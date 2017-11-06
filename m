@@ -1,91 +1,109 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
-Date: Mon, 6 Nov 2017 13:26:33 +0100
-Message-ID: <20171106122633.5mnqfh6xhmmxr45s@flea>
-References: <20171103195855.15283-1-geomatsi@gmail.com>
- <20171103195855.15283-2-geomatsi@gmail.com>
- <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
- <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter>
+From: Miquel RAYNAL <miquel.raynal@free-electrons.com>
+Subject: Re: [RFC 05/12] dt-bindings: mtd: add Marvell NAND controller
+ documentation
+Date: Mon, 6 Nov 2017 14:24:48 +0100
+Message-ID: <20171106142448.40ca5033@xps13>
+References: <20171018143629.29302-1-miquel.raynal@free-electrons.com>
+ <20171018143629.29302-6-miquel.raynal@free-electrons.com>
+ <20171024190433.r5xy25eqdesz7jjs@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="upsyiwlgqk2asb7s"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171104154221.ao7kkcwqhnja3cxe-tVm4GcgtBpsfMUw/CLfKLg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20171024190433.r5xy25eqdesz7jjs@rob-hp-laptop>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Catalin Marinas <catalin.marinas@arm.com>, Hanna Hawa <hannah@marvell.com>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nadav Haklai <nadavh@marvell.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devel@driverdev.osuosl.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Maxim Levitsky <maximlevitsky@gmail.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Josh Wu <rainyfeeling@outlook.com>, Russell King <linux@armlinux.org.uk>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, bcm-kernel-feedback-list@broadcom.com, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Sylvain Lemieux <slemie>
 List-Id: devicetree@vger.kernel.org
 
-
---upsyiwlgqk2asb7s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Nov 04, 2017 at 06:42:21PM +0300, Sergey Matyukevich wrote:
-> > > The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
-> > > Fix cd-gpio description to enable sdcard detect.
-> > >
-> > > Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 =
-+-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-pl=
-us2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> > > index b6b7a561df8c..a42fd79a62a3 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> > > @@ -71,7 +71,7 @@
-> > >         pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin>;
-> > >         vmmc-supply =3D <&reg_vcc3v3>;
-> > >         bus-width =3D <4>;
-> > > -       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_HIGH>;
-> > > +       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
-> >=20
-> > Was able to detect and do mount with existing dts
->=20
-> Did you try to boot from sdcard ? I am not able to boot my board from
-> sd-card without this change. As I mentioned earlier in my email
-> to buildroot mailing list, with mmc debug enabled I see that mmc
-> tries to init sd-card when I remove it from the slot.
->=20
-> Maybe there is a minor differences between h/w versions or batches ?
-> What is you board version ? I tested on board v1.0.
-
-Looking at the schematics, it definitely looks like it's active low.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---upsyiwlgqk2asb7s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJaAFT5AAoJEBx+YmzsjxAg88UQAKOO1g0NqwESR+nkzCznAOFS
-p+KjEEYROWHNDKJtIcdNHKI//zQOba++ccNRT9V1ySJhxJFerKh0UqRnLBv+V0gy
-/D4z75riznPxq9F4nVHsYBHbeG6ki/CuWle+0tJLdRO19xlTJfXMYYHbIXEVUAGd
-daN4wHQC1a9doNEdKMfgungNPpN3xNH7C7I7pWZwk9HvvQWL/nIpMKEKNwGlEnG+
-fguvbZxue70Vr8jNmxRs+rzz/1oc3QSLoqJb/m6e3Tzc6cgJc5AbsgCoo0J88Jju
-pMyYjPSEnzk8+/YR7iv3yRK3hPgc9dANFNc1NIodHjgMVmb66wmlHLFD8rfRYOKf
-9FjkDbh6eNHaJiRZ5q8dpI0wBEo9c84Yy2i9ao1SgfBo+XkKkpYope9JR1WWDiUE
-LwEdh6OFYXI/y5ydrcXljQiBAH0iQ7XMPe1PGhqSWPeY9CBtV+puZNWnN5t201LZ
-FOBVOWiAoG7HuKMbcC8OEl+NYK2TspijwQSVk/4HkXDQpV3wg8V3tBTMrLZptq6S
-fEiHQZm09hsa53UpD9qM/4FyuLrMbNK+D3B10U+kGuj6XylC0duCkuv7AbD9V/+j
-t83QhwInqU976axRMxJI1J0AD8Eqp/DQtxRTctLNtF9/kXsEErGVE85nKTVBZKXm
-HDmniwH7i3sY9KbxNX6i
-=BRft
------END PGP SIGNATURE-----
-
---upsyiwlgqk2asb7s--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLAoKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gK0MnZXN0IGZhdXgsIHQnZW4g
+YSByYWpvdXTDqSB1biB5IGEgcGFzIGxvbmd0cHMgOikuCj4gPiArSmUgY29uc2VpbGxlIGRlIG1l
+dHRyZSDDp2Egc291cyBmb3JtZSBkZSBsaXN0ZSwgZ2VucmUgIAo+IAo+IEh1bW0uCgpPb3BzIQoK
+PiAKPiA+ICsKPiA+ICstIGNvbXBhdGlibGU6IGNhbiBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoK
+PiA+ICsgICAgKiAibWFydmVsbCxhcm1hZGEtOGstbmFuZC1jb250cm9sbGVyIgo+ID4gKyAgICAq
+ICJtYXJ2ZWxsLGFybWFkYTM3MC1uYW5kLWNvbnRyb2xsZXIiCj4gPiArICAgICogIm1hcnZlbGws
+cHhhM3h4LW5hbmQtY29udHJvbGxlciIKPiA+ICsgICAgKiAibWFydmVsbCxhcm1hZGEtOGstbmFu
+ZCIgKGRlcHJlY2F0ZWQpCj4gPiArICAgICogIm1hcnZlbGwsYXJtYWRhMzcwLW5hbmQiIChkZXBy
+ZWNhdGVkKQo+ID4gKyAgICAqICJtYXJ2ZWxsLHB4YTN4eC1uYW5kIiAoZGVwcmVjYXRlZCkKPiA+
+ICstIHJlZzogc2hhbGwgY29udGFpbiByZWdpc3RlcnMgbG9jYXRpb24gYW5kIGxlbmd0aCBmb3Ig
+ZGF0YSBhbmQKPiA+IHJlZy4gIAo+IAo+IDIgcmVnaW9ucz8KCkp1c3Qgb25lLCByZXBocmFzZWQu
+Cgo+IAo+ID4gKy0gI2FkZHJlc3MtY2VsbHM6IHNoYWxsIGJlIHNldCB0byAxLiBFbmNvZGUgdGhl
+IG5hbmQgQ1MuCj4gPiArLSAjc2l6ZS1jZWxsczogc2hhbGwgYmUgc2V0IHRvIDAuCj4gPiArLSBp
+bnRlcnJ1cHRzOiBzaGFsbCBkZWZpbmUgdGhlIG5hbmQgY29udHJvbGxlciBpbnRlcnJ1cHQuCj4g
+PiArLSBjbG9ja3M6IHNoYWxsIHJlZmVyZW5jZSBuYW5kIGNvbnRyb2xsZXIgY2xvY2tzLiAgCj4g
+Cj4gSG93IG1hbnkgY2xvY2tzPwoKT25seSBvbmUgdG9vOiAicmVmZXJlbmNlIHRoZSBOQU5EIGNv
+bnRyb2xsZXIgY2xvY2siLgoKPiAKPiA+ICstIG1hcnZlbGwsc3lzdGVtLWNvbnRyb2xsZXI6IFNl
+dCB0byByZXRyaWV2ZSB0aGUgc3lzY29uIG5vZGUgdGhhdAo+ID4gaGFuZGxlcwo+ID4gKyAgTkFO
+RCBjb250cm9sbGVyIHJlbGF0ZWQgcmVnaXN0ZXJzIChvbmx5IHJlcXVpcmVkIHdpdGggdGhlCj4g
+PiArICAibWFydmVsbCxhcm1hZGEtOGstbmFuZFstY29udHJvbGxlcl0iIGNvbXBhdGlibGVzKS4K
+PiA+ICsKPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gKy0gZG1hczogc2hhbGwgcmVmZXJl
+bmNlIERNQSBjaGFubmVsIGFzc29jaWF0ZWQgdG8gdGhlIE5BTkQKPiA+IGNvbnRyb2xsZXIuICst
+IGRtYS1uYW1lczogc2hhbGwgYmUgInJ4dHgiLgo+ID4gKwo+ID4gK09wdGlvbmFsIGNoaWxkcmVu
+IG5vZGVzOgo+ID4gK0NoaWxkcmVuIG5vZGVzIHJlcHJlc2VudCB0aGUgYXZhaWxhYmxlIE5BTkQg
+Y2hpcHMuCj4gPiArCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICstIHJlZzogc2hhbGwg
+Y29udGFpbiB0aGUgbmF0aXZlIENoaXAgU2VsZWN0IGlkcyAoMC0zKQo+ID4gKy0gbWFydmVsbCxy
+Yjogc2hhbGwgY29udGFpbiB0aGUgbmF0aXZlIFJlYWR5L0J1c3kgaWRzICgwLTEpCj4gPiArCj4g
+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICstIG1hcnZlbGwsbmFuZC1rZWVwLWNvbmZpZzog
+b3JkZXJzIHRoZSBkcml2ZXIgbm90IHRvIHRha2UgdGhlCj4gPiB0aW1pbmdzCj4gPiArICBmcm9t
+IHRoZSBjb3JlIGFuZCBsZWF2aW5nIHRoZW0gY29tcGxldGVseSB1bnRvdWNoZWQuIEJvb3Rsb2Fk
+ZXIKPiA+ICsgIHRpbWluZ3Mgd2lsbCB0aGVuIGJlIHVzZWQuCj4gPiArLSBtYXJ2ZWxsLG5hbmQt
+ZW5hYmxlLWFyYml0ZXI6IG9ubHkgdXNlZnVsIGZvciBQWEEgcGxhdGZvcm1zLCB3aWxsCj4gPiAr
+ICBlbmFibGUgYnVzIGFyYml0ZXIgYmV0d2VlbiBORkMgYW5kIERGSSBidXMgKG11c3QgYmUgZW5h
+YmxlZCBmb3IKPiA+ICsgIE5GQyBvcGVyYXRpb24pICAKPiAKPiBXaHkgZG8geW91IG5lZWQgdGhp
+cyBpZiBpdCBtdXN0IGJlIGVuYWJsZWQ/CgpUaGF0IGlzIHJpZ2h0LCB0aGVyZSBpcyBubyBtb3Jl
+IG5lZWQgZm9yIGl0LCBhbHNvIHJlbW92ZWQgaXQgZnJvbSB0aGUKZHJpdmVyLCBqdXN0IGtub3dp
+bmcgdGhlIGJvYXJkIHdpdGggdGhlIGNvbXBhdGlibGUgc3RyaW5nIGlzIGVub3VnaC4KCj4gCj4g
+PiArLSBuYW5kLW9uLWZsYXNoLWJidDogc3BlZWQgdXAgdGhlIGJvb3QgcHJvY2VzcyBieSBub3Qg
+ZGlzY292ZXJpbmcKPiA+IGFsbAo+ID4gKyAgdGhlIGJhZCBibG9ja3MgYXQgZWFjaCBib290IGFu
+ZCByZWFkaW5nIGRpcmVjdGx5IGFuIG9uIGZsYXNoCj4gPiB0YWJsZS4gKy0gbmFuZC1lY2MtbW9k
+ZTogb25lIG9mIHRoZSBzdXBwb3J0ZWQgRUNDIG1vZGVzICgibm9uZSIsCj4gPiAic29mdCIsCj4g
+PiArICAiaHciKS4gSWYgbm90IHNwZWNpZmllZCwgaGFyZHdhcmUgRUNDIHdpbGwgYmUgdXNlZC4K
+PiA+ICstIG5hbmQtZWNjLWFsZ286IGFsZ29yaXRobSB0byB1c2UgaWYgcHJldmlvdXMgY2hvaWNl
+IHdhcyAic29mdCIKPiA+ICsgICgiaGFtbWluZyIgb3IgImJjaCkuIFRoaXMgcHJvcGVydHkgbWF5
+IGJlIGFkZGVkIGZvciBoYXJkd2FyZSBFQ0MKPiA+IGZvcgo+ID4gKyAgY2xhcmlmaWNhdGlvbiBi
+dXQgd2lsbCBiZSBpZ25vcmVkIGJ5IHRoZSBkcml2ZXIgYmVjYXVzZSBFQ0MgbW9kZQo+ID4gaXMK
+PiA+ICsgIGNob3NlbiBkZXBlbmRpbmcgb24gdGhlIHBhZ2Ugc2l6ZSBhbmQgdGhlIHN0cmVuZ3Ro
+IHJlcXVpcmVkIGJ5Cj4gPiB0aGUKPiA+ICsgIE5BTkQgY2hpcC4gVGhpcyB2YWx1ZSBtYXkgYmUg
+b3ZlcndyaXR0ZW4gd2l0aCB0aGUKPiA+IG5hbmQtZWNjLXN0cmVuZ3RoCj4gPiArICBwcm9wZXJ0
+eS4KPiA+ICstIG5hbmQtZWNjLXN0cmVuZ3RoOiBkZXNpcmVkIEVDQyBzdHJlbmd0aC4KPiA+ICst
+IG5hbmQtZWNjLXN0ZXAtc2l6ZTogaW5kaWNhdGlvbiBvbiB0aGUgRUNDIHN0ZXAgc2l6ZS4gVGhp
+cyBoYXMgbm8KPiA+ICsgIGVmZmVjdCBhbmQgd2lsbCBiZSBpZ25vcmVkIGJ5IHRoZSBkcml2ZXIg
+d2hlbiB1c2luZyBoYXJkd2FyZQo+ID4gKyAgRUNDLiBCZWNhdXNlIE1hcnZlbGwncyBOQU5EIGZs
+YXNoIGNvbnRyb2xsZXIgZG9lcyB1c2UgZml4ZWQKPiA+IHN0cmVuZ3RoCj4gPiArICAoMS1iaXQg
+Zm9yIEhhbW1pbmcsIDE2LWJpdCBmb3IgQkNIKSwgdGhlIHN0ZXAgc2l6ZSB3aWxsIHNocmluayBv
+cgo+ID4gKyAgZ3Jvd24gaW4gb3JkZXIgdG8gZml0IHRoZSByZXF1aXJlZCBzdHJlbmd0aCBhbmQg
+dGhlIHZhbHVlCj4gPiArICB1cGRhdGVkLiBTdGVwIHNpemVzIGFyZSBub3QgY29tcGxldGVseSBy
+YW5kb20gZm9yIGFsbCBhbmQgZm9sbG93Cj4gPiArICBjZXJ0YWluIHBhdHRlcm5zIGRlc2NyaWJl
+ZCBpbiBBTi0zNzksICJNYXJ2ZWxsIFNvQyBORkMgRUNDIi4gIAo+IAo+IEZvciBzdGFuZGFyZCBw
+cm9wZXJ0aWVzLCBqdXN0IHJlZmVyZW5jZSBuYW5kLnR4dCBhbmQgYWRkIGFueSAKPiBjb25zdHJh
+aW50cy4gRG9uJ3QgZGVmaW5lIHdoYXQgdGhlIHByb3BlcnR5IGlzIGFnYWluLgoKT2suCgo+IAo+
+ID4gKwo+ID4gK1NlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL25hbmQu
+dHh0IGZvciBtb3JlCj4gPiBkZXRhaWxzIG9uICtnZW5lcmljIGJpbmRpbmdzLgo+ID4gKwo+ID4g
+Kwo+ID4gK0V4YW1wbGU6Cj4gPiArbmFuZF9jb250cm9sbGVyOiBuYW5kLWNvbnRyb2xsZXJAZDAw
+MDAgewo+ID4gKwljb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhMzcwLW5hbmQtY29udHJvbGxl
+ciI7Cj4gPiArCXJlZyA9IDwweGQwMDAwIDB4NTQ+Owo+ID4gKwkjYWRkcmVzcy1jZWxscyA9IDwx
+PjsKPiA+ICsJI3NpemUtY2VsbHMgPSA8MD47Cj4gPiArCWludGVycnVwdHMgPSA8R0lDX1NQSSA4
+NCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiA+ICsJY2xvY2tzID0gPCZjb3JlZGl2Y2xrIDA+Owo+
+ID4gKwlzdGF0dXMgPSAib2theSI7ICAKPiAKPiBEb24ndCBzaG93IHN0YXR1cyBpbiBleGFtcGxl
+cy4KCk9rLgoKPiAKPiA+ICsKPiA+ICsJbmFuZEAwIHsKPiA+ICsJCXJlZyA9IDwwPjsKPiA+ICsJ
+CW1hcnZlbGwscmIgPSA8MD47Cj4gPiArCQluYW5kLWVjYy1tb2RlID0gImh3IjsKPiA+ICsJCW1h
+cnZlbGwsbmFuZC1rZWVwLWNvbmZpZzsKPiA+ICsJCW1hcnZlbGwsbmFuZC1lbmFibGUtYXJiaXRl
+cjsKPiA+ICsJCW5hbmQtb24tZmxhc2gtYmJ0Owo+ID4gKwkJbmFuZC1lY2Mtc3RyZW5ndGggPSA8
+ND47Cj4gPiArCQluYW5kLWVjYy1zdGVwLXNpemUgPSA8NTEyPjsKPiA+ICsKPiA+ICsJCXBhcnRp
+dGlvbnMgewo+ID4gKwkJCWNvbXBhdGlibGUgPSAiZml4ZWQtcGFydGl0aW9ucyI7Cj4gPiArCQkJ
+I2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiArCQkJI3NpemUtY2VsbHMgPSA8MT47Cj4gPiArCj4g
+PiArCQkJcGFydGl0aW9uQDAgewo+ID4gKwkJCQlsYWJlbCA9ICJSb290ZnMiOwo+ID4gKwkJCQly
+ZWcgPSA8MHgwMDAwMDAwMCAweDQwMDAwMDAwPjsKPiA+ICsJCQl9Owo+ID4gKwkJfTsKPiA+ICsJ
+fTsKPiA+ICt9Owo+ID4gLS0gCj4gPiAyLjExLjAKPiA+ICAgCgpUaGFua3MgZm9yIHRoZSByZXZp
+ZXcsCk1pcXXDqGwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDov
+L2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVy
+ZGV2LWRldmVsCg==
