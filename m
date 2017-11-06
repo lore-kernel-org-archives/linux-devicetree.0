@@ -1,87 +1,43 @@
-From: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
-Date: Mon, 6 Nov 2017 14:25:10 +0300
-Message-ID: <20171106112510.nqp3gwdz37wqhksa@speedy.hunter>
-References: <20171103195855.15283-1-geomatsi@gmail.com>
- <20171103195855.15283-2-geomatsi@gmail.com>
- <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
- <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter>
- <CAMty3ZCxXUaBf3t=3d7D+RU6rp83oJw8BHADU3TYDeM4Vx_k-w@mail.gmail.com>
- <20171104162206.gowih7h7og3fk7rk@speedy.hunter>
- <CAMty3ZBi1pscPLQyc4S075pvzyh-2wsSPnqqEuQgDFQ_c5oyFg@mail.gmail.com>
+From: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Subject: Re: [PATCH] brcmfmac: add support for external 32khz clock
+Date: Mon, 6 Nov 2017 22:27:29 +1100
+Message-ID: <20171106112726.GA25134@lineageos.org>
+References: <20171104132421.GA1541@archbox.home>
+ <5A004099.90200@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZBi1pscPLQyc4S075pvzyh-2wsSPnqqEuQgDFQ_c5oyFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5A004099.90200-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 06, 2017 at 03:58:15PM +0530, Jagan Teki wrote:
-> On Sat, Nov 4, 2017 at 9:52 PM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> > > The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
-> >> > > Fix cd-gpio description to enable sdcard detect.
-> >> > >
-> >> > > Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> > > ---
-> >> > >  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
-> >> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> > >
-> >> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> >> b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> >> > > index b6b7a561df8c..a42fd79a62a3 100644
-> >> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> >> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> >> > > @@ -71,7 +71,7 @@
-> >> > >         pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-> >> > >         vmmc-supply = <&reg_vcc3v3>;
-> >> > >         bus-width = <4>;
-> >> > > -       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-> >> > > +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
-> >> >
-> >> > Was able to detect and do mount with existing dts
-> >>
-> >> Did you try to boot from sdcard ? I am not able to boot my board from
-> >> sd-card without this change. As I mentioned earlier in my email
-> >> to buildroot mailing list, with mmc debug enabled I see that mmc
-> >> tries to init sd-card when I remove it from the slot.
-> >>
-> >> Maybe there is a minor differences between h/w versions or batches ?
-> >> What is you board version ? I tested on board v1.0.
-> >>
-> >>
-> >> I'm using same v1.0
-> >
-> > Ok, lets skip this patch for now.
-> >
-> > I will double check v1.0 schematics and my board behavior.
-> > Though I see that mmc0 dts fragment in u-boot for this board
-> > also differs from the current kernel one: it uses 'cd-inverted' property.
+On Mon, Nov 06, 2017 at 11:59:37AM +0100, Arend van Spriel wrote:
+> On 11/4/2017 2:24 PM, Simon Shields wrote:
+> > Some boards use an external 32khz clock for low-power
+> > mode timing. Make sure the clock is powered on while the chipset
+> > is active.
 > 
-> Can you shared the hang log.. look like I've seen boot issue with
-> Latest Linux and U-Boot.
+> Do you have such a board? With the little documentation I can get my hands
+> on here I wonder whether the clock needs to be enabled before the device is
+> powered. If you have the hardware I would like to check some registers in
+> the device.
 > 
-> [    1.348668] ALSA device list:
-> [    1.351649]   No soundcards found.
-> [    1.355388] Waiting for root device /dev/mmcblk0p2...
-> [    1.371117] mmc1: new high speed MMC card at address 0001
-> [    1.376947] mmcblk1: mmc1:0001 8WPD3R 7.28 GiB
-> [    1.381623] mmcblk1boot0: mmc1:0001 8WPD3R partition 1 4.00 MiB
-> [    1.387682] mmcblk1boot1: mmc1:0001 8WPD3R partition 2 4.00 MiB
-> [    1.395036]  mmcblk1: p1 p2 p3 < p5 p6 p7 p8 p9 p10 p11 p12 p13 p14
-> p15 p16 p17 >
-> [    1.402542] mmcblk1: p1 size 6873088 extends beyond EOD, truncated
 
-My log is exactly the same. The kernel detects mmcblk1 (emmmc) but can not
-detect mmcblk0 (sd-card). As a result, it waits according to 'rootwait' option
-in kernel command line. With this patch applied sd-card is properly detected
-and boot succeeds. As I mentioned in the commit message, this behavior corresponds
-to what I see in board schematics.
+Yes. Trats2 (exynos4412-based) has such a setup. The BCM4334 works fine
+with this patch and one more that enables the WL_REG_EN pin when
+brcmfmac is probed.
 
-Regards,
-Sergey
+Without this patch (and only enabling WL_REG_EN), the chip is detected but
+attempting to initialise it fails with a bunch of timeouts.
+
+> Regards,
+> Arend
+
+Cheers,
+Simon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
