@@ -1,44 +1,58 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] [net-next?] of: add of_property_read_variable_* dummy helpers
-Date: Mon, 6 Nov 2017 08:31:52 -0600
-Message-ID: <CAL_Jsq+uKzL94=+s+RYSQb2PH6tc1ji2ZLEoySBPezgsmLCiBw@mail.gmail.com>
-References: <20171106132627.150459-1-arnd@arndb.de>
+From: Eric Nelson <eric-SeqgQ6RdavfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3] rtc: add support for NXP PCF85363 real-time clock
+Date: Mon, 6 Nov 2017 07:32:19 -0700
+Message-ID: <597958de-7ef0-d715-450c-384cfe2dedd0@nelint.com>
+References: <CAL_Jsq+QQK=NTMBwk=h0uszLW0uSiEd1fmF09USRNFM-2VgiSQ@mail.gmail.com>
+ <1509548480-29472-1-git-send-email-eric@nelint.com>
+ <20171104160836.bah5su2ld5ckycr3@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171106132627.150459-1-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S . Miller" <davem@davemloft.net>, Frank Rowand <frowand.list@gmail.com>, netdev <netdev@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171104160836.bah5su2ld5ckycr3-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, otavio.salvador-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 6, 2017 at 7:26 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> Commit a67e9472da42 ("of: Add array read functions with min/max size
-> limits") added a new interface for reading variable-length arrays from
-> DT properties. One user was added in dsa recently and this causes a
-> build error because that code can be built with CONFIG_OF disabled:
->
-> net/dsa/dsa2.c: In function 'dsa_switch_parse_member_of':
-> net/dsa/dsa2.c:678:7: error: implicit declaration of function 'of_property_read_variable_u32_array'; did you mean 'of_property_read_u32_array'? [-Werror=implicit-function-declaration]
->
-> This adds a dummy functions for of_property_read_variable_u32_array()
-> and a few others that had been missing here. I decided to move
-> of_property_read_string() and of_property_read_string_helper() in the
-> process to make it easier to compare the two sets of function prototypes
-> to make sure they match.
->
-> Fixes: 975e6e32215e ("net: dsa: rework switch parsing")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> DT maintainers: there is currently a build break in the net-next tree
-> (from branch "dsa-parsing-stage") because of this, I think the best
-> way forward would be to get an Ack for this patch to get picked up
-> through the netdev trees.
+On 11/04/2017 09:08 AM, Alexandre Belloni wrote:
+> On 01/11/2017 at 08:01:20 -0700, Eric Nelson wrote:
 
-Fine by me.
+<snip>
 
-> ---
->  include/linux/of.h | 62 +++++++++++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 50 insertions(+), 12 deletions(-)
+>>
+>> V3 adds interrupts as an optional property in device tree bindings
+>>
+>>   drivers/rtc/Kconfig                                |  13 ++
+>>   drivers/rtc/Makefile                               |   1 +
+>>   drivers/rtc/rtc-pcf85363.c                         | 221 +++++++++++++++++++++
+>>   4 files changed, 252 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/rtc/pcf85363.txt
+>>   create mode 100644 drivers/rtc/rtc-pcf85363.c
+>>
+> 
+> I've tested it (thanks to Fabio, I received one a few weeks ago)
+> 
+> Applied with the following change:
+> 
+> --- a/drivers/rtc/rtc-pcf85363.c
+> +++ b/drivers/rtc/rtc-pcf85363.c
+> @@ -194,7 +194,6 @@ static int pcf85363_probe(struct i2c_client *client,
+>          pcf85363->nvmem_cfg.reg_write = pcf85363_nvram_write;
+>          pcf85363->nvmem_cfg.priv = pcf85363;
+>          pcf85363->rtc->nvmem_config = &pcf85363->nvmem_cfg;
+> -       pcf85363->rtc->nvram_old_abi = true;
+>          pcf85363->rtc->ops = &rtc_ops;
+>   
+>          return rtc_register_device(pcf85363->rtc);
+> 
+> nvram_old_abi must not be used for new drivers and will generate warning
+> when the (undocumented) ABI is used anyway.
+> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks Alexandre (and Fabio).
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
