@@ -1,117 +1,69 @@
-From: Oleksandr Shamray <oleksandrs@mellanox.com>
-Subject: RE: [v11,1/4] drivers: jtag: Add JTAG core driver
-Date: Mon, 6 Nov 2017 14:28:08 +0000
-Message-ID: <DB6PR0501MB2197286DFD9801F6C78D638DB1500@DB6PR0501MB2197.eurprd05.prod.outlook.com>
-References: <1509724449-26221-2-git-send-email-oleksandrs@mellanox.com>
- <8760aoz78q.fsf@bilbrey.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] display: panel: Add Tianma tm070rvhg71 display support
+ (800x480)
+Date: Mon, 6 Nov 2017 08:30:31 -0600
+Message-ID: <CAL_JsqJz67k_fTMkx5dHb5qFwXif9y+Cv=+PTq7OLH7woNoU=g@mail.gmail.com>
+References: <1508537403-878-1-git-send-email-lukma@denx.de>
+ <20171027031336.psu7hn27w2xajyux@rob-hp-laptop> <20171027101800.5dbfb161@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8760aoz78q.fsf@bilbrey.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chip Bilbrey <chip@bilbrey.org>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "joel@jms.id.au" <joel@jms.id.au>, "jiri@resnulli.us" <jiri@resnulli.us>, "tklauser@distanz.ch" <tklauser@distanz.ch>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "mec@shout.net" <mec@shout.net>, Vadim Pasternak <vadimp@mellanox.com>, system-sw-low-level <system-sw-low-level@mellanox.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "openocd-devel-owner@lists.sourceforge.net" <openocd-devel-owne>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171027101800.5dbfb161@jawa>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,=20
-Thanks for review>
-
-> -----Original Message-----
-> From: Chip Bilbrey [mailto:chip@bilbrey.org]
-> Sent: Monday, November 6, 2017 12:33 AM
-> To: Oleksandr Shamray <oleksandrs@mellanox.com>
-> Cc: gregkh@linuxfoundation.org; arnd@arndb.de; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> devicetree@vger.kernel.org; openbmc@lists.ozlabs.org; joel@jms.id.au;
-> jiri@resnulli.us; tklauser@distanz.ch; linux-serial@vger.kernel.org;
-> mec@shout.net; Vadim Pasternak <vadimp@mellanox.com>; system-sw-low-
-> level <system-sw-low-level@mellanox.com>; robh+dt@kernel.org; openocd-
-> devel-owner@lists.sourceforge.net; linux-api@vger.kernel.org;
-> davem@davemloft.net; mchehab@kernel.org; Jiri Pirko <jiri@mellanox.com>
-> Subject: Re: [v11,1/4] drivers: jtag: Add JTAG core driver
->=20
->=20
-> Oleksandr Shamray writes:
-> > diff --git a/include/uapi/linux/jtag.h b/include/uapi/linux/jtag.h new
-> > file mode 100644 index 0000000..0b25a83
-> > --- /dev/null
-> > +++ b/include/uapi/linux/jtag.h
-> > [...]
-> > +/**
-> > + * enum jtag_xfer_mode:
-> > + *
-> > + * @JTAG_XFER_HW_MODE: hardware mode transfer
-> > + * @JTAG_XFER_SW_MODE: software mode transfer  */ enum
-> jtag_xfer_mode
-> > +{
-> > +	JTAG_XFER_HW_MODE,
-> > +	JTAG_XFER_SW_MODE,
-> > +};
->=20
-> Is this essentially selecting between bit-bang mode or not?  Is there a g=
-enerally
-> applicable reason to select SW mode over HW (or vice versa)?
-> This sounds like it's tied to device-specific capability which shouldn't =
-be exposed
-> in a generic user API.
-
-It is a mode of working some JTAG master devices. F.e Aspeed JTAG core can =
-work in fully automatic mode when all StateMachine=20
-transitions and pin control done by hardware and in the more simpler mode w=
-hen JTAG pin control does by the user (like bit-bang).=20
-
-It HW defined feature and can be applied not in all cases.=20
-
-Seems it can be deleted from xfer option and controlled by separate like IO=
-CTL_SET_PARAM command.
->=20
-> > +/**
-> > + * struct jtag_xfer - jtag xfer:
-> > + *
-> > + * @mode: access mode
-> > + * @type: transfer type
-> > + * @direction: xfer direction
-> > + * @length: xfer bits len
-> > + * @tdio : xfer data array
-> > + * @endir: xfer end state
-> > + *
-> > + * Structure represents interface to Aspeed JTAG device for jtag sdr
-> > +xfer
-> > + * execution.
->=20
-> Probably should remove the reference to Aspeed here.
-
-Thanks, will remove it.
-
->=20
-> > +/* ioctl interface */
-> > +#define __JTAG_IOCTL_MAGIC	0xb2
-> > +
-> > +#define JTAG_IOCRUNTEST	_IOW(__JTAG_IOCTL_MAGIC, 0,\
-> > +			     struct jtag_run_test_idle)
-> > +#define JTAG_SIOCFREQ	_IOW(__JTAG_IOCTL_MAGIC, 1, unsigned int)
-> > +#define JTAG_GIOCFREQ	_IOR(__JTAG_IOCTL_MAGIC, 2, unsigned int)
-> > +#define JTAG_IOCXFER	_IOWR(__JTAG_IOCTL_MAGIC, 3, struct
-> jtag_xfer)
-> > +#define JTAG_GIOCSTATUS _IOWR(__JTAG_IOCTL_MAGIC, 4, enum
-> > +jtag_endstate)
->=20
-> I notice the single-open()-per-device lock was dropped by request in an e=
-arlier
-> revision of your patches, but multiple processes trying to drive a single=
- JTAG
-> master could wreak serious havoc if transactions get interleaved. Would
-> something like an added JTAG_LOCKCHAIN/UNLOCKCHAIN
-> ioctl() for exclusive client access be reasonable to prevent this?
-
-Yes, it dropped by recommendation of Greg KH <gregkh@linuxfoundation.org>.=
-=20
-Uer app should care about it.
-
->=20
-> -Chip
-
-Thanks for review.
-Oleksandr.
+T24gRnJpLCBPY3QgMjcsIDIwMTcgYXQgMzoxOCBBTSwgTHVrYXN6IE1hamV3c2tpIDxsdWttYUBk
+ZW54LmRlPiB3cm90ZToKPiBIaSBSb2IsCj4KPj4gT24gU2F0LCBPY3QgMjEsIDIwMTcgYXQgMTI6
+MTA6MDNBTSArMDIwMCwgTHVrYXN6IE1hamV3c2tpIHdyb3RlOgo+PiA+IFNpZ25lZC1vZmYtYnk6
+IEx1a2FzeiBNYWpld3NraSA8bHVrbWFAZGVueC5kZT4KPj4gPiAtLS0KPj4gPiAgLi4uL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvdGlhbm1hLHRtMDcwcnZoZzcxLnR4dCAgfCAgNyArKysrKysKPj4g
+PiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAgICAgfCAy
+Nwo+PiA+ICsrKysrKysrKysrKysrKysrKysrKysgMiBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNlcnRp
+b25zKCspCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+PiA+IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MHJ2aGc3MS50eHQKPj4gPgo+
+PiA+IGRpZmYgLS1naXQKPj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MHJ2aGc3MS50eHQKPj4gPiBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MHJ2aGc3MS50eHQK
+Pj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NCBpbmRleCAwMDAwMDAwLi5iODQyMTdmIC0tLSAvZGV2
+L251bGwKPj4gPiArKysKPj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MHJ2aGc3MS50eHQKPj4gPiBAQCAtMCwwICsxLDcgQEAg
+K1RpYW5tYSBNaWNyby1lbGVjdHJvbmljcyBUTTA3MFJWSEc3MSA3LjAiIFdYR0EgVEZUCj4+ID4g
+TENEIHBhbmVsICsKPj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gPiArLSBjb21wYXRpYmxl
+OiBzaG91bGQgYmUgInRpYW5tYSx0bTA3MHJ2aGc3MQo+PiA+ICsKPj4gPiArVGhpcyBiaW5kaW5n
+IGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzCj4+
+ID4gc3BlY2lmaWVkICtpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgo+Pgo+
+PiBObyBzdXBwbGllcz8gU3RpbGwgbmVlZCB0byBsaXN0IHBvd2VyLXN1cHBseSBoZXJlIGlmIHNv
+LCBzbyBpdCBpcwo+PiBjbGVhciB0aGF0IHRoaXMgZGlzcGxheSBoYXMgYSBzaW5nbGUgc3VwcGx5
+IChvciB5b3UgbmVlZCB0byBsaXN0Cj4+IG11bHRpcGxlIG9uZXMgaWYgbm90KS4KPgo+IEkgdG9v
+ayB0aGUgc2FtZSBhcHByb2FjaCBhcyBzZXZlcmFsIG90aGVyIHNpbXBsZSBwYW5lbHMgaGF2aW5n
+Cj4gZGVzY3JpcHRpb24gaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvKgo+IGRpcmVjdG9yeSAoZS5nLiBpbm5vbHV4LGcxMjFpMS1sMDEudHh0KSAuCj4K
+PiBJbiB0aGUgZGVzY3JpcHRpb24gaXQgaXMgc3RhdGVkIHRoYXQgdGhpcyBiaW5kaW5nIGlzIGNv
+bXBhdGlibGUgd2l0aAo+IG9uZSBkb2N1bWVudGVkIGluIHRoZSBzaW1wbGUtcGFuZWwudHh0LCB3
+aGljaCBkZWZpbmVzIGZvbGxvd2luZwo+IHByb3BlcnRpZXM6Cj4KPiBSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgo+IC0gcG93ZXItc3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlkZSB0aGUgc3VwcGx5IHZv
+bHRhZ2UKPgo+IE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gLSBkZGMtaTJjLWJ1czogcGhhbmRsZSBv
+ZiBhbiBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJRCBwcm9iaW5nCj4gLSBlbmFibGUt
+Z3Bpb3M6IEdQSU8gcGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAo+IC0gYmFja2xp
+Z2h0OiBwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5l
+bAo+Cj4KPiBEbyBJIG5lZWQgdG8gZG8gc29tZXRoaW5nIG1vcmU/CgpZZXMuIEhvdyBkbyBJIGtu
+b3cgdGhpcyBwYW5lbCBoYXMgYSBzaW5nbGUgcG93ZXIgc3VwcGx5IHZzLiBpdCBoYXMKbXVsdGlw
+bGUgc3VwcGxpZXMgYW5kIHlvdSBoYXZlbid0IHRob3VnaHQgYWJvdXQgc3VwcGxpZXMgeWV0IG9y
+IHRoZXkKYXJlbid0IHMvdyBjb250cm9sbGVkIG9uIHNvbWUgYm9hcmRzLiBUaGUgbGF0dGVyIGlz
+IGZyZXF1ZW50bHkgdGhlCmNhc2Ugd2hlbiBJIGdvIHJlYWQgdGhlIGRhdGFzaGVldHMuCgpBbmQg
+eWVzIHRoZXJlIGFyZSBleGFtcGxlcyB0aGF0IGRvbid0IGRvIHRoaXMsIGJ1dCB3ZSdyZSBzdHJp
+Y3RlciBub3cuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
