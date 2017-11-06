@@ -1,62 +1,70 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH v2 00/10] Allwinner H3/H5/A64(DE2) SimpleFB support
-Date: Mon, 6 Nov 2017 09:40:43 +0100
-Message-ID: <20171106084043.2vv56w2dmrutz4gn@phenom.ffwll.local>
-References: <20171027150658.18509-1-icenowy@aosc.io>
- <9bca10cc95d04f87a1122bc582402310@aosc.io>
- <20171102154447.b5qo3rvu5djxupay@flea>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH v2 2/2] devicetree: i2c-hid: Add reset property
+Date: Mon, 6 Nov 2017 10:06:30 +0100
+Message-ID: <20171106090630.GF9728@mail.corp.redhat.com>
+References: <1509418996-25348-1-git-send-email-hl@rock-chips.com>
+ <1509418996-25348-2-git-send-email-hl@rock-chips.com>
+ <20171101220208.gixv6anohp5q4kh2@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171102154447.b5qo3rvu5djxupay@flea>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20171101220208.gixv6anohp5q4kh2@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lin Huang <hl@rock-chips.com>, dmitry.torokhov@gmail.com, jikos@kernel.org, jani.nikula@intel.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, briannorris@chromium.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 02, 2017 at 04:44:47PM +0100, Maxime Ripard wrote:
-> On Thu, Nov 02, 2017 at 04:51:29PM +0800, Icenowy Zheng wrote:
-> > 在 2017-10-27 23:06，Icenowy Zheng 写道：
-> > > This patchset adds support for the SimpleFB on Allwinner SoCs with
-> > > "Display Engine 2.0".
-> > > 
-> > > PATCH 1 to PATCH 3 are DE2 CCU fixes for H3/H5 SoCs.
-> > > 
-> > > PATCH 4 adds the pipeline strings for DE2 SimpleFB.
-> > > 
-> > > PATCH 5 to 7 adds necessary device tree nodes (DE2 CCU and SimpleFB)
-> > > for H3/H5 SoCs.
-> > > 
-> > > PATCH 8 to 10 are for Allwinner A64 SoC to enable SimpleFB.
-> > > 
-> > > Icenowy Zheng (10):
-> > >   dt-bindings: fix the binding of Allwinner DE2 CCU of A83T and H3
-> > >   clk: sunxi-ng: add support for Allwinner H3 DE2 CCU
-> > >   clk: sunxi-ng: fix the A64/H5 clock description of DE2 CCU
-> > >   dt-bindings: simplefb-sunxi: add pipelines for DE2
-> > >   ARM: sun8i: h3/h5: add DE2 CCU device node for H3
-> > >   arm64: allwinner: h5: add compatible string for DE2 CCU
-> > >   ARM: sunxi: h3/h5: add simplefb nodes
-> > >   dt-bindings: add binding for A64 DE2 CCU SRAM
-> > >   arm64: allwinner: a64: add DE2 CCU for A64 SoC
-> > >   arm64: allwinner: a64: add simplefb for A64 SoC
-> > 
-> > Maxime, could you review and, if possible, apply the H3/5
-> > part of this patchset?
-> 
-> This came a bit late, we're too close from the merge window
-> now. Please resend them after -rc1 is out.
+Hi Rob,
 
-Just dropping here that drm-misc is open all the time, making for a much
-better process for contributors :-)
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Nov 01 2017 or thereabouts, Rob Herring wrote:
+> On Tue, Oct 31, 2017 at 11:03:16AM +0800, Lin Huang wrote:
+> > Document a "reset" and "assert-reset-us", it can be used for
+> > driver control reset property. And reuse post-power-on-delay-ms
+> > for deassert reset delay.
+> 
+> "dt-bindings: input: " for the subject please.
+> 
+> > 
+> > Signed-off-by: Lin Huang <hl@rock-chips.com>
+> > ---
+> >  Documentation/devicetree/bindings/input/hid-over-i2c.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> > index 28e8bd8..6ab0eed 100644
+> > --- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> > +++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> > @@ -31,7 +31,9 @@ device-specific compatible properties, which should be used in addition to the
+> >  
+> >  - vdd-supply: phandle of the regulator that provides the supply voltage.
+> >  - post-power-on-delay-ms: time required by the device after enabling its regulators
+> > -  before it is ready for communication. Must be used with 'vdd-supply'.
+> > +  or deassert reset pin before it is ready for communication.
+> > +- reset: phandle of the gpio that provides for hid reset pin.
+> 
+> The kernel api takes "reset", but the property is "reset-gpios".
+
+In the same way the generic regulator interface handles vdd-supply, is
+there any generic OF handling of reset lines? As far as I can tell,
+there are 97 references of reset-gpios in my tree, and I wonder if all
+the matching drivers need to rewrite the same code to set the reset line
+on power on/off.
+
+I am worried because here, 1/2 writes "arbitrary" 0 and 1 to the gpios,
+and nothing prevent a manufacturer to invert the required voltages on
+the reset lines, meaning there will be a need for a new OF property.
+
+Cheers,
+Benjamin
+
+> 
+> And it's not just a phandle typically.
+> 
+> > +- assert-reset-us: the device require reset assert time.
+> >  
+> >  Example:
+> >  
+> > -- 
+> > 2.7.4
+> > 
