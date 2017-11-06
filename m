@@ -1,62 +1,68 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
-Date: Mon, 6 Nov 2017 10:46:30 +0000
-Message-ID: <CAKv+Gu_oSuk3=d2T2NFFm3M3MfABCCaZwnaTH8ijG6O1TSZN6w@mail.gmail.com>
-References: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
- <20171102000814.ih2ggtfpmfsx3xap@rob-hp-laptop> <CAKv+Gu8UPpsobJ_d4+OCdufSkLLhGdRFxPO92X3YKvnyBY5b7w@mail.gmail.com>
- <CAPDyKFpaKdvnwL98UZKzNmR+yXtWJL6hPDPfTXtY8nqmDRsomQ@mail.gmail.com>
- <CAKv+Gu8nd7i+iaL-B55WbutGrOKaCsCdrQtFZgFs1TJaSqx-xw@mail.gmail.com>
- <CAPDyKFpKe-TaUeuWdenGf9tHV8+UkGkkdcp8Z+Yu9Q-haHsYsA@mail.gmail.com>
- <CAKR0VNJ0xzRebUEZprRfQVp1LGjPG4khyumSYKsRtxCPTGkxYQ@mail.gmail.com>
- <CAKR0VN+ATuiOdZ+n=t=h+Ru5WdzRfyq-41t0P8J=4LAUFGo+dA@mail.gmail.com> <CAPDyKFp92YTqGNZ8s4mGQOpbmbEKxj9vpL0tj0rB-RbirWKCjw@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] MIPS: dts: remove bogus bcm96358nb4ser.dtb from dtb-y entry
+Date: Mon, 6 Nov 2017 20:00:49 +0900
+Message-ID: <CAK7LNAQ_bugEP8hHKmCif5QCz2=Pw_GpXzYz4zJeXO0HXaT_ag@mail.gmail.com>
+References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
+ <1509859853-27473-2-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNAQfK_BWQcVW-ScrpAwNAHav3MrrzV-tjn_YUjsuvd7U5A@mail.gmail.com> <20171106095139.GG15260@jhogan-linux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp92YTqGNZ8s4mGQOpbmbEKxj9vpL0tj0rB-RbirWKCjw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Vincent Yang <vincent.cw.yang@gmail.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Vincent Yang <vincent.yang@socionext.com>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <20171106095139.GG15260@jhogan-linux>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: James Hogan <jhogan@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Sam Ravnborg <sam@ravnborg.org>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6 November 2017 at 07:17, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> [...]
+2017-11-06 19:41 GMT+09:00 James Hogan <jhogan@kernel.org>:
+> Hi,
 >
->>>>>
->>>>> Do you mean set it unconditionally? That works for me, but I have no
->>>>
->>>> Yes.
->>>>
->>>>> way of testing whether it still works on other SoCs that use this IP.
->>>>
->>>> Me neither!
->>>
->>> Hi all, I can not yet get contact with IP owner because it is a
->>> holiday in Japan.
->>> Around two years ago, F_SDH30_CMD_DAT_DELAY was a new feature of this IP.
->>> I will update the latest information as soon as I get it.
->>>
->> I got a response from IP owner.
->> He explains F_SDH30_CMD_DAT_DELAY is intended to adjust signal timing of
->> CMD/DAT lines, and it is necessary to change its value according to
->> SoC/board design.
->> So he advises us to make F_SDH30_CMD_DAT_DELAY adjustable by a DT binding.
+> On Sun, Nov 05, 2017 at 11:11:38PM +0900, Masahiro Yamada wrote:
+>> +CC Ralf Baechle <ralf@linux-mips.org>
+>> +CC linux-mips@linux-mips.org
+>> +CC Kevin Cernekee <cernekee@gmail.com>
+>> +CC Florian Fainelli <f.fainelli@gmail.com>
 >>
->> Kind regards
->> Vincent
 >>
->>>>
->>>> Apparently there are no DTS in the kernel git that uses the
->>>> "fujitsu,mb86s70-sdhci-3.0".
->>>
->>> Around two years ago, sdhci_f_sdh30_driver was a portion for mb86s70 SoC
->>> patch series, but finally the patch series did not fully go upstream.
->>>
+>> I missed to CC MIPS maintainers.
 >
-> Vincent, thanks for all the help in this!
+> Yes, please resend the patch so it lands in patchwork.linux-mips.org.
+
+
+This is a part of clean-up series of DT building.
+
+I want Acked-by from MIPS maintainers
+so that the whole series can go to a different tree.
+(DT or Kbuild).
+
+
+Sam addressed more clean-up candidates in MIPS Makefiles
+https://patchwork.kernel.org/patch/10041879/
+
+So, I will probably end up with touching those Makefiles more.
+
+All patches must go to the same tree.
+
+
+>> 2017-11-05 14:30 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+>> > arch/mips/boot/dts/brcm/bcm96358nb4ser.dts does not exist, so
+>> > we cannot build bcm96358nb4ser.dtb .
 >
-> Ard, one thing, could you please split the DT doc change into a
-> separate patch, preceding the change that actually do the parsing of
-> the new binding.
+> This appears to be due to the file being renamed in commit 695835511f96
+> ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom").
+> Please can you update the commit message when you resend to mention the
+> cause of the problem.
+>
+> You could also add the following if you like while you're at it:
+>
+> Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
+> Cc: <stable@vger.kernel.org> # 4.9+
 >
 
-Will do. Thanks.
+
+Will do.  Thanks!
+
+
+-- 
+Best Regards
+Masahiro Yamada
