@@ -1,111 +1,67 @@
-From: Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
-Date: Mon, 6 Nov 2017 10:54:34 +0800
-Message-ID: <CAKR0VN+ATuiOdZ+n=t=h+Ru5WdzRfyq-41t0P8J=4LAUFGo+dA@mail.gmail.com>
-References: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
- <20171102000814.ih2ggtfpmfsx3xap@rob-hp-laptop> <CAKv+Gu8UPpsobJ_d4+OCdufSkLLhGdRFxPO92X3YKvnyBY5b7w@mail.gmail.com>
- <CAPDyKFpaKdvnwL98UZKzNmR+yXtWJL6hPDPfTXtY8nqmDRsomQ@mail.gmail.com>
- <CAKv+Gu8nd7i+iaL-B55WbutGrOKaCsCdrQtFZgFs1TJaSqx-xw@mail.gmail.com>
- <CAPDyKFpKe-TaUeuWdenGf9tHV8+UkGkkdcp8Z+Yu9Q-haHsYsA@mail.gmail.com> <CAKR0VNJ0xzRebUEZprRfQVp1LGjPG4khyumSYKsRtxCPTGkxYQ@mail.gmail.com>
+From: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH v6 1/2] dt-bindings: watchdog: Add Spreadtrum watchdog documentation
+Date: Mon, 6 Nov 2017 10:46:27 +0800
+Message-ID: <555b315944a01b899d4f1efe20f0cd58b910a6d0.1509936580.git.eric.long@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKR0VNJ0xzRebUEZprRfQVp1LGjPG4khyumSYKsRtxCPTGkxYQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Yang <vincent.yang.fujitsu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Yang <Vincent.Yang-l16TxrwUIHTQFUHtdCDX3A@public.gmane.org>, Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-11-03 11:29 GMT+08:00 Vincent Yang <vincent.cw.yang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> 2017-11-02 19:00 GMT+08:00 Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
->> + Vincent Yang (several emails, don't know which works)
->>
->> On 2 November 2017 at 11:49, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On 2 November 2017 at 10:48, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>> On 2 November 2017 at 01:12, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>> On 2 November 2017 at 00:08, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>>>> On Wed, Nov 01, 2017 at 12:21:32AM +0000, Ard Biesheuvel wrote:
->>>>>>> The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
->>>>>>> requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
->>>>>>> F_SDH30_ESD_CONTROL control register.
->>>>>>>
->>>>>>> So let's add an optional property to this device's binding, and
->>>>>>> set the attribute if it is present in the DT node.
->>>>>>>
->>>>>>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>>> ---
->>>>>>>  Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt |  2 ++
->>>>>>>  drivers/mmc/host/sdhci_f_sdh30.c                        | 18 +++++++++++++++++-
->>>>>>>  2 files changed, 19 insertions(+), 1 deletion(-)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->>>>>>> index de2c53cff4f1..9ad02f743ad0 100644
->>>>>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->>>>>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->>>>>>> @@ -15,6 +15,8 @@ Required properties:
->>>>>>>  Optional properties:
->>>>>>>  - vqmmc-supply: phandle to the regulator device tree node, mentioned
->>>>>>>    as the VCCQ/VDD_IO supply in the eMMC/SD specs.
->>>>>>> +- cmd-dat-delay-select: boolean property indicating that this host requires
->>>>>>> +  the CMD_DAT_DELAY control to be enabled.
->>>>>>
->>>>>> Needs a vendor prefix unless this is a standard SDHCI bit (in which
->>>>>> case it should be documented in a common spot).
->>>>>>
->>>>>
->>>>> I suspect this is a non-standard thing, so I'll add the fujitsu prefix. Ulf?
->>>>
->>>> This is specific to the Fujitsu variant.
->>>>
->>>> However, what puzzles me is why this bit is needed for the Socionext
->>>> SynQuacer SoC, but not for other SoCs that uses this IP. That seems
->>>> weird (probably wrong).
->>>>
->>>> Moreover, the F_SDH30_CMD_DAT_DELAY register define is already there,
->>>> so I would rather suspect that it's something that did got fully
->>>> implemented. In other words, I don't think you need a new DT binding,
->>>> but rather try to implement it generically for the sdhci-f_sdh30
->>>> driver. Do you think that will work?
->>>>
->>>
->>> Do you mean set it unconditionally? That works for me, but I have no
->>
->> Yes.
->>
->>> way of testing whether it still works on other SoCs that use this IP.
->>
->> Me neither!
->
-> Hi all, I can not yet get contact with IP owner because it is a
-> holiday in Japan.
-> Around two years ago, F_SDH30_CMD_DAT_DELAY was a new feature of this IP.
-> I will update the latest information as soon as I get it.
->
-I got a response from IP owner.
-He explains F_SDH30_CMD_DAT_DELAY is intended to adjust signal timing of
-CMD/DAT lines, and it is necessary to change its value according to
-SoC/board design.
-So he advises us to make F_SDH30_CMD_DAT_DELAY adjustable by a DT binding.
+This patch adds the documentation for Spreadtrum watchdog driver.
 
-Kind regards
-Vincent
+Signed-off-by: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes since v5:
+- No updates.
 
->>
->> Apparently there are no DTS in the kernel git that uses the
->> "fujitsu,mb86s70-sdhci-3.0".
->
-> Around two years ago, sdhci_f_sdh30_driver was a portion for mb86s70 SoC
-> patch series, but finally the patch series did not fully go upstream.
->
-> Kind regards
-> Vincent
->
->>
->> I looped in Vincent Yang, let's hope he can provide us with some more
->> information.
->>
->> Kind regards
->> Uffe
+Changes since v4:
+- No updates.
+
+Changes since v3:
+- No updates.
+
+Changes since v2:
+- Add acked tag from Rob.
+
+Changes since v1:
+- No updates.
+---
+ .../devicetree/bindings/watchdog/sprd-wdt.txt         | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+
+diff --git a/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+new file mode 100644
+index 0000000..aeaf3e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
+@@ -0,0 +1,19 @@
++Spreadtrum SoCs Watchdog timer
++
++Required properties:
++- compatible : Should be "sprd,sp9860-wdt".
++- reg : Specifies base physical address and size of the registers.
++- interrupts : Exactly one interrupt specifier.
++- timeout-sec : Contain the default watchdog timeout in seconds.
++- clock-names : Contain the input clock names.
++- clocks : Phandles to input clocks.
++
++Example:
++	watchdog: watchdog@40310000 {
++		compatible = "sprd,sp9860-wdt";
++		reg = <0 0x40310000 0 0x1000>;
++		interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
++		timeout-sec = <12>;
++		clock-names = "enable", "rtc_enable";
++		clocks = <&clk_aon_apb_gates1 8>, <&clk_aon_apb_rtc_gates 9>;
++	};
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
