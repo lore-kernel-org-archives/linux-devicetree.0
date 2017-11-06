@@ -1,109 +1,141 @@
-From: Miquel RAYNAL <miquel.raynal@free-electrons.com>
-Subject: Re: [RFC 05/12] dt-bindings: mtd: add Marvell NAND controller
- documentation
-Date: Mon, 6 Nov 2017 14:24:48 +0100
-Message-ID: <20171106142448.40ca5033@xps13>
-References: <20171018143629.29302-1-miquel.raynal@free-electrons.com>
- <20171018143629.29302-6-miquel.raynal@free-electrons.com>
- <20171024190433.r5xy25eqdesz7jjs@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20171024190433.r5xy25eqdesz7jjs@rob-hp-laptop>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Catalin Marinas <catalin.marinas@arm.com>, Hanna Hawa <hannah@marvell.com>, Will Deacon <will.deacon@arm.com>, Stefan Agner <stefan@agner.ch>, Nadav Haklai <nadavh@marvell.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devel@driverdev.osuosl.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Maxim Levitsky <maximlevitsky@gmail.com>, Kamal Dasu <kdasu.kdev@gmail.com>, Josh Wu <rainyfeeling@outlook.com>, Russell King <linux@armlinux.org.uk>, Marek Vasut <marek.vasut@gmail.com>, Chen-Yu Tsai <wens@csie.org>, bcm-kernel-feedback-list@broadcom.com, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Sylvain Lemieux <slemie>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] [net-next?] of: add of_property_read_variable_* dummy helpers
+Date: Mon,  6 Nov 2017 14:26:10 +0100
+Message-ID: <20171106132627.150459-1-arnd@arndb.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: netdev@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gK0MnZXN0IGZhdXgsIHQnZW4g
-YSByYWpvdXTDqSB1biB5IGEgcGFzIGxvbmd0cHMgOikuCj4gPiArSmUgY29uc2VpbGxlIGRlIG1l
-dHRyZSDDp2Egc291cyBmb3JtZSBkZSBsaXN0ZSwgZ2VucmUgIAo+IAo+IEh1bW0uCgpPb3BzIQoK
-PiAKPiA+ICsKPiA+ICstIGNvbXBhdGlibGU6IGNhbiBiZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoK
-PiA+ICsgICAgKiAibWFydmVsbCxhcm1hZGEtOGstbmFuZC1jb250cm9sbGVyIgo+ID4gKyAgICAq
-ICJtYXJ2ZWxsLGFybWFkYTM3MC1uYW5kLWNvbnRyb2xsZXIiCj4gPiArICAgICogIm1hcnZlbGws
-cHhhM3h4LW5hbmQtY29udHJvbGxlciIKPiA+ICsgICAgKiAibWFydmVsbCxhcm1hZGEtOGstbmFu
-ZCIgKGRlcHJlY2F0ZWQpCj4gPiArICAgICogIm1hcnZlbGwsYXJtYWRhMzcwLW5hbmQiIChkZXBy
-ZWNhdGVkKQo+ID4gKyAgICAqICJtYXJ2ZWxsLHB4YTN4eC1uYW5kIiAoZGVwcmVjYXRlZCkKPiA+
-ICstIHJlZzogc2hhbGwgY29udGFpbiByZWdpc3RlcnMgbG9jYXRpb24gYW5kIGxlbmd0aCBmb3Ig
-ZGF0YSBhbmQKPiA+IHJlZy4gIAo+IAo+IDIgcmVnaW9ucz8KCkp1c3Qgb25lLCByZXBocmFzZWQu
-Cgo+IAo+ID4gKy0gI2FkZHJlc3MtY2VsbHM6IHNoYWxsIGJlIHNldCB0byAxLiBFbmNvZGUgdGhl
-IG5hbmQgQ1MuCj4gPiArLSAjc2l6ZS1jZWxsczogc2hhbGwgYmUgc2V0IHRvIDAuCj4gPiArLSBp
-bnRlcnJ1cHRzOiBzaGFsbCBkZWZpbmUgdGhlIG5hbmQgY29udHJvbGxlciBpbnRlcnJ1cHQuCj4g
-PiArLSBjbG9ja3M6IHNoYWxsIHJlZmVyZW5jZSBuYW5kIGNvbnRyb2xsZXIgY2xvY2tzLiAgCj4g
-Cj4gSG93IG1hbnkgY2xvY2tzPwoKT25seSBvbmUgdG9vOiAicmVmZXJlbmNlIHRoZSBOQU5EIGNv
-bnRyb2xsZXIgY2xvY2siLgoKPiAKPiA+ICstIG1hcnZlbGwsc3lzdGVtLWNvbnRyb2xsZXI6IFNl
-dCB0byByZXRyaWV2ZSB0aGUgc3lzY29uIG5vZGUgdGhhdAo+ID4gaGFuZGxlcwo+ID4gKyAgTkFO
-RCBjb250cm9sbGVyIHJlbGF0ZWQgcmVnaXN0ZXJzIChvbmx5IHJlcXVpcmVkIHdpdGggdGhlCj4g
-PiArICAibWFydmVsbCxhcm1hZGEtOGstbmFuZFstY29udHJvbGxlcl0iIGNvbXBhdGlibGVzKS4K
-PiA+ICsKPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gKy0gZG1hczogc2hhbGwgcmVmZXJl
-bmNlIERNQSBjaGFubmVsIGFzc29jaWF0ZWQgdG8gdGhlIE5BTkQKPiA+IGNvbnRyb2xsZXIuICst
-IGRtYS1uYW1lczogc2hhbGwgYmUgInJ4dHgiLgo+ID4gKwo+ID4gK09wdGlvbmFsIGNoaWxkcmVu
-IG5vZGVzOgo+ID4gK0NoaWxkcmVuIG5vZGVzIHJlcHJlc2VudCB0aGUgYXZhaWxhYmxlIE5BTkQg
-Y2hpcHMuCj4gPiArCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICstIHJlZzogc2hhbGwg
-Y29udGFpbiB0aGUgbmF0aXZlIENoaXAgU2VsZWN0IGlkcyAoMC0zKQo+ID4gKy0gbWFydmVsbCxy
-Yjogc2hhbGwgY29udGFpbiB0aGUgbmF0aXZlIFJlYWR5L0J1c3kgaWRzICgwLTEpCj4gPiArCj4g
-PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICstIG1hcnZlbGwsbmFuZC1rZWVwLWNvbmZpZzog
-b3JkZXJzIHRoZSBkcml2ZXIgbm90IHRvIHRha2UgdGhlCj4gPiB0aW1pbmdzCj4gPiArICBmcm9t
-IHRoZSBjb3JlIGFuZCBsZWF2aW5nIHRoZW0gY29tcGxldGVseSB1bnRvdWNoZWQuIEJvb3Rsb2Fk
-ZXIKPiA+ICsgIHRpbWluZ3Mgd2lsbCB0aGVuIGJlIHVzZWQuCj4gPiArLSBtYXJ2ZWxsLG5hbmQt
-ZW5hYmxlLWFyYml0ZXI6IG9ubHkgdXNlZnVsIGZvciBQWEEgcGxhdGZvcm1zLCB3aWxsCj4gPiAr
-ICBlbmFibGUgYnVzIGFyYml0ZXIgYmV0d2VlbiBORkMgYW5kIERGSSBidXMgKG11c3QgYmUgZW5h
-YmxlZCBmb3IKPiA+ICsgIE5GQyBvcGVyYXRpb24pICAKPiAKPiBXaHkgZG8geW91IG5lZWQgdGhp
-cyBpZiBpdCBtdXN0IGJlIGVuYWJsZWQ/CgpUaGF0IGlzIHJpZ2h0LCB0aGVyZSBpcyBubyBtb3Jl
-IG5lZWQgZm9yIGl0LCBhbHNvIHJlbW92ZWQgaXQgZnJvbSB0aGUKZHJpdmVyLCBqdXN0IGtub3dp
-bmcgdGhlIGJvYXJkIHdpdGggdGhlIGNvbXBhdGlibGUgc3RyaW5nIGlzIGVub3VnaC4KCj4gCj4g
-PiArLSBuYW5kLW9uLWZsYXNoLWJidDogc3BlZWQgdXAgdGhlIGJvb3QgcHJvY2VzcyBieSBub3Qg
-ZGlzY292ZXJpbmcKPiA+IGFsbAo+ID4gKyAgdGhlIGJhZCBibG9ja3MgYXQgZWFjaCBib290IGFu
-ZCByZWFkaW5nIGRpcmVjdGx5IGFuIG9uIGZsYXNoCj4gPiB0YWJsZS4gKy0gbmFuZC1lY2MtbW9k
-ZTogb25lIG9mIHRoZSBzdXBwb3J0ZWQgRUNDIG1vZGVzICgibm9uZSIsCj4gPiAic29mdCIsCj4g
-PiArICAiaHciKS4gSWYgbm90IHNwZWNpZmllZCwgaGFyZHdhcmUgRUNDIHdpbGwgYmUgdXNlZC4K
-PiA+ICstIG5hbmQtZWNjLWFsZ286IGFsZ29yaXRobSB0byB1c2UgaWYgcHJldmlvdXMgY2hvaWNl
-IHdhcyAic29mdCIKPiA+ICsgICgiaGFtbWluZyIgb3IgImJjaCkuIFRoaXMgcHJvcGVydHkgbWF5
-IGJlIGFkZGVkIGZvciBoYXJkd2FyZSBFQ0MKPiA+IGZvcgo+ID4gKyAgY2xhcmlmaWNhdGlvbiBi
-dXQgd2lsbCBiZSBpZ25vcmVkIGJ5IHRoZSBkcml2ZXIgYmVjYXVzZSBFQ0MgbW9kZQo+ID4gaXMK
-PiA+ICsgIGNob3NlbiBkZXBlbmRpbmcgb24gdGhlIHBhZ2Ugc2l6ZSBhbmQgdGhlIHN0cmVuZ3Ro
-IHJlcXVpcmVkIGJ5Cj4gPiB0aGUKPiA+ICsgIE5BTkQgY2hpcC4gVGhpcyB2YWx1ZSBtYXkgYmUg
-b3ZlcndyaXR0ZW4gd2l0aCB0aGUKPiA+IG5hbmQtZWNjLXN0cmVuZ3RoCj4gPiArICBwcm9wZXJ0
-eS4KPiA+ICstIG5hbmQtZWNjLXN0cmVuZ3RoOiBkZXNpcmVkIEVDQyBzdHJlbmd0aC4KPiA+ICst
-IG5hbmQtZWNjLXN0ZXAtc2l6ZTogaW5kaWNhdGlvbiBvbiB0aGUgRUNDIHN0ZXAgc2l6ZS4gVGhp
-cyBoYXMgbm8KPiA+ICsgIGVmZmVjdCBhbmQgd2lsbCBiZSBpZ25vcmVkIGJ5IHRoZSBkcml2ZXIg
-d2hlbiB1c2luZyBoYXJkd2FyZQo+ID4gKyAgRUNDLiBCZWNhdXNlIE1hcnZlbGwncyBOQU5EIGZs
-YXNoIGNvbnRyb2xsZXIgZG9lcyB1c2UgZml4ZWQKPiA+IHN0cmVuZ3RoCj4gPiArICAoMS1iaXQg
-Zm9yIEhhbW1pbmcsIDE2LWJpdCBmb3IgQkNIKSwgdGhlIHN0ZXAgc2l6ZSB3aWxsIHNocmluayBv
-cgo+ID4gKyAgZ3Jvd24gaW4gb3JkZXIgdG8gZml0IHRoZSByZXF1aXJlZCBzdHJlbmd0aCBhbmQg
-dGhlIHZhbHVlCj4gPiArICB1cGRhdGVkLiBTdGVwIHNpemVzIGFyZSBub3QgY29tcGxldGVseSBy
-YW5kb20gZm9yIGFsbCBhbmQgZm9sbG93Cj4gPiArICBjZXJ0YWluIHBhdHRlcm5zIGRlc2NyaWJl
-ZCBpbiBBTi0zNzksICJNYXJ2ZWxsIFNvQyBORkMgRUNDIi4gIAo+IAo+IEZvciBzdGFuZGFyZCBw
-cm9wZXJ0aWVzLCBqdXN0IHJlZmVyZW5jZSBuYW5kLnR4dCBhbmQgYWRkIGFueSAKPiBjb25zdHJh
-aW50cy4gRG9uJ3QgZGVmaW5lIHdoYXQgdGhlIHByb3BlcnR5IGlzIGFnYWluLgoKT2suCgo+IAo+
-ID4gKwo+ID4gK1NlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL25hbmQu
-dHh0IGZvciBtb3JlCj4gPiBkZXRhaWxzIG9uICtnZW5lcmljIGJpbmRpbmdzLgo+ID4gKwo+ID4g
-Kwo+ID4gK0V4YW1wbGU6Cj4gPiArbmFuZF9jb250cm9sbGVyOiBuYW5kLWNvbnRyb2xsZXJAZDAw
-MDAgewo+ID4gKwljb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhMzcwLW5hbmQtY29udHJvbGxl
-ciI7Cj4gPiArCXJlZyA9IDwweGQwMDAwIDB4NTQ+Owo+ID4gKwkjYWRkcmVzcy1jZWxscyA9IDwx
-PjsKPiA+ICsJI3NpemUtY2VsbHMgPSA8MD47Cj4gPiArCWludGVycnVwdHMgPSA8R0lDX1NQSSA4
-NCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiA+ICsJY2xvY2tzID0gPCZjb3JlZGl2Y2xrIDA+Owo+
-ID4gKwlzdGF0dXMgPSAib2theSI7ICAKPiAKPiBEb24ndCBzaG93IHN0YXR1cyBpbiBleGFtcGxl
-cy4KCk9rLgoKPiAKPiA+ICsKPiA+ICsJbmFuZEAwIHsKPiA+ICsJCXJlZyA9IDwwPjsKPiA+ICsJ
-CW1hcnZlbGwscmIgPSA8MD47Cj4gPiArCQluYW5kLWVjYy1tb2RlID0gImh3IjsKPiA+ICsJCW1h
-cnZlbGwsbmFuZC1rZWVwLWNvbmZpZzsKPiA+ICsJCW1hcnZlbGwsbmFuZC1lbmFibGUtYXJiaXRl
-cjsKPiA+ICsJCW5hbmQtb24tZmxhc2gtYmJ0Owo+ID4gKwkJbmFuZC1lY2Mtc3RyZW5ndGggPSA8
-ND47Cj4gPiArCQluYW5kLWVjYy1zdGVwLXNpemUgPSA8NTEyPjsKPiA+ICsKPiA+ICsJCXBhcnRp
-dGlvbnMgewo+ID4gKwkJCWNvbXBhdGlibGUgPSAiZml4ZWQtcGFydGl0aW9ucyI7Cj4gPiArCQkJ
-I2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPiArCQkJI3NpemUtY2VsbHMgPSA8MT47Cj4gPiArCj4g
-PiArCQkJcGFydGl0aW9uQDAgewo+ID4gKwkJCQlsYWJlbCA9ICJSb290ZnMiOwo+ID4gKwkJCQly
-ZWcgPSA8MHgwMDAwMDAwMCAweDQwMDAwMDAwPjsKPiA+ICsJCQl9Owo+ID4gKwkJfTsKPiA+ICsJ
-fTsKPiA+ICt9Owo+ID4gLS0gCj4gPiAyLjExLjAKPiA+ICAgCgpUaGFua3MgZm9yIHRoZSByZXZp
-ZXcsCk1pcXXDqGwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZGV2ZWwgbWFpbGluZyBsaXN0CmRldmVsQGxpbnV4ZHJpdmVycHJvamVjdC5vcmcKaHR0cDov
-L2RyaXZlcmRldi5saW51eGRyaXZlcnByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vZHJpdmVy
-ZGV2LWRldmVsCg==
+Commit a67e9472da42 ("of: Add array read functions with min/max size
+limits") added a new interface for reading variable-length arrays from
+DT properties. One user was added in dsa recently and this causes a
+build error because that code can be built with CONFIG_OF disabled:
+
+net/dsa/dsa2.c: In function 'dsa_switch_parse_member_of':
+net/dsa/dsa2.c:678:7: error: implicit declaration of function 'of_property_read_variable_u32_array'; did you mean 'of_property_read_u32_array'? [-Werror=implicit-function-declaration]
+
+This adds a dummy functions for of_property_read_variable_u32_array()
+and a few others that had been missing here. I decided to move
+of_property_read_string() and of_property_read_string_helper() in the
+process to make it easier to compare the two sets of function prototypes
+to make sure they match.
+
+Fixes: 975e6e32215e ("net: dsa: rework switch parsing")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+DT maintainers: there is currently a build break in the net-next tree
+(from branch "dsa-parsing-stage") because of this, I think the best
+way forward would be to get an Ack for this patch to get picked up
+through the netdev trees.
+---
+ include/linux/of.h | 62 +++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 50 insertions(+), 12 deletions(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 43b5034c6a1e..d3dea1d1e3a9 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -681,12 +681,6 @@ static inline int of_property_count_elems_of_size(const struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
+-static inline int of_property_read_u32_index(const struct device_node *np,
+-			const char *propname, u32 index, u32 *out_value)
+-{
+-	return -ENOSYS;
+-}
+-
+ static inline int of_property_read_u8_array(const struct device_node *np,
+ 			const char *propname, u8 *out_values, size_t sz)
+ {
+@@ -713,16 +707,14 @@ static inline int of_property_read_u64_array(const struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
+-static inline int of_property_read_string(const struct device_node *np,
+-					  const char *propname,
+-					  const char **out_string)
++static inline int of_property_read_u32_index(const struct device_node *np,
++			const char *propname, u32 index, u32 *out_value)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline int of_property_read_string_helper(const struct device_node *np,
+-						 const char *propname,
+-						 const char **out_strs, size_t sz, int index)
++static inline int of_property_read_u64_index(const struct device_node *np,
++			const char *propname, u32 index, u64 *out_value)
+ {
+ 	return -ENOSYS;
+ }
+@@ -750,12 +742,51 @@ static inline int of_n_size_cells(struct device_node *np)
+ 	return 0;
+ }
+ 
++static inline int of_property_read_variable_u8_array(const struct device_node *np,
++					const char *propname, u8 *out_values,
++					size_t sz_min, size_t sz_max)
++{
++	return -ENOSYS;
++}
++
++static inline int of_property_read_variable_u16_array(const struct device_node *np,
++					const char *propname, u16 *out_values,
++					size_t sz_min, size_t sz_max)
++{
++	return -ENOSYS;
++}
++
++static inline int of_property_read_variable_u32_array(const struct device_node *np,
++					const char *propname,
++					u32 *out_values,
++					size_t sz_min,
++					size_t sz_max)
++{
++	return -ENOSYS;
++}
++
+ static inline int of_property_read_u64(const struct device_node *np,
+ 				       const char *propname, u64 *out_value)
+ {
+ 	return -ENOSYS;
+ }
+ 
++static inline int of_property_read_variable_u64_array(const struct device_node *np,
++					const char *propname,
++					u64 *out_values,
++					size_t sz_min,
++					size_t sz_max)
++{
++	return -ENOSYS;
++}
++
++static inline int of_property_read_string(const struct device_node *np,
++					  const char *propname,
++					  const char **out_string)
++{
++	return -ENOSYS;
++}
++
+ static inline int of_property_match_string(const struct device_node *np,
+ 					   const char *propname,
+ 					   const char *string)
+@@ -763,6 +794,13 @@ static inline int of_property_match_string(const struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
++static inline int of_property_read_string_helper(const struct device_node *np,
++						 const char *propname,
++						 const char **out_strs, size_t sz, int index)
++{
++	return -ENOSYS;
++}
++
+ static inline struct device_node *of_parse_phandle(const struct device_node *np,
+ 						   const char *phandle_name,
+ 						   int index)
+-- 
+2.9.0
