@@ -1,37 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/1] at24: support eeproms that do not roll over page
- reads.
-Date: Mon, 6 Nov 2017 14:26:34 -0600
-Message-ID: <20171106202634.tuwdi76w6bmaqf4y@rob-hp-laptop>
-References: <1509543843-27697-1-git-send-email-svendev@arcx.com>
- <1509543843-27697-2-git-send-email-svendev@arcx.com>
+Subject: Re: [PATCH 1/2] dt-bindings: rng: Document BCM7278 RNG200 compatible
+Date: Mon, 6 Nov 2017 14:26:59 -0600
+Message-ID: <20171106202659.kmqvq6jvvehsg6ii@rob-hp-laptop>
+References: <20171101232006.3943-1-f.fainelli@gmail.com>
+ <20171101232006.3943-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1509543843-27697-2-git-send-email-svendev@arcx.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Sven Van Asbroeck <svendev@arcx.com>
-Cc: mark.rutland@arm.com, wsa@the-dreams.de, nsekhar@ti.com, david@lechnology.com, javier@dowhile0.org, brgl@bgdev.pl, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+In-Reply-To: <20171101232006.3943-2-f.fainelli@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Martin Kaiser <martin@kaiser.cx>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.o>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 01, 2017 at 09:44:03AM -0400, Sven Van Asbroeck wrote:
-> Some eeproms in the at24 family do not roll over page reads,
-> e.g. the Microchip 24AA16/24LC16B. On those eeproms, reads
-> that straddle block boundaries will not work correctly.
+On Wed, Nov 01, 2017 at 04:20:05PM -0700, Florian Fainelli wrote:
+> BCM7278 includes a RGN200 hardware random number generator, document the
+> compatible string for that version of the IP.
 > 
-> Solution:
-> Implement read rollover in the driver. To enable it, add the
-> AT24_FLAG_NO_RDROL flag to the eeprom entry in the
-> device_id table, or add 'no-read-rollover' to the eeprom
-> devicetree entry.
-> 
-> Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  .../devicetree/bindings/eeprom/eeprom.txt          |  5 +++
+>  Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/misc/eeprom/at24.c                         | 47 +++++++++++-----------
->  include/linux/platform_data/at24.h                 |  1 +
->  3 files changed, 29 insertions(+), 24 deletions(-)
