@@ -1,7 +1,7 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 1/3] dt-bindings: clock: Add Actions S900 clock bindings
-Date: Tue,  7 Nov 2017 01:15:50 +0530
-Message-ID: <1509997552-29718-2-git-send-email-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 2/3] arm64: dts: actions: Add S900 clock management unit nodes
+Date: Tue,  7 Nov 2017 01:15:51 +0530
+Message-ID: <1509997552-29718-3-git-send-email-manivannan.sadhasivam@linaro.org>
 References: <1509997552-29718-1-git-send-email-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1509997552-29718-1-git-send-email-manivannan.sadhasivam@linaro.org>
@@ -10,222 +10,66 @@ To: mturquette@baylibre.com, sboyd@codeaurora.org, afaerber@suse.de, robh+dt@ker
 Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, arnd@arndb.de, davem@davemloft.net, mchehab@kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, viresh.kumar@linaro.org, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Actions Semi S900 clock bindings.
+Add Actions Semi S900 Clock Management Unit (CMU) nodes
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
 Changes in v2:
 
-1. Added binding header to this patch
-2. Changed clock-controller node name to cmu
-3. Added clocks property to cmu node
-4. Changed compatible property value to "actions,s900-cmu"
-5. Fixed example UART controller node
-6. Fixed tab vs space issue
+1. Fixed commit message
+2. Changed "diff_24M" to "diff24M"
+3. Changed clock-controller node name to "cmu"
+4. Added clocks property
+5. Moved "cmu" node under "soc" node
+6. Sorted headers in alphabetical order
 
- .../devicetree/bindings/clock/actions,s900-cmu.txt |  47 +++++++
- include/dt-bindings/clock/actions,s900-cmu.h       | 139 +++++++++++++++++++++
- 2 files changed, 186 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
- create mode 100644 include/dt-bindings/clock/actions,s900-cmu.h
+ arch/arm64/boot/dts/actions/s900.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/actions,s900-cmu.txt b/Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-new file mode 100644
-index 0000000..6e2c038
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
-@@ -0,0 +1,47 @@
-+* Actions S900 Clock Management Unit (CMU)
+diff --git a/arch/arm64/boot/dts/actions/s900.dtsi b/arch/arm64/boot/dts/actions/s900.dtsi
+index 11406f6..bc0963e 100644
+--- a/arch/arm64/boot/dts/actions/s900.dtsi
++++ b/arch/arm64/boot/dts/actions/s900.dtsi
+@@ -4,6 +4,7 @@
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+ 
++#include <dt-bindings/clock/actions,s900-cmu.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+ / {
+@@ -88,6 +89,18 @@
+ 		#clock-cells = <0>;
+ 	};
+ 
++	losc: losc {
++		compatible = "fixed-clock";
++		clock-frequency = <32768>;
++		#clock-cells = <0>;
++	};
 +
-+The Actions S900 clock management unit generates and supplies clock to various
-+controllers within the SoC. The clock binding described here is applicable to
-+S900 SoC.
++	diff24M: diff24M {
++		compatible = "fixed-clock";
++		clock-frequency = <24000000>;
++		#clock-cells = <0>;
++	};
 +
-+Required Properties:
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+@@ -154,6 +167,13 @@
+ 			status = "disabled";
+ 		};
+ 
++		cmu: clock-controller@e0160000 {
++			compatible = "actions,s900-cmu";
++			reg = <0 0xe0160000 0 0x1000>;
++			clocks = <&hosc>, <&losc>;
++			#clock-cells = <1>;
++		};
 +
-+- compatible: should be "actions,s900-cmu"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- clocks: Reference to the parent clocks ("hosc", "losc")
-+- #clock-cells: should be 1.
-+
-+Each clock is assigned an identifier, and client nodes can use this identifier
-+to specify the clock which they consume.
-+
-+All available clocks are defined as preprocessor macros in
-+dt-bindings/clock/actions,s900-cmu.h header and can be used in device
-+tree sources.
-+
-+External clocks:
-+
-+The hosc clock used as input for the plls is generated outside the SoC. It is
-+expected that it is defined using standard clock bindings as "hosc".
-+
-+Actions S900 CMU also requires one more clock:
-+ - "losc" - internal low frequency oscillator
-+
-+Example: Clock Management Unit node:
-+
-+        cmu: clock-controller@e0160000 {
-+                compatible = "actions,s900-cmu";
-+                reg = <0 0xe0160000 0 0x1000>;
-+                clocks = <&hosc>, <&losc>;
-+                #clock-cells = <1>;
-+        };
-+
-+Example: UART controller node that consumes clock generated by the clock
-+management unit:
-+
-+        uart: serial@e012a000 {
-+                compatible = "actions,s900-uart", "actions,owl-uart";
-+                reg = <0x0 0xe012a000 0x0 0x2000>;
-+                interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+                clocks = <&cmu CLK_UART5>;
-+        };
-diff --git a/include/dt-bindings/clock/actions,s900-cmu.h b/include/dt-bindings/clock/actions,s900-cmu.h
-new file mode 100644
-index 0000000..2155449
---- /dev/null
-+++ b/include/dt-bindings/clock/actions,s900-cmu.h
-@@ -0,0 +1,139 @@
-+/*
-+ * Device Tree binding constants for Actions S900 Clock Management Unit
-+ *
-+ * Copyright (c) 2014 Actions Semi Inc.
-+ * Copyright (c) 2017 Linaro Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_S900_CMU_H
-+#define __DT_BINDINGS_CLOCK_S900_CMU_H
-+
-+#define CLK_NONE			0
-+
-+/* fixed rate clocks */
-+#define CLK_LOSC			1
-+#define CLK_HOSC			2
-+
-+/* pll clocks */
-+#define CLK_CORE_PLL			3
-+#define CLK_DEV_PLL			4
-+#define CLK_DDR_PLL			5
-+#define CLK_NAND_PLL			6
-+#define CLK_DISPLAY_PLL			7
-+#define CLK_DSI_PLL			8
-+#define CLK_ASSIST_PLL			9
-+#define CLK_AUDIO_PLL			10
-+
-+/* system clock */
-+#define CLK_CPU				15
-+#define CLK_DEV				16
-+#define CLK_NOC				17
-+#define CLK_NOC_CLK_MUX			18
-+#define CLK_NOC_CLK_DIV			19
-+#define CLK_AHB				20
-+#define CLK_APB				21
-+#define CLK_DMAC			22
-+
-+/* peripheral device clock */
-+#define CLK_GPIO			23
-+
-+#define CLK_BISP			24
-+#define CLK_CSI0			25
-+#define CLK_CSI1			26
-+
-+#define CLK_DE				27
-+#define CLK_DE1				28
-+#define CLK_DE2				29
-+#define CLK_DE3				30
-+#define CLK_DSI				32
-+
-+#define CLK_GPU				33
-+#define CLK_GPU_CORE			34
-+#define CLK_GPU_MEM			35
-+#define CLK_GPU_SYS			36
-+
-+#define CLK_HDE				37
-+#define CLK_I2C0			38
-+#define CLK_I2C1			39
-+#define CLK_I2C2			40
-+#define CLK_I2C3			41
-+#define CLK_I2C4			42
-+#define CLK_I2C5			43
-+#define CLK_I2SRX			44
-+#define CLK_I2STX			45
-+#define CLK_IMX				46
-+#define CLK_LCD				47
-+#define CLK_NAND0			48
-+#define CLK_NAND1			49
-+#define CLK_PWM0			50
-+#define CLK_PWM1			51
-+#define CLK_PWM2			52
-+#define CLK_PWM3			53
-+#define CLK_PWM4			54
-+#define CLK_PWM5			55
-+#define CLK_SD0				56
-+#define CLK_SD1				57
-+#define CLK_SD2				58
-+#define CLK_SD3				59
-+#define CLK_SENSOR			60
-+#define CLK_SPEED_SENSOR		61
-+#define CLK_SPI0			62
-+#define CLK_SPI1			63
-+#define CLK_SPI2			64
-+#define CLK_SPI3			65
-+#define CLK_THERMAL_SENSOR		66
-+#define CLK_UART0			67
-+#define CLK_UART1			68
-+#define CLK_UART2			69
-+#define CLK_UART3			70
-+#define CLK_UART4			71
-+#define CLK_UART5			72
-+#define CLK_UART6			73
-+#define CLK_VCE				74
-+#define CLK_VDE				75
-+
-+#define CLK_USB3_480MPLL0		76
-+#define CLK_USB3_480MPHY0		77
-+#define CLK_USB3_5GPHY			78
-+#define CLK_USB3_CCE			79
-+#define CLK_USB3_MAC			80
-+
-+#define CLK_TIMER			83
-+
-+#define CLK_HDMI_AUDIO			84
-+
-+#define CLK_24M				85
-+
-+#define CLK_EDP				86
-+
-+#define CLK_24M_EDP			87
-+#define CLK_EDP_PLL			88
-+#define CLK_EDP_LINK			89
-+
-+#define CLK_USB2H0_PLLEN		90
-+#define CLK_USB2H0_PHY			91
-+#define CLK_USB2H0_CCE			92
-+#define CLK_USB2H1_PLLEN		93
-+#define CLK_USB2H1_PHY			94
-+#define CLK_USB2H1_CCE			95
-+
-+#define CLK_DDR0			96
-+#define CLK_DDR1			97
-+#define CLK_DMM				98
-+
-+#define CLK_ETH_MAC			99
-+#define CLK_RMII_REF			100
-+
-+#define CLK_NR_CLKS			110
-+
-+#endif /* __DT_BINDINGS_CLOCK_S900_CMU_H */
+ 		timer: timer@e0228000 {
+ 			compatible = "actions,s900-timer";
+ 			reg = <0x0 0xe0228000 0x0 0x8000>;
 -- 
 2.7.4
