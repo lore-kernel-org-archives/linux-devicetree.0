@@ -1,44 +1,25 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH 1/1] of: Make return types of to_of_node and
- of_fwnode_handle macros consistent
-Date: Mon, 6 Nov 2017 15:45:46 -0600
-Message-ID: <20171106214546.br4excrvclrxfd7f@rob-hp-laptop>
-References: <2117711.dO2rQLXOup@avalon>
- <20171102095918.7041-1-sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 1/6] dt-bindings: pmbus: Add Maxim MAX31785
+ documentation
+Date: Mon, 6 Nov 2017 15:52:27 -0600
+Message-ID: <20171106215227.kbtyhpfbzffddp7n@rob-hp-laptop>
+References: <20171103045306.26448-1-andrew@aj.id.au>
+ <20171103045306.26448-2-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171102095918.7041-1-sakari.ailus@linux.intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: devicetree@vger.kernel.org, mchehab@s-opensource.com, linux-media@vger.kernel.org, laurent.pinchart@ideasonboard.com, hyun.kwon@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20171103045306.26448-2-andrew@aj.id.au>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-hwmon@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 02, 2017 at 11:59:18AM +0200, Sakari Ailus wrote:
-> (Fixed Mauro's e-mail.)
-> 
-> to_of_node() macro checks whether the fwnode_handle passed to it is not an
-> OF node, and if so, returns NULL in order to be NULL-safe. Otherwise it
-> returns the pointer to the OF node which the fwnode_handle contains.
-> 
-> The problem with returning NULL is that its type was void *, which
-> sometimes matters. Explicitly return struct device_node * instead.
-> 
-> Make a similar change to of_fwnode_handle() as well.
-> 
-> Fixes: d20dc1493db4 ("of: Support const and non-const use for to_of_node()")
-> Fixes: debd3a3b27c7 ("of: Make of_fwnode_handle() safer")
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+On Fri, Nov 03, 2017 at 03:53:01PM +1100, Andrew Jeffery wrote:
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
-> Hi Mauro,
-> 
-> Could you check whether this addresses the smatch issue with the xilinx
-> driver?
-> 
-> Thanks.
-> 
->  include/linux/of.h | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/hwmon/max31785.txt         | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/max31785.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
