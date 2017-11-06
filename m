@@ -1,80 +1,91 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH v2 2/2] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
-Date: Mon,  6 Nov 2017 11:40:50 +0000
-Message-ID: <20171106114050.15169-2-ard.biesheuvel@linaro.org>
-References: <20171106114050.15169-1-ard.biesheuvel@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20171106114050.15169-1-ard.biesheuvel@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, linux-mmc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
+Date: Mon, 6 Nov 2017 13:26:33 +0100
+Message-ID: <20171106122633.5mnqfh6xhmmxr45s@flea>
+References: <20171103195855.15283-1-geomatsi@gmail.com>
+ <20171103195855.15283-2-geomatsi@gmail.com>
+ <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
+ <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="upsyiwlgqk2asb7s"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171104154221.ao7kkcwqhnja3cxe-tVm4GcgtBpsfMUw/CLfKLg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
-requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
-F_SDH30_ESD_CONTROL control register. So set this bit if the
-DT node has the 'fujitsu,cmd-dat-delay-select' property.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
----
- drivers/mmc/host/sdhci_f_sdh30.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+--upsyiwlgqk2asb7s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
-index 111b66f5439b..c5bf69ef7e40 100644
---- a/drivers/mmc/host/sdhci_f_sdh30.c
-+++ b/drivers/mmc/host/sdhci_f_sdh30.c
-@@ -13,6 +13,7 @@
- #include <linux/err.h>
- #include <linux/delay.h>
- #include <linux/module.h>
-+#include <linux/property.h>
- #include <linux/clk.h>
- 
- #include "sdhci-pltfm.h"
-@@ -45,8 +46,9 @@
- struct f_sdhost_priv {
- 	struct clk *clk_iface;
- 	struct clk *clk;
--	u32 vendor_hs200;
- 	struct device *dev;
-+	u32 vendor_hs200;
-+	bool enable_cmd_dat_delay;
- };
- 
- static void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
-@@ -84,10 +86,19 @@ static unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
- 
- static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
- {
-+	struct f_sdhost_priv *priv = sdhci_priv(host);
-+	u32 ctl;
-+
- 	if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0)
- 		sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
- 
- 	sdhci_reset(host, mask);
-+
-+	if (priv->enable_cmd_dat_delay) {
-+		ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
-+		ctl |= F_SDH30_CMD_DAT_DELAY;
-+		sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
-+	}
- }
- 
- static const struct sdhci_ops sdhci_f_sdh30_ops = {
-@@ -126,6 +137,11 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
- 	host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
- 			SDHCI_QUIRK2_TUNING_WORK_AROUND;
- 
-+	if (device_property_read_bool(dev, "fujitsu,cmd-dat-delay-select")) {
-+		dev_info(dev, "Setting cmd-dat-delay\n");
-+		priv->enable_cmd_dat_delay = true;
-+	}
-+
- 	ret = mmc_of_parse(host->mmc);
- 	if (ret)
- 		goto err;
--- 
-2.11.0
+On Sat, Nov 04, 2017 at 06:42:21PM +0300, Sergey Matyukevich wrote:
+> > > The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
+> > > Fix cd-gpio description to enable sdcard detect.
+> > >
+> > > Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 =
++-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-pl=
+us2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> > > index b6b7a561df8c..a42fd79a62a3 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> > > @@ -71,7 +71,7 @@
+> > >         pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin>;
+> > >         vmmc-supply =3D <&reg_vcc3v3>;
+> > >         bus-width =3D <4>;
+> > > -       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_HIGH>;
+> > > +       cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_LOW>;
+> >=20
+> > Was able to detect and do mount with existing dts
+>=20
+> Did you try to boot from sdcard ? I am not able to boot my board from
+> sd-card without this change. As I mentioned earlier in my email
+> to buildroot mailing list, with mmc debug enabled I see that mmc
+> tries to init sd-card when I remove it from the slot.
+>=20
+> Maybe there is a minor differences between h/w versions or batches ?
+> What is you board version ? I tested on board v1.0.
 
+Looking at the schematics, it definitely looks like it's active low.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--upsyiwlgqk2asb7s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJaAFT5AAoJEBx+YmzsjxAg88UQAKOO1g0NqwESR+nkzCznAOFS
+p+KjEEYROWHNDKJtIcdNHKI//zQOba++ccNRT9V1ySJhxJFerKh0UqRnLBv+V0gy
+/D4z75riznPxq9F4nVHsYBHbeG6ki/CuWle+0tJLdRO19xlTJfXMYYHbIXEVUAGd
+daN4wHQC1a9doNEdKMfgungNPpN3xNH7C7I7pWZwk9HvvQWL/nIpMKEKNwGlEnG+
+fguvbZxue70Vr8jNmxRs+rzz/1oc3QSLoqJb/m6e3Tzc6cgJc5AbsgCoo0J88Jju
+pMyYjPSEnzk8+/YR7iv3yRK3hPgc9dANFNc1NIodHjgMVmb66wmlHLFD8rfRYOKf
+9FjkDbh6eNHaJiRZ5q8dpI0wBEo9c84Yy2i9ao1SgfBo+XkKkpYope9JR1WWDiUE
+LwEdh6OFYXI/y5ydrcXljQiBAH0iQ7XMPe1PGhqSWPeY9CBtV+puZNWnN5t201LZ
+FOBVOWiAoG7HuKMbcC8OEl+NYK2TspijwQSVk/4HkXDQpV3wg8V3tBTMrLZptq6S
+fEiHQZm09hsa53UpD9qM/4FyuLrMbNK+D3B10U+kGuj6XylC0duCkuv7AbD9V/+j
+t83QhwInqU976axRMxJI1J0AD8Eqp/DQtxRTctLNtF9/kXsEErGVE85nKTVBZKXm
+HDmniwH7i3sY9KbxNX6i
+=BRft
+-----END PGP SIGNATURE-----
+
+--upsyiwlgqk2asb7s--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
