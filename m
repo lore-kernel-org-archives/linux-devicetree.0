@@ -1,26 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: rng: Document BCM7278 RNG200 compatible
-Date: Mon, 6 Nov 2017 14:26:59 -0600
-Message-ID: <20171106202659.kmqvq6jvvehsg6ii@rob-hp-laptop>
-References: <20171101232006.3943-1-f.fainelli@gmail.com>
- <20171101232006.3943-2-f.fainelli@gmail.com>
+From: Emmanuel Vadot <manu@freebsd.org>
+Subject: [PATCH] ARM: dts: sunxi: Add codec for A13 Olinuxino
+Date: Mon,  6 Nov 2017 21:51:39 +0100
+Message-ID: <20171106205139.82751-1-manu@freebsd.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171101232006.3943-2-f.fainelli@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Sean Wang <sean.wang@mediatek.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Martin Kaiser <martin@kaiser.cx>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.o>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Emmanuel Vadot <manu@freebsd.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 01, 2017 at 04:20:05PM -0700, Florian Fainelli wrote:
-> BCM7278 includes a RGN200 hardware random number generator, document the
-> compatible string for that version of the IP.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+The A13 Olinuxino have an headphone jack and audio is supported
+so enable it.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+---
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
+index 38072c7e10e2..4b9af423c6d5 100644
+--- a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
++++ b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
+@@ -114,6 +114,10 @@
+ 	status = "okay";
+ };
+ 
++&codec {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+-- 
+2.14.1
