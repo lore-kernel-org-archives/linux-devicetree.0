@@ -1,39 +1,30 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: AXP803 I2C support / AXP devicetree-bindings
-Date: Mon, 6 Nov 2017 23:39:06 +0100
-Message-ID: <CAFBinCAm8pA-dh3+T4Ui+DvLv5C17Zup-FN8pvi0cUa5PgwJJw@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt-binding: timer: document NPCM7xx timer DT
+ bindings
+Date: Mon, 6 Nov 2017 16:39:50 -0600
+Message-ID: <20171106223950.ophliqmm7tz7aglu@rob-hp-laptop>
+References: <1509985716-25759-1-git-send-email-tmaimon77@gmail.com>
+ <1509985716-25759-3-git-send-email-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1509985716-25759-3-git-send-email-tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+To: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, Nov 06, 2017 at 06:28:36PM +0200, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton NPCM7xx timer.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../bindings/timer/nuvoton,npcm7xx-timer.txt       | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
 
-recently I discovered that there are some X-Powers AXP chips that
-support both, Allwinner's own "RSB" as well as the I2C ("TWSI" in the
-datasheet) busses.
-
-one chip that supports both interfaces is the AXP803
-the datasheet is linked in the public PINE64 wiki: [1] (direct link: [0])
-
-currently the "x-powers,axp803" binding is "RSB" bus specific as it's
-currently only listed in drivers/mfd/axp20x-rsb.c
-
-was there a discussion about supporting both, the "RSB" and I2C bus
-for one chip (for example the AXP803) in the past (I couldn't find
-anything online)?
-what about the device-tree bindings in this case?
-
-
-Regards
-Martin
-
-
-[0] http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
-[1] http://wiki.pine64.org/index.php/PINE_A64_Main_Page#Datasheets_for_Components_and_Peripherals
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
