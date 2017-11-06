@@ -1,38 +1,62 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] brcmfmac: add support for external 32khz clock
-Date: Mon, 06 Nov 2017 12:43:46 +0200
-Message-ID: <87fu9rk7q5.fsf@codeaurora.org>
-References: <20171106102934.GA23805@lineageos.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
+Date: Mon, 6 Nov 2017 10:46:30 +0000
+Message-ID: <CAKv+Gu_oSuk3=d2T2NFFm3M3MfABCCaZwnaTH8ijG6O1TSZN6w@mail.gmail.com>
+References: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
+ <20171102000814.ih2ggtfpmfsx3xap@rob-hp-laptop> <CAKv+Gu8UPpsobJ_d4+OCdufSkLLhGdRFxPO92X3YKvnyBY5b7w@mail.gmail.com>
+ <CAPDyKFpaKdvnwL98UZKzNmR+yXtWJL6hPDPfTXtY8nqmDRsomQ@mail.gmail.com>
+ <CAKv+Gu8nd7i+iaL-B55WbutGrOKaCsCdrQtFZgFs1TJaSqx-xw@mail.gmail.com>
+ <CAPDyKFpKe-TaUeuWdenGf9tHV8+UkGkkdcp8Z+Yu9Q-haHsYsA@mail.gmail.com>
+ <CAKR0VNJ0xzRebUEZprRfQVp1LGjPG4khyumSYKsRtxCPTGkxYQ@mail.gmail.com>
+ <CAKR0VN+ATuiOdZ+n=t=h+Ru5WdzRfyq-41t0P8J=4LAUFGo+dA@mail.gmail.com> <CAPDyKFp92YTqGNZ8s4mGQOpbmbEKxj9vpL0tj0rB-RbirWKCjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171106102934.GA23805-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> (Simon Shields's message
-        of "Mon, 6 Nov 2017 21:29:40 +1100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFp92YTqGNZ8s4mGQOpbmbEKxj9vpL0tj0rB-RbirWKCjw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Vincent Yang <vincent.cw.yang@gmail.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Vincent Yang <vincent.yang@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> writes:
-
-> Some boards use an external 32khz clock for low-power
-> mode timing. Make sure the clock is powered on while the chipset
-> is active.
+On 6 November 2017 at 07:17, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> [...]
 >
-> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+>>>>>
+>>>>> Do you mean set it unconditionally? That works for me, but I have no
+>>>>
+>>>> Yes.
+>>>>
+>>>>> way of testing whether it still works on other SoCs that use this IP.
+>>>>
+>>>> Me neither!
+>>>
+>>> Hi all, I can not yet get contact with IP owner because it is a
+>>> holiday in Japan.
+>>> Around two years ago, F_SDH30_CMD_DAT_DELAY was a new feature of this IP.
+>>> I will update the latest information as soon as I get it.
+>>>
+>> I got a response from IP owner.
+>> He explains F_SDH30_CMD_DAT_DELAY is intended to adjust signal timing of
+>> CMD/DAT lines, and it is necessary to change its value according to
+>> SoC/board design.
+>> So he advises us to make F_SDH30_CMD_DAT_DELAY adjustable by a DT binding.
+>>
+>> Kind regards
+>> Vincent
+>>
+>>>>
+>>>> Apparently there are no DTS in the kernel git that uses the
+>>>> "fujitsu,mb86s70-sdhci-3.0".
+>>>
+>>> Around two years ago, sdhci_f_sdh30_driver was a portion for mb86s70 SoC
+>>> patch series, but finally the patch series did not fully go upstream.
+>>>
+>
+> Vincent, thanks for all the help in this!
+>
+> Ard, one thing, could you please split the DT doc change into a
+> separate patch, preceding the change that actually do the parsing of
+> the new binding.
+>
 
-Then you submit a new version please always increase the version so that
-I know which patch I should follow and take from patchwork:
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#patch_version_missing
-
-And yes yes, I know the patch content was identical in this case but
-even a change in Cc field is important from my point of view. No need to
-resend, this reply is also a reminder to me that this is the v2 :)
-
--- 
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will do. Thanks.
