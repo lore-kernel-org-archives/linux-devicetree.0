@@ -1,93 +1,39 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 3/5] dt-bindings: arm: Document Socionext MB86S71 and
- Fujitsu F-Cue
-Date: Mon, 6 Nov 2017 11:28:05 +0000
-Message-ID: <CAKv+Gu_Wkdd3EdOjKJYZN5Ypjodpu5kFU=Ubg9H5e6ER3zq8Mg@mail.gmail.com>
-References: <20170625170020.11791-1-afaerber@suse.de>
- <20170625170020.11791-4-afaerber@suse.de>
- <20170628164605.2gnvrv4g7jluzyrm@rob-hp-laptop>
- <CAK7LNATqjOMUajUCYVq=L6wWVTUEc1M7Po+KQ3M3Z=A7+FHX5w@mail.gmail.com>
- <51221840-b08e-45f1-5601-937fb15f3947@suse.de>
- <CAK7LNASYvdWq5rV6q5Xf4Zqjso3H+XQY9Z6byJgcgfN7wT6fog@mail.gmail.com>
- <a39e3d09-4182-ee54-c855-3817498b306a@suse.de>
- <CAKv+Gu8fkOhQCx-BsyTkottkk63dohzSqa8RhAgTDcMVcmFbxQ@mail.gmail.com>
- <3327258c-b222-248b-9550-7620a57328f5@suse.de>
- <CAKv+Gu98dns-VoWF6xc0h_2R7SjcA3+85KVhLyLDgOBenhXJRQ@mail.gmail.com>
- <4d589d7a-2035-085e-17c4-1b88785b59f9@suse.de>
- <CAKv+Gu-m-KYnsgyFBUuez3gRhwPF=_sD4fGpE6BDugzW9NUnsA@mail.gmail.com>
- <c3c5b129-cd30-335d-80fd-05e9e4756121@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c3c5b129-cd30-335d-80fd-05e9e4756121@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Satoru OKAMOTO <okamoto.satoru@socionext.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yang Zhang <yang.zhang@96boards.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Grant Likely <Grant.Likely@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: sdhci-fujitsu: document cmd-dat-delay property
+Date: Mon,  6 Nov 2017 11:40:49 +0000
+Message-ID: <20171106114050.15169-1-ard.biesheuvel@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gNiBOb3ZlbWJlciAyMDE3IGF0IDA2OjU4LCBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1
-c2UuZGU+IHdyb3RlOgo+IEFtIDA1LjExLjIwMTcgdW0gMDQ6Mzkgc2NocmllYiBBcmQgQmllc2hl
-dXZlbDoKWy4uLl0KPj4KPj4gQWdhaW4sIEkgYW0gbm90IHRoZSBvbmUgd2hvIGlzIHJhbnRpbmcg
-aGVyZS4gWW91IGhpdCBhIG5lcnZlIGJ5Cj4+IGFjY3VzaW5nIG1lIG9mICdyZWJlbGxpbmcgYWdh
-aW5zdCBsaW51eC5naXQnIHdoaWxlIHRoaXMgaXMgcXVpdGUgdGhlCj4+IG9wcG9zaXRlIG9mIHdo
-YXQgSSBhbSBkb2luZy4KPgo+IEFjdHVhbGx5IHlvdSBkaWQgY29uZmlybSB0aGF0IHBvaW50IGJ5
-IHN0YXJ0aW5nIGFuIGFyZ3VtZW50IGFib3V0IG5vdAo+IG5lZWRpbmcgYSBjZW50cmFsIHJlcG9z
-aXRvcnkgYW5kIHlvdSBub3QgbGlraW5nIExpbnV4IGFzIHRoZSBsb2NhdGlvbi4KPiBUaGF0IHdh
-cyBleGFjdGx5IHdoYXQgSSBtZWFudCB3aXRoIG15IG9yaWdpbmFsIGNvbW1lbnQuCj4KPiBBZGRp
-bmcgQWN0aW9ucyBTZW1pIHdhcyBzb21ld2hhdCBlYXN5IGFzIGEgbmV3IHZlbmRvciBhbmQgbm93
-IC0gcm91Z2hseQo+IGEgeWVhciBhZnRlciB0aGUgYm9hcmQgd2VudCB0byBtYXJrZXQgLSB0aGVy
-ZSdzIExpbmFybyBjb250cmlidXRpb25zCj4gZnJvbSBNYW5pIHRoYXQgSSdtIHRoYW5rZnVsIGZv
-ci4KPgo+IFdoZXJlYXMgcGF0Y2hlcyBrZWVwIGZhbGxpbmcgaW50byBhIGRhcmsgaG9sZSB3aGVu
-IHRoZXJlJ3MgYWxyZWFkeSBvdGhlcgo+IHdvcmsgZm9yIGEgY2VydGFpbiB2ZW5kb3IsIHN1Y2gg
-YXMgTWFydmVsbCBhbmQgbm93IFNvY2lvbmV4dCwgd2l0aCBubwo+IG9uZSBmZWVsaW5nIHJlc3Bv
-bnNpYmxlIGZvciBlaXRoZXIgdGFraW5nIHRoZW0gb3Igc2F5aW5nLCAiaGV5LCB3ZSdyZQo+IG5v
-dCBnb2luZyB0byBzdWJtaXQgYW55IGNvbmZsaWN0aW5nIERUIGJpbmRpbmdzIGZvciBTeW5RdWFj
-ZXIgYmVjYXVzZSB3ZQo+IHVzZSBBQ1BJLCBzbyBwbGVhc2UgZ28gYWhlYWQgd2l0aCBwcm9wb3Nh
-bCBYLCB0aGFua3MgZm9yIHlvdXIgZWZmb3J0cyIuCj4KPiBEb24ndCBjb21wbGFpbiBhYm91dCBt
-ZSByYW50aW5nIGlmIHlvdSBiZWxpdHRsZSBteSB2b2x1bnRlZXIgd29yayB0aGF0IEkKPiBiZWxp
-ZXZlIExpbmFybyBhbmQgaXRzIHBhcnRuZXJzIHNob3VsZCd2ZSBkb25lIGluIHRoZSBmaXJzdCBw
-bGFjZTogSWYgSQo+IGNhbiBnZXQgYW4gaW5pdGlhbCBtYWlubGluZSBQb0MgZG9uZSBhcyBhbiBp
-bmRpdmlkdWFsIG9uIGEgZmV3Cj4gZXZlbmluZ3Mvd2Vla2VuZHMsIHRoZW4gdGhlIHNhbWUgc2hv
-dWxkIGJlIHN1cGVyLWVhc3kgZm9yIGFuCj4gb3JnYW5pemF0aW9uIHdpdGggbG90cyBvZiBlbmdp
-bmVlcnMgYW5kIHBheWluZyBtZW1iZXIgY29tcGFuaWVzLgoKVGhlIG9ubHkgcGVyc29uIGRvaW5n
-IHRoZSByYW50aW5nLCByZWJlbGxpbmcgYW5kIGJlbGl0dGxpbmcgaW4gdGhpcwp0aHJlYWQgaXMg
-eW91LiBJIGhhdmUgbmV2ZXIgY29tbWVudGVkIG9uIHRoZSBuYXR1cmUgb2YgeW91ciB3b3JrLCBs
-ZXQKYWxvbmUgYmVsaXR0bGUgaXQuCgpJIHVuZGVyc3RhbmQgeW91IGFyZSBmcnVzdHJhdGVkIHdp
-dGggaG93IHNvbWUgb2YgdGhlIHVwc3RyZWFtaW5nIG9mCjk2Ym9hcmRzIGlzIGhhbmRsZWQuIEkg
-ZG9uJ3QgaGF2ZSBhbnl0aGluZyB0byBkbyB3aXRoIHRoYXQuIFRoZSBvbmx5Cjk2Ym9hcmRzIGkg
-aGF2ZSBpbiBteSBkcmF3ZXIgKGFuZCBuZXZlciB1c2UpIGlzIGFuIG9yaWdpbmFsIEhpS2V5LgoK
-SSB3b3JrIGZvciB0aGUgZW50ZXJwcmlzZSBncm91cCwgbm90IHRoZSA5NmJvYXJkcyB0ZWFtLCBh
-bmQgSSBtYWtlIGEKcG9pbnQgb2Ygbm90IHdvcmtpbmcgd2l0aCB2ZW5kb3IgdHJlZXMgYXQgYWxs
-LiBUaGUgb25seSByZWFzb24gSQpzdWJtaXR0ZWQgc29tZSBwYXRjaGVzIHRvIHRoZSB1cGNvbWlu
-ZyByZWxlYXNlIG9mIHRoZSBFUlAgaXMgc28gdGhhdAp3ZSBoYXZlIGFuIGluc3RhbGxlciB0aGF0
-IHdvcmtzIG91dCBvZiB0aGUgYm94LCBidXQgYWxsIHRoZSBwYXRjaGVzIEkKZGlkIGNvbnRyaWJ1
-dGUgd2VyZSBhbHJlYWR5IHF1ZXVlZCBmb3IgdjQuMTUgYXQgdGhhdCBwb2ludC4KCj4gQXMgSSd2
-ZSBwb2ludGVkIG91dCwgYW4gZXZlci1pbmNyZWFzaW5nIGZydXN0cmF0aW9uIGJ1aWxkcyBvdmVy
-IExpbmFybwo+IGNvbnRpbnVpbmcgdG8gYW5ub3VuY2UgbmV3IGJvYXJkcyAoc3VjaCBhcyBTeW5R
-dWFjZXIpIHRoYXQgd2lsbCBiZSB0aGUKPiBiZXN0IHNpbmNlIHNsaWNlZCBicmVhZCwgd2hpbGUg
-bmVnbGVjdGluZyB0aGUgOTZib2FyZHMgdGhhdCBhcmUgYWxyZWFkeQo+IG9uIHRoZSBtYXJrZXQg
-YW5kIGVxdWFsbHkgYXJlIHByb21vdGVkIHVuZGVyIHRoZSAiOTZCb2FyZHMiIGJyYW5kLgo+IFRo
-ZSBMaW5hcm8gQ0VPIGhhcyBiZWVuIHByb21vdGluZyB0aGUgT3JhbmdlIFBpIGk5NiBpbiBrZXlu
-b3Rlcywgc28KPiBtYW5hZ2VtZW50IGlzIGF3YXJlIG9mIHRoYXQgaGFyZHdhcmUsIGFuZCB5ZXQg
-bm90IGEgc2luZ2xlIHBhdGNoIGNhbWUKPiBmcm9tIFh1bmxvbmcsIFJEQSBNaWNybyBvciBMaW5h
-cm8uIE5vIHBhdGNoIHJldmlldyBmcm9tIFJEQSBlaXRoZXIuIEFuZAo+IG15IHBhdGNoZXMgZ290
-IHN0dWNrIG9uIHRoZSBiaW5kaW5ncyBub3QgaW5jbHVkaW5nIGludGVycnVwdHMgcHJvcGVydHkK
-PiBmb3IgdGhlIFVBUlQgeWV0LCBzaW5jZSBJIHN0aWxsIGRvIG5vdCBoYXZlIHRoZWlyIGN1c3Rv
-bSBpbnRlcnJ1cHQKPiBjb250cm9sbGVyIHdvcmtpbmcuLi4gU28gdGhlIGNvbnRleHQgaGVyZSBp
-cyB0aGF0IG5vdCBqdXN0IG15IDQuMTQrCj4gcHVsbHMgZ290IHN0dWNrIGJ1dCB0aHJlZSBvdGhl
-ciA5NkJvYXJkcyBwYXRjaCBzZXJpZXMsIHRvby4KPgo+IFJlZ2FyZHMsCj4gQW5kcmVhcwo+Cj4g
-LS0KPiBTVVNFIExpbnV4IEdtYkgsIE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2Vy
-bWFueQo+IEdGOiBGZWxpeCBJbWVuZMO2cmZmZXIsIEphbmUgU21pdGhhcmQsIEdyYWhhbSBOb3J0
-b24KPiBIUkIgMjEyODQgKEFHIE7DvHJuYmVyZykKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Document a new boolean property of the sdhci-fujitsu binding that
+indicates whether the CMD_DAT_DELAY bit needs to be set in the
+F_SDH30_ESD_CONTROL register.
+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+index de2c53cff4f1..3ee9263adf73 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+@@ -15,6 +15,8 @@ Required properties:
+ Optional properties:
+ - vqmmc-supply: phandle to the regulator device tree node, mentioned
+   as the VCCQ/VDD_IO supply in the eMMC/SD specs.
++- fujitsu,cmd-dat-delay-select: boolean property indicating that this host
++  requires the CMD_DAT_DELAY control to be enabled.
+ 
+ Example:
+ 
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
