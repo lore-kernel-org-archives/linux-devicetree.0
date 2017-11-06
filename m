@@ -1,69 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] display: panel: Add Tianma tm070rvhg71 display support
- (800x480)
-Date: Mon, 6 Nov 2017 08:30:31 -0600
-Message-ID: <CAL_JsqJz67k_fTMkx5dHb5qFwXif9y+Cv=+PTq7OLH7woNoU=g@mail.gmail.com>
-References: <1508537403-878-1-git-send-email-lukma@denx.de>
- <20171027031336.psu7hn27w2xajyux@rob-hp-laptop> <20171027101800.5dbfb161@jawa>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] [net-next?] of: add of_property_read_variable_* dummy helpers
+Date: Mon, 6 Nov 2017 08:31:52 -0600
+Message-ID: <CAL_Jsq+uKzL94=+s+RYSQb2PH6tc1ji2ZLEoySBPezgsmLCiBw@mail.gmail.com>
+References: <20171106132627.150459-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171027101800.5dbfb161@jawa>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171106132627.150459-1-arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S . Miller" <davem@davemloft.net>, Frank Rowand <frowand.list@gmail.com>, netdev <netdev@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBPY3QgMjcsIDIwMTcgYXQgMzoxOCBBTSwgTHVrYXN6IE1hamV3c2tpIDxsdWttYUBk
-ZW54LmRlPiB3cm90ZToKPiBIaSBSb2IsCj4KPj4gT24gU2F0LCBPY3QgMjEsIDIwMTcgYXQgMTI6
-MTA6MDNBTSArMDIwMCwgTHVrYXN6IE1hamV3c2tpIHdyb3RlOgo+PiA+IFNpZ25lZC1vZmYtYnk6
-IEx1a2FzeiBNYWpld3NraSA8bHVrbWFAZGVueC5kZT4KPj4gPiAtLS0KPj4gPiAgLi4uL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvdGlhbm1hLHRtMDcwcnZoZzcxLnR4dCAgfCAgNyArKysrKysKPj4g
-PiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAgICAgfCAy
-Nwo+PiA+ICsrKysrKysrKysrKysrKysrKysrKysgMiBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNlcnRp
-b25zKCspCj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NAo+PiA+IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MHJ2aGc3MS50eHQKPj4gPgo+
-PiA+IGRpZmYgLS1naXQKPj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MHJ2aGc3MS50eHQKPj4gPiBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MHJ2aGc3MS50eHQK
-Pj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NCBpbmRleCAwMDAwMDAwLi5iODQyMTdmIC0tLSAvZGV2
-L251bGwKPj4gPiArKysKPj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL3RpYW5tYSx0bTA3MHJ2aGc3MS50eHQKPj4gPiBAQCAtMCwwICsxLDcgQEAg
-K1RpYW5tYSBNaWNyby1lbGVjdHJvbmljcyBUTTA3MFJWSEc3MSA3LjAiIFdYR0EgVEZUCj4+ID4g
-TENEIHBhbmVsICsKPj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gPiArLSBjb21wYXRpYmxl
-OiBzaG91bGQgYmUgInRpYW5tYSx0bTA3MHJ2aGc3MQo+PiA+ICsKPj4gPiArVGhpcyBiaW5kaW5n
-IGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzCj4+
-ID4gc3BlY2lmaWVkICtpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgo+Pgo+
-PiBObyBzdXBwbGllcz8gU3RpbGwgbmVlZCB0byBsaXN0IHBvd2VyLXN1cHBseSBoZXJlIGlmIHNv
-LCBzbyBpdCBpcwo+PiBjbGVhciB0aGF0IHRoaXMgZGlzcGxheSBoYXMgYSBzaW5nbGUgc3VwcGx5
-IChvciB5b3UgbmVlZCB0byBsaXN0Cj4+IG11bHRpcGxlIG9uZXMgaWYgbm90KS4KPgo+IEkgdG9v
-ayB0aGUgc2FtZSBhcHByb2FjaCBhcyBzZXZlcmFsIG90aGVyIHNpbXBsZSBwYW5lbHMgaGF2aW5n
-Cj4gZGVzY3JpcHRpb24gaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwvKgo+IGRpcmVjdG9yeSAoZS5nLiBpbm5vbHV4LGcxMjFpMS1sMDEudHh0KSAuCj4K
-PiBJbiB0aGUgZGVzY3JpcHRpb24gaXQgaXMgc3RhdGVkIHRoYXQgdGhpcyBiaW5kaW5nIGlzIGNv
-bXBhdGlibGUgd2l0aAo+IG9uZSBkb2N1bWVudGVkIGluIHRoZSBzaW1wbGUtcGFuZWwudHh0LCB3
-aGljaCBkZWZpbmVzIGZvbGxvd2luZwo+IHByb3BlcnRpZXM6Cj4KPiBSZXF1aXJlZCBwcm9wZXJ0
-aWVzOgo+IC0gcG93ZXItc3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlkZSB0aGUgc3VwcGx5IHZv
-bHRhZ2UKPgo+IE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gLSBkZGMtaTJjLWJ1czogcGhhbmRsZSBv
-ZiBhbiBJMkMgY29udHJvbGxlciB1c2VkIGZvciBEREMgRURJRCBwcm9iaW5nCj4gLSBlbmFibGUt
-Z3Bpb3M6IEdQSU8gcGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAo+IC0gYmFja2xp
-Z2h0OiBwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5l
-bAo+Cj4KPiBEbyBJIG5lZWQgdG8gZG8gc29tZXRoaW5nIG1vcmU/CgpZZXMuIEhvdyBkbyBJIGtu
-b3cgdGhpcyBwYW5lbCBoYXMgYSBzaW5nbGUgcG93ZXIgc3VwcGx5IHZzLiBpdCBoYXMKbXVsdGlw
-bGUgc3VwcGxpZXMgYW5kIHlvdSBoYXZlbid0IHRob3VnaHQgYWJvdXQgc3VwcGxpZXMgeWV0IG9y
-IHRoZXkKYXJlbid0IHMvdyBjb250cm9sbGVkIG9uIHNvbWUgYm9hcmRzLiBUaGUgbGF0dGVyIGlz
-IGZyZXF1ZW50bHkgdGhlCmNhc2Ugd2hlbiBJIGdvIHJlYWQgdGhlIGRhdGFzaGVldHMuCgpBbmQg
-eWVzIHRoZXJlIGFyZSBleGFtcGxlcyB0aGF0IGRvbid0IGRvIHRoaXMsIGJ1dCB3ZSdyZSBzdHJp
-Y3RlciBub3cuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+On Mon, Nov 6, 2017 at 7:26 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> Commit a67e9472da42 ("of: Add array read functions with min/max size
+> limits") added a new interface for reading variable-length arrays from
+> DT properties. One user was added in dsa recently and this causes a
+> build error because that code can be built with CONFIG_OF disabled:
+>
+> net/dsa/dsa2.c: In function 'dsa_switch_parse_member_of':
+> net/dsa/dsa2.c:678:7: error: implicit declaration of function 'of_property_read_variable_u32_array'; did you mean 'of_property_read_u32_array'? [-Werror=implicit-function-declaration]
+>
+> This adds a dummy functions for of_property_read_variable_u32_array()
+> and a few others that had been missing here. I decided to move
+> of_property_read_string() and of_property_read_string_helper() in the
+> process to make it easier to compare the two sets of function prototypes
+> to make sure they match.
+>
+> Fixes: 975e6e32215e ("net: dsa: rework switch parsing")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> DT maintainers: there is currently a build break in the net-next tree
+> (from branch "dsa-parsing-stage") because of this, I think the best
+> way forward would be to get an Ack for this patch to get picked up
+> through the netdev trees.
+
+Fine by me.
+
+> ---
+>  include/linux/of.h | 62 +++++++++++++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 50 insertions(+), 12 deletions(-)
+
+Acked-by: Rob Herring <robh@kernel.org>
