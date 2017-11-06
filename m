@@ -1,43 +1,97 @@
-From: Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] [net-next?] of: add of_property_read_variable_* dummy helpers
-Date: Mon, 06 Nov 2017 09:54:44 -0500
-Message-ID: <871slb1mq3.fsf@weeman.i-did-not-set--mail-host-address--so-tickle-me>
-References: <20171106132627.150459-1-arnd@arndb.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 2/2] sdhci-fujitsu: add support for setting the
+ CMD_DAT_DELAY attribute
+Date: Mon, 6 Nov 2017 16:00:55 +0100
+Message-ID: <CAPDyKFoqpAJhZw99CGKATeZJkREqBtfk4Mq9R-E==8cN8Rasog@mail.gmail.com>
+References: <20171106114050.15169-1-ard.biesheuvel@linaro.org> <20171106114050.15169-2-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171106132627.150459-1-arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20171106114050.15169-2-ard.biesheuvel@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
-
-> Commit a67e9472da42 ("of: Add array read functions with min/max size
-> limits") added a new interface for reading variable-length arrays from
-> DT properties. One user was added in dsa recently and this causes a
-> build error because that code can be built with CONFIG_OF disabled:
+On 6 November 2017 at 12:40, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+> The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
+> requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
+> F_SDH30_ESD_CONTROL control register. So set this bit if the
+> DT node has the 'fujitsu,cmd-dat-delay-select' property.
 >
-> net/dsa/dsa2.c: In function 'dsa_switch_parse_member_of':
-> net/dsa/dsa2.c:678:7: error: implicit declaration of function 'of_property_read_variable_u32_array'; did you mean 'of_property_read_u32_array'? [-Werror=implicit-function-declaration]
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> ---
+>  drivers/mmc/host/sdhci_f_sdh30.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 >
-> This adds a dummy functions for of_property_read_variable_u32_array()
-> and a few others that had been missing here. I decided to move
-> of_property_read_string() and of_property_read_string_helper() in the
-> process to make it easier to compare the two sets of function prototypes
-> to make sure they match.
+> diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
+> index 111b66f5439b..c5bf69ef7e40 100644
+> --- a/drivers/mmc/host/sdhci_f_sdh30.c
+> +++ b/drivers/mmc/host/sdhci_f_sdh30.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/err.h>
+>  #include <linux/delay.h>
+>  #include <linux/module.h>
+> +#include <linux/property.h>
+>  #include <linux/clk.h>
 >
-> Fixes: 975e6e32215e ("net: dsa: rework switch parsing")
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>  #include "sdhci-pltfm.h"
+> @@ -45,8 +46,9 @@
+>  struct f_sdhost_priv {
+>         struct clk *clk_iface;
+>         struct clk *clk;
+> -       u32 vendor_hs200;
+>         struct device *dev;
+> +       u32 vendor_hs200;
 
-I missed the missing stub for of_property_read_variable_u32_array with
-!CONFIG_OF. Thank you for the quick fix!
+No need to change the above.
 
-Reviewed-by: Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +       bool enable_cmd_dat_delay;
+>  };
+>
+>  static void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
+> @@ -84,10 +86,19 @@ static unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
+>
+>  static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+>  {
+> +       struct f_sdhost_priv *priv = sdhci_priv(host);
+> +       u32 ctl;
+> +
+>         if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0)
+>                 sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
+>
+>         sdhci_reset(host, mask);
+> +
+> +       if (priv->enable_cmd_dat_delay) {
+> +               ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
+> +               ctl |= F_SDH30_CMD_DAT_DELAY;
+> +               sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
+> +       }
+>  }
+>
+>  static const struct sdhci_ops sdhci_f_sdh30_ops = {
+> @@ -126,6 +137,11 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
+>         host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
+>                         SDHCI_QUIRK2_TUNING_WORK_AROUND;
+>
+> +       if (device_property_read_bool(dev, "fujitsu,cmd-dat-delay-select")) {
+> +               dev_info(dev, "Setting cmd-dat-delay\n");
+> +               priv->enable_cmd_dat_delay = true;
+> +       }
+
+I don't think there is need to print something due to the parsing.
+Let's instead simplify this with:
+
+priv->enable_cmd_dat_delay = device_property_read_bool(dev,
+"fujitsu,cmd-dat-delay-select");
+
+> +
+>         ret = mmc_of_parse(host->mmc);
+>         if (ret)
+>                 goto err;
+> --
+> 2.11.0
+>
+
+Kind regards
+Uffe
