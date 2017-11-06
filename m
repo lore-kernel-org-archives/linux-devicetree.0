@@ -1,289 +1,57 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 2/2] drivers/irqchip: add support for Socionext Synquacer EXIU controller
-Date: Mon,  6 Nov 2017 18:34:37 +0000
-Message-ID: <20171106183437.18214-2-ard.biesheuvel@linaro.org>
-References: <20171106183437.18214-1-ard.biesheuvel@linaro.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/3] Add clock driver for Actions S900 SoC
+Date: Tue,  7 Nov 2017 01:15:49 +0530
+Message-ID: <1509997552-29718-1-git-send-email-manivannan.sadhasivam@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171106183437.18214-1-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Socionext Synquacer SoC has an external interrupt unit (EXIU)
-that forwards a block of 32 configurable input lines to 32 adjacent
-level-high type GICv3 SPIs.
+This patchset adds clock driver for Actions Semi OWL series
+S900 SoC with relevant clock bindings and device tree data.
 
-The EXIU has per-interrupt level/edge and polarity controls, and
-mask bits that keep the outgoing lines de-asserted, even though
-the controller may still latch interrupt conditions that occur
-while the line is masked.
+This series also addresses the review comments from previous
+submission happened last year.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/Kconfig.platforms   |   3 +
- drivers/irqchip/Makefile       |   1 +
- drivers/irqchip/irq-sni-exiu.c | 227 ++++++++++++++++++++
- 3 files changed, 231 insertions(+)
+https://patchwork.kernel.org/patch/9254471/
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 6b54ee8c1262..1d03ef54295a 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -161,6 +161,9 @@ config ARCH_SEATTLE
- config ARCH_SHMOBILE
- 	bool
- 
-+config ARCH_SYNQUACER
-+	bool "Socionext SynQuacer SoC Family"
-+
- config ARCH_RENESAS
- 	bool "Renesas SoC Platforms"
- 	select ARCH_SHMOBILE
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 845abc107ad5..1ebb2e6c67e8 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -79,3 +79,4 @@ obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
- obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
- obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
- obj-$(CONFIG_IRQ_UNIPHIER_AIDET)	+= irq-uniphier-aidet.o
-+obj-$(CONFIG_ARCH_SYNQUACER)		+= irq-sni-exiu.o
-diff --git a/drivers/irqchip/irq-sni-exiu.c b/drivers/irqchip/irq-sni-exiu.c
-new file mode 100644
-index 000000000000..1b6e2f7c59af
---- /dev/null
-+++ b/drivers/irqchip/irq-sni-exiu.c
-@@ -0,0 +1,227 @@
-+/*
-+ * Driver for Socionext External Interrupt Unit (EXIU)
-+ *
-+ * Copyright (c) 2017 Linaro, Ltd. <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * Based on irq-tegra.c:
-+ *   Copyright (C) 2011 Google, Inc.
-+ *   Copyright (C) 2010,2013, NVIDIA Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+#define NUM_IRQS	32
-+
-+#define EIMASK		0x00
-+#define EISRCSEL	0x04
-+#define EIREQSTA	0x08
-+#define EIRAWREQSTA	0x0C
-+#define EIREQCLR	0x10
-+#define EILVL		0x14
-+#define EIEDG		0x18
-+#define EISIR		0x1C
-+
-+struct exiu_irq_data {
-+	void __iomem	*base;
-+	u32		spi_base;
-+};
-+
-+static void exiu_irq_eoi(struct irq_data *d)
-+{
-+	struct exiu_irq_data *data = irq_data_get_irq_chip_data(d);
-+
-+	writel(BIT(d->hwirq), data->base + EIREQCLR);
-+	irq_chip_eoi_parent(d);
-+}
-+
-+static void exiu_irq_mask(struct irq_data *d)
-+{
-+	struct exiu_irq_data *data = irq_data_get_irq_chip_data(d);
-+	u32 val;
-+
-+	val = readl_relaxed(data->base + EIMASK) | BIT(d->hwirq);
-+	writel_relaxed(val, data->base + EIMASK);
-+	irq_chip_mask_parent(d);
-+}
-+
-+static void exiu_irq_unmask(struct irq_data *d)
-+{
-+	struct exiu_irq_data *data = irq_data_get_irq_chip_data(d);
-+	u32 val;
-+
-+	val = readl_relaxed(data->base + EIMASK) & ~BIT(d->hwirq);
-+	writel_relaxed(val, data->base + EIMASK);
-+	irq_chip_unmask_parent(d);
-+}
-+
-+static void exiu_irq_enable(struct irq_data *d)
-+{
-+	struct exiu_irq_data *data = irq_data_get_irq_chip_data(d);
-+	u32 val;
-+
-+	/* clear interrupts that were latched while disabled */
-+	writel_relaxed(BIT(d->hwirq), data->base + EIREQCLR);
-+
-+	val = readl_relaxed(data->base + EIMASK) & ~BIT(d->hwirq);
-+	writel_relaxed(val, data->base + EIMASK);
-+	irq_chip_enable_parent(d);
-+}
-+
-+static int exiu_irq_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct exiu_irq_data *data = irq_data_get_irq_chip_data(d);
-+	u32 val;
-+
-+	val = readl_relaxed(data->base + EILVL);
-+	if (type == IRQ_TYPE_EDGE_RISING || type == IRQ_TYPE_LEVEL_HIGH)
-+		val |= BIT(d->hwirq);
-+	else
-+		val &= ~BIT(d->hwirq);
-+	writel_relaxed(val, data->base + EILVL);
-+
-+	val = readl_relaxed(data->base + EIEDG);
-+	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_LEVEL_HIGH)
-+		val &= ~BIT(d->hwirq);
-+	else
-+		val |= BIT(d->hwirq);
-+	writel_relaxed(val, data->base + EIEDG);
-+
-+	writel_relaxed(BIT(d->hwirq), data->base + EIREQCLR);
-+
-+	return irq_chip_set_type_parent(d, IRQ_TYPE_LEVEL_HIGH);
-+}
-+
-+static struct irq_chip exiu_irq_chip = {
-+	.name			= "EXIU",
-+	.irq_eoi		= exiu_irq_eoi,
-+	.irq_enable		= exiu_irq_enable,
-+	.irq_mask		= exiu_irq_mask,
-+	.irq_unmask		= exiu_irq_unmask,
-+	.irq_set_type		= exiu_irq_set_type,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.flags			= IRQCHIP_SET_TYPE_MASKED |
-+				  IRQCHIP_SKIP_SET_WAKE |
-+				  IRQCHIP_EOI_THREADED |
-+				  IRQCHIP_MASK_ON_SUSPEND,
-+};
-+
-+static int exiu_domain_translate(struct irq_domain *domain,
-+				 struct irq_fwspec *fwspec,
-+				 unsigned long *hwirq,
-+				 unsigned int *type)
-+{
-+	struct exiu_irq_data *info = domain->host_data;
-+
-+	if (is_of_node(fwspec->fwnode)) {
-+		if (fwspec->param_count != 3)
-+			return -EINVAL;
-+
-+		if (fwspec->param[0] != GIC_SPI)
-+			return -EINVAL; /* No PPI should point to this domain */
-+
-+		*hwirq = fwspec->param[1] - info->spi_base;
-+		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+
-+static int exiu_domain_alloc(struct irq_domain *dom, unsigned int virq,
-+			     unsigned int nr_irqs, void *data)
-+{
-+	struct irq_fwspec *fwspec = data;
-+	struct irq_fwspec parent_fwspec;
-+	struct exiu_irq_data *info = dom->host_data;
-+	irq_hw_number_t hwirq;
-+
-+	if (fwspec->param_count != 3)
-+		return -EINVAL;	/* Not GIC compliant */
-+	if (fwspec->param[0] != GIC_SPI)
-+		return -EINVAL;	/* No PPI should point to this domain */
-+
-+	WARN_ON(nr_irqs != 1);
-+	hwirq = fwspec->param[1] - info->spi_base;
-+	irq_domain_set_hwirq_and_chip(dom, virq, hwirq, &exiu_irq_chip, info);
-+
-+	parent_fwspec = *fwspec;
-+	parent_fwspec.fwnode = dom->parent->fwnode;
-+	return irq_domain_alloc_irqs_parent(dom, virq, nr_irqs, &parent_fwspec);
-+}
-+
-+static const struct irq_domain_ops exiu_domain_ops = {
-+	.translate	= exiu_domain_translate,
-+	.alloc		= exiu_domain_alloc,
-+	.free		= irq_domain_free_irqs_common,
-+};
-+
-+static int __init exiu_init(struct device_node *node,
-+			    struct device_node *parent)
-+{
-+	struct irq_domain *parent_domain, *domain;
-+	struct exiu_irq_data *data;
-+	int err;
-+
-+	if (!parent) {
-+		pr_err("%pOF: no parent, giving up\n", node);
-+		return -ENODEV;
-+	}
-+
-+	parent_domain = irq_find_host(parent);
-+	if (!parent_domain) {
-+		pr_err("%pOF: unable to obtain parent domain\n", node);
-+		return -ENXIO;
-+	}
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	if (of_property_read_u32(node, "socionext,spi-base", &data->spi_base)) {
-+		pr_err("%pOF: failed to parse 'spi-base' property\n", node);
-+		err = -ENODEV;
-+		goto out_free;
-+	}
-+
-+	data->base = of_iomap(node, 0);
-+	if (IS_ERR(data->base)) {
-+		err = PTR_ERR(data->base);
-+		goto out_free;
-+	}
-+
-+	/* clear and mask all interrupts */
-+	writel_relaxed(0xFFFFFFFF, data->base + EIREQCLR);
-+	writel_relaxed(0xFFFFFFFF, data->base + EIMASK);
-+
-+	domain = irq_domain_add_hierarchy(parent_domain, 0, NUM_IRQS, node,
-+					  &exiu_domain_ops, data);
-+	if (!domain) {
-+		pr_err("%pOF: failed to allocate domain\n", node);
-+		err = -ENOMEM;
-+		goto out_unmap;
-+	}
-+
-+	pr_info("%pOF: %d interrupts forwarded to %pOF\n", node, NUM_IRQS,
-+		parent);
-+
-+	return 0;
-+
-+out_unmap:
-+	iounmap(data->base);
-+out_free:
-+	kfree(data);
-+	return err;
-+}
-+IRQCHIP_DECLARE(exiu, "socionext,synquacer-exiu", exiu_init);
+Driver has been validated on Bubblegum-96 board.
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (3):
+  dt-bindings: clock: Add Actions S900 clock bindings
+  arm64: dts: actions: Add S900 clock management unit nodes
+  clk: actions: Add clock driver for Actions S900 SoC
+
+ .../devicetree/bindings/clock/actions,s900-cmu.txt |  47 ++
+ MAINTAINERS                                        |   8 +
+ arch/arm64/boot/dts/actions/s900.dtsi              |  20 +
+ drivers/clk/Kconfig                                |   1 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/actions/Kconfig                        |   6 +
+ drivers/clk/actions/Makefile                       |   2 +
+ drivers/clk/actions/owl-clk.c                      | 316 +++++++++++
+ drivers/clk/actions/owl-clk.h                      | 298 +++++++++++
+ drivers/clk/actions/owl-factor.c                   | 268 ++++++++++
+ drivers/clk/actions/owl-pll.c                      | 344 ++++++++++++
+ drivers/clk/actions/owl-s900.c                     | 585 +++++++++++++++++++++
+ include/dt-bindings/clock/actions,s900-cmu.h       | 139 +++++
+ 13 files changed, 2035 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/actions,s900-cmu.txt
+ create mode 100644 drivers/clk/actions/Kconfig
+ create mode 100644 drivers/clk/actions/Makefile
+ create mode 100644 drivers/clk/actions/owl-clk.c
+ create mode 100644 drivers/clk/actions/owl-clk.h
+ create mode 100644 drivers/clk/actions/owl-factor.c
+ create mode 100644 drivers/clk/actions/owl-pll.c
+ create mode 100644 drivers/clk/actions/owl-s900.c
+ create mode 100644 include/dt-bindings/clock/actions,s900-cmu.h
+
 -- 
-2.11.0
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
