@@ -1,116 +1,39 @@
-From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] arm64: dts: marvell: add NAND support on the 8040-DB board
-Date: Mon,  6 Nov 2017 23:28:23 +0100
-Message-ID: <20171106222823.3442-1-miquel.raynal@free-electrons.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: AXP803 I2C support / AXP devicetree-bindings
+Date: Mon, 6 Nov 2017 23:39:06 +0100
+Message-ID: <CAFBinCAm8pA-dh3+T4Ui+DvLv5C17Zup-FN8pvi0cUa5PgwJJw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add NAND support on the Armada-8040-DB by adding the same tree as for
-the Armada-7040-DB by using the same compatible string
-"marvell,armada-8k-nand".
+Hello,
 
-Do not enable the NAND node as enabling it (and changing manually the
-proper DPR-76 switch) would disable MDIO from CP1 (and thus disable CPS
-Ethernet PHY).
+recently I discovered that there are some X-Powers AXP chips that
+support both, Allwinner's own "RSB" as well as the I2C ("TWSI" in the
+datasheet) busses.
 
-Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/marvell/armada-8040-db.dts     | 28 ++++++++++++++++++++++
- arch/arm64/boot/dts/marvell/armada-80x0.dtsi       | 17 +++++++++++++
- .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi |  3 ++-
- 3 files changed, 47 insertions(+), 1 deletion(-)
+one chip that supports both interfaces is the AXP803
+the datasheet is linked in the public PINE64 wiki: [1] (direct link: [0])
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-index 0d7b2ae46610..1c4b4e9137e8 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-@@ -216,6 +216,34 @@
- 	clock-frequency = <100000>;
- };
- 
-+/*
-+ * Proper NAND usage will require DPR-76 to be in position 1-2, which disables
-+ * MDIO signal of CP1.
-+ */
-+&cps_nand {
-+	num-cs = <1>;
-+	pinctrl-0 = <&nand_pins>, <&nand_rb>;
-+	pinctrl-names = "default";
-+	nand-ecc-strength = <4>;
-+	nand-ecc-step-size = <512>;
-+	marvell,nand-enable-arbiter;
-+	marvell,system-controller = <&cps_syscon0>;
-+	nand-on-flash-bbt;
-+
-+	partition@0 {
-+		label = "U-Boot";
-+		reg = <0 0x200000>;
-+	};
-+	partition@200000 {
-+		label = "Linux";
-+		reg = <0x200000 0xe00000>;
-+	};
-+	partition@1000000 {
-+		label = "Filesystem";
-+		reg = <0x1000000 0x3f000000>;
-+	};
-+};
-+
- /* CON4 on CP1 expansion */
- &cps_sata0 {
- 	status = "okay";
-diff --git a/arch/arm64/boot/dts/marvell/armada-80x0.dtsi b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
-index 666ebe96ba0d..b280ddd3c397 100644
---- a/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
-@@ -72,5 +72,22 @@
- &cps_syscon0 {
- 	cps_pinctrl: pinctrl {
- 		compatible = "marvell,armada-8k-cps-pinctrl";
-+
-+		nand_pins: nand-pins {
-+			marvell,pins =
-+			"mpp0", "mpp1", "mpp2", "mpp3",
-+			"mpp4", "mpp5", "mpp6", "mpp7",
-+			"mpp8", "mpp9", "mpp10", "mpp11",
-+			"mpp15", "mpp16", "mpp17", "mpp18",
-+			"mpp19", "mpp20", "mpp21", "mpp22",
-+			"mpp23", "mpp24", "mpp25", "mpp26",
-+			"mpp27";
-+			marvell,function = "dev";
-+		};
-+
-+		nand_rb: nand-rb {
-+			marvell,pins = "mpp13", "mpp12";
-+			marvell,function = "nf";
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-index b71ee6c83668..64663f3f4dfe 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-@@ -275,12 +275,13 @@
- 				 * this controller is only usable on the CPM
- 				 * for A7K and on the CPS for A8K.
- 				 */
--				compatible = "marvell,armada370-nand";
-+				compatible = "marvell,armada-8k-nand";
- 				reg = <0x720000 0x54>;
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 				interrupts = <ICU_GRP_NSR 115 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&cps_clk 1 2>;
-+				marvell,system-controller = <&cpm_syscon0>;
- 				status = "disabled";
- 			};
- 
--- 
-2.11.0
+currently the "x-powers,axp803" binding is "RSB" bus specific as it's
+currently only listed in drivers/mfd/axp20x-rsb.c
 
+was there a discussion about supporting both, the "RSB" and I2C bus
+for one chip (for example the AXP803) in the past (I couldn't find
+anything online)?
+what about the device-tree bindings in this case?
+
+
+Regards
+Martin
+
+
+[0] http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
+[1] http://wiki.pine64.org/index.php/PINE_A64_Main_Page#Datasheets_for_Components_and_Peripherals
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
