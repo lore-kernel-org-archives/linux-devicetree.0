@@ -1,51 +1,37 @@
-From: James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] MIPS: dts: remove bogus bcm96358nb4ser.dtb from
- dtb-y entry
-Date: Mon, 6 Nov 2017 10:41:47 +0000
-Message-ID: <20171106095139.GG15260@jhogan-linux>
-References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
- <1509859853-27473-2-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNAQfK_BWQcVW-ScrpAwNAHav3MrrzV-tjn_YUjsuvd7U5A@mail.gmail.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] brcmfmac: add support for external 32khz clock
+Date: Mon, 06 Nov 2017 12:43:46 +0200
+Message-ID: <87fu9rk7q5.fsf@codeaurora.org>
+References: <20171106102934.GA23805@lineageos.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAQfK_BWQcVW-ScrpAwNAHav3MrrzV-tjn_YUjsuvd7U5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20171106102934.GA23805-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> (Simon Shields's message
+        of "Mon, 6 Nov 2017 21:29:40 +1100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Marek <michal.lkml-yyZNWGI4GtDR7s880joybQ@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> writes:
 
-On Sun, Nov 05, 2017 at 11:11:38PM +0900, Masahiro Yamada wrote:
-> +CC Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> +CC linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> +CC Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> +CC Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> 
-> I missed to CC MIPS maintainers.
+> Some boards use an external 32khz clock for low-power
+> mode timing. Make sure the clock is powered on while the chipset
+> is active.
+>
+> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
 
-Yes, please resend the patch so it lands in patchwork.linux-mips.org.
+Then you submit a new version please always increase the version so that
+I know which patch I should follow and take from patchwork:
 
-> 2017-11-05 14:30 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> > arch/mips/boot/dts/brcm/bcm96358nb4ser.dts does not exist, so
-> > we cannot build bcm96358nb4ser.dtb .
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#patch_version_missing
 
-This appears to be due to the file being renamed in commit 695835511f96
-("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom").
-Please can you update the commit message when you resend to mention the
-cause of the problem.
+And yes yes, I know the patch content was identical in this case but
+even a change in Cc field is important from my point of view. No need to
+resend, this reply is also a reminder to me that this is the v2 :)
 
-You could also add the following if you like while you're at it:
-
-Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
-Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 4.9+
-
-Thanks
-James
+-- 
+Kalle Valo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
