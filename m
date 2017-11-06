@@ -1,25 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/6] dt-bindings: pmbus: Add Maxim MAX31785
- documentation
-Date: Mon, 6 Nov 2017 15:52:27 -0600
-Message-ID: <20171106215227.kbtyhpfbzffddp7n@rob-hp-laptop>
-References: <20171103045306.26448-1-andrew@aj.id.au>
- <20171103045306.26448-2-andrew@aj.id.au>
+Subject: Re: [PATCH 1/3] dt-bindings: clk: Hi3660: Document stub clock
+Date: Mon, 6 Nov 2017 16:13:37 -0600
+Message-ID: <20171106221337.grwywvxzes7jcgob@rob-hp-laptop>
+References: <1509693907-90682-1-git-send-email-zhongkaihua@huawei.com>
+ <1509693907-90682-2-git-send-email-zhongkaihua@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171103045306.26448-2-andrew@aj.id.au>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-hwmon@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
+In-Reply-To: <1509693907-90682-2-git-send-email-zhongkaihua@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kaihua Zhong <zhongkaihua@huawei.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, xuejiancheng@hisilicon.com, wenpan@hisilicon.com, leo.yan@linaro.org, zhangfei.gao@linaro.org, guodong.xu@linaro.org, chenjun14@huawei.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, suzhuangluan@hisilicon.com, xuezhiliang@hisilicon.com, kevin.wangtao@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 03, 2017 at 03:53:01PM +1100, Andrew Jeffery wrote:
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+On Fri, Nov 03, 2017 at 03:25:05PM +0800, Kaihua Zhong wrote:
+> From: Leo Yan <leo.yan@linaro.org>
+> 
+> Document the DT binding for stub clock which is used for CPU,
+> GPU and DDR frequency scaling.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  .../devicetree/bindings/hwmon/max31785.txt         | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/max31785.txt
+>  Documentation/devicetree/bindings/clock/hi3660-clock.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
