@@ -1,60 +1,39 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] sdhci-fujitsu: add support for setting the CMD_DAT_DELAY attribute
-Date: Mon, 6 Nov 2017 08:17:58 +0100
-Message-ID: <CAPDyKFp92YTqGNZ8s4mGQOpbmbEKxj9vpL0tj0rB-RbirWKCjw@mail.gmail.com>
-References: <20171101002132.13500-1-ard.biesheuvel@linaro.org>
- <20171102000814.ih2ggtfpmfsx3xap@rob-hp-laptop> <CAKv+Gu8UPpsobJ_d4+OCdufSkLLhGdRFxPO92X3YKvnyBY5b7w@mail.gmail.com>
- <CAPDyKFpaKdvnwL98UZKzNmR+yXtWJL6hPDPfTXtY8nqmDRsomQ@mail.gmail.com>
- <CAKv+Gu8nd7i+iaL-B55WbutGrOKaCsCdrQtFZgFs1TJaSqx-xw@mail.gmail.com>
- <CAPDyKFpKe-TaUeuWdenGf9tHV8+UkGkkdcp8Z+Yu9Q-haHsYsA@mail.gmail.com>
- <CAKR0VNJ0xzRebUEZprRfQVp1LGjPG4khyumSYKsRtxCPTGkxYQ@mail.gmail.com> <CAKR0VN+ATuiOdZ+n=t=h+Ru5WdzRfyq-41t0P8J=4LAUFGo+dA@mail.gmail.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH 0/2] add clk controller driver for Meson-AXG SoC
+Date: Mon, 6 Nov 2017 15:31:34 +0800
+Message-ID: <20171106073134.13830-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAKR0VN+ATuiOdZ+n=t=h+Ru5WdzRfyq-41t0P8J=4LAUFGo+dA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Vincent Yang <vincent.cw.yang@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Yang <vincent.yang.fujitsu@gmail.com>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>, Vincent Yang <vincent.yang@socionext.com>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
+patch 1: add driver for the clk controller which found in Meson AXG
 
->>>>
->>>> Do you mean set it unconditionally? That works for me, but I have no
->>>
->>> Yes.
->>>
->>>> way of testing whether it still works on other SoCs that use this IP.
->>>
->>> Me neither!
->>
->> Hi all, I can not yet get contact with IP owner because it is a
->> holiday in Japan.
->> Around two years ago, F_SDH30_CMD_DAT_DELAY was a new feature of this IP.
->> I will update the latest information as soon as I get it.
->>
-> I got a response from IP owner.
-> He explains F_SDH30_CMD_DAT_DELAY is intended to adjust signal timing of
-> CMD/DAT lines, and it is necessary to change its value according to
-> SoC/board design.
-> So he advises us to make F_SDH30_CMD_DAT_DELAY adjustable by a DT binding.
->
-> Kind regards
-> Vincent
->
->>>
->>> Apparently there are no DTS in the kernel git that uses the
->>> "fujitsu,mb86s70-sdhci-3.0".
->>
->> Around two years ago, sdhci_f_sdh30_driver was a portion for mb86s70 SoC
->> patch series, but finally the patch series did not fully go upstream.
->>
+  Note, we deliberately create a seperate source file for the Meson AXG
+series, instead of sharing code with previous GXBB/GXL - the file axg.c
+It would help us maintaining the code more easily.
 
-Vincent, thanks for all the help in this!
+patch 2: describe the DT info for Meson AXG
 
-Ard, one thing, could you please split the DT doc change into a
-separate patch, preceding the change that actually do the parsing of
-the new binding.
+Qiufang Dai (2):
+  clk: meson-axg: add clock controller drivers
+  arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
 
-Kind regards
-Uffe
+ arch/arm64/Kconfig.platforms               |   1 +
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi |  16 +
+ drivers/clk/meson/Kconfig                  |   8 +
+ drivers/clk/meson/Makefile                 |   1 +
+ drivers/clk/meson/axg.c                    | 948 +++++++++++++++++++++++++++++
+ drivers/clk/meson/axg.h                    | 127 ++++
+ include/dt-bindings/clock/axg-clkc.h       |  72 +++
+ 7 files changed, 1173 insertions(+)
+ create mode 100644 drivers/clk/meson/axg.c
+ create mode 100644 drivers/clk/meson/axg.h
+ create mode 100644 include/dt-bindings/clock/axg-clkc.h
+
+-- 
+2.14.1
+
