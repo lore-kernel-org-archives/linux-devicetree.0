@@ -1,47 +1,41 @@
-From: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 3/9] dt-bindings: interrupt-controllers: add compatible string for stm32h7
-Date: Mon, 6 Nov 2017 18:03:33 +0100
-Message-ID: <1509987819-29599-4-git-send-email-ludovic.Barre@st.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH v3 8/9] ARM: dts: stm32: add system config bank node for stm32h743
+Date: Mon, 6 Nov 2017 18:03:38 +0100
+Message-ID: <1509987819-29599-9-git-send-email-ludovic.Barre@st.com>
 References: <1509987819-29599-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509987819-29599-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1509987819-29599-1-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch updates stm32-exti documentation with stm32h7-exti
-compatible string.
+This patch adds system config support for stm32h743.
 
-Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- .../devicetree/bindings/interrupt-controller/st,stm32-exti.txt        | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32h743.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
-index 6e7703d..edf03f0 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
-@@ -2,7 +2,9 @@ STM32 External Interrupt Controller
+diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+index 6b2fb4c..b17aa5c 100644
+--- a/arch/arm/boot/dts/stm32h743.dtsi
++++ b/arch/arm/boot/dts/stm32h743.dtsi
+@@ -194,6 +194,11 @@
+ 			};
+ 		};
  
- Required properties:
- 
--- compatible: Should be "st,stm32-exti"
-+- compatible: Should be:
-+    "st,stm32-exti"
-+    "st,stm32h7-exti"
- - reg: Specifies base physical address and size of the registers
- - interrupt-controller: Indentifies the node as an interrupt controller
- - #interrupt-cells: Specifies the number of cells to encode an interrupt
++		syscfg: system-config@58000400 {
++			compatible = "syscon";
++			reg = <0x58000400 0x400>;
++		};
++
+ 		exti: interrupt-controller@58000000 {
+ 			compatible = "st,stm32h7-exti";
+ 			interrupt-controller;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
