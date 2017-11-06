@@ -1,29 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 10/12] dt-bindings: rng: Incorporate brcm,bcm6368.txt
- binding
-Date: Mon, 6 Nov 2017 15:38:26 -0600
-Message-ID: <20171106213826.vetpedvdiwwmo4hs@rob-hp-laptop>
-References: <20171102010408.27736-1-f.fainelli@gmail.com>
- <20171102010408.27736-11-f.fainelli@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] dt-bindings: hwmon: aspeed-pwm-tacho: Add reset
+ node
+Date: Mon, 6 Nov 2017 15:42:09 -0600
+Message-ID: <20171106214209.o2cu2ndkmz2apc62@rob-hp-laptop>
+References: <20171102035349.1902-1-joel@jms.id.au>
+ <20171102035349.1902-4-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171102010408.27736-11-f.fainelli@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger>
+In-Reply-To: <20171102035349.1902-4-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 01, 2017 at 06:04:06PM -0700, Florian Fainelli wrote:
-> Since the same block is used on BCM2835 and BCM6368, merge the bindings
-> and remove the brcm,bcm6368.txt binding document.
+On Thu, Nov 02, 2017 at 02:53:49PM +1100, Joel Stanley wrote:
+> The device tree bindings are updated to document the resets phandle, and
+> the example is updated to match what is expected for both the reset and
+> clock phandle.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Note that the bindings should have always had the reset controller, as
+> the hardware is unusable without it.
+> 
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 > ---
->  .../devicetree/bindings/rng/brcm,bcm2835.txt       | 22 +++++++++++++++++++---
->  .../devicetree/bindings/rng/brcm,bcm6368.txt       | 17 -----------------
->  2 files changed, 19 insertions(+), 20 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm6368.txt
+>  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt         | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
