@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 1/2] ARM: dts: NSP: Disable AHCI controller for HR NSP boards
-Date: Tue,  7 Nov 2017 14:28:11 -0800
-Message-ID: <20171107222812.17267-2-f.fainelli@gmail.com>
+Subject: [PATCH 2/2] ARM: dts: NSP: Fix PPI interrupt types
+Date: Tue,  7 Nov 2017 14:28:12 -0800
+Message-ID: <20171107222812.17267-3-f.fainelli@gmail.com>
 References: <20171107222812.17267-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171107222812.17267-1-f.fainelli@gmail.com>
@@ -10,48 +10,45 @@ To: bcm-kernel-feedback-list@broadcom.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jon.mason@broadcom.com, rjui@broadcom.com, sbranden@broadcom.com, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The AHCI controller is currently enabled for all of these boards:
-bcm958623hr and bcm958625hr would result in a hard hang on boot that we
-cannot get rid of. Since this does not appear to have an easy and simple
-fix, just disable the AHCI controller for now until this gets resolved.
+Booting a kernel results in the kernel warning us about the following
+PPI interrupts configuration:
+[    0.105127] smp: Bringing up secondary CPUs ...
+[    0.110545] GIC: PPI11 is secure or misconfigured
+[    0.110551] GIC: PPI13 is secure or misconfigured
 
-Fixes: 70725d6e97ac ("ARM: dts: NSP: Enable SATA on bcm958625hr")
-Fixes: d454c3762437 ("ARM: dts: NSP: Add new DT file for bcm958623hr")
+Fix this by using the appropriate edge configuration for PPI11 and
+PPI13, this is similar to what was fixed for Northstar (BCM5301X) in
+commit 0e34079cd1f6 ("ARM: dts: BCM5301X: Correct GIC_PPI interrupt
+flags").
+
+Fixes: 1a9d53cabaf4 ("ARM: dts: NSP: Add TWD Support to DT")
+Fixes: 1a9d53cabaf4 ("ARM: dts: NSP: Add TWD Support to DT")
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/bcm958623hr.dts | 4 ----
- arch/arm/boot/dts/bcm958625hr.dts | 4 ----
- 2 files changed, 8 deletions(-)
+ arch/arm/boot/dts/bcm-nsp.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
-index 3bc50849d013..b8bde13de90a 100644
---- a/arch/arm/boot/dts/bcm958623hr.dts
-+++ b/arch/arm/boot/dts/bcm958623hr.dts
-@@ -141,10 +141,6 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index dff66974feed..d5f5e92e7488 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -85,7 +85,7 @@
+ 		timer@20200 {
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0x20200 0x100>;
+-			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&periph_clk>;
+ 		};
  
--&sata {
--	status = "okay";
--};
--
- &qspi {
- 	bspi-sel = <0>;
- 	flash: m25p80@0 {
-diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
-index d94d14b3c745..6a44b8021702 100644
---- a/arch/arm/boot/dts/bcm958625hr.dts
-+++ b/arch/arm/boot/dts/bcm958625hr.dts
-@@ -177,10 +177,6 @@
- 	status = "okay";
- };
+@@ -93,7 +93,7 @@
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0x20600 0x20>;
+ 			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
+-						  IRQ_TYPE_LEVEL_HIGH)>;
++						  IRQ_TYPE_EDGE_RISING)>;
+ 			clocks = <&periph_clk>;
+ 		};
  
--&sata {
--	status = "okay";
--};
--
- &srab {
- 	compatible = "brcm,bcm58625-srab", "brcm,nsp-srab";
- 	status = "okay";
 -- 
 2.9.3
