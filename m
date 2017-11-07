@@ -1,70 +1,31 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
-Date: Tue, 7 Nov 2017 13:12:43 +0530
-Message-ID: <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg@mail.gmail.com>
-References: <20171103195855.15283-1-geomatsi@gmail.com> <20171103195855.15283-2-geomatsi@gmail.com>
- <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
- <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter> <20171106122633.5mnqfh6xhmmxr45s@flea>
- <20171106161306.tq6yeq6bq36ridj3@speedy.hunter>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Rick Chen <rickchen36-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/3] *** Fix warning from kbuild test robot ***
+Date: Tue,  7 Nov 2017 15:19:50 +0800
+Message-ID: <1510039193-32522-1-git-send-email-rickchen36@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171106161306.tq6yeq6bq36ridj3-tVm4GcgtBpsfMUw/CLfKLg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rick-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org
+Cc: Rick Chen <rickchen36-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 6, 2017 at 9:43 PM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hello Maxime,
->
->> > > > The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
->> > > > Fix cd-gpio description to enable sdcard detect.
->> > > >
->> > > > Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > > > ---
->> > > >  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
->> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
->> > > >
->> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
->> > > > index b6b7a561df8c..a42fd79a62a3 100644
->> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
->> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
->> > > > @@ -71,7 +71,7 @@
->> > > >         pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
->> > > >         vmmc-supply = <&reg_vcc3v3>;
->> > > >         bus-width = <4>;
->> > > > -       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
->> > > > +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
->> > >
->> > > Was able to detect and do mount with existing dts
->> >
->> > Did you try to boot from sdcard ? I am not able to boot my board from
->> > sd-card without this change. As I mentioned earlier in my email
->> > to buildroot mailing list, with mmc debug enabled I see that mmc
->> > tries to init sd-card when I remove it from the slot.
->> >
->> > Maybe there is a minor differences between h/w versions or batches ?
->> > What is you board version ? I tested on board v1.0.
->>
->> Looking at the schematics, it definitely looks like it's active low.
->
-> Is it ok to merge it then ? Or using 'cd-inverted' property
-> is the preferable option ?
+*** Fix warnings when make with ARCH=x86_64 from auto build test ***
 
-W/o any change mainline works unstable for me, it wasn't booting
-at-all[1] did you find the same?
+rick (3):
+  clocksource/drivers/atcpit100: Add andestech atcpit100 timer
+  clocksource/drivers/Kconfig: Support andestech atcpit100 timer
+  dt-bindings: timer: Add andestech atcpit100 timer binding doc
 
-Even tried with active LOW and cd-inverted.
+ .../bindings/timer/andestech,atcpit100-timer.txt   |  31 ++++
+ drivers/clocksource/Kconfig                        |   6 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/timer-atcpit100.c              | 199 +++++++++++++++++++++
+ 4 files changed, 237 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
+ create mode 100644 drivers/clocksource/timer-atcpit100.c
 
-[1] https://paste.ubuntu.com/25909064/
-
-thanks!
 -- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
