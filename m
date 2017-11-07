@@ -1,7 +1,7 @@
 From: Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v2 3/3] usb: dwc3: Enable USB 3.0 phy driver
-Date: Tue, 7 Nov 2017 15:20:55 +0800
-Message-ID: <20171107072055.26945-3-ran.wang_1@nxp.com>
+Subject: [PATCH v2 2/3] arm64: dts: ls1043a: Enable USB 3.0 phy driver
+Date: Tue, 7 Nov 2017 15:20:54 +0800
+Message-ID: <20171107072055.26945-2-ran.wang_1@nxp.com>
 References: <20171107072055.26945-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,49 +12,82 @@ To: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.ker
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, stern@rowland.harvard.edu, pku.leo@gmail.com, mathias.nyman@intel.com, gregkh@linuxfoundation.org, suresh.gupta@nxp.com, felipe.balbi@linux.intel.com, Shawn Guo <shawnguo@kernel.org>, Sriram Dash <sriram.dash@nxp.com>, Li Yang <leoyang.li@nxp.com>, Hongtao Jia <hongtao.jia@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds entry point at dwc3 core init function to enable
-USB 3.0 PHY driver.
+This patch adds entries in dts to enable USB 3.0 PHY driver.
 
+Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
 Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 ---
 Change in v2:
-	- New file
+	- Rename node name from 'usb3-phy' to 'usb-phy'
+	- Adjust phy node position 
 
- drivers/usb/dwc3/core.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 33 ++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 03474d3575ab..a9df03c64a7b 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -746,6 +746,8 @@ static int dwc3_core_init(struct dwc3 *dwc)
- {
- 	u32			reg;
- 	int			ret;
-+	int			retval;
-+	struct phy *phy;
- 
- 	if (!dwc3_core_is_valid(dwc)) {
- 		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
-@@ -770,6 +772,19 @@ static int dwc3_core_init(struct dwc3 *dwc)
- 	if (ret)
- 		goto err0;
- 
-+	phy = phy_get(dwc->dev, "usb-phy");
-+	if (IS_ERR(phy)) {
-+		retval = PTR_ERR(phy);
-+		if (retval == -EPROBE_DEFER)
-+			dev_dbg(dwc->dev, "usb-phy no found\n");
-+	} else {
-+		retval = phy_init(phy);
-+		if (retval) {
-+			phy_put(phy);
-+		    dev_dbg(dwc->dev, "phy_init() error!\n");
-+		}
-+	}
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 31fd77f82ced..83d4e9e574ba 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -620,6 +620,8 @@
+ 			reg = <0x0 0x2f00000 0x0 0x10000>;
+ 			interrupts = <0 60 0x4>;
+ 			dr_mode = "host";
++			phys = <&usbphy0>;
++			phy-names = "usb-phy";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
+ 		};
+@@ -629,6 +631,8 @@
+ 			reg = <0x0 0x3000000 0x0 0x10000>;
+ 			interrupts = <0 61 0x4>;
+ 			dr_mode = "host";
++			phys = <&usbphy1>;
++			phy-names = "usb-phy";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
+ 		};
+@@ -638,6 +642,8 @@
+ 			reg = <0x0 0x3100000 0x0 0x10000>;
+ 			interrupts = <0 63 0x4>;
+ 			dr_mode = "host";
++			phys = <&usbphy2>;
++			phy-names = "usb-phy";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
+ 		};
+@@ -747,6 +753,33 @@
+ 					<0000 0 0 3 &gic 0 156 0x4>,
+ 					<0000 0 0 4 &gic 0 157 0x4>;
+ 		};
 +
- 	ret = dwc3_core_soft_reset(dwc);
- 	if (ret)
- 		goto err0;
++		usbphy0: usb-phy@084f0000 {
++			compatible = "fsl,qoriq-usb3-phy";
++			reg = <0x0 0x01570070 0x0 0xC>,
++			      <0x0 0x084F0000 0x0 0x5000>;
++			reg-names = "param_ctrl", "phy_base";
++			#phy-cells = <0>;
++			phy_type = "utmi";
++		};
++
++		usbphy1: usb-phy@08500000 {
++			compatible = "fsl,qoriq-usb3-phy";
++			reg = <0x0 0x0157007C 0x0 0xC>,
++			      <0x0 0x08500000 0x0 0x5000>;
++			reg-names = "param_ctrl", "phy_base";
++			#phy-cells = <0>;
++			phy_type = "utmi";
++		};
++
++		usbphy2: usb-phy@08510000 {
++			compatible = "fsl,qoriq-usb3-phy";
++			reg = <0x0 0x01570088 0x0 0xC>,
++			      <0x0 0x08510000 0x0 0x5000>;
++			reg-names = "param_ctrl", "phy_base";
++			#phy-cells = <0>;
++			phy_type = "utmi";
++		};
+ 	};
+ 
+ };
 -- 
 2.14.1
