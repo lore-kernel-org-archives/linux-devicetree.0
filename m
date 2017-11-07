@@ -1,58 +1,91 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3 0/4] fix the clock setting for SAR ADC
-Date: Tue, 7 Nov 2017 13:36:46 +0800
-Message-ID: <20171107053646.31087-1-yixun.lan@amlogic.com>
+Subject: [PATCH v3 4/4] ARM64: dts: meson: drop "sana" clock from SAR ADC
+Date: Tue, 7 Nov 2017 13:37:27 +0800
+Message-ID: <20171107053728.32169-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-patch [1/4]:
-  Fix wrong SARADC/SANA clock gate bit in Meson-GXBB/GXL,
-the published datasheet also has wrong description about this.
+From: Xingyu Chen <xingyu.chen@amlogic.com>
 
-patch [2-4/4]:
-  Drop the "sana" clock from SAR ADC module,
+The SAR ADC modules doesn't require The "sana" clock.
 
-  From the hardware perspective, the SAR ADC module doesn't
-require "sana" clock to wrok. This should apply to all SoC,
-including meson6,8, GXBB, GXL..
+Singed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ arch/arm/boot/dts/meson8.dtsi               | 5 ++---
+ arch/arm/boot/dts/meson8b.dtsi              | 5 ++---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 3 +--
+ 4 files changed, 6 insertions(+), 10 deletions(-)
 
-Note: the whole patchset series has been tested at GXL-P212 board,
-we haven't got any meson6,8 board to test, so I would appreciate
-if someone (Martin?) could help to confirm it works there.
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index b98d44fde6b6..f93d6cf6e094 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -289,9 +289,8 @@
+ &saradc {
+ 	compatible = "amlogic,meson8-saradc", "amlogic,meson-saradc";
+ 	clocks = <&clkc CLKID_XTAL>,
+-		<&clkc CLKID_SAR_ADC>,
+-		<&clkc CLKID_SANA>;
+-	clock-names = "clkin", "core", "sana";
++		<&clkc CLKID_SAR_ADC>;
++	clock-names = "clkin", "core";
+ };
  
-Changes since v2 at [2] :
-  - explicitly point out 'sana' clock is not required for saradc, and drop them
-  - update comments, as the published datasheet is wrong
+ &spifc {
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index bc278da7df0d..4aa444284f0c 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -185,9 +185,8 @@
+ &saradc {
+ 	compatible = "amlogic,meson8b-saradc", "amlogic,meson-saradc";
+ 	clocks = <&clkc CLKID_XTAL>,
+-		<&clkc CLKID_SAR_ADC>,
+-		<&clkc CLKID_SANA>;
+-	clock-names = "clkin", "core", "sana";
++		<&clkc CLKID_SAR_ADC>;
++	clock-names = "clkin", "core";
+ };
  
-Changes since v1 at [1] :
-  - correct SAR ADC/SANA clock gate bit
-
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005221.html
-[2] http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005242.html
-
-
-Xingyu Chen (3):
-  iio: adc: meson-saradc: remove irrelevant clock "sana"
-  dt-bindings: iio: adc: update the doc for SAR ADC
-  ARM64: dts: meson: drop "sana" clock from SAR ADC
-
-Yixun Lan (1):
-  clk: meson: gxbb: fix wrong clock for SARADC/SANA
-
- .../bindings/iio/adc/amlogic,meson-saradc.txt        |  1 -
- arch/arm/boot/dts/meson8.dtsi                        |  5 ++---
- arch/arm/boot/dts/meson8b.dtsi                       |  5 ++---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi          |  3 +--
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi           |  3 +--
- drivers/clk/meson/gxbb.c                             |  4 ++--
- drivers/iio/adc/meson_saradc.c                       | 20 --------------------
- 7 files changed, 8 insertions(+), 33 deletions(-)
-
+ &uart_AO {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index af834cdbba79..b77f2593cdc3 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -686,10 +686,9 @@
+ 	compatible = "amlogic,meson-gxbb-saradc", "amlogic,meson-saradc";
+ 	clocks = <&xtal>,
+ 		 <&clkc CLKID_SAR_ADC>,
+-		 <&clkc CLKID_SANA>,
+ 		 <&clkc CLKID_SAR_ADC_CLK>,
+ 		 <&clkc CLKID_SAR_ADC_SEL>;
+-	clock-names = "clkin", "core", "sana", "adc_clk", "adc_sel";
++	clock-names = "clkin", "core", "adc_clk", "adc_sel";
+ };
+ 
+ &sd_emmc_a {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index d8dd3298b15c..07805a3b4db0 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -628,10 +628,9 @@
+ 	compatible = "amlogic,meson-gxl-saradc", "amlogic,meson-saradc";
+ 	clocks = <&xtal>,
+ 		 <&clkc CLKID_SAR_ADC>,
+-		 <&clkc CLKID_SANA>,
+ 		 <&clkc CLKID_SAR_ADC_CLK>,
+ 		 <&clkc CLKID_SAR_ADC_SEL>;
+-	clock-names = "clkin", "core", "sana", "adc_clk", "adc_sel";
++	clock-names = "clkin", "core", "adc_clk", "adc_sel";
+ };
+ 
+ &sd_emmc_a {
 -- 
 2.14.1
-
