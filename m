@@ -1,68 +1,71 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RESEND PATCH v5 08/16] ARM: dts: socfpga: Add generic compatible
- string for I2C EEPROM
-Date: Tue, 7 Nov 2017 09:20:33 +0100
-Message-ID: <CABxcv=mQ_QjXiL0iBEZ=V9finCVywj6sSnbR+5Cb0kJrw12cow@mail.gmail.com>
-References: <20170615185418.13980-1-javier@dowhile0.org> <20170615185418.13980-9-javier@dowhile0.org>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: AXP803 I2C support / AXP devicetree-bindings
+Date: Tue, 07 Nov 2017 16:20:43 +0800
+Message-ID: <2bcdd4c97a13b1c24eccdf6f7d73e00b@aosc.io>
+References: <CAFBinCAm8pA-dh3+T4Ui+DvLv5C17Zup-FN8pvi0cUa5PgwJJw@mail.gmail.com>
+ <CAGb2v642n4puXqKOjG0QxhFgFFW2nJKrpU4KV2ZRPNb6_zF4pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170615185418.13980-9-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v642n4puXqKOjG0QxhFgFFW2nJKrpU4KV2ZRPNb6_zF4pw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Quentin Schulz <quentin.schulz@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Dinh,
 
-On Thu, Jun 15, 2017 at 8:54 PM, Javier Martinez Canillas
-<javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
-> The at24 driver allows to register I2C EEPROM chips using different vendor
-> and devices, but the I2C subsystem does not take the vendor into account
-> when matching using the I2C table since it only has device entries.
->
-> But when matching using an OF table, both the vendor and device has to be
-> taken into account so the driver defines only a set of compatible strings
-> using the "atmel" vendor as a generic fallback for compatible I2C devices.
->
-> So add this generic fallback to the device node compatible string to make
-> the device to match the driver using the OF device ID table.
->
-> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
->
-> ---
->
-> Changes in v5: None
-> Changes in v4:
-> - Only use the atmel manufacturer in the compatible string instead of
->   keeping the deprecated ones (Rob Herring).
->
-> Changes in v3: None
-> Changes in v2: None
->
->  arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
-> index 893198049397..4bb2791ab04a 100644
-> --- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
-> @@ -294,7 +294,7 @@
->         clock-frequency = <100000>;
->
->         at24@50 {
-> -               compatible = "at24,24c02";
-> +               compatible = "atmel,24c02";
->                 pagesize = <8>;
->                 reg = <0x50>;
->         };
-> --
+于 2017年11月7日 GMT+08:00 上午11:13:23, Chen-Yu Tsai <wens@csie.org> 写到:
+> On Tue, Nov 7, 2017 at 6:39 AM, Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+>> Hello,
+>> 
+>> recently I discovered that there are some X-Powers AXP chips that
+>> support both, Allwinner's own "RSB" as well as the I2C ("TWSI" in the
+>> datasheet) busses.
+>> 
+>> one chip that supports both interfaces is the AXP803
+>> the datasheet is linked in the public PINE64 wiki: [1] (direct link:
+> [0])
+> 
+> All the RSB based PMICs support both modes. They start in I2C mode
+> when cold booted.
 
-Any comments about this patch?
+I think it starts at a vendor-customized mode. In all PMICs sold
+with Allwinner SoCs the mode is predefined to RSB.
 
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In fact many registers in AXPs are vendor-customizable, see
+the datasheets.
+
+> 
+>> 
+>> currently the "x-powers,axp803" binding is "RSB" bus specific as it's
+>> currently only listed in drivers/mfd/axp20x-rsb.c
+>> 
+>> was there a discussion about supporting both, the "RSB" and I2C bus
+>> for one chip (for example the AXP803) in the past (I couldn't find
+>> anything online)?
+> 
+> No. None of the boards actually use I2C instead of RSB. RSB mode is
+> initialized by the boot loader. There is no easy way for the kernel to
+> switch it back.
+> 
+>> what about the device-tree bindings in this case?
+> 
+> We can deal with it if someone actually comes up with a practical
+> case needing it. Otherwise things go untested, which is not what
+> we want.
+> 
+> ChenYu
+> 
+>> 
+>> 
+>> Regards
+>> Martin
+>> 
+>> 
+>> [0]
+> http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
+>> [1]
+> http://wiki.pine64.org/index.php/PINE_A64_Main_Page#Datasheets_for_Components_and_Peripherals
