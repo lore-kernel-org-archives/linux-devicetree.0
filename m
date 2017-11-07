@@ -1,263 +1,54 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 2/2] kbuild: remove all dummy assignments to obj-
-Date: Wed,  8 Nov 2017 01:31:47 +0900
-Message-ID: <1510072307-16819-3-git-send-email-yamada.masahiro@socionext.com>
-References: <1510072307-16819-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1510072307-16819-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Michal Marek <michal.lkml@markovi.net>, Masahiro Yamada <yamada.masahiro@socionext.com>, Ralf Baechle <ralf@linux-mips.org>, Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Daniel Borkmann <daniel@iogearbox.net>, linux-arm-kernel@lists.infradead.org
+From: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
+Subject: Re: [PATCH 1/1] add rgb888 pins to a20 to enable parallel rgb LCD
+Date: Tue, 7 Nov 2017 17:38:55 +0100
+Message-ID: <65694f1d-e1cb-08e0-0883-f0087f5e09f5@micronovasrl.com>
+References: <1510058999-6778-1-git-send-email-giulio.benetti@micronovasrl.com>
+ <20171107130331.4wut5g6znzakkg4z@flea>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171107130331.4wut5g6znzakkg4z@flea>
+Content-Language: it
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now kbuild core scripts create empty built-in.o where necessary.
-Remove "obj- := dummy.o" tricks.
+Board could be any with A20,
+for example Olinuxino A20.
+Or our Q027, S027 boards, but final dts still are not complete.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- arch/arm/mach-uniphier/Makefile           | 1 -
- arch/mips/boot/dts/brcm/Makefile          | 3 ---
- arch/mips/boot/dts/cavium-octeon/Makefile | 3 ---
- arch/mips/boot/dts/img/Makefile           | 3 ---
- arch/mips/boot/dts/ingenic/Makefile       | 3 ---
- arch/mips/boot/dts/lantiq/Makefile        | 3 ---
- arch/mips/boot/dts/mti/Makefile           | 3 ---
- arch/mips/boot/dts/netlogic/Makefile      | 3 ---
- arch/mips/boot/dts/ni/Makefile            | 3 ---
- arch/mips/boot/dts/pic32/Makefile         | 3 ---
- arch/mips/boot/dts/qca/Makefile           | 3 ---
- arch/mips/boot/dts/ralink/Makefile        | 3 ---
- arch/mips/boot/dts/xilfpga/Makefile       | 3 ---
- firmware/Makefile                         | 3 ---
- samples/bpf/Makefile                      | 3 ---
- samples/hidraw/Makefile                   | 3 ---
- samples/seccomp/Makefile                  | 3 ---
- samples/sockmap/Makefile                  | 3 ---
- samples/statx/Makefile                    | 3 ---
- samples/uhid/Makefile                     | 3 ---
- 20 files changed, 58 deletions(-)
-
-diff --git a/arch/arm/mach-uniphier/Makefile b/arch/arm/mach-uniphier/Makefile
-index 6bea3d3..e69de29 100644
---- a/arch/arm/mach-uniphier/Makefile
-+++ b/arch/arm/mach-uniphier/Makefile
-@@ -1 +0,0 @@
--obj- += dummy.o
-diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/brcm/Makefile
-index bacb131..fcf68a2 100644
---- a/arch/mips/boot/dts/brcm/Makefile
-+++ b/arch/mips/boot/dts/brcm/Makefile
-@@ -34,6 +34,3 @@ dtb-$(CONFIG_DT_NONE) += \
- 	bcm97435svmb.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/cavium-octeon/Makefile b/arch/mips/boot/dts/cavium-octeon/Makefile
-index e9592a9..a857b4c 100644
---- a/arch/mips/boot/dts/cavium-octeon/Makefile
-+++ b/arch/mips/boot/dts/cavium-octeon/Makefile
-@@ -1,6 +1,3 @@
- dtb-$(CONFIG_CAVIUM_OCTEON_SOC)	+= octeon_3xxx.dtb octeon_68xx.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/img/Makefile b/arch/mips/boot/dts/img/Makefile
-index a46d773..17dedb7 100644
---- a/arch/mips/boot/dts/img/Makefile
-+++ b/arch/mips/boot/dts/img/Makefile
-@@ -2,6 +2,3 @@ dtb-$(CONFIG_FIT_IMAGE_FDT_BOSTON)	+= boston.dtb
- 
- dtb-$(CONFIG_MACH_PISTACHIO)	+= pistachio_marduk.dtb
- obj-$(CONFIG_MACH_PISTACHIO)	+= pistachio_marduk.dtb.o
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/ingenic/Makefile b/arch/mips/boot/dts/ingenic/Makefile
-index ddd0faf..f2e516c 100644
---- a/arch/mips/boot/dts/ingenic/Makefile
-+++ b/arch/mips/boot/dts/ingenic/Makefile
-@@ -2,6 +2,3 @@ dtb-$(CONFIG_JZ4740_QI_LB60)	+= qi_lb60.dtb
- dtb-$(CONFIG_JZ4780_CI20)	+= ci20.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/lantiq/Makefile b/arch/mips/boot/dts/lantiq/Makefile
-index 586b1c9..fed59e0 100644
---- a/arch/mips/boot/dts/lantiq/Makefile
-+++ b/arch/mips/boot/dts/lantiq/Makefile
-@@ -1,6 +1,3 @@
- dtb-$(CONFIG_DT_EASY50712)	+= easy50712.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/mti/Makefile b/arch/mips/boot/dts/mti/Makefile
-index faf7ac4..35cf12b 100644
---- a/arch/mips/boot/dts/mti/Makefile
-+++ b/arch/mips/boot/dts/mti/Makefile
-@@ -2,6 +2,3 @@ dtb-$(CONFIG_MIPS_MALTA)	+= malta.dtb
- dtb-$(CONFIG_LEGACY_BOARD_SEAD3)	+= sead3.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/netlogic/Makefile b/arch/mips/boot/dts/netlogic/Makefile
-index 77ffb30..84a38eb 100644
---- a/arch/mips/boot/dts/netlogic/Makefile
-+++ b/arch/mips/boot/dts/netlogic/Makefile
-@@ -5,6 +5,3 @@ dtb-$(CONFIG_DT_XLP_GVP)	+= xlp_gvp.dtb
- dtb-$(CONFIG_DT_XLP_RVP)	+= xlp_rvp.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/ni/Makefile b/arch/mips/boot/dts/ni/Makefile
-index 6cd9c60..9e2c9fa 100644
---- a/arch/mips/boot/dts/ni/Makefile
-+++ b/arch/mips/boot/dts/ni/Makefile
-@@ -1,4 +1 @@
- dtb-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= 169445.dtb
--
--# Force kbuild to make empty built-in.o if necessary
--obj-					+= dummy.o
-diff --git a/arch/mips/boot/dts/pic32/Makefile b/arch/mips/boot/dts/pic32/Makefile
-index 5a08e48..6ecc249 100644
---- a/arch/mips/boot/dts/pic32/Makefile
-+++ b/arch/mips/boot/dts/pic32/Makefile
-@@ -4,6 +4,3 @@ dtb-$(CONFIG_DTB_PIC32_NONE)		+= \
- 					pic32mzda_sk.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
-index 181db5d..ad6429b 100644
---- a/arch/mips/boot/dts/qca/Makefile
-+++ b/arch/mips/boot/dts/qca/Makefile
-@@ -4,6 +4,3 @@ dtb-$(CONFIG_ATH79)			+= ar9331_dpt_module.dtb
- dtb-$(CONFIG_ATH79)			+= ar9331_dragino_ms14.dtb
- dtb-$(CONFIG_ATH79)			+= ar9331_omega.dtb
- dtb-$(CONFIG_ATH79)			+= ar9331_tl_mr3020.dtb
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/ralink/Makefile b/arch/mips/boot/dts/ralink/Makefile
-index 7b64654..baaea4a 100644
---- a/arch/mips/boot/dts/ralink/Makefile
-+++ b/arch/mips/boot/dts/ralink/Makefile
-@@ -6,6 +6,3 @@ dtb-$(CONFIG_DTB_OMEGA2P)	+= omega2p.dtb
- dtb-$(CONFIG_DTB_VOCORE2)	+= vocore2.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/arch/mips/boot/dts/xilfpga/Makefile b/arch/mips/boot/dts/xilfpga/Makefile
-index 77c8096..53f755f 100644
---- a/arch/mips/boot/dts/xilfpga/Makefile
-+++ b/arch/mips/boot/dts/xilfpga/Makefile
-@@ -1,6 +1,3 @@
- dtb-$(CONFIG_XILFPGA_NEXYS4DDR)	+= nexys4ddr.dtb
- 
- obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
--
--# Force kbuild to make empty built-in.o if necessary
--obj-				+= dummy.o
-diff --git a/firmware/Makefile b/firmware/Makefile
-index fa08088..6524be1 100644
---- a/firmware/Makefile
-+++ b/firmware/Makefile
-@@ -58,6 +58,3 @@ endif
- 
- targets := $(patsubst $(obj)/%,%, \
-                                 $(shell find $(obj) -name \*.gen.S 2>/dev/null))
--# Without this, built-in.o won't be created when it's empty, and the
--# final vmlinux link will fail.
--obj- := dummy
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index cf17c79..4ea6f75 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -1,6 +1,3 @@
--# kbuild trick to avoid linker error. Can be omitted if a module is built.
--obj- := dummy.o
--
- # List of programs to build
- hostprogs-y := test_lru_dist
- hostprogs-y += sock_example
-diff --git a/samples/hidraw/Makefile b/samples/hidraw/Makefile
-index a9ab961..329da9c 100644
---- a/samples/hidraw/Makefile
-+++ b/samples/hidraw/Makefile
-@@ -1,6 +1,3 @@
--# kbuild trick to avoid linker error. Can be omitted if a module is built.
--obj- := dummy.o
--
- # List of programs to build
- hostprogs-y := hid-example
- 
-diff --git a/samples/seccomp/Makefile b/samples/seccomp/Makefile
-index bf7cc6b..5c6baac 100644
---- a/samples/seccomp/Makefile
-+++ b/samples/seccomp/Makefile
-@@ -1,6 +1,3 @@
--# kbuild trick to avoid linker error. Can be omitted if a module is built.
--obj- := dummy.o
--
- hostprogs-$(CONFIG_SAMPLE_SECCOMP) := bpf-fancy dropper bpf-direct
- 
- HOSTCFLAGS_bpf-fancy.o += -I$(objtree)/usr/include
-diff --git a/samples/sockmap/Makefile b/samples/sockmap/Makefile
-index 9291ab8..73f1da4 100644
---- a/samples/sockmap/Makefile
-+++ b/samples/sockmap/Makefile
-@@ -1,6 +1,3 @@
--# kbuild trick to avoid linker error. Can be omitted if a module is built.
--obj- := dummy.o
--
- # List of programs to build
- hostprogs-y := sockmap
- 
-diff --git a/samples/statx/Makefile b/samples/statx/Makefile
-index 1f80a3d..59df7c2 100644
---- a/samples/statx/Makefile
-+++ b/samples/statx/Makefile
-@@ -1,6 +1,3 @@
--# kbuild trick to avoid linker error. Can be omitted if a module is built.
--obj- := dummy.o
--
- # List of programs to build
- hostprogs-$(CONFIG_SAMPLE_STATX) := test-statx
- 
-diff --git a/samples/uhid/Makefile b/samples/uhid/Makefile
-index c95a696..8d7fd61 100644
---- a/samples/uhid/Makefile
-+++ b/samples/uhid/Makefile
-@@ -1,6 +1,3 @@
--# kbuild trick to avoid linker error. Can be omitted if a module is built.
--obj- := dummy.o
--
- # List of programs to build
- hostprogs-y := uhid-example
- 
 -- 
-2.7.4
+Giulio Benetti
+R&D Manager &
+Advanced Research
+
+MICRONOVA SRL
+Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+Tel. 049/8931563 - Fax 049/8931346
+Cod.Fiscale - P.IVA 02663420285
+Capitale Sociale € 26.000 i.v.
+Iscritta al Reg. Imprese di Padova N. 02663420285
+Numero R.E.A. 258642
+
+Il 07/11/2017 14:03, Maxime Ripard ha scritto:
+> On Tue, Nov 07, 2017 at 01:49:59PM +0100, Giulio Benetti wrote:
+>> On sun7i-a20-* there's no way to enable PA00--PA27 as RGB888 LCD0 pins.
+>>
+>> Add lcd_rgb888_pins in sun7i-a20.dtsi.
+>>
+>> It can be used on sun7i-a20-olinuxino-lime.dts.
+>> This patch gives possibility to set parallel lcd pins for RGB888.
+>> To be used with tcon0 in your <target>.dts
+> 
+> My question was on which board do you want to use it right now. If the
+> answer is none, then we won't merge that patch, we have too many
+> pinctrl already to not add the unused ones.
+> 
+> Maxime
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
