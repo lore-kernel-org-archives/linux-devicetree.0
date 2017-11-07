@@ -1,74 +1,78 @@
-From: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
-Subject: [PATCH 1/1] add mali r6p2 dt node
-Date: Tue,  7 Nov 2017 11:03:30 +0100
-Message-ID: <1510049010-5758-1-git-send-email-giulio.benetti@micronovasrl.com>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 0/6] stm32 clocksource driver rework
+Date: Tue, 7 Nov 2017 11:16:34 +0100
+Message-ID: <CA+M3ks4T9rQ91d7hqBmS=saJkVXvCSO=9pi3L7oX48vFmAcc0A@mail.gmail.com>
+References: <1508752722-4489-1-git-send-email-benjamin.gaignard@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1508752722-4489-1-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree mali node compatible with r6p2 utgard kernel driver 
-provided by ARM and patched by maxime ripard on his github.
+2017-10-23 11:58 GMT+02:00 Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> version 7:
+>  - reword "clocksource: stm32: only use 32 bits timers" commit message
+>    to give more details about why 16 bits are problematics.
 
-It can be easily used in target.dts with:
+Gentle ping in this last version.
+The first patch for timer core has been merge but driver patches still
+need to be reviewed
 
-&mali {
-	status = "okay";
-}
+Thanks,
+Benjamin
 
-then loading mali.ko in user space.
-
-Best regards
-Giulio Benetti
-Micronova srl
-
-Signed-off-by: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 228c368..e402596 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1216,6 +1216,33 @@
- 			#size-cells = <0>;
- 		};
- 
-+		mali: gpu@1c40000 {
-+			compatible = "allwinner,sun8i-a23-mali",
-+				     "allwinner,sun7i-a20-mali", "arm,mali-400";
-+			reg = <0x01c40000 0x10000>;
-+			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "gp",
-+					  "gpmmu",
-+					  "pp0",
-+					  "ppmmu0",
-+					  "pp1",
-+					  "ppmmu1",
-+					  "pmu";
-+			clocks = <&ccu CLK_AHB_GPU>, <&ccu CLK_GPU>;
-+			clock-names = "bus", "core";
-+			resets = <&ccu RST_GPU>;
-+			#cooling-cells = <2>;
-+
-+			assigned-clocks = <&ccu CLK_GPU>;
-+			assigned-clock-rates = <381000000>;
-+		};
-+
- 		gmac: ethernet@1c50000 {
- 			compatible = "allwinner,sun7i-a20-gmac";
- 			reg = <0x01c50000 0x10000>;
--- 
-2.7.4
-
+>
+> version 6:
+>  - add dedicated patch min delta change
+>  - rework commit messages, I hope it will be better now
+>  - change new function name from timer_of_deinit to timer_of_exit
+>  - make stm32_clock_event_set_next_event() safer like done in other
+>    drivers
+>
+> version 6:
+> - add timer_of_deinit function in core
+> - rework failure cases in probe function
+>
+> version 5:
+> - rebase on top of timer/core branch
+> - rework commit message of the first patch
+>
+> version 4:
+> - split patch in 3 parts
+>   - convert code to timer_of
+>   - only use 32 bits timers
+>   - add clocksource support
+>
+> version 3:
+> - fix comments done by Daniel
+> - use timer_of helper functions
+>
+> version 2:
+> - fix uninitialized variable
+>
+>
+> Benjamin Gaignard (6):
+>   timer: add timer_of_exit function
+>   clocksource: stm32: convert driver to timer_of
+>   clocksource: stm32: increase min delta value
+>   clocksource: stm32: only use 32 bits timers
+>   clocksource: stm32: add clocksource support
+>   arm: dts: stm32: remove useless clocksource nodes
+>
+>  arch/arm/boot/dts/stm32f429.dtsi  |  32 -----
+>  arch/arm/boot/dts/stm32f746.dtsi  |  32 -----
+>  drivers/clocksource/Kconfig       |   1 +
+>  drivers/clocksource/timer-of.c    |  12 ++
+>  drivers/clocksource/timer-of.h    |   3 +
+>  drivers/clocksource/timer-stm32.c | 241 ++++++++++++++++++++------------------
+>  6 files changed, 144 insertions(+), 177 deletions(-)
+>
+> --
+> 2.7.4
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
