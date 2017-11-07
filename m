@@ -1,58 +1,111 @@
-From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC][PATCH 0/3] Overlay manager for predefined DT overlay fragments
-Date: Tue, 7 Nov 2017 15:10:15 -0800
-Message-ID: <CALAqxLUBk6Mxcy78ZhExAbrmAE5gSg+AbV0E1By+FmVMa4YDSg@mail.gmail.com>
-References: <1507613660-27236-1-git-send-email-john.stultz@linaro.org>
- <20171013214103.mv6wcemzcl36nnvs@rob-hp-laptop> <CALAqxLWcK-wbmQxtX4RziQsvQ26DmixC=gEPojFVHruFrpBnjw@mail.gmail.com>
- <20171017194600.he3suyuls4na5p6x@rob-hp-laptop> <CALAqxLWSLqmN8WWGktVDxfcs3zyk8ktqVJbtAEoHtqZZw5KTVw@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 11/12] hwrng: bcm2835-rng: Enable BCM2835 RNG to work on
+ BCM63xx platforms
+Date: Wed, 8 Nov 2017 00:27:13 +0100 (CET)
+Message-ID: <1627253231.37578.1510097233943@email.1und1.de>
+References: <20171102010408.27736-1-f.fainelli@gmail.com>
+ <20171102010408.27736-12-f.fainelli@gmail.com>
+ <1831955836.132229.1509820078271@email.1und1.de>
+ <2538f1bb-e0f8-c336-d82a-0cb2f19b0ead@gmail.com>
+ <345702666.5362.1510037144469@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALAqxLWSLqmN8WWGktVDxfcs3zyk8ktqVJbtAEoHtqZZw5KTVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Shmidt <dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <345702666.5362.1510037144469@email.1und1.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Herbert Xu <herbert@gondor.apana.org.au>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Matt Mackall <mpm@selenic.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, moderated list:BROADCO
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 17, 2017 at 2:20 PM, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Oct 17, 2017 at 12:46 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Fri, Oct 13, 2017 at 04:51:03PM -0700, John Stultz wrote:
->>> It seems you're suggesting that there be some sort of special overlay
->>> partition which users have to flash with pre-built images containing
->>> the appropriate overlay dtbs, so that something like the treble
->>> overlay-per-partition approach could be used.
->>
->> I'm not really suggesting anything. I'm not going to take something that
->> *only* solves your usecase of apply an overlay embedded in a base dtb
->> based on the kernel command line. I have no issue really with either one
->> of those. What I don't want is another "overlay manager" for each
->> usecase. And sorry, you don't win for being first (you're not really).
->> All this I said before.
->
-> So, I'm not actually asking anyone to take anything here, I'm just
-> trying to reopen the conversation that hasn't gone very far, so we can
-> find some direction to take.
->
-> I've not followed the discussion super closely here, so apologies if
-> I'm off base here.  But it does seem there's a number of similar
-> efforts, and it seems no one has gotten enough momentum to make a real
-> push upstream. It seems its just easier for everyone to keep their own
-> approach in their own tree and not to bother.  At one end, sure,
-> keeping half baked ideas out of mainline until they really sort
-> themselves out is fine, but at the other extreme you risk the
-> half-baked ideas calcifying in their own tree and then you have more
-> Android (or whatever variant) specific cruft to shake your fist at.
-> :)
->
-> How do we get to a shared solution here where folks are engaging with upstream?
->
-> Even an "I like approach B, go make that work" would help here.
 
-Nudge.  Any further thoughts on what sort of an approach might be viable here?
+> Stefan Wahren <stefan.wahren@i2se.com> hat am 7. November 2017 um 07:45 geschrieben:
+> 
+> 
+> > Florian Fainelli <f.fainelli@gmail.com> hat am 6. November 2017 um 21:16 geschrieben:
+> > 
+> > 
+> > On 11/04/2017 11:27 AM, Stefan Wahren wrote:
+> > > Hi Florian
+> > > 
+> > >> Florian Fainelli <f.fainelli@gmail.com> hat am 2. November 2017 um 02:04 geschrieben:
+> > >>
+> > >>
+> > >> We have now incorporated all necessary functionality for the BCM63xx
+> > >> platforms to successfully migrate over bcm2835-rng, so add the final
+> > >> bits: Kconfig selection and proper platform_device device type matching
+> > >> to keep the same platform device name for registration to work.
+> > >>
+> > >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> > >> ---
+> > >>  drivers/char/hw_random/Kconfig       |  7 ++++---
+> > >>  drivers/char/hw_random/bcm2835-rng.c | 11 ++++++++++-
+> > >>  2 files changed, 14 insertions(+), 4 deletions(-)
+> > >>
+> > >> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> > >> index 95a031e9eced..d0689cc8c7fc 100644
+> > >> --- a/drivers/char/hw_random/Kconfig
+> > >> +++ b/drivers/char/hw_random/Kconfig
+> > >> @@ -87,12 +87,13 @@ config HW_RANDOM_BCM63XX
+> > >>  	  If unusure, say Y.
+> > >>  
+> > >>  config HW_RANDOM_BCM2835
+> > >> -	tristate "Broadcom BCM2835 Random Number Generator support"
+> > >> -	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X
+> > >> +	tristate "Broadcom BCM2835/BCM63xx Random Number Generator support"
+> > >> +	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X || \
+> > >> +		   ARCH_BCM_63XX || BCM63XX || BMIPS_GENERIC
+> > >>  	default HW_RANDOM
+> > >>  	---help---
+> > >>  	  This driver provides kernel-side support for the Random Number
+> > >> -	  Generator hardware found on the Broadcom BCM2835 SoCs.
+> > >> +	  Generator hardware found on the Broadcom BCM2835 and BCM63xx SoCs.
+> > >>  
+> > >>  	  To compile this driver as a module, choose M here: the
+> > >>  	  module will be called bcm2835-rng
+> > >> diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
+> > >> index 650e0033c273..d9ffe14f312b 100644
+> > >> --- a/drivers/char/hw_random/bcm2835-rng.c
+> > >> +++ b/drivers/char/hw_random/bcm2835-rng.c
+> > >> @@ -131,6 +131,7 @@ static const struct of_device_id bcm2835_rng_of_match[] = {
+> > >>  	{ .compatible = "brcm,bcm2835-rng"},
+> > >>  	{ .compatible = "brcm,bcm-nsp-rng", .data = &nsp_rng_of_data },
+> > >>  	{ .compatible = "brcm,bcm5301x-rng", .data = &nsp_rng_of_data },
+> > >> +	{ .compatible = "brcm,bcm6368-rng"},
+> > >>  	{},
+> > >>  };
+> > >>  
+> > >> @@ -164,7 +165,7 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
+> > >>  	if (IS_ERR(priv->clk))
+> > >>  		priv->clk = NULL;
+> > >>  
+> > >> -	priv->rng.name = "bcm2835-rng";
+> > >> +	priv->rng.name = pdev->id_entry->name;
+> > > 
+> > > this change breaks registration on bcm2835, because the name is NULL.
+> > 
+> > OH right, I will fix that in v2, I am assuming that if you did something
+> > like this, things still work correctly for you on 2835:
+> > 
+> > if (!priv->id_entry->name)
+> > 	priv->rng.name = "bcm2835-rng";
+> > else
+> > 	priv->rng.name = priv->id_entry->name;
+> > 
+> > ?
+> 
+> I think that should work, but i'm not really happy about it. I prefer a more general solution. Looking at the other rng drivers shows the following pattern:
+> 
+> priv->rng.name = pdev->name;
+> 
+> I need to verify this on bcm2835.
 
-thanks
--john
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay pdev->name works for bcm2835
