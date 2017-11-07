@@ -1,71 +1,90 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: AXP803 I2C support / AXP devicetree-bindings
-Date: Tue, 07 Nov 2017 16:20:43 +0800
-Message-ID: <2bcdd4c97a13b1c24eccdf6f7d73e00b@aosc.io>
-References: <CAFBinCAm8pA-dh3+T4Ui+DvLv5C17Zup-FN8pvi0cUa5PgwJJw@mail.gmail.com>
- <CAGb2v642n4puXqKOjG0QxhFgFFW2nJKrpU4KV2ZRPNb6_zF4pw@mail.gmail.com>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH v2 3/3] usb: dwc3: Enable USB 3.0 phy driver
+Date: Tue, 07 Nov 2017 10:24:56 +0200
+Message-ID: <87k1z2sdgn.fsf@linux.intel.com>
+References: <20171107072055.26945-1-ran.wang_1@nxp.com> <20171107072055.26945-3-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v642n4puXqKOjG0QxhFgFFW2nJKrpU4KV2ZRPNb6_zF4pw@mail.gmail.com>
+In-Reply-To: <20171107072055.26945-3-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Quentin Schulz <quentin.schulz@free-electrons.com>
+To: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, stern@rowland.harvard.edu, pku.leo@gmail.com, mathias.nyman@intel.com, gregkh@linuxfoundation.org, suresh.gupta@nxp.com, Shawn Guo <shawnguo@kernel.org>, Sriram Dash <sriram.dash@nxp.com>, Li Yang <leoyang.li@nxp.com>, Hongtao Jia <hongtao.jia@nxp.com>, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-于 2017年11月7日 GMT+08:00 上午11:13:23, Chen-Yu Tsai <wens@csie.org> 写到:
-> On Tue, Nov 7, 2017 at 6:39 AM, Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->> Hello,
->> 
->> recently I discovered that there are some X-Powers AXP chips that
->> support both, Allwinner's own "RSB" as well as the I2C ("TWSI" in the
->> datasheet) busses.
->> 
->> one chip that supports both interfaces is the AXP803
->> the datasheet is linked in the public PINE64 wiki: [1] (direct link:
-> [0])
-> 
-> All the RSB based PMICs support both modes. They start in I2C mode
-> when cold booted.
 
-I think it starts at a vendor-customized mode. In all PMICs sold
-with Allwinner SoCs the mode is predefined to RSB.
+Hi,
 
-In fact many registers in AXPs are vendor-customizable, see
-the datasheets.
+Ran Wang <ran.wang_1@nxp.com> writes:
+> Adds entry point at dwc3 core init function to enable
+> USB 3.0 PHY driver.
+>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+> Change in v2:
+> 	- New file
+>
+>  drivers/usb/dwc3/core.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index 03474d3575ab..a9df03c64a7b 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -746,6 +746,8 @@ static int dwc3_core_init(struct dwc3 *dwc)
+>  {
+>  	u32			reg;
+>  	int			ret;
+> +	int			retval;
+> +	struct phy *phy;
+>=20=20
+>  	if (!dwc3_core_is_valid(dwc)) {
+>  		dev_err(dwc->dev, "this is not a DesignWare USB3 DRD Core\n");
+> @@ -770,6 +772,19 @@ static int dwc3_core_init(struct dwc3 *dwc)
+>  	if (ret)
+>  		goto err0;
+>=20=20
+> +	phy =3D phy_get(dwc->dev, "usb-phy");
+> +	if (IS_ERR(phy)) {
+> +		retval =3D PTR_ERR(phy);
+> +		if (retval =3D=3D -EPROBE_DEFER)
+> +			dev_dbg(dwc->dev, "usb-phy no found\n");
+> +	} else {
+> +		retval =3D phy_init(phy);
+> +		if (retval) {
+> +			phy_put(phy);
+> +		    dev_dbg(dwc->dev, "phy_init() error!\n");
+> +		}
+> +	}
+> +
 
-> 
->> 
->> currently the "x-powers,axp803" binding is "RSB" bus specific as it's
->> currently only listed in drivers/mfd/axp20x-rsb.c
->> 
->> was there a discussion about supporting both, the "RSB" and I2C bus
->> for one chip (for example the AXP803) in the past (I couldn't find
->> anything online)?
-> 
-> No. None of the boards actually use I2C instead of RSB. RSB mode is
-> initialized by the boot loader. There is no easy way for the kernel to
-> switch it back.
-> 
->> what about the device-tree bindings in this case?
-> 
-> We can deal with it if someone actually comes up with a practical
-> case needing it. Otherwise things go untested, which is not what
-> we want.
-> 
-> ChenYu
-> 
->> 
->> 
->> Regards
->> Martin
->> 
->> 
->> [0]
-> http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
->> [1]
-> http://wiki.pine64.org/index.php/PINE_A64_Main_Page#Datasheets_for_Components_and_Peripherals
+what???? We already do this. See dwc3_core_get_phy().
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAloBbdoACgkQzL64meEa
+mQZitg/9GnyE4elCfc41RrF2oZZsb3CfNuz/FLkFUBH/rLUU1JtW90uLW/SI7Wrm
+jjBHFQ/ZYZZvH54tyoxGYOo0cGFTh0GjteyYspR0Pg72DwovEghV/ngPsSn/hqnX
+Nu61WkM8D1CwpECF+NAtUzLV2VB69jA+u7o3InOJAM3M6Q25pJ2eskL4DpCwga+P
+68HTSdxBuoECw6zx/GQXeHZwEsPgb/GLq5zFAJE7lBXhHq0AHoMcAy1pL7MAYcfX
+HJeoAEaxp3nwh6k3bmFvVaVJRiOYI62Y6Bf7FwJE+N+rHzXU8svAJjuuJms9fy0B
+PaQEmiNmHH2ueMAs/K8ay0FVaJGHi6GUGIiZqmQ+3T93o10qvMr73VYXpfcajyc9
+uiMK/H/KyXyvm+6ztJXxl+KQ82FkzmrChxdqG3wl3xoqOA5L0Ph9zCb8zgTW3vpF
+w2fam2aQeLzF9x75aRQH7wWWgUmVkdwiZKQDycrdmfDquDXdmQCJ/E0yY5R7cE/U
+KEKvZSrfhlg218fdo+Gy+xFhf+K+wzksgZuvioMAyE9vuIp5wArATxPR9Gd0BbTp
+/HtdCWW4r1lZg0Tku7n9YsifgnTTy5w6yW8yUJXsD7DvFbYQCe6FnYzsHHYEHpEC
+e10ya6aBhyPsVmFxiJKdjVyC55xIb9LWWp249RWnwlDciZ+1VUc=
+=GZRQ
+-----END PGP SIGNATURE-----
+--=-=-=--
