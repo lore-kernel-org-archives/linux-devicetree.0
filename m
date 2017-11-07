@@ -1,60 +1,76 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: AXP803 I2C support / AXP devicetree-bindings
-Date: Tue, 7 Nov 2017 11:13:23 +0800
-Message-ID: <CAGb2v642n4puXqKOjG0QxhFgFFW2nJKrpU4KV2ZRPNb6_zF4pw@mail.gmail.com>
-References: <CAFBinCAm8pA-dh3+T4Ui+DvLv5C17Zup-FN8pvi0cUa5PgwJJw@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] ARM: dts: r8a7745: Add DU support
+Date: Tue, 07 Nov 2017 06:05:37 +0200
+Message-ID: <9872942.on8edmfvcY@avalon>
+References: <1509992814-4543-1-git-send-email-fabrizio.castro@bp.renesas.com> <1509992814-4543-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCAm8pA-dh3+T4Ui+DvLv5C17Zup-FN8pvi0cUa5PgwJJw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1509992814-4543-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 7, 2017 at 6:39 AM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> Hello,
->
-> recently I discovered that there are some X-Powers AXP chips that
-> support both, Allwinner's own "RSB" as well as the I2C ("TWSI" in the
-> datasheet) busses.
->
-> one chip that supports both interfaces is the AXP803
-> the datasheet is linked in the public PINE64 wiki: [1] (direct link: [0])
+Hi Fabrizio,
 
-All the RSB based PMICs support both modes. They start in I2C mode
-when cold booted.
+Thank you for the patch.
 
->
-> currently the "x-powers,axp803" binding is "RSB" bus specific as it's
-> currently only listed in drivers/mfd/axp20x-rsb.c
->
-> was there a discussion about supporting both, the "RSB" and I2C bus
-> for one chip (for example the AXP803) in the past (I couldn't find
-> anything online)?
+On Monday, 6 November 2017 20:26:53 EET Fabrizio Castro wrote:
+> Add du node to r8a7745 SoC DT. Boards that want to enable the DU
+> need to specify the output topology.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
-No. None of the boards actually use I2C instead of RSB. RSB mode is
-initialized by the boot loader. There is no easy way for the kernel to
-switch it back.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-> what about the device-tree bindings in this case?
+> ---
+>  arch/arm/boot/dts/r8a7745.dtsi | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+> index 846c27a..53eb1ce4 100644
+> --- a/arch/arm/boot/dts/r8a7745.dtsi
+> +++ b/arch/arm/boot/dts/r8a7745.dtsi
+> @@ -821,6 +821,33 @@
+>  			status = "disabled";
+>  		};
+> 
+> +		du: display@feb00000 {
+> +			compatible = "renesas,du-r8a7745";
+> +			reg = <0 0xfeb00000 0 0x40000>;
+> +			reg-names = "du";
+> +			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 724>, <&cpg CPG_MOD 723>;
+> +			clock-names = "du.0", "du.1";
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					du_out_rgb0: endpoint {
+> +					};
+> +				};
+> +				port@1 {
+> +					reg = <1>;
+> +					du_out_rgb1: endpoint {
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+>  		msiof0: spi@e6e20000 {
+>  			compatible = "renesas,msiof-r8a7745",
+>  				     "renesas,rcar-gen2-msiof";
 
-We can deal with it if someone actually comes up with a practical
-case needing it. Otherwise things go untested, which is not what
-we want.
 
-ChenYu
+-- 
+Regards,
 
->
->
-> Regards
-> Martin
->
->
-> [0] http://files.pine64.org/doc/datasheet/pine64/AXP803_Datasheet_V1.0.pdf
-> [1] http://wiki.pine64.org/index.php/PINE_A64_Main_Page#Datasheets_for_Components_and_Peripherals
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
