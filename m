@@ -1,128 +1,63 @@
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH V3 02/11] dt-bindings: Add Spreadtrum clock binding documentation
-Date: Tue, 7 Nov 2017 15:01:09 +0800
-Message-ID: <CAAfSe-s=uF6j2T2cePbAT3q4BxY6RcvktwZVs+PjnkQYozvrWQ@mail.gmail.com>
-References: <20171102065626.21835-1-chunyan.zhang@spreadtrum.com>
- <20171102065626.21835-3-chunyan.zhang@spreadtrum.com> <20171106171519.xomnca72adqtzm2n@rob-hp-laptop>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v11 02/10] i2c: i2c-smbus: Move i2c_setup_smbus_alert
+ from i2c-smbus to i2c-core-smbus
+Date: Tue, 7 Nov 2017 08:22:55 +0100
+Message-ID: <20171107072254.s43mwpyplx3hdkyo@ninjato>
+References: <1503567070-115646-1-git-send-email-preid@electromag.com.au>
+ <1503567070-115646-3-git-send-email-preid@electromag.com.au>
+ <20171029154408.vmjkpj7ybqyrj3ke@ninjato>
+ <1397131b-c22d-9872-dbe0-9b691553cb9e@electromag.com.au>
+ <20171106213646.2h3zsitnlablblli@ninjato>
+ <2eaccb51-62cf-b764-d313-84008c6c8f87@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171106171519.xomnca72adqtzm2n@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Orson Zhai <orson.zhai@spreadtrum.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bikpymgkkwmtznnd"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2eaccb51-62cf-b764-d313-84008c6c8f87@electromag.com.au>
+Sender: linux-pm-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: Jean Delvare <jdelvare@suse.de>, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, benjamin.tissoires@redhat.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 7 November 2017 at 01:15, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Nov 02, 2017 at 02:56:17PM +0800, Chunyan Zhang wrote:
->> Introduce a new binding with its documentation for Spreadtrum clock
->> sub-framework.
->>
->> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
->> ---
->>  Documentation/devicetree/bindings/clock/sprd.txt | 55 ++++++++++++++++++++++++
->>  1 file changed, 55 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/sprd.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/sprd.txt b/Documentation/devicetree/bindings/clock/sprd.txt
->> new file mode 100644
->> index 0000000..5c09529
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/sprd.txt
->> @@ -0,0 +1,55 @@
->> +Spreadtrum Clock Binding
->> +------------------------
->> +
->> +Required properties:
->> +- compatible: should contain the following compatible strings:
->> +     - "sprd,sc9860-pmu-gate"
->> +     - "sprd,sc9860-pll"
->> +     - "sprd,sc9860-ap-clk"
->> +     - "sprd,sc9860-aon-prediv"
->> +     - "sprd,sc9860-apahb-gate"
->> +     - "sprd,sc9860-aon-gate"
->> +     - "sprd,sc9860-aonsecure-clk"
->> +     - "sprd,sc9860-agcp-gate"
->> +     - "sprd,sc9860-gpu-clk"
->> +     - "sprd,sc9860-vsp-clk"
->> +     - "sprd,sc9860-vsp-gate"
->> +     - "sprd,sc9860-cam-clk"
->> +     - "sprd,sc9860-cam-gate"
->> +     - "sprd,sc9860-disp-clk"
->> +     - "sprd,sc9860-disp-gate"
->> +     - "sprd,sc9860-apapb-gate"
->> +
->> +- #clock-cells: must be 1
->> +
->> +- clocks : shall be the input parent clock(s) phandle for the clock.
->
-> You need to document how many clocks for each block.
+--bikpymgkkwmtznnd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It depends, "clocks" property here just simply shows which clock group
-the clock's parents are in.
-The detailed dependency relationship (i.e. how many parents and which
-are the parents) are implemented in driver code.
 
-Ok, I should address more, will do in the next version.
+> I was just thinking that all that's in the file now is smbus-alert code.
+> The other smbus (host notify) code was moved to i2c-core
+> So maybe i2c-core-smbus-alert and as you say use makefile to include it.
 
->
->> +
->> +Optional properties:
->> +
->> +- reg:       Contain the registers base address and length. It must be configured only if no 'sprd,syscon' under the node.
->> +
->> +- sprd,syscon: phandle to the syscon which is in the same address area with the clock.
->> +
->> +Example:
->> +
->> +     pmu_gate: pmu-gate {
->> +             compatible = "sprd,sc9860-pmu-gate";
->> +             sprd,syscon = <&pmu_apb>;
->
-> Ideally, the pmu-gate node would be a child of pmu_apb and use the reg
-> property if clock registers are a contiguous range. Then you don't need
-> this phandle.
+Aaaah, i2c-core-smbus-alert.c. Yes, that probably makes sense. I was
+wondering about i2c-smbus-alert.c (without -core)...
 
-The pmu-gate is actually a clock independent from the 'pmu_apb' syscon
-device, using a reference to syscon node instead of a reg property is
-just to avoid mapping the same address areas repeatedly.  Spreadtrum's
-clock h/w design is a little complicated, after discussing with Arnd
-and Stephen, I then chose to implement in this way.
+> I've tried this and it seems to work for the various combinations.
+> I'll wait a bit for Jean to offer an opinion.
 
-I guess the name of 'pmu_apb' might be confused, it's actually not a
-bus, but a global address area stored a lot of registers shared by a
-few devices including some clocks.  I think I'd better use another
-name instead of pmu_apb :)
+Well, if you have code already, can you post it as RFC and CC Jean?
+It usually is easier to talk over code, even if it is not perfect yet...
 
-Please let me know if I'm missing something here.
 
-Thanks,
-Chunyan
+--bikpymgkkwmtznnd
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
->> +             clocks = <&ext_26m>;
->> +             #clock-cells = <1>;
->> +     };
->> +
->> +     pll: pll {
->> +             compatible = "sprd,sc9860-pll";
->> +             sprd,syscon = <&ana_apb>;
->
-> Same here.
->
->> +             clocks = <&pmu_gate 0>;
->> +             #clock-cells = <1>;
->> +     };
->> +
->> +     ap_clk: clock-controller@20000000 {
->> +             compatible = "sprd,sc9860-ap-clk";
->> +             reg = <0 0x20000000 0 0x400>;
->> +             clocks = <&ext_26m>, <&pll 0>,
->> +                      <&pmu_gate 0>;
->> +             #clock-cells = <1>;
->> +     };
->> --
->> 2.7.4
->>
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAloBX0oACgkQFA3kzBSg
+Kbb6nhAAiTjcLEHcmWcnWXLWm52v1eFi99WAwm3ONH6wlmWdT1WK/4ktJ6X3bx2Z
+XSVGvELMjeuFY2khXNmrM08pNu/ceNVBcBAuOhxDg9PeKLsBuRlPm6/38GIkKy9t
+IJbAz4+VJ1hqtpFNyOKuafvmcIwAYfdAeNOz5nqqiGGqZbHA3qMwLBxRvt3oupMB
+0ngTY/unB/x1tvhnXKAI73gq+I2S3OLM+SifwD+x84N8curvQ/oCtfhQ5WS+fuUW
+6FF/BeyE5qH0wN4LfDtap1LdIiiZnaHoI709hF8AGtJiLxmu4OeO+Jph5jiV6AOj
+mUCK4OoDDowHSsbvd7xNPE5FuPPNWpF6V1CnjZrV4zeN9QwP2DSlFwdZNkaCynGy
+V70sxrj1d2alD+YIWctu1iBuG7OiFus0wDvfpsUX9ZH0JQ0KSmtnZjjepaaQ3x/+
+XydRjM18OgGL7t28J4qb4sH36j8p1sGc04NMQokLwnh0zuR6+6e+qBTOYqQFtW5d
+8svTp8j7fRHdAwth57vAqRZx+qvUZtKH6f/BXhOEBsYQqnmeQfAjb78Q3+2XNdEY
+3sD3Bp0r5CUxKc+t3UZHP50NlPB6lm8i2ihu3kEqIqV6x/R1ESGP8PdznrbnGiNF
+om2OMPnFwWfeuAbiKvhpQt+J78nc+y9r06E+39vS1Fs4LI9QdUc=
+=j7zL
+-----END PGP SIGNATURE-----
+
+--bikpymgkkwmtznnd--
