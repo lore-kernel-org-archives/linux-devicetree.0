@@ -1,49 +1,90 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] *** Fix warning from kbuild test robot ***
-Date: Tue, 7 Nov 2017 09:31:45 +0100
-Message-ID: <b874ae68-08d4-ba0d-f52a-b25d0f2ccc73@linaro.org>
-References: <1510039193-32522-1-git-send-email-rickchen36@gmail.com>
+From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: iio: at91-sama5d2_adc: add optional
+ dma property
+Date: Tue, 7 Nov 2017 10:49:41 +0200
+Message-ID: <5f171202-6a6a-2055-cb5c-c0c687f60f86@microchip.com>
+References: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
+ <1507703732-29175-2-git-send-email-eugen.hristev@microchip.com>
+ <20171013215142.vlfhzzzetmc7resq@rob-hp-laptop>
+ <20171019111417.7rzdnkvtukzzhl2u@piout.net>
+ <CAL_JsqLPMeF9EtcCO3eZn+7DbyAQcxzNYEpAiFvQoe1=ytpELQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510039193-32522-1-git-send-email-rickchen36-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLPMeF9EtcCO3eZn+7DbyAQcxzNYEpAiFvQoe1=ytpELQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rick Chen <rickchen36-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rick-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2017 08:19, Rick Chen wrote:
-> *** Fix warnings when make with ARCH=x86_64 from auto build test ***
+
+
+On 20.10.2017 00:58, Rob Herring wrote:
+> On Thu, Oct 19, 2017 at 6:14 AM, Alexandre Belloni
+> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> On 13/10/2017 at 16:51:42 -0500, Rob Herring wrote:
+>>> On Wed, Oct 11, 2017 at 09:35:28AM +0300, Eugen Hristev wrote:
+>>>> Added property for DMA configuration of the device.
+>>>>
+>>>> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>>>> ---
+>>>>   Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
+>>>>   1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+>>>> index 552e7a8..5f94d479 100644
+>>>> --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+>>>> +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+>>>> @@ -17,6 +17,11 @@ Required properties:
+>>>>     This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
+>>>>     IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
+>>>>
+>>>> +Optional properties:
+>>>> +  - dmas: Phandle to dma channel for the ADC.
+>>>> +  See ../../dma/dma.txt for details.
+>>>> +  - dma-names: Must be "rx" when dmas property is being used.
+>>>
+>>> -names is pointless when there is only one.
+>>>
+>>
+>> You didn't reply to the question I had previously about that: What if at
+>> some point, we have multiple dmas in the same binding?
 > 
-> rick (3):
->   clocksource/drivers/atcpit100: Add andestech atcpit100 timer
->   clocksource/drivers/Kconfig: Support andestech atcpit100 timer
->   dt-bindings: timer: Add andestech atcpit100 timer binding doc
+> Then add dma-names at that point and rx has to be first. If you know
+> there's other channels, then add them now. Don't evolve the bindings
+> needlessly based on what a driver supports.
 > 
->  .../bindings/timer/andestech,atcpit100-timer.txt   |  31 ++++
->  drivers/clocksource/Kconfig                        |   6 +
->  drivers/clocksource/Makefile                       |   1 +
->  drivers/clocksource/timer-atcpit100.c              | 199 +++++++++++++++++++++
->  4 files changed, 237 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
->  create mode 100644 drivers/clocksource/timer-atcpit100.c
+> Would another channel make sense here? Maybe multi-channel rx in which
+> case your naming wouldn't be setup for that. But "tx" on an ADC?
+> 
+> Rob
 
-Hi Rick,
+Hello Rob,
 
-I'm not sure to get the 0/3 subject and description.
+I can keep only "dmas" and remove "dma-names", but then, the API used by
+the drivers that request channels requires a name parameter
+(dma_request_slave_channel), and it will look always inside the
+"dma-names" property to match the name and find the proper channel, and
+it will fail in this case.
 
-Is that a changelog ?
+Looking in the general dma binding (dma.txt) I can see that both
+properties are marked as required for a client driver, so that's why
+I added both.
+
+I can either keep dma-names; or try to find the channel properties by
+looking directly into the OF node and create the dma_chan struct inside
+my driver (maybe call some xlate function for the DMA controller), but
+still need to get the DT property. A complicated option would be to
+actually create an API inside the dmaengine to find a channel without
+name.
+
+Which approach you think it's best to pursue ?
+
+Thanks,
+Eugen
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
