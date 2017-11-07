@@ -1,43 +1,59 @@
-From: Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] Devicetree documentation: add rs485-rts-active-high property
-Date: Tue,  7 Nov 2017 08:53:36 +0100
-Message-ID: <20171107075336.11236-1-m.oleszczyk@grinn-global.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH] ARM: dts: add phy-reset property for rk3066a-rayeager
+ emac
+Date: Tue, 7 Nov 2017 09:54:27 +0200
+Message-ID: <e6f2393e-cb3b-9006-d0f5-6b30fd2a5192@mentor.com>
+References: <1510022959-19440-1-git-send-email-zyw@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1510022959-19440-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Roger Quadros <rogerq@ti.com>
+Cc: heiko@sntech.de, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hello Chris,
 
-Add description of rs485-rts-active-high property into
-/serial/rs485.txt devicetree documentation file.
+On 11/07/2017 04:49 AM, Chris Zhong wrote:
+> The ethernet phy of rk3066a-rayeager has a reset pin, it controlled by
+> GPIO1_D6, this pin should be pull down then pull up to reset the phy.
+> Add a phy-reset property in emac, make the phy can be reset when emac
+> power on.
 
-Signed-off-by: Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+for PHY reset there are properties 'reset-gpios' and 'reset-delay-us',
+please reference to Documentation/devicetree/bindings/net/mdio.txt
 
----
-Repair 'From' to match with 'Signed-off-by' section.
+Can you try to reuse them instead of adding new custom properties?
 
- Documentation/devicetree/bindings/serial/rs485.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/serial/rs485.txt b/Documentation/devicetree/bindings/serial/rs485.txt
-index b8415936dfdb..71c38ef7f6e2 100644
---- a/Documentation/devicetree/bindings/serial/rs485.txt
-+++ b/Documentation/devicetree/bindings/serial/rs485.txt
-@@ -16,6 +16,8 @@ Optional properties:
-   feature at boot time. It can be disabled later with proper ioctl.
- - rs485-rx-during-tx: empty property that enables the receiving of data even
-   whilst sending data.
-+- rs485-rts-active-high: empty property telling to set RTS line high when it is 
-+  active.
- 
- RS485 example for Atmel USART:
- 	usart0: serial@fff8c000 {
--- 
-2.11.0
+As a side question, which is mainly addressed to Sergei and Roger,
+I don't quite understand why PHY properties were initially added to
+MAC/MDIO bus device tree nodes, in my opinion they must be moved under
+PHY device tree nodes.
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
+
+> 
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> ---
+> 
+>  arch/arm/boot/dts/rk3066a-rayeager.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts b/arch/arm/boot/dts/rk3066a-rayeager.dts
+> index 570157f..6064a0a 100644
+> --- a/arch/arm/boot/dts/rk3066a-rayeager.dts
+> +++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
+> @@ -173,6 +173,8 @@
+>  	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
+>  	phy = <&phy0>;
+>  	phy-supply = <&vcc_rmii>;
+> +	phy-reset-gpios = <&gpio1 RK_PD6 GPIO_ACTIVE_LOW>; /* PHY_RST */
+> +	phy-reset-duration = <10>; /* millisecond */
+>  	status = "okay";
+>  
+>  	phy0: ethernet-phy@0 {
+> 
