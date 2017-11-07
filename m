@@ -1,151 +1,321 @@
-From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 3/3] iio: light: isl76683 add way to adjust irq threshold
-Date: Tue,  7 Nov 2017 16:36:23 +0100
-Message-ID: <1510068983-25769-4-git-send-email-chf.fritz@googlemail.com>
-References: <1510068983-25769-1-git-send-email-chf.fritz@googlemail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510068983-25769-1-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: Allow indicating loss of state across
+ suspend/resume
+Date: Tue, 7 Nov 2017 08:00:06 -0800
+Message-ID: <20171107160006.GQ28152@atomide.com>
+References: <20171102231551.16220-1-f.fainelli@gmail.com>
+ <da808465-dc64-6c33-0be6-e038e0f84bce@gmail.com>
+ <20171103173353.GJ28152@atomide.com>
+ <2452741.VnAOAIxsj2@aspire.rjw.lan>
+ <7091cb38-e55b-fa20-114e-bd77950ea912@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7091cb38-e55b-fa20-114e-bd77950ea912@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Charles Keepax <ckeepax@opensource.cirrus.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds sysfs read/write support for upper and lower irq
-thresholds. So it's possible that only on certain lux ranges the
-irq triggered measurement happens.
+* Florian Fainelli <f.fainelli@gmail.com> [171104 17:21]:
+> 
+> 
+> On 11/04/2017 05:25 AM, Rafael J. Wysocki wrote:
+> > On Friday, November 3, 2017 6:33:53 PM CET Tony Lindgren wrote:
+> >> * Florian Fainelli <f.fainelli@gmail.com> [171103 17:04]:
+> >>> On 11/03/2017 09:11 AM, Tony Lindgren wrote:
+> >>> The pinctrl provider is losing its state, hence these two patches.
+> >>
+> >> OK
+> >>
+> >>>> Anyways, the context lost flag should be managed in the PM core for
+> >>>> the device, so adding linux-pm and Rafael to Cc.
+> >>>
+> >>> I don't think it's that simple but sure, why not.
+> >>
+> >> Just having bool context_lost in struct dev_pm_info would probably
+> >> be enough to allow drivers to deal with it. This flag could then
+> >> be set for a device by power domain related code that knows if
+> >> context got lost.
+> > 
+> > Something like: if the driver sees "context_lost" set, it should restore
+> > the context to the device from memory?
+> 
+> That is what is being proposed here, except that the actual mechanism
+> where this matters needs to be in the core pinctrl code, otherwise the
+> state (context) is not restored due to a check that attempts not to
+> (re)apply a previous state.
+> 
+> > 
+> > But the it would also need to save the context beforehand, so why not to
+> > restore it unconditionally on resume?
+> 
+> That's what my original attempts did here:
+> 
+> https://patchwork.kernel.org/patch/9598969/
+> 
+> but Linus rightfully requested this to be done differently, hence this
+> attempt now to solve it in a slightly more flexible way based on DT
+> properties.
 
-Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+For runtime PM, restoring the state constantly is unnecessary and not
+good for battery life. The logic can be just:
+
+1. Device driver runtime PM suspend saves the state when needed
+
+2. Device driver runtime PM resume checks if context_lost was set by
+   the bus or power domain code
+
+3. If context was lost, device driver restores the state, or in some
+   cases may need re-run the driver register init related parts
+   to bring the driver back up, then clears the context_lost flag
+
+How about something like the following patch? So far only compile
+tested with CONFIG_PM enabled. If that looks like the way to go,
+I'll test it properly and add some comments for the functions and
+post a proper patch :)
+
+Regards,
+
+Tony
+
+8< ----------------------
+>From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Mon, 6 Nov 2017 07:02:54 -0800
+Subject: [PATCH] RFC: PM / context: Add support for context lost handling
+
+On some hardware device drivers can lose their context in deeper
+idle states when the power is cut off for some power domain.
+
+As the drivers themselves may not be aware if the context was lost
+without reinitializing the device, we want to provide few helpers
+for tracking if device context was lost in a generic way.
+
+Typically the interconnect or power domain hardware knows when
+context was lost and we can set up a function for the consumer
+drivers to query the context lost state.
+
+The helpers for context lost that can be used in the following way:
+
+1. Power domain or interconnect code registers a callback function
+   with for a device
+
+   error = dev_pm_register_context_lost_handler(dev, cb, data);
+   if (error)
+   	...
+
+2. A consumer device driver saves it's state as needed in suspend
+   or runtime PM suspend
+
+3. A power domain is powered off during idle, and context is lost
+   for all the devices in that power domain
+
+4. On resume or runtime PM resume, a device driver queries the
+   context lost state and restores the context if needed
+
+   error = dev_pm_update_context_lost(dev);
+   if (error)
+   	...
+
+   if (dev_pm_was_context_lost(dev))
+	restore_context(ddata);
+
+REVISIT: Compile tested only, needs testing and comments
+
+Not-Yet-Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- .../ABI/testing/sysfs-bus-iio-light-isl76683       | 17 +++++++
- drivers/iio/light/isl76683.c                       | 58 ++++++++++++++++++++--
- 2 files changed, 71 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-isl76683
+ drivers/base/power/Makefile  |  1 +
+ drivers/base/power/context.c | 84 ++++++++++++++++++++++++++++++++++++++++++++
+ drivers/base/power/power.h   |  6 ++++
+ include/linux/pm.h           |  1 +
+ include/linux/pm_context.h   | 51 +++++++++++++++++++++++++++
+ 5 files changed, 143 insertions(+)
+ create mode 100644 drivers/base/power/context.c
+ create mode 100644 include/linux/pm_context.h
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-light-isl76683 b/Documentation/ABI/testing/sysfs-bus-iio-light-isl76683
+diff --git a/drivers/base/power/Makefile b/drivers/base/power/Makefile
+--- a/drivers/base/power/Makefile
++++ b/drivers/base/power/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_PM)	+= sysfs.o generic_ops.o common.o qos.o runtime.o wakeirq.o
++obj-$(CONFIG_PM)	+= context.o
+ obj-$(CONFIG_PM_SLEEP)	+= main.o wakeup.o
+ obj-$(CONFIG_PM_TRACE_RTC)	+= trace.o
+ obj-$(CONFIG_PM_GENERIC_DOMAINS)	+=  domain.o domain_governor.o
+diff --git a/drivers/base/power/context.c b/drivers/base/power/context.c
 new file mode 100644
-index 0000000..c7e08d7
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-light-isl76683
-@@ -0,0 +1,17 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_threshold_low
-+Date:		November 2017
-+KernelVersion:	4.15.0
-+Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+Description:
-+		Raw value of lower threshold for the interrupt.
-+		Reading returns 8-bit MSB data of a 16-bit threshold.
-+		Writing 0...255 represents 8-bit MSB data of a 16-bit threshold.
++++ b/drivers/base/power/context.c
+@@ -0,0 +1,84 @@
++/*
++ * context.c - Device context lost helper functions
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_threshold_up
-+Date:		November 2017
-+KernelVersion:	4.15.0
-+Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+Description:
-+		Raw value of upper threshold for the interrupt.
-+		Reading returns 8-bit MSB data of a 16-bit threshold.
-+		Writing 0...255 represents 8-bit MSB data of a 16-bit threshold.
-diff --git a/drivers/iio/light/isl76683.c b/drivers/iio/light/isl76683.c
-index b730276..889fb85 100644
---- a/drivers/iio/light/isl76683.c
-+++ b/drivers/iio/light/isl76683.c
-@@ -74,11 +74,14 @@ static const int isl76683_lux_ranges_available[] = {
- #define ISL76683_KOHM_MAX		1000
- #define ISL76683_INTPERS_DEFAULT	0x0
- #define ISL76683_THR_DEFAULT		0x7f
-+#define ISL76683_THR_MAX		0xFF
++#include <linux/device.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/slab.h>
++#include <linux/pm_runtime.h>
++#include <linux/pm_context.h>
++
++#include "power.h"
++
++bool dev_pm_was_context_lost(struct device *dev)
++{
++	struct context_lost *ctx = dev->power.context_lost;
++	unsigned long flags;
++
++	if (!dev || !ctx)
++		return false;
++
++	spin_lock_irqsave(&dev->power.lock, flags);
++	if (ctx->cb)
++		ctx->lost = ctx->cb(dev, ctx->data);
++	spin_unlock_irqrestore(&dev->power.lock, flags);
++
++	return ctx->lost;
++}
++EXPORT_SYMBOL_GPL(dev_pm_was_context_lost);
++
++int dev_pm_register_context_lost_handler(struct device *dev,
++					 bool (*cb)(struct device *dev,
++						    void *data),
++					 void *data)
++{
++	struct context_lost *ctx = dev->power.context_lost;
++	unsigned long flags;
++
++	if (!dev || !cb)
++		return -EINVAL;
++
++	if (ctx)
++		return -EEXIST;
++
++	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->data = data;
++	ctx->cb = cb;
++
++	spin_lock_irqsave(&dev->power.lock, flags);
++	dev->power.context_lost = ctx;
++	spin_unlock_irqrestore(&dev->power.lock, flags);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(dev_pm_register_context_lost_handler);
++
++int dev_pm_unregister_context_lost_handler(struct device *dev)
++{
++	struct context_lost *ctx = dev->power.context_lost;
++	unsigned long flags;
++
++	if (!ctx)
++		return -ENODEV;
++
++	spin_lock_irqsave(&dev->power.lock, flags);
++	dev->power.context_lost = NULL;
++	spin_unlock_irqrestore(&dev->power.lock, flags);
++	kfree(ctx);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(dev_pm_unregister_context_lost_handler);
+diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
+--- a/drivers/base/power/power.h
++++ b/drivers/base/power/power.h
+@@ -39,6 +39,12 @@ extern void dev_pm_enable_wake_irq_check(struct device *dev,
+ 					 bool can_change_status);
+ extern void dev_pm_disable_wake_irq_check(struct device *dev);
  
- struct isl76683_chip {
- 	enum isl76683_lux_range	luxrange;
- 	int			external_resistor;
- 	enum isl76683_dmode	photodiode;
-+	int			threshold_up;
-+	int			threshold_low;
- 	struct i2c_client	*client;
- 	struct regmap		*rmp;
- 	struct completion	irq_complete;
-@@ -159,13 +162,11 @@ static int isl76683_set_config(struct isl76683_chip *chip)
- 	if (ret < 0)
- 		return ret;
++struct context_lost {
++	bool lost;
++	bool (*cb)(struct device *dev, void *data);
++	void *data;
++};
++
+ #ifdef CONFIG_PM_SLEEP
  
--	ret = regmap_write(chip->rmp, ISL76683_REG_THR_HI,
--				ISL76683_THR_DEFAULT);
-+	ret = regmap_write(chip->rmp, ISL76683_REG_THR_HI, chip->threshold_up);
- 	if (ret < 0)
- 		return ret;
- 
--	ret = regmap_write(chip->rmp, ISL76683_REG_THR_LO,
--				ISL76683_THR_DEFAULT);
-+	ret = regmap_write(chip->rmp, ISL76683_REG_THR_LO, chip->threshold_low);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -415,11 +416,58 @@ static int isl76683_write_raw(struct iio_dev *indio_dev,
- 	return -EINVAL;
- }
- 
-+#define ISL76683_SYSFS_STORE(ident, _max)				\
-+static ssize_t in_illuminance_##ident##_store(struct device *dev,	\
-+					struct device_attribute *attr,	\
-+					const char *buf, size_t len)	\
-+{									\
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);		\
-+	struct isl76683_chip *chip = iio_priv(indio_dev);		\
-+	unsigned int val;						\
-+	int ret;							\
-+									\
-+	if (kstrtouint(buf, 10, &val))					\
-+		return -EINVAL;						\
-+									\
-+	if (val > _max)							\
-+		return -EINVAL;						\
-+									\
-+	mutex_lock(&chip->lock);					\
-+	chip->ident = val;						\
-+	ret = isl76683_set_config(chip);				\
-+	mutex_unlock(&chip->lock);					\
-+									\
-+	if (ret)							\
-+		return -EIO;						\
-+									\
-+	return len;							\
+ extern int device_wakeup_attach_irq(struct device *dev,
+diff --git a/include/linux/pm.h b/include/linux/pm.h
+--- a/include/linux/pm.h
++++ b/include/linux/pm.h
+@@ -606,6 +606,7 @@ struct dev_pm_info {
+ 	struct work_struct	work;
+ 	wait_queue_head_t	wait_queue;
+ 	struct wake_irq		*wakeirq;
++	struct context_lost	*context_lost;
+ 	atomic_t		usage_count;
+ 	atomic_t		child_count;
+ 	unsigned int		disable_depth:3;
+diff --git a/include/linux/pm_context.h b/include/linux/pm_context.h
+new file mode 100644
+--- /dev/null
++++ b/include/linux/pm_context.h
+@@ -0,0 +1,51 @@
++/*
++ * pm_context.h - Device context lost helper functions
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _LINUX_PM_CONTEXT_H
++#define _LINUX_PM_CONTEXT_H
++
++#ifdef CONFIG_PM
++
++extern bool dev_pm_was_context_lost(struct device *dev);
++
++extern int
++dev_pm_register_context_lost_handler(struct device *dev,
++				     bool (*cb)(struct device *dev,
++						void *data),
++				     void *data);
++
++extern int dev_pm_unregister_context_lost_handler(struct device *dev);
++
++#else	/* !CONFIG_PM */
++
++static inline bool dev_pm_was_context_lost(struct device *dev)
++{
++	return false;
 +}
 +
-+ISL76683_SYSFS_STORE(threshold_low, ISL76683_THR_MAX)
-+ISL76683_SYSFS_STORE(threshold_up, ISL76683_THR_MAX)
-+
-+#define ISL76683_SYSFS_SHOW(ident, show_val)				\
-+static ssize_t in_illuminance_##ident##_show(struct device *dev,	\
-+			struct device_attribute *attr, char *buf)	\
-+{									\
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);		\
-+	struct isl76683_chip *chip = iio_priv(indio_dev);		\
-+									\
-+	return snprintf(buf, PAGE_SIZE, "%i\n", show_val);		\
++static inline int
++dev_pm_register_context_lost_handler(struct device *dev,
++				     bool (*cb)(struct device *dev,
++						void *data),
++				     void *data);
++{
++	return -ENODEV;
 +}
 +
-+ISL76683_SYSFS_SHOW(threshold_up, chip->threshold_up)
-+ISL76683_SYSFS_SHOW(threshold_low, chip->threshold_low)
++static inline int dev_pm_unregister_context_lost_handler(struct device *dev)
++{
++	return -ENODEV;
++}
 +
- static IIO_CONST_ATTR(in_illuminance_hardwaregain_available,
- 		ISL76683_LUXRANGE_STR);
-+static IIO_DEVICE_ATTR_RW(in_illuminance_threshold_up, 0);
-+static IIO_DEVICE_ATTR_RW(in_illuminance_threshold_low, 0);
- 
- static struct attribute *isl76683_attributes[] = {
- 	&iio_const_attr_in_illuminance_hardwaregain_available.dev_attr.attr,
-+	&iio_dev_attr_in_illuminance_threshold_up.dev_attr.attr,
-+	&iio_dev_attr_in_illuminance_threshold_low.dev_attr.attr,
- 	NULL
- };
- 
-@@ -535,6 +583,8 @@ static int isl76683_probe(struct i2c_client *client,
- 	chip->luxrange = ISL76683_LUX_RANGE_DEFAULT;
- 	chip->external_resistor = rs;
- 	chip->photodiode = ISL76683_DIODE_DEFAULT;
-+	chip->threshold_up = ISL76683_THR_DEFAULT;
-+	chip->threshold_low = ISL76683_THR_DEFAULT;
- 	chip->buffer_running = false;
- 
- 	chip->rmp = devm_regmap_init_i2c(client, &isl76683_regmap_config);
++#endif	/* CONFIG_PM */
++#endif	/* _LINUX_PM_CONTEXT_H */
 -- 
-2.1.4
+2.15.0
