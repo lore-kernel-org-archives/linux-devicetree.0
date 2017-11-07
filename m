@@ -1,49 +1,76 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can support
-Date: Tue,  7 Nov 2017 15:10:42 +0000
-Message-ID: <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 3/8] ARM: dts: r8a7745: Add CAN[01] SoC support
+Date: Tue,  7 Nov 2017 15:10:44 +0000
+Message-ID: <1510067449-17017-4-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Document "renesas,can-r8a7743" and "renesas,can-r8a7745" compatible
-strings. Since the fallback compatible string ("renesas,rcar-gen2-can")
-activates the right code in the driver, no driver change is needed.
+Add the definitions for can0 and can1 to the SoC .dtsi.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 ---
- Documentation/devicetree/bindings/net/can/rcar_can.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a7745.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-index 06bb7cc..94a7f33 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-@@ -2,7 +2,9 @@ Renesas R-Car CAN controller Device Tree Bindings
- -------------------------------------------------
+diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+index 2b32638..529e8c6 100644
+--- a/arch/arm/boot/dts/r8a7745.dtsi
++++ b/arch/arm/boot/dts/r8a7745.dtsi
+@@ -1065,6 +1065,34 @@
+ 				#phy-cells = <1>;
+ 			};
+ 		};
++
++		can0: can@e6e80000 {
++			compatible = "renesas,can-r8a7745",
++				     "renesas,rcar-gen2-can";
++			reg = <0 0xe6e80000 0 0x1000>;
++			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 916>,
++				 <&cpg CPG_CORE R8A7745_CLK_RCAN>,
++				 <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 916>;
++			status = "disabled";
++		};
++
++		can1: can@e6e88000 {
++			compatible = "renesas,can-r8a7745",
++				     "renesas,rcar-gen2-can";
++			reg = <0 0xe6e88000 0 0x1000>;
++			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 915>,
++				 <&cpg CPG_CORE R8A7745_CLK_RCAN>,
++				 <&can_clk>;
++			clock-names = "clkp1", "clkp2", "can_clk";
++			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
++			resets = <&cpg 915>;
++			status = "disabled";
++		};
+ 	};
  
- Required properties:
--- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
-+- compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A7743 SoC.
-+	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
-+	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
- 	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
- 	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
- 	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
-@@ -12,7 +14,8 @@ Required properties:
- 	      "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
- 	      "renesas,can-r8a7796" if CAN controller is a part of R8A7796 SoC.
- 	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
--	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 compatible device.
-+	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 or RZ/G1
-+	      compatible device.
- 	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device.
- 	      When compatible with the generic version, nodes must list the
- 	      SoC-specific version corresponding to the platform first
+ 	/* External root clock */
+@@ -1082,6 +1110,14 @@
+ 		clock-frequency = <48000000>;
+ 	};
+ 
++	/* External CAN clock */
++	can_clk: can {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		/* This value must be overridden by the board. */
++		clock-frequency = <0>;
++	};
++
+ 	/* External SCIF clock */
+ 	scif_clk: scif {
+ 		compatible = "fixed-clock";
 -- 
 2.7.4
