@@ -1,58 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: dts: iwg20d-q7: Add support for ttySC3
-Date: Tue, 7 Nov 2017 12:09:27 +0100
-Message-ID: <CAMuHMdXPSUmNiFF7gmkWng5OA_U4DUF+4uohjkjvuMPwgffj-g@mail.gmail.com>
-References: <1507539981-4193-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdUprE7QuXF_sX47JyrvuZXhXnQFufy4OHeJ5ExwwoogKw@mail.gmail.com> <TY1PR06MB0895D27B9C7F2D3B3113654EC0460@TY1PR06MB0895.apcprd06.prod.outlook.com>
+From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] brcmfmac: add support for external 32khz clock
+Date: Tue, 7 Nov 2017 12:09:23 +0100
+Message-ID: <5A019463.9060701@broadcom.com>
+References: <20171104132421.GA1541@archbox.home> <5A004099.90200@broadcom.com>
+ <20171106112726.GA25134@lineageos.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <TY1PR06MB0895D27B9C7F2D3B3113654EC0460@TY1PR06MB0895.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Simon Horman <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171106112726.GA25134-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
-
-On Mon, Oct 23, 2017 at 3:25 PM, Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
->> > > --- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
->> > > +++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
->> > > @@ -11,6 +11,7 @@
->> > >  / {
->> > >         aliases {
->> > >                 serial0 = &scif0;
->> > > +               serial3 = &scifb1;
->> >
->> > Given this port is not labeled "serial3", but called "data uart", you may want
->> > to add a comment to avoid confusion:
+On 11/6/2017 12:27 PM, Simon Shields wrote:
+> On Mon, Nov 06, 2017 at 11:59:37AM +0100, Arend van Spriel wrote:
+>> On 11/4/2017 2:24 PM, Simon Shields wrote:
+>>> Some boards use an external 32khz clock for low-power
+>>> mode timing. Make sure the clock is powered on while the chipset
+>>> is active.
 >>
->> It's a little bit confusing, isn't it? The lines related to such interface are named as UART0_x on the carrier board schematic, the section
->> of the schematic that contains the header is named "data uart header", and the board documentation names it explicitly as "UART 3 -
->> /dev/ttySC3 (SCIFB1)".
-
-And you cannot use "serial0" (to match "UART0"), as that's already in use
-for the SOM...
-
->> I don't think there is anything we can do to make this easier for the user really, is there? :D
->> If we decide to add a comment to serial 3, I guess we need to be consistent and add comments for the other serial interfaces too.
->> If you still prefer having a comment there I'll send a v2 and patch(es) for adding comments to the other interfaces, just let me know.
+>> Do you have such a board? With the little documentation I can get my hands
+>> on here I wonder whether the clock needs to be enabled before the device is
+>> powered. If you have the hardware I would like to check some registers in
+>> the device.
+>>
 >
-> Any thoughts about this?
+> Yes. Trats2 (exynos4412-based) has such a setup. The BCM4334 works fine
+> with this patch and one more that enables the WL_REG_EN pin when
+> brcmfmac is probed.
 
-Making life easier for the user is good.
-Consistency is also good.
+Ok. So this is exactly the thing I was wondering about. So it makes me 
+curious how the WL_REG_EN patch looks like. Can you provide that?
 
-I have no strong feelings about this, so do as you please...
+> Without this patch (and only enabling WL_REG_EN), the chip is detected but
+> attempting to initialise it fails with a bunch of timeouts.
 
-Gr{oetje,eeting}s,
+I would be interested in seeing a detailed log of that. Could you 
+provide that? You need to build the driver with CONFIG_BRCMDBG and pass 
+module parameter 'debug=0x1416' upon insmod/modprobe.
 
-                        Geert
+Regards,
+Arend
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
