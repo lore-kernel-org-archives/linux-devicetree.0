@@ -1,100 +1,188 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: Re: [PATCH v11 02/10] i2c: i2c-smbus: Move i2c_setup_smbus_alert from
- i2c-smbus to i2c-core-smbus
-Date: Tue, 7 Nov 2017 09:16:27 +0800
-Message-ID: <2eaccb51-62cf-b764-d313-84008c6c8f87@electromag.com.au>
-References: <1503567070-115646-1-git-send-email-preid@electromag.com.au>
- <1503567070-115646-3-git-send-email-preid@electromag.com.au>
- <20171029154408.vmjkpj7ybqyrj3ke@ninjato>
- <1397131b-c22d-9872-dbe0-9b691553cb9e@electromag.com.au>
- <20171106213646.2h3zsitnlablblli@ninjato>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: device tree overlays
+Date: Mon, 6 Nov 2017 17:23:15 -0800
+Message-ID: <be15f78a-2393-7dbd-9ff6-996a3ec7f63b@gmail.com>
+References: <CAAk4mkZcBEb7o0BA3gh2rEsQiEW18XKUqHUMN1fTf+h5WAXkyA@mail.gmail.com>
+ <CAAk4mkbBvjB4CJq_oeXvJFibus06LF83BF3D2Nw5BuSHLdn+xA@mail.gmail.com>
+ <CAAk4mkZNjQ-TA06mrYh_ZU0L4UQp9sLg58V1MGqWJWj=ZR8vMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171106213646.2h3zsitnlablblli@ninjato>
-Content-Language: en-AU
+In-Reply-To: <CAAk4mkZNjQ-TA06mrYh_ZU0L4UQp9sLg58V1MGqWJWj=ZR8vMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Iztok Jeras <iztok.jeras-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/11/2017 05:36, Wolfram Sang wrote:
-> Hey Phil,
+Hi Iztok,
+
+On 11/03/17 12:43, Iztok Jeras wrote:
+> Hi Frank,
 > 
-> (CCing Jean for some additional expertise)
+> I work for Red Pitaya as Verilog, C, Python, ... coder:
+> https://github.com/RedPitaya/RedPitaya
+> I will move to another job this month, but I might still code for Red
+> Pitaya of maybe PYNQ in my spare time.
+> http://www.pynq.io/
 > 
->>>> In preparation to adding of_i2c_setup_smbus_alert() move
->>>> i2c_setup_smbus_alert() to core module. of_i2c_setup_smbus_alert()
->>>> will call i2c_setup_smbus_alert() and this avoid module dependecy issues.
->>>
->>> I am not very happy with this but don't want to cause another delay. So,
->>> I hope we can discuss and fix it incrementally.
->>>
->>>  From what it does, I really think both setup_alert functions belong
->>> to i2c-smbus.c. Three possibilities come to my mind (untested,
->>> though):
->>>
->>> a) use try_then_request_module somehow
->>>
->>> b) add to CONFIG_I2C something like: select I2C_SMBUS if OF
->>>
->>> c) get rid of i2c-smbus.c entirely and move it all into the core
->>>
->>> Dunno if a) or b) have been tried in the course of this series
->>> already?
->>>
->>
->> Nope hadn't tried either a) or b). a) is not something I was aware of.
->> Had a brief play and not sure how to make this work. This gives me the
->> same linking problem.
+> We have been experimenting with device tree overlays on ZYNQ FPGA for
+> about a year now.
 > 
-> Which one? I2C core is built-in and the driver is a module? And
-> i2c-smbus is a module then, too?
-Yes. I may be doing something wrong with how to use a) thou..
-I do like conditional pulling the alert code in the to core if everyone else is happy with that.
+> I would like to share our experience with you and ask you a few questions.
+> 
+> We started with a patchset for kerner 4.4 this is still part of our
+> public release.
+> Recently we switched internally to kernel 4.9 patched with a newer patchset.
+> https://github.com/RedPitaya/linux-xlnx/commits/branch-redpitaya-v2017.2
+> The patchset was easy to apply to Xilinx kernel 2017.1,
+> but with the latest Xilinx release 2017.3 there are many conflicts,
+> apparently Xilinx started something there and did not finish.
+> I will check if the drivers I need are already upstream so I could
+> avoid using Xilinx provided kernels.
+> 
+> There are two reasons I would like to use overlays:
+> 1. switching between FPGA bitstream which require kernel drivers,
+> 2. I2C/SPI/1-wire drivers over GPIO, I would like to configure them at
+> runtime (we are not doing this yet).
+> 
+> We are switching FPGA bitstreams and we currently handled the next
+> Xilinx IP related drivers:
+> 1. UIO drivers
+> Work well if loaded at boot or as overlay, we have user space drivers
+> with IRQ support.
+> 2. Xilinx AXI IRQ
+> Does not work if loaded as overlay, a kernel developer contractor
+> described the issue
+> as driver initialization not being compatible with overlay code,
+> something about driver init running early.
+> He improvised an ugly and hard coded patch:
+> https://github.com/RedPitaya/linux-xlnx/commit/592b9c711f11fcfc14100094896fbabf08009f4b
+> The driver can now be loaded as overlay, but I would not recommend the
+> patch to anyone.
+> 3. Xilinx AXI DMA
+> This driver had many non overlay related bugs in 4.4 but it is fine in 4.9.
+> In kernel 4.4 we could not load it entirely from an overlay, so we
+> improvised an ugly solution.
+> We load the driver in the boot DT but with the status=disabled.
+> This prevents the driver code from loading and crashing at boot and
+> between FPGA image reloads.
+> Then we load an overlay with status=OK to actually enable the driver.
+> I might try to load the driver entirely from an overlay next week.
+> 4. XADC
+> I did not test this drivers with overlays yet.
+> 5. We had a branch, where the overlay was used to load the FPGA bistream,
+> it worked, but it meant disabling support for /dev/xdevcfg which would
+> need explaining to users.
+> Additionally our kernel developer was kind of slow making the changes
+> ad we run out of time.
+> So now we use overlays but load the FPGA through xdevcfg.
+> For my own project I might try loading with fpga_region again.
+> 
+> Questions:
+> 1. Could you point me to the latest overlay patchset
+> or even better a Xilinx kernel repo with overlay patches already applied.
+
+I don't follow any of the out of mainline patch sets that various projects
+are using, so I don't have any pointers.
 
 
-> 
->> A variant of b) was tried by selecting I2C_SMBUS from driver modules
->> having smbalert support, but that caused problems if the i2c core was
->> builtin and the driver was a module. But this looks to work for me.
-> 
-> It should work(tm). Yet, it will cause overhead, because OF is big these
-> days and I2C_SMBUS is still rare.
-> 
->> A variant of c) with option to exclude the i2c-smbus code still.
->> Add i2c-smbus to the i2c-core module by:
->> Change Kconfig I2C_SMBUS to a bool
->> add i2c-smbus to i2c-core object.
->> fixup duplicate init_module calls etc.
-> 
-> I see. From my side, why not. But I'd really like Jean's opinion here on
-> why i2c-smbus.c was a seperate module and not included in the core.
-> Because I split the I2C core into multiple source files recently, we
-> could have a seperate source file for i2c-smbus-alert without ifdeffery
-> but with some Makefile magic.
-> 
->> Possibly also rename i2c-smbus to i2c-smbus-alert?
-> 
-> Why the rename? I thought we put all the code into the core?
+> 2. You mentioned in your 2017 talk that dtsi files can be compiled into overlay,
+> I understand how, but am not sure I am using the correct dtc:
+> https://github.com/RedPitaya/dtc/archive/overlays.tar.gz at some point
+> forked from
+> https://github.com/pantoniou/dtc/archive/overlays.tar.gz
 
-I was just thinking that all that's in the file now is smbus-alert code.
-The other smbus (host notify) code was moved to i2c-core
-So maybe i2c-core-smbus-alert and as you say use makefile to include it.
-I've tried this and it seems to work for the various combinations.
-I'll wait a bit for Jean to offer an opinion.
-
-> 
->> Let me know your preference and I'll put something together.
-> 
-> Thanks for the assistance. I am afraid we need a bit more discussion
-> first, though.
+If the dtc repo has commit c1e55a5513e9 "checks: fix handling of unresolved
+phandles for dts plugins", then it will be recent enough.  I expect this
+version of dtc to appear in the Linux kernel tree in v4.15-rc1.
 
 
--- 
-Regards
-Phil Reid
+> How can I check if it works properly, a coworker mentioned that converting dtb
+> back into dtc should show fragments, there were no fragments when I tried.
+
+Your coworker is correct (though the fragment nodes are an implementation detail
+of the current version of dtc).  As an example, using the files from:
+
+   https://elinux.org/images/d/dc/Elce_2017_dt_bof.pdf
+
+If you compile and de-compile fpga_overlay.dts from slide 21, which includes
+fpga_plugin_or_dtsi.dts from slide 22, you will see a fragment node.  In the
+example dtx_diff is using the dtc that should appear in v4.15-rc1.
+
+
+$ scripts/dtc/dtx_diff fpga_overlay.dts 
+/dts-v1/;
+
+/ {
+
+	__fixups__ {
+		fpga_region = "/fragment@0:target:0";
+		intc = "/fragment@0/__overlay__/freeze_controller@100000450:interrupt-parent:0";
+	};
+
+	__local_fixups__ {
+
+		fragment@0 {
+
+			__overlay__ {
+
+				fpga_pr_region0 {
+					fpga-bridges = <0x0>;
+				};
+			};
+		};
+	};
+
+	fragment@0 {
+		target = <0xffffffff>;
+
+		__overlay__ {
+			#address-cells = <0x2>;
+			#size-cells = <0x1>;
+			external-fpga-config;
+			ranges = <0x0 0x0 0xc0000000 0x40000 0x1 0x0 0xff200000 0x1000>;
+
+			fpga_pr_region0 {
+				compatible = "fpga-region";
+				fpga-bridges = <0x1>;
+				ranges;
+			};
+
+			freeze_controller_0: freeze_controller@100000450 {
+				compatible = "altr,freeze-bridge-controller";
+				interrupt-parent = <0xffffffff>;
+				interrupts = <0x0 0x15 0x4>;
+				phandle = <0x1>;
+				reg = <0x1 0x450 0x10>;
+			};
+		};
+	};
+};
+
+
+> Which dtc should I use?
+
+You can find a link to the upstream dtc project at:
+
+   https://elinux.org/Device_Tree_Reference#dtc_.28upstream_project.29
+
+I don't know if you need any other changes from the places you have been
+getting dtc from.
+
+
+> 3. Do you know a better approach for loading the AXI IRQ driver with overlays?
+
+Nope, sorry.  I don't follow the out of mainline projects.
+
+
+> I will probably remember further questions later.
+> 
+> Regards,
+> Iztok Jeras
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
