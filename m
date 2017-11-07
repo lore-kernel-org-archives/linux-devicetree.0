@@ -1,90 +1,92 @@
-From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: iio: at91-sama5d2_adc: add optional
- dma property
-Date: Tue, 7 Nov 2017 10:49:41 +0200
-Message-ID: <5f171202-6a6a-2055-cb5c-c0c687f60f86@microchip.com>
-References: <1507703732-29175-1-git-send-email-eugen.hristev@microchip.com>
- <1507703732-29175-2-git-send-email-eugen.hristev@microchip.com>
- <20171013215142.vlfhzzzetmc7resq@rob-hp-laptop>
- <20171019111417.7rzdnkvtukzzhl2u@piout.net>
- <CAL_JsqLPMeF9EtcCO3eZn+7DbyAQcxzNYEpAiFvQoe1=ytpELQ@mail.gmail.com>
+From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] sdhci-fujitsu: add support for setting the
+ CMD_DAT_DELAY attribute
+Date: Tue, 7 Nov 2017 10:52:14 +0200
+Message-ID: <d8d0bd22-d04c-f90a-638c-d0f0fc7910f0@intel.com>
+References: <20171106152923.32114-1-ard.biesheuvel@linaro.org>
+ <20171106152923.32114-2-ard.biesheuvel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLPMeF9EtcCO3eZn+7DbyAQcxzNYEpAiFvQoe1=ytpELQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171106152923.32114-2-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20.10.2017 00:58, Rob Herring wrote:
-> On Thu, Oct 19, 2017 at 6:14 AM, Alexandre Belloni
-> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On 13/10/2017 at 16:51:42 -0500, Rob Herring wrote:
->>> On Wed, Oct 11, 2017 at 09:35:28AM +0300, Eugen Hristev wrote:
->>>> Added property for DMA configuration of the device.
->>>>
->>>> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->>>> ---
->>>>   Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
->>>>   1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
->>>> index 552e7a8..5f94d479 100644
->>>> --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
->>>> +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
->>>> @@ -17,6 +17,11 @@ Required properties:
->>>>     This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
->>>>     IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
->>>>
->>>> +Optional properties:
->>>> +  - dmas: Phandle to dma channel for the ADC.
->>>> +  See ../../dma/dma.txt for details.
->>>> +  - dma-names: Must be "rx" when dmas property is being used.
->>>
->>> -names is pointless when there is only one.
->>>
->>
->> You didn't reply to the question I had previously about that: What if at
->> some point, we have multiple dmas in the same binding?
+On 06/11/17 17:29, Ard Biesheuvel wrote:
+> The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
+> requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
+> F_SDH30_ESD_CONTROL control register. So set this bit if the
+> DT node has the 'fujitsu,cmd-dat-delay-select' property.
 > 
-> Then add dma-names at that point and rx has to be first. If you know
-> there's other channels, then add them now. Don't evolve the bindings
-> needlessly based on what a driver supports.
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Acked-by: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+
+> ---
+> v3: don't reorder struct members to reduce padding
+>     remove pr_info() and simplify conditional assignment
+> v2: no change
 > 
-> Would another channel make sense here? Maybe multi-channel rx in which
-> case your naming wouldn't be setup for that. But "tx" on an ADC?
+>  drivers/mmc/host/sdhci_f_sdh30.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> Rob
-
-Hello Rob,
-
-I can keep only "dmas" and remove "dma-names", but then, the API used by
-the drivers that request channels requires a name parameter
-(dma_request_slave_channel), and it will look always inside the
-"dma-names" property to match the name and find the proper channel, and
-it will fail in this case.
-
-Looking in the general dma binding (dma.txt) I can see that both
-properties are marked as required for a client driver, so that's why
-I added both.
-
-I can either keep dma-names; or try to find the channel properties by
-looking directly into the OF node and create the dma_chan struct inside
-my driver (maybe call some xlate function for the DMA controller), but
-still need to get the DT property. A complicated option would be to
-actually create an API inside the dmaengine to find a channel without
-name.
-
-Which approach you think it's best to pursue ?
-
-Thanks,
-Eugen
-
-
-
+> diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
+> index 111b66f5439b..04ca0d33a521 100644
+> --- a/drivers/mmc/host/sdhci_f_sdh30.c
+> +++ b/drivers/mmc/host/sdhci_f_sdh30.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/err.h>
+>  #include <linux/delay.h>
+>  #include <linux/module.h>
+> +#include <linux/property.h>
+>  #include <linux/clk.h>
+>  
+>  #include "sdhci-pltfm.h"
+> @@ -47,6 +48,7 @@ struct f_sdhost_priv {
+>  	struct clk *clk;
+>  	u32 vendor_hs200;
+>  	struct device *dev;
+> +	bool enable_cmd_dat_delay;
+>  };
+>  
+>  static void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
+> @@ -84,10 +86,19 @@ static unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
+>  
+>  static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
+>  {
+> +	struct f_sdhost_priv *priv = sdhci_priv(host);
+> +	u32 ctl;
+> +
+>  	if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0)
+>  		sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
+>  
+>  	sdhci_reset(host, mask);
+> +
+> +	if (priv->enable_cmd_dat_delay) {
+> +		ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
+> +		ctl |= F_SDH30_CMD_DAT_DELAY;
+> +		sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
+> +	}
+>  }
+>  
+>  static const struct sdhci_ops sdhci_f_sdh30_ops = {
+> @@ -126,6 +137,9 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
+>  	host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
+>  			SDHCI_QUIRK2_TUNING_WORK_AROUND;
+>  
+> +	priv->enable_cmd_dat_delay = device_property_read_bool(dev,
+> +						"fujitsu,cmd-dat-delay-select");
+> +
+>  	ret = mmc_of_parse(host->mmc);
+>  	if (ret)
+>  		goto err;
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
