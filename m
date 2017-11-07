@@ -1,57 +1,36 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v4,1/6] dt-bindings: pmbus: Add Maxim MAX31785 documentation
-Date: Mon, 6 Nov 2017 17:27:11 -0800
-Message-ID: <20171107012711.GA13616@roeck-us.net>
-References: <20171103045306.26448-2-andrew@aj.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH] ARM: dts: add phy-reset property for rk3066a-rayeager emac
+Date: Tue,  7 Nov 2017 10:49:19 +0800
+Message-ID: <1510022959-19440-1-git-send-email-zyw@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171103045306.26448-2-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-hwmon@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
+To: heiko@sntech.de
+Cc: Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 03, 2017 at 03:53:01PM +1100, Andrew Jeffery wrote:
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Acked-by: Rob Herring <robh@kernel.org>
+The ethernet phy of rk3066a-rayeager has a reset pin, it controlled by
+GPIO1_D6, this pin should be pull down then pull up to reset the phy.
+Add a phy-reset property in emac, make the phy can be reset when emac
+power on.
 
-Applied to hwmon-next.
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+---
 
-Thanks,
-Guenter
+ arch/arm/boot/dts/rk3066a-rayeager.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> ---
->  .../devicetree/bindings/hwmon/max31785.txt         | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/max31785.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/max31785.txt b/Documentation/devicetree/bindings/hwmon/max31785.txt
-> new file mode 100644
-> index 000000000000..106e08c56aaa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/max31785.txt
-> @@ -0,0 +1,22 @@
-> +Bindings for the Maxim MAX31785 Intelligent Fan Controller
-> +==========================================================
-> +
-> +Reference:
-> +
-> +https://datasheets.maximintegrated.com/en/ds/MAX31785.pdf
-> +
-> +The Maxim MAX31785 is a PMBus device providing closed-loop, multi-channel fan
-> +management with temperature and remote voltage sensing. Various fan control
-> +features are provided, including PWM frequency control, temperature hysteresis,
-> +dual tachometer measurements, and fan health monitoring.
-> +
-> +Required properties:
-> +- compatible     : One of "maxim,max31785" or "maxim,max31785a"
-> +- reg            : I2C address, one of 0x52, 0x53, 0x54, 0x55.
-> +
-> +Example:
-> +
-> +        fans@52 {
-> +                compatible = "maxim,max31785";
-> +                reg = <0x52>;
-> +        };
+diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts b/arch/arm/boot/dts/rk3066a-rayeager.dts
+index 570157f..6064a0a 100644
+--- a/arch/arm/boot/dts/rk3066a-rayeager.dts
++++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
+@@ -173,6 +173,8 @@
+ 	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
+ 	phy = <&phy0>;
+ 	phy-supply = <&vcc_rmii>;
++	phy-reset-gpios = <&gpio1 RK_PD6 GPIO_ACTIVE_LOW>; /* PHY_RST */
++	phy-reset-duration = <10>; /* millisecond */
+ 	status = "okay";
+ 
+ 	phy0: ethernet-phy@0 {
+-- 
+2.7.4
