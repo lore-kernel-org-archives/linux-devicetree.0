@@ -1,89 +1,58 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: add phy-reset property for rk3066a-rayeager
- emac
-Date: Tue, 7 Nov 2017 10:26:01 -0800
-Message-ID: <ac15ef59-3b5e-1752-09db-0a773615f44c@gmail.com>
-References: <1510022959-19440-1-git-send-email-zyw@rock-chips.com>
- <e6f2393e-cb3b-9006-d0f5-6b30fd2a5192@mentor.com>
- <e08d8ea2-40c5-a5b3-e570-44c90388fcdd@rock-chips.com>
+From: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
+Date: Tue, 7 Nov 2017 23:12:45 +0300
+Message-ID: <20171107201245.gptgfli54o6eqmrj@speedy.hunter>
+References: <20171103195855.15283-1-geomatsi@gmail.com>
+ <20171103195855.15283-2-geomatsi@gmail.com>
+ <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
+ <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter>
+ <20171106122633.5mnqfh6xhmmxr45s@flea>
+ <20171106161306.tq6yeq6bq36ridj3@speedy.hunter>
+ <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg@mail.gmail.com>
+ <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e08d8ea2-40c5-a5b3-e570-44c90388fcdd-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, andrew-g2DYL2Zd6BY@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2017 01:51 AM, Chris Zhong wrote:
+Hi,
+
+> >>> > Did you try to boot from sdcard ? I am not able to boot my board from
+> >>> > sd-card without this change. As I mentioned earlier in my email
+> >>> > to buildroot mailing list, with mmc debug enabled I see that mmc
+> >>> > tries to init sd-card when I remove it from the slot.
+> >>> >
+> >>> > Maybe there is a minor differences between h/w versions or batches ?
+> >>> > What is you board version ? I tested on board v1.0.
+> >>>
+> >>> Looking at the schematics, it definitely looks like it's active low.
+> >>
+> >> Is it ok to merge it then ? Or using 'cd-inverted' property
+> >> is the preferable option ?
+> >
+> > W/o any change mainline works unstable for me, it wasn't booting
+> > at-all[1] did you find the same?
+> >
+> > Even tried with active LOW and cd-inverted.
+> >
+> > [1] https://paste.ubuntu.com/25909064/
 > 
-> 
-> On 2017年11月07日 15:54, Vladimir Zapolskiy wrote:
->> Hello Chris,
->>
->> On 11/07/2017 04:49 AM, Chris Zhong wrote:
->>> The ethernet phy of rk3066a-rayeager has a reset pin, it controlled by
->>> GPIO1_D6, this pin should be pull down then pull up to reset the phy.
->>> Add a phy-reset property in emac, make the phy can be reset when emac
->>> power on.
->> for PHY reset there are properties 'reset-gpios' and 'reset-delay-us',
->> please reference to Documentation/devicetree/bindings/net/mdio.txt
->>
->> Can you try to reuse them instead of adding new custom properties?
-> This phy-reset is from Documentation/devicetree/bindings/net/arc_emac.txt.
-> And copy from arch/arm/boot/dts/rk3036-kylin.dts.
-> Can we just use these properties, they are not new.
+> Look like something broken for H5 and A64 between v4.14-rc8 to latest
 
-Because it already exists does not mean it's correct, in fact, it is not
-at all because it places the reset property for a PHY into the MAC node,
-which is just not what this is, what we should be using instead is the
-following patch series:
+Both 4.13.7 and 4.14-rc8 (synched today) kernels worked fine for me.
+DTS behavior is all the same:
+  - default DTS: sd-card is not detected, kernel is waiting forever
+  - DTS with 'active low' or 'cd-inverted' fix: sd-card and boot ok
 
-http://patchwork.ozlabs.org/project/netdev/list/?series=9267
+I have been using rootfs from buildroot with your zero-plus2 patches.
 
-http://patchwork.ozlabs.org/patch/828499/
-http://patchwork.ozlabs.org/patch/828505/
-http://patchwork.ozlabs.org/patch/828501/
-http://patchwork.ozlabs.org/patch/828502/
-
->> As a side question, which is mainly addressed to Sergei and Roger,
->> I don't quite understand why PHY properties were initially added to
->> MAC/MDIO bus device tree nodes, in my opinion they must be moved under
->> PHY device tree nodes.
->>
->> -- 
->> With best wishes,
->> Vladimir
->>
->>> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> ---
->>>
->>>   arch/arm/boot/dts/rk3066a-rayeager.dts | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts
->>> b/arch/arm/boot/dts/rk3066a-rayeager.dts
->>> index 570157f..6064a0a 100644
->>> --- a/arch/arm/boot/dts/rk3066a-rayeager.dts
->>> +++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
->>> @@ -173,6 +173,8 @@
->>>       pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
->>>       phy = <&phy0>;
->>>       phy-supply = <&vcc_rmii>;
->>> +    phy-reset-gpios = <&gpio1 RK_PD6 GPIO_ACTIVE_LOW>; /* PHY_RST */
->>> +    phy-reset-duration = <10>; /* millisecond */
->>>       status = "okay";
->>>         phy0: ethernet-phy@0 {
->>>
->>
->>
-> 
-
-
--- 
-Florian
+Regards,
+Sergey
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
