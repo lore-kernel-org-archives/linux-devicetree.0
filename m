@@ -1,154 +1,88 @@
-From: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
-Subject: Re: [PATCH 1/1] add mali r6p2 dt node
-Date: Tue, 7 Nov 2017 18:55:22 +0100
-Message-ID: <49715d2b-97f5-7e21-7072-8e050d471a9f@micronovasrl.com>
-References: <1510049010-5758-1-git-send-email-giulio.benetti@micronovasrl.com>
- <20171107110539.3wrm6uu6ohh6dnuy@flea>
+From: James Hogan <james.hogan@mips.com>
+Subject: Re: next/master build: 214 builds: 26 failed, 188 passed, 28 errors,
+ 6333 warnings (next-20171107)
+Date: Tue, 7 Nov 2017 18:17:22 +0000
+Message-ID: <20171107181721.GO15235@jhogan-linux>
+References: <5a0159b6.08bc500a.ebe4b.25c6@mx.google.com>
+ <CAK8P3a3QKkGv6eSjX7wH6LpOY0-1XUPFoX0ntog5-ZSHPab6iA@mail.gmail.com>
+ <2a051ef8-d383-ffd9-e79b-34a2701e44c9@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171107110539.3wrm6uu6ohh6dnuy@flea>
-Content-Language: it
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="WjzcGWYIDcuHBXpJ"
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <2a051ef8-d383-ffd9-e79b-34a2701e44c9@caviumnetworks.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "kernelci.org bot" <bot@kernelci.org>, Ralf
+ Baechle <ralf@linux-mips.org>, "Steven J. Hill" <steven.hill@cavium.com>, Kernel Build Reports Mailman List <kernel-build-reports@lists.linaro.org>, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, David Daney <david.daney@cavium.com>, Linus Walleij <linus.walleij@linaro.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--WjzcGWYIDcuHBXpJ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Il 07/11/2017 12:05, Maxime Ripard ha scritto:
-> Hi,
-> 
-> On Tue, Nov 07, 2017 at 11:03:30AM +0100, Giulio Benetti wrote:
->> This patch adds device tree mali node compatible with r6p2 utgard kernel driver
->> provided by ARM and patched by maxime ripard on his github.
->>
->> It can be easily used in target.dts with:
->>
->> &mali {
->> 	status = "okay";
->> }
->>
->> then loading mali.ko in user space.
->>
->> Best regards
->> Giulio Benetti
->> Micronova srl
-> 
-> Again, you should have a proper commit log here.
+On Tue, Nov 07, 2017 at 09:52:36AM -0800, David Daney wrote:
+> On 11/07/2017 04:15 AM, Arnd Bergmann wrote:
+> > On Tue, Nov 7, 2017 at 7:59 AM, kernelci.org bot <bot@kernelci.org> wro=
+te:
+> >=20
+> >> Errors summary:
+> >> 20 arch/mips/include/asm/smp.h:32:29: error: 'CONFIG_MIPS_NR_CPU_NR_MA=
+P' undeclared here (not in a function)
+> >=20
+> > I have reported this before, as did 0day, but I don't know if anyone
+> > is fixing this:
+> >=20
+> >
+>=20
+> Yes, Steven sent a patch to fix this back on Oct. 2:
+>=20
+> https://patchwork.linux-mips.org/patch/17400/
+>=20
+> Ralf seems AWOL with respect to this issue.
+>=20
+> Perhaps the alternate MIPS maintainer James Hogan can try to get the fix=
+=20
+> merged.
 
-As log could it be:
-It seems there is not mali node in sun7i-a20.dtsi    << This is "Why"
+I've asked Stephen Rothwell to switch to my tree for the timebeing, i.e.
+git://git.kernel.org/pub/scm/linux/kernel/git/jhogan/mips.git#mips-next
 
-Add mali node to sun7i-a20.dtsi                << This is "How"
+If so then tomorrows linux-next should hopefully be fixed.
 
-Or can you point me to some example?
-I've tried to check lot of other patches,
-but really I can't understand which is the right way.
+Cheers
+James
 
-> 
-> Moreover, the DT binding itself doesn't have a dependency on the mali
-> driver version. This is just a description of the hardware so you
-> shouldn't mention it.
+--WjzcGWYIDcuHBXpJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Right
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> And there's no need for the status = "okay" in the board DTS, since
-> you don't disable it in your patch.
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAloB+KoACgkQbAtpk944
+dnqAuw/+ODHqYtuo1e/iyDAJPyRzHxtydU0Ym8f91q4ITA2LrKRBZUmR+zAamd11
+ALDb8Qr33bdOk1BCCbBznXMmZ1TlCj9QzFwjmtCax2knwzGYJzfR8+vOPCer+YzY
+FfeELyaJi11syGRFhH9pXT70MRtPodR76AMjVI1ZNI1vIp58fCHPihvZmPlkRvaU
+orD+3wTqtjvkyxQSSvZGbbwIWu6wuLqftwfXdH0bFPJiqmGVnDrInH9D+Q7GtAbJ
+232Rzalp6ubiTY3ciGbMiEQN4desSdAeYEfwkQTe6ilUQ/Z+NpFO77Gjbn4W1N/h
+BVtOJq7Yyzq3kR0f1WqWt8c9L/YY9mlp+WCpYSlqviYsJFyA+MqWQkD3/UVV8ZDj
+N4UarlPpkt6f0+qYpavqfEBwfAvukaiviwcnkqh2LkZNKz/ygXHszmeqY2pJ00KW
+/nHAr66yzIM48h9R0x4CdPh8ntAKbefsKYUYuoa6gX3UAfAjxXsLkQREZOXetiUa
+HXkiwDNbB4Ab6mnExEYoSMa1u5W+6CQRdyIJrvo462G6aZ5es0mn/fU5ywZ5JCdc
+aKnu2thZeKKMyUahVl0jC0p91voliwRsRcesegRlWmSmB8PFrQLKvrAPGwqyNk9F
+ma88u9lkhGDDQypSXvWcceYXrei9sp/+FZ2D/wmo8nE2wpZN3rU=
+=udLA
+-----END PGP SIGNATURE-----
 
-Right
-
-> 
->> Signed-off-by: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/sun7i-a20.dtsi | 27 +++++++++++++++++++++++++++
->>   1 file changed, 27 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
->> index 228c368..e402596 100644
->> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
->> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
->> @@ -1216,6 +1216,33 @@
->>   			#size-cells = <0>;
->>   		};
->>   
->> +		mali: gpu@1c40000 {
->> +			compatible = "allwinner,sun8i-a23-mali",
-> 
-> This doesn't make any sense. The A23 went out later, and...
-> 
->> +				     "allwinner,sun7i-a20-mali", "arm,mali-400";
-> 
-> You're actually using the proper compatible already.
-
-So I will delete "allwinner,sun8i-a23-mali",
-
-> 
->> +			reg = <0x01c40000 0x10000>;
->> +			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "gp",
->> +					  "gpmmu",
->> +					  "pp0",
->> +					  "ppmmu0",
->> +					  "pp1",
->> +					  "ppmmu1",
->> +					  "pmu";
->> +			clocks = <&ccu CLK_AHB_GPU>, <&ccu CLK_GPU>;
->> +			clock-names = "bus", "core";
->> +			resets = <&ccu RST_GPU>;
->> +			#cooling-cells = <2>;
-> 
-> This isn't needed unless you're using thermal throttling, but in this
-> case you would also need to add the OPPs.
-
-Right,
-but at this time OPPs are not ready,
-so I can delete #cooling-cells = <2>;
-
-> 
->> +
->> +			assigned-clocks = <&ccu CLK_GPU>;
->> +			assigned-clock-rates = <381000000>;
-> 
-> And this should be in the driver instead.
-
-So it's useless and I will remove that
-
-> 
-> Maxime
-> 
-
-Now, to avoid any possible other mistake,
-do I have to resubmit patch corrected answering to this thread,
-when you give me the ok?
-
-PS. Sorry for the mess with double patches,
-but I did a mess with mailing lists
-and I'm new to this.
-
-Thank you
-
--- 
-Giulio Benetti
-R&D Manager &
-Advanced Research
-
-MICRONOVA SRL
-Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
-Tel. 049/8931563 - Fax 049/8931346
-Cod.Fiscale - P.IVA 02663420285
-Capitale Sociale € 26.000 i.v.
-Iscritta al Reg. Imprese di Padova N. 02663420285
-Numero R.E.A. 258642
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--WjzcGWYIDcuHBXpJ--
