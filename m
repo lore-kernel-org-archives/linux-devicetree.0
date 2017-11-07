@@ -1,35 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: next/master build: 214 builds: 26 failed, 188 passed, 28 errors,
- 6333 warnings (next-20171107)
-Date: Tue, 7 Nov 2017 08:02:47 -0600
-Message-ID: <CAL_JsqJsXzgUvQrBXGQxuOrb-QUjOOiSyqhpF-V9NeaKG4TyrA@mail.gmail.com>
-References: <5a0159b6.08bc500a.ebe4b.25c6@mx.google.com> <CAK8P3a3QKkGv6eSjX7wH6LpOY0-1XUPFoX0ntog5-ZSHPab6iA@mail.gmail.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v4 0/4] fix the clock setting for SAR ADC
+Date: Tue, 7 Nov 2017 22:09:42 +0800
+Message-ID: <20171107140942.29243-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3QKkGv6eSjX7wH6LpOY0-1XUPFoX0ntog5-ZSHPab6iA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "kernelci.org bot" <bot@kernelci.org>, Kernel Build Reports Mailman List <kernel-build-reports@lists.linaro.org>, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Linus Walleij <linus.walleij@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, linux-amlogic@lists.infradead.org, linux-iio@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 7, 2017 at 6:15 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tue, Nov 7, 2017 at 7:59 AM, kernelci.org bot <bot@kernelci.org> wrote:
+patch [1/4]:
+  Fix wrong SARADC/SANA clock gate bit in Meson-GXBB/GXL,
+the published datasheets[4] also has wrong description about this.
+  This patch should be explicitly merged *before* other patches.
 
->> 12 arch/arm/boot/dts/spear1340-evb.dtb: Warning (dmas_property): Property 'dmas', cell 4 is not a phandle reference in /ahb/apb/serial@b4100000
->> 12 arch/arm/boot/dts/spear1340-evb.dtb: Warning (dmas_property): Missing property '#dma-cells' in node /interrupt-controller@ec801000 or bad phandle (referred from /ahb/apb/serial@b4100000:dmas[4])
->> 12 arch/arm/boot/dts/spear1310-evb.dtb: Warning (gpios_property): Property 'cs-gpios', cell 6 is not a phandle reference in /ahb/apb/spi@e0100000
->> 12 arch/arm/boot/dts/spear1310-evb.dtb: Warning (gpios_property): Missing property '#gpio-cells' in node /interrupt-controller@ec801000 or bad phandle (referred from /ahb/apb/spi@e0100000:cs-gpios[6])
-> ...
->
-> endless stream of new dtc warnings, mostly valid. I have started
-> fixing them but at some point
-> gave up. Looking for help here.
+patch [2-4/4]:
+  Drop the "sana" clock from SAR ADC module,
 
-Sorry, I intended to have these show up early in the cycle to give
-time to fix, but between -next being sporadic and kernelci needing a
-change to report dtc warnings it all landed late. It's really only
-50-100 unique errors. Things just explode since everything is an
-include file.
+  From the hardware perspective, the SAR ADC module doesn't
+require "sana" clock to wrok. This should apply to all SoC,
+including meson6,8, GXBB, GXL..
 
-Rob
+Note: the whole patchset series has been tested at GXL-P212 board,
+we haven't got any meson6,8 board to test, so I would appreciate
+if someone (Martin?) could help to confirm it works there.
+
+Changes since v3 at [3] :
+  - fix the missing iio maintainers for patch[2/4]
+  - add warning about the dependency, the patch[1/4] should go first
+  - update comments
+
+Changes since v2 at [2] :
+  - explicitly point out 'sana' clock is not required for saradc, and drop them
+  - update comments, as the published datasheet is wrong
+ 
+Changes since v1 at [1] :
+  - correct SAR ADC/SANA clock gate bit
+
+[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005221.html
+
+[2] http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005242.html
+
+[3] http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005252.html
+    http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005257.html
+    http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005253.html
+    http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005254.html
+    http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005255.html
+
+
+[4] GXBB v1.1.4, page 57
+      http://dn.odroid.com/S905/DataSheet/S905_Public_Datasheet_V1.1.4.pdf
+    GXL v0.3_20170314
+      http://www.mediafire.com/file/5bpt054va5ut7v9/S905X_Datasheet_V0.3_20170314publicversion-Wesion.pdf
+
+
+Xingyu Chen (3):
+  iio: adc: meson-saradc: remove irrelevant clock "sana"
+  dt-bindings: iio: adc: update the doc for SAR ADC
+  ARM64: dts: meson: drop "sana" clock from SAR ADC
+
+Yixun Lan (1):
+  clk: meson: gxbb: fix wrong clock for SARADC/SANA
+
+ .../bindings/iio/adc/amlogic,meson-saradc.txt        |  1 -
+ arch/arm/boot/dts/meson8.dtsi                        |  5 ++---
+ arch/arm/boot/dts/meson8b.dtsi                       |  5 ++---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi          |  3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi           |  3 +--
+ drivers/clk/meson/gxbb.c                             |  4 ++--
+ drivers/iio/adc/meson_saradc.c                       | 20 --------------------
+ 7 files changed, 8 insertions(+), 33 deletions(-)
+
+-- 
+2.14.1
+
