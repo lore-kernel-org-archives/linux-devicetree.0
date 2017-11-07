@@ -1,71 +1,63 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: NSP: Fix PPI interrupt types
-Date: Tue, 7 Nov 2017 14:30:01 -0800
-Message-ID: <2f4dfba2-923a-840a-7dc9-5761380b28c5@gmail.com>
-References: <20171107222812.17267-1-f.fainelli@gmail.com>
- <20171107222812.17267-3-f.fainelli@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: AXP803 I2C support / AXP devicetree-bindings
+Date: Tue, 7 Nov 2017 23:32:23 +0100
+Message-ID: <CAFBinCDVh2DpuQBx-x2OC_n9GJyYF8E84V1muYYvMJp2FYxjTQ@mail.gmail.com>
+References: <CAFBinCAm8pA-dh3+T4Ui+DvLv5C17Zup-FN8pvi0cUa5PgwJJw@mail.gmail.com>
+ <CAGb2v642n4puXqKOjG0QxhFgFFW2nJKrpU4KV2ZRPNb6_zF4pw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171107222812.17267-3-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAGb2v642n4puXqKOjG0QxhFgFFW2nJKrpU4KV2ZRPNb6_zF4pw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2017 02:28 PM, Florian Fainelli wrote:
-> Booting a kernel results in the kernel warning us about the following
-> PPI interrupts configuration:
-> [    0.105127] smp: Bringing up secondary CPUs ...
-> [    0.110545] GIC: PPI11 is secure or misconfigured
-> [    0.110551] GIC: PPI13 is secure or misconfigured
-> 
-> Fix this by using the appropriate edge configuration for PPI11 and
-> PPI13, this is similar to what was fixed for Northstar (BCM5301X) in
-> commit 0e34079cd1f6 ("ARM: dts: BCM5301X: Correct GIC_PPI interrupt
-> flags").
-> 
-> Fixes: 1a9d53cabaf4 ("ARM: dts: NSP: Add TWD Support to DT")
+Hi ChenYu,
 
-this should have been Fixes: 7b2e987de207 ("ARM: NSP: add minimal
-Northstar Plus device tree"), I can fix that up while applying unless
-there are other comments.
+On Tue, Nov 7, 2017 at 4:13 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> On Tue, Nov 7, 2017 at 6:39 AM, Martin Blumenstingl
+> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>> Hello,
+>>
+>> recently I discovered that there are some X-Powers AXP chips that
+>> support both, Allwinner's own "RSB" as well as the I2C ("TWSI" in the
+>> datasheet) busses.
+>>
+>> one chip that supports both interfaces is the AXP803
+>> the datasheet is linked in the public PINE64 wiki: [1] (direct link: [0])
+>
+> All the RSB based PMICs support both modes. They start in I2C mode
+> when cold booted.
+I did not know that - thank you for that info!
 
-> Fixes: 1a9d53cabaf4 ("ARM: dts: NSP: Add TWD Support to DT")
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/bcm-nsp.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-> index dff66974feed..d5f5e92e7488 100644
-> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
-> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-> @@ -85,7 +85,7 @@
->  		timer@20200 {
->  			compatible = "arm,cortex-a9-global-timer";
->  			reg = <0x20200 0x100>;
-> -			interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&periph_clk>;
->  		};
->  
-> @@ -93,7 +93,7 @@
->  			compatible = "arm,cortex-a9-twd-timer";
->  			reg = <0x20600 0x20>;
->  			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-> -						  IRQ_TYPE_LEVEL_HIGH)>;
-> +						  IRQ_TYPE_EDGE_RISING)>;
->  			clocks = <&periph_clk>;
->  		};
->  
-> 
+>>
+>> currently the "x-powers,axp803" binding is "RSB" bus specific as it's
+>> currently only listed in drivers/mfd/axp20x-rsb.c
+>>
+>> was there a discussion about supporting both, the "RSB" and I2C bus
+>> for one chip (for example the AXP803) in the past (I couldn't find
+>> anything online)?
+>
+> No. None of the boards actually use I2C instead of RSB. RSB mode is
+> initialized by the boot loader. There is no easy way for the kernel to
+> switch it back.
+I'm not trying to change this on an existing board
+
+>> what about the device-tree bindings in this case?
+>
+> We can deal with it if someone actually comes up with a practical
+> case needing it. Otherwise things go untested, which is not what
+> we want.
+OK, thank you for this information
+
+if there is a valid use-case for this: would you like to see a RfC
+patch-series (along with a description why it's needed) or discuss
+this further before sending any patches?
 
 
--- 
-Florian
+Regards
+Martin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
