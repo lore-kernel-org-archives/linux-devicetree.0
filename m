@@ -1,59 +1,33 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH 5/8] ARM: dts: iwg22d-sodimm-dbhd-ca: Add can1 support to HDMI DB
-Date: Tue,  7 Nov 2017 15:10:46 +0000
-Message-ID: <1510067449-17017-6-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510067449-17017-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: next/master build: 214 builds: 26 failed, 188 passed, 28 errors,
+ 6333 warnings (next-20171107)
+Date: Tue, 7 Nov 2017 16:21:19 +0100
+Message-ID: <CACRpkdZLggJA_qcRSJv4tndHDU4SG6HhP1U8uJpiKn=gBpAneA@mail.gmail.com>
+References: <5a0159b6.08bc500a.ebe4b.25c6@mx.google.com> <CAK8P3a3QKkGv6eSjX7wH6LpOY0-1XUPFoX0ntog5-ZSHPab6iA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a3QKkGv6eSjX7wH6LpOY0-1XUPFoX0ntog5-ZSHPab6iA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "kernelci.org bot" <bot@kernelci.org>, Kernel Build Reports Mailman List <kernel-build-reports@lists.linaro.org>, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Masami Hiramatsu <mhiramat@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-CAN1 interface is exposed via connector J1 found on the HDMI daughter
-board. This patch enables can1 DT node from within the daughter board
-specific device tree.
+On Tue, Nov 7, 2017 at 1:15 PM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+>> 2 arch/arm/mach-footbridge/dc21285.c:145:2: error: expected ';' before 'else'
+>
+> A harmless rework that Linus Walleij did apparently uncovered an
+> ancient bug. I'm
+> waiting for Linus to suggest a fix.
 
-diff --git a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts
-index a8a4ec8..d34de82 100644
---- a/arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts
-+++ b/arch/arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts
-@@ -54,6 +54,13 @@
- 	};
- };
- 
-+&can1 {
-+	pinctrl-0 = <&can1_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
- &hscif2 {
- 	pinctrl-0 = <&hscif2_pins>;
- 	pinctrl-names = "default";
-@@ -105,6 +112,11 @@
- };
- 
- &pfc {
-+	can1_pins: can1 {
-+		groups = "can1_data_b";
-+		function = "can1";
-+	};
-+
- 	du0_pins: du0 {
- 		groups = "du0_rgb888", "du0_sync", "du0_disp", "du0_clk0_out";
- 		function = "du0";
--- 
-2.7.4
+In footbridge? Oh my. I just sent a fix for an ancient bug in the
+mach-sa1100 simpad.c
+boardfile. Isn't that what you're referring to?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(I intended to CC you but git send-email doesn't pick up Reported-by..
+I'll forward.)
+
+
+Yours,
+Linus Walleij
