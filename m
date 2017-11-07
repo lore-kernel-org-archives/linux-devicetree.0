@@ -1,80 +1,103 @@
-From: Tobias Klauser <tklauser@distanz.ch>
-Subject: Re: [patch v11 4/4] Documentation: jtag: Add ABI documentation
-Date: Tue, 7 Nov 2017 11:36:13 +0100
-Message-ID: <20171107103613.GJ1370@distanz.ch>
-References: <1509724449-26221-1-git-send-email-oleksandrs@mellanox.com>
- <1509724449-26221-5-git-send-email-oleksandrs@mellanox.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v4 20/20] cpufreq: scmi: add support for fast frequency
+ switching
+Date: Tue, 7 Nov 2017 10:57:29 +0000
+Message-ID: <7deac477-8400-a223-420b-63f5a483c546@arm.com>
+References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
+ <1509720477-18936-21-git-send-email-sudeep.holla@arm.com>
+ <20171107061933.GC3297@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1509724449-26221-5-git-send-email-oleksandrs@mellanox.com>
+In-Reply-To: <20171107061933.GC3297@vireshk-i7>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksandr Shamray <oleksandrs@mellanox.com>
-Cc: gregkh@linuxfoundation.org, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, linux-serial@vger.kernel.org, mec@shout.net, vadimp@mellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-11-03 at 16:54:09 +0100, Oleksandr Shamray <oleksandrs@mellanox.com> wrote:
-> Added document that describe the ABI for JTAG class drivrer
+
+
+On 07/11/17 06:19, Viresh Kumar wrote:
+> On 03-11-17, 14:47, Sudeep Holla wrote:
+>> The cpufreq core provides option for drivers to implement fast_switch
+>> callback which is invoked for frequency switching from interrupt context.
+>>
+>> This patch adds support for fast_switch callback in SCMI cpufreq driver
+>> by making use of polling based SCMI transfer. It also sets the flag
+>> fast_switch_possible.
+>>
+>> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+>> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+>> Cc: linux-pm@vger.kernel.org
+>> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>> ---
+>>  drivers/cpufreq/scmi-cpufreq.c | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+>> index b1057a13e6a7..91df5013f7b2 100644
+>> --- a/drivers/cpufreq/scmi-cpufreq.c
+>> +++ b/drivers/cpufreq/scmi-cpufreq.c
+>> @@ -64,6 +64,19 @@ scmi_cpufreq_set_target(struct cpufreq_policy *policy, unsigned int index)
+>>  	return perf_ops->freq_set(handle, priv->domain_id, freq, false);
+>>  }
+>>  
+>> +static unsigned int scmi_cpufreq_fast_switch(struct cpufreq_policy *policy,
+>> +					     unsigned int target_freq)
+>> +{
+>> +	struct scmi_data *priv = policy->driver_data;
+>> +	struct scmi_perf_ops *perf_ops = handle->perf_ops;
+>> +
+>> +	if (!perf_ops->freq_set(handle, priv->domain_id,
+>> +				target_freq * 1000, true))
+>> +		return target_freq;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int
+>>  scmi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
+>>  {
+>> @@ -167,6 +180,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
+>>  
+>>  	policy->cpuinfo.transition_latency = latency;
+>>  
+>> +	policy->fast_switch_possible = true;
+>>  	return 0;
+>>  
+>>  out_free_cpufreq_table:
+>> @@ -183,6 +197,7 @@ static int scmi_cpufreq_exit(struct cpufreq_policy *policy)
+>>  {
+>>  	struct scmi_data *priv = policy->driver_data;
+>>  
+>> +	policy->fast_switch_possible = false;
 > 
-> Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v10->v11
-> v9->v10
-> Fixes added by Oleksandr:
-> - change jtag-cdev to jtag-dev in documentation
-> - update Kernel Version and Date in jtag-dev documentation;
-> v8->v9
-> v7->v8
-> v6->v7
-> Comments pointed by Pavel Machek <pavel@ucw.cz>
-> - Added jtag-cdev documentation to Documentation/ABI/testing folder
-> ---
->  Documentation/ABI/testing/jatg-dev |   27 +++++++++++++++++++++++++++
->  1 files changed, 27 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/ABI/testing/jatg-dev
+> You don't need this.
 > 
-> diff --git a/Documentation/ABI/testing/jatg-dev b/Documentation/ABI/testing/jatg-dev
-> new file mode 100644
-> index 0000000..803dbab
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/jatg-dev
 
-Typo in the file name: s/jatg-dev/jtag-dev/
+OK, dropped now.
 
-> @@ -0,0 +1,27 @@
-> +What:		/dev/jtag[0-9]+
-> +Date:		October 2017
-> +KernelVersion:	4.15
-> +Contact:	oleksandrs@mellanox.com
-> +Description:
-> +		The misc device files /dev/jtag* are the interface
-> +		between JTAG master interfase and userspace.
-
-Typo: s/interfase/interface/
-
-> +
-> +		The ioctl(2)-based ABI is defined and documented in
-> +		[include/uapi]<linux/jtag.h>.
-> +
-> +		The following file operations are supported:
-> +
-> +		open(2)
-> +		The argument flag currently support only one access
-> +		mode O_RDWR.
-> +
-> +		ioctl(2)
-> +		Initiate various actions.
-> +		See the inline documentation in [include/uapi]<linux/jtag.h>
-> +		for descriptions of all ioctls.
-> +
-> +		close(2)
-> +		Stops and free up the I/O contexts that was associated
-> +		with the file descriptor.
-> +
-> +Users:		TBD
-> \ No newline at end of file
-> -- 
-> 1.7.1
+>>  	cpufreq_cooling_unregister(priv->cdev);
+>>  	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
+>>  	kfree(priv);
+>> @@ -226,6 +241,7 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
+>>  	.verify	= cpufreq_generic_frequency_table_verify,
+>>  	.attr	= cpufreq_generic_attr,
+>>  	.target_index	= scmi_cpufreq_set_target,
+>> +	.fast_switch	= scmi_cpufreq_fast_switch,
+>>  	.get	= scmi_cpufreq_get_rate,
+>>  	.init	= scmi_cpufreq_init,
+>>  	.exit	= scmi_cpufreq_exit,
 > 
+> Apart from that.
+> 
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> 
+
+Thanks
+
+-- 
+Regards,
+Sudeep
