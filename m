@@ -1,88 +1,90 @@
-From: James Hogan <james.hogan@mips.com>
-Subject: Re: next/master build: 214 builds: 26 failed, 188 passed, 28 errors,
- 6333 warnings (next-20171107)
-Date: Tue, 7 Nov 2017 18:17:22 +0000
-Message-ID: <20171107181721.GO15235@jhogan-linux>
-References: <5a0159b6.08bc500a.ebe4b.25c6@mx.google.com>
- <CAK8P3a3QKkGv6eSjX7wH6LpOY0-1XUPFoX0ntog5-ZSHPab6iA@mail.gmail.com>
- <2a051ef8-d383-ffd9-e79b-34a2701e44c9@caviumnetworks.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: add phy-reset property for rk3066a-rayeager
+ emac
+Date: Tue, 7 Nov 2017 10:26:01 -0800
+Message-ID: <ac15ef59-3b5e-1752-09db-0a773615f44c@gmail.com>
+References: <1510022959-19440-1-git-send-email-zyw@rock-chips.com>
+ <e6f2393e-cb3b-9006-d0f5-6b30fd2a5192@mentor.com>
+ <e08d8ea2-40c5-a5b3-e570-44c90388fcdd@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WjzcGWYIDcuHBXpJ"
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <2a051ef8-d383-ffd9-e79b-34a2701e44c9@caviumnetworks.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "kernelci.org bot" <bot@kernelci.org>, Ralf
- Baechle <ralf@linux-mips.org>, "Steven J. Hill" <steven.hill@cavium.com>, Kernel Build Reports Mailman List <kernel-build-reports@lists.linaro.org>, "open list:RALINK MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, David Daney <david.daney@cavium.com>, Linus Walleij <linus.walleij@linaro.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e08d8ea2-40c5-a5b3-e570-44c90388fcdd-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, andrew-g2DYL2Zd6BY@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---WjzcGWYIDcuHBXpJ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11/07/2017 01:51 AM, Chris Zhong wrote:
+> 
+> 
+> On 2017年11月07日 15:54, Vladimir Zapolskiy wrote:
+>> Hello Chris,
+>>
+>> On 11/07/2017 04:49 AM, Chris Zhong wrote:
+>>> The ethernet phy of rk3066a-rayeager has a reset pin, it controlled by
+>>> GPIO1_D6, this pin should be pull down then pull up to reset the phy.
+>>> Add a phy-reset property in emac, make the phy can be reset when emac
+>>> power on.
+>> for PHY reset there are properties 'reset-gpios' and 'reset-delay-us',
+>> please reference to Documentation/devicetree/bindings/net/mdio.txt
+>>
+>> Can you try to reuse them instead of adding new custom properties?
+> This phy-reset is from Documentation/devicetree/bindings/net/arc_emac.txt.
+> And copy from arch/arm/boot/dts/rk3036-kylin.dts.
+> Can we just use these properties, they are not new.
 
-On Tue, Nov 07, 2017 at 09:52:36AM -0800, David Daney wrote:
-> On 11/07/2017 04:15 AM, Arnd Bergmann wrote:
-> > On Tue, Nov 7, 2017 at 7:59 AM, kernelci.org bot <bot@kernelci.org> wro=
-te:
-> >=20
-> >> Errors summary:
-> >> 20 arch/mips/include/asm/smp.h:32:29: error: 'CONFIG_MIPS_NR_CPU_NR_MA=
-P' undeclared here (not in a function)
-> >=20
-> > I have reported this before, as did 0day, but I don't know if anyone
-> > is fixing this:
-> >=20
-> >
->=20
-> Yes, Steven sent a patch to fix this back on Oct. 2:
->=20
-> https://patchwork.linux-mips.org/patch/17400/
->=20
-> Ralf seems AWOL with respect to this issue.
->=20
-> Perhaps the alternate MIPS maintainer James Hogan can try to get the fix=
-=20
-> merged.
+Because it already exists does not mean it's correct, in fact, it is not
+at all because it places the reset property for a PHY into the MAC node,
+which is just not what this is, what we should be using instead is the
+following patch series:
 
-I've asked Stephen Rothwell to switch to my tree for the timebeing, i.e.
-git://git.kernel.org/pub/scm/linux/kernel/git/jhogan/mips.git#mips-next
+http://patchwork.ozlabs.org/project/netdev/list/?series=9267
 
-If so then tomorrows linux-next should hopefully be fixed.
+http://patchwork.ozlabs.org/patch/828499/
+http://patchwork.ozlabs.org/patch/828505/
+http://patchwork.ozlabs.org/patch/828501/
+http://patchwork.ozlabs.org/patch/828502/
 
-Cheers
-James
+>> As a side question, which is mainly addressed to Sergei and Roger,
+>> I don't quite understand why PHY properties were initially added to
+>> MAC/MDIO bus device tree nodes, in my opinion they must be moved under
+>> PHY device tree nodes.
+>>
+>> -- 
+>> With best wishes,
+>> Vladimir
+>>
+>>> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>> ---
+>>>
+>>>   arch/arm/boot/dts/rk3066a-rayeager.dts | 2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts
+>>> b/arch/arm/boot/dts/rk3066a-rayeager.dts
+>>> index 570157f..6064a0a 100644
+>>> --- a/arch/arm/boot/dts/rk3066a-rayeager.dts
+>>> +++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
+>>> @@ -173,6 +173,8 @@
+>>>       pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
+>>>       phy = <&phy0>;
+>>>       phy-supply = <&vcc_rmii>;
+>>> +    phy-reset-gpios = <&gpio1 RK_PD6 GPIO_ACTIVE_LOW>; /* PHY_RST */
+>>> +    phy-reset-duration = <10>; /* millisecond */
+>>>       status = "okay";
+>>>         phy0: ethernet-phy@0 {
+>>>
+>>
+>>
+> 
 
---WjzcGWYIDcuHBXpJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAloB+KoACgkQbAtpk944
-dnqAuw/+ODHqYtuo1e/iyDAJPyRzHxtydU0Ym8f91q4ITA2LrKRBZUmR+zAamd11
-ALDb8Qr33bdOk1BCCbBznXMmZ1TlCj9QzFwjmtCax2knwzGYJzfR8+vOPCer+YzY
-FfeELyaJi11syGRFhH9pXT70MRtPodR76AMjVI1ZNI1vIp58fCHPihvZmPlkRvaU
-orD+3wTqtjvkyxQSSvZGbbwIWu6wuLqftwfXdH0bFPJiqmGVnDrInH9D+Q7GtAbJ
-232Rzalp6ubiTY3ciGbMiEQN4desSdAeYEfwkQTe6ilUQ/Z+NpFO77Gjbn4W1N/h
-BVtOJq7Yyzq3kR0f1WqWt8c9L/YY9mlp+WCpYSlqviYsJFyA+MqWQkD3/UVV8ZDj
-N4UarlPpkt6f0+qYpavqfEBwfAvukaiviwcnkqh2LkZNKz/ygXHszmeqY2pJ00KW
-/nHAr66yzIM48h9R0x4CdPh8ntAKbefsKYUYuoa6gX3UAfAjxXsLkQREZOXetiUa
-HXkiwDNbB4Ab6mnExEYoSMa1u5W+6CQRdyIJrvo462G6aZ5es0mn/fU5ywZ5JCdc
-aKnu2thZeKKMyUahVl0jC0p91voliwRsRcesegRlWmSmB8PFrQLKvrAPGwqyNk9F
-ma88u9lkhGDDQypSXvWcceYXrei9sp/+FZ2D/wmo8nE2wpZN3rU=
-=udLA
------END PGP SIGNATURE-----
-
---WjzcGWYIDcuHBXpJ--
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
