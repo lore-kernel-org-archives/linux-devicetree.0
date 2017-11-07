@@ -1,49 +1,72 @@
-From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] brcmfmac: add support for external 32khz clock
-Date: Tue, 7 Nov 2017 12:09:23 +0100
-Message-ID: <5A019463.9060701@broadcom.com>
-References: <20171104132421.GA1541@archbox.home> <5A004099.90200@broadcom.com>
- <20171106112726.GA25134@lineageos.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] irqchip: stm32: add stm32h7 support
+Date: Tue, 7 Nov 2017 11:23:09 +0000
+Message-ID: <04d9d728-7f9f-6bc0-bb57-c7bb49817872@arm.com>
+References: <1509987819-29599-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171106112726.GA25134-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+In-Reply-To: <1509987819-29599-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
+To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/6/2017 12:27 PM, Simon Shields wrote:
-> On Mon, Nov 06, 2017 at 11:59:37AM +0100, Arend van Spriel wrote:
->> On 11/4/2017 2:24 PM, Simon Shields wrote:
->>> Some boards use an external 32khz clock for low-power
->>> mode timing. Make sure the clock is powered on while the chipset
->>> is active.
->>
->> Do you have such a board? With the little documentation I can get my hands
->> on here I wonder whether the clock needs to be enabled before the device is
->> powered. If you have the hardware I would like to check some registers in
->> the device.
->>
->
-> Yes. Trats2 (exynos4412-based) has such a setup. The BCM4334 works fine
-> with this patch and one more that enables the WL_REG_EN pin when
-> brcmfmac is probed.
+Hi Ludovic,
 
-Ok. So this is exactly the thing I was wondering about. So it makes me 
-curious how the WL_REG_EN patch looks like. Can you provide that?
+On 06/11/17 17:03, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> 
+> This series adds:
+> -Management of multi-bank of external interrupts
+> stm32h7 has up to 96 inputs (3 banks of  32 inputs).
+> -Fix initial value after cold/hot boot (wakeup issue).
+> 
+> Changes v3:
+> -remove chip.name and handler, already done by
+> irq_alloc_domain_generic_chips
+> -add Rob ack in dt-bindings commit
+> 
+> Changes v2:
+> -Remove irq_mask and adds const on struct stm32_exti_bank
+> -Add wrapper functions pending and ack
+> -Replace BITS_PER_LONG by IRQS_PER_BANK
+> -Fill commit message on
+> "ARM: dts: stm32: add support of exti on stm32h743"
+> -Add system config bank for stm32h7
+> 
+> Ludovic Barre (9):
+>   irqchip: stm32: select GENERIC_IRQ_CHIP
+>   irqchip: stm32: add multi-bank management
+>   dt-bindings: interrupt-controllers: add compatible string for stm32h7
+>   irqchip: stm32: add stm32h7 support
+>   irqchip: stm32: fix initial values
+>   irqchip: stm32: move the wakeup on interrupt mask
+>   ARM: dts: stm32: add exti support for stm32h743
+>   ARM: dts: stm32: add system config bank node for stm32h743
+>   ARM: dts: stm32: add support of exti on stm32h743 pinctrl
+> 
+>  .../interrupt-controller/st,stm32-exti.txt         |   4 +-
+>  arch/arm/boot/dts/stm32h743-pinctrl.dtsi           |  24 +++
+>  arch/arm/boot/dts/stm32h743.dtsi                   |  13 ++
+>  drivers/irqchip/Kconfig                            |   1 +
+>  drivers/irqchip/irq-stm32-exti.c                   | 206 ++++++++++++++++-----
+>  5 files changed, 198 insertions(+), 50 deletions(-)
+> 
 
-> Without this patch (and only enabling WL_REG_EN), the chip is detected but
-> attempting to initialise it fails with a bunch of timeouts.
+I'm happy to take the first 6 patches through the irqchip tree. How
+about the last 3? I'd rather see them routed via armsoc if there is any
+risk of merge conflicts.
 
-I would be interested in seeing a detailed log of that. Could you 
-provide that? You need to build the driver with CONFIG_BRCMDBG and pass 
-module parameter 'debug=0x1416' upon insmod/modprobe.
+How do you want to proceed?
 
-Regards,
-Arend
+Thanks,
 
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
