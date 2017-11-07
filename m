@@ -1,64 +1,49 @@
-From: Lei YU <mine260309@gmail.com>
-Subject: [PATCH v2 3/3] hwmon: (w83773g) Add documentation
-Date: Tue,  7 Nov 2017 16:27:54 +0800
-Message-ID: <1510043274-4778-4-git-send-email-mine260309@gmail.com>
-References: <1510043274-4778-1-git-send-email-mine260309@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1510043274-4778-1-git-send-email-mine260309@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Jiri Kosina <trivial@kernel.org>
-Cc: Lei YU <mine260309@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] *** Fix warning from kbuild test robot ***
+Date: Tue, 7 Nov 2017 09:31:45 +0100
+Message-ID: <b874ae68-08d4-ba0d-f52a-b25d0f2ccc73@linaro.org>
+References: <1510039193-32522-1-git-send-email-rickchen36@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1510039193-32522-1-git-send-email-rickchen36-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rick Chen <rickchen36-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rick-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the w83773g driver.
+On 07/11/2017 08:19, Rick Chen wrote:
+> *** Fix warnings when make with ARCH=x86_64 from auto build test ***
+> 
+> rick (3):
+>   clocksource/drivers/atcpit100: Add andestech atcpit100 timer
+>   clocksource/drivers/Kconfig: Support andestech atcpit100 timer
+>   dt-bindings: timer: Add andestech atcpit100 timer binding doc
+> 
+>  .../bindings/timer/andestech,atcpit100-timer.txt   |  31 ++++
+>  drivers/clocksource/Kconfig                        |   6 +
+>  drivers/clocksource/Makefile                       |   1 +
+>  drivers/clocksource/timer-atcpit100.c              | 199 +++++++++++++++++++++
+>  4 files changed, 237 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
+>  create mode 100644 drivers/clocksource/timer-atcpit100.c
 
-Signed-off-by: Lei YU <mine260309@gmail.com>
----
-v2:
- - Add notes for offset and update_interval
----
- Documentation/hwmon/w83773g | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/hwmon/w83773g
+Hi Rick,
 
-diff --git a/Documentation/hwmon/w83773g b/Documentation/hwmon/w83773g
-new file mode 100644
-index 0000000..4cc6c0b
---- /dev/null
-+++ b/Documentation/hwmon/w83773g
-@@ -0,0 +1,33 @@
-+Kernel driver w83773g
-+====================
-+
-+Supported chips:
-+  * Nuvoton W83773G
-+    Prefix: 'w83773g'
-+    Addresses scanned: I2C 0x4c and 0x4d
-+    Datasheet: https://www.nuvoton.com/resource-files/W83773G_SG_DatasheetV1_2.pdf
-+
-+Authors:
-+	Lei YU <mine260309@gmail.com>
-+
-+Description
-+-----------
-+
-+This driver implements support for Nuvoton W83773G temperature sensor
-+chip. This chip implements one local and two remote sensors.
-+The chip also features offsets for the two remote sensors which get added to
-+the input readings. The chip does all the scaling by itself and the driver
-+therefore reports true temperatures that don't need any user-space adjustments.
-+Temperature is measured in degrees Celsius.
-+The chip is wired over I2C/SMBus and specified over a temperature
-+range of -40 to +125 degrees Celsius (for local sensor) and -40 to +127
-+degrees Celsius (for remote sensors).
-+Resolution for both the local and remote channels is 0.125 degree C.
-+
-+The chip supports only temperature measurement. The driver exports
-+the temperature values via the following sysfs files:
-+
-+temp[1-3]_input
-+temp[2-3]_fault
-+temp[2-3]_offset
-+update_interval
+I'm not sure to get the 0/3 subject and description.
+
+Is that a changelog ?
+
+
 -- 
-1.9.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
