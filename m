@@ -1,73 +1,43 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
-Date: Tue, 7 Nov 2017 22:47:49 +0530
-Message-ID: <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA@mail.gmail.com>
-References: <20171103195855.15283-1-geomatsi@gmail.com> <20171103195855.15283-2-geomatsi@gmail.com>
- <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
- <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter> <20171106122633.5mnqfh6xhmmxr45s@flea>
- <20171106161306.tq6yeq6bq36ridj3@speedy.hunter> <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg@mail.gmail.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: next/master build: 214 builds: 26 failed, 188 passed, 28 errors,
+ 6333 warnings (next-20171107)
+Date: Tue, 7 Nov 2017 09:52:36 -0800
+Message-ID: <2a051ef8-d383-ffd9-e79b-34a2701e44c9@caviumnetworks.com>
+References: <5a0159b6.08bc500a.ebe4b.25c6@mx.google.com>
+ <CAK8P3a3QKkGv6eSjX7wH6LpOY0-1XUPFoX0ntog5-ZSHPab6iA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAK8P3a3QKkGv6eSjX7wH6LpOY0-1XUPFoX0ntog5-ZSHPab6iA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "kernelci.org bot" <bot-ssFOTAMYnuFg9hUCZPvPmw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>
+Cc: Kernel Build Reports Mailman List <kernel-build-reports-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "open list:RALINK MIPS ARCHITECTURE" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 7, 2017 at 1:12 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> On Mon, Nov 6, 2017 at 9:43 PM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hello Maxime,
->>
->>> > > > The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
->>> > > > Fix cd-gpio description to enable sdcard detect.
->>> > > >
->>> > > > Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> > > > ---
->>> > > >  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
->>> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
->>> > > >
->>> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
->>> > > > index b6b7a561df8c..a42fd79a62a3 100644
->>> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
->>> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
->>> > > > @@ -71,7 +71,7 @@
->>> > > >         pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
->>> > > >         vmmc-supply = <&reg_vcc3v3>;
->>> > > >         bus-width = <4>;
->>> > > > -       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
->>> > > > +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
->>> > >
->>> > > Was able to detect and do mount with existing dts
->>> >
->>> > Did you try to boot from sdcard ? I am not able to boot my board from
->>> > sd-card without this change. As I mentioned earlier in my email
->>> > to buildroot mailing list, with mmc debug enabled I see that mmc
->>> > tries to init sd-card when I remove it from the slot.
->>> >
->>> > Maybe there is a minor differences between h/w versions or batches ?
->>> > What is you board version ? I tested on board v1.0.
->>>
->>> Looking at the schematics, it definitely looks like it's active low.
->>
->> Is it ok to merge it then ? Or using 'cd-inverted' property
->> is the preferable option ?
+On 11/07/2017 04:15 AM, Arnd Bergmann wrote:
+> On Tue, Nov 7, 2017 at 7:59 AM, kernelci.org bot <bot-ssFOTAMYnuFg9hUCZPvPmw@public.gmane.org> wrote:
+> 
+>> Errors summary:
+>> 20 arch/mips/include/asm/smp.h:32:29: error: 'CONFIG_MIPS_NR_CPU_NR_MAP' undeclared here (not in a function)
+> 
+> I have reported this before, as did 0day, but I don't know if anyone
+> is fixing this:
+> 
 >
-> W/o any change mainline works unstable for me, it wasn't booting
-> at-all[1] did you find the same?
->
-> Even tried with active LOW and cd-inverted.
->
-> [1] https://paste.ubuntu.com/25909064/
 
-Look like something broken for H5 and A64 between v4.14-rc8 to latest
+Yes, Steven sent a patch to fix this back on Oct. 2:
 
-thanks!
--- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+https://patchwork.linux-mips.org/patch/17400/
+
+Ralf seems AWOL with respect to this issue.
+
+Perhaps the alternate MIPS maintainer James Hogan can try to get the fix 
+merged.
+
+David Daney
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
