@@ -1,69 +1,75 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH] ARM: dts: add phy-reset property for rk3066a-rayeager
- emac
-Date: Tue, 7 Nov 2017 17:51:27 +0800
-Message-ID: <e08d8ea2-40c5-a5b3-e570-44c90388fcdd@rock-chips.com>
-References: <1510022959-19440-1-git-send-email-zyw@rock-chips.com>
- <e6f2393e-cb3b-9006-d0f5-6b30fd2a5192@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e6f2393e-cb3b-9006-d0f5-6b30fd2a5192@mentor.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Roger Quadros <rogerq@ti.com>
-Cc: heiko@sntech.de, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+From: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
+Subject: [PATCH 1/1] add mali r6p2 dt node
+Date: Tue,  7 Nov 2017 11:03:30 +0100
+Message-ID: <1510049010-5758-1-git-send-email-giulio.benetti@micronovasrl.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds device tree mali node compatible with r6p2 utgard kernel driver 
+provided by ARM and patched by maxime ripard on his github.
 
+It can be easily used in target.dts with:
 
-On 2017年11月07日 15:54, Vladimir Zapolskiy wrote:
-> Hello Chris,
->
-> On 11/07/2017 04:49 AM, Chris Zhong wrote:
->> The ethernet phy of rk3066a-rayeager has a reset pin, it controlled by
->> GPIO1_D6, this pin should be pull down then pull up to reset the phy.
->> Add a phy-reset property in emac, make the phy can be reset when emac
->> power on.
-> for PHY reset there are properties 'reset-gpios' and 'reset-delay-us',
-> please reference to Documentation/devicetree/bindings/net/mdio.txt
->
-> Can you try to reuse them instead of adding new custom properties?
-This phy-reset is from Documentation/devicetree/bindings/net/arc_emac.txt.
-And copy from arch/arm/boot/dts/rk3036-kylin.dts.
-Can we just use these properties, they are not new.
-> As a side question, which is mainly addressed to Sergei and Roger,
-> I don't quite understand why PHY properties were initially added to
-> MAC/MDIO bus device tree nodes, in my opinion they must be moved under
-> PHY device tree nodes.
->
-> --
-> With best wishes,
-> Vladimir
->
->> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->> ---
->>
->>   arch/arm/boot/dts/rk3066a-rayeager.dts | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts b/arch/arm/boot/dts/rk3066a-rayeager.dts
->> index 570157f..6064a0a 100644
->> --- a/arch/arm/boot/dts/rk3066a-rayeager.dts
->> +++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
->> @@ -173,6 +173,8 @@
->>   	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
->>   	phy = <&phy0>;
->>   	phy-supply = <&vcc_rmii>;
->> +	phy-reset-gpios = <&gpio1 RK_PD6 GPIO_ACTIVE_LOW>; /* PHY_RST */
->> +	phy-reset-duration = <10>; /* millisecond */
->>   	status = "okay";
->>   
->>   	phy0: ethernet-phy@0 {
->>
->
->
+&mali {
+	status = "okay";
+}
 
+then loading mali.ko in user space.
+
+Best regards
+Giulio Benetti
+Micronova srl
+
+Signed-off-by: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 228c368..e402596 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1216,6 +1216,33 @@
+ 			#size-cells = <0>;
+ 		};
+ 
++		mali: gpu@1c40000 {
++			compatible = "allwinner,sun8i-a23-mali",
++				     "allwinner,sun7i-a20-mali", "arm,mali-400";
++			reg = <0x01c40000 0x10000>;
++			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "gp",
++					  "gpmmu",
++					  "pp0",
++					  "ppmmu0",
++					  "pp1",
++					  "ppmmu1",
++					  "pmu";
++			clocks = <&ccu CLK_AHB_GPU>, <&ccu CLK_GPU>;
++			clock-names = "bus", "core";
++			resets = <&ccu RST_GPU>;
++			#cooling-cells = <2>;
++
++			assigned-clocks = <&ccu CLK_GPU>;
++			assigned-clock-rates = <381000000>;
++		};
++
+ 		gmac: ethernet@1c50000 {
+ 			compatible = "allwinner,sun7i-a20-gmac";
+ 			reg = <0x01c50000 0x10000>;
 -- 
-Chris Zhong
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
