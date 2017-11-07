@@ -1,67 +1,57 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: NSP: Disable AHCI controller for HR NSP boards
-Date: Tue, 7 Nov 2017 17:45:46 -0500
-Message-ID: <CAC3K-4qZBJc9vRr2z3Fhx78feRdVASYFHZgayV=gG1jZ0dApVg@mail.gmail.com>
-References: <20171107222812.17267-1-f.fainelli@gmail.com> <20171107222812.17267-2-f.fainelli@gmail.com>
+From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC][PATCH 0/3] Overlay manager for predefined DT overlay fragments
+Date: Tue, 7 Nov 2017 15:10:15 -0800
+Message-ID: <CALAqxLUBk6Mxcy78ZhExAbrmAE5gSg+AbV0E1By+FmVMa4YDSg@mail.gmail.com>
+References: <1507613660-27236-1-git-send-email-john.stultz@linaro.org>
+ <20171013214103.mv6wcemzcl36nnvs@rob-hp-laptop> <CALAqxLWcK-wbmQxtX4RziQsvQ26DmixC=gEPojFVHruFrpBnjw@mail.gmail.com>
+ <20171017194600.he3suyuls4na5p6x@rob-hp-laptop> <CALAqxLWSLqmN8WWGktVDxfcs3zyk8ktqVJbtAEoHtqZZw5KTVw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171107222812.17267-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CALAqxLWSLqmN8WWGktVDxfcs3zyk8ktqVJbtAEoHtqZZw5KTVw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Shmidt <dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 7, 2017 at 5:28 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The AHCI controller is currently enabled for all of these boards:
-> bcm958623hr and bcm958625hr would result in a hard hang on boot that we
-> cannot get rid of. Since this does not appear to have an easy and simple
-> fix, just disable the AHCI controller for now until this gets resolved.
+On Tue, Oct 17, 2017 at 2:20 PM, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Oct 17, 2017 at 12:46 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Oct 13, 2017 at 04:51:03PM -0700, John Stultz wrote:
+>>> It seems you're suggesting that there be some sort of special overlay
+>>> partition which users have to flash with pre-built images containing
+>>> the appropriate overlay dtbs, so that something like the treble
+>>> overlay-per-partition approach could be used.
+>>
+>> I'm not really suggesting anything. I'm not going to take something that
+>> *only* solves your usecase of apply an overlay embedded in a base dtb
+>> based on the kernel command line. I have no issue really with either one
+>> of those. What I don't want is another "overlay manager" for each
+>> usecase. And sorry, you don't win for being first (you're not really).
+>> All this I said before.
 >
-> Fixes: 70725d6e97ac ("ARM: dts: NSP: Enable SATA on bcm958625hr")
-> Fixes: d454c3762437 ("ARM: dts: NSP: Add new DT file for bcm958623hr")
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> So, I'm not actually asking anyone to take anything here, I'm just
+> trying to reopen the conversation that hasn't gone very far, so we can
+> find some direction to take.
+>
+> I've not followed the discussion super closely here, so apologies if
+> I'm off base here.  But it does seem there's a number of similar
+> efforts, and it seems no one has gotten enough momentum to make a real
+> push upstream. It seems its just easier for everyone to keep their own
+> approach in their own tree and not to bother.  At one end, sure,
+> keeping half baked ideas out of mainline until they really sort
+> themselves out is fine, but at the other extreme you risk the
+> half-baked ideas calcifying in their own tree and then you have more
+> Android (or whatever variant) specific cruft to shake your fist at.
+> :)
+>
+> How do we get to a shared solution here where folks are engaging with upstream?
+>
+> Even an "I like approach B, go make that work" would help here.
 
-Acked-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Nudge.  Any further thoughts on what sort of an approach might be viable here?
 
-> ---
->  arch/arm/boot/dts/bcm958623hr.dts | 4 ----
->  arch/arm/boot/dts/bcm958625hr.dts | 4 ----
->  2 files changed, 8 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
-> index 3bc50849d013..b8bde13de90a 100644
-> --- a/arch/arm/boot/dts/bcm958623hr.dts
-> +++ b/arch/arm/boot/dts/bcm958623hr.dts
-> @@ -141,10 +141,6 @@
->         status = "okay";
->  };
->
-> -&sata {
-> -       status = "okay";
-> -};
-> -
->  &qspi {
->         bspi-sel = <0>;
->         flash: m25p80@0 {
-> diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
-> index d94d14b3c745..6a44b8021702 100644
-> --- a/arch/arm/boot/dts/bcm958625hr.dts
-> +++ b/arch/arm/boot/dts/bcm958625hr.dts
-> @@ -177,10 +177,6 @@
->         status = "okay";
->  };
->
-> -&sata {
-> -       status = "okay";
-> -};
-> -
->  &srab {
->         compatible = "brcm,bcm58625-srab", "brcm,nsp-srab";
->         status = "okay";
-> --
-> 2.9.3
->
+thanks
+-john
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
