@@ -1,53 +1,73 @@
-From: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
-Subject: Re: [PATCH 1/1] add rgb888 pins to a20 to enable parallel rgb LCD
-Date: Tue, 7 Nov 2017 17:38:55 +0100
-Message-ID: <65694f1d-e1cb-08e0-0883-f0087f5e09f5@micronovasrl.com>
-References: <1510058999-6778-1-git-send-email-giulio.benetti@micronovasrl.com>
- <20171107130331.4wut5g6znzakkg4z@flea>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
+Date: Tue, 7 Nov 2017 22:47:49 +0530
+Message-ID: <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA@mail.gmail.com>
+References: <20171103195855.15283-1-geomatsi@gmail.com> <20171103195855.15283-2-geomatsi@gmail.com>
+ <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
+ <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter> <20171106122633.5mnqfh6xhmmxr45s@flea>
+ <20171106161306.tq6yeq6bq36ridj3@speedy.hunter> <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171107130331.4wut5g6znzakkg4z@flea>
-Content-Language: it
+In-Reply-To: <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Board could be any with A20,
-for example Olinuxino A20.
-Or our Q027, S027 boards, but final dts still are not complete.
+On Tue, Nov 7, 2017 at 1:12 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> On Mon, Nov 6, 2017 at 9:43 PM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hello Maxime,
+>>
+>>> > > > The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
+>>> > > > Fix cd-gpio description to enable sdcard detect.
+>>> > > >
+>>> > > > Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> > > > ---
+>>> > > >  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
+>>> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+>>> > > >
+>>> > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+>>> > > > index b6b7a561df8c..a42fd79a62a3 100644
+>>> > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+>>> > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+>>> > > > @@ -71,7 +71,7 @@
+>>> > > >         pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+>>> > > >         vmmc-supply = <&reg_vcc3v3>;
+>>> > > >         bus-width = <4>;
+>>> > > > -       cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
+>>> > > > +       cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
+>>> > >
+>>> > > Was able to detect and do mount with existing dts
+>>> >
+>>> > Did you try to boot from sdcard ? I am not able to boot my board from
+>>> > sd-card without this change. As I mentioned earlier in my email
+>>> > to buildroot mailing list, with mmc debug enabled I see that mmc
+>>> > tries to init sd-card when I remove it from the slot.
+>>> >
+>>> > Maybe there is a minor differences between h/w versions or batches ?
+>>> > What is you board version ? I tested on board v1.0.
+>>>
+>>> Looking at the schematics, it definitely looks like it's active low.
+>>
+>> Is it ok to merge it then ? Or using 'cd-inverted' property
+>> is the preferable option ?
+>
+> W/o any change mainline works unstable for me, it wasn't booting
+> at-all[1] did you find the same?
+>
+> Even tried with active LOW and cd-inverted.
+>
+> [1] https://paste.ubuntu.com/25909064/
 
+Look like something broken for H5 and A64 between v4.14-rc8 to latest
+
+thanks!
 -- 
-Giulio Benetti
-R&D Manager &
-Advanced Research
-
-MICRONOVA SRL
-Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
-Tel. 049/8931563 - Fax 049/8931346
-Cod.Fiscale - P.IVA 02663420285
-Capitale Sociale € 26.000 i.v.
-Iscritta al Reg. Imprese di Padova N. 02663420285
-Numero R.E.A. 258642
-
-Il 07/11/2017 14:03, Maxime Ripard ha scritto:
-> On Tue, Nov 07, 2017 at 01:49:59PM +0100, Giulio Benetti wrote:
->> On sun7i-a20-* there's no way to enable PA00--PA27 as RGB888 LCD0 pins.
->>
->> Add lcd_rgb888_pins in sun7i-a20.dtsi.
->>
->> It can be used on sun7i-a20-olinuxino-lime.dts.
->> This patch gives possibility to set parallel lcd pins for RGB888.
->> To be used with tcon0 in your <target>.dts
-> 
-> My question was on which board do you want to use it right now. If the
-> answer is none, then we won't merge that patch, we have too many
-> pinctrl already to not add the unused ones.
-> 
-> Maxime
-> 
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
