@@ -1,63 +1,83 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/1] add rgb888 pins to a20 to enable parallel rgb LCD
-Date: Tue, 7 Nov 2017 14:03:31 +0100
-Message-ID: <20171107130331.4wut5g6znzakkg4z@flea>
-References: <1510058999-6778-1-git-send-email-giulio.benetti@micronovasrl.com>
+From: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] irqchip: stm32: add stm32h7 support
+Date: Tue, 7 Nov 2017 14:06:44 +0100
+Message-ID: <2f41fc16-6ed2-2d44-52e9-5461c86baf75@st.com>
+References: <1509987819-29599-1-git-send-email-ludovic.Barre@st.com>
+ <04d9d728-7f9f-6bc0-bb57-c7bb49817872@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qbltaszgd65ufodu"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1510058999-6778-1-git-send-email-giulio.benetti@micronovasrl.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <04d9d728-7f9f-6bc0-bb57-c7bb49817872-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+hi Marc
 
---qbltaszgd65ufodu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+normally, Alex take the last 3 ("ARM: dts")
+commits in his branch, and will send in his pull request
+Alex you confirm?
 
-On Tue, Nov 07, 2017 at 01:49:59PM +0100, Giulio Benetti wrote:
-> On sun7i-a20-* there's no way to enable PA00--PA27 as RGB888 LCD0 pins.
->=20
-> Add lcd_rgb888_pins in sun7i-a20.dtsi.
->=20
-> It can be used on sun7i-a20-olinuxino-lime.dts.
-> This patch gives possibility to set parallel lcd pins for RGB888.
-> To be used with tcon0 in your <target>.dts
+BR
+Ludo
 
-My question was on which board do you want to use it right now. If the
-answer is none, then we won't merge that patch, we have too many
-pinctrl already to not add the unused ones.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---qbltaszgd65ufodu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJaAa8iAAoJEBx+YmzsjxAgcX4QAIYiQR1Lq9OMrC45tD94Yn6M
-wD/wqmv/YPFK5yXRyYVQ33Zsl1g/n8seTbfkEpejWVo17lqofzxX5qOdF4l2Eq7K
-QN085IBSJynlhe1YutCjXqKuNSQG9WQgL/gjxnmYmgKGCMQ9PjDbNIcYs0ULzEqV
-/5pnIvsO3ReLZB397/E1a+r6rIPEq2Lrwgh1X4DUsjSN5xK00PPUnaSVHcsbinMC
-Tndo8o1qlg5cHyjXcfRKvXElqyBUs03Fng4Og/8vMguPptr3aXSUMNxHcZLYJwi9
-QtwBdmZVW0jNE/Fb+tqKNI0QBhNW3NSaW+0eUif1PAvTRNyW2Zn5pgGQFFET5mB7
-RtNp9YZKZbPCdJQa1Aa/dY2DiK9PX8uzfgDZCjvUy5izsnyFr34wk6KRohz8GPrk
-EZdsOZF3gXGnqq0yeLfb7HQ4bBbhowJM6Uemvf70qNAcr7MaUIfmvnj/ootLyUtv
-VtnTHHKlIfPGW4Sf6RD/T1DDuGRuQKkVYf/CF5E9M6tANUtznPlh2fUPHHJ//m+9
-J0GNU7g6Bj+heF3XzwEjG3LStAGYKU+TGvuzb3bIfD5kcG/X/6yL8+R4E+zqzuGx
-Lfaap4YcaI7EsyeTbgm25P6/VGHUYxdCmZxIUCQ8V75R7IbhpX8HykNosf9/ohZt
-I2AQHHgdWF6VbyNMma0N
-=otEV
------END PGP SIGNATURE-----
-
---qbltaszgd65ufodu--
+On 11/07/2017 12:23 PM, Marc Zyngier wrote:
+> Hi Ludovic,
+> 
+> On 06/11/17 17:03, Ludovic Barre wrote:
+>> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>>
+>> This series adds:
+>> -Management of multi-bank of external interrupts
+>> stm32h7 has up to 96 inputs (3 banks of  32 inputs).
+>> -Fix initial value after cold/hot boot (wakeup issue).
+>>
+>> Changes v3:
+>> -remove chip.name and handler, already done by
+>> irq_alloc_domain_generic_chips
+>> -add Rob ack in dt-bindings commit
+>>
+>> Changes v2:
+>> -Remove irq_mask and adds const on struct stm32_exti_bank
+>> -Add wrapper functions pending and ack
+>> -Replace BITS_PER_LONG by IRQS_PER_BANK
+>> -Fill commit message on
+>> "ARM: dts: stm32: add support of exti on stm32h743"
+>> -Add system config bank for stm32h7
+>>
+>> Ludovic Barre (9):
+>>    irqchip: stm32: select GENERIC_IRQ_CHIP
+>>    irqchip: stm32: add multi-bank management
+>>    dt-bindings: interrupt-controllers: add compatible string for stm32h7
+>>    irqchip: stm32: add stm32h7 support
+>>    irqchip: stm32: fix initial values
+>>    irqchip: stm32: move the wakeup on interrupt mask
+>>    ARM: dts: stm32: add exti support for stm32h743
+>>    ARM: dts: stm32: add system config bank node for stm32h743
+>>    ARM: dts: stm32: add support of exti on stm32h743 pinctrl
+>>
+>>   .../interrupt-controller/st,stm32-exti.txt         |   4 +-
+>>   arch/arm/boot/dts/stm32h743-pinctrl.dtsi           |  24 +++
+>>   arch/arm/boot/dts/stm32h743.dtsi                   |  13 ++
+>>   drivers/irqchip/Kconfig                            |   1 +
+>>   drivers/irqchip/irq-stm32-exti.c                   | 206 ++++++++++++++++-----
+>>   5 files changed, 198 insertions(+), 50 deletions(-)
+>>
+> 
+> I'm happy to take the first 6 patches through the irqchip tree. How
+> about the last 3? I'd rather see them routed via armsoc if there is any
+> risk of merge conflicts.
+> 
+> How do you want to proceed?
+> 
+> Thanks,
+> 
+> 	M.
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
