@@ -1,53 +1,46 @@
-From: Fabien DESSENNE <fabien.dessenne@st.com>
-Subject: Re: [PATCH v5 2/2] crypto: stm32 - Support for STM32 CRYP crypto
- module
-Date: Tue, 7 Nov 2017 14:40:46 +0000
-Message-ID: <d924a278-90d0-969e-f1ae-a12f92e8972d@st.com>
-References: <1508425830-13565-1-git-send-email-fabien.dessenne@st.com>
- <1508425830-13565-3-git-send-email-fabien.dessenne@st.com>
- <20171022072659.GB8489@Red>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171022072659.GB8489@Red>
-Content-Language: en-US
-Content-ID: <DA14ADA01B16A247BE4EC025CD29C198@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lionel DEBIEVE <lionel.debieve@st.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Ludovic BARRE <ludovic.barre@st.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/8] Add CAN support to iwg2[02]d
+Date: Tue,  7 Nov 2017 15:10:41 +0000
+Message-ID: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDIyLzEwLzE3IDA5OjI2LCBDb3JlbnRpbiBMYWJiZSB3cm90ZToNCj4gT24gVGh1LCBP
-Y3QgMTksIDIwMTcgYXQgMDU6MTA6MzBQTSArMDIwMCwgRmFiaWVuIERlc3Nlbm5lIHdyb3RlOg0K
-Pj4gVGhpcyBtb2R1bGUgcmVnaXN0ZXJzIGJsb2NrIGNpcGhlciBhbGdvcml0aG1zIHRoYXQgbWFr
-ZSB1c2Ugb2YgdGhlDQo+PiBTVE1pY3JvZWxlY3Ryb25pY3MgU1RNMzIgY3J5cHRvICJDUllQMSIg
-aGFyZHdhcmUuDQo+PiBUaGUgZm9sbG93aW5nIGFsZ29yaXRobXMgYXJlIHN1cHBvcnRlZDoNCj4+
-IC0gYWVzOiBlY2IsIGNiYywgY3RyDQo+PiAtIGRlczogZWNiLCBjYmMNCj4+IC0gdGRlczogZWNi
-LCBjYmMNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBGYWJpZW4gRGVzc2VubmUgPGZhYmllbi5kZXNz
-ZW5uZUBzdC5jb20+DQo+PiAtLS0NCj4+ICAgZHJpdmVycy9jcnlwdG8vc3RtMzIvS2NvbmZpZyAg
-ICAgIHwgICAgOSArDQo+PiAgIGRyaXZlcnMvY3J5cHRvL3N0bTMyL01ha2VmaWxlICAgICB8ICAg
-IDMgKy0NCj4+ICAgZHJpdmVycy9jcnlwdG8vc3RtMzIvc3RtMzItY3J5cC5jIHwgMTE3MiArKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+PiAgIDMgZmlsZXMgY2hhbmdlZCwg
-MTE4MyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBkcml2ZXJzL2NyeXB0by9zdG0zMi9zdG0zMi1jcnlwLmMNCj4+DQo+PiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9jcnlwdG8vc3RtMzIvS2NvbmZpZyBiL2RyaXZlcnMvY3J5cHRvL3N0bTMyL0tjb25m
-aWcNCj4+ICtzdGF0aWMgdm9pZCBzdG0zMl9jcnlwX2lycV93cml0ZV9ibG9jayhzdHJ1Y3Qgc3Rt
-MzJfY3J5cCAqY3J5cCkNCj4+ICt7DQo+PiArCXVuc2lnbmVkIGludCBpLCBqOw0KPj4gKwl1MzIg
-KnNyYzsNCj4+ICsJdTggZDhbNF07DQo+PiArDQo+PiArCXNyYyA9IHNnX3ZpcnQoY3J5cC0+aW5f
-c2cpICsgX3dhbGtlZF9pbjsNCj4+ICsNCj4+ICsJZm9yIChpID0gMDsgaSA8IGNyeXAtPmh3X2Js
-b2Nrc2l6ZSAvIHNpemVvZih1MzIpOyBpKyspIHsNCj4+ICsJCWlmIChsaWtlbHkoY3J5cC0+dG90
-YWxfaW4gPj0gc2l6ZW9mKHUzMikpKSB7DQo+PiArCQkJLyogV3JpdGUgYSBmdWxsIHUzMiAqLw0K
-Pj4gKwkJCXN0bTMyX2NyeXBfd3JpdGUoY3J5cCwgQ1JZUF9ESU4sICpzcmMpOw0KPiBIZWxsbw0K
-Pg0KPiBUcnkgYWxzbyB0byB0ZXN0IHlvdXIgZHJpdmVyIHdpdGggdXNlcnNwYWNlIHZpYSBBRl9B
-TEcgKGxpYmtjYXBpIGlzIGEgZ29vZCBzdGFydCkuDQo+IEl0IHNob3VsZCBwcm9iYWJseSBjcmFz
-aCBoZXJlLg0KPiBJIGhhdmUgZG8gdGhlIHNhbWUgb24gbXkgZmlyc3Qgc3VueGktc3MgZHJpdmVy
-IGFuZCB5b3Ugc2hvdWxkIHVzZSBrbWFwKCkuDQo+DQo+IFJlZ2FyZHMNCkhpIENvcmVudGluLA0K
-DQpUaGFuayB5b3UgZm9yIHN1Z2dlc3RpbmcgdG8gdGVzdCBmcm9tIHVzZXJzcGFjZSB0aHJvdWdo
-IHRoZSBBRl9BTEcgDQpzb2NrZXQgd2l0aCBsaWJrY2FwaS4NClRoaXMgaW5jcmVhc2VzIG15IHRl
-c3QgY292ZXJhZ2UuDQoNCkkgcmFuIHRoZSBtaXNjZWxsYW5lb3VzIHRlc3RzIChrY2FwaS1lbmMt
-dGVzdChsYXJnZSkuc2ggKyB0ZXN0LnNoKSBhbmQgDQpjb3VsZCBub3Qgb2JzZXJ2ZSBhbnkgY3Jh
-c2guDQpOb3RlIHRoYXQgSSBoYWQgYWxyZWFkeSBmaXhlZCBzb21lICdtZW1vcnkgY3Jhc2hlcycg
-d2hpbGUgdGVzdGluZyB3aXRoIA0KdGVzdG1nciAvIHRjcnlwdCB3aGlsZSB0ZXN0aW5nIGZyb20g
-dGhlIGtlcm5lbC4NCg0KU28gaXQgbG9va3MgbGlrZSB0aGUgcHJvcG9zZWQgaW1wbGVtZW50YXRp
-b24gaXMgZmluZS4NCg0KQlINCg0KRmFiaWVu
+Hello,
+
+this series delivers all of the changes necessary to add CAN bus
+support to the:
+* iW-RainboW-G22D SODIMM, and
+* iW-RainboW-G20M-Qseven-RZG1M
+development platforms, including documentation, pinctrl driver, SoC
+specific device trees, and board specific device trees.
+
+This work has been based and tested on top of:
+renesas-devel-20171106-v4.14-rc8
+
+Best regards,
+
+Fabrizio Castro (8):
+  dt-bindings: can: rcar_can: document r8a774[35] can support
+  pinctrl: sh-pfc: r8a7745: Add CAN[01] support
+  ARM: dts: r8a7745: Add CAN[01] SoC support
+  ARM: dts: iwg22d-sodimm: Add can0 support to carrier board
+  ARM: dts: iwg22d-sodimm-dbhd-ca: Add can1 support to HDMI DB
+  ARM: dts: r8a7743: Add CAN[01] SoC support
+  ARM: dts: iwg20d-q7-common: Add can0 support to carrier board
+  ARM: dts: iwg20d-q7-dbcm-ca: Add can1 support to camera DB
+
+ .../devicetree/bindings/net/can/rcar_can.txt       |   7 +-
+ arch/arm/boot/dts/iwg20d-q7-common.dtsi            |  12 ++
+ arch/arm/boot/dts/iwg20d-q7-dbcm-ca.dtsi           |  12 ++
+ arch/arm/boot/dts/r8a7743.dtsi                     |  36 +++++
+ .../arm/boot/dts/r8a7745-iwg22d-sodimm-dbhd-ca.dts |  12 ++
+ arch/arm/boot/dts/r8a7745-iwg22d-sodimm.dts        |  12 ++
+ arch/arm/boot/dts/r8a7745.dtsi                     |  36 +++++
+ drivers/pinctrl/sh-pfc/pfc-r8a7794.c               | 146 +++++++++++++++++++++
+ 8 files changed, 271 insertions(+), 2 deletions(-)
+
+-- 
+2.7.4
