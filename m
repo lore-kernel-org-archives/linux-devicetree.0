@@ -1,59 +1,68 @@
-From: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
-Date: Tue, 7 Nov 2017 23:12:45 +0300
-Message-ID: <20171107201245.gptgfli54o6eqmrj@speedy.hunter>
-References: <20171103195855.15283-1-geomatsi@gmail.com>
- <20171103195855.15283-2-geomatsi@gmail.com>
- <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
- <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter>
- <20171106122633.5mnqfh6xhmmxr45s@flea>
- <20171106161306.tq6yeq6bq36ridj3@speedy.hunter>
- <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg@mail.gmail.com>
- <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH 1/2] ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
+Date: Tue,  7 Nov 2017 21:13:25 +0100
+Message-ID: <20171107201326.17401-1-clabbe.montjoie@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
+This patch enable the dwmac-sun8i on the Allwinner a83t SoC Device-tree.
 
-> >>> > Did you try to boot from sdcard ? I am not able to boot my board from
-> >>> > sd-card without this change. As I mentioned earlier in my email
-> >>> > to buildroot mailing list, with mmc debug enabled I see that mmc
-> >>> > tries to init sd-card when I remove it from the slot.
-> >>> >
-> >>> > Maybe there is a minor differences between h/w versions or batches ?
-> >>> > What is you board version ? I tested on board v1.0.
-> >>>
-> >>> Looking at the schematics, it definitely looks like it's active low.
-> >>
-> >> Is it ok to merge it then ? Or using 'cd-inverted' property
-> >> is the preferable option ?
-> >
-> > W/o any change mainline works unstable for me, it wasn't booting
-> > at-all[1] did you find the same?
-> >
-> > Even tried with active LOW and cd-inverted.
-> >
-> > [1] https://paste.ubuntu.com/25909064/
-> 
-> Look like something broken for H5 and A64 between v4.14-rc8 to latest
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Both 4.13.7 and 4.14-rc8 (synched today) kernels worked fine for me.
-DTS behavior is all the same:
-  - default DTS: sd-card is not detected, kernel is waiting forever
-  - DTS with 'active low' or 'cd-inverted' fix: sd-card and boot ok
-
-I have been using rootfs from buildroot with your zero-plus2 patches.
-
-Regards,
-Sergey
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 19acae1b4089..68e5135410ec 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -336,6 +336,14 @@
+ 			#interrupt-cells = <3>;
+ 			#gpio-cells = <3>;
+ 
++			emac_rgmii_pins: emac-rgmii-pins {
++				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
++				       "PD11", "PD12", "PD13", "PD14", "PD18",
++				       "PD19", "PD21", "PD22", "PD23";
++				function = "gmac";
++				drive-strength = <40>;
++			};
++
+ 			mmc0_pins: mmc0-pins {
+ 				pins = "PF0", "PF1", "PF2",
+ 				       "PF3", "PF4", "PF5";
+@@ -440,6 +448,27 @@
+ 			status = "disabled";
+ 		};
+ 
++		emac: ethernet@1c30000 {
++			compatible = "allwinner,sun8i-a83t-emac";
++			syscon = <&syscon>;
++			reg = <0x01c30000 0x104>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			resets = <&ccu 13>;
++			reset-names = "stmmaceth";
++			clocks = <&ccu 27>;
++			clock-names = "stmmaceth";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++
++			mdio: mdio {
++				compatible = "snps,dwmac-mdio";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		gic: interrupt-controller@1c81000 {
+ 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
+ 			reg = <0x01c81000 0x1000>,
+-- 
+2.13.6
