@@ -1,91 +1,143 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 20/20] cpufreq: scmi: add support for fast frequency
- switching
-Date: Tue, 7 Nov 2017 11:49:33 +0530
-Message-ID: <20171107061933.GC3297@vireshk-i7>
-References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
- <1509720477-18936-21-git-send-email-sudeep.holla@arm.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 11/12] hwrng: bcm2835-rng: Enable BCM2835 RNG to work on
+ BCM63xx platforms
+Date: Tue, 7 Nov 2017 07:45:44 +0100 (CET)
+Message-ID: <345702666.5362.1510037144469@email.1und1.de>
+References: <20171102010408.27736-1-f.fainelli@gmail.com>
+ <20171102010408.27736-12-f.fainelli@gmail.com>
+ <1831955836.132229.1509820078271@email.1und1.de>
+ <2538f1bb-e0f8-c336-d82a-0cb2f19b0ead@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1509720477-18936-21-git-send-email-sudeep.holla@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <2538f1bb-e0f8-c336-d82a-0cb2f19b0ead@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Russell King <rmk+kernel@armlinux.org.uk>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Scott Branden <sbranden@broadcom.com>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, Martin Kaiser <martin@kaiser.cx>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Matt Mackall <mpm@selenic.com>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broa>
 List-Id: devicetree@vger.kernel.org
 
-On 03-11-17, 14:47, Sudeep Holla wrote:
-> The cpufreq core provides option for drivers to implement fast_switch
-> callback which is invoked for frequency switching from interrupt context.
+> Florian Fainelli <f.fainelli@gmail.com> hat am 6. November 2017 um 21:16 geschrieben:
 > 
-> This patch adds support for fast_switch callback in SCMI cpufreq driver
-> by making use of polling based SCMI transfer. It also sets the flag
-> fast_switch_possible.
 > 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/cpufreq/scmi-cpufreq.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> On 11/04/2017 11:27 AM, Stefan Wahren wrote:
+> > Hi Florian
+> > 
+> >> Florian Fainelli <f.fainelli@gmail.com> hat am 2. November 2017 um 02:04 geschrieben:
+> >>
+> >>
+> >> We have now incorporated all necessary functionality for the BCM63xx
+> >> platforms to successfully migrate over bcm2835-rng, so add the final
+> >> bits: Kconfig selection and proper platform_device device type matching
+> >> to keep the same platform device name for registration to work.
+> >>
+> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> >> ---
+> >>  drivers/char/hw_random/Kconfig       |  7 ++++---
+> >>  drivers/char/hw_random/bcm2835-rng.c | 11 ++++++++++-
+> >>  2 files changed, 14 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> >> index 95a031e9eced..d0689cc8c7fc 100644
+> >> --- a/drivers/char/hw_random/Kconfig
+> >> +++ b/drivers/char/hw_random/Kconfig
+> >> @@ -87,12 +87,13 @@ config HW_RANDOM_BCM63XX
+> >>  	  If unusure, say Y.
+> >>  
+> >>  config HW_RANDOM_BCM2835
+> >> -	tristate "Broadcom BCM2835 Random Number Generator support"
+> >> -	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X
+> >> +	tristate "Broadcom BCM2835/BCM63xx Random Number Generator support"
+> >> +	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X || \
+> >> +		   ARCH_BCM_63XX || BCM63XX || BMIPS_GENERIC
+> >>  	default HW_RANDOM
+> >>  	---help---
+> >>  	  This driver provides kernel-side support for the Random Number
+> >> -	  Generator hardware found on the Broadcom BCM2835 SoCs.
+> >> +	  Generator hardware found on the Broadcom BCM2835 and BCM63xx SoCs.
+> >>  
+> >>  	  To compile this driver as a module, choose M here: the
+> >>  	  module will be called bcm2835-rng
+> >> diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
+> >> index 650e0033c273..d9ffe14f312b 100644
+> >> --- a/drivers/char/hw_random/bcm2835-rng.c
+> >> +++ b/drivers/char/hw_random/bcm2835-rng.c
+> >> @@ -131,6 +131,7 @@ static const struct of_device_id bcm2835_rng_of_match[] = {
+> >>  	{ .compatible = "brcm,bcm2835-rng"},
+> >>  	{ .compatible = "brcm,bcm-nsp-rng", .data = &nsp_rng_of_data },
+> >>  	{ .compatible = "brcm,bcm5301x-rng", .data = &nsp_rng_of_data },
+> >> +	{ .compatible = "brcm,bcm6368-rng"},
+> >>  	{},
+> >>  };
+> >>  
+> >> @@ -164,7 +165,7 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
+> >>  	if (IS_ERR(priv->clk))
+> >>  		priv->clk = NULL;
+> >>  
+> >> -	priv->rng.name = "bcm2835-rng";
+> >> +	priv->rng.name = pdev->id_entry->name;
+> > 
+> > this change breaks registration on bcm2835, because the name is NULL.
 > 
-> diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
-> index b1057a13e6a7..91df5013f7b2 100644
-> --- a/drivers/cpufreq/scmi-cpufreq.c
-> +++ b/drivers/cpufreq/scmi-cpufreq.c
-> @@ -64,6 +64,19 @@ scmi_cpufreq_set_target(struct cpufreq_policy *policy, unsigned int index)
->  	return perf_ops->freq_set(handle, priv->domain_id, freq, false);
->  }
->  
-> +static unsigned int scmi_cpufreq_fast_switch(struct cpufreq_policy *policy,
-> +					     unsigned int target_freq)
-> +{
-> +	struct scmi_data *priv = policy->driver_data;
-> +	struct scmi_perf_ops *perf_ops = handle->perf_ops;
-> +
-> +	if (!perf_ops->freq_set(handle, priv->domain_id,
-> +				target_freq * 1000, true))
-> +		return target_freq;
-> +
-> +	return 0;
-> +}
-> +
->  static int
->  scmi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
->  {
-> @@ -167,6 +180,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
->  
->  	policy->cpuinfo.transition_latency = latency;
->  
-> +	policy->fast_switch_possible = true;
->  	return 0;
->  
->  out_free_cpufreq_table:
-> @@ -183,6 +197,7 @@ static int scmi_cpufreq_exit(struct cpufreq_policy *policy)
->  {
->  	struct scmi_data *priv = policy->driver_data;
->  
-> +	policy->fast_switch_possible = false;
+> OH right, I will fix that in v2, I am assuming that if you did something
+> like this, things still work correctly for you on 2835:
+> 
+> if (!priv->id_entry->name)
+> 	priv->rng.name = "bcm2835-rng";
+> else
+> 	priv->rng.name = priv->id_entry->name;
+> 
+> ?
 
-You don't need this.
+I think that should work, but i'm not really happy about it. I prefer a more general solution. Looking at the other rng drivers shows the following pattern:
 
->  	cpufreq_cooling_unregister(priv->cdev);
->  	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
->  	kfree(priv);
-> @@ -226,6 +241,7 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
->  	.verify	= cpufreq_generic_frequency_table_verify,
->  	.attr	= cpufreq_generic_attr,
->  	.target_index	= scmi_cpufreq_set_target,
-> +	.fast_switch	= scmi_cpufreq_fast_switch,
->  	.get	= scmi_cpufreq_get_rate,
->  	.init	= scmi_cpufreq_init,
->  	.exit	= scmi_cpufreq_exit,
+priv->rng.name = pdev->name;
 
-Apart from that.
+I need to verify this on bcm2835.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
+> 
+> > 
+> > Regards
+> > Stefan
+> > 
+> >>  	priv->rng.init = bcm2835_rng_init;
+> >>  	priv->rng.read = bcm2835_rng_read;
+> >>  	priv->rng.cleanup = bcm2835_rng_cleanup;
+> >> @@ -190,12 +191,20 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
+> >>  
+> >>  MODULE_DEVICE_TABLE(of, bcm2835_rng_of_match);
+> >>  
+> >> +static struct platform_device_id bcm2835_rng_devtype[] = {
+> >> +	{ .name = "bcm2835-rng" },
+> >> +	{ .name = "bcm63xx-rng" },
+> >> +	{ /* sentinel */ }
+> >> +};
+> >> +MODULE_DEVICE_TABLE(platform, bcm2835_rng_devtype);
+> >> +
+> >>  static struct platform_driver bcm2835_rng_driver = {
+> >>  	.driver = {
+> >>  		.name = "bcm2835-rng",
+> >>  		.of_match_table = bcm2835_rng_of_match,
+> >>  	},
+> >>  	.probe		= bcm2835_rng_probe,
+> >> +	.id_table	= bcm2835_rng_devtype,
+> >>  };
+> >>  module_platform_driver(bcm2835_rng_driver);
+> >>  
+> >> -- 
+> >> 2.9.3
+> >>
+> >>
+> >> _______________________________________________
+> >> linux-arm-kernel mailing list
+> >> linux-arm-kernel@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> 
+> -- 
+> Florian
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
