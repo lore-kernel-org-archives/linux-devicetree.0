@@ -1,189 +1,57 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: device tree overlays
-Date: Mon, 6 Nov 2017 17:23:15 -0800
-Message-ID: <be15f78a-2393-7dbd-9ff6-996a3ec7f63b@gmail.com>
-References: <CAAk4mkZcBEb7o0BA3gh2rEsQiEW18XKUqHUMN1fTf+h5WAXkyA@mail.gmail.com>
- <CAAk4mkbBvjB4CJq_oeXvJFibus06LF83BF3D2Nw5BuSHLdn+xA@mail.gmail.com>
- <CAAk4mkZNjQ-TA06mrYh_ZU0L4UQp9sLg58V1MGqWJWj=ZR8vMA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v4,1/6] dt-bindings: pmbus: Add Maxim MAX31785 documentation
+Date: Mon, 6 Nov 2017 17:27:11 -0800
+Message-ID: <20171107012711.GA13616@roeck-us.net>
+References: <20171103045306.26448-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAk4mkZNjQ-TA06mrYh_ZU0L4UQp9sLg58V1MGqWJWj=ZR8vMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Iztok Jeras <iztok.jeras-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171103045306.26448-2-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-hwmon@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Iztok,
+On Fri, Nov 03, 2017 at 03:53:01PM +1100, Andrew Jeffery wrote:
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-On 11/03/17 12:43, Iztok Jeras wrote:
-> Hi Frank,
+Applied to hwmon-next.
+
+Thanks,
+Guenter
+
+> ---
+>  .../devicetree/bindings/hwmon/max31785.txt         | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/max31785.txt
 > 
-> I work for Red Pitaya as Verilog, C, Python, ... coder:
-> https://github.com/RedPitaya/RedPitaya
-> I will move to another job this month, but I might still code for Red
-> Pitaya of maybe PYNQ in my spare time.
-> http://www.pynq.io/
-> 
-> We have been experimenting with device tree overlays on ZYNQ FPGA for
-> about a year now.
-> 
-> I would like to share our experience with you and ask you a few questions.
-> 
-> We started with a patchset for kerner 4.4 this is still part of our
-> public release.
-> Recently we switched internally to kernel 4.9 patched with a newer patchset.
-> https://github.com/RedPitaya/linux-xlnx/commits/branch-redpitaya-v2017.2
-> The patchset was easy to apply to Xilinx kernel 2017.1,
-> but with the latest Xilinx release 2017.3 there are many conflicts,
-> apparently Xilinx started something there and did not finish.
-> I will check if the drivers I need are already upstream so I could
-> avoid using Xilinx provided kernels.
-> 
-> There are two reasons I would like to use overlays:
-> 1. switching between FPGA bitstream which require kernel drivers,
-> 2. I2C/SPI/1-wire drivers over GPIO, I would like to configure them at
-> runtime (we are not doing this yet).
-> 
-> We are switching FPGA bitstreams and we currently handled the next
-> Xilinx IP related drivers:
-> 1. UIO drivers
-> Work well if loaded at boot or as overlay, we have user space drivers
-> with IRQ support.
-> 2. Xilinx AXI IRQ
-> Does not work if loaded as overlay, a kernel developer contractor
-> described the issue
-> as driver initialization not being compatible with overlay code,
-> something about driver init running early.
-> He improvised an ugly and hard coded patch:
-> https://github.com/RedPitaya/linux-xlnx/commit/592b9c711f11fcfc14100094896fbabf08009f4b
-> The driver can now be loaded as overlay, but I would not recommend the
-> patch to anyone.
-> 3. Xilinx AXI DMA
-> This driver had many non overlay related bugs in 4.4 but it is fine in 4.9.
-> In kernel 4.4 we could not load it entirely from an overlay, so we
-> improvised an ugly solution.
-> We load the driver in the boot DT but with the status=disabled.
-> This prevents the driver code from loading and crashing at boot and
-> between FPGA image reloads.
-> Then we load an overlay with status=OK to actually enable the driver.
-> I might try to load the driver entirely from an overlay next week.
-> 4. XADC
-> I did not test this drivers with overlays yet.
-> 5. We had a branch, where the overlay was used to load the FPGA bistream,
-> it worked, but it meant disabling support for /dev/xdevcfg which would
-> need explaining to users.
-> Additionally our kernel developer was kind of slow making the changes
-> ad we run out of time.
-> So now we use overlays but load the FPGA through xdevcfg.
-> For my own project I might try loading with fpga_region again.
-> 
-> Questions:
-> 1. Could you point me to the latest overlay patchset
-> or even better a Xilinx kernel repo with overlay patches already applied.
-
-I don't follow any of the out of mainline patch sets that various projects
-are using, so I don't have any pointers.
-
-
-> 2. You mentioned in your 2017 talk that dtsi files can be compiled into overlay,
-> I understand how, but am not sure I am using the correct dtc:
-> https://github.com/RedPitaya/dtc/archive/overlays.tar.gz at some point
-> forked from
-> https://github.com/pantoniou/dtc/archive/overlays.tar.gz
-
-If the dtc repo has commit c1e55a5513e9 "checks: fix handling of unresolved
-phandles for dts plugins", then it will be recent enough.  I expect this
-version of dtc to appear in the Linux kernel tree in v4.15-rc1.
-
-
-> How can I check if it works properly, a coworker mentioned that converting dtb
-> back into dtc should show fragments, there were no fragments when I tried.
-
-Your coworker is correct (though the fragment nodes are an implementation detail
-of the current version of dtc).  As an example, using the files from:
-
-   https://elinux.org/images/d/dc/Elce_2017_dt_bof.pdf
-
-If you compile and de-compile fpga_overlay.dts from slide 21, which includes
-fpga_plugin_or_dtsi.dts from slide 22, you will see a fragment node.  In the
-example dtx_diff is using the dtc that should appear in v4.15-rc1.
-
-
-$ scripts/dtc/dtx_diff fpga_overlay.dts 
-/dts-v1/;
-
-/ {
-
-	__fixups__ {
-		fpga_region = "/fragment@0:target:0";
-		intc = "/fragment@0/__overlay__/freeze_controller@100000450:interrupt-parent:0";
-	};
-
-	__local_fixups__ {
-
-		fragment@0 {
-
-			__overlay__ {
-
-				fpga_pr_region0 {
-					fpga-bridges = <0x0>;
-				};
-			};
-		};
-	};
-
-	fragment@0 {
-		target = <0xffffffff>;
-
-		__overlay__ {
-			#address-cells = <0x2>;
-			#size-cells = <0x1>;
-			external-fpga-config;
-			ranges = <0x0 0x0 0xc0000000 0x40000 0x1 0x0 0xff200000 0x1000>;
-
-			fpga_pr_region0 {
-				compatible = "fpga-region";
-				fpga-bridges = <0x1>;
-				ranges;
-			};
-
-			freeze_controller_0: freeze_controller@100000450 {
-				compatible = "altr,freeze-bridge-controller";
-				interrupt-parent = <0xffffffff>;
-				interrupts = <0x0 0x15 0x4>;
-				phandle = <0x1>;
-				reg = <0x1 0x450 0x10>;
-			};
-		};
-	};
-};
-
-
-> Which dtc should I use?
-
-You can find a link to the upstream dtc project at:
-
-   https://elinux.org/Device_Tree_Reference#dtc_.28upstream_project.29
-
-I don't know if you need any other changes from the places you have been
-getting dtc from.
-
-
-> 3. Do you know a better approach for loading the AXI IRQ driver with overlays?
-
-Nope, sorry.  I don't follow the out of mainline projects.
-
-
-> I will probably remember further questions later.
-> 
-> Regards,
-> Iztok Jeras
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/hwmon/max31785.txt b/Documentation/devicetree/bindings/hwmon/max31785.txt
+> new file mode 100644
+> index 000000000000..106e08c56aaa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/max31785.txt
+> @@ -0,0 +1,22 @@
+> +Bindings for the Maxim MAX31785 Intelligent Fan Controller
+> +==========================================================
+> +
+> +Reference:
+> +
+> +https://datasheets.maximintegrated.com/en/ds/MAX31785.pdf
+> +
+> +The Maxim MAX31785 is a PMBus device providing closed-loop, multi-channel fan
+> +management with temperature and remote voltage sensing. Various fan control
+> +features are provided, including PWM frequency control, temperature hysteresis,
+> +dual tachometer measurements, and fan health monitoring.
+> +
+> +Required properties:
+> +- compatible     : One of "maxim,max31785" or "maxim,max31785a"
+> +- reg            : I2C address, one of 0x52, 0x53, 0x54, 0x55.
+> +
+> +Example:
+> +
+> +        fans@52 {
+> +                compatible = "maxim,max31785";
+> +                reg = <0x52>;
+> +        };
