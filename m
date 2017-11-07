@@ -1,92 +1,33 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] sdhci-fujitsu: add support for setting the
- CMD_DAT_DELAY attribute
-Date: Tue, 7 Nov 2017 14:23:51 +0100
-Message-ID: <CAPDyKFrpTM8CvKeMMbkrLk5hz0QKKy4mAW3KpLnEtDQPa3e8Ww@mail.gmail.com>
-References: <20171106152923.32114-1-ard.biesheuvel@linaro.org> <20171106152923.32114-2-ard.biesheuvel@linaro.org>
+From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: usb-xhci: Document r8a7743 support
+Date: Tue, 7 Nov 2017 15:32:45 +0200
+Message-ID: <3d181836-0a29-2ca6-e826-e599cfcd44c3@linux.intel.com>
+References: <1508148769-47488-1-git-send-email-biju.das@bp.renesas.com>
+ <1508148769-47488-2-git-send-email-biju.das@bp.renesas.com>
+ <TY1PR06MB0992CBE8ED62C52D6412BF28D84C0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+ <KL1PR06MB1702D3E0C32610A0591A445FB8510@KL1PR06MB1702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171106152923.32114-2-ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <KL1PR06MB1702D3E0C32610A0591A445FB8510-k6wCOA2IOKSx7cDWSRonpW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6 November 2017 at 16:29, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> The Socionext SynQuacer SoC inherits this IP from Fujitsu, but
-> requires the F_SDH30_CMD_DAT_DELAY bit to be set in the
-> F_SDH30_ESD_CONTROL control register. So set this bit if the
-> DT node has the 'fujitsu,cmd-dat-delay-select' property.
->
-> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 07.11.2017 13:00, Biju Das wrote:
+> Hi Mathias,
+> 
+> Does this patch look okay to you?
+> 
 
-Thanks, applied for next!
+Yes, Adding to queue, Will send out after rc1
 
-Kind regards
-Uffe
+Thanks
+-Mathias
 
-> ---
-> v3: don't reorder struct members to reduce padding
->     remove pr_info() and simplify conditional assignment
-> v2: no change
->
->  drivers/mmc/host/sdhci_f_sdh30.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/mmc/host/sdhci_f_sdh30.c b/drivers/mmc/host/sdhci_f_sdh30.c
-> index 111b66f5439b..04ca0d33a521 100644
-> --- a/drivers/mmc/host/sdhci_f_sdh30.c
-> +++ b/drivers/mmc/host/sdhci_f_sdh30.c
-> @@ -13,6 +13,7 @@
->  #include <linux/err.h>
->  #include <linux/delay.h>
->  #include <linux/module.h>
-> +#include <linux/property.h>
->  #include <linux/clk.h>
->
->  #include "sdhci-pltfm.h"
-> @@ -47,6 +48,7 @@ struct f_sdhost_priv {
->         struct clk *clk;
->         u32 vendor_hs200;
->         struct device *dev;
-> +       bool enable_cmd_dat_delay;
->  };
->
->  static void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
-> @@ -84,10 +86,19 @@ static unsigned int sdhci_f_sdh30_get_min_clock(struct sdhci_host *host)
->
->  static void sdhci_f_sdh30_reset(struct sdhci_host *host, u8 mask)
->  {
-> +       struct f_sdhost_priv *priv = sdhci_priv(host);
-> +       u32 ctl;
-> +
->         if (sdhci_readw(host, SDHCI_CLOCK_CONTROL) == 0)
->                 sdhci_writew(host, 0xBC01, SDHCI_CLOCK_CONTROL);
->
->         sdhci_reset(host, mask);
-> +
-> +       if (priv->enable_cmd_dat_delay) {
-> +               ctl = sdhci_readl(host, F_SDH30_ESD_CONTROL);
-> +               ctl |= F_SDH30_CMD_DAT_DELAY;
-> +               sdhci_writel(host, ctl, F_SDH30_ESD_CONTROL);
-> +       }
->  }
->
->  static const struct sdhci_ops sdhci_f_sdh30_ops = {
-> @@ -126,6 +137,9 @@ static int sdhci_f_sdh30_probe(struct platform_device *pdev)
->         host->quirks2 = SDHCI_QUIRK2_SUPPORT_SINGLE |
->                         SDHCI_QUIRK2_TUNING_WORK_AROUND;
->
-> +       priv->enable_cmd_dat_delay = device_property_read_bool(dev,
-> +                                               "fujitsu,cmd-dat-delay-select");
-> +
->         ret = mmc_of_parse(host->mmc);
->         if (ret)
->                 goto err;
-> --
-> 2.11.0
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
