@@ -1,70 +1,68 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH 2/2] ARM: dts: NSP: Fix PPI interrupt types
-Date: Tue, 7 Nov 2017 17:45:09 -0500
-Message-ID: <CAC3K-4psoDRRsTKvjJLs1PwJJ+zTm3c8QoUEuaCxY6HiMWDivA@mail.gmail.com>
-References: <20171107222812.17267-1-f.fainelli@gmail.com> <20171107222812.17267-3-f.fainelli@gmail.com>
- <2f4dfba2-923a-840a-7dc9-5761380b28c5@gmail.com>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: NSP: Disable AHCI controller for HR NSP boards
+Date: Tue, 7 Nov 2017 17:45:46 -0500
+Message-ID: <CAC3K-4qZBJc9vRr2z3Fhx78feRdVASYFHZgayV=gG1jZ0dApVg@mail.gmail.com>
+References: <20171107222812.17267-1-f.fainelli@gmail.com> <20171107222812.17267-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2f4dfba2-923a-840a-7dc9-5761380b28c5@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, open list <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171107222812.17267-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 7, 2017 at 5:30 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 11/07/2017 02:28 PM, Florian Fainelli wrote:
->> Booting a kernel results in the kernel warning us about the following
->> PPI interrupts configuration:
->> [    0.105127] smp: Bringing up secondary CPUs ...
->> [    0.110545] GIC: PPI11 is secure or misconfigured
->> [    0.110551] GIC: PPI13 is secure or misconfigured
->>
->> Fix this by using the appropriate edge configuration for PPI11 and
->> PPI13, this is similar to what was fixed for Northstar (BCM5301X) in
->> commit 0e34079cd1f6 ("ARM: dts: BCM5301X: Correct GIC_PPI interrupt
->> flags").
->>
->> Fixes: 1a9d53cabaf4 ("ARM: dts: NSP: Add TWD Support to DT")
+On Tue, Nov 7, 2017 at 5:28 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> The AHCI controller is currently enabled for all of these boards:
+> bcm958623hr and bcm958625hr would result in a hard hang on boot that we
+> cannot get rid of. Since this does not appear to have an easy and simple
+> fix, just disable the AHCI controller for now until this gets resolved.
 >
-> this should have been Fixes: 7b2e987de207 ("ARM: NSP: add minimal
-> Northstar Plus device tree"), I can fix that up while applying unless
-> there are other comments.
->
->> Fixes: 1a9d53cabaf4 ("ARM: dts: NSP: Add TWD Support to DT")
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Fixes: 70725d6e97ac ("ARM: dts: NSP: Enable SATA on bcm958625hr")
+> Fixes: d454c3762437 ("ARM: dts: NSP: Add new DT file for bcm958623hr")
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Jon Mason <jon.mason@broadcom.com>
+Acked-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
->> ---
->>  arch/arm/boot/dts/bcm-nsp.dtsi | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
->> index dff66974feed..d5f5e92e7488 100644
->> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
->> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
->> @@ -85,7 +85,7 @@
->>               timer@20200 {
->>                       compatible = "arm,cortex-a9-global-timer";
->>                       reg = <0x20200 0x100>;
->> -                     interrupts = <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>;
->> +                     interrupts = <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>;
->>                       clocks = <&periph_clk>;
->>               };
->>
->> @@ -93,7 +93,7 @@
->>                       compatible = "arm,cortex-a9-twd-timer";
->>                       reg = <0x20600 0x20>;
->>                       interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
->> -                                               IRQ_TYPE_LEVEL_HIGH)>;
->> +                                               IRQ_TYPE_EDGE_RISING)>;
->>                       clocks = <&periph_clk>;
->>               };
->>
->>
+> ---
+>  arch/arm/boot/dts/bcm958623hr.dts | 4 ----
+>  arch/arm/boot/dts/bcm958625hr.dts | 4 ----
+>  2 files changed, 8 deletions(-)
 >
+> diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
+> index 3bc50849d013..b8bde13de90a 100644
+> --- a/arch/arm/boot/dts/bcm958623hr.dts
+> +++ b/arch/arm/boot/dts/bcm958623hr.dts
+> @@ -141,10 +141,6 @@
+>         status = "okay";
+>  };
 >
+> -&sata {
+> -       status = "okay";
+> -};
+> -
+>  &qspi {
+>         bspi-sel = <0>;
+>         flash: m25p80@0 {
+> diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+> index d94d14b3c745..6a44b8021702 100644
+> --- a/arch/arm/boot/dts/bcm958625hr.dts
+> +++ b/arch/arm/boot/dts/bcm958625hr.dts
+> @@ -177,10 +177,6 @@
+>         status = "okay";
+>  };
+>
+> -&sata {
+> -       status = "okay";
+> -};
+> -
+>  &srab {
+>         compatible = "brcm,bcm58625-srab", "brcm,nsp-srab";
+>         status = "okay";
 > --
-> Florian
+> 2.9.3
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
