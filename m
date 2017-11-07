@@ -1,134 +1,45 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] media: i2c: Add TDA1997x HDMI receiver driver
-Date: Mon, 6 Nov 2017 22:04:29 -0800
-Message-ID: <CAJ+vNU267VyOiq+fyv0dRm4Mui3YfK-ybqeOSENGMX6LmzZdcQ@mail.gmail.com>
-References: <1507783506-3884-1-git-send-email-tharvey@gateworks.com>
- <1507783506-3884-4-git-send-email-tharvey@gateworks.com> <230ceb18-1d69-7fa8-acb0-c810094f8e50@xs4all.nl>
- <CAJ+vNU0Z988G+wTfpiSXXOM9QsPj-eRvH=F1b9__8kJ+18xk4g@mail.gmail.com>
- <a5bd27c9-10e4-b9f5-f0ac-293528fa570e@xs4all.nl> <CAJ+vNU2yHKDf5tCVyj6iw83z0sDuV0ZsZ-=sLfa+fTFbtjVo0A@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 19/20] cpufreq: add support for CPU DVFS based on SCMI
+ message protocol
+Date: Tue, 7 Nov 2017 11:45:40 +0530
+Message-ID: <20171107061540.GB3297@vireshk-i7>
+References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
+ <1509720477-18936-20-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJ+vNU2yHKDf5tCVyj6iw83z0sDuV0ZsZ-=sLfa+fTFbtjVo0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1509720477-18936-20-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 20, 2017 at 7:00 AM, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org> wrote:
-> On Thu, Oct 19, 2017 at 12:39 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
-> <snip>
->>>
->>> Regarding video standard detection where this chip provides me with
->>> vertical-period, horizontal-period, and horizontal-pulse-width I
->>> should be able to detect the standard simply based off of
->>> vertical-period (framerate) and horizontal-period (line width
->>> including blanking) right? I wasn't sure if my method of matching
->>> these within 14% tolerance made sense. I will be removing the hsmatch
->>> logic from that as it seems the horizontal-pulse-width should be
->>> irrelevant.
->>
->> For proper video detection you ideally need:
->>
->> h/v sync size
->> h/v back/front porch size
->> h/v polarity
->> pixelclock (usually an approximation)
->>
->> The v4l2_find_dv_timings_cap() helper can help you find the corresponding
->> timings, allowing for pixelclock variation.
->>
->> That function assumes that the sync/back/frontporch values are all known.
->> But not all devices can actually discover those values. What can your
->> hardware detect? Can it tell front and backporch apart? Can it determine
->> the sync size?
->>
->> I've been considering for some time to improve that helper function to be
->> able to handle hardware that isn't able separate sync/back/frontporch values.
->>
->
-> The TDA1997x provides only the vertical/horizontal periods and the
-> horizontal pulse
-> width (section 8.3.4 of datasheet [1]).
->
-> Can you point me to a good primer on the relationship between these
-> values and the h/v back/front porch?
->
-> Currently I iterate over the list of known formats calculating hper
-> (bt->pixelclock / V4L2_DV_BT_FRAME_WIDTH(bt)) and vper (hper /
-> V4L2_DV_BT_FRAME_HEIGHT(bt)) (framerate) and find the closest match
-> within +/- 7% tolerance. The list of supported formats is sorted by
-> framerate then width.
->
->         /* look for matching timings */
->         for (i = 0; i < ARRAY_SIZE(tda1997x_hdmi_modes); i++) {
->                 const struct tda1997x_video_std *std = &tda1997x_hdmi_modes[i];
->                 const struct v4l2_bt_timings *bt = &std->timings.bt;
->                 int _hper, _vper, _hsper;
->                 int vmin, vmax, hmin, hmax, hsmin, hsmax;
->                 int vmatch, hsmatch;
->
->                 width = V4L2_DV_BT_FRAME_WIDTH(bt);
->                 lines = V4L2_DV_BT_FRAME_HEIGHT(bt);
->
->                 _hper = (int)bt->pixelclock / (int)width;
->                 _vper = _hper / lines;
->                 _hsper = (int)bt->pixelclock / (int)bt->hsync;
->                 if (bt->interlaced)
->                         _vper *= 2;
->                 /* vper +/- 0.7% */
->                 vmin = 993 * (27000000 / _vper) / 1000;
->                 vmax = 1007 * (27000000 / _vper) / 1000;
->                 _hsper = (int)bt->pixelclock / (int)bt->hsync;
->                 if (bt->interlaced)
->                         _vper *= 2;
->                 /* vper +/- 0.7% */
->                 vmin = 993 * (27000000 / _vper) / 1000;
->                 vmax = 1007 * (27000000 / _vper) / 1000;
->                 /* hper +/- 0.7% */
->                 hmin = 993 * (27000000 / _hper) / 1000;
->                 hmax = 1007 * (27000000 / _hper) / 1000;
->
->                 /* vmatch matches the framerate */
->                 vmatch = ((vper <= vmax) && (vper >= vmin)) ? 1 : 0;
->                 /* hmatch matches the width */
->                 hmatch = ((hper <= hmax) && (hper >= hmin)) ? 1 : 0;
->                 if (vmatch && hsmatch) {
->                         v4l_info(state->client,
->                                  "resolution: %dx%d%c@%d (%d/%d/%d) %dMHz %d\n",
->                                  bt->width, bt->height, bt->interlaced?'i':'p',
->                                  _vper, vper, hper, hsper, pixrate, hsmatch);
->                         state->fps = (int)bt->pixelclock / (width * lines);
->                         state->std = std;
->                         return 0;
->                 }
->         }
->
-> Note that I've thrown out any comparisons based on horizontal pulse
-> width from my first patch as that didn't appear to fit well. So far
-> the above works well however I do fail to recognize the following
-> modes (using a Marshall SG4K HDMI test generator):
->
+On 03-11-17, 14:47, Sudeep Holla wrote:
+> On some ARM based systems, a separate Cortex-M based System Control
+> Processor(SCP) provides the overall power, clock, reset and system
+> control including CPU DVFS. SCMI Message Protocol is used to
+> communicate with the SCP.
+> 
+> This patch adds a cpufreq driver for such systems using SCMI interface
+> to drive CPU DVFS.
+> 
+> Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+> Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  MAINTAINERS                    |   2 +-
+>  drivers/cpufreq/Kconfig.arm    |  11 ++
+>  drivers/cpufreq/Makefile       |   1 +
+>  drivers/cpufreq/scmi-cpufreq.c | 274 +++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 287 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/cpufreq/scmi-cpufreq.c
 
-Hans,
+Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I've found that I do indeed need to look at the 'hsper' that the TDA
-provides above along with the vper/hper as there are several timings
-that match a given vper/hper. However I haven't figured out how to
-make sense of the hsper value that is returned.
-
-Here are some example timings and the vper/hper/hsper returned from the TDA:
-V4L2_DV_BT_DMT_1280X960P60 449981/448/55
-V4L2_DV_BT_DMT_1280X1024P60 449833/420/27
-V4L2_DV_BT_DMT_1280X768P60 450021/568/11
-V4L2_DV_BT_DMT_1360X768P60 449867/564/34
-
-Do you know what the hsper could be here? It doesn't appear to match
-v4l2_bt_timings hsync ((27MHz/bt->pixelclock)*bt->hsync).
-
-Thanks,
-
-Tim
+-- 
+viresh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
