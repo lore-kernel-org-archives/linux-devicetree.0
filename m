@@ -1,7 +1,7 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 1/2] kbuild: create built-in.o automatically if parent directory wants it
-Date: Wed,  8 Nov 2017 01:31:46 +0900
-Message-ID: <1510072307-16819-2-git-send-email-yamada.masahiro@socionext.com>
+Subject: [PATCH 2/2] kbuild: remove all dummy assignments to obj-
+Date: Wed,  8 Nov 2017 01:31:47 +0900
+Message-ID: <1510072307-16819-3-git-send-email-yamada.masahiro@socionext.com>
 References: <1510072307-16819-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1510072307-16819-1-git-send-email-yamada.masahiro@socionext.com>
@@ -15,75 +15,249 @@ List-owner: <mailto:ralf@linux-mips.org>
 List-post: <mailto:linux-mips@linux-mips.org>
 List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Michal Marek <michal.lkml@markovi.net>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <mmarek@suse.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Michal Marek <michal.lkml@markovi.net>, Masahiro Yamada <yamada.masahiro@socionext.com>, Ralf Baechle <ralf@linux-mips.org>, Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Daniel Borkmann <daniel@iogearbox.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-"obj-y += foo/" syntax requires Kbuild to visit the "foo" subdirectory
-and link built-in.o from that directory.  This means foo/Makefile is
-responsible for creating built-in.o even if there is no object to
-link (in this case, built-in.o is an empty archive).
-
-We have had several fixups like commit 4b024242e8a4 ("kbuild: Fix
-linking error built-in.o no such file or directory"), then ended up
-with a complex condition as follows:
-
-  ifneq ($(strip $(obj-y) $(obj-m) $(obj-) $(subdir-m) $(lib-target)),)
-  builtin-target := $(obj)/built-in.o
-  endif
-
-We still have more cases not covered by the above, so we need to add
-  obj- := dummy.o
-in several places just for creating empty built-in.o.
-
-A key point is, the parent Makefile knows whether built-in.o is needed
-or not.  If a subdirectory needs to create built-in.o, its parent can
-tell the fact when Kbuild descends into it.
-
-If non-empty $(need-builtin) flag is passed from the parent, built-in.o
-should be created.  $(obj-y) should be still checked to support the
-single target "%/".  All of ugly tricks will go away.
+Now kbuild core scripts create empty built-in.o where necessary.
+Remove "obj- := dummy.o" tricks.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- Makefile               | 2 +-
- scripts/Makefile.build | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/mach-uniphier/Makefile           | 1 -
+ arch/mips/boot/dts/brcm/Makefile          | 3 ---
+ arch/mips/boot/dts/cavium-octeon/Makefile | 3 ---
+ arch/mips/boot/dts/img/Makefile           | 3 ---
+ arch/mips/boot/dts/ingenic/Makefile       | 3 ---
+ arch/mips/boot/dts/lantiq/Makefile        | 3 ---
+ arch/mips/boot/dts/mti/Makefile           | 3 ---
+ arch/mips/boot/dts/netlogic/Makefile      | 3 ---
+ arch/mips/boot/dts/ni/Makefile            | 3 ---
+ arch/mips/boot/dts/pic32/Makefile         | 3 ---
+ arch/mips/boot/dts/qca/Makefile           | 3 ---
+ arch/mips/boot/dts/ralink/Makefile        | 3 ---
+ arch/mips/boot/dts/xilfpga/Makefile       | 3 ---
+ firmware/Makefile                         | 3 ---
+ samples/bpf/Makefile                      | 3 ---
+ samples/hidraw/Makefile                   | 3 ---
+ samples/seccomp/Makefile                  | 3 ---
+ samples/sockmap/Makefile                  | 3 ---
+ samples/statx/Makefile                    | 3 ---
+ samples/uhid/Makefile                     | 3 ---
+ 20 files changed, 58 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 008a4e5..cc0b618 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1003,7 +1003,7 @@ $(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
+diff --git a/arch/arm/mach-uniphier/Makefile b/arch/arm/mach-uniphier/Makefile
+index 6bea3d3..e69de29 100644
+--- a/arch/arm/mach-uniphier/Makefile
++++ b/arch/arm/mach-uniphier/Makefile
+@@ -1 +0,0 @@
+-obj- += dummy.o
+diff --git a/arch/mips/boot/dts/brcm/Makefile b/arch/mips/boot/dts/brcm/Makefile
+index bacb131..fcf68a2 100644
+--- a/arch/mips/boot/dts/brcm/Makefile
++++ b/arch/mips/boot/dts/brcm/Makefile
+@@ -34,6 +34,3 @@ dtb-$(CONFIG_DT_NONE) += \
+ 	bcm97435svmb.dtb
  
- PHONY += $(vmlinux-dirs)
- $(vmlinux-dirs): prepare scripts
--	$(Q)$(MAKE) $(build)=$@
-+	$(Q)$(MAKE) $(build)=$@ need-builtin=1
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/cavium-octeon/Makefile b/arch/mips/boot/dts/cavium-octeon/Makefile
+index e9592a9..a857b4c 100644
+--- a/arch/mips/boot/dts/cavium-octeon/Makefile
++++ b/arch/mips/boot/dts/cavium-octeon/Makefile
+@@ -1,6 +1,3 @@
+ dtb-$(CONFIG_CAVIUM_OCTEON_SOC)	+= octeon_3xxx.dtb octeon_68xx.dtb
  
- define filechk_kernel.release
- 	echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
-diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-index 061d0c3..e1c6efd 100644
---- a/scripts/Makefile.build
-+++ b/scripts/Makefile.build
-@@ -84,7 +84,7 @@ lib-target := $(obj)/lib.a
- obj-y += $(obj)/lib-ksyms.o
- endif
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/img/Makefile b/arch/mips/boot/dts/img/Makefile
+index a46d773..17dedb7 100644
+--- a/arch/mips/boot/dts/img/Makefile
++++ b/arch/mips/boot/dts/img/Makefile
+@@ -2,6 +2,3 @@ dtb-$(CONFIG_FIT_IMAGE_FDT_BOSTON)	+= boston.dtb
  
--ifneq ($(strip $(obj-y) $(obj-m) $(obj-) $(subdir-m) $(lib-target)),)
-+ifneq ($(strip $(obj-y) $(need-builtin)),)
- builtin-target := $(obj)/built-in.o
- endif
+ dtb-$(CONFIG_MACH_PISTACHIO)	+= pistachio_marduk.dtb
+ obj-$(CONFIG_MACH_PISTACHIO)	+= pistachio_marduk.dtb.o
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/ingenic/Makefile b/arch/mips/boot/dts/ingenic/Makefile
+index ddd0faf..f2e516c 100644
+--- a/arch/mips/boot/dts/ingenic/Makefile
++++ b/arch/mips/boot/dts/ingenic/Makefile
+@@ -2,6 +2,3 @@ dtb-$(CONFIG_JZ4740_QI_LB60)	+= qi_lb60.dtb
+ dtb-$(CONFIG_JZ4780_CI20)	+= ci20.dtb
  
-@@ -569,7 +569,7 @@ targets += $(multi-used-y) $(multi-used-m)
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/lantiq/Makefile b/arch/mips/boot/dts/lantiq/Makefile
+index 586b1c9..fed59e0 100644
+--- a/arch/mips/boot/dts/lantiq/Makefile
++++ b/arch/mips/boot/dts/lantiq/Makefile
+@@ -1,6 +1,3 @@
+ dtb-$(CONFIG_DT_EASY50712)	+= easy50712.dtb
  
- PHONY += $(subdir-ym)
- $(subdir-ym):
--	$(Q)$(MAKE) $(build)=$@
-+	$(Q)$(MAKE) $(build)=$@ need-builtin=$(if $(findstring $@,$(subdir-obj-y)),1)
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/mti/Makefile b/arch/mips/boot/dts/mti/Makefile
+index faf7ac4..35cf12b 100644
+--- a/arch/mips/boot/dts/mti/Makefile
++++ b/arch/mips/boot/dts/mti/Makefile
+@@ -2,6 +2,3 @@ dtb-$(CONFIG_MIPS_MALTA)	+= malta.dtb
+ dtb-$(CONFIG_LEGACY_BOARD_SEAD3)	+= sead3.dtb
  
- # Add FORCE to the prequisites of a target to force it to be always rebuilt.
- # ---------------------------------------------------------------------------
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/netlogic/Makefile b/arch/mips/boot/dts/netlogic/Makefile
+index 77ffb30..84a38eb 100644
+--- a/arch/mips/boot/dts/netlogic/Makefile
++++ b/arch/mips/boot/dts/netlogic/Makefile
+@@ -5,6 +5,3 @@ dtb-$(CONFIG_DT_XLP_GVP)	+= xlp_gvp.dtb
+ dtb-$(CONFIG_DT_XLP_RVP)	+= xlp_rvp.dtb
+ 
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/ni/Makefile b/arch/mips/boot/dts/ni/Makefile
+index 6cd9c60..9e2c9fa 100644
+--- a/arch/mips/boot/dts/ni/Makefile
++++ b/arch/mips/boot/dts/ni/Makefile
+@@ -1,4 +1 @@
+ dtb-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= 169445.dtb
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-					+= dummy.o
+diff --git a/arch/mips/boot/dts/pic32/Makefile b/arch/mips/boot/dts/pic32/Makefile
+index 5a08e48..6ecc249 100644
+--- a/arch/mips/boot/dts/pic32/Makefile
++++ b/arch/mips/boot/dts/pic32/Makefile
+@@ -4,6 +4,3 @@ dtb-$(CONFIG_DTB_PIC32_NONE)		+= \
+ 					pic32mzda_sk.dtb
+ 
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/qca/Makefile b/arch/mips/boot/dts/qca/Makefile
+index 181db5d..ad6429b 100644
+--- a/arch/mips/boot/dts/qca/Makefile
++++ b/arch/mips/boot/dts/qca/Makefile
+@@ -4,6 +4,3 @@ dtb-$(CONFIG_ATH79)			+= ar9331_dpt_module.dtb
+ dtb-$(CONFIG_ATH79)			+= ar9331_dragino_ms14.dtb
+ dtb-$(CONFIG_ATH79)			+= ar9331_omega.dtb
+ dtb-$(CONFIG_ATH79)			+= ar9331_tl_mr3020.dtb
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/ralink/Makefile b/arch/mips/boot/dts/ralink/Makefile
+index 7b64654..baaea4a 100644
+--- a/arch/mips/boot/dts/ralink/Makefile
++++ b/arch/mips/boot/dts/ralink/Makefile
+@@ -6,6 +6,3 @@ dtb-$(CONFIG_DTB_OMEGA2P)	+= omega2p.dtb
+ dtb-$(CONFIG_DTB_VOCORE2)	+= vocore2.dtb
+ 
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/arch/mips/boot/dts/xilfpga/Makefile b/arch/mips/boot/dts/xilfpga/Makefile
+index 77c8096..53f755f 100644
+--- a/arch/mips/boot/dts/xilfpga/Makefile
++++ b/arch/mips/boot/dts/xilfpga/Makefile
+@@ -1,6 +1,3 @@
+ dtb-$(CONFIG_XILFPGA_NEXYS4DDR)	+= nexys4ddr.dtb
+ 
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+-
+-# Force kbuild to make empty built-in.o if necessary
+-obj-				+= dummy.o
+diff --git a/firmware/Makefile b/firmware/Makefile
+index fa08088..6524be1 100644
+--- a/firmware/Makefile
++++ b/firmware/Makefile
+@@ -58,6 +58,3 @@ endif
+ 
+ targets := $(patsubst $(obj)/%,%, \
+                                 $(shell find $(obj) -name \*.gen.S 2>/dev/null))
+-# Without this, built-in.o won't be created when it's empty, and the
+-# final vmlinux link will fail.
+-obj- := dummy
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index cf17c79..4ea6f75 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -1,6 +1,3 @@
+-# kbuild trick to avoid linker error. Can be omitted if a module is built.
+-obj- := dummy.o
+-
+ # List of programs to build
+ hostprogs-y := test_lru_dist
+ hostprogs-y += sock_example
+diff --git a/samples/hidraw/Makefile b/samples/hidraw/Makefile
+index a9ab961..329da9c 100644
+--- a/samples/hidraw/Makefile
++++ b/samples/hidraw/Makefile
+@@ -1,6 +1,3 @@
+-# kbuild trick to avoid linker error. Can be omitted if a module is built.
+-obj- := dummy.o
+-
+ # List of programs to build
+ hostprogs-y := hid-example
+ 
+diff --git a/samples/seccomp/Makefile b/samples/seccomp/Makefile
+index bf7cc6b..5c6baac 100644
+--- a/samples/seccomp/Makefile
++++ b/samples/seccomp/Makefile
+@@ -1,6 +1,3 @@
+-# kbuild trick to avoid linker error. Can be omitted if a module is built.
+-obj- := dummy.o
+-
+ hostprogs-$(CONFIG_SAMPLE_SECCOMP) := bpf-fancy dropper bpf-direct
+ 
+ HOSTCFLAGS_bpf-fancy.o += -I$(objtree)/usr/include
+diff --git a/samples/sockmap/Makefile b/samples/sockmap/Makefile
+index 9291ab8..73f1da4 100644
+--- a/samples/sockmap/Makefile
++++ b/samples/sockmap/Makefile
+@@ -1,6 +1,3 @@
+-# kbuild trick to avoid linker error. Can be omitted if a module is built.
+-obj- := dummy.o
+-
+ # List of programs to build
+ hostprogs-y := sockmap
+ 
+diff --git a/samples/statx/Makefile b/samples/statx/Makefile
+index 1f80a3d..59df7c2 100644
+--- a/samples/statx/Makefile
++++ b/samples/statx/Makefile
+@@ -1,6 +1,3 @@
+-# kbuild trick to avoid linker error. Can be omitted if a module is built.
+-obj- := dummy.o
+-
+ # List of programs to build
+ hostprogs-$(CONFIG_SAMPLE_STATX) := test-statx
+ 
+diff --git a/samples/uhid/Makefile b/samples/uhid/Makefile
+index c95a696..8d7fd61 100644
+--- a/samples/uhid/Makefile
++++ b/samples/uhid/Makefile
+@@ -1,6 +1,3 @@
+-# kbuild trick to avoid linker error. Can be omitted if a module is built.
+-obj- := dummy.o
+-
+ # List of programs to build
+ hostprogs-y := uhid-example
+ 
 -- 
 2.7.4
