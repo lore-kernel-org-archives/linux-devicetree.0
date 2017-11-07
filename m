@@ -1,29 +1,55 @@
 From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 0/3] iio: add Intersil isl76683 light sensor support
-Date: Tue,  7 Nov 2017 16:36:20 +0100
-Message-ID: <1510068983-25769-1-git-send-email-chf.fritz@googlemail.com>
+Subject: [PATCH 2/3] dt-bindings: iio: add Intersil isl76683 light sensor bindings
+Date: Tue,  7 Nov 2017 16:36:22 +0100
+Message-ID: <1510068983-25769-3-git-send-email-chf.fritz@googlemail.com>
+References: <1510068983-25769-1-git-send-email-chf.fritz@googlemail.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1510068983-25769-1-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds initial support for isl76683 light sensor.
+This patch adds documentation of device tree bindings for Intersil
+isl76683 light sensor.
 
-Christoph Fritz (3):
-  iio: light: add support for Intersil isl76683 sensor
-  dt-bindings: iio: add Intersil isl76683 light sensor bindings
-  iio: light: isl76683 add way to adjust irq threshold
-
- .../ABI/testing/sysfs-bus-iio-light-isl76683       |  17 +
- .../devicetree/bindings/iio/light/isl76683.txt     |  26 +
- drivers/iio/light/Kconfig                          |  12 +
- drivers/iio/light/Makefile                         |   1 +
- drivers/iio/light/isl76683.c                       | 743 +++++++++++++++++++++
- 5 files changed, 799 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-isl76683
+Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ .../devicetree/bindings/iio/light/isl76683.txt     | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/light/isl76683.txt
- create mode 100644 drivers/iio/light/isl76683.c
 
+diff --git a/Documentation/devicetree/bindings/iio/light/isl76683.txt b/Documentation/devicetree/bindings/iio/light/isl76683.txt
+new file mode 100644
+index 0000000..657f17d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/isl76683.txt
+@@ -0,0 +1,26 @@
++* ISL76683 ambient light sensor
++
++http://www.intersil.com/content/dam/Intersil/documents/isl7/isl76683.pdf
++
++Required properties:
++
++  - compatible: must be "isil,isl76683"
++  - reg: the I2C address of the sensor
++  - interrupt-parent: should be the phandle for the interrupt controller
++  - interrupts: interrupt mapping for GPIO IRQ
++
++Optional properties:
++
++  - isil,external-resistor: integer in kOhm of external resistor R_ext.
++                            Valid values are from 1 to 1000.
++                            If not supplied, 100 kOhm will be assumed.
++
++Example:
++
++isl76683@44 {
++	compatible = "isil,isl76683";
++	reg = <0x44>;
++	interrupt-parent = <&gpio1>;
++	interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
++	isil,external-resistor = <50>;
++};
 -- 
 2.1.4
