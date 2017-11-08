@@ -1,61 +1,75 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
-Date: Wed, 8 Nov 2017 16:55:32 +0530
-Message-ID: <CAMty3ZB3aXCsd9VkibjxPdA=BXvXr3nMbGJJvtZN_z2SGVUAXA@mail.gmail.com>
-References: <20171103195855.15283-1-geomatsi@gmail.com> <20171103195855.15283-2-geomatsi@gmail.com>
- <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
- <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter> <20171106122633.5mnqfh6xhmmxr45s@flea>
- <20171106161306.tq6yeq6bq36ridj3@speedy.hunter> <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg@mail.gmail.com>
- <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA@mail.gmail.com> <20171107201245.gptgfli54o6eqmrj@speedy.hunter>
+From: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Subject: Re: [PATCH] brcmfmac: add support for external 32khz clock
+Date: Wed, 8 Nov 2017 22:43:05 +1100
+Message-ID: <20171108114302.GA1291@lineageos.org>
+References: <20171104132421.GA1541@archbox.home>
+ <5A004099.90200@broadcom.com>
+ <20171106112726.GA25134@lineageos.org>
+ <5A019463.9060701@broadcom.com>
+ <20171107133112.GA1323@lineageos.org>
+ <5A02DE93.8030502@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171107201245.gptgfli54o6eqmrj-tVm4GcgtBpsfMUw/CLfKLg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5A02DE93.8030502-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 8, 2017 at 1:42 AM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi,
->
->> >>> > Did you try to boot from sdcard ? I am not able to boot my board from
->> >>> > sd-card without this change. As I mentioned earlier in my email
->> >>> > to buildroot mailing list, with mmc debug enabled I see that mmc
->> >>> > tries to init sd-card when I remove it from the slot.
->> >>> >
->> >>> > Maybe there is a minor differences between h/w versions or batches ?
->> >>> > What is you board version ? I tested on board v1.0.
->> >>>
->> >>> Looking at the schematics, it definitely looks like it's active low.
->> >>
->> >> Is it ok to merge it then ? Or using 'cd-inverted' property
->> >> is the preferable option ?
->> >
->> > W/o any change mainline works unstable for me, it wasn't booting
->> > at-all[1] did you find the same?
->> >
->> > Even tried with active LOW and cd-inverted.
->> >
->> > [1] https://paste.ubuntu.com/25909064/
->>
->> Look like something broken for H5 and A64 between v4.14-rc8 to latest
->
-> Both 4.13.7 and 4.14-rc8 (synched today) kernels worked fine for me.
-> DTS behavior is all the same:
+Hi Arend,
 
-I've tried fresh sync [2] but still see the issue, can you check the
-Image size of log(suspecting on that area)
+On Wed, Nov 08, 2017 at 11:38:11AM +0100, Arend van Spriel wrote:
+> + Stefan
+> 
+> On 11/7/2017 2:31 PM, Simon Shields wrote:
+> > Hi Arend,
+> > 
+> > On Tue, Nov 07, 2017 at 12:09:23PM +0100, Arend van Spriel wrote:
+> > > On 11/6/2017 12:27 PM, Simon Shields wrote:
+> > > > On Mon, Nov 06, 2017 at 11:59:37AM +0100, Arend van Spriel wrote:
+> > > > > On 11/4/2017 2:24 PM, Simon Shields wrote:
+> > > > > > Some boards use an external 32khz clock for low-power
+> > > > > > mode timing. Make sure the clock is powered on while the chipset
+> > > > > > is active.
+> > > > > 
+> > > > > Do you have such a board? With the little documentation I can get my hands
+> > > > > on here I wonder whether the clock needs to be enabled before the device is
+> > > > > powered. If you have the hardware I would like to check some registers in
+> > > > > the device.
+> > > > > 
+> > > > 
+> > > > Yes. Trats2 (exynos4412-based) has such a setup. The BCM4334 works fine
+> > > > with this patch and one more that enables the WL_REG_EN pin when
+> > > > brcmfmac is probed.
+> > > 
+> > > Ok. So this is exactly the thing I was wondering about. So it makes me
+> > > curious how the WL_REG_EN patch looks like. Can you provide that?
+> > > 
+> > 
+> > Here[0] is a link to the patch in its current state. Obviously, it's not
+> > ready at all for mainlining :-)
+> > 
+> > [0]: https://github.com/fourkbomb/linux/commit/436e59e58b44d856c186fc4767560cecbcbc0c59.patch
+> 
+> Thanks. Indeed doing it in module_init of brcmfmac is not going to fly.
+> Actually the MMC stack has a mechanism to power the SDIO device. This can be
+> configured through the device tree [1]. I just checked and it actually
+> includes specifying the external clock as well.
+> 
 
-[2] https://paste.ubuntu.com/25916951/
+It looks like mmc-pwrseq-simple would handle the clock case, but it
+doesn't handle the regulator properly: it sets the GPIO to high before
+powering on, then lowers it immediately after powering it on.
 
-thanks!
--- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess a simpler approach here would be to extend pwrseq-simple to behave
+as we need it to.
+
+> Regards,
+> Arend
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+
+Cheers,
+Simon
