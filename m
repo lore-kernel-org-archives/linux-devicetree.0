@@ -1,407 +1,79 @@
-From: Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] drivers: hwmon: Add W83773G driver
-Date: Wed, 8 Nov 2017 14:03:34 +0800
-Message-ID: <CAARXrt=zi4DpGVpH5Cjsr8+m20LdG7JXf7jRqzfzcSJ4isa97g@mail.gmail.com>
-References: <1510043274-4778-1-git-send-email-mine260309@gmail.com>
- <1510043274-4778-3-git-send-email-mine260309@gmail.com> <f02b61f8-ebda-6bfd-ec4e-d64b3bd488b4@roeck-us.net>
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [v2] Devicetree documentation: add rs485-rts-active-high property
+Date: Wed, 8 Nov 2017 07:11:55 +0100
+Message-ID: <20171108061155.GA4731@wunner.de>
+References: <20171107075336.11236-1-m.oleszczyk@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f02b61f8-ebda-6bfd-ec4e-d64b3bd488b4-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171107075336.11236-1-m.oleszczyk-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+To: Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Jackson <mpfj-2FZW7xY0fHgqdlJmJB21zg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 7, 2017 at 10:33 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On 11/07/2017 12:27 AM, Lei YU wrote:
->>
->> Nuvoton W83773G is a hardware monitor IC providing one local
->> temperature and two remote temperature sensors.
->>
->> Signed-off-by: Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> v2:
->>   - Rewrite the driver using regmap
->>   - Add offset and update_interval
->> ---
->>   drivers/hwmon/Kconfig   |  10 ++
->>   drivers/hwmon/Makefile  |   1 +
->>   drivers/hwmon/w83773g.c | 281
->> ++++++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 292 insertions(+)
->>   create mode 100644 drivers/hwmon/w83773g.c
->>
->> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->> index d654314..11c6248 100644
->> --- a/drivers/hwmon/Kconfig
->> +++ b/drivers/hwmon/Kconfig
->> @@ -1710,6 +1710,16 @@ config SENSORS_VT8231
->>           This driver can also be built as a module.  If so, the module
->>           will be called vt8231.
->>   +config SENSORS_W83773G
->> +       tristate "Nuvoton W83773G"
->> +       depends on I2C
->> +       help
->> +         If you say yes here you get support for the Nuvoton W83773G
->> hardware
->> +         monitoring chip.
->> +
->> +         This driver can also be built as a module.  If so, the module
->> +         will be called w83773g.
->> +
->>   config SENSORS_W83781D
->>         tristate "Winbond W83781D, W83782D, W83783S, Asus AS99127F"
->>         depends on I2C
->> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
->> index c84d978..0649ad8 100644
->> --- a/drivers/hwmon/Makefile
->> +++ b/drivers/hwmon/Makefile
->> @@ -13,6 +13,7 @@ obj-$(CONFIG_SENSORS_ATK0110) += asus_atk0110.o
->>   # asb100, then w83781d go first, as they can override other drivers'
->> addresses.
->>   obj-$(CONFIG_SENSORS_ASB100)  += asb100.o
->>   obj-$(CONFIG_SENSORS_W83627HF)        += w83627hf.o
->> +obj-$(CONFIG_SENSORS_W83773G)  += w83773g.o
->>   obj-$(CONFIG_SENSORS_W83792D) += w83792d.o
->>   obj-$(CONFIG_SENSORS_W83793)  += w83793.o
->>   obj-$(CONFIG_SENSORS_W83795)  += w83795.o
->> diff --git a/drivers/hwmon/w83773g.c b/drivers/hwmon/w83773g.c
->> new file mode 100644
->> index 0000000..d352bac
->> --- /dev/null
->> +++ b/drivers/hwmon/w83773g.c
->> @@ -0,0 +1,281 @@
->> +/*
->> + * Copyright (C) 2017 IBM Corp.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * Driver for the Nuvoton W83773G SMBus temperature sensor IC.
->> + * Supported models: W83773G
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/init.h>
->> +#include <linux/i2c.h>
->> +#include <linux/hwmon.h>
->> +#include <linux/hwmon-sysfs.h>
->> +#include <linux/err.h>
->> +#include <linux/of_device.h>
->> +#include <linux/regmap.h>
->> +
->> +/* Addresses to scan */
->> +static const unsigned short normal_i2c[] = { 0x4c, 0x4d, I2C_CLIENT_END
->> };
->> +
->> +/* The W83773 registers */
->> +#define W83773_CONVERSION_RATE_REG_READ                0x04
->> +#define W83773_CONVERSION_RATE_REG_WRITE       0x0A
->> +#define W83773_MANUFACTURER_ID_REG             0xFE
->> +#define W83773_LOCAL_TEMP                      0x00
->> +
->> +static const u8 W83773_STATUS[2] = { 0x02, 0x17 };
->> +
->> +static const u8 W83773_TEMP_LSB[2] = { 0x10, 0x25 };
->> +static const u8 W83773_TEMP_MSB[2] = { 0x01, 0x24 };
->> +
->> +static const u8 W83773_OFFSET_LSB[2] = { 0x12, 0x16 };
->> +static const u8 W83773_OFFSET_MSB[2] = { 0x11, 0x15 };
->> +
->> +
->> +/* this is the number of sensors in the device */
->> +static const struct i2c_device_id w83773_id[] = {
->> +       { "w83773g" },
->> +       { }
->> +};
->> +
->> +MODULE_DEVICE_TABLE(i2c, w83773_id);
->> +
->> +static const struct of_device_id w83773_of_match[] = {
->> +       {
->> +               .compatible = "nuvoton,w83773g"
->> +       },
->> +       { },
->> +};
->> +MODULE_DEVICE_TABLE(of, w83773_of_match);
->> +
->> +static inline int temp_of_local(s8 reg)
->> +{
->> +       return reg * 1000;
->> +}
->> +
->> +static inline int temp_of_remote(s8 hb, u8 lb)
->> +{
->> +       return (hb << 3 | lb >> 5) * 125;
->> +}
->> +
->> +static ssize_t show_local_temp(struct device *dev,
->> +                              struct device_attribute *attr,
->> +                              char *buf)
->> +{
->> +       struct sensor_device_attribute *sda = to_sensor_dev_attr(attr);
->> +       struct regmap *regmap = dev_get_drvdata(dev);
->> +       unsigned int regval;
->> +       int ret;
->> +
->> +       ret = regmap_read(regmap, sda->index, &regval);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return sprintf(buf, "%d\n", temp_of_local(regval));
->> +}
->> +
->> +static ssize_t show_remote_temp(struct device *dev,
->> +                               struct device_attribute *attr,
->> +                               char *buf)
->> +{
->> +       struct sensor_device_attribute *sda = to_sensor_dev_attr(attr);
->> +       struct regmap *regmap = dev_get_drvdata(dev);
->> +       unsigned int regval_high;
->> +       unsigned int regval_low;
->> +       int ret;
->> +
->> +       ret = regmap_read(regmap, W83773_TEMP_MSB[sda->index],
->> &regval_high);
->> +       ret |= regmap_read(regmap, W83773_TEMP_LSB[sda->index],
->> &regval_low);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return sprintf(buf, "%d\n", temp_of_remote(regval_high,
->> regval_low));
->> +}
->> +
->> +static ssize_t show_status(struct device *dev,
->> +                          struct device_attribute *attr,
->> +                          char *buf)
->> +{
->> +       struct sensor_device_attribute *sda = to_sensor_dev_attr(attr);
->> +       struct regmap *regmap = dev_get_drvdata(dev);
->> +       unsigned int regval;
->> +       int ret;
->> +
->> +       ret = regmap_read(regmap, W83773_STATUS[sda->index], &regval);
->> +
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return sprintf(buf, "%d\n", (u8)regval & 0x04 >> 2);
->> +}
->> +
->> +static ssize_t show_offset(struct device *dev,
->> +                          struct device_attribute *attr,
->> +                          char *buf)
->> +{
->> +       struct sensor_device_attribute *sda = to_sensor_dev_attr(attr);
->> +       struct regmap *regmap = dev_get_drvdata(dev);
->> +       unsigned int regval_high;
->> +       unsigned int regval_low;
->> +       int ret;
->> +
->> +       ret = regmap_read(regmap, W83773_OFFSET_MSB[sda->index],
->> &regval_high);
->> +       ret |= regmap_read(regmap, W83773_OFFSET_LSB[sda->index],
->> &regval_low);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return sprintf(buf, "%d\n", temp_of_remote(regval_high,
->> regval_low));
->> +}
->> +
->> +static ssize_t set_offset(struct device *dev,
->> +                         struct device_attribute *attr,
->> +                         const char *buf, size_t count)
->> +{
->> +       struct sensor_device_attribute *sda = to_sensor_dev_attr(attr);
->> +       struct regmap *regmap = dev_get_drvdata(dev);
->> +       long val;
->> +       int ret;
->> +       int err;
->> +       u8 high_byte;
->> +       u8 low_byte;
->> +
->> +       err = kstrtol(buf, 10, &val);
->> +       if (err)
->> +               return err;
->> +
->> +       val = clamp_val(val, -127825, 127825);
->> +       /* offset value equals to (high_byte << 3 | low_byte >> 5) * 125
->> */
->> +       val /= 125;
->> +       high_byte = val >> 3;
->> +       low_byte = (val & 0x07) << 5;
->> +
->> +       ret = regmap_write(regmap, W83773_OFFSET_MSB[sda->index],
->> high_byte);
->> +       ret |= regmap_write(regmap, W83773_OFFSET_LSB[sda->index],
->> low_byte);
->
->
-> Please don't do that. The errors, if any, might be different, messing up
-> the error return.
+On Tue, Nov 07, 2017 at 08:53:36AM +0100, Michal Oleszczyk wrote:
+> From: Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Add description of rs485-rts-active-high property into
+> /serial/rs485.txt devicetree documentation file.
 
-OK, it will be fixed in v3.
+Most rs485 transceivers on the market have an active-high Transmit Enable
+pin, e.g. MAX13451E, SN65HVD1781A:
 
->
->
->> +
->> +       if (ret < 0)
->> +               return ret;
->> +       return count;
->> +}
->> +
->> +static ssize_t show_update_interval(struct device *dev,
->> +                                   struct device_attribute *attr,
->> +                                   char *buf)
->> +{
->> +       struct regmap *regmap = dev_get_drvdata(dev);
->> +       unsigned int regval;
->> +       int ret;
->> +
->> +       ret = regmap_read(regmap, W83773_CONVERSION_RATE_REG_READ,
->> &regval);
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       return sprintf(buf, "%u\n", 16000 >> regval);
->> +}
->> +
->> +static ssize_t set_update_interval(struct device *dev,
->> +                                  struct device_attribute *attr,
->> +                                  const char *buf, size_t count)
->> +{
->> +       struct regmap *regmap = dev_get_drvdata(dev);
->> +       unsigned long val;
->> +       int ret;
->> +       int err, rate;
->> +
->> +       err = kstrtoul(buf, 10, &val);
->> +       if (err)
->> +               return err;
->> +
->> +       /*
->> +        * For valid rates, interval can be calculated as
->> +        *      interval = (1 << (8 - rate)) * 62.5;
->> +        * Rounded rate is therefore
->> +        *      rate = 8 - __fls(interval * 8 / (62.5 * 7));
->> +        * Use clamp_val() to avoid overflows, and to ensure valid input
->> +        * for __fls.
->> +        */
->> +       val = clamp_val(val, 62, 16000) * 10;
->> +       rate = 8 - __fls((val * 8 / (625 * 7)));
->> +       ret = regmap_write(regmap, W83773_CONVERSION_RATE_REG_WRITE,
->> rate);
->> +       if (ret < 0)
->> +               return ret;
->> +       return count;
->> +}
->> +
->> +static SENSOR_DEVICE_ATTR(temp1_input, 0444, show_local_temp, NULL,
->> +                         W83773_LOCAL_TEMP);
->> +static SENSOR_DEVICE_ATTR(temp2_input, 0444, show_remote_temp, NULL, 0);
->> +static SENSOR_DEVICE_ATTR(temp2_fault, 0444, show_status, NULL, 0);
->> +static SENSOR_DEVICE_ATTR(temp2_offset, 0644, show_offset, set_offset,
->> 0);
->> +static SENSOR_DEVICE_ATTR(temp3_input, 0444, show_remote_temp, NULL, 1);
->> +static SENSOR_DEVICE_ATTR(temp3_fault, 0444, show_status, NULL, 1);
->> +static SENSOR_DEVICE_ATTR(temp3_offset, 0644, show_offset, set_offset,
->> 1);
->> +static DEVICE_ATTR(update_interval, 0644, show_update_interval,
->> +                  set_update_interval);
->> +
->> +static struct attribute *w83773g_attrs[] = {
->> +       &sensor_dev_attr_temp1_input.dev_attr.attr,
->> +       &sensor_dev_attr_temp2_input.dev_attr.attr,
->> +       &sensor_dev_attr_temp2_fault.dev_attr.attr,
->> +       &sensor_dev_attr_temp2_offset.dev_attr.attr,
->> +       &sensor_dev_attr_temp3_input.dev_attr.attr,
->> +       &sensor_dev_attr_temp3_fault.dev_attr.attr,
->> +       &sensor_dev_attr_temp3_offset.dev_attr.attr,
->> +       &dev_attr_update_interval.attr,
->> +       NULL
->> +};
->> +ATTRIBUTE_GROUPS(w83773g);
->> +
->> +static const struct regmap_config w83773g_regmap_config = {
->> +       .reg_bits = 8,
->> +       .val_bits = 8,
->> +};
->> +
->> +static int w83773_probe(struct i2c_client *client,
->> +                       const struct i2c_device_id *id)
->> +{
->> +
->> +       struct device *dev = &client->dev;
->> +       struct device *hwmon_dev;
->> +       struct regmap *regmap;
->> +       int ret;
->> +
->> +       regmap = devm_regmap_init_i2c(client, &w83773g_regmap_config);
->> +       if (IS_ERR(regmap)) {
->> +               dev_err(dev, "failed to allocate register map\n");
->> +               return PTR_ERR(regmap);
->> +       }
->> +
->> +       /* Set the conversion rate to 2 Hz */
->> +       ret = regmap_write(regmap, W83773_CONVERSION_RATE_REG_WRITE,
->> 0x05);
->> +       if (ret < 0) {
->> +               dev_err(&client->dev, "error writing config rate
->> register\n");
->> +               return ret;
->> +       }
->> +
->> +       i2c_set_clientdata(client, regmap);
->> +       hwmon_dev = devm_hwmon_device_register_with_groups(dev,
->> client->name,
->> +                                                     regmap,
->> w83773g_groups);
->
->
-> You lost me here. Why did you stop using the new API ?
+https://datasheets.maximintegrated.com/en/ds/MAX13450E-MAX13451E.pdf
+http://www.ti.com/lit/gpn/sn65hvd1781a-q1
 
-I was referencing some other hwmon driver (e.g. tmp401.c) and find out
-the usage of SENSOR_DEVICE_ATTR, which I feel more clear and straightforward.
+In fact I'm not aware of a single transceiver that uses active-low,
+do you know one?
 
-So what I know for know is:
-1. In v1, devm_hwmon_device_register_with_info() with hwmon_chip_info providing
-is_visible(), read/write() operations;
-2. In v2, devm_hwmon_device_register_with_groups() with attribute_group.
+I know that omap-serial defaults to active-low and supports an
+(as yet undocumented) "rs485-rts-active-high" property.  I don't
+know why it defaults to active-low.  Adding Mark Jackson to cc
+who introduced that feature with commit 4a0ac0f55.
 
-So from your suggestion, it seems the hwmon_chip_info is more preferable, is it?
-If yes, I will update this in v3 as well.
+All other drivers (e.g. imx.c, fsl-lpuart.c) default to active-high.
+(Which in a way contradicts with your patch as it suggests *everything*
+defaults to active-low.)
 
-Thanks!
->
-> Guenter
->
->
->> +       return PTR_ERR_OR_ZERO(hwmon_dev);
->> +}
->> +
->> +static struct i2c_driver w83773_driver = {
->> +       .class = I2C_CLASS_HWMON,
->> +       .driver = {
->> +               .name   = "w83773g",
->> +               .of_match_table = of_match_ptr(w83773_of_match),
->> +       },
->> +       .probe = w83773_probe,
->> +       .id_table = w83773_id,
->> +       .address_list = normal_i2c,
->> +};
->> +
->> +module_i2c_driver(w83773_driver);
->> +
->> +MODULE_AUTHOR("Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
->> +MODULE_DESCRIPTION("W83773G temperature sensor driver");
->> +MODULE_LICENSE("GPL");
->>
->
+I have a series in preparation that I was going to post shortly
+which instead introduces an rs485-rts-active-low property for
+those presumably rare cases when it's needed, but retains the
+current behaviour of omap-serial for compatibility:
+
+https://github.com/l1k/linux/commit/03ef500e98e5
+https://github.com/l1k/linux/commit/8430ffdb5799
+https://github.com/l1k/linux/commit/c3a86d3b862b
+
+In my opinion that's a better approach but I'd be curious to
+hear other opinions.
+
+Thanks,
+
+Lukas
+
+> 
+> Signed-off-by: Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Repair 'From' to match with 'Signed-off-by' section.
+> 
+>  Documentation/devicetree/bindings/serial/rs485.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/rs485.txt b/Documentation/devicetree/bindings/serial/rs485.txt
+> index b8415936dfdb..71c38ef7f6e2 100644
+> --- a/Documentation/devicetree/bindings/serial/rs485.txt
+> +++ b/Documentation/devicetree/bindings/serial/rs485.txt
+> @@ -16,6 +16,8 @@ Optional properties:
+>    feature at boot time. It can be disabled later with proper ioctl.
+>  - rs485-rx-during-tx: empty property that enables the receiving of data even
+>    whilst sending data.
+> +- rs485-rts-active-high: empty property telling to set RTS line high when it is 
+> +  active.
+>  
+>  RS485 example for Atmel USART:
+>  	usart0: serial@fff8c000 {
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
