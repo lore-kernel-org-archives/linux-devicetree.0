@@ -1,70 +1,55 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
- re-enabling PWM and switching backlight power on
-Date: Wed, 8 Nov 2017 08:34:07 +0100
-Message-ID: <20171108083407.1ae55f91@karo-electronics.de>
-References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
-        <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
-        <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
-        <20171030103334.75ii247j6owrnrdb@dell>
-        <CAL_JsqLrmOc8AksfpfNGdoFCtaa6vwsT1aLEU9C=9URmaiyM=w@mail.gmail.com>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: msm8916: Add missing #phy-cells
+Date: Wed, 8 Nov 2017 13:14:41 +0530
+Message-ID: <f66341bb-2dff-7b21-3a78-5c9ec1c3a719@codeaurora.org>
+References: <20171108034501.2994-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLrmOc8AksfpfNGdoFCtaa6vwsT1aLEU9C=9URmaiyM=w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171108034501.2994-1-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Tue, 7 Nov 2017 18:46:18 -0600 Rob Herring wrote:
-> On Mon, Oct 30, 2017 at 5:33 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> > On Fri, 27 Oct 2017, Rob Herring wrote:
-> >
-> >> On Thu, Oct 26, 2017 at 02:49:46PM +0200, Lothar Waßmann wrote:
-> >> > When switching the backlight on, the LCD may need some time to adjust
-> >> > to the configured PWM duty cycle. Add a configurable delay between
-> >> > configuring the PWM and enabling the backlight regulator to account
-> >> > for this.
-> >> >
-> >> > Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
-> >> > ---
-> >> >  .../bindings/leds/backlight/pwm-backlight.txt      |  4 ++++
-> >> >  drivers/video/backlight/pwm_bl.c                   | 22 +++++++++++++++++++---
-> >> >  2 files changed, 23 insertions(+), 3 deletions(-)
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> >> > index 764db86..95594c3 100644
-> >> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> >> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> >> > @@ -17,6 +17,10 @@ Optional properties:
-> >> >                 "pwms" property (see PWM binding[0])
-> >> >    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
-> >> >                    and disables the backlight (see GPIO binding[1])
-> >> > +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
-> >> > +             and switching PWM on. This may be required to eliminate
-> >> > +             flicker when switching the PWM on after it has been
-> >> > +             disabled.
-> >>
-> >> The subject talks about turning on the backlight regulator, but this
-> >> only talks about the PWM.
-> >
-> > From my understanding "switching PWM on" == enabling the regulator.
-> >
-> > I don't see any disparity here.  Or am I missing something?
+
+On 11/08/2017 09:15 AM, Bjorn Andersson wrote:
+> Add a missing #phy-cells to the dsi-phy, to silence dtc warning.
 > 
-> The delay is from (re-)enabling the PWM (turning it on) to switching
-> backlight power on. That sounds like 2 different things to me.
+
+Reviewed-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+Thanks,
+Archit
+
+> Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Fixes: 305410ffd1b2 ("arm64: dts: msm8916: Add display support")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>   arch/arm64/boot/dts/qcom/msm8916.dtsi | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-The text should better read:
-+  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
-+             and switching the backlight regulator on. This may be
-+             required to eliminate flicker when switching the backlight
-+             on after it had been disabled.
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 6b2127a6ced1..09ac5c43807e 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -906,6 +906,7 @@
+>   					    "dsi_phy_regulator";
+>   
+>   				#clock-cells = <1>;
+> +				#phy-cells = <0>;
+>   
+>   				clocks = <&gcc GCC_MDSS_AHB_CLK>;
+>   				clock-names = "iface_clk";
+> 
 
-
-
-Lothar Waßmann
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
