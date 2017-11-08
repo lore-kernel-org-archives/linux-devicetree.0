@@ -1,104 +1,48 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/5] serial: core: Support common rs485 binding for RTS
- polarity
-Date: Wed, 8 Nov 2017 12:13:55 +0100
-Message-ID: <20171108111355.pzcrvdgqqeleinss@pengutronix.de>
-References: <cover.1510134353.git.lukas@wunner.de>
- <e85e3d02a45e79e410b6606d8fdec347f03053f4.1510134353.git.lukas@wunner.de>
+From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 20/20] cpufreq: scmi: add support for fast frequency switching
+Date: Wed, 8 Nov 2017 12:21:16 +0100
+Message-ID: <CAJZ5v0hAiJBrdXNn2Gf_aC4z-UmBg8t4fTNRbWTPsvk+kFtABA@mail.gmail.com>
+References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
+ <1509720477-18936-21-git-send-email-sudeep.holla@arm.com> <4588325.776kYim3Ci@aspire.rjw.lan>
+ <3f79f75f-1b6a-3f7b-b0c0-f970f0fb6c12@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e85e3d02a45e79e410b6606d8fdec347f03053f4.1510134353.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <3f79f75f-1b6a-3f7b-b0c0-f970f0fb6c12-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Jackson <mpfj-2FZW7xY0fHgqdlJmJB21zg@public.gmane.org>, Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 08, 2017 at 11:32:34AM +0100, Lukas Wunner wrote:
-> When a driver invokes the uart_get_rs485_mode() helper, set the RTS
-> polarity to active high by default unless the newly introduced
-> "rs485-rts-active-low" property was specified.
-> 
-> omap-serial historically defaults to active low and supports an
-> "rs485-rts-active-high" property to inverse the polarity.  Retain that
-> behavior for compatibility.
-> 
-> Cc: Mark Jackson <mpfj-2FZW7xY0fHgqdlJmJB21zg@public.gmane.org>
-> Cc: Michał Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-> ---
->  drivers/tty/serial/omap-serial.c | 7 +++++--
->  drivers/tty/serial/serial_core.c | 8 ++++++++
->  2 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-> index e6aadb6d02e5..7ef36c0af825 100644
-> --- a/drivers/tty/serial/omap-serial.c
-> +++ b/drivers/tty/serial/omap-serial.c
-> @@ -1617,10 +1617,13 @@ static int serial_omap_probe_rs485(struct uart_omap_port *up,
->  
->  	uart_get_rs485_mode(up->dev, rs485conf);
->  
-> -	if (of_property_read_bool(np, "rs485-rts-active-high"))
-> +	if (of_property_read_bool(np, "rs485-rts-active-high")) {
->  		rs485conf->flags |= SER_RS485_RTS_ON_SEND;
-> -	else
-> +		rs485conf->flags &= ~SER_RS485_RTS_AFTER_SEND;
-> +	} else {
-> +		rs485conf->flags &= ~SER_RS485_RTS_ON_SEND;
->  		rs485conf->flags |= SER_RS485_RTS_AFTER_SEND;
-> +	}
->  
->  	/* check for tx enable gpio */
->  	up->rts_gpio = of_get_named_gpio_flags(np, "rts-gpio", 0, &flags);
-> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> index 548bb80223c1..64e15507a9bd 100644
-> --- a/drivers/tty/serial/serial_core.c
-> +++ b/drivers/tty/serial/serial_core.c
-> @@ -3048,6 +3048,14 @@ void uart_get_rs485_mode(struct device *dev, struct serial_rs485 *rs485conf)
->  		rs485conf->delay_rts_after_send = 0;
->  	}
->  
-> +	if (device_property_read_bool(dev, "rs485-rts-active-low")) {
-> +		rs485conf->flags &= ~SER_RS485_RTS_ON_SEND;
-> +		rs485conf->flags |= SER_RS485_RTS_AFTER_SEND;
-> +	} else {
-> +		rs485conf->flags |= SER_RS485_RTS_ON_SEND;
-> +		rs485conf->flags &= ~SER_RS485_RTS_AFTER_SEND;
-> +	}
-> +
+On Wed, Nov 8, 2017 at 11:42 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+>
+> On 08/11/17 00:24, Rafael J. Wysocki wrote:
+>> On Friday, November 3, 2017 3:47:57 PM CET Sudeep Holla wrote:
+>>> The cpufreq core provides option for drivers to implement fast_switch
+>>> callback which is invoked for frequency switching from interrupt context.
+>>>
+>>> This patch adds support for fast_switch callback in SCMI cpufreq driver
+>>> by making use of polling based SCMI transfer. It also sets the flag
+>>> fast_switch_possible.
+>>>
+>>> Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+>>> Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>>
+>> I'm assuming that this material will go in along with the rest of the series
+>> through a different tree.
+>>
+>
+> Indeed, I will ask ARM-SoC guys to take it via their tree when ready. I
+> assume you are fine with that, please provide ack if that's still the case.
 
-I wonder if it would be easier to understand when making that:
+OK
 
--	rs485conf->flags &= ~(SER_RS485_RX_DURING_TX | SER_RS485_ENABLED);
-+	rs485conf->flags &= ~(SER_RS485_RX_DURING_TX | SER_RS485_RTS_AFTER_SEND | SER_RS485_ENABLED);
-+	rs485conf->flags |= SER_RS485_RTS_ON_SEND;
-...
-+	if (device_property_read_bool(dev, "rs485-rts-active-low")) {
-+		rs485conf->flags &= ~SER_RS485_RTS_ON_SEND;
-+		rs485conf->flags |= SER_RS485_RTS_AFTER_SEND;
-+	}
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-(together with the then needed comment updates) which would highlight
-that SER_RS485_RTS_ON_SEND is the default.
-
-imx.c has unconditional
-
-	sport->port.rs485.flags |= SER_RS485_RTS_ON_SEND;
-
-that needs to be dropped in this patch.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+as long as the changes are fine by Viresh.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
