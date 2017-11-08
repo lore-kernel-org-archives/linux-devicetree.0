@@ -1,62 +1,63 @@
-From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] brcmfmac: add support for external 32khz clock
-Date: Wed, 8 Nov 2017 11:38:11 +0100
-Message-ID: <5A02DE93.8030502@broadcom.com>
-References: <20171104132421.GA1541@archbox.home> <5A004099.90200@broadcom.com>
- <20171106112726.GA25134@lineageos.org> <5A019463.9060701@broadcom.com>
- <20171107133112.GA1323@lineageos.org>
+From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/5] rs485 properties: platform agnosticism + RTS polarity
+Date: Wed, 8 Nov 2017 11:32:34 +0100
+Message-ID: <cover.1510134353.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171107133112.GA1323-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franky Lin <franky.lin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hante Meuleman <hante.meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Wright Feng <wright.feng-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Uwe Kleine-Koenig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Jackson <mpfj-2FZW7xY0fHgqdlJmJB21zg@public.gmane.org>, Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jan Kiszka <jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Stefan
+Rework the common helper function for retrieving rs485 properties
+to be platform agnostic (patch [1/5]) and to allow specifying the
+RTS polarity (patch [2/5] and [3/5]).
 
-On 11/7/2017 2:31 PM, Simon Shields wrote:
-> Hi Arend,
->
-> On Tue, Nov 07, 2017 at 12:09:23PM +0100, Arend van Spriel wrote:
->> On 11/6/2017 12:27 PM, Simon Shields wrote:
->>> On Mon, Nov 06, 2017 at 11:59:37AM +0100, Arend van Spriel wrote:
->>>> On 11/4/2017 2:24 PM, Simon Shields wrote:
->>>>> Some boards use an external 32khz clock for low-power
->>>>> mode timing. Make sure the clock is powered on while the chipset
->>>>> is active.
->>>>
->>>> Do you have such a board? With the little documentation I can get my hands
->>>> on here I wonder whether the clock needs to be enabled before the device is
->>>> powered. If you have the hardware I would like to check some registers in
->>>> the device.
->>>>
->>>
->>> Yes. Trats2 (exynos4412-based) has such a setup. The BCM4334 works fine
->>> with this patch and one more that enables the WL_REG_EN pin when
->>> brcmfmac is probed.
->>
->> Ok. So this is exactly the thing I was wondering about. So it makes me
->> curious how the WL_REG_EN patch looks like. Can you provide that?
->>
->
-> Here[0] is a link to the patch in its current state. Obviously, it's not
-> ready at all for mainlining :-)
->
-> [0]: https://github.com/fourkbomb/linux/commit/436e59e58b44d856c186fc4767560cecbcbc0c59.patch
+Amend the fsl_lpuart and imx drivers to take advantage of this
+and fix a bunch of bugs while at it (patch [4/5] and [5/5]).
 
-Thanks. Indeed doing it in module_init of brcmfmac is not going to fly. 
-Actually the MMC stack has a mechanism to power the SDIO device. This 
-can be configured through the device tree [1]. I just checked and it 
-actually includes specifying the external clock as well.
+Note that Michal Oleszczyk posted a patch yesterday which documents
+the "rs485-rts-active-high" property supported by omap-serial in a
+way which suggests that *all* drivers default to active low, which
+is not the case (all other drivers default to active high).
+I think the present series is a better approach, but let's have a
+technical discussion about that.
 
-Regards,
-Arend
+I posted an earlier version of patch [1/5] a while back but withdrew
+it because I wanted to change uart_get_rs485_mode() to take a
+struct dev and a struct serial_rs485, instead of a struct uart_port
+(which seemed too fragile on second thought).  That change has been
+made now.
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+Thanks,
+
+Lukas
+
+
+Lukas Wunner (5):
+  serial: Make retrieval of rs485 properties platform-agnostic
+  dt-bindings: serial: Add common rs485 binding for RTS polarity
+  serial: core: Support common rs485 binding for RTS polarity
+  serial: fsl_lpuart: Support common rs485 binding for RTS polarity
+  serial: imx: Support common rs485 binding for RTS polarity
+
+ .../devicetree/bindings/serial/fsl-imx-uart.txt    |  3 ++-
+ .../devicetree/bindings/serial/fsl-lpuart.txt      |  3 ++-
+ .../devicetree/bindings/serial/omap_serial.txt     |  1 +
+ Documentation/devicetree/bindings/serial/rs485.txt |  1 +
+ drivers/tty/serial/atmel_serial.c                  |  2 +-
+ drivers/tty/serial/fsl_lpuart.c                    | 15 ++++----------
+ drivers/tty/serial/imx.c                           | 11 ++++++++---
+ drivers/tty/serial/omap-serial.c                   | 11 +++++++----
+ drivers/tty/serial/serial_core.c                   | 23 +++++++++++++++-------
+ include/linux/serial_core.h                        |  3 +--
+ 10 files changed, 43 insertions(+), 30 deletions(-)
+
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
