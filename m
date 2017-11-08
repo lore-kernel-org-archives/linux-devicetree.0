@@ -1,37 +1,61 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 07/12] hwrng: bcm2835-rng: Manage an optional clock
-Date: Wed, 8 Nov 2017 19:23:03 +0000
-Message-ID: <20171108192303.GT9463@n2100.armlinux.org.uk>
-References: <20171108004449.32730-1-f.fainelli@gmail.com>
- <20171108004449.32730-8-f.fainelli@gmail.com>
- <1065382783.63901.1510168797132@email.1und1.de>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
+Date: Wed, 8 Nov 2017 20:27:59 +0100
+Message-ID: <20171108192759.GA26904@Red>
+References: <20171107201326.17401-1-clabbe.montjoie@gmail.com>
+ <CAGb2v64zkEoy=_9D7g+GC5ZxYg_zuaTo3LL1e=4RXLnL0VDWaA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1065382783.63901.1510168797132@email.1und1.de>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Harald Freudenberger <freude@linux.vnet.ibm.com>, linux-arm-kernel@lists.infradead.org, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Scott Branden <sbranden@broadcom.com>, linux-crypto@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Martin Kaiser <martin@kaiser.cx>, Matt Mackall <mpm@selenic.com>, bcm-kernel-feedback-list@broadcom.com, Mark Rutland <mark.rutland@arm.com>, linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org
+In-Reply-To: <CAGb2v64zkEoy=_9D7g+GC5ZxYg_zuaTo3LL1e=4RXLnL0VDWaA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 08, 2017 at 08:19:57PM +0100, Stefan Wahren wrote:
-> Hi Florian,
-> > +	/* Clock is optional on most platforms */
-> > +	priv->clk = devm_clk_get(dev, NULL);
+On Wed, Nov 08, 2017 at 02:27:21PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Nov 8, 2017 at 4:13 AM, Corentin Labbe
+> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
+> > This patch enable the dwmac-sun8i on the Allwinner a83t SoC Device-tree.
+> 
+> The subject should say "add .... device node", not driver.
+> 
+> >
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-a83t.dtsi | 29 +++++++++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > index 19acae1b4089..68e5135410ec 100644
+> > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > @@ -336,6 +336,14 @@
+> >                         #interrupt-cells = <3>;
+> >                         #gpio-cells = <3>;
+> >
+> > +                       emac_rgmii_pins: emac-rgmii-pins {
+> > +                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+> > +                                      "PD11", "PD12", "PD13", "PD14", "PD18",
+> > +                                      "PD19", "PD21", "PD22", "PD23";
+> > +                               function = "gmac";
+> > +                               drive-strength = <40>;
+> > +                       };
 > > +
 > 
-> At least EPROBE_DEFER should be handled here:
+> You should mention this change in your commit log.
 > 
-> if (IS_ERR(priv->clk) && PTR_ERR(priv->clk) == -EPROBE_DEFER)
-> 	return -EPROBE_DEFER;
+> ChenYu
+> 
 
-	if (priv->clk == ERR_PTR(-EPROBE_DEFER))
-		return -EPROBE_DEFER;
+Ok I will do it
 
-is a simpler test for one particular error-pointer value.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+Thanks
+Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
