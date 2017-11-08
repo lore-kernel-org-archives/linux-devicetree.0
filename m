@@ -1,81 +1,60 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] pinctrl: Add skew-delay pin config and bindings
-Date: Tue, 7 Nov 2017 18:38:56 -0600
-Message-ID: <CAL_Jsq+DStFnj_oDtuVza1Owv1xpMJtxgf=FzTSJS67CqhP2AA@mail.gmail.com>
-References: <20171028133719.27528-1-linus.walleij@linaro.org>
- <20171028133719.27528-2-linus.walleij@linaro.org> <20171101212659.be4phj2wha66x63d@rob-hp-laptop>
- <CACRpkdZcB9ghYYFSQdTqpuN29DZZeY_AKimQ62-5W7+Mymm1HQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZcB9ghYYFSQdTqpuN29DZZeY_AKimQ62-5W7+Mymm1HQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v2 00/12] bcm63xx-rng conversion to bcm2835-rng
+Date: Tue,  7 Nov 2017 16:44:37 -0800
+Message-ID: <20171108004449.32730-1-f.fainelli@gmail.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-crypto@vger.k
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 2, 2017 at 9:32 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Nov 1, 2017 at 10:26 PM, Rob Herring <robh@kernel.org> wrote:
->> On Sat, Oct 28, 2017 at 03:37:17PM +0200, Linus Walleij wrote:
->>> Some pin controllers (such as the Gemini) can control the
->>> expected clock skew and output delay on certain pins with a
->>> sub-nanosecond granularity. This is typically done by shunting
->>> in a number of double inverters in front of or behind the pin.
->>> Make it possible to configure this with a generic binding.
->>>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->>> ---
->>>  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 4 ++++
->>>  drivers/pinctrl/pinconf-generic.c                              | 2 ++
->>>  include/linux/pinctrl/pinconf-generic.h                        | 5 +++++
->>>  3 files changed, 11 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->>> index 4483cc31e531..ad9bbbba36e9 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->>> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->>> @@ -271,6 +271,10 @@ output-high              - set the pin to output mode with high level
->>>  sleep-hardware-state - indicate this is sleep related state which will be programmed
->>>                         into the registers for the sleep state.
->>>  slew-rate            - set the slew rate
->>> +skew-delay           - this affects the expected clock skew on input pins
->>> +                       and the delay before latching a value to an output
->>> +                       pin. Typically indicates how many double-inverters are
->>> +                       used to delay the signal.
->>
->> Units?
->
-> Number of double-inverters I guess, just as it says.
->
-> skew-delay = <1>; // number of inverter pairs
->
-> Like with other bindings of this type they are custom.
->
-> The Gemini datasheet says "every unit represents about 0.2 ns".
->
-> So if you set it to 1, that means (as far as I can guess) this
-> is shunted in:
->
->    |\    |\
-> --+ >o--+ >o---
->    |/    |/
->
-> The signal will take ~0.2 ns to propagate through this.
-> For 2, there will be four inverters etc.
->
-> It is dependent of production technology, and I do not know
-> if everyone is using something like double-inverters.
->
-> We could try to define a value in picoseconds instead so I
-> would need to set this to 200 in that case if you think that is better:
->
-> skew-delay = <200>; // picoseconds
->
-> I think it would be kludgy since with increasing clock speeds
-> maybe picoseconds would be too big even. Nanoseconds is
-> apparently already a to coarse unit.
+Hi,
 
-Okay, it is fine.
+As it usually happens when there is a fair amount of HW IP block re-use,
+competing implementations show up. In that case the BCM2835 HWRNG driver and
+the BCM63xx RNG driver have exactly the same register offsets and this is
+indeed the same piece of HW.
 
-Acked-by: Rob Herring <robh@kernel.org>
+This patch series first prepares the bcm2835-rng to be more future proof and
+support newer platforms, and the last part brings in what is necessary to
+migrate the bcm63xx-rng over to bcm2835-rng. Finally we delete bcm63xx-rng
+completely.
+
+The reason why BCM2835 RNG was kept over BCM63xx RNG is because the former
+deals correctly with a warm up count and the number of words available in the
+FIFO size.
+
+Thanks!
+
+Changes in v2:
+
+- rework the logic about how we manage the optional clock
+- use pdev->name for the rng.name member
+
+Florian Fainelli (12):
+  hwrng: bcm2835-rng: Obtain base register via resource
+  hwrng: bcm2835-rng: Define a driver private context
+  hwrng: bcm2835-rng: Move enabling to hwrng::init
+  hwrng: bcm2835-rng: Implementation cleanup callback
+  hwrng: bcm2835-rng: Use device managed helpers
+  hwrng: bcm2835-rng: Rework interrupt masking
+  hwrng: bcm2835-rng: Manage an optional clock
+  hwrng: bcm2835-rng: Abstract I/O accessors
+  hwrng: bcm2835-rng: Add Broadcom MIPS I/O accessors
+  dt-bindings: rng: Incorporate brcm,bcm6368.txt binding
+  hwrng: bcm2835-rng: Enable BCM2835 RNG to work on BCM63xx platforms
+  hwrng: bcm63xx-rng: Remove since bcm2835-rng takes over
+
+ .../devicetree/bindings/rng/brcm,bcm2835.txt       |  22 ++-
+ .../devicetree/bindings/rng/brcm,bcm6368.txt       |  17 ---
+ drivers/char/hw_random/Kconfig                     |  20 +--
+ drivers/char/hw_random/Makefile                    |   1 -
+ drivers/char/hw_random/bcm2835-rng.c               | 167 +++++++++++++++------
+ drivers/char/hw_random/bcm63xx-rng.c               | 154 -------------------
+ 6 files changed, 140 insertions(+), 241 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm6368.txt
+ delete mode 100644 drivers/char/hw_random/bcm63xx-rng.c
+
+-- 
+2.9.3
