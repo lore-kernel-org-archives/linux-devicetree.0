@@ -1,54 +1,81 @@
-From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] arm64: dts: ulcb-kf: add dr_mode property for USB2.0 channel 0
-Date: Wed,  8 Nov 2017 16:09:00 +0300
-Message-ID: <1510146540-31881-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 30/31] dt-bindings: nds32 CPU Bindings
+Date: Wed, 8 Nov 2017 07:18:48 -0600
+Message-ID: <CAL_JsqJAtTSGg=yGvANGdTCWa4tDAicvOvWYr4pK5M1rjPFtfg@mail.gmail.com>
+References: <cover.1510118606.git.green.hu@gmail.com> <1a8efba0727437d510d10755f3fcea806833651d.1510118606.git.green.hu@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1a8efba0727437d510d10755f3fcea806833651d.1510118606.git.green.hu@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: greentime@andestech.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, netdev <netdev@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>, Rick Chen <rick@andestech.com>, Zong Li <zong@andestech.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-ULCB-KF has a USB2.0 dual-role channel (CN13).
-This adds dr_mode property for USB2.0 channel 0 (EHCI/OHCI and HS-USB)
-as "otg".
+Please Cc the DT list on bindings.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+On Tue, Nov 7, 2017 at 11:55 PM, Greentime Hu <green.hu@gmail.com> wrote:
+> From: Greentime Hu <greentime@andestech.com>
 
-diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-index 2ecb6ac..ccf5409 100644
---- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-+++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-@@ -29,6 +29,7 @@
- };
- 
- &ehci0 {
-+	dr_mode = "otg";
- 	status = "okay";
- };
- 
-@@ -41,6 +42,7 @@
- };
- 
- &hsusb {
-+	dr_mode = "otg";
- 	status = "okay";
- };
- 
-@@ -133,6 +135,7 @@
- };
- 
- &ohci0 {
-+	dr_mode = "otg";
- 	status = "okay";
- };
- 
--- 
-1.9.1
+Commit message needed.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Vincent Chen <vincentc@andestech.com>
+> Signed-off-by: Rick Chen <rick@andestech.com>
+> Signed-off-by: Zong Li <zong@andestech.com>
+> Signed-off-by: Greentime Hu <greentime@andestech.com>
+> ---
+>  Documentation/devicetree/bindings/nds32/cpus.txt |   33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nds32/cpus.txt
+>
+> diff --git a/Documentation/devicetree/bindings/nds32/cpus.txt b/Documentation/devicetree/bindings/nds32/cpus.txt
+> new file mode 100644
+> index 0000000..97394cb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nds32/cpus.txt
+> @@ -0,0 +1,33 @@
+> +* Andestech Processor Binding
+> +
+> +This binding specifies what properties must be available in the device tree
+> +representation of a Andestech Processor Core, which is the root node in the
+> +tree.
+> +
+> +Required properties:
+> +
+> +       - compatible:
+> +               Usage: required
+> +               Value type: <string>
+> +               Definition: should be one of:
+> +                       "andestech,n13"
+> +                       "andestech,n15"
+> +                       "andestech,d15"
+> +                       "andestech,n10"
+> +                       "andestech,d10"
+
+SMP supported for any of these?
+
+> +
+> +    - device_type
+> +               Usage: required
+> +               Value type: <string>
+> +               Definition: must be "cpu"
+> +
+> +* Examples
+> +
+> +/ {
+> +       cpus {
+> +               cpu@0 {
+
+Needs a reg property or drop the unit address.
+
+> +                       device_type = "cpu";
+> +                       compatible = "andestech,n13", "andestech,n15";
+
+n13 is a superset of n15?
+
+> +               };
+> +       };
+> +};
+> --
+> 1.7.9.5
+>
