@@ -1,63 +1,165 @@
-From: Bob Liu <liubo95@huawei.com>
-Subject: Re: [RFCv2 PATCH 00/36] Process management for IOMMU + SVM for SMMUv3
-Date: Wed, 8 Nov 2017 09:21:50 +0800
-Message-ID: <79f3610e-e522-29ad-8a93-be7e05df2973@huawei.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <0c6778d8-741f-0db7-fe3c-df88a75ebbb2@huawei.com>
- <0fecd29e-eaf7-9503-b087-7bfbc251da88@arm.com>
- <c6b7fb4b-4f2b-0d81-8bb5-8fa6b62aca3a@huawei.com>
- <8a1e090d-22e8-0295-a53f-bc3b5b7d7971@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <8a1e090d-22e8-0295-a53f-bc3b5b7d7971@arm.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, Yisheng Xie <xieyisheng1@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, "nwatters@codeaurora.org" <nwatters@codeaurora.org>
+From: Anthony Kim <anthony.kim@hideep.com>
+Subject: [PATCH v3 resend 0/1] Input: add support HiDeep touchscreen.
+Date: Wed,  8 Nov 2017 10:38:04 +0900
+Message-ID: <1510105085-18050-1-git-send-email-anthony.kim@hideep.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dennis.hong@hideep.com, Anthony Kim <anthony.kim@hideep.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
+Hi All,
 
-On 2017/10/12 20:55, Jean-Philippe Brucker wrote:
-> On 12/10/17 13:05, Yisheng Xie wrote:
-> [...]
->>>>> * An iommu_process can be bound to multiple domains, and a domain can have
->>>>>   multiple iommu_process.
->>>> when bind a task to device, can we create a single domain for it? I am thinking
->>>> about process management without shared PT(for some device only support PASID
->>>> without pri ability), it seems hard to expand if a domain have multiple iommu_process?
->>>> Do you have any idea about this?
->>>
->>> A device always has to be in a domain, as far as I know. Not supporting
->>> PRI forces you to pin down all user mappings (or just the ones you use for
->>> DMA) but you should sill be able to share PT. Now if you don't support
->>> shared PT either, but only PASID, then you'll have to use io-pgtable and a
->>> new map/unmap API on an iommu_process. I don't understand your concern
->>> though, how would the link between process and domains prevent this use-case?
->>>
->> So you mean that if an iommu_process bind to multiple devices it should create
->> multiple io-pgtables? or just share the same io-pgtable?
-> 
-> I don't know to be honest, I haven't thought much about the io-pgtable
-> case, I'm all about sharing the mm :)
-> 
+I remaked patch for dmitry's comment.
+Please refer as follow.
+http://www.spinics.net/lists/linux-input/msg53799.html
 
-Sorry to get back to this thread, but traditional DMA_MAP use case may also want to
-enable Substreamid/PASID.
-As a general framework, you may also consider SubStreamid/Pasid support for dma map/io-pgtable.
+I changed our fw binary to big endian format and confirmed that our driver
+code works well.
 
-We're considering make io-pgtables per SubStreamid/Pasid, but haven't decide put all 
-io-pgtables into a single domain or iommu_process.
+- v3
+  - Reverted code for converts to big endian to previous version.
+  - Changed part of variable order of dwz info structure to order of
+    old version.
 
-Thanks,
-Liubo
+- v2
+  - Our fw binary data is little endian, but our IC protocol for fw
+    update use big endian. So it need to conert to big endian data
+    and I added about it.
+  - Changed PGM pattern value to big endian.
+  - Changed to process for product code to using switch case.
 
-> It really depends on what the user (GPU driver I assume) wants. I think
-> that if you're not sharing an mm with the device, then you're trying to
-> hide parts of the process to the device, so you'd also want the
-> flexibility of having different io-pgtables between devices. Different
-> devices accessing isolated parts of the process requires separate io-pgtables.
-> 
+Please review this.
+Thanks!
 
+Ps. I added to changes about code of previous version.
+
+diff --git a/drivers/input/touchscreen/hideep.c b/drivers/input/touchscreen/hideep.c
+index 1df0a43..4455a13 100644
+--- a/drivers/input/touchscreen/hideep.c
++++ b/drivers/input/touchscreen/hideep.c
+@@ -123,9 +123,9 @@ struct dwz_info {
+	__be16 release_ver;
+	__be16 custom_ver;
+ 
+-	u8 model_name[6];
+	u8 factory_id;
+	u8 panel_type;
++	u8 model_name[6];
+ 
+	__be16 extra_option;
+	__be16 product_code;
+@@ -408,7 +408,7 @@ static int hideep_check_status(struct hideep_ts *ts)
+ }
+ 
+ static int hideep_program_page(struct hideep_ts *ts, u32 addr,
+-			       __be32 *ucode, size_t xfer_count)
++			       const __be32 *ucode, size_t xfer_count)
+ {
+	u32 val;
+	int error;
+@@ -457,15 +457,13 @@ static int hideep_program_page(struct hideep_ts *ts, u32 addr,
+ }
+ 
+ static int hideep_program_nvm(struct hideep_ts *ts,
+-			      const u32 *ucode, size_t ucode_len)
++			      const __be32 *ucode, size_t ucode_len)
+ {
+	struct pgm_packet *packet_r = (void *)ts->xfer_buf;
+	__be32 *current_ucode = packet_r->payload;
+-	__be32 write_ucode[HIDEEP_NVM_PAGE_SIZE];
+	size_t xfer_len;
+	size_t xfer_count;
+	u32 addr = 0;
+-	int i;
+	int error;
+ 
+	hideep_nvm_unlock(ts);
+@@ -483,14 +481,10 @@ static int hideep_program_nvm(struct hideep_ts *ts,
+			return error;
+		}
+ 
+-		/* Need to because binary data is little endian */
+-		for (i = 0; i < xfer_len; i++)
+-			write_ucode[i] = cpu_to_be32(ucode[i]);
+-
+		/* See if the page needs updating */
+-		if (memcmp(write_ucode, current_ucode, xfer_len)) {
++		if (memcmp(ucode, current_ucode, xfer_len)) {
+			error = hideep_program_page(ts, addr,
+-						    write_ucode, xfer_count);
++						    ucode, xfer_count);
+			if (error) {
+				dev_err(&ts->client->dev,
+					"%s: iwrite failure @%#08x: %d\n",
+@@ -510,11 +504,10 @@ static int hideep_program_nvm(struct hideep_ts *ts,
+ }
+ 
+ static int hideep_verify_nvm(struct hideep_ts *ts,
+-			     const u32 *ucode, size_t ucode_len)
++			     const __be32 *ucode, size_t ucode_len)
+ {
+	struct pgm_packet *packet_r = (void *)ts->xfer_buf;
+	__be32 *current_ucode = packet_r->payload;
+-	__be32 verify_ucode[HIDEEP_NVM_PAGE_SIZE];
+	size_t xfer_len;
+	size_t xfer_count;
+	u32 addr = 0;
+@@ -534,12 +527,8 @@ static int hideep_verify_nvm(struct hideep_ts *ts,
+			return error;
+		}
+ 
+-		/* Need to because binary data is little endian */
+-		for (i = 0; i < xfer_len; i++)
+-			verify_ucode[i] = cpu_to_be32(ucode[i]);
+-
+-		if (memcmp(verify_ucode, current_ucode, xfer_len)) {
+-			const u8 *ucode_bytes = (const u8 *)verify_ucode;
++		if (memcmp(ucode, current_ucode, xfer_len)) {
++			const u8 *ucode_bytes = (const u8 *)ucode;
+			const u8 *current_bytes = (const u8 *)current_ucode;
+ 
+			for (i = 0; i < xfer_len; i++)
+@@ -611,7 +600,7 @@ static int hideep_load_dwz(struct hideep_ts *ts)
+ }
+ 
+ static int hideep_flash_firmware(struct hideep_ts *ts,
+-				 const u32 *ucode, size_t ucode_len)
++				 const __be32 *ucode, size_t ucode_len)
+ {
+	int retry_cnt = 3;
+	int error;
+@@ -629,7 +618,7 @@ static int hideep_flash_firmware(struct hideep_ts *ts,
+ }
+ 
+ static int hideep_update_firmware(struct hideep_ts *ts,
+-				  const u32 *ucode, size_t ucode_len)
++				  const __be32 *ucode, size_t ucode_len)
+ {
+	int error, error2;
+ 
+@@ -909,7 +898,7 @@ static ssize_t hideep_update_fw(struct device *dev,
+	mutex_lock(&ts->dev_mutex);
+	disable_irq(client->irq);
+ 
+-	error = hideep_update_firmware(ts, (const u32 *)fw_entry->data,
++	error = hideep_update_firmware(ts, (const __be32 *)fw_entry->data,
+				       fw_entry->size);
+ 
+	enable_irq(client->irq);
+
+Anthony Kim (1):
+  Input: add support for HiDeep touchscreen
+
+ .../bindings/input/touchscreen/hideep.txt          |   42 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ drivers/input/touchscreen/Kconfig                  |   11 +
+ drivers/input/touchscreen/Makefile                 |    1 +
+ drivers/input/touchscreen/hideep.c                 | 1120 ++++++++++++++++++++
+ 5 files changed, 1175 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+ create mode 100644 drivers/input/touchscreen/hideep.c
+
+-- 
+2.7.4
 
