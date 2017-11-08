@@ -1,111 +1,82 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 11/12] hwrng: bcm2835-rng: Enable BCM2835 RNG to work on
- BCM63xx platforms
-Date: Wed, 8 Nov 2017 00:27:13 +0100 (CET)
-Message-ID: <1627253231.37578.1510097233943@email.1und1.de>
-References: <20171102010408.27736-1-f.fainelli@gmail.com>
- <20171102010408.27736-12-f.fainelli@gmail.com>
- <1831955836.132229.1509820078271@email.1und1.de>
- <2538f1bb-e0f8-c336-d82a-0cb2f19b0ead@gmail.com>
- <345702666.5362.1510037144469@email.1und1.de>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v2 0/2] pinctrl: Allow indicating loss of state across suspend/resume
+Date: Wed, 08 Nov 2017 01:23:14 +0100
+Message-ID: <4931157.VlYOOLbas7@aspire.rjw.lan>
+References: <20171102231551.16220-1-f.fainelli@gmail.com> <7091cb38-e55b-fa20-114e-bd77950ea912@gmail.com> <20171107160006.GQ28152@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <345702666.5362.1510037144469@email.1und1.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Herbert Xu <herbert@gondor.apana.org.au>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Matt Mackall <mpm@selenic.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, moderated list:BROADCO
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171107160006.GQ28152@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-> Stefan Wahren <stefan.wahren@i2se.com> hat am 7. November 2017 um 07:45 geschrieben:
-> 
-> 
-> > Florian Fainelli <f.fainelli@gmail.com> hat am 6. November 2017 um 21:16 geschrieben:
+On Tuesday, November 7, 2017 5:00:06 PM CET Tony Lindgren wrote:
+> * Florian Fainelli <f.fainelli@gmail.com> [171104 17:21]:
 > > 
 > > 
-> > On 11/04/2017 11:27 AM, Stefan Wahren wrote:
-> > > Hi Florian
+> > On 11/04/2017 05:25 AM, Rafael J. Wysocki wrote:
+> > > On Friday, November 3, 2017 6:33:53 PM CET Tony Lindgren wrote:
+> > >> * Florian Fainelli <f.fainelli@gmail.com> [171103 17:04]:
+> > >>> On 11/03/2017 09:11 AM, Tony Lindgren wrote:
+> > >>> The pinctrl provider is losing its state, hence these two patches.
+> > >>
+> > >> OK
+> > >>
+> > >>>> Anyways, the context lost flag should be managed in the PM core for
+> > >>>> the device, so adding linux-pm and Rafael to Cc.
+> > >>>
+> > >>> I don't think it's that simple but sure, why not.
+> > >>
+> > >> Just having bool context_lost in struct dev_pm_info would probably
+> > >> be enough to allow drivers to deal with it. This flag could then
+> > >> be set for a device by power domain related code that knows if
+> > >> context got lost.
 > > > 
-> > >> Florian Fainelli <f.fainelli@gmail.com> hat am 2. November 2017 um 02:04 geschrieben:
-> > >>
-> > >>
-> > >> We have now incorporated all necessary functionality for the BCM63xx
-> > >> platforms to successfully migrate over bcm2835-rng, so add the final
-> > >> bits: Kconfig selection and proper platform_device device type matching
-> > >> to keep the same platform device name for registration to work.
-> > >>
-> > >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> > >> ---
-> > >>  drivers/char/hw_random/Kconfig       |  7 ++++---
-> > >>  drivers/char/hw_random/bcm2835-rng.c | 11 ++++++++++-
-> > >>  2 files changed, 14 insertions(+), 4 deletions(-)
-> > >>
-> > >> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> > >> index 95a031e9eced..d0689cc8c7fc 100644
-> > >> --- a/drivers/char/hw_random/Kconfig
-> > >> +++ b/drivers/char/hw_random/Kconfig
-> > >> @@ -87,12 +87,13 @@ config HW_RANDOM_BCM63XX
-> > >>  	  If unusure, say Y.
-> > >>  
-> > >>  config HW_RANDOM_BCM2835
-> > >> -	tristate "Broadcom BCM2835 Random Number Generator support"
-> > >> -	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X
-> > >> +	tristate "Broadcom BCM2835/BCM63xx Random Number Generator support"
-> > >> +	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X || \
-> > >> +		   ARCH_BCM_63XX || BCM63XX || BMIPS_GENERIC
-> > >>  	default HW_RANDOM
-> > >>  	---help---
-> > >>  	  This driver provides kernel-side support for the Random Number
-> > >> -	  Generator hardware found on the Broadcom BCM2835 SoCs.
-> > >> +	  Generator hardware found on the Broadcom BCM2835 and BCM63xx SoCs.
-> > >>  
-> > >>  	  To compile this driver as a module, choose M here: the
-> > >>  	  module will be called bcm2835-rng
-> > >> diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
-> > >> index 650e0033c273..d9ffe14f312b 100644
-> > >> --- a/drivers/char/hw_random/bcm2835-rng.c
-> > >> +++ b/drivers/char/hw_random/bcm2835-rng.c
-> > >> @@ -131,6 +131,7 @@ static const struct of_device_id bcm2835_rng_of_match[] = {
-> > >>  	{ .compatible = "brcm,bcm2835-rng"},
-> > >>  	{ .compatible = "brcm,bcm-nsp-rng", .data = &nsp_rng_of_data },
-> > >>  	{ .compatible = "brcm,bcm5301x-rng", .data = &nsp_rng_of_data },
-> > >> +	{ .compatible = "brcm,bcm6368-rng"},
-> > >>  	{},
-> > >>  };
-> > >>  
-> > >> @@ -164,7 +165,7 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
-> > >>  	if (IS_ERR(priv->clk))
-> > >>  		priv->clk = NULL;
-> > >>  
-> > >> -	priv->rng.name = "bcm2835-rng";
-> > >> +	priv->rng.name = pdev->id_entry->name;
+> > > Something like: if the driver sees "context_lost" set, it should restore
+> > > the context to the device from memory?
+> > 
+> > That is what is being proposed here, except that the actual mechanism
+> > where this matters needs to be in the core pinctrl code, otherwise the
+> > state (context) is not restored due to a check that attempts not to
+> > (re)apply a previous state.
+> > 
 > > > 
-> > > this change breaks registration on bcm2835, because the name is NULL.
+> > > But the it would also need to save the context beforehand, so why not to
+> > > restore it unconditionally on resume?
 > > 
-> > OH right, I will fix that in v2, I am assuming that if you did something
-> > like this, things still work correctly for you on 2835:
+> > That's what my original attempts did here:
 > > 
-> > if (!priv->id_entry->name)
-> > 	priv->rng.name = "bcm2835-rng";
-> > else
-> > 	priv->rng.name = priv->id_entry->name;
+> > https://patchwork.kernel.org/patch/9598969/
 > > 
-> > ?
+> > but Linus rightfully requested this to be done differently, hence this
+> > attempt now to solve it in a slightly more flexible way based on DT
+> > properties.
 > 
-> I think that should work, but i'm not really happy about it. I prefer a more general solution. Looking at the other rng drivers shows the following pattern:
+> For runtime PM, restoring the state constantly is unnecessary and not
+> good for battery life. The logic can be just:
 > 
-> priv->rng.name = pdev->name;
+> 1. Device driver runtime PM suspend saves the state when needed
 > 
-> I need to verify this on bcm2835.
+> 2. Device driver runtime PM resume checks if context_lost was set by
+>    the bus or power domain code
+> 
+> 3. If context was lost, device driver restores the state, or in some
+>    cases may need re-run the driver register init related parts
+>    to bring the driver back up, then clears the context_lost flag
+> 
+> How about something like the following patch? So far only compile
+> tested with CONFIG_PM enabled. If that looks like the way to go,
+> I'll test it properly and add some comments for the functions and
+> post a proper patch :)
 
-Okay pdev->name works for bcm2835
+Honestly, I'm not sure.
+
+I'd rather have a context_lost flag to start with and see how/if
+drivers will use that before adding any common infra for handling
+this.
+
+Thanks,
+Rafael
