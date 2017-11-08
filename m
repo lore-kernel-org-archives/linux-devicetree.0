@@ -1,89 +1,57 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 11/12] hwrng: bcm2835-rng: Enable BCM2835 RNG to work on BCM63xx platforms
-Date: Tue,  7 Nov 2017 16:44:48 -0800
-Message-ID: <20171108004449.32730-12-f.fainelli@gmail.com>
-References: <20171108004449.32730-1-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171108004449.32730-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-crypto@vger.k
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
+ re-enabling PWM and switching backlight power on
+Date: Tue, 7 Nov 2017 18:46:18 -0600
+Message-ID: <CAL_JsqLrmOc8AksfpfNGdoFCtaa6vwsT1aLEU9C=9URmaiyM=w@mail.gmail.com>
+References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
+ <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
+ <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop> <20171030103334.75ii247j6owrnrdb@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20171030103334.75ii247j6owrnrdb@dell>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW@karo-electronics.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-We have now incorporated all necessary functionality for the BCM63xx
-platforms to successfully migrate over bcm2835-rng, so add the final
-bits: Kconfig selection and proper platform_device device type matching
-to keep the same platform device name for registration to work.
+On Mon, Oct 30, 2017 at 5:33 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Fri, 27 Oct 2017, Rob Herring wrote:
+>
+>> On Thu, Oct 26, 2017 at 02:49:46PM +0200, Lothar Waßmann wrote:
+>> > When switching the backlight on, the LCD may need some time to adjust
+>> > to the configured PWM duty cycle. Add a configurable delay between
+>> > configuring the PWM and enabling the backlight regulator to account
+>> > for this.
+>> >
+>> > Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+>> > ---
+>> >  .../bindings/leds/backlight/pwm-backlight.txt      |  4 ++++
+>> >  drivers/video/backlight/pwm_bl.c                   | 22 +++++++++++++++++++---
+>> >  2 files changed, 23 insertions(+), 3 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> > index 764db86..95594c3 100644
+>> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> > @@ -17,6 +17,10 @@ Optional properties:
+>> >                 "pwms" property (see PWM binding[0])
+>> >    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+>> >                    and disables the backlight (see GPIO binding[1])
+>> > +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
+>> > +             and switching PWM on. This may be required to eliminate
+>> > +             flicker when switching the PWM on after it has been
+>> > +             disabled.
+>>
+>> The subject talks about turning on the backlight regulator, but this
+>> only talks about the PWM.
+>
+> From my understanding "switching PWM on" == enabling the regulator.
+>
+> I don't see any disparity here.  Or am I missing something?
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/char/hw_random/Kconfig       |  7 ++++---
- drivers/char/hw_random/bcm2835-rng.c | 11 ++++++++++-
- 2 files changed, 14 insertions(+), 4 deletions(-)
+The delay is from (re-)enabling the PWM (turning it on) to switching
+backlight power on. That sounds like 2 different things to me.
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 95a031e9eced..d0689cc8c7fc 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -87,12 +87,13 @@ config HW_RANDOM_BCM63XX
- 	  If unusure, say Y.
- 
- config HW_RANDOM_BCM2835
--	tristate "Broadcom BCM2835 Random Number Generator support"
--	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X
-+	tristate "Broadcom BCM2835/BCM63xx Random Number Generator support"
-+	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X || \
-+		   ARCH_BCM_63XX || BCM63XX || BMIPS_GENERIC
- 	default HW_RANDOM
- 	---help---
- 	  This driver provides kernel-side support for the Random Number
--	  Generator hardware found on the Broadcom BCM2835 SoCs.
-+	  Generator hardware found on the Broadcom BCM2835 and BCM63xx SoCs.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called bcm2835-rng
-diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
-index 6dd8f48701b5..25e56311a197 100644
---- a/drivers/char/hw_random/bcm2835-rng.c
-+++ b/drivers/char/hw_random/bcm2835-rng.c
-@@ -134,6 +134,7 @@ static const struct of_device_id bcm2835_rng_of_match[] = {
- 	{ .compatible = "brcm,bcm2835-rng"},
- 	{ .compatible = "brcm,bcm-nsp-rng", .data = &nsp_rng_of_data },
- 	{ .compatible = "brcm,bcm5301x-rng", .data = &nsp_rng_of_data },
-+	{ .compatible = "brcm,bcm6368-rng"},
- 	{},
- };
- 
-@@ -165,7 +166,7 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
- 	/* Clock is optional on most platforms */
- 	priv->clk = devm_clk_get(dev, NULL);
- 
--	priv->rng.name = "bcm2835-rng";
-+	priv->rng.name = pdev->name;
- 	priv->rng.init = bcm2835_rng_init;
- 	priv->rng.read = bcm2835_rng_read;
- 	priv->rng.cleanup = bcm2835_rng_cleanup;
-@@ -191,12 +192,20 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
- 
- MODULE_DEVICE_TABLE(of, bcm2835_rng_of_match);
- 
-+static struct platform_device_id bcm2835_rng_devtype[] = {
-+	{ .name = "bcm2835-rng" },
-+	{ .name = "bcm63xx-rng" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(platform, bcm2835_rng_devtype);
-+
- static struct platform_driver bcm2835_rng_driver = {
- 	.driver = {
- 		.name = "bcm2835-rng",
- 		.of_match_table = bcm2835_rng_of_match,
- 	},
- 	.probe		= bcm2835_rng_probe,
-+	.id_table	= bcm2835_rng_devtype,
- };
- module_platform_driver(bcm2835_rng_driver);
- 
--- 
-2.9.3
+Rob
