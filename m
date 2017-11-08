@@ -1,69 +1,41 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: rtc: Add Spreadtrum SC27xx RTC documentation
-Date: Wed, 8 Nov 2017 13:33:45 +0800
-Message-ID: <CAMz4kuK2yOJEGEaJRutyU-8qEM_mO+JvOPnDhtjouHTk80Qphw@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] rtc: sprd: Add Spreadtrum RTC driver
+Date: Wed, 8 Nov 2017 06:35:22 +0100
+Message-ID: <20171108053522.qhoagssswonevae4@piout.net>
 References: <7037c5053a533505f38fc036290a398989cfdafc.1510051749.git.baolin.wang@spreadtrum.com>
- <20171108031520.zx2ipqugiyypmpms@piout.net> <CAMz4kuKPtTv0brSgcZb9UKM5n4T_dc+=0k6HoT7BAo1RWqfqpg@mail.gmail.com>
- <20171108051224.cfvbglubjpih2dm3@piout.net>
+ <b053858c3325e7c35436f35adf09b5df90106d42.1510051749.git.baolin.wang@spreadtrum.com>
+ <20171108034409.cm65hvuhz67hmz3b@piout.net>
+ <CAMz4kuK=7W7t63Axi=jcqLPYz-L=MF=uE-8rNNf9LhqP1E=hXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171108051224.cfvbglubjpih2dm3@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-rtc@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMz4kuK=7W7t63Axi=jcqLPYz-L=MF=uE-8rNNf9LhqP1E=hXw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8 November 2017 at 13:12, Alexandre Belloni
-<alexandre.belloni@free-electrons.com> wrote:
-> On 08/11/2017 at 13:02:59 +0800, Baolin Wang wrote:
->> Hi Alexandre,
->>
->> On 8 November 2017 at 11:15, Alexandre Belloni
->> <alexandre.belloni@free-electrons.com> wrote:
->> > Hi,
->> >
->> > On 07/11/2017 at 19:34:07 +0800, Baolin Wang wrote:
->> >> This patch adds the binding documentation for Spreadtrum SC27xx series
->> >> RTC device.
->> >>
->> >> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
->> >> ---
->> >>  .../devicetree/bindings/rtc/sprd,sc27xx-rtc.txt    |   16 ++++++++++++++++
->> >>  1 file changed, 16 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt b/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
->> >> new file mode 100644
->> >> index 0000000..971d3a2
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
->> >> @@ -0,0 +1,16 @@
->> >> +Spreadtrum SC27xx Real Time Clock
->> >> +
->> >> +Required properties:
->> >> +- compatible: should be "sprd,sc27xx-rtc".
->> >
->> > Don't use wildcards in a compatible, use a specific chip model. later
->> > chips may or may not be compatible with that one.
->>
->> Our Spreadtrum SC27xx series PMICs contain SC2720, SC2721, SC2723,
->> SC2730 and SC2731. They all integrate the same RTC IP, so I think it
->> will be better to use "sc27xx" string. Our PMIC driver also used the
->> "sprd,sc27xx-rtc" sting which has been merged into Lee's MFD next
->> tree.
->>
->
-> And at some point it time, you'll have sc2750 or 2770 with a different
-> rtc and everything will get confusing.
+On 08/11/2017 at 13:29:21 +0800, Baolin Wang wrote:
+> > Don't do that. This is a valuable information. If you know the time is
+> > invalid, return -EINVAL in read_time(). What your are doing here is
+> > confusing the system by making it believe your fake date is the correct
+> > time.
+> 
+> Usually for mobile device, we should give one reasonable start time if
+> the RTC powered down. Anyway I can remove this feature now.
+> Very appreciated for your helpful comments.
 
-Yes, I can understand your concern. OK, I will change to a specific
-chip name in next version. Thanks.
+Then userspace will have -EINVAL when reading the RTC and will be able
+to set the RTC to whatever value it wants. Don't encode that policy in
+the kernel.
 
->
-> I should have been copied on the mfd series if you wanted to avoid that.
-> Anyway, I'm pretty sure Rob will have the same opinion.
->
+
 -- 
-Baolin.wang
-Best Regards
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
