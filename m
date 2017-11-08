@@ -1,677 +1,86 @@
-From: Baolin Wang <baolin.wang@spreadtrum.com>
-Subject: [PATCH v2 2/2] rtc: sprd: Add Spreadtrum RTC driver
-Date: Wed, 8 Nov 2017 17:16:15 +0800
-Message-ID: <6482283a3ae8c6ec35d0a7a078420151a69b8aca.1510132279.git.baolin.wang@spreadtrum.com>
-References: <c65b61e5e37cb43214973cb3e479ce06c4a73395.1510132279.git.baolin.wang@spreadtrum.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
+ re-enabling PWM and switching backlight power on
+Date: Wed, 8 Nov 2017 10:44:44 +0100
+Message-ID: <20171108104444.03798dc4@karo-electronics.de>
+References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
+        <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
+        <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
+        <20171030103334.75ii247j6owrnrdb@dell>
+        <CAL_JsqLrmOc8AksfpfNGdoFCtaa6vwsT1aLEU9C=9URmaiyM=w@mail.gmail.com>
+        <20171108083407.1ae55f91@karo-electronics.de>
+        <20171108091212.2mucso6egwzaic57@dell>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c65b61e5e37cb43214973cb3e479ce06c4a73395.1510132279.git.baolin.wang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, baolin.wang@spreadtrum.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20171108091212.2mucso6egwzaic57@dell>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the Spreadtrum RTC driver, which embedded in the
-Spreadtrum SC27xx series PMICs.
+Hi,
 
-Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
----
-Changes since v1:
- - Change file name.
- - Should depend on the MFD parent.
- - Add more help documentation.
- - Remove regmap wrapper functions.
- - Modify the mothod of setting alarm.
- - Remove set_mmss64() method.
- - Remove checking RTC power-down.
- - Optimize lock/unlock alarm.
----
- drivers/rtc/Kconfig      |   11 +
- drivers/rtc/Makefile     |    1 +
- drivers/rtc/rtc-sc27xx.c |  600 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 612 insertions(+)
- create mode 100644 drivers/rtc/rtc-sc27xx.c
+On Wed, 8 Nov 2017 09:12:12 +0000 Lee Jones wrote:
+> On Wed, 08 Nov 2017, Lothar Waßmann wrote:
+> 
+> > Hi,
+> > 
+> > On Tue, 7 Nov 2017 18:46:18 -0600 Rob Herring wrote:
+> > > On Mon, Oct 30, 2017 at 5:33 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> > > > On Fri, 27 Oct 2017, Rob Herring wrote:
+> > > >
+> > > >> On Thu, Oct 26, 2017 at 02:49:46PM +0200, Lothar Waßmann wrote:
+> > > >> > When switching the backlight on, the LCD may need some time to adjust
+> > > >> > to the configured PWM duty cycle. Add a configurable delay between
+> > > >> > configuring the PWM and enabling the backlight regulator to account
+> > > >> > for this.
+> > > >> >
+> > > >> > Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+> > > >> > ---
+> > > >> >  .../bindings/leds/backlight/pwm-backlight.txt      |  4 ++++
+> > > >> >  drivers/video/backlight/pwm_bl.c                   | 22 +++++++++++++++++++---
+> > > >> >  2 files changed, 23 insertions(+), 3 deletions(-)
+> > > >> >
+> > > >> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > > >> > index 764db86..95594c3 100644
+> > > >> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > > >> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> > > >> > @@ -17,6 +17,10 @@ Optional properties:
+> > > >> >                 "pwms" property (see PWM binding[0])
+> > > >> >    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+> > > >> >                    and disables the backlight (see GPIO binding[1])
+> > > >> > +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
+> > > >> > +             and switching PWM on. This may be required to eliminate
+> > > >> > +             flicker when switching the PWM on after it has been
+> > > >> > +             disabled.
+> > > >>
+> > > >> The subject talks about turning on the backlight regulator, but this
+> > > >> only talks about the PWM.
+> > > >
+> > > > From my understanding "switching PWM on" == enabling the regulator.
+> > > >
+> > > > I don't see any disparity here.  Or am I missing something?
+> > > 
+> > > The delay is from (re-)enabling the PWM (turning it on) to switching
+> > > backlight power on. That sounds like 2 different things to me.
+> 
+> I read it as the delay being between "configuring the PWM" (still not
+> on) and "switching <the> PWM on" (enabling the regulator).
+> 
+> > The text should better read:
+> > +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
+> > +             and switching the backlight regulator on. This may be
+> > +             required to eliminate flicker when switching the backlight
+> > +             on after it had been disabled.
+> 
+> How is the regulator described in the datasheet?
+> 
+> Is it for the Backlight or the PWM?
+> 
+It actually is a Power Control input of the LCD panel, that is
+modeled as a fiexd-regulator in Linux.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index e0e58f3..8c240e7 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1174,6 +1174,17 @@ config RTC_DRV_WM8350
- 	  This driver can also be built as a module. If so, the module
- 	  will be called "rtc-wm8350".
- 
-+config RTC_DRV_SC27XX
-+	tristate "Spreadtrum SC27xx RTC"
-+	depends on MFD_SC27XX_PMIC || COMPILE_TEST
-+	help
-+	  If you say Y here you will get support for the RTC subsystem
-+	  of the Spreadtrum SC27xx series PMICs. The SC27xx series PMICs
-+	  includes the SC2720, SC2721, SC2723, SC2730 and SC2731 chips.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-sc27xx.
-+
- config RTC_DRV_SPEAR
- 	tristate "SPEAR ST RTC"
- 	depends on PLAT_SPEAR || COMPILE_TEST
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 7230014..f9b857f 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -143,6 +143,7 @@ obj-$(CONFIG_RTC_DRV_S35390A)	+= rtc-s35390a.o
- obj-$(CONFIG_RTC_DRV_S3C)	+= rtc-s3c.o
- obj-$(CONFIG_RTC_DRV_S5M)	+= rtc-s5m.o
- obj-$(CONFIG_RTC_DRV_SA1100)	+= rtc-sa1100.o
-+obj-$(CONFIG_RTC_DRV_SC27XX)	+= rtc-sc27xx.o
- obj-$(CONFIG_RTC_DRV_SH)	+= rtc-sh.o
- obj-$(CONFIG_RTC_DRV_SIRFSOC)	+= rtc-sirfsoc.o
- obj-$(CONFIG_RTC_DRV_SNVS)	+= rtc-snvs.o
-diff --git a/drivers/rtc/rtc-sc27xx.c b/drivers/rtc/rtc-sc27xx.c
-new file mode 100644
-index 0000000..f1b673d
---- /dev/null
-+++ b/drivers/rtc/rtc-sc27xx.c
-@@ -0,0 +1,600 @@
-+/*
-+ * Copyright (C) 2017 Spreadtrum Communications Inc.
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/rtc.h>
-+
-+#define SPRD_RTC_SEC_CNT_VALUE		0x0
-+#define SPRD_RTC_MIN_CNT_VALUE		0x4
-+#define SPRD_RTC_HOUR_CNT_VALUE		0x8
-+#define SPRD_RTC_DAY_CNT_VALUE		0xc
-+#define SPRD_RTC_SEC_CNT_UPD		0x10
-+#define SPRD_RTC_MIN_CNT_UPD		0x14
-+#define SPRD_RTC_HOUR_CNT_UPD		0x18
-+#define SPRD_RTC_DAY_CNT_UPD		0x1c
-+#define SPRD_RTC_SEC_ALM_UPD		0x20
-+#define SPRD_RTC_MIN_ALM_UPD		0x24
-+#define SPRD_RTC_HOUR_ALM_UPD		0x28
-+#define SPRD_RTC_DAY_ALM_UPD		0x2c
-+#define SPRD_RTC_INT_EN			0x30
-+#define SPRD_RTC_INT_RAW_STS		0x34
-+#define SPRD_RTC_INT_CLR		0x38
-+#define SPRD_RTC_INT_MASK_STS		0x3C
-+#define SPRD_RTC_SEC_ALM_VALUE		0x40
-+#define SPRD_RTC_MIN_ALM_VALUE		0x44
-+#define SPRD_RTC_HOUR_ALM_VALUE		0x48
-+#define SPRD_RTC_DAY_ALM_VALUE		0x4c
-+#define SPRD_RTC_SPG_VALUE		0x50
-+#define SPRD_RTC_SPG_UPD		0x54
-+#define SPRD_RTC_SEC_AUXALM_UPD		0x60
-+#define SPRD_RTC_MIN_AUXALM_UPD		0x64
-+#define SPRD_RTC_HOUR_AUXALM_UPD	0x68
-+#define SPRD_RTC_DAY_AUXALM_UPD		0x6c
-+
-+/* BIT & MASK definition for SPRD_RTC_INT_* registers */
-+#define SPRD_RTC_SEC_EN			BIT(0)
-+#define SPRD_RTC_MIN_EN			BIT(1)
-+#define SPRD_RTC_HOUR_EN		BIT(2)
-+#define SPRD_RTC_DAY_EN			BIT(3)
-+#define SPRD_RTC_ALARM_EN		BIT(4)
-+#define SPRD_RTC_HRS_FORMAT_EN		BIT(5)
-+#define SPRD_RTC_AUXALM_EN		BIT(6)
-+#define SPRD_RTC_SPG_UPD_EN		BIT(7)
-+#define SPRD_RTC_SEC_UPD_EN		BIT(8)
-+#define SPRD_RTC_MIN_UPD_EN		BIT(9)
-+#define SPRD_RTC_HOUR_UPD_EN		BIT(10)
-+#define SPRD_RTC_DAY_UPD_EN		BIT(11)
-+#define SPRD_RTC_ALMSEC_UPD_EN		BIT(12)
-+#define SPRD_RTC_ALMMIN_UPD_EN		BIT(13)
-+#define SPRD_RTC_ALMHOUR_UPD_EN		BIT(14)
-+#define SPRD_RTC_ALMDAY_UPD_EN		BIT(15)
-+#define SPRD_RTC_INT_MASK		GENMASK(15, 0)
-+
-+#define SPRD_RTC_TIME_INT_MASK				\
-+	(SPRD_RTC_SEC_UPD_EN | SPRD_RTC_MIN_UPD_EN |	\
-+	 SPRD_RTC_HOUR_UPD_EN | SPRD_RTC_DAY_UPD_EN)
-+
-+#define SPRD_RTC_ALMTIME_INT_MASK				\
-+	(SPRD_RTC_ALMSEC_UPD_EN | SPRD_RTC_ALMMIN_UPD_EN |	\
-+	 SPRD_RTC_ALMHOUR_UPD_EN | SPRD_RTC_ALMDAY_UPD_EN)
-+
-+#define SPRD_RTC_ALM_INT_MASK			\
-+	(SPRD_RTC_SEC_EN | SPRD_RTC_MIN_EN |	\
-+	 SPRD_RTC_HOUR_EN | SPRD_RTC_DAY_EN |	\
-+	 SPRD_RTC_ALARM_EN | SPRD_RTC_AUXALM_EN)
-+
-+/* second/minute/hour/day values mask definition */
-+#define SPRD_RTC_SEC_MASK		GENMASK(5, 0)
-+#define SPRD_RTC_MIN_MASK		GENMASK(5, 0)
-+#define SPRD_RTC_HOUR_MASK		GENMASK(4, 0)
-+#define SPRD_RTC_DAY_MASK		GENMASK(15, 0)
-+
-+/* alarm lock definition for SPRD_RTC_SPG_UPD register */
-+#define SPRD_RTC_ALMLOCK_MASK		GENMASK(7, 0)
-+#define SPRD_RTC_ALM_UNLOCK		0xa5
-+#define SPRD_RTC_ALM_LOCK		(~SPRD_RTC_ALM_UNLOCK &	\
-+					 SPRD_RTC_ALMLOCK_MASK)
-+
-+/* SPG values definition for SPRD_RTC_SPG_UPD register */
-+#define SPRD_RTC_POWEROFF_ALM_FLAG	BIT(8)
-+#define SPRD_RTC_POWER_RESET_FLAG	BIT(9)
-+
-+/* timeout of synchronizing time and alarm registers (us) */
-+#define SPRD_RTC_POLL_TIMEOUT		200000
-+#define SPRD_RTC_POLL_DELAY_US		20000
-+
-+struct sprd_rtc {
-+	struct rtc_device	*rtc;
-+	struct regmap		*regmap;
-+	struct device		*dev;
-+	u32			base;
-+	int			irq;
-+};
-+
-+/*
-+ * The Spreadtrum RTC controller has 3 groups registers, including time, normal
-+ * alarm and auxiliary alarm. The time group registers are used to set RTC time,
-+ * the normal alarm registers are used to set normal alarm, and the auxiliary
-+ * alarm registers are used to set auxiliary alarm. Both alarm event and
-+ * auxiliary alarm event can wake up system from deep sleep, but only alarm
-+ * event can power up system from power down status.
-+ */
-+enum sprd_rtc_reg_types {
-+	SPRD_RTC_TIME,
-+	SPRD_RTC_ALARM,
-+	SPRD_RTC_AUX_ALARM,
-+};
-+
-+static int sprd_rtc_clear_alarm_ints(struct sprd_rtc *rtc)
-+{
-+	return regmap_write(rtc->regmap, rtc->base + SPRD_RTC_INT_CLR,
-+			    SPRD_RTC_ALM_INT_MASK);
-+}
-+
-+static int sprd_rtc_disable_ints(struct sprd_rtc *rtc)
-+{
-+	int ret;
-+
-+	ret = regmap_update_bits(rtc->regmap, rtc->base + SPRD_RTC_INT_EN,
-+				 SPRD_RTC_INT_MASK, 0);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_write(rtc->regmap, rtc->base + SPRD_RTC_INT_CLR,
-+			    SPRD_RTC_INT_MASK);
-+}
-+
-+static int sprd_rtc_lock_alarm(struct sprd_rtc *rtc, bool lock)
-+{
-+	int ret;
-+	u32 val;
-+
-+	ret = regmap_read(rtc->regmap, rtc->base + SPRD_RTC_SPG_VALUE, &val);
-+	if (ret)
-+		return ret;
-+
-+	val &= ~(SPRD_RTC_ALMLOCK_MASK | SPRD_RTC_POWEROFF_ALM_FLAG);
-+	if (lock)
-+		val |= SPRD_RTC_ALM_LOCK;
-+	else
-+		val |= SPRD_RTC_ALM_UNLOCK | SPRD_RTC_POWEROFF_ALM_FLAG;
-+
-+	ret = regmap_write(rtc->regmap, rtc->base + SPRD_RTC_SPG_UPD, val);
-+	if (ret)
-+		return ret;
-+
-+	/* wait until the SPG value is updated successfully */
-+	ret = regmap_read_poll_timeout(rtc->regmap,
-+				       rtc->base + SPRD_RTC_INT_RAW_STS, val,
-+				       (val & SPRD_RTC_SPG_UPD_EN),
-+				       SPRD_RTC_POLL_DELAY_US,
-+				       SPRD_RTC_POLL_TIMEOUT);
-+	if (ret) {
-+		dev_err(rtc->dev, "failed to update SPG value:%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sprd_rtc_get_secs(struct sprd_rtc *rtc, enum sprd_rtc_reg_types type,
-+			     time64_t *secs)
-+{
-+	u32 sec_reg, min_reg, hour_reg, day_reg;
-+	u32 val, sec, min, hour, day;
-+	int ret;
-+
-+	switch (type) {
-+	case SPRD_RTC_TIME:
-+		sec_reg = SPRD_RTC_SEC_CNT_VALUE;
-+		min_reg = SPRD_RTC_MIN_CNT_VALUE;
-+		hour_reg = SPRD_RTC_HOUR_CNT_VALUE;
-+		day_reg = SPRD_RTC_DAY_CNT_VALUE;
-+		break;
-+	case SPRD_RTC_ALARM:
-+		sec_reg = SPRD_RTC_SEC_ALM_VALUE;
-+		min_reg = SPRD_RTC_MIN_ALM_VALUE;
-+		hour_reg = SPRD_RTC_HOUR_ALM_VALUE;
-+		day_reg = SPRD_RTC_DAY_ALM_VALUE;
-+		break;
-+	case SPRD_RTC_AUX_ALARM:
-+		sec_reg = SPRD_RTC_SEC_AUXALM_UPD;
-+		min_reg = SPRD_RTC_MIN_AUXALM_UPD;
-+		hour_reg = SPRD_RTC_HOUR_AUXALM_UPD;
-+		day_reg = SPRD_RTC_DAY_AUXALM_UPD;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_read(rtc->regmap, rtc->base + sec_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	sec = val & SPRD_RTC_SEC_MASK;
-+
-+	ret = regmap_read(rtc->regmap, rtc->base + min_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	min = val & SPRD_RTC_MIN_MASK;
-+
-+	ret = regmap_read(rtc->regmap, rtc->base + hour_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	hour = val & SPRD_RTC_HOUR_MASK;
-+
-+	ret = regmap_read(rtc->regmap, rtc->base + day_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	day = val & SPRD_RTC_DAY_MASK;
-+	*secs = (((time64_t)(day * 24) + hour) * 60 + min) * 60 + sec;
-+	return 0;
-+}
-+
-+static int sprd_rtc_set_secs(struct sprd_rtc *rtc, enum sprd_rtc_reg_types type,
-+			     time64_t secs)
-+{
-+	u32 sec_reg, min_reg, hour_reg, day_reg, sts_mask;
-+	u32 sec, min, hour, day, val;
-+	int ret, rem;
-+
-+	/* convert seconds to RTC time format */
-+	day = div_s64_rem(secs, 86400, &rem);
-+	hour = rem / 3600;
-+	rem -= hour * 3600;
-+	min = rem / 60;
-+	sec = rem - min * 60;
-+
-+	switch (type) {
-+	case SPRD_RTC_TIME:
-+		sec_reg = SPRD_RTC_SEC_CNT_UPD;
-+		min_reg = SPRD_RTC_MIN_CNT_UPD;
-+		hour_reg = SPRD_RTC_HOUR_CNT_UPD;
-+		day_reg = SPRD_RTC_DAY_CNT_UPD;
-+		sts_mask = SPRD_RTC_TIME_INT_MASK;
-+		break;
-+	case SPRD_RTC_ALARM:
-+		sec_reg = SPRD_RTC_SEC_ALM_UPD;
-+		min_reg = SPRD_RTC_MIN_ALM_UPD;
-+		hour_reg = SPRD_RTC_HOUR_ALM_UPD;
-+		day_reg = SPRD_RTC_DAY_ALM_UPD;
-+		sts_mask = SPRD_RTC_ALMTIME_INT_MASK;
-+		break;
-+	case SPRD_RTC_AUX_ALARM:
-+		sec_reg = SPRD_RTC_SEC_AUXALM_UPD;
-+		min_reg = SPRD_RTC_MIN_AUXALM_UPD;
-+		hour_reg = SPRD_RTC_HOUR_AUXALM_UPD;
-+		day_reg = SPRD_RTC_DAY_AUXALM_UPD;
-+		sts_mask = 0;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_write(rtc->regmap, rtc->base + sec_reg, sec);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(rtc->regmap, rtc->base + min_reg, min);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(rtc->regmap, rtc->base + hour_reg, hour);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(rtc->regmap, rtc->base + day_reg, day);
-+	if (ret)
-+		return ret;
-+
-+	if (type == SPRD_RTC_AUX_ALARM)
-+		return 0;
-+
-+	/*
-+	 * Since the time and normal alarm registers are put in always-power-on
-+	 * region supplied by VDDRTC, then these registers changing time will
-+	 * be very long, about 125ms. Thus here we should wait until all
-+	 * values are updated successfully.
-+	 */
-+	ret = regmap_read_poll_timeout(rtc->regmap,
-+				       rtc->base + SPRD_RTC_INT_RAW_STS, val,
-+				       ((val & sts_mask) == sts_mask),
-+				       SPRD_RTC_POLL_DELAY_US,
-+				       SPRD_RTC_POLL_TIMEOUT);
-+	if (ret < 0) {
-+		dev_err(rtc->dev, "set time/alarm values timeout\n");
-+		return ret;
-+	}
-+
-+	return regmap_write(rtc->regmap, rtc->base + SPRD_RTC_INT_CLR,
-+			    sts_mask);
-+}
-+
-+static int sprd_rtc_read_aux_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct sprd_rtc *rtc = dev_get_drvdata(dev);
-+	time64_t secs;
-+	u32 val;
-+	int ret;
-+
-+	ret = sprd_rtc_get_secs(rtc, SPRD_RTC_AUX_ALARM, &secs);
-+	if (ret)
-+		return ret;
-+
-+	rtc_time64_to_tm(secs, &alrm->time);
-+
-+	ret = regmap_read(rtc->regmap, rtc->base + SPRD_RTC_INT_EN, &val);
-+	if (ret)
-+		return ret;
-+
-+	alrm->enabled = !!(val & SPRD_RTC_AUXALM_EN);
-+
-+	ret = regmap_read(rtc->regmap, rtc->base + SPRD_RTC_INT_RAW_STS, &val);
-+	if (ret)
-+		return ret;
-+
-+	alrm->pending = !!(val & SPRD_RTC_AUXALM_EN);
-+	return 0;
-+}
-+
-+static int sprd_rtc_set_aux_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct sprd_rtc *rtc = dev_get_drvdata(dev);
-+	time64_t secs = rtc_tm_to_time64(&alrm->time);
-+	int ret;
-+
-+	/* clear the auxiliary alarm interrupt status */
-+	ret = regmap_write(rtc->regmap, rtc->base + SPRD_RTC_INT_CLR,
-+			   SPRD_RTC_AUXALM_EN);
-+	if (ret)
-+		return ret;
-+
-+	ret = sprd_rtc_set_secs(rtc, SPRD_RTC_AUX_ALARM, secs);
-+	if (ret)
-+		return ret;
-+
-+	if (alrm->enabled) {
-+		ret = regmap_update_bits(rtc->regmap,
-+					 rtc->base + SPRD_RTC_INT_EN,
-+					 SPRD_RTC_AUXALM_EN,
-+					 SPRD_RTC_AUXALM_EN);
-+	} else {
-+		ret = regmap_update_bits(rtc->regmap,
-+					 rtc->base + SPRD_RTC_INT_EN,
-+					 SPRD_RTC_AUXALM_EN, 0);
-+	}
-+
-+	return ret;
-+}
-+
-+static int sprd_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct sprd_rtc *rtc = dev_get_drvdata(dev);
-+	time64_t secs;
-+	int ret;
-+
-+	ret = sprd_rtc_get_secs(rtc, SPRD_RTC_TIME, &secs);
-+	if (ret)
-+		return ret;
-+
-+	rtc_time64_to_tm(secs, tm);
-+	return rtc_valid_tm(tm);
-+}
-+
-+static int sprd_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct sprd_rtc *rtc = dev_get_drvdata(dev);
-+	time64_t secs = rtc_tm_to_time64(tm);
-+
-+	return sprd_rtc_set_secs(rtc, SPRD_RTC_TIME, secs);
-+}
-+
-+static int sprd_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct sprd_rtc *rtc = dev_get_drvdata(dev);
-+	time64_t secs;
-+	int ret;
-+	u32 val;
-+
-+	/*
-+	 * If aie_timer is enabled, we should get the normal alarm time.
-+	 * Otherwise we should get auxiliary alarm time.
-+	 */
-+	if (rtc->rtc && rtc->rtc->aie_timer.enabled == 0)
-+		return sprd_rtc_read_aux_alarm(dev, alrm);
-+
-+	ret = sprd_rtc_get_secs(rtc, SPRD_RTC_ALARM, &secs);
-+	if (ret)
-+		return ret;
-+
-+	rtc_time64_to_tm(secs, &alrm->time);
-+
-+	ret = regmap_read(rtc->regmap, rtc->base + SPRD_RTC_INT_EN, &val);
-+	if (ret)
-+		return ret;
-+
-+	alrm->enabled = !!(val & SPRD_RTC_ALARM_EN);
-+
-+	ret = regmap_read(rtc->regmap, rtc->base + SPRD_RTC_INT_RAW_STS, &val);
-+	if (ret)
-+		return ret;
-+
-+	alrm->pending = !!(val & SPRD_RTC_ALARM_EN);
-+	return 0;
-+}
-+
-+static int sprd_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct sprd_rtc *rtc = dev_get_drvdata(dev);
-+	time64_t secs = rtc_tm_to_time64(&alrm->time);
-+	struct rtc_time aie_time =
-+		rtc_ktime_to_tm(rtc->rtc->aie_timer.node.expires);
-+	int ret;
-+
-+	/*
-+	 * We have 2 groups alarms: normal alarm and auxiliary alarm. Since
-+	 * both normal alarm event and auxiliary alarm event can wake up system
-+	 * from deep sleep, but only alarm event can power up system from power
-+	 * down status. Moreover we do not need to poll about 125ms when
-+	 * updating auxiliary alarm registers. Thus we usually set auxiliary
-+	 * alarm when wake up system from deep sleep, and for other scenarios,
-+	 * we should set normal alarm with polling status.
-+	 *
-+	 * So here we check if the alarm time is set by aie_timer, if yes, we
-+	 * should set normal alarm, if not, we should set auxiliary alarm which
-+	 * means it is just a wake event.
-+	 */
-+	if (!rtc->rtc->aie_timer.enabled || rtc_tm_sub(&aie_time, &alrm->time))
-+		return sprd_rtc_set_aux_alarm(dev, alrm);
-+
-+	/* clear the alarm interrupt status firstly */
-+	ret = regmap_write(rtc->regmap, rtc->base + SPRD_RTC_INT_CLR,
-+			   SPRD_RTC_ALARM_EN);
-+	if (ret)
-+		return ret;
-+
-+	ret = sprd_rtc_set_secs(rtc, SPRD_RTC_ALARM, secs);
-+	if (ret)
-+		return ret;
-+
-+	if (alrm->enabled) {
-+		ret = regmap_update_bits(rtc->regmap,
-+					 rtc->base + SPRD_RTC_INT_EN,
-+					 SPRD_RTC_ALARM_EN,
-+					 SPRD_RTC_ALARM_EN);
-+		if (ret)
-+			return ret;
-+
-+		/* unlock the alarm to enable the alarm function. */
-+		ret = sprd_rtc_lock_alarm(rtc, false);
-+	} else {
-+		regmap_update_bits(rtc->regmap,
-+				   rtc->base + SPRD_RTC_INT_EN,
-+				   SPRD_RTC_ALARM_EN, 0);
-+
-+		/*
-+		 * Lock the alarm function in case fake alarm event will power
-+		 * up systems.
-+		 */
-+		ret = sprd_rtc_lock_alarm(rtc, true);
-+	}
-+
-+	return ret;
-+}
-+
-+static int sprd_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-+{
-+	struct sprd_rtc *rtc = dev_get_drvdata(dev);
-+	int ret;
-+
-+	if (enabled) {
-+		ret = regmap_update_bits(rtc->regmap,
-+					 rtc->base + SPRD_RTC_INT_EN,
-+					 SPRD_RTC_ALARM_EN | SPRD_RTC_AUXALM_EN,
-+					 SPRD_RTC_ALARM_EN | SPRD_RTC_AUXALM_EN);
-+		if (ret)
-+			return ret;
-+
-+		ret = sprd_rtc_lock_alarm(rtc, false);
-+	} else {
-+		regmap_update_bits(rtc->regmap, rtc->base + SPRD_RTC_INT_EN,
-+				   SPRD_RTC_ALARM_EN | SPRD_RTC_AUXALM_EN, 0);
-+
-+		ret = sprd_rtc_lock_alarm(rtc, true);
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct rtc_class_ops sprd_rtc_ops = {
-+	.read_time = sprd_rtc_read_time,
-+	.set_time = sprd_rtc_set_time,
-+	.read_alarm = sprd_rtc_read_alarm,
-+	.set_alarm = sprd_rtc_set_alarm,
-+	.alarm_irq_enable = sprd_rtc_alarm_irq_enable,
-+};
-+
-+static irqreturn_t sprd_rtc_handler(int irq, void *dev_id)
-+{
-+	struct sprd_rtc *rtc = dev_id;
-+	int ret;
-+
-+	ret = sprd_rtc_clear_alarm_ints(rtc);
-+	if (ret)
-+		return IRQ_RETVAL(ret);
-+
-+	rtc_update_irq(rtc->rtc, 1, RTC_AF | RTC_IRQF);
-+	return IRQ_HANDLED;
-+}
-+
-+static int sprd_rtc_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct sprd_rtc *rtc;
-+	int ret;
-+
-+	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
-+	if (!rtc)
-+		return -ENOMEM;
-+
-+	rtc->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!rtc->regmap)
-+		return -ENODEV;
-+
-+	ret = of_property_read_u32(node, "reg", &rtc->base);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to get RTC base address\n");
-+		return ret;
-+	}
-+
-+	rtc->irq = platform_get_irq(pdev, 0);
-+	if (rtc->irq < 0) {
-+		dev_err(&pdev->dev, "failed to get RTC irq number\n");
-+		return rtc->irq;
-+	}
-+
-+	rtc->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, rtc);
-+
-+	/* Clear all RTC interrupts and disable all RTC interrupts */
-+	ret = sprd_rtc_disable_ints(rtc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to disable RTC interrupts\n");
-+		return ret;
-+	}
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-+					sprd_rtc_handler,
-+					IRQF_ONESHOT | IRQF_EARLY_RESUME,
-+					pdev->name, rtc);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to request RTC irq\n");
-+		return ret;
-+	}
-+
-+	rtc->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
-+					    &sprd_rtc_ops, THIS_MODULE);
-+	if (IS_ERR(rtc->rtc))
-+		return PTR_ERR(rtc->rtc);
-+
-+	device_init_wakeup(&pdev->dev, 1);
-+	return 0;
-+}
-+
-+static int sprd_rtc_remove(struct platform_device *pdev)
-+{
-+	device_init_wakeup(&pdev->dev, 0);
-+	return 0;
-+}
-+
-+static const struct of_device_id sprd_rtc_of_match[] = {
-+	{ .compatible = "sprd,sc2731-rtc", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, sprd_rtc_of_match);
-+
-+static struct platform_driver sprd_rtc_driver = {
-+	.driver = {
-+		.name = "sprd-rtc",
-+		.of_match_table = sprd_rtc_of_match,
-+	},
-+	.probe	= sprd_rtc_probe,
-+	.remove = sprd_rtc_remove,
-+};
-+module_platform_driver(sprd_rtc_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Spreadtrum RTC Device Driver");
-+MODULE_AUTHOR("Baolin Wang <baolin.wang@spreadtrum.com>");
--- 
-1.7.9.5
+
+Lothar Waßmann
