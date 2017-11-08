@@ -1,38 +1,88 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] arm64: dts: msm8916: Add missing #phy-cells
-Date: Tue,  7 Nov 2017 19:45:01 -0800
-Message-ID: <20171108034501.2994-1-bjorn.andersson@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v1 0/2] DRM driver for ILI9225 display panels
+Date: Tue,  7 Nov 2017 21:52:14 -0600
+Message-ID: <1510113136-6788-1-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a missing #phy-cells to the dsi-phy, to silence dtc warning.
-
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Fixes: 305410ffd1b2 ("arm64: dts: msm8916: Add display support")
-Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 6b2127a6ced1..09ac5c43807e 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -906,6 +906,7 @@
- 					    "dsi_phy_regulator";
- 
- 				#clock-cells = <1>;
-+				#phy-cells = <0>;
- 
- 				clocks = <&gcc GCC_MDSS_AHB_CLK>;
- 				clock-names = "iface_clk";
--- 
-2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBpcyBhIG5ldyBkcml2ZXIgZm9yIElMSTkyMjUgYmFzZWQgZGlzcGxheSBwYW5lbHMuCgpU
+aGVyZSBhcmUgYSBjb3VwbGUgb2YgdGhpbmdzIHRoYXQgc3RhbmQgb3V0OgoKMS4gIERlc3BpdGUg
+bXkgYmVzdCBlZmZvcnRzLCBJIGNvdWxkIG5vdCBmaW5kIGEgbmFtZSBmb3IgdGhpcyBkaXNwbGF5
+WzFdLCBzbyBJCiAgICBoYXZlIG1hZGUgdXAgYSBnZW5lcmljIG5hbWUgZm9yIGl0LiBJZiBzb21l
+b25lIHJlY29nbml6ZXMgdGhpcyBhbmQgaGFzIGEKICAgIG5hbWUgZm9yIGl0LCBwbGVhc2Ugc3Bl
+YWsgdXAuIFRoZSBiZXN0IGRvY3VtZW50YXRpb24gSSBjb3VsZCBmaW5kIHdhcwogICAgaGVyZVsy
+XS4KCjIuICBUaGVyZSBpcyBxdWl0ZSBhIGJpdCBvZiBvbmUtb2ZmIGNvZGUgY29waWVkIGZyb20g
+bWlwaS1kYmkuYy4gQmFzZWQgb24gdGhlCiAgICBmZWVkYmFjayBmcm9tIGEgcHJldmlvdXMgcGF0
+Y2ggc2VyaWVzLCBJJ20gZ3Vlc3NpbmcgdGhhdCB3ZSBkb24ndCB3YW50IHRvCiAgICBtb2RpZnkg
+bWlwaS1kYmkuYyB0byBhY2NvbW1vZGF0ZSB0aGUgSUxJOTIyNSBjb250cm9sbGVyIGJlY2F1c2Ug
+dGhlIElMSTkyMjUKICAgIGNvbnRyb2xsZXIgZG9lcyBub3QgdXNlIHN0YW5kYXJkIE1JUEkgY29t
+bWFuZHMuIElMSTkyMjUgaGFzIGl0J3Mgb3duCiAgICBub24tc3RhbmRhcmQgY29tbWFuZCBzZXQs
+IGJ1dCBvdGhlciB0aGFuIHRoYXQsIGl0IHByZXR0eSBtdWNoIG1hdGNoZXMgdGhlCiAgICBnZW5l
+cmljIG1pcGktZGJpIGRyaXZlciBpbiBhbGwgcmVnYXJkcy4KCiAgICBDb2RlIHRoYXQgY291bGQg
+YmUgZWFzaWx5IHNoYXJlZDoKCiAgICBhLiAgaWxpOTIyNV9idWZfY29weSgpIGlzIGV4YWN0bHkg
+dGhlIHNhbWUgYXMgbWlwaV9kYmlfYnVmX2NvcHkoKQogICAgICAgIC0gaWxpOTIyNV9idWZfY29w
+eSgpIGlzIHVzZWQgaW4gaWxpOTIyNV9mYl9kaXJ0eSgpCiAgICAgICAgLSBtaXBpX2RiaV9idWZf
+Y29weSgpIGlzIHN0YXRpYyBpbiBtaXBpLWRiaS5jCgogICAgYi4gIGlsaTkyMjVfc3BpX2NtZF9t
+YXhfc3BlZWQoKSBpcyBleGFjdGx5IHRoZSBzYW1lIGFzCiAgICAgICAgbWlwaV9kYmlfc3BpX2Nt
+ZF9tYXhfc3BlZWQoKQogICAgICAgIC0gaWxpOTIyNV9zcGlfY21kX21heF9zcGVlZCgpIGlzIHVz
+ZWQgaW4gaWxpOTIyNV9jb21tYW5kKCkgYmVsb3csIHNvCiAgICAgICAgICB3b3VsZCBub3QgbmVl
+ZCB0byBiZSBjb3BpZWQgaWYgbWlwaV9kYmlfdHlwZWMzX2NvbW1hbmQoKSBjb3VsZCBiZQogICAg
+ICAgICAgc2hhcmVkCiAgICAgICAgLSBtaXBpX2RiaV9zcGlfY21kX21heF9zcGVlZCgpIGlzIHN0
+YXRpYyBpbiBtaXBpLWRiaS5jCgogICAgYy4gIGlsaTkyMjVfY29tbWFuZCgpIGlzIG5lYXJseSB0
+aGUgc2FtZSBhcyBtaXBpX2RiaV90eXBlYzNfY29tbWFuZCgpCiAgICAgICAgLSBhIGZldyB1bnVz
+ZWQgbGluZXMgd2VyZSByZW1vdmVkIHNvIEkgZGlkbid0IGhhdmUgdG8gY29weSBldmVuIG1vcmUK
+ICAgICAgICAgIGNvZGUsIGJ1dCB0aGVzZSB3b3VsZCBub3QgYmUgYW4gaXNzdWUgaWYgY29kZSB3
+YXMgc2hhcmVkCiAgICAgICAgLSBjbWQgPT0gSUxJOTIyNV9XUklURV9EQVRBX1RPX0dSQU0gaW5z
+dGVhZCBvZgogICAgICAgICAgY21kID09IE1JUElfRENTX1dSSVRFX01FTU9SWV9TVEFSVAoKICAg
+IGQuICBpbGk5MjI1X3NwaV9pbml0KCkgaXMgbmVhcmx5IHRoZSBzYW1lIGFzIG1pcGlfZGJpX3Nw
+aV9pbml0KCkKICAgICAgICAtIGEgZmV3IHVudXNlZCBsaW5lcyB3ZXJlIHJlbW92ZWQgc28gSSBk
+aWRuJ3QgaGF2ZSB0byBjb3B5IGV2ZW4gbW9yZQogICAgICAgICAgY29kZSwgYnV0IHRoZXNlIHdv
+dWxkIG5vdCBiZSBhbiBpc3N1ZSBpZiBjb2RlIHdhcyBzaGFyZWQKICAgICAgICAtIG1pcGktPmNv
+bW1hbmQgPSBpbGk5MjI1X2NvbW1hbmQgaW5zdGVhZCBvZgogICAgICAgICAgbWlwaS0+Y29tbWFu
+ZCA9IG1pcGlfZGJpX3R5cGVjM19jb21tYW5kCiAgICAgICAgLSB0aGlzIGZ1bmN0aW9uIHdvdWxk
+IG5vdCBuZWVkIHRvIGJlIGNvcGllZCBpZiBtaXBpX2RiaV90eXBlYzNfY29tbWFuZCgpCiAgICAg
+ICAgICB3YXMgbW9kaWZpZWQgdG8gd29yayB3aXRoIHRoZSBJTEk5MjI1IGNvbW1hbmQgc2V0IHRv
+bwoKICAgIGUuICBpbGk5MjI1X2luaXQoKSBpcyBuZWFybHkgdGhlIHNhbWUgYXMgbWlwaV9kYmlf
+aW5pdCgpCiAgICAgICAgLSBvbmx5IGRpZmZlcmVuY2UgaXMgaWxpOTIyNV9mYl9mdW5jcyBpbnN0
+ZWFkIG9mIG1pcGlfZGJpX2ZiX2Z1bmNzCgozLiAgSSBoYXZlbid0IHRyaWVkIGl0LCBidXQgSSBi
+ZWxpZXZlIHRoYXQgaXQgaXMgcG9zc2libGUgdG8gaW1wbGVtZW50CiAgICBEUk1fRk9STUFUX1JH
+Qjg4OCBkaXJlY3RseSBpbnN0ZWFkIG9mIHNpbXVsYXRpbmcgRFJNX0ZPUk1BVF9YUkdCODg4OC4K
+ICAgIEkgZG9uJ3Qga25vdyBpZiB0aGVyZSB3b3VsZCBiZSBhbnkgcmVhbCBiZW5lZml0IHRvIGRv
+aW5nIHRoaXMuIEkgYW0gbm90CiAgICBmYW1pbGlhciBlbm91Z2ggd2l0aCB1c2Vyc3BhY2UgcHJv
+Z3JhbXMvbGlicmFyaWVzIHRvIGtub3cgaWYgdGhpcyBtb2RlIGlzCiAgICB1bml2ZXJzYWxseSB1
+c2VkLiBBbmQsIGl0IHdpbGwgb25seSBwaHlzaWNhbGx5IGJlIDE4LWJpdCBjb2xvciBpbnN0ZWFk
+IG9mCiAgICAyNC1iaXQgYnV0IHdpbGwgaW5jcmVhc2UgdGhlIGFtb3VudCBvZiBkYXRhIHRyYW5z
+ZmVycmVkIGJ5IDUwJSAoMyBieXRlcyBwZXIKICAgIHBpeGVsIGluc3RlYWQgb2YgMikuIEltcGxl
+bWVudGluZyB0aGlzIHdvdWxkIGhhdmUgYSBzaWRlIGVmZmVjdCBvZiBtYWtpbmcKICAgIHRoZSBv
+bmUtb2ZmIHNoYXJlZCBjb2RlIChkZXNjcmliZWQgYWJvdmUpIG1vcmUgdGhhbiBvbmUtb2ZmIHRo
+b3VnaC4KClsxXTogaHR0cHM6Ly9naXRodWIuY29tL05rYXd1L1RGVF8yMl9JTEk5MjI1ClsyXTog
+aHR0cDovL3d3dy5ob3RtY3UuY29tLzIyLTE3NngyMjAtdGZ0LWxjZC13aXRoLXNwaS1pbnRlcmZh
+Y2UtcC0zMTYuaHRtbAoKRGF2aWQgTGVjaG5lciAoMik6CiAgZHQtYmluZGluZ3M6IEFkZCBiaW5k
+aW5nIGZvciBJbGl0ZWsgSUxJOTIyNSBkaXNwbGF5IHBhbmVscwogIGRybS90aW55ZHJtOiBhZGQg
+ZHJpdmVyIGZvciBJTEk5MjI1IHBhbmVscwoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvaWxpdGVrLGlsaTkyMjUudHh0IHwgIDI1ICsKIE1BSU5UQUlORVJTICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2ICsKIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJt
+L0tjb25maWcgICAgICAgICAgICAgICAgICAgIHwgIDEwICsKIGRyaXZlcnMvZ3B1L2RybS90aW55
+ZHJtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS90
+aW55ZHJtL2lsaTkyMjUuYyAgICAgICAgICAgICAgICAgIHwgNTQ3ICsrKysrKysrKysrKysrKysr
+KysrKwogNSBmaWxlcyBjaGFuZ2VkLCA1ODkgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lsaXRlayxpbGk5
+MjI1LnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL2lsaTky
+MjUuYwoKLS0KMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
