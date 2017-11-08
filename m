@@ -1,80 +1,83 @@
-From: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [v2] Devicetree documentation: add rs485-rts-active-high property
-Date: Wed, 8 Nov 2017 07:11:55 +0100
-Message-ID: <20171108061155.GA4731@wunner.de>
-References: <20171107075336.11236-1-m.oleszczyk@grinn-global.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/2] ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
+Date: Wed, 8 Nov 2017 14:27:21 +0800
+Message-ID: <CAGb2v64zkEoy=_9D7g+GC5ZxYg_zuaTo3LL1e=4RXLnL0VDWaA@mail.gmail.com>
+References: <20171107201326.17401-1-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171107075336.11236-1-m.oleszczyk-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Jackson <mpfj-2FZW7xY0fHgqdlJmJB21zg@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171107201326.17401-1-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 07, 2017 at 08:53:36AM +0100, Michal Oleszczyk wrote:
-> From: Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Add description of rs485-rts-active-high property into
-> /serial/rs485.txt devicetree documentation file.
+On Wed, Nov 8, 2017 at 4:13 AM, Corentin Labbe
+<clabbe.montjoie@gmail.com> wrote:
+> The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
+> This patch enable the dwmac-sun8i on the Allwinner a83t SoC Device-tree.
 
-Most rs485 transceivers on the market have an active-high Transmit Enable
-pin, e.g. MAX13451E, SN65HVD1781A:
+The subject should say "add .... device node", not driver.
 
-https://datasheets.maximintegrated.com/en/ds/MAX13450E-MAX13451E.pdf
-http://www.ti.com/lit/gpn/sn65hvd1781a-q1
-
-In fact I'm not aware of a single transceiver that uses active-low,
-do you know one?
-
-I know that omap-serial defaults to active-low and supports an
-(as yet undocumented) "rs485-rts-active-high" property.  I don't
-know why it defaults to active-low.  Adding Mark Jackson to cc
-who introduced that feature with commit 4a0ac0f55.
-
-All other drivers (e.g. imx.c, fsl-lpuart.c) default to active-high.
-(Which in a way contradicts with your patch as it suggests *everything*
-defaults to active-low.)
-
-I have a series in preparation that I was going to post shortly
-which instead introduces an rs485-rts-active-low property for
-those presumably rare cases when it's needed, but retains the
-current behaviour of omap-serial for compatibility:
-
-https://github.com/l1k/linux/commit/03ef500e98e5
-https://github.com/l1k/linux/commit/8430ffdb5799
-https://github.com/l1k/linux/commit/c3a86d3b862b
-
-In my opinion that's a better approach but I'd be curious to
-hear other opinions.
-
-Thanks,
-
-Lukas
-
-> 
-> Signed-off-by: Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 > ---
-> Repair 'From' to match with 'Signed-off-by' section.
-> 
->  Documentation/devicetree/bindings/serial/rs485.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/rs485.txt b/Documentation/devicetree/bindings/serial/rs485.txt
-> index b8415936dfdb..71c38ef7f6e2 100644
-> --- a/Documentation/devicetree/bindings/serial/rs485.txt
-> +++ b/Documentation/devicetree/bindings/serial/rs485.txt
-> @@ -16,6 +16,8 @@ Optional properties:
->    feature at boot time. It can be disabled later with proper ioctl.
->  - rs485-rx-during-tx: empty property that enables the receiving of data even
->    whilst sending data.
-> +- rs485-rts-active-high: empty property telling to set RTS line high when it is 
-> +  active.
->  
->  RS485 example for Atmel USART:
->  	usart0: serial@fff8c000 {
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> index 19acae1b4089..68e5135410ec 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -336,6 +336,14 @@
+>                         #interrupt-cells = <3>;
+>                         #gpio-cells = <3>;
+>
+> +                       emac_rgmii_pins: emac-rgmii-pins {
+> +                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+> +                                      "PD11", "PD12", "PD13", "PD14", "PD18",
+> +                                      "PD19", "PD21", "PD22", "PD23";
+> +                               function = "gmac";
+> +                               drive-strength = <40>;
+> +                       };
+> +
+
+You should mention this change in your commit log.
+
+ChenYu
+
+>                         mmc0_pins: mmc0-pins {
+>                                 pins = "PF0", "PF1", "PF2",
+>                                        "PF3", "PF4", "PF5";
+> @@ -440,6 +448,27 @@
+>                         status = "disabled";
+>                 };
+>
+> +               emac: ethernet@1c30000 {
+> +                       compatible = "allwinner,sun8i-a83t-emac";
+> +                       syscon = <&syscon>;
+> +                       reg = <0x01c30000 0x104>;
+> +                       interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names = "macirq";
+> +                       resets = <&ccu 13>;
+> +                       reset-names = "stmmaceth";
+> +                       clocks = <&ccu 27>;
+> +                       clock-names = "stmmaceth";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       status = "disabled";
+> +
+> +                       mdio: mdio {
+> +                               compatible = "snps,dwmac-mdio";
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +                       };
+> +               };
+> +
+>                 gic: interrupt-controller@1c81000 {
+>                         compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
+>                         reg = <0x01c81000 0x1000>,
+> --
+> 2.13.6
+>
