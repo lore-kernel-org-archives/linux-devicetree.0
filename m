@@ -1,113 +1,63 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: Allow indicating loss of state across
- suspend/resume
-Date: Tue, 7 Nov 2017 17:04:28 -0800
-Message-ID: <20171108010428.GT28152@atomide.com>
-References: <20171102231551.16220-1-f.fainelli@gmail.com>
- <4931157.VlYOOLbas7@aspire.rjw.lan>
- <952312f9-2c26-58bc-e34f-76ab1fb5f05d@gmail.com>
- <1827289.ayaZCGrVNF@aspire.rjw.lan>
+From: Bob Liu <liubo95@huawei.com>
+Subject: Re: [RFCv2 PATCH 00/36] Process management for IOMMU + SVM for SMMUv3
+Date: Wed, 8 Nov 2017 09:21:50 +0800
+Message-ID: <79f3610e-e522-29ad-8a93-be7e05df2973@huawei.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <0c6778d8-741f-0db7-fe3c-df88a75ebbb2@huawei.com>
+ <0fecd29e-eaf7-9503-b087-7bfbc251da88@arm.com>
+ <c6b7fb4b-4f2b-0d81-8bb5-8fa6b62aca3a@huawei.com>
+ <8a1e090d-22e8-0295-a53f-bc3b5b7d7971@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1827289.ayaZCGrVNF@aspire.rjw.lan>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <8a1e090d-22e8-0295-a53f-bc3b5b7d7971@arm.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, Yisheng Xie <xieyisheng1@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, "nwatters@codeaurora.org" <nwatters@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-* Rafael J. Wysocki <rjw@rjwysocki.net> [171108 00:47]:
-> On Wednesday, November 8, 2017 1:28:24 AM CET Florian Fainelli wrote:
-> > On 11/07/2017 04:23 PM, Rafael J. Wysocki wrote:
-> > > On Tuesday, November 7, 2017 5:00:06 PM CET Tony Lindgren wrote:
-> > >> * Florian Fainelli <f.fainelli@gmail.com> [171104 17:21]:
-> > >>>
-> > >>>
-> > >>> On 11/04/2017 05:25 AM, Rafael J. Wysocki wrote:
-> > >>>> On Friday, November 3, 2017 6:33:53 PM CET Tony Lindgren wrote:
-> > >>>>> * Florian Fainelli <f.fainelli@gmail.com> [171103 17:04]:
-> > >>>>>> On 11/03/2017 09:11 AM, Tony Lindgren wrote:
-> > >>>>>> The pinctrl provider is losing its state, hence these two patches.
-> > >>>>>
-> > >>>>> OK
-> > >>>>>
-> > >>>>>>> Anyways, the context lost flag should be managed in the PM core for
-> > >>>>>>> the device, so adding linux-pm and Rafael to Cc.
-> > >>>>>>
-> > >>>>>> I don't think it's that simple but sure, why not.
-> > >>>>>
-> > >>>>> Just having bool context_lost in struct dev_pm_info would probably
-> > >>>>> be enough to allow drivers to deal with it. This flag could then
-> > >>>>> be set for a device by power domain related code that knows if
-> > >>>>> context got lost.
-> > >>>>
-> > >>>> Something like: if the driver sees "context_lost" set, it should restore
-> > >>>> the context to the device from memory?
-> > >>>
-> > >>> That is what is being proposed here, except that the actual mechanism
-> > >>> where this matters needs to be in the core pinctrl code, otherwise the
-> > >>> state (context) is not restored due to a check that attempts not to
-> > >>> (re)apply a previous state.
-> > >>>
-> > >>>>
-> > >>>> But the it would also need to save the context beforehand, so why not to
-> > >>>> restore it unconditionally on resume?
-> > >>>
-> > >>> That's what my original attempts did here:
-> > >>>
-> > >>> https://patchwork.kernel.org/patch/9598969/
-> > >>>
-> > >>> but Linus rightfully requested this to be done differently, hence this
-> > >>> attempt now to solve it in a slightly more flexible way based on DT
-> > >>> properties.
-> > >>
-> > >> For runtime PM, restoring the state constantly is unnecessary and not
-> > >> good for battery life. The logic can be just:
-> > >>
-> > >> 1. Device driver runtime PM suspend saves the state when needed
-> > >>
-> > >> 2. Device driver runtime PM resume checks if context_lost was set by
-> > >>    the bus or power domain code
-> > >>
-> > >> 3. If context was lost, device driver restores the state, or in some
-> > >>    cases may need re-run the driver register init related parts
-> > >>    to bring the driver back up, then clears the context_lost flag
-> > >>
-> > >> How about something like the following patch? So far only compile
-> > >> tested with CONFIG_PM enabled. If that looks like the way to go,
-> > >> I'll test it properly and add some comments for the functions and
-> > >> post a proper patch :)
-> > > 
-> > > Honestly, I'm not sure.
-> > > 
-> > > I'd rather have a context_lost flag to start with and see how/if
-> > > drivers will use that before adding any common infra for handling
-> > > this.
-> > 
-> > I am afraid we are being slightly side tracked here on this context_loss
-> > flag, because the crux of the problem is not whether a driver knows or
-> > not when it loses state, it's more than the pinctrl core refuses to
-> > re-apply the same state upon resumption even when the consumer driver
-> > tells it to, because it has not seen a transition (consider it as a
-> > stale software cache of the state), and there is only one state defined.
-> > 
-> > I don't particularly care how its gets solved, at the generic device
-> > driver model or at the pinctrl level, but I think the pinctrl code needs
-> > to change in that regard no matter what we do, because right now, if you
-> > call pinctrl_select_state() in your driver's resume function, and there
-> > is only one state defined, nothing happens, that's a problem.
+Hi Jean,
+
+On 2017/10/12 20:55, Jean-Philippe Brucker wrote:
+> On 12/10/17 13:05, Yisheng Xie wrote:
+> [...]
+>>>>> * An iommu_process can be bound to multiple domains, and a domain can have
+>>>>>   multiple iommu_process.
+>>>> when bind a task to device, can we create a single domain for it? I am thinking
+>>>> about process management without shared PT(for some device only support PASID
+>>>> without pri ability), it seems hard to expand if a domain have multiple iommu_process?
+>>>> Do you have any idea about this?
+>>>
+>>> A device always has to be in a domain, as far as I know. Not supporting
+>>> PRI forces you to pin down all user mappings (or just the ones you use for
+>>> DMA) but you should sill be able to share PT. Now if you don't support
+>>> shared PT either, but only PASID, then you'll have to use io-pgtable and a
+>>> new map/unmap API on an iommu_process. I don't understand your concern
+>>> though, how would the link between process and domains prevent this use-case?
+>>>
+>> So you mean that if an iommu_process bind to multiple devices it should create
+>> multiple io-pgtables? or just share the same io-pgtable?
 > 
-> I see, thanks for explaining that clearly.
+> I don't know to be honest, I haven't thought much about the io-pgtable
+> case, I'm all about sharing the mm :)
 > 
-> Then it looks like that there needs to be a way for the "cached" state to be
-> invalidated and the question is what that way should be and how it is going to
-> be triggered.
 
-Yeah seems like that issue needs to be solved at the pinctrl level
-even if the drivers were using a generic state for the context
-lost for figuring out when to do it.
+Sorry to get back to this thread, but traditional DMA_MAP use case may also want to
+enable Substreamid/PASID.
+As a general framework, you may also consider SubStreamid/Pasid support for dma map/io-pgtable.
 
-Regards,
+We're considering make io-pgtables per SubStreamid/Pasid, but haven't decide put all 
+io-pgtables into a single domain or iommu_process.
 
-Tony
+Thanks,
+Liubo
+
+> It really depends on what the user (GPU driver I assume) wants. I think
+> that if you're not sharing an mm with the device, then you're trying to
+> hide parts of the process to the device, so you'd also want the
+> flexibility of having different io-pgtables between devices. Different
+> devices accessing isolated parts of the process requires separate io-pgtables.
+> 
+
+
