@@ -1,48 +1,38 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 20/20] cpufreq: scmi: add support for fast frequency
- switching
-Date: Wed, 8 Nov 2017 10:42:03 +0000
-Message-ID: <3f79f75f-1b6a-3f7b-b0c0-f970f0fb6c12@arm.com>
-References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
- <1509720477-18936-21-git-send-email-sudeep.holla@arm.com>
- <4588325.776kYim3Ci@aspire.rjw.lan>
+From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] backlight: pwm_bl: prevent backlight flicker when
+ switching PWM on
+Date: Wed, 8 Nov 2017 10:48:01 +0000
+Message-ID: <cec1af21-8a6d-f9f3-eaf0-197ba68d87ee@linaro.org>
+References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
+ <1509022186-19636-2-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4588325.776kYim3Ci-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+In-Reply-To: <1509022186-19636-2-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 26/10/17 13:49, Lothar Waßmann wrote:
+> These patches implement some measures to prevent backlight flicker
+> when the backlight is being switched on for a display with an active
+> low brightness control pin.
+> GIT: [PATCH 1/2] backlight: pwm_bl: Enable PWM before switching regulator
+> GIT: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
+
+Other than hoisting the pwm_enable() even earlier in the setup sequence 
+this patchset seems to have a significant overlap with Enric's recent 
+posting:
+
+   https://lkml.org/lkml/2017/7/21/211
+
+Any chance of a shared view on this, especially on the DT bindings?
 
 
-On 08/11/17 00:24, Rafael J. Wysocki wrote:
-> On Friday, November 3, 2017 3:47:57 PM CET Sudeep Holla wrote:
->> The cpufreq core provides option for drivers to implement fast_switch
->> callback which is invoked for frequency switching from interrupt context.
->>
->> This patch adds support for fast_switch callback in SCMI cpufreq driver
->> by making use of polling based SCMI transfer. It also sets the flag
->> fast_switch_possible.
->>
->> Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
->> Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> 
-> I'm assuming that this material will go in along with the rest of the series
-> through a different tree.
-> 
 
-Indeed, I will ask ARM-SoC guys to take it via their tree when ready. I
-assume you are fine with that, please provide ack if that's still the case.
-
--- 
-Regards,
-Sudeep
+Daniel.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
