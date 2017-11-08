@@ -1,50 +1,82 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] ARM: dts: r8a7745: Add DU support
-Date: Wed, 8 Nov 2017 13:48:23 +0900
-Message-ID: <20171108044822.ktnzzowzprqtdnsm@verge.net.au>
-References: <1509992814-4543-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1509992814-4543-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <9872942.on8edmfvcY@avalon>
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: rtc: Add Spreadtrum SC27xx RTC documentation
+Date: Wed, 8 Nov 2017 13:02:59 +0800
+Message-ID: <CAMz4kuKPtTv0brSgcZb9UKM5n4T_dc+=0k6HoT7BAo1RWqfqpg@mail.gmail.com>
+References: <7037c5053a533505f38fc036290a398989cfdafc.1510051749.git.baolin.wang@spreadtrum.com>
+ <20171108031520.zx2ipqugiyypmpms@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9872942.on8edmfvcY@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171108031520.zx2ipqugiyypmpms-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 07, 2017 at 06:05:37AM +0200, Laurent Pinchart wrote:
-> Hi Fabrizio,
-> 
-> Thank you for the patch.
-> 
-> On Monday, 6 November 2017 20:26:53 EET Fabrizio Castro wrote:
-> > Add du node to r8a7745 SoC DT. Boards that want to enable the DU
-> > need to specify the output topology.
-> > 
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> > ---
-> >  arch/arm/boot/dts/r8a7745.dtsi | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-> > index 846c27a..53eb1ce4 100644
-> > --- a/arch/arm/boot/dts/r8a7745.dtsi
-> > +++ b/arch/arm/boot/dts/r8a7745.dtsi
-> > @@ -821,6 +821,33 @@
-> >  			status = "disabled";
-> >  		};
-> > 
-> > +		du: display@feb00000 {
-> > +			compatible = "renesas,du-r8a7745";
+Hi Alexandre,
 
-Hi,
+On 8 November 2017 at 11:15, Alexandre Belloni
+<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On 07/11/2017 at 19:34:07 +0800, Baolin Wang wrote:
+>> This patch adds the binding documentation for Spreadtrum SC27xx series
+>> RTC device.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/rtc/sprd,sc27xx-rtc.txt    |   16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt b/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
+>> new file mode 100644
+>> index 0000000..971d3a2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
+>> @@ -0,0 +1,16 @@
+>> +Spreadtrum SC27xx Real Time Clock
+>> +
+>> +Required properties:
+>> +- compatible: should be "sprd,sc27xx-rtc".
+>
+> Don't use wildcards in a compatible, use a specific chip model. later
+> chips may or may not be compatible with that one.
 
-could you provide some information on the status of upstreaming
-the binding used above?
+Our Spreadtrum SC27xx series PMICs contain SC2720, SC2721, SC2723,
+SC2730 and SC2731. They all integrate the same RTC IP, so I think it
+will be better to use "sc27xx" string. Our PMIC driver also used the
+"sprd,sc27xx-rtc" sting which has been merged into Lee's MFD next
+tree.
+
+>
+>> +- reg: address offset of rtc register.
+>> +- interrupt-parent: phandle for the interrupt controller.
+>> +- interrupts: rtc alarm interrupt.
+>> +
+>> +Example:
+>> +
+>> +     rtc: rtc@280 {
+>
+> The rtc: alias is probably useless
+
+Yes, I will remove it.
+
+>
+>> +             compatible = "sprd,sc27xx-rtc";
+>> +             reg = <0x280>;
+>> +             interrupt-parent = <&pmic>;
+>> +             interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
+>> +     };
+>
+> I would include the parent MFD node too.
+
+OK. Thanks for your comments.
+
+-- 
+Baolin Wang
+Best Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
