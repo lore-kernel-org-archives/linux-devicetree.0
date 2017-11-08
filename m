@@ -1,37 +1,31 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v2 06/12] hwrng: bcm2835-rng: Rework interrupt masking
-Date: Wed, 8 Nov 2017 19:46:37 +0100 (CET)
-Message-ID: <1086045224.63286.1510166797078@email.1und1.de>
-References: <20171108004449.32730-1-f.fainelli@gmail.com>
- <20171108004449.32730-7-f.fainelli@gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: NSP fixes
+Date: Wed, 8 Nov 2017 10:49:10 -0800
+Message-ID: <0e75e9d6-c2c8-4018-6c18-9e1c9bf19e2e@gmail.com>
+References: <20171107222812.17267-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171108004449.32730-7-f.fainelli@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Herbert Xu <herbert@gondor.apana.org.au>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Matt Mackall <mpm@selenic.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, Harald Freudenberger <freude@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171107222812.17267-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
-
-> Florian Fainelli <f.fainelli@gmail.com> hat am 8. November 2017 um 01:44 geschrieben:
+On 11/07/2017 02:28 PM, Florian Fainelli wrote:
+> Hi all,
 > 
+> This patch series contains a couple of fixes:
 > 
-> The interrupt masking done for Northstart Plus and Northstar (BCM5301X)
-> is moved from being a function pointer mapped to of_device_id::data into
-> a proper part of the hwrng::init callback. While at it, we also make the
-> of_data be a proper structure indicating the platform specifics, since
-> the day we need to add a second type of platform information, we would
-> have to do that anyway.
+> - disables AHCI on NSP HR boards since that results in a hard hang
+> - fixes PPI interrupts specifiers
 
-in the lack of proper documentation for bcm2835 rng, is it possible that we should mask the interrupts for bcm2835 as well?
+Applied to devicetree/fixes.
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
