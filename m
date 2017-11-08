@@ -1,86 +1,92 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
- re-enabling PWM and switching backlight power on
-Date: Wed, 8 Nov 2017 10:44:44 +0100
-Message-ID: <20171108104444.03798dc4@karo-electronics.de>
-References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
-        <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
-        <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
-        <20171030103334.75ii247j6owrnrdb@dell>
-        <CAL_JsqLrmOc8AksfpfNGdoFCtaa6vwsT1aLEU9C=9URmaiyM=w@mail.gmail.com>
-        <20171108083407.1ae55f91@karo-electronics.de>
-        <20171108091212.2mucso6egwzaic57@dell>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [PATCH] ARM: dts: add phy-reset property for rk3066a-rayeager
+ emac
+Date: Wed, 8 Nov 2017 17:49:55 +0800
+Message-ID: <464f7b9f-1c07-286e-1b7f-bdef0332b4c9@rock-chips.com>
+References: <1510022959-19440-1-git-send-email-zyw@rock-chips.com>
+ <e6f2393e-cb3b-9006-d0f5-6b30fd2a5192@mentor.com>
+ <e08d8ea2-40c5-a5b3-e570-44c90388fcdd@rock-chips.com>
+ <ac15ef59-3b5e-1752-09db-0a773615f44c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20171108091212.2mucso6egwzaic57@dell>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ac15ef59-3b5e-1752-09db-0a773615f44c@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Roger Quadros <rogerq@ti.com>, andrew@lunn.ch
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, heiko@sntech.de, netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, 8 Nov 2017 09:12:12 +0000 Lee Jones wrote:
-> On Wed, 08 Nov 2017, Lothar Waßmann wrote:
-> 
-> > Hi,
-> > 
-> > On Tue, 7 Nov 2017 18:46:18 -0600 Rob Herring wrote:
-> > > On Mon, Oct 30, 2017 at 5:33 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> > > > On Fri, 27 Oct 2017, Rob Herring wrote:
-> > > >
-> > > >> On Thu, Oct 26, 2017 at 02:49:46PM +0200, Lothar Waßmann wrote:
-> > > >> > When switching the backlight on, the LCD may need some time to adjust
-> > > >> > to the configured PWM duty cycle. Add a configurable delay between
-> > > >> > configuring the PWM and enabling the backlight regulator to account
-> > > >> > for this.
-> > > >> >
-> > > >> > Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
-> > > >> > ---
-> > > >> >  .../bindings/leds/backlight/pwm-backlight.txt      |  4 ++++
-> > > >> >  drivers/video/backlight/pwm_bl.c                   | 22 +++++++++++++++++++---
-> > > >> >  2 files changed, 23 insertions(+), 3 deletions(-)
-> > > >> >
-> > > >> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > > >> > index 764db86..95594c3 100644
-> > > >> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > > >> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> > > >> > @@ -17,6 +17,10 @@ Optional properties:
-> > > >> >                 "pwms" property (see PWM binding[0])
-> > > >> >    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
-> > > >> >                    and disables the backlight (see GPIO binding[1])
-> > > >> > +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
-> > > >> > +             and switching PWM on. This may be required to eliminate
-> > > >> > +             flicker when switching the PWM on after it has been
-> > > >> > +             disabled.
-> > > >>
-> > > >> The subject talks about turning on the backlight regulator, but this
-> > > >> only talks about the PWM.
-> > > >
-> > > > From my understanding "switching PWM on" == enabling the regulator.
-> > > >
-> > > > I don't see any disparity here.  Or am I missing something?
-> > > 
-> > > The delay is from (re-)enabling the PWM (turning it on) to switching
-> > > backlight power on. That sounds like 2 different things to me.
-> 
-> I read it as the delay being between "configuring the PWM" (still not
-> on) and "switching <the> PWM on" (enabling the regulator).
-> 
-> > The text should better read:
-> > +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
-> > +             and switching the backlight regulator on. This may be
-> > +             required to eliminate flicker when switching the backlight
-> > +             on after it had been disabled.
-> 
-> How is the regulator described in the datasheet?
-> 
-> Is it for the Backlight or the PWM?
-> 
-It actually is a Power Control input of the LCD panel, that is
-modeled as a fiexd-regulator in Linux.
+Hi Florian Fainelli
 
 
-Lothar Waßmann
+On 2017年11月08日 02:26, Florian Fainelli wrote:
+> On 11/07/2017 01:51 AM, Chris Zhong wrote:
+>>
+>> On 2017年11月07日 15:54, Vladimir Zapolskiy wrote:
+>>> Hello Chris,
+>>>
+>>> On 11/07/2017 04:49 AM, Chris Zhong wrote:
+>>>> The ethernet phy of rk3066a-rayeager has a reset pin, it controlled by
+>>>> GPIO1_D6, this pin should be pull down then pull up to reset the phy.
+>>>> Add a phy-reset property in emac, make the phy can be reset when emac
+>>>> power on.
+>>> for PHY reset there are properties 'reset-gpios' and 'reset-delay-us',
+>>> please reference to Documentation/devicetree/bindings/net/mdio.txt
+>>>
+>>> Can you try to reuse them instead of adding new custom properties?
+>> This phy-reset is from Documentation/devicetree/bindings/net/arc_emac.txt.
+>> And copy from arch/arm/boot/dts/rk3036-kylin.dts.
+>> Can we just use these properties, they are not new.
+> Because it already exists does not mean it's correct, in fact, it is not
+> at all because it places the reset property for a PHY into the MAC node,
+> which is just not what this is, what we should be using instead is the
+> following patch series:
+>
+> http://patchwork.ozlabs.org/project/netdev/list/?series=9267
+>
+> http://patchwork.ozlabs.org/patch/828499/
+> http://patchwork.ozlabs.org/patch/828505/
+> http://patchwork.ozlabs.org/patch/828501/
+> http://patchwork.ozlabs.org/patch/828502/
+Okay, this series works for me, and I will push a new version patch 
+following it,
+with a reset-gpios property under phy node.
+And hope this series can be applied soon.
+
+Thanks
+Chris Zhong
+
+
+>>> As a side question, which is mainly addressed to Sergei and Roger,
+>>> I don't quite understand why PHY properties were initially added to
+>>> MAC/MDIO bus device tree nodes, in my opinion they must be moved under
+>>> PHY device tree nodes.
+>>>
+>>> -- 
+>>> With best wishes,
+>>> Vladimir
+>>>
+>>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>>>> ---
+>>>>
+>>>>    arch/arm/boot/dts/rk3066a-rayeager.dts | 2 ++
+>>>>    1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/rk3066a-rayeager.dts
+>>>> b/arch/arm/boot/dts/rk3066a-rayeager.dts
+>>>> index 570157f..6064a0a 100644
+>>>> --- a/arch/arm/boot/dts/rk3066a-rayeager.dts
+>>>> +++ b/arch/arm/boot/dts/rk3066a-rayeager.dts
+>>>> @@ -173,6 +173,8 @@
+>>>>        pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&rmii_rst>;
+>>>>        phy = <&phy0>;
+>>>>        phy-supply = <&vcc_rmii>;
+>>>> +    phy-reset-gpios = <&gpio1 RK_PD6 GPIO_ACTIVE_LOW>; /* PHY_RST */
+>>>> +    phy-reset-duration = <10>; /* millisecond */
+>>>>        status = "okay";
+>>>>          phy0: ethernet-phy@0 {
+>>>>
+>>>
+>
