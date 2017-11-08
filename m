@@ -1,71 +1,94 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 27/31] dt-bindings: interrupt-controller: Andestech
- Internal Vector Interrupt Controller
-Date: Wed, 8 Nov 2017 07:25:10 -0600
-Message-ID: <CAL_JsqLGQGZq9VYW2By84rf0BHPm4=QvKNts7ETCqVT3g7LA-w@mail.gmail.com>
-References: <cover.1510118606.git.green.hu@gmail.com> <a7b9f0a21bf6e0c3325a0d9a28a8503082cafd14.1510118606.git.green.hu@gmail.com>
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+Subject: [PATCH] arm64: dts: ls1088a: add fsl-mc hardware resource manager node
+Date: Wed, 8 Nov 2017 15:30:05 +0200
+Message-ID: <1510147805-24873-1-git-send-email-ioana.ciornei@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a7b9f0a21bf6e0c3325a0d9a28a8503082cafd14.1510118606.git.green.hu@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: greentime@andestech.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, netdev <netdev@vger.kernel.org>, Rick Chen <rick@andestech.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, will.deacon@arm.com, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, Ioana Ciornei <ioana.ciornei@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-+DT list
+Add the fsl-mc node in the LS1088A device tree.
 
-On Tue, Nov 7, 2017 at 11:55 PM, Greentime Hu <green.hu@gmail.com> wrote:
-> From: Greentime Hu <greentime@andestech.com>
+Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 62 ++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-Commit msg needed.
-
-> Signed-off-by: Rick Chen <rick@andestech.com>
-> Signed-off-by: Greentime Hu <greentime@andestech.com>
-> ---
->  .../interrupt-controller/andestech,ativic32.txt    |   27 ++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt b/Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
-> new file mode 100644
-> index 0000000..6bac908
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
-> @@ -0,0 +1,27 @@
-> +* Andestech Internal Vector Interrupt Controller
-> +
-> +The Internal Vector Interrupt Controller (IVIC) is a basic interrupt controller
-> +suitable for a simpler SoC platform not requiring a more sophisticated and
-> +bigger External Vector Interrupt Controller.
-> +
-> +
-> +Main node required properties:
-> +
-> +- compatible : should at least contain  "andestech,ativic32".
-> +- interrupt-parent: Empty for the interrupt controller itself
-
-Drop this.
-
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells: The number of cells to define the interrupts. Should be 2.
-> +       The first cell is the IRQ number
-> +       The second cell is used to specify mode:
-> +               1 = low-to-high edge triggered
-> +               2 = high-to-low edge triggered
-> +               4 = active high level-sensitive
-> +               8 = active low level-sensitive
-
-Just state 2 cells and refer to interrupt-controller/interrupts.txt.
-
-> +               Default for internal sources should be set to 4 (active high).
-> +
-> +Examples:
-> +       intc: interrupt-controller {
-> +               compatible = "andestech,ativic32";
-> +               #interrupt-cells = <2>;
-> +               interrupt-controller;
-> +       };
-> --
-> 1.7.9.5
->
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index bd80e9a..aa37ffe 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -166,6 +166,68 @@
+ 			     <1 10 IRQ_TYPE_LEVEL_LOW>;/* Hypervisor PPI */
+ 	};
+ 
++	fsl_mc: fsl-mc@80c000000 {
++		compatible = "fsl,qoriq-mc";
++		reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
++		      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
++		msi-parent = <&its>;
++		#address-cells = <3>;
++		#size-cells = <1>;
++
++		/*
++		 * Region type 0x0 - MC portals
++		 * Region type 0x1 - QBMAN portals
++		 */
++		ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
++			  0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
++
++		dpmacs {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			dpmac1: dpmac@1 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <1>;
++			};
++			dpmac2: dpmac@2 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <2>;
++			};
++			dpmac3: dpmac@3 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <3>;
++			};
++			dpmac4: dpmac@4 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <4>;
++			};
++			dpmac5: dpmac@5 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <5>;
++			};
++			dpmac6: dpmac@6 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <6>;
++			};
++			dpmac7: dpmac@7 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <7>;
++			};
++			dpmac8: dpmac@8 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <8>;
++			};
++			dpmac9: dpmac@9 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <9>;
++			};
++			dpmac10: dpmac@10 {
++				compatible = "fsl,qoriq-mc-dpmac";
++				reg = <0xa>;
++			};
++		};
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
+-- 
+1.9.1
