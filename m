@@ -1,37 +1,50 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] [net-next?] of: add of_property_read_variable_* dummy
- helpers
-Date: Wed, 08 Nov 2017 13:36:02 +0900 (KST)
-Message-ID: <20171108.133602.1192972972086140265.davem@davemloft.net>
-References: <20171106132627.150459-1-arnd@arndb.de>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] ARM: dts: r8a7745: Add DU support
+Date: Wed, 8 Nov 2017 13:48:23 +0900
+Message-ID: <20171108044822.ktnzzowzprqtdnsm@verge.net.au>
+References: <1509992814-4543-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1509992814-4543-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <9872942.on8edmfvcY@avalon>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171106132627.150459-1-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de
-Cc: vivien.didelot@savoirfairelinux.com, robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org, sakari.ailus@linux.intel.com, grant.likely@secretlab.ca, rafael.j.wysocki@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9872942.on8edmfvcY@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon,  6 Nov 2017 14:26:10 +0100
+On Tue, Nov 07, 2017 at 06:05:37AM +0200, Laurent Pinchart wrote:
+> Hi Fabrizio,
+> 
+> Thank you for the patch.
+> 
+> On Monday, 6 November 2017 20:26:53 EET Fabrizio Castro wrote:
+> > Add du node to r8a7745 SoC DT. Boards that want to enable the DU
+> > need to specify the output topology.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> > ---
+> >  arch/arm/boot/dts/r8a7745.dtsi | 27 +++++++++++++++++++++++++++
+> >  1 file changed, 27 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+> > index 846c27a..53eb1ce4 100644
+> > --- a/arch/arm/boot/dts/r8a7745.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7745.dtsi
+> > @@ -821,6 +821,33 @@
+> >  			status = "disabled";
+> >  		};
+> > 
+> > +		du: display@feb00000 {
+> > +			compatible = "renesas,du-r8a7745";
 
-> Commit a67e9472da42 ("of: Add array read functions with min/max size
-> limits") added a new interface for reading variable-length arrays from
-> DT properties. One user was added in dsa recently and this causes a
-> build error because that code can be built with CONFIG_OF disabled:
-> 
-> net/dsa/dsa2.c: In function 'dsa_switch_parse_member_of':
-> net/dsa/dsa2.c:678:7: error: implicit declaration of function 'of_property_read_variable_u32_array'; did you mean 'of_property_read_u32_array'? [-Werror=implicit-function-declaration]
-> 
-> This adds a dummy functions for of_property_read_variable_u32_array()
-> and a few others that had been missing here. I decided to move
-> of_property_read_string() and of_property_read_string_helper() in the
-> process to make it easier to compare the two sets of function prototypes
-> to make sure they match.
-> 
-> Fixes: 975e6e32215e ("net: dsa: rework switch parsing")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hi,
 
-Applied, thanks Arnd.
+could you provide some information on the status of upstreaming
+the binding used above?
