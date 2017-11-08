@@ -1,79 +1,43 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: [PATCH v2] arm64: dts: ulcb-kf: enable USB2 PHY of channel 0
-Date: Wed,  8 Nov 2017 15:21:38 +0300
-Message-ID: <1510143698-17306-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: dra7: Add missing hdmi audio DMA channel information
+Date: Wed, 8 Nov 2017 14:53:23 +0200
+Message-ID: <20171108125323.7070-1-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This supports USB2 PHY channel #0 on ULCB Kingfisher board
+The audio DMA request for hdmi is crossbar 76 and we use sDMA
+to handle the data transfer.
 
-The dedicated USB0_PWEN pin is used to control CN13 VBUS source from U43
-power supply.
-MAX3355 can also provide VBUS, hence it should be disabled via OTG_OFFVBUSn
-node coming from gpio expander TCA9539.
-Set MAX3355 enabled using OTG_EXTLPn node to be able to read OTG ID of CN13.
-
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 ---
-Changes in version 2:
-- added gpio hogs for MAX3355 VBUS and SHDN
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
- arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-index 657ad10..48a2e8f 100644
---- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-+++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
-@@ -67,6 +67,20 @@
- 			output-high;
- 			line-name = "HUB rst";
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index ac9216293b7c..a61802b0c4b9 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -1907,6 +1907,8 @@
+ 				ti,hwmods = "dss_hdmi";
+ 				clocks = <&dss_48mhz_clk>, <&dss_hdmi_clk>;
+ 				clock-names = "fck", "sys_clk";
++				dmas = <&sdma_xbar 76>;
++				dma-names = "audio_tx";
+ 			};
  		};
-+
-+		otg_offvbusn {
-+			gpio-hog;
-+			gpios = <8 GPIO_ACTIVE_HIGH>;
-+			output-low;
-+			line-name = "OTG OFFVBUSn";
-+		};
-+
-+		otg_extlpn {
-+			gpio-hog;
-+			gpios = <9 GPIO_ACTIVE_HIGH>;
-+			output-high;
-+			line-name = "OTG EXTLPn";
-+		};
- 	};
  
- 	gpio_exp_75: gpio@75 {
-@@ -154,6 +168,11 @@
- 		groups = "scif1_data_b", "scif1_ctrl";
- 		function = "scif1";
- 	};
-+
-+	usb0_pins: usb0 {
-+		groups = "usb0";
-+		function = "usb0";
-+	};
- };
- 
- &scif1 {
-@@ -164,6 +183,13 @@
- 	status = "okay";
- };
- 
-+&usb2_phy0 {
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
- &xhci0 {
- 	status = "okay";
- };
 -- 
-1.9.1
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
