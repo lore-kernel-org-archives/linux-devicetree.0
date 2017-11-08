@@ -1,65 +1,59 @@
-From: <andy.tang@nxp.com>
-Subject: [PATCH] clk: qoriq: add more divider clocks support
-Date: Wed, 8 Nov 2017 16:26:15 +0800
-Message-ID: <20171108082615.46769-1-andy.tang@nxp.com>
+From: Xu YiPing <xuyiping@hisilicon.com>
+Subject: [PATCH] arm64: dts: hi3660: improve pmu description
+Date: Wed, 8 Nov 2017 16:59:38 +0800
+Message-ID: <1510131578-84235-1-git-send-email-xuyiping@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com
-Cc: sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xuyiping@hisilicon.com, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yuantian Tang <andy.tang@nxp.com>
+cortex a73 pmu is supported, use it instead of armpmu-v3
 
-More divider clocks are needed by IP. So enlarge the PLL divider
-array to accommodate more divider clocks.
-
-Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
 ---
- Documentation/devicetree/bindings/clock/qoriq-clock.txt | 1 +
- drivers/clk/clk-qoriq.c                                 | 9 ++++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-index 6498e1fdbb33..97f46adac85f 100644
---- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-@@ -78,6 +78,7 @@ second cell is the clock index for the specified type.
- 	2	hwaccel		index (n in CLKCGnHWACSR)
- 	3	fman		0 for fm1, 1 for fm2
- 	4	platform pll	0=pll, 1=pll/2, 2=pll/3, 3=pll/4
-+				4=pll/5, 5=pll/6, 6=pll/7, 7=pll/8
- 	5	coreclk		must be 0
- 
- 3. Example
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index b0ea753b8709..c2cd3f01fd62 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -41,7 +41,7 @@ struct clockgen_pll_div {
- };
- 
- struct clockgen_pll {
--	struct clockgen_pll_div div[4];
-+	struct clockgen_pll_div div[8];
- };
- 
- #define CLKSEL_VALID	1
-@@ -1127,6 +1127,13 @@ static void __init create_one_pll(struct clockgen *cg, int idx)
- 		struct clk *clk;
- 		int ret;
- 
-+		/*
-+		 * For platform PLL, there are 8 divider clocks.
-+		 * For core PLL, there are 4 divider clocks at most.
-+		 */
-+		if (i != 0 && i >= 4)
-+			break;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 13ae69f..f638897 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -203,21 +203,25 @@
+ 					 IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+
+-	pmu {
+-		compatible = "arm,armv8-pmuv3";
++	pmu_a53 {
++		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++			     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-affinity = <&cpu0>,
+ 				     <&cpu1>,
+ 				     <&cpu2>,
+-				     <&cpu3>,
+-				     <&cpu4>,
++				     <&cpu3>;
++	};
 +
- 		snprintf(pll->div[i].name, sizeof(pll->div[i].name),
- 			 "cg-pll%d-div%d", idx, i + 1);
- 
--- 
-2.14.1
-
++	pmu_a73 {
++		compatible = "arm,cortex-a73-pmu";
++		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu4>,
+ 				     <&cpu5>,
+ 				     <&cpu6>,
+ 				     <&cpu7>;
+--
+2.7.4
