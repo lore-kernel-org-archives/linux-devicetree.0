@@ -1,59 +1,69 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
-Date: Wed, 8 Nov 2017 20:30:51 +0100
-Message-ID: <20171108193051.GB26904@Red>
-References: <20171107201326.17401-1-clabbe.montjoie@gmail.com>
- <CAGb2v64zkEoy=_9D7g+GC5ZxYg_zuaTo3LL1e=4RXLnL0VDWaA@mail.gmail.com>
- <20171108074858.ompog5in7xi776d6@flea.lan>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v2 06/12] hwrng: bcm2835-rng: Rework interrupt masking
+Date: Wed, 08 Nov 2017 12:41:41 -0800
+Message-ID: <87efp8bj0a.fsf@anholt.net>
+References: <20171108004449.32730-1-f.fainelli@gmail.com> <20171108004449.32730-7-f.fainelli@gmail.com> <1086045224.63286.1510166797078@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171108074858.ompog5in7xi776d6@flea.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1086045224.63286.1510166797078-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Harald Freudenberger <freude-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 08, 2017 at 08:48:58AM +0100, Maxime Ripard wrote:
-> On Wed, Nov 08, 2017 at 02:27:21PM +0800, Chen-Yu Tsai wrote:
-> > On Wed, Nov 8, 2017 at 4:13 AM, Corentin Labbe
-> > <clabbe.montjoie@gmail.com> wrote:
-> > > The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
-> > > This patch enable the dwmac-sun8i on the Allwinner a83t SoC Device-tree.
-> > 
-> > The subject should say "add .... device node", not driver.
-> > 
-> > >
-> > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> > > ---
-> > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 29 +++++++++++++++++++++++++++++
-> > >  1 file changed, 29 insertions(+)
-> > >
-> > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> > > index 19acae1b4089..68e5135410ec 100644
-> > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> > > @@ -336,6 +336,14 @@
-> > >                         #interrupt-cells = <3>;
-> > >                         #gpio-cells = <3>;
-> > >
-> > > +                       emac_rgmii_pins: emac-rgmii-pins {
-> > > +                               pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
-> > > +                                      "PD11", "PD12", "PD13", "PD14", "PD18",
-> > > +                                      "PD19", "PD21", "PD22", "PD23";
-> > > +                               function = "gmac";
-> > > +                               drive-strength = <40>;
-> > > +                       };
-> > > +
-> > 
-> > You should mention this change in your commit log.
-> 
-> And add a comment about why that drive strength is needed.
-> 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-OK I will do it
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-Thanks
-Regards
+> Hi Florian,
+>
+>> Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 8. November 2017 um 01:44=
+ geschrieben:
+>>=20
+>>=20
+>> The interrupt masking done for Northstart Plus and Northstar (BCM5301X)
+>> is moved from being a function pointer mapped to of_device_id::data into
+>> a proper part of the hwrng::init callback. While at it, we also make the
+>> of_data be a proper structure indicating the platform specifics, since
+>> the day we need to add a second type of platform information, we would
+>> have to do that anyway.
+>
+> in the lack of proper documentation for bcm2835 rng, is it possible
+> that we should mask the interrupts for bcm2835 as well?
+
+I don't have the RTL nearby and the RNG block doesn't have the usual
+#defines for power-on-reset values, so I'm not sure.  I don't see any
+use of the RNG by the firmware that should impact Linux -- a driver
+exists and it uses IRQs, but it shouldn't have been active, and even if
+it was then its teardown process masks the interrupt off again.
+
+However, masking it off ourselves should be harmless at worst.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAloDbAUACgkQtdYpNtH8
+nugQhg//a/ByTkAPxXrEri8S0Jr/+eo/fuUy4pyHogL8YeJekXlkwAce8JscyTe+
+8DzE5NILxTPar5+z+wib7a7Ycn/M57Ydpkcaa/qUTbhFYbihgbxmw36cXRXmaQre
+7RgX401AyU4UTtLv/COe5rOYtGjwaiIC5huTb7ieqTH92dU9spCzxorWFH6lh2eb
+QUhmOUtZkMOFa3PJ3VtpXUbgnGt4q2hHvFFItGfRWj/Q8KcxJjzKP1ZWIn1pusZI
+HZITLWp6icSxjCzAqqukKDjLGC53RXlyoLEhSzwKDfAr1DOTWoUSfspcN5x3R8QM
+dbIHbh+UpBTc1pyGK2khj+OE790emb18orHkCr5lVMB+iktz4pT+6yzl5MeLPSOc
+hOY9CLaROY/FoiL1a8LpqOPAkTS9eaNhpeqT1NORSDKKwYN9H1LcwdgWjqhBk0cF
+0LBK7vg/ByoUY9x8fiqIkZvfAOLzl/a1Wo2UYFJmlhMj6Rs2KkOCxnIh2AuHyJ37
+6314dGc3H66QHcBdPZoc4S1HhYgPMzDqApvVKIoMRYOzK6QufUCJkkDnopqt9WP2
+yDQlutu/O8chcK9Ln8vtxeum0g6t9CbjXK8iU6VnLES8CerhgCOHCU9UH5h0eHkM
+WmFDZUiD0SAAe9HOY3pRF/pYNpaj+g0iWt3rnoxtOwevJl6hM/Y=
+=fSFI
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
