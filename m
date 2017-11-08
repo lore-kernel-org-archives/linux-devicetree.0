@@ -1,97 +1,70 @@
-From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 4/4] ARM64: dts: meson-axg: add pinctrl DT info for Meson-AXG SoC
-Date: Wed, 8 Nov 2017 14:48:02 +0800
-Message-ID: <20171108064802.1707-1-yixun.lan@amlogic.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
+ re-enabling PWM and switching backlight power on
+Date: Wed, 8 Nov 2017 08:34:07 +0100
+Message-ID: <20171108083407.1ae55f91@karo-electronics.de>
+References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
+        <1509022186-19636-4-git-send-email-LW@KARO-electronics.de>
+        <20171027140307.x7mtgvy5py7l5nqf@rob-hp-laptop>
+        <20171030103334.75ii247j6owrnrdb@dell>
+        <CAL_JsqLrmOc8AksfpfNGdoFCtaa6vwsT1aLEU9C=9URmaiyM=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLrmOc8AksfpfNGdoFCtaa6vwsT1aLEU9C=9URmaiyM=w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Hi,
 
-Add new pinctrl DT info for the Amlogic's Meson-AXG SoC.
+On Tue, 7 Nov 2017 18:46:18 -0600 Rob Herring wrote:
+> On Mon, Oct 30, 2017 at 5:33 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> > On Fri, 27 Oct 2017, Rob Herring wrote:
+> >
+> >> On Thu, Oct 26, 2017 at 02:49:46PM +0200, Lothar Waßmann wrote:
+> >> > When switching the backlight on, the LCD may need some time to adjust
+> >> > to the configured PWM duty cycle. Add a configurable delay between
+> >> > configuring the PWM and enabling the backlight regulator to account
+> >> > for this.
+> >> >
+> >> > Signed-off-by: Lothar Waßmann <LW@KARO-electronics.de>
+> >> > ---
+> >> >  .../bindings/leds/backlight/pwm-backlight.txt      |  4 ++++
+> >> >  drivers/video/backlight/pwm_bl.c                   | 22 +++++++++++++++++++---
+> >> >  2 files changed, 23 insertions(+), 3 deletions(-)
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> >> > index 764db86..95594c3 100644
+> >> > --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> >> > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> >> > @@ -17,6 +17,10 @@ Optional properties:
+> >> >                 "pwms" property (see PWM binding[0])
+> >> >    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+> >> >                    and disables the backlight (see GPIO binding[1])
+> >> > +  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
+> >> > +             and switching PWM on. This may be required to eliminate
+> >> > +             flicker when switching the PWM on after it has been
+> >> > +             disabled.
+> >>
+> >> The subject talks about turning on the backlight regulator, but this
+> >> only talks about the PWM.
+> >
+> > From my understanding "switching PWM on" == enabling the regulator.
+> >
+> > I don't see any disparity here.  Or am I missing something?
+> 
+> The delay is from (re-)enabling the PWM (turning it on) to switching
+> backlight power on. That sounds like 2 different things to me.
+> 
+The text should better read:
++  - turn-on-delay-ms: delay in milliseconds between configuring the PWM
++             and switching the backlight regulator on. This may be
++             required to eliminate flicker when switching the backlight
++             on after it had been disabled.
 
-Signed-off-by: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 43 ++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 4a07fc7daa99..771a1c46b8a8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/axg-clkc.h>
- #include <dt-bindings/clock/gxbb-aoclkc.h>
-+#include <dt-bindings/gpio/meson-axg-gpio.h>
- 
- / {
- 	compatible = "amlogic,meson-axg";
-@@ -173,6 +174,32 @@
- 			#mbox-cells = <1>;
- 		};
- 
-+		periphs: periphs@ff634000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff634000 0x0 0x2000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff634000 0x0 0x2000>;
-+
-+			pinctrl_periphs: pinctrl@480 {
-+				compatible = "amlogic,meson-axg-periphs-pinctrl";
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges;
-+
-+				gpio: bank@480 {
-+					reg = <0x0 0x00480 0x0 0x40>,
-+						<0x0 0x004e8 0x0 0x14>,
-+						<0x0 0x00520 0x0 0x14>,
-+						<0x0 0x00430 0x0 0x3c>;
-+					reg-names = "mux", "pull", "pull-enable", "gpio";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&pinctrl_periphs 0 0 86>;
-+				};
-+			};
-+		};
-+
- 		sram: sram@fffc0000 {
- 			compatible = "amlogic,meson-axg-sram", "mmio-sram";
- 			reg = <0x0 0xfffc0000 0x0 0x20000>;
-@@ -197,6 +224,22 @@
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xff800000 0x0 0x100000>;
-+			pinctrl_aobus: pinctrl@14 {
-+				compatible = "amlogic,meson-axg-aobus-pinctrl";
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges;
-+
-+				gpio_ao: bank@14 {
-+					reg = <0x0 0x00014 0x0 0x8>,
-+						<0x0 0x0002c 0x0 0x4>,
-+						<0x0 0x00024 0x0 0x8>;
-+					reg-names = "mux", "pull", "gpio";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&pinctrl_aobus 0 0 15>;
-+				};
-+			};
- 
- 			uart_AO: serial@3000 {
- 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
--- 
-2.14.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lothar Waßmann
