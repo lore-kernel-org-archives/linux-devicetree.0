@@ -1,53 +1,79 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 2/3] drivers: hwmon: Add W83773G driver
-Date: Wed, 8 Nov 2017 09:59:06 -0800
-Message-ID: <20171108175906.GA18718@roeck-us.net>
-References: <1510043274-4778-1-git-send-email-mine260309@gmail.com>
- <1510043274-4778-3-git-send-email-mine260309@gmail.com>
- <f02b61f8-ebda-6bfd-ec4e-d64b3bd488b4@roeck-us.net>
- <CAARXrt=zi4DpGVpH5Cjsr8+m20LdG7JXf7jRqzfzcSJ4isa97g@mail.gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v2 02/12] hwrng: bcm2835-rng: Define a driver private context
+Date: Wed, 08 Nov 2017 10:22:29 -0800
+Message-ID: <87po8sy6je.fsf@anholt.net>
+References: <20171108004449.32730-1-f.fainelli@gmail.com> <20171108004449.32730-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAARXrt=zi4DpGVpH5Cjsr8+m20LdG7JXf7jRqzfzcSJ4isa97g@mail.gmail.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Lei YU <mine260309@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Kosina <trivial@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20171108004449.32730-3-f.fainelli@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Stefan Wahren <stefan.wahren@i2se.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, open list:HARDWARE RANDOM NUMBER GENERATOR CORE
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 08, 2017 at 02:03:34PM +0800, Lei YU wrote:
-> On Tue, Nov 7, 2017 at 10:33 PM, Guenter Roeck <linux@roeck-us.net> wrote:
-> > On 11/07/2017 12:27 AM, Lei YU wrote:
-> >>
-> >> Nuvoton W83773G is a hardware monitor IC providing one local
-> >> temperature and two remote temperature sensors.
-> >>
-> >> Signed-off-by: Lei YU <mine260309@gmail.com>
-> >> ---
-> >> v2:
-> >>   - Rewrite the driver using regmap
-> >>   - Add offset and update_interval
-[ ... ]
+--=-=-=
+Content-Type: text/plain
 
-> >> +       hwmon_dev = devm_hwmon_device_register_with_groups(dev,
-> >> client->name,
-> >> +                                                     regmap,
-> >> w83773g_groups);
-> >
-> >
-> > You lost me here. Why did you stop using the new API ?
-> 
-> I was referencing some other hwmon driver (e.g. tmp401.c) and find out
-> the usage of SENSOR_DEVICE_ATTR, which I feel more clear and straightforward.
-> 
+Florian Fainelli <f.fainelli@gmail.com> writes:
 
-The new API is supposed to replace the old API to make it independent from
-sysfs and to simplify the actual driver code. On a driver like this, using
-the new API should reduce code and data size by 30% or more.
+> Instead of making hwrng::priv host the base register address, define a
+> driver private context, make it per platform device instance and pass it
+> down the different functions.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/char/hw_random/bcm2835-rng.c | 55 ++++++++++++++++++++++--------------
+>  1 file changed, 34 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/char/hw_random/bcm2835-rng.c b/drivers/char/hw_random/bcm2835-rng.c
+> index a818418a7e4c..0d72147ab45b 100644
+> --- a/drivers/char/hw_random/bcm2835-rng.c
+> +++ b/drivers/char/hw_random/bcm2835-rng.c
 
-If you find the new API to be less clear and less straigtforward to use than
-the old API, we need to improve it. Do you have any suggestions ?
+> -static struct hwrng bcm2835_rng_ops = {
+> -	.name	= "bcm2835",
+> -	.read	= bcm2835_rng_read,
+> -};
+> -
 
-Thanks,
-Guenter
+>  	/* map peripheral */
+> -	rng_base = devm_ioremap_resource(dev, r);
+> -	if (IS_ERR(rng_base)) {
+> +	priv->base = devm_ioremap_resource(dev, r);
+> +	if (IS_ERR(priv->base)) {
+>  		dev_err(dev, "failed to remap rng regs");
+> -		return PTR_ERR(rng_base);
+> +		return PTR_ERR(priv->base);
+>  	}
+> -	bcm2835_rng_ops.priv = (unsigned long)rng_base;
+> +
+> +	priv->rng.name = "bcm2835-rng";
+
+Looks like an unintentional change from the previous "bcm2835" here?
+
+Other than that, 1-2 are:
+
+Reviewed-by: Eric Anholt <eric@anholt.net>
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAloDS2UACgkQtdYpNtH8
+nuhw4w/+NIBhKh0AHhQFrwMLVIt3tqjEwuEgNq8KjCenaVzwt1V6YvDrwPH14jM5
+0UMz1apFrej7TKC38IQ1EsAODiodJvYQC1p/Nl5gQS4/WfejUPyhYW6wvDfZTAOK
+l+9QA3IZQiHjo3Lwozp1bg35Bdt1RsaMV1fi9LElrcgF8DLzd4+G5m4sDllnZtTJ
+MaPVIBE+bGwS/XULzOROpcRGhGhtxad6pTENPxxJMgO9MrymNgXe5eZihH2d5OM+
+YN5qQQNPIvmhYisgc0YoVvrqP1Od6JRIXssJNdUD10CyqDeV2A45QhvzLAB664HC
+w8Mm5TzJLgOptOeC3rDY38A+B8yT7B0SUIwv3ODITG0XFX43HVp9xDfxF8zX/+cI
+9cuOsgAohjohPzgyqZbx5Hy+vqTOTCc9+Av0lfeWYoVoaGYXsVZXPgLbe+rctd39
+gFjWMP6bz6Bb5dhFxOhr90GwwAQCIC2zfUGMAfHn3B0+Ae2odPSOiESjBac4Hyd3
+X8EGg/ATsgxCzOzvBjmafYsgupJbtsJ4A6a9rbIKr2226vPRHWZJ8VZP3Qxvqa2a
+a2XRKGj5s5U+v5vum4/ly+Vr7DIlSYysUqfaGNpYBqUOFBzualghE7zQh7yiRrNn
+5vHeiUGaudUatRK7TGoTWFx80647+YwoPcoJzCuV+3OtKaLtstY=
+=mpPQ
+-----END PGP SIGNATURE-----
+--=-=-=--
