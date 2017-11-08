@@ -1,56 +1,37 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v1 1/2] dt-bindings: Add binding for Ilitek ILI9225 display
- panels
-Date: Tue,  7 Nov 2017 21:52:15 -0600
-Message-ID: <1510113136-6788-2-git-send-email-david@lechnology.com>
-References: <1510113136-6788-1-git-send-email-david@lechnology.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] [net-next?] of: add of_property_read_variable_* dummy
+ helpers
+Date: Wed, 08 Nov 2017 13:36:02 +0900 (KST)
+Message-ID: <20171108.133602.1192972972086140265.davem@davemloft.net>
+References: <20171106132627.150459-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1510113136-6788-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171106132627.150459-1-arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de
+Cc: vivien.didelot@savoirfairelinux.com, robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org, sakari.ailus@linux.intel.com, grant.likely@secretlab.ca, rafael.j.wysocki@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGEgbmV3IGJpbmRpbmcgZm9yIGRpc3BsYXkgcGFuZWxzIHRoYXQgdXNlIGFuIEls
-aXRlayBJTEk5MjI1CmNvbnRyb2xsZXIuCgpUaGUgImdlbmVyaWMsMi4yaW4tMTc2eDIyMC1pbGk5
-MjI1LXRmdCIgZGV2aWNlIGxpc3RlZCBoYXMgbm8gaWRlbnRpZmljYXRpb24KbWFya2luZ3Mgd2hh
-dHNvZXZlciBhbmQgYW4gaG91ciBvZiBnb29nbGluZyB0dXJuZWQgdXAgbm90aGluZywgaGVuY2Ug
-dGhlIHVzZQpvZiAiZ2VuZXJpYyIuCgpBbiBleGFtcGxlIG9mIHRoaXMgbmFtZWxlc3MgZGV2aWNl
-IGNhbiBiZSBmb3VuZCBhdDoKaHR0cHM6Ly9naXRodWIuY29tL05rYXd1L1RGVF8yMl9JTEk5MjI1
-CgpTaWduZWQtb2ZmLWJ5OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4KLS0t
-CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lsaXRlayxpbGk5MjI1LnR4dCB8IDI1
-ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCsp
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvaWxpdGVrLGlsaTkyMjUudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkyMjUudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkyMjUudHh0Cm5ldyBmaWxl
-IG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjU4MzlmNTYKLS0tIC9kZXYvbnVsbAorKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTIyNS50
-eHQKQEAgLTAsMCArMSwyNSBAQAorSWxpdGVrIElMSTkyMjUgZGlzcGxheSBwYW5lbHMKKworVGhp
-cyBiaW5kaW5nIGlzIGZvciBkaXNwbGF5IHBhbmVscyB1c2luZyBhbiBJbGl0ZWsgSUxJOTIyNSBj
-b250cm9sbGVyIGluIFNQSQorbW9kZS4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0
-aWJsZToJImdlbmVyaWMsMi4yaW4tMTc2eDIyMC1pbGk5MjI1LXRmdCIKKy0gcnMtZ3Bpb3M6CVJl
-Z2lzdGVyIHNlbGVjdCBzaWduYWwKKy0gcmVzZXQtZ3Bpb3M6CVJlc2V0IHBpbgorCitUaGUgbm9k
-ZSBmb3IgdGhpcyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxkIG5vZGUgb2YgYSBTUEkgY29udHJvbGxl
-ciwgaGVuY2UKK2FsbCBtYW5kYXRvcnkgcHJvcGVydGllcyBkZXNjcmliZWQgaW4gLi4vc3BpL3Nw
-aS1idXMudHh0IG11c3QgYmUgc3BlY2lmaWVkLgorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBy
-b3RhdGlvbjoJcGFuZWwgcm90YXRpb24gaW4gZGVncmVlcyBjb3VudGVyIGNsb2Nrd2lzZSAoMCw5
-MCwxODAsMjcwKQorCitFeGFtcGxlOgorCWRpc3BsYXlAMHsKKwkJY29tcGF0aWJsZSA9ICJnZW5l
-cmljLDIuMmluLTE3NngyMjAtaWxpOTIyNS10ZnQiOworCQlyZWcgPSA8MD47CisJCXNwaS1tYXgt
-ZnJlcXVlbmN5ID0gPDEyMDAwMDAwPjsKKwkJcnMtZ3Bpb3MgPSA8JmdwaW8wIDkgR1BJT19BQ1RJ
-VkVfSElHSD47CisJCXJlc2V0LWdwaW9zID0gPCZncGlvMCA4IEdQSU9fQUNUSVZFX0hJR0g+Owor
-CQlyb3RhdGlvbiA9IDwyNzA+OworCX07Ci0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Mon,  6 Nov 2017 14:26:10 +0100
+
+> Commit a67e9472da42 ("of: Add array read functions with min/max size
+> limits") added a new interface for reading variable-length arrays from
+> DT properties. One user was added in dsa recently and this causes a
+> build error because that code can be built with CONFIG_OF disabled:
+> 
+> net/dsa/dsa2.c: In function 'dsa_switch_parse_member_of':
+> net/dsa/dsa2.c:678:7: error: implicit declaration of function 'of_property_read_variable_u32_array'; did you mean 'of_property_read_u32_array'? [-Werror=implicit-function-declaration]
+> 
+> This adds a dummy functions for of_property_read_variable_u32_array()
+> and a few others that had been missing here. I decided to move
+> of_property_read_string() and of_property_read_string_helper() in the
+> process to make it easier to compare the two sets of function prototypes
+> to make sure they match.
+> 
+> Fixes: 975e6e32215e ("net: dsa: rework switch parsing")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Applied, thanks Arnd.
