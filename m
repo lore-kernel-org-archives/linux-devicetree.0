@@ -1,57 +1,132 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH v4 2/6] remoteproc: Export rproc_elf_get_boot_addr
-Date: Thu,  9 Nov 2017 20:16:11 +0530
-Message-ID: <1510238775-14883-3-git-send-email-sricharan@codeaurora.org>
-References: <1510238775-14883-1-git-send-email-sricharan@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1510238775-14883-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: sricharan@codeaurora.org
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: Question about "unit address format error" of DTC
+Date: Fri, 10 Nov 2017 00:09:51 +0900
+Message-ID: <CAK7LNARoE6hhhH36ZugfqCNubUQzSLYGkMrx5TzTQe-gpu4CaQ@mail.gmail.com>
+References: <CAK7LNARujG8J_z62bc+PQOz34rf-Bo=+M54kvtokZxnktn2Y+A@mail.gmail.com>
+ <CAL_Jsq+eZkCQTEHLb62Le3e6eLxt=N7EWGk7dsPAfLF9-73soQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+eZkCQTEHLb62Le3e6eLxt=N7EWGk7dsPAfLF9-73soQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Export rproc_elf_get_boot_addr so that it can be
-used by any remoteproc to get the bootaddr of the
-elf type firmware images. This is used in the
-subsequent patch by the q6v5 based remoteproc
-while loading its elf based mdt type image.
+Hi Rob,
 
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
- drivers/remoteproc/remoteproc_elf_loader.c | 2 +-
- drivers/remoteproc/remoteproc_internal.h   | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+2017-11-09 23:15 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Thu, Nov 9, 2017 at 6:14 AM, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>> Hi Rob, David,
+>>
+>>
+>> I am just curious about a DTC warning.
+>>
+>>
+>> For example,
+>>
+>> soc {
+>>     compatible = "simple-bus";
+>>     #address-cells = <1>;
+>>     #size-cells = <1>;
+>>     ranges;
+>>
+>>     foo@11111111 {
+>>          compatible = "foo";
+>>          reg = <0x54006800 0x40>;
+>>     };
+>> };
+>>
+>> This emits the following warning.
+>>
+>> Warning (simple_bus_reg): Node /soc/foo@11111111 simple-bus unit
+>> address format error, expected "54006800"
+>>
+>>
+>> But, if I replace "simple-bus" with "simple-mfd",
+>> DTC is completely happy.
+>
+> We could probably add simple-mfd to the check. Though, if you have
+> addresses, then you probably should use simple-bus. I'm not a bit fan
+> of simple-mfd in general.
+>
+>> Why is this check limited to simple bus / PCI bus?
+>
+> Because bus types are free to define their own unit address format to
+> some extent.
+>
+>> For other cases, is mismatching @<address>  allowed?
+>
+> No, but it is not checked. Most other cases such as I2C and SPI buses
+> aren't checked because we have no generic way to key off of them. We
+> need schema data with compatible strings of those bus controllers to
+> do the checking.
+>
+> Any bus type needs to define its unit address format. Generally, it
+> must match data fields in reg property and distinct fields are
+> separated by commas.
+>
 
-diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
-index c523983..f6d07d9 100644
---- a/drivers/remoteproc/remoteproc_elf_loader.c
-+++ b/drivers/remoteproc/remoteproc_elf_loader.c
-@@ -110,13 +110,13 @@
-  * Note that the boot address is not a configurable property of all remote
-  * processors. Some will always boot at a specific hard-coded address.
-  */
--static
- u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
- {
- 	struct elf32_hdr *ehdr  = (struct elf32_hdr *)fw->data;
- 
- 	return ehdr->e_entry;
- }
-+EXPORT_SYMBOL(rproc_elf_get_boot_addr);
- 
- /**
-  * rproc_elf_load_segments() - load firmware segments to memory
-diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-index c1077be..1bbbfea 100644
---- a/drivers/remoteproc/remoteproc_internal.h
-+++ b/drivers/remoteproc/remoteproc_internal.h
-@@ -124,4 +124,7 @@ struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
- 
- extern const struct rproc_fw_ops rproc_elf_fw_ops;
- 
-+/* from remoteproc_elf_loader.c */
-+u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
-+
- #endif /* REMOTEPROC_INTERNAL_H */
+Thanks.
+I had a more specific example I wanted to ask,
+but your last comment "distinct fields are separated by commas"
+probably answered the question.
+
+
+The following is an example of NVMEM data cells.
+The generic binding is Documentation/devicetree/binding/nvmem/nvmem.txt
+
+
+reg:    specifies the offset in byte within the storage device.
+
+bits:   Is pair of bit location and number of bits, which specifies offset
+        in bit and number of bits within the address range specified
+by reg property.
+        Offset takes values from 0-7.
+
+
+So, it is possible to have multiple data cells
+that share the same "reg".
+
+@<reg-offset>,<bit-position>
+was the idea in my mind, but I was not 100% sure.
+
+         qfprom: qfprom@00700000 {
+                ...
+
+                /* Data cells */
+                calib0: calib@10,2 {
+                        reg = <0x10 0x4>;
+                        bits = <2 2>;
+                };
+
+                calib1: calib@10,6 {
+                        reg = <0x10 0x4>;
+                        bits = <6 2>
+                };
+
+                calib2: calib@14,2 {
+                        reg = <0x14 0x4>;
+                        bits = <2 2>;
+                };
+
+                calib3: calib@14,6 {
+                        reg = <0x14 0x4>;
+                        bits = <6 2>
+                };
+                ...
+        };
+
+
+>From your comment, probably, this is the right thing to do.
+
+
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
