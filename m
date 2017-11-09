@@ -1,54 +1,43 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 03/17] ASoC: tlv320aic31xx: Fix GPIO1 register definition
-Date: Thu, 9 Nov 2017 12:45:28 +0000
-Message-ID: <20171109124528.nadkkb76clg5lw2g@sirena.co.uk>
-References: <20171109002741.10897-1-afd@ti.com>
- <20171109002741.10897-4-afd@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] gpio: rcar: Add r8a77995 (R-Car D3) support
+Date: Thu, 9 Nov 2017 13:54:28 +0100
+Message-ID: <CACRpkdYhzbRTyjax_A0mF9CW27i26g8OrSZYyepL7zSNgYRLcA@mail.gmail.com>
+References: <1510223960-14139-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="skcqwcgyc7suyywf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171109002741.10897-4-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1510223960-14139-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 9, 2017 at 11:39 AM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
---skcqwcgyc7suyywf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Nov 08, 2017 at 06:27:27PM -0600, Andrew F. Davis wrote:
-> GPIO1 control register is number 51, fix this here.
->=20
-> Fixes: bafcbfe429eb ("ASoC: tlv320aic31xx: Make the register values human=
- readable")
-> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+>
+> This patch adds binding for r8a77995 (R-Car D3). This SoC can use
+> "renesas,rcar-gen3-gpio" fallback compatibility. So, this patch
+> doesn't modify the gpio-rcar driver.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
+> Linus: it seems this one fell through the cracks, as the later
+> f76a2d9d7f9524c5 ("gpio-rcar: document R8A77970 bindings") did get
+> applied.
+>
+> Thx!
+>
+> v2:
+>   - Add Acked-by, rebased.
 
-We should send this as a bug fix to stable but this depends on your
-reformatting :(
+Oopsie. Maybe my oversight.
 
---skcqwcgyc7suyywf
-Content-Type: application/pgp-signature; name="signature.asc"
+Patch applied!
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloETecACgkQJNaLcl1U
-h9A+rAf/YJrzWkLUK+YJV6i4vuGl7PxQFxJ3Zf9UmB3K9m8x9UdT7wzEATLoCRPi
-xGd/o0PV/nGSBuOqlOcXbTYaV0MU83D5A+TqHpfQbgkkIWY9l6jH2svWSWVa929Z
-W8QkPVI38WaYfssw05RMqd+/LEBPzK6rJZd8WiQJPL7YxI0rOve3vRr0xVyMPUCl
-GJKF/WddCfP0+4sA4wtQwzBHDe8n6QMWnadwYhZ3SuLYLw77bY+R+rpYrJ58+IaV
-JPQ5sVj2MphXVkQHvPejYtQ06u0VlnC7B41x8zQvekwJbXYhPP5dGXKdwzZOiCyu
-I2+eHQQSsjqI01Biy8wIirL6iwMH9A==
-=Fqxi
------END PGP SIGNATURE-----
-
---skcqwcgyc7suyywf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
