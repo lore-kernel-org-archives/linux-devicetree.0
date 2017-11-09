@@ -1,72 +1,85 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 1/2] kbuild: create built-in.o automatically if parent
- directory wants it
-Date: Thu, 9 Nov 2017 17:08:38 +0100
-Message-ID: <20171109160838.GA26703@ravnborg.org>
-References: <1510072307-16819-1-git-send-email-yamada.masahiro@socionext.com>
- <1510072307-16819-2-git-send-email-yamada.masahiro@socionext.com>
- <20171109053529.GA12717@ravnborg.org>
- <CAK7LNARyrgRBYOW7NGURnVUhhArL3C46UWiSosveM9KGmvEY4Q@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 01/17] ASoC: tlv320aic31xx: General source
+ formatting cleanup
+Date: Thu, 9 Nov 2017 16:15:53 +0000
+Message-ID: <20171109161553.vgefnocjktnpmrj2@sirena.co.uk>
+References: <20171109002741.10897-1-afd@ti.com>
+ <20171109002741.10897-2-afd@ti.com>
+ <20171109124143.mpolqcvsdzj2t6tv@sirena.co.uk>
+ <98eaa342-8405-56af-0804-38c7c1e5bc2a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARyrgRBYOW7NGURnVUhhArL3C46UWiSosveM9KGmvEY4Q@mail.gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Linux-MIPS <linux-mips@linux-mips.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Michal Marek <mmarek@suse.com>
+Content-Type: multipart/mixed; boundary="===============1153015218566630172=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <98eaa342-8405-56af-0804-38c7c1e5bc2a@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro.
 
-On Thu, Nov 09, 2017 at 02:53:04PM +0900, Masahiro Yamada wrote:
-> Hi Sam,
-> 
-> Thanks for your review.
-> 
-> 2017-11-09 14:35 GMT+09:00 Sam Ravnborg <sam@ravnborg.org>:
-> > Hi Masahiro.
-> >
-> > Thanks for picking this up.
-> >
-> >> A key point is, the parent Makefile knows whether built-in.o is needed
-> >> or not.  If a subdirectory needs to create built-in.o, its parent can
-> >> tell the fact when Kbuild descends into it.
-> > Good observation!
-> >>
-> >> diff --git a/Makefile b/Makefile
-> >> index 008a4e5..cc0b618 100644
-> >> --- a/Makefile
-> >> +++ b/Makefile
-> >> @@ -1003,7 +1003,7 @@ $(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
-> >>
-> >>  PHONY += $(vmlinux-dirs)
-> >>  $(vmlinux-dirs): prepare scripts
-> >> -     $(Q)$(MAKE) $(build)=$@
-> >> +     $(Q)$(MAKE) $(build)=$@ need-builtin=1
-> >
-> > The need-bultin may also be required for the shortcuts
-> > that allows one to use:
-> >
-> >         make <dir>/
-> >
-> >     example:
-> >
-> >         make net/
-> 
-> 
-> I do not want to add need-builtin=1 for single targets.
-> 
-> 
-> make scripts/
-> would create false scripts/built-in.o
-> This is odd.
-> 
-> I wrote the solution in the commit log:
->   $(obj-y) should be still checked to support the single target "%/".
+--===============1153015218566630172==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yfks4eiqhcynewa3"
+Content-Disposition: inline
 
-I missed this bit in the commit log,
-but I almost commented on this in the patch itself.
-Good way to do it.
 
-	Sam
+--yfks4eiqhcynewa3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Nov 09, 2017 at 08:13:17AM -0600, Andrew F. Davis wrote:
+> On 11/09/2017 06:41 AM, Mark Brown wrote:
+
+> > There's other things in here like adding error reporting...  please
+> > don't send changes like this, if you want to do cleanups you should
+> > split them up in the same way you would other changes.  Bigger patches
+> > are harder to review especially if they're not repetitive examples of
+> > the same pattern. =20
+
+> I'm never really sure with these where the split point should be, almost
+> every change in here could be its own patch if I really wanted to pad my
+> kernel patch count, but this series is already 17 patches long and I
+> usually see these all as the same logical action: non-functional cleanups.
+
+> I agree the added error message isn't purely non-functional and so
+> should be broken out, I'll break out a couple other changes for v2.
+
+This is why cleanups don't happen :)
+
+A separate cleanup series would probably cover it, when they're split up
+well they're quick and easy to review.
+
+--yfks4eiqhcynewa3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloEfzgACgkQJNaLcl1U
+h9Bwxgf+K/x//kbeY+xtueRKC+CWDmVc7UjYIAHAqS6s5l/psxdb2e6SPOY8e4MM
+VgRj0/gMsOkGDy/fUUEaI6ZiX+eqX4ucQLwV3wCgYPWqGxlkLG8OrAf6UPZrN8Ko
+/1O3/XD6ju6adaF6jC4BCzl1naF0tXSRzz6a4EICPKJj0Fi7NH97q56moKM4m/YT
+WU7aREusATrfXSyQdD8lU/iCbSLBgCTIAfBENLqKVy0fQIrx2uvhap/ACkEgunkI
+Z7nR9ufSaMJSiDOtJMl4QOTgvpdI9lKHu3NAKfBFYGgfwyfag4tqCWh9sI+yeTNE
+7gJjdIUyjBs82Wjx/SuQUoSPPylrOA==
+=B6Fn
+-----END PGP SIGNATURE-----
+
+--yfks4eiqhcynewa3--
+
+--===============1153015218566630172==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1153015218566630172==--
