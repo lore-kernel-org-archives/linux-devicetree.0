@@ -1,61 +1,46 @@
-From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH net-next] bindings: net: stmmac: correctify note about LPI interrupt
-Date: Thu,  9 Nov 2017 18:09:26 +0100
-Message-ID: <20171109170928.15496-1-niklas.cassel@axis.com>
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 3/8] dt-bindings: usb: clean up compatible property
+Date: Thu,  9 Nov 2017 18:07:18 +0100
+Message-ID: <20171109170723.10960-4-johan@kernel.org>
+References: <20171109170723.10960-1-johan@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171109170723.10960-1-johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are two different combined signal for various interrupt events:
-In EQOS-CORE and EQOS-MTL configurations, mci_intr_o is the interrupt
-signal.
-In EQOS-DMA, EQOS-AHB and EQOS-AXI configurations, these interrupt events
-are combined with the events in the DMA on the sbd_intr_o signal.
+Add quotation marks around the compatible string to avoid ambiguity due
+to following punctuation, and define the VID and PID components.
 
-Depending on configuration, the device tree irq "macirq" will refer to
-either mci_intr_o or sbd_intr_o.
-
-The databook states:
-"The MAC generates the LPI interrupt when the Tx or Rx side enters or exits
-the LPI state. The interrupt mci_intr_o (sbd_intr_o in certain
-configurations) is asserted when the LPI interrupt status is set.
-
-When the MAC exits the Rx LPI state, then in addition to the mci_intr_o
-(sbd_intr_o in certain configurations), the sideband signal lpi_intr_o is
-asserted.
-
-If you do not want to gate-off the application clock during the Rx LPI
-state, you can leave the lpi_intr_o signal unconnected and use the
-mci_intr_o (sbd_intr_o in certain configurations) signal to detect Rx LPI
-exit."
-
-Since the "macirq" is always raised when Tx or Rx enters/exits the LPI
-state, "eth_lpi" must therefore refer to lpi_intr_o, which is only raised
-when Rx exits the LPI state. Update the DT binding description to reflect
-reality.
-
-Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/net/stmmac.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/usb-device.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index c3a7be6615c5..3a28a5d8857d 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -12,7 +12,7 @@ Required properties:
- 	Valid interrupt names are:
-   - "macirq" (combined signal for various interrupt events)
-   - "eth_wake_irq" (the interrupt to manage the remote wake-up packet detection)
--  - "eth_lpi" (the interrupt that occurs when Tx or Rx enters/exits LPI state)
-+  - "eth_lpi" (the interrupt that occurs when Rx exits the LPI state)
- - phy-mode: See ethernet.txt file in the same directory.
- - snps,reset-gpio 	gpio number for phy reset.
- - snps,reset-active-low boolean flag to indicate if phy reset is active low.
+diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+index b749fb9f2674..e0b562e35a0c 100644
+--- a/Documentation/devicetree/bindings/usb/usb-device.txt
++++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+@@ -5,11 +5,11 @@ The reference binding doc is from:
+ http://www.devicetree.org/open-firmware/bindings/usb/usb-1_0.ps
+ 
+ Required properties:
+-- compatible: usbVID,PID. The textual representation of VID, PID shall
+-  be in lower case hexadecimal with leading zeroes suppressed. The
+-  other compatible strings from the above standard binding could also
+-  be used, but a device adhering to this binding may leave out all except
+-  for usbVID,PID.
++- compatible: "usbVID,PID", where VID is the vendor id and PID the product id.
++  The textual representation of VID and PID shall be in lower case hexadecimal
++  with leading zeroes suppressed. The other compatible strings from the above
++  standard binding could also be used, but a device adhering to this binding
++  may leave out all except for "usbVID,PID".
+ - reg: the port number which this device is connecting to, the range
+   is 1-255.
+ 
 -- 
-2.14.2
+2.15.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
