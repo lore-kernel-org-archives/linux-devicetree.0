@@ -1,77 +1,53 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 4/4] omapdss: fix problem enabling VDDS_DSI on OMAP3530 (OpenPandora)
-Date: Thu, 09 Nov 2017 05:45:36 +0200
-Message-ID: <3397395.9drm9Essi0@avalon>
-References: <cover.1510175371.git.hns@goldelico.com> <b94c5e773994ee55df9225fc84825bacb3fcb256.1510175371.git.hns@goldelico.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 1/2] kbuild: create built-in.o automatically if parent
+ directory wants it
+Date: Thu, 9 Nov 2017 06:35:29 +0100
+Message-ID: <20171109053529.GA12717@ravnborg.org>
+References: <1510072307-16819-1-git-send-email-yamada.masahiro@socionext.com>
+ <1510072307-16819-2-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b94c5e773994ee55df9225fc84825bacb3fcb256.1510175371.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1510072307-16819-2-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-kbuild@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Michal Marek <michal.lkml@markovi.net>, Michal Marek <mmarek@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nikolaus,
+Hi Masahiro.
 
-Thank you for the patch.
+Thanks for picking this up.
 
-On Wednesday, 8 November 2017 23:09:32 EET H. Nikolaus Schaller wrote:
-> commit d178e034d565 ("drm: omapdrm: Move FEAT_DPI_USES_VDDS_DSI feature to
-> dpi code")
+> A key point is, the parent Makefile knows whether built-in.o is needed
+> or not.  If a subdirectory needs to create built-in.o, its parent can
+> tell the fact when Kbuild descends into it.
+Good observation!
 > 
-> introduced a new match table which turned out to be wrong, at least
-> for the 600 MHz OpenPandora using the OMAP3530.
-> 
-> The effect was strange: only the Blue channel of the RGB panel was
-> driven while Red and Green stayed black. So a coloured picture turned
-> into blue/black.
-> 
-> The GTA04 with DM3730 didn't show the effect.
-> 
-> It turned out that VDDS_DSI was not properly initialized on OMAP3530,
-> because the .family string is just "OMAP3" for these processors and
-> not "OMAP3xxx".
-> 
-> Therefore we match the .machine attribute.
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> diff --git a/Makefile b/Makefile
+> index 008a4e5..cc0b618 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1003,7 +1003,7 @@ $(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
+>  
+>  PHONY += $(vmlinux-dirs)
+>  $(vmlinux-dirs): prepare scripts
+> -	$(Q)$(MAKE) $(build)=$@
+> +	$(Q)$(MAKE) $(build)=$@ need-builtin=1
 
-I've already submitted a similar patch (but without the problem pointed out 
-below) in the mail thread where we discussed the issue. It is customary to use 
-the first patch posted (unless it is utterly broken of course). Could you thus 
-please include it in this series in replacement of this patch ?
+The need-bultin may also be required for the shortcuts
+that allows one to use:
 
-> ---
->  drivers/gpu/drm/omapdrm/dss/dpi.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/omapdrm/dss/dpi.c
-> b/drivers/gpu/drm/omapdrm/dss/dpi.c index 4ed5fde11313..aae3626910bb 100644
-> --- a/drivers/gpu/drm/omapdrm/dss/dpi.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/dpi.c
-> @@ -566,8 +566,7 @@ static int dpi_verify_pll(struct dss_pll *pll)
->  }
-> 
->  static const struct soc_device_attribute dpi_soc_devices[] = {
-> -	{ .family = "OMAP3[456]*" },
-> -	{ .family = "[AD]M37*" },
-> +	{ .machine = "OMAP3[456]*" },
+	make <dir>/
 
-You also need 
+    example:
 
-	{ .machine = "[AD]M37*" },
+	make net/
 
-otherwise there will be no match for the OMAP3-like AM37xx and DM37xx SoCs.
+And maybe selftest, documentation shortcuts too?
+Other than that - looks good.
 
-Another option would be to match on { .family = "OMAP3*" } but there could be 
-spurious matches, even though I haven't identified any.
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
->  	{ /* sentinel */ }
->  };
+	Sam
 
--- 
-Regards,
-
-Laurent Pinchart
