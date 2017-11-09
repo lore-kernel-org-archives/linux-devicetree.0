@@ -1,144 +1,114 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH 14/17] ASoC: tlv320aic31xx: Add
-	headphone/headset detection
-Date: Wed, 8 Nov 2017 18:27:38 -0600
-Message-ID: <20171109002741.10897-15-afd@ti.com>
-References: <20171109002741.10897-1-afd@ti.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH 1/2] MIPS: dts: remove bogus bcm96358nb4ser.dtb from dtb-y entry
+Date: Thu, 9 Nov 2017 09:38:22 +0900
+Message-ID: <CAK7LNARzRUA6ZGQUiebZ+nmLBSAVdYONsozHBf0VQb83KqSx1g@mail.gmail.com>
+References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
+ <1509859853-27473-2-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNAQfK_BWQcVW-ScrpAwNAHav3MrrzV-tjn_YUjsuvd7U5A@mail.gmail.com>
+ <20171106095139.GG15260@jhogan-linux> <CAK7LNAQ_bugEP8hHKmCif5QCz2=Pw_GpXzYz4zJeXO0HXaT_ag@mail.gmail.com>
+ <CAL_JsqJ8taCKnr_79UumiH2GFYq-fMzzkYm2iYevTOgUUWuzvg@mail.gmail.com> <CAK7LNATZ9O4cCpxLrG3MJoKYF+RnURkY4-tY2MdiZb90eGPtQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171109002741.10897-1-afd@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNATZ9O4cCpxLrG3MJoKYF+RnURkY4-tY2MdiZb90eGPtQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Marek <michal.lkml-yyZNWGI4GtDR7s880joybQ@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This device can detect the insertion/removal of headphones and headsets.
-Enable reporting this status by enabling this interrupt and forwarding
-this to upper-layers if a jack has been defined.
+2017-11-09 9:11 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> 2017-11-09 1:51 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>> On Mon, Nov 6, 2017 at 5:00 AM, Masahiro Yamada
+>> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>>> 2017-11-06 19:41 GMT+09:00 James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>>>> Hi,
+>>>>
+>>>> On Sun, Nov 05, 2017 at 11:11:38PM +0900, Masahiro Yamada wrote:
+>>>>> +CC Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+>>>>> +CC linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+>>>>> +CC Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>> +CC Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>
+>>>>>
+>>>>> I missed to CC MIPS maintainers.
+>>>>
+>>>> Yes, please resend the patch so it lands in patchwork.linux-mips.org.
+>>>
+>>>
+>>> This is a part of clean-up series of DT building.
+>>>
+>>> I want Acked-by from MIPS maintainers
+>>> so that the whole series can go to a different tree.
+>>> (DT or Kbuild).
+>>>
+>>>
+>>> Sam addressed more clean-up candidates in MIPS Makefiles
+>>> https://patchwork.kernel.org/patch/10041879/
+>>>
+>>> So, I will probably end up with touching those Makefiles more.
+>>>
+>>> All patches must go to the same tree.
+>>>
+>>>
+>>>>> 2017-11-05 14:30 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+>>>>> > arch/mips/boot/dts/brcm/bcm96358nb4ser.dts does not exist, so
+>>>>> > we cannot build bcm96358nb4ser.dtb .
+>>>>
+>>>> This appears to be due to the file being renamed in commit 695835511f96
+>>>> ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom").
+>>>> Please can you update the commit message when you resend to mention the
+>>>> cause of the problem.
+>>>>
+>>>> You could also add the following if you like while you're at it:
+>>>>
+>>>> Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
+>>>> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 4.9+
+>>
+>> I think this one can be applied independently and we'd want it to if
+>> we tag for stable. So I think it can go thru the MIPS tree.
+>>
+>
+>
+> As I said to MIPS folks, this patch must go before 2/2.
+>
+> You picked up only 2/2, so your dt/kbuild branch is broken.
+>
+>
+> make ARCH=mips allyesconfig
+> && make ARCH=mips CROSS_COMPILE=mips-linux- dtbs
+>
+>
+> will produce the following error.
+>
+>
+> make[2]: *** No rule to make target
+> 'arch/mips/boot/dts/brcm/bcm96358nb4ser.dtb', needed by '__build'.
+> Stop.
+> scripts/Makefile.build:570: recipe for target 'arch/mips/boot/dts/brcm' failed
+> make[1]: *** [arch/mips/boot/dts/brcm] Error 2
+> arch/mips/Makefile:413: recipe for target 'dtbs' failed
+> make: *** [dtbs] Error 2
+>
 
-This jack definition and the resulting operation from a jack detection
-event must currently be defined by sound card platform code until CODEC
-outputs to jack mappings can be defined generically.
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- sound/soc/codecs/tlv320aic31xx.c | 33 +++++++++++++++++++++++++++++++++
- sound/soc/codecs/tlv320aic31xx.h | 11 +++++++++++
- 2 files changed, 44 insertions(+)
+Looking into it, probably
+bmips_dtb_defconfig was already broken regardless my patches.
 
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index f208362017c6..7a27361d9d27 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -33,6 +33,7 @@
- #include <linux/of_gpio.h>
- #include <linux/slab.h>
- #include <sound/core.h>
-+#include <sound/jack.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-@@ -97,6 +98,7 @@ static bool aic31xx_volatile(struct device *dev, unsigned int reg)
- 	case AIC31XX_INTRADCFLAG: /* Sticky interrupt flags */
- 	case AIC31XX_INTRDACFLAG2:
- 	case AIC31XX_INTRADCFLAG2:
-+	case AIC31XX_HSDETECT:
- 		return true;
- 	}
- 	return false;
-@@ -170,6 +172,7 @@ struct aic31xx_priv {
- 	int micbias_vg;
- 	struct regulator_bulk_data supplies[AIC31XX_NUM_SUPPLIES];
- 	struct aic31xx_disable_nb disable_nb[AIC31XX_NUM_SUPPLIES];
-+	struct snd_soc_jack *jack;
- 	unsigned int sysclk;
- 	u8 p_div;
- 	int rate_div_line;
-@@ -1339,6 +1342,32 @@ static irqreturn_t aic31xx_irq(int irq, void *data)
- 	if (value & AIC31XX_HPRSCDETECT)
- 		dev_err(dev, "Short circuit on Right output is detected\n");
- 
-+	if (value & AIC31XX_HSPLUG) {
-+		int status = 0;
-+
-+		ret = regmap_read(aic31xx->regmap, AIC31XX_HSDETECT, &value);
-+		if (ret) {
-+			dev_err(dev, "Failed to read headset type: %d\n", ret);
-+			return IRQ_NONE;
-+		}
-+
-+		switch ((value & AIC31XX_HSD_TYPE_MASK) >>
-+			AIC31XX_HSD_TYPE_SHIFT) {
-+		case AIC31XX_HSD_HP:
-+			status |= SND_JACK_HEADPHONE;
-+			break;
-+		case AIC31XX_HSD_HS:
-+			status |= SND_JACK_HEADSET;
-+			break;
-+		default:
-+			break;
-+		}
-+
-+		if (aic31xx->jack)
-+			snd_soc_jack_report(aic31xx->jack, status,
-+					    AIC31XX_JACK_MASK);
-+	}
-+
- 	ret = regmap_read(aic31xx->regmap, AIC31XX_OFFLAG, &value);
- 	if (ret) {
- 		dev_err(dev, "Failed to read overflow flag: %d\n", ret);
-@@ -1430,9 +1459,13 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
- 				   AIC31XX_GPIO1_FUNC_SHIFT);
- 
- 		regmap_write(aic31xx->regmap, AIC31XX_INT1CTRL,
-+			     AIC31XX_HSPLUGDET |
- 			     AIC31XX_SC |
- 			     AIC31XX_ENGINE);
- 
-+		regmap_write(aic31xx->regmap, AIC31XX_HSDETECT,
-+			     AIC31XX_HSD_ENABLE);
-+
- 		ret = devm_request_threaded_irq(aic31xx->dev, aic31xx->irq,
- 						NULL, aic31xx_irq,
- 						IRQF_ONESHOT, "aic31xx-irq",
-diff --git a/sound/soc/codecs/tlv320aic31xx.h b/sound/soc/codecs/tlv320aic31xx.h
-index 944a19539324..eca0a99209d8 100644
---- a/sound/soc/codecs/tlv320aic31xx.h
-+++ b/sound/soc/codecs/tlv320aic31xx.h
-@@ -27,6 +27,9 @@
- #define AIC31XX_MINIDSP_BIT		BIT(2)
- #define DAC31XX_BIT			BIT(3)
- 
-+#define AIC31XX_JACK_MASK (SND_JACK_HEADPHONE | \
-+			   SND_JACK_HEADSET)
-+
- enum aic31xx_type {
- 	AIC3100	= 0,
- 	AIC3110 = AIC31XX_STEREO_CLASS_D_BIT,
-@@ -221,6 +224,14 @@ enum aic31xx_type {
- /* AIC31XX_DACMUTE */
- #define AIC31XX_DACMUTE_MASK		GENMASK(3, 2)
- 
-+/* AIC31XX_HSDETECT */
-+#define AIC31XX_HSD_ENABLE		BIT(7)
-+#define AIC31XX_HSD_TYPE_MASK		GENMASK(6, 5)
-+#define AIC31XX_HSD_TYPE_SHIFT		5
-+#define AIC31XX_HSD_NONE		0
-+#define AIC31XX_HSD_HP			1
-+#define AIC31XX_HSD_HS			3
-+
- /* AIC31XX_MICBIAS */
- #define AIC31XX_MICBIAS_MASK		GENMASK(1, 0)
- #define AIC31XX_MICBIAS_SHIFT		0
+But, I am not comfortable with breaking all{yes,mod}config
+because they are often used for build test.
+
+
+I hope you can apply this in the order as I sent,
+with the following tag.
+
+Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to
+bcm6358-neufbox4-sercom")
+Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 4.9+
+
 -- 
-2.15.0
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
