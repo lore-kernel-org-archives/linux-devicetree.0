@@ -1,64 +1,77 @@
-From: Baolin Wang <baolin.wang@spreadtrum.com>
-Subject: [PATCH v3 1/2] dt-bindings: rtc: Add Spreadtrum SC27xx RTC documentation
-Date: Thu, 9 Nov 2017 11:34:16 +0800
-Message-ID: <c65b61e5e37cb43214973cb3e479ce06c4a73395.1510198341.git.baolin.wang@spreadtrum.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 4/4] omapdss: fix problem enabling VDDS_DSI on OMAP3530 (OpenPandora)
+Date: Thu, 09 Nov 2017 05:45:36 +0200
+Message-ID: <3397395.9drm9Essi0@avalon>
+References: <cover.1510175371.git.hns@goldelico.com> <b94c5e773994ee55df9225fc84825bacb3fcb256.1510175371.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b94c5e773994ee55df9225fc84825bacb3fcb256.1510175371.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: a.zummo@towertech.it, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, baolin.wang@spreadtrum.com
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the binding documentation for Spreadtrum SC27xx series
-RTC device.
+Hi Nikolaus,
 
-Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
----
-Changes since v2:
- - No updates.
+Thank you for the patch.
 
-Changes since v1:
- - Use a specific chip name as compatible string.
- - Remove useless alias.
- - Add the parent MFD node.
----
- .../devicetree/bindings/rtc/sprd,sc27xx-rtc.txt    |   27 ++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
+On Wednesday, 8 November 2017 23:09:32 EET H. Nikolaus Schaller wrote:
+> commit d178e034d565 ("drm: omapdrm: Move FEAT_DPI_USES_VDDS_DSI feature to
+> dpi code")
+> 
+> introduced a new match table which turned out to be wrong, at least
+> for the 600 MHz OpenPandora using the OMAP3530.
+> 
+> The effect was strange: only the Blue channel of the RGB panel was
+> driven while Red and Green stayed black. So a coloured picture turned
+> into blue/black.
+> 
+> The GTA04 with DM3730 didn't show the effect.
+> 
+> It turned out that VDDS_DSI was not properly initialized on OMAP3530,
+> because the .family string is just "OMAP3" for these processors and
+> not "OMAP3xxx".
+> 
+> Therefore we match the .machine attribute.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-diff --git a/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt b/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
-new file mode 100644
-index 0000000..7c170da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/sprd,sc27xx-rtc.txt
-@@ -0,0 +1,27 @@
-+Spreadtrum SC27xx Real Time Clock
-+
-+Required properties:
-+- compatible: should be "sprd,sc2731-rtc".
-+- reg: address offset of rtc register.
-+- interrupt-parent: phandle for the interrupt controller.
-+- interrupts: rtc alarm interrupt.
-+
-+Example:
-+
-+	sc2731_pmic: pmic@0 {
-+		compatible = "sprd,sc2731";
-+		reg = <0>;
-+		spi-max-frequency = <26000000>;
-+		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rtc@280 {
-+			compatible = "sprd,sc2731-rtc";
-+			reg = <0x280>;
-+			interrupt-parent = <&sc2731_pmic>;
-+			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
+I've already submitted a similar patch (but without the problem pointed out 
+below) in the mail thread where we discussed the issue. It is customary to use 
+the first patch posted (unless it is utterly broken of course). Could you thus 
+please include it in this series in replacement of this patch ?
+
+> ---
+>  drivers/gpu/drm/omapdrm/dss/dpi.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/omapdrm/dss/dpi.c
+> b/drivers/gpu/drm/omapdrm/dss/dpi.c index 4ed5fde11313..aae3626910bb 100644
+> --- a/drivers/gpu/drm/omapdrm/dss/dpi.c
+> +++ b/drivers/gpu/drm/omapdrm/dss/dpi.c
+> @@ -566,8 +566,7 @@ static int dpi_verify_pll(struct dss_pll *pll)
+>  }
+> 
+>  static const struct soc_device_attribute dpi_soc_devices[] = {
+> -	{ .family = "OMAP3[456]*" },
+> -	{ .family = "[AD]M37*" },
+> +	{ .machine = "OMAP3[456]*" },
+
+You also need 
+
+	{ .machine = "[AD]M37*" },
+
+otherwise there will be no match for the OMAP3-like AM37xx and DM37xx SoCs.
+
+Another option would be to match on { .family = "OMAP3*" } but there could be 
+spurious matches, even though I haven't identified any.
+
+>  	{ /* sentinel */ }
+>  };
+
 -- 
-1.7.9.5
+Regards,
+
+Laurent Pinchart
