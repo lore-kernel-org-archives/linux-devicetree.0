@@ -1,48 +1,57 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/8] dt-bindings: usb: clean up compatible property
-Date: Thu,  9 Nov 2017 18:07:18 +0100
-Message-ID: <20171109170723.10960-4-johan@kernel.org>
+From: Johan Hovold <johan@kernel.org>
+Subject: [PATCH 7/8] USB: ledtrig-usbport: fix of-node leak
+Date: Thu,  9 Nov 2017 18:07:22 +0100
+Message-ID: <20171109170723.10960-8-johan@kernel.org>
 References: <20171109170723.10960-1-johan@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171109170723.10960-1-johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171109170723.10960-1-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Alan Stern <stern@rowland.harvard.edu>, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Add quotation marks around the compatible string to avoid ambiguity due
-to following punctuation, and define the VID and PID components.
+This code looks up a USB device node from a given parent USB device but
+never dropped its reference to the returned node.
 
-Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+As only the address of the node is used for a later matching, the
+reference can be dropped immediately.
+
+Note that this trigger implementation confuses the description of the
+USB device connected to a port with the port itself (which does not have
+a device-tree representation).
+
+Fixes: 4f04c210d031 ("usb: core: read USB ports from DT in the usbport LED trigger driver")
+Cc: Rafał Miłecki <rafal@milecki.pl>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- Documentation/devicetree/bindings/usb/usb-device.txt | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/usb/core/ledtrig-usbport.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-index b749fb9f2674..e0b562e35a0c 100644
---- a/Documentation/devicetree/bindings/usb/usb-device.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-@@ -5,11 +5,11 @@ The reference binding doc is from:
- http://www.devicetree.org/open-firmware/bindings/usb/usb-1_0.ps
+diff --git a/drivers/usb/core/ledtrig-usbport.c b/drivers/usb/core/ledtrig-usbport.c
+index 9dbb429cd471..f1fde5165068 100644
+--- a/drivers/usb/core/ledtrig-usbport.c
++++ b/drivers/usb/core/ledtrig-usbport.c
+@@ -137,11 +137,17 @@ static bool usbport_trig_port_observed(struct usbport_trig_data *usbport_data,
+ 	if (!led_np)
+ 		return false;
  
- Required properties:
--- compatible: usbVID,PID. The textual representation of VID, PID shall
--  be in lower case hexadecimal with leading zeroes suppressed. The
--  other compatible strings from the above standard binding could also
--  be used, but a device adhering to this binding may leave out all except
--  for usbVID,PID.
-+- compatible: "usbVID,PID", where VID is the vendor id and PID the product id.
-+  The textual representation of VID and PID shall be in lower case hexadecimal
-+  with leading zeroes suppressed. The other compatible strings from the above
-+  standard binding could also be used, but a device adhering to this binding
-+  may leave out all except for "usbVID,PID".
- - reg: the port number which this device is connecting to, the range
-   is 1-255.
+-	/* Get node of port being added */
++	/*
++	 * Get node of port being added
++	 *
++	 * FIXME: This is really the device node of the connected device
++	 */
+ 	port_np = usb_of_get_child_node(usb_dev->dev.of_node, port1);
+ 	if (!port_np)
+ 		return false;
  
++	of_node_put(port_np);
++
+ 	/* Amount of trigger sources for this LED */
+ 	count = of_count_phandle_with_args(led_np, "trigger-sources",
+ 					   "#trigger-source-cells");
 -- 
 2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
