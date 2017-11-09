@@ -1,93 +1,99 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v2 00/10] Allwinner H3/H5/A64(DE2)
- SimpleFB support
-Date: Thu, 9 Nov 2017 13:15:28 +0100
-Message-ID: <20171109121528.zqilrabirceyaj5h@flea.lan>
-References: <20171027150658.18509-1-icenowy@aosc.io>
- <9bca10cc95d04f87a1122bc582402310@aosc.io>
- <20171102154447.b5qo3rvu5djxupay@flea>
- <20171106084043.2vv56w2dmrutz4gn@phenom.ffwll.local>
- <CAP03XerMhdOYL08ED7=rt99BZ=RpXLhz_EySUhrJ4HbjYTX93g@mail.gmail.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFCv2 PATCH 01/36] iommu: Keep track of processes and PASIDs
+Date: Thu, 9 Nov 2017 12:16:20 +0000
+Message-ID: <16b6ba80-b15b-b278-0d06-350ae0201e82@arm.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+	<20171006133203.22803-2-jean-philippe.brucker@arm.com>
+	<BLUPR0201MB150538FDD455F6042803B54FA5560@BLUPR0201MB1505.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0295281015=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAP03XerMhdOYL08ED7=rt99BZ=RpXLhz_EySUhrJ4HbjYTX93g@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Obbard <obbardc@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <BLUPR0201MB150538FDD455F6042803B54FA5560-hRBPhS1iNj/g9tdZWAsUFxrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Bharat,
 
---===============0295281015==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tmyvcrwy4hbx5jzz"
-Content-Disposition: inline
+On 11/08/2017 05:50 PM, Bharat Kumar Gogada wrote:
+> Hi Jean,
+> 
+> +static struct iommu_process *
+> +iommu_process_alloc(struct iommu_domain *domain, struct task_struct
+> +*task) {
+> +       int err;
+> +       int pasid;
+> +       struct iommu_process *process;
+> +
+> +       if (WARN_ON(!domain->ops->process_alloc ||
+> !domain->ops->process_free))
+> +               return ERR_PTR(-ENODEV);
+> +
+> +       process = domain->ops->process_alloc(task);
+> +       if (IS_ERR(process))
+> +               return process;
+> +       if (!process)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       process->pid            = get_task_pid(task, PIDTYPE_PID);
+> +       process->release        = domain->ops->process_free;
+> +       INIT_LIST_HEAD(&process->domains);
+> +       kref_init(&process->kref);
+> +
+> +       if (!process->pid) {
+> +               err = -EINVAL;
+> +               goto err_free_process;
+> +       }
+> +
+> +       idr_preload(GFP_KERNEL);
+> +       spin_lock(&iommu_process_lock);
+> +       pasid = idr_alloc_cyclic(&iommu_process_idr, process,
+> domain->min_pasid,
+> +                                domain->max_pasid + 1, GFP_ATOMIC);
+> If EP supports only one pasid; domain->min_pasid=1 and domain->max_pasid=0.
+> When idr_alloc_cyclic is called it invokes idr_get_free_cmn function
+> where we have following condition. (Based on kernel 4.14-rc6)
+>         if (!radix_tree_tagged(root, IDR_FREE))
+>                 start = max(start, maxindex + 1);
+>               if (start > max)
+>                 return ERR_PTR(-ENOSPC);
+> Here max is being assigned zero by the time this function is invoked,
+> this value is based on domain->max_pasid.
+> This condition fails and ENOSPC is returned.
+>        
+> In this case even though hardware supports PASID, BIND flow fails.
 
+It should fail, since we're reserving PASID 0 for non-PASID transactions
+with S1DSS=0b10. In addition, the SMMUv3 specification does not allow
+using PASID with a single entry. See the description of S1CDMax in 5.2
+Stream Table Entry:
 
---tmyvcrwy4hbx5jzz
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+"when this field is 0, the substreams of the STE are disabled and one CD
+is available. (The minimum useful number of substreams is 2.) Any
+transaction with a SubstreamID will be terminated with an abort and a
+C_BAD_SUBSTREAMID event recorded."
 
-On Thu, Nov 09, 2017 at 11:17:03AM +0000, Chris Obbard wrote:
-> Hi Everyone,
->=20
-> What's the status of HDMI/SimpleFB driver for H5?
->=20
-> I don't see anything related to HDMI in linux-next dts files:
->=20
-> arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts=A0 (example boar=
-d)
-> arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
-> arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> Any reason why pasid allocation moved to idr allocations rather than
+> bitmap allocations as in v1 patches ?
 
-It will be part of 4.16 and are not in linux-next (yet).
+Yes, idr provides a convenient way to quickly retrieve the context
+associated with a PASID, when handling a fault. v1 had the allocation in a
+bitmap and storing in a rb-tree. By using an idr we combine both and rely
+on a well-tested infrastructure.
 
-Maxime
+Note that in the future we might need to go back to handcrafting the PASID
+allocation, but it will probably still be based on idr.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---tmyvcrwy4hbx5jzz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJaBEbgAAoJEBx+YmzsjxAgaP0P/3wh3yZtiBp0CAFjAyedsfvi
-JDNH18pb4HsxvHwwASKU5MS/OTP88wlmAi1VUNSBRyYv8lcOjY/jqiBh50YgSWN7
-Q+qk0rOhlGiHVliAWj3OODAum5H2fpzX2Afu2cE1awvQsEhnzOmW9XYCfdBdeHNM
-V4NIV7i6BuP3KRg5w7UrW/mmuVw/k0sVHT/uSlJlzP1HfMOSU2zB1v86x72dX28B
-CXk4OmY+rVc2pS/z348XWGS5nJkAJyQXVipRRP/fs5YKKp/HouDjCsHKikHMUd0U
-j6DtuDI4YtTu3YxSE5Ns+STlQ1xkt9ssf75WM95OS386Kc40WAulPDMtu128zs0K
-aSi9HMctMNnDYqJaiqwk+Myn5VnT0DXTgUmnZIqQcUt6qmtpCkFIWEQKVYnkbwEM
-ufsFkXr72jnT3hmPLmisIH+GqB1vonjknZKjK34bSbiBi0wGSBxElRIpA/b2A/EK
-Cap/LbnSRRVU1Bk0m9SS/hQvYEoY1sMGltNB/NyFSjpOO6jccqI9m6z6+kW8nbXs
-oe7lfIOz64Ug8U5MOUl9lXlFHH0vQNZKSp9uDt7ZKCEtZWP6aVXP/0mzyCHHYLma
-b7ejTn3XRNQZWzCBXWOh2/LuEcCMLye5ETu0GDuYJcClHqCx/AX1nKUW0GrkaO23
-heTHVL+ew0A34kL1G3PK
-=pMBk
------END PGP SIGNATURE-----
-
---tmyvcrwy4hbx5jzz--
-
---===============0295281015==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0295281015==--
+Thanks,
+Jean
