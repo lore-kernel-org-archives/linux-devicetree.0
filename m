@@ -1,48 +1,67 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] gpio: rcar: Add r8a77995 (R-Car D3) support
-Date: Thu,  9 Nov 2017 11:39:20 +0100
-Message-ID: <1510223960-14139-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v2] arm64: dts: hi3660: improve pmu description
+Date: Thu, 9 Nov 2017 19:18:23 +0800
+Message-ID: <1510226303-20950-1-git-send-email-xuyiping@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, chenjun14-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+cortex-a73 pmu driver is supported now. hi3660 is 4*a73 + 4*a53, so it
+should use "cortex-a73-pmu" and "cortex-a53-pmu" instead of "armpmu-v3",
+then we can use the a73 and a53 events in perf tool directly.
 
-This patch adds binding for r8a77995 (R-Car D3). This SoC can use
-"renesas,rcar-gen3-gpio" fallback compatibility. So, this patch
-doesn't modify the gpio-rcar driver.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 ---
-Linus: it seems this one fell through the cracks, as the later
-f76a2d9d7f9524c5 ("gpio-rcar: document R8A77970 bindings") did get
-applied.
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-Thx!
-
-v2:
-  - Add Acked-by, rebased.
----
- Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-index 41137a1cc099b7e7..a7ac460ad6572526 100644
---- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-@@ -15,6 +15,7 @@ Required Properties:
-     - "renesas,gpio-r8a7795": for R8A7795 (R-Car H3) compatible GPIO controller.
-     - "renesas,gpio-r8a7796": for R8A7796 (R-Car M3-W) compatible GPIO controller.
-     - "renesas,gpio-r8a77970": for R8A77970 (R-Car V3M) compatible GPIO controller.
-+    - "renesas,gpio-r8a77995": for R8A77995 (R-Car D3) compatible GPIO controller.
-     - "renesas,rcar-gen1-gpio": for a generic R-Car Gen1 GPIO controller.
-     - "renesas,rcar-gen2-gpio": for a generic R-Car Gen2 or RZ/G1 GPIO controller.
-     - "renesas,rcar-gen3-gpio": for a generic R-Car Gen3 GPIO controller.
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 13ae69f..f4882d3 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -203,21 +203,25 @@
+ 					 IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+ 
+-	pmu {
+-		compatible = "arm,armv8-pmuv3";
++	a53-pmu {
++		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+-			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++			     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-affinity = <&cpu0>,
+ 				     <&cpu1>,
+ 				     <&cpu2>,
+-				     <&cpu3>,
+-				     <&cpu4>,
++				     <&cpu3>;
++	};
++
++	a73-pmu {
++		compatible = "arm,cortex-a73-pmu";
++		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu4>,
+ 				     <&cpu5>,
+ 				     <&cpu6>,
+ 				     <&cpu7>;
 -- 
 2.7.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
