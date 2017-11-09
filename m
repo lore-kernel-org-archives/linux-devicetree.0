@@ -1,61 +1,32 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 2/2] rtc: sprd: Add Spreadtrum RTC driver
-Date: Thu, 9 Nov 2017 09:53:01 +0800
-Message-ID: <CAMz4kuJ4ZazBSWCi2mtZuj0gEaJ1CYB7Y=4oui6CD-nZBEOzXA@mail.gmail.com>
-References: <c65b61e5e37cb43214973cb3e479ce06c4a73395.1510132279.git.baolin.wang@spreadtrum.com>
- <6482283a3ae8c6ec35d0a7a078420151a69b8aca.1510132279.git.baolin.wang@spreadtrum.com>
- <20171109012653.32zkqyh5p4jqhftr@piout.net>
+From: "Sammy" <ts1@a.xoov.net>
+Subject: PCB supplier in China- RF-4, rogers, arlon in stock!
+Date: Thu, 9 Nov 2017 10:05:41 +0800
+Message-ID: <201711091005414859011@a.xoov.net>
+Reply-To: sammy-h4CsuzqGJ+yw4oTr9wS9Ww@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171109012653.32zkqyh5p4jqhftr@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Baolin Wang <baolin.wang@spreadtrum.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-rtc@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain;
+        charset="GB2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
-
-On 9 November 2017 at 09:26, Alexandre Belloni
-<alexandre.belloni@free-electrons.com> wrote:
-> Hi,
->
-> On 08/11/2017 at 17:16:15 +0800, Baolin Wang wrote:
->> +static int sprd_rtc_read_time(struct device *dev, struct rtc_time *tm)
->> +{
->> +     struct sprd_rtc *rtc = dev_get_drvdata(dev);
->> +     time64_t secs;
->> +     int ret;
->> +
->
-> I would have expected a check for SPRD_RTC_POWER_RESET_FLAG here.
-
-Actually I want to create one separate patch to add this feature. But
-like you suggested, I can add this checking in here in next version.
-Thanks for your suggestion.
-
->
->
->> +     ret = sprd_rtc_get_secs(rtc, SPRD_RTC_TIME, &secs);
->> +     if (ret)
->> +             return ret;
->> +
->> +     rtc_time64_to_tm(secs, tm);
->> +     return rtc_valid_tm(tm);
->> +}
->> +
->> +static int sprd_rtc_set_time(struct device *dev, struct rtc_time *tm)
->> +{
->> +     struct sprd_rtc *rtc = dev_get_drvdata(dev);
->> +     time64_t secs = rtc_tm_to_time64(tm);
->> +
->
-> And you need to reset SPRD_RTC_POWER_RESET_FLAG here
->
->> +     return sprd_rtc_set_secs(rtc, SPRD_RTC_TIME, secs);
->> +}
->> +
-
--- 
-Baolin.wang
-Best Regards
+RGVhciBDdXN0b21lciwNCg0KV2UgYXJlIGEgUHJpbnRlZCBDaXJjdWl0cyBCb2FyZHMgc3VwcGxp
+ZXIgaW4gQ2hpbmEgc2luY2UgMjAwNy5XZSBoYXZlIGNvb3BlcmF0ZWQgd2l0aCBtYW55IFBDQiBk
+ZXNpZ24gY29tcGFuaWVzIGFsbCBvdmVyIHRoZSB3b3JsZC4NCg0KV0hZIFVTOg0KVG9wIEV4cGVy
+aWVuY2VkIEVuZ2luZWVyIFRlYW0NClF1aWNrIFF1b3RhdGlvbiYgUmVzcG9uY2UNClNwZWNpYWwg
+TWF0ZXJpYWwgaW4gU3RvY2soZS5nLiBSTzQzNTBCLCBSTzQwMDMsIEhpZ2ggVEcgMTgwICBGUi00
+KQ0KQWxsIEFyb3VuZCBDYXBhYmlsaXRpZXMoTGFzZXIgZHJpbGxpbmcsIEJsaW5kIFZpYSwgSW1w
+ZWRhbmNlLCBQbGFzbWEsVGFpeW8gaW5rICkNCg0KU2FtcGxlcyBhbmQgcHJvdG90eXBlIGFyZSB3
+ZWxjb21lZC4gDQpFbWFpbCBtZSBmb3IgeW91ciBmcmVlIHF1b3RhdGlvbi4gWW91IHdpbGwgYmUg
+cGxlYXNlbnRseSBzdXJwcmlzZWQgd2l0aCBvdXIgY29tcGV0aXRpdmUgcHJpY2VzIGFuZCBleGNl
+bGxlbnQgc2VydmljZS4NCg0KQmVzdCBSZWdhcmRzLA0KU2FtbXkgQ2hhbmcNCk92ZXJzZWFzIFNh
+bGVzDQpNb2JpbGU6ICs4NiAxMzU4MDk4MjY1Ng0KU2t5cGU6ICs4NiAxMzU4MDk4MjY1Ng0KDQpT
+aGVuemhlbiBQbHVzIENpcmN1aXRzIExpbWl0ZWQNCldlYnNpdGU6IHd3dy5wbHVzY2lyY3VpdHMu
+Y29tIA0KQWRkOiBCdWlsZGluZyAwNSwgTGlzaGVuZyBJbmR1c3RyaWFsIFBhcmssIEJhb2FuIERp
+c3RyaWN0LCBTaGVuemhlbiBDaGluYQ==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
