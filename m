@@ -1,61 +1,88 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] ARM: dts: r8a7745: Add DU support
-Date: Thu, 09 Nov 2017 11:31:25 +0200
-Message-ID: <12916864.hfKIdpMrll@avalon>
-References: <1509992814-4543-1-git-send-email-fabrizio.castro@bp.renesas.com> <9872942.on8edmfvcY@avalon> <20171108044822.ktnzzowzprqtdnsm@verge.net.au>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH 30/31] dt-bindings: nds32 CPU Bindings
+Date: Thu, 9 Nov 2017 17:39:28 +0800
+Message-ID: <CAEbi=3e-hRbej7EZ68-J1YPNfdxu7O_BAZ1rvZvAhhYzAT09-g@mail.gmail.com>
+References: <cover.1510118606.git.green.hu@gmail.com> <1a8efba0727437d510d10755f3fcea806833651d.1510118606.git.green.hu@gmail.com>
+ <CAL_JsqJAtTSGg=yGvANGdTCWa4tDAicvOvWYr4pK5M1rjPFtfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171108044822.ktnzzowzprqtdnsm@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJAtTSGg=yGvANGdTCWa4tDAicvOvWYr4pK5M1rjPFtfg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Greentime <greentime@andestech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, netdev <netdev@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>, Rick Chen <rick@andestech.com>, Zong Li <zong@andestech.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+2017-11-08 21:18 GMT+08:00 Rob Herring <robh+dt@kernel.org>:
+> Please Cc the DT list on bindings.
 
-On Wednesday, 8 November 2017 06:48:23 EET Simon Horman wrote:
-> On Tue, Nov 07, 2017 at 06:05:37AM +0200, Laurent Pinchart wrote:
-> > Hi Fabrizio,
-> > 
-> > Thank you for the patch.
-> > 
-> > On Monday, 6 November 2017 20:26:53 EET Fabrizio Castro wrote:
-> > > Add du node to r8a7745 SoC DT. Boards that want to enable the DU
-> > > need to specify the output topology.
-> > > 
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> > 
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > 
-> > > ---
-> > > 
-> > >  arch/arm/boot/dts/r8a7745.dtsi | 27 +++++++++++++++++++++++++++
-> > >  1 file changed, 27 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/r8a7745.dtsi
-> > > b/arch/arm/boot/dts/r8a7745.dtsi index 846c27a..53eb1ce4 100644
-> > > --- a/arch/arm/boot/dts/r8a7745.dtsi
-> > > +++ b/arch/arm/boot/dts/r8a7745.dtsi
-> > > @@ -821,6 +821,33 @@
-> > > 
-> > >  			status = "disabled";
-> > >  		
-> > >  		};
-> > > 
-> > > +		du: display@feb00000 {
-> > > +			compatible = "renesas,du-r8a7745";
-> 
-> Hi,
-> 
-> could you provide some information on the status of upstreaming
-> the binding used above?
+Sorry. I am not sure what you mean.
+Do you mean add devicetree@vger.kernel.org to cc list?
 
-I'll send a pull request for v4.16, it's too late for v4.15.
+> On Tue, Nov 7, 2017 at 11:55 PM, Greentime Hu <green.hu@gmail.com> wrote:
+>> From: Greentime Hu <greentime@andestech.com>
+>
+> Commit message needed.
 
--- 
-Regards,
+Thanks. I will add more commit messages in the next version patch.
 
-Laurent Pinchart
+>> Signed-off-by: Vincent Chen <vincentc@andestech.com>
+>> Signed-off-by: Rick Chen <rick@andestech.com>
+>> Signed-off-by: Zong Li <zong@andestech.com>
+>> Signed-off-by: Greentime Hu <greentime@andestech.com>
+>> ---
+>>  Documentation/devicetree/bindings/nds32/cpus.txt |   33 ++++++++++++++++++++++
+>>  1 file changed, 33 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/nds32/cpus.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/nds32/cpus.txt b/Documentation/devicetree/bindings/nds32/cpus.txt
+>> new file mode 100644
+>> index 0000000..97394cb
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/nds32/cpus.txt
+>> @@ -0,0 +1,33 @@
+>> +* Andestech Processor Binding
+>> +
+>> +This binding specifies what properties must be available in the device tree
+>> +representation of a Andestech Processor Core, which is the root node in the
+>> +tree.
+>> +
+>> +Required properties:
+>> +
+>> +       - compatible:
+>> +               Usage: required
+>> +               Value type: <string>
+>> +               Definition: should be one of:
+>> +                       "andestech,n13"
+>> +                       "andestech,n15"
+>> +                       "andestech,d15"
+>> +                       "andestech,n10"
+>> +                       "andestech,d10"
+>
+> SMP supported for any of these?
+
+We don't support SMP now.
+
+>> +
+>> +    - device_type
+>> +               Usage: required
+>> +               Value type: <string>
+>> +               Definition: must be "cpu"
+>> +
+>> +* Examples
+>> +
+>> +/ {
+>> +       cpus {
+>> +               cpu@0 {
+>
+> Needs a reg property or drop the unit address.
+
+Thanks.
+I will fix it in the next version patch.
+
+>> +                       device_type = "cpu";
+>> +                       compatible = "andestech,n13", "andestech,n15";
+>
+> n13 is a superset of n15?
+
+No, they are independent ones.
