@@ -1,82 +1,288 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH 27/31] dt-bindings: interrupt-controller: Andestech
- Internal Vector Interrupt Controller
-Date: Thu, 9 Nov 2017 17:43:10 +0800
-Message-ID: <CAEbi=3c0n69R+YRqTBR8ftwpNmjwOFf40RhHzW5JKsGgVz0t-w@mail.gmail.com>
-References: <cover.1510118606.git.green.hu@gmail.com> <a7b9f0a21bf6e0c3325a0d9a28a8503082cafd14.1510118606.git.green.hu@gmail.com>
- <CAL_JsqLGQGZq9VYW2By84rf0BHPm4=QvKNts7ETCqVT3g7LA-w@mail.gmail.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH v4 01/12] iio: Add hardware consumer buffer
+	support
+Date: Thu, 9 Nov 2017 11:12:23 +0100
+Message-ID: <1510222354-15290-2-git-send-email-arnaud.pouliquen@st.com>
+References: <1510222354-15290-1-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLGQGZq9VYW2By84rf0BHPm4=QvKNts7ETCqVT3g7LA-w@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Greentime <greentime@andestech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, netdev <netdev@vger.kernel.org>, Rick Chen <rick@andestech.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1510222354-15290-1-git-send-email-arnaud.pouliquen@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-iio@vger.kernel.org, arnaud.pouliquen@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2017-11-08 21:25 GMT+08:00 Rob Herring <robh+dt@kernel.org>:
-> +DT list
->
-> On Tue, Nov 7, 2017 at 11:55 PM, Greentime Hu <green.hu@gmail.com> wrote:
->> From: Greentime Hu <greentime@andestech.com>
->
-> Commit msg needed.
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-Thanks.
-I will add commit msg in the next version patch.
+Hardware consumer interface can be used when one IIO device has
+a direct connection to another device in hardware.
 
->> Signed-off-by: Rick Chen <rick@andestech.com>
->> Signed-off-by: Greentime Hu <greentime@andestech.com>
->> ---
->>  .../interrupt-controller/andestech,ativic32.txt    |   27 ++++++++++++++++++++
->>  1 file changed, 27 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt b/Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
->> new file mode 100644
->> index 0000000..6bac908
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
->> @@ -0,0 +1,27 @@
->> +* Andestech Internal Vector Interrupt Controller
->> +
->> +The Internal Vector Interrupt Controller (IVIC) is a basic interrupt controller
->> +suitable for a simpler SoC platform not requiring a more sophisticated and
->> +bigger External Vector Interrupt Controller.
->> +
->> +
->> +Main node required properties:
->> +
->> +- compatible : should at least contain  "andestech,ativic32".
->> +- interrupt-parent: Empty for the interrupt controller itself
->
-> Drop this.
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+ drivers/iio/buffer/Kconfig                    |  10 ++
+ drivers/iio/buffer/Makefile                   |   1 +
+ drivers/iio/buffer/industrialio-hw-consumer.c | 182 ++++++++++++++++++++++++++
+ include/linux/iio/hw-consumer.h               |  20 +++
+ 4 files changed, 213 insertions(+)
+ create mode 100644 drivers/iio/buffer/industrialio-hw-consumer.c
+ create mode 100644 include/linux/iio/hw-consumer.h
 
-Thanks.
-I will fix it in the next version patch.
-
->> +- interrupt-controller : Identifies the node as an interrupt controller
->> +- #interrupt-cells: The number of cells to define the interrupts. Should be 2.
->> +       The first cell is the IRQ number
->> +       The second cell is used to specify mode:
->> +               1 = low-to-high edge triggered
->> +               2 = high-to-low edge triggered
->> +               4 = active high level-sensitive
->> +               8 = active low level-sensitive
->
-> Just state 2 cells and refer to interrupt-controller/interrupts.txt.
-
-Thanks.
-I will fix it in the next version patch.
-
->> +               Default for internal sources should be set to 4 (active high).
->> +
->> +Examples:
->> +       intc: interrupt-controller {
->> +               compatible = "andestech,ativic32";
->> +               #interrupt-cells = <2>;
->> +               interrupt-controller;
->> +       };
->> --
->> 1.7.9.5
->>
+diff --git a/drivers/iio/buffer/Kconfig b/drivers/iio/buffer/Kconfig
+index 4ffd3db..338774c 100644
+--- a/drivers/iio/buffer/Kconfig
++++ b/drivers/iio/buffer/Kconfig
+@@ -29,6 +29,16 @@ config IIO_BUFFER_DMAENGINE
+ 
+ 	  Should be selected by drivers that want to use this functionality.
+ 
++config IIO_BUFFER_HW_CONSUMER
++	tristate "Industrial I/O HW buffering"
++	help
++	  Provides a way to bonding when an IIO device has a direct connection
++	  to another device in hardware. In this case buffers for data transfers
++	  are handled by hardware.
++
++	  Should be selected by drivers that want to use the generic Hw consumer
++	  interface.
++
+ config IIO_KFIFO_BUF
+ 	tristate "Industrial I/O buffering based on kfifo"
+ 	help
+diff --git a/drivers/iio/buffer/Makefile b/drivers/iio/buffer/Makefile
+index 85beaae..324a36b 100644
+--- a/drivers/iio/buffer/Makefile
++++ b/drivers/iio/buffer/Makefile
+@@ -6,5 +6,6 @@
+ obj-$(CONFIG_IIO_BUFFER_CB) += industrialio-buffer-cb.o
+ obj-$(CONFIG_IIO_BUFFER_DMA) += industrialio-buffer-dma.o
+ obj-$(CONFIG_IIO_BUFFER_DMAENGINE) += industrialio-buffer-dmaengine.o
++obj-$(CONFIG_IIO_BUFFER_HW_CONSUMER) += industrialio-hw-consumer.o
+ obj-$(CONFIG_IIO_TRIGGERED_BUFFER) += industrialio-triggered-buffer.o
+ obj-$(CONFIG_IIO_KFIFO_BUF) += kfifo_buf.o
+diff --git a/drivers/iio/buffer/industrialio-hw-consumer.c b/drivers/iio/buffer/industrialio-hw-consumer.c
+new file mode 100644
+index 0000000..7d4d800
+--- /dev/null
++++ b/drivers/iio/buffer/industrialio-hw-consumer.c
+@@ -0,0 +1,182 @@
++/*
++ * Copyright 2017 Analog Devices Inc.
++ *  Author: Lars-Peter Clausen <lars@metafoo.de>
++ *
++ * Licensed under the GPL-2 or later.
++ */
++
++#include <linux/err.h>
++#include <linux/export.h>
++#include <linux/slab.h>
++#include <linux/module.h>
++
++#include <linux/iio/iio.h>
++#include <linux/iio/consumer.h>
++#include <linux/iio/hw-consumer.h>
++#include <linux/iio/buffer_impl.h>
++
++/**
++ * struct iio_hw_consumer - IIO hw consumer block
++ * @buffers: hardware buffers list head.
++ * @channels: IIO provider channels.
++ */
++struct iio_hw_consumer {
++	struct list_head buffers;
++	struct iio_channel *channels;
++};
++
++struct hw_consumer_buffer {
++	struct list_head head;
++	struct iio_dev *indio_dev;
++	struct iio_buffer buffer;
++	long scan_mask[];
++};
++
++static struct hw_consumer_buffer *iio_buffer_to_hw_consumer_buffer(
++	struct iio_buffer *buffer)
++{
++	return container_of(buffer, struct hw_consumer_buffer, buffer);
++}
++
++static void iio_hw_buf_release(struct iio_buffer *buffer)
++{
++	struct hw_consumer_buffer *hw_buf =
++		iio_buffer_to_hw_consumer_buffer(buffer);
++	kfree(hw_buf);
++}
++
++static const struct iio_buffer_access_funcs iio_hw_buf_access = {
++	.release = &iio_hw_buf_release,
++	.modes = INDIO_BUFFER_HARDWARE,
++};
++
++static struct hw_consumer_buffer *iio_hw_consumer_get_buffer(
++	struct iio_hw_consumer *hwc, struct iio_dev *indio_dev)
++{
++	size_t mask_size = BITS_TO_LONGS(indio_dev->masklength) * sizeof(long);
++	struct hw_consumer_buffer *buf;
++
++	list_for_each_entry(buf, &hwc->buffers, head) {
++		if (buf->indio_dev == indio_dev)
++			return buf;
++	}
++
++	buf = kzalloc(sizeof(*buf) + mask_size, GFP_KERNEL);
++	if (!buf)
++		return NULL;
++
++	buf->buffer.access = &iio_hw_buf_access;
++	buf->indio_dev = indio_dev;
++	buf->buffer.scan_mask = buf->scan_mask;
++
++	iio_buffer_init(&buf->buffer);
++	list_add_tail(&buf->head, &hwc->buffers);
++
++	return buf;
++}
++
++/**
++ * iio_hw_consumer_alloc() - Allocate IIO hardware consumer
++ * @dev: Pointer to consumer device.
++ *
++ * Returns a valid iio_hw_consumer on success or a ERR_PTR() on failure.
++ */
++struct iio_hw_consumer *iio_hw_consumer_alloc(struct device *dev)
++{
++	struct hw_consumer_buffer *buf;
++	struct iio_hw_consumer *hwc;
++	struct iio_channel *chan;
++	int ret;
++
++	hwc = kzalloc(sizeof(*hwc), GFP_KERNEL);
++	if (!hwc)
++		return ERR_PTR(-ENOMEM);
++
++	INIT_LIST_HEAD(&hwc->buffers);
++
++	hwc->channels = iio_channel_get_all(dev);
++	if (IS_ERR(hwc->channels)) {
++		ret = PTR_ERR(hwc->channels);
++		goto err_free_hwc;
++	}
++
++	chan = &hwc->channels[0];
++	while (chan->indio_dev) {
++		buf = iio_hw_consumer_get_buffer(hwc, chan->indio_dev);
++		if (!buf) {
++			ret = -ENOMEM;
++			goto err_put_buffers;
++		}
++		set_bit(chan->channel->scan_index, buf->buffer.scan_mask);
++		chan++;
++	}
++
++	return hwc;
++
++err_put_buffers:
++	list_for_each_entry(buf, &hwc->buffers, head)
++		iio_buffer_put(&buf->buffer);
++	iio_channel_release_all(hwc->channels);
++err_free_hwc:
++	kfree(hwc);
++	return ERR_PTR(ret);
++}
++EXPORT_SYMBOL_GPL(iio_hw_consumer_alloc);
++
++/**
++ * iio_hw_consumer_free() - Free IIO hardware consumer
++ * @hwc: hw consumer to free.
++ */
++void iio_hw_consumer_free(struct iio_hw_consumer *hwc)
++{
++	struct hw_consumer_buffer *buf;
++
++	iio_channel_release_all(hwc->channels);
++	list_for_each_entry(buf, &hwc->buffers, head)
++		iio_buffer_put(&buf->buffer);
++	kfree(hwc);
++}
++EXPORT_SYMBOL_GPL(iio_hw_consumer_free);
++
++/**
++ * iio_hw_consumer_enable() - Enable IIO hardware consumer
++ * @hwc: iio_hw_consumer to enable.
++ *
++ * Returns 0 on success.
++ */
++int iio_hw_consumer_enable(struct iio_hw_consumer *hwc)
++{
++	struct hw_consumer_buffer *buf;
++	int ret;
++
++	list_for_each_entry(buf, &hwc->buffers, head) {
++		ret = iio_update_buffers(buf->indio_dev, &buf->buffer, NULL);
++		if (ret)
++			goto err_disable_buffers;
++	}
++
++	return 0;
++
++err_disable_buffers:
++	list_for_each_entry_continue_reverse(buf, &hwc->buffers, head)
++		iio_update_buffers(buf->indio_dev, NULL, &buf->buffer);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(iio_hw_consumer_enable);
++
++/**
++ * iio_hw_consumer_disable() - Disable IIO hardware consumer
++ * @hwc: iio_hw_consumer to disable.
++ */
++void iio_hw_consumer_disable(struct iio_hw_consumer *hwc)
++{
++	struct hw_consumer_buffer *buf;
++
++	list_for_each_entry(buf, &hwc->buffers, head)
++		iio_update_buffers(buf->indio_dev, NULL, &buf->buffer);
++}
++EXPORT_SYMBOL_GPL(iio_hw_consumer_disable);
++
++MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
++MODULE_DESCRIPTION("Hardware consumer buffer the IIO framework");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/iio/hw-consumer.h b/include/linux/iio/hw-consumer.h
+new file mode 100644
+index 0000000..f16791b
+--- /dev/null
++++ b/include/linux/iio/hw-consumer.h
+@@ -0,0 +1,20 @@
++/*
++ * Industrial I/O in kernel hardware consumer interface
++ *
++ * Copyright 2017 Analog Devices Inc.
++ *  Author: Lars-Peter Clausen <lars@metafoo.de>
++ *
++ * Licensed under the GPL-2 or later.
++ */
++
++#ifndef LINUX_IIO_HW_CONSUMER_H
++#define LINUX_IIO_HW_CONSUMER_H
++
++struct iio_hw_consumer;
++
++struct iio_hw_consumer *iio_hw_consumer_alloc(struct device *dev);
++void iio_hw_consumer_free(struct iio_hw_consumer *hwc);
++int iio_hw_consumer_enable(struct iio_hw_consumer *hwc);
++void iio_hw_consumer_disable(struct iio_hw_consumer *hwc);
++
++#endif
+-- 
+2.7.4
