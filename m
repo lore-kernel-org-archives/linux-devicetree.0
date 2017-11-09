@@ -1,53 +1,61 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v10 1/8] perf: Export perf_event_update_userpage
-Date: Thu, 9 Nov 2017 10:07:06 +0100
-Message-ID: <20171109090706.oangi7qebju5mvmu@hirez.programming.kicks-ass.net>
-References: <20171103175105.23546-1-suzuki.poulose@arm.com>
- <20171103175105.23546-2-suzuki.poulose@arm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] ARM: dts: r8a7745: Add DU support
+Date: Thu, 09 Nov 2017 11:31:25 +0200
+Message-ID: <12916864.hfKIdpMrll@avalon>
+References: <1509992814-4543-1-git-send-email-fabrizio.castro@bp.renesas.com> <9872942.on8edmfvcY@avalon> <20171108044822.ktnzzowzprqtdnsm@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20171103175105.23546-2-suzuki.poulose@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: mark.rutland@arm.com, robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, leo.yan@linaro.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, Jonathan.Cameron@huawei.com, sudeep.holla@arm.com, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171108044822.ktnzzowzprqtdnsm@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 03, 2017 at 05:50:58PM +0000, Suzuki K Poulose wrote:
-> Export perf_event_update_userpage() so that PMU driver using them,
-> can be built as modules.
-> 
-> Cc: Peter Zilstra <peterz@infradead.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Hi Simon,
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Wednesday, 8 November 2017 06:48:23 EET Simon Horman wrote:
+> On Tue, Nov 07, 2017 at 06:05:37AM +0200, Laurent Pinchart wrote:
+> > Hi Fabrizio,
+> > 
+> > Thank you for the patch.
+> > 
+> > On Monday, 6 November 2017 20:26:53 EET Fabrizio Castro wrote:
+> > > Add du node to r8a7745 SoC DT. Boards that want to enable the DU
+> > > need to specify the output topology.
+> > > 
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > 
+> > > ---
+> > > 
+> > >  arch/arm/boot/dts/r8a7745.dtsi | 27 +++++++++++++++++++++++++++
+> > >  1 file changed, 27 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/r8a7745.dtsi
+> > > b/arch/arm/boot/dts/r8a7745.dtsi index 846c27a..53eb1ce4 100644
+> > > --- a/arch/arm/boot/dts/r8a7745.dtsi
+> > > +++ b/arch/arm/boot/dts/r8a7745.dtsi
+> > > @@ -821,6 +821,33 @@
+> > > 
+> > >  			status = "disabled";
+> > >  		
+> > >  		};
+> > > 
+> > > +		du: display@feb00000 {
+> > > +			compatible = "renesas,du-r8a7745";
+> 
+> Hi,
+> 
+> could you provide some information on the status of upstreaming
+> the binding used above?
 
-> ---
->  kernel/events/core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 9d93db81fa36..550015829db8 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4982,6 +4982,7 @@ void perf_event_update_userpage(struct perf_event *event)
->  unlock:
->  	rcu_read_unlock();
->  }
-> +EXPORT_SYMBOL_GPL(perf_event_update_userpage);
->  
->  static int perf_mmap_fault(struct vm_fault *vmf)
->  {
-> -- 
-> 2.13.6
-> 
+I'll send a pull request for v4.16, it's too late for v4.15.
+
+-- 
+Regards,
+
+Laurent Pinchart
