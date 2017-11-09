@@ -1,7 +1,7 @@
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v2 1/8] dt-bindings: Add Cavium Octeon Common Ethernet Interface.
-Date: Wed,  8 Nov 2017 16:51:19 -0800
-Message-ID: <20171109005126.21341-2-david.daney@cavium.com>
+Subject: [PATCH v2 2/8] MIPS: Octeon: Enable LMTDMA/LMTST operations.
+Date: Wed,  8 Nov 2017 16:51:20 -0800
+Message-ID: <20171109005126.21341-3-david.daney@cavium.com>
 References: <20171109005126.21341-1-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,82 +14,68 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlos Munoz <cmunoz@cavium.com>
 
-Add bindings for Common Ethernet Interface (BGX) block.
+LMTDMA/LMTST operations move data between cores and I/O devices:
+
+* LMTST operations can send an address and a variable length
+  (up to 128 bytes) of data to an I/O device.
+* LMTDMA operations can send an address and a variable length
+  (up to 128) of data to the I/O device and then return a
+  variable length (up to 128 bytes) response from the IOI device.
 
 Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
 Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- .../devicetree/bindings/net/cavium-bgx.txt         | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
+ arch/mips/cavium-octeon/setup.c       |  6 ++++++
+ arch/mips/include/asm/octeon/octeon.h | 12 ++++++++++--
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/cavium-bgx.txt b/Documentation/devicetree/bindings/net/cavium-bgx.txt
-new file mode 100644
-index 000000000000..6b1f8b994c20
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/cavium-bgx.txt
-@@ -0,0 +1,61 @@
-+* Common Ethernet Interface (BGX) block
-+
-+Properties:
-+
-+- compatible: "cavium,octeon-7890-bgx": Compatibility with all cn7xxx SOCs.
-+
-+- reg: The base address of the BGX block.
-+
-+- #address-cells: Must be <1>.
-+
-+- #size-cells: Must be <0>.  BGX addresses have no size component.
-+
-+A BGX block has several children, each representing an Ethernet
-+interface.
-+
-+
-+* Ethernet Interface (BGX port) connects to PKI/PKO
-+
-+Properties:
-+
-+- compatible: "cavium,octeon-7890-bgx-port": Compatibility with all
-+	      cn7xxx SOCs.
-+
-+	      "cavium,octeon-7360-xcv": Compatibility with cn73xx SOCs
-+	      for RGMII.
-+
-+- reg: The index of the interface within the BGX block.
-+
-+Optional properties:
-+
-+- local-mac-address: Mac address for the interface.
-+
-+- phy-handle: phandle to the phy node connected to the interface.
-+
-+- phy-mode: described in ethernet.txt.
-+
-+- fixed-link: described in fixed-link.txt.
-+
-+Example:
-+
-+	ethernet-mac-nexus@11800e0000000 {
-+		compatible = "cavium,octeon-7890-bgx";
-+		reg = <0x00011800 0xe0000000 0x00000000 0x01000000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet-mac@0 {
-+			compatible = "cavium,octeon-7360-xcv";
-+			reg = <0>;
-+			local-mac-address = [ 00 01 23 45 67 89 ];
-+			phy-handle = <&phy3>;
-+			phy-mode = "rgmii-rxid"
-+		};
-+		ethernet-mac@1 {
-+			compatible = "cavium,octeon-7890-bgx-port";
-+			reg = <1>;
-+			local-mac-address = [ 00 01 23 45 67 8a ];
-+			phy-handle = <&phy4>;
-+			phy-mode = "sgmii"
-+		};
-+	};
+diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
+index a8034d0dcade..99e6a68bc652 100644
+--- a/arch/mips/cavium-octeon/setup.c
++++ b/arch/mips/cavium-octeon/setup.c
+@@ -609,6 +609,12 @@ void octeon_user_io_init(void)
+ #else
+ 	cvmmemctl.s.cvmsegenak = 0;
+ #endif
++	if (OCTEON_IS_OCTEON3()) {
++		/* Enable LMTDMA */
++		cvmmemctl.s.lmtena = 1;
++		/* Scratch line to use for LMT operation */
++		cvmmemctl.s.lmtline = 2;
++	}
+ 	/* R/W If set, CVMSEG is available for loads/stores in
+ 	 * supervisor mode. */
+ 	cvmmemctl.s.cvmsegenas = 0;
+diff --git a/arch/mips/include/asm/octeon/octeon.h b/arch/mips/include/asm/octeon/octeon.h
+index c99c4b6a79f4..92a17d67c1fa 100644
+--- a/arch/mips/include/asm/octeon/octeon.h
++++ b/arch/mips/include/asm/octeon/octeon.h
+@@ -179,7 +179,15 @@ union octeon_cvmemctl {
+ 		/* RO 1 = BIST fail, 0 = BIST pass */
+ 		__BITFIELD_FIELD(uint64_t wbfbist:1,
+ 		/* Reserved */
+-		__BITFIELD_FIELD(uint64_t reserved:17,
++		__BITFIELD_FIELD(uint64_t reserved_52_57:6,
++		/* When set, LMTDMA/LMTST operations are permitted */
++		__BITFIELD_FIELD(uint64_t lmtena:1,
++		/* Selects the CVMSEG LM cacheline used by LMTDMA
++		 * LMTST and wide atomic store operations.
++		 */
++		__BITFIELD_FIELD(uint64_t lmtline:6,
++		/* Reserved */
++		__BITFIELD_FIELD(uint64_t reserved_41_44:4,
+ 		/* OCTEON II - TLB replacement policy: 0 = bitmask LRU; 1 = NLU.
+ 		 * This field selects between the TLB replacement policies:
+ 		 * bitmask LRU or NLU. Bitmask LRU maintains a mask of
+@@ -275,7 +283,7 @@ union octeon_cvmemctl {
+ 		/* R/W Size of local memory in cache blocks, 54 (6912
+ 		 * bytes) is max legal value. */
+ 		__BITFIELD_FIELD(uint64_t lmemsz:6,
+-		;)))))))))))))))))))))))))))))))))
++		;))))))))))))))))))))))))))))))))))))
+ 	} s;
+ };
+ 
 -- 
 2.13.6
