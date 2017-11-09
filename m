@@ -1,67 +1,74 @@
-From: Radu Andrei Alexe <radu.alexe-3arQi8VN3Tc@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/4] crypto: caam: add caam-dma node to SEC4.0
- device tree binding
-Date: Thu, 9 Nov 2017 11:54:13 +0000
-Message-ID: <VI1PR04MB1325BAD68A7CC8C7A302D9A48A570@VI1PR04MB1325.eurprd04.prod.outlook.com>
-References: <20171030134654.13729-1-horia.geanta@nxp.com>
- <20171030134654.13729-2-horia.geanta@nxp.com>
- <20171030092424.1279add003c96ced4233bd2d@arm.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [RFCv2 PATCH 21/36] iommu/arm-smmu-v3: Implement process
+ operations
+Date: Thu, 9 Nov 2017 12:08:59 +0000
+Message-ID: <812aa54c-1cda-d4a4-640f-4aa2d8eb81fa@arm.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <20171006133203.22803-22-jean-philippe.brucker@arm.com>
+ <084b1848-0939-5e73-3890-3aab8dc4bc70@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <084b1848-0939-5e73-3890-3aab8dc4bc70@huawei.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kim Phillips <kim.phillips-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Dan Douglass <dan.douglass-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Yisheng Xie <xieyisheng1@huawei.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "gabriele.paoloni@huawei.com" <gabriele.paoloni@huawei.com>, nwatters@cod
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2017 4:24 PM, Kim Phillips wrote:=0A=
-> On Mon, 30 Oct 2017 15:46:51 +0200=0A=
-> Horia Geant=E3 <horia.geanta-3arQi8VN3Tc@public.gmane.org> wrote:=0A=
-> =0A=
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
->> +CAAM DMA Node=0A=
->> +=0A=
->> +    Child node of the crypto node that enables the use of the DMA capab=
-ilities=0A=
->> +    of the CAAM by a stand-alone driver. The only required property is =
-the=0A=
->> +    "compatible" property. All the other properties are determined from=
-=0A=
->> +    the job rings on which the CAAM DMA driver depends (ex: the number =
-of=0A=
->> +    dma-channels is equal to the number of defined job rings).=0A=
->> +=0A=
->> +  - compatible=0A=
->> +      Usage: required=0A=
->> +      Value type: <string>=0A=
->> +      Definition: Must include "fsl,sec-v4.0-dma"=0A=
->> +=0A=
->> +EXAMPLE=0A=
->> +  caam-dma {=0A=
->> +    compatible =3D "fsl,sec-v5.4-dma",=0A=
->> +                 "fsl,sec-v5.0-dma",=0A=
->> +                 "fsl,sec-v4.0-dma";=0A=
->> +  }=0A=
-> =0A=
-> If this isn't describing an aspect of the hardware, then what is it=0A=
-> doing in the device tree?=0A=
-> =0A=
-> Kim=0A=
-> =0A=
-=0A=
-Because the caam_dma driver is a platform driver I needed to create a =0A=
-platform device to activate the driver. My thought was that it was =0A=
-simpler to implement it using device tree.=0A=
-The next patch version will create the platform device dynamically at =0A=
-run time.=0A=
-=0A=
-BR,=0A=
-Radu=0A=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On 09/11/17 03:32, Yisheng Xie wrote:
+> Hi Jean,
+> 
+> On 2017/10/6 21:31, Jean-Philippe Brucker wrote:
+>> Hook process operations to support PASID and page table sharing with the
+>> SMMUv3:
+>>
+>> +
+>> +static void arm_smmu_process_exit(struct iommu_domain *domain,
+>> +				  struct iommu_process *process)
+>> +{
+>> +	struct arm_smmu_master_data *master;
+>> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>> +
+>> +	if (!domain->process_exit)
+>> +		return;
+> 
+> If domain do not set process_exit handler, just return? smmu do not
+> need invalid ATC, clear cd entry, etc.? Maybe you should check when
+> call domain->process_exit?
+
+Indeed, that doesn't make sense. I'll move the check below.
+
+Thanks,
+Jean
+
+>> +
+>> +	spin_lock(&smmu_domain->devices_lock);
+>> +	list_for_each_entry(master, &smmu_domain->devices, list) {
+>> +		if (!master->processes)
+>> +			continue;
+>> +
+>> +		master->processes--;
+> Add
+> 		if (domain->process_exit)
+> here?
+>> +		domain->process_exit(domain, master->dev, process->pasid,
+>> +				     domain->process_exit_token);
+>> +
+>> +		/* TODO: inval ATC */
+>> +	}
+>> +	spin_unlock(&smmu_domain->devices_lock);
+>> +
+>> +	arm_smmu_write_ctx_desc(smmu_domain, process->pasid, NULL);
+>> +
+>> +	/* TODO: Invalidate all mappings if not DVM */
+>> +}
+>> +
+> Thanks
+> Yisheng Xie
+> 
+> 
+
