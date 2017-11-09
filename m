@@ -1,94 +1,47 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 1/2] MIPS: dts: remove bogus bcm96358nb4ser.dtb from dtb-y entry
-Date: Thu, 9 Nov 2017 09:11:41 +0900
-Message-ID: <CAK7LNATZ9O4cCpxLrG3MJoKYF+RnURkY4-tY2MdiZb90eGPtQg@mail.gmail.com>
-References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
- <1509859853-27473-2-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNAQfK_BWQcVW-ScrpAwNAHav3MrrzV-tjn_YUjsuvd7U5A@mail.gmail.com>
- <20171106095139.GG15260@jhogan-linux> <CAK7LNAQ_bugEP8hHKmCif5QCz2=Pw_GpXzYz4zJeXO0HXaT_ag@mail.gmail.com>
- <CAL_JsqJ8taCKnr_79UumiH2GFYq-fMzzkYm2iYevTOgUUWuzvg@mail.gmail.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH 03/17] ASoC: tlv320aic31xx: Fix GPIO1 register
+	definition
+Date: Wed, 8 Nov 2017 18:27:27 -0600
+Message-ID: <20171109002741.10897-4-afd@ti.com>
+References: <20171109002741.10897-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ8taCKnr_79UumiH2GFYq-fMzzkYm2iYevTOgUUWuzvg@mail.gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: James Hogan <jhogan@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Sam Ravnborg <sam@ravnborg.org>, Ralf Baechle <ralf@linux-mips.org>, Linux-MIPS <linux-mips@linux-mips.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171109002741.10897-1-afd@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-2017-11-09 1:51 GMT+09:00 Rob Herring <robh+dt@kernel.org>:
-> On Mon, Nov 6, 2017 at 5:00 AM, Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->> 2017-11-06 19:41 GMT+09:00 James Hogan <jhogan@kernel.org>:
->>> Hi,
->>>
->>> On Sun, Nov 05, 2017 at 11:11:38PM +0900, Masahiro Yamada wrote:
->>>> +CC Ralf Baechle <ralf@linux-mips.org>
->>>> +CC linux-mips@linux-mips.org
->>>> +CC Kevin Cernekee <cernekee@gmail.com>
->>>> +CC Florian Fainelli <f.fainelli@gmail.com>
->>>>
->>>>
->>>> I missed to CC MIPS maintainers.
->>>
->>> Yes, please resend the patch so it lands in patchwork.linux-mips.org.
->>
->>
->> This is a part of clean-up series of DT building.
->>
->> I want Acked-by from MIPS maintainers
->> so that the whole series can go to a different tree.
->> (DT or Kbuild).
->>
->>
->> Sam addressed more clean-up candidates in MIPS Makefiles
->> https://patchwork.kernel.org/patch/10041879/
->>
->> So, I will probably end up with touching those Makefiles more.
->>
->> All patches must go to the same tree.
->>
->>
->>>> 2017-11-05 14:30 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
->>>> > arch/mips/boot/dts/brcm/bcm96358nb4ser.dts does not exist, so
->>>> > we cannot build bcm96358nb4ser.dtb .
->>>
->>> This appears to be due to the file being renamed in commit 695835511f96
->>> ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom").
->>> Please can you update the commit message when you resend to mention the
->>> cause of the problem.
->>>
->>> You could also add the following if you like while you're at it:
->>>
->>> Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
->>> Cc: <stable@vger.kernel.org> # 4.9+
->
-> I think this one can be applied independently and we'd want it to if
-> we tag for stable. So I think it can go thru the MIPS tree.
->
+GPIO1 control register is number 51, fix this here.
 
+Fixes: bafcbfe429eb ("ASoC: tlv320aic31xx: Make the register values human readable")
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ sound/soc/codecs/tlv320aic31xx.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As I said to MIPS folks, this patch must go before 2/2.
-
-You picked up only 2/2, so your dt/kbuild branch is broken.
-
-
-make ARCH=mips allyesconfig
-&& make ARCH=mips CROSS_COMPILE=mips-linux- dtbs
-
-
-will produce the following error.
-
-
-make[2]: *** No rule to make target
-'arch/mips/boot/dts/brcm/bcm96358nb4ser.dtb', needed by '__build'.
-Stop.
-scripts/Makefile.build:570: recipe for target 'arch/mips/boot/dts/brcm' failed
-make[1]: *** [arch/mips/boot/dts/brcm] Error 2
-arch/mips/Makefile:413: recipe for target 'dtbs' failed
-make: *** [dtbs] Error 2
-
-
+diff --git a/sound/soc/codecs/tlv320aic31xx.h b/sound/soc/codecs/tlv320aic31xx.h
+index db95eeae966b..4f126cd82add 100644
+--- a/sound/soc/codecs/tlv320aic31xx.h
++++ b/sound/soc/codecs/tlv320aic31xx.h
+@@ -82,7 +82,7 @@ struct aic31xx_pdata {
+ #define AIC31XX_INTRADCFLAG2	AIC31XX_REG(0, 47) /* ADC Interrupt flags 2 */
+ #define AIC31XX_INT1CTRL	AIC31XX_REG(0, 48) /* INT1 interrupt control */
+ #define AIC31XX_INT2CTRL	AIC31XX_REG(0, 49) /* INT2 interrupt control */
+-#define AIC31XX_GPIO1		AIC31XX_REG(0, 50) /* GPIO1 control */
++#define AIC31XX_GPIO1		AIC31XX_REG(0, 51) /* GPIO1 control */
+ #define AIC31XX_DACPRB		AIC31XX_REG(0, 60)
+ #define AIC31XX_ADCPRB		AIC31XX_REG(0, 61) /* ADC Instruction Set Register */
+ #define AIC31XX_DACSETUP	AIC31XX_REG(0, 63) /* DAC channel setup register */
 -- 
-Best Regards
-Masahiro Yamada
+2.15.0
