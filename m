@@ -1,157 +1,105 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Problem with commit to add overlay symbols to live device tree
-Date: Thu, 9 Nov 2017 12:02:41 -0800
-Message-ID: <a444bccd-1d42-44b9-398c-095fb4fb9055@gmail.com>
-References: <85c5a40bb6eb4d4ebe522b3034528a36@infineon.com>
- <59E9029D.1030700@gmail.com> <d0bd4312e9314c8ba6c56d800d07c0a9@infineon.com>
- <59EA6348.5020205@gmail.com> <c4deba835169411ea2645c27c734dd31@infineon.com>
+From: =?UTF-8?Q?Beno=C3=AEt_Th=C3=A9baudeau?=
+        <benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 2/9] ASoC: tlv320aic3x: Fix typo in DT
+ binding documentation
+Date: Thu, 9 Nov 2017 21:26:00 +0100
+Message-ID: <CA+sos78vOjcY=9B3-pFthe9UUBqiEUps967UDEY=o=fUu230=Q@mail.gmail.com>
+References: <20171108212505.28320-1-afd@ti.com> <20171108212505.28320-3-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c4deba835169411ea2645c27c734dd31-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171108212505.28320-3-afd-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org, frank.rowand-7U/KSKJipcs@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alsa-devel <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/17 09:09, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
->> On 10/20/17 05:11, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
->>>> Hi Alexander,
->>>>
->>>> On 10/19/17 10:06, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
->>>>> Hi Frank, Rob,
->>>>>
->>>>> I ran some tests with kernel v4.14-rc2, where I came across an issue
->>>>> with your commit "of: overlay: add overlay symbols to live device
->>>>> tree" (d1651b03c2df75db8eda3fbcd3a07adb337ee8b0,
->>>>>
->>>>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/d
->>>> rivers/of?h=v4.14-
->> rc5&id=d1651b03c2df75db8eda3fbcd3a07adb337ee8b0).
->>>>> I am not sure whether this is a problem with your change or whether I
->>>>> made a mistake somewhere.
->>>>>
->>>>> Without this commit, the following device tree overlay works fine on
->>>>> a Raspberry Pi:
->>>>>
->>>>> /dts-v1/;
->>>>> /plugin/;
->>>>>
->>>>> / {
->>>>> 	fragment@0 {
->>>>> 		target-path = "/soc/spi@7e204000";
->>>>> 		__overlay__ {
->>>>> 			#address-cells = <1>;
->>>>> 			#size-cells = <0>;
->>>>> 			status = "okay";
->>>>>
->>>>> 		        spidev1: spi@1 {
->>>>> 				compatible = "spidev";
->>>>> 				reg = <1>;
->>>>> 				spi-max-frequency = <5000000>;
->>>>> 			};
->>>>> 		};
->>>>> 	};
->>>>> };
->>>>>
->>>>> But with the commit, it is rejected:
->>>>>
->>>>> OF: overlay: no symbols in root of device tree.
->>>>> OF: overlay: of_build_overlay_info() failed for tree@/
->>>>> create_overlay: Failed to create overlay (err=-22)
->>>>>
->>>>> Only if I remove the spidev1 label, it continues to work with the
->>>>> commit (but this is not always possible in more complex overlays).
->>>>>
->>>>> I hope this does not make a difference, but I use the configfs
->>>>> interface to load the overlay, that is not part of mainline, but
->>>>> shipped by several distributions nonetheless (for example in the
->>>>> Raspberry Pi kernel,
->>>>>
->>>>
->> https://github.com/raspberrypi/linux/commit/cccc24635da69799335566eb46
->>>> 4a4c9e1fb4a8ad).
->>>>>
->>>>>
->>>>> Could you tell me whether this change in behavior is intentional and
->>>>> whether I have to fix something in my usage?
->>>>
->>>> Yes, the change is intentional.
->>>>
->>>> If you are using overlays, the expectation is that the device tree
->>>> that was used to boot contains symbols (the paths of nodes that
->>>> have phandles) so that phandle references in the overlay can be
->>>> fixed up to match the values in the base devicetree.  Symbols
->>>> will be added to the device tree if if is compiled with the
->>>> "@" option.  This is the first method to avoid the overlay
->>>> load error.
->>>
->>> Ah, thanks, this does solve the problem. I use nothing special to
->>> generate the base devicetree, just "make dtbs". Would it make sense
->>> to add the "@" option to the kernel Makefile, so that symbols are
->>> added by default? Or does this have any downside? I'd suspect that
->>
->> Yes, there is a large downside.  Compiling with the "@" option will
->> increase the size of the DTB.  Most boards will not use overlays,
->> and in those cases this overhead has no value.  So "@" should be
->> opt-in, not default.
-> 
-> I see. Is there a way (a config option maybe?) that I can use to get this behavior without patching the Makefile?
+Dear Andrew F. Davis,
 
-To compile a DTB with -@, you can specify the value of DTC_FLAGS
-on the make command line.  For example:
+On Wed, Nov 8, 2017 at 10:24 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+> The property used to specify a GPIO intended for reset is "reset-gpio",
+> this binding uses "gpio-reset", as almost all other bindings use the
+> former name this use of the latter is certainly not intended and
+> was a typo. It is not compatible with newer methods used to fetch
+> GPIO pins and to prevent the spread of this error to other bindings
+> lets fix this here.
+>
+> We also standardize the pin as active-low, different device trees have
+> marked the GPIO different ways, luckily the driver currently uses the
+> low-level GPIO set function which does not respect the active-low flag,
+> but future changes may change this. This is an active-low reset, mark
+> it as such.
+>
+> Lastly, add an example of use for this property.
+>
+> Fixes: c24fdc886fde ("ASoC: tlv320aic3x: Add device tree bindings")
+>
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/sound/tlv320aic3x.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/sound/tlv320aic3x.txt b/Do=
+cumentation/devicetree/bindings/sound/tlv320aic3x.txt
+> index ba5b45c483f5..9e8eaa08ce90 100644
+> --- a/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
+> +++ b/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
+> @@ -17,7 +17,7 @@ Required properties:
+>
+>  Optional properties:
+>
+> -- gpio-reset - gpio pin number used for codec reset
+> +- reset-gpio - GPIO specification for the active low RESET input.
+>  - ai3x-gpio-func - <array of 2 int> - AIC3X_GPIO1 & AIC3X_GPIO2 Function=
+ality
+>                                     - Not supported on tlv320aic3104
+>  - ai3x-micbias-vg - MicBias Voltage required.
+> @@ -61,10 +61,14 @@ The pins can be used in referring sound node's audio-=
+routing property.
+>
+>  Example:
+>
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+>  tlv320aic3x: tlv320aic3x@1b {
+>         compatible =3D "ti,tlv320aic3x";
+>         reg =3D <0x1b>;
+>
+> +       reset-gpio =3D <&gpio1 17 GPIO_ACTIVE_LOW>;
+> +
+>         AVDD-supply =3D <&regulator>;
+>         IOVDD-supply =3D <&regulator>;
+>         DRVDD-supply =3D <&regulator>;
 
-   DTC_FLAGS="-@" make qcom-apq8074-dragonboard.dtb
+According to Documentation/devicetree/bindings/gpio/gpio.txt:
+"GPIO properties should be named "[<name>-]gpios", with <name> being the pu=
+rpose
+of this GPIO for the device. While a non-existent <name> is considered vali=
+d
+for compatibility reasons (resolving to the "gpios" property), it is not al=
+lowed
+for new bindings. Also, GPIO properties named "[<name>-]gpio" are valid and=
+ old
+bindings use it, but are only supported for compatibility reasons and shoul=
+d not
+be used for newer bindings since it has been deprecated."
 
-This will work for arm.  For some other architectures, you may want to
-add additional flags to DTC_FLAGS, and for microblaze this will not work
-with the current makefile (the arch makefiles should probably be changed
-to be: DTC_FLAGS += ... or to remove the "-p 1024" if no longer needed):
+So it should be "reset-gpios" for new bindings.
 
-  $ git grep DTC_FLAGS | grep Makefile: | grep arch
-  arch/c6x/boot/dts/Makefile:DTC_FLAGS ?= -p 1024
-  arch/microblaze/boot/dts/Makefile:DTC_FLAGS := -p 1024
-  arch/openrisc/boot/dts/Makefile:#DTC_FLAGS ?= -p 1024
-  arch/powerpc/boot/Makefile:DTC_FLAGS	?= -p 1024
+Also, sound/soc/codecs/tlv320aic3x.c still uses "gpio-reset", and I do
+not see any patch in your series changing this:
+ret =3D of_get_named_gpio(np, "gpio-reset", 0);
 
+Same remarks for your "[PATCH 6/9] ARM: dts: imx: Fix the audio
+CODEC's reset pin". I don't know if there are other DTS files using
+this, but they should all be updated accordingly. This would anyway
+break all of the out-of-tree DTS files using this, which I think is
+not allowed, so the driver should be changed in a way still allowing
+the legacy naming besides the new one.
 
->>> many more people will be hit by this change, since most tutorials for
->>> overlays that I have seen include the "@" option for the dtc calls.>
->>>> If you compile the overlay with the "@" option then symbols
->>>> will be added to the overlay DTB.  Previous to commit
->>>> d1651b03c2df, these symbols would be ignored when an overlay
->>>> was loaded.  If you remove the "@" from the compile of
->>>> overlays, then everything should work the same way it did
->>>> before the commit.  This is the second way to avoid the
->>>> load overlay error.
-> 
-> Do I understand that correctly, that when I remove the "@" option
-> from the dtc calls, the same call should work both with an old
-> (pre-d1651b03c2df) and a new kernel? If the old kernel just ignored
-> the symbols, they were not used for anything, so it should not matter
-> whether they were contained in the overlay DTB or not, right?
-
-I just mentioned that workaround as another temporary way to work
-around your specific case.  You should probably just forget I even
-mentioned it.
-
-
->>>>
->>>>
->>>>> Thanks
->>>>> Alexander
->>>>> --
->>>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
->>
-> 
-> 
-
+Best regards,
+Beno=C3=AEt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
