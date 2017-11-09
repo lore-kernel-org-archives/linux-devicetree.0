@@ -1,7 +1,7 @@
 From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH v4 3/6] remoteproc: qcom: Push reset ops, fw ops, rproc ops in to of_match data
-Date: Thu,  9 Nov 2017 20:16:12 +0530
-Message-ID: <1510238775-14883-4-git-send-email-sricharan@codeaurora.org>
+Subject: [PATCH v4 4/6] remoteproc: qcom: Split the head and tail of the q6v5-pil rproc start function
+Date: Thu,  9 Nov 2017 20:16:13 +0530
+Message-ID: <1510238775-14883-5-git-send-email-sricharan@codeaurora.org>
 References: <1510238775-14883-1-git-send-email-sricharan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1510238775-14883-1-git-send-email-sricharan@codeaurora.org>
@@ -10,112 +10,210 @@ To: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutlan
 Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Instead of directly assigning reset, fw and rproc ops, put them
-in to of_match data and get from that. Currently same ops
-are used for all compatibles, but that will change when we add
-q6v5-wcss support.
+Most of the q6v5-pil start function is same for the q6v5-wcss rproc
+that will be added later. So split and move out the common pieces
+so that the same code can be reused.
 
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 ---
- drivers/remoteproc/qcom_q6v5_pil.c | 38 +++++++++++++++++++++++++-------------
- 1 file changed, 25 insertions(+), 13 deletions(-)
+ drivers/remoteproc/qcom_q6v5_pil.c | 166 ++++++++++++++++++++-----------------
+ 1 file changed, 91 insertions(+), 75 deletions(-)
 
 diff --git a/drivers/remoteproc/qcom_q6v5_pil.c b/drivers/remoteproc/qcom_q6v5_pil.c
-index df8723d..769c6af 100644
+index 769c6af..75ff02d 100644
 --- a/drivers/remoteproc/qcom_q6v5_pil.c
 +++ b/drivers/remoteproc/qcom_q6v5_pil.c
-@@ -116,16 +116,6 @@ struct qcom_mss_reg_res {
- 	int uA;
- };
+@@ -405,75 +405,107 @@ static int q6v5_rmb_mba_wait(struct q6v5 *qproc, u32 status, int ms)
+ 	return val;
+ }
  
--struct rproc_hexagon_res {
--	const char *hexagon_mba_image;
--	struct qcom_mss_reg_res *proxy_supply;
--	struct qcom_mss_reg_res *active_supply;
--	char **proxy_clk_names;
--	char **active_clk_names;
--	int version;
--	bool need_mem_protection;
--};
--
- struct q6v5 {
- 	struct device *dev;
- 	struct rproc *rproc;
-@@ -174,6 +164,19 @@ struct q6v5 {
- 	int version;
- };
+-static int q6v5proc_reset(struct q6v5 *qproc)
++static int q6v5_reset(struct q6v5 *qproc)
+ {
+-	u32 val;
+-	int ret;
+-	int i;
++	u32 ret;
++	int val, i;
  
-+struct rproc_hexagon_res {
-+	const char *hexagon_mba_image;
-+	struct qcom_mss_reg_res *proxy_supply;
-+	struct qcom_mss_reg_res *active_supply;
-+	char **proxy_clk_names;
-+	char **active_clk_names;
-+	int version;
-+	bool need_mem_protection;
-+	int (*init_reset)(struct q6v5 *qproc);
-+	const struct rproc_fw_ops *fw_ops;
-+	const struct rproc_ops *ops;
-+};
++	/* Assert resets, stop core */
++	val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
++	val |= Q6SS_CORE_ARES | Q6SS_BUS_ARES_ENABLE | Q6SS_STOP_CORE;
++	writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
+ 
+-	if (qproc->version == MSS_MSM8996) {
+-		/* Override the ACC value if required */
+-		writel(QDSP6SS_ACC_OVERRIDE_VAL,
+-		       qproc->reg_base + QDSP6SS_STRAP_ACC);
++	/* BHS require xo cbcr to be enabled */
++	val = readl(qproc->reg_base + QDSP6SS_XO_CBCR);
++	val |= 0x1;
++	writel(val, qproc->reg_base + QDSP6SS_XO_CBCR);
+ 
+-		/* Assert resets, stop core */
+-		val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
+-		val |= Q6SS_CORE_ARES | Q6SS_BUS_ARES_ENABLE | Q6SS_STOP_CORE;
+-		writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
++	/* Read CLKOFF bit to go low indicating CLK is enabled */
++	ret = readl_poll_timeout(qproc->reg_base + QDSP6SS_XO_CBCR,
++				 val, !(val & BIT(31)), 1,
++				 HALT_CHECK_MAX_LOOPS);
++	if (ret) {
++		dev_err(qproc->dev,
++			"xo cbcr enabling timed out (rc:%d)\n", ret);
++		return ret;
++	}
++	/* Enable power block headswitch and wait for it to stabilize */
++	val = readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++	val |= QDSP6v56_BHS_ON;
++	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++	val |= readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++	udelay(1);
+ 
+-		/* BHS require xo cbcr to be enabled */
+-		val = readl(qproc->reg_base + QDSP6SS_XO_CBCR);
+-		val |= 0x1;
+-		writel(val, qproc->reg_base + QDSP6SS_XO_CBCR);
++	/* Put LDO in bypass mode */
++	val |= QDSP6v56_LDO_BYP;
++	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+ 
+-		/* Read CLKOFF bit to go low indicating CLK is enabled */
+-		ret = readl_poll_timeout(qproc->reg_base + QDSP6SS_XO_CBCR,
+-					 val, !(val & BIT(31)), 1,
+-					 HALT_CHECK_MAX_LOOPS);
+-		if (ret) {
+-			dev_err(qproc->dev,
+-				"xo cbcr enabling timed out (rc:%d)\n", ret);
+-			return ret;
+-		}
+-		/* Enable power block headswitch and wait for it to stabilize */
+-		val = readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+-		val |= QDSP6v56_BHS_ON;
+-		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+-		val |= readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++	/* Deassert QDSP6 compiler memory clamp */
++	val = readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++	val &= ~QDSP6v56_CLAMP_QMC_MEM;
++	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
 +
- enum {
- 	MSS_MSM8916,
- 	MSS_MSM8974,
-@@ -1128,14 +1131,14 @@ static int q6v5_probe(struct platform_device *pdev)
- 	if (!desc)
- 		return -EINVAL;
++	/* Deassert memory peripheral sleep and L2 memory standby */
++	val |= Q6SS_L2DATA_STBY_N | Q6SS_SLP_RET_N;
++	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++
++	/* Turn on L1, L2, ETB and JU memories 1 at a time */
++	val = readl(qproc->reg_base + QDSP6SS_MEM_PWR_CTL);
++	for (i = 19; i >= 0; i--) {
++		val |= BIT(i);
++		writel(val, qproc->reg_base + QDSP6SS_MEM_PWR_CTL);
++		/*
++		 * Read back value to ensure the write is done then
++		 * wait for 1us for both memory peripheral and data
++		 * array to turn on.
++		 */
++		val |= readl(qproc->reg_base + QDSP6SS_MEM_PWR_CTL);
+ 		udelay(1);
++	}
++	/* Remove word line clamp */
++	val = readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++	val &= ~QDSP6v56_CLAMP_WL;
++	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
  
--	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_ops,
-+	rproc = rproc_alloc(&pdev->dev, pdev->name, desc->ops,
- 			    desc->hexagon_mba_image, sizeof(*qproc));
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "failed to allocate rproc\n");
- 		return -ENOMEM;
+-		/* Put LDO in bypass mode */
+-		val |= QDSP6v56_LDO_BYP;
+-		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++	return 0;
++}
+ 
+-		/* Deassert QDSP6 compiler memory clamp */
+-		val = readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+-		val &= ~QDSP6v56_CLAMP_QMC_MEM;
+-		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++static void q6v5_reset_rest(struct q6v5 *qproc)
++{
++	u32 val;
+ 
+-		/* Deassert memory peripheral sleep and L2 memory standby */
+-		val |= Q6SS_L2DATA_STBY_N | Q6SS_SLP_RET_N;
+-		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++	val = readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+ 
+-		/* Turn on L1, L2, ETB and JU memories 1 at a time */
+-		val = readl(qproc->reg_base + QDSP6SS_MEM_PWR_CTL);
+-		for (i = 19; i >= 0; i--) {
+-			val |= BIT(i);
+-			writel(val, qproc->reg_base +
+-						QDSP6SS_MEM_PWR_CTL);
+-			/*
+-			 * Read back value to ensure the write is done then
+-			 * wait for 1us for both memory peripheral and data
+-			 * array to turn on.
+-			 */
+-			val |= readl(qproc->reg_base + QDSP6SS_MEM_PWR_CTL);
+-			udelay(1);
+-		}
+-		/* Remove word line clamp */
+-		val = readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+-		val &= ~QDSP6v56_CLAMP_WL;
+-		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++	/* Remove IO clamp */
++	val &= ~Q6SS_CLAMP_IO;
++	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
++
++	/* Bring core out of reset */
++	val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
++	val &= ~Q6SS_CORE_ARES;
++	writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
++
++	/* Turn on core clock */
++	val = readl(qproc->reg_base + QDSP6SS_GFMUX_CTL_REG);
++	val |= Q6SS_CLK_ENABLE;
++	writel(val, qproc->reg_base + QDSP6SS_GFMUX_CTL_REG);
++
++	/* Start core execution */
++	val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
++	val &= ~Q6SS_STOP_CORE;
++	writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
++}
++
++static int q6v5proc_reset(struct q6v5 *qproc)
++{
++	u32 val;
++	int ret;
++
++	if (qproc->version == MSS_MSM8996) {
++		/* Override the ACC value if required */
++		writel(QDSP6SS_ACC_OVERRIDE_VAL,
++		       qproc->reg_base + QDSP6SS_STRAP_ACC);
++		q6v5_reset(qproc);
+ 	} else {
+ 		/* Assert resets, stop core */
+ 		val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
+@@ -501,24 +533,8 @@ static int q6v5proc_reset(struct q6v5 *qproc)
+ 		val |= Q6SS_L2DATA_SLP_NRET_N_0;
+ 		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
  	}
+-	/* Remove IO clamp */
+-	val &= ~Q6SS_CLAMP_IO;
+-	writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+-
+-	/* Bring core out of reset */
+-	val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
+-	val &= ~Q6SS_CORE_ARES;
+-	writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
  
--	rproc->fw_ops = &q6v5_fw_ops;
-+	rproc->fw_ops = desc->fw_ops;
+-	/* Turn on core clock */
+-	val = readl(qproc->reg_base + QDSP6SS_GFMUX_CTL_REG);
+-	val |= Q6SS_CLK_ENABLE;
+-	writel(val, qproc->reg_base + QDSP6SS_GFMUX_CTL_REG);
+-
+-	/* Start core execution */
+-	val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
+-	val &= ~Q6SS_STOP_CORE;
+-	writel(val, qproc->reg_base + QDSP6SS_RESET_REG);
++	q6v5_reset_rest(qproc);
  
- 	qproc = (struct q6v5 *)rproc->priv;
- 	qproc->dev = &pdev->dev;
-@@ -1185,7 +1188,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	}
- 	qproc->active_reg_count = ret;
- 
--	ret = q6v5_init_reset(qproc);
-+	ret = desc->init_reset(qproc);
- 	if (ret)
- 		goto free_rproc;
- 
-@@ -1258,6 +1261,9 @@ static int q6v5_remove(struct platform_device *pdev)
- 	},
- 	.need_mem_protection = true,
- 	.version = MSS_MSM8996,
-+	.init_reset = q6v5_init_reset,
-+	.fw_ops = &q6v5_fw_ops,
-+	.ops = &q6v5_ops,
- };
- 
- static const struct rproc_hexagon_res msm8916_mss = {
-@@ -1289,6 +1295,9 @@ static int q6v5_remove(struct platform_device *pdev)
- 	},
- 	.need_mem_protection = false,
- 	.version = MSS_MSM8916,
-+	.init_reset = q6v5_init_reset,
-+	.fw_ops = &q6v5_fw_ops,
-+	.ops = &q6v5_ops,
- };
- 
- static const struct rproc_hexagon_res msm8974_mss = {
-@@ -1328,6 +1337,9 @@ static int q6v5_remove(struct platform_device *pdev)
- 	},
- 	.need_mem_protection = false,
- 	.version = MSS_MSM8974,
-+	.init_reset = q6v5_init_reset,
-+	.fw_ops = &q6v5_fw_ops,
-+	.ops = &q6v5_ops,
- };
- 
- static const struct of_device_id q6v5_of_match[] = {
+ 	/* Wait for PBL status */
+ 	ret = q6v5_rmb_pbl_wait(qproc, 1000);
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
