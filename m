@@ -1,91 +1,54 @@
-From: Jean-Philippe Brucker <jphilippe.brucker@gmail.com>
-Subject: Re: [RFCv2 PATCH 01/36] iommu: Keep track of processes and PASIDs
-Date: Thu, 9 Nov 2017 12:13:13 +0000
-Message-ID: <67e7ad60-3f71-26d8-6ff6-59c95275f0e3@gmail.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-2-jean-philippe.brucker@arm.com>
- <BLUPR0201MB150538FDD455F6042803B54FA5560@BLUPR0201MB1505.namprd02.prod.outlook.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Question about "unit address format error" of DTC
+Date: Thu, 9 Nov 2017 21:14:16 +0900
+Message-ID: <CAK7LNARujG8J_z62bc+PQOz34rf-Bo=+M54kvtokZxnktn2Y+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <BLUPR0201MB150538FDD455F6042803B54FA5560@BLUPR0201MB1505.namprd02.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharatku@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, gabriele.paoloni@huawe
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bharat,
+Hi Rob, David,
 
-On 11/08/2017 05:50 PM, Bharat Kumar Gogada wrote:
-> Hi Jean,
-> 
-> +static struct iommu_process *
-> +iommu_process_alloc(struct iommu_domain *domain, struct task_struct
-> +*task) {
-> +       int err;
-> +       int pasid;
-> +       struct iommu_process *process;
-> +
-> +       if (WARN_ON(!domain->ops->process_alloc ||
-> !domain->ops->process_free))
-> +               return ERR_PTR(-ENODEV);
-> +
-> +       process = domain->ops->process_alloc(task);
-> +       if (IS_ERR(process))
-> +               return process;
-> +       if (!process)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       process->pid            = get_task_pid(task, PIDTYPE_PID);
-> +       process->release        = domain->ops->process_free;
-> +       INIT_LIST_HEAD(&process->domains);
-> +       kref_init(&process->kref);
-> +
-> +       if (!process->pid) {
-> +               err = -EINVAL;
-> +               goto err_free_process;
-> +       }
-> +
-> +       idr_preload(GFP_KERNEL);
-> +       spin_lock(&iommu_process_lock);
-> +       pasid = idr_alloc_cyclic(&iommu_process_idr, process,
-> domain->min_pasid,
-> +                                domain->max_pasid + 1, GFP_ATOMIC);
-> If EP supports only one pasid; domain->min_pasid=1 and domain->max_pasid=0.
-> When idr_alloc_cyclic is called it invokes idr_get_free_cmn function
-> where we have following condition. (Based on kernel 4.14-rc6)
->         if (!radix_tree_tagged(root, IDR_FREE))
->                 start = max(start, maxindex + 1);
->               if (start > max)
->                 return ERR_PTR(-ENOSPC);
-> Here max is being assigned zero by the time this function is invoked,
-> this value is based on domain->max_pasid.
-> This condition fails and ENOSPC is returned.
->        
-> In this case even though hardware supports PASID, BIND flow fails.
 
-It should fail, since we're reserving PASID 0 for non-PASID transactions
-with S1DSS=0b10. In addition, the SMMUv3 specification does not allow
-using PASID with a single entry. See the description of S1CDMax in 5.2
-Stream Table Entry:
+I am just curious about a DTC warning.
 
-"when this field is 0, the substreams of the STE are disabled and one CD
-is available. (The minimum useful number of substreams is 2.) Any
-transaction with a SubstreamID will be terminated with an abort and a
-C_BAD_SUBSTREAMID event recorded."
 
-> Any reason why pasid allocation moved to idr allocations rather than
-> bitmap allocations as in v1 patches ?
+For example,
 
-Yes, idr provides a convenient way to quickly retrieve the context
-associated with a PASID, when handling a fault. v1 had the allocation in a
-bitmap and storing in a rb-tree. By using an idr we combine both and rely
-on a well-tested infrastructure.
+soc {
+    compatible = "simple-bus";
+    #address-cells = <1>;
+    #size-cells = <1>;
+    ranges;
 
-Note that in the future we might need to go back to handcrafting the PASID
-allocation, but it will probably still be based on idr.
+    foo@11111111 {
+         compatible = "foo";
+         reg = <0x54006800 0x40>;
+    };
+};
 
-Thanks,
-Jean
+This emits the following warning.
+
+Warning (simple_bus_reg): Node /soc/foo@11111111 simple-bus unit
+address format error, expected "54006800"
+
+
+But, if I replace "simple-bus" with "simple-mfd",
+DTC is completely happy.
+
+Why is this check limited to simple bus / PCI bus?
+
+For other cases, is mismatching @<address>  allowed?
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
