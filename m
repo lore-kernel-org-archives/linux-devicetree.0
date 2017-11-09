@@ -1,113 +1,103 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 1/2] MIPS: dts: remove bogus bcm96358nb4ser.dtb from dtb-y entry
-Date: Thu, 9 Nov 2017 09:38:22 +0900
-Message-ID: <CAK7LNARzRUA6ZGQUiebZ+nmLBSAVdYONsozHBf0VQb83KqSx1g@mail.gmail.com>
-References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
- <1509859853-27473-2-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNAQfK_BWQcVW-ScrpAwNAHav3MrrzV-tjn_YUjsuvd7U5A@mail.gmail.com>
- <20171106095139.GG15260@jhogan-linux> <CAK7LNAQ_bugEP8hHKmCif5QCz2=Pw_GpXzYz4zJeXO0HXaT_ag@mail.gmail.com>
- <CAL_JsqJ8taCKnr_79UumiH2GFYq-fMzzkYm2iYevTOgUUWuzvg@mail.gmail.com> <CAK7LNATZ9O4cCpxLrG3MJoKYF+RnURkY4-tY2MdiZb90eGPtQg@mail.gmail.com>
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/8] Cavium OCTEON-III network driver.
+Date: Wed,  8 Nov 2017 16:51:18 -0800
+Message-ID: <20171109005126.21341-1-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNATZ9O4cCpxLrG3MJoKYF+RnURkY4-tY2MdiZb90eGPtQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Marek <michal.lkml-yyZNWGI4GtDR7s880joybQ@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-11-09 9:11 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> 2017-11-09 1:51 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->> On Mon, Nov 6, 2017 at 5:00 AM, Masahiro Yamada
->> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->>> 2017-11-06 19:41 GMT+09:00 James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->>>> Hi,
->>>>
->>>> On Sun, Nov 05, 2017 at 11:11:38PM +0900, Masahiro Yamada wrote:
->>>>> +CC Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
->>>>> +CC linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
->>>>> +CC Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>> +CC Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>
->>>>>
->>>>> I missed to CC MIPS maintainers.
->>>>
->>>> Yes, please resend the patch so it lands in patchwork.linux-mips.org.
->>>
->>>
->>> This is a part of clean-up series of DT building.
->>>
->>> I want Acked-by from MIPS maintainers
->>> so that the whole series can go to a different tree.
->>> (DT or Kbuild).
->>>
->>>
->>> Sam addressed more clean-up candidates in MIPS Makefiles
->>> https://patchwork.kernel.org/patch/10041879/
->>>
->>> So, I will probably end up with touching those Makefiles more.
->>>
->>> All patches must go to the same tree.
->>>
->>>
->>>>> 2017-11-05 14:30 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
->>>>> > arch/mips/boot/dts/brcm/bcm96358nb4ser.dts does not exist, so
->>>>> > we cannot build bcm96358nb4ser.dtb .
->>>>
->>>> This appears to be due to the file being renamed in commit 695835511f96
->>>> ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom").
->>>> Please can you update the commit message when you resend to mention the
->>>> cause of the problem.
->>>>
->>>> You could also add the following if you like while you're at it:
->>>>
->>>> Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
->>>> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 4.9+
->>
->> I think this one can be applied independently and we'd want it to if
->> we tag for stable. So I think it can go thru the MIPS tree.
->>
->
->
-> As I said to MIPS folks, this patch must go before 2/2.
->
-> You picked up only 2/2, so your dt/kbuild branch is broken.
->
->
-> make ARCH=mips allyesconfig
-> && make ARCH=mips CROSS_COMPILE=mips-linux- dtbs
->
->
-> will produce the following error.
->
->
-> make[2]: *** No rule to make target
-> 'arch/mips/boot/dts/brcm/bcm96358nb4ser.dtb', needed by '__build'.
-> Stop.
-> scripts/Makefile.build:570: recipe for target 'arch/mips/boot/dts/brcm' failed
-> make[1]: *** [arch/mips/boot/dts/brcm] Error 2
-> arch/mips/Makefile:413: recipe for target 'dtbs' failed
-> make: *** [dtbs] Error 2
->
+We are adding the Cavium OCTEON-III network driver.  But since
+interacting with the input and output queues is done via special CPU
+local memory, we also need to add support to the MIPS/Octeon
+architecture code.  Aren't SoCs nice in this way?
 
+The first six patches add the SoC support needed by the driver, the
+last two add the driver and an entry in MAINTAINERS.
 
-Looking into it, probably
-bmips_dtb_defconfig was already broken regardless my patches.
+Since these touch several subsystems (mips, staging, netdev), I would
+propose merging via netdev, but defer to the maintainers if they think
+something else would work better.
 
-But, I am not comfortable with breaking all{yes,mod}config
-because they are often used for build test.
+A separate pull request was recently done by Steven Hill for the
+firmware required by the driver.
 
+Changes from v1:
 
-I hope you can apply this in the order as I sent,
-with the following tag.
+o Cleanup and use of standard bindings in the device tree bindings
+  document.
 
-Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to
-bcm6358-neufbox4-sercom")
-Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 4.9+
+o Added (hopefully) clarifying comments about several OCTEON
+  architectural peculiarities.
+
+o Removed unused testing code from the driver.
+
+o Removed some module parameters that already default to the proper
+  values.
+
+o KConfig cleanup, including testing on x86_64, arm64 and mips.
+
+o Fixed breakage to the driver for previous generation of OCTEON SoCs (in
+  the staging directory still).
+
+o Verified bisectability of the patch set.
+
+Carlos Munoz (5):
+  dt-bindings: Add Cavium Octeon Common Ethernet Interface.
+  MIPS: Octeon: Enable LMTDMA/LMTST operations.
+  MIPS: Octeon: Add a global resource manager.
+  MIPS: Octeon: Add Free Pointer Unit (FPA) support.
+  netdev: octeon-ethernet: Add Cavium Octeon III support.
+
+David Daney (3):
+  MIPS: Octeon: Automatically provision CVMSEG space.
+  staging: octeon: Remove USE_ASYNC_IOBDMA macro.
+  MAINTAINERS: Add entry for
+    drivers/net/ethernet/cavium/octeon/octeon3-*
+
+ .../devicetree/bindings/net/cavium-bgx.txt         |   61 +
+ MAINTAINERS                                        |    6 +
+ arch/mips/cavium-octeon/Kconfig                    |   35 +-
+ arch/mips/cavium-octeon/Makefile                   |    4 +-
+ arch/mips/cavium-octeon/octeon-fpa3.c              |  364 ++++
+ arch/mips/cavium-octeon/resource-mgr.c             |  371 ++++
+ arch/mips/cavium-octeon/setup.c                    |   22 +-
+ .../asm/mach-cavium-octeon/kernel-entry-init.h     |   20 +-
+ arch/mips/include/asm/mipsregs.h                   |    2 +
+ arch/mips/include/asm/octeon/octeon.h              |   47 +-
+ arch/mips/include/asm/processor.h                  |    2 +-
+ arch/mips/kernel/octeon_switch.S                   |    2 -
+ arch/mips/mm/tlbex.c                               |   29 +-
+ drivers/net/ethernet/cavium/Kconfig                |   55 +-
+ drivers/net/ethernet/cavium/octeon/Makefile        |    6 +
+ .../net/ethernet/cavium/octeon/octeon3-bgx-nexus.c |  698 +++++++
+ .../net/ethernet/cavium/octeon/octeon3-bgx-port.c  | 2028 +++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-core.c  | 2068 ++++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pki.c   |  833 ++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pko.c   | 1719 ++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-sso.c   |  309 +++
+ drivers/net/ethernet/cavium/octeon/octeon3.h       |  411 ++++
+ drivers/staging/octeon/ethernet-defines.h          |    6 -
+ drivers/staging/octeon/ethernet-rx.c               |   25 +-
+ drivers/staging/octeon/ethernet-tx.c               |   85 +-
+ 25 files changed, 9065 insertions(+), 143 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
+ create mode 100644 arch/mips/cavium-octeon/octeon-fpa3.c
+ create mode 100644 arch/mips/cavium-octeon/resource-mgr.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-nexus.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-core.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pki.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pko.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-sso.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3.h
 
 -- 
-Best Regards
-Masahiro Yamada
+2.13.6
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
