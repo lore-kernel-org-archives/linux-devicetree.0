@@ -1,103 +1,35 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 2/9] ASoC: tlv320aic3x: Fix typo in DT
- binding documentation
-Date: Thu, 9 Nov 2017 14:42:12 -0600
-Message-ID: <caa53427-7b27-105d-3207-807c4776eaec@ti.com>
-References: <20171108212505.28320-1-afd@ti.com>
- <20171108212505.28320-3-afd@ti.com>
- <CA+sos78vOjcY=9B3-pFthe9UUBqiEUps967UDEY=o=fUu230=Q@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Fix DTC warnings about missing phy-cells
+Date: Thu, 9 Nov 2017 14:59:51 -0600
+Message-ID: <CAL_JsqK=6PdDk0ARTbpn39JmsKwFz71s6z5E+cfu6+uONzzGOg@mail.gmail.com>
+References: <1509277745-6730-1-git-send-email-stefan.wahren@i2se.com> <8760aww4jm.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CA+sos78vOjcY=9B3-pFthe9UUBqiEUps967UDEY=o=fUu230=Q@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: =?UTF-8?Q?Beno=c3=aet_Th=c3=a9baudeau?= <benoit.thebaudeau.dev@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alsa-devel <alsa-devel@alsa-project.org>, Sascha Hauer <kernel@pengutronix.de>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8760aww4jm.fsf-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMDkvMjAxNyAwMjoyNiBQTSwgQmVub8OudCBUaMOpYmF1ZGVhdSB3cm90ZToKPiBEZWFy
-IEFuZHJldyBGLiBEYXZpcywKPiAKPiBPbiBXZWQsIE5vdiA4LCAyMDE3IGF0IDEwOjI0IFBNLCBB
-bmRyZXcgRi4gRGF2aXMgPGFmZEB0aS5jb20+IHdyb3RlOgo+PiBUaGUgcHJvcGVydHkgdXNlZCB0
-byBzcGVjaWZ5IGEgR1BJTyBpbnRlbmRlZCBmb3IgcmVzZXQgaXMgInJlc2V0LWdwaW8iLAo+PiB0
-aGlzIGJpbmRpbmcgdXNlcyAiZ3Bpby1yZXNldCIsIGFzIGFsbW9zdCBhbGwgb3RoZXIgYmluZGlu
-Z3MgdXNlIHRoZQo+PiBmb3JtZXIgbmFtZSB0aGlzIHVzZSBvZiB0aGUgbGF0dGVyIGlzIGNlcnRh
-aW5seSBub3QgaW50ZW5kZWQgYW5kCj4+IHdhcyBhIHR5cG8uIEl0IGlzIG5vdCBjb21wYXRpYmxl
-IHdpdGggbmV3ZXIgbWV0aG9kcyB1c2VkIHRvIGZldGNoCj4+IEdQSU8gcGlucyBhbmQgdG8gcHJl
-dmVudCB0aGUgc3ByZWFkIG9mIHRoaXMgZXJyb3IgdG8gb3RoZXIgYmluZGluZ3MKPj4gbGV0cyBm
-aXggdGhpcyBoZXJlLgo+Pgo+PiBXZSBhbHNvIHN0YW5kYXJkaXplIHRoZSBwaW4gYXMgYWN0aXZl
-LWxvdywgZGlmZmVyZW50IGRldmljZSB0cmVlcyBoYXZlCj4+IG1hcmtlZCB0aGUgR1BJTyBkaWZm
-ZXJlbnQgd2F5cywgbHVja2lseSB0aGUgZHJpdmVyIGN1cnJlbnRseSB1c2VzIHRoZQo+PiBsb3ct
-bGV2ZWwgR1BJTyBzZXQgZnVuY3Rpb24gd2hpY2ggZG9lcyBub3QgcmVzcGVjdCB0aGUgYWN0aXZl
-LWxvdyBmbGFnLAo+PiBidXQgZnV0dXJlIGNoYW5nZXMgbWF5IGNoYW5nZSB0aGlzLiBUaGlzIGlz
-IGFuIGFjdGl2ZS1sb3cgcmVzZXQsIG1hcmsKPj4gaXQgYXMgc3VjaC4KPj4KPj4gTGFzdGx5LCBh
-ZGQgYW4gZXhhbXBsZSBvZiB1c2UgZm9yIHRoaXMgcHJvcGVydHkuCj4+Cj4+IEZpeGVzOiBjMjRm
-ZGM4ODZmZGUgKCJBU29DOiB0bHYzMjBhaWMzeDogQWRkIGRldmljZSB0cmVlIGJpbmRpbmdzIikK
-Pj4KPj4gU2lnbmVkLW9mZi1ieTogQW5kcmV3IEYuIERhdmlzIDxhZmRAdGkuY29tPgo+PiAtLS0K
-Pj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC90bHYzMjBhaWMzeC50
-eHQgfCA2ICsrKysrLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
-dGlvbigtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3NvdW5kL3RsdjMyMGFpYzN4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9zb3VuZC90bHYzMjBhaWMzeC50eHQKPj4gaW5kZXggYmE1YjQ1YzQ4M2Y1Li45ZThlYWEw
-OGNlOTAgMTAwNjQ0Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
-b3VuZC90bHYzMjBhaWMzeC50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3NvdW5kL3RsdjMyMGFpYzN4LnR4dAo+PiBAQCAtMTcsNyArMTcsNyBAQCBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgo+Pgo+PiAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4KPj4gLS0gZ3Bpby1y
-ZXNldCAtIGdwaW8gcGluIG51bWJlciB1c2VkIGZvciBjb2RlYyByZXNldAo+PiArLSByZXNldC1n
-cGlvIC0gR1BJTyBzcGVjaWZpY2F0aW9uIGZvciB0aGUgYWN0aXZlIGxvdyBSRVNFVCBpbnB1dC4K
-Pj4gIC0gYWkzeC1ncGlvLWZ1bmMgLSA8YXJyYXkgb2YgMiBpbnQ+IC0gQUlDM1hfR1BJTzEgJiBB
-SUMzWF9HUElPMiBGdW5jdGlvbmFsaXR5Cj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIC0gTm90IHN1cHBvcnRlZCBvbiB0bHYzMjBhaWMzMTA0Cj4+ICAtIGFpM3gtbWljYmlh
-cy12ZyAtIE1pY0JpYXMgVm9sdGFnZSByZXF1aXJlZC4KPj4gQEAgLTYxLDEwICs2MSwxNCBAQCBU
-aGUgcGlucyBjYW4gYmUgdXNlZCBpbiByZWZlcnJpbmcgc291bmQgbm9kZSdzIGF1ZGlvLXJvdXRp
-bmcgcHJvcGVydHkuCj4+Cj4+ICBFeGFtcGxlOgo+Pgo+PiArI2luY2x1ZGUgPGR0LWJpbmRpbmdz
-L2dwaW8vZ3Bpby5oPgo+PiArCj4+ICB0bHYzMjBhaWMzeDogdGx2MzIwYWljM3hAMWIgewo+PiAg
-ICAgICAgIGNvbXBhdGlibGUgPSAidGksdGx2MzIwYWljM3giOwo+PiAgICAgICAgIHJlZyA9IDww
-eDFiPjsKPj4KPj4gKyAgICAgICByZXNldC1ncGlvID0gPCZncGlvMSAxNyBHUElPX0FDVElWRV9M
-T1c+Owo+PiArCj4+ICAgICAgICAgQVZERC1zdXBwbHkgPSA8JnJlZ3VsYXRvcj47Cj4+ICAgICAg
-ICAgSU9WREQtc3VwcGx5ID0gPCZyZWd1bGF0b3I+Owo+PiAgICAgICAgIERSVkRELXN1cHBseSA9
-IDwmcmVndWxhdG9yPjsKPiAKPiBBY2NvcmRpbmcgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2dwaW8vZ3Bpby50eHQ6Cj4gIkdQSU8gcHJvcGVydGllcyBzaG91bGQgYmUgbmFt
-ZWQgIls8bmFtZT4tXWdwaW9zIiwgd2l0aCA8bmFtZT4gYmVpbmcgdGhlIHB1cnBvc2UKPiBvZiB0
-aGlzIEdQSU8gZm9yIHRoZSBkZXZpY2UuIFdoaWxlIGEgbm9uLWV4aXN0ZW50IDxuYW1lPiBpcyBj
-b25zaWRlcmVkIHZhbGlkCj4gZm9yIGNvbXBhdGliaWxpdHkgcmVhc29ucyAocmVzb2x2aW5nIHRv
-IHRoZSAiZ3Bpb3MiIHByb3BlcnR5KSwgaXQgaXMgbm90IGFsbG93ZWQKPiBmb3IgbmV3IGJpbmRp
-bmdzLiBBbHNvLCBHUElPIHByb3BlcnRpZXMgbmFtZWQgIls8bmFtZT4tXWdwaW8iIGFyZSB2YWxp
-ZCBhbmQgb2xkCj4gYmluZGluZ3MgdXNlIGl0LCBidXQgYXJlIG9ubHkgc3VwcG9ydGVkIGZvciBj
-b21wYXRpYmlsaXR5IHJlYXNvbnMgYW5kIHNob3VsZCBub3QKPiBiZSB1c2VkIGZvciBuZXdlciBi
-aW5kaW5ncyBzaW5jZSBpdCBoYXMgYmVlbiBkZXByZWNhdGVkLiIKPiAKPiBTbyBpdCBzaG91bGQg
-YmUgInJlc2V0LWdwaW9zIiBmb3IgbmV3IGJpbmRpbmdzLgo+IAoKWW91IGFyZSB0aGUgdGhpcmQg
-cGVyc29uIHRvIGNvbW1lbnQgdGhpcy4gSSB3aXNoIHBlb3BsZSB3b3VsZCBoYXZlIGJlZW4KdGhp
-cyBvYnNlcnZhbnQgd2hlbiB0aGUgb3JpZ2luYWwgcGF0Y2ggYWRkaW5nIHRoZSBjb21wbGV0ZWx5
-IGJhY2t3YXJkcwoiZ3Bpby1yZXNldCIgd2FzIHBvc3RlZC4uLiA6KQoKPiBBbHNvLCBzb3VuZC9z
-b2MvY29kZWNzL3RsdjMyMGFpYzN4LmMgc3RpbGwgdXNlcyAiZ3Bpby1yZXNldCIsIGFuZCBJIGRv
-Cj4gbm90IHNlZSBhbnkgcGF0Y2ggaW4geW91ciBzZXJpZXMgY2hhbmdpbmcgdGhpczoKPiByZXQg
-PSBvZl9nZXRfbmFtZWRfZ3BpbyhucCwgImdwaW8tcmVzZXQiLCAwKTsKPiAKCkNoZWNrIHBhdGNo
-ICM5Cgo+IFNhbWUgcmVtYXJrcyBmb3IgeW91ciAiW1BBVENIIDYvOV0gQVJNOiBkdHM6IGlteDog
-Rml4IHRoZSBhdWRpbwo+IENPREVDJ3MgcmVzZXQgcGluIi4gSSBkb24ndCBrbm93IGlmIHRoZXJl
-IGFyZSBvdGhlciBEVFMgZmlsZXMgdXNpbmcKPiB0aGlzLCBidXQgdGhleSBzaG91bGQgYWxsIGJl
-IHVwZGF0ZWQgYWNjb3JkaW5nbHkuIFRoaXMgd291bGQgYW55d2F5Cj4gYnJlYWsgYWxsIG9mIHRo
-ZSBvdXQtb2YtdHJlZSBEVFMgZmlsZXMgdXNpbmcgdGhpcywgd2hpY2ggSSB0aGluayBpcwo+IG5v
-dCBhbGxvd2VkLCBzbyB0aGUgZHJpdmVyIHNob3VsZCBiZSBjaGFuZ2VkIGluIGEgd2F5IHN0aWxs
-IGFsbG93aW5nCj4gdGhlIGxlZ2FjeSBuYW1pbmcgYmVzaWRlcyB0aGUgbmV3IG9uZS4KPiAKCkkg
-aGF2ZSB1cGRhdGVkIGV2ZXJ5IGluLXRyZWUgdXNlLiBJIGtub3cgd2Ugc2hvdWxkIHdvcmsgdG8g
-YXZvaWQKYnJlYWtpbmcgb3V0LW9mLXRyZWUgRFRTIGZpbGVzLCBidXQgSSdtIGFza2luZyBmb3Ig
-YSBzbWFsbCBleGNlcHRpb24KaGVyZSBmb3IgcmVhc29ucyBJJ3ZlIGRlc2NyaWJlZCBpbiB0aGUg
-Y292ZXItbGV0dGVyIGFuZCBvdGhlciBwYXRjaGVzLgoKSSBqdXN0IGNhbid0IHNlZSB0aGlzIGJy
-ZWFraW5nIGFueXRoaW5nLCBpZiB0aGVyZSBhY3R1YWxseSBleGlzdHMgYSByZWFsCm91dC1vZi10
-cmVlIHVzZXIgb2YgdGhpcyB3aXRoIGEgRFRCIHRoYXQgaXMgbm90IGJlaW5nIHVwZGF0ZWQgd2l0
-aCB0aGUKa2VybmVsIHZlcnNpb24gYW5kIHRoaXMgcGF0Y2ggY2F1c2VzIGFueSBmdW5jdGlvbmFs
-aXR5IGNoYW5nZSBmb3IgdGhlbSBJCndpbGwgbGl0ZXJhbGx5IGVhdCBhIGhhdC4KClRoYW5rcywK
-QW5kcmV3Cgo+IEJlc3QgcmVnYXJkcywKPiBCZW5vw650Cj4gCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2Et
-ZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21h
-aWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
++arm-soc
+
+On Mon, Oct 30, 2017 at 7:21 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+>
+>> This patch fixes the DTC warnings about missing property #phy-cells.
+>>
+>> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+>
+> I'm not seeing warnings, but this seems reasonable to me.  Waiting for
+> -rc1 to apply (sigh).
+
+Because you need dtc version that is in -next.
+
+Why are you waiting for -rc1? I suspect Arnd would be happy to apply it now.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
