@@ -1,99 +1,108 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFCv2 PATCH 01/36] iommu: Keep track of processes and PASIDs
-Date: Thu, 9 Nov 2017 12:16:20 +0000
-Message-ID: <16b6ba80-b15b-b278-0d06-350ae0201e82@arm.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
-	<20171006133203.22803-2-jean-philippe.brucker@arm.com>
-	<BLUPR0201MB150538FDD455F6042803B54FA5560@BLUPR0201MB1505.namprd02.prod.outlook.com>
+From: James Hogan <james-IP01RNCDaiKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] kbuild: handle dtb-y and CONFIG_OF_ALL_DTBS natively
+ in Makefile.lib
+Date: Thu, 9 Nov 2017 12:19:02 +0000
+Message-ID: <CAAG0J99envT6gtM6tHdTvetrHr0itX1dexkuWSU=u1c5UTLE1A@mail.gmail.com>
+References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
+ <1509859853-27473-3-git-send-email-yamada.masahiro@socionext.com> <CAAG0J98rRS+Sw8k_87gmTqYdNWByk=9zWVbWnC348vd63H4N9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <BLUPR0201MB150538FDD455F6042803B54FA5560-hRBPhS1iNj/g9tdZWAsUFxrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAG0J98rRS+Sw8k_87gmTqYdNWByk=9zWVbWnC348vd63H4N9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Marek <michal.lkml-yyZNWGI4GtDR7s880joybQ@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bharat,
+(resend using a working From address)
 
-On 11/08/2017 05:50 PM, Bharat Kumar Gogada wrote:
-> Hi Jean,
-> 
-> +static struct iommu_process *
-> +iommu_process_alloc(struct iommu_domain *domain, struct task_struct
-> +*task) {
-> +       int err;
-> +       int pasid;
-> +       struct iommu_process *process;
-> +
-> +       if (WARN_ON(!domain->ops->process_alloc ||
-> !domain->ops->process_free))
-> +               return ERR_PTR(-ENODEV);
-> +
-> +       process = domain->ops->process_alloc(task);
-> +       if (IS_ERR(process))
-> +               return process;
-> +       if (!process)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       process->pid            = get_task_pid(task, PIDTYPE_PID);
-> +       process->release        = domain->ops->process_free;
-> +       INIT_LIST_HEAD(&process->domains);
-> +       kref_init(&process->kref);
-> +
-> +       if (!process->pid) {
-> +               err = -EINVAL;
-> +               goto err_free_process;
-> +       }
-> +
-> +       idr_preload(GFP_KERNEL);
-> +       spin_lock(&iommu_process_lock);
-> +       pasid = idr_alloc_cyclic(&iommu_process_idr, process,
-> domain->min_pasid,
-> +                                domain->max_pasid + 1, GFP_ATOMIC);
-> If EP supports only one pasid; domain->min_pasid=1 and domain->max_pasid=0.
-> When idr_alloc_cyclic is called it invokes idr_get_free_cmn function
-> where we have following condition. (Based on kernel 4.14-rc6)
->         if (!radix_tree_tagged(root, IDR_FREE))
->                 start = max(start, maxindex + 1);
->               if (start > max)
->                 return ERR_PTR(-ENOSPC);
-> Here max is being assigned zero by the time this function is invoked,
-> this value is based on domain->max_pasid.
-> This condition fails and ENOSPC is returned.
->        
-> In this case even though hardware supports PASID, BIND flow fails.
+<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> If CONFIG_OF_ALL_DTBS is enabled, "make ARCH=arm64 dtbs" compiles each
+> DTB twice; one from arch/arm64/boot/dts/*/Makefile and the other from
+> the dtb-$(CONFIG_OF_ALL_DTBS) line in arch/arm64/boot/dts/Makefile.
+> It could be a race problem when building DTBS in parallel.
+>
+> Another minor issue is CONFIG_OF_ALL_DTBS covers only *.dts in vendor
+> sub-directories, so this broke when Broadcom added one more hierarchy
+> in arch/arm64/boot/dts/broadcom/<soc>/.
+>
+> One idea to fix the issues in a clean way is to move DTB handling
+> to Kbuild core scripts.  Makefile.dtbinst already recognizes dtb-y
+> natively, so it should not hurt to do so.
+>
+> Add $(dtb-y) to extra-y, and $(dtb-) as well if CONFIG_OF_ALL_DTBS is
+> enabled.  All clutter things in Makefiles go away.
+>
+> As a bonus clean-up, I also removed dts-dirs.  Just use subdir-y
+> directly to traverse sub-directories.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 
-It should fail, since we're reserving PASID 0 for non-PASID transactions
-with S1DSS=0b10. In addition, the SMMUv3 specification does not allow
-using PASID with a single entry. See the description of S1CDMax in 5.2
-Stream Table Entry:
+ ...
 
-"when this field is 0, the substreams of the STE are disabled and one CD
-is available. (The minimum useful number of substreams is 2.) Any
-transaction with a SubstreamID will be terminated with an abort and a
-C_BAD_SUBSTREAMID event recorded."
+> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+> index 7891ffa..b2b0d88 100644
+> --- a/arch/mips/boot/dts/Makefile
+> +++ b/arch/mips/boot/dts/Makefile
+> @@ -1,20 +1,14 @@
+> -dts-dirs       += brcm
+> -dts-dirs       += cavium-octeon
+> -dts-dirs       += img
+> -dts-dirs       += ingenic
+> -dts-dirs       += lantiq
+> -dts-dirs       += mti
+> -dts-dirs       += netlogic
+> -dts-dirs       += ni
+> -dts-dirs       += pic32
+> -dts-dirs       += qca
+> -dts-dirs       += ralink
+> -dts-dirs       += xilfpga
+> +subdir-y       += brcm
+> +subdir-y       += cavium-octeon
+> +subdir-y       += img
+> +subdir-y       += ingenic
+> +subdir-y       += lantiq
+> +subdir-y       += mti
+> +subdir-y       += netlogic
+> +subdir-y       += ni
+> +subdir-y       += pic32
+> +subdir-y       += qca
+> +subdir-y       += ralink
+> +subdir-y       += xilfpga
+>
+> -obj-y          := $(addsuffix /, $(dts-dirs))
+> -
+> -dtstree                := $(srctree)/$(src)
+> -dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(foreach d,$(dts-dirs), $(wildcard $(dtstree)/$(d)/*.dts)))
+> -
+> -always         := $(dtb-y)
+> -subdir-y       := $(dts-dirs)
+> +obj-$(BUILTIN_DTB)     := $(addsuffix /, $(subdir-y))
 
-> Any reason why pasid allocation moved to idr allocations rather than
-> bitmap allocations as in v1 patches ?
+I wonder if that should be CONFIG_BUILTIN_DTB?
 
-Yes, idr provides a convenient way to quickly retrieve the context
-associated with a PASID, when handling a fault. v1 had the allocation in a
-bitmap and storing in a rb-tree. By using an idr we combine both and rely
-on a well-tested infrastructure.
+This is causing failures in linux-next with MIPS
+cavium_octeon_defconfig like below, and changing this line to
+CONFIG_BUILTIN_DTB seems to fix it.
 
-Note that in the future we might need to go back to handcrafting the PASID
-allocation, but it will probably still be based on idr.
+arch/mips/cavium-octeon/setup.o: In function `__octeon_is_model_runtime__':
+/work/mips/linux/main/./arch/mips/include/asm/octeon/octeon-model.h:368:
+undefined reference to `__dtb_octeon_3xxx_begin'
+arch/mips/cavium-octeon/setup.o: In function `device_tree_init':
+/work/mips/linux/main/arch/mips/cavium-octeon/setup.c:1188: undefined
+reference to `__dtb_octeon_3xxx_begin'
+/work/mips/linux/main/arch/mips/cavium-octeon/setup.c:1184: undefined
+reference to `__dtb_octeon_68xx_begin'
+/work/mips/linux/main/arch/mips/cavium-octeon/setup.c:1184: undefined
+reference to `__dtb_octeon_68xx_begin'
 
-Thanks,
-Jean
+Thanks
+James
+
+
+-- 
+James Hogan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
