@@ -1,126 +1,80 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 2/2] kbuild: handle dtb-y and CONFIG_OF_ALL_DTBS natively
- in Makefile.lib
-Date: Thu, 9 Nov 2017 21:23:14 +0900
-Message-ID: <CAK7LNAT-3yBTFqnFECbGzSHRUiaG38b0BG3_3ouRAZRTF+iiDQ@mail.gmail.com>
-References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
- <1509859853-27473-3-git-send-email-yamada.masahiro@socionext.com>
- <CAAG0J98rRS+Sw8k_87gmTqYdNWByk=9zWVbWnC348vd63H4N9w@mail.gmail.com> <CAAG0J99envT6gtM6tHdTvetrHr0itX1dexkuWSU=u1c5UTLE1A@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 01/17] ASoC: tlv320aic31xx: General source
+ formatting cleanup
+Date: Thu, 9 Nov 2017 12:41:43 +0000
+Message-ID: <20171109124143.mpolqcvsdzj2t6tv@sirena.co.uk>
+References: <20171109002741.10897-1-afd@ti.com>
+ <20171109002741.10897-2-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAG0J99envT6gtM6tHdTvetrHr0itX1dexkuWSU=u1c5UTLE1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hogan <james-IP01RNCDaiKakBO8gow8eQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Marek <michal.lkml-yyZNWGI4GtDR7s880joybQ@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, Linux-Next Mailing List <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============4860103946263265523=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171109002741.10897-2-afd@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
+
+--===============4860103946263265523==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r2eiv4wnvkyqnbbj"
+Content-Disposition: inline
 
 
-2017-11-09 21:19 GMT+09:00 James Hogan <james-IP01RNCDaiKakBO8gow8eQ@public.gmane.org>:
-> (resend using a working From address)
->
-> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->> If CONFIG_OF_ALL_DTBS is enabled, "make ARCH=arm64 dtbs" compiles each
->> DTB twice; one from arch/arm64/boot/dts/*/Makefile and the other from
->> the dtb-$(CONFIG_OF_ALL_DTBS) line in arch/arm64/boot/dts/Makefile.
->> It could be a race problem when building DTBS in parallel.
->>
->> Another minor issue is CONFIG_OF_ALL_DTBS covers only *.dts in vendor
->> sub-directories, so this broke when Broadcom added one more hierarchy
->> in arch/arm64/boot/dts/broadcom/<soc>/.
->>
->> One idea to fix the issues in a clean way is to move DTB handling
->> to Kbuild core scripts.  Makefile.dtbinst already recognizes dtb-y
->> natively, so it should not hurt to do so.
->>
->> Add $(dtb-y) to extra-y, and $(dtb-) as well if CONFIG_OF_ALL_DTBS is
->> enabled.  All clutter things in Makefiles go away.
->>
->> As a bonus clean-up, I also removed dts-dirs.  Just use subdir-y
->> directly to traverse sub-directories.
->>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->
->  ...
->
->> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
->> index 7891ffa..b2b0d88 100644
->> --- a/arch/mips/boot/dts/Makefile
->> +++ b/arch/mips/boot/dts/Makefile
->> @@ -1,20 +1,14 @@
->> -dts-dirs       += brcm
->> -dts-dirs       += cavium-octeon
->> -dts-dirs       += img
->> -dts-dirs       += ingenic
->> -dts-dirs       += lantiq
->> -dts-dirs       += mti
->> -dts-dirs       += netlogic
->> -dts-dirs       += ni
->> -dts-dirs       += pic32
->> -dts-dirs       += qca
->> -dts-dirs       += ralink
->> -dts-dirs       += xilfpga
->> +subdir-y       += brcm
->> +subdir-y       += cavium-octeon
->> +subdir-y       += img
->> +subdir-y       += ingenic
->> +subdir-y       += lantiq
->> +subdir-y       += mti
->> +subdir-y       += netlogic
->> +subdir-y       += ni
->> +subdir-y       += pic32
->> +subdir-y       += qca
->> +subdir-y       += ralink
->> +subdir-y       += xilfpga
->>
->> -obj-y          := $(addsuffix /, $(dts-dirs))
->> -
->> -dtstree                := $(srctree)/$(src)
->> -dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(foreach d,$(dts-dirs), $(wildcard $(dtstree)/$(d)/*.dts)))
->> -
->> -always         := $(dtb-y)
->> -subdir-y       := $(dts-dirs)
->> +obj-$(BUILTIN_DTB)     := $(addsuffix /, $(subdir-y))
->
-> I wonder if that should be CONFIG_BUILTIN_DTB?
->
-> This is causing failures in linux-next with MIPS
-> cavium_octeon_defconfig like below, and changing this line to
-> CONFIG_BUILTIN_DTB seems to fix it.
+--r2eiv4wnvkyqnbbj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Good catch!
+On Wed, Nov 08, 2017 at 06:27:25PM -0600, Andrew F. Davis wrote:
+> Simple non-functional changes including:
+>=20
+>  * Fix header copyright tags
+>  * Fix spelling errors
+>  * Reformat code for easier reading
+>  * Move some code blocks to a more natural ordering
+>  * Remove unneeded code
+>  * Remove assignments that are always overridden
+>  * Normalize function return paths
+>=20
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+
+There's other things in here like adding error reporting...  please
+don't send changes like this, if you want to do cleanups you should
+split them up in the same way you would other changes.  Bigger patches
+are harder to review especially if they're not repetitive examples of
+the same pattern. =20
+
+--r2eiv4wnvkyqnbbj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloETQYACgkQJNaLcl1U
+h9Bj2wf/WSq0Nv2h3DBZSFu6PzUWpOsuarkxzYbINzKGIMVDzAtwuEfJLzTH/Tv6
+J/qz+7DiEYjVdLQv7vO6hSMrIn+4WYyUDs/BcJ6SyNkhlOOmY84s2E2g0WdgTi1D
+glTZsqkeliT1qfN+N3fqkCGwIoZi3+LuGhNF1BoSpfyExOvAYHoPLuyRWcc9M4rm
+wo9wDqweQTq8SdP1QY0gdpGFsae+UHRdCLgrQqz3BN25PayXseIbBYvex1aYzVJf
+xv+bvxVj+5LohZzh2V/8T/7ZlC27UQmpmgegE0K7ecbhC9UerFb8t6BsTGfIfg7U
+gvxW/fbmisFwSIw1SStXmMyCZ5AYvQ==
+=E1YO
+-----END PGP SIGNATURE-----
+
+--r2eiv4wnvkyqnbbj--
+
+--===============4860103946263265523==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 
-Rob,
-Can you fix it to CONFIG_BUILTIN_DTB?
-
-Thanks!
-
-
-
-> arch/mips/cavium-octeon/setup.o: In function `__octeon_is_model_runtime__':
-> /work/mips/linux/main/./arch/mips/include/asm/octeon/octeon-model.h:368:
-> undefined reference to `__dtb_octeon_3xxx_begin'
-> arch/mips/cavium-octeon/setup.o: In function `device_tree_init':
-> /work/mips/linux/main/arch/mips/cavium-octeon/setup.c:1188: undefined
-> reference to `__dtb_octeon_3xxx_begin'
-> /work/mips/linux/main/arch/mips/cavium-octeon/setup.c:1184: undefined
-> reference to `__dtb_octeon_68xx_begin'
-> /work/mips/linux/main/arch/mips/cavium-octeon/setup.c:1184: undefined
-> reference to `__dtb_octeon_68xx_begin'
->
-> Thanks
-> James
->
->
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============4860103946263265523==--
