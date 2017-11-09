@@ -1,35 +1,57 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v3 7/8] netdev: octeon-ethernet: Add Cavium Octeon III
- support.
-Date: Thu, 9 Nov 2017 23:29:19 +0100
-Message-ID: <20171109222919.GB25275@lunn.ch>
-References: <20171109192915.11912-1-david.daney@cavium.com>
- <20171109192915.11912-8-david.daney@cavium.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm: dts: rockchip: fix errors in IOMMU interrupts property cells
+Date: Thu,  9 Nov 2017 16:35:35 -0600
+Message-ID: <20171109223535.17368-1-robh@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171109192915.11912-8-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> +	if (link_changed != 0) {
-> +		struct port_status status;
-> +
-> +		if (link_changed > 0) {
-> +			netdev_info(netdev, "Link is up - %d/%s\n",
-> +				    priv->phydev->speed,
-> +				    priv->phydev->duplex == DUPLEX_FULL ?
-> +				    "Full" : "Half");
-> +		} else {
-> +			netdev_info(netdev, "Link is down\n");
-> +		}
+The interrupts property in the IOMMU node for Rockchip dts file has a
+spurious extra cell causing a dtc warning:
 
-phy_print_status()
+Warning (interrupts_property): interrupts size is (16), expected multiple of 12 in /iommu@ff900800
 
-	Andrew
+Remove the extra cell.
+
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi            | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 356ed1e62452..cd43235ca16f 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -956,7 +956,7 @@
+ 	iep_mmu: iommu@ff900800 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff900800 0x0 0x40>;
+-		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "iep_mmu";
+ 		#iommu-cells = <0>;
+ 		status = "disabled";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index e0518b4bc6c2..7a63279a85c5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -808,7 +808,7 @@
+ 	iep_mmu: iommu@ff900800 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff900800 0x0 0x100>;
+-		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "iep_mmu";
+ 		#iommu-cells = <0>;
+ 		status = "disabled";
+-- 
+2.14.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
