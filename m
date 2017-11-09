@@ -1,7 +1,7 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: [PATCH 8/8] USB: of: clean up device-node helper
-Date: Thu,  9 Nov 2017 18:07:23 +0100
-Message-ID: <20171109170723.10960-9-johan@kernel.org>
+Subject: [PATCH 5/8] dt-bindings: usb: add interface binding
+Date: Thu,  9 Nov 2017 18:07:20 +0100
+Message-ID: <20171109170723.10960-6-johan@kernel.org>
 References: <20171109170723.10960-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171109170723.10960-1-johan@kernel.org>
@@ -10,126 +10,109 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Alan Stern <stern@rowland.harvard.edu>, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Clean up the USB device-node helper that is used to look up a device
-node given a parent hub device and a port number. Also pass in a struct
-usb_device as first argument to provide some type checking.
+Add a new binding for USB interface nodes, which are child nodes of
+USB device nodes and addressed by interface number and configuration
+value tuples.
 
-Give the helper the more descriptive name usb_of_get_device_node(),
-which matches the new usb_of_get_interface_node() helper that is used to
-look up a second type of of child node from a USB device.
+Also add a new binding for USB combined nodes, which are special case
+nodes for simple USB devices for which they replace the device and
+interface nodes.
 
-Note that the terms "device node" and "interface node" are defined and
-used by the OF Recommended Practice for USB.
+For completeness, define the already used terms "host-controller node",
+"device node" and "hub node".
 
 Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/usb/core/ledtrig-usbport.c |  2 +-
- drivers/usb/core/of.c              | 27 ++++++++++++++-------------
- drivers/usb/core/usb.c             |  3 +--
- include/linux/usb/of.h             |  7 +++----
- 4 files changed, 19 insertions(+), 20 deletions(-)
+ .../devicetree/bindings/usb/usb-device.txt         | 68 +++++++++++++++++++++-
+ 1 file changed, 66 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/core/ledtrig-usbport.c b/drivers/usb/core/ledtrig-usbport.c
-index f1fde5165068..d775ffea20c3 100644
---- a/drivers/usb/core/ledtrig-usbport.c
-+++ b/drivers/usb/core/ledtrig-usbport.c
-@@ -142,7 +142,7 @@ static bool usbport_trig_port_observed(struct usbport_trig_data *usbport_data,
- 	 *
- 	 * FIXME: This is really the device node of the connected device
- 	 */
--	port_np = usb_of_get_child_node(usb_dev->dev.of_node, port1);
-+	port_np = usb_of_get_device_node(usb_dev, port1);
- 	if (!port_np)
- 		return false;
+diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+index 1b27cebb47f4..036be172b1ae 100644
+--- a/Documentation/devicetree/bindings/usb/usb-device.txt
++++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+@@ -4,8 +4,49 @@ Usually, we only use device tree for hard wired USB device.
+ The reference binding doc is from:
+ http://www.devicetree.org/open-firmware/bindings/usb/usb-1_0.ps
  
-diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
-index 074fabc26d6c..fd77442c2d12 100644
---- a/drivers/usb/core/of.c
-+++ b/drivers/usb/core/of.c
-@@ -12,31 +12,32 @@
- #include <linux/usb/of.h>
++Four types of device-tree nodes are defined: "host-controller nodes"
++representing USB host controllers, "device nodes" representing USB devices,
++"interface nodes" representing USB interfaces and "combined nodes"
++representing simple USB devices.
  
- /**
-- * usb_of_get_child_node - Find the device node match port number
-- * @parent: the parent device node
-- * @portnum: the port number which device is connecting
-+ * usb_of_get_device_node() - get a USB device node
-+ * @hub: hub to which device is connected
-+ * @port1: one-based index of port
-  *
-- * Find the node from device tree according to its port number.
-+ * Look up the node of a USB device given its parent hub device and one-based
-+ * port number.
-  *
-  * Return: A pointer to the node with incremented refcount if found, or
-  * %NULL otherwise.
-  */
--struct device_node *usb_of_get_child_node(struct device_node *parent,
--					int portnum)
-+struct device_node *usb_of_get_device_node(struct usb_device *hub, int port1)
- {
- 	struct device_node *node;
--	u32 port;
-+	u32 reg;
- 
--	for_each_child_of_node(parent, node) {
--		if (!of_property_read_u32(node, "reg", &port)) {
--			if (port == portnum)
--				return node;
--		}
-+	for_each_child_of_node(hub->dev.of_node, node) {
-+		if (of_property_read_u32(node, "reg", &reg))
-+			continue;
+-Required properties:
++A combined node shall be used instead of a device node and an interface node
++for devices of class 0 or 9 (hub) with a single configuration and a single
++interface.
 +
-+		if (reg == port1)
-+			return node;
- 	}
++A "hub node" is a combined node or an interface node that represents a USB
++hub.
++
++
++Required properties for device nodes:
++- compatible: "usbVID,PID", where VID is the vendor id and PID the product id.
++  The textual representation of VID and PID shall be in lower case hexadecimal
++  with leading zeroes suppressed. The other compatible strings from the above
++  standard binding could also be used, but a device adhering to this binding
++  may leave out all except for "usbVID,PID".
++- reg: the number of the USB hub port or the USB host-controller port to which
++  this device is attached. The range is 1-255.
++
++
++Required properties for device nodes with interface nodes:
++- #address-cells: shall be 2
++- #size-cells: shall be 0
++
++
++Required properties for interface nodes:
++- compatible: "usbifVID,PID.configCN.IN", where VID is the vendor id, PID is
++  the product id, CN is the configuration value and IN is the interface
++  number. The textual representation of VID, PID, CN and IN shall be in lower
++  case hexadecimal with leading zeroes suppressed. The other compatible
++  strings from the above standard binding could also be used, but a device
++  adhering to this binding may leave out all except for
++  "usbifVID,PID.configCN.IN".
++- reg: the interface number and configuration value
++
++The configuration component is not included in the textual representation of
++an interface-node unit address for configuration 1.
++
++
++Required properties for combined nodes:
+ - compatible: "usbVID,PID", where VID is the vendor id and PID the product id.
+   The textual representation of VID and PID shall be in lower case hexadecimal
+   with leading zeroes suppressed. The other compatible strings from the above
+@@ -31,8 +72,31 @@ Example:
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
  
- 	return NULL;
- }
--EXPORT_SYMBOL_GPL(usb_of_get_child_node);
-+EXPORT_SYMBOL_GPL(usb_of_get_device_node);
- 
- /**
-  * usb_of_has_combined_node() - determine whether a device has a combined node
-diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
-index 845286f08ab0..2f5fbc56a9dd 100644
---- a/drivers/usb/core/usb.c
-+++ b/drivers/usb/core/usb.c
-@@ -645,8 +645,7 @@ struct usb_device *usb_alloc_dev(struct usb_device *parent,
- 			raw_port = usb_hcd_find_raw_port_number(usb_hcd,
- 				port1);
- 		}
--		dev->dev.of_node = usb_of_get_child_node(parent->dev.of_node,
--				raw_port);
-+		dev->dev.of_node = usb_of_get_device_node(parent, raw_port);
- 
- 		/* hub driver sets up TT records */
- 	}
-diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-index 0294ccac4f1d..dba55ccb9b53 100644
---- a/include/linux/usb/of.h
-+++ b/include/linux/usb/of.h
-@@ -19,8 +19,7 @@ enum usb_dr_mode of_usb_get_dr_mode_by_phy(struct device_node *np, int arg0);
- bool of_usb_host_tpl_support(struct device_node *np);
- int of_usb_update_otg_caps(struct device_node *np,
- 			struct usb_otg_caps *otg_caps);
--struct device_node *usb_of_get_child_node(struct device_node *parent,
--			int portnum);
-+struct device_node *usb_of_get_device_node(struct usb_device *hub, int port1);
- bool usb_of_has_combined_node(struct usb_device *udev);
- struct device_node *usb_of_get_interface_node(struct usb_device *udev,
- 		u8 config, u8 ifnum);
-@@ -40,8 +39,8 @@ static inline int of_usb_update_otg_caps(struct device_node *np,
- {
- 	return 0;
- }
--static inline struct device_node *usb_of_get_child_node
--		(struct device_node *parent, int portnum)
-+static inline struct device_node *
-+usb_of_get_device_node(struct usb_device *hub, int port1)
- {
- 	return NULL;
- }
+-	hub@1 {	/* hub connected to port 1 */
++	hub@1 {		/* hub connected to port 1 */
+ 		compatible = "usb5e3,608";
+ 		reg = <1>;
+ 	};
++
++	device@2 {	/* device connected to port 2 */
++		compatible = "usb123,4567";
++		reg = <2>;
++	};
++
++	device@3 { 	/* device connected to port 3 */
++		compatible = "usb123,abcd";
++		reg = <3>;
++
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		interface@0 {	/* interface 0 of configuration 1 */
++			compatible = "usbif123,abcd.config1.0";
++			reg = <0 1>;
++		};
++
++		interface@0,2 {	/* interface 0 of configuration 2 */
++			compatible = "usbif123,abcd.config2.0";
++			reg = <0 2>;
++		};
++	};
+ };
 -- 
 2.15.0
