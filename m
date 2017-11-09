@@ -1,41 +1,35 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v8 3/5] Documentation: Add device tree binding for
- Goldfish FB driver
-Date: Thu, 09 Nov 2017 15:00:46 +0100
-Message-ID: <2050272.eLOeq0HGv7@amdc3058>
-References: <1509729730-26621-1-git-send-email-aleksandar.markovic@rt-rk.com>
-        <1509729730-26621-4-git-send-email-aleksandar.markovic@rt-rk.com>
-        <CGME20171109140048epcas2p3b9077f49a91c0cb3b51ec91132731776@epcas2p3.samsung.com>
+From: Olivier Moysan <olivier.moysan@st.com>
+Subject: [PATCH 0/2] ASoC: add mclk-fs support to audio graph
+	card
+Date: Thu, 9 Nov 2017 15:07:56 +0100
+Message-ID: <1510236478-2351-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1509729730-26621-4-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
+Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday, November 03, 2017 06:21:36 PM Aleksandar Markovic wrote:
-> From: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
-> 
-> Add documentation for DT binding of Goldfish FB driver. The compatible
-> string used by OS for binding the driver is "google,goldfish-fb".
-> 
-> Signed-off-by: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
-> Signed-off-by: Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>
-> Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+The aim of these patches is to port mclk-fs property to audio graph card, 
+as originally implemented in simple card.
 
-Patch queued for 4.15, thanks.
+Olivier Moysan (2):
+  ASoC: add mclk-fs to audio graph card binding
+  ASoC: add mclk-fs support to audio graph card
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+ .../devicetree/bindings/sound/audio-graph-card.txt |  1 +
+ sound/soc/generic/audio-graph-card.c               | 47 ++++++++++++++++++----
+ 2 files changed, 40 insertions(+), 8 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
