@@ -1,106 +1,112 @@
-From: =?UTF-8?Q?Beno=C3=AEt_Th=C3=A9baudeau?=
-        <benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 2/9] ASoC: tlv320aic3x: Fix typo in DT
- binding documentation
-Date: Thu, 9 Nov 2017 21:26:00 +0100
-Message-ID: <CA+sos78vOjcY=9B3-pFthe9UUBqiEUps967UDEY=o=fUu230=Q@mail.gmail.com>
-References: <20171108212505.28320-1-afd@ti.com> <20171108212505.28320-3-afd@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] kbuild: handle dtb-y and CONFIG_OF_ALL_DTBS natively
+ in Makefile.lib
+Date: Thu, 9 Nov 2017 14:34:38 -0600
+Message-ID: <CAL_JsqLJZ3D8MXooiS+RFC1jJTCf7L6epwXUgovMAtH5Logwqg@mail.gmail.com>
+References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
+ <1509859853-27473-3-git-send-email-yamada.masahiro@socionext.com>
+ <CAAG0J98rRS+Sw8k_87gmTqYdNWByk=9zWVbWnC348vd63H4N9w@mail.gmail.com>
+ <CAAG0J99envT6gtM6tHdTvetrHr0itX1dexkuWSU=u1c5UTLE1A@mail.gmail.com> <CAK7LNAT-3yBTFqnFECbGzSHRUiaG38b0BG3_3ouRAZRTF+iiDQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171108212505.28320-3-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alsa-devel <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <CAK7LNAT-3yBTFqnFECbGzSHRUiaG38b0BG3_3ouRAZRTF+iiDQ@mail.gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: James Hogan <james@albanarts.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Sam Ravnborg <sam@ravnborg.org>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, James Hogan <james.hogan@mips.com>, Linux-Next Mailing List <linux-next@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew F. Davis,
+On Thu, Nov 9, 2017 at 6:23 AM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> Hi James,
+>
+>
+> 2017-11-09 21:19 GMT+09:00 James Hogan <james@albanarts.com>:
+>> (resend using a working From address)
+>>
+>> <yamada.masahiro@socionext.com> wrote:
+>>> If CONFIG_OF_ALL_DTBS is enabled, "make ARCH=arm64 dtbs" compiles each
+>>> DTB twice; one from arch/arm64/boot/dts/*/Makefile and the other from
+>>> the dtb-$(CONFIG_OF_ALL_DTBS) line in arch/arm64/boot/dts/Makefile.
+>>> It could be a race problem when building DTBS in parallel.
+>>>
+>>> Another minor issue is CONFIG_OF_ALL_DTBS covers only *.dts in vendor
+>>> sub-directories, so this broke when Broadcom added one more hierarchy
+>>> in arch/arm64/boot/dts/broadcom/<soc>/.
+>>>
+>>> One idea to fix the issues in a clean way is to move DTB handling
+>>> to Kbuild core scripts.  Makefile.dtbinst already recognizes dtb-y
+>>> natively, so it should not hurt to do so.
+>>>
+>>> Add $(dtb-y) to extra-y, and $(dtb-) as well if CONFIG_OF_ALL_DTBS is
+>>> enabled.  All clutter things in Makefiles go away.
+>>>
+>>> As a bonus clean-up, I also removed dts-dirs.  Just use subdir-y
+>>> directly to traverse sub-directories.
+>>>
+>>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>>
+>>  ...
+>>
+>>> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+>>> index 7891ffa..b2b0d88 100644
+>>> --- a/arch/mips/boot/dts/Makefile
+>>> +++ b/arch/mips/boot/dts/Makefile
+>>> @@ -1,20 +1,14 @@
+>>> -dts-dirs       += brcm
+>>> -dts-dirs       += cavium-octeon
+>>> -dts-dirs       += img
+>>> -dts-dirs       += ingenic
+>>> -dts-dirs       += lantiq
+>>> -dts-dirs       += mti
+>>> -dts-dirs       += netlogic
+>>> -dts-dirs       += ni
+>>> -dts-dirs       += pic32
+>>> -dts-dirs       += qca
+>>> -dts-dirs       += ralink
+>>> -dts-dirs       += xilfpga
+>>> +subdir-y       += brcm
+>>> +subdir-y       += cavium-octeon
+>>> +subdir-y       += img
+>>> +subdir-y       += ingenic
+>>> +subdir-y       += lantiq
+>>> +subdir-y       += mti
+>>> +subdir-y       += netlogic
+>>> +subdir-y       += ni
+>>> +subdir-y       += pic32
+>>> +subdir-y       += qca
+>>> +subdir-y       += ralink
+>>> +subdir-y       += xilfpga
+>>>
+>>> -obj-y          := $(addsuffix /, $(dts-dirs))
+>>> -
+>>> -dtstree                := $(srctree)/$(src)
+>>> -dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(foreach d,$(dts-dirs), $(wildcard $(dtstree)/$(d)/*.dts)))
+>>> -
+>>> -always         := $(dtb-y)
+>>> -subdir-y       := $(dts-dirs)
+>>> +obj-$(BUILTIN_DTB)     := $(addsuffix /, $(subdir-y))
+>>
+>> I wonder if that should be CONFIG_BUILTIN_DTB?
+>>
+>> This is causing failures in linux-next with MIPS
+>> cavium_octeon_defconfig like below, and changing this line to
+>> CONFIG_BUILTIN_DTB seems to fix it.
+>
+> Good catch!
+>
+>
+> Rob,
+> Can you fix it to CONFIG_BUILTIN_DTB?
 
-On Wed, Nov 8, 2017 at 10:24 PM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
-> The property used to specify a GPIO intended for reset is "reset-gpio",
-> this binding uses "gpio-reset", as almost all other bindings use the
-> former name this use of the latter is certainly not intended and
-> was a typo. It is not compatible with newer methods used to fetch
-> GPIO pins and to prevent the spread of this error to other bindings
-> lets fix this here.
->
-> We also standardize the pin as active-low, different device trees have
-> marked the GPIO different ways, luckily the driver currently uses the
-> low-level GPIO set function which does not respect the active-low flag,
-> but future changes may change this. This is an active-low reset, mark
-> it as such.
->
-> Lastly, add an example of use for this property.
->
-> Fixes: c24fdc886fde ("ASoC: tlv320aic3x: Add device tree bindings")
->
-> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/sound/tlv320aic3x.txt | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/sound/tlv320aic3x.txt b/Do=
-cumentation/devicetree/bindings/sound/tlv320aic3x.txt
-> index ba5b45c483f5..9e8eaa08ce90 100644
-> --- a/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
-> +++ b/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
-> @@ -17,7 +17,7 @@ Required properties:
->
->  Optional properties:
->
-> -- gpio-reset - gpio pin number used for codec reset
-> +- reset-gpio - GPIO specification for the active low RESET input.
->  - ai3x-gpio-func - <array of 2 int> - AIC3X_GPIO1 & AIC3X_GPIO2 Function=
-ality
->                                     - Not supported on tlv320aic3104
->  - ai3x-micbias-vg - MicBias Voltage required.
-> @@ -61,10 +61,14 @@ The pins can be used in referring sound node's audio-=
-routing property.
->
->  Example:
->
-> +#include <dt-bindings/gpio/gpio.h>
-> +
->  tlv320aic3x: tlv320aic3x@1b {
->         compatible =3D "ti,tlv320aic3x";
->         reg =3D <0x1b>;
->
-> +       reset-gpio =3D <&gpio1 17 GPIO_ACTIVE_LOW>;
-> +
->         AVDD-supply =3D <&regulator>;
->         IOVDD-supply =3D <&regulator>;
->         DRVDD-supply =3D <&regulator>;
+Fixed.
 
-According to Documentation/devicetree/bindings/gpio/gpio.txt:
-"GPIO properties should be named "[<name>-]gpios", with <name> being the pu=
-rpose
-of this GPIO for the device. While a non-existent <name> is considered vali=
-d
-for compatibility reasons (resolving to the "gpios" property), it is not al=
-lowed
-for new bindings. Also, GPIO properties named "[<name>-]gpio" are valid and=
- old
-bindings use it, but are only supported for compatibility reasons and shoul=
-d not
-be used for newer bindings since it has been deprecated."
-
-So it should be "reset-gpios" for new bindings.
-
-Also, sound/soc/codecs/tlv320aic3x.c still uses "gpio-reset", and I do
-not see any patch in your series changing this:
-ret =3D of_get_named_gpio(np, "gpio-reset", 0);
-
-Same remarks for your "[PATCH 6/9] ARM: dts: imx: Fix the audio
-CODEC's reset pin". I don't know if there are other DTS files using
-this, but they should all be updated accordingly. This would anyway
-break all of the out-of-tree DTS files using this, which I think is
-not allowed, so the driver should be changed in a way still allowing
-the legacy naming besides the new one.
-
-Best regards,
-Beno=C3=AEt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
