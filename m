@@ -1,116 +1,125 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] MIPS: dts: remove bogus bcm96358nb4ser.dtb from dtb-y entry
-Date: Thu, 9 Nov 2017 17:06:25 -0600
-Message-ID: <CAL_JsqJF=AV_m7DJyc4GGX0xrbvn+yJ05Oy8EWoM+FO8qr=k2g@mail.gmail.com>
-References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
- <1509859853-27473-2-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNAQfK_BWQcVW-ScrpAwNAHav3MrrzV-tjn_YUjsuvd7U5A@mail.gmail.com>
- <20171106095139.GG15260@jhogan-linux> <CAK7LNAQ_bugEP8hHKmCif5QCz2=Pw_GpXzYz4zJeXO0HXaT_ag@mail.gmail.com>
- <CAL_JsqJ8taCKnr_79UumiH2GFYq-fMzzkYm2iYevTOgUUWuzvg@mail.gmail.com>
- <CAK7LNATZ9O4cCpxLrG3MJoKYF+RnURkY4-tY2MdiZb90eGPtQg@mail.gmail.com> <CAK7LNARzRUA6ZGQUiebZ+nmLBSAVdYONsozHBf0VQb83KqSx1g@mail.gmail.com>
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
+        <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Subject: [PATCH v9 0/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2 support
+Date: Fri, 10 Nov 2017 00:43:18 +0100
+Message-ID: <20171109234320.13016-1-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNARzRUA6ZGQUiebZ+nmLBSAVdYONsozHBf0VQb83KqSx1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kbuild mailing list <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Marek <michal.lkml-yyZNWGI4GtDR7s880joybQ@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 8, 2017 at 6:38 PM, Masahiro Yamada
-<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> 2017-11-09 9:11 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
->> 2017-11-09 1:51 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->>> On Mon, Nov 6, 2017 at 5:00 AM, Masahiro Yamada
->>> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->>>> 2017-11-06 19:41 GMT+09:00 James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->>>>> Hi,
->>>>>
->>>>> On Sun, Nov 05, 2017 at 11:11:38PM +0900, Masahiro Yamada wrote:
->>>>>> +CC Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
->>>>>> +CC linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
->>>>>> +CC Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>> +CC Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>>
->>>>>>
->>>>>> I missed to CC MIPS maintainers.
->>>>>
->>>>> Yes, please resend the patch so it lands in patchwork.linux-mips.org.
->>>>
->>>>
->>>> This is a part of clean-up series of DT building.
->>>>
->>>> I want Acked-by from MIPS maintainers
->>>> so that the whole series can go to a different tree.
->>>> (DT or Kbuild).
->>>>
->>>>
->>>> Sam addressed more clean-up candidates in MIPS Makefiles
->>>> https://patchwork.kernel.org/patch/10041879/
->>>>
->>>> So, I will probably end up with touching those Makefiles more.
->>>>
->>>> All patches must go to the same tree.
->>>>
->>>>
->>>>>> 2017-11-05 14:30 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
->>>>>> > arch/mips/boot/dts/brcm/bcm96358nb4ser.dts does not exist, so
->>>>>> > we cannot build bcm96358nb4ser.dtb .
->>>>>
->>>>> This appears to be due to the file being renamed in commit 695835511f96
->>>>> ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom").
->>>>> Please can you update the commit message when you resend to mention the
->>>>> cause of the problem.
->>>>>
->>>>> You could also add the following if you like while you're at it:
->>>>>
->>>>> Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
->>>>> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 4.9+
->>>
->>> I think this one can be applied independently and we'd want it to if
->>> we tag for stable. So I think it can go thru the MIPS tree.
->>>
->>
->>
->> As I said to MIPS folks, this patch must go before 2/2.
->>
->> You picked up only 2/2, so your dt/kbuild branch is broken.
->>
->>
->> make ARCH=mips allyesconfig
->> && make ARCH=mips CROSS_COMPILE=mips-linux- dtbs
->>
->>
->> will produce the following error.
->>
->>
->> make[2]: *** No rule to make target
->> 'arch/mips/boot/dts/brcm/bcm96358nb4ser.dtb', needed by '__build'.
->> Stop.
->> scripts/Makefile.build:570: recipe for target 'arch/mips/boot/dts/brcm' failed
->> make[1]: *** [arch/mips/boot/dts/brcm] Error 2
->> arch/mips/Makefile:413: recipe for target 'dtbs' failed
->> make: *** [dtbs] Error 2
->>
->
->
-> Looking into it, probably
-> bmips_dtb_defconfig was already broken regardless my patches.
->
-> But, I am not comfortable with breaking all{yes,mod}config
-> because they are often used for build test.
->
->
-> I hope you can apply this in the order as I sent,
-> with the following tag.
->
-> Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to
-> bcm6358-neufbox4-sercom")
-> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # 4.9+
+Hi,
 
-Okay, now applied.
+This is the latest incarnation of R-Car MIPI CSI-2 receiver driver. It's
+based on top of the media-tree and are tested on Renesas Salvator-X 
+together with the out-of-tree patches for rcar-vin to add support for 
+Gen3 VIN. If anyone is interested to test video grabbing using these out 
+of tree patches please see [1].
 
-Rob
+Changes since v8:
+- Updated bindings documentation, thanks Rob!
+- Make use of the now in media-tree sub-notifier V4L2 API
+- Add delay when resetting the IP to allow for a proper reset
+- Fix bug in s_stream error path where the usage count was off if an 
+  error was hit.
+- Add support for H3 ES2.0
+
+Changes since v7:
+- Rebase on top of the latest incremental async patches.
+- Fix comments on DT documentation.
+- Use v4l2_ctrl_g_ctrl_int64() instead of v4l2_g_ext_ctrls().
+- Handle try formats in .set_fmt() and .get_fmt().
+- Don't call v4l2_device_register_subdev_nodes() as this is not needed
+  with the complete() callbacks synchronized.
+- Fix line over 80 chars.
+- Fix varies spelling mistakes.
+
+Changes since v6:
+- Rebased on top of Sakaris fwnode patches.
+- Changed of RCAR_CSI2_PAD_MAX to NR_OF_RCAR_CSI2_PAD.
+- Remove assumption about unknown media bus type, thanks Sakari for
+  pointing this out.
+- Created table for supported format information instead of scattering
+  this information around the driver, thanks Sakari!
+- Small newline fixes and reduce some indentation levels.
+
+Changes since v5:
+- Make use of the incremental async subnotifer and helper to map DT
+  endpoint to media pad number. This moves functionality which
+  previously in the Gen3 patches for R-Car VIN driver to this R-Car
+  CSI-2 driver. This is done in preparation to support the ADV7482
+  driver in development by Kieran which will register more then one
+  subdevice and the CSI-2 driver needs to cope wit this. Further more it
+  prepares the driver for another use-case where more then one subdevice
+  is present upstream for the CSI-2.
+- Small cleanups.
+- Add explicit include for linux/io.h, thanks Kieran.
+
+Changes since v4:
+- Match SoC part numbers and drop trailing space in documentation,
+  thanks Geert for pointing this out.
+- Clarify that the driver is a CSI-2 receiver by supervised
+  s/interface/receiver/, thanks Laurent.
+- Add entries in Kconfig and Makefile alphabetically instead of append.
+- Rename struct rcar_csi2 member swap to lane_swap.
+- Remove macros to wrap calls to dev_{dbg,info,warn,err}.
+- Add wrappers for ioread32 and iowrite32.
+- Remove unused interrupt handler, but keep checking in probe that there
+  are a interrupt define in DT.
+- Rework how to wait for LP-11 state, thanks Laurent for the great idea!
+- Remove unneeded delay in rcar_csi2_reset()
+- Remove check for duplicated lane id:s from DT parsing. Broken out to a
+  separate patch adding this check directly to v4l2_of_parse_endpoint().
+- Fixed rcar_csi2_start() to ask it's source subdevice for information
+  about pixel rate and frame format. With this change having
+  {set,get}_fmt operations became redundant, it was only used for
+  figuring out this out so dropped them.
+- Tabulated frequency settings map.
+- Dropped V4L2_SUBDEV_FL_HAS_DEVNODE it should never have been set.
+- Switched from MEDIA_ENT_F_ATV_DECODER to
+  MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER as entity function. I can't
+  find a more suitable function, and what the hardware do is to fetch
+  video from an external chip and passes it on to a another SoC internal
+  IP it's sort of a formatter.
+- Break out DT documentation and code in two patches.
+
+Changes since v3:
+- Update DT binding documentation with input from Geert Uytterhoeven,
+  thanks!
+
+Changes since v2:
+- Added media control pads as this is needed by the new rcar-vin driver.
+- Update DT bindings after review comments and to add r8a7796 support.
+- Add get_fmt handler.
+- Fix media bus format error s/YUYV8/UYVY8/
+
+Changes since v1:
+- Drop dependency on a pad aware s_stream operation.
+- Use the DT bindings format "renesas,<soctype>-<device>", thanks Geert
+  for pointing this out.
+
+1. http://elinux.org/R-Car/Tests:rcar-vin
+
+Niklas Söderlund (2):
+  media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver documentation
+  media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver
+
+ .../devicetree/bindings/media/rcar-csi2.txt        | 103 +++
+ MAINTAINERS                                        |   1 +
+ drivers/media/platform/rcar-vin/Kconfig            |  12 +
+ drivers/media/platform/rcar-vin/Makefile           |   1 +
+ drivers/media/platform/rcar-vin/rcar-csi2.c        | 933 +++++++++++++++++++++
+ 5 files changed, 1050 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rcar-csi2.txt
+ create mode 100644 drivers/media/platform/rcar-vin/rcar-csi2.c
+
+-- 
+2.15.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
