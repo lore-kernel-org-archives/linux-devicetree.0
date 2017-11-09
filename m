@@ -1,51 +1,53 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: mfd: mc13xxx: Remove obsolete property
-Date: Thu, 9 Nov 2017 08:56:53 +0000
-Message-ID: <20171109085653.hbmjw5f4rbou6f7x@dell>
-References: <1505922711-22070-1-git-send-email-fabio.estevam@nxp.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v10 1/8] perf: Export perf_event_update_userpage
+Date: Thu, 9 Nov 2017 10:07:06 +0100
+Message-ID: <20171109090706.oangi7qebju5mvmu@hirez.programming.kicks-ass.net>
+References: <20171103175105.23546-1-suzuki.poulose@arm.com>
+ <20171103175105.23546-2-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1505922711-22070-1-git-send-email-fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <20171103175105.23546-2-suzuki.poulose@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: mark.rutland@arm.com, robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, leo.yan@linaro.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, Jonathan.Cameron@huawei.com, sudeep.holla@arm.com, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Sep 2017, Fabio Estevam wrote:
-
-> The 'fsl,spi-num-chipselects' property is obsolete according to 
-> Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt, so remove
-> it from the example.
+On Fri, Nov 03, 2017 at 05:50:58PM +0000, Suzuki K Poulose wrote:
+> Export perf_event_update_userpage() so that PMU driver using them,
+> can be built as modules.
 > 
-> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> Cc: Peter Zilstra <peterz@infradead.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
 > ---
->  Documentation/devicetree/bindings/mfd/mc13xxx.txt | 1 -
->  1 file changed, 1 deletion(-)
-
-Applied, thanks.
-
-> diff --git a/Documentation/devicetree/bindings/mfd/mc13xxx.txt b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
-> index 39ba414..ac235fe 100644
-> --- a/Documentation/devicetree/bindings/mfd/mc13xxx.txt
-> +++ b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
-> @@ -113,7 +113,6 @@ MC13892 regulators:
->  Examples:
+>  kernel/events/core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 9d93db81fa36..550015829db8 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -4982,6 +4982,7 @@ void perf_event_update_userpage(struct perf_event *event)
+>  unlock:
+>  	rcu_read_unlock();
+>  }
+> +EXPORT_SYMBOL_GPL(perf_event_update_userpage);
 >  
->  ecspi@70010000 { /* ECSPI1 */
-> -	fsl,spi-num-chipselects = <2>;
->  	cs-gpios = <&gpio4 24 0>, /* GPIO4_24 */
->  		   <&gpio4 25 0>; /* GPIO4_25 */
->  
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  static int perf_mmap_fault(struct vm_fault *vmf)
+>  {
+> -- 
+> 2.13.6
+> 
