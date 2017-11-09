@@ -1,95 +1,51 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH] ARM: dts: add phy-reset property for rk3066a-rayeager emac
-Date: Thu, 9 Nov 2017 10:40:03 +0200
-Message-ID: <7aa6919d-5d46-3469-f195-022c09b0e9c4@ti.com>
-References: <1510022959-19440-1-git-send-email-zyw@rock-chips.com>
- <e6f2393e-cb3b-9006-d0f5-6b30fd2a5192@mentor.com>
- <e08d8ea2-40c5-a5b3-e570-44c90388fcdd@rock-chips.com>
- <ac15ef59-3b5e-1752-09db-0a773615f44c@gmail.com>
- <464f7b9f-1c07-286e-1b7f-bdef0332b4c9@rock-chips.com>
- <a6b2354c-324f-3d22-39d4-8cdc2e8ba97a@ti.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: mfd: mc13xxx: Remove obsolete property
+Date: Thu, 9 Nov 2017 08:56:53 +0000
+Message-ID: <20171109085653.hbmjw5f4rbou6f7x@dell>
+References: <1505922711-22070-1-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a6b2354c-324f-3d22-39d4-8cdc2e8ba97a@ti.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Zhong <zyw@rock-chips.com>, Florian Fainelli <f.fainelli@gmail.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, andrew@lunn.ch
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, heiko@sntech.de, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1505922711-22070-1-git-send-email-fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMTEvMTcgMTA6MjgsIFJvZ2VyIFF1YWRyb3Mgd3JvdGU6Cj4gT24gMDgvMTEvMTcgMTE6
-NDksIENocmlzIFpob25nIHdyb3RlOgo+PiBIaSBGbG9yaWFuIEZhaW5lbGxpCj4+Cj4+Cj4+IE9u
-IDIwMTflubQxMeaciDA45pelIDAyOjI2LCBGbG9yaWFuIEZhaW5lbGxpIHdyb3RlOgo+Pj4gT24g
-MTEvMDcvMjAxNyAwMTo1MSBBTSwgQ2hyaXMgWmhvbmcgd3JvdGU6Cj4+Pj4KPj4+PiBPbiAyMDE3
-5bm0MTHmnIgwN+aXpSAxNTo1NCwgVmxhZGltaXIgWmFwb2xza2l5IHdyb3RlOgo+Pj4+PiBIZWxs
-byBDaHJpcywKPj4+Pj4KPj4+Pj4gT24gMTEvMDcvMjAxNyAwNDo0OSBBTSwgQ2hyaXMgWmhvbmcg
-d3JvdGU6Cj4+Pj4+PiBUaGUgZXRoZXJuZXQgcGh5IG9mIHJrMzA2NmEtcmF5ZWFnZXIgaGFzIGEg
-cmVzZXQgcGluLCBpdCBjb250cm9sbGVkIGJ5Cj4+Pj4+PiBHUElPMV9ENiwgdGhpcyBwaW4gc2hv
-dWxkIGJlIHB1bGwgZG93biB0aGVuIHB1bGwgdXAgdG8gcmVzZXQgdGhlIHBoeS4KPj4+Pj4+IEFk
-ZCBhIHBoeS1yZXNldCBwcm9wZXJ0eSBpbiBlbWFjLCBtYWtlIHRoZSBwaHkgY2FuIGJlIHJlc2V0
-IHdoZW4gZW1hYwo+Pj4+Pj4gcG93ZXIgb24uCj4+Pj4+IGZvciBQSFkgcmVzZXQgdGhlcmUgYXJl
-IHByb3BlcnRpZXMgJ3Jlc2V0LWdwaW9zJyBhbmQgJ3Jlc2V0LWRlbGF5LXVzJywKPj4+Pj4gcGxl
-YXNlIHJlZmVyZW5jZSB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L21k
-aW8udHh0Cj4+Pj4+Cj4+Pj4+IENhbiB5b3UgdHJ5IHRvIHJldXNlIHRoZW0gaW5zdGVhZCBvZiBh
-ZGRpbmcgbmV3IGN1c3RvbSBwcm9wZXJ0aWVzPwo+Pj4+IFRoaXMgcGh5LXJlc2V0IGlzIGZyb20g
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9hcmNfZW1hYy50eHQuCj4+Pj4g
-QW5kIGNvcHkgZnJvbSBhcmNoL2FybS9ib290L2R0cy9yazMwMzYta3lsaW4uZHRzLgo+Pj4+IENh
-biB3ZSBqdXN0IHVzZSB0aGVzZSBwcm9wZXJ0aWVzLCB0aGV5IGFyZSBub3QgbmV3Lgo+Pj4gQmVj
-YXVzZSBpdCBhbHJlYWR5IGV4aXN0cyBkb2VzIG5vdCBtZWFuIGl0J3MgY29ycmVjdCwgaW4gZmFj
-dCwgaXQgaXMgbm90Cj4+PiBhdCBhbGwgYmVjYXVzZSBpdCBwbGFjZXMgdGhlIHJlc2V0IHByb3Bl
-cnR5IGZvciBhIFBIWSBpbnRvIHRoZSBNQUMgbm9kZSwKPj4+IHdoaWNoIGlzIGp1c3Qgbm90IHdo
-YXQgdGhpcyBpcywgd2hhdCB3ZSBzaG91bGQgYmUgdXNpbmcgaW5zdGVhZCBpcyB0aGUKPj4+IGZv
-bGxvd2luZyBwYXRjaCBzZXJpZXM6Cj4+Pgo+Pj4gaHR0cDovL3BhdGNod29yay5vemxhYnMub3Jn
-L3Byb2plY3QvbmV0ZGV2L2xpc3QvP3Nlcmllcz05MjY3Cj4+Pgo+Pj4gaHR0cDovL3BhdGNod29y
-ay5vemxhYnMub3JnL3BhdGNoLzgyODQ5OS8KPj4+IGh0dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9y
-Zy9wYXRjaC84Mjg1MDUvCj4+PiBodHRwOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvODI4
-NTAxLwo+Pj4gaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3BhdGNoLzgyODUwMi8KPj4gT2th
-eSwgdGhpcyBzZXJpZXMgd29ya3MgZm9yIG1lLCBhbmQgSSB3aWxsIHB1c2ggYSBuZXcgdmVyc2lv
-biBwYXRjaCBmb2xsb3dpbmcgaXQsCj4+IHdpdGggYSByZXNldC1ncGlvcyBwcm9wZXJ0eSB1bmRl
-ciBwaHkgbm9kZS4KPj4gQW5kIGhvcGUgdGhpcyBzZXJpZXMgY2FuIGJlIGFwcGxpZWQgc29vbi4K
-Pj4KPiAKPiBJZiAncmVzZXQtZ3Bpb3MnIGFuZCAncmVzZXQtZGVsYXktdXMnIGFzIHBlciBbMV0g
-d29ya3MgZm9yIHlvdQo+IHRoZW4gd2h5IG5vdCB1c2UgdGhhdD8KPiAKPiBbMV0gRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tZGlvLnR4dAoKSSB0YWtlIGJhY2sgbXkgc3Rh
-dGVtZW50LgoKWW91IHNob3VsZCB1c2UgdGhlIGFib3ZlIG9ubHkgaWYgeW91IGhhdmUgYSBzaW5n
-bGUgcmVzZXQgbGluZSBjb25uZWN0ZWQgdG8gbXVsdGlwbGUgUEhZcwpvbiB0aGUgc2FtZSBNRElP
-IGJ1cy4KSW4gYWxsIG90aGVyIGNhc2VzIHRoZSByZXNldCBwcm9wZXJ0aWVzIHNob3VsZCBiZSBw
-YXJ0IG9mIFBIWSBkZXZpY2Ugbm9kZS4KCkhvd2V2ZXIsIHdlIG5lZWQgdG8gc3RpbGwgZW5zdXJl
-IHRoYXQgdGhlIG1kaW9fYnVzIGRyaXZlciBpc3N1ZXMgdGhlIHJlc2V0LiBUaGlzIHBpZWNlCmlz
-IHN0aWxsIG1pc3NpbmcgaW4gdGhlIGNvZGUuCgo+IAo+PiBUaGFua3MKPj4gQ2hyaXMgWmhvbmcK
-Pj4KPj4KPj4+Pj4gQXMgYSBzaWRlIHF1ZXN0aW9uLCB3aGljaCBpcyBtYWlubHkgYWRkcmVzc2Vk
-IHRvIFNlcmdlaSBhbmQgUm9nZXIsCj4+Pj4+IEkgZG9uJ3QgcXVpdGUgdW5kZXJzdGFuZCB3aHkg
-UEhZIHByb3BlcnRpZXMgd2VyZSBpbml0aWFsbHkgYWRkZWQgdG8KPj4+Pj4gTUFDL01ESU8gYnVz
-IGRldmljZSB0cmVlIG5vZGVzLCBpbiBteSBvcGluaW9uIHRoZXkgbXVzdCBiZSBtb3ZlZCB1bmRl
-cgo+Pj4+PiBQSFkgZGV2aWNlIHRyZWUgbm9kZXMuCj4+Pj4+Cj4+Pj4+IC0twqAKPj4+Pj4gV2l0
-aCBiZXN0IHdpc2hlcywKPj4+Pj4gVmxhZGltaXIKPj4+Pj4KPj4+Pj4+IFNpZ25lZC1vZmYtYnk6
-IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+Cj4+Pj4+PiAtLS0KPj4+Pj4+Cj4+Pj4+
-PiDCoMKgIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzA2NmEtcmF5ZWFnZXIuZHRzIHwgMiArKwo+Pj4+
-Pj4gwqDCoCAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4+Pj4+Pgo+Pj4+Pj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzA2NmEtcmF5ZWFnZXIuZHRzCj4+Pj4+PiBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzA2NmEtcmF5ZWFnZXIuZHRzCj4+Pj4+PiBpbmRleCA1NzAx
-NTdmLi42MDY0YTBhIDEwMDY0NAo+Pj4+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcmszMDY2
-YS1yYXllYWdlci5kdHMKPj4+Pj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3JrMzA2NmEtcmF5
-ZWFnZXIuZHRzCj4+Pj4+PiBAQCAtMTczLDYgKzE3Myw4IEBACj4+Pj4+PiDCoMKgwqDCoMKgwqAg
-cGluY3RybC0wID0gPCZlbWFjX3hmZXI+LCA8JmVtYWNfbWRpbz4sIDwmcm1paV9yc3Q+Owo+Pj4+
-Pj4gwqDCoMKgwqDCoMKgIHBoeSA9IDwmcGh5MD47Cj4+Pj4+PiDCoMKgwqDCoMKgwqAgcGh5LXN1
-cHBseSA9IDwmdmNjX3JtaWk+Owo+Pj4+Pj4gK8KgwqDCoCBwaHktcmVzZXQtZ3Bpb3MgPSA8Jmdw
-aW8xIFJLX1BENiBHUElPX0FDVElWRV9MT1c+OyAvKiBQSFlfUlNUICovCj4+Pj4+PiArwqDCoMKg
-IHBoeS1yZXNldC1kdXJhdGlvbiA9IDwxMD47IC8qIG1pbGxpc2Vjb25kICovCj4+Pj4+PiDCoMKg
-wqDCoMKgwqAgc3RhdHVzID0gIm9rYXkiOwo+Pj4+Pj4gwqDCoMKgwqDCoMKgwqDCoCBwaHkwOiBl
-dGhlcm5ldC1waHlAMCB7Cj4+Pj4+Pgo+Pj4+Pgo+Pj4KPj4KPiAKCi0tIApjaGVlcnMsCi1yb2dl
-cgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAg
-SGVsc2lua2kuIFktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9t
-aWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Wed, 20 Sep 2017, Fabio Estevam wrote:
+
+> The 'fsl,spi-num-chipselects' property is obsolete according to 
+> Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt, so remove
+> it from the example.
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/mc13xxx.txt | 1 -
+>  1 file changed, 1 deletion(-)
+
+Applied, thanks.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/mc13xxx.txt b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+> index 39ba414..ac235fe 100644
+> --- a/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mc13xxx.txt
+> @@ -113,7 +113,6 @@ MC13892 regulators:
+>  Examples:
+>  
+>  ecspi@70010000 { /* ECSPI1 */
+> -	fsl,spi-num-chipselects = <2>;
+>  	cs-gpios = <&gpio4 24 0>, /* GPIO4_24 */
+>  		   <&gpio4 25 0>; /* GPIO4_25 */
+>  
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
