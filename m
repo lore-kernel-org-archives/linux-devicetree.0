@@ -1,66 +1,50 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Question about "unit address format error" of DTC
-Date: Thu, 9 Nov 2017 08:15:11 -0600
-Message-ID: <CAL_Jsq+eZkCQTEHLb62Le3e6eLxt=N7EWGk7dsPAfLF9-73soQ@mail.gmail.com>
-References: <CAK7LNARujG8J_z62bc+PQOz34rf-Bo=+M54kvtokZxnktn2Y+A@mail.gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 4/9] ARM: dts: am335x-pepper: Fix the audio CODEC's
+ reset pin
+Date: Thu, 09 Nov 2017 15:25:21 +0100
+Message-ID: <1510237521.7659.11.camel@pengutronix.de>
+References: <20171108212505.28320-1-afd@ti.com>
+         <20171108212505.28320-5-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNARujG8J_z62bc+PQOz34rf-Bo=+M54kvtokZxnktn2Y+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171108212505.28320-5-afd-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 9, 2017 at 6:14 AM, Masahiro Yamada
-<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> Hi Rob, David,
->
->
-> I am just curious about a DTC warning.
->
->
-> For example,
->
-> soc {
->     compatible = "simple-bus";
->     #address-cells = <1>;
->     #size-cells = <1>;
->     ranges;
->
->     foo@11111111 {
->          compatible = "foo";
->          reg = <0x54006800 0x40>;
->     };
-> };
->
-> This emits the following warning.
->
-> Warning (simple_bus_reg): Node /soc/foo@11111111 simple-bus unit
-> address format error, expected "54006800"
->
->
-> But, if I replace "simple-bus" with "simple-mfd",
-> DTC is completely happy.
+On Wed, 2017-11-08 at 15:25 -0600, Andrew F. Davis wrote:
+> The correct DT property for specifying a GPIO used for reset
+> is "reset-gpio", fix this here.
+> 
+> Fixes: 4341881d0562 ("ARM: dts: Add devicetree for Gumstix Pepper board")
+> 
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/am335x-pepper.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
+> index 03c7d77023c6..d652abd76333 100644
+> --- a/arch/arm/boot/dts/am335x-pepper.dts
+> +++ b/arch/arm/boot/dts/am335x-pepper.dts
+> @@ -139,7 +139,7 @@
+>  &audio_codec {
+>  	status = "okay";
+>  
+> -	gpio-reset = <&gpio1 16 GPIO_ACTIVE_LOW>;
+> +	reset-gpio = <&gpio1 16 GPIO_ACTIVE_LOW>;
 
-We could probably add simple-mfd to the check. Though, if you have
-addresses, then you probably should use simple-bus. I'm not a bit fan
-of simple-mfd in general.
+This potentially breaks audio on am335x-pepper until the driver patches
+are applied, same for the other device trees. To make this bisectable,
+add support for the new property name to the driver before changing the
+device trees.
 
-> Why is this check limited to simple bus / PCI bus?
-
-Because bus types are free to define their own unit address format to
-some extent.
-
-> For other cases, is mismatching @<address>  allowed?
-
-No, but it is not checked. Most other cases such as I2C and SPI buses
-aren't checked because we have no generic way to key off of them. We
-need schema data with compatible strings of those bus controllers to
-do the checking.
-
-Any bus type needs to define its unit address format. Generally, it
-must match data fields in reg property and distinct fields are
-separated by commas.
-
-Rob
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
