@@ -1,76 +1,94 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 8/9] ASoC: tlv320aic31xx: Fix the reset GPIO OF name
-Date: Wed, 8 Nov 2017 17:25:20 -0600
-Message-ID: <1374534b-ac17-82ef-7b3b-3c6e4d4c5cc9@ti.com>
-References: <20171108212505.28320-1-afd@ti.com>
- <20171108212505.28320-9-afd@ti.com>
- <20171108213639.iymb7wuyjpuirbdu@sirena.co.uk>
- <80169c43-ad7f-d89c-61bf-5ca054aacda5@ti.com>
- <20171108221814.m6j3dgrlqpy4htxf@sirena.co.uk>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] MIPS: dts: remove bogus bcm96358nb4ser.dtb from dtb-y entry
+Date: Thu, 9 Nov 2017 09:11:41 +0900
+Message-ID: <CAK7LNATZ9O4cCpxLrG3MJoKYF+RnURkY4-tY2MdiZb90eGPtQg@mail.gmail.com>
+References: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
+ <1509859853-27473-2-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNAQfK_BWQcVW-ScrpAwNAHav3MrrzV-tjn_YUjsuvd7U5A@mail.gmail.com>
+ <20171106095139.GG15260@jhogan-linux> <CAK7LNAQ_bugEP8hHKmCif5QCz2=Pw_GpXzYz4zJeXO0HXaT_ag@mail.gmail.com>
+ <CAL_JsqJ8taCKnr_79UumiH2GFYq-fMzzkYm2iYevTOgUUWuzvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171108221814.m6j3dgrlqpy4htxf-7j8lgAiuQgnQXOPxS62xeg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJ8taCKnr_79UumiH2GFYq-fMzzkYm2iYevTOgUUWuzvg@mail.gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: James Hogan <jhogan@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Sam Ravnborg <sam@ravnborg.org>, Ralf Baechle <ralf@linux-mips.org>, Linux-MIPS <linux-mips@linux-mips.org>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2017 04:18 PM, Mark Brown wrote:
-> On Wed, Nov 08, 2017 at 03:53:51PM -0600, Andrew F. Davis wrote:
->> On 11/08/2017 03:36 PM, Mark Brown wrote:
->>> On Wed, Nov 08, 2017 at 03:25:04PM -0600, Andrew F. Davis wrote:
-> 
->>> This is obviously an incompatible change in the binding which will break
->>> any production DTs relying on the current behaviour.  You need to keep
->>> support for the existing property.
-> 
->> I understand the reasons not to change driver behavior wrt DT, but this
->> driver did not make functional use of this gpio, only going forward will
->> this gpio be used for actually reseting the device (in some patches I
->> will post soon). So I would like to fix this incorrect binding *before*
->> fixing it will cause behavior incompatibilities.
-> 
-> There is code in the driver to use the GPIO, including in the probe
-> where the GPIO is requested and set to high (which will bring it out of
-> reset if the default state was low).  At least the probe seems rather
-> likely to have a concrete effect.
-> 
+2017-11-09 1:51 GMT+09:00 Rob Herring <robh+dt@kernel.org>:
+> On Mon, Nov 6, 2017 at 5:00 AM, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>> 2017-11-06 19:41 GMT+09:00 James Hogan <jhogan@kernel.org>:
+>>> Hi,
+>>>
+>>> On Sun, Nov 05, 2017 at 11:11:38PM +0900, Masahiro Yamada wrote:
+>>>> +CC Ralf Baechle <ralf@linux-mips.org>
+>>>> +CC linux-mips@linux-mips.org
+>>>> +CC Kevin Cernekee <cernekee@gmail.com>
+>>>> +CC Florian Fainelli <f.fainelli@gmail.com>
+>>>>
+>>>>
+>>>> I missed to CC MIPS maintainers.
+>>>
+>>> Yes, please resend the patch so it lands in patchwork.linux-mips.org.
+>>
+>>
+>> This is a part of clean-up series of DT building.
+>>
+>> I want Acked-by from MIPS maintainers
+>> so that the whole series can go to a different tree.
+>> (DT or Kbuild).
+>>
+>>
+>> Sam addressed more clean-up candidates in MIPS Makefiles
+>> https://patchwork.kernel.org/patch/10041879/
+>>
+>> So, I will probably end up with touching those Makefiles more.
+>>
+>> All patches must go to the same tree.
+>>
+>>
+>>>> 2017-11-05 14:30 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+>>>> > arch/mips/boot/dts/brcm/bcm96358nb4ser.dts does not exist, so
+>>>> > we cannot build bcm96358nb4ser.dtb .
+>>>
+>>> This appears to be due to the file being renamed in commit 695835511f96
+>>> ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom").
+>>> Please can you update the commit message when you resend to mention the
+>>> cause of the problem.
+>>>
+>>> You could also add the following if you like while you're at it:
+>>>
+>>> Fixes: 695835511f96 ("MIPS: BMIPS: rename bcm96358nb4ser to bcm6358-neufbox4-sercom")
+>>> Cc: <stable@vger.kernel.org> # 4.9+
+>
+> I think this one can be applied independently and we'd want it to if
+> we tag for stable. So I think it can go thru the MIPS tree.
+>
 
-None of the 4 boards that defined this gpio have this pulled low in the
-pin control, boards should have an external pull-up on the reset line.
 
-At any-rate, I'm pushing this fix to allow the driver to use new kernel
-frameworks that depend on the correct binding being used. This is not a
-case of a badly designed binding or trying to add incompatible
-functionality, it is a typo fix. If we have to keep this driver back
-using old frameworks and needlessly bloat the code solely for the sake
-of compatibility with a typo, then DT "stability" here is causing more
-issues than it solves. </rant>
+As I said to MIPS folks, this patch must go before 2/2.
+
+You picked up only 2/2, so your dt/kbuild branch is broken.
 
 
+make ARCH=mips allyesconfig
+&& make ARCH=mips CROSS_COMPILE=mips-linux- dtbs
 
 
-I guess the alternative would be to have of_find_gpio() also consider
-prefixing, the 'gpio_suffixes' to 'con_id' and checking for those. That
-is rather ugly and probably encourages the spread of this bad binding
-property, but whatever the best fix is it cannot be to force bloat into
-the driver.
+will produce the following error.
 
->>> It also doesn't look like a good fix if we're aiming for conformance
->>> with DT naming conventions as unless things changed all GPIO related
->>> properties are supposed to end -gpios even if they can only ever specify
->>> a single GPIO.
-> 
->> If that is the new standard I can fix this patch to use -gpios.
-> 
-> It's always been the standard AFAIK.
-> 
 
-Will fix for v2.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+make[2]: *** No rule to make target
+'arch/mips/boot/dts/brcm/bcm96358nb4ser.dtb', needed by '__build'.
+Stop.
+scripts/Makefile.build:570: recipe for target 'arch/mips/boot/dts/brcm' failed
+make[1]: *** [arch/mips/boot/dts/brcm] Error 2
+arch/mips/Makefile:413: recipe for target 'dtbs' failed
+make: *** [dtbs] Error 2
+
+
+-- 
+Best Regards
+Masahiro Yamada
