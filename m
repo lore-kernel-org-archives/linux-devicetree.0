@@ -1,131 +1,79 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: Question about "unit address format error" of DTC
-Date: Fri, 10 Nov 2017 00:09:51 +0900
-Message-ID: <CAK7LNARoE6hhhH36ZugfqCNubUQzSLYGkMrx5TzTQe-gpu4CaQ@mail.gmail.com>
-References: <CAK7LNARujG8J_z62bc+PQOz34rf-Bo=+M54kvtokZxnktn2Y+A@mail.gmail.com>
- <CAL_Jsq+eZkCQTEHLb62Le3e6eLxt=N7EWGk7dsPAfLF9-73soQ@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] watchdog: jz4780: Allow selection of jz4740-wdt
+ driver
+Date: Thu, 9 Nov 2017 08:01:47 -0800
+Message-ID: <20171109160147.GB19959@roeck-us.net>
+References: <20170908183558.1537-1-malat@debian.org>
+ <20170908183558.1537-2-malat@debian.org>
+ <20171109074718.GR15260@jhogan-linux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+eZkCQTEHLb62Le3e6eLxt=N7EWGk7dsPAfLF9-73soQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171109074718.GR15260@jhogan-linux>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Nov 09, 2017 at 07:47:19AM +0000, James Hogan wrote:
+> Hi Wim,
+> 
+> On Fri, Sep 08, 2017 at 08:35:54PM +0200, Mathieu Malaterre wrote:
+> > This driver works for jz4740 & jz4780
+> > 
+> > Suggested-by: Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>
+> > Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> 
+> I just noticed that though Ralf applied the other two patches in this
+> series (defconfig + dt), he hadn't applied this patch.
+> 
+> Please can we have an ack from a watchdog maintainer so this can get
+> into 4.15 via the MIPS tree? It could alternatively go via the watchdog
+> tree if you prefer.
+> 
 
-2017-11-09 23:15 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Thu, Nov 9, 2017 at 6:14 AM, Masahiro Yamada
-> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->> Hi Rob, David,
->>
->>
->> I am just curious about a DTC warning.
->>
->>
->> For example,
->>
->> soc {
->>     compatible = "simple-bus";
->>     #address-cells = <1>;
->>     #size-cells = <1>;
->>     ranges;
->>
->>     foo@11111111 {
->>          compatible = "foo";
->>          reg = <0x54006800 0x40>;
->>     };
->> };
->>
->> This emits the following warning.
->>
->> Warning (simple_bus_reg): Node /soc/foo@11111111 simple-bus unit
->> address format error, expected "54006800"
->>
->>
->> But, if I replace "simple-bus" with "simple-mfd",
->> DTC is completely happy.
->
-> We could probably add simple-mfd to the check. Though, if you have
-> addresses, then you probably should use simple-bus. I'm not a bit fan
-> of simple-mfd in general.
->
->> Why is this check limited to simple bus / PCI bus?
->
-> Because bus types are free to define their own unit address format to
-> some extent.
->
->> For other cases, is mismatching @<address>  allowed?
->
-> No, but it is not checked. Most other cases such as I2C and SPI buses
-> aren't checked because we have no generic way to key off of them. We
-> need schema data with compatible strings of those bus controllers to
-> do the checking.
->
-> Any bus type needs to define its unit address format. Generally, it
-> must match data fields in reg property and distinct fields are
-> separated by commas.
->
+FWIW, according to my logs I did send out a Reviewed-by: some time ago,
+which normally means that I expect it to go through the watchdog tree.
+I wasn't aware that you wanted the patch to go through the mips tree.
+Sorry if I missed that earlier. For the record,
 
-Thanks.
-I had a more specific example I wanted to ask,
-but your last comment "distinct fields are separated by commas"
-probably answered the question.
+Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+
+since I don't care one way or another.
+
+I assume you want me to drop this and the related patches from my own
+watchdpog-next tree to prevent it from showing up in Wim's tree (if
+it isn't already there). Is that correct ?
+
+Guenter
+
+> Thanks
+> James
+> 
+> > ---
+> >  drivers/watchdog/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> > index c722cbfdc7e6..ca200d1f310a 100644
+> > --- a/drivers/watchdog/Kconfig
+> > +++ b/drivers/watchdog/Kconfig
+> > @@ -1460,7 +1460,7 @@ config INDYDOG
+> >  
+> >  config JZ4740_WDT
+> >  	tristate "Ingenic jz4740 SoC hardware watchdog"
+> > -	depends on MACH_JZ4740
+> > +	depends on MACH_JZ4740 || MACH_JZ4780
+> >  	select WATCHDOG_CORE
+> >  	help
+> >  	  Hardware driver for the built-in watchdog timer on Ingenic jz4740 SoCs.
+> > -- 
+> > 2.11.0
+> > 
+> > 
 
 
-The following is an example of NVMEM data cells.
-The generic binding is Documentation/devicetree/binding/nvmem/nvmem.txt
-
-
-reg:    specifies the offset in byte within the storage device.
-
-bits:   Is pair of bit location and number of bits, which specifies offset
-        in bit and number of bits within the address range specified
-by reg property.
-        Offset takes values from 0-7.
-
-
-So, it is possible to have multiple data cells
-that share the same "reg".
-
-@<reg-offset>,<bit-position>
-was the idea in my mind, but I was not 100% sure.
-
-         qfprom: qfprom@00700000 {
-                ...
-
-                /* Data cells */
-                calib0: calib@10,2 {
-                        reg = <0x10 0x4>;
-                        bits = <2 2>;
-                };
-
-                calib1: calib@10,6 {
-                        reg = <0x10 0x4>;
-                        bits = <6 2>
-                };
-
-                calib2: calib@14,2 {
-                        reg = <0x14 0x4>;
-                        bits = <2 2>;
-                };
-
-                calib3: calib@14,6 {
-                        reg = <0x14 0x4>;
-                        bits = <6 2>
-                };
-                ...
-        };
-
-
->From your comment, probably, this is the right thing to do.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
