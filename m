@@ -1,106 +1,40 @@
-From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: msm8916: add bindings for i2c1,
- i2c3, i2c5
-Date: Thu, 9 Nov 2017 12:14:56 -0500
-Message-ID: <20171109171456.6t3nhig6t4bnkc77@workotop.localdomain>
-References: <20171101175335.22123-1-damien.riegel@savoirfairelinux.com>
- <20171101175335.22123-5-damien.riegel@savoirfairelinux.com>
- <20171109170016.GC28761@minitux>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Johan Hovold <johan@kernel.org>
+Subject: [PATCH 2/8] dt-bindings: usb: fix reg-property port-number range
+Date: Thu,  9 Nov 2017 18:07:17 +0100
+Message-ID: <20171109170723.10960-3-johan@kernel.org>
+References: <20171109170723.10960-1-johan@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171109170016.GC28761@minitux>
+In-Reply-To: <20171109170723.10960-1-johan@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kernel@savoirfairelinux.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Alan Stern <stern@rowland.harvard.edu>, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+The USB hub port-number range for USB 2.0 is 1-255 and not 1-31 which
+reflects an arbitrary limit set by the current Linux implementation.
 
+Note that for USB 3.1 hubs the valid range is 1-15.
 
-On Thu, Nov 09, 2017 at 09:00:16AM -0800, Bjorn Andersson wrote:
-> On Wed 01 Nov 10:53 PDT 2017, Damien Riegel wrote:
-> 
-> I think it's better to use the word "nodes" (add nodes...)
+Increase the documented valid range in the binding to 255, which is the
+maximum allowed by the specifications.
 
-Will reword that.
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ Documentation/devicetree/bindings/usb/usb-device.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> > Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 72 ++++++++++++++++++++++++++++++
-> >  arch/arm64/boot/dts/qcom/msm8916.dtsi      | 45 +++++++++++++++++++
-> >  2 files changed, 117 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-> > index c67ad8ed8b60..1cec5b30ed6e 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-> > @@ -270,6 +270,30 @@
-> >  		};
-> >  	};
-> >  
-> > +	i2c1_default: i2c1_default {
-> > +		pinmux {
-> > +			function = "blsp_i2c1";
-> > +			pins = "gpio2", "gpio3";
-> > +		};
-> > +		pinconf {
-> > +			pins = "gpio2", "gpio3";
-> > +			drive-strength = <16>;
-> > +			bias-disable;
-> > +		};
-> 
-> pinconf is typically board specific, so please leave these out from the
-> base dtsi.
-
-I don't mind dropping that, but pinconf for i2c{2,4,6} is already in
-msm8916-pins.dtsi, so we should either drop them all, or add pinconf for
-i2c{1,3,5} for consistency. And if I read the pinctrl driver correctly,
-I2C cannot be routed to other pins, the only properties that users may
-want to modify are drive-strength and bias. Let me know which option you
-prefer.
-
-
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > index de25bd6070f5..bdc4cb6f66d4 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > @@ -455,6 +455,21 @@
-> >  			status = "disabled";
-> >  		};
-> >  
-> > +		blsp_i2c1: i2c@78b5000 {
-> > +			compatible = "qcom,i2c-qup-v2.2.1";
-> > +			reg = <0x078b5000 0x600>;
-> 
-> Size is 0x500.
-
-Will update that (and will also do that for patch 3)
-
-> > +			interrupts = <GIC_SPI 95 0>;
-> > +			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-> > +				 <&gcc GCC_BLSP1_QUP1_I2C_APPS_CLK>;
-> > +			clock-names = "iface", "core";
-> > +			pinctrl-names = "default", "sleep";
-> > +			pinctrl-0 = <&i2c1_default>;
-> > +			pinctrl-1 = <&i2c1_sleep>;
-> 
-> Please omit the pinctrl-* properties from the base dtsi (when it's not
-> hard coded things for the platform).
-> 
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			status = "disabled";
-> > +		};
-> > +
-> >  		blsp_i2c2: i2c@78b6000 {
-> >  			compatible = "qcom,i2c-qup-v2.2.1";
-> >  			reg = <0x078b6000 0x600>;
-> 
-> Otherwise this looks good!
-
-Thank you for the review,
+diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+index 4df7e22e0084..b749fb9f2674 100644
+--- a/Documentation/devicetree/bindings/usb/usb-device.txt
++++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+@@ -11,7 +11,7 @@ Required properties:
+   be used, but a device adhering to this binding may leave out all except
+   for usbVID,PID.
+ - reg: the port number which this device is connecting to, the range
+-  is 1-31.
++  is 1-255.
+ 
+ Example:
+ 
 -- 
-Damien
+2.15.0
