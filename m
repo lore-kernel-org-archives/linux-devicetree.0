@@ -1,42 +1,65 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 03/17] ASoC: tlv320aic31xx: Fix GPIO1
-	register definition
-Date: Thu, 9 Nov 2017 08:32:34 -0600
-Message-ID: <2a4b7d9c-e0b1-a15c-f03a-0872f8ea312f@ti.com>
-References: <20171109002741.10897-1-afd@ti.com>
- <20171109002741.10897-4-afd@ti.com>
- <20171109124528.nadkkb76clg5lw2g@sirena.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171109124528.nadkkb76clg5lw2g@sirena.co.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v4 0/6] Add support for Hexagon q6v5-wcss integrated core
+Date: Thu,  9 Nov 2017 20:16:09 +0530
+Message-ID: <1510238775-14883-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2017 06:45 AM, Mark Brown wrote:
-> On Wed, Nov 08, 2017 at 06:27:27PM -0600, Andrew F. Davis wrote:
->> GPIO1 control register is number 51, fix this here.
->>
->> Fixes: bafcbfe429eb ("ASoC: tlv320aic31xx: Make the register values human readable")
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
-> 
-> We should send this as a bug fix to stable but this depends on your
-> reformatting :(
-> 
+IPQ8074 has an integrated Hexagon dsp core Q6v5 and a wireless lan
+(Lithium) IP. This series adds the remoteproc driver to reset, load
+and boot Q6 firmware.
 
-I put it after the reformatting as an example of its value, now that you
-have seen it, I'll move it before the reformatting so it can be taken
-independently.
+The first patch is to make the mdt_loader authenticate
+the firmware only if required, so that the code can be reused for
+self-authenticating firmware like the Q6v5 core in IPQ8074. The second
+patch exports the elf header's get_boot_addr helper to reuse it.
+The next couple of patches arranges the code in the original q6v5-mpss
+rproc to add q6v5-wcss later. The last couple of patches add the relevant
+bits for the q6v5-wcss core.
+
+This is done on top of Avaneesh's msm8996 rproc support [1]
+
+[1] https://lkml.org/lkml/2017/10/24/771
+
+V4:
+    Fixed Bjorn's comment in PATCH#1 and added his acked-by
+    Rebased on top of Avinash's latest rproc for msm8996 q6 support.
+
+V3:
+    Rebased on top of latest remoteproc next
+
+V2:
+    Last time introduced this a new rproc driver, but there is lot
+    of code that can be shared if it is added to the q6v5-mpss pil
+    driver.
+
+Sricharan R (6):
+  remoteproc: qcom: mdt_loader: Make the firmware authentication
+    optional
+  remoteproc: Export rproc_elf_get_boot_addr
+  remoteproc: qcom: Push reset ops, fw ops, rproc ops in to of_match
+    data
+  remoteproc: qcom: Split the head and tail of the q6v5-pil rproc start
+    function
+  remoteproc: qcom: Add support for q6v5-wcss pil
+  remoteproc: qcom: Add q6v5-wcss rproc ops
+
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   7 +-
+ drivers/remoteproc/Kconfig                         |   1 +
+ drivers/remoteproc/qcom_q6v5_pil.c                 | 469 +++++++++++++++++----
+ drivers/remoteproc/remoteproc_elf_loader.c         |   2 +-
+ drivers/remoteproc/remoteproc_internal.h           |   3 +
+ drivers/soc/qcom/mdt_loader.c                      |  82 +++-
+ include/linux/soc/qcom/mdt_loader.h                |   3 +
+ 7 files changed, 453 insertions(+), 114 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
