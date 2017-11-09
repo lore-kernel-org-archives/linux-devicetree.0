@@ -1,12 +1,12 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: sun8i: bananapi-m3: Enable dwmac-sun8i
-Date: Thu,  9 Nov 2017 09:29:50 +0100
-Message-ID: <20171109082950.21124-3-clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 1/2] ARM: sun8i: a83t: add dwmac-sun8i device node
+Date: Thu,  9 Nov 2017 09:29:49 +0100
+Message-ID: <20171109082950.21124-2-clabbe.montjoie@gmail.com>
 References: <20171109082950.21124-1-clabbe.montjoie@gmail.com>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBD5FSDIAKGQESVYPASI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBDNFSDIAKGQEBEQN53A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171109082950.21124-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,51 +19,67 @@ To: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@publ
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The dwmac-sun8i hardware is present on the bananapi m3
-It uses an external PHY rtl8211e via RGMII.
+The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
+This patch add support for it on the Allwinner a83t SoC Device-tree.
 
-This patch create the needed emac and phy nodes.
+This patch add the emac device node and the related RGMII pins node.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-index c606af3dbfed..45bdd5c17829 100644
---- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-@@ -52,6 +52,7 @@
- 	compatible = "sinovoip,bpi-m3", "allwinner,sun8i-a83t";
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 19acae1b4089..a384b766f3dc 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -336,6 +336,18 @@
+ 			#interrupt-cells = <3>;
+ 			#gpio-cells = <3>;
  
- 	aliases {
-+		ethernet0 = &emac;
- 		serial0 = &uart0;
- 	};
++			emac_rgmii_pins: emac-rgmii-pins {
++				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
++				       "PD11", "PD12", "PD13", "PD14", "PD18",
++				       "PD19", "PD21", "PD22", "PD23";
++				function = "gmac";
++				/*
++				 * data lines in RGMII mode use DDR mode
++				 * and need a higher signal drive strength
++				 */
++				drive-strength = <40>;
++			};
++
+ 			mmc0_pins: mmc0-pins {
+ 				pins = "PF0", "PF1", "PF2",
+ 				       "PF3", "PF4", "PF5";
+@@ -440,6 +452,27 @@
+ 			status = "disabled";
+ 		};
  
-@@ -88,6 +89,23 @@
- 	/* TODO GL830 USB-to-SATA bridge downstream w/ GPIO power controls */
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_rgmii_pins>;
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-mode = "rgmii";
-+	allwinner,rx-delay-ps = <700>;
-+	allwinner,tx-delay-ps = <700>;
++		emac: ethernet@1c30000 {
++			compatible = "allwinner,sun8i-a83t-emac";
++			syscon = <&syscon>;
++			reg = <0x01c30000 0x104>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			resets = <&ccu 13>;
++			reset-names = "stmmaceth";
++			clocks = <&ccu 27>;
++			clock-names = "stmmaceth";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
 +
-+	status = "okay";
-+};
++			mdio: mdio {
++				compatible = "snps,dwmac-mdio";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
 +
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
+ 		gic: interrupt-controller@1c81000 {
+ 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
+ 			reg = <0x01c81000 0x1000>,
 -- 
 2.13.6
