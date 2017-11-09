@@ -1,90 +1,135 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: msm8916: add bindings for i2c1,
- i2c3, i2c5
-Date: Thu, 9 Nov 2017 09:00:16 -0800
-Message-ID: <20171109170016.GC28761@minitux>
-References: <20171101175335.22123-1-damien.riegel@savoirfairelinux.com>
- <20171101175335.22123-5-damien.riegel@savoirfairelinux.com>
+From: <Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org>
+Subject: RE: Problem with commit to add overlay symbols to live device tree
+Date: Thu, 9 Nov 2017 17:09:01 +0000
+Message-ID: <c4deba835169411ea2645c27c734dd31@infineon.com>
+References: <85c5a40bb6eb4d4ebe522b3034528a36@infineon.com>
+ <59E9029D.1030700@gmail.com> <d0bd4312e9314c8ba6c56d800d07c0a9@infineon.com>
+ <59EA6348.5020205@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171101175335.22123-5-damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <59EA6348.5020205-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frank.rowand-7U/KSKJipcs@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 01 Nov 10:53 PDT 2017, Damien Riegel wrote:
+> On 10/20/17 05:11, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
+> >> Hi Alexander,
+> >>
+> >> On 10/19/17 10:06, Alexander.Steffen-d0qZbvYSIPpWk0Htik3J/w@public.gmane.org wrote:
+> >>> Hi Frank, Rob,
+> >>>
+> >>> I ran some tests with kernel v4.14-rc2, where I came across an issue
+> >>> with your commit "of: overlay: add overlay symbols to live device
+> >>> tree" (d1651b03c2df75db8eda3fbcd3a07adb337ee8b0,
+> >>>
+> >>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/d
+> >> rivers/of?h=3Dv4.14-
+> rc5&id=3Dd1651b03c2df75db8eda3fbcd3a07adb337ee8b0).
+> >>> I am not sure whether this is a problem with your change or whether I
+> >>> made a mistake somewhere.
+> >>>
+> >>> Without this commit, the following device tree overlay works fine on
+> >>> a Raspberry Pi:
+> >>>
+> >>> /dts-v1/;
+> >>> /plugin/;
+> >>>
+> >>> / {
+> >>> 	fragment@0 {
+> >>> 		target-path =3D "/soc/spi@7e204000";
+> >>> 		__overlay__ {
+> >>> 			#address-cells =3D <1>;
+> >>> 			#size-cells =3D <0>;
+> >>> 			status =3D "okay";
+> >>>
+> >>> 		        spidev1: spi@1 {
+> >>> 				compatible =3D "spidev";
+> >>> 				reg =3D <1>;
+> >>> 				spi-max-frequency =3D <5000000>;
+> >>> 			};
+> >>> 		};
+> >>> 	};
+> >>> };
+> >>>
+> >>> But with the commit, it is rejected:
+> >>>
+> >>> OF: overlay: no symbols in root of device tree.
+> >>> OF: overlay: of_build_overlay_info() failed for tree@/
+> >>> create_overlay: Failed to create overlay (err=3D-22)
+> >>>
+> >>> Only if I remove the spidev1 label, it continues to work with the
+> >>> commit (but this is not always possible in more complex overlays).
+> >>>
+> >>> I hope this does not make a difference, but I use the configfs
+> >>> interface to load the overlay, that is not part of mainline, but
+> >>> shipped by several distributions nonetheless (for example in the
+> >>> Raspberry Pi kernel,
+> >>>
+> >>
+> https://github.com/raspberrypi/linux/commit/cccc24635da69799335566eb46
+> >> 4a4c9e1fb4a8ad).
+> >>>
+> >>>
+> >>> Could you tell me whether this change in behavior is intentional and
+> >>> whether I have to fix something in my usage?
+> >>
+> >> Yes, the change is intentional.
+> >>
+> >> If you are using overlays, the expectation is that the device tree
+> >> that was used to boot contains symbols (the paths of nodes that
+> >> have phandles) so that phandle references in the overlay can be
+> >> fixed up to match the values in the base devicetree.  Symbols
+> >> will be added to the device tree if if is compiled with the
+> >> "@" option.  This is the first method to avoid the overlay
+> >> load error.
+> >
+> > Ah, thanks, this does solve the problem. I use nothing special to
+> > generate the base devicetree, just "make dtbs". Would it make sense
+> > to add the "@" option to the kernel Makefile, so that symbols are
+> > added by default? Or does this have any downside? I'd suspect that
+>=20
+> Yes, there is a large downside.  Compiling with the "@" option will
+> increase the size of the DTB.  Most boards will not use overlays,
+> and in those cases this overhead has no value.  So "@" should be
+> opt-in, not default.
 
-I think it's better to use the word "nodes" (add nodes...)
+I see. Is there a way (a config option maybe?) that I can use to get this b=
+ehavior without patching the Makefile?
 
-> Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 72 ++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/msm8916.dtsi      | 45 +++++++++++++++++++
->  2 files changed, 117 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-> index c67ad8ed8b60..1cec5b30ed6e 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-> @@ -270,6 +270,30 @@
->  		};
->  	};
->  
-> +	i2c1_default: i2c1_default {
-> +		pinmux {
-> +			function = "blsp_i2c1";
-> +			pins = "gpio2", "gpio3";
-> +		};
-> +		pinconf {
-> +			pins = "gpio2", "gpio3";
-> +			drive-strength = <16>;
-> +			bias-disable;
-> +		};
+> > many more people will be hit by this change, since most tutorials for
+> > overlays that I have seen include the "@" option for the dtc calls.>
+> >> If you compile the overlay with the "@" option then symbols
+> >> will be added to the overlay DTB.  Previous to commit
+> >> d1651b03c2df, these symbols would be ignored when an overlay
+> >> was loaded.  If you remove the "@" from the compile of
+> >> overlays, then everything should work the same way it did
+> >> before the commit.  This is the second way to avoid the
+> >> load overlay error.
 
-pinconf is typically board specific, so please leave these out from the
-base dtsi.
+Do I understand that correctly, that when I remove the "@" option from the =
+dtc calls, the same call should work both with an old (pre-d1651b03c2df) an=
+d a new kernel? If the old kernel just ignored the symbols, they were not u=
+sed for anything, so it should not matter whether they were contained in th=
+e overlay DTB or not, right?
 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index de25bd6070f5..bdc4cb6f66d4 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -455,6 +455,21 @@
->  			status = "disabled";
->  		};
->  
-> +		blsp_i2c1: i2c@78b5000 {
-> +			compatible = "qcom,i2c-qup-v2.2.1";
-> +			reg = <0x078b5000 0x600>;
+> >>
+> >>
+> >>> Thanks
+> >>> Alexander
+> >>> --
+> >>> To unsubscribe from this list: send the line "unsubscribe devicetree"=
+ in
+> >>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >
+>=20
 
-Size is 0x500.
-
-> +			interrupts = <GIC_SPI 95 0>;
-> +			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-> +				 <&gcc GCC_BLSP1_QUP1_I2C_APPS_CLK>;
-> +			clock-names = "iface", "core";
-> +			pinctrl-names = "default", "sleep";
-> +			pinctrl-0 = <&i2c1_default>;
-> +			pinctrl-1 = <&i2c1_sleep>;
-
-Please omit the pinctrl-* properties from the base dtsi (when it's not
-hard coded things for the platform).
-
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->  		blsp_i2c2: i2c@78b6000 {
->  			compatible = "qcom,i2c-qup-v2.2.1";
->  			reg = <0x078b6000 0x600>;
-
-Otherwise this looks good!
-
-Regards,
-Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
