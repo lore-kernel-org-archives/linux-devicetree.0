@@ -1,7 +1,7 @@
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v3 5/8] MIPS: Octeon: Automatically provision CVMSEG space.
-Date: Thu,  9 Nov 2017 11:29:12 -0800
-Message-ID: <20171109192915.11912-6-david.daney@cavium.com>
+Subject: [PATCH v3 4/8] MIPS: Octeon: Add Free Pointer Unit (FPA) support.
+Date: Thu,  9 Nov 2017 11:29:11 -0800
+Message-ID: <20171109192915.11912-5-david.daney@cavium.com>
 References: <20171109192915.11912-1-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,297 +18,455 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org, Carlos Munoz <cmunoz@caviumnetworks.com>, Andrew Lunn <andrew@lunn.ch>, "Steven J. Hill" <steven.hill@cavium.com>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>, "Steven J . Hill" <Steven.Hill@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE and automatically calculate
-the amount of CVMSEG space needed.
+From: Carlos Munoz <cmunoz@cavium.com>
 
-1st 128-bytes: Use by IOBDMA
-2nd 128-bytes: Reserved by kernel for scratch/TLS emulation.
-3rd 128-bytes: OCTEON-III LMTLINE
+>From the hardware user manual: "The FPA is a unit that maintains
+pools of pointers to free L2/DRAM memory. To provide QoS, the pools
+are referenced indirectly through 1024 auras. Both core software
+and hardware units allocate and free pointers."
 
-New config variable CONFIG_CAVIUM_OCTEON_EXTRA_CVMSEG provisions
-additional lines, defaults to zero.
-
+Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
+Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
 Signed-off-by: David Daney <david.daney@cavium.com>
-Signed-off-by: Carlos Munoz <cmunoz@caviumnetworks.com>
 ---
- arch/mips/cavium-octeon/Kconfig                    | 27 ++++++++++++--------
- arch/mips/cavium-octeon/setup.c                    | 16 ++++++------
- .../asm/mach-cavium-octeon/kernel-entry-init.h     | 20 +++++++++------
- arch/mips/include/asm/mipsregs.h                   |  2 ++
- arch/mips/include/asm/octeon/octeon.h              |  2 ++
- arch/mips/include/asm/processor.h                  |  2 +-
- arch/mips/kernel/octeon_switch.S                   |  2 --
- arch/mips/mm/tlbex.c                               | 29 ++++++----------------
- drivers/staging/octeon/ethernet-defines.h          |  2 +-
- 9 files changed, 50 insertions(+), 52 deletions(-)
+ arch/mips/cavium-octeon/Kconfig       |   8 +
+ arch/mips/cavium-octeon/Makefile      |   1 +
+ arch/mips/cavium-octeon/octeon-fpa3.c | 364 ++++++++++++++++++++++++++++++++++
+ arch/mips/include/asm/octeon/octeon.h |  15 ++
+ 4 files changed, 388 insertions(+)
+ create mode 100644 arch/mips/cavium-octeon/octeon-fpa3.c
 
 diff --git a/arch/mips/cavium-octeon/Kconfig b/arch/mips/cavium-octeon/Kconfig
-index 4dffe78fe6b9..a526bb80aa16 100644
+index 5c0b56203bae..4dffe78fe6b9 100644
 --- a/arch/mips/cavium-octeon/Kconfig
 +++ b/arch/mips/cavium-octeon/Kconfig
-@@ -10,21 +10,26 @@ config CAVIUM_CN63XXP1
- 	  non-CN63XXP1 hardware, so it is recommended to select "n"
- 	  unless it is known the workarounds are needed.
+@@ -86,4 +86,12 @@ config OCTEON_ILM
+ 	  To compile this driver as a module, choose M here.  The module
+ 	  will be called octeon-ilm
  
--config CAVIUM_OCTEON_CVMSEG_SIZE
--	int "Number of L1 cache lines reserved for CVMSEG memory"
--	range 0 54
--	default 1
--	help
--	  CVMSEG LM is a segment that accesses portions of the dcache as a
--	  local memory; the larger CVMSEG is, the smaller the cache is.
--	  This selects the size of CVMSEG LM, which is in cache blocks. The
--	  legally range is from zero to 54 cache blocks (i.e. CVMSEG LM is
--	  between zero and 6192 bytes).
--
- endif # CPU_CAVIUM_OCTEON
- 
- if CAVIUM_OCTEON_SOC
- 
-+config CAVIUM_OCTEON_EXTRA_CVMSEG
-+	int "Number of extra L1 cache lines reserved for CVMSEG memory"
-+	range 0 50
-+	default 0
++config OCTEON_FPA3
++	tristate "Octeon III fpa driver"
 +	help
-+	  CVMSEG LM is a segment that accesses portions of the dcache
-+	  as a local memory; the larger CVMSEG is, the smaller the
-+	  cache is.  The kernel uses two or three blocks (one for TLB
-+	  exception handlers, one for driver IOBDMA operations, and on
-+	  models that need it, one for LMTDMA operations). This
-+	  selects an optional extra number of CVMSEG lines for use by
-+	  other software.
++	  This option enables a Octeon III driver for the Free Pool Unit (FPA).
++	  The FPA is a hardware unit that manages pools of pointers to free
++	  L2/DRAM memory. This driver provides an interface to reserve,
++	  initialize, and fill fpa pools.
 +
-+	  Normally no extra lines are required, and this parameter
-+	  should be set to zero.
-+
- config CAVIUM_OCTEON_LOCK_L2
- 	bool "Lock often used kernel code in the L2"
- 	default "y"
-diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
-index 99e6a68bc652..51c4d3c3cada 100644
---- a/arch/mips/cavium-octeon/setup.c
-+++ b/arch/mips/cavium-octeon/setup.c
-@@ -68,6 +68,12 @@ extern void pci_console_init(const char *arg);
- static unsigned long long max_memory = ULLONG_MAX;
- static unsigned long long reserve_low_mem;
- 
+ endif # CAVIUM_OCTEON_SOC
+diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
+index 0a299ab8719f..0ef967399702 100644
+--- a/arch/mips/cavium-octeon/Makefile
++++ b/arch/mips/cavium-octeon/Makefile
+@@ -20,3 +20,4 @@ obj-$(CONFIG_MTD)		      += flash_setup.o
+ obj-$(CONFIG_SMP)		      += smp.o
+ obj-$(CONFIG_OCTEON_ILM)	      += oct_ilm.o
+ obj-$(CONFIG_USB)		      += octeon-usb.o
++obj-$(CONFIG_OCTEON_FPA3)	      += octeon-fpa3.o
+diff --git a/arch/mips/cavium-octeon/octeon-fpa3.c b/arch/mips/cavium-octeon/octeon-fpa3.c
+new file mode 100644
+index 000000000000..a7c7decdbc9a
+--- /dev/null
++++ b/arch/mips/cavium-octeon/octeon-fpa3.c
+@@ -0,0 +1,364 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * modified in hernel-entry-init.h, must have an initial value to keep
-+ * it from being clobbered when bss is zeroed.
++ * Driver for the Octeon III Free Pool Unit (fpa).
++ *
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License.  See the file "COPYING" in the main directory of this archive
++ * for more details.
++ *
++ * Copyright (C) 2015-2017 Cavium, Inc.
 + */
-+u32 octeon_cvmseg_lines = 2;
 +
- DEFINE_SEMAPHORE(octeon_bootbus_sem);
- EXPORT_SYMBOL(octeon_bootbus_sem);
- 
-@@ -604,11 +610,7 @@ void octeon_user_io_init(void)
- 
- 	/* R/W If set, CVMSEG is available for loads/stores in
- 	 * kernel/debug mode. */
--#if CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE > 0
- 	cvmmemctl.s.cvmsegenak = 1;
--#else
--	cvmmemctl.s.cvmsegenak = 0;
--#endif
- 	if (OCTEON_IS_OCTEON3()) {
- 		/* Enable LMTDMA */
- 		cvmmemctl.s.lmtena = 1;
-@@ -626,9 +628,9 @@ void octeon_user_io_init(void)
- 
- 	/* Setup of CVMSEG is done in kernel-entry-init.h */
- 	if (smp_processor_id() == 0)
--		pr_notice("CVMSEG size: %d cache lines (%d bytes)\n",
--			  CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE,
--			  CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE * 128);
-+		pr_notice("CVMSEG size: %u cache lines (%u bytes)\n",
-+			  octeon_cvmseg_lines,
-+			  octeon_cvmseg_lines * 128);
- 
- 	if (octeon_has_feature(OCTEON_FEATURE_FAU)) {
- 		union cvmx_iob_fau_timeout fau_timeout;
-diff --git a/arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h b/arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h
-index c38b38ce5a3d..cdcca60978a2 100644
---- a/arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h
-+++ b/arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h
-@@ -26,11 +26,18 @@
- 	# a3 = address of boot descriptor block
- 	.set push
- 	.set arch=octeon
-+	mfc0	v1, CP0_PRID_REG
-+	andi	v1, 0xff00
-+	li	v0, 0x9500		# cn78XX or later
-+	subu	v1, v1, v0
-+	li	t2, 2 + CONFIG_CAVIUM_OCTEON_EXTRA_CVMSEG
-+	bltz	v1, 1f
-+	addiu	t2, 1			# t2 has cvmseg_size
-+1:
- 	# Read the cavium mem control register
- 	dmfc0	v0, CP0_CVMMEMCTL_REG
- 	# Clear the lower 6 bits, the CVMSEG size
--	dins	v0, $0, 0, 6
--	ori	v0, CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE
-+	dins	v0, t2, 0, 6
- 	dmtc0	v0, CP0_CVMMEMCTL_REG	# Write the cavium mem control register
- 	dmfc0	v0, CP0_CVMCTL_REG	# Read the cavium control register
- 	# Disable unaligned load/store support but leave HW fixup enabled
-@@ -70,7 +77,7 @@
- 	# Flush dcache after config change
- 	cache	9, 0($0)
- 	# Zero all of CVMSEG to make sure parity is correct
--	dli	v0, CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE
-+	move	v0, t2
- 	dsll	v0, 7
- 	beqz	v0, 2f
- 1:	dsubu	v0, 8
-@@ -126,12 +133,7 @@
- 	LONG_L	sp, (t0)
- 	# Set the SP global variable to zero so the master knows we've started
- 	LONG_S	zero, (t0)
--#ifdef __OCTEON__
--	syncw
--	syncw
--#else
- 	sync
--#endif
- 	# Jump to the normal Linux SMP entry point
- 	j   smp_bootstrap
- 	nop
-@@ -148,6 +150,8 @@
- 
- #endif /* CONFIG_SMP */
- octeon_main_processor:
-+	dla	v0, octeon_cvmseg_lines
-+	sw	t2, 0(v0)
- 	.set pop
- .endm
- 
-diff --git a/arch/mips/include/asm/mipsregs.h b/arch/mips/include/asm/mipsregs.h
-index a6810923b3f0..df7654d7333d 100644
---- a/arch/mips/include/asm/mipsregs.h
-+++ b/arch/mips/include/asm/mipsregs.h
-@@ -1126,6 +1126,8 @@
- #define FPU_CSR_RD	0x3	/* towards -Infinity */
- 
- 
-+#define CAVIUM_OCTEON_SCRATCH_OFFSET (2 * 128 - 16 - 32768)
++#include <linux/module.h>
 +
- #ifndef __ASSEMBLY__
- 
- /*
++#include <asm/octeon/octeon.h>
++
++
++/* Registers are accessed via xkphys */
++#define SET_XKPHYS			(1ull << 63)
++#define NODE_OFFSET			0x1000000000ull
++#define SET_NODE(node)			((node) * NODE_OFFSET)
++
++#define FPA_BASE			0x1280000000000ull
++#define SET_FPA_BASE(node)		(SET_XKPHYS + SET_NODE(node) + FPA_BASE)
++
++#define FPA_GEN_CFG(n)			(SET_FPA_BASE(n)           + 0x00000050)
++
++#define FPA_POOLX_CFG(n, p)		(SET_FPA_BASE(n) + (p<<3)  + 0x10000000)
++#define FPA_POOLX_START_ADDR(n, p)	(SET_FPA_BASE(n) + (p<<3)  + 0x10500000)
++#define FPA_POOLX_END_ADDR(n, p)	(SET_FPA_BASE(n) + (p<<3)  + 0x10600000)
++#define FPA_POOLX_STACK_BASE(n, p)	(SET_FPA_BASE(n) + (p<<3)  + 0x10700000)
++#define FPA_POOLX_STACK_END(n, p)	(SET_FPA_BASE(n) + (p<<3)  + 0x10800000)
++#define FPA_POOLX_STACK_ADDR(n, p)	(SET_FPA_BASE(n) + (p<<3)  + 0x10900000)
++
++#define FPA_AURAX_POOL(n, a)		(SET_FPA_BASE(n) + (a<<3)  + 0x20000000)
++#define FPA_AURAX_CFG(n, a)		(SET_FPA_BASE(n) + (a<<3)  + 0x20100000)
++#define FPA_AURAX_CNT(n, a)		(SET_FPA_BASE(n) + (a<<3)  + 0x20200000)
++#define FPA_AURAX_CNT_LIMIT(n, a)	(SET_FPA_BASE(n) + (a<<3)  + 0x20400000)
++#define FPA_AURAX_CNT_THRESHOLD(n, a)	(SET_FPA_BASE(n) + (a<<3)  + 0x20500000)
++#define FPA_AURAX_POOL_LEVELS(n, a)	(SET_FPA_BASE(n) + (a<<3)  + 0x20700000)
++#define FPA_AURAX_CNT_LEVELS(n, a)	(SET_FPA_BASE(n) + (a<<3)  + 0x20800000)
++
++static inline u64 oct_csr_read(u64 addr)
++{
++	return __raw_readq((void __iomem *)addr);
++}
++
++static inline void oct_csr_write(u64 data, u64 addr)
++{
++	__raw_writeq(data, (void __iomem *)addr);
++}
++
++static DEFINE_MUTEX(octeon_fpa3_lock);
++
++static int get_num_pools(void)
++{
++	if (OCTEON_IS_MODEL(OCTEON_CN78XX))
++		return 64;
++	if (OCTEON_IS_MODEL(OCTEON_CNF75XX) || OCTEON_IS_MODEL(OCTEON_CN73XX))
++		return 32;
++	return 0;
++}
++
++static int get_num_auras(void)
++{
++	if (OCTEON_IS_MODEL(OCTEON_CN78XX))
++		return 1024;
++	if (OCTEON_IS_MODEL(OCTEON_CNF75XX) || OCTEON_IS_MODEL(OCTEON_CN73XX))
++		return 512;
++	return 0;
++}
++
++/**
++ * octeon_fpa3_init - Initialize the fpa to default values.
++ * @node: Node of fpa to initialize.
++ *
++ * Returns 0 if successful.
++ * Returns <0 for error codes.
++ */
++int octeon_fpa3_init(int node)
++{
++	static bool init_done[2];
++	u64 data;
++	int aura_cnt, i;
++
++	mutex_lock(&octeon_fpa3_lock);
++
++	if (init_done[node])
++		goto done;
++
++	aura_cnt = get_num_auras();
++	for (i = 0; i < aura_cnt; i++) {
++		oct_csr_write(0x100000000ull, FPA_AURAX_CNT(node, i));
++		oct_csr_write(0xfffffffffull, FPA_AURAX_CNT_LIMIT(node, i));
++		oct_csr_write(0xffffffffeull, FPA_AURAX_CNT_THRESHOLD(node, i));
++	}
++
++	data = oct_csr_read(FPA_GEN_CFG(node));
++	data &= ~GENMASK_ULL(9, 4);
++	data |= 3 << 4;
++	oct_csr_write(data, FPA_GEN_CFG(node));
++
++	init_done[node] = 1;
++ done:
++	mutex_unlock(&octeon_fpa3_lock);
++	return 0;
++}
++EXPORT_SYMBOL(octeon_fpa3_init);
++
++/**
++ * octeon_fpa3_pool_init - Initialize a pool.
++ * @node: Node to initialize pool on.
++ * @pool_num: Requested pool number (-1 for don't care).
++ * @pool: Updated with the initialized pool number.
++ * @pool_stack: Updated with the base of the memory allocated for the pool
++ *		stack.
++ * @num_ptrs: Number of pointers to allocated on the stack.
++ *
++ * Returns 0 if successful.
++ * Returns <0 for error codes.
++ */
++int octeon_fpa3_pool_init(int node, int pool_num, int *pool, void **pool_stack, int num_ptrs)
++{
++	struct global_resource_tag tag;
++	char buf[16];
++	u64 pool_stack_start, pool_stack_end, data;
++	int stack_size, rc = 0;
++
++	mutex_lock(&octeon_fpa3_lock);
++
++	strncpy((char *)&tag.lo, "cvm_pool", 8);
++	snprintf(buf, 16, "_%d......", node);
++	memcpy(&tag.hi, buf, 8);
++
++	res_mgr_create_resource(tag, get_num_pools());
++	*pool = res_mgr_alloc(tag, pool_num, true);
++	if (*pool < 0) {
++		rc = -ENODEV;
++		goto error;
++	}
++
++	oct_csr_write(0, FPA_POOLX_CFG(node, *pool));
++	oct_csr_write(128, FPA_POOLX_START_ADDR(node, *pool));
++	oct_csr_write(GENMASK_ULL(41, 7), FPA_POOLX_END_ADDR(node, *pool));
++
++	stack_size = (DIV_ROUND_UP(num_ptrs, 29) + 1) * 128;
++	*pool_stack = kmalloc_node(stack_size, GFP_KERNEL, node);
++	if (!*pool_stack) {
++		pr_err("Failed to allocate pool stack memory pool=%d\n",
++		       pool_num);
++		rc = -ENOMEM;
++		goto error_stack;
++	}
++
++	pool_stack_start = virt_to_phys(*pool_stack);
++	pool_stack_end = round_down(pool_stack_start + stack_size, 128);
++	pool_stack_start = round_up(pool_stack_start, 128);
++	oct_csr_write(pool_stack_start, FPA_POOLX_STACK_BASE(node, *pool));
++	oct_csr_write(pool_stack_start, FPA_POOLX_STACK_ADDR(node, *pool));
++	oct_csr_write(pool_stack_end, FPA_POOLX_STACK_END(node, *pool));
++
++	data = (2 << 3) | BIT(0);
++	oct_csr_write(data, FPA_POOLX_CFG(node, *pool));
++
++	mutex_unlock(&octeon_fpa3_lock);
++	return 0;
++
++error_stack:
++	res_mgr_free(tag, *pool);
++error:
++	mutex_unlock(&octeon_fpa3_lock);
++	return rc;
++}
++EXPORT_SYMBOL(octeon_fpa3_pool_init);
++
++/**
++ * octeon_fpa3_release_pool - Release a pool.
++ * @node: Node pool is on.
++ * @pool: Pool to release.
++ */
++void octeon_fpa3_release_pool(int node, int pool)
++{
++	struct global_resource_tag tag;
++	char buf[16];
++
++	mutex_lock(&octeon_fpa3_lock);
++
++	strncpy((char *)&tag.lo, "cvm_pool", 8);
++	snprintf(buf, 16, "_%d......", node);
++	memcpy(&tag.hi, buf, 8);
++
++	res_mgr_free(tag, pool);
++
++	mutex_unlock(&octeon_fpa3_lock);
++}
++EXPORT_SYMBOL(octeon_fpa3_release_pool);
++
++/**
++ * octeon_fpa3_aura_init - Initialize an aura.
++ * @node: Node to initialize aura on.
++ * @pool: Pool the aura belongs to.
++ * @aura_num: Requested aura number (-1 for don't care).
++ * @aura: Updated with the initialized aura number.
++ * @num_bufs: Number of buffers in the aura.
++ * @limit: Limit for the aura.
++ *
++ * Returns 0 if successful.
++ * Returns <0 for error codes.
++ */
++int octeon_fpa3_aura_init(int node, int pool, int aura_num, int *aura, int num_bufs, unsigned int limit)
++{
++	struct global_resource_tag tag;
++	char buf[16];
++	u64 data, shift;
++	unsigned int drop, pass;
++	int rc = 0;
++
++	mutex_lock(&octeon_fpa3_lock);
++
++	strncpy((char *)&tag.lo, "cvm_aura", 8);
++	snprintf(buf, 16, "_%d......", node);
++	memcpy(&tag.hi, buf, 8);
++
++	res_mgr_create_resource(tag, get_num_auras());
++	*aura = res_mgr_alloc(tag, aura_num, true);
++	if (*aura < 0) {
++		rc = -ENODEV;
++		goto error;
++	}
++
++	oct_csr_write(0, FPA_AURAX_CFG(node, *aura));
++
++	/* Allow twice the limit before saturation at zero */
++	limit *= 2;
++	data = limit;
++	oct_csr_write(data, FPA_AURAX_CNT_LIMIT(node, *aura));
++	oct_csr_write(data, FPA_AURAX_CNT(node, *aura));
++
++	oct_csr_write(pool, FPA_AURAX_POOL(node, *aura));
++
++	/* No per-pool RED/Drop */
++	oct_csr_write(0, FPA_AURAX_POOL_LEVELS(node, *aura));
++
++	shift = 0;
++	while ((limit >> shift) > 255)
++		shift++;
++
++	drop = (limit - num_bufs / 20) >> shift;	/* 95% */
++	pass = (limit - (num_bufs * 3) / 20) >> shift;	/* 85% */
++
++	/* Enable per aura RED/drop */
++	data = BIT(38) | (shift << 32) | (drop << 16) | (pass << 8);
++	oct_csr_write(data, FPA_AURAX_CNT_LEVELS(node, *aura));
++
++error:
++	mutex_unlock(&octeon_fpa3_lock);
++	return rc;
++}
++EXPORT_SYMBOL(octeon_fpa3_aura_init);
++
++/**
++ * octeon_fpa3_release_aura - Release an aura.
++ * @node: Node to aura is on.
++ * @aura: Aura to release.
++ */
++void octeon_fpa3_release_aura(int node, int aura)
++{
++	struct global_resource_tag tag;
++	char buf[16];
++
++	mutex_lock(&octeon_fpa3_lock);
++
++	strncpy((char *)&tag.lo, "cvm_aura", 8);
++	snprintf(buf, 16, "_%d......", node);
++	memcpy(&tag.hi, buf, 8);
++
++	res_mgr_free(tag, aura);
++
++	mutex_unlock(&octeon_fpa3_lock);
++}
++EXPORT_SYMBOL(octeon_fpa3_release_aura);
++
++/**
++ * octeon_fpa3_alloc - Get a buffer from a aura's pool.
++ * @node: Node to free memory to.
++ * @aura: Aura to free memory to.
++ *
++ * Returns allocated buffer pointer if successful
++ * Returns NULL on error.
++ */
++void *octeon_fpa3_alloc(u64 node, int aura)
++{
++	u64 buf_phys, addr;
++	void *buf = NULL;
++
++	/* Buffer pointers are obtained using load operations */
++	addr = BIT(63) | BIT(48) | (0x29ull << 40) | (node << 36) |
++		(aura << 16);
++	buf_phys = *(u64 *)addr;
++
++	if (buf_phys)
++		buf = phys_to_virt(buf_phys);
++
++	return buf;
++}
++EXPORT_SYMBOL(octeon_fpa3_alloc);
++
++/**
++ * octeon_fpa3_free - Add a buffer back to the aura's pool.
++ * @node: Node to free memory to.
++ * @aura: Aura to free memory to.
++ * @buf: Address of buffer to free to the aura's pool.
++ */
++void octeon_fpa3_free(u64 node, int aura, const void *buf)
++{
++	u64 buf_phys, addr;
++
++	buf_phys = virt_to_phys(buf);
++
++	/* Make sure that any previous writes to memory go out before we free
++	 * this buffer. This also serves as a barrier to prevent GCC from
++	 * reordering operations to after the free.
++	 */
++	wmb();
++
++	/* Buffers are added to fpa pools using store operations */
++	addr = BIT(63) | BIT(48) | (0x29ull << 40) | (node << 36) | (aura << 16);
++	*(u64 *)addr = buf_phys;
++}
++EXPORT_SYMBOL(octeon_fpa3_free);
++
++/**
++ * octeon_fpa3_mem_fill - Add buffers to an aura.
++ * @node: Node to get memory from.
++ * @cache: Memory cache to allocate from.
++ * @aura: Aura to add buffers to.
++ * @num_bufs: Number of buffers to add to the aura.
++ *
++ * Returns 0 if successful.
++ * Returns <0 for error codes.
++ */
++int octeon_fpa3_mem_fill(int node, struct kmem_cache *cache, int aura, int num_bufs)
++{
++	void *mem;
++	int i, rc = 0;
++
++	mutex_lock(&octeon_fpa3_lock);
++
++	for (i = 0; i < num_bufs; i++) {
++		mem = kmem_cache_alloc_node(cache, GFP_KERNEL, node);
++		if (!mem) {
++			pr_err("Failed to allocate memory for aura=%d\n", aura);
++			rc = -ENOMEM;
++			break;
++		}
++		octeon_fpa3_free(node, aura, mem);
++	}
++
++	mutex_unlock(&octeon_fpa3_lock);
++	return rc;
++}
++EXPORT_SYMBOL(octeon_fpa3_mem_fill);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Cavium, Inc. Octeon III FPA manager.");
 diff --git a/arch/mips/include/asm/octeon/octeon.h b/arch/mips/include/asm/octeon/octeon.h
-index d184592e6515..02eb194b2cdc 100644
+index 0411efdb465c..d184592e6515 100644
 --- a/arch/mips/include/asm/octeon/octeon.h
 +++ b/arch/mips/include/asm/octeon/octeon.h
-@@ -392,6 +392,8 @@ static inline uint32_t octeon_npi_read32(uint64_t address)
+@@ -10,6 +10,7 @@
  
- extern struct cvmx_bootinfo *octeon_bootinfo;
+ #include <asm/octeon/cvmx.h>
+ #include <asm/bitfield.h>
++#include <linux/slab.h>
  
-+extern u32 octeon_cvmseg_lines;
+ extern uint64_t octeon_bootmem_alloc_range_phys(uint64_t size,
+ 						uint64_t alignment,
+@@ -364,6 +365,20 @@ int res_mgr_alloc_range(struct global_resource_tag tag, int req_inst,
+ 			int req_cnt, bool use_last_avail, int *inst);
+ int res_mgr_create_resource(struct global_resource_tag tag, int inst_cnt);
+ 
++#if IS_ENABLED(CONFIG_OCTEON_FPA3)
++int octeon_fpa3_init(int node);
++int octeon_fpa3_pool_init(int node, int pool_num, int *pool, void **pool_stack,
++			  int num_ptrs);
++int octeon_fpa3_aura_init(int node, int pool, int aura_num, int *aura,
++			  int num_bufs, unsigned int limit);
++int octeon_fpa3_mem_fill(int node, struct kmem_cache *cache, int aura,
++			 int num_bufs);
++void octeon_fpa3_free(u64 node, int aura, const void *buf);
++void *octeon_fpa3_alloc(u64 node, int aura);
++void octeon_fpa3_release_pool(int node, int pool);
++void octeon_fpa3_release_aura(int node, int aura);
++#endif
 +
- extern uint64_t octeon_bootloader_entry_addr;
- 
- extern void (*octeon_irq_setup_secondary)(void);
-diff --git a/arch/mips/include/asm/processor.h b/arch/mips/include/asm/processor.h
-index 95b8c471f572..3d264008afcb 100644
---- a/arch/mips/include/asm/processor.h
-+++ b/arch/mips/include/asm/processor.h
-@@ -216,7 +216,7 @@ struct octeon_cop2_state {
- 	.cp2			= {0,},
- 
- struct octeon_cvmseg_state {
--	unsigned long cvmseg[CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE]
-+	unsigned long cvmseg[CONFIG_CAVIUM_OCTEON_EXTRA_CVMSEG + 3]
- 			    [cpu_dcache_line_size() / sizeof(unsigned long)];
- };
- 
-diff --git a/arch/mips/kernel/octeon_switch.S b/arch/mips/kernel/octeon_switch.S
-index e42113fe2762..4f56902d5ee7 100644
---- a/arch/mips/kernel/octeon_switch.S
-+++ b/arch/mips/kernel/octeon_switch.S
-@@ -29,7 +29,6 @@
- 	cpu_save_nonscratch a0
- 	LONG_S	ra, THREAD_REG31(a0)
- 
--#if CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE > 0
- 	/* Check if we need to store CVMSEG state */
- 	dmfc0	t0, $11,7	/* CvmMemCtl */
- 	bbit0	t0, 6, 3f	/* Is user access enabled? */
-@@ -58,7 +57,6 @@
- 	dmfc0	t0, $11,7	/* CvmMemCtl */
- 	xori	t0, t0, 0x40	/* Bit 6 is CVMSEG user enable */
- 	dmtc0	t0, $11,7	/* CvmMemCtl */
--#endif
- 3:
- 
- #if defined(CONFIG_CC_STACKPROTECTOR) && !defined(CONFIG_SMP)
-diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
-index 79b9f2ad3ff5..3d3dfba465ae 100644
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -115,33 +115,17 @@ static int use_lwx_insns(void)
- 		return 0;
- 	}
- }
--#if defined(CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE) && \
--    CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE > 0
--static bool scratchpad_available(void)
--{
--	return true;
--}
--static int scratchpad_offset(int i)
--{
--	/*
--	 * CVMSEG starts at address -32768 and extends for
--	 * CAVIUM_OCTEON_CVMSEG_SIZE 128 byte cache lines.
--	 */
--	i += 1; /* Kernel use starts at the top and works down. */
--	return CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE * 128 - (8 * i) - 32768;
--}
--#else
--static bool scratchpad_available(void)
--{
--	return false;
--}
-+
- static int scratchpad_offset(int i)
- {
-+	if (IS_ENABLED(CONFIG_CPU_CAVIUM_OCTEON))
-+		return (CAVIUM_OCTEON_SCRATCH_OFFSET - (8 * i));
-+
- 	BUG();
- 	/* Really unreachable, but evidently some GCC want this. */
- 	return 0;
- }
--#endif
-+
- /*
-  * Found by experiment: At least some revisions of the 4kc throw under
-  * some circumstances a machine check exception, triggered by invalid
-@@ -1302,7 +1286,8 @@ static void build_r4000_tlb_refill_handler(void)
- 	memset(relocs, 0, sizeof(relocs));
- 	memset(final_handler, 0, sizeof(final_handler));
- 
--	if (IS_ENABLED(CONFIG_64BIT) && (scratch_reg >= 0 || scratchpad_available()) && use_bbit_insns()) {
-+	if (IS_ENABLED(CONFIG_64BIT) && use_bbit_insns() &&
-+	   (scratch_reg >= 0 || IS_ENABLED(CONFIG_CPU_CAVIUM_OCTEON))) {
- 		htlb_info = build_fast_tlb_refill_handler(&p, &l, &r, K0, K1,
- 							  scratch_reg);
- 		vmalloc_mode = refill_scratch;
-diff --git a/drivers/staging/octeon/ethernet-defines.h b/drivers/staging/octeon/ethernet-defines.h
-index 07bd2b87f6a0..e898df25b87f 100644
---- a/drivers/staging/octeon/ethernet-defines.h
-+++ b/drivers/staging/octeon/ethernet-defines.h
-@@ -32,7 +32,7 @@
- #define REUSE_SKBUFFS_WITHOUT_FREE  1
- #endif
- 
--#define USE_ASYNC_IOBDMA            (CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE > 0)
-+#define USE_ASYNC_IOBDMA	1
- 
- /* Maximum number of SKBs to try to free per xmit packet. */
- #define MAX_OUT_QUEUE_DEPTH 1000
+ /**
+  * Read a 32bit value from the Octeon NPI register space
+  *
 -- 
 2.13.6
