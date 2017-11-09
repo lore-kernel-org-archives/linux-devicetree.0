@@ -1,99 +1,59 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Add support for bq27521 battery monitor
-Date: Thu, 9 Nov 2017 22:52:36 +0100
-Message-ID: <20171109215236.ntmrgoobrs5k7ufh@pali>
-References: <20171109210615.GA27638@amd>
- <20171109212945.2sgu56zkse7nbzo3@pali>
- <20171109214540.GB23376@amd>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v3 7/8] netdev: octeon-ethernet: Add Cavium Octeon III
+ support.
+Date: Thu, 9 Nov 2017 23:23:52 +0100
+Message-ID: <20171109222352.GA25275@lunn.ch>
+References: <20171109192915.11912-1-david.daney@cavium.com>
+ <20171109192915.11912-8-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171109214540.GB23376@amd>
+In-Reply-To: <20171109192915.11912-8-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 09 November 2017 22:45:40 Pavel Machek wrote:
-> On Thu 2017-11-09 22:29:45, Pali Rohár wrote:
-> > On Thursday 09 November 2017 22:06:15 Pavel Machek wrote:
-> > > diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-> > > index ed44439..ee2851a 100644
-> > > --- a/drivers/power/supply/bq27xxx_battery.c
-> > > +++ b/drivers/power/supply/bq27xxx_battery.c
-> > > @@ -381,6 +381,30 @@ static u8 bq27xxx_regs[][BQ27XXX_REG_MAX] = {
-> > >  		[BQ27XXX_REG_AP] = INVALID_REG_ADDR,
-> > >  		BQ27XXX_DM_REG_ROWS,
-> > >  	},
-> > > +	[BQ27521] = {				/* FIXME */
-> > > +		[BQ27XXX_REG_CTRL] = 0x02,
-> > > +		[BQ27XXX_REG_TEMP] = 0x0a,
-> > > +		[BQ27XXX_REG_INT_TEMP] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_VOLT] = 0x0c,
-> > > +		[BQ27XXX_REG_AI] = 0x0e,
-> > > +		[BQ27XXX_REG_FLAGS] = 0x08,
-> > > +		[BQ27XXX_REG_TTE] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_TTF] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_TTES] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_TTECP] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_NAC] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_FCC] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_CYCT] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_AE] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_SOC] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_DCAP] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_REG_AP] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_DM_CTRL] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_DM_CLASS] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_DM_BLOCK] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_DM_DATA] = INVALID_REG_ADDR,
-> > > +		[BQ27XXX_DM_CKSUM] = INVALID_REG_ADDR,
-> > > +	},
-> > >  	[BQ27530] = {
-> > >  		[BQ27XXX_REG_CTRL] = 0x00,
-> > >  		[BQ27XXX_REG_TEMP] = 0x06,
-> > 
-> > Hi! IIRC those registers are valid only for sn27521 chip in revision 14
-> > (or new). For older revision is used different register map. And
-> > detection of chip revision is somehow possible via some registers.
-> 
-> Yes, I know.. I even had this, but as I can't test it, and early N950
-> samples should be very very rare, I'd prefer the patch as is.
-> 
-> @@ -1905,6 +1940,23 @@ int bq27xxx_battery_setup(struct bq27xxx_device_info *di)
->  
->  	dev_info(di->dev, "support ver. %s enabled\n", DRIVER_VERSION);
->  
-> +	if (di->chip == BQ27521) {
-> +		int val;
-> +		val = di->bus.read(di, 0x32, false);
-> +		if (val == 0x2100) {
-> +			printk("rev. 13 chip detected; add support\n");
-> +			/* https://elinux.org/N950 has details */
-> +			return PTR_ERR(ENODEV);
-> +		}
+> +	priv->phy_np = of_parse_phandle(pdev->dev.of_node, "phy-handle", 0);
+> +	priv->phy_mode = of_get_phy_mode(pdev->dev.of_node);
+> +	/* If phy-mode absent, default to SGMII. */
+> +	if (priv->phy_mode < 0)
+> +		priv->phy_mode = PHY_INTERFACE_MODE_SGMII;
 > +
-> +		val = di->bus.read(di, 0x34, false);
-> +		if ((val & 0xff00) != 0x2100) {
-> +			printk("rev. 14 chip not detected?!\n");
-> +			return PTR_ERR(EINVAL);
-> +		}
-> +		printk("verified chip rev. 14\n");
-> +	}
+> +	if (priv->phy_mode == PHY_INTERFACE_MODE_1000BASEX)
+> +		priv->mode_1000basex = true;
 > +
->  	bq27xxx_battery_settings(di);
->  	bq27xxx_battery_update(di);
+> +	if (of_phy_is_fixed_link(pdev->dev.of_node))
+> +		priv->bgx_as_phy = true;
+> +
 
-This change could be useful, specially if somebody got device with
-sn27521 chip which is not in revision 14 (no idea if in world are those
-chips used) -- at least would get message that current driver does not
-support it.
+...
 
--- 
-Pali Rohár
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> +	priv->mode = bgx_port_get_mode(priv->node, priv->bgx, priv->index);
+> +
+
+It might be a good idea to verify priv->phy_mode and priv->mode are
+compatible.
+
+> +	switch (priv->mode) {
+> +	case PORT_MODE_SGMII:
+> +	case PORT_MODE_RGMII:
+> +		priv->get_link = bgx_port_get_sgmii_link;
+> +		priv->set_link = bgx_port_set_xgmii_link;
+> +		break;
+> +	case PORT_MODE_XAUI:
+> +	case PORT_MODE_RXAUI:
+> +	case PORT_MODE_XLAUI:
+> +	case PORT_MODE_XFI:
+> +	case PORT_MODE_10G_KR:
+> +	case PORT_MODE_40G_KR4:
+> +		priv->get_link = bgx_port_get_xaui_link;
+> +		priv->set_link = bgx_port_set_xaui_link;
+> +		break;
+
+
+  Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
