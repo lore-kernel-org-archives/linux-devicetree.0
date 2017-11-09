@@ -1,69 +1,60 @@
-From: Kim Phillips <kim.phillips-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/4] crypto: caam: add caam-dma node to SEC4.0
- device tree binding
-Date: Thu, 9 Nov 2017 10:34:37 -0600
-Message-ID: <20171109103437.834f8ddb5c62e5253002b2d0@arm.com>
-References: <20171030134654.13729-1-horia.geanta@nxp.com>
-        <20171030134654.13729-2-horia.geanta@nxp.com>
-        <20171030092424.1279add003c96ced4233bd2d@arm.com>
-        <VI1PR04MB1325BAD68A7CC8C7A302D9A48A570@VI1PR04MB1325.eurprd04.prod.outlook.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 4/9] ARM: dts: am335x-pepper: Fix the audio
+ CODEC's reset pin
+Date: Thu, 9 Nov 2017 10:40:52 -0600
+Message-ID: <8d40b3f4-40a6-70e1-8b67-ae805e701aca@ti.com>
+References: <20171108212505.28320-1-afd@ti.com>
+ <20171108212505.28320-5-afd@ti.com> <1510237521.7659.11.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <VI1PR04MB1325BAD68A7CC8C7A302D9A48A570-mr6QIVyDiCGGEpojCloM0M9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Radu Andrei Alexe <radu.alexe-3arQi8VN3Tc@public.gmane.org>
-Cc: Horia =?UTF-8?B?R2VhbnTEgw==?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Dan Douglass <dan.douglass-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1510237521.7659.11.camel@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 9 Nov 2017 11:54:13 +0000
-Radu Andrei Alexe <radu.alexe-3arQi8VN3Tc@public.gmane.org> wrote:
-
-> On 10/30/2017 4:24 PM, Kim Phillips wrote:
-> > On Mon, 30 Oct 2017 15:46:51 +0200
-> > Horia Geantă <horia.geanta-3arQi8VN3Tc@public.gmane.org> wrote:
-> > 
-> >> +=====================================================================
-> >> +CAAM DMA Node
-> >> +
-> >> +    Child node of the crypto node that enables the use of the DMA capabilities
-> >> +    of the CAAM by a stand-alone driver. The only required property is the
-> >> +    "compatible" property. All the other properties are determined from
-> >> +    the job rings on which the CAAM DMA driver depends (ex: the number of
-> >> +    dma-channels is equal to the number of defined job rings).
-> >> +
-> >> +  - compatible
-> >> +      Usage: required
-> >> +      Value type: <string>
-> >> +      Definition: Must include "fsl,sec-v4.0-dma"
-> >> +
-> >> +EXAMPLE
-> >> +  caam-dma {
-> >> +    compatible = "fsl,sec-v5.4-dma",
-> >> +                 "fsl,sec-v5.0-dma",
-> >> +                 "fsl,sec-v4.0-dma";
-> >> +  }
-> > 
-> > If this isn't describing an aspect of the hardware, then what is it
-> > doing in the device tree?
-> > 
-> > Kim
-> > 
-> 
-> Because the caam_dma driver is a platform driver I needed to create a 
-> platform device to activate the driver. My thought was that it was 
-> simpler to implement it using device tree.
-> The next patch version will create the platform device dynamically at 
-> run time.
-
-Why create a new device when that h/w already has one?
-
-Why doesn't the existing crypto driver register dma capabilities with
-the dma driver subsystem?
-
-Kim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTEvMDkvMjAxNyAwODoyNSBBTSwgUGhpbGlwcCBaYWJlbCB3cm90ZToKPiBPbiBXZWQsIDIw
+MTctMTEtMDggYXQgMTU6MjUgLTA2MDAsIEFuZHJldyBGLiBEYXZpcyB3cm90ZToKPj4gVGhlIGNv
+cnJlY3QgRFQgcHJvcGVydHkgZm9yIHNwZWNpZnlpbmcgYSBHUElPIHVzZWQgZm9yIHJlc2V0Cj4+
+IGlzICJyZXNldC1ncGlvIiwgZml4IHRoaXMgaGVyZS4KPj4KPj4gRml4ZXM6IDQzNDE4ODFkMDU2
+MiAoIkFSTTogZHRzOiBBZGQgZGV2aWNldHJlZSBmb3IgR3Vtc3RpeCBQZXBwZXIgYm9hcmQiKQo+
+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBbmRyZXcgRi4gRGF2aXMgPGFmZEB0aS5jb20+Cj4+IC0tLQo+
+PiAgYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LXBlcHBlci5kdHMgfCAyICstCj4+ICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPj4KPj4gZGlmZiAtLWdpdCBh
+L2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1wZXBwZXIuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+YW0zMzV4LXBlcHBlci5kdHMKPj4gaW5kZXggMDNjN2Q3NzAyM2M2Li5kNjUyYWJkNzYzMzMgMTAw
+NjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1wZXBwZXIuZHRzCj4+ICsrKyBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1wZXBwZXIuZHRzCj4+IEBAIC0xMzksNyArMTM5LDcg
+QEAKPj4gICZhdWRpb19jb2RlYyB7Cj4+ICAJc3RhdHVzID0gIm9rYXkiOwo+PiAgCj4+IC0JZ3Bp
+by1yZXNldCA9IDwmZ3BpbzEgMTYgR1BJT19BQ1RJVkVfTE9XPjsKPj4gKwlyZXNldC1ncGlvID0g
+PCZncGlvMSAxNiBHUElPX0FDVElWRV9MT1c+Owo+IAo+IFRoaXMgcG90ZW50aWFsbHkgYnJlYWtz
+IGF1ZGlvIG9uIGFtMzM1eC1wZXBwZXIgdW50aWwgdGhlIGRyaXZlciBwYXRjaGVzCj4gYXJlIGFw
+cGxpZWQsIHNhbWUgZm9yIHRoZSBvdGhlciBkZXZpY2UgdHJlZXMuIFRvIG1ha2UgdGhpcyBiaXNl
+Y3RhYmxlLAo+IGFkZCBzdXBwb3J0IGZvciB0aGUgbmV3IHByb3BlcnR5IG5hbWXCoHRvIHRoZSBk
+cml2ZXIgYmVmb3JlIGNoYW5naW5nIHRoZQo+IGRldmljZSB0cmVlcy4KCkFGQUlLIHRoaXMgY2hh
+bmdlIGRvZXNuJ3QgYnJlYWsgYW55dGhpbmcgYXMgdGhpcyByZXNldCB3YXMgbm90IHVzZWQgaW4g
+YQpmdW5jdGlvbmFsIHdheSAoaXQgd2FzIGp1c3QgcHVsbGVkIGhpZ2ggaW4gcHJvYmUgaWYgcHJv
+dmlkZWQsIGJ1dCB0aGUKcGluX211eCBhbmQvb3IgYW5kIG9uLWJvYXJkIHJlc2lzdG9yIHNob3Vs
+ZCBoYXZlIGRvbmUgdGhlIHNhbWUgYWxyZWFkeSwKYnV0IGEgc2VyaWVzIEkganVzdCBwb3N0ZWQg
+d2lsbCBhY3R1YWxseSBnZXQgc29tZSB1c2Ugb3V0IG9mIGl0IGFuZCBzbyBJCndhbnQgdG8gZ2V0
+IHRoaXMgZml4ZWQgYmVmb3JlIHRoZW4pLgoKQXMgY29udHJvdmVyc2lhbCBhcyBpdCBtYXkgYmUs
+IG15IHBsYW4gaXMgdG8gc2ltcGx5IG5vdCBzdXBwb3J0IHRoZSBvbGQKYmluZGluZyBhdCBhbGws
+IHN1cHBvcnRpbmcgaXQgd291bGQgYWRkIHVubmVjZXNzYXJ5IGJsb2F0IHRvIHRoZSBkcml2ZXIs
+CnByZXZlbnQgbW92aW5nIHRvIG5ldyBmcmFtZXdvcmtzIHRoYXQgZXhwZWN0IHRoZSBjb3JyZWN0
+IGJpbmRpbmcKKGZ3bm9kZV9nZXRfbmFtZWRfZ3Bpb2QpLCBhbmQgaW4gdGhpcyBjYXNlIHByb3Zp
+ZGUgbm8gYmVuZWZpdCBhcyBmYXIgYXMKSSBjYW4gdGVsbC4KCkFuZHJldwoKPiAKPiByZWdhcmRz
+Cj4gUGhpbGlwcAo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcK
+aHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2
+ZWwK
