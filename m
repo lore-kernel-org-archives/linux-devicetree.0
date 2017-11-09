@@ -1,101 +1,44 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] add mali r6p2 dt node
-Date: Thu, 9 Nov 2017 14:40:32 +0100
-Message-ID: <20171109134032.rwhhf6pvcr6xrgol@flea.lan>
-References: <1510049010-5758-1-git-send-email-giulio.benetti@micronovasrl.com>
- <20171107110539.3wrm6uu6ohh6dnuy@flea>
- <49715d2b-97f5-7e21-7072-8e050d471a9f@micronovasrl.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 30/31] dt-bindings: nds32 CPU Bindings
+Date: Thu, 9 Nov 2017 07:57:48 -0600
+Message-ID: <CABGGisw5gi92aM0_tZ0htOzwZTFJpcSNZUJth5TzRXPxzssRxA@mail.gmail.com>
+References: <cover.1510118606.git.green.hu@gmail.com> <1a8efba0727437d510d10755f3fcea806833651d.1510118606.git.green.hu@gmail.com>
+ <CAL_JsqJAtTSGg=yGvANGdTCWa4tDAicvOvWYr4pK5M1rjPFtfg@mail.gmail.com> <CAEbi=3e-hRbej7EZ68-J1YPNfdxu7O_BAZ1rvZvAhhYzAT09-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7moi5ymdnlwkh2ni"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <49715d2b-97f5-7e21-7072-8e050d471a9f-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
+In-Reply-To: <CAEbi=3e-hRbej7EZ68-J1YPNfdxu7O_BAZ1rvZvAhhYzAT09-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <vincentc-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Rick Chen <rick-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Zong Li <zong-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 9, 2017 at 3:39 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2017-11-08 21:18 GMT+08:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>> Please Cc the DT list on bindings.
+>
+> Sorry. I am not sure what you mean.
+> Do you mean add devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org to cc list?
 
---7moi5ymdnlwkh2ni
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes. Use get_maintainers.pl as a guide.
 
-On Tue, Nov 07, 2017 at 06:55:22PM +0100, Giulio Benetti wrote:
-> Hi,
->=20
-> Il 07/11/2017 12:05, Maxime Ripard ha scritto:
-> > Hi,
-> >=20
-> > On Tue, Nov 07, 2017 at 11:03:30AM +0100, Giulio Benetti wrote:
-> > > This patch adds device tree mali node compatible with r6p2 utgard ker=
-nel driver
-> > > provided by ARM and patched by maxime ripard on his github.
-> > >=20
-> > > It can be easily used in target.dts with:
-> > >=20
-> > > &mali {
-> > > 	status =3D "okay";
-> > > }
-> > >=20
-> > > then loading mali.ko in user space.
-> > >=20
-> > > Best regards
-> > > Giulio Benetti
-> > > Micronova srl
-> >=20
-> > Again, you should have a proper commit log here.
->=20
-> As log could it be:
-> It seems there is not mali node in sun7i-a20.dtsi    << This is "Why"
->=20
-> Add mali node to sun7i-a20.dtsi                << This is "How"
->=20
-> Or can you point me to some example?
-> I've tried to check lot of other patches,
-> but really I can't understand which is the right way.
+>> On Tue, Nov 7, 2017 at 11:55 PM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
+>>
 
-Not having your signature would be a good start, and describing the
-changes would be great as well. You can comment on which Mali chip it
-is for example, which variant, whether the BSP uses thermal throttling
-or not, and if so why did you leave it out, which frequency it's
-running at, etc.
+>>> +                       device_type = "cpu";
+>>> +                       compatible = "andestech,n13", "andestech,n15";
+>>
+>> n13 is a superset of n15?
+>
+> No, they are independent ones.
 
-> Now, to avoid any possible other mistake,
-> do I have to resubmit patch corrected answering to this thread,
-> when you give me the ok?
+Then having both is not valid. The strings should be in order of best
+match to worst match where worst match is typically either older
+implementations of IP blocks or generic'ish strings such as "ns16550"
+for a UART.
 
-Please resend it yes.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---7moi5ymdnlwkh2ni
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJaBFrQAAoJEBx+YmzsjxAgLh4QAK6epVBKyfPfUQPeiJsORuOv
-gId7j+FmicUdeTtBhlIYx4f+L/FTXmcVOBFg7I+PMOW0ULCddOw5y7s/pUbsNnHR
-G2XsDB3Aa6VYYEfRP4gB2DXhfITfNFBsAeV/IlG3naKPDUhHkTBlGZSBlKCndq2q
-ZTSkSqNX+DDI7IwgUCHp7i6ALEF89+XUoTfbQ+r6yw7pWGYUBka5+xY91bcZLLWW
-02loUBG50HtFzwZ5R5yVi8BltBcrQqV0O7Zn9dZyEuj1uS0BHydJLQomZFVg2BYZ
-/97QjSCYGh7ZE6Xs5uiZqO4UE1J73CeUbfcrTkFFo/UZIqZSCCVyRghzQeXcrN5c
-pbwjXLXfev3Z5YpL4Bb3MZDEQ9kuW8Bvm4QoUa768HKbUvkVJoA91nbkzgZNEsmN
-OkonYdz7gVs3JVp3ZA/KGWmAN11W/M2ikErYw0zCoXHz8ePlqB75P7IWknptwBm5
-YLW1YB4AF5AEleDRflM01TqUjEm/0xQcS7mn5WVpvTruug0G/OFFokiUMJDiJvlA
-RbCJFMgPAp7htlNqE1v9ZmjGPCB/O5YF0GP9FeSRM+NOJChSBD1Iim5Brk+nsbh/
-VGf5NXWbK7wJ4M9Cj+fG08uN3tw7DX+2oWil/UVZnhwP8weDwg4VR/hsYR3aj4xL
-i/Lz9HqVClXshM9MWPVe
-=JEHj
------END PGP SIGNATURE-----
-
---7moi5ymdnlwkh2ni--
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
