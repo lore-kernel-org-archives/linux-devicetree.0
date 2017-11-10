@@ -1,67 +1,34 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: r8a7745: Add DU support
-Date: Fri, 10 Nov 2017 09:32:49 +0100
-Message-ID: <20171110083248.3lurepyfmrvxejaa@verge.net.au>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: dts: iwg22d-sodimm-dbhd-ca: Add HDMI video
+ output
+Date: Fri, 10 Nov 2017 09:35:53 +0100
+Message-ID: <20171110083552.lvwnlpnrelcwzx5y@verge.net.au>
 References: <1509992814-4543-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <9872942.on8edmfvcY@avalon>
- <20171108044822.ktnzzowzprqtdnsm@verge.net.au>
- <12916864.hfKIdpMrll@avalon>
+ <1509992814-4543-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1683156.dTMPXyoQIO@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <12916864.hfKIdpMrll@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1683156.dTMPXyoQIO@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 09, 2017 at 11:31:25AM +0200, Laurent Pinchart wrote:
-> Hi Simon,
+On Tue, Nov 07, 2017 at 06:13:01AM +0200, Laurent Pinchart wrote:
+> Hi Fabrizio,
 > 
-> On Wednesday, 8 November 2017 06:48:23 EET Simon Horman wrote:
-> > On Tue, Nov 07, 2017 at 06:05:37AM +0200, Laurent Pinchart wrote:
-> > > Hi Fabrizio,
-> > > 
-> > > Thank you for the patch.
-> > > 
-> > > On Monday, 6 November 2017 20:26:53 EET Fabrizio Castro wrote:
-> > > > Add du node to r8a7745 SoC DT. Boards that want to enable the DU
-> > > > need to specify the output topology.
-> > > > 
-> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > > > Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > > 
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > > 
-> > > > ---
-> > > > 
-> > > >  arch/arm/boot/dts/r8a7745.dtsi | 27 +++++++++++++++++++++++++++
-> > > >  1 file changed, 27 insertions(+)
-> > > > 
-> > > > diff --git a/arch/arm/boot/dts/r8a7745.dtsi
-> > > > b/arch/arm/boot/dts/r8a7745.dtsi index 846c27a..53eb1ce4 100644
-> > > > --- a/arch/arm/boot/dts/r8a7745.dtsi
-> > > > +++ b/arch/arm/boot/dts/r8a7745.dtsi
-> > > > @@ -821,6 +821,33 @@
-> > > > 
-> > > >  			status = "disabled";
-> > > >  		
-> > > >  		};
-> > > > 
-> > > > +		du: display@feb00000 {
-> > > > +			compatible = "renesas,du-r8a7745";
-> > 
-> > Hi,
-> > 
-> > could you provide some information on the status of upstreaming
-> > the binding used above?
+> Thank you for the patch.
 > 
-> I'll send a pull request for v4.16, it's too late for v4.15.
+> On Monday, 6 November 2017 20:26:54 EET Fabrizio Castro wrote:
+> > This patch enables the HDMI interface found on the expansion board.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Nothing strikes me as wrong, but I haven't checked the board's schematics, so
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thanks, I'm happy with patches in that stage of being upstreamed
-as the basis for accepting these patches. I'll see about doing so.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I have applied this for v4.16.
