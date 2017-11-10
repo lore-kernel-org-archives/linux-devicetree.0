@@ -1,143 +1,82 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v4,4/6] pmbus: max31785: Add fan control
-Date: Fri, 10 Nov 2017 00:07:01 -0800
-Message-ID: <b67d4fd5-3a3f-44b2-03af-530599356606@roeck-us.net>
-References: <20171103045306.26448-5-andrew@aj.id.au>
- <20171105150441.GA26191@roeck-us.net> <1510283416.4287.43.camel@aj.id.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v9 1/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2
+ receiver documentation
+Date: Fri, 10 Nov 2017 09:09:39 +0100
+Message-ID: <CAMuHMdWDfxFQO8bwxHim=BXHtC37cWFgU-keDDNiLDtEhh7=Dw@mail.gmail.com>
+References: <20171109234320.13016-1-niklas.soderlund+renesas@ragnatech.se> <20171109234320.13016-2-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1510283416.4287.43.camel@aj.id.au>
-Content-Language: en-US
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-hwmon@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171109234320.13016-2-niklas.soderlund+renesas@ragnatech.se>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Linux Media Mailing List <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Fukawa <tomoharu.fukawa.eb@renesas.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2017 07:10 PM, Andrew Jeffery wrote:
-> On Sun, 2017-11-05 at 07:04 -0800, Guenter Roeck wrote:
->> On Fri, Nov 03, 2017 at 03:53:04PM +1100, Andrew Jeffery wrote:
->>> The implementation makes use of the new fan control virtual registers
->>> exposed by the pmbus core. It mixes use of the default implementations
->>> with some overrides via the read/write handlers to handle FAN_COMMAND_1
->>> on the MAX31785, whose definition breaks the value range into various
->>> control bands dependent on RPM or PWM mode.
->>>
->>> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
->>> ---
->>>   Documentation/hwmon/max31785   |   4 ++
->>>   drivers/hwmon/pmbus/max31785.c | 104 ++++++++++++++++++++++++++++++++++++++++-
->>>   2 files changed, 107 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/hwmon/max31785 b/Documentation/hwmon/max31785
->>> index 45fb6093dec2..e9edbf11948f 100644
->>> --- a/Documentation/hwmon/max31785
->>> +++ b/Documentation/hwmon/max31785
->>> @@ -32,6 +32,7 @@ Sysfs attributes
->>>   fan[1-4]_alarm		Fan alarm.
->>>   fan[1-4]_fault		Fan fault.
->>>   fan[1-4]_input		Fan RPM.
->>> +fan[1-4]_target		Fan input target
->>>   
->>>   in[1-6]_crit		Critical maximum output voltage
->>>   in[1-6]_crit_alarm	Output voltage critical high alarm
->>> @@ -44,6 +45,9 @@ in[1-6]_max_alarm	Output voltage high alarm
->>>   in[1-6]_min		Minimum output voltage
->>>   in[1-6]_min_alarm	Output voltage low alarm
->>>   
->>> +pwm[1-4]		Fan target duty cycle (0..255)
->>> +pwm[1-4]_enable		0: full-speed, 1: manual control, 2: automatic
->>> +
->>>   temp[1-11]_crit		Critical high temperature
->>>   temp[1-11]_crit_alarm	Chip temperature critical high alarm
->>>   temp[1-11]_input	Measured temperature
->>> diff --git a/drivers/hwmon/pmbus/max31785.c b/drivers/hwmon/pmbus/max31785.c
->>> index 9313849d5160..0d97ddf67079 100644
->>> --- a/drivers/hwmon/pmbus/max31785.c
->>> +++ b/drivers/hwmon/pmbus/max31785.c
->>> @@ -20,8 +20,102 @@ enum max31785_regs {
->>>   
->>>   #define MAX31785_NR_PAGES		23
->>>   
->>> +static int max31785_get_pwm(struct i2c_client *client, int page)
->>> +{
->>> +	int config;
->>> +	int command;
->>> +
->>> +	config = pmbus_read_byte_data(client, page, PMBUS_FAN_CONFIG_12);
->>> +	if (config < 0)
->>> +		return config;
->>> +
->>> +	command = pmbus_read_word_data(client, page, PMBUS_FAN_COMMAND_1);
->>> +	if (command < 0)
->>> +		return command;
->>> +
->>> +	if (!(config & PB_FAN_1_RPM)) {
->>> +		if (command >= 0x8000)
->>> +			return 0;
->>> +		else if (command >= 0x2711)
->>> +			return 0x2710;
->>> +
->>> +		return command;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int max31785_get_pwm_mode(struct i2c_client *client, int page)
->>> +{
->>> +	int config;
->>> +	int command;
->>> +
->>> +	config = pmbus_read_byte_data(client, page, PMBUS_FAN_CONFIG_12);
->>> +	if (config < 0)
->>> +		return config;
->>> +
->>> +	command = pmbus_read_word_data(client, page, PMBUS_FAN_COMMAND_1);
->>> +	if (command < 0)
->>> +		return command;
->>> +
->>> +	if (!(config & PB_FAN_1_RPM)) {
->>> +		if (command >= 0x8000)
->>> +			return 2;
->>> +		else if (command >= 0x2711)
->>> +			return 0;
->>> +
->>> +		return 1;
->>> +	}
->>> +
->>> +	return (command >= 0x8000) ? 2 : 1;
->>> +}
->>> +
->>> +static int max31785_read_word_data(struct i2c_client *client, int page,
->>> +				   int reg)
->>> +{
->>> +	int rv;
->>> +
->>> +	switch (reg) {
->>> +	case PMBUS_VIRT_PWM_1:
->>> +		rv = max31785_get_pwm(client, page);
->>> +		if (rv < 0)
->>> +			return rv;
->>> +
->>> +		rv *= 255;
->>> +		rv /= 100;
->>> +		break;
->>> +	case PMBUS_VIRT_PWM_ENABLE_1:
->>> +		rv = max31785_get_pwm_mode(client, page);
->>> +		break;
->>
->> I do wonder ... does it even make sense to specify generic code
->> for the new virtual attributes in the pmbus core code, or would
->> it be better to have it all in this driver, at least for now ?
-> 
-> I think I'll pull the generic implementations out in light of my
-> response on 3/6. At best the generic implementation for the PWM virtual
-> regs is a guess. We can always put it back if others come to need it.
-> 
+Hi Niklas,
 
-SGTM.
+On Fri, Nov 10, 2017 at 12:43 AM, Niklas S=C3=B6derlund
+<niklas.soderlund+renesas@ragnatech.se> wrote:
+> Documentation for Renesas R-Car MIPI CSI-2 receiver. The CSI-2 receivers
+> are located between the video sources (CSI-2 transmitters) and the video
+> grabbers (VIN) on Gen3 of Renesas R-Car SoC.
+>
+> Each CSI-2 device is connected to more then one VIN device which
+> simultaneously can receive video from the same CSI-2 device. Each VIN
+> device can also be connected to more then one CSI-2 device. The routing
+> of which link are used are controlled by the VIN devices. There are only
+> a few possible routes which are set by hardware limitations, which are
+> different for each SoC in the Gen3 family.
+>
+> To work with the limitations of routing possibilities it is necessary
+> for the DT bindings to describe which VIN device is connected to which
+> CSI-2 device. This is why port 1 needs to to assign reg numbers for each
+> VIN device that be connected to it. To setup and to know which links are
+> valid for each SoC is the responsibility of the VIN driver since the
+> register to configure it belongs to the VIN hardware.
+>
+> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
+se>
+> ---
+>  .../devicetree/bindings/media/rcar-csi2.txt        | 103 +++++++++++++++=
+++++++
+>  MAINTAINERS                                        |   1 +
+>  2 files changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rcar-csi2.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/rcar-csi2.txt b/Docu=
+mentation/devicetree/bindings/media/rcar-csi2.txt
+> new file mode 100644
+> index 0000000000000000..39d41d82b71b60eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/rcar-csi2.txt
 
-Thanks,
-Guenter
+> +Example:
+> +
+> +       csi20: csi2@fea80000 {
+> +               compatible =3D "renesas,r8a7796-csi2", "renesas,rcar-gen3=
+-csi2";
+> +               reg =3D <0 0xfea80000 0 0x10000>;
+> +               interrupts =3D <0 184 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks =3D <&cpg CPG_MOD 714>;
+> +               power-domains =3D <&sysc R8A7796_PD_ALWAYS_ON>;
+
+resets?
+
+I know this is just an example, but your prototype patches to add the
+csi nodes to r8a7795.dtsi also don't have reset properties.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
