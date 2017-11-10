@@ -1,126 +1,123 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v1 0/2] DRM driver for ILI9225 display panels
-Date: Fri, 10 Nov 2017 13:33:27 +0100
-Message-ID: <9e56b9ae-2615-4cf2-c072-937f593e8fb7@tronnes.org>
-References: <1510113136-6788-1-git-send-email-david@lechnology.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] can: flexcan: Remodel FlexCAN register r/w APIs for
+ big endian FlexCAN controllers.
+Date: Fri, 10 Nov 2017 13:49:03 +0100
+Message-ID: <b27d6e14-c6d7-5c4b-0588-093684cbe57b@pengutronix.de>
+References: <1510307990-15418-1-git-send-email-pankaj.bansal@nxp.com>
+ <a08c34d0-5870-b4b3-f68d-3db33ba3e950@pengutronix.de>
+ <AM0PR0402MB3940A39D32C4725DE1B8C426F1540@AM0PR0402MB3940.eurprd04.prod.outlook.com>
+ <e87441cc-3848-1125-f4f0-02f1a630c36b@pengutronix.de>
+ <AM0PR0402MB394051B0FAADBC45AF71439CF1540@AM0PR0402MB3940.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="MtuB2lslQog7bgVIes5Xksjfb40xe2nPO"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510113136-6788-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+In-Reply-To: <AM0PR0402MB394051B0FAADBC45AF71439CF1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Varun Sethi <V.Sethi-3arQi8VN3Tc@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David, nice to see a new driver.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--MtuB2lslQog7bgVIes5Xksjfb40xe2nPO
+Content-Type: multipart/mixed; boundary="4j6Oox4wBteJt5QElS7qQrbGGuRNbRo9f";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>,
+ "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
+ "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Varun Sethi <V.Sethi-3arQi8VN3Tc@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-3arQi8VN3Tc@public.gmane.org>,
+ "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Message-ID: <b27d6e14-c6d7-5c4b-0588-093684cbe57b-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] can: flexcan: Remodel FlexCAN register r/w APIs for
+ big endian FlexCAN controllers.
+References: <1510307990-15418-1-git-send-email-pankaj.bansal-3arQi8VN3Tc@public.gmane.org>
+ <a08c34d0-5870-b4b3-f68d-3db33ba3e950-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+ <AM0PR0402MB3940A39D32C4725DE1B8C426F1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+ <e87441cc-3848-1125-f4f0-02f1a630c36b-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+ <AM0PR0402MB394051B0FAADBC45AF71439CF1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <AM0PR0402MB394051B0FAADBC45AF71439CF1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 
-Den 08.11.2017 04.52, skrev David Lechner:
-> This is a new driver for ILI9225 based display panels.
->
-> There are a couple of things that stand out:
->
-> 1.  Despite my best efforts, I could not find a name for this display[1], so I
->      have made up a generic name for it. If someone recognizes this and has a
->      name for it, please speak up. The best documentation I could find was
->      here[2].
->
-> 2.  There is quite a bit of one-off code copied from mipi-dbi.c. Based on the
->      feedback from a previous patch series, I'm guessing that we don't want to
->      modify mipi-dbi.c to accommodate the ILI9225 controller because the ILI9225
->      controller does not use standard MIPI commands. ILI9225 has it's own
->      non-standard command set, but other than that, it pretty much matches the
->      generic mipi-dbi driver in all regards.
+--4j6Oox4wBteJt5QElS7qQrbGGuRNbRo9f
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Yes you're right, I don't want non MIPI code in mipi-dbi, but we can
-try and make it flexible for usage with DBI like interfaces.
+On 11/10/2017 01:35 PM, Pankaj Bansal wrote:
+>>> 3. Regarding backward compatibility with PowerPC, I see that there is=
+ only one platform in PowerPC architecture that is using flexcan.
+>>>     There is only one platform in "arch/powerpc/boot/dts/" having fle=
+xcan node. p1010si-post.dtsi
+>>>     I have added the big-endian property in that platform and have te=
+sted it on P1010 platform after backporting the patch to Freescale SDK 1.=
+4 linux.
+>>>     I have sent the patch for this. See "[PATCH 2/3] powerpc: dts: P1=
+010: Add endianness property to flexcan node"
+>>>     I believe these changes can be accepted for both powerpc and arm =
+and other architectures that use flexcan.
+>>
+>> No, this is not acceptable. You break the device tree. Please add the =
+le, be information to the devtype data.
+>=20
+> I don't understand how this breaks device tree? can you please elaborat=
+e? This method is already being used in other specifications.
 
->      Code that could be easily shared:
->
->      a.  ili9225_buf_copy() is exactly the same as mipi_dbi_buf_copy()
->          - ili9225_buf_copy() is used in ili9225_fb_dirty()
->          - mipi_dbi_buf_copy() is static in mipi-dbi.c
+Boot a new kernel with an old tree on a PPC board -> flexcan will not wor=
+k.
 
-You can export mipi_dbi_buf_copy().
+See this talk for more information for stable device tree ABI:
 
->      b.  ili9225_spi_cmd_max_speed() is exactly the same as
->          mipi_dbi_spi_cmd_max_speed()
->          - ili9225_spi_cmd_max_speed() is used in ili9225_command() below, so
->            would not need to be copied if mipi_dbi_typec3_command() could be
->            shared
->          - mipi_dbi_spi_cmd_max_speed() is static in mipi-dbi.c
+https://elinux.org/images/0/0e/OSELAS.Presentation-ELCE2017-DT.pdf
+https://www.youtube.com/watch?v=3D6iguKSJJfxo
 
-Same here, you can export the function.
+> You can refer "Documentation/devicetree/bindings/usb/usb-ehci.txt" or
+> "Documentation/devicetree/bindings/i2c/i2c-mux-reg.txt" Or
+> "Documentation/devicetree/bindings/regmap/regmap.txt".
 
->      c.  ili9225_command() is nearly the same as mipi_dbi_typec3_command()
->          - a few unused lines were removed so I didn't have to copy even more
->            code, but these would not be an issue if code was shared
->          - cmd == ILI9225_WRITE_DATA_TO_GRAM instead of
->            cmd == MIPI_DCS_WRITE_MEMORY_START
->
->      d.  ili9225_spi_init() is nearly the same as mipi_dbi_spi_init()
->          - a few unused lines were removed so I didn't have to copy even more
->            code, but these would not be an issue if code was shared
->          - mipi->command = ili9225_command instead of
->            mipi->command = mipi_dbi_typec3_command
->          - this function would not need to be copied if mipi_dbi_typec3_command()
->            was modified to work with the ILI9225 command set too
+> In my opinion, keeping this info in devtype data is not good idea.
+> E.g. say two platforms which have same FlexCAN hardware revision,
+> will have same quirks. BUT these two platforms implement FlexCAN in
+> le and be fashion respectively.
 
-Looks like you can use mipi_dbi_spi_init() and reassign afterwards:
-     mipi_dbi_spi_init();
-     mipi->command = ili9225_command;
+Then it's two different platforms. Simply add another compatible to the
+driver.
 
->      e.  ili9225_init() is nearly the same as mipi_dbi_init()
->          - only difference is ili9225_fb_funcs instead of mipi_dbi_fb_funcs
+> With current FlexCAN driver, these two platforms can have same
+> devtype data. And we need not to change flexcan.c if we want to add
+> support for a second platform. We can just add device tree for that
+> platform (which would be needed anyway), and it can work. We can
+> mention endianness in device tree.
 
-When we get framebuffer flushing trough atomic modeset, we'll use a generic
-fb_dirty and at that point it will be possible to use mipi_dbi_init().
-The actual flushing will happen in the update callback I guess.
+Marc
 
-> 3.  I haven't tried it, but I believe that it is possible to implement
->      DRM_FORMAT_RGB888 directly instead of simulating DRM_FORMAT_XRGB8888.
->      I don't know if there would be any real benefit to doing this. I am not
->      familiar enough with userspace programs/libraries to know if this mode is
->      universally used. And, it will only physically be 18-bit color instead of
->      24-bit but will increase the amount of data transferred by 50% (3 bytes per
->      pixel instead of 2). Implementing this would have a side effect of making
->      the one-off shared code (described above) more than one-off though.
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
-I have tried it on a display and I couldn't really tell the difference
-between 16-bit and 18-bit colors, with X windows at least. And as you
-say it's terrible for the framerate.
 
-I'll look closer through the driver later today and see if I have more
-comments.
+--4j6Oox4wBteJt5QElS7qQrbGGuRNbRo9f--
 
-Side note:
-This controller can also do something called 24-bit 4 wire SPI. It uses a
-Start byte the same way that the (only) SPI mode on ILI9320 and ILI9325 do.
-I did a test implementation for ILI9325 where I used regmap as the register
-abstraction: https://github.com/notro/tinydrm/blob/master/tinydrm-ili9325.c
+--MtuB2lslQog7bgVIes5Xksjfb40xe2nPO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Noralf.
+-----BEGIN PGP SIGNATURE-----
 
-> [1]: https://github.com/Nkawu/TFT_22_ILI9225
-> [2]: http://www.hotmcu.com/22-176x220-tft-lcd-with-spi-interface-p-316.html
->
-> David Lechner (2):
->    dt-bindings: Add binding for Ilitek ILI9225 display panels
->    drm/tinydrm: add driver for ILI9225 panels
->
->   .../devicetree/bindings/display/ilitek,ili9225.txt |  25 +
->   MAINTAINERS                                        |   6 +
->   drivers/gpu/drm/tinydrm/Kconfig                    |  10 +
->   drivers/gpu/drm/tinydrm/Makefile                   |   1 +
->   drivers/gpu/drm/tinydrm/ili9225.c                  | 547 +++++++++++++++++++++
->   5 files changed, 589 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9225.txt
->   create mode 100644 drivers/gpu/drm/tinydrm/ili9225.c
->
-> --
-> 2.7.4
->
+iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAloFoD8ACgkQHv7KIOw4
+HPZHVAgAzLGJjRBYnAjvdifqbLrqGJLhLRLk37BL+Dw1HO7MhgOjNVoMoqFtc8TC
+ceNQlcDJgOX5fAANVH72IY3O1WGq0P1yiXOCPp1Bq3eyC9S5xvoiSRuFDMg2FPIM
+5lXKMRFW558+4h8aVPiw1o58LIV8c/vEoVCBHrpkHVP92NAcFzCpIQtgBa74YPOh
+Mja5GwHaLQNbFFW8DoxXJs/jcHBCopd7KjgyBZExqnwtr9KFFRMRx42jVTrb3I3N
+3E+T7QgCe7H4rQxTC6qu9nl4kGa1SsOEmXuZOH0X4svqHNyMm3WHYeY+eg+6wewt
+YgBtOlB6v3SiAv6WtAQhwdFcJmKpYg==
+=iS1I
+-----END PGP SIGNATURE-----
 
+--MtuB2lslQog7bgVIes5Xksjfb40xe2nPO--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
