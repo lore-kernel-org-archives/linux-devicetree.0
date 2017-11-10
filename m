@@ -1,124 +1,192 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] can: flexcan: Remodel FlexCAN register r/w APIs for
- big endian FlexCAN controllers.
-Date: Fri, 10 Nov 2017 13:49:03 +0100
-Message-ID: <b27d6e14-c6d7-5c4b-0588-093684cbe57b@pengutronix.de>
-References: <1510307990-15418-1-git-send-email-pankaj.bansal@nxp.com>
- <a08c34d0-5870-b4b3-f68d-3db33ba3e950@pengutronix.de>
- <AM0PR0402MB3940A39D32C4725DE1B8C426F1540@AM0PR0402MB3940.eurprd04.prod.outlook.com>
- <e87441cc-3848-1125-f4f0-02f1a630c36b@pengutronix.de>
- <AM0PR0402MB394051B0FAADBC45AF71439CF1540@AM0PR0402MB3940.eurprd04.prod.outlook.com>
+From: "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v9 2/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2
+ receiver driver
+Date: Fri, 10 Nov 2017 14:12:04 +0100
+Message-ID: <20171110131204.GA5458@bigcity.dyn.berto.se>
+References: <20171109234320.13016-1-niklas.soderlund+renesas@ragnatech.se>
+ <20171109234320.13016-3-niklas.soderlund+renesas@ragnatech.se>
+ <CAMuHMdWgUNeJPkORSKRQJfxkarRdSnzu2Q9cSB7E1nJzV2oFSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="MtuB2lslQog7bgVIes5Xksjfb40xe2nPO"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AM0PR0402MB394051B0FAADBC45AF71439CF1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Varun Sethi <V.Sethi-3arQi8VN3Tc@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWgUNeJPkORSKRQJfxkarRdSnzu2Q9cSB7E1nJzV2oFSQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Linux Media Mailing List <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Fukawa <tomoharu.fukawa.eb@renesas.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---MtuB2lslQog7bgVIes5Xksjfb40xe2nPO
-Content-Type: multipart/mixed; boundary="4j6Oox4wBteJt5QElS7qQrbGGuRNbRo9f";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>,
- "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
- "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Varun Sethi <V.Sethi-3arQi8VN3Tc@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-3arQi8VN3Tc@public.gmane.org>,
- "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Message-ID: <b27d6e14-c6d7-5c4b-0588-093684cbe57b-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] can: flexcan: Remodel FlexCAN register r/w APIs for
- big endian FlexCAN controllers.
-References: <1510307990-15418-1-git-send-email-pankaj.bansal-3arQi8VN3Tc@public.gmane.org>
- <a08c34d0-5870-b4b3-f68d-3db33ba3e950-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
- <AM0PR0402MB3940A39D32C4725DE1B8C426F1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
- <e87441cc-3848-1125-f4f0-02f1a630c36b-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
- <AM0PR0402MB394051B0FAADBC45AF71439CF1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-In-Reply-To: <AM0PR0402MB394051B0FAADBC45AF71439CF1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Hi Geert,
 
---4j6Oox4wBteJt5QElS7qQrbGGuRNbRo9f
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On 2017-11-10 10:30:24 +0100, Geert Uytterhoeven wrote:
+> Hi Niklas,
+> 
+> On Fri, Nov 10, 2017 at 12:43 AM, Niklas Söderlund
+> <niklas.soderlund+renesas@ragnatech.se> wrote:
+> > A V4L2 driver for Renesas R-Car MIPI CSI-2 receiver. The driver
+> > supports the rcar-vin driver on R-Car Gen3 SoCs where separate CSI-2
+> > hardware blocks are connected between the video sources and the video
+> > grabbers (VIN).
+> >
+> > Driver is based on a prototype by Koji Matsuoka in the Renesas BSP.
+> >
+> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> 
+> Thanks for your patch!
 
-On 11/10/2017 01:35 PM, Pankaj Bansal wrote:
->>> 3. Regarding backward compatibility with PowerPC, I see that there is=
- only one platform in PowerPC architecture that is using flexcan.
->>>     There is only one platform in "arch/powerpc/boot/dts/" having fle=
-xcan node. p1010si-post.dtsi
->>>     I have added the big-endian property in that platform and have te=
-sted it on P1010 platform after backporting the patch to Freescale SDK 1.=
-4 linux.
->>>     I have sent the patch for this. See "[PATCH 2/3] powerpc: dts: P1=
-010: Add endianness property to flexcan node"
->>>     I believe these changes can be accepted for both powerpc and arm =
-and other architectures that use flexcan.
->>
->> No, this is not acceptable. You break the device tree. Please add the =
-le, be information to the devtype data.
->=20
-> I don't understand how this breaks device tree? can you please elaborat=
-e? This method is already being used in other specifications.
+Thanks for your feedback, much appreciated!
 
-Boot a new kernel with an old tree on a PPC board -> flexcan will not wor=
-k.
+> 
+> > --- /dev/null
+> > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > @@ -0,0 +1,933 @@
+> 
+> > +/* Control Timing Select */
+> > +#define TREF_REG                       0x00
+> > +#define TREF_TREF                      (1 << 0)
+> 
+> BIT(0)? (many more)
 
-See this talk for more information for stable device tree ABI:
+Good idea.
 
-https://elinux.org/images/0/0e/OSELAS.Presentation-ELCE2017-DT.pdf
-https://www.youtube.com/watch?v=3D6iguKSJJfxo
+> 
+> > +struct phypll_hsfreqrange {
+> > +       unsigned int    mbps;
+> > +       unsigned char   reg;
+> 
+> The "unsigned char" doesn't buy you much, due to alignment rules.
+> What about making both u16 instead?
 
-> You can refer "Documentation/devicetree/bindings/usb/usb-ehci.txt" or
-> "Documentation/devicetree/bindings/i2c/i2c-mux-reg.txt" Or
-> "Documentation/devicetree/bindings/regmap/regmap.txt".
+Yes that would work, thanks.
 
-> In my opinion, keeping this info in devtype data is not good idea.
-> E.g. say two platforms which have same FlexCAN hardware revision,
-> will have same quirks. BUT these two platforms implement FlexCAN in
-> le and be fashion respectively.
+> 
+> > +static const struct rcar_csi2_format *rcar_csi2_code_to_fmt(unsigned int code)
+> > +{
+> > +       int i;
+> 
+> unsigned int
 
-Then it's two different platforms. Simply add another compatible to the
-driver.
+Thanks.
 
-> With current FlexCAN driver, these two platforms can have same
-> devtype data. And we need not to change flexcan.c if we want to add
-> support for a second platform. We can just add device tree for that
-> platform (which would be needed anyway), and it can work. We can
-> mention endianness in device tree.
+> 
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(rcar_csi2_formats); i++)
+> > +               if (rcar_csi2_formats[i].code == code)
+> > +                       return rcar_csi2_formats + i;
+> > +       return NULL;
+> > +}
+> 
+> > +struct rcar_csi2_info {
+> > +       const struct phypll_hsfreqrange *hsfreqrange;
+> > +       bool clear_ulps;
+> > +       bool have_phtw;
+> > +       unsigned int csi0clkfreqrange;
+> 
+> I'd sort by decreasing size/alignment, i.e. the bools last.
 
-Marc
+I had not consider packing of the struct, thanks for pointing this out.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
+> > +};
+> > +
+> > +struct rcar_csi2 {
+> > +       struct device *dev;
+> > +       void __iomem *base;
+> > +       const struct rcar_csi2_info *info;
+> > +
+> > +       unsigned short lanes;
+> > +       unsigned char lane_swap[4];
+> > +
+> > +       struct v4l2_subdev subdev;
+> > +       struct media_pad pads[NR_OF_RCAR_CSI2_PAD];
+> > +
+> > +       struct v4l2_mbus_framefmt mf;
+> > +
+> > +       struct mutex lock;
+> > +       int stream_count;
+> > +
+> > +       struct v4l2_async_notifier notifier;
+> > +       struct v4l2_async_subdev remote;
+> 
+> Likewise.
 
+Thanks for this, I learnt something new.
 
---4j6Oox4wBteJt5QElS7qQrbGGuRNbRo9f--
+> 
+> > +static int rcar_csi2_start(struct rcar_csi2 *priv)
+> > +{
+> 
+> > +       dev_dbg(priv->dev, "Input size (%dx%d%c)\n", mf->width,
+> 
+> %u for __u32
 
---MtuB2lslQog7bgVIes5Xksjfb40xe2nPO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Good catch.
 
------BEGIN PGP SIGNATURE-----
+> 
+> > +               mf->height, mf->field == V4L2_FIELD_NONE ? 'p' : 'i');
+> 
+> > +static int rcar_csi2_probe_resources(struct rcar_csi2 *priv,
+> > +                                    struct platform_device *pdev)
+> > +{
+> > +       struct resource *mem;
+> > +       int irq;
+> > +
+> > +       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       if (!mem)
+> 
+> No need to check mem, platform_get_resource() and devm_ioremap_resource()
+> are designed to be pipelined.
 
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAloFoD8ACgkQHv7KIOw4
-HPZHVAgAzLGJjRBYnAjvdifqbLrqGJLhLRLk37BL+Dw1HO7MhgOjNVoMoqFtc8TC
-ceNQlcDJgOX5fAANVH72IY3O1WGq0P1yiXOCPp1Bq3eyC9S5xvoiSRuFDMg2FPIM
-5lXKMRFW558+4h8aVPiw1o58LIV8c/vEoVCBHrpkHVP92NAcFzCpIQtgBa74YPOh
-Mja5GwHaLQNbFFW8DoxXJs/jcHBCopd7KjgyBZExqnwtr9KFFRMRx42jVTrb3I3N
-3E+T7QgCe7H4rQxTC6qu9nl4kGa1SsOEmXuZOH0X4svqHNyMm3WHYeY+eg+6wewt
-YgBtOlB6v3SiAv6WtAQhwdFcJmKpYg==
-=iS1I
------END PGP SIGNATURE-----
+Did not know that, thanks.
 
---MtuB2lslQog7bgVIes5Xksjfb40xe2nPO--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > +               return -ENODEV;
+> > +
+> > +       priv->base = devm_ioremap_resource(&pdev->dev, mem);
+> 
+> 
+> > +static const struct soc_device_attribute r8a7795es1[] = {
+> > +       { .soc_id = "r8a7795", .revision = "ES1.*" },
+> > +       { /* sentinel */ }
+> > +};
+> > +
+> > +static int rcar_csi2_probe(struct platform_device *pdev)
+> > +{
+> > +       struct rcar_csi2 *priv;
+> > +       unsigned int i;
+> > +       int ret;
+> > +
+> > +       priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> > +       if (!priv)
+> > +               return -ENOMEM;
+> > +
+> > +       priv->info = of_device_get_match_data(&pdev->dev);
+> > +
+> > +       /* r8a7795 ES1.x behaves different then ES2.0+ but no own compat */
+> > +       if (priv->info == &rcar_csi2_info_r8a7795 &&
+> > +           soc_device_match(r8a7795es1))
+> > +               priv->info = &rcar_csi2_info_r8a7795es1;
+> 
+> Please store &rcar_csi2_info_r8a7795es1 in r8a7795es1[0].data instead.
+
+Good idea.
+
+I will fix this and resend, thanks again for taking the time to review 
+this patch.
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+-- 
+Regards,
+Niklas Söderlund
