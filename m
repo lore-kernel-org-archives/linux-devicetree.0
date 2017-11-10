@@ -1,87 +1,81 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] drivers: usb: phy: Add qoriq usb 3.0 phy driver
- support
-Date: Fri, 10 Nov 2017 15:19:06 -0600
-Message-ID: <20171110211906.3xxmquoz74nl4zdc@rob-hp-laptop>
-References: <20171107072055.26945-1-ran.wang_1@nxp.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCHv4 1/3] ARMv8: dts: ls1046a: add the property of IB and OB
+Date: Fri, 10 Nov 2017 21:20:31 +0000
+Message-ID: <AM4PR0401MB16999BD34AFBB1362BD32EBD8F540@AM4PR0401MB1699.eurprd04.prod.outlook.com>
+References: <20171110034847.17891-1-xiaowei.bao@nxp.com>
+ <20171110034847.17891-2-xiaowei.bao@nxp.com>
+ <20b8f1d2-f817-469f-afbf-66f25d6f8c46@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171107072055.26945-1-ran.wang_1@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@kernel.org>, mark.rutland@arm.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, stern@rowland.harvard.edu, pku.leo@gmail.com, mathias.nyman@intel.com, gregkh@linuxfoundation.org, suresh.gupta@nxp.com, felipe.balbi@linux.intel.com, Shawn Guo <shawnguo@kernel.org>, Sriram Dash <sriram.dash@nxp.com>, Li Yang <leoyang.li@nxp.com>, Hongtao Jia <hongtao.jia@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20b8f1d2-f817-469f-afbf-66f25d6f8c46@ti.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Andy Tang <andy.tang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pbrobinson@gmail.com" <pbrobinson@gmail.com>, "songxiaowei@hisilicon.com" <songxiaowei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@list>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 07, 2017 at 03:20:53PM +0800, Ran Wang wrote:
-> Adds qoriq usb 3.0 phy driver to implement erratum related workaround
-> for qoriq SoC.
-> 
-> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
-> Change in v2:
-> 	- Replace funciont __raw_writel() by iowrite32be()
-> 	- Remove qoriq_usb3_phy_read() and qoriq_usb3_phy_write()
-> 	- Remove USB3PRM1CR_VAL define, use numbers directly
-> 	- Use C-style numeric constants on 32'h27672B2A in annotation
-> 	- Add prefix 'static' to struct qoriq_usb3_phy_erratum
-> 
->  .../devicetree/bindings/phy/phy-qoriq-usb3.txt     |  36 ++++
 
-Please split bindings to separate patch.
 
->  drivers/phy/Kconfig                                |   9 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-qoriq-usb3.c                       | 191 +++++++++++++++++++++
->  4 files changed, 237 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
->  create mode 100644 drivers/phy/phy-qoriq-usb3.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
-> new file mode 100644
-> index 000000000000..d956f9c89fbf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
-> @@ -0,0 +1,36 @@
-> +Driver for Freescale USB 3.0 PHY
-> +
-> +Required properties:
-> +
-> +- compatible :	fsl,qoriq-usb3-phy
-> +- reg :		register mappings for Parameter Configuration Register
-> +		and Phy base offset.
-> +- reg-names :	"param_ctrl" and "phy_base"
-> +- phy_type :	For multi port host USB controllers, should be one of
-> +		"ulpi", or "serial". For dual role USB controllers,
-> +		should be one of "ulpi", "utmi", "utmi_wide", or "serial".
-> +
-> +Example:
-> +		usbphy0: usb-phy@084F0000 {
+> -----Original Message-----
+> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
+> Sent: Friday, November 10, 2017 12:22 AM
+> To: Xiaowei Bao <xiaowei.bao@nxp.com>; robh+dt@kernel.org;
+> mark.rutland@arm.com; catalin.marinas@arm.com; will.deacon@arm.com;
+> bhelgaas@google.com; shawnguo@kernel.org; Madalin-cristian Bucur
+> <madalin.bucur@nxp.com>; Sumit Garg <sumit.garg@nxp.com>; Y.b. Lu
+> <yangbo.lu@nxp.com>; hongtao.jia@nxp.com; Andy Tang
+> <andy.tang@nxp.com>; Leo Li <leoyang.li@nxp.com>; jingoohan1@gmail.com;
+> pbrobinson@gmail.com; songxiaowei@hisilicon.com;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; linux-pci@vger.kernel.org; linuxppc-
+> dev@lists.ozlabs.org; Z.q. Hou <zhiqiang.hou@nxp.com>; Mingkai Hu
+> <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>
+> Subject: Re: [PATCHv4 1/3] ARMv8: dts: ls1046a: add the property of IB an=
+d OB
+>=20
+> Hi Bao,
+>=20
+> On Friday 10 November 2017 09:18 AM, Bao Xiaowei wrote:
+> > Add the property of inbound and outbound windows number for ep driver.
+> >
+> > Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
+> > Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
+> > ---
+> >  v2:
+> >  - no change
+> >  v3:
+> >  - modify the commit message
+> >  v4:
+> >  - no change
+> >
+> >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+>=20
+> $subject should start with something like
+> arm64: dts: ls1046a: **
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > index 06b5e12d04d8..f8332669663c 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > @@ -674,6 +674,8 @@
+> >  			device_type =3D "pci";
+> >  			dma-coherent;
+> >  			num-lanes =3D <4>;
+> > +			num-ib-windows =3D <6>;
+> > +			num-ob-windows =3D <6>;
+>=20
+> EP specific properties shouldn't be added in RC dt node. Ideally you shou=
+ld have
+> a separate dt node for RC and EP.
 
-Drop leading 0s and use lower case hex. Building dts with W=2 will tell 
-you this.
+It is a single PCIe controller which can be configured to either RC mode or=
+ EP mode.  Wouldn't it conflict with the device tree principles to have two=
+ device tree nodes for the same PCIe controller?  And obviously the two mod=
+es cannot be used at the same time so we cannot have two drivers both probe=
+ on the same hardware.
 
-> +				compatible = "fsl,qoriq-usb3-phy";
-> +                reg = <0x0 0x01570070 0x0 0xC>, <0x0 0x084F0000 0x0 0x5000>;
-> +                reg-names = "param_ctrl", "phy_base";
-> +                #phy-cells = <0>;
-> +                phy_type = "utmi";
-> +		};
-> +
-> +        usbphy1: usb-phy@08500000 {
-> +                compatible = "fsl,qoriq-usb3-phy";
-> +                reg = <0x0 0x0157007C 0x0 0xC>, <0x0 0x08500000 0x0 0x5000>;
-> +                reg-names = "param_ctrl", "phy_base";
-> +                #phy-cells = <0>;
-> +                phy_type = "utmi";
-> +        };
-> +
-> +        usbphy2: usb-phy@08510000 {
-> +                compatible = "fsl,qoriq-usb3-phy";
-> +                reg = <0x0 0x01570088 0x0 0xC>, <0x0 0x08510000 0x0 0x5000>;
-> +                reg-names = "param_ctrl", "phy_base";
-> +                #phy-cells = <0>;
-> +                phy_type = "utmi";
-> +        };
+Regards,
+Leo
