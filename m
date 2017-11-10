@@ -1,67 +1,61 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: sun8i: bananapi-m3: Enable dwmac-sun8i
-Date: Fri, 10 Nov 2017 06:50:15 +0100
-Message-ID: <20171110055015.GA11040@Red>
-References: <20171109082950.21124-1-clabbe.montjoie@gmail.com>
- <20171109082950.21124-3-clabbe.montjoie@gmail.com>
- <CAGb2v6670K24MTQ8NWGDF8e2iXB+Okghp51kMD7rADgviQ65fg@mail.gmail.com>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCHv4 1/3] ARMv8: dts: ls1046a: add the property of IB and OB
+Date: Fri, 10 Nov 2017 11:52:21 +0530
+Message-ID: <20b8f1d2-f817-469f-afbf-66f25d6f8c46@ti.com>
+References: <20171110034847.17891-1-xiaowei.bao@nxp.com>
+ <20171110034847.17891-2-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBGX4STIAKGQEOZZC3UI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v6670K24MTQ8NWGDF8e2iXB+Okghp51kMD7rADgviQ65fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171110034847.17891-2-xiaowei.bao@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bao Xiaowei <xiaowei.bao@nxp.com>, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, bhelgaas@google.com, shawnguo@kernel.org, madalin.bucur@nxp.com, sumit.garg@nxp.com, yangbo.lu@nxp.com, hongtao.jia@nxp.com, Yuantian.Tang@nxp.com, leoyang.li@nxp.com, jingoohan1@gmail.com, pbrobinson@gmail.com, songxiaowei@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Zhiqiang.Hou@nxp.com, mingkai.hu@nxp.com, Minghuan.Lian@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 10, 2017 at 11:48:11AM +0800, Chen-Yu Tsai wrote:
-> On Thu, Nov 9, 2017 at 4:29 PM, Corentin Labbe
-> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > The dwmac-sun8i hardware is present on the bananapi m3
-> > It uses an external PHY rtl8211e via RGMII.
-> >
-> > This patch create the needed emac and phy nodes.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-> > index c606af3dbfed..45bdd5c17829 100644
-> > --- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-> > +++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-> > @@ -52,6 +52,7 @@
-> >         compatible = "sinovoip,bpi-m3", "allwinner,sun8i-a83t";
-> >
-> >         aliases {
-> > +               ethernet0 = &emac;
-> >                 serial0 = &uart0;
-> >         };
-> >
-> > @@ -88,6 +89,23 @@
-> >         /* TODO GL830 USB-to-SATA bridge downstream w/ GPIO power controls */
-> >  };
-> >
-> > +&emac {
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&emac_rgmii_pins>;
-> > +       phy-handle = <&ext_rgmii_phy>;
-> > +       phy-mode = "rgmii";
-> 
-> Schematics say PHY is power by DC1SW from the PMIC.
-> Not sure why you don't need that. Have you tested your patch?
+Hi Bao,
 
-Tested on 4.14.0-rc5-next-20171018+ 
-I will try to check which uboot is used, perhaps it's an old uboot with some PMIC hack.
+On Friday 10 November 2017 09:18 AM, Bao Xiaowei wrote:
+> Add the property of inbound and outbound windows number for ep
+> driver.
+> 
+> Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
+> Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
+> ---
+>  v2:
+>  - no change
+>  v3:
+>  - modify the commit message
+>  v4:
+>  - no change
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+
+$subject should start with something like
+arm64: dts: ls1046a: **
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 06b5e12d04d8..f8332669663c 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -674,6 +674,8 @@
+>  			device_type = "pci";
+>  			dma-coherent;
+>  			num-lanes = <4>;
+> +			num-ib-windows = <6>;
+> +			num-ob-windows = <6>;
+
+EP specific properties shouldn't be added in RC dt node. Ideally you should
+have a separate dt node for RC and EP.
 
 Thanks
-Regards
+Kishon
