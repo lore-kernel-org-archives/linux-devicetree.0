@@ -1,114 +1,71 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation : can : flexcan : Add big-endian
- property to device tree
-Date: Fri, 10 Nov 2017 11:36:12 +0100
-Message-ID: <5ebd21fe-9733-2caf-bafd-e1fe773837f0@pengutronix.de>
-References: <1510309043-16777-1-git-send-email-pankaj.bansal@nxp.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH net-next] bindings: net: stmmac: correctify note about LPI
+ interrupt
+Date: Fri, 10 Nov 2017 11:47:29 +0100
+Message-ID: <bf749c8c-8a4b-6ecb-c979-60113252d909@st.com>
+References: <20171109170928.15496-1-niklas.cassel@axis.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="sEse9B9aw7plEa3NlS6NhEIALbLfEthoc"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510309043-16777-1-git-send-email-pankaj.bansal-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20171109170928.15496-1-niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: V.Sethi-3arQi8VN3Tc@public.gmane.org, poonam.aggrwal-3arQi8VN3Tc@public.gmane.org
+To: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---sEse9B9aw7plEa3NlS6NhEIALbLfEthoc
-Content-Type: multipart/mixed; boundary="NU5a0SdbQTrkxgJJLpLm8BhlaS2RtrUTL";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org,
- linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: V.Sethi-3arQi8VN3Tc@public.gmane.org, poonam.aggrwal-3arQi8VN3Tc@public.gmane.org
-Message-ID: <5ebd21fe-9733-2caf-bafd-e1fe773837f0-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation : can : flexcan : Add big-endian
- property to device tree
-References: <1510309043-16777-1-git-send-email-pankaj.bansal-3arQi8VN3Tc@public.gmane.org>
-In-Reply-To: <1510309043-16777-1-git-send-email-pankaj.bansal-3arQi8VN3Tc@public.gmane.org>
 
---NU5a0SdbQTrkxgJJLpLm8BhlaS2RtrUTL
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
 
-On 11/10/2017 11:17 AM, Pankaj Bansal wrote:
-> The FlexCAN controller can be modelled as little or big endian
-> depending on SOC design. This device tree property identifies the
-> controller endianness and the driver reads/writes controller registers
-> based on that.
->=20
-> This is optional property. i.e. if this property is not present in
-> device tree node then controller is assumed to be little endian. if
-> this property is present then controller is assumed to be big endian.
->=20
-> Signed-off-by: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>
-> Reviewed-by: Poonam Aggrwal <poonam.aggrwal-3arQi8VN3Tc@public.gmane.org>
-
-NACK, this is not backwards compatible.
-
-See mail on linux-can for better solution.
-
-Marc
-
+On 11/09/2017 06:09 PM, Niklas Cassel wrote:
+> There are two different combined signal for various interrupt events:
+> In EQOS-CORE and EQOS-MTL configurations, mci_intr_o is the interrupt
+> signal.
+> In EQOS-DMA, EQOS-AHB and EQOS-AXI configurations, these interrupt events
+> are combined with the events in the DMA on the sbd_intr_o signal.
+> 
+> Depending on configuration, the device tree irq "macirq" will refer to
+> either mci_intr_o or sbd_intr_o.
+> 
+> The databook states:
+> "The MAC generates the LPI interrupt when the Tx or Rx side enters or exits
+> the LPI state. The interrupt mci_intr_o (sbd_intr_o in certain
+> configurations) is asserted when the LPI interrupt status is set.
+> 
+> When the MAC exits the Rx LPI state, then in addition to the mci_intr_o
+> (sbd_intr_o in certain configurations), the sideband signal lpi_intr_o is
+> asserted.
+> 
+> If you do not want to gate-off the application clock during the Rx LPI
+> state, you can leave the lpi_intr_o signal unconnected and use the
+> mci_intr_o (sbd_intr_o in certain configurations) signal to detect Rx LPI
+> exit."
+> 
+> Since the "macirq" is always raised when Tx or Rx enters/exits the LPI
+> state, "eth_lpi" must therefore refer to lpi_intr_o, which is only raised
+> when Rx exits the LPI state. Update the DT binding description to reflect
+> reality.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/net/can/fsl-flexcan.txt | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt =
-b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
-> index 56d6cc3..b9693c7 100644
-> --- a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
-> +++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
-> @@ -18,6 +18,8 @@ Optional properties:
-> =20
->  - xceiver-supply: Regulator that powers the CAN transceiver
-> =20
-> +- big-endian: This means the registers of FlexCAN controller are big e=
-ndian
-> +
->  Example:
-> =20
->  	can@1c000 {
-> @@ -26,4 +28,5 @@ Example:
->  		interrupts =3D <48 0x2>;
->  		interrupt-parent =3D <&mpic>;
->  		clock-frequency =3D <200000000>; // filled in by bootloader
-> +		big-endian;
->  	};
->=20
-
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---NU5a0SdbQTrkxgJJLpLm8BhlaS2RtrUTL--
-
---sEse9B9aw7plEa3NlS6NhEIALbLfEthoc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAloFgRwACgkQHv7KIOw4
-HPb3FQf9E4i2dStcSJZQalg71K+3iVqgdNNdkwYg9IAwn459O0KLMyhxFumBSsLp
-NTdgat+vbk/eLTJlm/lsrcxRrqDTnAxWxSqMaKJrjhHEXTBVrYkNXamukH9dmx3E
-vjmoCI5Q6lUhnIyypDrMjgyuOhOD4Gl/O6FSJOtvIIFuU/Iqudz1vHS9QXhJGA1x
-Y2GSr+UiYPgryLEv785LmA6NHOvxFXkCmDnhCdir/hnKWLeYt1IMo9C2DQIs6WOT
-FXjk59PwACxowD4RbylOYg9P1E3kg1TKuHWXh08z5JYc1ZDG3j/ISTTVOg+M4dmd
-+bCAPRzDtXV80jJIhGj3RDU2149Nlw==
-=FIwA
------END PGP SIGNATURE-----
-
---sEse9B9aw7plEa3NlS6NhEIALbLfEthoc--
+>   Documentation/devicetree/bindings/net/stmmac.txt | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index c3a7be6615c5..3a28a5d8857d 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -12,7 +12,7 @@ Required properties:
+>   	Valid interrupt names are:
+>     - "macirq" (combined signal for various interrupt events)
+>     - "eth_wake_irq" (the interrupt to manage the remote wake-up packet detection)
+> -  - "eth_lpi" (the interrupt that occurs when Tx or Rx enters/exits LPI state)
+> +  - "eth_lpi" (the interrupt that occurs when Rx exits the LPI state)
+>   - phy-mode: See ethernet.txt file in the same directory.
+>   - snps,reset-gpio 	gpio number for phy reset.
+>   - snps,reset-active-low boolean flag to indicate if phy reset is active low.
+> 
+Acked-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
