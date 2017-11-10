@@ -1,31 +1,61 @@
-From: Bao Xiaowei <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCHv3 0/3]  dts: Add the property of IB and OB
-Date: Fri, 10 Nov 2017 10:49:23 +0800
-Message-ID: <20171110024926.39700-1-xiaowei.bao@nxp.com>
+From: Bao Xiaowei <xiaowei.bao@nxp.com>
+Subject: [PATCHv3 1/3] ARMv8: dts: ls1046a: add the property of IB and OB
+Date: Fri, 10 Nov 2017 10:49:24 +0800
+Message-ID: <20171110024926.39700-2-xiaowei.bao@nxp.com>
+References: <20171110024926.39700-1-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, madalin.bucur-3arQi8VN3Tc@public.gmane.org, sumit.garg-3arQi8VN3Tc@public.gmane.org, yangbo.lu-3arQi8VN3Tc@public.gmane.org, hongtao.jia-3arQi8VN3Tc@public.gmane.org, Yuantian.Tang-3arQi8VN3Tc@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org, mingkai.hu-3arQi8VN3Tc@public.gmane.org, Minghuan.Lian-3arQi8VN3Tc@public.gmane.org
-Cc: Bao Xiaowei <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171110024926.39700-1-xiaowei.bao@nxp.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, bhelgaas@google.com, shawnguo@kernel.org, madalin.bucur@nxp.com, sumit.garg@nxp.com, yangbo.lu@nxp.com, hongtao.jia@nxp.com, Yuantian.Tang@nxp.com, leoyang.li@nxp.com, kishon@ti.com, jingoohan1@gmail.com, pbrobinson@gmail.com, songxiaowei@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Zhiqiang.Hou@nxp.com, mingkai.hu@nxp.com, Minghuan.Lian@nxp.com
+Cc: Bao Xiaowei <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Depend on http://patchwork.ozlabs.org/patch/815382/
+Add the property of inbound and outbound windows number for ep
+driver.
 
-Bao Xiaowei (3):
-  ARMv8: dts: ls1046a: add the property of IB and OB
-  ARMv8: layerscape: add the pcie ep function support
-  ARMv8: pcie: make the DWC EP driver support for layerscape
+Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
+Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
+---
+ v2:
+ - no change
+ v3:
+ - modify the commit message
 
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   6 ++
- drivers/pci/dwc/Kconfig                        |   1 +
- drivers/pci/dwc/pci-layerscape.c               | 124 +++++++++++++++++++++++--
- 3 files changed, 125 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 06b5e12d04d8..f8332669663c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -674,6 +674,8 @@
+ 			device_type = "pci";
+ 			dma-coherent;
+ 			num-lanes = <4>;
++			num-ib-windows = <6>;
++			num-ob-windows = <6>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
+ 				  0x82000000 0x0 0x40000000 0x40 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+@@ -699,6 +701,8 @@
+ 			device_type = "pci";
+ 			dma-coherent;
+ 			num-lanes = <2>;
++			num-ib-windows = <6>;
++			num-ob-windows = <6>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
+ 				  0x82000000 0x0 0x40000000 0x48 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+@@ -724,6 +728,8 @@
+ 			device_type = "pci";
+ 			dma-coherent;
+ 			num-lanes = <2>;
++			num-ib-windows = <6>;
++			num-ob-windows = <6>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x50 0x00010000 0x0 0x00010000   /* downstream I/O */
+ 				  0x82000000 0x0 0x40000000 0x50 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
