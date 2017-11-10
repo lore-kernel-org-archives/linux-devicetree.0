@@ -1,29 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: can: rcar_can: document r8a774[35] can
- support
-Date: Fri, 10 Nov 2017 15:23:01 -0600
-Message-ID: <20171110212301.jbxti6n5ab5hs7xw@rob-hp-laptop>
-References: <1510067449-17017-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] display: panel: Add Tianma tm070rvhg71 display
+ support (800x480)
+Date: Fri, 10 Nov 2017 15:24:23 -0600
+Message-ID: <20171110212423.jddj5kw32voms2oj@rob-hp-laptop>
+References: <CAL_JsqJz67k_fTMkx5dHb5qFwXif9y+Cv=+PTq7OLH7woNoU=g@mail.gmail.com>
+ <20171107153058.5554-1-lukma@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1510067449-17017-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+In-Reply-To: <20171107153058.5554-1-lukma-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 07, 2017 at 03:10:42PM +0000, Fabrizio Castro wrote:
-> Document "renesas,can-r8a7743" and "renesas,can-r8a7745" compatible
-> strings. Since the fallback compatible string ("renesas,rcar-gen2-can")
-> activates the right code in the driver, no driver change is needed.
+On Tue, Nov 07, 2017 at 04:30:58PM +0100, Lukasz Majewski wrote:
+> Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 > ---
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> Changes for v2:
+> - Provide more detailed ./Documentation/devicetree/bindings/display/panel
+>   entry to describe this panel device.
+> ---
+>  .../bindings/display/panel/tianma,tm070rvhg71.txt  | 29 ++++++++++++++++++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++
+>  2 files changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
