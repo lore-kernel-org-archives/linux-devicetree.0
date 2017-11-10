@@ -1,41 +1,30 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] soc: renesas: Identify R-Car M3-W ES1.1
-Date: Fri, 10 Nov 2017 10:26:50 +0100
-Message-ID: <20171110092649.6m4ltkoq7z53apvx@verge.net.au>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: renesas: Add support for Salvator-XS
+ with R-Car M3-W
+Date: Fri, 10 Nov 2017 10:30:17 +0100
+Message-ID: <20171110093016.7xqwlalnxk5eqoog@verge.net.au>
 References: <1509384599-28953-1-git-send-email-geert+renesas@glider.be>
- <1509384599-28953-3-git-send-email-geert+renesas@glider.be>
- <20171101084237.atr25lujcqctwhjj@verge.net.au>
+ <1509384599-28953-4-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171101084237.atr25lujcqctwhjj@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1509384599-28953-4-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 01, 2017 at 09:42:38AM +0100, Simon Horman wrote:
-> On Mon, Oct 30, 2017 at 06:29:58PM +0100, Geert Uytterhoeven wrote:
-> > The Product Register of R-Car M3-W ES1.1 incorrectly identifies the SoC
-> > revision as ES2.0.  Add a workaround to fix this.
-> > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Is it already known how future revisions will be identified?
+On Mon, Oct 30, 2017 at 06:29:59PM +0100, Geert Uytterhoeven wrote:
+> Add initial support for the Renesas Salvator-XS (Salvator-X 2nd version)
+> development board equipped with an R-Car M3-W SiP.
 > 
-> I'd like there to be some sort of conclusion to that discussion before
-> applying that patch (I seem to recall we discussed it some time ago
-> but I don't recall the outcome). The reason that I am being cautious here
-> is that it potentially has implications for old-kernel/new-SoC compatibility
-> which may be hard to fix later.
+> Based on work for the Salvator-X and -XS boards with M3-W resp. H3 SiPs.
 > 
-> I am happy to apply the other patches in the series if you think that is
-> worthwhile.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-After some discussion off-list I am now satisfied that the approach you
-have taken - to special case as identifying ES1.1 as what would otherwise
-be identified ES2.0 - is not likely to cause problems with future SoC
-releases.
-
-I have applied this patch for v4.16.
+Thanks, applied for v4.16.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
