@@ -1,81 +1,32 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCHv4 1/3] ARMv8: dts: ls1046a: add the property of IB and OB
-Date: Fri, 10 Nov 2017 21:20:31 +0000
-Message-ID: <AM4PR0401MB16999BD34AFBB1362BD32EBD8F540@AM4PR0401MB1699.eurprd04.prod.outlook.com>
-References: <20171110034847.17891-1-xiaowei.bao@nxp.com>
- <20171110034847.17891-2-xiaowei.bao@nxp.com>
- <20b8f1d2-f817-469f-afbf-66f25d6f8c46@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: iio: adc: update the doc for SAR ADC
+Date: Fri, 10 Nov 2017 15:21:39 -0600
+Message-ID: <20171110212139.ssh5kts3xo35hqeu@rob-hp-laptop>
+References: <20171107141020.30419-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20b8f1d2-f817-469f-afbf-66f25d6f8c46@ti.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Andy Tang <andy.tang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pbrobinson@gmail.com" <pbrobinson@gmail.com>, "songxiaowei@hisilicon.com" <songxiaowei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@list>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171107141020.30419-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 07, 2017 at 10:10:20PM +0800, Yixun Lan wrote:
+> From: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> 
+> Update the doc as the SAR ADC modules doesn't require "sana" clock.
+> 
+> Singed-off-by: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt | 1 -
+>  1 file changed, 1 deletion(-)
 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> -----Original Message-----
-> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
-> Sent: Friday, November 10, 2017 12:22 AM
-> To: Xiaowei Bao <xiaowei.bao@nxp.com>; robh+dt@kernel.org;
-> mark.rutland@arm.com; catalin.marinas@arm.com; will.deacon@arm.com;
-> bhelgaas@google.com; shawnguo@kernel.org; Madalin-cristian Bucur
-> <madalin.bucur@nxp.com>; Sumit Garg <sumit.garg@nxp.com>; Y.b. Lu
-> <yangbo.lu@nxp.com>; hongtao.jia@nxp.com; Andy Tang
-> <andy.tang@nxp.com>; Leo Li <leoyang.li@nxp.com>; jingoohan1@gmail.com;
-> pbrobinson@gmail.com; songxiaowei@hisilicon.com;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; linux-pci@vger.kernel.org; linuxppc-
-> dev@lists.ozlabs.org; Z.q. Hou <zhiqiang.hou@nxp.com>; Mingkai Hu
-> <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>
-> Subject: Re: [PATCHv4 1/3] ARMv8: dts: ls1046a: add the property of IB an=
-d OB
->=20
-> Hi Bao,
->=20
-> On Friday 10 November 2017 09:18 AM, Bao Xiaowei wrote:
-> > Add the property of inbound and outbound windows number for ep driver.
-> >
-> > Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
-> > Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
-> > ---
-> >  v2:
-> >  - no change
-> >  v3:
-> >  - modify the commit message
-> >  v4:
-> >  - no change
-> >
-> >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 6 ++++++
-> >  1 file changed, 6 insertions(+)
->=20
-> $subject should start with something like
-> arm64: dts: ls1046a: **
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > index 06b5e12d04d8..f8332669663c 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > @@ -674,6 +674,8 @@
-> >  			device_type =3D "pci";
-> >  			dma-coherent;
-> >  			num-lanes =3D <4>;
-> > +			num-ib-windows =3D <6>;
-> > +			num-ob-windows =3D <6>;
->=20
-> EP specific properties shouldn't be added in RC dt node. Ideally you shou=
-ld have
-> a separate dt node for RC and EP.
-
-It is a single PCIe controller which can be configured to either RC mode or=
- EP mode.  Wouldn't it conflict with the device tree principles to have two=
- device tree nodes for the same PCIe controller?  And obviously the two mod=
-es cannot be used at the same time so we cannot have two drivers both probe=
- on the same hardware.
-
-Regards,
-Leo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
