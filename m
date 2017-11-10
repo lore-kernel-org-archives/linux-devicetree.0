@@ -1,38 +1,41 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH 3/3] arm64: dts: meson-axg: add new reset DT node
-Date: Fri, 10 Nov 2017 16:46:59 +0800
-Message-ID: <20171110084659.31641-1-yixun.lan@amlogic.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/3] soc: renesas: Identify R-Car M3-W ES1.1
+Date: Fri, 10 Nov 2017 10:26:50 +0100
+Message-ID: <20171110092649.6m4ltkoq7z53apvx@verge.net.au>
+References: <1509384599-28953-1-git-send-email-geert+renesas@glider.be>
+ <1509384599-28953-3-git-send-email-geert+renesas@glider.be>
+ <20171101084237.atr25lujcqctwhjj@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171101084237.atr25lujcqctwhjj@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add reset DT node for Amlogic's Meson-AXG SoC.
+On Wed, Nov 01, 2017 at 09:42:38AM +0100, Simon Horman wrote:
+> On Mon, Oct 30, 2017 at 06:29:58PM +0100, Geert Uytterhoeven wrote:
+> > The Product Register of R-Car M3-W ES1.1 incorrectly identifies the SoC
+> > revision as ES2.0.  Add a workaround to fix this.
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > Is it already known how future revisions will be identified?
+> 
+> I'd like there to be some sort of conclusion to that discussion before
+> applying that patch (I seem to recall we discussed it some time ago
+> but I don't recall the outcome). The reason that I am being cautious here
+> is that it potentially has implications for old-kernel/new-SoC compatibility
+> which may be hard to fix later.
+> 
+> I am happy to apply the other patches in the series if you think that is
+> worthwhile.
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+After some discussion off-list I am now satisfied that the approach you
+have taken - to special case as identifying ES1.1 as what would otherwise
+be identified ES2.0 - is not likely to cause problems with future SoC
+releases.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index e0fb860e12c5..65945c6c8b65 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -123,6 +123,12 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
- 
-+			reset: reset-controller@1004 {
-+				compatible = "amlogic,meson-axg-reset";
-+				reg = <0x0 0x01004 0x0 0x9c>;
-+				#reset-cells = <1>;
-+			};
-+
- 			uart_A: serial@24000 {
- 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
- 				reg = <0x0 0x24000 0x0 0x14>;
--- 
-2.14.1
+I have applied this patch for v4.16.
