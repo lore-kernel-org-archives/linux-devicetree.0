@@ -1,95 +1,48 @@
-From: "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2
- receiver documentation
-Date: Fri, 10 Nov 2017 12:20:13 +0100
-Message-ID: <20171110112013.GC30830@bigcity.dyn.berto.se>
-References: <20171109234320.13016-1-niklas.soderlund+renesas@ragnatech.se>
- <20171109234320.13016-2-niklas.soderlund+renesas@ragnatech.se>
- <CAMuHMdWDfxFQO8bwxHim=BXHtC37cWFgU-keDDNiLDtEhh7=Dw@mail.gmail.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH 0/2] backlight: pwm_bl: prevent backlight flicker when
+ switching PWM on
+Date: Fri, 10 Nov 2017 12:22:15 +0100
+Message-ID: <8682e9c4-518d-5dce-55c5-c221dddd5fd6@collabora.com>
+References: <1509022186-19636-1-git-send-email-LW@KARO-electronics.de>
+ <1509022186-19636-2-git-send-email-LW@KARO-electronics.de>
+ <cec1af21-8a6d-f9f3-eaf0-197ba68d87ee@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWDfxFQO8bwxHim=BXHtC37cWFgU-keDDNiLDtEhh7=Dw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fukawa <tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <cec1af21-8a6d-f9f3-eaf0-197ba68d87ee@linaro.org>
+Content-Language: en-GB
+Sender: linux-leds-owner@vger.kernel.org
+To: Daniel Thompson <daniel.thompson@linaro.org>, =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <LW@KARO-electronics.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Jingoo Han <jingoohan1@gmail.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi all,
 
-Thanks for your feedback.
+On 08/11/17 11:48, Daniel Thompson wrote:
+> On 26/10/17 13:49, Lothar WaÃŸmann wrote:
+>> These patches implement some measures to prevent backlight flicker
+>> when the backlight is being switched on for a display with an active
+>> low brightness control pin.
+>> GIT: [PATCH 1/2] backlight: pwm_bl: Enable PWM before switching regulator
+>> GIT: [PATCH 2/2] backlight: pwm_bl: add configurable delay between
+> 
+> Other than hoisting the pwm_enable() even earlier in the setup sequence this
+> patchset seems to have a significant overlap with Enric's recent posting:
+> 
+>   https://lkml.org/lkml/2017/7/21/211
+> 
+> Any chance of a shared view on this, especially on the DT bindings?
+> 
 
-On 2017-11-10 09:09:39 +0100, Geert Uytterhoeven wrote:
-> Hi Niklas,
-> 
-> On Fri, Nov 10, 2017 at 12:43 AM, Niklas Söderlund
-> <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org> wrote:
-> > Documentation for Renesas R-Car MIPI CSI-2 receiver. The CSI-2 receivers
-> > are located between the video sources (CSI-2 transmitters) and the video
-> > grabbers (VIN) on Gen3 of Renesas R-Car SoC.
-> >
-> > Each CSI-2 device is connected to more then one VIN device which
-> > simultaneously can receive video from the same CSI-2 device. Each VIN
-> > device can also be connected to more then one CSI-2 device. The routing
-> > of which link are used are controlled by the VIN devices. There are only
-> > a few possible routes which are set by hardware limitations, which are
-> > different for each SoC in the Gen3 family.
-> >
-> > To work with the limitations of routing possibilities it is necessary
-> > for the DT bindings to describe which VIN device is connected to which
-> > CSI-2 device. This is why port 1 needs to to assign reg numbers for each
-> > VIN device that be connected to it. To setup and to know which links are
-> > valid for each SoC is the responsibility of the VIN driver since the
-> > register to configure it belongs to the VIN hardware.
-> >
-> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/media/rcar-csi2.txt        | 103 +++++++++++++++++++++
-> >  MAINTAINERS                                        |   1 +
-> >  2 files changed, 104 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/rcar-csi2.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/rcar-csi2.txt b/Documentation/devicetree/bindings/media/rcar-csi2.txt
-> > new file mode 100644
-> > index 0000000000000000..39d41d82b71b60eb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/rcar-csi2.txt
-> 
-> > +Example:
-> > +
-> > +       csi20: csi2@fea80000 {
-> > +               compatible = "renesas,r8a7796-csi2", "renesas,rcar-gen3-csi2";
-> > +               reg = <0 0xfea80000 0 0x10000>;
-> > +               interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
-> > +               clocks = <&cpg CPG_MOD 714>;
-> > +               power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> 
-> resets?
-> 
-> I know this is just an example, but your prototype patches to add the
-> csi nodes to r8a7795.dtsi also don't have reset properties.
+The DT binding were discussed some time ago for the patch series I sent, though
+there isn't a final ack from DT maintainer.
 
-Thanks for catching this, I had updated the DT series but forgot the 
-example.
+Lothar, the series I sent have been reviewed and acked, can you test if the
+series fixes the problem for you too?
+
+Thanks,
+ Enric
 
 > 
-> Gr{oetje,eeting}s,
 > 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
--- 
-Regards,
-Niklas Söderlund
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Daniel.
