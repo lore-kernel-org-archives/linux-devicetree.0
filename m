@@ -1,31 +1,77 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: iio: adc: update the doc for SAR ADC
-Date: Fri, 10 Nov 2017 15:21:39 -0600
-Message-ID: <20171110212139.ssh5kts3xo35hqeu@rob-hp-laptop>
-References: <20171107141020.30419-1-yixun.lan@amlogic.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: codecs: Add initial PCM1862/63/64/65 universal
+ ADC driver
+Date: Fri, 10 Nov 2017 21:21:50 +0000
+Message-ID: <20171110212150.fyxqtoh5nusirslp@sirena.co.uk>
+References: <20171110195711.24210-1-afd@ti.com>
+ <20171110195711.24210-2-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="k3w4ke7dyh63td57"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171107141020.30419-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20171110195711.24210-2-afd-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 07, 2017 at 10:10:20PM +0800, Yixun Lan wrote:
-> From: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-> 
-> Update the doc as the SAR ADC modules doesn't require "sana" clock.
-> 
-> Singed-off-by: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt | 1 -
->  1 file changed, 1 deletion(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--k3w4ke7dyh63td57
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Fri, Nov 10, 2017 at 01:57:11PM -0600, Andrew F. Davis wrote:
+
+This looks mostly good, a few small issues though:
+
+> +	dev_info(&i2c->dev, "%s() i2c->addr=%d\n", __func__, i2c->addr);
+
+No need for this as standard, we already have I2C level logging
+facilities if they're really needed.  It's OK to do things like log chip
+revisions read back from hardware but this is pure software.
+
+> +static const struct snd_kcontrol_new pcm1863_snd_controls[] = {
+> +	SOC_DOUBLE_R_S_TLV("Analog Gain", PCM186X_PGA_VAL_CH1_L,
+
+Volume controls should end in Volume to tell userspace how to handle
+them, see ControlNames.txt.
+
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(priv->supplies),
+> +				      priv->supplies);
+> +	if (ret != 0) {
+> +		dev_err(dev, "failed to request supplies: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Reset device registers for a consistent power-on like state */
+> +	ret = regmap_write(regmap, PCM186X_PAGE, PCM186X_RESET);
+> +	if (ret != 0) {
+> +		dev_err(dev, "failed to write device: %d\n", ret);
+> +		return ret;
+> +	}
+
+We didn't enable the supplies for the device before we reset it, if the
+device was powered off then the write will hopefully not work and we'll
+get a spurious error here.  The driver should bounce the supplies on at
+least long enough to do the reset, it's not ideal but it's robust.
+
+--k3w4ke7dyh63td57
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloGGG0ACgkQJNaLcl1U
+h9DVJgf+IoG8uVUySa7bC03HnYfu2JE0hSsoGo+TOR+oZfrOHEaAioeTJcxwSR60
+5r9FErPeMCjGTdvjXjQ4yt87Bre9wAYkgCyyuq+ZfLlxH4FCgj1dMuOeQRTj0uaX
+4RqSRk6vA69/+JNJV4NOHV0PhEFMi3ioYFOXFUIUB/eiXfu73NwY+WA5DzsP7rRy
+WOM3FjT1ZGwLy1Mc5ptkUbKiW+W0Ow99RZ4wGgcejY1McS54Yid2gsdFOmqYWnuh
+BpZQC73uMuTEv3MgxnbHkuNerqVLpkkiVxLdQZO2U4w0N4NVRpiL8YTwld+8Ozm5
+xobFX1fGg/PxC1lCQBGZ9EwTvjj3/Q==
+=5oWf
+-----END PGP SIGNATURE-----
+
+--k3w4ke7dyh63td57--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
