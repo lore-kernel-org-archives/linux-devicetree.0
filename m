@@ -1,57 +1,31 @@
-From: Lei YU <mine260309@gmail.com>
-Subject: Re: [PATCH v2 2/3] drivers: hwmon: Add W83773G driver
-Date: Fri, 10 Nov 2017 11:05:39 +0800
-Message-ID: <CAARXrt=uY=gnmuq4AyXa458L1Pw3YOaMwGL=TYwwtThVVH4=Kw@mail.gmail.com>
-References: <1510043274-4778-1-git-send-email-mine260309@gmail.com>
- <1510043274-4778-3-git-send-email-mine260309@gmail.com> <f02b61f8-ebda-6bfd-ec4e-d64b3bd488b4@roeck-us.net>
- <CAARXrt=zi4DpGVpH5Cjsr8+m20LdG7JXf7jRqzfzcSJ4isa97g@mail.gmail.com> <20171108175906.GA18718@roeck-us.net>
+From: Bao Xiaowei <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCHv3 0/3]  dts: Add the property of IB and OB
+Date: Fri, 10 Nov 2017 10:49:23 +0800
+Message-ID: <20171110024926.39700-1-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20171108175906.GA18718@roeck-us.net>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Kosina <trivial@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, madalin.bucur-3arQi8VN3Tc@public.gmane.org, sumit.garg-3arQi8VN3Tc@public.gmane.org, yangbo.lu-3arQi8VN3Tc@public.gmane.org, hongtao.jia-3arQi8VN3Tc@public.gmane.org, Yuantian.Tang-3arQi8VN3Tc@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org, mingkai.hu-3arQi8VN3Tc@public.gmane.org, Minghuan.Lian-3arQi8VN3Tc@public.gmane.org
+Cc: Bao Xiaowei <xiaowei.bao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 9, 2017 at 1:59 AM, Guenter Roeck <linux@roeck-us.net> wrote:
-> On Wed, Nov 08, 2017 at 02:03:34PM +0800, Lei YU wrote:
->> On Tue, Nov 7, 2017 at 10:33 PM, Guenter Roeck <linux@roeck-us.net> wrote:
->> > On 11/07/2017 12:27 AM, Lei YU wrote:
->> >>
->> >> Nuvoton W83773G is a hardware monitor IC providing one local
->> >> temperature and two remote temperature sensors.
->> >>
->> >> Signed-off-by: Lei YU <mine260309@gmail.com>
->> >> ---
->> >> v2:
->> >>   - Rewrite the driver using regmap
->> >>   - Add offset and update_interval
-> [ ... ]
->
->> >> +       hwmon_dev = devm_hwmon_device_register_with_groups(dev,
->> >> client->name,
->> >> +                                                     regmap,
->> >> w83773g_groups);
->> >
->> >
->> > You lost me here. Why did you stop using the new API ?
->>
->> I was referencing some other hwmon driver (e.g. tmp401.c) and find out
->> the usage of SENSOR_DEVICE_ATTR, which I feel more clear and straightforward.
->>
->
-> The new API is supposed to replace the old API to make it independent from
-> sysfs and to simplify the actual driver code. On a driver like this, using
-> the new API should reduce code and data size by 30% or more.
->
-> If you find the new API to be less clear and less straigtforward to use than
-> the old API, we need to improve it. Do you have any suggestions ?
->
+Depend on http://patchwork.ozlabs.org/patch/815382/
 
-Thanks for the explanation.
-I have sent the v3 patch using the new API.
-And I do compare the binary size and it is smaller with the new API, great!
+Bao Xiaowei (3):
+  ARMv8: dts: ls1046a: add the property of IB and OB
+  ARMv8: layerscape: add the pcie ep function support
+  ARMv8: pcie: make the DWC EP driver support for layerscape
 
-> Thanks,
-> Guenter
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |   6 ++
+ drivers/pci/dwc/Kconfig                        |   1 +
+ drivers/pci/dwc/pci-layerscape.c               | 124 +++++++++++++++++++++++--
+ 3 files changed, 125 insertions(+), 6 deletions(-)
+
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
