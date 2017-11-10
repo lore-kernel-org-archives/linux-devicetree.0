@@ -1,35 +1,41 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] remoteproc: qcom: Add support for q6v5-wcss pil
-Date: Fri, 10 Nov 2017 15:08:08 -0600
-Message-ID: <20171110210808.6sms52m4rrgqnf2r@rob-hp-laptop>
-References: <1510238775-14883-1-git-send-email-sricharan@codeaurora.org>
- <1510238775-14883-6-git-send-email-sricharan@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 09/11] clk: sprd: add clocks support for SC9860
+Date: Fri, 10 Nov 2017 15:10:24 -0600
+Message-ID: <CAL_Jsq+3wuzCPh1Pkbq79t9zkef-Gvg9AW4pgrKvwOuRJJyn1Q@mail.gmail.com>
+References: <20171102065626.21835-1-chunyan.zhang@spreadtrum.com>
+ <20171102065626.21835-10-chunyan.zhang@spreadtrum.com> <20171106214335.qvuvcwahemnpwftt@rob-hp-laptop>
+ <CAAfSe-tadvpgJ0OC00Ccc+y+84t90dArfAu9ASOG77Hnw9Z=RA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1510238775-14883-6-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAAfSe-tadvpgJ0OC00Ccc+y+84t90dArfAu9ASOG77Hnw9Z=RA@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Orson Zhai <orson.zhai@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 09, 2017 at 08:16:14PM +0530, Sricharan R wrote:
-> IPQ8074 has an integrated Hexagon dsp core q6v5 and a wireless lan
-> (Lithium) IP. An mdt type single image format is used for the
-> firmware. So the mdt_load function can be directly used to load
-> the firmware. Also add the relevant resets required for this core.
-> 
-> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |  7 ++-
+On Thu, Nov 9, 2017 at 2:18 AM, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> Hi Rob and Stephen,
+>
+> On 7 November 2017 at 05:43, Rob Herring <robh@kernel.org> wrote:
+>> On Thu, Nov 02, 2017 at 02:56:24PM +0800, Chunyan Zhang wrote:
+>>> This patch added the list of clocks for Spreadtrum's SC9860 SoC,
+>>> together with clock initialization code.
+>>>
+>>> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+>>> ---
+>>>  drivers/clk/sprd/Kconfig                    |   10 +
+>>>  drivers/clk/sprd/Makefile                   |    3 +
+>>>  drivers/clk/sprd/sc9860-clk.c               | 1987 +++++++++++++++++++++++++++
+>>>  include/dt-bindings/clock/sprd,sc9860-clk.h |  408 ++++++
+>>
+>> This belongs in the binding doc patch.
+>
+> I noticed that this kind of files were submitted in driver patch
+> before when adding a new driver, how about I just put it into a single
+> patch in the next version?
 
-Please add acks when posting new versions.
+It's been done all ways, but the correct way is as I told you. Binding
+doc and header in one, driver in another patch.
 
->  drivers/remoteproc/Kconfig                         |  1 +
->  drivers/remoteproc/qcom_q6v5_pil.c                 | 53 +++++++++++++++++++++-
->  3 files changed, 59 insertions(+), 2 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
