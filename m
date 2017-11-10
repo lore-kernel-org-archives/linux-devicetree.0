@@ -1,28 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] clk: qoriq: add more divider clocks support
-Date: Fri, 10 Nov 2017 15:45:35 -0600
-Message-ID: <20171110214535.r3rp4g4ypj5spmue@rob-hp-laptop>
-References: <20171108082615.46769-1-andy.tang@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] dt-bindings: serial: Add common rs485 binding for
+ RTS polarity
+Date: Fri, 10 Nov 2017 15:58:06 -0600
+Message-ID: <20171110215806.htd2mk245c3ehz7i@rob-hp-laptop>
+References: <cover.1510134353.git.lukas@wunner.de>
+ <60d6ef2cf6c599d2d8717250fe52a0ccb1272be8.1510134353.git.lukas@wunner.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171108082615.46769-1-andy.tang@nxp.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: andy.tang@nxp.com
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <60d6ef2cf6c599d2d8717250fe52a0ccb1272be8.1510134353.git.lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Uwe Kleine-Koenig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Jackson <mpfj-2FZW7xY0fHgqdlJmJB21zg@public.gmane.org>, Michal Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 08, 2017 at 04:26:15PM +0800, andy.tang@nxp.com wrote:
-> From: Yuantian Tang <andy.tang@nxp.com>
+On Wed, Nov 08, 2017 at 11:32:34AM +0100, Lukas Wunner wrote:
+> rs485 allows for robust half-duplex serial communication.  It is often
+> implemented by attaching an rs485 transceiver to a UART.  The UART's
+> RTS line is wired to the transceiver's Transmit Enable pin and
+> determines whether the transceiver is sending or receiving.
 > 
-> More divider clocks are needed by IP. So enlarge the PLL divider
-> array to accommodate more divider clocks.
+> Examples for such transceivers are Maxim MAX13451E and TI SN65HVD1781A:
+> https://datasheets.maximintegrated.com/en/ds/MAX13450E-MAX13451E.pdf
+> http://www.ti.com/lit/ds/symlink/sn65hvd1781a-q1.pdf
 > 
-> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 1 +
->  drivers/clk/clk-qoriq.c                                 | 9 ++++++++-
->  2 files changed, 9 insertions(+), 1 deletion(-)
+> In the devicetree, the transceiver itself is not represented, only the
+> UART is.  A few rs485-specific dt-bindings already exist and these go
+> into the UART's device node.
 
-Acked-by: Rob Herring <robh@kernel.org>
+That often ends up being a mistake. We don't describe things, then add a 
+few properties and then finally realize we need a full representation. 
+Connectors are a good example.
+
+> This commit adds a binding to set the RTS polarity.  Most (if not all)
+> transceivers require the Transmit Enable pin be driven high for sending,
+> but in some cases boards may negate the pin and RTS must then be driven
+> low.  Consequently the polarity defaults to active high but can be
+> inverted with the newly added "rs485-rts-active-low" binding.
+> 
+> Document this binding in rs485.txt and in the two drivers fsl-imx-uart
+> and fsl-lpuart that are about to be amended with support for it.
+> 
+> Curiously, the omap_serial driver defaults to active low and already
+> supports an "rs485-rts-active-high" binding to invert the polarity.
+> This is left unchanged to retain compatibility, but the binding is
+> herewith documented.
+> 
+> Cc: Mark Jackson <mpfj-2FZW7xY0fHgqdlJmJB21zg@public.gmane.org>
+> Cc: Michał Oleszczyk <oleszczyk.m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Lukas Wunner <lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 3 ++-
+>  Documentation/devicetree/bindings/serial/fsl-lpuart.txt   | 3 ++-
+>  Documentation/devicetree/bindings/serial/omap_serial.txt  | 1 +
+>  Documentation/devicetree/bindings/serial/rs485.txt        | 1 +
+>  4 files changed, 6 insertions(+), 2 deletions(-)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
