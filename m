@@ -1,69 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: iio: add Intersil isl76683 light sensor
- bindings
-Date: Fri, 10 Nov 2017 15:26:04 -0600
-Message-ID: <20171110212604.bpbsgtw7zbk5qp2d@rob-hp-laptop>
-References: <1510068983-25769-1-git-send-email-chf.fritz@googlemail.com>
- <1510068983-25769-3-git-send-email-chf.fritz@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1510068983-25769-3-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: add mclk-fs to audio graph card binding" to the asoc tree
+Date: Fri, 10 Nov 2017 21:29:28 +0000
+Message-ID: <E1eDGrg-0004Th-UR@debutante>
+References: <1510236478-2351-2-git-send-email-olivier.moysan@st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1510236478-2351-2-git-send-email-olivier.moysan@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, lgirdwood@gmail.combroonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.comalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 07, 2017 at 04:36:22PM +0100, Christoph Fritz wrote:
-> This patch adds documentation of device tree bindings for Intersil
-> isl76683 light sensor.
-> 
-> Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/light/isl76683.txt     | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/isl76683.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/isl76683.txt b/Documentation/devicetree/bindings/iio/light/isl76683.txt
-> new file mode 100644
-> index 0000000..657f17d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/isl76683.txt
-> @@ -0,0 +1,26 @@
-> +* ISL76683 ambient light sensor
-> +
-> +http://www.intersil.com/content/dam/Intersil/documents/isl7/isl76683.pdf
-> +
-> +Required properties:
-> +
-> +  - compatible: must be "isil,isl76683"
-> +  - reg: the I2C address of the sensor
-> +  - interrupt-parent: should be the phandle for the interrupt controller
-> +  - interrupts: interrupt mapping for GPIO IRQ
-> +
-> +Optional properties:
-> +
-> +  - isil,external-resistor: integer in kOhm of external resistor R_ext.
-> +                            Valid values are from 1 to 1000.
-> +                            If not supplied, 100 kOhm will be assumed.
+The patch
 
-Add an unit suffix as defined in property-units.txt.
+   ASoC: add mclk-fs to audio graph card binding
 
-> +
-> +Example:
-> +
-> +isl76683@44 {
-> +	compatible = "isil,isl76683";
-> +	reg = <0x44>;
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-> +	isil,external-resistor = <50>;
-> +};
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From b8b0d10c3a9b6ee94d56d0c3b162d05c177fb101 Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Thu, 9 Nov 2017 15:07:57 +0100
+Subject: [PATCH] ASoC: add mclk-fs to audio graph card binding
+
+Add mclk-fs support to audio graph card
+as initially supported in simple card.
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/audio-graph-card.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/audio-graph-card.txt b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
+index 6e6720aa33f1..d04ea3b1a1dd 100644
+--- a/Documentation/devicetree/bindings/sound/audio-graph-card.txt
++++ b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
+@@ -17,6 +17,7 @@ Below are same as Simple-Card.
+ - bitclock-master
+ - bitclock-inversion
+ - frame-inversion
++- mclk-fs
+ - dai-tdm-slot-num
+ - dai-tdm-slot-width
+ - clocks / system-clock-frequency
+-- 
+2.15.0
