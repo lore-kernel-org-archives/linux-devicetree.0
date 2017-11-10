@@ -1,65 +1,67 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 30/31] dt-bindings: nds32 CPU Bindings
-Date: Fri, 10 Nov 2017 09:25:19 +0100
-Message-ID: <CAK8P3a1k_zNN6FTRNm5kfun8Nb+3ZLtmCLjHOVZUFB10TqQBFQ@mail.gmail.com>
-References: <cover.1510118606.git.green.hu@gmail.com> <1a8efba0727437d510d10755f3fcea806833651d.1510118606.git.green.hu@gmail.com>
- <CAL_JsqJAtTSGg=yGvANGdTCWa4tDAicvOvWYr4pK5M1rjPFtfg@mail.gmail.com>
- <CAEbi=3e-hRbej7EZ68-J1YPNfdxu7O_BAZ1rvZvAhhYzAT09-g@mail.gmail.com>
- <CABGGisw5gi92aM0_tZ0htOzwZTFJpcSNZUJth5TzRXPxzssRxA@mail.gmail.com> <CAEbi=3eus0ZEyFaNbS_a8bDOfH3aK_FB2ckATm-ELzPZT0MJ_Q@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: r8a7745: Add DU support
+Date: Fri, 10 Nov 2017 09:32:49 +0100
+Message-ID: <20171110083248.3lurepyfmrvxejaa@verge.net.au>
+References: <1509992814-4543-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <9872942.on8edmfvcY@avalon>
+ <20171108044822.ktnzzowzprqtdnsm@verge.net.au>
+ <12916864.hfKIdpMrll@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAEbi=3eus0ZEyFaNbS_a8bDOfH3aK_FB2ckATm-ELzPZT0MJ_Q@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Greentime <greentime@andestech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, netdev <netdev@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>, Rick Chen <rick@andestech.com>, Zong Li <zong@andestech.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <12916864.hfKIdpMrll@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 10, 2017 at 7:22 AM, Greentime Hu <green.hu@gmail.com> wrote:
-> 2017-11-09 21:57 GMT+08:00 Rob Herring <robh@kernel.org>:
->> On Thu, Nov 9, 2017 at 3:39 AM, Greentime Hu <green.hu@gmail.com> wrote:
->>> 2017-11-08 21:18 GMT+08:00 Rob Herring <robh+dt@kernel.org>:
->>>> Please Cc the DT list on bindings.
->>>
->>> Sorry. I am not sure what you mean.
->>> Do you mean add devicetree@vger.kernel.org to cc list?
->>
->> Yes. Use get_maintainers.pl as a guide.
->
-> Roger that! Thanks!
->
->>>> On Tue, Nov 7, 2017 at 11:55 PM, Greentime Hu <green.hu@gmail.com> wrote:
->>>>> From: Greentime Hu <greentime@andestech.com>
->>>>
->>
->>>>> +                       device_type = "cpu";
->>>>> +                       compatible = "andestech,n13", "andestech,n15";
->>>>
->>>> n13 is a superset of n15?
->>>
->>> No, they are independent ones.
->>
->> Then having both is not valid. The strings should be in order of best
->> match to worst match where worst match is typically either older
->> implementations of IP blocks or generic'ish strings such as "ns16550"
->> for a UART.
->
-> Thanks.
-> I would like to explain it more clearly.
-> They are independent ones in implementations.
-> They are implemented based on the same nds32 ISA and architecture spec
-> with different configurations
-> like cache size, page size, cache type(VIPT/PIPT), pipeline stages...
-> Most of them are compatible.
-> They use the same toolchain to build vmlinux which can run on
-> different nds32 cores.
+On Thu, Nov 09, 2017 at 11:31:25AM +0200, Laurent Pinchart wrote:
+> Hi Simon,
+> 
+> On Wednesday, 8 November 2017 06:48:23 EET Simon Horman wrote:
+> > On Tue, Nov 07, 2017 at 06:05:37AM +0200, Laurent Pinchart wrote:
+> > > Hi Fabrizio,
+> > > 
+> > > Thank you for the patch.
+> > > 
+> > > On Monday, 6 November 2017 20:26:53 EET Fabrizio Castro wrote:
+> > > > Add du node to r8a7745 SoC DT. Boards that want to enable the DU
+> > > > need to specify the output topology.
+> > > > 
+> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> > > > Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> > > 
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> > > 
+> > > > ---
+> > > > 
+> > > >  arch/arm/boot/dts/r8a7745.dtsi | 27 +++++++++++++++++++++++++++
+> > > >  1 file changed, 27 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm/boot/dts/r8a7745.dtsi
+> > > > b/arch/arm/boot/dts/r8a7745.dtsi index 846c27a..53eb1ce4 100644
+> > > > --- a/arch/arm/boot/dts/r8a7745.dtsi
+> > > > +++ b/arch/arm/boot/dts/r8a7745.dtsi
+> > > > @@ -821,6 +821,33 @@
+> > > > 
+> > > >  			status = "disabled";
+> > > >  		
+> > > >  		};
+> > > > 
+> > > > +		du: display@feb00000 {
+> > > > +			compatible = "renesas,du-r8a7745";
+> > 
+> > Hi,
+> > 
+> > could you provide some information on the status of upstreaming
+> > the binding used above?
+> 
+> I'll send a pull request for v4.16, it's too late for v4.15.
 
-Du you have a name for the ISA spec that distinguishes it from other nds32
-versions that are incompatible? If you do, this could be written like
-
-compatible = "andestech,n13", "andestech,nds32v3.0";
-
-to signify that a an 'n13' core implements the 'v3.0' ISA (will it
-whatever you call the ISA in reality).
-
-       Arnd
+Thanks, I'm happy with patches in that stage of being upstreamed
+as the basis for accepting these patches. I'll see about doing so.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
