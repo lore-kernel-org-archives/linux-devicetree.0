@@ -1,68 +1,65 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v5 2/2] memory: ti-emif-sram: introduce relocatable
- suspend/resume handlers
-Date: Fri, 10 Nov 2017 16:39:22 +0000
-Message-ID: <20171110163922.GK28231@n2100.armlinux.org.uk>
-References: <20171013205915.9652-1-d-gerlach@ti.com>
- <20171013205915.9652-3-d-gerlach@ti.com>
- <19256977-40e1-a972-4de8-838a8da863cc@oracle.com>
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: Re: [PATCH RESEND 1/4] crypto: caam: add caam-dma node to SEC4.0
+ device tree binding
+Date: Fri, 10 Nov 2017 10:44:30 -0600
+Message-ID: <20171110104430.28b2f56f910b7514d778c4b2@arm.com>
+References: <20171030134654.13729-1-horia.geanta@nxp.com>
+        <20171030134654.13729-2-horia.geanta@nxp.com>
+        <20171030092424.1279add003c96ced4233bd2d@arm.com>
+        <VI1PR04MB1325BAD68A7CC8C7A302D9A48A570@VI1PR04MB1325.eurprd04.prod.outlook.com>
+        <20171109103437.834f8ddb5c62e5253002b2d0@arm.com>
+        <VI1PR04MB13253DB5164A151D8E4AB8308A540@VI1PR04MB1325.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <19256977-40e1-a972-4de8-838a8da863cc@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Cc: Dave Gerlach <d-gerlach@ti.com>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Keerthy J <j-keerthy@ti.com>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <VI1PR04MB13253DB5164A151D8E4AB8308A540@VI1PR04MB1325.eurprd04.prod.outlook.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Radu Andrei Alexe <radu.alexe@nxp.com>
+Cc: Horia =?UTF-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>, Vinod Koul <vinod.koul@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dan Douglass <dan.douglass@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 16, 2017 at 08:31:59AM -0700, Santosh Shilimkar wrote:
-> Hi Russell,
+On Fri, 10 Nov 2017 08:02:01 +0000
+Radu Andrei Alexe <radu.alexe@nxp.com> wrote:
+
+> On 11/9/2017 6:34 PM, Kim Phillips wrote:
+> > On Thu, 9 Nov 2017 11:54:13 +0000
+> > Radu Andrei Alexe <radu.alexe@nxp.com> wrote:
+> >> The next patch version will create the platform device dynamically at
+> >> run time.
+> > 
+> > Why create a new device when that h/w already has one?
+> > 
+> > Why doesn't the existing crypto driver register dma capabilities with
+> > the dma driver subsystem?
+> >
+> I can think of two reasons:
 > 
-> On 10/13/2017 1:59 PM, Dave Gerlach wrote:
-> >Certain SoCs like Texas Instruments AM335x and AM437x require parts
-> >of the EMIF PM code to run late in the suspend sequence from SRAM,
-> >such as saving and restoring the EMIF context and placing the memory
-> >into self-refresh.
-> >
-> >One requirement for these SoCs to suspend and enter its lowest power
-> >mode, called DeepSleep0, is that the PER power domain must be shut off.
-> >Because the EMIF (DDR Controller) resides within this power domain, it
-> >will lose context during a suspend operation, so we must save it so we
-> >can restore once we resume. However, we cannot execute this code from
-> >external memory, as it is not available at this point, so the code must
-> >be executed late in the suspend path from SRAM.
-> >
-> >This patch introduces a ti-emif-sram driver that includes several
-> >functions written in ARM ASM that are relocatable so the PM SRAM
-> >code can use them. It also allocates a region of writable SRAM to
-> >be used by the code running in the executable region of SRAM to save
-> >and restore the EMIF context. It can export a table containing the
-> >absolute addresses of the available PM functions so that other SRAM
-> >code can branch to them. This code is required for suspend/resume on
-> >AM335x and AM437x to work.
-> >
-> >In addition to this, to be able to share data structures between C and
-> >the ti-emif-sram-pm assembly code, we can automatically generate all of
-> >the C struct member offsets and sizes as macros by processing
-> >emif-asm-offsets.c into assembly code and then extracting the relevant
-> >data as is done for the generated platform asm-offsets.h files.
-> >
-> >Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> >---
-> >v4->v5:
-> >* Simplify Makefile to generate include/generated/ti-emif-asm-offsets.h
-> >
-> If you are happy with this version from Dave, can I get your ack please?
-> I can add this to the driver-soc then.
+> 1. The code that this driver introduces has nothing to do with crypto 
+> and everything to do with dma.
 
-Does it need my ack anymore?  It doesn't touch anything in arch/arm.
-If you still want it, then... notwithstanding the loss of type checking
-that fncpy() gave and the new sram stuff messes up...
+I would think that at least a crypto "null" algorithm implementation
+would share code.
 
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Placing the code in the same directory as 
+> the caam subsystem would only create confusion for the reader of an 
+> already complex driver.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+this different directory argument seems to be identical to your 2 below:
+
+> 2. I wanted this driver to be tracked by the dma engine team. They have 
+> the right expertise to provide adequate feedback. If all the code was in 
+> the crypto directory they wouldn't know about this driver or any 
+> subsequent changes to it.
+
+dma subsystem bits could still be put in the dma area if deemed
+necessary but I don't think it is: I see
+drivers/crypto/ccp/ccp-dmaengine.c calls dma_async_device_register for
+example.
+
+I also don't see how that complicates things much further.
+
+What is the rationale for using the crypto h/w as a dma engine anyway?
+Are there supporting performance figures?
+
+Kim
