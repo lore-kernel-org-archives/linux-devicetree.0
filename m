@@ -1,139 +1,461 @@
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-        <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Subject: [PATCH v10 0/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2
-Date: Fri, 10 Nov 2017 14:31:35 +0100
-Message-ID: <20171110133137.9137-1-niklas.soderlund+renesas@ragnatech.se>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 2/3] drivers: hwmon: Add W83773G driver
+Date: Fri, 10 Nov 2017 06:49:23 -0800
+Message-ID: <2747fc2e-0120-cc14-991e-3f5baa4a0780@roeck-us.net>
+References: <1510211341-17415-1-git-send-email-mine260309@gmail.com>
+ <1510211341-17415-3-git-send-email-mine260309@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <1510211341-17415-3-git-send-email-mine260309@gmail.com>
+Content-Language: en-US
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Lei YU <mine260309@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Kosina <trivial@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 11/08/2017 11:09 PM, Lei YU wrote:
+> Nuvoton W83773G is a hardware monitor IC providing one local
+> temperature and two remote temperature sensors.
+> 
+> Signed-off-by: Lei YU <mine260309@gmail.com>
 
-This is the latest incarnation of R-Car MIPI CSI-2 receiver driver. It's
-based on top of the media-tree and are tested on Renesas Salvator-X
-together with the out-of-tree patches for rcar-vin to add support for
-Gen3 VIN. If anyone is interested to test video grabbing using these out
-of tree patches please see [1].
+Nicely done. Couple of nitpicks left.
 
-* Changes since v9
-- Add reset property to device tree example
-- Use BIT(x) instead of (1 << x)
-- Use u16 in struct phypll_hsfreqrange to pack struct better.
-- Use unsigned int type for loop variable in rcar_csi2_code_to_fmt
-- Move fields inside struct struct rcar_csi2_info and struct rcar_csi2 
-  to pack struct's tighter.
-- Use %u instead of %d when printing __u32.
-- Don't check return of platform_get_resource(), let 
-  devm_ioremap_resource() handle it.
-- Store quirk workaround for r8a7795 ES1.0 in the data field of struct 
-  soc_device_attribute.
+Thanks!
+Guenter
 
-Changes since v8:
-- Updated bindings documentation, thanks Rob!
-- Make use of the now in media-tree sub-notifier V4L2 API
-- Add delay when resetting the IP to allow for a proper reset
-- Fix bug in s_stream error path where the usage count was off if an
-  error was hit.
-- Add support for H3 ES2.0
+> ---
+> v2:
+>   - Rewrite the driver using regmap
+>   - Add offset and update_interval
+> v3:
+>   - Use devm_hwmon_device_register_with_info() with is_visible/read/write
+>     functions.
+> ---
+>   drivers/hwmon/Kconfig   |  10 ++
+>   drivers/hwmon/Makefile  |   1 +
+>   drivers/hwmon/w83773g.c | 348 ++++++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 359 insertions(+)
+>   create mode 100644 drivers/hwmon/w83773g.c
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index d654314..11c6248 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1710,6 +1710,16 @@ config SENSORS_VT8231
+>   	  This driver can also be built as a module.  If so, the module
+>   	  will be called vt8231.
+>   
+> +config SENSORS_W83773G
+> +	tristate "Nuvoton W83773G"
+> +	depends on I2C
+> +	help
+> +	  If you say yes here you get support for the Nuvoton W83773G hardware
+> +	  monitoring chip.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called w83773g.
+> +
+>   config SENSORS_W83781D
+>   	tristate "Winbond W83781D, W83782D, W83783S, Asus AS99127F"
+>   	depends on I2C
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index c84d978..0649ad8 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_SENSORS_ATK0110)	+= asus_atk0110.o
+>   # asb100, then w83781d go first, as they can override other drivers' addresses.
+>   obj-$(CONFIG_SENSORS_ASB100)	+= asb100.o
+>   obj-$(CONFIG_SENSORS_W83627HF)	+= w83627hf.o
+> +obj-$(CONFIG_SENSORS_W83773G)	+= w83773g.o
+>   obj-$(CONFIG_SENSORS_W83792D)	+= w83792d.o
+>   obj-$(CONFIG_SENSORS_W83793)	+= w83793.o
+>   obj-$(CONFIG_SENSORS_W83795)	+= w83795.o
+> diff --git a/drivers/hwmon/w83773g.c b/drivers/hwmon/w83773g.c
+> new file mode 100644
+> index 0000000..58ac45b
+> --- /dev/null
+> +++ b/drivers/hwmon/w83773g.c
+> @@ -0,0 +1,348 @@
+> +/*
+> + * Copyright (C) 2017 IBM Corp.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * Driver for the Nuvoton W83773G SMBus temperature sensor IC.
+> + * Supported models: W83773G
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/i2c.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/err.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +
+> +/* Addresses to scan */
+> +static const unsigned short normal_i2c[] = { 0x4c, 0x4d, I2C_CLIENT_END };
+> +
+> +/* W83773 has 3 channels */
+> +#define W83773_CHANNELS				3
+> +
+> +/* The W83773 registers */
+> +#define W83773_CONVERSION_RATE_REG_READ		0x04
+> +#define W83773_CONVERSION_RATE_REG_WRITE	0x0A
+> +#define W83773_MANUFACTURER_ID_REG		0xFE
+> +#define W83773_LOCAL_TEMP			0x00
+> +
+> +static const u8 W83773_STATUS[2] = { 0x02, 0x17 };
+> +
+> +static const u8 W83773_TEMP_LSB[2] = { 0x10, 0x25 };
+> +static const u8 W83773_TEMP_MSB[2] = { 0x01, 0x24 };
+> +
+> +static const u8 W83773_OFFSET_LSB[2] = { 0x12, 0x16 };
+> +static const u8 W83773_OFFSET_MSB[2] = { 0x11, 0x15 };
+> +
+> +/* this is the number of sensors in the device */
+> +static const struct i2c_device_id w83773_id[] = {
+> +	{ "w83773g" },
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(i2c, w83773_id);
+> +
+> +static const struct of_device_id w83773_of_match[] = {
+> +	{
+> +		.compatible = "nuvoton,w83773g"
+> +	},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, w83773_of_match);
+> +
+> +static inline long temp_of_local(s8 reg)
+> +{
+> +	return reg * 1000;
+> +}
+> +
+> +static inline long temp_of_remote(s8 hb, u8 lb)
+> +{
+> +	return (hb << 3 | lb >> 5) * 125;
+> +}
+> +
+> +static int get_local_temp(struct regmap *regmap, long *val)
+> +{
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = regmap_read(regmap, W83773_LOCAL_TEMP, &regval);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = temp_of_local(regval);
+> +	return 0;
+> +}
+> +
+> +static int get_remote_temp(struct regmap *regmap, int index, long *val)
+> +{
+> +	unsigned int regval_high;
+> +	unsigned int regval_low;
+> +	int ret;
+> +
+> +	ret = regmap_read(regmap, W83773_TEMP_MSB[index], &regval_high);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = regmap_read(regmap, W83773_TEMP_LSB[index], &regval_low);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = temp_of_remote(regval_high, regval_low);
+> +	return 0;
+> +}
+> +
+> +static int get_fault(struct regmap *regmap, int index, long *val)
+> +{
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = regmap_read(regmap, W83773_STATUS[index], &regval);
+> +
+Drop the empty line please.
 
-Changes since v7:
-- Rebase on top of the latest incremental async patches.
-- Fix comments on DT documentation.
-- Use v4l2_ctrl_g_ctrl_int64() instead of v4l2_g_ext_ctrls().
-- Handle try formats in .set_fmt() and .get_fmt().
-- Don't call v4l2_device_register_subdev_nodes() as this is not needed
-  with the complete() callbacks synchronized.
-- Fix line over 80 chars.
-- Fix varies spelling mistakes.
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = (u8)regval & 0x04 >> 2;
+> +	return 0;
+> +}
+> +
+> +static int get_offset(struct regmap *regmap, int index, long *val)
+> +{
+> +	unsigned int regval_high;
+> +	unsigned int regval_low;
+> +	int ret;
+> +
+> +	ret = regmap_read(regmap, W83773_OFFSET_MSB[index], &regval_high);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = regmap_read(regmap, W83773_OFFSET_LSB[index], &regval_low);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = temp_of_remote(regval_high, regval_low);
+> +	return 0;
+> +}
+> +
+> +static int set_offset(struct regmap *regmap, int index, long val)
+> +{
+> +	int ret;
+> +	u8 high_byte;
+> +	u8 low_byte;
+> +
+> +	val = clamp_val(val, -127825, 127825);
+> +	/* offset value equals to (high_byte << 3 | low_byte >> 5) * 125 */
+> +	val /= 125;
+> +	high_byte = val >> 3;
+> +	low_byte = (val & 0x07) << 5;
+> +
+> +	ret = regmap_write(regmap, W83773_OFFSET_MSB[index], high_byte);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = regmap_write(regmap, W83773_OFFSET_LSB[index], low_byte);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
 
-Changes since v6:
-- Rebased on top of Sakaris fwnode patches.
-- Changed of RCAR_CSI2_PAD_MAX to NR_OF_RCAR_CSI2_PAD.
-- Remove assumption about unknown media bus type, thanks Sakari for
-  pointing this out.
-- Created table for supported format information instead of scattering
-  this information around the driver, thanks Sakari!
-- Small newline fixes and reduce some indentation levels.
+For the second call,
 
-Changes since v5:
-- Make use of the incremental async subnotifer and helper to map DT
-  endpoint to media pad number. This moves functionality which
-  previously in the Gen3 patches for R-Car VIN driver to this R-Car
-  CSI-2 driver. This is done in preparation to support the ADV7482
-  driver in development by Kieran which will register more then one
-  subdevice and the CSI-2 driver needs to cope wit this. Further more it
-  prepares the driver for another use-case where more then one subdevice
-  is present upstream for the CSI-2.
-- Small cleanups.
-- Add explicit include for linux/io.h, thanks Kieran.
+	return regmap_write(regmap, W83773_OFFSET_LSB[index], low_byte);
 
-Changes since v4:
-- Match SoC part numbers and drop trailing space in documentation,
-  thanks Geert for pointing this out.
-- Clarify that the driver is a CSI-2 receiver by supervised
-  s/interface/receiver/, thanks Laurent.
-- Add entries in Kconfig and Makefile alphabetically instead of append.
-- Rename struct rcar_csi2 member swap to lane_swap.
-- Remove macros to wrap calls to dev_{dbg,info,warn,err}.
-- Add wrappers for ioread32 and iowrite32.
-- Remove unused interrupt handler, but keep checking in probe that there
-  are a interrupt define in DT.
-- Rework how to wait for LP-11 state, thanks Laurent for the great idea!
-- Remove unneeded delay in rcar_csi2_reset()
-- Remove check for duplicated lane id:s from DT parsing. Broken out to a
-  separate patch adding this check directly to v4l2_of_parse_endpoint().
-- Fixed rcar_csi2_start() to ask it's source subdevice for information
-  about pixel rate and frame format. With this change having
-  {set,get}_fmt operations became redundant, it was only used for
-  figuring out this out so dropped them.
-- Tabulated frequency settings map.
-- Dropped V4L2_SUBDEV_FL_HAS_DEVNODE it should never have been set.
-- Switched from MEDIA_ENT_F_ATV_DECODER to
-  MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER as entity function. I can't
-  find a more suitable function, and what the hardware do is to fetch
-  video from an external chip and passes it on to a another SoC internal
-  IP it's sort of a formatter.
-- Break out DT documentation and code in two patches.
+> +}
+> +
+> +static int get_update_interval(struct regmap *regmap, long *val)
+> +{
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret = regmap_read(regmap, W83773_CONVERSION_RATE_REG_READ, &regval);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	*val = 16000 >> regval;
+> +	return 0;
+> +}
+> +
+> +static int set_update_interval(struct regmap *regmap, long val)
+> +{
+> +	int ret;
+> +	int rate;
+> +
+> +	if (val <= 0)
+> +		return -EINVAL;
+> +
+Not really needed since you are clamping below. For consistency I would suggest
+to drop it (otherwise 0 returns -EINVAL, 1 translates to 62).
 
-Changes since v3:
-- Update DT binding documentation with input from Geert Uytterhoeven,
-  thanks!
+> +	/*
+> +	 * For valid rates, interval can be calculated as
+> +	 *	interval = (1 << (8 - rate)) * 62.5;
+> +	 * Rounded rate is therefore
+> +	 *	rate = 8 - __fls(interval * 8 / (62.5 * 7));
+> +	 * Use clamp_val() to avoid overflows, and to ensure valid input
+> +	 * for __fls.
+> +	 */
+> +	val = clamp_val(val, 62, 16000) * 10;
+> +	rate = 8 - __fls((val * 8 / (625 * 7)));
+> +	ret = regmap_write(regmap, W83773_CONVERSION_RATE_REG_WRITE, rate);
+> +	if (ret < 0)
+> +		return ret;
+> +	return 0;
 
-Changes since v2:
-- Added media control pads as this is needed by the new rcar-vin driver.
-- Update DT bindings after review comments and to add r8a7796 support.
-- Add get_fmt handler.
-- Fix media bus format error s/YUYV8/UYVY8/
+just
+	return regmap_write(regmap, W83773_CONVERSION_RATE_REG_WRITE, rate);
 
-Changes since v1:
-- Drop dependency on a pad aware s_stream operation.
-- Use the DT bindings format "renesas,<soctype>-<device>", thanks Geert
-  for pointing this out.
+> +}
+> +
+> +static int w83773_read(struct device *dev, enum hwmon_sensor_types type,
+> +		       u32 attr, int channel, long *val)
+> +{
+> +	struct regmap *regmap = dev_get_drvdata(dev);
+> +
+> +	if (type == hwmon_chip) {
+> +		if (attr == hwmon_chip_update_interval)
+> +			return get_update_interval(regmap, val);
+> +		else
 
-1. http://elinux.org/R-Car/Tests:rcar-vin
+else not needed after return
 
-Niklas Söderlund (2):
-  media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver documentation
-  media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver
+> +			return -EOPNOTSUPP;
+> +	}
+> +
+> +	switch (attr) {
+> +	case hwmon_temp_input:
+> +		if (channel == 0)
+> +			return get_local_temp(regmap, val);
+> +		else
 
- .../devicetree/bindings/media/rcar-csi2.txt        | 104 +++
- MAINTAINERS                                        |   1 +
- drivers/media/platform/rcar-vin/Kconfig            |  12 +
- drivers/media/platform/rcar-vin/Makefile           |   1 +
- drivers/media/platform/rcar-vin/rcar-csi2.c        | 934 +++++++++++++++++++++
- 5 files changed, 1052 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/rcar-csi2.txt
- create mode 100644 drivers/media/platform/rcar-vin/rcar-csi2.c
+else not needed after return
 
--- 
-2.15.0
+> +			return get_remote_temp(regmap, channel - 1, val);
+> +	case hwmon_temp_fault:
+> +		return get_fault(regmap, channel - 1, val);
+> +	case hwmon_temp_offset:
+> +		return get_offset(regmap, channel - 1, val);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static int w83773_write(struct device *dev, enum hwmon_sensor_types type,
+> +			u32 attr, int channel, long val)
+> +{
+> +	struct regmap *regmap = dev_get_drvdata(dev);
+> +
+> +	if (type == hwmon_chip && attr == hwmon_chip_update_interval)
+> +		return set_update_interval(regmap, val);
+> +
+> +	if (type == hwmon_temp && attr == hwmon_temp_offset)
+> +		return set_offset(regmap, channel - 1, val);
+> +
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static umode_t w83773_is_visible(const void *data, enum hwmon_sensor_types type,
+> +				 u32 attr, int channel)
+> +{
+> +	switch (type) {
+> +	case hwmon_chip:
+> +		switch (attr) {
+> +		case hwmon_chip_update_interval:
+> +			return 0644;
+> +		}
+> +		break;
+> +	case hwmon_temp:
+> +		switch (attr) {
+> +		case hwmon_temp_input:
+> +			return 0444;
+> +		case hwmon_temp_fault:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The above case statements can be combined.
+
+> +			return 0444;
+> +		case hwmon_temp_offset:
+> +			return 0644;
+
+Wonder if static analyzers complain here and above because
+of the missing default: case. Any idea ?
+
+> +		}
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static const u32 w83773_chip_config[] = {
+> +	HWMON_C_REGISTER_TZ | HWMON_C_UPDATE_INTERVAL,
+> +	0
+> +};
+> +
+> +static const struct hwmon_channel_info w83773_chip = {
+> +	.type = hwmon_chip,
+> +	.config = w83773_chip_config,
+> +};
+> +
+> +static const u32 w83773_temp_config[] = {
+> +	HWMON_T_INPUT,
+> +	HWMON_T_INPUT | HWMON_T_FAULT | HWMON_T_OFFSET,
+> +	HWMON_T_INPUT | HWMON_T_FAULT | HWMON_T_OFFSET,
+> +	0
+> +};
+> +
+> +static const struct hwmon_channel_info w83773_temp = {
+> +	.type = hwmon_temp,
+> +	.config = w83773_temp_config,
+> +};
+> +
+> +static const struct hwmon_channel_info *w83773_info[] = {
+> +	&w83773_chip,
+> +	&w83773_temp,
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops w83773_ops = {
+> +	.is_visible = w83773_is_visible,
+> +	.read = w83773_read,
+> +	.write = w83773_write,
+> +};
+> +
+> +static const struct hwmon_chip_info w83773_chip_info = {
+> +	.ops = &w83773_ops,
+> +	.info = w83773_info,
+> +};
+> +
+> +static const struct regmap_config w83773_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +};
+> +
+> +static int w83773_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct device *hwmon_dev;
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	regmap = devm_regmap_init_i2c(client, &w83773_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(dev, "failed to allocate register map\n");
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	/* Set the conversion rate to 2 Hz */
+> +	ret = regmap_write(regmap, W83773_CONVERSION_RATE_REG_WRITE, 0x05);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "error writing config rate register\n");
+> +		return ret;
+> +	}
+> +
+> +	i2c_set_clientdata(client, regmap);
+> +
+> +	hwmon_dev = devm_hwmon_device_register_with_info(dev,
+> +							 client->name,
+> +							 regmap,
+> +							 &w83773_chip_info,
+> +							 NULL);
+> +	return PTR_ERR_OR_ZERO(hwmon_dev);
+> +}
+> +
+> +static struct i2c_driver w83773_driver = {
+> +	.class = I2C_CLASS_HWMON,
+> +	.driver = {
+> +		.name	= "w83773g",
+> +		.of_match_table = of_match_ptr(w83773_of_match),
+> +	},
+> +	.probe = w83773_probe,
+> +	.id_table = w83773_id,
+> +	.address_list = normal_i2c,
+
+address_list is only used if there is a detect function, so you can drop it.
+
+> +};
+> +
+> +module_i2c_driver(w83773_driver);
+> +
+> +MODULE_AUTHOR("Lei YU <mine260309@gmail.com>");
+> +MODULE_DESCRIPTION("W83773G temperature sensor driver");
+> +MODULE_LICENSE("GPL");
+> 
+
