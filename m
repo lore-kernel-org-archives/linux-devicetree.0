@@ -1,55 +1,142 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH 1/1] add rgb888 pins to a20 to enable
- parallel rgb LCD
-Date: Fri, 10 Nov 2017 09:05:59 +0800
-Message-ID: <a57155315f2d5791b629e03240265e2e@aosc.io>
-References: <1510058999-6778-1-git-send-email-giulio.benetti@micronovasrl.com>
- <20171107130331.4wut5g6znzakkg4z@flea>
- <65694f1d-e1cb-08e0-0883-f0087f5e09f5@micronovasrl.com>
- <20171108105623.zzabmqd3a3sehg2k@flea.lan>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: Question about "unit address format error" of DTC
+Date: Fri, 10 Nov 2017 10:48:39 +0900
+Message-ID: <CAK7LNASRMBY1KjtzGxtXzkzDWgXmu3ZzfJu5kh1GRqP1WxQ6TQ@mail.gmail.com>
+References: <CAK7LNARujG8J_z62bc+PQOz34rf-Bo=+M54kvtokZxnktn2Y+A@mail.gmail.com>
+ <CAL_Jsq+eZkCQTEHLb62Le3e6eLxt=N7EWGk7dsPAfLF9-73soQ@mail.gmail.com>
+ <CAK7LNARoE6hhhH36ZugfqCNubUQzSLYGkMrx5TzTQe-gpu4CaQ@mail.gmail.com> <CAL_JsqKjF0um6UrsyBSKF5bY3rRscRqua0ncJca6ZCOh5VcKwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB7PWSPIAKGQE2EOCCVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171108105623.zzabmqd3a3sehg2k-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKjF0um6UrsyBSKF5bY3rRscRqua0ncJca6ZCOh5VcKwA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-11-08 18:56=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> Hi,
->=20
-> On Tue, Nov 07, 2017 at 05:38:55PM +0100, Giulio Benetti wrote:
->> Board could be any with A20,
->> for example Olinuxino A20.
->> Or our Q027, S027 boards, but final dts still are not complete.
->=20
-> Therefore no upstream boards are using it right now, so we'll merge it
-> when that will be the case.
+Hi Rob,
 
-I think the LCD connector on Banana Pi's uses parallel interface,
-although the LCD should be an external DT overlay.
+2017-11-10 3:04 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Thu, Nov 9, 2017 at 9:09 AM, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>> Hi Rob,
+>>
+>> 2017-11-09 23:15 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>>> On Thu, Nov 9, 2017 at 6:14 AM, Masahiro Yamada
+>>> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>>>> Hi Rob, David,
+>>>>
+>>>>
+>>>> I am just curious about a DTC warning.
+>>>>
+>>>>
+>>>> For example,
+>>>>
+>>>> soc {
+>>>>     compatible = "simple-bus";
+>>>>     #address-cells = <1>;
+>>>>     #size-cells = <1>;
+>>>>     ranges;
+>>>>
+>>>>     foo@11111111 {
+>>>>          compatible = "foo";
+>>>>          reg = <0x54006800 0x40>;
+>>>>     };
+>>>> };
+>>>>
+>>>> This emits the following warning.
+>>>>
+>>>> Warning (simple_bus_reg): Node /soc/foo@11111111 simple-bus unit
+>>>> address format error, expected "54006800"
+>>>>
+>>>>
+>>>> But, if I replace "simple-bus" with "simple-mfd",
+>>>> DTC is completely happy.
+>>>
+>>> We could probably add simple-mfd to the check. Though, if you have
+>>> addresses, then you probably should use simple-bus. I'm not a bit fan
+>>> of simple-mfd in general.
+>>>
+>>>> Why is this check limited to simple bus / PCI bus?
+>>>
+>>> Because bus types are free to define their own unit address format to
+>>> some extent.
+>>>
+>>>> For other cases, is mismatching @<address>  allowed?
+>>>
+>>> No, but it is not checked. Most other cases such as I2C and SPI buses
+>>> aren't checked because we have no generic way to key off of them. We
+>>> need schema data with compatible strings of those bus controllers to
+>>> do the checking.
+>>>
+>>> Any bus type needs to define its unit address format. Generally, it
+>>> must match data fields in reg property and distinct fields are
+>>> separated by commas.
+>>>
+>>
+>> Thanks.
+>> I had a more specific example I wanted to ask,
+>> but your last comment "distinct fields are separated by commas"
+>> probably answered the question.
+>>
+>>
+>> The following is an example of NVMEM data cells.
+>> The generic binding is Documentation/devicetree/binding/nvmem/nvmem.txt
+>>
+>>
+>> reg:    specifies the offset in byte within the storage device.
+>>
+>> bits:   Is pair of bit location and number of bits, which specifies offset
+>>         in bit and number of bits within the address range specified
+>> by reg property.
+>>         Offset takes values from 0-7.
+>>
+>> So, it is possible to have multiple data cells
+>> that share the same "reg".
+>
+> In hindsight, I think I'd do away with bits and just define that reg
+> is the offset and size in bits. Maybe we did discuss that and I've
+> just forgotten the reasons not to do that.
 
->=20
-> Maxime
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Yeah, I like the idea, but "in hindsight".
+
+
+
+>>
+>> @<reg-offset>,<bit-position>
+>> was the idea in my mind, but I was not 100% sure.
+>
+> Yeah, this is fine. Bonus points if you write a check in dtc for it. I
+> think we can match on #nvmem-cells in the parent node.
+
+
+I have no idea when I can look into it.
+
+I think most (all?) of DTC checks are from your contribution.
+It would be appreciated if you care to it.
+
+
+One idea for generic solution might be DTC checks:
+
+  - @* exactly matches to reg
+
+     or
+
+  - The first field of comma separated @*,*,... matches to reg
+
+
+I do not know if other patterns exist.
+
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
