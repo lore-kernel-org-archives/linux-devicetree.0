@@ -1,65 +1,160 @@
-From: Kim Phillips <kim.phillips@arm.com>
-Subject: Re: [PATCH RESEND 1/4] crypto: caam: add caam-dma node to SEC4.0
- device tree binding
-Date: Fri, 10 Nov 2017 10:44:30 -0600
-Message-ID: <20171110104430.28b2f56f910b7514d778c4b2@arm.com>
-References: <20171030134654.13729-1-horia.geanta@nxp.com>
-        <20171030134654.13729-2-horia.geanta@nxp.com>
-        <20171030092424.1279add003c96ced4233bd2d@arm.com>
-        <VI1PR04MB1325BAD68A7CC8C7A302D9A48A570@VI1PR04MB1325.eurprd04.prod.outlook.com>
-        <20171109103437.834f8ddb5c62e5253002b2d0@arm.com>
-        <VI1PR04MB13253DB5164A151D8E4AB8308A540@VI1PR04MB1325.eurprd04.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: exynos: Switch to dedicated Odroid-XU3
+ sound card binding
+Date: Fri, 10 Nov 2017 18:14:17 +0100
+Message-ID: <20171110171417.qbnn7gsihor2fwng@kozik-lap>
+References: <20171103165446.15438-1-s.nawrocki@samsung.com>
+ <CGME20171103165539epcas1p48cc87811574dace9dfe91d8e9ec6f7ca@epcas1p4.samsung.com>
+ <20171103165446.15438-2-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB13253DB5164A151D8E4AB8308A540@VI1PR04MB1325.eurprd04.prod.outlook.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Radu Andrei Alexe <radu.alexe@nxp.com>
-Cc: Horia =?UTF-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>, Vinod Koul <vinod.koul@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dan Douglass <dan.douglass@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171103165446.15438-2-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: kgene@kernel.org, mihailescu2m@gmail.com, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 10 Nov 2017 08:02:01 +0000
-Radu Andrei Alexe <radu.alexe@nxp.com> wrote:
+On Fri, Nov 03, 2017 at 05:54:45PM +0100, Sylwester Nawrocki wrote:
+> The new sound card DT binding is used for Odroid XU3 in order
+> to properly support the HDMI audio path.
+> Clocks configuration is changed so the I2S controller is now the bit
+> and the frame clock master with EPLL as the root clock source.
 
-> On 11/9/2017 6:34 PM, Kim Phillips wrote:
-> > On Thu, 9 Nov 2017 11:54:13 +0000
-> > Radu Andrei Alexe <radu.alexe@nxp.com> wrote:
-> >> The next patch version will create the platform device dynamically at
-> >> run time.
-> > 
-> > Why create a new device when that h/w already has one?
-> > 
-> > Why doesn't the existing crypto driver register dma capabilities with
-> > the dma driver subsystem?
-> >
-> I can think of two reasons:
+Patch looks good but I do not understand this last sentence. What did
+you want to say?
+
+Best regards,
+Krzysztof
+
+
 > 
-> 1. The code that this driver introduces has nothing to do with crypto 
-> and everything to do with dma.
-
-I would think that at least a crypto "null" algorithm implementation
-would share code.
-
-> Placing the code in the same directory as 
-> the caam subsystem would only create confusion for the reader of an 
-> already complex driver.
-
-this different directory argument seems to be identical to your 2 below:
-
-> 2. I wanted this driver to be tracked by the dma engine team. They have 
-> the right expertise to provide adequate feedback. If all the code was in 
-> the crypto directory they wouldn't know about this driver or any 
-> subsequent changes to it.
-
-dma subsystem bits could still be put in the dma area if deemed
-necessary but I don't think it is: I see
-drivers/crypto/ccp/ccp-dmaengine.c calls dma_async_device_register for
-example.
-
-I also don't see how that complicates things much further.
-
-What is the rationale for using the crypto h/w as a dma engine anyway?
-Are there supporting performance figures?
-
-Kim
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi                    |  1 +
+>  arch/arm/boot/dts/exynos5420.dtsi                 |  1 +
+>  arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 60 ++++++++++++++---------
+>  3 files changed, 40 insertions(+), 22 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index 5739389f5bb8..f82647c0adb1 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -755,6 +755,7 @@
+>  		phy = <&hdmi_i2c_phy>;
+>  		power-domains = <&pd_tv>;
+>  		samsung,syscon-phandle = <&pmu_system_controller>;
+> +		#sound-dai-cells = <0>;
+>  		status = "disabled";
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 88e5d6d3f901..6f0414cce854 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -618,6 +618,7 @@
+>  			samsung,syscon-phandle = <&pmu_system_controller>;
+>  			status = "disabled";
+>  			power-domains = <&disp_pd>;
+> +			#sound-dai-cells = <0>;
+>  		};
+>  
+>  		hdmiphy: hdmiphy@145D0000 {
+> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+> index da3141a307d5..fe4d8ef094d0 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Hardkernel Odroid XU3 Audio Codec device tree source
+> + * Hardkernel Odroid XU3 audio subsystem device tree source
+>   *
+>   * Copyright (c) 2015 Krzysztof Kozlowski
+>   * Copyright (c) 2014 Collabora Ltd.
+> @@ -15,13 +15,13 @@
+>  
+>  / {
+>  	sound: sound {
+> -		compatible = "simple-audio-card";
+> +		compatible = "samsung,odroid-xu3-audio";
+> +		model = "Odroid-XU3";
+>  
+> -		simple-audio-card,name = "Odroid-XU3";
+> -		simple-audio-card,widgets =
+> +		samsung,audio-widgets =
+>  			"Headphone", "Headphone Jack",
+>  			"Speakers", "Speakers";
+> -		simple-audio-card,routing =
+> +		samsung,audio-routing =
+>  			"Headphone Jack", "HPL",
+>  			"Headphone Jack", "HPR",
+>  			"Headphone Jack", "MICBIAS",
+> @@ -29,31 +29,47 @@
+>  			"Speakers", "SPKL",
+>  			"Speakers", "SPKR";
+>  
+> -		simple-audio-card,format = "i2s";
+> -		simple-audio-card,bitclock-master = <&link0_codec>;
+> -		simple-audio-card,frame-master = <&link0_codec>;
+> +		assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>,
+> +				<&clock CLK_MOUT_EPLL>,
+> +				<&clock CLK_MOUT_MAU_EPLL>,
+> +				<&clock CLK_MOUT_USER_MAU_EPLL>,
+> +				<&clock_audss EXYNOS_MOUT_AUDSS>,
+> +				<&clock_audss EXYNOS_MOUT_I2S>,
+> +				<&clock_audss EXYNOS_DOUT_SRP>,
+> +				<&clock_audss EXYNOS_DOUT_AUD_BUS>,
+> +				<&clock_audss EXYNOS_DOUT_I2S>;
+>  
+> -		simple-audio-card,cpu {
+> +		assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>,
+> +				<&clock CLK_FOUT_EPLL>,
+> +				<&clock CLK_MOUT_EPLL>,
+> +				<&clock CLK_MOUT_MAU_EPLL>,
+> +				<&clock CLK_MAU_EPLL>,
+> +				<&clock_audss EXYNOS_MOUT_AUDSS>;
+> +
+> +		assigned-clock-rates = <0>,
+> +				<0>,
+> +				<0>,
+> +				<0>,
+> +				<0>,
+> +				<0>,
+> +				<196608001>,
+> +				<(196608002 / 2)>,
+> +				<196608000>;
+> +
+> +		cpu {
+>  			sound-dai = <&i2s0 0>;
+> -			system-clock-frequency = <19200000>;
+>  		};
+> -
+> -		link0_codec: simple-audio-card,codec {
+> -			sound-dai = <&max98090>;
+> -			clocks = <&i2s0 CLK_I2S_CDCLK>;
+> +		codec {
+> +			sound-dai = <&hdmi>, <&max98090>;
+>  		};
+>  	};
+>  };
+>  
+>  &clock_audss {
+> -	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
+> -			<&clock_audss EXYNOS_MOUT_I2S>,
+> -			<&clock_audss EXYNOS_DOUT_AUD_BUS>;
+> -	assigned-clock-parents = <&clock CLK_FIN_PLL>,
+> -			<&clock_audss EXYNOS_MOUT_AUDSS>;
+> -	assigned-clock-rates = <0>,
+> -			<0>,
+> -			<19200000>;
+> +	assigned-clocks = <&clock_audss EXYNOS_DOUT_SRP>,
+> +			  <&clock CLK_FOUT_EPLL>;
+> +	assigned-clock-rates = <(196608000 / 256)>,
+> +			       <196608000>;
+>  };
+>  
+>  &hsi2c_5 {
+> -- 
+> 2.14.2
+> 
