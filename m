@@ -1,213 +1,132 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCHv4 2/3] ARMv8: layerscape: add the pcie ep function support
-Date: Fri, 10 Nov 2017 12:01:58 +0530
-Message-ID: <d02ec499-5de5-11fe-9d95-591513037d49@ti.com>
-References: <20171110034847.17891-1-xiaowei.bao@nxp.com>
- <20171110034847.17891-3-xiaowei.bao@nxp.com>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V4 00/12] add clock driver for Spreadtrum platforms
+Date: Fri, 10 Nov 2017 14:35:55 +0800
+Message-ID: <20171110063607.3250-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171110034847.17891-3-xiaowei.bao@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bao Xiaowei <xiaowei.bao@nxp.com>, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, bhelgaas@google.com, shawnguo@kernel.org, madalin.bucur@nxp.com, sumit.garg@nxp.com, yangbo.lu@nxp.com, hongtao.jia@nxp.com, Yuantian.Tang@nxp.com, leoyang.li@nxp.com, jingoohan1@gmail.com, pbrobinson@gmail.com, songxiaowei@hisilicon.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Zhiqiang.Hou@nxp.com, mingkai.hu@nxp.com, Minghuan.Lian@nxp.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This series adds Spreadtrum clock support together with its binding
+documentation and devicetree data.
 
-On Friday 10 November 2017 09:18 AM, Bao Xiaowei wrote:
-> Add the pcie controller ep function support of layerscape base on
-> pcie ep framework.
-> 
-> Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
-> ---
->  v2:
->  - fix the ioremap function used but no ioumap issue
->  - optimize the code structure
->  - add code comments
->  v3:
->  - fix the msi outband window request failed issue
->  v4:
->  - optimize the code, adjust the format
-> 
->  drivers/pci/dwc/pci-layerscape.c | 120 ++++++++++++++++++++++++++++++++++++---
->  1 file changed, 113 insertions(+), 7 deletions(-)
+Any comments would be greatly appreciated.
 
-$subject should begin with
-PCI: layerscape:
-> 
-> diff --git a/drivers/pci/dwc/pci-layerscape.c b/drivers/pci/dwc/pci-layerscape.c
-> index 87fa486bee2c..6f3e434599e0 100644
-> --- a/drivers/pci/dwc/pci-layerscape.c
-> +++ b/drivers/pci/dwc/pci-layerscape.c
-> @@ -34,7 +34,12 @@
->  /* PEX Internal Configuration Registers */
->  #define PCIE_STRFMR1		0x71c /* Symbol Timer & Filter Mask Register1 */
->  
-> +#define PCIE_DBI2_BASE		0x1000	/* DBI2 base address*/
+This patchset also added a few common clock mactos into drivers/clk/clk_common.h,
+which are generally useful for all vendors' clock driver, sunxi-ng, zte, sprd
+(added in this patchse) use them (or part of them) at present, once this patchset
+is merged, I can help to remove the duplicated code which is under the vendors'
+respective directories.
 
-The base address should come from dt.
-> +#define PCIE_MSI_MSG_DATA_OFF	0x5c	/* MSI Data register address*/
-> +#define PCIE_MSI_OB_SIZE	4096
-> +#define PCIE_MSI_ADDR_OFFSET	(1024 * 1024)
->  #define PCIE_IATU_NUM		6
-> +#define PCIE_EP_ADDR_SPACE_SIZE 0x100000000
->  
->  struct ls_pcie_drvdata {
->  	u32 lut_offset;
-> @@ -44,12 +49,20 @@ struct ls_pcie_drvdata {
->  	const struct dw_pcie_ops *dw_pcie_ops;
->  };
->  
-> +struct ls_pcie_ep {
-> +	dma_addr_t msi_phys_addr;
-> +	void __iomem *msi_virt_addr;
-> +	u64 msi_msg_addr;
-> +	u16 msi_msg_data;
-> +};
-> +
->  struct ls_pcie {
->  	struct dw_pcie *pci;
->  	void __iomem *lut;
->  	struct regmap *scfg;
->  	const struct ls_pcie_drvdata *drvdata;
->  	int index;
-> +	struct ls_pcie_ep *pcie_ep;
->  };
->  
->  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
-> @@ -263,6 +276,99 @@ static const struct of_device_id ls_pcie_of_match[] = {
->  	{ },
->  };
->  
-> +static void ls_pcie_raise_msi_irq(struct ls_pcie_ep *pcie_ep)
-> +{
-> +	iowrite32(pcie_ep->msi_msg_data, pcie_ep->msi_virt_addr);
-> +}
-> +
-> +static int ls_pcie_raise_irq(struct dw_pcie_ep *ep,
-> +		enum pci_epc_irq_type type, u8 interrupt_num)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	struct ls_pcie *pcie = to_ls_pcie(pci);
-> +	struct ls_pcie_ep *pcie_ep = pcie->pcie_ep;
-> +	u32 free_win;
-> +
-> +	/* get the msi message address and msi message data */
-> +	pcie_ep->msi_msg_addr = ioread32(pci->dbi_base + MSI_MESSAGE_ADDR_L32) |
-> +		(((u64)ioread32(pci->dbi_base + MSI_MESSAGE_ADDR_U32)) << 32);
-> +	pcie_ep->msi_msg_data = ioread16(pci->dbi_base + PCIE_MSI_MSG_DATA_OFF);
-> +
-> +	/* request and config the outband window for msi */
-> +	free_win = find_first_zero_bit(&ep->ob_window_map,
-> +					sizeof(ep->ob_window_map));
-> +	if (free_win >= ep->num_ob_windows) {
-> +		dev_err(pci->dev, "no free outbound window\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
-> +					pcie_ep->msi_phys_addr,
-> +					pcie_ep->msi_msg_addr,
-> +					PCIE_MSI_OB_SIZE);
-> +
-> +	set_bit(free_win, &ep->ob_window_map);
 
-This custom logic is not required. You can use [1] instead
+Thanks,
+Chunyan
 
-[1] -> https://lkml.org/lkml/2017/11/3/318
-> +
-> +	/* generate the msi interrupt */
-> +	ls_pcie_raise_msi_irq(pcie_ep);
-> +
-> +	/* release the outband window of msi */
-> +	dw_pcie_disable_atu(pci, free_win, DW_PCIE_REGION_OUTBOUND);
-> +	clear_bit(free_win, &ep->ob_window_map);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct dw_pcie_ep_ops pcie_ep_ops = {
-> +	.raise_irq = ls_pcie_raise_irq,
-> +};
-> +
-> +static int __init ls_add_pcie_ep(struct ls_pcie *pcie,
-> +					struct platform_device *pdev)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	struct dw_pcie_ep *ep;
-> +	struct ls_pcie_ep *pcie_ep;
-> +	struct resource *cfg_res;
-> +	int ret;
-> +
-> +	ep = &pci->ep;
-> +	ep->ops = &pcie_ep_ops;
-> +
-> +	pcie_ep = devm_kzalloc(dev, sizeof(*pcie_ep), GFP_KERNEL);
-> +	if (!pcie_ep)
-> +		return -ENOMEM;
-> +
-> +	pcie->pcie_ep = pcie_ep;
-> +
-> +	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-> +	if (cfg_res) {
-> +		ep->phys_base = cfg_res->start;
-> +		ep->addr_size = PCIE_EP_ADDR_SPACE_SIZE;
-> +	} else {
-> +		dev_err(dev, "missing *config* space\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	pcie_ep->msi_phys_addr = ep->phys_base + PCIE_MSI_ADDR_OFFSET;
-> +
-> +	pcie_ep->msi_virt_addr = ioremap(pcie_ep->msi_phys_addr,
-> +						PCIE_MSI_OB_SIZE);
-> +	if (!pcie_ep->msi_virt_addr) {
-> +		dev_err(dev, "failed to map MSI outbound region\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = dw_pcie_ep_init(ep);
-> +	if (ret) {
-> +		dev_err(dev, "failed to initialize endpoint\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int __init ls_add_pcie_port(struct ls_pcie *pcie)
->  {
->  	struct dw_pcie *pci = pcie->pci;
-> @@ -309,18 +415,18 @@ static int __init ls_pcie_probe(struct platform_device *pdev)
->  	if (IS_ERR(pci->dbi_base))
->  		return PTR_ERR(pci->dbi_base);
->  
-> -	pcie->lut = pci->dbi_base + pcie->drvdata->lut_offset;
-> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_BASE;
->  
-> -	if (!ls_pcie_is_bridge(pcie))
-> -		return -ENODEV;
-> +	pcie->lut = pci->dbi_base + pcie->drvdata->lut_offset;
->  
->  	platform_set_drvdata(pdev, pcie);
->  
-> -	ret = ls_add_pcie_port(pcie);
-> -	if (ret < 0)
-> -		return ret;
-> +	if (!ls_pcie_is_bridge(pcie))
-> +		ret = ls_add_pcie_ep(pcie, pdev);
+Changes from V3: (https://lkml.org/lkml/2017/11/2/61)
+* Addressed comments from Julien Thierry:
+  - Clean the if branch of sprd_mux_helper_get_parent()
+  - Have the Gate clock macros and ops for both mode (i.e. sc_gate and gate) separate;
+  - Have the Mux clock macros with/without table separate, and same changes
+    for the composite clock.
+* Switched the function name from _endisable to _toggle;
+* Fixed Kbuild test error:
+  - Added exporting sprd_clk_regmap_init() which would be used in other module(s);
+* Change the function sprd_clk_set_regmap() to the static one, and removed the
+  declear from the include file;
+* Addressed comments from Rob:
+  - Separate the dt-binding include file from the driver patch;
+  - Documented more for the property "clocks"
+* Changed the syscon device names;
+* Changed the name of 'sprd_mux_internal' to 'sprd_mux_ssel'
+  
 
-HOST or EP mode should be obtained directly from dt.
+Changes from V2: (http://lkml.iu.edu/hypermail/linux/kernel/1707.1/01504.html)
+* Switch to use regmap to access registers;
+* Splited all clocks into 16 separated nodes, for each belongs to a single address area; 
+* Rearranged the order of clock declaration in sc9860-clk.c, sorted them upon the address area;
+* Added syscon device tree nodes which will be quoted by the node of clocks which are in
+  the same address area with the syscon device;
+* Revised the binding documentation according to the dt modification. 
 
-Thanks
-Kishon
+Changes from V1: (https://lkml.org/lkml/2017/6/17/356)
+* Address Stephen's comments:
+  - Switch to use platform device driver instead of the DT probing mechanism.
+  - Move the common clock macro out from vendor directory, but need to remove those
+    overlap code from other vendors (such as sunxi-ng) once this get merged.
+  - Add support to be built as a module.
+  - Add 'sprd_' prefix for all spin locks used in these drivers.
+  - Mark input parameter of sprd_x with const.
+  - Remove unreasonable dependencies to CONFIG_64BIT.
+  - Add readl() after writing the same register.
+  - Remove CLK_IS_BASIC which is no longer used.
+  - Remove unnecessery CLK_IGNORE_UNUSED when defining a clock.
+  - Change to expose all clock index.
+  - Use clk_ instead of ccu.
+  - Add Kconfig for sprd clocks.
+  - Move the fixed clocks out from the soc node.
+  - Switch to use 64-bit math in pll driver instead of 32-bit math.
+* Revise binding documentation according to dt modification.
+* Rename sc9860.c to sc9860-clk.c
+
+
+Chunyan Zhang (12):
+  drivers: move clock common macros out from vendor directories
+  dt-bindings: Add Spreadtrum clock binding documentation
+  clk: sprd: Add common infrastructure
+  clk: sprd: add gate clock support
+  clk: sprd: add mux clock support
+  clk: sprd: add divider clock support
+  clk: sprd: add composite clock support
+  clk: sprd: add adjustable pll support
+  clk: sprd: Add dt-bindings include file for SC9860
+  clk: sprd: add clocks support for SC9860
+  arm64: dts: add syscon for whale2 platform
+  arm64: dts: add clocks for SC9860
+
+ Documentation/devicetree/bindings/clock/sprd.txt |   63 +
+ arch/arm64/boot/dts/sprd/sc9860.dtsi             |  115 ++
+ arch/arm64/boot/dts/sprd/whale2.dtsi             |   48 +-
+ drivers/clk/Kconfig                              |    1 +
+ drivers/clk/Makefile                             |    1 +
+ drivers/clk/clk_common.h                         |   60 +
+ drivers/clk/sprd/Kconfig                         |   14 +
+ drivers/clk/sprd/Makefile                        |   11 +
+ drivers/clk/sprd/common.c                        |  113 ++
+ drivers/clk/sprd/common.h                        |   54 +
+ drivers/clk/sprd/composite.c                     |   65 +
+ drivers/clk/sprd/composite.h                     |   55 +
+ drivers/clk/sprd/div.c                           |  100 ++
+ drivers/clk/sprd/div.h                           |   79 +
+ drivers/clk/sprd/gate.c                          |  124 ++
+ drivers/clk/sprd/gate.h                          |   63 +
+ drivers/clk/sprd/mux.c                           |   86 +
+ drivers/clk/sprd/mux.h                           |   78 +
+ drivers/clk/sprd/pll.c                           |  268 +++
+ drivers/clk/sprd/pll.h                           |  110 ++
+ drivers/clk/sprd/sc9860-clk.c                    | 1987 ++++++++++++++++++++++
+ include/dt-bindings/clock/sprd,sc9860-clk.h      |  408 +++++
+ 22 files changed, 3901 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd.txt
+ create mode 100644 drivers/clk/clk_common.h
+ create mode 100644 drivers/clk/sprd/Kconfig
+ create mode 100644 drivers/clk/sprd/Makefile
+ create mode 100644 drivers/clk/sprd/common.c
+ create mode 100644 drivers/clk/sprd/common.h
+ create mode 100644 drivers/clk/sprd/composite.c
+ create mode 100644 drivers/clk/sprd/composite.h
+ create mode 100644 drivers/clk/sprd/div.c
+ create mode 100644 drivers/clk/sprd/div.h
+ create mode 100644 drivers/clk/sprd/gate.c
+ create mode 100644 drivers/clk/sprd/gate.h
+ create mode 100644 drivers/clk/sprd/mux.c
+ create mode 100644 drivers/clk/sprd/mux.h
+ create mode 100644 drivers/clk/sprd/pll.c
+ create mode 100644 drivers/clk/sprd/pll.h
+ create mode 100644 drivers/clk/sprd/sc9860-clk.c
+ create mode 100644 include/dt-bindings/clock/sprd,sc9860-clk.h
+
+-- 
+2.7.4
