@@ -1,180 +1,654 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 resend 0/1] Input: add support HiDeep touchscreen.
-Date: Fri, 10 Nov 2017 10:25:15 -0800
-Message-ID: <20171110182515.zg3dx5kzpqxcmxfk@dtor-ws>
-References: <1510105085-18050-1-git-send-email-anthony.kim@hideep.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] drm/tinydrm: add driver for ILI9225 panels
+Date: Fri, 10 Nov 2017 19:44:17 +0100
+Message-ID: <86f97466-3ab4-0560-2372-a819d1128308@tronnes.org>
+References: <1510113136-6788-1-git-send-email-david@lechnology.com>
+ <1510113136-6788-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1510105085-18050-1-git-send-email-anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1510113136-6788-3-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dennis.hong-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 08, 2017 at 10:38:04AM +0900, Anthony Kim wrote:
-> Hi All,
-> 
-> I remaked patch for dmitry's comment.
-> Please refer as follow.
-> http://www.spinics.net/lists/linux-input/msg53799.html
-> 
-> I changed our fw binary to big endian format and confirmed that our driver
-> code works well.
 
-Applied, thank you.
+Den 08.11.2017 04.52, skrev David Lechner:
+> This adds a new driver for display panels based on the Ilitek ILI9225
+> controller.
+>
+> This was developed for a no-name panel with a red PCB that is commonly
+> marketed for Arduino. See <https://github.com/Nkawu/TFT_22_ILI9225>.
+>
+> I really did try very hard to find a make and model for this panel, but
+> there doesn't seem to be one, so the best I can do is offer the picture
+> in the link above for identification.
+>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> ---
+>   MAINTAINERS                       |   6 +
+>   drivers/gpu/drm/tinydrm/Kconfig   |  10 +
+>   drivers/gpu/drm/tinydrm/Makefile  |   1 +
+>   drivers/gpu/drm/tinydrm/ili9225.c | 547 ++++++++++++++++++++++++++++++++++++++
+>   4 files changed, 564 insertions(+)
+>   create mode 100644 drivers/gpu/drm/tinydrm/ili9225.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0d77f22..72404f3 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4372,6 +4372,12 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
+>   S:	Maintained
+>   F:	drivers/gpu/drm/tve200/
+>   
+> +DRM DRIVER FOR ILITEK ILI9225 PANELS
+> +M:	David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> +S:	Maintained
+> +F:	drivers/gpu/drm/tinydrm/ili9225.c
+> +F:	Documentation/devicetree/bindings/display/ili9225.txt
+> +
+>   DRM DRIVER FOR INTEL I810 VIDEO CARDS
+>   S:	Orphan / Obsolete
+>   F:	drivers/gpu/drm/i810/
+> diff --git a/drivers/gpu/drm/tinydrm/Kconfig b/drivers/gpu/drm/tinydrm/Kconfig
+> index 2e790e7..90c5bd5 100644
+> --- a/drivers/gpu/drm/tinydrm/Kconfig
+> +++ b/drivers/gpu/drm/tinydrm/Kconfig
+> @@ -12,6 +12,16 @@ menuconfig DRM_TINYDRM
+>   config TINYDRM_MIPI_DBI
+>   	tristate
+>   
+> +config TINYDRM_ILI9225
+> +	tristate "DRM support for ILI9225 display panels"
+> +	depends on DRM_TINYDRM && SPI
+> +	select TINYDRM_MIPI_DBI
+> +	help
+> +	  DRM driver for the following Ilitek ILI9225 panels:
+> +	  * No-name 2.2" color screen module
+> +
+> +	  If M is selected the module will be called ili9225.
+> +
+>   config TINYDRM_MI0283QT
+>   	tristate "DRM support for MI0283QT"
+>   	depends on DRM_TINYDRM && SPI
+> diff --git a/drivers/gpu/drm/tinydrm/Makefile b/drivers/gpu/drm/tinydrm/Makefile
+> index 0c184bd..8aeee53 100644
+> --- a/drivers/gpu/drm/tinydrm/Makefile
+> +++ b/drivers/gpu/drm/tinydrm/Makefile
+> @@ -4,6 +4,7 @@ obj-$(CONFIG_DRM_TINYDRM)		+= core/
+>   obj-$(CONFIG_TINYDRM_MIPI_DBI)		+= mipi-dbi.o
+>   
+>   # Displays
+> +obj-$(CONFIG_TINYDRM_ILI9225)		+= ili9225.o
+>   obj-$(CONFIG_TINYDRM_MI0283QT)		+= mi0283qt.o
+>   obj-$(CONFIG_TINYDRM_REPAPER)		+= repaper.o
+>   obj-$(CONFIG_TINYDRM_ST7586)		+= st7586.o
+> diff --git a/drivers/gpu/drm/tinydrm/ili9225.c b/drivers/gpu/drm/tinydrm/ili9225.c
+> new file mode 100644
+> index 0000000..07e1b8b
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tinydrm/ili9225.c
+> @@ -0,0 +1,547 @@
+> +/*
+> + * DRM driver for Ilitek ILI9225 panels
+> + *
+> + * Copyright 2017 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> + *
+> + * Lots of code copied from mipi-dbi.c
+> + * Copyright 2016 Noralf Trønnes
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/dma-buf.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/property.h>
+> +#include <linux/spi/spi.h>
+> +#include <video/mipi_display.h>
+> +
+> +#include <drm/drm_gem_framebuffer_helper.h>
+> +#include <drm/tinydrm/mipi-dbi.h>
+> +#include <drm/tinydrm/tinydrm-helpers.h>
+> +
+> +#define ILI9225_DRIVER_READ_CODE	0x00
+> +#define ILI9225_DRIVER_OUTPUT_CONTROL	0x01
+> +#define ILI9225_LCD_AC_DRIVING_CONTROL	0x02
+> +#define ILI9225_ENTRY_MODE		0x03
+> +#define ILI9225_DISPLAY_CONTROL_1	0x07
+> +#define ILI9225_BLANK_PERIOD_CONTROL_1	0x08
+> +#define ILI9225_FRAME_CYCLE_CONTROL	0x0b
+> +#define ILI9225_INTERFACE_CONTROL	0x0c
+> +#define ILI9225_OSCILLATION_CONTROL	0x0f
+> +#define ILI9225_POWER_CONTROL_1		0x10
+> +#define ILI9225_POWER_CONTROL_2		0x11
+> +#define ILI9225_POWER_CONTROL_3		0x12
+> +#define ILI9225_POWER_CONTROL_4		0x13
+> +#define ILI9225_POWER_CONTROL_5		0x14
+> +#define ILI9225_VCI_RECYCLING		0x15
+> +#define ILI9225_RAM_ADDRESS_SET_1	0x20
+> +#define ILI9225_RAM_ADDRESS_SET_2	0x21
+> +#define ILI9225_WRITE_DATA_TO_GRAM	0x22
+> +#define ILI9225_SOFTWARE_RESET		0x28
+> +#define ILI9225_GATE_SCAN_CONTROL	0x30
+> +#define ILI9225_VERTICAL_SCROLL_1	0x31
+> +#define ILI9225_VERTICAL_SCROLL_2	0x32
+> +#define ILI9225_VERTICAL_SCROLL_3	0x33
+> +#define ILI9225_PARTIAL_DRIVING_POS_1	0x34
+> +#define ILI9225_PARTIAL_DRIVING_POS_2	0x35
+> +#define ILI9225_HORIZ_WINDOW_ADDR_1	0x36
+> +#define ILI9225_HORIZ_WINDOW_ADDR_2	0x37
+> +#define ILI9225_VERT_WINDOW_ADDR_1	0x38
+> +#define ILI9225_VERT_WINDOW_ADDR_2	0x39
+> +#define ILI9225_GAMMA_CONTROL_1		0x50
+> +#define ILI9225_GAMMA_CONTROL_2		0x51
+> +#define ILI9225_GAMMA_CONTROL_3		0x52
+> +#define ILI9225_GAMMA_CONTROL_4		0x53
+> +#define ILI9225_GAMMA_CONTROL_5		0x54
+> +#define ILI9225_GAMMA_CONTROL_6		0x55
+> +#define ILI9225_GAMMA_CONTROL_7		0x56
+> +#define ILI9225_GAMMA_CONTROL_8		0x57
+> +#define ILI9225_GAMMA_CONTROL_9		0x58
+> +#define ILI9225_GAMMA_CONTROL_10	0x59
+> +
+> +static int ili9225_buf_copy(void *dst, struct drm_framebuffer *fb,
+> +			    struct drm_clip_rect *clip, bool swap)
+> +{
+> +	struct drm_gem_cma_object *cma_obj = drm_fb_cma_get_gem_obj(fb, 0);
+> +	struct dma_buf_attachment *import_attach = cma_obj->base.import_attach;
+> +	struct drm_format_name_buf format_name;
+> +	void *src = cma_obj->vaddr;
+> +	int ret = 0;
+> +
+> +	if (import_attach) {
+> +		ret = dma_buf_begin_cpu_access(import_attach->dmabuf,
+> +					       DMA_FROM_DEVICE);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	switch (fb->format->format) {
+> +	case DRM_FORMAT_RGB565:
+> +		if (swap)
+> +			tinydrm_swab16(dst, src, fb, clip);
+> +		else
+> +			tinydrm_memcpy(dst, src, fb, clip);
+> +		break;
+> +	case DRM_FORMAT_XRGB8888:
+> +		tinydrm_xrgb8888_to_rgb565(dst, src, fb, clip, swap);
+> +		break;
+> +	default:
+> +		dev_err_once(fb->dev->dev, "Format is not supported: %s\n",
+> +			     drm_get_format_name(fb->format->format,
+> +						 &format_name));
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (import_attach)
+> +		ret = dma_buf_end_cpu_access(import_attach->dmabuf,
+> +					     DMA_FROM_DEVICE);
+> +	return ret;
+> +}
+> +
+> +static int ili9225_fb_dirty(struct drm_framebuffer *fb,
+> +			    struct drm_file *file_priv, unsigned int flags,
+> +			    unsigned int color, struct drm_clip_rect *clips,
+> +			    unsigned int num_clips)
+> +{
+> +	struct drm_gem_cma_object *cma_obj = drm_fb_cma_get_gem_obj(fb, 0);
+> +	struct tinydrm_device *tdev = fb->dev->dev_private;
+> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+> +	bool swap = mipi->swap_bytes;
+> +	struct drm_clip_rect clip;
+> +	u8 x_start, y_start;
+> +	u8 x1, x2, y1, y2;
+> +	int ret = 0;
+> +	bool full;
+> +	void *tr;
+> +
+> +	mutex_lock(&tdev->dirty_lock);
+> +
+> +	if (!mipi->enabled)
+> +		goto out_unlock;
+> +
+> +	/* fbdev can flush even when we're not interested */
+> +	if (tdev->pipe.plane.fb != fb)
+> +		goto out_unlock;
+> +
+> +	full = tinydrm_merge_clips(&clip, clips, num_clips, flags,
+> +				   fb->width, fb->height);
+> +
+> +	DRM_DEBUG("Flushing [FB:%d] x1=%u, x2=%u, y1=%u, y2=%u\n", fb->base.id,
+> +		  clip.x1, clip.x2, clip.y1, clip.y2);
+> +
+> +	if (!mipi->dc || !full || swap ||
+> +	    fb->format->format == DRM_FORMAT_XRGB8888) {
+> +		tr = mipi->tx_buf;
+> +		ret = ili9225_buf_copy(mipi->tx_buf, fb, &clip, swap);
+> +		if (ret)
+> +			goto out_unlock;
+> +	} else {
+> +		tr = cma_obj->vaddr;
+> +	}
+> +
+> +	switch (mipi->rotation) {
+> +	default:
+> +		x1 = clip.x1;
+> +		x2 = clip.x2 - 1;
+> +		y1 = clip.y1;
+> +		y2 = clip.y2 - 1;
+> +		x_start = x1;
+> +		y_start = y1;
+> +		break;
+> +	case 90:
+> +		x1 = clip.y1;
+> +		x2 = clip.y2 - 1;
+> +		y1 = fb->width - clip.x2;
+> +		y2 = fb->width - clip.x1 - 1;
+> +		x_start = x1;
+> +		y_start = y2;
+> +		break;
+> +	case 180:
+> +		x1 = fb->width - clip.x2;
+> +		x2 = fb->width - clip.x1 - 1;
+> +		y1 = fb->height - clip.y2;
+> +		y2 = fb->height - clip.y1 - 1;
+> +		x_start = x2;
+> +		y_start = y2;
+> +		break;
+> +	case 270:
+> +		x1 = fb->height - clip.y2;
+> +		x2 = fb->height - clip.y1 - 1;
+> +		y1 = clip.x1;
+> +		y2 = clip.x2 - 1;
+> +		x_start = x2;
+> +		y_start = y1;
+> +		break;
+> +	}
+> +
+> +	mipi_dbi_command(mipi, ILI9225_HORIZ_WINDOW_ADDR_1, 0x00, x2);
 
-> 
-> - v3
->   - Reverted code for converts to big endian to previous version.
->   - Changed part of variable order of dwz info structure to order of
->     old version.
-> 
-> - v2
->   - Our fw binary data is little endian, but our IC protocol for fw
->     update use big endian. So it need to conert to big endian data
->     and I added about it.
->   - Changed PGM pattern value to big endian.
->   - Changed to process for product code to using switch case.
-> 
-> Please review this.
-> Thanks!
-> 
-> Ps. I added to changes about code of previous version.
-> 
-> diff --git a/drivers/input/touchscreen/hideep.c b/drivers/input/touchscreen/hideep.c
-> index 1df0a43..4455a13 100644
-> --- a/drivers/input/touchscreen/hideep.c
-> +++ b/drivers/input/touchscreen/hideep.c
-> @@ -123,9 +123,9 @@ struct dwz_info {
-> 	__be16 release_ver;
-> 	__be16 custom_ver;
->  
-> -	u8 model_name[6];
-> 	u8 factory_id;
-> 	u8 panel_type;
-> +	u8 model_name[6];
->  
-> 	__be16 extra_option;
-> 	__be16 product_code;
-> @@ -408,7 +408,7 @@ static int hideep_check_status(struct hideep_ts *ts)
->  }
->  
->  static int hideep_program_page(struct hideep_ts *ts, u32 addr,
-> -			       __be32 *ucode, size_t xfer_count)
-> +			       const __be32 *ucode, size_t xfer_count)
->  {
-> 	u32 val;
-> 	int error;
-> @@ -457,15 +457,13 @@ static int hideep_program_page(struct hideep_ts *ts, u32 addr,
->  }
->  
->  static int hideep_program_nvm(struct hideep_ts *ts,
-> -			      const u32 *ucode, size_t ucode_len)
-> +			      const __be32 *ucode, size_t ucode_len)
->  {
-> 	struct pgm_packet *packet_r = (void *)ts->xfer_buf;
-> 	__be32 *current_ucode = packet_r->payload;
-> -	__be32 write_ucode[HIDEEP_NVM_PAGE_SIZE];
-> 	size_t xfer_len;
-> 	size_t xfer_count;
-> 	u32 addr = 0;
-> -	int i;
-> 	int error;
->  
-> 	hideep_nvm_unlock(ts);
-> @@ -483,14 +481,10 @@ static int hideep_program_nvm(struct hideep_ts *ts,
-> 			return error;
-> 		}
->  
-> -		/* Need to because binary data is little endian */
-> -		for (i = 0; i < xfer_len; i++)
-> -			write_ucode[i] = cpu_to_be32(ucode[i]);
-> -
-> 		/* See if the page needs updating */
-> -		if (memcmp(write_ucode, current_ucode, xfer_len)) {
-> +		if (memcmp(ucode, current_ucode, xfer_len)) {
-> 			error = hideep_program_page(ts, addr,
-> -						    write_ucode, xfer_count);
-> +						    ucode, xfer_count);
-> 			if (error) {
-> 				dev_err(&ts->client->dev,
-> 					"%s: iwrite failure @%#08x: %d\n",
-> @@ -510,11 +504,10 @@ static int hideep_program_nvm(struct hideep_ts *ts,
->  }
->  
->  static int hideep_verify_nvm(struct hideep_ts *ts,
-> -			     const u32 *ucode, size_t ucode_len)
-> +			     const __be32 *ucode, size_t ucode_len)
->  {
-> 	struct pgm_packet *packet_r = (void *)ts->xfer_buf;
-> 	__be32 *current_ucode = packet_r->payload;
-> -	__be32 verify_ucode[HIDEEP_NVM_PAGE_SIZE];
-> 	size_t xfer_len;
-> 	size_t xfer_count;
-> 	u32 addr = 0;
-> @@ -534,12 +527,8 @@ static int hideep_verify_nvm(struct hideep_ts *ts,
-> 			return error;
-> 		}
->  
-> -		/* Need to because binary data is little endian */
-> -		for (i = 0; i < xfer_len; i++)
-> -			verify_ucode[i] = cpu_to_be32(ucode[i]);
-> -
-> -		if (memcmp(verify_ucode, current_ucode, xfer_len)) {
-> -			const u8 *ucode_bytes = (const u8 *)verify_ucode;
-> +		if (memcmp(ucode, current_ucode, xfer_len)) {
-> +			const u8 *ucode_bytes = (const u8 *)ucode;
-> 			const u8 *current_bytes = (const u8 *)current_ucode;
->  
-> 			for (i = 0; i < xfer_len; i++)
-> @@ -611,7 +600,7 @@ static int hideep_load_dwz(struct hideep_ts *ts)
->  }
->  
->  static int hideep_flash_firmware(struct hideep_ts *ts,
-> -				 const u32 *ucode, size_t ucode_len)
-> +				 const __be32 *ucode, size_t ucode_len)
->  {
-> 	int retry_cnt = 3;
-> 	int error;
-> @@ -629,7 +618,7 @@ static int hideep_flash_firmware(struct hideep_ts *ts,
->  }
->  
->  static int hideep_update_firmware(struct hideep_ts *ts,
-> -				  const u32 *ucode, size_t ucode_len)
-> +				  const __be32 *ucode, size_t ucode_len)
->  {
-> 	int error, error2;
->  
-> @@ -909,7 +898,7 @@ static ssize_t hideep_update_fw(struct device *dev,
-> 	mutex_lock(&ts->dev_mutex);
-> 	disable_irq(client->irq);
->  
-> -	error = hideep_update_firmware(ts, (const u32 *)fw_entry->data,
-> +	error = hideep_update_firmware(ts, (const __be32 *)fw_entry->data,
-> 				       fw_entry->size);
->  
-> 	enable_irq(client->irq);
-> 
-> Anthony Kim (1):
->   Input: add support for HiDeep touchscreen
-> 
->  .../bindings/input/touchscreen/hideep.txt          |   42 +
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  drivers/input/touchscreen/Kconfig                  |   11 +
->  drivers/input/touchscreen/Makefile                 |    1 +
->  drivers/input/touchscreen/hideep.c                 | 1120 ++++++++++++++++++++
->  5 files changed, 1175 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
->  create mode 100644 drivers/input/touchscreen/hideep.c
-> 
-> -- 
-> 2.7.4
-> 
+Please make a register write function that takes the reg value as 16-bit.
+Like ili9225_write(mipi, u8 reg, u16 val) or something.
 
--- 
-Dmitry
+I have come to understand that mipi isn't really a good variable name here.
+mipi can be a lot of things, MIPI DSI for instance uses dsi as a variable
+name. So we really should use 'dbi' instead of 'mipi'.
+
+Noralf.
+
+> +	mipi_dbi_command(mipi, ILI9225_HORIZ_WINDOW_ADDR_2, 0x00, x1);
+> +	mipi_dbi_command(mipi, ILI9225_VERT_WINDOW_ADDR_1, 0x00, y2);
+> +	mipi_dbi_command(mipi, ILI9225_VERT_WINDOW_ADDR_2, 0x00, y1);
+> +
+> +	mipi_dbi_command(mipi, ILI9225_RAM_ADDRESS_SET_1, 0x00, x_start);
+> +	mipi_dbi_command(mipi, ILI9225_RAM_ADDRESS_SET_2, 0x00, y_start);
+> +
+> +	ret = mipi_dbi_command_buf(mipi, ILI9225_WRITE_DATA_TO_GRAM, tr,
+> +				(clip.x2 - clip.x1) * (clip.y2 - clip.y1) * 2);
+> +
+> +out_unlock:
+> +	mutex_unlock(&tdev->dirty_lock);
+> +
+> +	if (ret)
+> +		dev_err_once(fb->dev->dev, "Failed to update display %d\n",
+> +			     ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct drm_framebuffer_funcs ili9225_fb_funcs = {
+> +	.destroy	= drm_gem_fb_destroy,
+> +	.create_handle	= drm_gem_fb_create_handle,
+> +	.dirty		= ili9225_fb_dirty,
+> +};
+> +
+> +static void ili9225_pipe_enable(struct drm_simple_display_pipe *pipe,
+> +				struct drm_crtc_state *crtc_state)
+> +{
+> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+> +	struct drm_framebuffer *fb = pipe->plane.fb;
+> +	struct device *dev = tdev->drm->dev;
+> +	int ret;
+> +	u8 am_id;
+> +
+> +	DRM_DEBUG_KMS("\n");
+> +
+> +	mipi_dbi_hw_reset(mipi);
+> +
+> +	/*
+> +	 * There don't seem to be two example init sequences that match, so
+> +	 * using the one from the popular Arduino library for this display.
+> +	 * https://github.com/Nkawu/TFT_22_ILI9225/blob/master/src/TFT_22_ILI9225.cpp
+> +	 */
+> +
+> +	ret = mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_1, 0x00, 0x00);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(dev, "Error sending command %d\n", ret);
+> +		return;
+> +	}
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_2, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_3, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_4, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_5, 0x00, 0x00);
+> +
+> +	msleep(40);
+> +
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_2, 0x00, 0x18);
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_3, 0x61, 0x21);
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_4, 0x00, 0x6f);
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_5, 0x49, 0x5f);
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_1, 0x08, 0x00);
+> +
+> +	msleep(10);
+> +
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_2, 0x10, 0x3b);
+> +
+> +	msleep(50);
+> +
+> +	switch (mipi->rotation) {
+> +	default:
+> +		am_id = 0x30;
+> +		break;
+> +	case 90:
+> +		am_id = 0x18;
+> +		break;
+> +	case 180:
+> +		am_id = 0x00;
+> +		break;
+> +	case 270:
+> +		am_id = 0x28;
+> +		break;
+> +	}
+> +	mipi_dbi_command(mipi, ILI9225_DRIVER_OUTPUT_CONTROL, 0x01, 0x1c);
+> +	mipi_dbi_command(mipi, ILI9225_LCD_AC_DRIVING_CONTROL, 0x01, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_ENTRY_MODE, 0x10, am_id);
+> +	mipi_dbi_command(mipi, ILI9225_DISPLAY_CONTROL_1, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_BLANK_PERIOD_CONTROL_1, 0x08, 0x08);
+> +	mipi_dbi_command(mipi, ILI9225_FRAME_CYCLE_CONTROL, 0x11, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_INTERFACE_CONTROL, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_OSCILLATION_CONTROL, 0x0d, 0x01);
+> +	mipi_dbi_command(mipi, ILI9225_VCI_RECYCLING, 0x00, 0x20);
+> +	mipi_dbi_command(mipi, ILI9225_RAM_ADDRESS_SET_1, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_RAM_ADDRESS_SET_2, 0x00, 0x00);
+> +
+> +	mipi_dbi_command(mipi, ILI9225_GATE_SCAN_CONTROL, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_VERTICAL_SCROLL_1, 0x00, 0xdb);
+> +	mipi_dbi_command(mipi, ILI9225_VERTICAL_SCROLL_2, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_VERTICAL_SCROLL_3, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_PARTIAL_DRIVING_POS_1, 0x00, 0xdb);
+> +	mipi_dbi_command(mipi, ILI9225_PARTIAL_DRIVING_POS_2, 0x00, 0x00);
+> +
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_1, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_2, 0x08, 0x08);
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_3, 0x08, 0x0a);
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_4, 0x00, 0x0a);
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_5, 0x0a, 0x08);
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_6, 0x08, 0x08);
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_7, 0x00, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_8, 0x0a, 0x00);
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_9, 0x07, 0x10);
+> +	mipi_dbi_command(mipi, ILI9225_GAMMA_CONTROL_10, 0x07, 0x10);
+> +
+> +	mipi_dbi_command(mipi, ILI9225_DISPLAY_CONTROL_1, 0x00, 0x12);
+> +
+> +	msleep(50);
+> +
+> +	mipi_dbi_command(mipi, ILI9225_DISPLAY_CONTROL_1, 0x10, 0x17);
+> +
+> +	mipi->enabled = true;
+> +
+> +	if (fb)
+> +		fb->funcs->dirty(fb, NULL, 0, 0, NULL, 0);
+> +}
+> +
+> +static void ili9225_pipe_disable(struct drm_simple_display_pipe *pipe)
+> +{
+> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+> +
+> +	DRM_DEBUG_KMS("\n");
+> +
+> +	if (!mipi->enabled)
+> +		return;
+> +
+> +	mipi_dbi_command(mipi, ILI9225_DISPLAY_CONTROL_1, 0x00, 0x00);
+> +	msleep(50);
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_2, 0x00, 0x07);
+> +	msleep(50);
+> +	mipi_dbi_command(mipi, ILI9225_POWER_CONTROL_1, 0x0a, 0x02);
+> +
+> +	mipi->enabled = false;
+> +}
+> +
+> +static u32 ili9225_spi_cmd_max_speed(struct spi_device *spi, size_t len)
+> +{
+> +	if (len > 64)
+> +		return 0; /* use default */
+> +
+> +	return min_t(u32, 10000000, spi->max_speed_hz);
+> +}
+> +
+> +static int ili9225_command(struct mipi_dbi *mipi, u8 cmd, u8 *par, size_t num)
+> +{
+> +	struct spi_device *spi = mipi->spi;
+> +	unsigned int bpw = 8;
+> +	u32 speed_hz;
+> +	int ret;
+> +
+> +	gpiod_set_value_cansleep(mipi->dc, 0);
+> +	speed_hz = ili9225_spi_cmd_max_speed(spi, 1);
+> +	ret = tinydrm_spi_transfer(spi, speed_hz, NULL, 8, &cmd, 1);
+> +	if (ret || !num)
+> +		return ret;
+> +
+> +	if (cmd == ILI9225_WRITE_DATA_TO_GRAM && !mipi->swap_bytes)
+> +		bpw = 16;
+> +
+> +	gpiod_set_value_cansleep(mipi->dc, 1);
+> +	speed_hz = ili9225_spi_cmd_max_speed(spi, num);
+> +
+> +	return tinydrm_spi_transfer(spi, speed_hz, NULL, bpw, par, num);
+> +}
+> +
+> +static int ili9225_spi_init(struct spi_device *spi, struct mipi_dbi *mipi,
+> +			    struct gpio_desc *dc)
+> +{
+> +	size_t tx_size = tinydrm_spi_max_transfer_size(spi, 0);
+> +	struct device *dev = &spi->dev;
+> +	int ret;
+> +
+> +	if (tx_size < 16) {
+> +		DRM_ERROR("SPI transmit buffer too small: %zu\n", tx_size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Even though it's not the SPI device that does DMA (the master does),
+> +	 * the dma mask is necessary for the dma_alloc_wc() in
+> +	 * drm_gem_cma_create(). The dma_addr returned will be a physical
+> +	 * address which might be different from the bus address, but this is
+> +	 * not a problem since the address will not be used.
+> +	 * The virtual address is used in the transfer and the SPI core
+> +	 * re-maps it on the SPI master device using the DMA streaming API
+> +	 * (spi_map_buf()).
+> +	 */
+> +	if (!dev->coherent_dma_mask) {
+> +		ret = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> +		if (ret) {
+> +			dev_warn(dev, "Failed to set dma mask %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	mipi->spi = spi;
+> +
+> +	mipi->command = ili9225_command;
+> +	mipi->dc = dc;
+> +	if (tinydrm_machine_little_endian() &&
+> +	    !tinydrm_spi_bpw_supported(spi, 16))
+> +		mipi->swap_bytes = true;
+> +
+> +	DRM_DEBUG_DRIVER("SPI speed: %uMHz\n", spi->max_speed_hz / 1000000);
+> +
+> +	return 0;
+> +}
+> +
+> +static const u32 ili9225_formats[] = {
+> +	DRM_FORMAT_RGB565,
+> +	DRM_FORMAT_XRGB8888,
+> +};
+> +
+> +static int ili9225_init(struct device *dev, struct mipi_dbi *mipi,
+> +			const struct drm_simple_display_pipe_funcs *pipe_funcs,
+> +			struct drm_driver *driver,
+> +			const struct drm_display_mode *mode,
+> +			unsigned int rotation)
+> +{
+> +	size_t bufsize = mode->vdisplay * mode->hdisplay * sizeof(u16);
+> +	struct tinydrm_device *tdev = &mipi->tinydrm;
+> +	int ret;
+> +
+> +	if (!mipi->command)
+> +		return -EINVAL;
+> +
+> +	mutex_init(&mipi->cmdlock);
+> +
+> +	mipi->tx_buf = devm_kmalloc(dev, bufsize, GFP_KERNEL);
+> +	if (!mipi->tx_buf)
+> +		return -ENOMEM;
+> +
+> +	ret = devm_tinydrm_init(dev, tdev, &ili9225_fb_funcs, driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = tinydrm_display_pipe_init(tdev, pipe_funcs,
+> +					DRM_MODE_CONNECTOR_VIRTUAL,
+> +					ili9225_formats,
+> +					ARRAY_SIZE(ili9225_formats), mode,
+> +					rotation);
+> +	if (ret)
+> +		return ret;
+> +
+> +	tdev->drm->mode_config.preferred_depth = 16;
+> +	mipi->rotation = rotation;
+> +
+> +	drm_mode_config_reset(tdev->drm);
+> +
+> +	DRM_DEBUG_KMS("preferred_depth=%u, rotation = %u\n",
+> +		      tdev->drm->mode_config.preferred_depth, rotation);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_simple_display_pipe_funcs ili9225_pipe_funcs = {
+> +	.enable		= ili9225_pipe_enable,
+> +	.disable	= ili9225_pipe_disable,
+> +	.update		= tinydrm_display_pipe_update,
+> +	.prepare_fb	= tinydrm_display_pipe_prepare_fb,
+> +};
+> +
+> +static const struct drm_display_mode ili9225_mode = {
+> +	TINYDRM_MODE(176, 220, 35, 44),
+> +};
+> +
+> +DEFINE_DRM_GEM_CMA_FOPS(ili9225_fops);
+> +
+> +static struct drm_driver ili9225_driver = {
+> +	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
+> +				  DRIVER_ATOMIC,
+> +	.fops			= &ili9225_fops,
+> +	TINYDRM_GEM_DRIVER_OPS,
+> +	.lastclose		= tinydrm_lastclose,
+> +	.name			= "ili9225",
+> +	.desc			= "Ilitek ILI9225",
+> +	.date			= "20171106",
+> +	.major			= 1,
+> +	.minor			= 0,
+> +};
+> +
+> +static const struct of_device_id ili9225_of_match[] = {
+> +	{ .compatible = "generic,2.2in-176x220-ili9225-tft" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, ili9225_of_match);
+> +
+> +static const struct spi_device_id ili9225_id[] = {
+> +	{ "2.2in-176x220-ili9225-tft", 0 },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(spi, ili9225_id);
+> +
+> +static int ili9225_probe(struct spi_device *spi)
+> +{
+> +	struct device *dev = &spi->dev;
+> +	struct mipi_dbi *mipi;
+> +	struct gpio_desc *rs;
+> +	u32 rotation = 0;
+> +	int ret;
+> +
+> +	mipi = devm_kzalloc(dev, sizeof(*mipi), GFP_KERNEL);
+> +	if (!mipi)
+> +		return -ENOMEM;
+> +
+> +	mipi->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+> +	if (IS_ERR(mipi->reset)) {
+> +		DRM_DEV_ERROR(dev, "Failed to get gpio 'reset'\n");
+> +		return PTR_ERR(mipi->reset);
+> +	}
+> +
+> +	rs = devm_gpiod_get(dev, "rs", GPIOD_OUT_LOW);
+> +	if (IS_ERR(rs)) {
+> +		DRM_DEV_ERROR(dev, "Failed to get gpio 'rs'\n");
+> +		return PTR_ERR(rs);
+> +	}
+> +
+> +	device_property_read_u32(dev, "rotation", &rotation);
+> +
+> +	ret = ili9225_spi_init(spi, mipi, rs);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ili9225_init(&spi->dev, mipi, &ili9225_pipe_funcs,
+> +			   &ili9225_driver, &ili9225_mode, rotation);
+> +	if (ret)
+> +		return ret;
+> +
+> +	spi_set_drvdata(spi, mipi);
+> +
+> +	return devm_tinydrm_register(&mipi->tinydrm);
+> +}
+> +
+> +static void ili9225_shutdown(struct spi_device *spi)
+> +{
+> +	struct mipi_dbi *mipi = spi_get_drvdata(spi);
+> +
+> +	tinydrm_shutdown(&mipi->tinydrm);
+> +}
+> +
+> +static struct spi_driver ili9225_spi_driver = {
+> +	.driver = {
+> +		.name = "ili9225",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = ili9225_of_match,
+> +	},
+> +	.id_table = ili9225_id,
+> +	.probe = ili9225_probe,
+> +	.shutdown = ili9225_shutdown,
+> +};
+> +module_spi_driver(ili9225_spi_driver);
+> +
+> +MODULE_DESCRIPTION("Ilitek ILI9225 DRM driver");
+> +MODULE_AUTHOR("David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
