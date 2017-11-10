@@ -1,48 +1,236 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] Add dwmac-sun8i on A83T DT
-Date: Fri, 10 Nov 2017 11:21:25 +0800
-Message-ID: <CAGb2v64=wj2C3T1CXM3Kh-nP71rJqdCwaCAAMtc6hBJzc9i8pA@mail.gmail.com>
-References: <20171109082950.21124-1-clabbe.montjoie@gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: "M.h. Lian" <minghuan.lian@nxp.com>
+Subject: RE: [PATCHv3 2/3] ARMv8: layerscape: add the pcie ep function support
+Date: Fri, 10 Nov 2017 03:30:27 +0000
+Message-ID: <VI1PR04MB1615B7DCB18B28D41BFA8707E8540@VI1PR04MB1615.eurprd04.prod.outlook.com>
+References: <20171110024926.39700-1-xiaowei.bao@nxp.com>
+ <20171110024926.39700-3-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUFWSTIAKGQEANNRIYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171109082950.21124-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171110024926.39700-3-xiaowei.bao@nxp.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, "hongtao.jia@nxp.com" <hongtao.jia@nxp.com>, Andy Tang <andy.tang@nxp.com>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pbrobinson@gmail.com" <pbrobinson@gmail.com>, "songxiaowei@hisilicon.com" <songxiaowei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 9, 2017 at 4:29 PM, Corentin Labbe
-<clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hello
->
-> This patch series add some device node for dwmac-sun8i on A83T.
->
-> Changes since v1:
-> - reworked commit log of patch #1
-> - added comment on drive strength
->
-> Corentin Labbe (2):
->   ARM: sun8i: a83t: add dwmac-sun8i device node
->   ARM: sun8i: bananapi-m3: Enable dwmac-sun8i
 
-Subjects should have "dts:" prefix.
-We could probably fix it up for you.
 
-ChenYu
+> -----Original Message-----
+> From: Bao Xiaowei [mailto:xiaowei.bao@nxp.com]
+> Sent: Friday, November 10, 2017 10:49 AM
+> To: robh+dt@kernel.org; mark.rutland@arm.com; catalin.marinas@arm.com;
+> will.deacon@arm.com; bhelgaas@google.com; shawnguo@kernel.org;
+> Madalin-cristian Bucur <madalin.bucur@nxp.com>; Sumit Garg
+> <sumit.garg@nxp.com>; Y.b. Lu <yangbo.lu@nxp.com>; hongtao.jia@nxp.com;
+> Andy Tang <andy.tang@nxp.com>; Leo Li <leoyang.li@nxp.com>;
+> kishon@ti.com; jingoohan1@gmail.com; pbrobinson@gmail.com;
+> songxiaowei@hisilicon.com; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+> pci@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; Z.q. Hou
+> <zhiqiang.hou@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> <minghuan.lian@nxp.com>
+> Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Subject: [PATCHv3 2/3] ARMv8: layerscape: add the pcie ep function suppor=
+t
+>=20
+> Add the pcie controller ep function support of layerscape base on pcie ep
+> framework.
+>=20
+> Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
+> ---
+>   v2:
+>   - fix the ioremap function used but no ioumap issue
+>   - optimize the code structure
+>   - add code comments
+>   v3:
+>   - fix the msi outband window request failed issue
+>=20
+>  drivers/pci/dwc/pci-layerscape.c | 124
+> +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 118 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/dwc/pci-layerscape.c b/drivers/pci/dwc/pci-layer=
+scape.c
+> index 87fa486bee2c..d787375528eb 100644
+> --- a/drivers/pci/dwc/pci-layerscape.c
+> +++ b/drivers/pci/dwc/pci-layerscape.c
+> @@ -34,7 +34,12 @@
+>  /* PEX Internal Configuration Registers */
+>  #define PCIE_STRFMR1		0x71c /* Symbol Timer & Filter Mask Register1
+> */
+>=20
+> +#define PCIE_DBI2_BASE		0x1000	/* DBI2 base address*/
+> +#define PCIE_MSI_MSG_DATA_OFF	0x5c	/* MSI Data register address*/
+> +#define PCIE_MSI_OB_SIZE	4096
+> +#define PCIE_MSI_ADDR_OFFSET	(1024 * 1024)
+>  #define PCIE_IATU_NUM		6
+> +#define PCIE_EP_ADDR_SPACE_SIZE 0x100000000
+>=20
+>  struct ls_pcie_drvdata {
+>  	u32 lut_offset;
+> @@ -44,12 +49,20 @@ struct ls_pcie_drvdata {
+>  	const struct dw_pcie_ops *dw_pcie_ops;  };
+>=20
+> +struct ls_pcie_ep {
+> +	dma_addr_t msi_phys_addr;
+> +	void __iomem *msi_virt_addr;
+> +	u64 msi_msg_addr;
+> +	u16 msi_msg_data;
+> +};
+> +
+>  struct ls_pcie {
+>  	struct dw_pcie *pci;
+>  	void __iomem *lut;
+>  	struct regmap *scfg;
+>  	const struct ls_pcie_drvdata *drvdata;
+>  	int index;
+> +	struct ls_pcie_ep *pcie_ep;
+>  };
+>=20
+>  #define to_ls_pcie(x)	dev_get_drvdata((x)->dev)
+> @@ -263,6 +276,100 @@ static const struct of_device_id ls_pcie_of_match[]=
+ =3D
+> {
+>  	{ },
+>  };
+>=20
+> +static void ls_pcie_raise_msi_irq(struct ls_pcie_ep *pcie_ep) {
+> +	iowrite32(pcie_ep->msi_msg_data, pcie_ep->msi_virt_addr); }
+> +
+> +static int ls_pcie_raise_irq(struct dw_pcie_ep *ep,
+> +		enum pci_epc_irq_type type, u8 interrupt_num) {
+> +	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> +	struct ls_pcie *pcie =3D to_ls_pcie(pci);
+> +	struct ls_pcie_ep *pcie_ep =3D pcie->pcie_ep;
+> +	u32 free_win;
+> +
+> +	/* get the msi message address and msi message data */
+> +	pcie_ep->msi_msg_addr =3D ioread32(pci->dbi_base +
+> MSI_MESSAGE_ADDR_L32) |
+> +		(((u64)ioread32(pci->dbi_base + MSI_MESSAGE_ADDR_U32)) <<
+> 32);
+> +	pcie_ep->msi_msg_data =3D ioread16(pci->dbi_base +
+> +PCIE_MSI_MSG_DATA_OFF);
+> +
+> +	/* request and config the outband window for msi */
+> +	free_win =3D find_first_zero_bit(&ep->ob_window_map,
+> +					sizeof(ep->ob_window_map));
+> +	if (free_win >=3D ep->num_ob_windows) {
+> +		dev_err(pci->dev, "no free outbound window\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	dw_pcie_prog_outbound_atu(pci, free_win, PCIE_ATU_TYPE_MEM,
+> +					pcie_ep->msi_phys_addr,
+> +					pcie_ep->msi_msg_addr,
+> +					PCIE_MSI_OB_SIZE);
+> +
+> +	set_bit(free_win, &ep->ob_window_map);
+> +
+> +	/* generate the msi interrupt */
+> +	ls_pcie_raise_msi_irq(pcie_ep);
+> +
+> +	/* release the outband window of msi */
+> +	dw_pcie_disable_atu(pci, free_win, DW_PCIE_REGION_OUTBOUND);
+> +	clear_bit(free_win, &ep->ob_window_map);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct dw_pcie_ep_ops pcie_ep_ops =3D {
+> +	.raise_irq =3D ls_pcie_raise_irq,
+> +};
+> +
+> +static int __init ls_add_pcie_ep(struct ls_pcie *pcie,
+> +					struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci =3D pcie->pci;
+> +	struct device *dev =3D pci->dev;
+> +	struct dw_pcie_ep *ep;
+> +	struct ls_pcie_ep *pcie_ep;
+> +	struct resource *cfg_res;
+> +	int ret;
+> +
+> +	ep =3D &pci->ep;
+> +	ep->ops =3D &pcie_ep_ops;
+> +
+> +	pcie_ep =3D devm_kzalloc(dev, sizeof(*pcie_ep), GFP_KERNEL);
+> +	if (!pcie_ep)
+> +		return -ENOMEM;
+> +
+> +	pcie->pcie_ep =3D pcie_ep;
+> +
+> +	cfg_res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> "config");
+> +	if (cfg_res) {
+> +		ep->phys_base =3D cfg_res->start;
+> +		ep->addr_size =3D PCIE_EP_ADDR_SPACE_SIZE;
+> +	} else {
+> +		dev_err(dev, "missing *config* space\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	pcie_ep->msi_phys_addr =3D ep->phys_base + PCIE_MSI_ADDR_OFFSET;
+> +
+> +	pcie_ep->msi_virt_addr =3D ioremap(pcie_ep->msi_phys_addr,
+> +						PCIE_MSI_OB_SIZE);
+> +	if (!pcie_ep->msi_virt_addr) {
+> +		dev_err(dev, "failed to map MSI outbound region\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret =3D dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize endpoint\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +
+[Minghuan Lian] Remove unnecessary blank line.
+> +}
+> +
+>  static int __init ls_add_pcie_port(struct ls_pcie *pcie)  {
+>  	struct dw_pcie *pci =3D pcie->pci;
+> @@ -309,16 +416,21 @@ static int __init ls_pcie_probe(struct platform_dev=
+ice
+> *pdev)
+>  	if (IS_ERR(pci->dbi_base))
+>  		return PTR_ERR(pci->dbi_base);
+>=20
+> -	pcie->lut =3D pci->dbi_base + pcie->drvdata->lut_offset;
+> +	pci->dbi_base2 =3D pci->dbi_base + PCIE_DBI2_BASE;
+>=20
+> -	if (!ls_pcie_is_bridge(pcie))
+> -		return -ENODEV;
+> +	pcie->lut =3D pci->dbi_base + pcie->drvdata->lut_offset;
+>=20
+>  	platform_set_drvdata(pdev, pcie);
+>=20
+> -	ret =3D ls_add_pcie_port(pcie);
+> -	if (ret < 0)
+> -		return ret;
+> +	if (!ls_pcie_is_bridge(pcie)) {
+> +		ret =3D ls_add_pcie_ep(pcie, pdev);
+> +		if (ret < 0)
+> +			return ret;
+> +	} else {
+> +		ret =3D ls_add_pcie_port(pcie);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+>=20
+>  	return 0;
+We can clean code like this:
+if (!ls_pcie_is_bridge(pcie))=20
+	ret =3D ls_add_pcie_ep(pcie, pdev);
+ else=20
+	ret =3D ls_add_pcie_port(pcie);
 
->
->  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 18 +++++++++++++++
->  arch/arm/boot/dts/sun8i-a83t.dtsi            | 33 ++++++++++++++++++++++++++++
->  2 files changed, 51 insertions(+)
->
+return ret;
+
+>  }
 > --
-> 2.13.6
->
+> 2.14.1
