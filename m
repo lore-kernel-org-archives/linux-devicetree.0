@@ -1,173 +1,87 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6: Remove unneeded address-cells/size-cells
-Date: Fri, 10 Nov 2017 19:12:58 -0200
-Message-ID: <1510348378-18150-1-git-send-email-festevam@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] drivers: usb: phy: Add qoriq usb 3.0 phy driver
+ support
+Date: Fri, 10 Nov 2017 15:19:06 -0600
+Message-ID: <20171110211906.3xxmquoz74nl4zdc@rob-hp-laptop>
+References: <20171107072055.26945-1-ran.wang_1@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171107072055.26945-1-ran.wang_1@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@kernel.org>, mark.rutland@arm.com, kishon@ti.com, catalin.marinas@arm.com, will.deacon@arm.com, stern@rowland.harvard.edu, pku.leo@gmail.com, mathias.nyman@intel.com, gregkh@linuxfoundation.org, suresh.gupta@nxp.com, felipe.balbi@linux.intel.com, Shawn Guo <shawnguo@kernel.org>, Sriram Dash <sriram.dash@nxp.com>, Li Yang <leoyang.li@nxp.com>, Hongtao Jia <hongtao.jia@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+On Tue, Nov 07, 2017 at 03:20:53PM +0800, Ran Wang wrote:
+> Adds qoriq usb 3.0 phy driver to implement erratum related workaround
+> for qoriq SoC.
+> 
+> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+> Change in v2:
+> 	- Replace funciont __raw_writel() by iowrite32be()
+> 	- Remove qoriq_usb3_phy_read() and qoriq_usb3_phy_write()
+> 	- Remove USB3PRM1CR_VAL define, use numbers directly
+> 	- Use C-style numeric constants on 32'h27672B2A in annotation
+> 	- Add prefix 'static' to struct qoriq_usb3_phy_erratum
+> 
+>  .../devicetree/bindings/phy/phy-qoriq-usb3.txt     |  36 ++++
 
-According to Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt:
+Please split bindings to separate patch.
 
-"- #address-cells, #size-cells : Must be present if the device has
-sub-nodes representing partitions."
+>  drivers/phy/Kconfig                                |   9 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-qoriq-usb3.c                       | 191 +++++++++++++++++++++
+>  4 files changed, 237 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
+>  create mode 100644 drivers/phy/phy-qoriq-usb3.c
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
+> new file mode 100644
+> index 000000000000..d956f9c89fbf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-qoriq-usb3.txt
+> @@ -0,0 +1,36 @@
+> +Driver for Freescale USB 3.0 PHY
+> +
+> +Required properties:
+> +
+> +- compatible :	fsl,qoriq-usb3-phy
+> +- reg :		register mappings for Parameter Configuration Register
+> +		and Phy base offset.
+> +- reg-names :	"param_ctrl" and "phy_base"
+> +- phy_type :	For multi port host USB controllers, should be one of
+> +		"ulpi", or "serial". For dual role USB controllers,
+> +		should be one of "ulpi", "utmi", "utmi_wide", or "serial".
+> +
+> +Example:
+> +		usbphy0: usb-phy@084F0000 {
 
-Remove the occurrences of #address-cells/size-cells where no sub-nodes
-representing partitions are present.
+Drop leading 0s and use lower case hex. Building dts with W=2 will tell 
+you this.
 
-Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-cm-fx6.dts           | 2 --
- arch/arm/boot/dts/imx6q-mccmon6.dts          | 2 --
- arch/arm/boot/dts/imx6qdl-aristainetos.dtsi  | 2 --
- arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi | 2 --
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi     | 2 --
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi       | 2 --
- arch/arm/boot/dts/imx6sl-evk.dts             | 2 --
- arch/arm/boot/dts/imx6sx-sdb-reva.dts        | 4 ----
- arch/arm/boot/dts/imx6sx-sdb.dts             | 4 ----
- 9 files changed, 22 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-index bc7587c..5df84e2 100644
---- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-+++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-@@ -194,8 +194,6 @@
- 	status = "okay";
- 
- 	m25p80@0 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "st,m25p", "jedec,spi-nor";
- 		spi-max-frequency = <20000000>;
- 		reg = <0>;
-diff --git a/arch/arm/boot/dts/imx6q-mccmon6.dts b/arch/arm/boot/dts/imx6q-mccmon6.dts
-index cab36f4..9636e15 100644
---- a/arch/arm/boot/dts/imx6q-mccmon6.dts
-+++ b/arch/arm/boot/dts/imx6q-mccmon6.dts
-@@ -90,8 +90,6 @@
- 	status = "okay";
- 
- 	s25sl032p: flash@0 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "jedec,spi-nor";
- 		spi-max-frequency = <40000000>;
- 		reg = <0>;
-diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
-index 7d64075..d8f578c 100644
---- a/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
-@@ -106,8 +106,6 @@
- 	status = "okay";
- 
- 	flash: m25p80@0 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "micron,n25q128a11", "jedec,spi-nor";
- 		spi-max-frequency = <20000000>;
- 		reg = <0>;
-diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-index 1b18728..5875252 100644
---- a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-@@ -136,8 +136,6 @@
- 	status = "okay";
- 
- 	flash: m25p80@1 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "micron,n25q128a11", "jedec,spi-nor";
- 		spi-max-frequency = <20000000>;
- 		reg = <1>;
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index 4fa2fac..828a9a5 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -200,8 +200,6 @@
- 	status = "disabled"; /* pin conflict with WEIM NOR */
- 
- 	flash: m25p80@0 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "st,m25p32", "jedec,spi-nor";
- 		spi-max-frequency = <20000000>;
- 		reg = <0>;
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index 0a50705..acb0292 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -196,8 +196,6 @@
- 	status = "okay";
- 
- 	flash: m25p80@0 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "st,m25p32", "jedec,spi-nor";
- 		spi-max-frequency = <20000000>;
- 		reg = <0>;
-diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
-index 60600b4..03a2240 100644
---- a/arch/arm/boot/dts/imx6sl-evk.dts
-+++ b/arch/arm/boot/dts/imx6sl-evk.dts
-@@ -123,8 +123,6 @@
- 	status = "okay";
- 
- 	flash: m25p80@0 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "st,m25p32", "jedec,spi-nor";
- 		spi-max-frequency = <20000000>;
- 		reg = <0>;
-diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-index e3533e7..ebbed57 100644
---- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-+++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-@@ -127,16 +127,12 @@
- 
- 	flash0: s25fl128s@0 {
- 		reg = <0>;
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "spansion,s25fl128s", "jedec,spi-nor";
- 		spi-max-frequency = <66000000>;
- 	};
- 
- 	flash1: s25fl128s@1 {
- 		reg = <1>;
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "spansion,s25fl128s", "jedec,spi-nor";
- 		spi-max-frequency = <66000000>;
- 	};
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
-index 6dd9beb..4b7481a 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dts
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dts
-@@ -113,16 +113,12 @@
- 	status = "okay";
- 
- 	flash0: n25q256a@0 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "micron,n25q256a", "jedec,spi-nor";
- 		spi-max-frequency = <29000000>;
- 		reg = <0>;
- 	};
- 
- 	flash1: n25q256a@1 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "micron,n25q256a", "jedec,spi-nor";
- 		spi-max-frequency = <29000000>;
- 		reg = <1>;
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +				compatible = "fsl,qoriq-usb3-phy";
+> +                reg = <0x0 0x01570070 0x0 0xC>, <0x0 0x084F0000 0x0 0x5000>;
+> +                reg-names = "param_ctrl", "phy_base";
+> +                #phy-cells = <0>;
+> +                phy_type = "utmi";
+> +		};
+> +
+> +        usbphy1: usb-phy@08500000 {
+> +                compatible = "fsl,qoriq-usb3-phy";
+> +                reg = <0x0 0x0157007C 0x0 0xC>, <0x0 0x08500000 0x0 0x5000>;
+> +                reg-names = "param_ctrl", "phy_base";
+> +                #phy-cells = <0>;
+> +                phy_type = "utmi";
+> +        };
+> +
+> +        usbphy2: usb-phy@08510000 {
+> +                compatible = "fsl,qoriq-usb3-phy";
+> +                reg = <0x0 0x01570088 0x0 0xC>, <0x0 0x08510000 0x0 0x5000>;
+> +                reg-names = "param_ctrl", "phy_base";
+> +                #phy-cells = <0>;
+> +                phy_type = "utmi";
+> +        };
