@@ -1,206 +1,205 @@
-From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
-Subject: Re: [PATCH] ARM: dts: imx6: Remove unneeded address-cells/size-cells
-Date: Sat, 11 Nov 2017 15:24:47 +0100
-Message-ID: <62f3cb01-ff85-0fe0-2afa-0fe4732a7421@rwth-aachen.de>
-References: <1510348378-18150-1-git-send-email-festevam@gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v10 2/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2
+ receiver driver
+Date: Sun, 12 Nov 2017 01:32:31 +0200
+Message-ID: <20171111233230.zbrt6mkfcplccuuw@valkosipuli.retiisi.org.uk>
+References: <20171110133137.9137-1-niklas.soderlund+renesas@ragnatech.se>
+ <20171110133137.9137-3-niklas.soderlund+renesas@ragnatech.se>
+ <20171110223227.pug7d4qi7rdi4b4b@valkosipuli.retiisi.org.uk>
+ <20171111001113.GB13042@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1510348378-18150-1-git-send-email-festevam@gmail.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171111001113.GB13042@bigcity.dyn.berto.se>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, tomoharu.fukawa.eb@renesas.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Hejssan, Niklas!
 
-(I'm sorry if I've missed some recipients or broke the email thread but
-I got Fabio's email from the infradead archive.)
-
-On 11/10/2017 10:12 PM, festevam at gmail.com (Fabio Estevam) wrote:
-> From: Fabio Estevam <fabio.estevam at nxp.com>
+On Sat, Nov 11, 2017 at 01:11:13AM +0100, Niklas Söderlund wrote:
+> Hej Sakari,
 > 
-> According to Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt:
+> On 2017-11-11 00:32:27 +0200, Sakari Ailus wrote:
+> > Hej Niklas,
+> > 
+> > Tack för uppdaterade lappar! Jag har några kommentar nedan... det ser bra
+> > ut överallt.
 > 
-> "- #address-cells, #size-cells : Must be present if the device has
-> sub-nodes representing partitions."
+> Tack för din feedback!
+
+Var så god!
+
+...
+
+> > > +static int rcar_csi2_calc_phypll(struct rcar_csi2 *priv,
+> > > +				 struct v4l2_subdev *source,
+> > > +				 struct v4l2_mbus_framefmt *mf,
+> > > +				 u32 *phypll)
+> > > +{
+> > > +	const struct phypll_hsfreqrange *hsfreq;
+> > > +	const struct rcar_csi2_format *format;
+> > > +	struct v4l2_ctrl *ctrl;
+> > > +	u64 mbps;
+> > > +
+> > > +	ctrl = v4l2_ctrl_find(source->ctrl_handler, V4L2_CID_PIXEL_RATE);
+> > 
+> > How about LINK_FREQ instead? It'd be more straightforward to calculate
+> > this. Up to you.
 > 
-> Remove the occurrences of #address-cells/size-cells where no sub-nodes
-> representing partitions are present.
+> I need to use PIXEL_RATE as my test setup uses the adv748x driver which 
+> only implement that control. In the short term I would like to support 
+> both, but I need a setup to test that before I can add support for it.  
+> In the long term, maybe we should deprecate one of the controls?
 
-This results in a regression for those devices where U-Boot is supposed
-to inject the partition sub-nodes. For example, this is the case for
-cm-fx6 module based devices like the Utilite Pro.
+Hmm. At least we musn't give the responsibility to calculate the pixel rate
+to the end user: this depends on the bus and that is not visible to the
+user space.
 
-Linux fails to parse the partitions and reports:
-[    9.330881] spi0.0: error parsing ofpart partition
-/soc/aips-bus@2000000/spba-bus@2000000/ecspi@2008000/m25p80@0/partition@0
-(/soc/aips-bus@2000000/spba-bus@2000000/ecspi@2008000/m25p80@0)
-[    9.330887] mtd: failed to find partitions; one or more parsers
-reports errors (-22)
+The link frequency is usually chosen from a few alternatives (or there's
+just a single choice). And the pixel rate depends on the pixel code chosen
+--- so you'd have a menu with menu entries changing based on format. That'd
+be odd.
 
-Also, the documentation does not forbid the #address-cells/size-cells if
-no partitions are present.
+Perhaps just leave it as-is, as suggested by Laurent?
 
-So, please, drop this patch (or exclude at least the cm-fx6 related change).
+...
 
-Thanks!
-Christopher
-
-> Signed-off-by: Fabio Estevam <fabio.estevam at nxp.com>
-> ---
->  arch/arm/boot/dts/imx6q-cm-fx6.dts           | 2 --
->  arch/arm/boot/dts/imx6q-mccmon6.dts          | 2 --
->  arch/arm/boot/dts/imx6qdl-aristainetos.dtsi  | 2 --
->  arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi | 2 --
->  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi     | 2 --
->  arch/arm/boot/dts/imx6qdl-sabresd.dtsi       | 2 --
->  arch/arm/boot/dts/imx6sl-evk.dts             | 2 --
->  arch/arm/boot/dts/imx6sx-sdb-reva.dts        | 4 ----
->  arch/arm/boot/dts/imx6sx-sdb.dts             | 4 ----
->  9 files changed, 22 deletions(-)
+> > > +
+> > > +	dev_dbg(priv->dev, "Using source %s pad: %u\n", source->name,
+> > > +		source_pad->index);
+> > > +
+> > > +	fmt.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> > > +	fmt.pad = source_pad->index;
+> > > +	ret = v4l2_subdev_call(source, pad, get_fmt, NULL, &fmt);
+> > > +	if (ret)
+> > > +		return ret;
+> > 
+> > The link format has been validated already by this point this isn't
+> > supposed to fail or produce different results than in link validation.
+> > 
+> > You could get the same format from the local pad, too.
 > 
-> diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> index bc7587c..5df84e2 100644
-> --- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> +++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> @@ -194,8 +194,6 @@
->  	status = "okay";
->  
->  	m25p80 at 0 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "st,m25p", "jedec,spi-nor";
->  		spi-max-frequency = <20000000>;
->  		reg = <0>;
-> diff --git a/arch/arm/boot/dts/imx6q-mccmon6.dts b/arch/arm/boot/dts/imx6q-mccmon6.dts
-> index cab36f4..9636e15 100644
-> --- a/arch/arm/boot/dts/imx6q-mccmon6.dts
-> +++ b/arch/arm/boot/dts/imx6q-mccmon6.dts
-> @@ -90,8 +90,6 @@
->  	status = "okay";
->  
->  	s25sl032p: flash at 0 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "jedec,spi-nor";
->  		spi-max-frequency = <40000000>;
->  		reg = <0>;
-> diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
-> index 7d64075..d8f578c 100644
-> --- a/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
-> @@ -106,8 +106,6 @@
->  	status = "okay";
->  
->  	flash: m25p80 at 0 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "micron,n25q128a11", "jedec,spi-nor";
->  		spi-max-frequency = <20000000>;
->  		reg = <0>;
-> diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-> index 1b18728..5875252 100644
-> --- a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
-> @@ -136,8 +136,6 @@
->  	status = "okay";
->  
->  	flash: m25p80 at 1 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "micron,n25q128a11", "jedec,spi-nor";
->  		spi-max-frequency = <20000000>;
->  		reg = <1>;
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> index 4fa2fac..828a9a5 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> @@ -200,8 +200,6 @@
->  	status = "disabled"; /* pin conflict with WEIM NOR */
->  
->  	flash: m25p80 at 0 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "st,m25p32", "jedec,spi-nor";
->  		spi-max-frequency = <20000000>;
->  		reg = <0>;
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> index 0a50705..acb0292 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-> @@ -196,8 +196,6 @@
->  	status = "okay";
->  
->  	flash: m25p80 at 0 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "st,m25p32", "jedec,spi-nor";
->  		spi-max-frequency = <20000000>;
->  		reg = <0>;
-> diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
-> index 60600b4..03a2240 100644
-> --- a/arch/arm/boot/dts/imx6sl-evk.dts
-> +++ b/arch/arm/boot/dts/imx6sl-evk.dts
-> @@ -123,8 +123,6 @@
->  	status = "okay";
->  
->  	flash: m25p80 at 0 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "st,m25p32", "jedec,spi-nor";
->  		spi-max-frequency = <20000000>;
->  		reg = <0>;
-> diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-> index e3533e7..ebbed57 100644
-> --- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-> +++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-> @@ -127,16 +127,12 @@
->  
->  	flash0: s25fl128s at 0 {
->  		reg = <0>;
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "spansion,s25fl128s", "jedec,spi-nor";
->  		spi-max-frequency = <66000000>;
->  	};
->  
->  	flash1: s25fl128s at 1 {
->  		reg = <1>;
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "spansion,s25fl128s", "jedec,spi-nor";
->  		spi-max-frequency = <66000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
-> index 6dd9beb..4b7481a 100644
-> --- a/arch/arm/boot/dts/imx6sx-sdb.dts
-> +++ b/arch/arm/boot/dts/imx6sx-sdb.dts
-> @@ -113,16 +113,12 @@
->  	status = "okay";
->  
->  	flash0: n25q256a at 0 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "micron,n25q256a", "jedec,spi-nor";
->  		spi-max-frequency = <29000000>;
->  		reg = <0>;
->  	};
->  
->  	flash1: n25q256a at 1 {
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
->  		compatible = "micron,n25q256a", "jedec,spi-nor";
->  		spi-max-frequency = <29000000>;
->  		reg = <1>;
+> Another good catch, I will use the format stored locally to make the 
+> code simpler. As you state the formats are already validated so it's 
+> safe to do so. I still need to get the remote subdevice to be able to 
+> read the PIXEL_RATE control, but I can move that to 
+> rcar_csi2_calc_phypll() where it's actually used.
+
+Sounds good to me.
+ 
+...
+
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int rcar_csi2_set_pad_format(struct v4l2_subdev *sd,
+> > > +				    struct v4l2_subdev_pad_config *cfg,
+> > > +				    struct v4l2_subdev_format *format)
+> > > +{
+> > > +	struct rcar_csi2 *priv = sd_to_csi2(sd);
+> > > +	struct v4l2_mbus_framefmt *framefmt;
+> > > +
+> > 
+> > Is everything possible? For instance, are there limits regarding width or
+> > height? Or the pixel code? They should be checked here.
 > 
+> Yes it do care about pixel code which was only validated at s_stream() 
+> time, will move the check here thanks!
+> 
+> > 
+> > Also the format on the source pad is, presumably, dependent on the format
+> > on the sink pad.
+> 
+> Yes, but since this driver can't change the format in any way is there 
+> any harm in mirror whatever is set on one pad on the other(s)? This will 
+> change once multiple stream support is added in a later series.
+
+If the hardware does not have functionality that may affect the size or the
+pixel code, then the format on the source pad shouldn't be settable.
+
+Yes, this will change when support for multiple streams is added. You'll
+get more pads, and the sink pad no longer will have a format. But... it's a
+good question how to prepare for this --- is it possible without changing
+the user space API? I'm sure we'll have other such cases, such as the
+smiapp driver with sensor embedded data.
+
+...
+
+> > > +static int rcar_csi2_parse_dt(struct rcar_csi2 *priv)
+> > > +{
+> > > +	struct device_node *ep;
+> > > +	struct v4l2_fwnode_endpoint v4l2_ep;
+> > > +	int ret;
+> > > +
+> > > +	ep = of_graph_get_endpoint_by_regs(priv->dev->of_node, 0, 0);
+> > > +	if (!ep) {
+> > > +		dev_err(priv->dev, "Not connected to subdevice\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
+> > > +	if (ret) {
+> > > +		dev_err(priv->dev, "Could not parse v4l2 endpoint\n");
+> > > +		of_node_put(ep);
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	ret = rcar_csi2_parse_v4l2(priv, &v4l2_ep);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	priv->remote.match.fwnode.fwnode =
+> > > +		fwnode_graph_get_remote_endpoint(of_fwnode_handle(ep));
+> > > +	priv->remote.match_type = V4L2_ASYNC_MATCH_FWNODE;
+> > > +
+> > > +	of_node_put(ep);
+> > > +
+> > > +	priv->notifier.subdevs = devm_kzalloc(priv->dev,
+> > > +					      sizeof(*priv->notifier.subdevs),
+> > > +					      GFP_KERNEL);
+> > > +	if (priv->notifier.subdevs == NULL)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	priv->notifier.num_subdevs = 1;
+> > > +	priv->notifier.subdevs[0] = &priv->remote;
+> > > +	priv->notifier.ops = &rcar_csi2_notify_ops;
+> > > +
+> > > +	dev_dbg(priv->dev, "Found '%pOF'\n",
+> > > +		to_of_node(priv->remote.match.fwnode.fwnode));
+> > > +
+> > > +	return v4l2_async_subdev_notifier_register(&priv->subdev,
+> > > +						   &priv->notifier);
+> > 
+> > Could you use v4l2_async_notifier_parse_fwnode_endpoints_by_port() or does
+> > something bad happen if you do? The intent with that was to avoid functions
+> > like the above in drivers.
+> 
+> Unfortunately not :-(
+> 
+> I have a local patch which do this, but it won't work since this driver 
+> needs to register remote endpoints (fwnode_graph_get_remote_endpoint() 
+> above) and not the remote parent in the async framework. The reason for 
+> this is that that is what the adv748x driver registers with the async 
+> framework given that it only have one node in DT but registers multiple 
+> subdevices. I would love to in the future resolve this in the helper 
+> functions and switch to such a helper here.
+
+Right. How does the fwnode matching work then? Don't you need to do
+endpoint node matching here, i.e. the patch for the fwnode framework, too?
+
+Could you change how the framework assigns the matched fwnode?
+
+What I'd like to do still is to decouple registering async sub-devices and
+parsing the endpoints. The two are quite entangled and I just haven't been
+able to come up with a good API for that yet.
+
+-- 
+Trevliga hälsningar,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
