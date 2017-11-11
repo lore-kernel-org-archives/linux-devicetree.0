@@ -1,109 +1,206 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH v4 2/5] media: dt: bindings: Add binding for NVIDIA Tegra
- Video Decoder Engine
-Date: Sat, 11 Nov 2017 16:21:07 +0200
-Message-ID: <6492d1af-19fa-253f-2b75-2c37ccd44cbe@mleia.com>
-References: <cover.1508448293.git.digetx@gmail.com>
- <bf5b91666229f9e46ed8c73d6ca2e4b65f86b5ab.1508448293.git.digetx@gmail.com>
+From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+Subject: Re: [PATCH] ARM: dts: imx6: Remove unneeded address-cells/size-cells
+Date: Sat, 11 Nov 2017 15:24:47 +0100
+Message-ID: <62f3cb01-ff85-0fe0-2afa-0fe4732a7421@rwth-aachen.de>
+References: <1510348378-18150-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <bf5b91666229f9e46ed8c73d6ca2e4b65f86b5ab.1508448293.git.digetx@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>, linux-media@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1510348378-18150-1-git-send-email-festevam@gmail.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Hi Fabio,
 
-On 10/20/2017 12:34 AM, Dmitry Osipenko wrote:
-> Add binding documentation for the Video Decoder Engine which is found
-> on NVIDIA Tegra20/30/114/124/132 SoC's.
+(I'm sorry if I've missed some recipients or broke the email thread but
+I got Fabio's email from the infradead archive.)
+
+On 11/10/2017 10:12 PM, festevam at gmail.com (Fabio Estevam) wrote:
+> From: Fabio Estevam <fabio.estevam at nxp.com>
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> According to Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt:
+> 
+> "- #address-cells, #size-cells : Must be present if the device has
+> sub-nodes representing partitions."
+> 
+> Remove the occurrences of #address-cells/size-cells where no sub-nodes
+> representing partitions are present.
+
+This results in a regression for those devices where U-Boot is supposed
+to inject the partition sub-nodes. For example, this is the case for
+cm-fx6 module based devices like the Utilite Pro.
+
+Linux fails to parse the partitions and reports:
+[    9.330881] spi0.0: error parsing ofpart partition
+/soc/aips-bus@2000000/spba-bus@2000000/ecspi@2008000/m25p80@0/partition@0
+(/soc/aips-bus@2000000/spba-bus@2000000/ecspi@2008000/m25p80@0)
+[    9.330887] mtd: failed to find partitions; one or more parsers
+reports errors (-22)
+
+Also, the documentation does not forbid the #address-cells/size-cells if
+no partitions are present.
+
+So, please, drop this patch (or exclude at least the cm-fx6 related change).
+
+Thanks!
+Christopher
+
+> Signed-off-by: Fabio Estevam <fabio.estevam at nxp.com>
 > ---
->  .../devicetree/bindings/media/nvidia,tegra-vde.txt | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
+>  arch/arm/boot/dts/imx6q-cm-fx6.dts           | 2 --
+>  arch/arm/boot/dts/imx6q-mccmon6.dts          | 2 --
+>  arch/arm/boot/dts/imx6qdl-aristainetos.dtsi  | 2 --
+>  arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi | 2 --
+>  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi     | 2 --
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi       | 2 --
+>  arch/arm/boot/dts/imx6sl-evk.dts             | 2 --
+>  arch/arm/boot/dts/imx6sx-sdb-reva.dts        | 4 ----
+>  arch/arm/boot/dts/imx6sx-sdb.dts             | 4 ----
+>  9 files changed, 22 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt b/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
-> new file mode 100644
-> index 000000000000..470237ed6fe5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
-> @@ -0,0 +1,55 @@
-> +NVIDIA Tegra Video Decoder Engine
-> +
-> +Required properties:
-> +- compatible : Must contain one of the following values:
-> +   - "nvidia,tegra20-vde"
-> +   - "nvidia,tegra30-vde"
-> +   - "nvidia,tegra114-vde"
-> +   - "nvidia,tegra124-vde"
-> +   - "nvidia,tegra132-vde"
-> +- reg : Must contain an entry for each entry in reg-names.
-> +- reg-names : Must include the following entries:
-> +  - sxe
-> +  - bsev
-> +  - mbe
-> +  - ppe
-> +  - mce
-> +  - tfe
-> +  - ppb
-> +  - vdma
-> +  - frameid
-
-I've already mentioned it in my review of the driver code, but the
-version from v3 with a single region is more preferable.
-
-Also it implies that "reg-names" property will be removed.
-
-> +- iram : Must contain phandle to the mmio-sram device node that represents
-> +         IRAM region used by VDE.
-> +- interrupts : Must contain an entry for each entry in interrupt-names.
-> +- interrupt-names : Must include the following entries:
-> +  - sync-token
-> +  - bsev
-> +  - sxe
-> +- clocks : Must include the following entries:
-> +  - vde
-> +- resets : Must include the following entries:
-> +  - vde
-> +
-> +Example:
-> +
-> +video-codec@6001a000 {
-> +	compatible = "nvidia,tegra20-vde";
-> +	reg = <0x6001a000 0x1000 /* Syntax Engine */
-> +	       0x6001b000 0x1000 /* Video Bitstream Engine */
-> +	       0x6001c000  0x100 /* Macroblock Engine */
-> +	       0x6001c200  0x100 /* Post-processing Engine */
-> +	       0x6001c400  0x100 /* Motion Compensation Engine */
-> +	       0x6001c600  0x100 /* Transform Engine */
-> +	       0x6001c800  0x100 /* Pixel prediction block */
-> +	       0x6001ca00  0x100 /* Video DMA */
-> +	       0x6001d800  0x300 /* Video frame controls */>;
-> +	reg-names = "sxe", "bsev", "mbe", "ppe", "mce",
-> +		    "tfe", "ppb", "vdma", "frameid";
-> +	iram = <&vde_pool>; /* IRAM region */
-> +	interrupts = <GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>, /* Sync token interrupt */
-> +		     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>, /* BSE-V interrupt */
-> +		     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>; /* SXE interrupt */
-> +	interrupt-names = "sync-token", "bsev", "sxe";
-> +	clocks = <&tegra_car TEGRA20_CLK_VDE>;
-> +	resets = <&tegra_car 61>;
-> +};
+> diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+> index bc7587c..5df84e2 100644
+> --- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
+> +++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+> @@ -194,8 +194,6 @@
+>  	status = "okay";
+>  
+>  	m25p80 at 0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "st,m25p", "jedec,spi-nor";
+>  		spi-max-frequency = <20000000>;
+>  		reg = <0>;
+> diff --git a/arch/arm/boot/dts/imx6q-mccmon6.dts b/arch/arm/boot/dts/imx6q-mccmon6.dts
+> index cab36f4..9636e15 100644
+> --- a/arch/arm/boot/dts/imx6q-mccmon6.dts
+> +++ b/arch/arm/boot/dts/imx6q-mccmon6.dts
+> @@ -90,8 +90,6 @@
+>  	status = "okay";
+>  
+>  	s25sl032p: flash at 0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "jedec,spi-nor";
+>  		spi-max-frequency = <40000000>;
+>  		reg = <0>;
+> diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
+> index 7d64075..d8f578c 100644
+> --- a/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-aristainetos.dtsi
+> @@ -106,8 +106,6 @@
+>  	status = "okay";
+>  
+>  	flash: m25p80 at 0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "micron,n25q128a11", "jedec,spi-nor";
+>  		spi-max-frequency = <20000000>;
+>  		reg = <0>;
+> diff --git a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
+> index 1b18728..5875252 100644
+> --- a/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi
+> @@ -136,8 +136,6 @@
+>  	status = "okay";
+>  
+>  	flash: m25p80 at 1 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "micron,n25q128a11", "jedec,spi-nor";
+>  		spi-max-frequency = <20000000>;
+>  		reg = <1>;
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> index 4fa2fac..828a9a5 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> @@ -200,8 +200,6 @@
+>  	status = "disabled"; /* pin conflict with WEIM NOR */
+>  
+>  	flash: m25p80 at 0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "st,m25p32", "jedec,spi-nor";
+>  		spi-max-frequency = <20000000>;
+>  		reg = <0>;
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> index 0a50705..acb0292 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+> @@ -196,8 +196,6 @@
+>  	status = "okay";
+>  
+>  	flash: m25p80 at 0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "st,m25p32", "jedec,spi-nor";
+>  		spi-max-frequency = <20000000>;
+>  		reg = <0>;
+> diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+> index 60600b4..03a2240 100644
+> --- a/arch/arm/boot/dts/imx6sl-evk.dts
+> +++ b/arch/arm/boot/dts/imx6sl-evk.dts
+> @@ -123,8 +123,6 @@
+>  	status = "okay";
+>  
+>  	flash: m25p80 at 0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "st,m25p32", "jedec,spi-nor";
+>  		spi-max-frequency = <20000000>;
+>  		reg = <0>;
+> diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+> index e3533e7..ebbed57 100644
+> --- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+> +++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
+> @@ -127,16 +127,12 @@
+>  
+>  	flash0: s25fl128s at 0 {
+>  		reg = <0>;
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "spansion,s25fl128s", "jedec,spi-nor";
+>  		spi-max-frequency = <66000000>;
+>  	};
+>  
+>  	flash1: s25fl128s at 1 {
+>  		reg = <1>;
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "spansion,s25fl128s", "jedec,spi-nor";
+>  		spi-max-frequency = <66000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
+> index 6dd9beb..4b7481a 100644
+> --- a/arch/arm/boot/dts/imx6sx-sdb.dts
+> +++ b/arch/arm/boot/dts/imx6sx-sdb.dts
+> @@ -113,16 +113,12 @@
+>  	status = "okay";
+>  
+>  	flash0: n25q256a at 0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "micron,n25q256a", "jedec,spi-nor";
+>  		spi-max-frequency = <29000000>;
+>  		reg = <0>;
+>  	};
+>  
+>  	flash1: n25q256a at 1 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>  		compatible = "micron,n25q256a", "jedec,spi-nor";
+>  		spi-max-frequency = <29000000>;
+>  		reg = <1>;
 > 
-
---
-With best wishes,
-Vladimir
