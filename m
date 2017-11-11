@@ -1,49 +1,136 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] of: Document exactly what of_find_node_by_name() puts
-Date: Fri, 10 Nov 2017 18:12:44 -0800
-Message-ID: <0ef4b415-801c-cb58-5de1-01bcfba1c778@infradead.org>
-References: <20171111014536.3592-1-sboyd@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v10 2/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver
+Date: Sat, 11 Nov 2017 08:17:59 +0200
+Message-ID: <2456560.miCsvfXtsD@avalon>
+References: <20171110133137.9137-1-niklas.soderlund+renesas@ragnatech.se> <20171110133137.9137-3-niklas.soderlund+renesas@ragnatech.se> <20171110223227.pug7d4qi7rdi4b4b@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20171111014536.3592-1-sboyd@codeaurora.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171110223227.pug7d4qi7rdi4b4b-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/2017 05:45 PM, Stephen Boyd wrote:
-> It isn't clear if this function of_node_put()s the 'from'
-> argument, or the node it finds in the search. Clearly indicate
-> which variable is touched.
-> 
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  drivers/of/base.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 63897531cd75..602c5d65734a 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -866,7 +866,7 @@ EXPORT_SYMBOL(of_find_node_opts_by_path);>   *	@from:	The node to start searching from or NULL, the node
+Hi Sakari,
 
-    *	@from:	The node to start searching from or %NULL; the node
+On Saturday, 11 November 2017 00:32:27 EET Sakari Ailus wrote:
+> On Fri, Nov 10, 2017 at 02:31:37PM +0100, Niklas S=F6derlund wrote:
+> > A V4L2 driver for Renesas R-Car MIPI CSI-2 receiver. The driver
+> > supports the rcar-vin driver on R-Car Gen3 SoCs where separate CSI-2
+> > hardware blocks are connected between the video sources and the video
+> > grabbers (VIN).
+> >=20
+> > Driver is based on a prototype by Koji Matsuoka in the Renesas BSP.
+> >=20
+> > Signed-off-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.s=
+e>
+> > ---
+> >=20
+> >  drivers/media/platform/rcar-vin/Kconfig     |  12 +
+> >  drivers/media/platform/rcar-vin/Makefile    |   1 +
+> >  drivers/media/platform/rcar-vin/rcar-csi2.c | 934 ++++++++++++++++++++=
++++
+> >  3 files changed, 947 insertions(+)
+> >  create mode 100644 drivers/media/platform/rcar-vin/rcar-csi2.c
 
->   *		you pass will not be searched, only the next one
->   *		will; typically, you pass what the previous call
+[snip]
 
-    *		will. Typically, you pass what the previous call
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > b/drivers/media/platform/rcar-vin/rcar-csi2.c new file mode 100644
+> > index 0000000000000000..27d09da191a09b39
+> > --- /dev/null
+> > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
 
-> - *		returned. of_node_put() will be called on it
-> + *		returned. of_node_put() will be called on @from.
->   *	@name:	The name string to match against
->   *
->   *	Returns a node pointer with refcount incremented, use
-> 
+[snip]
 
+> > +static int rcar_csi2_calc_phypll(struct rcar_csi2 *priv,
+> > +				 struct v4l2_subdev *source,
+> > +				 struct v4l2_mbus_framefmt *mf,
+> > +				 u32 *phypll)
+> > +{
+> > +	const struct phypll_hsfreqrange *hsfreq;
+> > +	const struct rcar_csi2_format *format;
+> > +	struct v4l2_ctrl *ctrl;
+> > +	u64 mbps;
+> > +
+> > +	ctrl =3D v4l2_ctrl_find(source->ctrl_handler, V4L2_CID_PIXEL_RATE);
+>=20
+> How about LINK_FREQ instead? It'd be more straightforward to calculate
+> this. Up to you.
 
--- 
-~Randy
+This probably needs to be documented, but I think the official API is=20
+V4L2_CID_PIXEL_RATE. The link frequency control is not mandatory.
+
+> > +	if (!ctrl) {
+> > +		dev_err(priv->dev, "no link freq control in subdev %s\n",
+> > +			source->name);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	format =3D rcar_csi2_code_to_fmt(mf->code);
+> > +	if (!format) {
+> > +		dev_err(priv->dev, "Unknown format: %d\n", mf->code);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	mbps =3D v4l2_ctrl_g_ctrl_int64(ctrl) * format->bpp;
+> > +	do_div(mbps, priv->lanes * 1000000);
+> > +
+> > +	for (hsfreq =3D priv->info->hsfreqrange; hsfreq->mbps !=3D 0; hsfreq+=
++)
+> > +		if (hsfreq->mbps >=3D mbps)
+> > +			break;
+> > +
+> > +	if (!hsfreq->mbps) {
+> > +		dev_err(priv->dev, "Unsupported PHY speed (%llu Mbps)", mbps);
+> > +		return -ERANGE;
+> > +	}
+> > +
+> > +	dev_dbg(priv->dev, "PHY HSFREQRANGE requested %llu got %u Mbps\n",=20
+mbps,
+> > +		hsfreq->mbps);
+> > +
+> > +	*phypll =3D PHYPLL_HSFREQRANGE(hsfreq->reg);
+> > +
+> > +	return 0;
+> > +}
+
+[snip]
+
+> > +static int rcar_csi2_s_power(struct v4l2_subdev *sd, int on)
+> > +{
+> > +	struct rcar_csi2 *priv =3D sd_to_csi2(sd);
+> > +
+> > +	if (on)
+> > +		pm_runtime_get_sync(priv->dev);
+> > +	else
+> > +		pm_runtime_put(priv->dev);
+>=20
+> The pipeline you have is already rather complex. Would it be an option to
+> power the hardware on when streaming is started? The smiapp driver does
+> this, without even implementing the s_power callback. (You'd still need to
+> call it on the image source, as long as we have drivers that need it.)
+
+We've briefly discussed this before, and I agree that pipeline power=20
+management needs to be redesigned, but we still haven't agreed on a proper=
+=20
+architecture for that. Feel free to propose an RFC :-) In the meantime I=20
+wouldn't try to enforce one specific model.
+
+> > +
+> > +	return 0;
+> > +}
+
+[snip]
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
