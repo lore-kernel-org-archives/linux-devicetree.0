@@ -1,118 +1,86 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v10 2/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver
-Date: Sat, 11 Nov 2017 08:34:58 +0200
-Message-ID: <2021174.cCvEQoDkK6@avalon>
-References: <20171110133137.9137-1-niklas.soderlund+renesas@ragnatech.se> <20171110223227.pug7d4qi7rdi4b4b@valkosipuli.retiisi.org.uk> <20171111001113.GB13042@bigcity.dyn.berto.se>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: msm8916: add bindings for i2c1,
+ i2c3, i2c5
+Date: Fri, 10 Nov 2017 23:56:12 -0800
+Message-ID: <20171111075612.GA1236@tuxbook>
+References: <20171101175335.22123-1-damien.riegel@savoirfairelinux.com>
+ <20171101175335.22123-5-damien.riegel@savoirfairelinux.com>
+ <20171109170016.GC28761@minitux>
+ <20171109171456.6t3nhig6t4bnkc77@workotop.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20171111001113.GB13042@bigcity.dyn.berto.se>
-Sender: linux-media-owner@vger.kernel.org
-To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, tomoharu.fukawa.eb@renesas.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171109171456.6t3nhig6t4bnkc77@workotop.localdomain>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Damien Riegel <damien.riegel@savoirfairelinux.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kernel@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+On Thu 09 Nov 09:14 PST 2017, Damien Riegel wrote:
 
-On Saturday, 11 November 2017 02:11:13 EET Niklas S=F6derlund wrote:
-> On 2017-11-11 00:32:27 +0200, Sakari Ailus wrote:
-> > On Fri, Nov 10, 2017 at 02:31:37PM +0100, Niklas S=F6derlund wrote:
-> >> A V4L2 driver for Renesas R-Car MIPI CSI-2 receiver. The driver
-> >> supports the rcar-vin driver on R-Car Gen3 SoCs where separate CSI-2
-> >> hardware blocks are connected between the video sources and the video
-> >> grabbers (VIN).
-> >>=20
-> >> Driver is based on a prototype by Koji Matsuoka in the Renesas BSP.
-> >>=20
-> >> Signed-off-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.=
-se>
-> >> ---
-> >>=20
-> >>  drivers/media/platform/rcar-vin/Kconfig     |  12 +
-> >>  drivers/media/platform/rcar-vin/Makefile    |   1 +
-> >>  drivers/media/platform/rcar-vin/rcar-csi2.c | 934 +++++++++++++++++++=
-+++
-> >>  3 files changed, 947 insertions(+)
-> >>  create mode 100644 drivers/media/platform/rcar-vin/rcar-csi2.c
+> Hi Bjorn,
+> 
+> 
+> On Thu, Nov 09, 2017 at 09:00:16AM -0800, Bjorn Andersson wrote:
+> > On Wed 01 Nov 10:53 PDT 2017, Damien Riegel wrote:
+> > 
+> > I think it's better to use the word "nodes" (add nodes...)
+> 
+> Will reword that.
+> 
+> > 
+> > > Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 72 ++++++++++++++++++++++++++++++
+> > >  arch/arm64/boot/dts/qcom/msm8916.dtsi      | 45 +++++++++++++++++++
+> > >  2 files changed, 117 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+> > > index c67ad8ed8b60..1cec5b30ed6e 100644
+> > > --- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+> > > @@ -270,6 +270,30 @@
+> > >  		};
+> > >  	};
+> > >  
+> > > +	i2c1_default: i2c1_default {
+> > > +		pinmux {
+> > > +			function = "blsp_i2c1";
+> > > +			pins = "gpio2", "gpio3";
+> > > +		};
+> > > +		pinconf {
+> > > +			pins = "gpio2", "gpio3";
+> > > +			drive-strength = <16>;
+> > > +			bias-disable;
+> > > +		};
+> > 
+> > pinconf is typically board specific, so please leave these out from the
+> > base dtsi.
+> 
+> I don't mind dropping that, but pinconf for i2c{2,4,6} is already in
+> msm8916-pins.dtsi, so we should either drop them all, or add pinconf for
+> i2c{1,3,5} for consistency.
 
-[snip]
+You're right, this needs to be consistent. So I would like us to update
+the existing nodes,
 
-> >> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> >> b/drivers/media/platform/rcar-vin/rcar-csi2.c new file mode 100644
-> >> index 0000000000000000..27d09da191a09b39
-> >> --- /dev/null
-> >> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> And if I read the pinctrl driver correctly,
+> I2C cannot be routed to other pins, the only properties that users may
+> want to modify are drive-strength and bias. Let me know which option you
+> prefer.
+> 
 
-[snip]
+I discussed the matter with my colleagues and we concluded that we want
+to keep the muxing in the platform.dtsi and move the specification of
+the electrical properties (pinconf) to the board.dts(i).
 
-> >> +static int rcar_csi2_calc_phypll(struct rcar_csi2 *priv,
-> >> +				 struct v4l2_subdev *source,
-> >> +				 struct v4l2_mbus_framefmt *mf,
-> >> +				 u32 *phypll)
-> >> +{
-> >> +	const struct phypll_hsfreqrange *hsfreq;
-> >> +	const struct rcar_csi2_format *format;
-> >> +	struct v4l2_ctrl *ctrl;
-> >> +	u64 mbps;
-> >> +
-> >> +	ctrl =3D v4l2_ctrl_find(source->ctrl_handler, V4L2_CID_PIXEL_RATE);
-> >=20
-> > How about LINK_FREQ instead? It'd be more straightforward to calculate
-> > this. Up to you.
->=20
-> I need to use PIXEL_RATE as my test setup uses the adv748x driver which
-> only implement that control. In the short term I would like to support
-> both, but I need a setup to test that before I can add support for it.
-> In the long term, maybe we should deprecate one of the controls?
+We did discuss having some "default values" in the platform file, but
+pushing these down to the board file gives an indication to others that
+these values are board specific.
 
-The LINK_FREQ control is meant for the user to select one of the available=
-=20
-link frequencies (when multiple values are possible), while the PIXEL_RATE=
-=20
-control is a read-only control meant for the connected subdev to query the=
-=20
-resulting pixel rate. I think both controls should be kept, and PIXEL_RATE=
-=20
-should be used here.
 
-> >> +	if (!ctrl) {
-> >> +		dev_err(priv->dev, "no link freq control in subdev %s\n",
-> >> +			source->name);
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	format =3D rcar_csi2_code_to_fmt(mf->code);
-> >> +	if (!format) {
-> >> +		dev_err(priv->dev, "Unknown format: %d\n", mf->code);
-> >> +		return -EINVAL;
-> >> +	}
-> >> +
-> >> +	mbps =3D v4l2_ctrl_g_ctrl_int64(ctrl) * format->bpp;
-> >> +	do_div(mbps, priv->lanes * 1000000);
-> >> +
-> >> +	for (hsfreq =3D priv->info->hsfreqrange; hsfreq->mbps !=3D 0; hsfreq=
-++)
-> >> +		if (hsfreq->mbps >=3D mbps)
-> >> +			break;
-> >> +
-> >> +	if (!hsfreq->mbps) {
-> >> +		dev_err(priv->dev, "Unsupported PHY speed (%llu Mbps)", mbps);
-> >> +		return -ERANGE;
-> >> +	}
-> >> +
-> >> +	dev_dbg(priv->dev, "PHY HSFREQRANGE requested %llu got %u Mbps\n",
-> >> mbps,
-> >> +		hsfreq->mbps);
-> >> +
-> >> +	*phypll =3D PHYPLL_HSFREQRANGE(hsfreq->reg);
-> >> +
-> >> +	return 0;
-> >> +}
+PS. If you're willing to provide a patch for the existing nodes I would
+be happy to review this as well!
 
-[snip]
-
-=2D-=20
 Regards,
-
-Laurent Pinchart
+Bjorn
