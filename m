@@ -1,55 +1,65 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] fix the clock setting for SAR ADC
-Date: Sun, 12 Nov 2017 02:35:26 +0100
-Message-ID: <CAFBinCBJck9p8dDr-tmzFVyCk0Udfh4pB0z8c_HmJ4T+g20tQw@mail.gmail.com>
-References: <20171107140942.29243-1-yixun.lan@amlogic.com> <CAFBinCB=2pb9dZkpSqdVAiumkSCzgaW0oejftjZNP7aYbiQJuw@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: et8ek8: Document support for flash and lens devices
+Date: Sun, 12 Nov 2017 12:27:29 +0100
+Message-ID: <20171112112729.GA21247@amd>
+References: <20171026075342.5760-1-sakari.ailus@linux.intel.com>
+ <20171026075342.5760-30-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCB=2pb9dZkpSqdVAiumkSCzgaW0oejftjZNP7aYbiQJuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171026075342.5760-30-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, niklas.soderlund@ragnatech.se, maxime.ripard@free-electrons.com, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, sre@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yixun,
 
-On Tue, Nov 7, 2017 at 10:36 PM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> Hi Yixun,
->
-> On Tue, Nov 7, 2017 at 3:09 PM, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> wrote:
->> patch [1/4]:
->>   Fix wrong SARADC/SANA clock gate bit in Meson-GXBB/GXL,
->> the published datasheets[4] also has wrong description about this.
->>   This patch should be explicitly merged *before* other patches.
->>
->> patch [2-4/4]:
->>   Drop the "sana" clock from SAR ADC module,
-> I agree with Jerome that patch 2/4 should be applied last.
-> when I wrote the driver I couldn't get it to work on my GXBB board
-> (which unfortunately has died since then) because the clocks were
-> disabled (they weren't enabled by the bootloader). people who are
-> using an old .dtb would get the same problem again until the clock
-> driver is merged
->
->>   From the hardware perspective, the SAR ADC module doesn't
->> require "sana" clock to wrok. This should apply to all SoC,
->> including meson6,8, GXBB, GXL..
-> thank you for clarifying this!
->
->> Note: the whole patchset series has been tested at GXL-P212 board,
->> we haven't got any meson6,8 board to test, so I would appreciate
->> if someone (Martin?) could help to confirm it works there.
-> I can test this on a Meson8b and a Meson8m2 board on the weekend -
-> I'll let you know about the results
-the ADC still works fine with this series applied on my Meson8m2 board
-as well as my Meson8b EC-100
-I added my "Reviewed-by" and "Acked-by" to the corresponding patches
-(with a change request on the .dts patch)
-
-Thank you for fixing this!
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-Regards
-Martin
+Document dts support of LED/focus.
+
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt=
+ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+index 0b7b6a4..e80d589 100644
+--- a/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
++++ b/Documentation/devicetree/bindings/media/i2c/toshiba,et8ek8.txt
+@@ -20,6 +20,13 @@ Mandatory properties
+   is in hardware standby mode when the signal is in the low state.
+=20
+=20
++Optional properties
++-------------------
++
++- flash-leds: See ../video-interfaces.txt
++- lens-focus: See ../video-interfaces.txt
++
++
+ Endpoint node mandatory properties
+ ----------------------------------
+=20
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--VS++wcV0S1rZb1Fb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAloIMCEACgkQMOfwapXb+vIvvwCgovOzLS5wXz8nFZhPHXmoXMf5
+yzAAnRVd8KAhtF72KttFGW2keU/MFEeH
+=5wB8
+-----END PGP SIGNATURE-----
+
+--VS++wcV0S1rZb1Fb--
