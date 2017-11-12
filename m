@@ -1,51 +1,41 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] Input: twl4030-vibra: fix sibling-node lookup
-Date: Sun, 12 Nov 2017 13:12:35 +0100
-Message-ID: <20171112121235.GO11226@localhost>
-References: <20171111154339.16875-1-johan@kernel.org>
- <20171111175059.lwfhw2wdhlj5yxhc@dtor-ws>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6: Remove unneeded address-cells/size-cells
+Date: Sun, 12 Nov 2017 10:14:23 -0200
+Message-ID: <CAOMZO5CEVdWgKRQT8-42GOEyFgB8cvCtJZK780BK1t3zHkX62w@mail.gmail.com>
+References: <1510348378-18150-1-git-send-email-festevam@gmail.com> <62f3cb01-ff85-0fe0-2afa-0fe4732a7421@rwth-aachen.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171111175059.lwfhw2wdhlj5yxhc@dtor-ws>
+In-Reply-To: <62f3cb01-ff85-0fe0-2afa-0fe4732a7421-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[ +CC: Lee, Rob and device-tree list ]
+Hi Christopher,
 
-On Sat, Nov 11, 2017 at 09:50:59AM -0800, Dmitry Torokhov wrote:
-> On Sat, Nov 11, 2017 at 04:43:37PM +0100, Johan Hovold wrote:
-> > A helper purported to look up a child node based on its name was using
-> > the wrong of-helper and ended up prematurely freeing the parent of-node
-> > while searching the whole device tree depth-first starting at the parent
-> > node.
-> 
-> Ugh, this all is pretty ugly business. Can we teach MFD to allow
-> specifying firmware node to be attached to the platform devices it
-> creates in mfd_add_device() so that the leaf drivers simply call
-> device_property_read_XXX() on their own device and not be bothered with
-> weird OF refcount issues or what node they need to locate and parse?
+On Sat, Nov 11, 2017 at 12:24 PM, Christopher Spinrath
+<christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
 
-Yeah, that may have helped. You can actually specify a compatible string
-in struct mfd_cell today which does make mfd_add_device() associate a
-matching child node.
+> This results in a regression for those devices where U-Boot is supposed
+> to inject the partition sub-nodes. For example, this is the case for
+> cm-fx6 module based devices like the Utilite Pro.
+>
+> Linux fails to parse the partitions and reports:
+> [    9.330881] spi0.0: error parsing ofpart partition
+> /soc/aips-bus@2000000/spba-bus@2000000/ecspi@2008000/m25p80@0/partition@0
+> (/soc/aips-bus@2000000/spba-bus@2000000/ecspi@2008000/m25p80@0)
+> [    9.330887] mtd: failed to find partitions; one or more parsers
+> reports errors (-22)
+>
+> Also, the documentation does not forbid the #address-cells/size-cells if
+> no partitions are present.
+>
+> So, please, drop this patch (or exclude at least the cm-fx6 related change).
 
-Some best practice regarding how to deal with MFD and device tree would
-be good to determine and document too. For example, when should
-of_platform_populate() be used in favour of mfd_add_device()?
-And how best to deal with sibling nodes, which is part of the problem
-here (I think the mfd should have provided a flag rather than having
-subdrivers deal with sibling nodes, for example).
+Good point! I will resend the patch and will only change the NXP boards.
 
-That said, driver authors using the wrong of-helper could possibly have
-been avoided by amending the kernel docs (I'll do that as a follow up),
-but once these incorrect usages get in, only review can prevent them
-from being reproduced through copy-paste coding.
-
-Johan
+Thanks
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
