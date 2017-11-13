@@ -1,30 +1,57 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: ls1021a: add "fsl, ls1021a-esdhc" compatible
- string to esdhc node
-Date: Mon, 13 Nov 2017 13:16:31 -0200
-Message-ID: <CAOMZO5Di8UsXvgFnKtibrpbMG9b7uiDa2gdGPPNHE+CV52D9AQ@mail.gmail.com>
-References: <1510583976-6661-1-git-send-email-rasmus.villemoes@prevas.dk>
+From: Kim Phillips <kim.phillips@arm.com>
+Subject: Re: [PATCH RESEND 1/4] crypto: caam: add caam-dma node to SEC4.0
+ device tree binding
+Date: Mon, 13 Nov 2017 09:21:32 -0600
+Message-ID: <20171113092132.55f13384cede1f283a53434b@arm.com>
+References: <20171030134654.13729-1-horia.geanta@nxp.com>
+        <20171030134654.13729-2-horia.geanta@nxp.com>
+        <20171030092424.1279add003c96ced4233bd2d@arm.com>
+        <VI1PR04MB1325BAD68A7CC8C7A302D9A48A570@VI1PR04MB1325.eurprd04.prod.outlook.com>
+        <20171109103437.834f8ddb5c62e5253002b2d0@arm.com>
+        <VI1PR04MB13253DB5164A151D8E4AB8308A540@VI1PR04MB1325.eurprd04.prod.outlook.com>
+        <20171110104430.28b2f56f910b7514d778c4b2@arm.com>
+        <VI1PR0402MB3342C1736F492A323096541C982B0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510583976-6661-1-git-send-email-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <VI1PR0402MB3342C1736F492A323096541C982B0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Horia =?UTF-8?B?R2VhbnTEgw==?= <horia.geanta@nxp.com>
+Cc: Radu Andrei Alexe <radu.alexe@nxp.com>, Vinod Koul <vinod.koul@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dan Douglass <dan.douglass@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 13, 2017 at 12:39 PM, Rasmus Villemoes
-<rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org> wrote:
-> Commit a22950c888e3 (mmc: sdhci-of-esdhc: add quirk
-> SDHCI_QUIRK_BROKEN_TIMEOUT_VAL for ls1021a) added logic to the driver to
-> enable the broken timeout val quirk for ls1021a, but did not add the
-> corresponding compatible string to the device tree, so it didn't really
-> have any effect. Fix that.
->
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+On Mon, 13 Nov 2017 08:32:24 +0000
+Horia Geantă <horia.geanta@nxp.com> wrote:
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On 11/10/2017 6:44 PM, Kim Phillips wrote:
+> > On Fri, 10 Nov 2017 08:02:01 +0000
+> > Radu Andrei Alexe <radu.alexe@nxp.com> wrote:
+> [snip]>> 2. I wanted this driver to be tracked by the dma engine team.
+> They have
+> >> the right expertise to provide adequate feedback. If all the code was in 
+> >> the crypto directory they wouldn't know about this driver or any 
+> >> subsequent changes to it.
+> > 
+> > dma subsystem bits could still be put in the dma area if deemed
+> > necessary but I don't think it is: I see
+> > drivers/crypto/ccp/ccp-dmaengine.c calls dma_async_device_register for
+> > example.
+> > 
+> Please see previous discussion with Vinod:
+> https://www.mail-archive.com/linux-crypto@vger.kernel.org/msg21468.html
+
+Vinod says: "If the dma controller is internal to crypto, then it might
+be okay to be inside the crypto driver."
+
+Is that the case for the CCP driver?  Isn't it the case here?
+
+In any case, I don't care that much about that, this all begat from new
+*devices* coming out of nowhere.
+
+> > What is the rationale for using the crypto h/w as a dma engine anyway?
+> SoCs that don't have a system DMA, for e.g. LS1012A.
+
+OK.
+
+Kim
