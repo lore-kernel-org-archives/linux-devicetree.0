@@ -1,52 +1,22 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/9] ASoC: cs42l56: bindings: sound: Fix reset GPIO name
- in example DT binding
-Date: Mon, 13 Nov 2017 15:20:47 -0600
-Message-ID: <20171113212047.dx6n2ko4q42fcznz@rob-hp-laptop>
-References: <20171108212505.28320-1-afd@ti.com>
- <20171108212505.28320-4-afd@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171108212505.28320-4-afd-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/2] Add R8A77970/Eagle GPIO support
+Date: Tue, 14 Nov 2017 00:23:19 +0300
+Message-ID: <20171113212319.775334314@cogentembedded.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 08, 2017 at 03:24:59PM -0600, Andrew F. Davis wrote:
-> The binding states the reset GPIO property shall be named
-> "cirrus,gpio-nreset" and this is what the driver looks for,
-> but the example uses "gpio-reset". Fix this here.
-> 
-> Fixes: 3bb40619aca8 ("ASoC: cs42l56: bindings: sound: Add bindings for CS42L56 CODEC")
-> 
-> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/sound/cs42l56.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/cs42l56.txt b/Documentation/devicetree/bindings/sound/cs42l56.txt
-> index 4feb0eb27ea4..4ba520a28ae8 100644
-> --- a/Documentation/devicetree/bindings/sound/cs42l56.txt
-> +++ b/Documentation/devicetree/bindings/sound/cs42l56.txt
-> @@ -55,7 +55,7 @@ Example:
->  codec: codec@4b {
->  	compatible = "cirrus,cs42l56";
->  	reg = <0x4b>;
-> -	gpio-reset = <&gpio 10 0>;
-> +	cirrus,gpio-nreset = <&gpio 10 0>;
+Hello!
 
-Can we deprecate this and use reset-gpios instead?
+Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20171113-v4.14' tag. We're adding the R8A77970 GPIO nodes
+and then describing the PHY IRQ for EtherAVB  device declared earlier.
+These patches depend on the R8A77970/Eagle PFC suport patchset in order
+to apply/compile.
 
->  	cirrus,chgfreq-divisor = <0x05>;
->  	cirrus.ain1_ref_cfg;
->  	cirrus,micbias-lvl = <5>;
-> -- 
-> 2.15.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1/2] arm64: dts: renesas: r8a77970: add GPIO support
+[2/2] arm64: dts: renesas: eagle: specify EtherAVB PHY IRQ
+
+WBR, Sergei
