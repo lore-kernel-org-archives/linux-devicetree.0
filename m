@@ -1,165 +1,199 @@
-From: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: phy: Add Cygnus usb phy binding
-Date: Mon, 13 Nov 2017 09:53:45 +0530
-Message-ID: <CAAFb_vqKLOixSROUvkRFR=hwOqQvnVyV4mu37=MrEBo-pZaF5w@mail.gmail.com>
-References: <1510127203-5815-1-git-send-email-raveendra.padasalagi@broadcom.com>
- <1510127203-5815-2-git-send-email-raveendra.padasalagi@broadcom.com> <20171110214439.rlt5de2c6e6k246d@rob-hp-laptop>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Question about "unit address format error" of DTC
+Date: Mon, 13 Nov 2017 16:27:19 +1100
+Message-ID: <20171113052719.GB1014@umbus.fritz.box>
+References: <CAK7LNARujG8J_z62bc+PQOz34rf-Bo=+M54kvtokZxnktn2Y+A@mail.gmail.com>
+ <CAL_Jsq+eZkCQTEHLb62Le3e6eLxt=N7EWGk7dsPAfLF9-73soQ@mail.gmail.com>
+ <CAK7LNARoE6hhhH36ZugfqCNubUQzSLYGkMrx5TzTQe-gpu4CaQ@mail.gmail.com>
+ <CAL_JsqKjF0um6UrsyBSKF5bY3rRscRqua0ncJca6ZCOh5VcKwA@mail.gmail.com>
+ <CAK7LNASRMBY1KjtzGxtXzkzDWgXmu3ZzfJu5kh1GRqP1WxQ6TQ@mail.gmail.com>
+ <CAL_JsqLXRxz-VpFe5AC6NHu5UBvi8frt1CtEFSJH_JhaLDk8QQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171110214439.rlt5de2c6e6k246d@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rafal Milecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLXRxz-VpFe5AC6NHu5UBvi8frt1CtEFSJH_JhaLDk8QQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Sat, Nov 11, 2017 at 3:14 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Nov 08, 2017 at 01:16:41PM +0530, Raveendra Padasalagi wrote:
->> Add devicetree binding document for broadcom's
->> Cygnus SoC specific usb phy controller driver.
->>
->> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../bindings/phy/brcm,cygnus-usb-phy.txt           | 106 +++++++++++++++++++++
->>  1 file changed, 106 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
->> new file mode 100644
->> index 0000000..bbc4b94
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
->> @@ -0,0 +1,106 @@
->> +BROADCOM CYGNUS USB PHY
->> +
->> +Required Properties:
->> +- compatible:  brcm,cygnus-usb-phy
->> +- reg : the register start address and length for
->> +        crmu_usbphy_aon_ctrl,
->> +        cdru usb phy control,
->> +        usb host idm registers,
->> +        usb device idm registers.
->> +- reg-names: a list of the names corresponding to the previous register ranges
->> +  Should contain
->> +        "crmu-usbphy-aon-ctrl",
->> +        "cdru-usbphy",
->> +        "usb2h-idm",
->> +        "usb2d-idm".
->> +- address-cells: should be 1
->> +- size-cells: should be 0
->> +
->> +Sub-nodes:
->> +  Each port's PHY should be represented as a sub-node.
->> +
->> +Sub-nodes required properties:
->> +- reg: the PHY number
->> +- #phy-cells must be 1
->> +  The node that uses the phy must provide 1 integer argument specifying
->> +  port number.
->> +
->> +Optional Properties:
->> +- vbus-p#-supply : The regulator for vbus out control for the host
->
-> Is this a literal # or something else?
+--3uo+9/B/ebqu+fSQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, this is a literal. It's assumed # will replace numeric 0-2 for
-each of the ports.
-In the example it's not shown as the regulators specified in vbus-p#-supply
-are board specific.
+On Fri, Nov 10, 2017 at 09:48:46AM -0600, Rob Herring wrote:
+> On Thu, Nov 9, 2017 at 7:48 PM, Masahiro Yamada
+> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> > Hi Rob,
+> >
+> > 2017-11-10 3:04 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> >> On Thu, Nov 9, 2017 at 9:09 AM, Masahiro Yamada
+> >> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> >>> Hi Rob,
+> >>>
+> >>> 2017-11-09 23:15 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> >>>> On Thu, Nov 9, 2017 at 6:14 AM, Masahiro Yamada
+> >>>> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> >>>>> Hi Rob, David,
+> >>>>>
+> >>>>>
+> >>>>> I am just curious about a DTC warning.
+> >>>>>
+> >>>>>
+> >>>>> For example,
+> >>>>>
+> >>>>> soc {
+> >>>>>     compatible =3D "simple-bus";
+> >>>>>     #address-cells =3D <1>;
+> >>>>>     #size-cells =3D <1>;
+> >>>>>     ranges;
+> >>>>>
+> >>>>>     foo@11111111 {
+> >>>>>          compatible =3D "foo";
+> >>>>>          reg =3D <0x54006800 0x40>;
+> >>>>>     };
+> >>>>> };
+> >>>>>
+> >>>>> This emits the following warning.
+> >>>>>
+> >>>>> Warning (simple_bus_reg): Node /soc/foo@11111111 simple-bus unit
+> >>>>> address format error, expected "54006800"
+> >>>>>
+> >>>>>
+> >>>>> But, if I replace "simple-bus" with "simple-mfd",
+> >>>>> DTC is completely happy.
+> >>>>
+> >>>> We could probably add simple-mfd to the check. Though, if you have
+> >>>> addresses, then you probably should use simple-bus. I'm not a bit fan
+> >>>> of simple-mfd in general.
+> >>>>
+> >>>>> Why is this check limited to simple bus / PCI bus?
+> >>>>
+> >>>> Because bus types are free to define their own unit address format to
+> >>>> some extent.
+> >>>>
+> >>>>> For other cases, is mismatching @<address>  allowed?
+> >>>>
+> >>>> No, but it is not checked. Most other cases such as I2C and SPI buses
+> >>>> aren't checked because we have no generic way to key off of them. We
+> >>>> need schema data with compatible strings of those bus controllers to
+> >>>> do the checking.
+> >>>>
+> >>>> Any bus type needs to define its unit address format. Generally, it
+> >>>> must match data fields in reg property and distinct fields are
+> >>>> separated by commas.
+> >>>>
+> >>>
+> >>> Thanks.
+> >>> I had a more specific example I wanted to ask,
+> >>> but your last comment "distinct fields are separated by commas"
+> >>> probably answered the question.
+> >>>
+> >>>
+> >>> The following is an example of NVMEM data cells.
+> >>> The generic binding is Documentation/devicetree/binding/nvmem/nvmem.t=
+xt
+> >>>
+> >>>
+> >>> reg:    specifies the offset in byte within the storage device.
+> >>>
+> >>> bits:   Is pair of bit location and number of bits, which specifies o=
+ffset
+> >>>         in bit and number of bits within the address range specified
+> >>> by reg property.
+> >>>         Offset takes values from 0-7.
+> >>>
+> >>> So, it is possible to have multiple data cells
+> >>> that share the same "reg".
+> >>
+> >> In hindsight, I think I'd do away with bits and just define that reg
+> >> is the offset and size in bits. Maybe we did discuss that and I've
+> >> just forgotten the reasons not to do that.
+> >
+> >
+> > Yeah, I like the idea, but "in hindsight".
+> >
+> >
+> >
+> >>>
+> >>> @<reg-offset>,<bit-position>
+> >>> was the idea in my mind, but I was not 100% sure.
+> >>
+> >> Yeah, this is fine. Bonus points if you write a check in dtc for it. I
+> >> think we can match on #nvmem-cells in the parent node.
+> >
+> >
+> > I have no idea when I can look into it.
+> >
+> > I think most (all?) of DTC checks are from your contribution.
+>=20
+> Recently, yes. Except for fixing all my bugs. :)
+>=20
+> > It would be appreciated if you care to it.
+>=20
+> I'd appreciate contributions from others. :)
+>=20
+> > One idea for generic solution might be DTC checks:
+> >
+> >   - @* exactly matches to reg
+> >
+> >      or
+> >
+> >   - The first field of comma separated @*,*,... matches to reg
+>=20
+> David rejected generic checks of the unit-address beyond what we have
+> now. Part of the problem is what is valid vs. what is considered best
+> practice today. Or to put another way, things we'd like to check and
+> discourage, but aren't something we should fix in existing
+> trees/bindings.
 
->> +  functionality enabled ports.
->> +- vbus-gpios: vbus gpio binding
->> +  This is mandatory for port 2, as port 2 is used as dual role phy.
->> +  Based on the vbus and id values device or host role is determined
->> +  for phy 2.
->
-> These optional properties don't match with the example.
-vbus-gpios is placed by mistake here in the documentation,
-this is no more required. I will remove it in the next version of the patch.
+Right.
 
->> +
->> +- extcon: extcon phandle
->> +  This is mandatory for port 2,  as port 2 is used as dual role phy.
->> +  extcon should be phandle to external usb gpio module which provide
->> +  device or host role notifications based on the ID and VBUS gpio's state.
->> +
->> +
->> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
->> +
->> +NOTE: port 0 and port 1 are host only and port 2 is dual role port.
->> +
->> +Example of phy :
->> +     usbphy: usb-phy@0301c028 {
->> +             compatible = "brcm,cygnus-usb-phy";
->> +             reg = <0x0301c028 0x4>,
->> +                   <0x0301d1b4 0x5c>,
->> +                   <0x18115000 0xa00>,
->> +                   <0x18111000 0xa00>;
->> +             reg-names = "crmu-usbphy-aon-ctrl", "cdru-usbphy",
->> +                         "usb2h-idm", "usb2d-idm";
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +
->> +             usbphy0: usb-phy@0 {
->> +                     reg = <0>;
->> +                     #phy-cells = <1>;
->> +             };
->> +
->> +             usbphy1: usb-phy@1 {
->> +                     reg = <1>;
->> +                     #phy-cells = <1>;
->> +             };
->> +
->> +             usbphy2: usb-phy@2 {
->> +                     reg = <2>;
->> +                     #phy-cells = <1>;
->> +                     extcon = <&extcon_usb>;
->> +             };
->> +     };
->> +
->> +     extcon_usb: extcon_usb {
->> +             compatible = "linux,extcon-usb-gpio";
->> +             vbus-gpio = <&gpio_asiu 121 0>;
->> +             id-gpio = <&gpio_asiu 122 0>;
->> +             status = "okay";
->> +     };
->> +
->> +
->> +Example of node using the phy:
->> +
->> +     /* This nodes declares all three ports, port 0
->> +     and port 1 are host and port 2 is device or host */
->> +
->> +     ehci0: usb@18048000 {
->> +             compatible = "generic-ehci";
->> +             reg = <0x18048000 0x100>;
->> +             interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
->> +             phys = <&usbphy0 0 &usbphy1 1 &usbphy2 2>;
->> +             phy-names = "usbp0","usbp1","usbp2";
->> +             status = "okay";
->
-> Don't show status in examples.
+The problem is what does "matches to reg" mean.  Equals reg rendered
+as a hex string?  That works for simple cases, but not for more
+complex busses.  That won't work for PCI - even the first element
+before a , has to be deciphered from the devfn bits encoded within the
+various words of the 'reg' address.  A similar scheme would make sense
+for many complex busses.
 
-Ok, Thanks. I will update it in the next version of the patch.
+There are other variants to, like I think you can have things like
+@i80 on old ISA busses to represent things in IO space rather than
+MMIO space.  Not much used nowadays, though.
 
->> +     };
->> +
->> +     /* This node declares port 2 phy
->> +     and configures it for device */
->> +
->> +     usbd_udc_dwc1: usb@1804c000 {
->> +             compatible = "iproc-udc";
->> +             reg = <0x1804c000 0x2000>;
->> +             interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
->> +             phys = <&usbphy2 2>;
->> +             phy-names = "usbdrd";
->> +     };
->> --
->> 1.9.1
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+But the point is that the formatting of the unit address is entirely
+up to the bus type.  In traditional OF the unit address could be
+determined automatically, but that's because it didn't include just
+the device tree, but actual methods for all the devices and busses
+that knew how to correctly format the address from 'reg'.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--3uo+9/B/ebqu+fSQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAloJLTUACgkQbDjKyiDZ
+s5JEQRAAkYVj75pCtJmlAdNOSfZhwWJqmf4zhOHTk3WkKgGXn4T1PXCQQbV+zorj
+DXOpHYI4djTRl7EtviGe1/R1SSG37+03uSJH/AFh0sU34L4DfTcz/zYGZlaAnf31
+FUwPaNQR4SId83keXbE29LHrNMVZX+ALYV8RV8Ica8j1Hm0kAiK3+mqWu3Ac6g60
+uP4ZQJFBkqrfkX2Gpq4UtNTXN0Q0vJDE+QfymBs9csseg1C+Mm/520ra8QxLoARC
+OybxJwPlnEyyNG8DSawrR0uEbv2tdDY+4mBLg4lQIozJeKUxNoioLh8ocTXDvROR
+oK/GskYWTUY7mt981zzt/8CMbW/Bv9LfWZr+rnWmXMkg9YJHeVRMdMN0nPdTVxq8
+wJSgZJKEsB23WqMfDSHcy+yteXcBpWE+in12XrDNP25lN7By+OO6Dk6K5lynaEK1
+6sWE5nn2VFhvZ54xg8oWlh1ENlHBYN1cRc5XMb8IsPgdEeYsBUGO/t/SNlrnW/az
+SV3uHBzRNNaDgZz9cjNK4V/Fuu/HW5p3K6XTDjTHK1iGP+yL84Ux5zKAOHFhzxcI
+AeQKeSsPgNIl03y3nlw1Y+0ZupObpaq8pcJgWJSKOc63XBoLh0fdA2FUlshPtOqA
+IKSccx+BKoJham6XSnLpdTdK05mp6yThUY1p8XUf94///EVlhS8=
+=dJAX
+-----END PGP SIGNATURE-----
+
+--3uo+9/B/ebqu+fSQ--
