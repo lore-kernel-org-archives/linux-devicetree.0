@@ -1,40 +1,33 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: renesas: eagle: specify EtherAVB PHY IRQ
-Date: Tue, 14 Nov 2017 00:23:21 +0300
-Message-ID: <20171113213152.819421744@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/2] Add R8A77970/Eagle GPIO support
+Date: Tue, 14 Nov 2017 00:23:19 +0300
+Message-ID: <20171113212319.775334314__44179.3225858875$1510608741$gmane$org@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=arm64-dts-renesas-eagle-specify-EtherAVB-PHY-IRQ.patch
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Specify  EtherAVB PHY IRQ  in the Eagle board's device tree, now that we
-have the GPIO support (previously phylib had to resort to polling).
+Hello!
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20171113-v4.14' tag. We're adding the R8A77970 GPIO nodes
+and then describing the PHY IRQ for EtherAVB  device declared earlier.
+These patches depend on the R8A77970/Eagle PFC suport patchset in order
+to apply/compile.
 
----
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts |    2 ++
- 1 file changed, 2 insertions(+)
+[1/2] arm64: dts: renesas: r8a77970: add GPIO support
+[2/2] arm64: dts: renesas: eagle: specify EtherAVB PHY IRQ
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-@@ -44,6 +44,8 @@
- 	phy0: ethernet-phy@0 {
- 		rxc-skew-ps = <1500>;
- 		reg = <0>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+WBR, Sergei
