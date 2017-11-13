@@ -1,48 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drm/tilcdc: Remove obsolete "ti, tilcdc,
- slave" dts binding support
-Date: Mon, 13 Nov 2017 16:40:00 -0600
-Message-ID: <CAL_JsqK3trv8zZpzXm+KZc2fs=fUAV7jvU5tCCjHSO_4TsOiaA@mail.gmail.com>
-References: <1510576927-4023-1-git-send-email-jsarha@ti.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v2 0/8] arm64: Add initial Actions Semi S700 and CubieBoard7 support
+Date: Tue, 14 Nov 2017 00:34:19 +0100
+Message-ID: <20171113233427.5386-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1510576927-4023-1-git-send-email-jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, Stephen Boyd <stephen.boyd@linaro.org>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benoit Cousson <bcousson@baylibre.com>, Frank Rowand <frank.rowand@sony.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Thomas Liau <thomas.liau@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, =?UTF-8?q?=E6=A2=85=E5=88=A9?= <harrymei@actions-semi.com>, support@cubietech.com, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Ahha Lee <lee@cubietech.com>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBOb3YgMTMsIDIwMTcgYXQgNjo0MiBBTSwgSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNv
-bT4gd3JvdGU6Cj4gVGhpcyBwYXRjaCByZW1vdmVzIERSTV9USUxDRENfU0xBVkVfQ09NUEFUIG9w
-dGlvbiBmb3Igc3VwcG9ydGluZyB0aGUKPiBvYnNvbGV0ZSAidGksdGlsY2RjLHNsYXZlIiBkZXZp
-Y2UgdHJlZSBiaW5kaW5nLiBUaGUgbmV3IG9mX2dyYXBoIGJhc2VkCj4gYmluZGluZyAtIHRoYXQg
-aXMgd2lkZWx5IHVzZWQgaW4gb3RoZXIgZHJtIGRyaXZlciB0b28gLSBoYXMgYmVlbgo+IHN1cHBv
-cnRlZCBzaW5jZSBMaW51eCB2NC4yLiBNYWludGFpbmluZyB0aGUgdGhlIGJhY2t3YXJkcyBkdHMK
-PiBjb252ZXJzaW9uIGNvZGUgaW4gMHRoZSBEUk1fVElMQ0RDX1NMQVZFX0NPTVBBVCBoYXMgYmVj
-b21lIGEgbnVpc2FuY2UKPiBmb3IgdGhlIGRldmljZS9vZiBkZXZlbG9wbWVudCBzbyB0aGUgd2Ug
-ZGVjaWRlZCB0byBkcm9wIGl0IGFmdGVyIExpbnV4Cj4gdjQuMTQsIHRoZSAyMDE3IExUUy4KPgo+
-IFNpZ25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Cj4gLS0tCj4gIGRyaXZl
-cnMvZ3B1L2RybS90aWxjZGMvS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAgMTEgLQo+ICBkcml2
-ZXJzL2dwdS9kcm0vdGlsY2RjL01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICAzIC0KPiAgZHJp
-dmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfc2xhdmVfY29tcGF0LmMgICB8IDI2OSAtLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX3NsYXZl
-X2NvbXBhdC5kdHMgfCAgNzIgLS0tLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNk
-Y19zbGF2ZV9jb21wYXQuaCAgIHwgIDI1IC0tLQo+ICA1IGZpbGVzIGNoYW5nZWQsIDM4MCBkZWxl
-dGlvbnMoLSkKPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGls
-Y2RjX3NsYXZlX2NvbXBhdC5jCj4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-dGlsY2RjL3RpbGNkY19zbGF2ZV9jb21wYXQuZHRzCj4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19zbGF2ZV9jb21wYXQuaAoKQWNrZWQtYnk6IFJvYiBI
-ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+Hello,
+
+This series prepares the Actions Semi S700 SoC and Cubietech CubieBoard7.
+It boots equally far as the S900 based Bubblegum-96 these patches are based on,
+i.e. into an initrd with serial and all four cores up.
+
+v2 modifies the clocksource driver patches and adds SPS patches.
+
+Not having succeeded to replace the bootloader on eMMC or to try
+booting from SD, the only working way I've found to boot mainline kernels
+appears to be booting into Android, then issuing "reboot bootloader". U-Boot
+is lacking the saveenv command, so it wasn't possible to change the bootdelay
+to facilitate this.
+
+Cf. https://en.opensuse.org/HCL:CubieBoard7
+
+Work branch:
+https://github.com/afaerber/linux/commits/bg96-next
+
+Have a lot of fun!
+
+Cheers,
+Andreas
+
+v1 -> v2:
+* Prepended patch converting CLOCKSOURCE_OF_DECLARE() to TIMER_OF_DECLARE() (Daniel)
+* Added patches for SPS
+
+Cc: Ahha Lee <lee@cubietech.com>
+Cc: support@cubietech.com
+Cc: Jeff Chen <jeff.chen@actions-semi.com>
+
+Cc: devicetree@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+
+Andreas Färber (8):
+  dt-bindings: arm: actions: Add S700 and CubieBoard7
+  dt-bindings: timer: Add Actions Semi S700
+  clocksource: owl: Adopt TIMER_OF_DECLARE()
+  clocksource: owl: Prepare S700
+  arm64: dts: actions: Add S700 and CubieBoard7
+  dt-bindings: power: Add Actions Semi S700 SPS
+  soc: actions: sps: Add S700
+  arm64: dts: actions: Add S700 SPS node
+
+ Documentation/devicetree/bindings/arm/actions.txt  |  15 ++
+ .../devicetree/bindings/power/actions,owl-sps.txt  |   2 +
+ .../bindings/timer/actions,owl-timer.txt           |   1 +
+ arch/arm64/boot/dts/actions/Makefile               |   2 +
+ arch/arm64/boot/dts/actions/s700-cubieboard7.dts   |  47 ++++++
+ arch/arm64/boot/dts/actions/s700.dtsi              | 170 +++++++++++++++++++++
+ drivers/clocksource/owl-timer.c                    |   5 +-
+ drivers/soc/actions/owl-sps.c                      |  42 +++++
+ include/dt-bindings/power/owl-s700-powergate.h     |  20 +++
+ 9 files changed, 302 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/actions/s700-cubieboard7.dts
+ create mode 100644 arch/arm64/boot/dts/actions/s700.dtsi
+ create mode 100644 include/dt-bindings/power/owl-s700-powergate.h
+
+-- 
+2.13.6
