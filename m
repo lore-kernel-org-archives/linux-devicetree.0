@@ -1,104 +1,62 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/3] Input: twl4030-vibra: fix sibling-node lookup
-Date: Mon, 13 Nov 2017 10:20:28 +0000
-Message-ID: <20171113102028.c53rlcnwrjaey2tv@dell>
-References: <20171111154339.16875-1-johan@kernel.org>
- <20171111175059.lwfhw2wdhlj5yxhc@dtor-ws>
- <20171112121235.GO11226@localhost>
- <20171113091144.5oz77shbu4oupoy7@dell>
- <20171113093544.GR11226@localhost>
+From: Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] crypto: stm32 - Support for STM32 CRYP crypto
+ module
+Date: Mon, 13 Nov 2017 10:30:40 +0000
+Message-ID: <774a92f2-af70-0424-b066-0cc1db3f9ab0@st.com>
+References: <1508425830-13565-1-git-send-email-fabien.dessenne@st.com>
+ <1508425830-13565-3-git-send-email-fabien.dessenne@st.com>
+ <20171022072659.GB8489@Red> <d924a278-90d0-969e-f1ae-a12f92e8972d@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171113093544.GR11226@localhost>
-Sender: linux-input-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Marek Belisko <marek@goldelico.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d924a278-90d0-969e-f1ae-a12f92e8972d-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
+Content-ID: <32DFA78EC06AD043AC672D4861F49477-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lionel DEBIEVE <lionel.debieve-qxv4g6HH51o@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 13 Nov 2017, Johan Hovold wrote:
-
-> On Mon, Nov 13, 2017 at 09:11:44AM +0000, Lee Jones wrote:
-> > On Sun, 12 Nov 2017, Johan Hovold wrote:
-> > 
-> > > [ +CC: Lee, Rob and device-tree list ]
-> > > 
-> > > On Sat, Nov 11, 2017 at 09:50:59AM -0800, Dmitry Torokhov wrote:
-> > > > On Sat, Nov 11, 2017 at 04:43:37PM +0100, Johan Hovold wrote:
-> > > > > A helper purported to look up a child node based on its name was using
-> > > > > the wrong of-helper and ended up prematurely freeing the parent of-node
-> > > > > while searching the whole device tree depth-first starting at the parent
-> > > > > node.
-> > > > 
-> > > > Ugh, this all is pretty ugly business. Can we teach MFD to allow
-> > > > specifying firmware node to be attached to the platform devices it
-> > > > creates in mfd_add_device() so that the leaf drivers simply call
-> > > > device_property_read_XXX() on their own device and not be bothered with
-> > > > weird OF refcount issues or what node they need to locate and parse?
-> > 
-> > If a child compatible is provided, we already set the child's
-> > of_node.  It's then up to the driver (set) author(s) to use it in the
-> > correct manner. 
-> > 
-> > > Yeah, that may have helped. You can actually specify a compatible string
-> > > in struct mfd_cell today which does make mfd_add_device() associate a
-> > > matching child node.
-> > > 
-> > > Some best practice regarding how to deal with MFD and device tree would
-> > > be good to determine and document too. For example, when should
-> > > of_platform_populate() be used in favour of mfd_add_device()?
-> > 
-> > When the device supports DT and its entire hierarchical layout, along
-> > with all of its attributes can be expressed in DT.
-> 
-> Ok, a follow up: When there are different variants of an MFD and that
-> affects the child drivers, then that should be expressed in in the child
-> node compatibles rather than having the child match on the parent node?
-> 
-> I'm asking because this came up recently during review and their seems
-> to be no precedent for matching on the parent compatible in child
-> drivers:
-> 
-> 	https://lkml.kernel.org/r/20171105154725.GA11226@localhost
-
-Accessing the parent's of_device_id .data directly doesn't sit well
-with me.  The parent driver should pass this type of configuration
-though pdata IMHO.
-
-> > > And how best to deal with sibling nodes, which is part of the problem
-> > > here (I think the mfd should have provided a flag rather than having
-> > > subdrivers deal with sibling nodes, for example).
-> > 
-> > I disagree.  The only properties the MFD (parent) driver is interested
-> > in is ones which are shared across multiple child devices.
-> > *Everything* which pertains to only a single child device should be
-> > handled by its accompanying driver. 
-> 
-> Even if that means leaking details of one child driver into a sibling?
-
-Not sure what you mean here.  Could you please elaborate or provide an
-example?
-
-> Isn't it then cleaner to use the parent MFD to coordinate between the
-> cells, just as we do for IO?
-> 
-> In this case a child driver looked up a sibling node based on name, but
-
-This should not be allowed.  If >1 sibling requires access to a
-particular property, this is normally evidence enough that this
-property should be shared and handled by the parent.
-
-> that doesn't mean the node is active, that there's a driver bound, or
-> that the sibling node has some other random property for example. The
-> parent could be used for such coordination, if only to pass information
-> from one sibling to another.
-
-Right.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+SGkgSGVyYmVydCwNCg0KQ2FuIHlvdSBjaGVjayBpZiB0aGlzIHBhdGNoc2V0IChyZW1vdmVkIHRo
+ZSBBRUFEIHBhcnQgYXMgeW91IHN1Z2dlc3RlZCArIA0KbGlia2NhcGkgdGVzdCBPSyBhcyBzdWdn
+ZXN0ZWQgYnkgQ29yZW50aW4pIGNhbiBiZSBhcHBsaWVkIG5vdz8NCg0KQlINCg0KRmFiaWVuDQoN
+Cg0KT24gMDcvMTEvMTcgMTU6NDAsIEZhYmllbiBERVNTRU5ORSB3cm90ZToNCj4NCj4gT24gMjIv
+MTAvMTcgMDk6MjYsIENvcmVudGluIExhYmJlIHdyb3RlOg0KPj4gT24gVGh1LCBPY3QgMTksIDIw
+MTcgYXQgMDU6MTA6MzBQTSArMDIwMCwgRmFiaWVuIERlc3Nlbm5lIHdyb3RlOg0KPj4+IFRoaXMg
+bW9kdWxlIHJlZ2lzdGVycyBibG9jayBjaXBoZXIgYWxnb3JpdGhtcyB0aGF0IG1ha2UgdXNlIG9m
+IHRoZQ0KPj4+IFNUTWljcm9lbGVjdHJvbmljcyBTVE0zMiBjcnlwdG8gIkNSWVAxIiBoYXJkd2Fy
+ZS4NCj4+PiBUaGUgZm9sbG93aW5nIGFsZ29yaXRobXMgYXJlIHN1cHBvcnRlZDoNCj4+PiAtIGFl
+czogZWNiLCBjYmMsIGN0cg0KPj4+IC0gZGVzOiBlY2IsIGNiYw0KPj4+IC0gdGRlczogZWNiLCBj
+YmMNCj4+Pg0KPj4+IFNpZ25lZC1vZmYtYnk6IEZhYmllbiBEZXNzZW5uZSA8ZmFiaWVuLmRlc3Nl
+bm5lQHN0LmNvbT4NCj4+PiAtLS0NCj4+PiAgICBkcml2ZXJzL2NyeXB0by9zdG0zMi9LY29uZmln
+ICAgICAgfCAgICA5ICsNCj4+PiAgICBkcml2ZXJzL2NyeXB0by9zdG0zMi9NYWtlZmlsZSAgICAg
+fCAgICAzICstDQo+Pj4gICAgZHJpdmVycy9jcnlwdG8vc3RtMzIvc3RtMzItY3J5cC5jIHwgMTE3
+MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+Pj4gICAgMyBmaWxlcyBj
+aGFuZ2VkLCAxMTgzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+PiAgICBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9jcnlwdG8vc3RtMzIvc3RtMzItY3J5cC5jDQo+Pj4NCj4+PiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vc3RtMzIvS2NvbmZpZyBiL2RyaXZlcnMvY3J5cHRv
+L3N0bTMyL0tjb25maWcNCj4+PiArc3RhdGljIHZvaWQgc3RtMzJfY3J5cF9pcnFfd3JpdGVfYmxv
+Y2soc3RydWN0IHN0bTMyX2NyeXAgKmNyeXApDQo+Pj4gK3sNCj4+PiArCXVuc2lnbmVkIGludCBp
+LCBqOw0KPj4+ICsJdTMyICpzcmM7DQo+Pj4gKwl1OCBkOFs0XTsNCj4+PiArDQo+Pj4gKwlzcmMg
+PSBzZ192aXJ0KGNyeXAtPmluX3NnKSArIF93YWxrZWRfaW47DQo+Pj4gKw0KPj4+ICsJZm9yIChp
+ID0gMDsgaSA8IGNyeXAtPmh3X2Jsb2Nrc2l6ZSAvIHNpemVvZih1MzIpOyBpKyspIHsNCj4+PiAr
+CQlpZiAobGlrZWx5KGNyeXAtPnRvdGFsX2luID49IHNpemVvZih1MzIpKSkgew0KPj4+ICsJCQkv
+KiBXcml0ZSBhIGZ1bGwgdTMyICovDQo+Pj4gKwkJCXN0bTMyX2NyeXBfd3JpdGUoY3J5cCwgQ1JZ
+UF9ESU4sICpzcmMpOw0KPj4gSGVsbG8NCj4+DQo+PiBUcnkgYWxzbyB0byB0ZXN0IHlvdXIgZHJp
+dmVyIHdpdGggdXNlcnNwYWNlIHZpYSBBRl9BTEcgKGxpYmtjYXBpIGlzIGEgZ29vZCBzdGFydCku
+DQo+PiBJdCBzaG91bGQgcHJvYmFibHkgY3Jhc2ggaGVyZS4NCj4+IEkgaGF2ZSBkbyB0aGUgc2Ft
+ZSBvbiBteSBmaXJzdCBzdW54aS1zcyBkcml2ZXIgYW5kIHlvdSBzaG91bGQgdXNlIGttYXAoKS4N
+Cj4+DQo+PiBSZWdhcmRzDQo+IEhpIENvcmVudGluLA0KPg0KPiBUaGFuayB5b3UgZm9yIHN1Z2dl
+c3RpbmcgdG8gdGVzdCBmcm9tIHVzZXJzcGFjZSB0aHJvdWdoIHRoZSBBRl9BTEcNCj4gc29ja2V0
+IHdpdGggbGlia2NhcGkuDQo+IFRoaXMgaW5jcmVhc2VzIG15IHRlc3QgY292ZXJhZ2UuDQo+DQo+
+IEkgcmFuIHRoZSBtaXNjZWxsYW5lb3VzIHRlc3RzIChrY2FwaS1lbmMtdGVzdChsYXJnZSkuc2gg
+KyB0ZXN0LnNoKSBhbmQNCj4gY291bGQgbm90IG9ic2VydmUgYW55IGNyYXNoLg0KPiBOb3RlIHRo
+YXQgSSBoYWQgYWxyZWFkeSBmaXhlZCBzb21lICdtZW1vcnkgY3Jhc2hlcycgd2hpbGUgdGVzdGlu
+ZyB3aXRoDQo+IHRlc3RtZ3IgLyB0Y3J5cHQgd2hpbGUgdGVzdGluZyBmcm9tIHRoZSBrZXJuZWwu
+DQo+DQo+IFNvIGl0IGxvb2tzIGxpa2UgdGhlIHByb3Bvc2VkIGltcGxlbWVudGF0aW9uIGlzIGZp
+bmUuDQo+DQo+IEJSDQo+DQo+IEZhYmllbg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
