@@ -1,199 +1,195 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Question about "unit address format error" of DTC
-Date: Mon, 13 Nov 2017 16:27:19 +1100
-Message-ID: <20171113052719.GB1014@umbus.fritz.box>
-References: <CAK7LNARujG8J_z62bc+PQOz34rf-Bo=+M54kvtokZxnktn2Y+A@mail.gmail.com>
- <CAL_Jsq+eZkCQTEHLb62Le3e6eLxt=N7EWGk7dsPAfLF9-73soQ@mail.gmail.com>
- <CAK7LNARoE6hhhH36ZugfqCNubUQzSLYGkMrx5TzTQe-gpu4CaQ@mail.gmail.com>
- <CAL_JsqKjF0um6UrsyBSKF5bY3rRscRqua0ncJca6ZCOh5VcKwA@mail.gmail.com>
- <CAK7LNASRMBY1KjtzGxtXzkzDWgXmu3ZzfJu5kh1GRqP1WxQ6TQ@mail.gmail.com>
- <CAL_JsqLXRxz-VpFe5AC6NHu5UBvi8frt1CtEFSJH_JhaLDk8QQ@mail.gmail.com>
+From: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/3] Initial Allwinner V3s CSI Support
+Date: Mon, 13 Nov 2017 15:22:59 +0800
+Message-ID: <1510557779-43600-1-git-send-email-yong.deng@magewell.com>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLXRxz-VpFe5AC6NHu5UBvi8frt1CtEFSJH_JhaLDk8QQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBBEURUXIAKGQEJA63I6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree@vger.
 List-Id: devicetree@vger.kernel.org
 
+This patchset add initial support for Allwinner V3s CSI.
 
---3uo+9/B/ebqu+fSQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
+and CSI1 is used for parallel interface. This is not documented in
+datasheet but by testing and guess.
 
-On Fri, Nov 10, 2017 at 09:48:46AM -0600, Rob Herring wrote:
-> On Thu, Nov 9, 2017 at 7:48 PM, Masahiro Yamada
-> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> > Hi Rob,
-> >
-> > 2017-11-10 3:04 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> >> On Thu, Nov 9, 2017 at 9:09 AM, Masahiro Yamada
-> >> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> >>> Hi Rob,
-> >>>
-> >>> 2017-11-09 23:15 GMT+09:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> >>>> On Thu, Nov 9, 2017 at 6:14 AM, Masahiro Yamada
-> >>>> <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> >>>>> Hi Rob, David,
-> >>>>>
-> >>>>>
-> >>>>> I am just curious about a DTC warning.
-> >>>>>
-> >>>>>
-> >>>>> For example,
-> >>>>>
-> >>>>> soc {
-> >>>>>     compatible =3D "simple-bus";
-> >>>>>     #address-cells =3D <1>;
-> >>>>>     #size-cells =3D <1>;
-> >>>>>     ranges;
-> >>>>>
-> >>>>>     foo@11111111 {
-> >>>>>          compatible =3D "foo";
-> >>>>>          reg =3D <0x54006800 0x40>;
-> >>>>>     };
-> >>>>> };
-> >>>>>
-> >>>>> This emits the following warning.
-> >>>>>
-> >>>>> Warning (simple_bus_reg): Node /soc/foo@11111111 simple-bus unit
-> >>>>> address format error, expected "54006800"
-> >>>>>
-> >>>>>
-> >>>>> But, if I replace "simple-bus" with "simple-mfd",
-> >>>>> DTC is completely happy.
-> >>>>
-> >>>> We could probably add simple-mfd to the check. Though, if you have
-> >>>> addresses, then you probably should use simple-bus. I'm not a bit fan
-> >>>> of simple-mfd in general.
-> >>>>
-> >>>>> Why is this check limited to simple bus / PCI bus?
-> >>>>
-> >>>> Because bus types are free to define their own unit address format to
-> >>>> some extent.
-> >>>>
-> >>>>> For other cases, is mismatching @<address>  allowed?
-> >>>>
-> >>>> No, but it is not checked. Most other cases such as I2C and SPI buses
-> >>>> aren't checked because we have no generic way to key off of them. We
-> >>>> need schema data with compatible strings of those bus controllers to
-> >>>> do the checking.
-> >>>>
-> >>>> Any bus type needs to define its unit address format. Generally, it
-> >>>> must match data fields in reg property and distinct fields are
-> >>>> separated by commas.
-> >>>>
-> >>>
-> >>> Thanks.
-> >>> I had a more specific example I wanted to ask,
-> >>> but your last comment "distinct fields are separated by commas"
-> >>> probably answered the question.
-> >>>
-> >>>
-> >>> The following is an example of NVMEM data cells.
-> >>> The generic binding is Documentation/devicetree/binding/nvmem/nvmem.t=
-xt
-> >>>
-> >>>
-> >>> reg:    specifies the offset in byte within the storage device.
-> >>>
-> >>> bits:   Is pair of bit location and number of bits, which specifies o=
-ffset
-> >>>         in bit and number of bits within the address range specified
-> >>> by reg property.
-> >>>         Offset takes values from 0-7.
-> >>>
-> >>> So, it is possible to have multiple data cells
-> >>> that share the same "reg".
-> >>
-> >> In hindsight, I think I'd do away with bits and just define that reg
-> >> is the offset and size in bits. Maybe we did discuss that and I've
-> >> just forgotten the reasons not to do that.
-> >
-> >
-> > Yeah, I like the idea, but "in hindsight".
-> >
-> >
-> >
-> >>>
-> >>> @<reg-offset>,<bit-position>
-> >>> was the idea in my mind, but I was not 100% sure.
-> >>
-> >> Yeah, this is fine. Bonus points if you write a check in dtc for it. I
-> >> think we can match on #nvmem-cells in the parent node.
-> >
-> >
-> > I have no idea when I can look into it.
-> >
-> > I think most (all?) of DTC checks are from your contribution.
->=20
-> Recently, yes. Except for fixing all my bugs. :)
->=20
-> > It would be appreciated if you care to it.
->=20
-> I'd appreciate contributions from others. :)
->=20
-> > One idea for generic solution might be DTC checks:
-> >
-> >   - @* exactly matches to reg
-> >
-> >      or
-> >
-> >   - The first field of comma separated @*,*,... matches to reg
->=20
-> David rejected generic checks of the unit-address beyond what we have
-> now. Part of the problem is what is valid vs. what is considered best
-> practice today. Or to put another way, things we'd like to check and
-> discourage, but aren't something we should fix in existing
-> trees/bindings.
+This patchset implement a v4l2 framework driver and add a binding 
+documentation for it. 
 
-Right.
+Currently, the driver only support the parallel interface. And has been
+tested with a BT1120 signal which generating from FPGA. The following
+fetures are not support with this patchset:
+  - ISP 
+  - MIPI-CSI2
+  - Master clock for camera sensor
+  - Power regulator for the front end IC
 
-The problem is what does "matches to reg" mean.  Equals reg rendered
-as a hex string?  That works for simple cases, but not for more
-complex busses.  That won't work for PCI - even the first element
-before a , has to be deciphered from the devfn bits encoded within the
-various words of the 'reg' address.  A similar scheme would make sense
-for many complex busses.
+Changes in v3:
+  * get rid of struct sun6i_csi_ops
+  * move sun6i-csi to new directory drivers/media/platform/sunxi
+  * merge sun6i_csi.c and sun6i_csi_v3s.c into sun6i_csi.c
+  * use generic fwnode endpoints parser
+  * only support a single subdev to make things simple
+  * many complaintion fix
 
-There are other variants to, like I think you can have things like
-@i80 on old ISA busses to represent things in IO space rather than
-MMIO space.  Not much used nowadays, though.
+Changes in v2: 
+  * Change sunxi-csi to sun6i-csi
+  * Rebase to media_tree master branch 
 
-But the point is that the formatting of the unit address is entirely
-up to the bus type.  In traditional OF the unit address could be
-determined automatically, but that's because it didn't include just
-the device tree, but actual methods for all the devices and busses
-that knew how to correctly format the address from 'reg'.
+Following is the 'v4l2-compliance -s -f' output, I have test this
+with both interlaced and progressive signal:
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+# ./v4l2-compliance -s -f
+v4l2-compliance SHA   : 7b2d48ff594dcc2c9b395463441e5abb4f5e9439
 
---3uo+9/B/ebqu+fSQ
-Content-Type: application/pgp-signature; name="signature.asc"
+Driver Info:
+        Driver name   : sun6i-video
+        Card type     : sun6i-csi
+        Bus info      : platform:csi
+        Driver version: 4.14.0
+        Capabilities  : 0x84200001
+                Video Capture
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x04200001
+                Video Capture
+                Streaming
+                Extended Pix Format
 
------BEGIN PGP SIGNATURE-----
+Compliance test for device /dev/video0 (not using libv4l2):
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAloJLTUACgkQbDjKyiDZ
-s5JEQRAAkYVj75pCtJmlAdNOSfZhwWJqmf4zhOHTk3WkKgGXn4T1PXCQQbV+zorj
-DXOpHYI4djTRl7EtviGe1/R1SSG37+03uSJH/AFh0sU34L4DfTcz/zYGZlaAnf31
-FUwPaNQR4SId83keXbE29LHrNMVZX+ALYV8RV8Ica8j1Hm0kAiK3+mqWu3Ac6g60
-uP4ZQJFBkqrfkX2Gpq4UtNTXN0Q0vJDE+QfymBs9csseg1C+Mm/520ra8QxLoARC
-OybxJwPlnEyyNG8DSawrR0uEbv2tdDY+4mBLg4lQIozJeKUxNoioLh8ocTXDvROR
-oK/GskYWTUY7mt981zzt/8CMbW/Bv9LfWZr+rnWmXMkg9YJHeVRMdMN0nPdTVxq8
-wJSgZJKEsB23WqMfDSHcy+yteXcBpWE+in12XrDNP25lN7By+OO6Dk6K5lynaEK1
-6sWE5nn2VFhvZ54xg8oWlh1ENlHBYN1cRc5XMb8IsPgdEeYsBUGO/t/SNlrnW/az
-SV3uHBzRNNaDgZz9cjNK4V/Fuu/HW5p3K6XTDjTHK1iGP+yL84Ux5zKAOHFhzxcI
-AeQKeSsPgNIl03y3nlw1Y+0ZupObpaq8pcJgWJSKOc63XBoLh0fdA2FUlshPtOqA
-IKSccx+BKoJham6XSnLpdTdK05mp6yThUY1p8XUf94///EVlhS8=
-=dJAX
------END PGP SIGNATURE-----
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
 
---3uo+9/B/ebqu+fSQ--
+Allow for multiple opens:
+        test second video open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Test input 0:
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+                test VIDIOC_QUERYCTRL: OK (Not Supported)
+                test VIDIOC_G/S_CTRL: OK (Not Supported)
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 0 Private Controls: 0
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK (Not Supported)
+                test Scaling: OK (Not Supported)
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+        test MMAP: OK                                     
+        test USERPTR: OK (Not Supported)
+        test DMABUF: Cannot test, specify --expbuf-device
+
+Stream using all formats:
+        test MMAP for Format HM12, Frame Size 1920x1080:
+                Stride 2880, Field None: OK                                 
+        test MMAP for Format NV12, Frame Size 1920x1080:
+                Stride 2880, Field None: OK                                 
+        test MMAP for Format NV21, Frame Size 1920x1080:
+                Stride 2880, Field None: OK                                 
+        test MMAP for Format YU12, Frame Size 1920x1080:
+                Stride 2880, Field None: OK                                 
+        test MMAP for Format YV12, Frame Size 1920x1080:
+                Stride 2880, Field None: OK                                 
+        test MMAP for Format NV16, Frame Size 1920x1080:
+                Stride 3840, Field None: OK                                 
+        test MMAP for Format NV61, Frame Size 1920x1080:
+                Stride 3840, Field None: OK                                 
+        test MMAP for Format 422P, Frame Size 1920x1080:
+                Stride 3840, Field None: OK                                 
+
+Total: 54, Succeeded: 54, Failed: 0, Warnings: 0
+
+
+Yong Deng (3):
+  media: V3s: Add support for Allwinner CSI.
+  dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
+  media: MAINTAINERS: add entries for Allwinner V3s CSI
+
+ .../devicetree/bindings/media/sun6i-csi.txt        |  51 ++
+ MAINTAINERS                                        |   8 +
+ drivers/media/platform/Kconfig                     |   1 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/sunxi/sun6i-csi/Kconfig     |   9 +
+ drivers/media/platform/sunxi/sun6i-csi/Makefile    |   3 +
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 918 +++++++++++++++++++++
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 146 ++++
+ .../media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h | 203 +++++
+ .../media/platform/sunxi/sun6i-csi/sun6i_video.c   | 722 ++++++++++++++++
+ .../media/platform/sunxi/sun6i-csi/sun6i_video.h   |  61 ++
+ 11 files changed, 2124 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Kconfig
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/Makefile
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c
+ create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun6i_video.h
+
+-- 
+1.8.3.1
