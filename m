@@ -1,134 +1,60 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v7 25/25] rcar-vin: enable support for r8a7796
-Date: Mon, 13 Nov 2017 09:42:01 +0100
-Message-ID: <CAMuHMdXP7jOK8LxMtUFkEn0ooPPuodomVr2sqkNX4idMzrmrpw@mail.gmail.com>
-References: <20171111003835.4909-1-niklas.soderlund+renesas@ragnatech.se> <20171111003835.4909-26-niklas.soderlund+renesas@ragnatech.se>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: Add codec for A13 Olinuxino
+Date: Mon, 13 Nov 2017 09:45:34 +0100
+Message-ID: <20171113084534.7jozr5b2cl4ozpck@flea.lan>
+References: <20171106205139.82751-1-manu@freebsd.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="rn5csegognxxkru5"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171111003835.4909-26-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171106205139.82751-1-manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fukawa <tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CC DT
 
-On Sat, Nov 11, 2017 at 1:38 AM, Niklas S=C3=B6derlund
-<niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org> wrote:
-> Add the SoC specific information for Renesas r8a7796.
->
-> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.=
-se>
-> Reviewed-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/rcar_vin.txt         |  1 +
->  drivers/media/platform/rcar-vin/rcar-core.c        | 64 ++++++++++++++++=
-++++++
->  2 files changed, 65 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Docum=
-entation/devicetree/bindings/media/rcar_vin.txt
-> index df1abd0fb20386f8..ddf249c2276600d2 100644
-> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> @@ -10,6 +10,7 @@ Depending on the instance the VIN input is connected to=
- external SoC pins, or
->  on Gen3 to a CSI-2 receiver.
->
->   - compatible: Must be one or more of the following
-> +   - "renesas,vin-r8a7796" for the R8A7796 device
->     - "renesas,vin-r8a7795" for the R8A7795 device
->     - "renesas,vin-r8a7794" for the R8A7794 device
->     - "renesas,vin-r8a7793" for the R8A7793 device
-> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/=
-platform/rcar-vin/rcar-core.c
-> index b22f6596700d2479..e329de4ce0172e8d 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> @@ -1084,6 +1084,66 @@ static const struct rvin_info rcar_info_r8a7795es1=
- =3D {
->         },
->  };
->
-> +static const struct rvin_info rcar_info_r8a7796 =3D {
-> +       .chip =3D RCAR_GEN3,
-> +       .use_mc =3D true,
-> +       .max_width =3D 4096,
-> +       .max_height =3D 4096,
-> +
-> +       .num_chsels =3D 5,
-> +       .chsels =3D {
-> +               {
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 0 },
-> +                       { .csi =3D RVIN_NC, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 0 },
-> +               }, {
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 0 },
-> +                       { .csi =3D RVIN_NC, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 1 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 1 },
-> +               }, {
-> +                       { .csi =3D RVIN_NC, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 2 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 2 },
-> +               }, {
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 1 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 1 },
-> +                       { .csi =3D RVIN_NC, .chan =3D 1 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 3 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 3 },
-> +               }, {
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 0 },
-> +                       { .csi =3D RVIN_NC, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 0 },
-> +               }, {
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 0 },
-> +                       { .csi =3D RVIN_NC, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 1 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 1 },
-> +               }, {
-> +                       { .csi =3D RVIN_NC, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 0 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 2 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 2 },
-> +               }, {
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 1 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 1 },
-> +                       { .csi =3D RVIN_NC, .chan =3D 1 },
-> +                       { .csi =3D RVIN_CSI40, .chan =3D 3 },
-> +                       { .csi =3D RVIN_CSI20, .chan =3D 3 },
-> +               },
-> +       },
-> +};
-> +
->  static const struct of_device_id rvin_of_id_table[] =3D {
->         {
->                 .compatible =3D "renesas,vin-r8a7778",
-> @@ -1117,6 +1177,10 @@ static const struct of_device_id rvin_of_id_table[=
-] =3D {
->                 .compatible =3D "renesas,vin-r8a7795",
->                 .data =3D &rcar_info_r8a7795,
->         },
-> +       {
-> +               .compatible =3D "renesas,vin-r8a7796",
-> +               .data =3D &rcar_info_r8a7796,
-> +       },
->         { },
->  };
->  MODULE_DEVICE_TABLE(of, rvin_of_id_table);
-> --
-> 2.15.0
+--rn5csegognxxkru5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 06, 2017 at 09:51:39PM +0100, Emmanuel Vadot wrote:
+> The A13 Olinuxino have an headphone jack and audio is supported
+> so enable it.
+>=20
+> Signed-off-by: Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>
+
+Queued for 4.16, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--rn5csegognxxkru5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJaCVuuAAoJEBx+YmzsjxAgb0cP/0yWlZSSs1GD+98Gv0GkTvAh
+C/URVCz1FOI1TcLo53mI8Gy4EjIBt2Hlk3WCO1Z7cugn0w9w2/ICi9cloTUxW9io
+/fV4ZvaHtE0TsKwdcd5xJvnWZ1WVooBhVgr/VEiyuUAX8O/+bwg4o/dHyIviwb2S
+Xm9WMn6kuZ4WHs4Jabh5YwKHfgoMZ8oVRQXlGOrqr/5cUaak5a7oskrqxN8og0K/
+36xfVcwNqHMaF/omk4msG8z09HNu9+YK77hBhAd0nKqw5RFjhjiCPTGM1kwNT/Y7
+wP6eabKotXH1ckDeRZh0zh8If2IU7iz5bfF0a0NFZ1vOi19eeFER4yofCrvSCVWc
+ItDJt+pNGA/uy9Tbopa7oC5Gp3K7ZClnK2yoAULXxnM3oFraHEsJFNWppHEUM0Gq
+ZJCIEIK3aU/GlIbUxK5BMwaXznlKsNpRiZVThbKPr8YoDmPWMdJiJuNAo2JnNM+N
+P4MiVMrwwd0qdzT5Hk21dKHHCbwgc4g/vuivE413iL08A9tufirbuHjHQhI2zkoE
+zjl/T8ObTGBU7CTcsCGfe7qXA5n+uKIgdHTE3vCKcHnF0bgtwJSIUBYEmgfHxquM
+JReR/xVY5SAj6Szkgr4TSkP5Sf2oWOzZ2WJl0dl8rc38QF33KofUO1tPIxyBGn/3
+3bCE3+41Rr9Hm9gC5jQe
+=Rqly
+-----END PGP SIGNATURE-----
+
+--rn5csegognxxkru5--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
