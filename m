@@ -1,93 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: phy: Add Cygnus usb phy binding
-Date: Mon, 13 Nov 2017 11:53:21 -0600
-Message-ID: <CAL_JsqL+KaxAHb_u31U07-e+Nm2cW=Wi-oHyTP42B--hBiEyig@mail.gmail.com>
-References: <1510127203-5815-1-git-send-email-raveendra.padasalagi@broadcom.com>
- <1510127203-5815-2-git-send-email-raveendra.padasalagi@broadcom.com>
- <20171110214439.rlt5de2c6e6k246d@rob-hp-laptop> <CAAFb_vqKLOixSROUvkRFR=hwOqQvnVyV4mu37=MrEBo-pZaF5w@mail.gmail.com>
+From: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
+Date: Mon, 13 Nov 2017 22:24:11 +0300
+Message-ID: <20171113192411.kmohcthzickk4n5v@speedy.hunter>
+References: <20171103195855.15283-1-geomatsi@gmail.com>
+ <20171103195855.15283-2-geomatsi@gmail.com>
+ <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
+ <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter>
+ <20171106122633.5mnqfh6xhmmxr45s@flea>
+ <20171106161306.tq6yeq6bq36ridj3@speedy.hunter>
+ <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg@mail.gmail.com>
+ <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA@mail.gmail.com>
+ <20171107201245.gptgfli54o6eqmrj@speedy.hunter>
+ <CAMty3ZB3aXCsd9VkibjxPdA=BXvXr3nMbGJJvtZN_z2SGVUAXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAFb_vqKLOixSROUvkRFR=hwOqQvnVyV4mu37=MrEBo-pZaF5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZB3aXCsd9VkibjxPdA=BXvXr3nMbGJJvtZN_z2SGVUAXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rafal Milecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-ke
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 12, 2017 at 10:23 PM, Raveendra Padasalagi
-<raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Hi,
->
-> On Sat, Nov 11, 2017 at 3:14 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Nov 08, 2017 at 01:16:41PM +0530, Raveendra Padasalagi wrote:
->>> Add devicetree binding document for broadcom's
->>> Cygnus SoC specific usb phy controller driver.
->>>
->>> Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> ---
->>>  .../bindings/phy/brcm,cygnus-usb-phy.txt           | 106 +++++++++++++++++++++
->>>  1 file changed, 106 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
->>> new file mode 100644
->>> index 0000000..bbc4b94
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/phy/brcm,cygnus-usb-phy.txt
->>> @@ -0,0 +1,106 @@
->>> +BROADCOM CYGNUS USB PHY
->>> +
->>> +Required Properties:
->>> +- compatible:  brcm,cygnus-usb-phy
->>> +- reg : the register start address and length for
->>> +        crmu_usbphy_aon_ctrl,
->>> +        cdru usb phy control,
->>> +        usb host idm registers,
->>> +        usb device idm registers.
->>> +- reg-names: a list of the names corresponding to the previous register ranges
->>> +  Should contain
->>> +        "crmu-usbphy-aon-ctrl",
->>> +        "cdru-usbphy",
->>> +        "usb2h-idm",
->>> +        "usb2d-idm".
->>> +- address-cells: should be 1
->>> +- size-cells: should be 0
->>> +
->>> +Sub-nodes:
->>> +  Each port's PHY should be represented as a sub-node.
->>> +
->>> +Sub-nodes required properties:
->>> +- reg: the PHY number
->>> +- #phy-cells must be 1
->>> +  The node that uses the phy must provide 1 integer argument specifying
->>> +  port number.
->>> +
->>> +Optional Properties:
->>> +- vbus-p#-supply : The regulator for vbus out control for the host
->>
->> Is this a literal # or something else?
->
-> Yes, this is a literal. It's assumed # will replace numeric 0-2 for
-> each of the ports.
+Hello Maxime,
 
-I'm still confused. Which is valid? "vbus-p#-supply" or "vbus-p0-supply"
+On Wed, Nov 08, 2017 at 04:55:32PM +0530, Jagan Teki wrote:
+> On Wed, Nov 8, 2017 at 1:42 AM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Hi,
+> >
+> >> >>> > Did you try to boot from sdcard ? I am not able to boot my board from
+> >> >>> > sd-card without this change. As I mentioned earlier in my email
+> >> >>> > to buildroot mailing list, with mmc debug enabled I see that mmc
+> >> >>> > tries to init sd-card when I remove it from the slot.
+> >> >>> >
+> >> >>> > Maybe there is a minor differences between h/w versions or batches ?
+> >> >>> > What is you board version ? I tested on board v1.0.
+> >> >>>
+> >> >>> Looking at the schematics, it definitely looks like it's active low.
+> >> >>
+> >> >> Is it ok to merge it then ? Or using 'cd-inverted' property
+> >> >> is the preferable option ?
+> >> >
+> >> > W/o any change mainline works unstable for me, it wasn't booting
+> >> > at-all[1] did you find the same?
+> >> >
+> >> > Even tried with active LOW and cd-inverted.
+> >> >
+> >> > [1] https://paste.ubuntu.com/25909064/
+> >>
+> >> Look like something broken for H5 and A64 between v4.14-rc8 to latest
+> >
+> > Both 4.13.7 and 4.14-rc8 (synched today) kernels worked fine for me.
+> > DTS behavior is all the same:
+> 
+> I've tried fresh sync [2] but still see the issue, can you check the
+> Image size of log(suspecting on that area)
 
-If the latter, you need to enumerate all valid options. But these are
-in sub nodes for each port, so just "vbus-supply" should be
-sufficient.
+Do you plan to accept this patch as well ? Or you would prefer to wait
+for the confirmation from Jagan as well ?
 
-One more question, does Vbus actually supply power to the phy or you
-are just associating the Vbus supply to a connector with a port? The
-latter needs a connector node instead and Vbus should be part of that.
-There's been some attempts at USB connectors, but we don't really have
-one yet (the extcon binding is not it).
-
-> In the example it's not shown as the regulators specified in vbus-p#-supply
-> are board specific.
-
-Please show in the example. Examples should be complete.
-
-Rob
+Regards,
+Sergey
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
