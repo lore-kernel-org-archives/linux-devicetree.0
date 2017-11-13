@@ -1,127 +1,88 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] can: flexcan: Remodel FlexCAN register r/w APIs for
- big endian FlexCAN controllers.
-Date: Mon, 13 Nov 2017 16:50:34 +0100
-Message-ID: <15d6c00e-293d-1350-b955-d24b9d189a06@pengutronix.de>
-References: <1510307990-15418-1-git-send-email-pankaj.bansal@nxp.com>
- <a08c34d0-5870-b4b3-f68d-3db33ba3e950@pengutronix.de>
- <AM0PR0402MB3940A39D32C4725DE1B8C426F1540@AM0PR0402MB3940.eurprd04.prod.outlook.com>
- <e87441cc-3848-1125-f4f0-02f1a630c36b@pengutronix.de>
- <AM0PR0402MB394051B0FAADBC45AF71439CF1540@AM0PR0402MB3940.eurprd04.prod.outlook.com>
- <b27d6e14-c6d7-5c4b-0588-093684cbe57b@pengutronix.de>
- <AM0PR0402MB3940DE05B2BA456D0FF54498F1540@AM0PR0402MB3940.eurprd04.prod.outlook.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 3/5] dt-bindings: arm: Document Socionext MB86S71 and
+ Fujitsu F-Cue
+Date: Mon, 13 Nov 2017 15:55:01 +0000
+Message-ID: <CAKv+Gu9emoFge2+V92pW2vJcTyh=k7-bkpiFeiDu+d7MF9b1ew@mail.gmail.com>
+References: <20170625170020.11791-1-afaerber@suse.de> <20170625170020.11791-4-afaerber@suse.de>
+ <20170628164605.2gnvrv4g7jluzyrm@rob-hp-laptop> <CAK7LNATqjOMUajUCYVq=L6wWVTUEc1M7Po+KQ3M3Z=A7+FHX5w@mail.gmail.com>
+ <51221840-b08e-45f1-5601-937fb15f3947@suse.de> <CAK7LNASYvdWq5rV6q5Xf4Zqjso3H+XQY9Z6byJgcgfN7wT6fog@mail.gmail.com>
+ <a39e3d09-4182-ee54-c855-3817498b306a@suse.de> <CAKv+Gu8fkOhQCx-BsyTkottkk63dohzSqa8RhAgTDcMVcmFbxQ@mail.gmail.com>
+ <3327258c-b222-248b-9550-7620a57328f5@suse.de> <CAKv+Gu98dns-VoWF6xc0h_2R7SjcA3+85KVhLyLDgOBenhXJRQ@mail.gmail.com>
+ <4d589d7a-2035-085e-17c4-1b88785b59f9@suse.de> <CAKv+Gu-m-KYnsgyFBUuez3gRhwPF=_sD4fGpE6BDugzW9NUnsA@mail.gmail.com>
+ <c3c5b129-cd30-335d-80fd-05e9e4756121@suse.de> <CAKv+Gu_Wkdd3EdOjKJYZN5Ypjodpu5kFU=Ubg9H5e6ER3zq8Mg@mail.gmail.com>
+ <4c5fdcbd-057f-12a2-55f4-ff5f85b80f64@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="BfXfQhBhtOWaaghdVm0DIttkVe0bKxged"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AM0PR0402MB3940DE05B2BA456D0FF54498F1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Varun Sethi <V.Sethi-3arQi8VN3Tc@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4c5fdcbd-057f-12a2-55f4-ff5f85b80f64@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Leif Lindholm <leif.lindholm@linaro.org>, Grant Likely <Grant.Likely@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Satoru OKAMOTO <okamoto.satoru@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Yang Zhang <yang.zhang@96boards.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---BfXfQhBhtOWaaghdVm0DIttkVe0bKxged
-Content-Type: multipart/mixed; boundary="nuvxENl8BatJgh6FwQS1B8mkaSNKuhVFm";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>,
- "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>,
- "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Varun Sethi <V.Sethi-3arQi8VN3Tc@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-3arQi8VN3Tc@public.gmane.org>,
- "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Message-ID: <15d6c00e-293d-1350-b955-d24b9d189a06-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] can: flexcan: Remodel FlexCAN register r/w APIs for
- big endian FlexCAN controllers.
-References: <1510307990-15418-1-git-send-email-pankaj.bansal-3arQi8VN3Tc@public.gmane.org>
- <a08c34d0-5870-b4b3-f68d-3db33ba3e950-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
- <AM0PR0402MB3940A39D32C4725DE1B8C426F1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
- <e87441cc-3848-1125-f4f0-02f1a630c36b-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
- <AM0PR0402MB394051B0FAADBC45AF71439CF1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
- <b27d6e14-c6d7-5c4b-0588-093684cbe57b-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
- <AM0PR0402MB3940DE05B2BA456D0FF54498F1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-In-Reply-To: <AM0PR0402MB3940DE05B2BA456D0FF54498F1540-mYCQpYF9suc3mfjNbz3WnI3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+On 13 November 2017 at 15:40, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
+> Am 06.11.2017 um 12:28 schrieb Ard Biesheuvel:
+>> On 6 November 2017 at 06:58, Andreas F=C3=A4rber <afaerber@suse.de> wrot=
+e:
+>>> Am 05.11.2017 um 04:39 schrieb Ard Biesheuvel:
+>> [...]
+>>>>
+>>>> Again, I am not the one who is ranting here. You hit a nerve by
+>>>> accusing me of 'rebelling against linux.git' while this is quite the
+>>>> opposite of what I am doing.
+>>>
+>>> Actually you did confirm that point by starting an argument about not
+>>> needing a central repository and you not liking Linux as the location.
+>>> That was exactly what I meant with my original comment.
+>>>
+>>> Adding Actions Semi was somewhat easy as a new vendor and now - roughly
+>>> a year after the board went to market - there's Linaro contributions
+>>> from Mani that I'm thankful for.
+>>>
+>>> Whereas patches keep falling into a dark hole when there's already othe=
+r
+>>> work for a certain vendor, such as Marvell and now Socionext, with no
+>>> one feeling responsible for either taking them or saying, "hey, we're
+>>> not going to submit any conflicting DT bindings for SynQuacer because w=
+e
+>>> use ACPI, so please go ahead with proposal X, thanks for your efforts".
+>>>
+>>> Don't complain about me ranting if you belittle my volunteer work that =
+I
+>>> believe Linaro and its partners should've done in the first place: If I
+>>> can get an initial mainline PoC done as an individual on a few
+>>> evenings/weekends, then the same should be super-easy for an
+>>> organization with lots of engineers and paying member companies.
+>>
+>> The only person doing the ranting, rebelling and belittling in this
+>> thread is you. I have never commented on the nature of your work, let
+>> alone belittle it.
+>
+> You have stated your opinion that Device Trees don't belong in a central
+> repository and that Linux was the wrong place for them.
 
---nuvxENl8BatJgh6FwQS1B8mkaSNKuhVFm
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+Not as strongly as that, but ok.
 
-On 11/10/2017 05:32 PM, Pankaj Bansal wrote:
-> Thanks for sharing the video and slides. It was really helpful. But I
-> would still like to solve this problem using device tree property. My
-> rationale behind it is that, if a platform designer uses same IP
-> block whose support is present is linux kernel, but with different
-> endianness. Then he would not need to add his platform data in each
-> driver to support his platform in linux. He can just add endianness
-> property in device tree and can use latest linux kernel right off the
-> bat. This is also mentioned in
-> "Documentation/devicetree/bindings/regmap/regmap.txt".
->=20
-> Regmap defaults to little-endian register access on MMIO based
-> devices, this is by far the most common setting. On CPU
-> architectures that typically run big-endian operating systems
-> (e.g. PowerPC), registers can be defined as big-endian and must
-> be marked that way in the devicetree.
->=20
-> This rule was apparently not followed in P1010RDB flexcan node.
->=20
-> To solve this problem, I suggest that we define 2 optional device
-> tree properties for flexcan. little-endian : for powerpc
-> architecture, if this property is defined then controller is little
-> endian otherwise big endian (default) big-endian : for other
-> architectures, if this property is defined then controller is big
-> endian otherwise little endian (default)
->=20
-> Although the controller drivers should be architecture independent,
-> but apparently there is no way around it in flexcan.
+> My contributions
+> to Linux have been mainly such Device Trees and bindings, such as this
+> patch series here.
 
-Please keep the endianess as default es stated in the comment in the driv=
-er:
+Again, I don't have a clue what it is you work on, although I just
+found out (from the other thread you started) that it involves a
+Fujitsu not-quite-96board that shares IP with the SynQuacer SoC? It
+was my understanding (from information I received from Socionext) that
+any upstreaming efforts involving that SoC had been discarded. I guess
+the Socionext and Fujitsu engineers are not talking to each other
+either.
 
->> /* Abstract off the read/write for arm versus ppc. This
->>  * assumes that PPC uses big-endian registers and everything
->>  * else uses little-endian registers, independent of CPU
->>  * endianness.
->>  */
+> Quod erat demonstrandum.
 
-See description of commit 0e4b949e6620 ("can: flexcan: fix flexcan
-driver build for big endian on ARM and little endian on PowerPc") for
-more information.
-
-I'll not ACK a change in the driver, that's breaking PPC.
-
-Marc
+Mathematical proof usually involves inferring new facts from existing
+facts. You have done nothing of the kind, and I am not sure what you
+are so angry about, but I think it would be better to leave the
+emotions out of it, and try to remain factual. Especially when it
+comes to representing other people's statements.
 
 --=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---nuvxENl8BatJgh6FwQS1B8mkaSNKuhVFm--
-
---BfXfQhBhtOWaaghdVm0DIttkVe0bKxged
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAloJv0oACgkQHv7KIOw4
-HPYqqQgAiVAmfp1P4EMMOkqoZ4OmFhvPCcFsKVUWVhcDUSGSLX6/be82r7tJYrYh
-enLTw5cBbu+VcCewLIwi0zyk12kx0cvpJ+9b7Vuv5vFrwCCCj3kAXiEG1IjgfI10
-OGtvTkBbNTjCljXmrHqVLeQBfH+jV7Xs13j7v8sFtM7jX4nvQMC3TLB3apInc2Kt
-vxm1Rb+m9cayTktzuYznK1gtRW02nuP0m76TdDkpl7M3OmT1jpOKBAf/3w88iY74
-THqXOETZW287LCVpsNYQdR3JtqOyJmSb3dRhyBqnOTMWjaQZyid83oqqw7IAQGa0
-FdQtDNuKCgTCePWT7zxMaiXskH3FzQ==
-=j9+a
------END PGP SIGNATURE-----
-
---BfXfQhBhtOWaaghdVm0DIttkVe0bKxged--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ard.
