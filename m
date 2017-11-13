@@ -1,47 +1,109 @@
-From: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFCv2 PATCH 01/36] iommu: Keep track of processes and PASIDs
-Date: Mon, 13 Nov 2017 11:06:51 +0000
-Message-ID: <SN1PR0201MB1518765CCEDD9B75119D6C63A52B0@SN1PR0201MB1518.namprd02.prod.outlook.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-2-jean-philippe.brucker@arm.com>
- <BLUPR0201MB150538FDD455F6042803B54FA5560@BLUPR0201MB1505.namprd02.prod.outlook.com>
- <16b6ba80-b15b-b278-0d06-350ae0201e82@arm.com>
+From: James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>
+Subject: Re: [PATCH] MIPS: implement a "bootargs-append" DT property
+Date: Mon, 13 Nov 2017 11:23:12 +0000
+Message-ID: <20171113112312.GZ15260@jhogan-linux>
+References: <1510420788-25184-1-git-send-email-daniel@gimpelevich.san-francisco.ca.us>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PxDrs/Fpf4pPiewX"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <16b6ba80-b15b-b278-0d06-350ae0201e82-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1510420788-25184-1-git-send-email-daniel-R/FLGEdV95bo9U+Z1CfBt0SU0eOFXohjCypLqA8HKkk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Cc: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org" <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, gabriele.pao
+To: Daniel Gimpelevich <daniel-R/FLGEdV95bo9U+Z1CfBt0SU0eOFXohjCypLqA8HKkk@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->       =20
-> In this case even though hardware supports PASID, BIND flow fails.
+--PxDrs/Fpf4pPiewX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It should fail, since we're reserving PASID 0 for non-PASID transactions wi=
-th S1DSS=3D0b10. In addition, the SMMUv3 specification does not allow using=
- PASID with a single entry. See the description of S1CDMax in 5.2 Stream Ta=
-ble Entry:
+On Sat, Nov 11, 2017 at 09:19:48AM -0800, Daniel Gimpelevich wrote:
+> There are two uses for this:
+>=20
+> 1) It may be useful to split a device-specific kernel command line between
+> a .dts file and a .dtsi file, with "bootargs" in one and "bootargs-append"
+> in the other, such as for variations of a reference board.
+>=20
+> 2) There are kernel configuration options for prepending "bootargs" to the
+> kernel command line that the bootloader has passed, but not for appending.
+> A new option for this would be a less future-proof solution, since things
+> like this should be in the dtb.
+>=20
+> This is tested on MIPS, but it can be useful on other architectures also.
+>=20
+> Signed-off-by: Daniel Gimpelevich <daniel-R/FLGEdV95bo9U+Z1CfBt0SU0eOFXohjCypLqA8HKkk@public.gmane.org>
 
-"when this field is 0, the substreams of the STE are disabled and one CD is=
- available. (The minimum useful number of substreams is 2.) Any transaction=
- with a SubstreamID will be terminated with an abort and a C_BAD_SUBSTREAMI=
-D event recorded."
+The device tree maintainers should be on Cc. Adding them now.
 
-> Any reason why pasid allocation moved to idr allocations rather than=20
-> bitmap allocations as in v1 patches ?
+Cheers
+James
 
-Yes, idr provides a convenient way to quickly retrieve the context associat=
-ed with a PASID, when handling a fault. v1 had the allocation in a bitmap a=
-nd storing in a rb-tree. By using an idr we combine both and rely on a well=
--tested infrastructure.
+> ---
+>  arch/mips/kernel/setup.c | 3 +++
+>  drivers/of/fdt.c         | 4 ++++
+>  2 files changed, 7 insertions(+)
+>=20
+> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+> index fe39397..95e9bf2 100644
+> --- a/arch/mips/kernel/setup.c
+> +++ b/arch/mips/kernel/setup.c
+> @@ -826,7 +826,10 @@ static void __init arch_mem_init(char **cmdline_p)
+>  	extern void plat_mem_setup(void);
+> =20
+>  	/* call board setup routine */
+> +	strlcpy(boot_command_line, arcs_cmdline, COMMAND_LINE_SIZE);
+>  	plat_mem_setup();
+> +	if (strncmp(boot_command_line, arcs_cmdline, COMMAND_LINE_SIZE) =3D=3D =
+0)
+> +		boot_command_line[0] =3D '\0';
+> =20
+>  	/*
+>  	 * Make sure all kernel memory is in the maps.  The "UP" and
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index ce30c9a..65dbda6 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -1127,6 +1127,10 @@ int __init early_init_dt_scan_chosen(unsigned long=
+ node, const char *uname,
+>  	p =3D of_get_flat_dt_prop(node, "bootargs", &l);
+>  	if (p !=3D NULL && l > 0)
+>  		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
+> +	p =3D of_get_flat_dt_prop(node, "bootargs-append", &l);
+> +	if (p !=3D NULL && l > 0)
+> +		strlcat(data, p, min_t(int, strlen(data) + l,
+> +					COMMAND_LINE_SIZE));
+> =20
+>  	/*
+>  	 * CONFIG_CMDLINE is meant to be a default in case nothing else
+> --=20
+> 1.9.1
+>=20
+>=20
 
-Note that in the future we might need to go back to handcrafting the PASID =
-allocation, but it will probably still be based on idr.
+--PxDrs/Fpf4pPiewX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks for the clarification, Jean.=20
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAloJgJgACgkQbAtpk944
+dnpf+xAAmG5LEovzRhR7TAmxD1nvBm0tHkZU+/HwJiu5w4nG305C6oMO/WKtdHDr
+w5fgwnipppZnMpX+K39Nkr2pa0mB0AZS0SFHDehr/Kq03oN/LpGLTUgGVM7HyhBu
+3qQoYuBOSiGnQTMBkxbSMGYFKHYqAEJYD8LcPr5g3LP7xXubVUXFYI/cQr1QnkH5
+m2AgRHMTXAyIAkPTHxe+fzA2KaHaE2une6uA0bsMR9/rQv2nHoJy33X6r4+dyKPd
+upXmxWsrnRmO3FDYnthyo587Jqpq+Equ/R1uGnPylePk/izjWlj5braseyUtdE0C
+SfFIHTagkce2kTn9jeSOvDaj2UuD4curgVEBV44/b5kk2rKdUc1dXUVZd/nihvyH
+/29pTCr9ROU3OCuMdwF838q9mvZV2mhFg2fQTLxrPJLKBKYkNWWVjSqLI0U0gng2
+4msI/EXmjB//F1WQ3o8s8j8HAnUYVofJHMPBnOkreripEmfJxxyvx3m/nMfEG9AI
+nO/zDzFPQZ/aS9yig+j2tjlktAZE/4GdcLHixkFHGWx8P/c77mIkXUq1dPLOFn7/
+olhpkcR/qMWe6M+i2QzNrKaaROK/wQZfKbhl5AnmB/iHHWbPajuiYl1N+H7k9VJM
+eN2qGIx7citvTK1GVykdR9tr++owNvKGaYVuPgjO/t3zzQNlBJo=
+=DCvJ
+-----END PGP SIGNATURE-----
+
+--PxDrs/Fpf4pPiewX--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
