@@ -1,61 +1,77 @@
-From: Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] crypto: stm32 - Support for STM32 CRYP crypto
- module
-Date: Mon, 13 Nov 2017 10:30:40 +0000
-Message-ID: <774a92f2-af70-0424-b066-0cc1db3f9ab0@st.com>
-References: <1508425830-13565-1-git-send-email-fabien.dessenne@st.com>
- <1508425830-13565-3-git-send-email-fabien.dessenne@st.com>
- <20171022072659.GB8489@Red> <d924a278-90d0-969e-f1ae-a12f92e8972d@st.com>
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: Re: split devicetree repository to be rebased/rewritten after
+ v4.14-rcFINAL
+Date: Mon, 13 Nov 2017 10:19:38 +0000
+Message-ID: <1510568378.11820.17.camel@hellion.org.uk>
+References: <1506970413.4619.53.camel@hellion.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d924a278-90d0-969e-f1ae-a12f92e8972d-qxv4g6HH51o@public.gmane.org>
-Content-Language: en-US
-Content-ID: <32DFA78EC06AD043AC672D4861F49477-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1506970413.4619.53.camel-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
-Cc: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lionel DEBIEVE <lionel.debieve-qxv4g6HH51o@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVyYmVydCwNCg0KQ2FuIHlvdSBjaGVjayBpZiB0aGlzIHBhdGNoc2V0IChyZW1vdmVkIHRo
-ZSBBRUFEIHBhcnQgYXMgeW91IHN1Z2dlc3RlZCArIA0KbGlia2NhcGkgdGVzdCBPSyBhcyBzdWdn
-ZXN0ZWQgYnkgQ29yZW50aW4pIGNhbiBiZSBhcHBsaWVkIG5vdz8NCg0KQlINCg0KRmFiaWVuDQoN
-Cg0KT24gMDcvMTEvMTcgMTU6NDAsIEZhYmllbiBERVNTRU5ORSB3cm90ZToNCj4NCj4gT24gMjIv
-MTAvMTcgMDk6MjYsIENvcmVudGluIExhYmJlIHdyb3RlOg0KPj4gT24gVGh1LCBPY3QgMTksIDIw
-MTcgYXQgMDU6MTA6MzBQTSArMDIwMCwgRmFiaWVuIERlc3Nlbm5lIHdyb3RlOg0KPj4+IFRoaXMg
-bW9kdWxlIHJlZ2lzdGVycyBibG9jayBjaXBoZXIgYWxnb3JpdGhtcyB0aGF0IG1ha2UgdXNlIG9m
-IHRoZQ0KPj4+IFNUTWljcm9lbGVjdHJvbmljcyBTVE0zMiBjcnlwdG8gIkNSWVAxIiBoYXJkd2Fy
-ZS4NCj4+PiBUaGUgZm9sbG93aW5nIGFsZ29yaXRobXMgYXJlIHN1cHBvcnRlZDoNCj4+PiAtIGFl
-czogZWNiLCBjYmMsIGN0cg0KPj4+IC0gZGVzOiBlY2IsIGNiYw0KPj4+IC0gdGRlczogZWNiLCBj
-YmMNCj4+Pg0KPj4+IFNpZ25lZC1vZmYtYnk6IEZhYmllbiBEZXNzZW5uZSA8ZmFiaWVuLmRlc3Nl
-bm5lQHN0LmNvbT4NCj4+PiAtLS0NCj4+PiAgICBkcml2ZXJzL2NyeXB0by9zdG0zMi9LY29uZmln
-ICAgICAgfCAgICA5ICsNCj4+PiAgICBkcml2ZXJzL2NyeXB0by9zdG0zMi9NYWtlZmlsZSAgICAg
-fCAgICAzICstDQo+Pj4gICAgZHJpdmVycy9jcnlwdG8vc3RtMzIvc3RtMzItY3J5cC5jIHwgMTE3
-MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+Pj4gICAgMyBmaWxlcyBj
-aGFuZ2VkLCAxMTgzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+PiAgICBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9jcnlwdG8vc3RtMzIvc3RtMzItY3J5cC5jDQo+Pj4NCj4+PiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vc3RtMzIvS2NvbmZpZyBiL2RyaXZlcnMvY3J5cHRv
-L3N0bTMyL0tjb25maWcNCj4+PiArc3RhdGljIHZvaWQgc3RtMzJfY3J5cF9pcnFfd3JpdGVfYmxv
-Y2soc3RydWN0IHN0bTMyX2NyeXAgKmNyeXApDQo+Pj4gK3sNCj4+PiArCXVuc2lnbmVkIGludCBp
-LCBqOw0KPj4+ICsJdTMyICpzcmM7DQo+Pj4gKwl1OCBkOFs0XTsNCj4+PiArDQo+Pj4gKwlzcmMg
-PSBzZ192aXJ0KGNyeXAtPmluX3NnKSArIF93YWxrZWRfaW47DQo+Pj4gKw0KPj4+ICsJZm9yIChp
-ID0gMDsgaSA8IGNyeXAtPmh3X2Jsb2Nrc2l6ZSAvIHNpemVvZih1MzIpOyBpKyspIHsNCj4+PiAr
-CQlpZiAobGlrZWx5KGNyeXAtPnRvdGFsX2luID49IHNpemVvZih1MzIpKSkgew0KPj4+ICsJCQkv
-KiBXcml0ZSBhIGZ1bGwgdTMyICovDQo+Pj4gKwkJCXN0bTMyX2NyeXBfd3JpdGUoY3J5cCwgQ1JZ
-UF9ESU4sICpzcmMpOw0KPj4gSGVsbG8NCj4+DQo+PiBUcnkgYWxzbyB0byB0ZXN0IHlvdXIgZHJp
-dmVyIHdpdGggdXNlcnNwYWNlIHZpYSBBRl9BTEcgKGxpYmtjYXBpIGlzIGEgZ29vZCBzdGFydCku
-DQo+PiBJdCBzaG91bGQgcHJvYmFibHkgY3Jhc2ggaGVyZS4NCj4+IEkgaGF2ZSBkbyB0aGUgc2Ft
-ZSBvbiBteSBmaXJzdCBzdW54aS1zcyBkcml2ZXIgYW5kIHlvdSBzaG91bGQgdXNlIGttYXAoKS4N
-Cj4+DQo+PiBSZWdhcmRzDQo+IEhpIENvcmVudGluLA0KPg0KPiBUaGFuayB5b3UgZm9yIHN1Z2dl
-c3RpbmcgdG8gdGVzdCBmcm9tIHVzZXJzcGFjZSB0aHJvdWdoIHRoZSBBRl9BTEcNCj4gc29ja2V0
-IHdpdGggbGlia2NhcGkuDQo+IFRoaXMgaW5jcmVhc2VzIG15IHRlc3QgY292ZXJhZ2UuDQo+DQo+
-IEkgcmFuIHRoZSBtaXNjZWxsYW5lb3VzIHRlc3RzIChrY2FwaS1lbmMtdGVzdChsYXJnZSkuc2gg
-KyB0ZXN0LnNoKSBhbmQNCj4gY291bGQgbm90IG9ic2VydmUgYW55IGNyYXNoLg0KPiBOb3RlIHRo
-YXQgSSBoYWQgYWxyZWFkeSBmaXhlZCBzb21lICdtZW1vcnkgY3Jhc2hlcycgd2hpbGUgdGVzdGlu
-ZyB3aXRoDQo+IHRlc3RtZ3IgLyB0Y3J5cHQgd2hpbGUgdGVzdGluZyBmcm9tIHRoZSBrZXJuZWwu
-DQo+DQo+IFNvIGl0IGxvb2tzIGxpa2UgdGhlIHByb3Bvc2VkIGltcGxlbWVudGF0aW9uIGlzIGZp
-bmUuDQo+DQo+IEJSDQo+DQo+IEZhYmllbg0K
+This has now been done.
+
+Ian,
+On Mon, 2017-10-02 at 19:53 +0100, Ian Campbell wrote:
+> TL;DR: The tree[DT-R] at
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+> 
+> will be force pushed when v4.14 is released. This means a complete new
+> history and tags for this tree. The original tree will remain
+> available at [V1] but will not receive updates after v4.14-rcFINAL.
+> 
+> I'm not sure how widely used this tree is but I have made some changes
+> to the scripting which improves things in various ways:
+> 
+>  - The main change is that uninteresting merges (those which don't
+>    involve any files present in the output) are now removed, resulting
+>    in a _much_ cleaner history.
+> 
+>  - I've taken the chance to fix the dates on the vX.Y-dts tags so they
+>    reflect the date of the original vX.Y tag from Linus rather than
+>    whenever the conversion happened. Likewise the underlying merge
+>    commits now take their dates from the commit which Linus tagged.
+> 
+>  - I've also now upstreamed my changes to git filter-branch, which
+>    have been merged into git.git#master post v2.14.2. For now I am
+>    running v2.14.0 with the patches I sent upstream, but will switch
+>    to a real release with those changes ASAP. The switch to mainline
+>    git filter-branch has resulted in some irrelevant secondary roots
+>    (such as the one from the btrfs merge) being omitted, as they
+>    should have been all along. It's also nice to be using upstream!
+> 
+>  - Lastly I've improved the conversion scripting in various ways (unlike
+>    the others these do not change the output, but it is ~10-13x faster now
+>    for example).
+> 
+> As above the original tree will remain available at [V1] but will not
+> receive updates after v4.14-rcFINAL. The conversion state repo for
+> this tree will remain at [STATE-V1].
+> 
+> The new tree and its conversion state will be mirrored respectively at
+> [V2] and [STATE-V2]. These trees are already active if you want a
+> glimpse into the future. It's also not entirely too late to point out
+> issues with the new tree as there is still a chance to rewrite from
+> scratch (which takes around 3 days) before v4.14.
+> 
+> The spurious/empty/irrelevant merges have bugged me from day 1 of this
+> tree so I am glad to have had a chance to fix them. I'm not aware of
+> any other reason why the tree would need rebasing again, although for
+> now I am going to reserve the right to do so.
+> 
+> Cheers,
+> Ian.
+> 
+> [DT-R] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+> [V1] https://github.com/ijc/devicetree-rebasing-v1
+> [V2] https://github.com/ijc/devicetree-rebasing-v2
+> [STATE-V1] https://github.com/ijc/devicetree-conversion-state-v1
+> [STATE-V2] https://github.com/ijc/devicetree-conversion-state-v2
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
