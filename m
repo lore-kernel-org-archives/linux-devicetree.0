@@ -1,36 +1,39 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] pinctrl: sh-pfc: add PORT_GP_CFG_{6|22}() helper macros
-Date: Mon, 13 Nov 2017 13:23:58 +0100
-Message-ID: <CAMuHMdWZ97RiWBmaf-vkOX=qXjhkqak2QpFTP3weF+4yJT4vew@mail.gmail.com>
-References: <20171110181547.933934369@cogentembedded.com>
+Subject: Re: [PATCH] MIPS: implement a "bootargs-append" DT property
+Date: Mon, 13 Nov 2017 13:31:33 +0100
+Message-ID: <CAMuHMdUtHhSLbrgmOW7gkEUg8pif+Ddc-zZgWzCZ4WL3JTeOKg@mail.gmail.com>
+References: <1510420788-25184-1-git-send-email-daniel@gimpelevich.san-francisco.ca.us>
+ <20171113112312.GZ15260@jhogan-linux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171110181547.933934369@cogentembedded.com>
+In-Reply-To: <20171113112312.GZ15260@jhogan-linux>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+To: James Hogan <james.hogan@mips.com>, Daniel Gimpelevich <daniel@gimpelevich.san-francisco.ca.us>
+Cc: Linux MIPS Mailing List <linux-mips@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi James, Daniel,
 
-On Fri, Nov 10, 2017 at 6:59 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> They follow the style of the existing PORT_GP_CFG_<n>() macros and
-> will be used by a follow-up  patch for the R8A77970 SoC.
->
-> Based on the original (and large) patch by Daisuke Matsushita
-> <daisuke.matsushita.ns@hitachi.com>.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Mon, Nov 13, 2017 at 12:23 PM, James Hogan <james.hogan@mips.com> wrote:
+> On Sat, Nov 11, 2017 at 09:19:48AM -0800, Daniel Gimpelevich wrote:
+>> There are two uses for this:
+>>
+>> 1) It may be useful to split a device-specific kernel command line between
+>> a .dts file and a .dtsi file, with "bootargs" in one and "bootargs-append"
+>> in the other, such as for variations of a reference board.
 
-Thanks for your patch!
+I've seen other use cases, e.g. the extension of the du node's "clocks" and
+"clock-names" properties from arch/arm64/boot/dts/renesas/r8a7795.dtsi to
+arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts.
 
-Soon we will have all 32 sets of macros ;-)
+To avoid the proliferation of "-append" versions of existing properties, what
+about handling this in dtc, by adding support for an "/append-property/"
+keyword?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-I.e. will queue in sh-pfc-for-v4.16.
+     bootargs = "first part"
+     ...
+     /append-property/ bootargs = " second part".
 
 Gr{oetje,eeting}s,
 
