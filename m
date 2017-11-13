@@ -1,77 +1,58 @@
-From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Subject: Re: split devicetree repository to be rebased/rewritten after
- v4.14-rcFINAL
-Date: Mon, 13 Nov 2017 10:19:38 +0000
-Message-ID: <1510568378.11820.17.camel@hellion.org.uk>
-References: <1506970413.4619.53.camel@hellion.org.uk>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 15/13] firmware: arm_sdei: be more robust against
+ cpu-hotplug
+Date: Mon, 13 Nov 2017 11:01:10 +0000
+Message-ID: <20171113110109.GB8968@arm.com>
+References: <5A031E9E.2090809@arm.com>
+ <20171108160624.10355-1-james.morse@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1506970413.4619.53.camel-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171108160624.10355-1-james.morse-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This has now been done.
+On Wed, Nov 08, 2017 at 04:06:24PM +0000, James Morse wrote:
+> dpm_suspend() calls the freeze/thaw callbacks for hibernate before
+> disable_non_bootcpus() takes down secondaries.
+> 
+> This leads to a fun race where the freeze/thaw callbacks reset the
+> SDEI interface (as we may be restoring a kernel with a different
+> layout due to KASLR), then the cpu-hotplug callbacks come in to
+> save the current state, which has already been reset.
+> 
+> I tried to solve this with a 'frozen' flag that stops the hotplug
+> callback from overwriting the saved values. Instead this just
+> moves the race around and makes it even harder to think about.
+> 
+> Instead, make it look like the secondaries have gone offline.
+> Call cpuhp_remove_state() in the freeze callback, this will call the
+> teardown hook on all online CPUs, then remove the state. This saves
+> all private events and makes future CPU up/down events invisible.
+> 
+> Change sdei_event_unregister_all()/sdei_reregister_events() to
+> only save/restore shared events, which are all that is left. With
+> this we can remove the frozen flag. We can remove the device
+> suspend/resume calls too as cpuhotplug's teardown call has masked
+> the CPUs.
+> 
+> All that is left is the reboot notifier, (which was abusing the
+> frozen flag). Call cpuhp_remove_state() to make it look like
+> secondary CPUs have gone offline.
+> 
+> Suggested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/firmware/arm_sdei.c | 60 +++++++++++++++++++++++----------------------
+>  1 file changed, 31 insertions(+), 29 deletions(-)
 
-Ian,
-On Mon, 2017-10-02 at 19:53 +0100, Ian Campbell wrote:
-> TL;DR: The tree[DT-R] at
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
-> 
-> will be force pushed when v4.14 is released. This means a complete new
-> history and tags for this tree. The original tree will remain
-> available at [V1] but will not receive updates after v4.14-rcFINAL.
-> 
-> I'm not sure how widely used this tree is but I have made some changes
-> to the scripting which improves things in various ways:
-> 
->  - The main change is that uninteresting merges (those which don't
->    involve any files present in the output) are now removed, resulting
->    in a _much_ cleaner history.
-> 
->  - I've taken the chance to fix the dates on the vX.Y-dts tags so they
->    reflect the date of the original vX.Y tag from Linus rather than
->    whenever the conversion happened. Likewise the underlying merge
->    commits now take their dates from the commit which Linus tagged.
-> 
->  - I've also now upstreamed my changes to git filter-branch, which
->    have been merged into git.git#master post v2.14.2. For now I am
->    running v2.14.0 with the patches I sent upstream, but will switch
->    to a real release with those changes ASAP. The switch to mainline
->    git filter-branch has resulted in some irrelevant secondary roots
->    (such as the one from the btrfs merge) being omitted, as they
->    should have been all along. It's also nice to be using upstream!
-> 
->  - Lastly I've improved the conversion scripting in various ways (unlike
->    the others these do not change the output, but it is ~10-13x faster now
->    for example).
-> 
-> As above the original tree will remain available at [V1] but will not
-> receive updates after v4.14-rcFINAL. The conversion state repo for
-> this tree will remain at [STATE-V1].
-> 
-> The new tree and its conversion state will be mirrored respectively at
-> [V2] and [STATE-V2]. These trees are already active if you want a
-> glimpse into the future. It's also not entirely too late to point out
-> issues with the new tree as there is still a chance to rewrite from
-> scratch (which takes around 3 days) before v4.14.
-> 
-> The spurious/empty/irrelevant merges have bugged me from day 1 of this
-> tree so I am glad to have had a chance to fix them. I'm not aware of
-> any other reason why the tree would need rebasing again, although for
-> now I am going to reserve the right to do so.
-> 
-> Cheers,
-> Ian.
-> 
-> [DT-R] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
-> [V1] https://github.com/ijc/devicetree-rebasing-v1
-> [V2] https://github.com/ijc/devicetree-rebasing-v2
-> [STATE-V1] https://github.com/ijc/devicetree-conversion-state-v1
-> [STATE-V2] https://github.com/ijc/devicetree-conversion-state-v2
+Thanks, this appears to address my concerns. It's too late for 4.15 now,
+but please resend for 4.16 and Catalin can pick this series up.
+
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
