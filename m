@@ -1,35 +1,51 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add R8A77970/Eagle PFC support
-Date: Mon, 13 Nov 2017 08:53:03 +0100
-Message-ID: <20171113075303.zmkmq6bt3lfuttwu@verge.net.au>
-References: <20171110200218.747996672@cogentembedded.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6: Remove unneeded address-cells/size-cells
+Date: Mon, 13 Nov 2017 08:55:53 +0100
+Message-ID: <20171113075553.vseyq3swmzwja3ld@pengutronix.de>
+References: <1510348378-18150-1-git-send-email-festevam@gmail.com>
+ <62f3cb01-ff85-0fe0-2afa-0fe4732a7421@rwth-aachen.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171110200218.747996672-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <62f3cb01-ff85-0fe0-2afa-0fe4732a7421-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 10, 2017 at 11:02:18PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> Here's the set of 3 patches against Simon Horman's 'renesas.git' repo's
-> 'renesas-devel-20171110-v4.14-rc8' tag.  We're adding the R8A77970 PFC node
-> and then describing the pins for SCIF0 and EtherAVB devices declared earlier.
-> These patches depend on the R8A77970 PFC suport in order to work properly.
-> 
-> [1/3] arm64: dts: renesas: r8a77970: add PFC support
-> [2/3] arm64: dts: renesas: eagle: add SCIF0 pins
-> [3/3] arm64: dts: renesas: eagle: add EtherAVB pins
+Hello,
 
-Hi Sergei,
+On Sat, Nov 11, 2017 at 03:24:47PM +0100, Christopher Spinrath wrote:
+> (I'm sorry if I've missed some recipients or broke the email thread but
+> I got Fabio's email from the infradead archive.)
+> 
+> On 11/10/2017 10:12 PM, festevam at gmail.com (Fabio Estevam) wrote:
+> > From: Fabio Estevam <fabio.estevam at nxp.com>
+> > 
+> > According to Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt:
+> > 
+> > "- #address-cells, #size-cells : Must be present if the device has
+> > sub-nodes representing partitions."
+> > 
+> > Remove the occurrences of #address-cells/size-cells where no sub-nodes
+> > representing partitions are present.
+> 
+> This results in a regression for those devices where U-Boot is supposed
+> to inject the partition sub-nodes. For example, this is the case for
+> cm-fx6 module based devices like the Utilite Pro.
 
-I have marked these patches as deferred pending acceptance of the PFC
-driver. Please repost or otherwise ping me once that dependency has been
-accepted.
+sounds like an U-Boot bug that it inserts partition nodes, but doesn't
+ensure matching #address-cells/size-cells are specified.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
