@@ -1,113 +1,63 @@
 From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/3] dt-bindings: display/ti: Add optional property to set memory bandwidth limit
-Date: Tue, 14 Nov 2017 14:47:53 +0200
-Message-ID: <20171114124755.14277-2-peter.ujfalusi@ti.com>
-References: <20171114124755.14277-1-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 0/3] drm/omap: Support for dispc memory bandwidth limit
+Date: Tue, 14 Nov 2017 14:47:52 +0200
+Message-ID: <20171114124755.14277-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171114124755.14277-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-max-memory-bandwidth can be used to specify the maximum bandwidth dispc
-can use when reading display data from main memory.
+=EF=BB=BFHi,
 
-In some SoC (am437x for example) we have memory bandwidth limitation
-which causes underflow in the display subsystem.
+Changes since v1:
+- Use the crtc->mode_valid and not connector->mode_valid as the limit is re=
+ally
+  posed by the 'crtc' (DISPC)
+- Bandwidth calculation changed: do the calculation in place + extended com=
+ment
+- looked for better place to document the max-memory-bandwidth, but
+  can not find any suitable document. Creating a new txt file for only one
+  property did not seemed feasable.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+This series will add simple memory bandwidth limit support to reject modes
+which, if used with one plane in full size would fail the limit.
+
+Regards,
+Peter
 ---
- Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt  | 5 +++++
- Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt | 4 ++++
- Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt | 4 ++++
- Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt | 4 ++++
- Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt | 4 ++++
- 5 files changed, 21 insertions(+)
+Peter Ujfalusi (3):
+  dt-bindings: display/ti: Add optional property to set memory bandwidth
+    limit
+  drm/omap: dss: Add support for reporting memory bandwidth limitation
+  drm/omap: Filter displays mode based on bandwidth limit
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt
-index c30f9ec189ed..91279f1060fe 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt
-+++ b/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt
-@@ -47,6 +47,11 @@ Required properties:
- - clocks: handle to fclk
- - clock-names: "fck"
- 
-+Optional properties:
-+- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
-+			in bytes per second
-+
-+
- HDMI
- ----
- 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt
-index afcd5a86c6a4..ee867c4d1152 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt
-+++ b/Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt
-@@ -28,6 +28,10 @@ Required properties:
- - ti,hwmods: "dss_dispc"
- - interrupts: the DISPC interrupt
- 
-+Optional properties:
-+- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
-+			in bytes per second
-+
- 
- RFBI
- ----
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
-index dc66e1447c31..cd02516a40b6 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
-+++ b/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
-@@ -37,6 +37,10 @@ Required properties:
- - clocks: handle to fclk
- - clock-names: "fck"
- 
-+Optional properties:
-+- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
-+			in bytes per second
-+
- 
- RFBI
- ----
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt
-index bc624db8888d..0f85f6b3a5a8 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt
-+++ b/Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt
-@@ -36,6 +36,10 @@ Required properties:
- - clocks: handle to fclk
- - clock-names: "fck"
- 
-+Optional properties:
-+- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
-+			in bytes per second
-+
- 
- RFBI
- ----
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt
-index 118a486c47bb..20861218649f 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt
-+++ b/Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt
-@@ -36,6 +36,10 @@ Required properties:
- - clocks: handle to fclk
- - clock-names: "fck"
- 
-+Optional properties:
-+- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
-+			in bytes per second
-+
- 
- RFBI
- ----
--- 
+ .../devicetree/bindings/display/ti/ti,dra7-dss.txt |  5 +++
+ .../bindings/display/ti/ti,omap2-dss.txt           |  4 +++
+ .../bindings/display/ti/ti,omap3-dss.txt           |  4 +++
+ .../bindings/display/ti/ti,omap4-dss.txt           |  4 +++
+ .../bindings/display/ti/ti,omap5-dss.txt           |  4 +++
+ drivers/gpu/drm/omapdrm/dss/dispc.c                | 13 ++++++++
+ drivers/gpu/drm/omapdrm/dss/omapdss.h              |  2 ++
+ drivers/gpu/drm/omapdrm/omap_crtc.c                | 37 ++++++++++++++++++=
+++++
+ drivers/gpu/drm/omapdrm/omap_drv.c                 |  5 +++
+ drivers/gpu/drm/omapdrm/omap_drv.h                 |  3 ++
+ 10 files changed, 81 insertions(+)
+
+--=20
 Peter
 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
 Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Bu=
+siness ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
