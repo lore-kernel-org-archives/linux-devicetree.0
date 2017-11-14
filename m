@@ -1,63 +1,51 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v9 3/7] mailbox: qcom: Move the apcs struct into a
- separate header
-Date: Mon, 13 Nov 2017 18:12:55 -0800
-Message-ID: <20171114021255.GY11955@codeaurora.org>
-References: <20170921164940.20343-1-georgi.djakov@linaro.org>
- <20170921164940.20343-4-georgi.djakov@linaro.org>
- <20171026042811.GL1575@tuxbook>
- <5bad4c4b-362b-ba9f-3072-1cced7a004dd@linaro.org>
+From: Daniel Gimpelevich <daniel-R/FLGEdV95bo9U+Z1CfBt0SU0eOFXohjCypLqA8HKkk@public.gmane.org>
+Subject: Re: [PATCH] MIPS: implement a "bootargs-append" DT property
+Date: Mon, 13 Nov 2017 19:05:54 -0800
+Message-ID: <1510628754.14209.27.camel@chimera>
+References: <1510420788-25184-1-git-send-email-daniel@gimpelevich.san-francisco.ca.us>
+         <20171113112312.GZ15260@jhogan-linux>
+         <CAL_JsqJRVB928DVOAVQGrtT_EOuQBHkBhcd9+XFzqemutG65GA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5bad4c4b-362b-ba9f-3072-1cced7a004dd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAL_JsqJRVB928DVOAVQGrtT_EOuQBHkBhcd9+XFzqemutG65GA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/27, Georgi Djakov wrote:
-> Hi Bjorn,
+On Mon, 2017-11-13 at 10:34 -0600, Rob Herring wrote:
+> This is a kernel problem. What's the use case where you want the DT to
+> override the kernel?
 > 
-> Thanks for reviewing!
-> 
-> On 10/26/2017 07:28 AM, Bjorn Andersson wrote:
-> > On Thu 21 Sep 09:49 PDT 2017, Georgi Djakov wrote:
-> > 
-> >> Move the structure shared by the APCS IPC device and its subdevices
-> >> into a separate header file.
-> >>
-> > 
-> > As you're creating the apcs regmap with devm_regmap_init_mmio() you can
-> > just call dev_get_regmap(dev->parent) in your child to get the handle.
-> 
-> Ok, thanks!
-> 
-> > 
-> > But I would prefer that you just add the clock code to the existing
-> > driver.
-> 
-> This will require an ack from Stephen, and i got the impression that he
-> prefers a separate clk driver [1].
-> 
-> Stephen, are you ok with registering the clocks from the apcs mailbox
-> driver?
-> 
-> [1] https://lkml.org/lkml/2017/6/26/750
+> One way you could handle this is make bootargs be multiple strings.
+> Well 2 specifically, the first string is prepended and the 2nd is
+> appended. That complicates how you'd implement /append-property/
+> though as you'd probably want to support both string cat and 2
+> strings. Though the latter works more generically without knowing the
+> data type.
 
-The parent regmap "trick" was the plan. Is something wrong with
-that?
+Let's say the bootloader tells the kernel that the command line is "foo
+bar" and that "baz" is in the dtb. Currently, there are kernel
+configuration options to control whether this means the kernel's command
+line will be "baz" or "baz foo bar" instead, but there is no way to turn
+it into "foo bar baz" without either creating new kernel configuration
+options or this patch. Implementing it via this patch would allow a
+theoretical distro to use a generic kernel across different devices that
+need the arguments from their bootloader manipulated in different ways.
 
-Not having random clk drivers scattered throughout the tree is
-sort of nice because it makes for an easier time finding things
-that are similar. Maybe that's an abuse of the driver model
-though? Just to get things into some same directory. I'm fine
-either way.
+Ideally, the MIPS-specific kernel configuration options for how to treat
+the dtb's bootargs with respect to the bootloader's bootargs should go
+away in favor of an analogous device tree property "bootargs-prepend"
+for this reason. The kernel configuration options to supply a hard-coded
+default command line if the bootloader does not supply one, and to
+override what the bootloader and dtb supply, would remain. This would
+separate the need for an alternate or "recovery" kernel to supply its
+own bootargs to override the dtb from the need to have device-specific
+bootargs in the dtb override a legacy bootloader, where the manner its
+bootargs are overridden may be device-specific.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
