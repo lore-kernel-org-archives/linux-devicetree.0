@@ -1,48 +1,72 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] remoteproc: qcom: Add support for q6v5-wcss pil
-Date: Tue, 14 Nov 2017 15:21:09 +0530
-Message-ID: <ee5d49fb-f60c-1840-5bd1-80f41e8dcc16@codeaurora.org>
-References: <1510238775-14883-1-git-send-email-sricharan@codeaurora.org>
- <1510238775-14883-6-git-send-email-sricharan@codeaurora.org>
- <20171110210808.6sms52m4rrgqnf2r@rob-hp-laptop>
+From: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [v11,1/4] drivers: jtag: Add JTAG core driver
+Date: Tue, 14 Nov 2017 10:34:49 +0000
+Message-ID: <DB6PR0501MB219753AC43515148F39CC2D0B1280@DB6PR0501MB2197.eurprd05.prod.outlook.com>
+References: <1509724449-26221-2-git-send-email-oleksandrs@mellanox.com>
+ <8760aoz78q.fsf@bilbrey.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171110210808.6sms52m4rrgqnf2r@rob-hp-laptop>
+In-Reply-To: <8760aoz78q.fsf-Gz1Ta9Qd61ZAfugRpC6u6w@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Chip Bilbrey' <chip-Gz1Ta9Qd61ZAfugRpC6u6w@public.gmane.org>
+Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org" <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, "tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org" <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org" <mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, davem@davemlo
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+> -----Original Message-----
+> From: Chip Bilbrey [mailto:chip-Gz1Ta9Qd61ZAfugRpC6u6w@public.gmane.org]
+> Sent: Monday, November 6, 2017 12:33 AM
+> To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; arnd-r2nGTMty4D4@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org;
+> jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org; tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org; linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org; Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>; system-sw-low-
+> level <system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; openocd-
+> devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org; linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Subject: Re: [v11,1/4] drivers: jtag: Add JTAG core driver
+>=20
+>=20
+> Oleksandr Shamray writes:
 
-On 11/11/2017 2:38 AM, Rob Herring wrote:
-> On Thu, Nov 09, 2017 at 08:16:14PM +0530, Sricharan R wrote:
->> IPQ8074 has an integrated Hexagon dsp core q6v5 and a wireless lan
->> (Lithium) IP. An mdt type single image format is used for the
->> firmware. So the mdt_load function can be directly used to load
->> the firmware. Also add the relevant resets required for this core.
->>
->> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |  7 ++-
-> 
-> Please add acks when posting new versions.
+[..]
 
-oops.Really sorry, missed it. will update.
+> I notice the single-open()-per-device lock was dropped by request in an e=
+arlier
+> revision of your patches, but multiple processes trying to drive a single=
+ JTAG
+> master could wreak serious havoc if transactions get interleaved. Would
+> something like an added JTAG_LOCKCHAIN/UNLOCKCHAIN
+> ioctl() for exclusive client access be reasonable to prevent this?
+>=20
 
-Regards,
- Sricharan
+Yes, it dropped by recommendation of Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>.=
+=20
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Greg, what you can suggest about it. May be better to add again single-open=
+()-per-device lock with right locking way like:
 
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+>if (mutex_lock_interruptible(&jtag->open_lock)) {
+>	return -ERESTARTSYS;
+>}
+>
+>if (jtag->opened) {
+>	mutex_unlock(&jtag->open_lock);
+>	return -EINVAL;
+>}
+>
+>nonseekable_open(inode, file);
+>file->private_data =3D jtag;
+>jtag->opened++;
+>mutex_unlock(&jtag->open_lock);
+>
 
+Thaks.
+
+> -Chip
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
