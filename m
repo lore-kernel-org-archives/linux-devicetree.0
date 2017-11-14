@@ -1,71 +1,64 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 6/8] dt-bindings: power: Add Actions Semi S700 SPS
-Date: Tue, 14 Nov 2017 00:34:25 +0100
-Message-ID: <20171113233427.5386-7-afaerber@suse.de>
-References: <20171113233427.5386-1-afaerber@suse.de>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v9 3/7] mailbox: qcom: Move the apcs struct into a
+ separate header
+Date: Mon, 13 Nov 2017 18:12:55 -0800
+Message-ID: <20171114021255.GY11955@codeaurora.org>
+References: <20170921164940.20343-1-georgi.djakov@linaro.org>
+ <20170921164940.20343-4-georgi.djakov@linaro.org>
+ <20171026042811.GL1575@tuxbook>
+ <5bad4c4b-362b-ba9f-3072-1cced7a004dd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171113233427.5386-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Thomas Liau <thomas.liau@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, =?UTF-8?q?=E6=A2=85=E5=88=A9?= <harrymei@actions-semi.com>, support@cubietech.com, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5bad4c4b-362b-ba9f-3072-1cced7a004dd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Define power domains for Actions Semi S700 SoC Smart Power System (SPS).
+On 10/27, Georgi Djakov wrote:
+> Hi Bjorn,
+> 
+> Thanks for reviewing!
+> 
+> On 10/26/2017 07:28 AM, Bjorn Andersson wrote:
+> > On Thu 21 Sep 09:49 PDT 2017, Georgi Djakov wrote:
+> > 
+> >> Move the structure shared by the APCS IPC device and its subdevices
+> >> into a separate header file.
+> >>
+> > 
+> > As you're creating the apcs regmap with devm_regmap_init_mmio() you can
+> > just call dev_get_regmap(dev->parent) in your child to get the handle.
+> 
+> Ok, thanks!
+> 
+> > 
+> > But I would prefer that you just add the clock code to the existing
+> > driver.
+> 
+> This will require an ack from Stephen, and i got the impression that he
+> prefers a separate clk driver [1].
+> 
+> Stephen, are you ok with registering the clocks from the apcs mailbox
+> driver?
+> 
+> [1] https://lkml.org/lkml/2017/6/26/750
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v2: New
- 
- .../devicetree/bindings/power/actions,owl-sps.txt    |  2 ++
- include/dt-bindings/power/owl-s700-powergate.h       | 20 ++++++++++++++++++++
- 2 files changed, 22 insertions(+)
- create mode 100644 include/dt-bindings/power/owl-s700-powergate.h
+The parent regmap "trick" was the plan. Is something wrong with
+that?
 
-diff --git a/Documentation/devicetree/bindings/power/actions,owl-sps.txt b/Documentation/devicetree/bindings/power/actions,owl-sps.txt
-index 007b9a7ae723..78edd63641e8 100644
---- a/Documentation/devicetree/bindings/power/actions,owl-sps.txt
-+++ b/Documentation/devicetree/bindings/power/actions,owl-sps.txt
-@@ -2,10 +2,12 @@ Actions Semi Owl Smart Power System (SPS)
- 
- Required properties:
- - compatible          :  "actions,s500-sps" for S500
-+                         "actions,s700-sps" for S700
- - reg                 :  Offset and length of the register set for the device.
- - #power-domain-cells :  Must be 1.
-                          See macros in:
-                           include/dt-bindings/power/owl-s500-powergate.h for S500
-+                          include/dt-bindings/power/owl-s700-powergate.h for S700
- 
- 
- Example:
-diff --git a/include/dt-bindings/power/owl-s700-powergate.h b/include/dt-bindings/power/owl-s700-powergate.h
-new file mode 100644
-index 000000000000..4ded16bc074f
---- /dev/null
-+++ b/include/dt-bindings/power/owl-s700-powergate.h
-@@ -0,0 +1,20 @@
-+/*
-+ * Actions Semi S700 SPS
-+ *
-+ * Copyright (c) 2017 Andreas Färber
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+#ifndef DT_BINDINGS_POWER_OWL_S700_POWERGATE_H
-+#define DT_BINDINGS_POWER_OWL_S700_POWERGATE_H
-+
-+#define S700_PD_VDE	0
-+#define S700_PD_VCE_SI	1
-+#define S700_PD_USB2_1	2
-+#define S700_PD_HDE	3
-+#define S700_PD_DMA	4
-+#define S700_PD_DS	5
-+#define S700_PD_USB3	6
-+#define S700_PD_USB2_0	7
-+
-+#endif
+Not having random clk drivers scattered throughout the tree is
+sort of nice because it makes for an easier time finding things
+that are similar. Maybe that's an abuse of the driver model
+though? Just to get things into some same directory. I'm fine
+either way.
+
 -- 
-2.13.6
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
