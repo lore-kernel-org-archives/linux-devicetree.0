@@ -1,225 +1,73 @@
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v8 5/6] clocksource: stm32: add clocksource support
-Date: Tue, 14 Nov 2017 09:52:42 +0100
-Message-ID: <1510649563-22975-6-git-send-email-benjamin.gaignard@linaro.org>
-References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH v2] dt-bindings: mtd: Add sst25vf016b to the list of
+ supported chip names
+Date: Tue, 14 Nov 2017 09:38:05 +0000
+Message-ID: <TY1PR06MB089543675F2792B50910E9B0C0280@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1505118928-3987-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1508853032-25229-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510649563-22975-1-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1508853032-25229-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, julien.thierry-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The stm32 timer hardware is currently only used as a clock event device,
-but it can be utilized as a clocksource as well.
+Dear All,
 
-Implement this by enabling the free running counter in the hardware block
-and converting the clock event part from a count down event timer to a
-comparator based timer.
+how does this patch look like?
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/clocksource/timer-stm32.c | 116 +++++++++++++++++++++++++++++---------
- 1 file changed, 88 insertions(+), 28 deletions(-)
+Thanks,
+Fabrizio
 
-diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
-index 8173bcf..c0a62cd 100644
---- a/drivers/clocksource/timer-stm32.c
-+++ b/drivers/clocksource/timer-stm32.c
-@@ -16,6 +16,8 @@
- #include <linux/of_irq.h>
- #include <linux/clk.h>
- #include <linux/reset.h>
-+#include <linux/sched_clock.h>
-+#include <linux/slab.h>
- 
- #include "timer-of.h"
- 
-@@ -23,16 +25,16 @@
- #define TIM_DIER	0x0c
- #define TIM_SR		0x10
- #define TIM_EGR		0x14
-+#define TIM_CNT		0x24
- #define TIM_PSC		0x28
- #define TIM_ARR		0x2c
-+#define TIM_CCR1	0x34
- 
- #define TIM_CR1_CEN	BIT(0)
--#define TIM_CR1_OPM	BIT(3)
-+#define TIM_CR1_UDIS	BIT(1)
- #define TIM_CR1_ARPE	BIT(7)
- 
--#define TIM_DIER_UIE	BIT(0)
--
--#define TIM_SR_UIF	BIT(0)
-+#define TIM_DIER_CC1IE	BIT(1)
- 
- #define TIM_EGR_UG	BIT(0)
- 
-@@ -42,28 +44,44 @@ static int stm32_clock_event_shutdown(struct clock_event_device *evt)
- {
- 	struct timer_of *to = to_timer_of(evt);
- 
--	writel_relaxed(0, timer_of_base(to) + TIM_CR1);
-+	writel_relaxed(0, timer_of_base(to) + TIM_DIER);
-+
- 	return 0;
- }
- 
--static int stm32_clock_event_set_periodic(struct clock_event_device *evt)
-+static int stm32_clock_event_set_next_event(unsigned long evt,
-+					    struct clock_event_device *clkevt)
- {
--	struct timer_of *to = to_timer_of(evt);
-+	struct timer_of *to = to_timer_of(clkevt);
-+	unsigned long now, next;
- 
--	writel_relaxed(timer_of_period(to), timer_of_base(to) + TIM_ARR);
--	writel_relaxed(TIM_CR1_ARPE | TIM_CR1_CEN, timer_of_base(to) + TIM_CR1);
-+	next = readl_relaxed(timer_of_base(to) + TIM_CNT) + evt;
-+	writel_relaxed(next, timer_of_base(to) + TIM_CCR1);
-+	now = readl_relaxed(timer_of_base(to) + TIM_CNT);
-+
-+	if ((next - now) > evt)
-+		return -ETIME;
-+
-+	writel_relaxed(TIM_DIER_CC1IE, timer_of_base(to) + TIM_DIER);
- 
- 	return 0;
- }
- 
--static int stm32_clock_event_set_next_event(unsigned long evt,
--					    struct clock_event_device *clkevt)
-+static int stm32_clock_event_set_periodic(struct clock_event_device *evt)
- {
--	struct timer_of *to = to_timer_of(clkevt);
-+	struct timer_of *to = to_timer_of(evt);
- 
--	writel_relaxed(evt, timer_of_base(to) + TIM_ARR);
--	writel_relaxed(TIM_CR1_ARPE | TIM_CR1_OPM | TIM_CR1_CEN,
--		       timer_of_base(to) + TIM_CR1);
-+	return stm32_clock_event_set_next_event(timer_of_period(to), evt);
-+}
-+
-+static int stm32_clock_event_set_oneshot(struct clock_event_device *evt)
-+{
-+	struct timer_of *to = to_timer_of(evt);
-+	unsigned long val;
-+
-+	val = readl_relaxed(timer_of_base(to) + TIM_CNT);
-+	writel_relaxed(val, timer_of_base(to) + TIM_CCR1);
-+	writel_relaxed(TIM_DIER_CC1IE, timer_of_base(to) + TIM_DIER);
- 
- 	return 0;
- }
-@@ -75,12 +93,57 @@ static irqreturn_t stm32_clock_event_handler(int irq, void *dev_id)
- 
- 	writel_relaxed(0, timer_of_base(to) + TIM_SR);
- 
-+	if (clockevent_state_periodic(evt))
-+		stm32_clock_event_set_periodic(evt);
-+	else
-+		stm32_clock_event_shutdown(evt);
-+
- 	evt->event_handler(evt);
- 
- 	return IRQ_HANDLED;
- }
- 
--static int __init stm32_clockevent_init(struct device_node *node)
-+static void __init stm32_clockevent_init(struct timer_of *to)
-+{
-+	writel_relaxed(0, timer_of_base(to) + TIM_DIER);
-+	writel_relaxed(0, timer_of_base(to) + TIM_SR);
-+
-+	clockevents_config_and_register(&to->clkevt,
-+					timer_of_rate(to), MIN_DELTA, ~0U);
-+}
-+
-+static void __iomem *stm32_timer_cnt __read_mostly;
-+static u64 notrace stm32_read_sched_clock(void)
-+{
-+	return readl_relaxed(stm32_timer_cnt);
-+}
-+
-+static int __init stm32_clocksource_init(struct timer_of *to)
-+{
-+	writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
-+	writel_relaxed(0, timer_of_base(to) + TIM_PSC);
-+	writel_relaxed(0, timer_of_base(to) + TIM_SR);
-+	writel_relaxed(0, timer_of_base(to) + TIM_DIER);
-+	writel_relaxed(0, timer_of_base(to) + TIM_SR);
-+	writel_relaxed(TIM_CR1_ARPE | TIM_CR1_UDIS,
-+		       timer_of_base(to) + TIM_CR1);
-+
-+	/* Make sure that registers are updated */
-+	writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
-+
-+	/* Enable controller */
-+	writel_relaxed(TIM_CR1_ARPE | TIM_CR1_UDIS | TIM_CR1_CEN,
-+		       timer_of_base(to) + TIM_CR1);
-+
-+	stm32_timer_cnt = timer_of_base(to) + TIM_CNT;
-+	sched_clock_register(stm32_read_sched_clock, 32, timer_of_rate(to));
-+
-+	return clocksource_mmio_init(stm32_timer_cnt, "stm32_timer",
-+				     timer_of_rate(to), 250, 32,
-+				     clocksource_mmio_readl_up);
-+}
-+
-+static int __init stm32_timer_init(struct device_node *node)
- {
- 	struct reset_control *rstc;
- 	unsigned long max_arr;
-@@ -92,12 +155,13 @@ static int __init stm32_clockevent_init(struct device_node *node)
- 		return -ENOMEM;
- 
- 	to->flags = TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE;
-+
- 	to->clkevt.name = "stm32_clockevent";
- 	to->clkevt.rating = 200;
--	to->clkevt.features = CLOCK_EVT_FEAT_PERIODIC;
-+	to->clkevt.features = CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PERIODIC;
- 	to->clkevt.set_state_shutdown = stm32_clock_event_shutdown;
- 	to->clkevt.set_state_periodic = stm32_clock_event_set_periodic;
--	to->clkevt.set_state_oneshot = stm32_clock_event_shutdown;
-+	to->clkevt.set_state_oneshot = stm32_clock_event_set_oneshot;
- 	to->clkevt.tick_resume = stm32_clock_event_shutdown;
- 	to->clkevt.set_next_event = stm32_clock_event_set_next_event;
- 
-@@ -122,23 +186,19 @@ static int __init stm32_clockevent_init(struct device_node *node)
- 		goto deinit;
- 	}
- 
--	writel_relaxed(0, timer_of_base(to) + TIM_ARR);
--
--	writel_relaxed(0, timer_of_base(to) + TIM_PSC);
--	writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
--	writel_relaxed(TIM_DIER_UIE, timer_of_base(to) + TIM_DIER);
--	writel_relaxed(0, timer_of_base(to) + TIM_SR);
-+	ret = stm32_clocksource_init(to);
-+	if (ret)
-+		goto deinit;
- 
--	clockevents_config_and_register(&to->clkevt,
--					timer_of_period(to), MIN_DELTA, ~0U);
-+	stm32_clockevent_init(to);
- 
- 	return 0;
- 
- deinit:
--	timer_of_exit(to);
-+	timer_of_cleanup(to);
- err:
- 	kfree(to);
- 	return ret;
- }
- 
--TIMER_OF_DECLARE(stm32, "st,stm32-timer", stm32_clockevent_init);
-+TIMER_OF_DECLARE(stm32, "st,stm32-timer", stm32_timer_init);
--- 
-2.7.4
+> Subject: [PATCH v2] dt-bindings: mtd: Add sst25vf016b to the list of supp=
+orted chip names
+>
+> There are a few DT files that make use of sst25vf016b in their
+> compatible strings, and the driver supports this chip already.
+> This patch improves the documentation and therefore the result
+> of ./scripts/checkpatch.pl.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> ---
+> Thank you Rob, thank you Geert, and sorry for the delay on this one.
+> Here is v2.
+>
+> Changes in v2:
+> * fixed subject prefix
+> * added changelog
+>
+>  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Do=
+cumentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> index 4cab5d8..bf56d77 100644
+> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> @@ -31,6 +31,7 @@ Required properties:
+>                   s25sl12801
+>                   s25fl008k
+>                   s25fl064k
+> +                 sst25vf016b
+>                   sst25vf040b
+>                   sst25wf040b
+>                   m25p40
+> --
+> 2.7.4
 
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
