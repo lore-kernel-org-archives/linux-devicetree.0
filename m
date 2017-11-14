@@ -1,73 +1,147 @@
-From: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: RE: [v11,1/4] drivers: jtag: Add JTAG core driver
-Date: Tue, 14 Nov 2017 10:34:49 +0000
-Message-ID: <DB6PR0501MB219753AC43515148F39CC2D0B1280@DB6PR0501MB2197.eurprd05.prod.outlook.com>
-References: <1509724449-26221-2-git-send-email-oleksandrs@mellanox.com>
- <8760aoz78q.fsf@bilbrey.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/3] Input: twl4030-vibra: fix sibling-node lookup
+Date: Tue, 14 Nov 2017 10:39:36 +0000
+Message-ID: <20171114103936.4mzcmxuear5kxrtt@dell>
+References: <20171111154339.16875-1-johan@kernel.org>
+ <20171111175059.lwfhw2wdhlj5yxhc@dtor-ws>
+ <20171112121235.GO11226@localhost>
+ <20171113091144.5oz77shbu4oupoy7@dell>
+ <20171113093544.GR11226@localhost>
+ <20171113102028.c53rlcnwrjaey2tv@dell>
+ <20171113115102.GU11226@localhost>
+ <20171113215452.hqjvxjbef4dt5647@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8760aoz78q.fsf-Gz1Ta9Qd61ZAfugRpC6u6w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Chip Bilbrey' <chip-Gz1Ta9Qd61ZAfugRpC6u6w@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org" <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, "tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org" <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org" <mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, davem@davemlo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171113215452.hqjvxjbef4dt5647@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Marek Belisko <marek@goldelico.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Chip Bilbrey [mailto:chip-Gz1Ta9Qd61ZAfugRpC6u6w@public.gmane.org]
-> Sent: Monday, November 6, 2017 12:33 AM
-> To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; arnd-r2nGTMty4D4@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org;
-> jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org; tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org; linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org; Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>; system-sw-low-
-> level <system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; openocd-
-> devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org; linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> Subject: Re: [v11,1/4] drivers: jtag: Add JTAG core driver
->=20
->=20
-> Oleksandr Shamray writes:
+On Mon, 13 Nov 2017, Dmitry Torokhov wrote:
 
-[..]
+> On Mon, Nov 13, 2017 at 12:51:02PM +0100, Johan Hovold wrote:
+> > On Mon, Nov 13, 2017 at 10:20:28AM +0000, Lee Jones wrote:
+> > > On Mon, 13 Nov 2017, Johan Hovold wrote:
+> > > 
+> > > > On Mon, Nov 13, 2017 at 09:11:44AM +0000, Lee Jones wrote:
+> > > > > On Sun, 12 Nov 2017, Johan Hovold wrote:
+> > > > > 
+> > > > > > [ +CC: Lee, Rob and device-tree list ]
+> > > > > > 
+> > > > > > On Sat, Nov 11, 2017 at 09:50:59AM -0800, Dmitry Torokhov wrote:
+> > > > > > > On Sat, Nov 11, 2017 at 04:43:37PM +0100, Johan Hovold wrote:
+> > > > > > > > A helper purported to look up a child node based on its name was using
+> > > > > > > > the wrong of-helper and ended up prematurely freeing the parent of-node
+> > > > > > > > while searching the whole device tree depth-first starting at the parent
+> > > > > > > > node.
+> > > > > > > 
+> > > > > > > Ugh, this all is pretty ugly business. Can we teach MFD to allow
+> > > > > > > specifying firmware node to be attached to the platform devices it
+> > > > > > > creates in mfd_add_device() so that the leaf drivers simply call
+> > > > > > > device_property_read_XXX() on their own device and not be bothered with
+> > > > > > > weird OF refcount issues or what node they need to locate and parse?
+> > > > > 
+> > > > > If a child compatible is provided, we already set the child's
+> > > > > of_node.  It's then up to the driver (set) author(s) to use it in the
+> > > > > correct manner. 
+> > > > > 
+> > > > > > Yeah, that may have helped. You can actually specify a compatible string
+> > > > > > in struct mfd_cell today which does make mfd_add_device() associate a
+> > > > > > matching child node.
+> > > > > > 
+> > > > > > Some best practice regarding how to deal with MFD and device tree would
+> > > > > > be good to determine and document too. For example, when should
+> > > > > > of_platform_populate() be used in favour of mfd_add_device()?
+> > > > > 
+> > > > > When the device supports DT and its entire hierarchical layout, along
+> > > > > with all of its attributes can be expressed in DT.
+> > > > 
+> > > > Ok, a follow up: When there are different variants of an MFD and that
+> > > > affects the child drivers, then that should be expressed in in the child
+> > > > node compatibles rather than having the child match on the parent node?
+> > > > 
+> > > > I'm asking because this came up recently during review and their seems
+> > > > to be no precedent for matching on the parent compatible in child
+> > > > drivers:
+> > > > 
+> > > > 	https://lkml.kernel.org/r/20171105154725.GA11226@localhost
+> > > 
+> > > Accessing the parent's of_device_id .data directly doesn't sit well
+> > > with me.  The parent driver should pass this type of configuration
+> > > though pdata IMHO.
+> > 
+> > The child driver is only matching on the parent-node compatible string
+> > IIRC, and therefore keeps its own table of all parent compatibles with
+> > its own set of (child) private match data (i.e. the parent compatible
+> > property is matched first by the parent driver, and then again by the
+> > child).
+> > 
+> > Passing through pdata here is not possible since mfd_add_device() isn't
+> > used, right? It could of course be described using properties of the
+> > child node (e.g. by using different child compatible strings).
+> > 
+> > > > > > And how best to deal with sibling nodes, which is part of the problem
+> > > > > > here (I think the mfd should have provided a flag rather than having
+> > > > > > subdrivers deal with sibling nodes, for example).
+> > > > > 
+> > > > > I disagree.  The only properties the MFD (parent) driver is interested
+> > > > > in is ones which are shared across multiple child devices.
+> > > > > *Everything* which pertains to only a single child device should be
+> > > > > handled by its accompanying driver. 
+> > > > 
+> > > > Even if that means leaking details of one child driver into a sibling?
+> > > 
+> > > Not sure what you mean here.  Could you please elaborate or provide an
+> > > example?
+> > 
+> > I mean that the sibling node needs to be aware of the name, compatible
+> > string, or other node properties of its sibling node to be able to parse
+> > sibling nodes itself (rather than the sibling or parent doing so on its
+> > behalf). But it seems you answer this below.
+> > 
+> > > > Isn't it then cleaner to use the parent MFD to coordinate between the
+> > > > cells, just as we do for IO?
+> > > > 
+> > > > In this case a child driver looked up a sibling node based on name, but
+> > > 
+> > > This should not be allowed.  If >1 sibling requires access to a
+> > > particular property, this is normally evidence enough that this
+> > > property should be shared and handled by the parent.
+> > > 
+> > > > that doesn't mean the node is active, that there's a driver bound, or
+> > > > that the sibling node has some other random property for example. The
+> > > > parent could be used for such coordination, if only to pass information
+> > > > from one sibling to another.
+> > > 
+> > > Right.
+> > 
+> > Ok, it seems we're in agreement here.
+> > 
+> > Given that MFD has evolved over time and device-tree support has been
+> > added retroactively to some drivers, we've ended up with a multitude of
+> > different ways of dealing with such issues. I think it may still be a
+> > good idea to jot down some best practices for future driver developers.
+> 
+> FWIW here is the patch allowing attaching fwnode to an MFD cell that is
+> not using of_compatible (because if historical reasons). Completely
+> untested as I do not have this hardware.
 
-> I notice the single-open()-per-device lock was dropped by request in an e=
-arlier
-> revision of your patches, but multiple processes trying to drive a single=
- JTAG
-> master could wreak serious havoc if transactions get interleaved. Would
-> something like an added JTAG_LOCKCHAIN/UNLOCKCHAIN
-> ioctl() for exclusive client access be reasonable to prevent this?
->=20
+I am not familiar with the device_* OF implementation, so find it
+hard to provide a solid, knowledgeable review.  It looks okay in
+principle.
 
-Yes, it dropped by recommendation of Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>.=
-=20
+I'd appreciate it if Rob or one of the other DT guys could cast an
+eye though.
 
-Greg, what you can suggest about it. May be better to add again single-open=
-()-per-device lock with right locking way like:
+> If this is somewhat acceptable I can untangle core from twl6040
+> changes.
 
->if (mutex_lock_interruptible(&jtag->open_lock)) {
->	return -ERESTARTSYS;
->}
->
->if (jtag->opened) {
->	mutex_unlock(&jtag->open_lock);
->	return -EINVAL;
->}
->
->nonseekable_open(inode, file);
->file->private_data =3D jtag;
->jtag->opened++;
->mutex_unlock(&jtag->open_lock);
->
-
-Thaks.
-
-> -Chip
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
