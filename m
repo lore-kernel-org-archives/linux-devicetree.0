@@ -1,50 +1,113 @@
-From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: [PATCH] arm: dts: ls1021a: Add label to USB controllers
-Date: Tue, 14 Nov 2017 13:39:43 +0100
-Message-ID: <1510663184-19537-1-git-send-email-rasmus.villemoes@prevas.dk>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 1/3] dt-bindings: display/ti: Add optional property to set memory bandwidth limit
+Date: Tue, 14 Nov 2017 14:47:53 +0200
+Message-ID: <20171114124755.14277-2-peter.ujfalusi@ti.com>
+References: <20171114124755.14277-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171114124755.14277-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>
+max-memory-bandwidth can be used to specify the maximum bandwidth dispc
+can use when reading display data from main memory.
 
-Add usb2 and usb3 labels to USB2 and USB3 controller device tree nodes,
-for easier modification in board dts files.
+In some SoC (am437x for example) we have memory bandwidth limitation
+which causes underflow in the display subsystem.
 
-Signed-off-by: Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt  | 5 +++++
+ Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt | 4 ++++
+ Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt | 4 ++++
+ Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt | 4 ++++
+ Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt | 4 ++++
+ 5 files changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 9cdec545decc..50ad4dccb22b 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -675,7 +675,7 @@
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt
+index c30f9ec189ed..91279f1060fe 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt
++++ b/Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt
+@@ -47,6 +47,11 @@ Required properties:
+ - clocks: handle to fclk
+ - clock-names: "fck"
  
--		usb@8600000 {
-+		usb2: usb@8600000 {
- 			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
- 			reg = <0x0 0x8600000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
-@@ -683,7 +683,7 @@
- 			phy_type = "ulpi";
- 		};
++Optional properties:
++- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
++			in bytes per second
++
++
+ HDMI
+ ----
  
--		usb3@3100000 {
-+		usb3: usb3@3100000 {
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0x3100000 0x0 0x10000>;
- 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt
+index afcd5a86c6a4..ee867c4d1152 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt
++++ b/Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt
+@@ -28,6 +28,10 @@ Required properties:
+ - ti,hwmods: "dss_dispc"
+ - interrupts: the DISPC interrupt
+ 
++Optional properties:
++- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
++			in bytes per second
++
+ 
+ RFBI
+ ----
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
+index dc66e1447c31..cd02516a40b6 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
++++ b/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
+@@ -37,6 +37,10 @@ Required properties:
+ - clocks: handle to fclk
+ - clock-names: "fck"
+ 
++Optional properties:
++- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
++			in bytes per second
++
+ 
+ RFBI
+ ----
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt
+index bc624db8888d..0f85f6b3a5a8 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt
++++ b/Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt
+@@ -36,6 +36,10 @@ Required properties:
+ - clocks: handle to fclk
+ - clock-names: "fck"
+ 
++Optional properties:
++- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
++			in bytes per second
++
+ 
+ RFBI
+ ----
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt
+index 118a486c47bb..20861218649f 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt
++++ b/Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt
+@@ -36,6 +36,10 @@ Required properties:
+ - clocks: handle to fclk
+ - clock-names: "fck"
+ 
++Optional properties:
++- max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
++			in bytes per second
++
+ 
+ RFBI
+ ----
 -- 
-2.7.4
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
