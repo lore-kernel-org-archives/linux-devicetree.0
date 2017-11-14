@@ -1,7 +1,7 @@
 From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v8 1/6] clocksource: timer_of: rename timer_of_exit to timer_of_cleanup
-Date: Tue, 14 Nov 2017 09:52:38 +0100
-Message-ID: <1510649563-22975-2-git-send-email-benjamin.gaignard@linaro.org>
+Subject: [PATCH v8 4/6] clocksource: stm32: only use 32 bits timers
+Date: Tue, 14 Nov 2017 09:52:41 +0100
+Message-ID: <1510649563-22975-5-git-send-email-benjamin.gaignard@linaro.org>
 References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1510649563-22975-1-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,48 +10,75 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@pu
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Change function name to something more explicit since it is only
-used in init error cases.
-Add __init annotation and description about the function usage.
+The clock driving counters is at 90MHz so the maximum period
+for 16 bis counters is around 750 ms which is a short period
+for a clocksource. For 32 bits counters this period is close
+47 secondes which is more acceptable.
+
+This patch remove 16 bits counters support and makes sure that
+they won't be probed anymore.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/clocksource/timer-of.c | 9 ++++++++-
- drivers/clocksource/timer-of.h | 2 +-
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ drivers/clocksource/timer-stm32.c | 26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-index 7c64a5c1..a319904 100644
---- a/drivers/clocksource/timer-of.c
-+++ b/drivers/clocksource/timer-of.c
-@@ -177,7 +177,14 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
- 	return ret;
- }
- 
--void timer_of_exit(struct timer_of *to)
-+/**
-+ * timer_of_cleanup - release timer_of ressources
-+ * @to: timer_of structure
-+ *
-+ * Release the ressources that has been used in timer_of_init().
-+ * This function should be called in init error cases
-+ */
-+void __init timer_of_cleanup(struct timer_of *to)
+diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
+index ae41a19..8173bcf 100644
+--- a/drivers/clocksource/timer-stm32.c
++++ b/drivers/clocksource/timer-stm32.c
+@@ -83,9 +83,9 @@ static irqreturn_t stm32_clock_event_handler(int irq, void *dev_id)
+ static int __init stm32_clockevent_init(struct device_node *node)
  {
- 	if (to->flags & TIMER_OF_IRQ)
- 		timer_irq_exit(&to->of_irq);
-diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
-index 44f57e0..f521477 100644
---- a/drivers/clocksource/timer-of.h
-+++ b/drivers/clocksource/timer-of.h
-@@ -67,6 +67,6 @@ static inline unsigned long timer_of_period(struct timer_of *to)
- extern int __init timer_of_init(struct device_node *np,
- 				struct timer_of *to);
+ 	struct reset_control *rstc;
+-	unsigned long max_delta;
+-	int ret, bits, prescaler = 1;
++	unsigned long max_arr;
+ 	struct timer_of *to;
++	int ret;
  
--extern void timer_of_exit(struct timer_of *to);
-+extern void __init timer_of_cleanup(struct timer_of *to);
+ 	to = kzalloc(sizeof(*to), GFP_KERNEL);
+ 	if (!to)
+@@ -115,29 +115,27 @@ static int __init stm32_clockevent_init(struct device_node *node)
  
- #endif
+ 	/* Detect whether the timer is 16 or 32 bits */
+ 	writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
+-	max_delta = readl_relaxed(timer_of_base(to) + TIM_ARR);
+-	if (max_delta == ~0U) {
+-		prescaler = 1;
+-		bits = 32;
+-	} else {
+-		prescaler = 1024;
+-		bits = 16;
++	max_arr = readl_relaxed(timer_of_base(to) + TIM_ARR);
++	if (max_arr != ~0U) {
++		pr_err("32 bits timer is needed\n");
++		ret = -EINVAL;
++		goto deinit;
+ 	}
++
+ 	writel_relaxed(0, timer_of_base(to) + TIM_ARR);
+ 
+-	writel_relaxed(prescaler - 1, timer_of_base(to) + TIM_PSC);
++	writel_relaxed(0, timer_of_base(to) + TIM_PSC);
+ 	writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
+ 	writel_relaxed(TIM_DIER_UIE, timer_of_base(to) + TIM_DIER);
+ 	writel_relaxed(0, timer_of_base(to) + TIM_SR);
+ 
+ 	clockevents_config_and_register(&to->clkevt,
+-					timer_of_period(to), MIN_DELTA, max_delta);
+-
+-	pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
+-			node, bits);
++					timer_of_period(to), MIN_DELTA, ~0U);
+ 
+ 	return 0;
+ 
++deinit:
++	timer_of_exit(to);
+ err:
+ 	kfree(to);
+ 	return ret;
 -- 
 2.7.4
 
