@@ -1,77 +1,47 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 2/3] drm/omap: dss: Add support for reporting memory bandwidth limitation
-Date: Tue, 14 Nov 2017 14:47:54 +0200
-Message-ID: <20171114124755.14277-3-peter.ujfalusi@ti.com>
-References: <20171114124755.14277-1-peter.ujfalusi@ti.com>
+From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: iio: add Intersil isl76683 light
+ sensor bindings
+Date: Tue, 14 Nov 2017 15:20:20 +0100
+Message-ID: <1510669220.1892.4.camel@googlemail.com>
+References: <1510068983-25769-1-git-send-email-chf.fritz@googlemail.com>
+         <1510068983-25769-3-git-send-email-chf.fritz@googlemail.com>
+         <20171110212604.bpbsgtw7zbk5qp2d@rob-hp-laptop>
+Reply-To: chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171114124755.14277-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171110212604.bpbsgtw7zbk5qp2d@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The get_memory_bandwidth_limit() in dispc_ops can be used to query the
-memory bandwidth limit of dispc by upper layers.
+Hi Rob
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
----
- drivers/gpu/drm/omapdrm/dss/dispc.c   | 13 +++++++++++++
- drivers/gpu/drm/omapdrm/dss/omapdss.h |  2 ++
- 2 files changed, 15 insertions(+)
+On Fri, 2017-11-10 at 15:26 -0600, Rob Herring wrote:
+> On Tue, Nov 07, 2017 at 04:36:22PM +0100, Christoph Fritz wrote:
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
-index 0f4fdb221498..90f9ad89af0d 100644
---- a/drivers/gpu/drm/omapdrm/dss/dispc.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
-@@ -4325,6 +4325,17 @@ static void dispc_free_irq(void *dev_id)
- 	dispc.user_data = NULL;
- }
- 
-+static u32 dispc_get_memory_bandwidth_limit(void)
-+{
-+	u32 limit = 0;
-+
-+	/* Optional maximum memory bandwidth */
-+	of_property_read_u32(dispc.pdev->dev.of_node, "max-memory-bandwidth",
-+			     &limit);
-+
-+	return limit;
-+}
-+
- /*
-  * Workaround for errata i734 in DSS dispc
-  *  - LCD1 Gamma Correction Is Not Working When GFX Pipe Is Disabled
-@@ -4497,6 +4508,8 @@ static const struct dispc_ops dispc_ops = {
- 	.get_num_ovls = dispc_get_num_ovls,
- 	.get_num_mgrs = dispc_get_num_mgrs,
- 
-+	.get_memory_bandwidth_limit = dispc_get_memory_bandwidth_limit,
-+
- 	.mgr_enable = dispc_mgr_enable,
- 	.mgr_is_enabled = dispc_mgr_is_enabled,
- 	.mgr_get_vsync_irq = dispc_mgr_get_vsync_irq,
-diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss.h b/drivers/gpu/drm/omapdrm/dss/omapdss.h
-index 0bc6669d56f0..f30b3c09e1ba 100644
---- a/drivers/gpu/drm/omapdrm/dss/omapdss.h
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss.h
-@@ -692,6 +692,8 @@ struct dispc_ops {
- 	int (*get_num_ovls)(void);
- 	int (*get_num_mgrs)(void);
- 
-+	u32 (*get_memory_bandwidth_limit)(void);
-+
- 	void (*mgr_enable)(enum omap_channel channel, bool enable);
- 	bool (*mgr_is_enabled)(enum omap_channel channel);
- 	u32 (*mgr_get_vsync_irq)(enum omap_channel channel);
--- 
-Peter
+> > +Optional properties:
+> > +
+> > +  - isil,external-resistor: integer in kOhm of external resistor R_ext.
+> > +                            Valid values are from 1 to 1000.
+> > +                            If not supplied, 100 kOhm will be assumed.
+> 
+> Add an unit suffix as defined in property-units.txt.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks, I'll use "isil,external-resistor-ohms" as defined in
+property-units.txt.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What bothers me a bit is that there is no "-kilo-ohms" suffix but a
+"-micro-ohms" which is pretty uncommon. Even the only use of suffix
+"-micro-ohms" could have been expressed easily as "-ohms" while being
+more readable:
+
+qcom,external-resistor-micro-ohms = <10000>;
+
+Due to stable dt-api I suppose this cannot be changed and/or extended
+with "-kilo-ohms", right?
+
+Thanks
+ -- Christoph
