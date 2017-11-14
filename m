@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 3/3] drm/omap: Filter displays mode based on bandwidth limit
-Date: Tue, 14 Nov 2017 14:47:55 +0200
-Message-ID: <20171114124755.14277-4-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 2/3] drm/omap: dss: Add support for reporting memory bandwidth limitation
+Date: Tue, 14 Nov 2017 14:47:54 +0200
+Message-ID: <20171114124755.14277-3-peter.ujfalusi@ti.com>
 References: <20171114124755.14277-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,117 +12,59 @@ To: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C
 Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If we have memory bandwidth limit configured, reject the modes which would
-require more bandwidth than the limit if it is used with one full
-resolution plane (most common use case).
-
-This filtering is not providing full protection as it is possible that
-application would pick smaller crtc resolution with high resolution planes
-and down scaling, or can enable more smaller planes where the sum of their
-bandwidth need would be higher than the limit.
-
-This patch only allows us to filter out modes which would need more
-bandwidth if they were used with one full screen plane.
+The get_memory_bandwidth_limit() in dispc_ops can be used to query the
+memory bandwidth limit of dispc by upper layers.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 ---
- drivers/gpu/drm/omapdrm/omap_crtc.c | 37 +++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/omapdrm/omap_drv.c  |  5 +++++
- drivers/gpu/drm/omapdrm/omap_drv.h  |  3 +++
- 3 files changed, 45 insertions(+)
+ drivers/gpu/drm/omapdrm/dss/dispc.c   | 13 +++++++++++++
+ drivers/gpu/drm/omapdrm/dss/omapdss.h |  2 ++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
-index cc85c16cbc2a..ae2e16ed3874 100644
---- a/drivers/gpu/drm/omapdrm/omap_crtc.c
-+++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
-@@ -23,6 +23,7 @@
- #include <drm/drm_crtc_helper.h>
- #include <drm/drm_mode.h>
- #include <drm/drm_plane_helper.h>
-+#include <linux/math64.h>
- 
- #include "omap_drv.h"
- 
-@@ -400,6 +401,41 @@ static void omap_crtc_atomic_disable(struct drm_crtc *crtc,
- 	drm_crtc_vblank_off(crtc);
+diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
+index 0f4fdb221498..90f9ad89af0d 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dispc.c
++++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
+@@ -4325,6 +4325,17 @@ static void dispc_free_irq(void *dev_id)
+ 	dispc.user_data = NULL;
  }
  
-+static enum drm_mode_status omap_crtc_mode_valid(struct drm_crtc *crtc,
-+					const struct drm_display_mode *mode)
++static u32 dispc_get_memory_bandwidth_limit(void)
 +{
-+	struct omap_drm_private *priv = crtc->dev->dev_private;
++	u32 limit = 0;
 +
-+	/* Check for bandwidth limit */
-+	if (priv->max_bandwidth) {
-+		/*
-+		 * Estimation for the bandwidth need of a given mode with one
-+		 * full screen plane:
-+		 * bandwidth = resolution * 32bpp * (pclk / (vtotal * htotal))
-+		 *					^^ Refresh rate ^^
-+		 *
-+		 * The interlaced mode is taken into account by using the
-+		 * pixelclock in the calculation.
-+		 *
-+		 * The equation is rearranged for 64bit arithmetic.
-+		 */
-+		uint64_t bandwidth = mode->clock * 1000;
-+		unsigned int bpp = 4;
++	/* Optional maximum memory bandwidth */
++	of_property_read_u32(dispc.pdev->dev.of_node, "max-memory-bandwidth",
++			     &limit);
 +
-+		bandwidth = bandwidth * mode->hdisplay * mode->vdisplay * bpp;
-+		bandwidth = div_u64(bandwidth, mode->htotal * mode->vtotal);
-+
-+		/*
-+		 * Reject modes which would need more bandwidth if used with one
-+		 * full resolution plane (most common use case).
-+		 */
-+		if (priv->max_bandwidth < bandwidth)
-+			return MODE_BAD;
-+	}
-+
-+	return MODE_OK;
++	return limit;
 +}
 +
- static void omap_crtc_mode_set_nofb(struct drm_crtc *crtc)
- {
- 	struct omap_crtc *omap_crtc = to_omap_crtc(crtc);
-@@ -621,6 +657,7 @@ static const struct drm_crtc_helper_funcs omap_crtc_helper_funcs = {
- 	.atomic_flush = omap_crtc_atomic_flush,
- 	.atomic_enable = omap_crtc_atomic_enable,
- 	.atomic_disable = omap_crtc_atomic_disable,
-+	.mode_valid = omap_crtc_mode_valid,
- };
+ /*
+  * Workaround for errata i734 in DSS dispc
+  *  - LCD1 Gamma Correction Is Not Working When GFX Pipe Is Disabled
+@@ -4497,6 +4508,8 @@ static const struct dispc_ops dispc_ops = {
+ 	.get_num_ovls = dispc_get_num_ovls,
+ 	.get_num_mgrs = dispc_get_num_mgrs,
  
- /* -----------------------------------------------------------------------------
-diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
-index 528cf5c25bec..58b4a0e149e0 100644
---- a/drivers/gpu/drm/omapdrm/omap_drv.c
-+++ b/drivers/gpu/drm/omapdrm/omap_drv.c
-@@ -701,6 +701,11 @@ static int pdev_probe(struct platform_device *pdev)
- 	spin_lock_init(&priv->list_lock);
- 	INIT_LIST_HEAD(&priv->obj_list);
- 
-+	/* Get memory bandwidth limits */
-+	if (priv->dispc_ops->get_memory_bandwidth_limit)
-+		priv->max_bandwidth =
-+				priv->dispc_ops->get_memory_bandwidth_limit();
++	.get_memory_bandwidth_limit = dispc_get_memory_bandwidth_limit,
 +
- 	omap_gem_init(ddev);
+ 	.mgr_enable = dispc_mgr_enable,
+ 	.mgr_is_enabled = dispc_mgr_is_enabled,
+ 	.mgr_get_vsync_irq = dispc_mgr_get_vsync_irq,
+diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss.h b/drivers/gpu/drm/omapdrm/dss/omapdss.h
+index 0bc6669d56f0..f30b3c09e1ba 100644
+--- a/drivers/gpu/drm/omapdrm/dss/omapdss.h
++++ b/drivers/gpu/drm/omapdrm/dss/omapdss.h
+@@ -692,6 +692,8 @@ struct dispc_ops {
+ 	int (*get_num_ovls)(void);
+ 	int (*get_num_mgrs)(void);
  
- 	ret = omap_modeset_init(ddev);
-diff --git a/drivers/gpu/drm/omapdrm/omap_drv.h b/drivers/gpu/drm/omapdrm/omap_drv.h
-index cccaae787a7c..d49715272080 100644
---- a/drivers/gpu/drm/omapdrm/omap_drv.h
-+++ b/drivers/gpu/drm/omapdrm/omap_drv.h
-@@ -86,6 +86,9 @@ struct omap_drm_private {
- 	spinlock_t wait_lock;		/* protects the wait_list */
- 	struct list_head wait_list;	/* list of omap_irq_wait */
- 	uint32_t irq_mask;		/* enabled irqs in addition to wait_list */
++	u32 (*get_memory_bandwidth_limit)(void);
 +
-+	/* memory bandwidth limit if it is needed on the platform */
-+	unsigned int max_bandwidth;
- };
- 
- 
+ 	void (*mgr_enable)(enum omap_channel channel, bool enable);
+ 	bool (*mgr_is_enabled)(enum omap_channel channel);
+ 	u32 (*mgr_get_vsync_irq)(enum omap_channel channel);
 -- 
 Peter
 
