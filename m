@@ -1,54 +1,70 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] pinctrl: sh-pfc: add R8A77970 PFC support
-Date: Tue, 14 Nov 2017 09:48:40 +0100
-Message-ID: <CAMuHMdVoyjB_9q9=5hF3XKtF7bdJOCCgCWkTnRZwC4Zxaix_BA@mail.gmail.com>
-References: <20171110181552.227541251@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20171110181552.227541251@cogentembedded.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v8 0/6] stm32 clocksource driver rework
+Date: Tue, 14 Nov 2017 09:52:37 +0100
+Message-ID: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, julien.thierry-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+version 8:
+ - rebased on timers/core
+ - change timer_of_exit() name to timer_of_cleanup()
+ - update stm32 clocksource driver to use this function
 
-On Fri, Nov 10, 2017 at 6:59 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add the PFC support for the R8A77970 SoC including pin groups for some
-> on-chip devices such as CAN-FD, EtherAVB, [H]SCIF, I2C, INTC-EX, MMC,
-> MSIOF, PWM, VIN...
->
-> Based on the original (and large) patch by Daisuke Matsushita
-> <daisuke.matsushita.ns@hitachi.com>.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+version 7:
+ - reword "clocksource: stm32: only use 32 bits timers" commit message
+   to give more details about why 16 bits are problematics.
 
-> --- /dev/null
-> +++ renesas-drivers/drivers/pinctrl/sh-pfc/pfc-r8a77970.c
+version 6:
+ - add dedicated patch min delta change
+ - rework commit messages, I hope it will be better now
+ - change new function name from timer_of_deinit to timer_of_exit
+ - make stm32_clock_event_set_next_event() safer like done in other
+   drivers
 
-> +/* - EtherAVB --------------------------------------------------------------- */
+version 6:
+- add timer_of_deinit function in core
+- rework failure cases in probe function
 
-> +static const unsigned int avb0_mdio_pins[] = {
-> +       /* AVB0_MDC, AVB0_MDIO */
-> +       RCAR_GP_PIN(1, 15), RCAR_GP_PIN(1, 14),
-> +};
-> +static const unsigned int avb0_mdio_mux[] = {
-> +       AVB0_MDC_MARK, AVB0_MDIO_MARK,
-> +};
+version 5:
+- rebase on top of timer/core branch
+- rework commit message of the first patch
 
-Upon second look: this group is called "avb(0)_mdc" instead of "avb(0)_mdio"
-on all other R-Car Gen3 SoCs?
+version 4:
+- split patch in 3 parts
+  - convert code to timer_of
+  - only use 32 bits timers
+  - add clocksource support
 
-Gr{oetje,eeting}s,
+version 3:
+- fix comments done by Daniel
+- use timer_of helper functions
 
-                        Geert
+version 2:
+- fix uninitialized variable
+
+Benjamin Gaignard (6):
+  clocksource: timer_of: rename timer_of_exit to timer_of_cleanup
+  clocksource: stm32: convert driver to timer_of
+  clocksource: stm32: increase min delta value
+  clocksource: stm32: only use 32 bits timers
+  clocksource: stm32: add clocksource support
+  arm: dts: stm32: remove useless clocksource nodes
+
+ arch/arm/boot/dts/stm32f429.dtsi  |  32 -----
+ arch/arm/boot/dts/stm32f746.dtsi  |  32 -----
+ drivers/clocksource/Kconfig       |   1 +
+ drivers/clocksource/timer-of.c    |   9 +-
+ drivers/clocksource/timer-of.h    |   2 +-
+ drivers/clocksource/timer-stm32.c | 242 ++++++++++++++++++++------------------
+ 6 files changed, 138 insertions(+), 180 deletions(-)
+
+-- 
+2.7.4
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
