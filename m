@@ -1,158 +1,57 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v5 1/6] remoteproc: qcom: mdt_loader: Make the firmware authentication optional
-Date: Tue, 14 Nov 2017 16:23:09 +0530
-Message-ID: <1510656794-3815-2-git-send-email-sricharan@codeaurora.org>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v5 2/6] remoteproc: Export rproc_elf_get_boot_addr
+Date: Tue, 14 Nov 2017 16:23:10 +0530
+Message-ID: <1510656794-3815-3-git-send-email-sricharan@codeaurora.org>
 References: <1510656794-3815-1-git-send-email-sricharan@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510656794-3815-1-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1510656794-3815-1-git-send-email-sricharan@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-qcom_mdt_load function loads the mdt type firmware and
-initialises the secure memory as well. Make the initialisation only
-when requested by the caller, so that the function can be used
-by self-authenticating remoteproc as well.
+Export rproc_elf_get_boot_addr so that it can be
+used by any remoteproc to get the bootaddr of the
+elf type firmware images. This is used in the
+subsequent patch by the q6v5 based remoteproc
+while loading its elf based mdt type image.
 
-Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 ---
- drivers/soc/qcom/mdt_loader.c       | 82 ++++++++++++++++++++++++++-----------
- include/linux/soc/qcom/mdt_loader.h |  3 ++
- 2 files changed, 62 insertions(+), 23 deletions(-)
+ drivers/remoteproc/remoteproc_elf_loader.c | 2 +-
+ drivers/remoteproc/remoteproc_internal.h   | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
-index 08bd854..65ab833 100644
---- a/drivers/soc/qcom/mdt_loader.c
-+++ b/drivers/soc/qcom/mdt_loader.c
-@@ -74,21 +74,9 @@ ssize_t qcom_mdt_get_size(const struct firmware *fw)
- }
- EXPORT_SYMBOL_GPL(qcom_mdt_get_size);
- 
--/**
-- * qcom_mdt_load() - load the firmware which header is loaded as fw
-- * @dev:	device handle to associate resources with
-- * @fw:		firmware object for the mdt file
-- * @firmware:	name of the firmware, for construction of segment file names
-- * @pas_id:	PAS identifier
-- * @mem_region:	allocated memory region to load firmware into
-- * @mem_phys:	physical address of allocated memory region
-- * @mem_size:	size of the allocated memory region
-- *
-- * Returns 0 on success, negative errno otherwise.
-- */
--int qcom_mdt_load(struct device *dev, const struct firmware *fw,
--		  const char *firmware, int pas_id, void *mem_region,
--		  phys_addr_t mem_phys, size_t mem_size)
-+static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
-+			   const char *firmware, int pas_id, void *mem_region,
-+			   phys_addr_t mem_phys, size_t mem_size, bool pas_init)
+diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
+index c523983..f6d07d9 100644
+--- a/drivers/remoteproc/remoteproc_elf_loader.c
++++ b/drivers/remoteproc/remoteproc_elf_loader.c
+@@ -110,13 +110,13 @@
+  * Note that the boot address is not a configurable property of all remote
+  * processors. Some will always boot at a specific hard-coded address.
+  */
+-static
+ u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
  {
- 	const struct elf32_phdr *phdrs;
- 	const struct elf32_phdr *phdr;
-@@ -119,10 +107,12 @@ int qcom_mdt_load(struct device *dev, const struct firmware *fw,
- 	if (!fw_name)
- 		return -ENOMEM;
+ 	struct elf32_hdr *ehdr  = (struct elf32_hdr *)fw->data;
  
--	ret = qcom_scm_pas_init_image(pas_id, fw->data, fw->size);
--	if (ret) {
--		dev_err(dev, "invalid firmware metadata\n");
--		goto out;
-+	if (pas_init) {
-+		ret = qcom_scm_pas_init_image(pas_id, fw->data, fw->size);
-+		if (ret) {
-+			dev_err(dev, "invalid firmware metadata\n");
-+			goto out;
-+		}
- 	}
- 
- 	for (i = 0; i < ehdr->e_phnum; i++) {
-@@ -142,10 +132,13 @@ int qcom_mdt_load(struct device *dev, const struct firmware *fw,
- 	}
- 
- 	if (relocate) {
--		ret = qcom_scm_pas_mem_setup(pas_id, mem_phys, max_addr - min_addr);
--		if (ret) {
--			dev_err(dev, "unable to setup relocation\n");
--			goto out;
-+		if (pas_init) {
-+			ret = qcom_scm_pas_mem_setup(pas_id, mem_phys,
-+						     max_addr - min_addr);
-+			if (ret) {
-+				dev_err(dev, "unable to setup relocation\n");
-+				goto out;
-+			}
- 		}
- 
- 		/*
-@@ -197,7 +190,50 @@ int qcom_mdt_load(struct device *dev, const struct firmware *fw,
- 
- 	return ret;
+ 	return ehdr->e_entry;
  }
-+
-+/**
-+ * qcom_mdt_load() - sets up the secure memory for the firmware and
-+		     loads the firmware
-+ * @dev:	device handle to associate resources with
-+ * @fw:		firmware object for the mdt file
-+ * @firmware:	name of the firmware, for construction of segment file names
-+ * @pas_id:	PAS identifier
-+ * @mem_region:	allocated memory region to load firmware into
-+ * @mem_phys:	physical address of allocated memory region
-+ * @mem_size:	size of the allocated memory region
-+ *
-+ * Returns 0 on success, negative errno otherwise.
-+ */
-+int qcom_mdt_load(struct device *dev, const struct firmware *fw,
-+		  const char *firmware, int pas_id, void *mem_region,
-+		  phys_addr_t mem_phys, size_t mem_size)
-+{
-+	return __qcom_mdt_load(dev, fw, firmware, pas_id, mem_region, mem_phys,
-+			       mem_size, true);
-+}
- EXPORT_SYMBOL_GPL(qcom_mdt_load);
++EXPORT_SYMBOL(rproc_elf_get_boot_addr);
  
-+/**
-+ * qcom_mdt_load_no_init() - load the firmware which header is loaded as fw
-+ * @dev:	device handle to associate resources with
-+ * @fw:		firmware object for the mdt file
-+ * @firmware:	name of the firmware, for construction of segment file names
-+ * @pas_id:	PAS identifier
-+ * @mem_region:	allocated memory region to load firmware into
-+ * @mem_phys:	physical address of allocated memory region
-+ * @mem_size:	size of the allocated memory region
-+ *
-+ * Returns 0 on success, negative errno otherwise.
-+ */
-+int qcom_mdt_load_no_init(struct device *dev, const struct firmware *fw,
-+			  const char *firmware, int pas_id,
-+			  void *mem_region, phys_addr_t mem_phys,
-+			  size_t mem_size)
-+{
-+	return __qcom_mdt_load(dev, fw, firmware, pas_id, mem_region, mem_phys,
-+			       mem_size, false);
-+}
-+EXPORT_SYMBOL_GPL(qcom_mdt_load_no_init);
-+
- MODULE_DESCRIPTION("Firmware parser for Qualcomm MDT format");
- MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/soc/qcom/mdt_loader.h b/include/linux/soc/qcom/mdt_loader.h
-index bd8e086..151ee6a 100644
---- a/include/linux/soc/qcom/mdt_loader.h
-+++ b/include/linux/soc/qcom/mdt_loader.h
-@@ -16,4 +16,7 @@ int qcom_mdt_load(struct device *dev, const struct firmware *fw,
- 		  const char *fw_name, int pas_id, void *mem_region,
- 		  phys_addr_t mem_phys, size_t mem_size);
+ /**
+  * rproc_elf_load_segments() - load firmware segments to memory
+diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+index c1077be..1bbbfea 100644
+--- a/drivers/remoteproc/remoteproc_internal.h
++++ b/drivers/remoteproc/remoteproc_internal.h
+@@ -124,4 +124,7 @@ struct resource_table *rproc_find_loaded_rsc_table(struct rproc *rproc,
  
-+int qcom_mdt_load_no_init(struct device *dev, const struct firmware *fw,
-+			  const char *fw_name, int pas_id, void *mem_region,
-+			  phys_addr_t mem_phys, size_t mem_size);
- #endif
+ extern const struct rproc_fw_ops rproc_elf_fw_ops;
+ 
++/* from remoteproc_elf_loader.c */
++u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
++
+ #endif /* REMOTEPROC_INTERNAL_H */
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
