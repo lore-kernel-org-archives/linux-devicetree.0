@@ -1,177 +1,74 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v11 1/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2
- receiver documentation
-Date: Wed, 15 Nov 2017 13:59:36 -0600
-Message-ID: <20171115195936.jkq4ssgfp4tko3lv@rob-hp-laptop>
-References: <20171111002526.2646-1-niklas.soderlund+renesas@ragnatech.se>
- <20171111002526.2646-2-niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH v7 01/25] rcar-vin: add Gen3 devicetree bindings
+ documentation
+Date: Wed, 15 Nov 2017 14:02:26 -0600
+Message-ID: <20171115200226.wd343hd3a52jjhdd@rob-hp-laptop>
+References: <20171111003835.4909-1-niklas.soderlund+renesas@ragnatech.se>
+ <20171111003835.4909-2-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171111002526.2646-2-niklas.soderlund+renesas@ragnatech.se>
+In-Reply-To: <20171111003835.4909-2-niklas.soderlund+renesas@ragnatech.se>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, tomoharu.fukawa.eb@renesas.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, tomoharu.fukawa.eb@renesas.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 11, 2017 at 01:25:25AM +0100, Niklas Söderlund wrote:
-> Documentation for Renesas R-Car MIPI CSI-2 receiver. The CSI-2 receivers
-> are located between the video sources (CSI-2 transmitters) and the video
-> grabbers (VIN) on Gen3 of Renesas R-Car SoC.
+On Sat, Nov 11, 2017 at 01:38:11AM +0100, Niklas Söderlund wrote:
+> Document the devicetree bindings for the CSI-2 inputs available on Gen3.
 > 
-> Each CSI-2 device is connected to more then one VIN device which
-> simultaneously can receive video from the same CSI-2 device. Each VIN
-> device can also be connected to more then one CSI-2 device. The routing
-> of which link are used are controlled by the VIN devices. There are only
-> a few possible routes which are set by hardware limitations, which are
-> different for each SoC in the Gen3 family.
-> 
-> To work with the limitations of routing possibilities it is necessary
-> for the DT bindings to describe which VIN device is connected to which
-> CSI-2 device. This is why port 1 needs to to assign reg numbers for each
-> VIN device that be connected to it. To setup and to know which links are
-> valid for each SoC is the responsibility of the VIN driver since the
-> register to configure it belongs to the VIN hardware.
+> There is a need to add a custom property 'renesas,id' and to define
+> which CSI-2 input is described in which endpoint under the port@1 node.
+> This information is needed since there are a set of predefined routes
+> between each VIN and CSI-2 block. This routing table will be kept
+> inside the driver but in order for it to act on it it must know which
+> VIN and CSI-2 is which.
 > 
 > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 > ---
->  .../bindings/media/renesas,rcar-csi2.txt           | 104 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 105 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+>  .../devicetree/bindings/media/rcar_vin.txt         | 116 ++++++++++++++++++---
+>  1 file changed, 104 insertions(+), 12 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> new file mode 100644
-> index 0000000000000000..24705d8997b14a10
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> @@ -0,0 +1,104 @@
-> +Renesas R-Car MIPI CSI-2
-> +------------------------
-> +
-> +The rcar-csi2 device provides MIPI CSI-2 capabilities for the Renesas R-Car
-> +family of devices. It is to be used in conjunction with the R-Car VIN module,
-> +which provides the video capture capabilities.
-> +
-> +Mandatory properties
-> +--------------------
-> + - compatible: Must be one or more of the following
-> +   - "renesas,r8a7795-csi2" for the R8A7795 device.
-> +   - "renesas,r8a7796-csi2" for the R8A7796 device.
-> +
-> + - reg: the register base and size for the device registers
-> + - interrupts: the interrupt for the device
-> + - clocks: Reference to the parent clock
-> +
-> +The device node shall contain two 'port' child nodes according to the
-> +bindings defined in Documentation/devicetree/bindings/media/
-> +video-interfaces.txt. Port 0 shall connect the node that is the video
-> +source for to the CSI-2. Port 1 shall connect all the R-Car VIN
-> +modules, which can make use of the CSI-2 module.
-> +
-> +- Port 0 - Video source (Mandatory)
-> +	- Endpoint 0 - sub-node describing the endpoint that is the video source
-> +
-> +- Port 1 - VIN instances (Mandatory for all VIN present in the SoC)
-> +	- Endpoint 0 - sub-node describing the endpoint that is VIN0
-> +	- Endpoint 1 - sub-node describing the endpoint that is VIN1
-> +	- Endpoint 2 - sub-node describing the endpoint that is VIN2
-> +	- Endpoint 3 - sub-node describing the endpoint that is VIN3
-> +	- Endpoint 4 - sub-node describing the endpoint that is VIN4
-> +	- Endpoint 5 - sub-node describing the endpoint that is VIN5
-> +	- Endpoint 6 - sub-node describing the endpoint that is VIN6
-> +	- Endpoint 7 - sub-node describing the endpoint that is VIN7
-> +
-> +Example:
-> +
-> +	csi20: csi2@fea80000 {
-> +		compatible = "renesas,r8a7796-csi2", "renesas,rcar-gen3-csi2";
-> +		reg = <0 0xfea80000 0 0x10000>;
-> +		interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cpg CPG_MOD 714>;
-> +		power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> +		resets = <&cpg 714>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				reg = <0>;
-> +
-> +				csi20_in: endpoint@0 {
-
-unit-address without reg property is not valid.
-
-Otherwise,
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-
-> +					clock-lanes = <0>;
-> +					data-lanes = <1>;
-> +					remote-endpoint = <&adv7482_txb>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				reg = <1>;
-> +
-> +				csi20vin0: endpoint@0 {
-> +					reg = <0>;
-> +					remote-endpoint = <&vin0csi20>;
-> +				};
-> +				csi20vin1: endpoint@1 {
-> +					reg = <1>;
-> +					remote-endpoint = <&vin1csi20>;
-> +				};
-> +				csi20vin2: endpoint@2 {
-> +					reg = <2>;
-> +					remote-endpoint = <&vin2csi20>;
-> +				};
-> +				csi20vin3: endpoint@3 {
-> +					reg = <3>;
-> +					remote-endpoint = <&vin3csi20>;
-> +				};
-> +				csi20vin4: endpoint@4 {
-> +					reg = <4>;
-> +					remote-endpoint = <&vin4csi20>;
-> +				};
-> +				csi20vin5: endpoint@5 {
-> +					reg = <5>;
-> +					remote-endpoint = <&vin5csi20>;
-> +				};
-> +				csi20vin6: endpoint@6 {
-> +					reg = <6>;
-> +					remote-endpoint = <&vin6csi20>;
-> +				};
-> +				csi20vin7: endpoint@7 {
-> +					reg = <7>;
-> +					remote-endpoint = <&vin7csi20>;
-> +				};
-> +			};
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index adbf69306e9ee3d2..fe999e9de76e3cb3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8565,6 +8565,7 @@ L:	linux-media@vger.kernel.org
->  L:	linux-renesas-soc@vger.kernel.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Supported
-> +F:	Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
->  F:	Documentation/devicetree/bindings/media/rcar_vin.txt
->  F:	drivers/media/platform/rcar-vin/
+> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> index 6e4ef8caf759e5d3..df1abd0fb20386f8 100644
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -2,8 +2,12 @@ Renesas R-Car Video Input driver (rcar_vin)
+>  -------------------------------------------
 >  
-> -- 
-> 2.15.0
-> 
+>  The rcar_vin device provides video input capabilities for the Renesas R-Car
+> -family of devices. The current blocks are always slaves and suppot one input
+> -channel which can be either RGB, YUYV or BT656.
+> +family of devices.
+> +
+> +Each VIN instance has a single parallel input that supports RGB and YUV video,
+> +with both external synchronization and BT.656 synchronization for the latter.
+> +Depending on the instance the VIN input is connected to external SoC pins, or
+> +on Gen3 to a CSI-2 receiver.
+>  
+>   - compatible: Must be one or more of the following
+>     - "renesas,vin-r8a7795" for the R8A7795 device
+> @@ -28,21 +32,38 @@ channel which can be either RGB, YUYV or BT656.
+>  Additionally, an alias named vinX will need to be created to specify
+>  which video input device this is.
+>  
+> -The per-board settings:
+> +The per-board settings Gen2:
+>   - port sub-node describing a single endpoint connected to the vin
+>     as described in video-interfaces.txt[1]. Only the first one will
+>     be considered as each vin interface has one input port.
+>  
+> -   These settings are used to work out video input format and widths
+> -   into the system.
+> +The per-board settings Gen3:
+> +
+> +Gen3 can support both a single connected parallel input source from
+> +external SoC pins (port0) and/or multiple parallel input sources from
+> +local SoC CSI-2 receivers (port1) depending on SoC.
+>  
+> +- renesas,id - ID number of the VIN, VINx in the documentation.
+
+Why is this needed? We try to avoid indexes unless that's the only way a 
+device is addressed (and then we use reg).
