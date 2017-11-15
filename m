@@ -1,41 +1,129 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: sh-pfc: add R8A77970 PFC support
-Date: Wed, 15 Nov 2017 13:22:24 -0600
-Message-ID: <20171115192224.wse7klcuiqqk4o4m@rob-hp-laptop>
-References: <20171110181552.227541251@cogentembedded.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v3 1/8] dt-bindings: Add Cavium Octeon Common Ethernet
+ Interface.
+Date: Wed, 15 Nov 2017 11:30:12 -0800
+Message-ID: <93196fac-378f-4e59-d926-67e96817f60c@caviumnetworks.com>
+References: <20171109192915.11912-1-david.daney@cavium.com>
+ <20171109192915.11912-2-david.daney@cavium.com>
+ <20171115191857.podohd56knfd4hyh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171110181552.227541251-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20171115191857.podohd56knfd4hyh@rob-hp-laptop>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, David Daney <david.daney@cavium.com>
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Carlos Munoz <cmunoz@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 10, 2017 at 08:59:01PM +0300, Sergei Shtylyov wrote:
-> Add the PFC support for the R8A77970 SoC including pin groups for some
-> on-chip devices such as CAN-FD, EtherAVB, [H]SCIF, I2C, INTC-EX, MMC,
-> MSIOF, PWM, VIN...
+On 11/15/2017 11:18 AM, Rob Herring wrote:
+> On Thu, Nov 09, 2017 at 11:29:08AM -0800, David Daney wrote:
+>> From: Carlos Munoz <cmunoz@cavium.com>
+>>
+>> Add bindings for Common Ethernet Interface (BGX) block.
+>>
+>> Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
+>> Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+>> ---
+>>   .../devicetree/bindings/net/cavium-bgx.txt         | 61 ++++++++++++++++++++++
+>>   1 file changed, 61 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/cavium-bgx.txt b/Documentation/devicetree/bindings/net/cavium-bgx.txt
+>> new file mode 100644
+>> index 000000000000..6b1f8b994c20
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/cavium-bgx.txt
+>> @@ -0,0 +1,61 @@
+>> +* Common Ethernet Interface (BGX) block
+>> +
+>> +Properties:
+>> +
+>> +- compatible: "cavium,octeon-7890-bgx": Compatibility with all cn7xxx SOCs.
+>> +
+>> +- reg: The base address of the BGX block.
+>> +
+>> +- #address-cells: Must be <1>.
+>> +
+>> +- #size-cells: Must be <0>.  BGX addresses have no size component.
+>> +
+>> +A BGX block has several children, each representing an Ethernet
+>> +interface.
+>> +
+>> +
+>> +* Ethernet Interface (BGX port) connects to PKI/PKO
+>> +
+>> +Properties:
+>> +
+>> +- compatible: "cavium,octeon-7890-bgx-port": Compatibility with all
+>> +	      cn7xxx SOCs.
+>> +
+>> +	      "cavium,octeon-7360-xcv": Compatibility with cn73xx SOCs
+>> +	      for RGMII.
+>> +
+>> +- reg: The index of the interface within the BGX block.
 > 
-> Based on the original (and large) patch by Daisuke Matsushita
-> <daisuke.matsushita.ns-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> 
-> ---
->  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt |    1 
+> There's no memory mapped region associated with the sub-blocks?
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+No.  Many of the sub block control bits are co-located in the same 
+registers.
 
->  drivers/pinctrl/sh-pfc/Kconfig                                    |    5 
->  drivers/pinctrl/sh-pfc/Makefile                                   |    1 
->  drivers/pinctrl/sh-pfc/core.c                                     |    6 
->  drivers/pinctrl/sh-pfc/pfc-r8a77970.c                             | 2421 ++++++++++
->  drivers/pinctrl/sh-pfc/sh_pfc.h                                   |    1 
->  6 files changed, 2435 insertions(+)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> 
+>> +
+>> +Optional properties:
+>> +
+>> +- local-mac-address: Mac address for the interface.
+>> +
+>> +- phy-handle: phandle to the phy node connected to the interface.
+>> +
+>> +- phy-mode: described in ethernet.txt.
+>> +
+>> +- fixed-link: described in fixed-link.txt.
+>> +
+>> +Example:
+>> +
+>> +	ethernet-mac-nexus@11800e0000000 {
+>> +		compatible = "cavium,octeon-7890-bgx";
+>> +		reg = <0x00011800 0xe0000000 0x00000000 0x01000000>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		ethernet-mac@0 {
+> 
+> ethernet@0
+
+
+Good point.  I will fix that.
+
+
+> 
+>> +			compatible = "cavium,octeon-7360-xcv";
+>> +			reg = <0>;
+>> +			local-mac-address = [ 00 01 23 45 67 89 ];
+>> +			phy-handle = <&phy3>;
+>> +			phy-mode = "rgmii-rxid"
+>> +		};
+>> +		ethernet-mac@1 {
+> 
+> ditto.
+> 
+> Otherwise,
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Thanks,
+David Daney
+> 
+>> +			compatible = "cavium,octeon-7890-bgx-port";
+>> +			reg = <1>;
+>> +			local-mac-address = [ 00 01 23 45 67 8a ];
+>> +			phy-handle = <&phy4>;
+>> +			phy-mode = "sgmii"
+>> +		};
+>> +	};
+>> -- 
+>> 2.13.6
+>>
