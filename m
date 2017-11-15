@@ -1,118 +1,533 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 3/5] misc serdev: Add w2sg0004 (gps receiver) power
- control driver
-Date: Wed, 15 Nov 2017 18:03:03 +0100
-Message-ID: <CAK8P3a1Ah35mmbw0qN=zp8TMN9HVgdtTSkkSCCayC-5b6Q960A@mail.gmail.com>
-References: <cover.1510759152.git.hns@goldelico.com> <9e1525e72afe890ea390fd153c1f3a1b0866c986.1510759152.git.hns@goldelico.com>
- <CAK8P3a3ZtqXVobx5hdxUZyAQRYs2Y6Aw2Qpo2puSBb_AVa_aVA@mail.gmail.com> <AFD95D2E-2EBB-4EBF-9B3B-E68ED98E5437@goldelico.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V5] clk: qcom: Add spmi_pmic clock divider support
+Date: Wed, 15 Nov 2017 09:06:47 -0800
+Message-ID: <20171115170647.GR11955@codeaurora.org>
+References: <1505817286-12445-1-git-send-email-tirupath@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AFD95D2E-2EBB-4EBF-9B3B-E68ED98E5437-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1505817286-12445-1-git-send-email-tirupath@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tirupathi Reddy <tirupath@codeaurora.org>
+Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 5:27 PM, H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
->> Am 15.11.2017 um 16:54 schrieb Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
->> On Wed, Nov 15, 2017 at 4:19 PM, H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
->>> Add driver for Wi2Wi W2SG0004/84 GPS module connected through uart.
->
-> There is one more goal. Some people are dreaming about a generic GPS interface.
-> Then, the driver wouldn't have to register a /dev/GPS tty any more but a
-> gps_interface and mangle serial data as requested by that API. This will become
-> a simple upgrade.
->
-> So you can consider creating a new tty as sort of temporary solution. Like we
-> had for years for UART HCI based bluetooth devices using a user-space daemon.
+On 09/19, Tirupathi Reddy wrote:
+> diff --git a/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
+> new file mode 100644
+> index 0000000..e37a136
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
+> @@ -0,0 +1,56 @@
+> +Qualcomm Technologies, Inc. SPMI PMIC clock divider (clkdiv)
+> +
+> +clkdiv configures the clock frequency of a set of outputs on the PMIC.
+> +These clocks are typically wired through alternate functions on
+> +gpio pins.
+> +
+> +=======================
+> +Properties
+> +=======================
+> +
+> +- compatible
+> +	Usage:      required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,spmi-clkdiv"
+> +		    "qcom,pm8998-clkdiv"
+> +
+> +- reg
+> +	Usage:      required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Addresses and sizes for the memory of this CLKDIV
 
-It shouldn't be hard to split out the tty_driver portion of your file from the
-part that registers the port, basically getting two files that each handle
-half of the work, and the second one would be generic from the start.
+There's no size though.
 
->>> +       /* initialize the tty driver */
->>> +       data->tty_drv->owner = THIS_MODULE;
->>> +       data->tty_drv->driver_name = "w2sg0004";
->>> +       data->tty_drv->name = "ttyGPS";
->>> +       data->tty_drv->major = 0;
->>> +       data->tty_drv->minor_start = 0;
->>> +       data->tty_drv->type = TTY_DRIVER_TYPE_SERIAL;
->>> +       data->tty_drv->subtype = SERIAL_TYPE_NORMAL;
->>> +       data->tty_drv->flags = TTY_DRIVER_REAL_RAW | TTY_DRIVER_DYNAMIC_DEV;
->>> +       data->tty_drv->init_termios = tty_std_termios;
->>> +       data->tty_drv->init_termios.c_cflag = B9600 | CS8 | CREAD |
->>> +                                             HUPCL | CLOCAL;
->>> +       /*
->>> +        * optional:
->>> +        * tty_termios_encode_baud_rate(&data->tty_drv->init_termios,
->>> +                                       115200, 115200);
->>> +        * w2sg_tty_termios(&data->tty_drv->init_termios);
->>> +        */
->>> +       tty_set_operations(data->tty_drv, &w2sg_serial_ops);
->>
->> While I'm still not sure about why we want nested tty port, it
->> seems that we should have only one tty_driver that gets initialized
->> at module load time, rather than one driver structure per port.
->
-> If we have several such chips connected to different serdev UARTs
-> we need different /dev/GPS to separate them in user-space.
+> +		    peripheral.
+> +
+> +- clocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: reference to the xo clock.
+> +
+> +- clock-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "xo".
+> +
+> +- clock-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: shall contain 1.
 
-I understand that you need multiple devices, but I don't see
-what having multiple drivers that all share the same name
-"w2sg0004" helps. I would have expected that to fail in
-tty_register_driver() when you get to the second driver,
-but looking at the code, it doesn't actually try to make the name
-unique proc_tty_register_driver() will fail to create the second
-procfs file, but we ignore that failure.
+Can we get a property to indicate the number of clks? Something
+like "qcom,num-clkdivs" or something like that. That would make
+things easier to handle in the driver because we could match the
+generic compatible and look for the property and then populate
+that many clks. Otherwise, we're going to need a "small" driver
+update for each PMIC just because the number of clks changes.
 
-Why not call tty_register_driver() in the init function rather than probe()?
+Of course we're going to need to update the binding to add the
+new PMIC compatibles as new things are created, but I'd like to
+avoid driver updates for the compatible. If someone messes up the
+number we can always fallback to matching the more specific
+compatible and fix it up in the driver, but let's hope that
+doesn't happen.
 
->>> +       /* register the tty driver */
->>> +       err = tty_register_driver(data->tty_drv);
->>> +       if (err) {
->>> +               pr_err("%s - tty_register_driver failed(%d)\n",
->>> +                       __func__, err);
->>> +               put_tty_driver(data->tty_drv);
->>> +               goto err_rfkill;
->>> +       }
->>> +
->>> +       tty_port_init(&data->port);
->>> +       data->port.ops = &w2sg_port_ops;
->>> +
->>> +/*
->>> + * FIXME: this appears to reenter this probe() function a second time
->>> + * which only fails because the gpio is already assigned
->>> + */
->>> +
->>> +       data->dev = tty_port_register_device(&data->port,
->>> +                       data->tty_drv, minor, &serdev->dev);
->>
->> This seems to be a result of having nested tty ports, and both
->> ports point to the same device.
->
-> The UART tty would be e.g. /dev/ttyO2 (on OMAP3) if no driver is
-> installed. And the new one that is registered is /dev/GPS0. So the
-> tty subsystem doesn't (or shouldn't) know they are related. They
-> are only related/connected inside this driver. So I assume that
-> some locking or reentrancy happens in tty_port_register_device().
+> +
+> +=======
+> +Example
+> +=======
+> +
+> +pm8998_clk_divs: qcom,clock@5b00 {
 
-I meant the serdev->dev pointer that you pass into
-tty_port_register_device() seems to be the same one that
-got passed into the first tty_port_register_device() in the
-parent uart_port.
+clock-controller@5b00?
 
-I just checked the current mainline code, and it doesn't seem
-to actually call serdev_tty_port_register() from
-tty_port_register_device(), so maybe the comment was
-based on an older version of the serdev framework?
+> +	compatible = "qcom,pm8998-clkdiv";
+> +	reg = <0x5b00>;
+> +	#clock-cells = <1>;
+> +	clocks = <&xo_board>;
+> +	clock-names = "xo";
+> +
+> +	assigned-clocks = <&pm8998_clk_divs 1>,
+> +			  <&pm8998_clk_divs 2>,
+> +			  <&pm8998_clk_divs 3>;
+> +	assigned-clock-rates = <9600000>,
+> +			       <9600000>,
+> +			       <9600000>;
+> +};
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 9f6c278..dd5b18e 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -196,3 +196,12 @@ config MSM_MMCC_8996
+>  	  Support for the multimedia clock controller on msm8996 devices.
+>  	  Say Y if you want to support multimedia devices such as display,
+>  	  graphics, video encode/decode, camera, etc.
+> +
+> +config SPMI_PMIC_CLKDIV
+> +	tristate "spmi pmic clkdiv driver"
 
-It seems like something that should be fixed, so maybe
-put a WARN_ON() at the beginning of the probe
-function to see where we come from.
+Capitalize SPMI and PMIC and replace driver with something else.
 
-      Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	depends on (COMMON_CLK_QCOM && SPMI) || COMPILE_TEST
+> +	help
+> +	  This driver supports the clkdiv functionality on the Qualcomm
+> +	  Technologies, Inc. SPMI PMIC. It configures the frequency of
+> +	  clkdiv outputs on the PMIC. These clocks are typically wired
+> +	  through alternate functions on gpio pins.
+
+I rewrote a bunch of stuff in the driver. Let me know if anything
+doesn't work.
+
+----8<----
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index dd5b18ecd9d1..20b5d6fd501d 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -198,10 +198,10 @@ config MSM_MMCC_8996
+ 	  graphics, video encode/decode, camera, etc.
+ 
+ config SPMI_PMIC_CLKDIV
+-	tristate "spmi pmic clkdiv driver"
++	tristate "SPMI PMIC clkdiv Support"
+ 	depends on (COMMON_CLK_QCOM && SPMI) || COMPILE_TEST
+ 	help
+ 	  This driver supports the clkdiv functionality on the Qualcomm
+ 	  Technologies, Inc. SPMI PMIC. It configures the frequency of
+-	  clkdiv outputs on the PMIC. These clocks are typically wired
+-	  through alternate functions on gpio pins.
++	  clkdiv outputs of the PMIC. These clocks are typically wired
++	  through alternate functions on GPIO pins.
+diff --git a/drivers/clk/qcom/clk-spmi-pmic-div.c b/drivers/clk/qcom/clk-spmi-pmic-div.c
+index af343ad2ee0b..a7217ee9f741 100644
+--- a/drivers/clk/qcom/clk-spmi-pmic-div.c
++++ b/drivers/clk/qcom/clk-spmi-pmic-div.c
+@@ -18,6 +18,7 @@
+ #include <linux/log2.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+@@ -29,29 +30,12 @@
+ #define REG_EN_CTL			0x46
+ #define REG_EN_MASK			BIT(7)
+ 
+-#define ENABLE_DELAY_NS(cxo_ns, div)	((2 + 3 * div) * cxo_ns)
+-#define DISABLE_DELAY_NS(cxo_ns, div)	((3 * div) * cxo_ns)
+-
+-#define CLK_SPMI_PMIC_DIV_OFFSET	1
+-
+-#define CLKDIV_XO_DIV_1_0		0
+-#define CLKDIV_XO_DIV_1			1
+-#define CLKDIV_XO_DIV_2			2
+-#define CLKDIV_XO_DIV_4			3
+-#define CLKDIV_XO_DIV_8			4
+-#define CLKDIV_XO_DIV_16		5
+-#define CLKDIV_XO_DIV_32		6
+-#define CLKDIV_XO_DIV_64		7
+-#define CLKDIV_MAX_ALLOWED		8
+-
+ struct clkdiv {
+ 	struct regmap		*regmap;
+ 	u16			base;
+ 	spinlock_t		lock;
+ 
+-	/* clock properties */
+ 	struct clk_hw		hw;
+-	unsigned int		div_factor;
+ 	unsigned int		cxo_period_ns;
+ };
+ 
+@@ -62,94 +46,68 @@ static inline struct clkdiv *to_clkdiv(struct clk_hw *hw)
+ 
+ static inline unsigned int div_factor_to_div(unsigned int div_factor)
+ {
+-	if (div_factor == CLKDIV_XO_DIV_1_0)
+-		return 1;
++	if (!div_factor)
++		div_factor = 1;
+ 
+-	return 1 << (div_factor - CLK_SPMI_PMIC_DIV_OFFSET);
++	return 1 << (div_factor - 1);
+ }
+ 
+ static inline unsigned int div_to_div_factor(unsigned int div)
+ {
+-	return min(ilog2(div) + CLK_SPMI_PMIC_DIV_OFFSET,
+-		   CLKDIV_MAX_ALLOWED - 1);
++	return min(ilog2(div) + 1, 7);
+ }
+ 
+ static bool is_spmi_pmic_clkdiv_enabled(struct clkdiv *clkdiv)
+ {
+ 	unsigned int val = 0;
+ 
+-	regmap_read(clkdiv->regmap, clkdiv->base + REG_EN_CTL,
+-			 &val);
+-	return (val & REG_EN_MASK) ? true : false;
++	regmap_read(clkdiv->regmap, clkdiv->base + REG_EN_CTL, &val);
++
++	return val & REG_EN_MASK;
+ }
+ 
+-static int spmi_pmic_clkdiv_set_enable_state(struct clkdiv *clkdiv,
+-			bool enable_state)
++static int
++__spmi_pmic_clkdiv_set_enable_state(struct clkdiv *clkdiv, bool enable,
++				    unsigned int div_factor)
+ {
+-	int rc;
++	int ret;
++	unsigned int ns = clkdiv->cxo_period_ns;
++	unsigned int div = div_factor_to_div(div_factor);
+ 
+-	rc = regmap_update_bits(clkdiv->regmap, clkdiv->base + REG_EN_CTL,
+-				REG_EN_MASK,
+-				(enable_state == true) ? REG_EN_MASK : 0);
+-	if (rc)
+-		return rc;
++	ret = regmap_update_bits(clkdiv->regmap, clkdiv->base + REG_EN_CTL,
++				 REG_EN_MASK, enable ? REG_EN_MASK : 0);
++	if (ret)
++		return ret;
+ 
+-	if (enable_state == true)
+-		ndelay(ENABLE_DELAY_NS(clkdiv->cxo_period_ns,
+-				div_factor_to_div(clkdiv->div_factor)));
++	if (enable)
++		ndelay((2 + 3 * div) * ns);
+ 	else
+-		ndelay(DISABLE_DELAY_NS(clkdiv->cxo_period_ns,
+-				div_factor_to_div(clkdiv->div_factor)));
++		ndelay(3 * div * ns);
+ 
+-	return rc;
++	return 0;
+ }
+ 
+-static int spmi_pmic_clkdiv_config_freq_div(struct clkdiv *clkdiv,
+-			unsigned int div)
++static int spmi_pmic_clkdiv_set_enable_state(struct clkdiv *clkdiv, bool enable)
+ {
+ 	unsigned int div_factor;
+-	unsigned long flags;
+-	bool enabled;
+-	int rc;
+-
+-	div_factor = div_to_div_factor(div);
+-
+-	spin_lock_irqsave(&clkdiv->lock, flags);
+-
+-	enabled = is_spmi_pmic_clkdiv_enabled(clkdiv);
+-	if (enabled) {
+-		rc = spmi_pmic_clkdiv_set_enable_state(clkdiv, false);
+-		if (rc)
+-			goto fail;
+-	}
+ 
+-	rc = regmap_update_bits(clkdiv->regmap,
+-				clkdiv->base + REG_DIV_CTL1,
+-				DIV_CTL1_DIV_FACTOR_MASK, div_factor);
+-	if (rc)
+-		goto fail;
++	regmap_read(clkdiv->regmap, clkdiv->base + REG_DIV_CTL1, &div_factor);
++	div_factor &= DIV_CTL1_DIV_FACTOR_MASK;
+ 
+-	clkdiv->div_factor = div_factor;
+-
+-	if (enabled)
+-		rc = spmi_pmic_clkdiv_set_enable_state(clkdiv, true);
+-
+-fail:
+-	spin_unlock_irqrestore(&clkdiv->lock, flags);
+-	return rc;
++	return __spmi_pmic_clkdiv_set_enable_state(clkdiv, enable, div_factor);
+ }
+ 
+ static int clk_spmi_pmic_div_enable(struct clk_hw *hw)
+ {
+ 	struct clkdiv *clkdiv = to_clkdiv(hw);
+ 	unsigned long flags;
+-	int rc;
++	int ret;
+ 
+ 	spin_lock_irqsave(&clkdiv->lock, flags);
+-	rc = spmi_pmic_clkdiv_set_enable_state(clkdiv, true);
++	ret = spmi_pmic_clkdiv_set_enable_state(clkdiv, true);
+ 	spin_unlock_irqrestore(&clkdiv->lock, flags);
+ 
+-	return rc;
++	return ret;
+ }
+ 
+ static void clk_spmi_pmic_div_disable(struct clk_hw *hw)
+@@ -163,35 +121,59 @@ static void clk_spmi_pmic_div_disable(struct clk_hw *hw)
+ }
+ 
+ static long clk_spmi_pmic_div_round_rate(struct clk_hw *hw, unsigned long rate,
+-			unsigned long *parent_rate)
++					 unsigned long *parent_rate)
+ {
+-	unsigned long new_rate;
+ 	unsigned int div, div_factor;
+ 
+ 	div = DIV_ROUND_UP(*parent_rate, rate);
+ 	div_factor = div_to_div_factor(div);
+-	new_rate = *parent_rate / div_factor_to_div(div_factor);
++	div = div_factor_to_div(div_factor);
+ 
+-	return new_rate;
++	return *parent_rate / div;
+ }
+ 
+-static unsigned long clk_spmi_pmic_div_recalc_rate(struct clk_hw *hw,
+-			unsigned long parent_rate)
++static unsigned long
++clk_spmi_pmic_div_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ {
+ 	struct clkdiv *clkdiv = to_clkdiv(hw);
+-	unsigned long rate;
++	unsigned int div_factor;
+ 
+-	rate = parent_rate / div_factor_to_div(clkdiv->div_factor);
++	regmap_read(clkdiv->regmap, clkdiv->base + REG_DIV_CTL1, &div_factor);
++	div_factor &= DIV_CTL1_DIV_FACTOR_MASK;
+ 
+-	return rate;
++	return parent_rate / div_factor_to_div(div_factor);
+ }
+ 
+ static int clk_spmi_pmic_div_set_rate(struct clk_hw *hw, unsigned long rate,
+-			unsigned long parent_rate)
++				      unsigned long parent_rate)
+ {
+ 	struct clkdiv *clkdiv = to_clkdiv(hw);
++	unsigned int div_factor = div_to_div_factor(parent_rate / rate);
++	unsigned long flags;
++	bool enabled;
++	int ret;
++
++	spin_lock_irqsave(&clkdiv->lock, flags);
++	enabled = is_spmi_pmic_clkdiv_enabled(clkdiv);
++	if (enabled) {
++		ret = spmi_pmic_clkdiv_set_enable_state(clkdiv, false);
++		if (ret)
++			goto unlock;
++	}
++
++	ret = regmap_update_bits(clkdiv->regmap, clkdiv->base + REG_DIV_CTL1,
++				 DIV_CTL1_DIV_FACTOR_MASK, div_factor);
++	if (ret)
++		goto unlock;
++
++	if (enabled)
++		ret = __spmi_pmic_clkdiv_set_enable_state(clkdiv, true,
++							  div_factor);
+ 
+-	return spmi_pmic_clkdiv_config_freq_div(clkdiv, parent_rate / rate);
++unlock:
++	spin_unlock_irqrestore(&clkdiv->lock, flags);
++
++	return ret;
+ }
+ 
+ static const struct clk_ops clk_spmi_pmic_div_ops = {
+@@ -203,30 +185,25 @@ static const struct clk_ops clk_spmi_pmic_div_ops = {
+ };
+ 
+ struct spmi_pmic_div_clk_cc {
+-	struct clk_hw	**div_clks;
+ 	int		nclks;
++	struct clkdiv	clks[];
+ };
+ 
+-#define SPMI_PMIC_CLKDIV_MIN_INDEX	1
+-
+-static struct clk_hw *spmi_pmic_div_clk_hw_get(struct of_phandle_args *clkspec,
+-				      void *data)
++static struct clk_hw *
++spmi_pmic_div_clk_hw_get(struct of_phandle_args *clkspec, void *data)
+ {
+-	struct spmi_pmic_div_clk_cc *clk_cc = data;
+-	unsigned int idx = (clkspec->args[0] - SPMI_PMIC_CLKDIV_MIN_INDEX);
++	struct spmi_pmic_div_clk_cc *cc = data;
++	int idx = clkspec->args[0] - 1; /* Start at 1 instead of 0 */
+ 
+-	if (idx < 0 || idx >= clk_cc->nclks) {
+-		pr_err("%s: index value %u is invalid; allowed range: [%d, %d]\n",
+-		       __func__, clkspec->args[0], SPMI_PMIC_CLKDIV_MIN_INDEX,
+-		       clk_cc->nclks);
++	if (idx < 0 || idx >= cc->nclks) {
++		pr_err("%s: index value %u is invalid; allowed range [1, %d]\n",
++		       __func__, clkspec->args[0], cc->nclks);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	return clk_cc->div_clks[idx];
++	return &cc->clks[idx].hw;
+ }
+ 
+-#define SPMI_PMIC_DIV_CLK_SIZE		0x100
+-
+ static const struct of_device_id spmi_pmic_clkdiv_match_table[] = {
+ 	{
+ 		.compatible = "qcom,spmi-clkdiv",
+@@ -242,20 +219,21 @@ MODULE_DEVICE_TABLE(of, spmi_pmic_clkdiv_match_table);
+ 
+ static int spmi_pmic_clkdiv_probe(struct platform_device *pdev)
+ {
+-	struct spmi_pmic_div_clk_cc *clk_cc;
++	struct spmi_pmic_div_clk_cc *cc;
+ 	struct clk_init_data init = {};
+ 	struct clkdiv *clkdiv;
+ 	struct clk *cxo;
+ 	struct regmap *regmap;
+ 	struct device *dev = &pdev->dev;
++	struct device_node *of_node = dev->of_node;
+ 	const char *parent_name;
+-	int nclks, i, rc, cxo_hz;
++	int nclks, i, ret, cxo_hz;
+ 	u32 start;
+ 
+-	rc = of_property_read_u32(dev->of_node, "reg", &start);
+-	if (rc < 0) {
++	ret = of_property_read_u32(of_node, "reg", &start);
++	if (ret < 0) {
+ 		dev_err(dev, "reg property reading failed\n");
+-		return rc;
++		return ret;
+ 	}
+ 
+ 	regmap = dev_get_regmap(dev->parent, NULL);
+@@ -264,62 +242,51 @@ static int spmi_pmic_clkdiv_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	nclks = (uintptr_t)of_match_node(spmi_pmic_clkdiv_match_table,
+-					 dev->of_node)->data;
+-
+-	clkdiv = devm_kcalloc(dev, nclks, sizeof(*clkdiv), GFP_KERNEL);
+-	if (!clkdiv)
+-		return -ENOMEM;
+-
+-	clk_cc = devm_kzalloc(&pdev->dev, sizeof(*clk_cc), GFP_KERNEL);
+-	if (!clk_cc)
+-		return -ENOMEM;
++	nclks = (uintptr_t)of_device_get_match_data(dev);
++	if (!nclks)
++		return -EINVAL;
+ 
+-	clk_cc->div_clks = devm_kcalloc(&pdev->dev, nclks,
+-					sizeof(*clk_cc->div_clks), GFP_KERNEL);
+-	if (!clk_cc->div_clks)
++	cc = devm_kzalloc(dev, sizeof(*cc) + sizeof(*cc->clks) * nclks,
++			  GFP_KERNEL);
++	if (!cc)
+ 		return -ENOMEM;
++	cc->nclks = nclks;
+ 
+ 	cxo = clk_get(dev, "xo");
+ 	if (IS_ERR(cxo)) {
+-		rc = PTR_ERR(cxo);
+-		if (rc != -EPROBE_DEFER)
+-			dev_err(dev, "failed to get xo clock");
+-		return rc;
++		ret = PTR_ERR(cxo);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to get xo clock\n");
++		return ret;
+ 	}
+ 	cxo_hz = clk_get_rate(cxo);
+ 	clk_put(cxo);
+ 
+-	parent_name = of_clk_get_parent_name(dev->of_node, 0);
++	parent_name = of_clk_get_parent_name(of_node, 0);
+ 	if (!parent_name) {
+ 		dev_err(dev, "missing parent clock\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	init.parent_names = &parent_name;
+-	init.num_parents = parent_name ? 1 : 0;
++	init.num_parents = 1;
+ 	init.ops = &clk_spmi_pmic_div_ops;
+-	init.flags = 0;
+ 
+-	for (i = 0; i < nclks; i++) {
++	for (i = 0, clkdiv = cc->clks; i < nclks; i++) {
+ 		spin_lock_init(&clkdiv[i].lock);
+-		clkdiv[i].base = start + i * SPMI_PMIC_DIV_CLK_SIZE;
++		clkdiv[i].base = start + i * 0x100;
+ 		clkdiv[i].regmap = regmap;
+ 		clkdiv[i].cxo_period_ns = NSEC_PER_SEC / cxo_hz;
+ 		init.name = kasprintf(GFP_KERNEL, "div_clk%d", i + 1);
+ 		clkdiv[i].hw.init = &init;
+-		rc = devm_clk_hw_register(dev, &clkdiv[i].hw);
+-		kfree(init.name); /* clock framework made a copy of the name */
+-		if (rc)
+-			return rc;
+ 
+-		clk_cc->div_clks[i] = &clkdiv[i].hw;
++		ret = devm_clk_hw_register(dev, &clkdiv[i].hw);
++		kfree(init.name); /* clk framework made a copy */
++		if (ret)
++			return ret;
+ 	}
+ 
+-	clk_cc->nclks = nclks;
+-	rc = of_clk_add_hw_provider(pdev->dev.of_node, spmi_pmic_div_clk_hw_get,
+-				    clk_cc);
+-	return rc;
++	return of_clk_add_hw_provider(of_node, spmi_pmic_div_clk_hw_get, cc);
+ }
+ 
+ static int spmi_pmic_clkdiv_remove(struct platform_device *pdev)
+
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
