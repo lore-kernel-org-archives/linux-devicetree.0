@@ -1,74 +1,66 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH v7 10/13] dt-bindings: Add qcom slimbus controller bindings
-Date: Wed, 15 Nov 2017 14:10:40 +0000
-Message-ID: <20171115141043.29202-11-srinivas.kandagatla@linaro.org>
-References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org
-Cc: sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, vinod.koul@intel.com, arnd@arndb.de, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v3 2/5] DT: misc serdev: w2sg0004: add bindings documentation
+ (GPS module with serdev UART)
+Date: Wed, 15 Nov 2017 16:19:10 +0100
+Message-ID: <876b6e7256bbf23cbff7fb2e67c33730592a4990.1510759152.git.hns@goldelico.com>
+References: <cover.1510759152.git.hns@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1510759152.git.hns@goldelico.com>
+In-Reply-To: <cover.1510759152.git.hns@goldelico.com>
+References: <cover.1510759152.git.hns@goldelico.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "H. Nikolaus Schaller" <hns@goldelico.com>, Kevin Hilman <khilman@baylibre.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pyra-handheld.com, letux-kernel@openphoenux.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sagar Dharia <sdharia@codeaurora.org>
+add bindings documentation for Wi2Wi W2SG00x4 GPS module
 
-This patch add device tree bindings for Qualcomm slimbus controller.
-
-Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+ .../devicetree/bindings/misc/wi2wi,w2sg0004.txt    | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
 
-diff --git a/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+diff --git a/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
 new file mode 100644
-index 000000000000..e4d28910b2e0
+index 000000000000..ccec9361a1a4
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-@@ -0,0 +1,43 @@
-+Qualcomm SLIMBUS controller
-+This controller is used if applications processor driver controls slimbus
-+master component.
++++ b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+@@ -0,0 +1,24 @@
++Wi2Wi GPS module connected through UART
++
++Should be a subnode of the SoC UART it is connected to (serdev).
 +
 +Required properties:
++- compatible:	should be one of (depending on precise model)
++	"wi2wi,w2sg0004"
++	"wi2wi,w2sg0084"
++- enable-gpio:	the GPIO that controls the module's power toggle
++	input. A positive impulse of sufficent length toggles the
++	power state.
 +
-+ - #address-cells - refer to Documentation/devicetree/bindings/slimbus/bus.txt
-+ - #size-cells	- refer to Documentation/devicetree/bindings/slimbus/bus.txt
-+
-+ - reg : Offset and length of the register region(s) for the device
-+ - reg-names : Register region name(s) referenced in reg above
-+	 Required register resource entries are:
-+	 "ctrl": Physical address of controller register blocks
-+ - compatible : should be "qcom,<SOC-NAME>-slim" for SOC specific compatible
-+ 		followed by "qcom,slim" for fallback.
-+ - interrupts : Interrupt number used by this controller
-+ - clocks : Interface and core clocks used by this slimbus controller
-+ - clock-names : Required clock-name entries are:
-+	"iface_clk" : Interface clock for this controller
-+	"core_clk" : Interrupt for controller core's BAM
-+
-+
-+Optional property:
-+ - reg entry for slew rate : If slew rate control register is provided, this
-+	entry should be used.
-+ - reg-name for slew rate: "slew"
++Optional properties:
++- lna-supply:	an (optional) LNA regulator that is enabled together with the GPS receiver
 +
 +Example:
 +
-+	slim@28080000 {
-+		compatible = "qcom,apq8064-slim", "qcom,slim";
-+		reg = <0x28080000 0x2000>,
-+		interrupts = <0 33 0>;
-+		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
-+		clock-names = "iface", "core";
-+		#address-cells = <2>;
-+		#size-cell = <0>;
-+
-+		codec: wcd9310@1,0{
-+			compatible = "slim217,60";
-+			reg = <1 0>;
-+		};
-+	};
++&uart2 {
++	w2sg0004: gps {
++		compatible = "wi2wi,w2sg0004";
++		lna-supply = <&vsim>;   /* LNA regulator */
++		enable-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;    /* GPIO_145: trigger for turning on/off w2sg0004 */
++        };
++};
 -- 
-2.15.0
+2.12.2
