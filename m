@@ -1,152 +1,99 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v1 01/10] dt-bindings: media: Add Renesas CEU bindings
-Date: Wed, 15 Nov 2017 14:07:31 +0100
-Message-ID: <CAMuHMdUG6gAEyyC0ANBzmj3KA-940+C7e9Nv_rLkBSjtfeKR1g@mail.gmail.com>
-References: <1510743363-25798-1-git-send-email-jacopo+renesas@jmondi.org> <1510743363-25798-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v3 0/4] iio: adc: at91-sama5d2_adc: add DMA support
+Date: Wed, 15 Nov 2017 14:56:44 +0200
+Message-ID: <1510750608-8697-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510743363-25798-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+This patch implements the DMA support for the ADC in sama5d2 SoC.
+After discussing on the mailing list, this approach is based on triggered
+kfifo buffer, with DMA support added on top of it.
+Thus, the trigger is enabled by the buffer. The ADC itself will not have
+an IRQ enabled if using DMA. With DMA, the channels are enabled, and DMA
+controller is configured to read from the data ready registers.
+When DMA starts, the trigger will start the conversion (external trigger
+configured), then the registers will have the conversion data ready, the ADC
+will trigger the DMA controller to read from the registers, the DMA will
+copy the data into the software buffer, and trigger the DMA IRQ.
+In the bottom half, the trigger polled and the data from the DMA buffer is
+pushed to buffer.
 
-CC devicetree folks
+The DMA will use a cyclic buffer to write to one half, and the software can
+read from the other half. The DMA operation doesn't stop until the buffer is
+disabled.
+The DMA coherent area is allocated when DMA is initially started, and
+deallocated only if the watermark is changed to 1 (no more DMA usage). The
+coherent area is large enough to cope with maximum fifo size for all possible
+channels enabled.
+The fifo size is set to 128 conversions by default in the driver.
 
-On Wed, Nov 15, 2017 at 11:55 AM, Jacopo Mondi
-<jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> Add bindings documentation for Renesas Capture Engine Unit (CEU).
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/renesas,ceu.txt      | 87 ++++++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> new file mode 100644
-> index 0000000..a88e9cb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
-> @@ -0,0 +1,87 @@
-> +Renesas Capture Engine Unit (CEU)
-> +----------------------------------------------
-> +
-> +The Capture Engine Unit is the image capture interface found on Renesas
-> +RZ chip series and on SH Mobile ones.
-> +
-> +The interface supports a single parallel input with up 8/16bits data bus width.
+The implementation uses the user watermark  to decide whether DMA will be
+used or not. For watermark 1, DMA will not be used. If watermark is greater,
+DMA will be used.
+Sysfs attributes are created to indicate whether the DMA is used,
+with hwfifo_enabled, and the current DMA watermark is readable
+in hwfifo_watermark. Minimum and maximum values are in hwfifo_watermark_min
+and hwfifo_watermark_max.
 
-... with data bus widths up to 8/16 bits?
+Devicetree binding added for dma as well.
+Binding adds both dmas and dma-names to keep compatibility with the drivers and
+current helpers that rely on the properties being present
 
-> +
-> +Required properties:
-> +- compatible
-> +       Must be "renesas,renesas-ceu".
+Modified devicetree for sama5d2 SoC to add connected DMA channel.
 
-The double "renesas" part looks odd to me. What about "renesas,ceu"?
-Shouldn't you add SoC-specific compatible values like "renesas,r7s72100-ceu",
-too?
+To demonstrate the capabilities of the DMA support at best sampling rate, the
+frequency for the ADC needs to be modified to maximum, from sysfs attribute.
 
-> +- reg
-> +       Physical address base and size.
-> +- interrupts
-> +       The interrupt line number.
+A different commit addresses the issue of not clearing the DRDY irq in direct
+mode. This is required to avoid erroneous overrun warnings.
 
-interrupt specifier
+  Changes in v3:
+ - Removed commit to change sample rate to maximum as this is configurable
+from sysfs
+ - Remove misleaded dev_info message when DMA was not enabled at probe
+ - Rebased patch on top of the
+[PATCH] iio: adc: at91-sama5d2_adc: fix probe error on missing trigger property
+Which is already upstreamed in 4.14
+ - Fixed the bug introduced in v2, with buffer size
+ - added extra check when enabling DMA, to have hw trigger present.
+This is because now, we can have the driver with software trigger only (if no
+hw trigger in device tree, start as software only)
 
-> +- pinctrl-names, pinctrl-0
-> +       phandle of pin controller sub-node configuring pins for CEU operations.
-> +
-> +CEU supports a single parallel input and should contain a single 'port' subnode
-> +with a single 'endpoint'. Optional endpoint properties applicable to parallel
-> +input bus are described in "video-interfaces.txt".
-> +
-> +Example:
-> +
-> +The example describes the connection between the Capture Engine Unit and a
+  Changes in v2:
+ - No longer add last timestamp to all samples. Now, compute an interval
+between samples w.r.t. start and end time of the transfer and number
+of samples. Then distribute them each in the time interval.
+ - Add warning for conversion overrun. This helps user identify cases
+when the watermark needs adjustment : the software is too slow in reading
+data from the ADC.
+ - Protection around watermark is not needed, changing of the watermark
+cannot be done while the buffer is enabled. When buffer is disabled, all
+DMA resources are freed anyway.
+ - Added validation on trigger to be used by own device
+ - Best sample rate I could obtain using the low frequency clock was about
+4k samples/second, with a watermark of 100. To get up to 50k samples/second
+the ADC frequency must be increased to max.
+ - Addressed other comments from mailing list review. Feedback is appreciated
+ - Added [PATCH v2 4/5] iio: adc: at91-sama5d2_adc: ack DRDY irq in direct
+ - Added [PATCH v2 5/5] iio: adc: at91-sama5d2_adc: use max sample rate
 
-... an
 
-> +OV7670 image sensor sitting on bus i2c1 with an on-board 24Mhz clock.
-> +
-> +ceu: ceu@e8210000 {
-> +       reg = <0xe8210000 0x209c>;
-> +       compatible = "renesas,renesas-ceu";
-> +       interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&vio_pins>;
-> +
-> +       status = "okay";
-> +
-> +       port {
-> +               ceu_in: endpoint {
-> +                       remote-endpoint = <&ov7670_out>;
-> +
-> +                       bus-width = <8>;
-> +                       hsync-active = <1>;
-> +                       vsync-active = <1>;
-> +                       pclk-sample = <1>;
-> +                       data-active = <1>;
-> +               };
-> +       };
-> +};
-> +
-> +i2c1: i2c@fcfee400 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&i2c1_pins>;
-> +
-> +       status = "okay";
-> +       clock-frequency = <100000>;
-> +
-> +       ov7670: camera@21 {
-> +               compatible = "ovti,ov7670";
-> +               reg = <0x21>;
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&vio_pins>;
-> +
-> +               reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
-> +               powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
-> +
-> +               clocks = <&xclk>;
-> +               clock-names = "xclk";
-> +
-> +               xclk: fixed_clk {
-> +                       compatible = "fixed-clock";
-> +                       #clock-cells = <0>;
-> +                       clock-frequency = <24000000>;
-> +               };
-> +
-> +               port {
-> +                       ov7670_out: endpoint {
-> +                               remote-endpoint = <&ceu_in>;
-> +
-> +                               bus-width = <8>;
-> +                               hsync-active = <1>;
-> +                               vsync-active = <1>;
-> +                               pclk-sample = <1>;
-> +                               data-active = <1>;
-> +                       };
-> +               };
-> +       };
-> --
-> 2.7.4
+Eugen Hristev (4):
+  dt-bindings: iio: at91-sama5d2_adc: add optional dma property
+  ARM: dts: at91: sama5d2: added dma property for ADC device
+  iio: adc: at91-sama5d2_adc: add support for DMA
+  iio: adc: at91-sama5d2_adc: ack DRDY irq in direct mode
 
-Gr{oetje,eeting}s,
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   7 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |   2 +
+ drivers/iio/adc/Kconfig                            |   1 +
+ drivers/iio/adc/at91-sama5d2_adc.c                 | 456 ++++++++++++++++++++-
+ 4 files changed, 446 insertions(+), 20 deletions(-)
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
