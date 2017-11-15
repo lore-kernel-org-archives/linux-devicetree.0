@@ -1,65 +1,117 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v1 01/10] dt-bindings: media: Add Renesas CEU bindings
-Date: Wed, 15 Nov 2017 19:39:18 +0100
-Message-ID: <CAMuHMdVA2iovgrLN6PEWQMLHXJiauGgYuLn1m6xtX1EirZ3oDw@mail.gmail.com>
-References: <1510743363-25798-1-git-send-email-jacopo+renesas@jmondi.org>
- <1510743363-25798-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdUG6gAEyyC0ANBzmj3KA-940+C7e9Nv_rLkBSjtfeKR1g@mail.gmail.com> <20171115181505.GB6736@w540>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] dt-bindings: Add Cavium Octeon Common Ethernet
+ Interface.
+Date: Wed, 15 Nov 2017 13:18:57 -0600
+Message-ID: <20171115191857.podohd56knfd4hyh@rob-hp-laptop>
+References: <20171109192915.11912-1-david.daney@cavium.com>
+ <20171109192915.11912-2-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171115181505.GB6736@w540>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171109192915.11912-2-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Thu, Nov 09, 2017 at 11:29:08AM -0800, David Daney wrote:
+> From: Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> 
+> Add bindings for Common Ethernet Interface (BGX) block.
+> 
+> Signed-off-by: Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Steven J. Hill <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/cavium-bgx.txt         | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/cavium-bgx.txt b/Documentation/devicetree/bindings/net/cavium-bgx.txt
+> new file mode 100644
+> index 000000000000..6b1f8b994c20
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/cavium-bgx.txt
+> @@ -0,0 +1,61 @@
+> +* Common Ethernet Interface (BGX) block
+> +
+> +Properties:
+> +
+> +- compatible: "cavium,octeon-7890-bgx": Compatibility with all cn7xxx SOCs.
+> +
+> +- reg: The base address of the BGX block.
+> +
+> +- #address-cells: Must be <1>.
+> +
+> +- #size-cells: Must be <0>.  BGX addresses have no size component.
+> +
+> +A BGX block has several children, each representing an Ethernet
+> +interface.
+> +
+> +
+> +* Ethernet Interface (BGX port) connects to PKI/PKO
+> +
+> +Properties:
+> +
+> +- compatible: "cavium,octeon-7890-bgx-port": Compatibility with all
+> +	      cn7xxx SOCs.
+> +
+> +	      "cavium,octeon-7360-xcv": Compatibility with cn73xx SOCs
+> +	      for RGMII.
+> +
+> +- reg: The index of the interface within the BGX block.
 
-On Wed, Nov 15, 2017 at 7:15 PM, jacopo mondi <jacopo@jmondi.org> wrote:
-> On Wed, Nov 15, 2017 at 02:07:31PM +0100, Geert Uytterhoeven wrote:
->> On Wed, Nov 15, 2017 at 11:55 AM, Jacopo Mondi
->> <jacopo+renesas@jmondi.org> wrote:
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
->> > @@ -0,0 +1,87 @@
->> > +Renesas Capture Engine Unit (CEU)
->> > +----------------------------------------------
->> > +
->> > +The Capture Engine Unit is the image capture interface found on Renesas
->> > +RZ chip series and on SH Mobile ones.
->> > +
->> > +The interface supports a single parallel input with up 8/16bits data bus width.
->>
->> ... with data bus widths up to 8/16 bits?
->>
->> > +
->> > +Required properties:
->> > +- compatible
->> > +       Must be "renesas,renesas-ceu".
->>
->> The double "renesas" part looks odd to me. What about "renesas,ceu"?
->
-> I'm totally open for better "compatible" strings here, so yeah, let's
-> got for the shorter one you proposed...
->
->> Shouldn't you add SoC-specific compatible values like "renesas,r7s72100-ceu",
->> too?
->
-> Well, I actually have no SoC-specific data in the driver, so I don't
-> need SoC specific "compatible" values. But if it's a good practice
-> to have them anyway, I will add those in next spin..
+There's no memory mapped region associated with the sub-blocks?
 
-You don't necessarily need them in the driver, but in the bindings and DTS,
-just in case a difference is discovered later.
+> +
+> +Optional properties:
+> +
+> +- local-mac-address: Mac address for the interface.
+> +
+> +- phy-handle: phandle to the phy node connected to the interface.
+> +
+> +- phy-mode: described in ethernet.txt.
+> +
+> +- fixed-link: described in fixed-link.txt.
+> +
+> +Example:
+> +
+> +	ethernet-mac-nexus@11800e0000000 {
+> +		compatible = "cavium,octeon-7890-bgx";
+> +		reg = <0x00011800 0xe0000000 0x00000000 0x01000000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethernet-mac@0 {
 
-Gr{oetje,eeting}s,
+ethernet@0
 
-                        Geert
+> +			compatible = "cavium,octeon-7360-xcv";
+> +			reg = <0>;
+> +			local-mac-address = [ 00 01 23 45 67 89 ];
+> +			phy-handle = <&phy3>;
+> +			phy-mode = "rgmii-rxid"
+> +		};
+> +		ethernet-mac@1 {
 
+ditto.
+
+Otherwise,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> +			compatible = "cavium,octeon-7890-bgx-port";
+> +			reg = <1>;
+> +			local-mac-address = [ 00 01 23 45 67 8a ];
+> +			phy-handle = <&phy4>;
+> +			phy-mode = "sgmii"
+> +		};
+> +	};
+> -- 
+> 2.13.6
+> 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
