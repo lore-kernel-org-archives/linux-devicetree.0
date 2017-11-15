@@ -1,30 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: usb: fix example hub node name
-Date: Wed, 15 Nov 2017 09:44:56 -0600
-Message-ID: <20171115154456.3dmx2o5b4r5uncdw@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/8] dt-bindings: usb: document hub and host-controller
+ properties
+Date: Wed, 15 Nov 2017 09:46:55 -0600
+Message-ID: <20171115154655.rw4n5ihhcm7ilrmv@rob-hp-laptop>
 References: <20171109170723.10960-1-johan@kernel.org>
- <20171109170723.10960-2-johan@kernel.org>
+ <20171109170723.10960-5-johan@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171109170723.10960-2-johan@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Alan Stern <stern@rowland.harvard.edu>, Peter Chen <peter.chen@nxp.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20171109170723.10960-5-johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 09, 2017 at 06:07:16PM +0100, Johan Hovold wrote:
-> According to the OF Recommended Practice for USB, hub nodes shall be
-> named "hub", but the example had mixed up the label and node names. Fix
-> the node name and drop the redundant label.
+On Thu, Nov 09, 2017 at 06:07:19PM +0100, Johan Hovold wrote:
+> Hub nodes and host-controller nodes with child nodes must specify values
+> for #address-cells (1) and #size-cells (0).
 > 
-> While at it, remove a newline and add a missing semicolon to the example
-> source.
+> Also make the definition of the related reg property a bit more
+> stringent, and add comments to the example source.
 > 
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+> Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/usb/usb-device.txt | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/usb/usb-device.txt | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+I'm happy to apply patches 1-4 for 4.15 if you want.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
