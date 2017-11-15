@@ -1,43 +1,45 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v3 5/5] misc serdev: w2sg0004: add debugging code and
- Kconfig
-Date: Wed, 15 Nov 2017 17:29:25 +0100
-Message-ID: <DC57A290-669C-4B3C-A4EE-2ABEA37F47CE@goldelico.com>
-References: <cover.1510759152.git.hns@goldelico.com>
- <9b4969c858d4c3801bb796f92dad5c580799b768.1510759152.git.hns@goldelico.com>
- <28e16c7a-2688-a302-1548-1cdc2552f0ad@suse.de>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <28e16c7a-2688-a302-1548-1cdc2552f0ad@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pyra-handheld.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, letux-kernel@openphoenux.org, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] arm64: dts: ulcb-kf: enable USB2 PHY of channel 0
+Date: Wed, 15 Nov 2017 17:36:21 +0100
+Message-ID: <CAMuHMdWuHV38=XupXxH1TXFONpsjmY=3zN7iaKDT54xBd_DSGw@mail.gmail.com>
+References: <1510143698-17306-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1510143698-17306-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmVhcywKCj4gQW0gMTUuMTEuMjAxNyB1bSAxNjo1MyBzY2hyaWViIEFuZHJlYXMgRsOk
-cmJlciA8YWZhZXJiZXJAc3VzZS5kZT46Cj4gCj4gSGksCj4gCj4gQW0gMTUuMTEuMjAxNyB1bSAx
-NjoxOSBzY2hyaWViIEguIE5pa29sYXVzIFNjaGFsbGVyOgo+PiBUaGlzIGFsbG93cyB0byBzZXQg
-Q09ORklHX1cyU0cwMDA0X0RFQlVHIHdoaWNoIHdpbGwKPj4gbWFrZSB0aGUgZHJpdmVyIHJlcG9y
-dCBtb3JlIGFjdGl2aXRpZXMgYW5kIGl0IHdpbGwgdHVybiBvbiB0aGUKPj4gR1BTIG1vZHVsZSBk
-dXJpbmcgYm9vdCB3aGlsZSB0aGUgZHJpdmVyIGFzc3VtZXMgdGhhdCBpdAo+PiBpcyBvZmYuIFRo
-aXMgY2FuIGJlIHVzZWQgdG8gZGVidWcgdGhlIGNvcnJlY3QgZnVuY3Rpb25pbmcgb2YKPj4gdGhl
-IGhhcmR3YXJlLiBUaGVyZWZvcmUgd2UgYWRkIGl0IGFzIGFuIG9wdGlvbiB0byB0aGUgZHJpdmVy
-Cj4+IGJlY2F1c2Ugd2UgdGhpbmsgaXQgaXMgb2YgZ2VuZXJhbCB1c2UgKGFuZCBhIGxpdHRsZSB0
-cmlja3kgdG8KPj4gYWRkIGJ5IHN5c3RlbSB0ZXN0ZXJzKS4KPj4gCj4+IE5vcm1hbGx5IGl0IHNo
-b3VsZCBiZSBvZmYuCj4+IC0tLQo+IAo+IElmIHlvdSB3YW50IHRvIG1lcmdlIHRoaXMsIGl0IGlz
-IGxhY2tpbmcgYSBTb2IuCgpXaGF0cyBpcyBhICJTb2IiIGluIHRoaXMgY29udGV4dCAoaHR0cHM6
-Ly9hY3Jvbnltcy50aGVmcmVlZGljdGlvbmFyeS5jb20vU09CKT8KCkJSIGFuZCB0aGFua3MsCk5p
-a29sYXVzIFNjaGFsbGVyCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Vladimir,
+
+On Wed, Nov 8, 2017 at 1:21 PM, Vladimir Barinov
+<vladimir.barinov@cogentembedded.com> wrote:
+> This supports USB2 PHY channel #0 on ULCB Kingfisher board
+>
+> The dedicated USB0_PWEN pin is used to control CN13 VBUS source from U43
+> power supply.
+> MAX3355 can also provide VBUS, hence it should be disabled via OTG_OFFVBUSn
+> node coming from gpio expander TCA9539.
+> Set MAX3355 enabled using OTG_EXTLPn node to be able to read OTG ID of CN13.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> ---
+> Changes in version 2:
+> - added gpio hogs for MAX3355 VBUS and SHDN
+
+Thanks for the update!
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
