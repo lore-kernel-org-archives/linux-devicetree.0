@@ -1,56 +1,56 @@
-From: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
-Subject: [PATCH] dt-bindings: add device tree binding for Arm TrustZone CryptoCell crypto engine
-Date: Wed, 15 Nov 2017 13:05:17 +0000
-Message-ID: <1510751117-13627-1-git-send-email-gilad@benyossef.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ofir Drang <ofir.drang-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 2/2] leds: lm3692x: Introduce LM3692x dual string driver
+Date: Wed, 15 Nov 2017 07:06:37 -0600
+Message-ID: <4a13eae0-044a-95f1-ab3e-68b2114f623b@ti.com>
+References: <20171113205052.25884-1-dmurphy@ti.com>
+ <20171113205052.25884-2-dmurphy@ti.com> <20171115104526.GC456@amd>
+ <1b0c05a6-2261-85d5-a3c6-9753f7600a20@ti.com> <20171115130057.GA11557@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20171115130057.GA11557@amd>
+Content-Language: en-US
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Arm TrustZone CryptoCell is a hardware security engine. This patch
-adds DT bindings for its Rich Execution Environment crypto engine.
+Pavel
 
-A driver supporting this device is already present in the staging tree.
+On 11/15/2017 07:00 AM, Pavel Machek wrote:
+> Hi!
+> 
+>>>> +	ret = regmap_write(led->regmap, LM3692X_PWM_CTRL,
+>>>> +		LM3692X_PWM_FILTER_100 | LM3692X_PWM_SAMP_24MHZ);
+>>>> +	if (ret)
+>>>> +		dev_err(&led->client->dev, "Failed programming PWM CTRL\n");
+>>>> +
+>>>> +	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
+>>>> +			LM3692X_BRHT_MODE_RAMP_MULTI |
+>>>> +			LM3692X_BL_ADJ_POL |
+>>>> +			LM3692X_RAMP_RATE_250us);
+>>>> +	if (ret)
+>>>> +		dev_err(&led->client->dev, "Failed programming BOOST CTRL\n");
+>>>> +
+>>>> +	ret = regmap_write(led->regmap, LM3692X_AUTO_FREQ_HI, 0x00);
+>>>> +	if (ret)
+>>>> +		dev_err(&led->client->dev, "Failed programming AUTO HI FREQ\n");
+>>>
+>>> If something fails, is it wise to continue?
+> 
+> If something fails, is it wise to continue?
+> 
 
-Signed-off-by: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
----
- .../devicetree/bindings/crypto/arm-cryptocell.txt  | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+Sorry missed that comment.  It is ok to continue but probably should goto out and return
+an error so the probe fails.
 
-diff --git a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-new file mode 100644
-index 0000000..ccf8a101
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-@@ -0,0 +1,22 @@
-+Arm TrustZone CryptoCell cryptographic engine
-+
-+Required properties:
-+- compatible: Should be "arm,cryptocell-712-ree".
-+- reg: Base physical address of the engine and length of memory mapped region.
-+- interrupts: Interrupt number for the device.
-+
-+Optional properties:
-+- interrupt-parent: The phandle for the interrupt controller that services
-+  interrupts for this device.
-+- clocks: Reference to the crypto engine clock.
-+- dma-coherent: Present if dma operations are coherent.
-+
-+Examples:
-+
-+       arm_cc712: arm_cc712@80000000 {
-+               compatible = "arm,cryptocell-712-ree";
-+               interrupt-parent = <&intc>;
-+               interrupts = < 0 30 4 >;
-+               reg = < 0x80000000 0x10000 >;
-+
-+       };
+Dan
+
+> 									Pavel
+> 
+
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------
+Dan Murphy
