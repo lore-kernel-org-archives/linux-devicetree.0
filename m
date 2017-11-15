@@ -1,676 +1,442 @@
-From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v3 3/4] iio: adc: at91-sama5d2_adc: add support for DMA
-Date: Wed, 15 Nov 2017 14:56:47 +0200
-Message-ID: <1510750608-8697-4-git-send-email-eugen.hristev@microchip.com>
-References: <1510750608-8697-1-git-send-email-eugen.hristev@microchip.com>
+From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] leds: lm3692x: Introduce LM3692x dual string driver
+Date: Wed, 15 Nov 2017 07:11:12 -0600
+Message-ID: <fbe8314e-8e52-4a6d-06e9-9e400a847545@ti.com>
+References: <20171113205052.25884-1-dmurphy@ti.com>
+ <20171113205052.25884-2-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510750608-8697-1-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171113205052.25884-2-dmurphy-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Added support for DMA transfers. The implementation uses the user watermark
-to decide whether DMA will be used or not. For watermark 1, DMA will not be
-used. If watermark is bigger, DMA will be used.
-Sysfs attributes are created to indicate whether the DMA is used,
-with hwfifo_enabled, and the current DMA watermark is readable
-in hwfifo_watermark. Minimum and maximum values are in hwfifo_watermark_min
-and hwfifo_watermark_max.
+On 11/13/2017 02:50 PM, Dan Murphy wrote:
+> Introducing the LM3692x Dual-String white LED driver.
+> 
+> Data sheet is located
+> http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
+> 
+> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/leds/leds-lm3692x.c | 380 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 380 insertions(+)
+>  create mode 100644 drivers/leds/leds-lm3692x.c
+> 
+> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+> new file mode 100644
+> index 000000000000..beb753abc7b0
+> --- /dev/null
+> +++ b/drivers/leds/leds-lm3692x.c
+> @@ -0,0 +1,380 @@
+> +/*
+> + * TI lm3692x LED Driver
+> + *
+> + * Copyright (C) 2017 Texas Instruments
+> + *
+> + * Author: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * version 2 as published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/leds.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/slab.h>
+> +
+> +#define LM3692X_LED_NAME	"lm3692x_led"
+> +
+> +#define LM3692X_REV		0x0
+> +#define LM3692X_RESET		0x1
+> +#define LM3692X_EN		0x10
+> +#define LM3692X_BRT_CTRL	0x11
+> +#define LM3692X_PWM_CTRL	0x12
+> +#define LM3692X_BOOST_CTRL	0x13
+> +#define LM3692X_AUTO_FREQ_HI	0x15
+> +#define LM3692X_AUTO_FREQ_LO	0x16
+> +#define LM3692X_BL_ADJ_THRESH	0x17
+> +#define LM3692X_BRT_LSB		0x18
+> +#define LM3692X_BRT_MSB		0x19
+> +#define LM3692X_FAULT_CTRL	0x1e
+> +#define LM3692X_FAULT_FLAGS	0x1f
+> +
+> +#define LM3692X_SW_RESET	BIT(0)
+> +#define LM3692X_DEVICE_EN	BIT(0)
+> +#define LM3692X_LED1_EN		BIT(1)
+> +#define LM3692X_LED2_EN		BIT(2)
+> +
+> +/* Brightness Control Bits */
+> +#define LM3692X_BL_ADJ_POL	BIT(0)
+> +#define LM3692X_RAMP_RATE_125us	0x00
+> +#define LM3692X_RAMP_RATE_250us	BIT(1)
+> +#define LM3692X_RAMP_RATE_500us BIT(2)
+> +#define LM3692X_RAMP_RATE_1ms	(BIT(1) | BIT(2))
+> +#define LM3692X_RAMP_RATE_2ms	BIT(3)
+> +#define LM3692X_RAMP_RATE_4ms	(BIT(3) | BIT(1))
+> +#define LM3692X_RAMP_RATE_8ms	(BIT(2) | BIT(3))
+> +#define LM3692X_RAMP_RATE_16ms	(BIT(1) | BIT(2) | BIT(3))
+> +#define LM3692X_RAMP_EN		BIT(4)
+> +#define LM3692X_BRHT_MODE_REG	0x00
+> +#define LM3692X_BRHT_MODE_PWM	BIT(5)
+> +#define LM3692X_BRHT_MODE_MULTI_RAMP BIT(6)
+> +#define LM3692X_BRHT_MODE_RAMP_MULTI (BIT(5) | BIT(6))
+> +#define LM3692X_MAP_MODE_EXP	BIT(7)
+> +
+> +/* PWM Register Bits */
+> +#define LM3692X_PWM_FILTER_100	BIT(0)
+> +#define LM3692X_PWM_FILTER_150	BIT(1)
+> +#define LM3692X_PWM_FILTER_200	(BIT(0) | BIT(1))
+> +#define LM3692X_PWM_HYSTER_1LSB BIT(2)
+> +#define LM3692X_PWM_HYSTER_2LSB	BIT(3)
+> +#define LM3692X_PWM_HYSTER_3LSB (BIT(3) | BIT(2))
+> +#define LM3692X_PWM_HYSTER_4LSB BIT(4)
+> +#define LM3692X_PWM_HYSTER_5LSB (BIT(4) | BIT(2))
+> +#define LM3692X_PWM_HYSTER_6LSB (BIT(4) | BIT(3))
+> +#define LM3692X_PWM_POLARITY	BIT(5)
+> +#define LM3692X_PWM_SAMP_4MHZ	BIT(6)
+> +#define LM3692X_PWM_SAMP_24MHZ	BIT(7)
+> +
+> +/* Boost Control Bits */
+> +#define LM3692X_OCP_PROT_1A	BIT(0)
+> +#define LM3692X_OCP_PROT_1_25A	BIT(1)
+> +#define LM3692X_OCP_PROT_1_5A	(BIT(0) | BIT(1))
+> +#define LM3692X_OVP_21V		BIT(2)
+> +#define LM3692X_OVP_25V		BIT(3)
+> +#define LM3692X_OVP_29V		(BIT(2) | BIT(3))
+> +#define LM3692X_MIN_IND_22UH	BIT(4)
+> +#define LM3692X_BOOST_SW_1MHZ	BIT(5)
+> +#define LM3692X_BOOST_SW_NO_SHIFT	BIT(6)
+> +
+> +/* Fault Control Bits */
+> +#define LM3692X_FAULT_CTRL_OVP BIT(0)
+> +#define LM3692X_FAULT_CTRL_OCP BIT(1)
+> +#define LM3692X_FAULT_CTRL_TSD BIT(2)
+> +#define LM3692X_FAULT_CTRL_OPEN BIT(3)
+> +
+> +/* Fault Flag Bits */
+> +#define LM3692X_FAULT_FLAG_OVP BIT(0)
+> +#define LM3692X_FAULT_FLAG_OCP BIT(1)
+> +#define LM3692X_FAULT_FLAG_TSD BIT(2)
+> +#define LM3692X_FAULT_FLAG_SHRT BIT(3)
+> +#define LM3692X_FAULT_FLAG_OPEN BIT(4)
+> +
+> +/**
+> + * struct lm3692x_led -
+> + * @lock - Lock for reading/writing the device
+> + * @client - Pointer to the I2C client
+> + * @led_dev - led class device pointer
+> + * @regmap - Devices register map
+> + * @enable_gpio - VDDIO/EN gpio to enable communication interface
+> + * @regulator - LED supply regulator pointer
+> + * @label - LED label
+> + **/
+> +struct lm3692x_led {
+> +	struct mutex lock;
+> +	struct i2c_client *client;
+> +	struct led_classdev led_dev;
+> +	struct regmap *regmap;
+> +	struct gpio_desc *enable_gpio;
+> +	struct regulator *regulator;
+> +	const char *label;
+> +};
+> +
+> +static const struct reg_default lm3692x_reg_defs[] = {
+> +	{LM3692X_EN, 0xf},
+> +	{LM3692X_BRT_CTRL, 0x61},
+> +	{LM3692X_PWM_CTRL, 0x73},
+> +	{LM3692X_BOOST_CTRL, 0x6f},
+> +	{LM3692X_AUTO_FREQ_HI, 0x0},
+> +	{LM3692X_AUTO_FREQ_LO, 0x0},
+> +	{LM3692X_BL_ADJ_THRESH, 0x0},
+> +	{LM3692X_BRT_LSB, 0x7},
+> +	{LM3692X_BRT_MSB, 0xff},
+> +	{LM3692X_FAULT_CTRL, 0x7},
+> +};
+> +
+> +static const struct regmap_config lm3692x_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +
+> +	.max_register = LM3692X_FAULT_FLAGS,
+> +	.reg_defaults = lm3692x_reg_defs,
+> +	.num_reg_defaults = ARRAY_SIZE(lm3692x_reg_defs),
+> +	.cache_type = REGCACHE_RBTREE,
+> +};
+> +
+> +static int lm3692x_fault_check(struct lm3692x_led *led)
+> +{
+> +	int ret, fault;
+> +	unsigned int read_buf;
+> +
+> +	ret = regmap_read(led->regmap, LM3692X_FAULT_FLAGS, &read_buf);
+> +	if (ret)
+> +		goto out;
+> +
+> +	fault = read_buf;
+> +
+> +	if (fault)
+> +		dev_err(&led->client->dev, "Detected a fault 0x%X\n",
+> +			fault);
+> +out:
+> +	return ret;
+> +}
+> +
+> +static int lm3692x_brightness_set(struct led_classdev *led_cdev,
+> +				enum led_brightness brt_val)
+> +{
+> +	struct lm3692x_led *led =
+> +			container_of(led_cdev, struct lm3692x_led, led_dev);
+> +	int led_brightness = (brt_val << 4) + 7;
 
-Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
----
- Changes in v3:
- - Remove misleaded dev_info message when DMA was not enabled at probe
- - Rebased patch on top of the
-[PATCH] iio: adc: at91-sama5d2_adc: fix probe error on missing trigger property
-Which is already upstreamed in 4.14
- - Fixed the bug introduced in v2, with buffer size
- - added extra check when enabling DMA, to have hw trigger present.
-This is because now, we can have the driver with software trigger only (if no
-hw trigger in device tree, start as software only)
+After a peer review with the hardware team it was determined that the brightness value
+calculation always sets the LSB to a value of 7.  Therefore this will be changed in patch
+v2 so that the MSB will contain the brt_val and the LSB will contain the 3 MSB bits of the
+brt_val.
 
- Changes in v2:
- - No longer add last timestamp to all samples. Now, compute an interval
-between samples w.r.t. start and end time of the transfer and number
-of samples. Then distribute them each in the time interval.
- - Add warning for conversion overrun. This helps user identify cases
-when the watermark needs adjustment : the software is too slow in reading
-data from the ADC.
- - Protection around watermark is not needed, changing of the watermark
-cannot be done while the buffer is enabled. When buffer is disabled, all
-DMA resources are freed anyway.
- - Added validation on trigger to be used by own device
- - Best sample rate I could obtain using the low frequency clock was about
-4k samples/second, with a watermark of 100. To get up to 50k samples/second
-the ADC frequency must be increased to max.
- - Fixed computation of DMA buffer size
- - Addressed other comments from mailing list review. Feedback is appreciated
+So the values will look something like this:
 
- drivers/iio/adc/Kconfig            |   1 +
- drivers/iio/adc/at91-sama5d2_adc.c | 453 +++++++++++++++++++++++++++++++++++--
- 2 files changed, 434 insertions(+), 20 deletions(-)
+Code 0x00 thru code 0x1f --> LSB = 0 
+Code 0x20 thru code 0x3f --> LSB = 1, 0x101 up to 0x1f9
+Code 0x40 thru code 0x5f --> LSB = 2, 0x202 up to 0x2fa
+Code 0x60 thru code 0x7f --> LSB = 3, 0x303 thru 0x3fb
+Code 0x80 thru code 0x9f --> LSB = 4, 0x404 thru 0x4fc
+.
+.
+Code 0xe0 thru code 0xff --> LSB = 7, 0x707 thru 0x7ff
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 1d13bf0..1a3a8e3 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -158,6 +158,7 @@ config AT91_SAMA5D2_ADC
- 	tristate "Atmel AT91 SAMA5D2 ADC"
- 	depends on ARCH_AT91 || COMPILE_TEST
- 	depends on HAS_IOMEM
-+	depends on HAS_DMA
- 	select IIO_TRIGGERED_BUFFER
- 	help
- 	  Say yes here to build support for Atmel SAMA5D2 ADC which is
-diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-index a70ef7f..11d34a8 100644
---- a/drivers/iio/adc/at91-sama5d2_adc.c
-+++ b/drivers/iio/adc/at91-sama5d2_adc.c
-@@ -16,6 +16,8 @@
- 
- #include <linux/bitops.h>
- #include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmaengine.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-@@ -100,6 +102,8 @@
- #define AT91_SAMA5D2_LCDR	0x20
- /* Interrupt Enable Register */
- #define AT91_SAMA5D2_IER	0x24
-+/* Interrupt Enable Register - general overrun error */
-+#define AT91_SAMA5D2_IER_GOVRE BIT(25)
- /* Interrupt Disable Register */
- #define AT91_SAMA5D2_IDR	0x28
- /* Interrupt Mask Register */
-@@ -167,13 +171,19 @@
- 
- /*
-  * Maximum number of bytes to hold conversion from all channels
-- * plus the timestamp
-+ * without the timestamp.
-  */
--#define AT91_BUFFER_MAX_BYTES ((AT91_SAMA5D2_SINGLE_CHAN_CNT +		\
--				AT91_SAMA5D2_DIFF_CHAN_CNT) * 2 + 8)
-+#define AT91_BUFFER_MAX_CONVERSION_BYTES ((AT91_SAMA5D2_SINGLE_CHAN_CNT + \
-+					 AT91_SAMA5D2_DIFF_CHAN_CNT) * 2)
-+
-+/* This total must also include the timestamp */
-+#define AT91_BUFFER_MAX_BYTES (AT91_BUFFER_MAX_CONVERSION_BYTES + 8)
- 
- #define AT91_BUFFER_MAX_HWORDS (AT91_BUFFER_MAX_BYTES / 2)
- 
-+#define AT91_HWFIFO_MAX_SIZE_STR	"128"
-+#define AT91_HWFIFO_MAX_SIZE		128
-+
- #define AT91_SAMA5D2_CHAN_SINGLE(num, addr)				\
- 	{								\
- 		.type = IIO_VOLTAGE,					\
-@@ -228,6 +238,28 @@ struct at91_adc_trigger {
- 	bool				hw_trig;
- };
- 
-+/**
-+ * at91_adc_dma - at91-sama5d2 dma information struct
-+ * @dma_chan:		the dma channel acquired
-+ * @rx_buf:		dma coherent allocated area
-+ * @rx_dma_buf:		dma handler for the buffer
-+ * @phys_addr:		physical address of the ADC base register
-+ * @buf_idx:		index inside the dma buffer where reading was last done
-+ * @rx_buf_sz:		size of buffer used by DMA operation
-+ * @watermark:		number of conversions to copy before DMA triggers irq
-+ * @dma_ts:		hold the start timestamp of dma operation
-+ */
-+struct at91_adc_dma {
-+	struct dma_chan			*dma_chan;
-+	u8				*rx_buf;
-+	dma_addr_t			rx_dma_buf;
-+	phys_addr_t			phys_addr;
-+	int				buf_idx;
-+	int				rx_buf_sz;
-+	int				watermark;
-+	s64				dma_ts;
-+};
-+
- struct at91_adc_state {
- 	void __iomem			*base;
- 	int				irq;
-@@ -242,6 +274,7 @@ struct at91_adc_state {
- 	u32				conversion_value;
- 	struct at91_adc_soc_info	soc_info;
- 	wait_queue_head_t		wq_data_available;
-+	struct at91_adc_dma		dma_st;
- 	u16				buffer[AT91_BUFFER_MAX_HWORDS];
- 	/*
- 	 * lock to prevent concurrent 'single conversion' requests through
-@@ -322,11 +355,17 @@ static int at91_adc_configure_trigger(struct iio_trigger *trig, bool state)
- 		if (state) {
- 			at91_adc_writel(st, AT91_SAMA5D2_CHER,
- 					BIT(chan->channel));
--			at91_adc_writel(st, AT91_SAMA5D2_IER,
--					BIT(chan->channel));
-+			/* enable irq only if not using DMA */
-+			if (!st->dma_st.dma_chan) {
-+				at91_adc_writel(st, AT91_SAMA5D2_IER,
-+						BIT(chan->channel));
-+			}
- 		} else {
--			at91_adc_writel(st, AT91_SAMA5D2_IDR,
--					BIT(chan->channel));
-+			/* disable irq only if not using DMA */
-+			if (!st->dma_st.dma_chan) {
-+				at91_adc_writel(st, AT91_SAMA5D2_IDR,
-+						BIT(chan->channel));
-+			}
- 			at91_adc_writel(st, AT91_SAMA5D2_CHDR,
- 					BIT(chan->channel));
- 		}
-@@ -340,6 +379,10 @@ static int at91_adc_reenable_trigger(struct iio_trigger *trig)
- 	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
- 	struct at91_adc_state *st = iio_priv(indio);
- 
-+	/* if we are using DMA, we must not reenable irq after each trigger */
-+	if (st->dma_st.dma_chan)
-+		return 0;
-+
- 	enable_irq(st->irq);
- 
- 	/* Needed to ACK the DRDY interruption */
-@@ -351,6 +394,153 @@ static const struct iio_trigger_ops at91_adc_trigger_ops = {
- 	.owner = THIS_MODULE,
- 	.set_trigger_state = &at91_adc_configure_trigger,
- 	.try_reenable = &at91_adc_reenable_trigger,
-+	.validate_device = iio_trigger_validate_own_device,
-+};
-+
-+static int at91_adc_dma_size_done(struct at91_adc_state *st)
-+{
-+	struct dma_tx_state state;
-+	enum dma_status status;
-+	int i, size;
-+
-+	status = dmaengine_tx_status(st->dma_st.dma_chan,
-+				     st->dma_st.dma_chan->cookie,
-+				     &state);
-+	if (status != DMA_IN_PROGRESS)
-+		return 0;
-+
-+	/* Transferred length is size in bytes from end of buffer */
-+	i = st->dma_st.rx_buf_sz - state.residue;
-+
-+	/* Return available bytes */
-+	if (i >= st->dma_st.buf_idx)
-+		size = i - st->dma_st.buf_idx;
-+	else
-+		size = st->dma_st.rx_buf_sz + i - st->dma_st.buf_idx;
-+	return size;
-+}
-+
-+static void at91_dma_buffer_done(void *data)
-+{
-+	struct iio_dev *indio_dev = data;
-+
-+	iio_trigger_poll_chained(indio_dev->trig);
-+}
-+
-+static int at91_adc_dma_start(struct iio_dev *indio_dev)
-+{
-+	struct at91_adc_state *st = iio_priv(indio_dev);
-+	struct dma_async_tx_descriptor *desc;
-+	dma_cookie_t cookie;
-+	int ret;
-+	u8 bit;
-+
-+	if (!st->dma_st.dma_chan)
-+		return 0;
-+
-+	/* we start a new DMA, so set buffer index to start */
-+	st->dma_st.buf_idx = 0;
-+
-+	/*
-+	 * compute buffer size w.r.t. watermark and enabled channels.
-+	 * scan_bytes is aligned so we need an exact size for DMA
-+	 */
-+	st->dma_st.rx_buf_sz = 0;
-+
-+	for_each_set_bit(bit, indio_dev->active_scan_mask,
-+			 indio_dev->num_channels) {
-+		struct iio_chan_spec const *chan = indio_dev->channels + bit;
-+
-+		st->dma_st.rx_buf_sz += chan->scan_type.storagebits / 8;
-+	}
-+	st->dma_st.rx_buf_sz *= st->dma_st.watermark;
-+
-+	/* Prepare a DMA cyclic transaction */
-+	desc = dmaengine_prep_dma_cyclic(st->dma_st.dma_chan,
-+					 st->dma_st.rx_dma_buf,
-+					 st->dma_st.rx_buf_sz,
-+					 st->dma_st.rx_buf_sz / 2,
-+					 DMA_DEV_TO_MEM, DMA_PREP_INTERRUPT);
-+
-+	if (!desc) {
-+		dev_err(&indio_dev->dev, "cannot prepare DMA cyclic\n");
-+		return -EBUSY;
-+	}
-+
-+	desc->callback = at91_dma_buffer_done;
-+	desc->callback_param = indio_dev;
-+
-+	cookie = dmaengine_submit(desc);
-+	ret = dma_submit_error(cookie);
-+	if (ret) {
-+		dev_err(&indio_dev->dev, "cannot submit DMA cyclic\n");
-+		dmaengine_terminate_async(st->dma_st.dma_chan);
-+		return ret;
-+	}
-+
-+	/* enable general overrun error signaling */
-+	at91_adc_writel(st, AT91_SAMA5D2_IER, AT91_SAMA5D2_IER_GOVRE);
-+	/* Issue pending DMA requests */
-+	dma_async_issue_pending(st->dma_st.dma_chan);
-+
-+	/* consider current time as DMA start time for timestamps */
-+	st->dma_st.dma_ts = iio_get_time_ns(indio_dev);
-+
-+	dev_dbg(&indio_dev->dev, "DMA cyclic started\n");
-+
-+	return 0;
-+}
-+
-+static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
-+{
-+	int ret;
-+
-+	ret = at91_adc_dma_start(indio_dev);
-+	if (ret) {
-+		dev_err(&indio_dev->dev, "buffer postenable failed\n");
-+		return ret;
-+	}
-+
-+	return iio_triggered_buffer_postenable(indio_dev);
-+}
-+
-+static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
-+{
-+	struct at91_adc_state *st = iio_priv(indio_dev);
-+	int ret;
-+	u8 bit;
-+
-+	ret = iio_triggered_buffer_predisable(indio_dev);
-+	if (ret < 0)
-+		dev_err(&indio_dev->dev, "buffer predisable failed\n");
-+
-+	if (!st->dma_st.dma_chan)
-+		return ret;
-+
-+	/* if we are using DMA we must clear registers and end DMA */
-+	dmaengine_terminate_sync(st->dma_st.dma_chan);
-+
-+	/*
-+	 * For each enabled channel we must read the last converted value
-+	 * to clear EOC status and not get a possible interrupt later.
-+	 * This value is being read by DMA from LCDR anyway
-+	 */
-+	for_each_set_bit(bit, indio_dev->active_scan_mask,
-+			 indio_dev->num_channels) {
-+		struct iio_chan_spec const *chan = indio_dev->channels + bit;
-+
-+		if (st->dma_st.dma_chan)
-+			at91_adc_readl(st, chan->address);
-+	}
-+
-+	/* read overflow register to clear possible overflow status */
-+	at91_adc_readl(st, AT91_SAMA5D2_OVER);
-+	return ret;
-+}
-+
-+static const struct iio_buffer_setup_ops at91_buffer_setup_ops = {
-+	.postenable = &at91_adc_buffer_postenable,
-+	.predisable = &at91_adc_buffer_predisable,
- };
- 
- static struct iio_trigger *at91_adc_allocate_trigger(struct iio_dev *indio,
-@@ -389,24 +579,77 @@ static int at91_adc_trigger_init(struct iio_dev *indio)
- 	return 0;
- }
- 
--static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
-+static void at91_adc_trigger_handler_nodma(struct iio_dev *indio_dev,
-+					   struct iio_poll_func *pf)
- {
--	struct iio_poll_func *pf = p;
--	struct iio_dev *indio = pf->indio_dev;
--	struct at91_adc_state *st = iio_priv(indio);
-+	struct at91_adc_state *st = iio_priv(indio_dev);
- 	int i = 0;
- 	u8 bit;
- 
--	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
--		struct iio_chan_spec const *chan = indio->channels + bit;
-+	for_each_set_bit(bit, indio_dev->active_scan_mask,
-+			 indio_dev->num_channels) {
-+		struct iio_chan_spec const *chan = indio_dev->channels + bit;
- 
- 		st->buffer[i] = at91_adc_readl(st, chan->address);
- 		i++;
- 	}
-+	iio_push_to_buffers_with_timestamp(indio_dev, st->buffer,
-+					   pf->timestamp);
-+}
-+
-+static void at91_adc_trigger_handler_dma(struct iio_dev *indio_dev)
-+{
-+	struct at91_adc_state *st = iio_priv(indio_dev);
-+	int transferred_len = at91_adc_dma_size_done(st);
-+	s64 ns = iio_get_time_ns(indio_dev);
-+	s64 interval;
-+	int sample_index = 0, sample_count, sample_size;
-+
-+	u32 status = at91_adc_readl(st, AT91_SAMA5D2_ISR);
-+	/* if we reached this point, we cannot sample faster */
-+	if (status & AT91_SAMA5D2_IER_GOVRE)
-+		pr_info_ratelimited("%s: conversion overrun detected\n",
-+				    indio_dev->name);
-+
-+	sample_size = div_s64(st->dma_st.rx_buf_sz, st->dma_st.watermark);
-+
-+	sample_count = div_s64(transferred_len, sample_size);
-+
-+	/*
-+	 * interval between samples is total time since last transfer handling
-+	 * divided by the number of samples (total size divided by sample size)
-+	 */
-+	interval = div_s64((ns - st->dma_st.dma_ts), sample_count);
-+
-+	while (transferred_len >= sample_size) {
-+		iio_push_to_buffers_with_timestamp(indio_dev,
-+				(st->dma_st.rx_buf + st->dma_st.buf_idx),
-+				(st->dma_st.dma_ts + interval * sample_index));
-+		/* adjust remaining length */
-+		transferred_len -= sample_size;
-+		/* adjust buffer index */
-+		st->dma_st.buf_idx += sample_size;
-+		/* in case of reaching end of buffer, reset index */
-+		if (st->dma_st.buf_idx >= st->dma_st.rx_buf_sz)
-+			st->dma_st.buf_idx = 0;
-+		sample_index++;
-+	}
-+	/* adjust saved time for next transfer handling */
-+	st->dma_st.dma_ts = iio_get_time_ns(indio_dev);
-+}
-+
-+static irqreturn_t at91_adc_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct at91_adc_state *st = iio_priv(indio_dev);
- 
--	iio_push_to_buffers_with_timestamp(indio, st->buffer, pf->timestamp);
-+	if (st->dma_st.dma_chan)
-+		at91_adc_trigger_handler_dma(indio_dev);
-+	else
-+		at91_adc_trigger_handler_nodma(indio_dev, pf);
- 
--	iio_trigger_notify_done(indio->trig);
-+	iio_trigger_notify_done(indio_dev->trig);
- 
- 	return IRQ_HANDLED;
- }
-@@ -415,7 +658,7 @@ static int at91_adc_buffer_init(struct iio_dev *indio)
- {
- 	return devm_iio_triggered_buffer_setup(&indio->dev, indio,
- 			&iio_pollfunc_store_time,
--			&at91_adc_trigger_handler, NULL);
-+			&at91_adc_trigger_handler, &at91_buffer_setup_ops);
- }
- 
- static unsigned at91_adc_startup_time(unsigned startup_time_min,
-@@ -486,10 +729,13 @@ static irqreturn_t at91_adc_interrupt(int irq, void *private)
- 	if (!(status & imr))
- 		return IRQ_NONE;
- 
--	if (iio_buffer_enabled(indio)) {
-+	if (iio_buffer_enabled(indio) && !st->dma_st.dma_chan) {
- 		disable_irq_nosync(irq);
- 		iio_trigger_poll(indio->trig);
--	} else {
-+	} else if (iio_buffer_enabled(indio) && st->dma_st.dma_chan) {
-+		disable_irq_nosync(irq);
-+		WARN(true, "Unexpected irq occurred\n");
-+	} else if (!iio_buffer_enabled(indio)) {
- 		st->conversion_value = at91_adc_readl(st, st->chan->address);
- 		st->conversion_done = true;
- 		wake_up_interruptible(&st->wq_data_available);
-@@ -511,7 +757,6 @@ static int at91_adc_read_raw(struct iio_dev *indio_dev,
- 		ret = iio_device_claim_direct_mode(indio_dev);
- 		if (ret)
- 			return ret;
--
- 		mutex_lock(&st->lock);
- 
- 		st->chan = chan;
-@@ -581,9 +826,123 @@ static int at91_adc_write_raw(struct iio_dev *indio_dev,
- 	return 0;
- }
- 
-+static void at91_adc_dma_init(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct at91_adc_state *st = iio_priv(indio_dev);
-+	struct dma_slave_config config = {0};
-+	/*
-+	 * We make the buffer double the size of the fifo,
-+	 * such that DMA uses one half of the buffer (full fifo size)
-+	 * and the software uses the other half to read/write.
-+	 */
-+	unsigned int pages = DIV_ROUND_UP(AT91_HWFIFO_MAX_SIZE *
-+					  AT91_BUFFER_MAX_CONVERSION_BYTES * 2,
-+					  PAGE_SIZE);
-+
-+	if (st->dma_st.dma_chan)
-+		return;
-+
-+	st->dma_st.dma_chan = dma_request_slave_channel(&pdev->dev, "rx");
-+
-+	if (!st->dma_st.dma_chan)  {
-+		dev_info(&pdev->dev, "can't get DMA channel\n");
-+		goto dma_exit;
-+	}
-+
-+	st->dma_st.rx_buf = dma_alloc_coherent(st->dma_st.dma_chan->device->dev,
-+					       pages * PAGE_SIZE,
-+					       &st->dma_st.rx_dma_buf,
-+					       GFP_KERNEL);
-+	if (!st->dma_st.rx_buf) {
-+		dev_info(&pdev->dev, "can't allocate coherent DMA area\n");
-+		goto dma_chan_disable;
-+	}
-+
-+	/* Configure DMA channel to read data register */
-+	config.direction = DMA_DEV_TO_MEM;
-+	config.src_addr = (phys_addr_t)(st->dma_st.phys_addr
-+			  + AT91_SAMA5D2_LCDR);
-+	config.src_addr_width = DMA_SLAVE_BUSWIDTH_2_BYTES;
-+	config.src_maxburst = 1;
-+	config.dst_maxburst = 1;
-+
-+	if (dmaengine_slave_config(st->dma_st.dma_chan, &config)) {
-+		dev_info(&pdev->dev, "can't configure DMA slave\n");
-+		goto dma_free_area;
-+	}
-+
-+	dev_info(&pdev->dev, "using %s for rx DMA transfers\n",
-+		 dma_chan_name(st->dma_st.dma_chan));
-+
-+	return;
-+
-+dma_free_area:
-+	dma_free_coherent(st->dma_st.dma_chan->device->dev, pages * PAGE_SIZE,
-+			  st->dma_st.rx_buf, st->dma_st.rx_dma_buf);
-+dma_chan_disable:
-+	dma_release_channel(st->dma_st.dma_chan);
-+	st->dma_st.dma_chan = 0;
-+dma_exit:
-+	dev_info(&pdev->dev, "continuing without DMA support\n");
-+}
-+
-+static void at91_adc_dma_disable(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct at91_adc_state *st = iio_priv(indio_dev);
-+	unsigned int pages = DIV_ROUND_UP(AT91_HWFIFO_MAX_SIZE *
-+					  AT91_BUFFER_MAX_CONVERSION_BYTES * 2,
-+					  PAGE_SIZE);
-+
-+	/* if we are not using DMA, just return */
-+	if (!st->dma_st.dma_chan)
-+		return;
-+
-+	/* wait for all transactions to be terminated first*/
-+	dmaengine_terminate_sync(st->dma_st.dma_chan);
-+
-+	dma_free_coherent(st->dma_st.dma_chan->device->dev, pages * PAGE_SIZE,
-+			  st->dma_st.rx_buf, st->dma_st.rx_dma_buf);
-+	dma_release_channel(st->dma_st.dma_chan);
-+	st->dma_st.dma_chan = 0;
-+
-+	dev_info(&pdev->dev, "continuing without DMA support\n");
-+}
-+
-+static int at91_adc_set_watermark(struct iio_dev *indio_dev, unsigned int val)
-+{
-+	struct at91_adc_state *st = iio_priv(indio_dev);
-+
-+	if (val > AT91_HWFIFO_MAX_SIZE)
-+		return -EINVAL;
-+
-+	if (!st->selected_trig->hw_trig) {
-+		dev_dbg(&indio_dev->dev, "we need hw trigger for DMA\n");
-+		return 0;
-+	}
-+
-+	dev_dbg(&indio_dev->dev, "new watermark is %u\n", val);
-+	st->dma_st.watermark = val;
-+
-+	/*
-+	 * The logic here is: if we have watermark 1, it means we do
-+	 * each conversion with it's own IRQ, thus we don't need DMA.
-+	 * If the watermark is higher, we do DMA to do all the transfers in bulk
-+	 */
-+
-+	if (val == 1)
-+		at91_adc_dma_disable(to_platform_device(&indio_dev->dev));
-+	else if (val > 1)
-+		at91_adc_dma_init(to_platform_device(&indio_dev->dev));
-+
-+	return 0;
-+}
-+
- static const struct iio_info at91_adc_info = {
- 	.read_raw = &at91_adc_read_raw,
- 	.write_raw = &at91_adc_write_raw,
-+	.hwfifo_set_watermark = &at91_adc_set_watermark,
- 	.driver_module = THIS_MODULE,
- };
- 
-@@ -601,6 +960,42 @@ static void at91_adc_hw_init(struct at91_adc_state *st)
- 	at91_adc_setup_samp_freq(st, st->soc_info.min_sample_rate);
- }
- 
-+static ssize_t at91_adc_get_fifo_state(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	struct iio_dev *indio_dev =
-+			platform_get_drvdata(to_platform_device(dev));
-+	struct at91_adc_state *st = iio_priv(indio_dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", !!st->dma_st.dma_chan);
-+}
-+
-+static ssize_t at91_adc_get_watermark(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct iio_dev *indio_dev =
-+			platform_get_drvdata(to_platform_device(dev));
-+	struct at91_adc_state *st = iio_priv(indio_dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", st->dma_st.watermark);
-+}
-+
-+static IIO_DEVICE_ATTR(hwfifo_enabled, 0444,
-+		       at91_adc_get_fifo_state, NULL, 0);
-+static IIO_DEVICE_ATTR(hwfifo_watermark, 0444,
-+		       at91_adc_get_watermark, NULL, 0);
-+
-+static IIO_CONST_ATTR(hwfifo_watermark_min, "2");
-+static IIO_CONST_ATTR(hwfifo_watermark_max, AT91_HWFIFO_MAX_SIZE_STR);
-+
-+static const struct attribute *at91_adc_fifo_attributes[] = {
-+	&iio_const_attr_hwfifo_watermark_min.dev_attr.attr,
-+	&iio_const_attr_hwfifo_watermark_max.dev_attr.attr,
-+	&iio_dev_attr_hwfifo_watermark.dev_attr.attr,
-+	&iio_dev_attr_hwfifo_enabled.dev_attr.attr,
-+	NULL,
-+};
-+
- static int at91_adc_probe(struct platform_device *pdev)
- {
- 	struct iio_dev *indio_dev;
-@@ -676,6 +1071,9 @@ static int at91_adc_probe(struct platform_device *pdev)
- 	if (!res)
- 		return -EINVAL;
- 
-+	/* if we plan to use DMA, we need the physical address of the regs */
-+	st->dma_st.phys_addr = res->start;
-+
- 	st->base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(st->base))
- 		return PTR_ERR(st->base);
-@@ -739,11 +1137,22 @@ static int at91_adc_probe(struct platform_device *pdev)
- 			dev_err(&pdev->dev, "couldn't setup the triggers.\n");
- 			goto per_clk_disable_unprepare;
- 		}
-+		/*
-+		 * Initially the iio buffer has a length of 2 and
-+		 * a watermark of 1
-+		 */
-+		st->dma_st.watermark = 1;
-+
-+		iio_buffer_set_attrs(indio_dev->buffer,
-+				     at91_adc_fifo_attributes);
- 	}
- 
-+	if (dma_coerce_mask_and_coherent(&indio_dev->dev, DMA_BIT_MASK(32)))
-+		dev_info(&pdev->dev, "cannot set DMA mask to 32-bit\n");
-+
- 	ret = iio_device_register(indio_dev);
- 	if (ret < 0)
--		goto per_clk_disable_unprepare;
-+		goto dma_disable;
- 
- 	if (st->selected_trig->hw_trig)
- 		dev_info(&pdev->dev, "setting up trigger as %s\n",
-@@ -754,6 +1163,8 @@ static int at91_adc_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+dma_disable:
-+	at91_adc_dma_disable(pdev);
- per_clk_disable_unprepare:
- 	clk_disable_unprepare(st->per_clk);
- vref_disable:
-@@ -770,6 +1181,8 @@ static int at91_adc_remove(struct platform_device *pdev)
- 
- 	iio_device_unregister(indio_dev);
- 
-+	at91_adc_dma_disable(pdev);
-+
- 	clk_disable_unprepare(st->per_clk);
- 
- 	regulator_disable(st->vref);
+> +	int ret;
+> +
+> +	if (brt_val == LED_OFF)
+> +		led_brightness = 0;
+> +
+> +	mutex_lock(&led->lock);
+> +
+> +	ret = lm3692x_fault_check(led);
+> +	if (ret) {
+> +		dev_err(&led->client->dev, "Cannot read/clear faults\n");
+> +		goto out;
+> +	}
+> +
+> +	ret = regmap_write(led->regmap, LM3692X_BRT_MSB,
+> +			(led_brightness & 0xff0) >> 4);
+> +	if (ret) {
+> +		dev_err(&led->client->dev, "Cannot write MSB\n");
+> +		goto out;
+> +	}
+> +
+> +	ret = regmap_write(led->regmap, LM3692X_BRT_LSB,
+> +			led_brightness & 0x07);
+> +	if (ret) {
+> +		dev_err(&led->client->dev, "Cannot write LSB\n");
+> +		goto out;
+> +	}
+> +out:
+> +	mutex_unlock(&led->lock);
+> +	return ret;
+> +}
+> +
+> +static int lm3692x_init(struct lm3692x_led *led)
+> +{
+> +	int ret;
+> +
+> +	if (led->regulator) {
+> +		ret = regulator_enable(led->regulator);
+> +		if (ret)
+> +			dev_err(&led->client->dev,
+> +				"Failed to enable regulator\n");
+> +	}
+> +
+> +	if (led->enable_gpio)
+> +		gpiod_direction_output(led->enable_gpio, 1);
+> +
+> +	ret = lm3692x_fault_check(led);
+> +	if (ret) {
+> +		dev_err(&led->client->dev, "Cannot read/clear faults\n");
+> +		goto out;
+> +	}
+> +
+> +	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, 0x00);
+> +	if (ret)
+> +		dev_err(&led->client->dev, "Fail writing BRT CTRL\n");
+> +	/*
+> +	 * For glitch free operation, the following data should
+> +	 * only be written while device enable bit is 0
+> +	 * Per Section 7.5.14 of the data sheet
+> +	 */
+> +	ret = regmap_write(led->regmap, LM3692X_PWM_CTRL,
+> +		LM3692X_PWM_FILTER_100 | LM3692X_PWM_SAMP_24MHZ);
+> +	if (ret)
+> +		dev_err(&led->client->dev, "Failed programming PWM CTRL\n");
+> +
+> +	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
+> +			LM3692X_BRHT_MODE_RAMP_MULTI |
+> +			LM3692X_BL_ADJ_POL |
+> +			LM3692X_RAMP_RATE_250us);
+> +	if (ret)
+> +		dev_err(&led->client->dev, "Failed programming BOOST CTRL\n");
+> +
+> +	ret = regmap_write(led->regmap, LM3692X_AUTO_FREQ_HI, 0x00);
+> +	if (ret)
+> +		dev_err(&led->client->dev, "Failed programming AUTO HI FREQ\n");
+> +
+> +	ret = regmap_write(led->regmap, LM3692X_AUTO_FREQ_LO, 0x00);
+> +	if (ret)
+> +		dev_err(&led->client->dev, "Failed programming AUTO LO FREQ\n");
+> +
+> +
+> +	ret = regmap_write(led->regmap, LM3692X_BL_ADJ_THRESH, 0x00);
+> +	if (ret)
+> +		dev_err(&led->client->dev, "Failed programming BL Threshold\n");
+> +
+> +	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
+> +			LM3692X_BL_ADJ_POL | LM3692X_PWM_HYSTER_4LSB);
+> +	if (ret)
+> +		dev_err(&led->client->dev, "Failed programming BRT CTRL\n");
+> +
+> +	return ret;
+> +out:
+> +
+> +	if (led->enable_gpio)
+> +		gpiod_direction_output(led->enable_gpio, 0);
+> +
+> +	if (led->regulator) {
+> +		ret = regulator_disable(led->regulator);
+> +		if (ret)
+> +			dev_err(&led->client->dev,
+> +				"Failed to disable regulator\n");
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int lm3692x_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	int ret;
+> +	struct lm3692x_led *led;
+> +	struct device_node *np = client->dev.of_node;
+> +
+> +	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
+> +	if (!led)
+> +		return -ENOMEM;
+> +
+> +	if (client->dev.of_node) {
+> +		ret = of_property_read_string(np, "label", &led->label);
+> +		if (ret)
+> +			led->label = LM3692X_LED_NAME;
+> +	}
+> +
+> +	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
+> +						   "enable", GPIOD_OUT_LOW);
+> +	if (IS_ERR(led->enable_gpio)) {
+> +		ret = PTR_ERR(led->enable_gpio);
+> +		dev_err(&client->dev, "Failed to get enable gpio: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	led->regulator = devm_regulator_get(&client->dev, "vled");
+> +	if (IS_ERR(led->regulator))
+> +		led->regulator = NULL;
+> +
+> +	led->client = client;
+> +	led->led_dev.name = led->label;
+> +	led->led_dev.max_brightness = LED_FULL;
+> +	led->led_dev.brightness_set_blocking = lm3692x_brightness_set;
+> +
+> +	mutex_init(&led->lock);
+> +
+> +	i2c_set_clientdata(client, led);
+> +
+> +	led->regmap = devm_regmap_init_i2c(client, &lm3692x_regmap_config);
+> +	if (IS_ERR(led->regmap)) {
+> +		ret = PTR_ERR(led->regmap);
+> +		dev_err(&client->dev, "Failed to allocate register map: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = lm3692x_init(led);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = led_classdev_register(&client->dev, &led->led_dev);
+> +	if (ret) {
+> +		dev_err(&client->dev, "led register err: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int lm3692x_remove(struct i2c_client *client)
+> +{
+> +	struct lm3692x_led *led = i2c_get_clientdata(client);
+> +	int ret;
+> +
+> +	led_classdev_unregister(&led->led_dev);
+> +
+> +	if (led->enable_gpio)
+> +		gpiod_direction_output(led->enable_gpio, 0);
+> +
+> +	if (led->regulator) {
+> +		ret = regulator_disable(led->regulator);
+> +		if (ret)
+> +			dev_err(&led->client->dev,
+> +				"Failed to disable regulator\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id lm3692x_id[] = {
+> +	{ "lm3692x", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, lm3692x_id);
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id of_lm3692x_leds_match[] = {
+> +	{ .compatible = "ti,lm3692x", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, of_lm3692x_leds_match);
+> +#endif
+> +
+> +static struct i2c_driver lm3692x_driver = {
+> +	.driver = {
+> +		.name	= "lm3692x",
+> +		.of_match_table = of_match_ptr(of_lm3692x_leds_match),
+> +	},
+> +	.probe		= lm3692x_probe,
+> +	.remove		= lm3692x_remove,
+> +	.id_table	= lm3692x_id,
+> +};
+> +module_i2c_driver(lm3692x_driver);
+> +
+> +MODULE_DESCRIPTION("Texas Instruments LM3692X LED driver");
+> +MODULE_AUTHOR("Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+> 
+
+
 -- 
-2.7.4
+------------------
+Dan Murphy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
