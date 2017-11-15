@@ -1,75 +1,130 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
- LED driver
-Date: Wed, 15 Nov 2017 23:23:25 +0100
-Message-ID: <20171115222323.GA18290@amd>
-References: <20171115194203.13572-1-dmurphy@ti.com>
- <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4@gmail.com>
- <0a78c883-f074-cc19-3c0c-fc05607400e9@ti.com>
+From: "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v7 01/25] rcar-vin: add Gen3 devicetree bindings
+ documentation
+Date: Wed, 15 Nov 2017 23:58:14 +0100
+Message-ID: <20171115225814.GJ12677@bigcity.dyn.berto.se>
+References: <20171111003835.4909-1-niklas.soderlund+renesas@ragnatech.se>
+ <20171111003835.4909-2-niklas.soderlund+renesas@ragnatech.se>
+ <20171115200226.wd343hd3a52jjhdd@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0a78c883-f074-cc19-3c0c-fc05607400e9-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20171115200226.wd343hd3a52jjhdd@rob-hp-laptop>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, tomoharu.fukawa.eb@renesas.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your feedback, much appreciated!
 
-Hi!
+On 2017-11-15 14:02:26 -0600, Rob Herring wrote:
+> On Sat, Nov 11, 2017 at 01:38:11AM +0100, Niklas Söderlund wrote:
+> > Document the devicetree bindings for the CSI-2 inputs available on Gen3.
+> > 
+> > There is a need to add a custom property 'renesas,id' and to define
+> > which CSI-2 input is described in which endpoint under the port@1 node.
+> > This information is needed since there are a set of predefined routes
+> > between each VIN and CSI-2 block. This routing table will be kept
+> > inside the driver but in order for it to act on it it must know which
+> > VIN and CSI-2 is which.
+> > 
+> > Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> > ---
+> >  .../devicetree/bindings/media/rcar_vin.txt         | 116 ++++++++++++++++++---
+> >  1 file changed, 104 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > index 6e4ef8caf759e5d3..df1abd0fb20386f8 100644
+> > --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > @@ -2,8 +2,12 @@ Renesas R-Car Video Input driver (rcar_vin)
+> >  -------------------------------------------
+> >  
+> >  The rcar_vin device provides video input capabilities for the Renesas R-Car
+> > -family of devices. The current blocks are always slaves and suppot one input
+> > -channel which can be either RGB, YUYV or BT656.
+> > +family of devices.
+> > +
+> > +Each VIN instance has a single parallel input that supports RGB and YUV video,
+> > +with both external synchronization and BT.656 synchronization for the latter.
+> > +Depending on the instance the VIN input is connected to external SoC pins, or
+> > +on Gen3 to a CSI-2 receiver.
+> >  
+> >   - compatible: Must be one or more of the following
+> >     - "renesas,vin-r8a7795" for the R8A7795 device
+> > @@ -28,21 +32,38 @@ channel which can be either RGB, YUYV or BT656.
+> >  Additionally, an alias named vinX will need to be created to specify
+> >  which video input device this is.
+> >  
+> > -The per-board settings:
+> > +The per-board settings Gen2:
+> >   - port sub-node describing a single endpoint connected to the vin
+> >     as described in video-interfaces.txt[1]. Only the first one will
+> >     be considered as each vin interface has one input port.
+> >  
+> > -   These settings are used to work out video input format and widths
+> > -   into the system.
+> > +The per-board settings Gen3:
+> > +
+> > +Gen3 can support both a single connected parallel input source from
+> > +external SoC pins (port0) and/or multiple parallel input sources from
+> > +local SoC CSI-2 receivers (port1) depending on SoC.
+> >  
+> > +- renesas,id - ID number of the VIN, VINx in the documentation.
+> 
+> Why is this needed? We try to avoid indexes unless that's the only way a 
+> device is addressed (and then we use reg).
 
-> > Shouldn't the driver be targeted for backlight subsystem then?
-> >=20
-> > Adding backlight maintainers.
-> >=20
->=20
-> Great point!  I was not aware of the backlight subsystem.
->=20
-> Looks like I need to create a back light version as well.
->=20
-> Like the lp8788 did since this can be used as a LED driver beyond
-> display back lighting.
+This is unfortunately needed (or something similar) as there is a 
+register in one VIN instance which controls the routing of the incoming 
+CSI-2 video streams, not only to itself, but also to other VIN instances 
+inside the same SoC.
 
-No, definitely not two drivers for lp8788 hardware.
+To be more specific I will try to clarify this using the R-Car H3 as an 
+example. On the H3 there are 8 instances of the capture hardware (VIN0 - 
+VIN7) and 3 instances off CSI-2 receivers (CSI20, CSI40 and CSI41) which 
+receives CSI-2 streams, split the possible multiple virtual channels 
+(VC) encoded in CSI-2 streams and forwards it to the VIN's.
 
-If that does not yet exist... you want to create glue layer to be able
-to use LED as a display backlight. (It may already exist, no idea).
+The problem is that VIN0 and VIN4 are different from the other VIN's, 
+they have one register (CHSEL) which controls the limited number of 
+possible routes of video streams between a CSI-2 + VC to a specific VIN.  
+The CHSEL register in VIN0 controls the routing for VIN0-3 and the one 
+in VIN4 controls VIN4-7 (the two subgroups are similar so lets only 
+consider VIN0-3).
 
-=2E..
+There are only a handful of routes possible and the kicker is that 
+changing the CHSEL value in VIN0, directly reflects all routes for 
+VIN0-VIN3 per this table:
 
-Actually or maybe a LED trigger. Just set LED's trigger to "this is
-display backlight".
+CHSEL reg in VIN0:  0         1         2         3         4
+Video sent to VIN0: CSI40/VC0 CSI20/VC0 CSI40/VC1 CSI40/VC0 CSI20/VC0
+Video sent to VIN1: CSI20/VC0 CSI40/VC1 CSI40/VC0 CSI40/VC1 CSI20/VC1
+Video sent to VIN2: CSI20/VC1 CSI40/VC0 CSI20/VC0 CSI40/VC2 CSI20/VC2
+Video sent to VIN3: CSI40/VC1 CSI20/VC1 CSI20/VC1 CSI40/VC3 CSI20/VC3
 
-Other solutions are acceptable, but not two hardware drivers.
+So if CHSEL in VIN0 is set to 2 the following routes are active: VIN0: 
+CSI40/VC1, VIN1: CSI40/VC0, VIN2: CSI20/VC0, CSI20/VC1. These routing 
+tables are different for most SoCs in the R-Car Gen3 family, and are 
+kept inside the driver code.
 
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+So the renesas,id properly is used so that the rcar-vin driver knows 
+which of the driver instances corresponds to a specific VINx number from 
+the documentation so that using the media device API the correct links 
+can be added and that the routing table is enforced so a user can't try 
+to activate a CSI-2 + VC to a VIN link which is not possible due to 
+other routes already being active.
 
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I agree that if possible I would like to not have the need for this 
+property, but I can't think of another way on how to give this knowledge 
+to the driver in a better way. I'm happy to try out other ideas :-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Dose this explanation make sens to you?
 
-iEYEARECAAYFAloMvloACgkQMOfwapXb+vIvXACfTbGt5pm5s67EQxI9SVDvQ0Rw
-YiEAnjEdVh4CvaRhKK0cOH+6SNK7ncls
-=Hb2x
------END PGP SIGNATURE-----
-
---mYCpIKhGyMATD0i+--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+Niklas Söderlund
