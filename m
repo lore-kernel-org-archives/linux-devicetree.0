@@ -1,63 +1,66 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] dt-bindings: rtc: imxdi: Improve the bindings text
-Date: Wed, 15 Nov 2017 10:59:53 -0200
-Message-ID: <1510750793-25564-1-git-send-email-festevam@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/2] leds: lm3692x: Introduce LM3692x dual string driver
+Date: Wed, 15 Nov 2017 14:00:58 +0100
+Message-ID: <20171115130057.GA11557@amd>
+References: <20171113205052.25884-1-dmurphy@ti.com>
+ <20171113205052.25884-2-dmurphy@ti.com>
+ <20171115104526.GC456@amd>
+ <1b0c05a6-2261-85d5-a3c6-9753f7600a20@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1b0c05a6-2261-85d5-a3c6-9753f7600a20@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-Improve the bindings text by doing the following changes:
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Remove the i.MX53 reference, as the RTC on i.MX53 is a different hardware
-- Add 'clocks' to the list of required properties
-- Explain that the optional security violation irq is the second entry
-- Use the real unit address and irq numbers for i.MX25
+Hi!
 
-Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
----
- Documentation/devicetree/bindings/rtc/imxdi-rtc.txt | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+> >> +	ret =3D regmap_write(led->regmap, LM3692X_PWM_CTRL,
+> >> +		LM3692X_PWM_FILTER_100 | LM3692X_PWM_SAMP_24MHZ);
+> >> +	if (ret)
+> >> +		dev_err(&led->client->dev, "Failed programming PWM CTRL\n");
+> >> +
+> >> +	ret =3D regmap_write(led->regmap, LM3692X_BOOST_CTRL,
+> >> +			LM3692X_BRHT_MODE_RAMP_MULTI |
+> >> +			LM3692X_BL_ADJ_POL |
+> >> +			LM3692X_RAMP_RATE_250us);
+> >> +	if (ret)
+> >> +		dev_err(&led->client->dev, "Failed programming BOOST CTRL\n");
+> >> +
+> >> +	ret =3D regmap_write(led->regmap, LM3692X_AUTO_FREQ_HI, 0x00);
+> >> +	if (ret)
+> >> +		dev_err(&led->client->dev, "Failed programming AUTO HI FREQ\n");
+> >=20
+> > If something fails, is it wise to continue?
 
-diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt b/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-index 323cf26..b8f3050 100644
---- a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-@@ -1,20 +1,20 @@
- * i.MX25 Real Time Clock controller
- 
--This binding supports the following chips: i.MX25, i.MX53
--
- Required properties:
- - compatible: should be: "fsl,imx25-rtc"
- - reg: physical base address of the controller and length of memory mapped
-   region.
-+- clocks: should contain the phandle for the rtc clock
- - interrupts: rtc alarm interrupt
- 
- Optional properties:
--- interrupts: dryice security violation interrupt
-+- interrupts: dryice security violation interrupt (second entry)
- 
- Example:
- 
--rtc@80056000 {
--	compatible = "fsl,imx53-rtc", "fsl,imx25-rtc";
--	reg = <0x80056000 2000>;
--	interrupts = <29 56>;
-+rtc@53ffc000 {
-+	compatible = "fsl,imx25-rtc";
-+	reg = <0x53ffc000 0x4000>;
-+	clocks = <&clks 81>;
-+	interrupts = <25 56>;
- };
--- 
-2.7.4
+If something fails, is it wise to continue?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAloMOokACgkQMOfwapXb+vJOywCfQEXPDEYoFb9gkOitQ8l9BwSS
+cwYAn3ct0iFQ6CYVE4n25WVF3zXXr+N5
+=b7Bm
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
