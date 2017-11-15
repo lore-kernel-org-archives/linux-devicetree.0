@@ -1,59 +1,76 @@
-From: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] misc serdev: w2sg0004: add debugging code and
- Kconfig
-Date: Wed, 15 Nov 2017 17:42:57 +0100
-Message-ID: <20171115164257.2mbbk7yqhq3puc5a@lenoch>
-References: <cover.1510759152.git.hns@goldelico.com>
- <9b4969c858d4c3801bb796f92dad5c580799b768.1510759152.git.hns@goldelico.com>
- <28e16c7a-2688-a302-1548-1cdc2552f0ad@suse.de>
- <DC57A290-669C-4B3C-A4EE-2ABEA37F47CE@goldelico.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: renesas: ulcb-kf: add pfc node for USB3.0
+ channel 0
+Date: Wed, 15 Nov 2017 17:49:21 +0100
+Message-ID: <CAMuHMdX+7cHF4ZWBkZ8jQzhuycKYGNdFuZK5Ge9e9coX9pUKcQ@mail.gmail.com>
+References: <1510146398-31805-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <DC57A290-669C-4B3C-A4EE-2ABEA37F47CE-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <1510146398-31805-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Andreas =?iso-8859-2?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-2?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 05:29:25PM +0100, H. Nikolaus Schaller wrote:
-> Hi Andreas,
-> 
-> > Am 15.11.2017 um 16:53 schrieb Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>:
-> > 
-> > Hi,
-> > 
-> > Am 15.11.2017 um 16:19 schrieb H. Nikolaus Schaller:
-> >> This allows to set CONFIG_W2SG0004_DEBUG which will
-> >> make the driver report more activities and it will turn on the
-> >> GPS module during boot while the driver assumes that it
-> >> is off. This can be used to debug the correct functioning of
-> >> the hardware. Therefore we add it as an option to the driver
-> >> because we think it is of general use (and a little tricky to
-> >> add by system testers).
-> >> 
-> >> Normally it should be off.
-> >> ---
-> > 
-> > If you want to merge this, it is lacking a Sob.
-> 
-> Whats is a "Sob" in this context (https://acronyms.thefreedictionary.com/SOB)?
+Hi Vladimir,
 
-https://acronyms.thefreedictionary.com/Signed-Off-By
+On Wed, Nov 8, 2017 at 2:06 PM, Vladimir Barinov
+<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Adds the pfc node for USB3.0 channel 0.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> index 48a2e8f..2ecb6ac 100644
+> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
+> @@ -173,6 +173,11 @@
+>                 groups = "usb0";
+>                 function = "usb0";
+>         };
+> +
+> +       usb30_pins: usb30 {
+> +               groups = "usb30";
+> +               function = "usb30";
 
-Also please read Documentation/process/submitting-patches.rst
+This enabled USB30_PWEN and USB30_OVC.
 
-	ladis
+However, these pins are routed via CN1A pins A97/A98 to HDMI_CS_A
+and HDMI_CS_B, not to a USB PHY?
 
-> BR and thanks,
-> Nikolaus Schaller
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+USB30_PWEN of the real USB PHY is provided by the i2c GPIO
+expander U11.
+
+I'm a bit puzzled by this... What am I missing?
+
+> +       };
+>  };
+>
+>  &scif1 {
+> @@ -191,5 +196,8 @@
+>  };
+>
+>  &xhci0 {
+> +       pinctrl-0 = <&usb30_pins>;
+> +       pinctrl-names = "default";
+> +
+>         status = "okay";
+>  };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
