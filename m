@@ -1,56 +1,152 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 2/2] leds: lm3692x: Introduce LM3692x dual string driver
-Date: Wed, 15 Nov 2017 07:06:37 -0600
-Message-ID: <4a13eae0-044a-95f1-ab3e-68b2114f623b@ti.com>
-References: <20171113205052.25884-1-dmurphy@ti.com>
- <20171113205052.25884-2-dmurphy@ti.com> <20171115104526.GC456@amd>
- <1b0c05a6-2261-85d5-a3c6-9753f7600a20@ti.com> <20171115130057.GA11557@amd>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v1 01/10] dt-bindings: media: Add Renesas CEU bindings
+Date: Wed, 15 Nov 2017 14:07:31 +0100
+Message-ID: <CAMuHMdUG6gAEyyC0ANBzmj3KA-940+C7e9Nv_rLkBSjtfeKR1g@mail.gmail.com>
+References: <1510743363-25798-1-git-send-email-jacopo+renesas@jmondi.org> <1510743363-25798-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171115130057.GA11557@amd>
-Content-Language: en-US
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1510743363-25798-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Pavel
+Hi Jacopo,
 
-On 11/15/2017 07:00 AM, Pavel Machek wrote:
-> Hi!
-> 
->>>> +	ret = regmap_write(led->regmap, LM3692X_PWM_CTRL,
->>>> +		LM3692X_PWM_FILTER_100 | LM3692X_PWM_SAMP_24MHZ);
->>>> +	if (ret)
->>>> +		dev_err(&led->client->dev, "Failed programming PWM CTRL\n");
->>>> +
->>>> +	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
->>>> +			LM3692X_BRHT_MODE_RAMP_MULTI |
->>>> +			LM3692X_BL_ADJ_POL |
->>>> +			LM3692X_RAMP_RATE_250us);
->>>> +	if (ret)
->>>> +		dev_err(&led->client->dev, "Failed programming BOOST CTRL\n");
->>>> +
->>>> +	ret = regmap_write(led->regmap, LM3692X_AUTO_FREQ_HI, 0x00);
->>>> +	if (ret)
->>>> +		dev_err(&led->client->dev, "Failed programming AUTO HI FREQ\n");
->>>
->>> If something fails, is it wise to continue?
-> 
-> If something fails, is it wise to continue?
-> 
+CC devicetree folks
 
-Sorry missed that comment.  It is ok to continue but probably should goto out and return
-an error so the probe fails.
+On Wed, Nov 15, 2017 at 11:55 AM, Jacopo Mondi
+<jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+> Add bindings documentation for Renesas Capture Engine Unit (CEU).
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/renesas,ceu.txt      | 87 ++++++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> new file mode 100644
+> index 0000000..a88e9cb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+> @@ -0,0 +1,87 @@
+> +Renesas Capture Engine Unit (CEU)
+> +----------------------------------------------
+> +
+> +The Capture Engine Unit is the image capture interface found on Renesas
+> +RZ chip series and on SH Mobile ones.
+> +
+> +The interface supports a single parallel input with up 8/16bits data bus width.
 
-Dan
+... with data bus widths up to 8/16 bits?
 
-> 									Pavel
-> 
+> +
+> +Required properties:
+> +- compatible
+> +       Must be "renesas,renesas-ceu".
 
+The double "renesas" part looks odd to me. What about "renesas,ceu"?
+Shouldn't you add SoC-specific compatible values like "renesas,r7s72100-ceu",
+too?
 
--- 
-------------------
-Dan Murphy
+> +- reg
+> +       Physical address base and size.
+> +- interrupts
+> +       The interrupt line number.
+
+interrupt specifier
+
+> +- pinctrl-names, pinctrl-0
+> +       phandle of pin controller sub-node configuring pins for CEU operations.
+> +
+> +CEU supports a single parallel input and should contain a single 'port' subnode
+> +with a single 'endpoint'. Optional endpoint properties applicable to parallel
+> +input bus are described in "video-interfaces.txt".
+> +
+> +Example:
+> +
+> +The example describes the connection between the Capture Engine Unit and a
+
+... an
+
+> +OV7670 image sensor sitting on bus i2c1 with an on-board 24Mhz clock.
+> +
+> +ceu: ceu@e8210000 {
+> +       reg = <0xe8210000 0x209c>;
+> +       compatible = "renesas,renesas-ceu";
+> +       interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&vio_pins>;
+> +
+> +       status = "okay";
+> +
+> +       port {
+> +               ceu_in: endpoint {
+> +                       remote-endpoint = <&ov7670_out>;
+> +
+> +                       bus-width = <8>;
+> +                       hsync-active = <1>;
+> +                       vsync-active = <1>;
+> +                       pclk-sample = <1>;
+> +                       data-active = <1>;
+> +               };
+> +       };
+> +};
+> +
+> +i2c1: i2c@fcfee400 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&i2c1_pins>;
+> +
+> +       status = "okay";
+> +       clock-frequency = <100000>;
+> +
+> +       ov7670: camera@21 {
+> +               compatible = "ovti,ov7670";
+> +               reg = <0x21>;
+> +
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&vio_pins>;
+> +
+> +               reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+> +               powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+> +
+> +               clocks = <&xclk>;
+> +               clock-names = "xclk";
+> +
+> +               xclk: fixed_clk {
+> +                       compatible = "fixed-clock";
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <24000000>;
+> +               };
+> +
+> +               port {
+> +                       ov7670_out: endpoint {
+> +                               remote-endpoint = <&ceu_in>;
+> +
+> +                               bus-width = <8>;
+> +                               hsync-active = <1>;
+> +                               vsync-active = <1>;
+> +                               pclk-sample = <1>;
+> +                               data-active = <1>;
+> +                       };
+> +               };
+> +       };
+> --
+> 2.7.4
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
