@@ -1,73 +1,903 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 02/10] drm/sun4i: tcon: Add support for A10 TCON
-Date: Wed, 15 Nov 2017 10:37:02 +0800
-Message-ID: <CAGb2v660aAWC8aCNMMmEOEbJ0rc2vT4ir_UUwuAkfc3Mvm2ROQ@mail.gmail.com>
-References: <20171017121807.2994-1-wens@csie.org> <20171017121807.2994-3-wens@csie.org>
- <20171024160102.fjonpvkykyijxmow@rob-hp-laptop>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm64: dts: hisilicon: add pinctrl nodes for
+ hi3798cv200-poplar board
+Date: Wed, 15 Nov 2017 11:22:27 +0800
+Message-ID: <20171115032224.GG11163@dragon>
+References: <1508325728-55823-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1508325728-55823-3-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB2OQV3IAKGQEZPMMFUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171024160102.fjonpvkykyijxmow@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1508325728-55823-3-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, project-aspen-dev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Younian Wang <wangyounian-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 25, 2017 at 12:01 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Oct 17, 2017 at 08:17:59PM +0800, Chen-Yu Tsai wrote:
->> From: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> The A10 has two TCONs that are similar to the ones found on other SoCs.
->> Like the A31, TCON0 has a register used to mux the TCON outputs to the
->> downstream encoders. The bit fields are slightly different.
->>
->> Signed-off-by: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> [wens-jdAy2FN1RRM@public.gmane.org: Reworked for A10 and fixed up commit message]
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  .../bindings/display/sunxi/sun4i-drm.txt           |  1 +
->>  drivers/gpu/drm/sun4i/sun4i_drv.c                  |  3 ++-
->>  drivers/gpu/drm/sun4i/sun4i_tcon.c                 | 30 ++++++++++++++++++++++
->>  3 files changed, 33 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->> index 46df3b78ae9e..b2c08af73a95 100644
->> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
->> @@ -86,6 +86,7 @@ The TCON acts as a timing controller for RGB, LVDS and TV interfaces.
->>
->>  Required properties:
->>   - compatible: value must be either:
->> +   * allwinner,sun4i-a10-tcon
->>     * allwinner,sun5i-a13-tcon
->>     * allwinner,sun6i-a31-tcon
->>     * allwinner,sun6i-a31s-tcon
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
->> index b5879d4620d8..b8089ac6feef 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
->> @@ -184,7 +184,8 @@ static bool sun4i_drv_node_is_frontend(struct device_node *node)
->>
->>  static bool sun4i_drv_node_is_tcon(struct device_node *node)
->>  {
->> -     return of_device_is_compatible(node, "allwinner,sun5i-a13-tcon") ||
->> +     return of_device_is_compatible(node, "allwinner,sun4i-a10-tcon") ||
->> +             of_device_is_compatible(node, "allwinner,sun5i-a13-tcon") ||
->
-> This would be better written with of_match_node. Since there's already a
-> match table in sun4i_tcon.c, it would be better to use it.
+On Wed, Oct 18, 2017 at 07:22:07AM -0400, Jiancheng Xue wrote:
+> From: Younian Wang <wangyounian-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> 
+> Add pinctrl nodes for hi3798cv200-poplar board
+> 
+> Signed-off-by: Younian Wang <wangyounian-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
+>  .../boot/dts/hisilicon/hi3798cv200-poplar.dts      |   1 +
+>  arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     |  71 +++
+>  arch/arm64/boot/dts/hisilicon/poplar-pinctrl.dtsi  | 651 +++++++++++++++++++++
+>  3 files changed, 723 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/poplar-pinctrl.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> index b914287..6a0b7e9 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> @@ -11,6 +11,7 @@
+>  
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include "hi3798cv200.dtsi"
+> +#include "poplar-pinctrl.dtsi"
+>  
+>  / {
+>  	model = "HiSilicon Poplar Development Board";
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> index 0d11dc7..5a73c68 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> @@ -106,6 +106,54 @@
+>  			#reset-cells = <2>;
+>  		};
+>  
+> +		pmx0: pinconf@8a21000 {
+> +			compatible = "pinconf-single";
+> +			reg = <0x8a21000 0x180>;
+> +			pinctrl-single,register-width = <32>;
+> +			pinctrl-single,function-mask = <7>;
+> +			pinctrl-single,gpio-range = <
+> +				&range 0  8 2  /* GPIO 0 */
+> +				&range 8  1 0  /* GPIO 1 */
+> +				&range 9  4 2
+> +				&range 13 1 0
+> +				&range 14 1 1
+> +				&range 15 1 0
+> +				&range 16 5 0  /* GPIO 2 */
+> +				&range 21 3 1
+> +				&range 24 4 1  /* GPIO 3 */
+> +				&range 28 2 2
+> +				&range 86 1 1
+> +				&range 87 1 0
+> +				&range 30 4 2  /* GPIO 4 */
+> +				&range 34 3 0
+> +				&range 37 1 2
+> +				&range 38 3 2  /* GPIO 6 */
+> +				&range 41 5 0
+> +				&range 46 8 1  /* GPIO 7 */
+> +				&range 54 8 1  /* GPIO 8 */
+> +				&range 64 7 1  /* GPIO 9 */
+> +				&range 71 1 0
+> +				&range 72 6 1  /* GPIO 10 */
+> +				&range 78 1 0
+> +				&range 79 1 1
+> +				&range 80 6 1  /* GPIO 11 */
+> +				&range 70 2 1
+> +				&range 88 8 0  /* GPIO 12 */
+> +			>;
+> +
+> +			range: gpio-range {
+> +				#pinctrl-single,gpio-range-cells = <3>;
+> +			};
+> +		};
+> +
+> +		pmx1: pinconf@8000044 {
+> +			compatible = "pinctrl-single";
+> +			reg = <0x8000044 4>;
+> +			pinctrl-single,register-width = <32>;
+> +			pinctrl-single,function-mask = <1>;
+> +			pinctrl-single,bit-per-mux;
+> +		};
+> +
+>  		uart0: serial@8b00000 {
+>  			compatible = "arm,pl011", "arm,primecell";
+>  			reg = <0x8b00000 0x1000>;
+> @@ -209,6 +257,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 0 8>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -222,6 +271,13 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <
+> +				&pmx0 0 8 1
+> +				&pmx0 1 9 4
+> +				&pmx0 5 13 1
+> +				&pmx0 6 14 1
+> +				&pmx0 7 15 1
+> +			>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -235,6 +291,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 16 5 &pmx0 5 21 3>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -248,6 +305,12 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <
+> +				&pmx0 0 24 4
+> +				&pmx0 4 28 2
+> +				&pmx0 6 86 1
+> +				&pmx0 7 87 1
+> +			>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -261,6 +324,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 30 4 &pmx0 4 34 3 &pmx0 7 37 1>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -287,6 +351,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 38 3 &pmx0 0 41 5>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -300,6 +365,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 46 8>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -313,6 +379,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 54 8>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -326,6 +393,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 64 7 &pmx0 71 1>;
 
-Tried this and it looks good. I'll send a patch after the merge window.
+There is one cell number missing from the second phandle.  It should be:
 
-ChenYu
+  <&pmx0 0 64 7 &pmx0 7 71 1>;
 
-> Otherwise,
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Otherwise, we will see following error message in kernel boot log when
+this GPIO device gets enabled.
+
+  OF: /soc@f0000000/gpio@8b29000: arguments longer than property
+
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -339,6 +407,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 72 6 &pmx0 6 78 1 &pmx0 7 79 1>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -352,6 +421,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 80 6 &pmx0 6 70 2>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> @@ -365,6 +435,7 @@
+>  			#gpio-cells = <2>;
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> +			gpio-ranges = <&pmx0 0 88 8>;
+>  			clocks = <&crg HISTB_APB_CLK>;
+>  			clock-names = "apb_pclk";
+>  			status = "disabled";
+> diff --git a/arch/arm64/boot/dts/hisilicon/poplar-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/poplar-pinctrl.dtsi
+> new file mode 100644
+> index 0000000..5a87a0e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/hisilicon/poplar-pinctrl.dtsi
+> @@ -0,0 +1,651 @@
+> +/*
+> + * pinctrl dts file for HiSilicon poplar board
+> + *
+> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
+> + *
+> + * Released under the GPLv2 only.
+> + * SPDX-License-Identifier: GPL-2.0
+> + */
+> +
+> +#include <dt-bindings/pinctrl/hisi.h>
+> +
+> +/* value, enable bits, disable bits, mask */
+> +#define PINCTRL_PULLDOWN(value, enable, disable, mask) \
+> +	(value << 13) (enable << 13) (disable << 13) (mask << 13)
+> +#define PINCTRL_PULLUP(value, enable, disable, mask) \
+> +	(value << 12) (enable << 12) (disable << 12) (mask << 12)
+> +#define PINCTRL_SLEW_RATE(value, mask)	  (value << 8) (mask << 8)
+> +#define PINCTRL_DRV_STRENGTH(value, mask) (value << 4) (mask << 4)
+> +#define GPIO5_MUX_CFG(offset, value, bit) (offset) (value << bit) (1 << bit)
+> +
+> +&pmx0 {
+> +	pinctrl-names = "default";
+> +		pinctrl-0 = <
+
+There is an indent issue.
+
+> +			&emmc_p1_pmx_cfg
+> +			&emmc_p2_pmx_cfg
+> +			&emmc_p3_pmx_cfg
+> +			&emmc_p4_pmx_cfg
+> +			&gpu_pmx_cfg
+> +			&sim0_p1_pmx_cfg
+> +			&sim0_p2_pmx_cfg
+> +			&i2c0_pmx_cfg
+> +			&gpio_pmx_cfg
+
+If we only want to configure mux mode for a GPIO pin, we do not need to
+have a pinctrl group for that, as GPIO subsystem will ask PINCTRL to
+set up the mux mode for the GPIO pin being requested, just like how
+those LED GPIO pins work on Poplar board.
+
+> +			&bt_uart2_p1_pmx_cfg
+> +			&bt_uart2_p2_pmx_cfg
+> +			&pcm_pmx_cfg
+> +			&spi0_p1_pmx_cfg
+> +			&spi0_p2_pmx_cfg
+> +			&tsi0_p1_pmx_cfg
+> +			&tsi0_p2_pmx_cfg
+> +			&tsi0_p3_pmx_cfg
+> +			&tsi0_p4_pmx_cfg
+> +			&i2c2_p1_pmx_cfg
+> +			&i2c2_p2_pmx_cfg
+> +			&mute_pmx_cfg
+> +			&spdif_pmx_cfg
+> +			&rgmii1_p1_pmx_cfg
+> +			&rgmii1_p2_pmx_cfg
+> +			&rgmii1_p3_pmx_cfg
+> +			&sdio0_p1_pmx0_cfg
+> +			&sdio0_p2_pmx0_cfg
+> +			&sdio0_p3_pmx0_cfg
+
+IMHO, referencing all these pinctrl groups here is not as good as having
+client devices reference their pin groups as needed.  These "hog" groups
+will always request the pins no matter whether corresponding devices is
+enabled or not.  With client device referencing the phandle, the pins
+will only be requested when the device is enabled and probed
+successfully.  Also, in that case, we can easily find out which devices
+use which pins.
+
+Shawn
+
+> +		>;
+> +
+> +	emmc_p1_pmx_cfg: emmc_p1_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x000 MUX_M2
+> +			0x004 MUX_M2
+> +			0x008 MUX_M2
+> +			0x00c MUX_M2
+> +			0x010 MUX_M2
+> +			0x014 MUX_M2
+> +			0x018 MUX_M2
+> +			0x01c MUX_M2
+> +			0x024 MUX_M2
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(0xb, 0xf)
+> +		>;
+> +	};
+> +
+> +	emmc_p2_pmx_cfg: emmc_p2_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x028 MUX_M2
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(0x9, 0xf)
+> +		>;
+> +	};
+> +
+> +	emmc_p3_pmx_cfg:emmc_p3_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x02c MUX_M2
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	emmc_p4_pmx_cfg:emmc_p4_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x030 MUX_M2
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(1, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	gpu_pmx_cfg: gpu_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x038 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	sim0_p1_pmx_cfg: sim0_p1_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x054 MUX_M1
+> +			0x058 MUX_M1
+> +			0x05c MUX_M1
+> +			0x064 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	sim0_p2_pmx_cfg: sim0_p2_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x060 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(2, 3)
+> +		>;
+> +	};
+> +
+> +	i2c0_pmx_cfg: i2c0_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x068 MUX_M1
+> +			0x06c MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	gpio_pmx_cfg: gpio_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x070 MUX_M2
+> +			0x074 MUX_M2
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	bt_uart2_p1_pmx_cfg: bt_uart2_p1_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x078 MUX_M2
+> +			0x07c MUX_M2
+> +			0x080 MUX_M2
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	bt_uart2_p2_pmx_cfg: bt_uart2_p2_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x084 MUX_M2
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(7, 7)
+> +		>;
+> +	};
+> +
+> +	pcm_pmx_cfg: pcm_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x094 MUX_M2
+> +			0x098 MUX_M2
+> +			0x09c MUX_M2
+> +			0x0a0 MUX_M2
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(7, 7)
+> +		>;
+> +	};
+> +
+> +	spi0_p1_pmx_cfg: spi0_p1_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x0b8 MUX_M1
+> +			0x0bc MUX_M1
+> +			0x0c0 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(7, 7)
+> +		>;
+> +	};
+> +
+> +	spi0_p2_pmx_cfg: spi0_p2_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x0c4 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	tsi0_p1_pmx_cfg: tsi0_p1_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x0c8 MUX_M1
+> +			0x0cc MUX_M1
+> +			0x0d0 MUX_M1
+> +			0x0d8 MUX_M1
+> +			0x0dc MUX_M1
+> +			0x0e0 MUX_M1
+> +			0x0e4 MUX_M1
+> +			0x0e8 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	tsi0_p2_pmx_cfg: tsi0_p2_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x0d4 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(7, 7)
+> +		>;
+> +	};
+> +
+> +	tsi0_p3_pmx_cfg: tsi0_p3_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x0ec MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(1, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	tsi0_p4_pmx_cfg: tsi0_p4_pmx_cfg  {
+> +		pinctrl-single,pins = <
+> +			0x0f0 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown	= <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup	= <
+> +			PINCTRL_PULLUP(1, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate	= <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength	= <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	i2c2_p1_pmx_cfg: i2c2_p1_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x0f4 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown   = <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup  = <
+> +			PINCTRL_PULLUP(1, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	i2c2_p2_pmx_cfg: i2c2_p2_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x0f8 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown   = <
+> +			PINCTRL_PULLDOWN(1, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup  = <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	mute_pmx_cfg: mute_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x100 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown   = <
+> +			PINCTRL_PULLDOWN(1, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup  = <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	spdif_pmx_cfg: spdif_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x104 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown   = <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup  = <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	rgmii1_p1_pmx_cfg: rgmii1_p1_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x118 MUX_M1
+> +			0x11c MUX_M1
+> +			0x120 MUX_M1
+> +			0x144 MUX_M1
+> +			0x148 MUX_M1
+> +			0x14c MUX_M1
+> +			0x150 MUX_M1
+> +			0x154 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown    = <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup  = <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	rgmii1_p2_pmx_cfg: rgmii1_p2_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x124 MUX_M1
+> +			0x128 MUX_M1
+> +			0x12c MUX_M1
+> +			0x130 MUX_M1
+> +			0x134 MUX_M1
+> +			0x13c MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown    = <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup   = <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(6, 7)
+> +		>;
+> +	};
+> +
+> +	rgmii1_p3_pmx_cfg: rgmii1_p3_pmx_cfg {
+> +		pinctrl-single,pins = <
+> +			0x140 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown    = <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup   = <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(7, 7)
+> +		>;
+> +	};
+> +
+> +	sdio0_p1_pmx0_cfg: sdio0_p1_pmx0_cfg {
+> +		pinctrl-single,pins = <
+> +			0x158 MUX_M1
+> +			0x178 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown    = <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup   = <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(3, 3)
+> +		>;
+> +	};
+> +
+> +	sdio0_p2_pmx0_cfg: sdio0_p2_pmx0_cfg {
+> +		pinctrl-single,pins = <
+> +			0x160 MUX_M1
+> +			0x164 MUX_M1
+> +			0x16c MUX_M1
+> +			0x170 MUX_M1
+> +			0x174 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown    = <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup   = <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(5, 7)
+> +		>;
+> +	};
+> +
+> +	sdio0_p3_pmx0_cfg: sdio0_p3_pmx0_cfg {
+> +		pinctrl-single,pins = <
+> +			0x168 MUX_M1
+> +		>;
+> +		pinctrl-single,bias-pulldown    = <
+> +			PINCTRL_PULLDOWN(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,bias-pullup   = <
+> +			PINCTRL_PULLUP(0, 1, 0, 1)
+> +		>;
+> +		pinctrl-single,slew-rate    = <
+> +			PINCTRL_SLEW_RATE(1, 1)
+> +		>;
+> +		pinctrl-single,drive-strength   = <
+> +			PINCTRL_DRV_STRENGTH(0xc, 0xf)
+> +		>;
+> +	};
+> +};
+> +
+> +&pmx1{
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <
+> +		&uart0_pmx
+> +		&lowspeed_gpio_pmx
+> +		&bt_led_pmx
+> +		&user_led_pmx
+> +		&ir_pmx
+> +		&stb_key_pmx
+> +	>;
+> +
+> +	uart0_pmx: uart0_pmx {
+> +		pinctrl-single,bits = <
+> +			GPIO5_MUX_CFG(0, 0, 0)
+> +			GPIO5_MUX_CFG(0, 0, 1)
+> +		>;
+> +	};
+> +
+> +	lowspeed_gpio_pmx: lowspeed_gpio_pmx {
+> +		pinctrl-single,bits = <
+> +			GPIO5_MUX_CFG(0, 0, 4)
+> +		>;
+> +	};
+> +
+> +	bt_led_pmx: bt_led_pmx {
+> +		pinctrl-single,bits = <
+> +			GPIO5_MUX_CFG(0, 1, 7)
+> +		>;
+> +	};
+> +
+> +	user_led_pmx: user_led_pmx {
+> +		pinctrl-single,bits = <
+> +			GPIO5_MUX_CFG(0, 0, 3)
+> +			GPIO5_MUX_CFG(0, 0, 6)
+> +		>;
+> +	};
+> +
+> +	ir_pmx: ir_pmx {
+> +		pinctrl-single,bits = <
+> +			GPIO5_MUX_CFG(0, 0, 5)
+> +		>;
+> +	};
+> +
+> +	stb_key_pmx:stb_key_pmx {
+> +		pinctrl-single,bits = <
+> +			GPIO5_MUX_CFG(0, 0, 2)
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
