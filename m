@@ -1,70 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] media: i2c: Add TDA1997x HDMI receiver
-	driver
-Date: Wed, 15 Nov 2017 09:52:04 -0600
-Message-ID: <20171115155204.yhqjocdm32qunllx@rob-hp-laptop>
-References: <1510253136-14153-1-git-send-email-tharvey@gateworks.com>
- <1510253136-14153-4-git-send-email-tharvey@gateworks.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] misc serdev: w2sg0004: add debugging code and
+ Kconfig
+Date: Wed, 15 Nov 2017 16:53:36 +0100
+Message-ID: <28e16c7a-2688-a302-1548-1cdc2552f0ad@suse.de>
+References: <cover.1510759152.git.hns@goldelico.com>
+ <9b4969c858d4c3801bb796f92dad5c580799b768.1510759152.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <1510253136-14153-4-git-send-email-tharvey@gateworks.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, shawnguo@kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9b4969c858d4c3801bb796f92dad5c580799b768.1510759152.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 09, 2017 at 10:45:34AM -0800, Tim Harvey wrote:
-> Add support for the TDA1997x HDMI receivers.
-> 
-> Cc: Hans Verkuil <hverkuil@xs4all.nl>
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
-> v3:
->  - use V4L2_DV_BT_FRAME_WIDTH/HEIGHT macros
->  - fixed missing break
->  - use only hdmi_infoframe_log for infoframe logging
->  - simplify tda1997x_s_stream error handling
->  - add delayed work proc to handle hotplug enable/disable
->  - fix set_edid (disable HPD before writing, enable after)
->  - remove enabling edid by default
->  - initialize timings
->  - take quant range into account in colorspace conversion
->  - remove vendor/product tracking (we provide this in log_status via infoframes)
->  - add v4l_controls
->  - add more detail to log_status
->  - calculate vhref generator timings
->  - timing detection fixes (rounding errors, hswidth errors)
->  - rename configure_input/configure_conv functions
-> 
-> v2:
->  - implement dv timings enum/cap
->  - remove deprecated g_mbus_config op
->  - fix dv_query_timings
->  - add EDID get/set handling
->  - remove max-pixel-rate support
->  - add audio codec DAI support
->  - change audio bindings
-> ---
->  drivers/media/i2c/Kconfig            |    9 +
->  drivers/media/i2c/Makefile           |    1 +
->  drivers/media/i2c/tda1997x.c         | 3485 ++++++++++++++++++++++++++++++++++
->  include/dt-bindings/media/tda1997x.h |   78 +
+Hi,
 
-This belongs with the binding documentation patch.
+Am 15.11.2017 um 16:19 schrieb H. Nikolaus Schaller:
+> This allows to set CONFIG_W2SG0004_DEBUG which will
+> make the driver report more activities and it will turn on the
+> GPS module during boot while the driver assumes that it
+> is off. This can be used to debug the correct functioning of
+> the hardware. Therefore we add it as an option to the driver
+> because we think it is of general use (and a little tricky to
+> add by system testers).
+> 
+> Normally it should be off.
+> ---
 
->  include/media/i2c/tda1997x.h         |   53 +
->  5 files changed, 3626 insertions(+)
->  create mode 100644 drivers/media/i2c/tda1997x.c
->  create mode 100644 include/dt-bindings/media/tda1997x.h
->  create mode 100644 include/media/i2c/tda1997x.h
+If you want to merge this, it is lacking a Sob.
+
+Cheers,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
