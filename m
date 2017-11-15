@@ -1,40 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: iio: at91-sama5d2_adc: add optional
- dma property
-Date: Wed, 15 Nov 2017 09:27:46 -0600
-Message-ID: <20171115152746.w4giwt7kdqm4i3yl@rob-hp-laptop>
-References: <1510750608-8697-1-git-send-email-eugen.hristev@microchip.com>
- <1510750608-8697-2-git-send-email-eugen.hristev@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 07/17] ASoC: tlv320aic31xx: Add MICBIAS off
+	setting
+Date: Wed, 15 Nov 2017 09:30:42 -0600
+Message-ID: <20171115153042.4f72ackp7sy2flpf@rob-hp-laptop>
+References: <20171109002741.10897-1-afd@ti.com>
+ <20171109002741.10897-8-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1510750608-8697-2-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <20171109002741.10897-8-afd@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 02:56:45PM +0200, Eugen Hristev wrote:
-> Added property for DMA configuration of the device.
+On Wed, Nov 08, 2017 at 06:27:31PM -0600, Andrew F. Davis wrote:
+> Leaving microphone bias off is a valid setting and even used in the DT
+> binding document example. Add this setting here and document the same.
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
 > ---
->  Changes in v3:
-> None, but we discussed on the ML about whether we should have "dma-names"
-> present in the binding even if it's only one.
-> The helpers in the kernel to retrieve the channel info rely on the
-> presence of this property, so I am resending the patch based on this.
-> If another solution is better, please advise and I can try it and
-> resend the patch.
+>  Documentation/devicetree/bindings/sound/tlv320aic31xx.txt | 1 +
+>  include/dt-bindings/sound/tlv320aic31xx-micbias.h         | 1 +
+>  sound/soc/codecs/tlv320aic31xx.c                          | 1 +
+>  3 files changed, 3 insertions(+)
 
-Really the kernel APIs should accept a NULL name and return the DMA 
-channel when there is only one. This is how the clk_get API works for 
-example.
-
->  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-
-In any case, not really a big deal.
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
