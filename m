@@ -1,36 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/8] dt-bindings: usb: document hub and host-controller
- properties
-Date: Wed, 15 Nov 2017 09:46:55 -0600
-Message-ID: <20171115154655.rw4n5ihhcm7ilrmv@rob-hp-laptop>
-References: <20171109170723.10960-1-johan@kernel.org>
- <20171109170723.10960-5-johan@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/5] media: i2c: Add TDA1997x HDMI receiver
+	driver
+Date: Wed, 15 Nov 2017 09:52:04 -0600
+Message-ID: <20171115155204.yhqjocdm32qunllx@rob-hp-laptop>
+References: <1510253136-14153-1-git-send-email-tharvey@gateworks.com>
+ <1510253136-14153-4-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20171109170723.10960-5-johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1510253136-14153-4-git-send-email-tharvey@gateworks.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, shawnguo@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 09, 2017 at 06:07:19PM +0100, Johan Hovold wrote:
-> Hub nodes and host-controller nodes with child nodes must specify values
-> for #address-cells (1) and #size-cells (0).
+On Thu, Nov 09, 2017 at 10:45:34AM -0800, Tim Harvey wrote:
+> Add support for the TDA1997x HDMI receivers.
 > 
-> Also make the definition of the related reg property a bit more
-> stringent, and add comments to the example source.
-> 
-> Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Hans Verkuil <hverkuil@xs4all.nl>
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 > ---
->  Documentation/devicetree/bindings/usb/usb-device.txt | 20 ++++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
+> v3:
+>  - use V4L2_DV_BT_FRAME_WIDTH/HEIGHT macros
+>  - fixed missing break
+>  - use only hdmi_infoframe_log for infoframe logging
+>  - simplify tda1997x_s_stream error handling
+>  - add delayed work proc to handle hotplug enable/disable
+>  - fix set_edid (disable HPD before writing, enable after)
+>  - remove enabling edid by default
+>  - initialize timings
+>  - take quant range into account in colorspace conversion
+>  - remove vendor/product tracking (we provide this in log_status via infoframes)
+>  - add v4l_controls
+>  - add more detail to log_status
+>  - calculate vhref generator timings
+>  - timing detection fixes (rounding errors, hswidth errors)
+>  - rename configure_input/configure_conv functions
+> 
+> v2:
+>  - implement dv timings enum/cap
+>  - remove deprecated g_mbus_config op
+>  - fix dv_query_timings
+>  - add EDID get/set handling
+>  - remove max-pixel-rate support
+>  - add audio codec DAI support
+>  - change audio bindings
+> ---
+>  drivers/media/i2c/Kconfig            |    9 +
+>  drivers/media/i2c/Makefile           |    1 +
+>  drivers/media/i2c/tda1997x.c         | 3485 ++++++++++++++++++++++++++++++++++
+>  include/dt-bindings/media/tda1997x.h |   78 +
 
-I'm happy to apply patches 1-4 for 4.15 if you want.
+This belongs with the binding documentation patch.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  include/media/i2c/tda1997x.h         |   53 +
+>  5 files changed, 3626 insertions(+)
+>  create mode 100644 drivers/media/i2c/tda1997x.c
+>  create mode 100644 include/dt-bindings/media/tda1997x.h
+>  create mode 100644 include/media/i2c/tda1997x.h
