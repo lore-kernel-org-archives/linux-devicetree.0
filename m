@@ -1,56 +1,75 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 3/3] arm64: dts: renesas: eagle: add EtherAVB pins
-Date: Wed, 15 Nov 2017 23:21:19 +0300
-Message-ID: <a65b8740-b133-eb92-5494-fb532554127b@cogentembedded.com>
-References: <20171110200714.406365231@cogentembedded.com>
- <CAMuHMdWCj=CjA_zyC1GKr=KEk2CNMAtwvREw25R1uJktZucY4w@mail.gmail.com>
- <1017d8fb-e353-f212-09a9-a28bf07eddc2@cogentembedded.com>
- <CAMuHMdX8j__iF5xP33Na9pVM1nRWvrE7e68-zg0oE0gE5MOHXw@mail.gmail.com>
+From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
+ LED driver
+Date: Wed, 15 Nov 2017 14:31:33 -0600
+Message-ID: <0a78c883-f074-cc19-3c0c-fc05607400e9@ti.com>
+References: <20171115194203.13572-1-dmurphy@ti.com>
+ <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX8j__iF5xP33Na9pVM1nRWvrE7e68-zg0oE0gE5MOHXw@mail.gmail.com>
-Content-Language: en-MW
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Jacek
 
-On 11/15/2017 07:21 PM, Geert Uytterhoeven wrote:
-
->>>> Add the (previously omitted) EtherAVB pin data to the Eagle board's
->>>> device tree.
+On 11/15/2017 02:15 PM, Jacek Anaszewski wrote:
+> Hi Dan,
 > 
->>>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
->>>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
->>>> @@ -34,6 +34,9 @@
->>
->> [...]
->>>>
->>>> @@ -53,6 +56,11 @@
->>>>    };
->>>>
->>>>    &pfc {
->>>> +       avb_pins: avb {
->>>> +               groups = "avb0_mdio", "avb0_mii";
->>>
->>>
->>> Oh no, its'called "avb0_mdio" here, but "avb(0)_mdc" on all other
->>> R-Car Gen3 SoCs?
->>
->>
->>     Can you remember the reason? I don;t want to follow the bad example. :-)
+> Thanks for the patch.
 > 
-> Sorry, I don't know.
+> On 11/15/2017 08:42 PM, Dan Murphy wrote:
+>> This adds the devicetree bindings for the LM3692x
+>> I2C LED string driver.
+>>
+>> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+>> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+>> ---
+>>
+>> v3 - No changes
+>> v2 - No changes - https://patchwork.kernel.org/patch/10056677/
+>>
+>>  .../devicetree/bindings/leds/leds-lm3692x.txt      | 28 ++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+>> new file mode 100644
+>> index 000000000000..cfef67bd4100
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+>> @@ -0,0 +1,28 @@
+>> +* Texas Instruments - LM3692x Highly Efficient Dual-String White LED Driver
+>> +
+>> +The LM36922 is an ultra-compact, highly efficient,
+>> +two string white-LED driver designed for LCD display
+>> +backlighting.
+> 
+> Shouldn't the driver be targeted for backlight subsystem then?
+> 
+> Adding backlight maintainers.
+> 
 
-    Hm, you seem to have participated in the related discussions for H2/M3-W...
-The reason was that omlu AVB_MDC signal was multiplexed, AVB_MDIO signal (and 
-AVB MII signals) was mapped to a dedicated pin without any multiplexing, so 
-the "avb_mdc" group initially contained only AVB_MDC.
+Great point!  I was not aware of the backlight subsystem.
 
-> Gr{oetje,eeting}s,
+Looks like I need to create a back light version as well.
 
-MBR, Sergei
+Like the lp8788 did since this can be used as a LED driver beyond display back lighting.
+
+Unless the maintainers don't want it.
+
+Dan
+
+
+-- 
+------------------
+Dan Murphy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
