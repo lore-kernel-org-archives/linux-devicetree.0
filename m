@@ -1,75 +1,65 @@
-From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
- LED driver
-Date: Wed, 15 Nov 2017 14:31:33 -0600
-Message-ID: <0a78c883-f074-cc19-3c0c-fc05607400e9@ti.com>
-References: <20171115194203.13572-1-dmurphy@ti.com>
- <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 2/5] DT: misc: w2sg0004: add bindings documentation (GPS module with serdev UART)
+Date: Wed, 15 Nov 2017 21:36:34 +0100
+Message-ID: <797D508F-5285-403E-BA9F-E9586B87D368@goldelico.com>
+References: <cover.1510520397.git.hns@goldelico.com> <069ce12d5609c4e968f2a468e6c58a57f59f3ffb.1510520397.git.hns@goldelico.com> <20171115200808.2nkldpoybhv5x6a5@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171115200808.2nkldpoybhv5x6a5@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+Hi Rob,
 
-On 11/15/2017 02:15 PM, Jacek Anaszewski wrote:
-> Hi Dan,
-> 
-> Thanks for the patch.
-> 
-> On 11/15/2017 08:42 PM, Dan Murphy wrote:
->> This adds the devicetree bindings for the LM3692x
->> I2C LED string driver.
->>
->> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
->> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+> Am 15.11.2017 um 21:08 schrieb Rob Herring <robh@kernel.org>:
+>=20
+> On Sun, Nov 12, 2017 at 09:59:55PM +0100, H. Nikolaus Schaller wrote:
+>> add bindings documentation for Wi2Wi W2SG00x4 GPS module
+>=20
+> Add ... module.
+
+Ok.
+
+>=20
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 >> ---
->>
->> v3 - No changes
->> v2 - No changes - https://patchwork.kernel.org/patch/10056677/
->>
->>  .../devicetree/bindings/leds/leds-lm3692x.txt      | 28 ++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3692x.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+>> .../devicetree/bindings/misc/wi2wi,w2sg0004.txt    | 24 =
+++++++++++++++++++++++
+>=20
+> The path doesn't have to match the kernel. Use bindings/gps/...
+
+Ok.
+
+>=20
+>> 1 file changed, 24 insertions(+)
+>> create mode 100644 =
+Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+>>=20
+>> diff --git =
+a/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt =
+b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
 >> new file mode 100644
->> index 000000000000..cfef67bd4100
+>> index 000000000000..ccec9361a1a4
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
->> @@ -0,0 +1,28 @@
->> +* Texas Instruments - LM3692x Highly Efficient Dual-String White LED Driver
+>> +++ b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+>> @@ -0,0 +1,24 @@
+>> +Wi2Wi GPS module connected through UART
 >> +
->> +The LM36922 is an ultra-compact, highly efficient,
->> +two string white-LED driver designed for LCD display
->> +backlighting.
-> 
-> Shouldn't the driver be targeted for backlight subsystem then?
-> 
-> Adding backlight maintainers.
-> 
-
-Great point!  I was not aware of the backlight subsystem.
-
-Looks like I need to create a back light version as well.
-
-Like the lp8788 did since this can be used as a LED driver beyond display back lighting.
-
-Unless the maintainers don't want it.
-
-Dan
+>> +Should be a subnode of the SoC UART it is connected to (serdev).
+>=20
+> Could be connected to any kind of UART and serdev is a Linuxism.
+>=20
+> With those fixed,
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
 
 
--- 
-------------------
-Dan Murphy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fine and thanks,
+Nikolaus Schaller
+
+PS: there is already a [PATCH v3] (no changes for 1/5 and 2/5)
