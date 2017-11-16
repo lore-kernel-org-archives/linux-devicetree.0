@@ -1,34 +1,104 @@
-From: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [GIT PULL] DeviceTree updates for 4.15
-Date: Wed, 15 Nov 2017 21:15:06 -0800
-Message-ID: <CA+55aFx7-inRaLcb1iV58x6=WA4TKgN4aaQ1pZuhhtNzyxGYrw@mail.gmail.com>
-References: <CAL_JsqLbJP4T014Mgb4-RTmuTtV7nOiFDBPPzak=d9NHb3-w9Q@mail.gmail.com>
- <CA+55aFyPe=uWLF8gH5_bkPTbGbTP5h1Uq6XTUZA7oiNF8nd_SQ@mail.gmail.com> <CAL_JsqLgpL+19ekd_J7h-jBic1whcQuU+Vp-HEh-VgShhvSVGQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 10/13] dt-bindings: Add qcom slimbus
+ controller bindings
+Date: Wed, 15 Nov 2017 23:19:11 -0600
+Message-ID: <20171116051911.tvl6mioxpbo4h72c@rob-hp-laptop>
+References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-11-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLgpL+19ekd_J7h-jBic1whcQuU+Vp-HEh-VgShhvSVGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20171115141043.29202-11-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, vinod.koul@intel.com, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, broonie@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 9:05 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
-> These cases are intentionally bad DT data to feed the testcase. We can
-> switch off the warning (at least I think the kbuild infrastructure is
-> there), but then the check is disabled for all the good cases too
-> which isn't great.
+On Wed, Nov 15, 2017 at 02:10:40PM +0000, srinivas.kandagatla@linaro.org wrote:
+> From: Sagar Dharia <sdharia@codeaurora.org>
+> 
+> This patch add device tree bindings for Qualcomm slimbus controller.
+> 
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+> new file mode 100644
+> index 000000000000..e4d28910b2e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+> @@ -0,0 +1,43 @@
+> +Qualcomm SLIMBUS controller
+> +This controller is used if applications processor driver controls slimbus
+> +master component.
+> +
+> +Required properties:
+> +
+> + - #address-cells - refer to Documentation/devicetree/bindings/slimbus/bus.txt
+> + - #size-cells	- refer to Documentation/devicetree/bindings/slimbus/bus.txt
+> +
+> + - reg : Offset and length of the register region(s) for the device
+> + - reg-names : Register region name(s) referenced in reg above
+> +	 Required register resource entries are:
+> +	 "ctrl": Physical address of controller register blocks
+> + - compatible : should be "qcom,<SOC-NAME>-slim" for SOC specific compatible
+> + 		followed by "qcom,slim" for fallback.
+> + - interrupts : Interrupt number used by this controller
+> + - clocks : Interface and core clocks used by this slimbus controller
+> + - clock-names : Required clock-name entries are:
+> +	"iface_clk" : Interface clock for this controller
+> +	"core_clk" : Interrupt for controller core's BAM
+> +
+> +
+> +Optional property:
+> + - reg entry for slew rate : If slew rate control register is provided, this
+> +	entry should be used.
+> + - reg-name for slew rate: "slew"
 
-It's fine to have test-cases that are supposed to fail.
+reg-names
 
-But they should warn not as they fail, but only if they fail to fail.
+I'd prefer it be explicit as to which compatibles do or don't have this 
+register.
 
-Warning about expected behavior and annoying everybody else is simply
-not acceptable.
+> +
+> +Example:
+> +
+> +	slim@28080000 {
+> +		compatible = "qcom,apq8064-slim", "qcom,slim";
+> +		reg = <0x28080000 0x2000>,
 
-                Linus
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+error                                    ^
+
+> +		interrupts = <0 33 0>;
+> +		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
+> +		clock-names = "iface", "core";
+> +		#address-cells = <2>;
+> +		#size-cell = <0>;
+> +
+> +		codec: wcd9310@1,0{
+
+Use generic node names:
+
+wcd9310: audio-codec@1,0
+
+> +			compatible = "slim217,60";
+> +			reg = <1 0>;
+> +		};
+> +	};
+> -- 
+> 2.15.0
+> 
