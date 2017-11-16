@@ -1,43 +1,54 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: koelsch: Correct primary compatible value for eeprom
-Date: Thu, 16 Nov 2017 14:51:35 +0100
-Message-ID: <1510840296-12767-2-git-send-email-geert+renesas@glider.be>
-References: <1510840296-12767-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510840296-12767-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] dt-bindings: media: rcar_vin: add device tree support
+ for r8a774[35]
+Date: Thu, 16 Nov 2017 14:53:31 +0100
+Message-ID: <CAMuHMdVLkhdb0nKMd8OzRK7=wnh_Dxww932Vq2P_OiL=a29V4w@mail.gmail.com>
+References: <1510834290-25434-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1510834290-25434-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdW+krUp5ELO4NFxGi8NZ5-H4vrtm-=OXyvZKMCk2f-WcQ@mail.gmail.com> <TY1PR06MB089529F042099069AD960093C02E0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <TY1PR06MB089529F042099069AD960093C02E0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-The Renesas part number of the two-wire serial interface EEPROM is not
-24C02, but R1EX24002ATAS0G.
+Hi Fabrizio,
 
-Hence change its primary compatible value to "renesas,r1ex24002", like
-on Gose.
+On Thu, Nov 16, 2017 at 2:45 PM, Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+>> Subject: Re: [PATCH 1/2] dt-bindings: media: rcar_vin: add device tree support for r8a774[35]
+>>
+>> On Thu, Nov 16, 2017 at 1:11 PM, Fabrizio Castro
+>> <fabrizio.castro@bp.renesas.com> wrote:
+>> > --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+>> > +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+>> > @@ -14,7 +14,10 @@ channel which can be either RGB, YUYV or BT656.
+>> >     - "renesas,vin-r8a7790" for the R8A7790 device
+>> >     - "renesas,vin-r8a7779" for the R8A7779 device
+>> >     - "renesas,vin-r8a7778" for the R8A7778 device
+>> > -   - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 compatible device.
+>> > +   - "renesas,vin-r8a7745" for the R8A7745 device
+>> > +   - "renesas,vin-r8a7743" for the R8A7743 device
+>>
+>> Please keep the list sorted by SoC part number.
+>
+> It is sorted, just in descending order. Do you want me to re-order the full list in ascending order?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a7791-koelsch.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That may be a good idea, given the current order is non-standard and
+counter-intuitive.
 
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index 4126de4179224261..fac9cdea49650591 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -708,7 +708,7 @@
- 	};
- 
- 	eeprom@50 {
--		compatible = "renesas,24c02", "atmel,24c02";
-+		compatible = "renesas,r1ex24002", "atmel,24c02";
- 		reg = <0x50>;
- 		pagesize = <16>;
- 	};
--- 
-2.7.4
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
