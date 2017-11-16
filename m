@@ -1,132 +1,146 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 1/4] omapdrm: fix compatible string for td028ttec1
-Date: Thu, 16 Nov 2017 11:08:30 -0600
-Message-ID: <a6b4c02d-a5ff-b0e6-ca59-afaf1148fe2a@ti.com>
-References: <cover.1510822218.git.hns@goldelico.com>
- <474bfc72b67e1d0e2a223084a69f04d2baa1dda8.1510822218.git.hns@goldelico.com>
- <4753a425-d050-7f2d-35ae-b387accfd99e@ti.com>
- <130D3B71-C0CE-4755-BF06-971681F630BC@goldelico.com>
- <d90ee1ee-8a33-de04-bb8b-2f10e0a80a61@ti.com>
- <908C52B9-83E2-49B3-B5B4-D8F27A96ECD6@goldelico.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v7 04/13] slimbus: core: Add slim
+	controllers support
+Date: Thu, 16 Nov 2017 17:29:35 +0000
+Message-ID: <55794ca5-b70a-4866-1e80-bc0e78880c50@linaro.org>
+References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-5-srinivas.kandagatla@linaro.org>
+ <20171116164233.GB3187@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <908C52B9-83E2-49B3-B5B4-D8F27A96ECD6@goldelico.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171116164233.GB3187@localhost>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>, letux-kernel@openphoenux.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-fbdev@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, Sean Paul <seanpaul@chromium.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, broonie@kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2017 10:10 AM, H. Nikolaus Schaller wrote:
-> Hi Andrew,
+thanks for the comments.
+
+
+On 16/11/17 16:42, Vinod Koul wrote:
+> On Wed, Nov 15, 2017 at 02:10:34PM +0000, srinivas.kandagatla@linaro.org wrote:
 > 
->> Am 16.11.2017 um 16:53 schrieb Andrew F. Davis <afd@ti.com>:
->>
->> On 11/16/2017 07:43 AM, H. Nikolaus Schaller wrote:
->>>
->>>> Am 16.11.2017 um 13:32 schrieb Tomi Valkeinen <tomi.valkeinen@ti.com>:
->>>>
->>>> On 16/11/17 10:50, H. Nikolaus Schaller wrote:
->>>>> The vendor name was "toppoly" but other panels and the vendor list
->>>>> have defined it as "tpo". So let's fix it in driver and bindings.
->>>>>
->>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>>> ---
->>>>
->>>>
->>>>> -MODULE_ALIAS("spi:toppoly,td028ttec1");
->>>>> +MODULE_ALIAS("spi:tpo,td028ttec1");
->>>>
->>>> Doesn't this mean that the module won't load if you have old bindings?
->>>
->>> Hm.
->>>
->>> Well, I think it can load but doesn't automatically from DT strings which might
->>> be unexpected.
->>>
->>>> Can't we have two module aliases?
->>>
->>> I think we can. Just a random example:
->>> https://elixir.free-electrons.com/linux/latest/source/drivers/w1/slaves/w1_therm.c#L754
->>>
->>> So we should keep both.
->>
->> Even better would be to drop both MODULE_ALIAS and let the
->> MODULE_DEVICE_TABLE macro define them for your from the SPI id table.
+>> +static void slim_dev_release(struct device *dev)
+>> +{
+>> +	struct slim_device *sbdev = to_slim_device(dev);
+>> +
+>> +	put_device(sbdev->ctrl->dev);
 > 
-> Why would that be better?
+> which device would that be?
+This is controller device
+
 > 
-
-MODULE_ALIAS is ugly, you already have a table (usually) of device names
-that are supported by the driver, the module aliases should be generated
-from that table. This also keeps supported device list in one place.
-
-> As far as I see it will need more code and changes than adding one line of
-> MODULE_ALIAS.
+>> +static int slim_add_device(struct slim_controller *ctrl,
+>> +			   struct slim_device *sbdev,
+>> +			   struct device_node *node)
+>> +{
+>> +	sbdev->dev.bus = &slimbus_bus;
+>> +	sbdev->dev.parent = ctrl->dev;
+>> +	sbdev->dev.release = slim_dev_release;
+>> +	sbdev->dev.driver = NULL;
+>> +	sbdev->ctrl = ctrl;
+>> +
+>> +	dev_set_name(&sbdev->dev, "%x:%x:%x:%x",
+>> +				  sbdev->e_addr.manf_id,
+>> +				  sbdev->e_addr.prod_code,
+>> +				  sbdev->e_addr.dev_index,
+>> +				  sbdev->e_addr.instance);
+>> +
+>> +	get_device(ctrl->dev);
 > 
->> Although it doesn't look like this driver has an SPI id table, you
->> should probably add one, I be interested to see if this module is always
->> being matched through the "spi" or the "of" alias..
+> is this controller device and you ensuring it doesnt go away while you have
+> slaves on it?
+
+Yes.
+
 > 
-> Could you please propose how that code should look like, so that I can test?
+>> +static struct slim_device *slim_alloc_device(struct slim_controller *ctrl,
+>> +					     struct slim_eaddr *eaddr,
+>> +					     struct device_node *node)
+>> +{
+>> +	struct slim_device *sbdev;
+>> +	int ret;
+>> +
+>> +	sbdev = kzalloc(sizeof(struct slim_device), GFP_KERNEL);
 > 
-
-Sure,
-
-start with
-$ udevadm monitor
-and see what string the kernel is looking for when trying to find a
-module for this device.
-
-If it is only ever looking for "of:toppoly,td028ttec1", then you can
-drop the MODULE_ALIAS and be done as it was never getting used anyway.
-
-What I expect though is "spi:toppoly,td028ttec1", in which case you
-should add
-
-static const struct spi_device_id td028ttec1_ids[] = {
-	{ "toppoly,td028ttec1", 0 },
-	{ "tpo,td028ttec1", 0},
-	{ /* sentinel */ }
-};
-MODULE_DEVICE_TABLE(spi, td028ttec1_ids);
-
-link to it in the td028ttec1_spi_driver struct:
-.id_table = td028ttec1_ids,
-
-Then test again to see that the module still loads with the new and old
-DT string.
-
-Andrew
-
-> BR and thanks,
-> Nikolaus Schaller
+> Usual kernel way of doing is kzalloc(*sbdev)
 > 
->>
->>>
->>> Should I submit a new version?
->>>
->>> BR,
->>> Nikolaus
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
+I agree will fix it in next version.
+
+>> +void slim_report_absent(struct slim_device *sbdev)
+>> +{
+>> +	struct slim_controller *ctrl = sbdev->ctrl;
+>> +
+>> +	if (!ctrl)
+>> +		return;
+>> +
+>> +	/* invalidate logical addresses */
+>> +	mutex_lock(&ctrl->lock);
+>> +	sbdev->is_laddr_valid = false;
+>> +	mutex_unlock(&ctrl->lock);
+>> +
+>> +	ida_simple_remove(&ctrl->laddr_ida, sbdev->laddr);
+>> +	slim_device_update_status(sbdev, SLIM_DEVICE_STATUS_DOWN);
+>> +}
+>> +EXPORT_SYMBOL_GPL(slim_report_absent);
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Do you have APIs for report present too, if so why not add te status in
+> argument as you may have common handling
+Yes, We do  have api for reporting too, I will give it a try to combine 
+both.
+
+> 
+>> +static int slim_device_alloc_laddr(struct slim_device *sbdev,
+>> +				   u8 *laddr, bool report_present)
+>> +{
+>> +	struct slim_controller *ctrl = sbdev->ctrl;
+>> +	int ret;
+>> +
+>> +	mutex_lock(&ctrl->lock);
+>> +	if (ctrl->get_laddr) {
+>> +		ret = ctrl->get_laddr(ctrl, &sbdev->e_addr, laddr);
+>> +		if (ret < 0)
+>> +			goto err;
+>> +	} else if (report_present) {
+>> +		ret = ida_simple_get(&ctrl->laddr_ida,
+>> +				     0, SLIM_LA_MANAGER - 1, GFP_KERNEL);
+>> +		if (ret < 0)
+>> +			goto err;
+>> +
+>> +		*laddr = ret;
+>> +	} else {
+>> +		ret = -EINVAL;
+>> +		goto err;
+>> +	}
+>> +
+>> +	if (ctrl->set_laddr) {
+>> +		ret = ctrl->set_laddr(ctrl, &sbdev->e_addr, *laddr);
+>> +		if (ret) {
+>> +			ret = -EINVAL;
+>> +			goto err;
+>> +		}
+>> +	}
+>> +
+>> +	sbdev->laddr = *laddr;
+> 
+> if you have this in sbdev, then why have this as an arg also?
+Yes makes sens, laddr argument in this function is redundant, it can be 
+removed totally.
+> 
+>> +	sbdev->is_laddr_valid = true;
+> 
+> shouldn't non-zero value signify that?
+0 is also a valid laddr.
+
 > 
