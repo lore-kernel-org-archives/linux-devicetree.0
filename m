@@ -1,101 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] media: i2c: Add TDA1997x HDMI receiver
-	driver
-Date: Wed, 15 Nov 2017 22:30:59 -0600
-Message-ID: <20171116043059.azaqjfbjeo4rlaon@rob-hp-laptop>
-References: <1510253136-14153-1-git-send-email-tharvey@gateworks.com>
- <1510253136-14153-4-git-send-email-tharvey@gateworks.com>
- <20171115155204.yhqjocdm32qunllx@rob-hp-laptop>
- <CAJ+vNU0NuNjZePQBaxWHT4HtYGxZJ_DUSvuHvb6wAFDGA_xX9A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] DT: i2c: W83773G is a trivial device
+Date: Wed, 15 Nov 2017 22:33:29 -0600
+Message-ID: <20171116043329.isdd23nf4khk7wai@rob-hp-laptop>
+References: <1510543655-27059-1-git-send-email-mine260309@gmail.com>
+ <1510543655-27059-2-git-send-email-mine260309@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJ+vNU0NuNjZePQBaxWHT4HtYGxZJ_DUSvuHvb6wAFDGA_xX9A@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
+In-Reply-To: <1510543655-27059-2-git-send-email-mine260309@gmail.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Lei YU <mine260309@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, Jiri Kosina <trivial@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 10:31:14AM -0800, Tim Harvey wrote:
-> On Wed, Nov 15, 2017 at 7:52 AM, Rob Herring <robh@kernel.org> wrote:
-> > On Thu, Nov 09, 2017 at 10:45:34AM -0800, Tim Harvey wrote:
-> >> Add support for the TDA1997x HDMI receivers.
-> >>
-> >> Cc: Hans Verkuil <hverkuil@xs4all.nl>
-> >> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> >> ---
-> >> v3:
-> >>  - use V4L2_DV_BT_FRAME_WIDTH/HEIGHT macros
-> >>  - fixed missing break
-> >>  - use only hdmi_infoframe_log for infoframe logging
-> >>  - simplify tda1997x_s_stream error handling
-> >>  - add delayed work proc to handle hotplug enable/disable
-> >>  - fix set_edid (disable HPD before writing, enable after)
-> >>  - remove enabling edid by default
-> >>  - initialize timings
-> >>  - take quant range into account in colorspace conversion
-> >>  - remove vendor/product tracking (we provide this in log_status via infoframes)
-> >>  - add v4l_controls
-> >>  - add more detail to log_status
-> >>  - calculate vhref generator timings
-> >>  - timing detection fixes (rounding errors, hswidth errors)
-> >>  - rename configure_input/configure_conv functions
-> >>
-> >> v2:
-> >>  - implement dv timings enum/cap
-> >>  - remove deprecated g_mbus_config op
-> >>  - fix dv_query_timings
-> >>  - add EDID get/set handling
-> >>  - remove max-pixel-rate support
-> >>  - add audio codec DAI support
-> >>  - change audio bindings
-> >> ---
-> >>  drivers/media/i2c/Kconfig            |    9 +
-> >>  drivers/media/i2c/Makefile           |    1 +
-> >>  drivers/media/i2c/tda1997x.c         | 3485 ++++++++++++++++++++++++++++++++++
-> >>  include/dt-bindings/media/tda1997x.h |   78 +
-> >
-> > This belongs with the binding documentation patch.
-> >
+On Mon, Nov 13, 2017 at 11:27:32AM +0800, Lei YU wrote:
+> Signed-off-by: Lei YU <mine260309@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/trivial-devices.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Rob,
-> 
-> Thanks - missed that. I will move it for v4.
-> 
-> Regarding your previous comment to the v2 series:
-> > The rest of the binding looks fine, but I have some reservations about
-> > this. I think this should be common probably. There's been a few
-> > bindings for display recently that deal with the interface format. Maybe
-> > some vendor property is needed here to map a standard interface format
-> > back to pin configuration.
-> 
-> I take it this is not an 'Ack' for the bindings?
-> 
-> Which did you feel should be made common? I admit I was surprised
-> there wasn't a common binding for audio bus format (i2s|spdif) but if
-> you were referring to the video data that would probably be much more
-> complicated.
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
+> index af284fb..63ad2f1 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/trivial-devices.txt
+> @@ -188,3 +188,4 @@ ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Inter
+>  ti,tmp275		Digital Temperature Sensor
+>  winbond,w83793		Winbond/Nuvoton H/W Monitor
+>  winbond,wpct301		i2c trusted platform module (TPM)
+> +nuvoton,w83773g		Nuvoton Temperature Sensor
 
-The video data. Either you have to try to come up with some way to map 
-color components to signals/pins (and even cycles) or you just enumerate 
-the formats and keep adding to them when new ones appear. There's h/w 
-that allows the former, but in the end you have to interoperate, so 
-enumerating the formats is probably enough.
+Keep alphabetical order please.
 
-> I was hoping one of the media/driver maintainers would respond to your
-> comment with thoughts as I'm not familiar with a very wide variety of
-> receivers.
-
-I am hoping, too.
+Send trivial-devices.txt changes separately to me and I'll take them to 
+avoid any conflicts.
 
 Rob
