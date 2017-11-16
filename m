@@ -1,54 +1,135 @@
-From: Bharat Kumar Gogada <bharatku@xilinx.com>
-Subject: RE: [RFCv2 PATCH 31/36] iommu/arm-smmu-v3: Add support for PCI ATS
-Date: Thu, 16 Nov 2017 14:19:36 +0000
-Message-ID: <BLUPR0201MB150565029F9260A528739ACBA52E0@BLUPR0201MB1505.namprd02.prod.outlook.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-32-jean-philippe.brucker@arm.com>
+From: Ioana Ciornei <ioana.ciornei-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH] arm64: dts: ls1088a: add fsl-mc hardware resource manager
+ node
+Date: Thu, 16 Nov 2017 14:24:49 +0000
+Message-ID: <DB6PR0401MB2264A182C4048471B53BFF89E02E0@DB6PR0401MB2264.eurprd04.prod.outlook.com>
+References: <1510147805-24873-1-git-send-email-ioana.ciornei@nxp.com>
+ <20171116083920.GK25384@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20171006133203.22803-32-jean-philippe.brucker@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171116083920.GK25384@dragon>
 Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, xieyisheng1@huawei.co
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
+See comments inline.
 
-+static size_t
-+arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain, int ssid,
-+			unsigned long iova, size_t size)
-+{
-+	unsigned long flags;
-+	struct arm_smmu_cmdq_ent cmd;
-+	struct arm_smmu_master_data *master;
-+
-+	arm_smmu_atc_inv_to_cmd(ssid, iova, size, &cmd);
-+
-+	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-+	list_for_each_entry(master, &smmu_domain->devices, list)
-+		arm_smmu_atc_inv_master(master, &cmd);
-+	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-+
-+	return size;
-+}
-+
- /* IOMMU API */
- static bool arm_smmu_capable(enum iommu_cap cap)  { @@ -2361,6 +2506,8 @@ =
-static void arm_smmu_detach_dev(struct device *dev)
- 		__iommu_process_unbind_dev_all(&smmu_domain->domain, dev);
+>=20
+> On Wed, Nov 08, 2017 at 03:30:05PM +0200, Ioana Ciornei wrote:
+> > Add the fsl-mc node in the LS1088A device tree.
+> >
+> > Signed-off-by: Ioana Ciornei <ioana.ciornei-3arQi8VN3Tc@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 62
+> ++++++++++++++++++++++++++
+> >  1 file changed, 62 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > index bd80e9a..aa37ffe 100644
+> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > @@ -166,6 +166,68 @@
+> >  			     <1 10 IRQ_TYPE_LEVEL_LOW>;/* Hypervisor PPI */
+> >  	};
+> >
+> > +	fsl_mc: fsl-mc@80c000000 {
+>=20
+> The unit-address of the node should be somehow related to 'reg'
+> property.  Can you please help me understand how they are related?
+
+The unit-address of the fsl-mc node is the base address of the MC portal de=
+scribed in the first region of the 'reg' property and formed using the 2 ad=
+dress cells.
+Hope this helps.
 =20
- 	if (smmu_domain) {
-+		arm_smmu_atc_inv_master_all(master, 0);
-+
-In BIND flow, when VFIO_IOMMU_UNBIND is invoked invalidation is sent on all=
-ocated PASID for this application.
-When vfio group fd is closed after UNBIND,  arm_smmu_detach_dev is invoked =
-now invalidation is being sent on ssid zero.
-Why  invalidation needs to be sent on ssid zero ?
+>=20
+> > +		compatible =3D "fsl,qoriq-mc";
+> > +		reg =3D <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+> > +		      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+> > +		msi-parent =3D <&its>;
+> > +		#address-cells =3D <3>;
+> > +		#size-cells =3D <1>;
+> > +
+> > +		/*
+> > +		 * Region type 0x0 - MC portals
+> > +		 * Region type 0x1 - QBMAN portals
+> > +		 */
+> > +		ranges =3D <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
+> > +			  0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
+> > +
+> > +		dpmacs {
+> > +			#address-cells =3D <1>;
+> > +			#size-cells =3D <0>;
+> > +
+> > +			dpmac1: dpmac@1 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <1>;
+> > +			};
+>=20
+> Please have a newline in between nodes.
 
-Regards,
-Bharat
+Will do.=20
 
+Should I send a rework of this patch right away or better to wait for the m=
+erge window to close?
+
+Ioana=20
+
+>=20
+> Shawn
+>=20
+> > +			dpmac2: dpmac@2 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <2>;
+> > +			};
+> > +			dpmac3: dpmac@3 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <3>;
+> > +			};
+> > +			dpmac4: dpmac@4 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <4>;
+> > +			};
+> > +			dpmac5: dpmac@5 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <5>;
+> > +			};
+> > +			dpmac6: dpmac@6 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <6>;
+> > +			};
+> > +			dpmac7: dpmac@7 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <7>;
+> > +			};
+> > +			dpmac8: dpmac@8 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <8>;
+> > +			};
+> > +			dpmac9: dpmac@9 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <9>;
+> > +			};
+> > +			dpmac10: dpmac@10 {
+> > +				compatible =3D "fsl,qoriq-mc-dpmac";
+> > +				reg =3D <0xa>;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> >  	psci {
+> >  		compatible =3D "arm,psci-0.2";
+> >  		method =3D "smc";
+> > --
+> > 1.9.1
+> >
+> >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
