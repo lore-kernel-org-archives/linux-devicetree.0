@@ -1,177 +1,90 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 1/4] omapdrm: fix compatible string for td028ttec1
-Date: Thu, 16 Nov 2017 12:32:33 -0600
-Message-ID: <2e67402b-4a32-9da9-3b06-e271c23d2422@ti.com>
-References: <cover.1510822218.git.hns@goldelico.com>
- <474bfc72b67e1d0e2a223084a69f04d2baa1dda8.1510822218.git.hns@goldelico.com>
- <4753a425-d050-7f2d-35ae-b387accfd99e@ti.com>
- <130D3B71-C0CE-4755-BF06-971681F630BC@goldelico.com>
- <d90ee1ee-8a33-de04-bb8b-2f10e0a80a61@ti.com>
- <908C52B9-83E2-49B3-B5B4-D8F27A96ECD6@goldelico.com>
- <a6b4c02d-a5ff-b0e6-ca59-afaf1148fe2a@ti.com>
- <689D4636-A169-4C4A-89C2-7039C78E853F@goldelico.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/8] USB: add device-tree support for interfaces
+Date: Thu, 16 Nov 2017 12:33:33 -0600
+Message-ID: <CAL_JsqKFpa6_0nB5ftgFRvwqMN8aBGymASZY7ZeykN0MD6UWbw@mail.gmail.com>
+References: <20171109170723.10960-1-johan@kernel.org> <20171116144321.hlp6em77t56e5nly@rob-hp-laptop>
+ <20171116161249.GJ11226@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <689D4636-A169-4C4A-89C2-7039C78E853F@goldelico.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>, letux-kernel@openphoenux.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-fbdev@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, Sean Paul <seanpaul@chromium.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171116161249.GJ11226@localhost>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2017 12:18 PM, H. Nikolaus Schaller wrote:
-> 
->> Am 16.11.2017 um 18:08 schrieb Andrew F. Davis <afd@ti.com>:
+On Thu, Nov 16, 2017 at 10:12 AM, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Nov 16, 2017 at 08:43:21AM -0600, Rob Herring wrote:
+>> On Thu, Nov 09, 2017 at 06:07:15PM +0100, Johan Hovold wrote:
+>> > This series adds support for representing USB interfaces in device tree
+>> > by implementing support for "interface nodes" and "combined nodes" from
+>> > the OF specification.
+>> >
+>> > This is needed to be able to describe non-discoverable properties of
+>> > permanently attached USB devices and their interfaces such as any
+>> > i2c-clients connected to a USB-i2c bridge (e.g. the dln2 mfd) or,
+>> > eventually, devices connected to usb-serial converters (to be used with
+>> > serdev).
 >>
->> On 11/16/2017 10:10 AM, H. Nikolaus Schaller wrote:
->>> Hi Andrew,
->>>
->>>> Am 16.11.2017 um 16:53 schrieb Andrew F. Davis <afd@ti.com>:
->>>>
->>>> On 11/16/2017 07:43 AM, H. Nikolaus Schaller wrote:
->>>>>
->>>>>> Am 16.11.2017 um 13:32 schrieb Tomi Valkeinen <tomi.valkeinen@ti.com>:
->>>>>>
->>>>>> On 16/11/17 10:50, H. Nikolaus Schaller wrote:
->>>>>>> The vendor name was "toppoly" but other panels and the vendor list
->>>>>>> have defined it as "tpo". So let's fix it in driver and bindings.
->>>>>>>
->>>>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>>>>> ---
->>>>>>
->>>>>>
->>>>>>> -MODULE_ALIAS("spi:toppoly,td028ttec1");
->>>>>>> +MODULE_ALIAS("spi:tpo,td028ttec1");
->>>>>>
->>>>>> Doesn't this mean that the module won't load if you have old bindings?
->>>>>
->>>>> Hm.
->>>>>
->>>>> Well, I think it can load but doesn't automatically from DT strings which might
->>>>> be unexpected.
->>>>>
->>>>>> Can't we have two module aliases?
->>>>>
->>>>> I think we can. Just a random example:
->>>>> https://elixir.free-electrons.com/linux/latest/source/drivers/w1/slaves/w1_therm.c#L754
->>>>>
->>>>> So we should keep both.
->>>>
->>>> Even better would be to drop both MODULE_ALIAS and let the
->>>> MODULE_DEVICE_TABLE macro define them for your from the SPI id table.
->>>
->>> Why would that be better?
->>>
->>
->> MODULE_ALIAS is ugly, you already have a table (usually) of device names
->> that are supported by the driver, the module aliases should be generated
->> from that table. This also keeps supported device list in one place.
->>
->>> As far as I see it will need more code and changes than adding one line of
->>> MODULE_ALIAS.
->>>
->>>> Although it doesn't look like this driver has an SPI id table, you
->>>> should probably add one, I be interested to see if this module is always
->>>> being matched through the "spi" or the "of" alias..
->>>
->>> Could you please propose how that code should look like, so that I can test?
->>>
->>
->> Sure,
->>
->> start with
->> $ udevadm monitor
->> and see what string the kernel is looking for when trying to find a
->> module for this device.
-> 
-> Well, the module is loaded automatically from DT at boot time well before
-> I can start udevadm. So that is the most tricky part to setup the system
-> to suppress this...
-> 
->>
->> If it is only ever looking for "of:toppoly,td028ttec1", then you can
->> drop the MODULE_ALIAS and be done as it was never getting used anyway.
-> 
-> Since it is an SPI client, I am sure it looks for "spi:something.
-> 
->>
->> What I expect though is "spi:toppoly,td028ttec1", in which case you
->> should add
->>
->> static const struct spi_device_id td028ttec1_ids[] = {
->> 	{ "toppoly,td028ttec1", 0 },
->> 	{ "tpo,td028ttec1", 0},
->> 	{ /* sentinel */ }
->> };
->> MODULE_DEVICE_TABLE(spi, td028ttec1_ids);
-> 
-> We already have a static const struct of_device_id td028ttec1_of_match[]
-> table with the same information.
-> 
-> So we still have two places to keep in sync.
-> 
-> Or can we remove the td028ttec1_of_match[]? AFAIK not.
-> 
->>
->> link to it in the td028ttec1_spi_driver struct:
->> .id_table = td028ttec1_ids,
->>
->> Then test again to see that the module still loads with the new and old
->> DT string.
-> 
-> In total I am not really convinced that adding 7 lines of code is better
-> than one (the "tpo," alias) that is tested and works...
-> 
-> And it looks like a lot of unplanned code testing for me which takes more
-> than 5 minutes :)
-> 
-> So I'd prefer to leave that exercise of fixing the MODULE_ALIAS/DEVICE_TABLE
-> to someone else...
-> 
+>> In the original OF binding, the firmware dynamically generated the tree
+>> for the active configuration AIUI. That doesn't really fit for the
+>> (mostly) static FDT usage and why we stopped at the device level. So how
+>> do we handle multiple configs? Or can we assume that if say the I2C bus
+>> is used, then there's only one config and interface that can use it?
+>
+> Multiple configuration can be used to implement different sets of
+> functionality. A hypothetical device could have one i2c controller in
+> one configuration and two in another. Most devices will only have one
+> configuration though.
 
-That's fine, someday I'll probably get some script to do this for all
-the drivers that still have MODULE_ALIAS and an existing table.
+Right, but ultimately the device has the physical interface (pins) and
+we could have multiple USB interfaces pointing to the single physical
+interface. How do we represent that without duplicating the DT data in
+both interfaces? I guess we can do a phandle to the I2C bus as we do
+sometimes.
 
-> BR and thanks,
-> Nikolaus
-> 
->>
->> Andrew
->>
->>> BR and thanks,
->>> Nikolaus Schaller
->>>
->>>>
->>>>>
->>>>> Should I submit a new version?
->>>>>
->>>>> BR,
->>>>> Nikolaus
->>>>>
->>>>> --
->>>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>>>> the body of a message to majordomo@vger.kernel.org
->>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>>>
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> A USB interface implements some functionality of the device (and this is
+> what Linux USB drivers bind to). So even for single-configuration
+> devices, you need to be able to say which i2c controller (bus) you are
+> describing.
+
+Are you saying the mapping of USB interface to physical interface
+cannot be implied by the specific device? Say, we had something like
+this:
+
+usb-device {
+  i2c-bus@0 {};
+  i2c-bus@1 {};
+};
+
+Where 0 and 1 are based on the pin out of the device. There's no way
+for the driver to figure out the mapping of USB interfaces to i2c bus?
+How does the user writing the DT do it?
+
+> [ And as a simplification, the combined nodes can be used for most cases
+> were we only have one configuration with a single interface. ]
+>
+> Note that a new set of interfaces (in the kernel device model) is
+> created when a new USB device configuration is selected. These new
+> interfaces will be associated with any matching device-tree interface
+> nodes and that these would be distinct from any nodes that matches
+> another configuration.
+>
+> So I don't think there's any problem with dealing with the rare cases of
+> multi-configuration devices.
+
+Perhaps it is rare enough that we don't worry about the above case.
+
+I'm not saying we shouldn't follow the OF spec here, but I also think
+our usecases have changed a bit in 20 years so we could want to do
+something different.
+
+The other part of this is how do we make this usecase work on non-DT
+systems or DT systems where the USB topology is not fully described
+because you're just hotplugging the USB device.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
