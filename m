@@ -1,43 +1,46 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] libnvdimm: Add a device-tree interface
-Date: Thu, 16 Nov 2017 08:29:26 -0600
-Message-ID: <20171116142926.cdvx2st72tnu7gi7@rob-hp-laptop>
-References: <20171115175131.23631-1-oohall@gmail.com>
- <20171115175131.23631-2-oohall@gmail.com>
+Subject: Re: [PATCH 4/8] dt-bindings: usb: document hub and host-controller
+ properties
+Date: Thu, 16 Nov 2017 08:32:17 -0600
+Message-ID: <20171116143217.pcvqteutvr4lck6z@rob-hp-laptop>
+References: <20171109170723.10960-1-johan@kernel.org>
+ <20171109170723.10960-5-johan@kernel.org>
+ <20171115154655.rw4n5ihhcm7ilrmv@rob-hp-laptop>
+ <20171116084540.GH11226@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171115175131.23631-2-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+In-Reply-To: <20171116084540.GH11226@localhost>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 04:51:30AM +1100, Oliver O'Halloran wrote:
-> A fairly bare-bones set of device-tree bindings so libnvdimm can be used
-> on powerpc and other device-tree based platforms.
+On Thu, Nov 16, 2017 at 09:45:40AM +0100, Johan Hovold wrote:
+> On Wed, Nov 15, 2017 at 09:46:55AM -0600, Rob Herring wrote:
+> > On Thu, Nov 09, 2017 at 06:07:19PM +0100, Johan Hovold wrote:
+> > > Hub nodes and host-controller nodes with child nodes must specify values
+> > > for #address-cells (1) and #size-cells (0).
+> > > 
+> > > Also make the definition of the related reg property a bit more
+> > > stringent, and add comments to the example source.
+> > > 
+> > > Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/usb/usb-device.txt | 20 ++++++++++++++++----
+> > >  1 file changed, 16 insertions(+), 4 deletions(-)
+> > 
+> > I'm happy to apply patches 1-4 for 4.15 if you want.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/nvdimm/nvdimm-bus.txt      |  69 +++++++
+> Sure, that would be great. Greg will probably base usb-next on 4.15-rc2,
+> and otherwise the rest of the binding updates can just go through your
+> tree instead.
 
-Also, please split bindings to a separate patch.
+1-4 applied.
 
->  MAINTAINERS                                        |   8 +
->  drivers/nvdimm/Kconfig                             |  10 +
->  drivers/nvdimm/Makefile                            |   1 +
->  drivers/nvdimm/of_nvdimm.c                         | 202 +++++++++++++++++++++
->  5 files changed, 290 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvdimm/nvdimm-bus.txt
->  create mode 100644 drivers/nvdimm/of_nvdimm.c
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
