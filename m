@@ -1,43 +1,26 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: dts: fun with chip names Re: [PATCH v3 1/2] dt: bindings:
- lm3692x: Add bindings for lm3692x LED driver
-Date: Thu, 16 Nov 2017 14:36:01 -0600
-Message-ID: <CAL_Jsq+aysVR9U2Wquwwv7cjjO7wO8EXBg1Ja82u6s5t1yeJUw@mail.gmail.com>
-References: <20171115194203.13572-1-dmurphy@ti.com> <20171116154139.wed7qmpmv2ffyzv2@rob-hp-laptop>
- <d3483e49-650d-1d68-bec6-eeb84d8ac48a@ti.com> <20171116201121.GA28848@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171116201121.GA28848@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>, Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/1] Add R8A77970/Eagle I2C support
+Date: Thu, 16 Nov 2017 23:56:47 +0300
+Message-ID: <20171116205647.152964720@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 2:11 PM, Pavel Machek <pavel@ucw.cz> wrote:
-> Hi!
->
->> >> +Required properties:
->> >> +  - compatible:
->> >> +          "ti,lm3692x"
->> >
->> > Don't use wildcards in compatible strings.
->>
->> Do you mean to remove the x?  How do we denote a family of parts
->> then?
->
-> I guess you should specify the exact chip.
->
-> Which will present interesting problem for me on Nokia N9/N950; in one
-> case, compatible chip is produced by two companies, and it looks like
-> some machines have one and some have the other; but we'd like to share
-> the dts as user has no chance telling them apart (and it is not
-> important, anyway).
->
-> In second case, chip is refered as APDS990X and I don't know where to
-> get more exact data.
+Hello!
 
-There's always exceptions to rules. Just make the case for it. IIRC,
-there was the same case for the BT chip.
+Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20171113-v4.14' tag. We're adding the R8A77970 I2C nodes
+and then describing the PCA9654 I/O expander connected to the I2C0 bus.
+These patches depend on the R8A77970/Eagle PFC suport patchset in order
+to apply/compile.
 
-Rob
+[1/2] arm64: dts: renesas: r8a77970: add I2C support
+[2/2] arm64: dts: renesas: eagle: add I2C support
+
+WBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
