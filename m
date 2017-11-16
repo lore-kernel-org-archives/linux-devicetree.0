@@ -1,129 +1,102 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v7 04/13] slimbus: core: Add slim
-	controllers support
-Date: Thu, 16 Nov 2017 22:12:33 +0530
-Message-ID: <20171116164233.GB3187@localhost>
-References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
- <20171115141043.29202-5-srinivas.kandagatla@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCHv4 1/3] ARMv8: dts: ls1046a: add the property of IB and OB
+Date: Thu, 16 Nov 2017 16:49:39 +0000
+Message-ID: <20171116164939.GA30182@e107981-ln.cambridge.arm.com>
+References: <20171110034847.17891-1-xiaowei.bao@nxp.com>
+ <20171110034847.17891-2-xiaowei.bao@nxp.com>
+ <20b8f1d2-f817-469f-afbf-66f25d6f8c46@ti.com>
+ <AM4PR0401MB16999BD34AFBB1362BD32EBD8F540@AM4PR0401MB1699.eurprd04.prod.outlook.com>
+ <VI1PR04MB161516288A0FF2F507DAA9BEE82B0@VI1PR04MB1615.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171115141043.29202-5-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, broonie@kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
+In-Reply-To: <VI1PR04MB161516288A0FF2F507DAA9BEE82B0@VI1PR04MB1615.eurprd04.prod.outlook.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: "M.h. Lian" <minghuan.lian@nxp.com>, robh+dt@kernel.org
+Cc: Leo Li <leoyang.li@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, Xiaowei Bao <xiaowei.bao@nxp.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Sumit Garg <sumit.garg@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Andy Tang <andy.tang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "pbrobinson@gmail.com" <pbrobinson@gmail.com>, "songxiaowei@hisilicon.com" <songxiaowei@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.or>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 02:10:34PM +0000, srinivas.kandagatla@linaro.org wrote:
+On Mon, Nov 13, 2017 at 02:35:48AM +0000, M.h. Lian wrote:
 
-> +static void slim_dev_release(struct device *dev)
-> +{
-> +	struct slim_device *sbdev = to_slim_device(dev);
-> +
-> +	put_device(sbdev->ctrl->dev);
+[...]
 
-which device would that be?
+> > > On Friday 10 November 2017 09:18 AM, Bao Xiaowei wrote:
+> > > > Add the property of inbound and outbound windows number for ep driver.
+> > > >
+> > > > Signed-off-by: Bao Xiaowei <xiaowei.bao@nxp.com>
+> > > > Acked-by: Minghuan Lian <minghuan.Lian@nxp.com>
+> > > > ---
+> > > >  v2:
+> > > >  - no change
+> > > >  v3:
+> > > >  - modify the commit message
+> > > >  v4:
+> > > >  - no change
+> > > >
+> > > >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > >
+> > > $subject should start with something like
+> > > arm64: dts: ls1046a: **
 
-> +static int slim_add_device(struct slim_controller *ctrl,
-> +			   struct slim_device *sbdev,
-> +			   struct device_node *node)
-> +{
-> +	sbdev->dev.bus = &slimbus_bus;
-> +	sbdev->dev.parent = ctrl->dev;
-> +	sbdev->dev.release = slim_dev_release;
-> +	sbdev->dev.driver = NULL;
-> +	sbdev->ctrl = ctrl;
-> +
-> +	dev_set_name(&sbdev->dev, "%x:%x:%x:%x",
-> +				  sbdev->e_addr.manf_id,
-> +				  sbdev->e_addr.prod_code,
-> +				  sbdev->e_addr.dev_index,
-> +				  sbdev->e_addr.instance);
-> +
-> +	get_device(ctrl->dev);
+Indeed.
 
-is this controller device and you ensuring it doesnt go away while you have
-slaves on it?
+> > > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > > > b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > > > index 06b5e12d04d8..f8332669663c 100644
+> > > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> > > > @@ -674,6 +674,8 @@
+> > > >  			device_type = "pci";
+> > > >  			dma-coherent;
+> > > >  			num-lanes = <4>;
+> > > > +			num-ib-windows = <6>;
+> > > > +			num-ob-windows = <6>;
+> > >
+> > > EP specific properties shouldn't be added in RC dt node. Ideally you
+> > > should have a separate dt node for RC and EP.
+> > 
+> > It is a single PCIe controller which can be configured to either RC
+> > mode or EP mode.  Wouldn't it conflict with the device tree
+> > principles to have two device tree nodes for the same PCIe
+> > controller?  And obviously the two modes cannot be used at the same
+> > time so we cannot have two drivers both probe on the same hardware.
+> > 
+> [Minghuan Lian]  There is only one PCIe dts node in the dts file. PCIe
+> dts node describes the PCIe controller's hardware properties and does
+> not have work mode.  The new properties  "num-ib-windows " and
+> "num-ob-windows" are used to describe the inbound/outbound window
+> number included in the PCIe hardware. These windows are used in both
+> RC and EP mode.  We can change work mode when resetting via RCW(reset
+> configuration word).
 
-> +static struct slim_device *slim_alloc_device(struct slim_controller *ctrl,
-> +					     struct slim_eaddr *eaddr,
-> +					     struct device_node *node)
-> +{
-> +	struct slim_device *sbdev;
-> +	int ret;
-> +
-> +	sbdev = kzalloc(sizeof(struct slim_device), GFP_KERNEL);
+I am not happy about this (that's what I am asking Rob to chime in
+please on DT side).
 
-Usual kernel way of doing is kzalloc(*sbdev)
+1) I do not think it is allowed to have two DT nodes in a dts with same unit
+   address (ie same reg property)
 
-> +void slim_report_absent(struct slim_device *sbdev)
-> +{
-> +	struct slim_controller *ctrl = sbdev->ctrl;
-> +
-> +	if (!ctrl)
-> +		return;
-> +
-> +	/* invalidate logical addresses */
-> +	mutex_lock(&ctrl->lock);
-> +	sbdev->is_laddr_valid = false;
-> +	mutex_unlock(&ctrl->lock);
-> +
-> +	ida_simple_remove(&ctrl->laddr_ida, sbdev->laddr);
-> +	slim_device_update_status(sbdev, SLIM_DEVICE_STATUS_DOWN);
-> +}
-> +EXPORT_SYMBOL_GPL(slim_report_absent);
+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/dra7.dtsi?h=v4.14
 
-Do you have APIs for report present too, if so why not add te status in
-argument as you may have common handling
+2) In the Synopsis Designware PCIe interface bindings we have some
+   properties that are for RC mode and some for EP mode but there is
+   no way from a *binding* perspective to detect in what mode the
+   controller is:
 
-> +static int slim_device_alloc_laddr(struct slim_device *sbdev,
-> +				   u8 *laddr, bool report_present)
-> +{
-> +	struct slim_controller *ctrl = sbdev->ctrl;
-> +	int ret;
-> +
-> +	mutex_lock(&ctrl->lock);
-> +	if (ctrl->get_laddr) {
-> +		ret = ctrl->get_laddr(ctrl, &sbdev->e_addr, laddr);
-> +		if (ret < 0)
-> +			goto err;
-> +	} else if (report_present) {
-> +		ret = ida_simple_get(&ctrl->laddr_ida,
-> +				     0, SLIM_LA_MANAGER - 1, GFP_KERNEL);
-> +		if (ret < 0)
-> +			goto err;
-> +
-> +		*laddr = ret;
-> +	} else {
-> +		ret = -EINVAL;
-> +		goto err;
-> +	}
-> +
-> +	if (ctrl->set_laddr) {
-> +		ret = ctrl->set_laddr(ctrl, &sbdev->e_addr, *laddr);
-> +		if (ret) {
-> +			ret = -EINVAL;
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	sbdev->laddr = *laddr;
+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/designware-pcie.txt?h=v4.14
 
-if you have this in sbdev, then why have this as an arg also?
+3) You can't use properties that in the bindings above are declared EP
+   only for RC mode, we define bindings to respect their rules.
 
-> +	sbdev->is_laddr_valid = true;
+4) I think that a) a compatible should be added to the designware-pcie
+   bindings to define endpoint mode and b) the same should be done for
+   the ls1046a bindings. If the RC is programmed in EP mode DT firmware
+   should be able to provide the information to an operating system, it
+   is actually a _different_ component but on this I need DT people to
+   chime in to define the best way forward.
 
-shouldn't non-zero value signify that?
+I cannot review/merge this code until the points above are clarified.
 
--- 
-~Vinod
+Thanks,
+Lorenzo
