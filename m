@@ -1,125 +1,46 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v7 03/13] slimbus: Add SLIMbus bus type
-Date: Thu, 16 Nov 2017 18:48:14 +0530
-Message-ID: <20171116131814.GV3187@localhost>
-References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
- <20171115141043.29202-4-srinivas.kandagatla@linaro.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: media: rcar_vin: add device tree support
+ for r8a774[35]
+Date: Thu, 16 Nov 2017 14:19:33 +0100
+Message-ID: <CAMuHMdXVb9xE5toLGHnaFX9y+-qVzz2_NzK6qEebaDiXxAec7w@mail.gmail.com>
+References: <1510834290-25434-1-git-send-email-fabrizio.castro@bp.renesas.com> <1510834290-25434-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20171115141043.29202-4-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, broonie@kernel.org, daniel@ffwll.ch, gregkh@linuxfoundation.org, joe@perches.com, davem@davemloft.net
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1510834290-25434-2-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 02:10:33PM +0000, srinivas.kandagatla@linaro.org wrote:
+On Thu, Nov 16, 2017 at 1:11 PM, Fabrizio Castro
+<fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+> Add compatible strings for r8a7743 and r8a7745. No driver change
+> change is needed as "renesas,rcar-gen2-vin" will activate the right
 
-> +menuconfig SLIMBUS
-> +	tristate "Slimbus support"
-> +	help
-> +	  Slimbus is standard interface between System-on-Chip and audio codec,
-> +	  and other peripheral components in typical embedded systems.
-> +
-> +	  If unsure, choose N.
-> +
-> +if SLIMBUS
-> +
-> +# SlIMbus controllers
+double "change"
 
-Slimbus perhaps?
+> code. However, it is good practice to document compatible strings
+> for the specific SoC as this allows SoC specific changes to the
+> driver if needed, in addition to document SoC support and therefore
+> allow checkpatch.pl to validate compatible string values.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
-> +static int slim_device_match(struct device *dev, struct device_driver *drv)
-> +{
-> +	struct slim_device *sbdev = to_slim_device(dev);
-> +	struct slim_driver *sbdrv = to_slim_driver(drv);
-> +
-> +	return slim_match(sbdrv->id_table, sbdev) != NULL;
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-return !!slim_match() ?
+Gr{oetje,eeting}s,
 
-> +static int slim_device_probe(struct device *dev)
-> +{
-> +	struct slim_device	*sbdev;
-> +	struct slim_driver	*sbdrv;
-> +	int ret = 0;
-> +
-> +	sbdev = to_slim_device(dev);
-> +	sbdrv = to_slim_driver(dev->driver);
-> +
-> +	if (sbdrv->probe)
-> +		ret = sbdrv->probe(sbdev);
+                        Geert
 
-shouldn't probe be mandatory :)
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> index 1c2e8d6b7274..7d6238863fc1 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -452,6 +452,19 @@ struct spi_device_id {
->  	kernel_ulong_t driver_data;	/* Data private to the driver */
->  };
->  
-> +/* SLIMbus */
-> +
-> +#define SLIMBUS_NAME_SIZE	32
-> +#define SLIMBUS_MODULE_PREFIX	"slim:"
-> +
-> +struct slim_device_id {
-> +	__u16 manf_id, prod_code;
-> +	__u8 dev_index, instance;
-> +
-> +	/* Data private to the driver */
-> +	kernel_ulong_t driver_data;
-
-As Takashi pointed out in SDW patches, this needs to be aligned.
-
-> +};
-> +
-
-I was hoping to see changes to devicetable-offsets.c and file2alias.c as
-well as that is required for module autoloading. I think that is required?
-
-> +/**
-> + * struct slim_device - Slim device handle.
-> + * @dev: Driver model representation of the device.
-> + * @name: Name of driver to use with this device.
-> + * @e_addr: Enumeration address of this device.
-> + * @driver: Device's driver. Pointer to access routines.
-> + * @laddr: 1-byte Logical address of this device.
-> + *
-> + * This is the client/device handle returned when a slimbus
-> + * device is registered with a controller.
-> + * Pointer to this structure is used by client-driver as a handle.
-> + */
-> +struct slim_device {
-> +	struct device		dev;
-> +	struct slim_eaddr	e_addr;
-> +	struct list_head node;
-
-aligned with others please
-
-> +/**
-> + * struct slim_driver - Slimbus 'generic device' (slave) device driver
-> + *				(similar to 'spi_device' on SPI)
-> + * @probe: Binds this driver to a slimbus device.
-> + * @remove: Unbinds this driver from the slimbus device.
-> + * @shutdown: Standard shutdown callback used during powerdown/halt.
-> + * @device_status: This callback is called when
-> + *	-The device reports present and gets a laddr assigned
-> + *	-The device reports absent, or the bus goes down.
-
-space after - pls
-
--- 
-~Vinod
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
