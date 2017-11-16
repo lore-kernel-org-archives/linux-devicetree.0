@@ -1,71 +1,43 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: add device tree binding for Arm TrustZone
- CryptoCell crypto engine
-Date: Wed, 15 Nov 2017 23:12:39 -0600
-Message-ID: <20171116051239.mztfnfc23xtabcjr@rob-hp-laptop>
-References: <1510751117-13627-1-git-send-email-gilad@benyossef.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 02/13] dt-bindings: Add SLIMbus bindings
+Date: Wed, 15 Nov 2017 23:15:00 -0600
+Message-ID: <20171116051500.qlzgxglom2s3dhkt@rob-hp-laptop>
+References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-3-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1510751117-13627-1-git-send-email-gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
-Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ofir Drang <ofir.drang-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20171115141043.29202-3-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, vinod.koul@intel.com, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, broonie@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 01:05:17PM +0000, Gilad Ben-Yossef wrote:
-> The Arm TrustZone CryptoCell is a hardware security engine. This patch
-> adds DT bindings for its Rich Execution Environment crypto engine.
+On Wed, Nov 15, 2017 at 02:10:32PM +0000, srinivas.kandagatla@linaro.org wrote:
+> From: Sagar Dharia <sdharia@codeaurora.org>
 > 
-> A driver supporting this device is already present in the staging tree.
+> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
+> developed by MIPI (Mobile Industry Processor Interface) alliance.
+> SLIMbus is a 2-wire implementation, which is used to communicate with
+> peripheral components like audio-codec.
 > 
-> Signed-off-by: Gilad Ben-Yossef <gilad-6S/DczAoZh3WXxRugSxzZg@public.gmane.org>
+> This patch adds device tree bindings for the slimbus.
+> 
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  .../devicetree/bindings/crypto/arm-cryptocell.txt  | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-> new file mode 100644
-> index 0000000..ccf8a101
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-> @@ -0,0 +1,22 @@
-> +Arm TrustZone CryptoCell cryptographic engine
-> +
-> +Required properties:
-> +- compatible: Should be "arm,cryptocell-712-ree".
-> +- reg: Base physical address of the engine and length of memory mapped region.
-> +- interrupts: Interrupt number for the device.
-> +
-> +Optional properties:
-> +- interrupt-parent: The phandle for the interrupt controller that services
-> +  interrupts for this device.
-> +- clocks: Reference to the crypto engine clock.
-> +- dma-coherent: Present if dma operations are coherent.
-> +
-> +Examples:
-> +
-> +       arm_cc712: arm_cc712@80000000 {
+>  Documentation/devicetree/bindings/slimbus/bus.txt | 50 +++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
 
-crypto@...
-
-With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
-> +               compatible = "arm,cryptocell-712-ree";
-> +               interrupt-parent = <&intc>;
-> +               interrupts = < 0 30 4 >;
-> +               reg = < 0x80000000 0x10000 >;
-> +
-> +       };
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
