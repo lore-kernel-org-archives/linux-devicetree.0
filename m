@@ -1,80 +1,77 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: r8a7743: add VIN dt support
-Date: Thu, 16 Nov 2017 12:11:30 +0000
-Message-ID: <1510834290-25434-3-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1510834290-25434-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Alan Martinovic <alan.martinovic-+NedCK/4fiIAvxtiuMwx3w@public.gmane.org>
+Subject: Decompiled vs *tmp extended device tree
+Date: Thu, 16 Nov 2017 13:12:55 +0100
+Message-ID: <CAOT_U5bV1cWsXa-d7A5sbd0e+UuhD6NmwsmyjrQcuWceqtus_A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510834290-25434-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add VIN[012] support to SoC dt. Also, add aliases.
+Hi,
+I'm trying to modify a device tree to enable support of the second UART.
+The actual device tree which is used for the example:
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a7743.dtsi | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+https://github.com/getsenic/senic-os-linux/blob/senic/4.13/arch/arm/boot/dt=
+s/sun8i-h3-senic-hub.dts
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 9e26c40..c09c667 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -32,6 +32,9 @@
- 		spi1 = &msiof0;
- 		spi2 = &msiof1;
- 		spi3 = &msiof2;
-+		vin0 = &vin0;
-+		vin1 = &vin1;
-+		vin2 = &vin2;
- 	};
- 
- 	cpus {
-@@ -1037,6 +1040,39 @@
- 			};
- 		};
- 
-+		vin0: video@e6ef0000 {
-+			compatible = "renesas,vin-r8a7743",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef0000 0 0x1000>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 811>;
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 811>;
-+			status = "disabled";
-+		};
-+
-+		vin1: video@e6ef1000 {
-+			compatible = "renesas,vin-r8a7743",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef1000 0 0x1000>;
-+			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 810>;
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 810>;
-+			status = "disabled";
-+		};
-+
-+		vin2: video@e6ef2000 {
-+			compatible = "renesas,vin-r8a7743",
-+				     "renesas,rcar-gen2-vin";
-+			reg = <0 0xe6ef2000 0 0x1000>;
-+			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 809>;
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 809>;
-+			status = "disabled";
-+		};
-+
- 		du: display@feb00000 {
- 			compatible = "renesas,du-r8a7743";
- 			reg = <0 0xfeb00000 0 0x40000>,
--- 
-2.7.4
+The device tree includes and overrides some additional files:
 
+    #include "sun8i-h3.dtsi"
+    #include "sunxi-common-regulators.dtsi"
+    #include <dt-bindings/gpio/gpio.h>
+    #include <dt-bindings/input/input.h>
+    #include <dt-bindings/pinctrl/sun4i-a10.h>
+
+I would like to know to what does the extended device tree look like,
+and use that as my base, because I don't really have the complete picture
+by just looking at the sun8i-h3-senic-hub.dts
+
+In this example I'm interested in where are "uart0_pins_a" defined.
+sun8i-h3-senic-hub.dts references them but has no definitions,
+so I'm assuming the definition is somewhere in the included files.
+
+To help me out with this task I discovered the device tree decompiler.
+Am expecting that the decompiled dts contains all the data that
+end up in the dtb blob, and should, among other, contain all the informatio=
+n
+available in sun8i-h3-senic-hub.dts.
+
+    scripts/dtc/dtc -I dtb -O dts -o expanded-devtree.dts
+arch/arm/boot/dts/sun8i-h3-senic-hub.dtb
+
+But the decompiled extended device tree also seems to have no
+traces of "uart0_pins_a" at all :
+
+    grep uart0_pins_a expanded-devtree.dts
+
+I've also discovered the hidden .tmp files:
+
+    =E2=9F=AB ls arch/arm/boot/dts/.sun8i-h3-*
+    arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.cmd
+    arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.d.dtc.tmp
+    arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.d.pre.tmp
+    arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp
+
+and in one of them there is a definition to "uart0_pins_a":
+
+    =E2=9F=AB grep uart0_pins_a  arch/arm/boot/dts/.sun8i-h3-*
+    arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp:   uart0_pins_a: uart=
+0@0 {
+    arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp: pinctrl-0 =3D
+<&uart0_pins_a>;
+
+My question is, which one is a more accurate representation
+of the final device tree that I should use as a basis?
+
+Why isn't it correct to expect that everything from sun8i-h3-senic-hub.dts
+will end up in the final device tree blob?
+
+
+Be Well,
+Alan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
