@@ -1,35 +1,28 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: display/ti: Add optional property to
- set memory bandwidth limit
-Date: Wed, 15 Nov 2017 22:37:43 -0600
-Message-ID: <20171116043743.fawfoaij4pvv2fxk@rob-hp-laptop>
-References: <20171114124755.14277-1-peter.ujfalusi@ti.com>
- <20171114124755.14277-2-peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add vendor prefix for Allo.com
+Date: Wed, 15 Nov 2017 22:38:29 -0600
+Message-ID: <20171116043829.bnmsh7w2vcyokgw2@rob-hp-laptop>
+References: <20171114180114.26408-1-afaerber@suse.de>
+ <20171114180114.26408-2-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171114124755.14277-2-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20171114180114.26408-2-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Jeff Chen <jeff.chen-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?utf-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?utf-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?utf-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?utf-8?B?5qKF5Yip?= <harrymei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Ioan B <ioan-HmMszb9TTf4@public.gmane.org>, Sudeep Kumar <sudeepkumar-/0wLYENt7sWikuSvNLsyVV6hYfS7NtTn@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 14, 2017 at 02:47:53PM +0200, Peter Ujfalusi wrote:
-> max-memory-bandwidth can be used to specify the maximum bandwidth dispc
-> can use when reading display data from main memory.
+On Tue, Nov 14, 2017 at 07:01:12PM +0100, Andreas Färber wrote:
+> ALLO is a Canadian-Indian manufacturer of telecommunications hardware.
 > 
-> In some SoC (am437x for example) we have memory bandwidth limitation
-> which causes underflow in the display subsystem.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+> Cc: Ioan B. <ioan-HmMszb9TTf4@public.gmane.org>
+> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/display/ti/ti,dra7-dss.txt  | 5 +++++
->  Documentation/devicetree/bindings/display/ti/ti,omap2-dss.txt | 4 ++++
->  Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt | 4 ++++
->  Documentation/devicetree/bindings/display/ti/ti,omap4-dss.txt | 4 ++++
->  Documentation/devicetree/bindings/display/ti/ti,omap5-dss.txt | 4 ++++
->  5 files changed, 21 insertions(+)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
