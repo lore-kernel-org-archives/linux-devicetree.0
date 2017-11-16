@@ -1,43 +1,42 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/8] dt-bindings: usb: document hub and host-controller
- properties
-Date: Thu, 16 Nov 2017 09:45:40 +0100
-Message-ID: <20171116084540.GH11226@localhost>
-References: <20171109170723.10960-1-johan@kernel.org>
- <20171109170723.10960-5-johan@kernel.org>
- <20171115154655.rw4n5ihhcm7ilrmv@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171115154655.rw4n5ihhcm7ilrmv@rob-hp-laptop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH v2 3/4] DTS: Pandora: fix panel compatibility string
+Date: Thu, 16 Nov 2017 09:50:18 +0100
+Message-ID: <f9e764c18a8fc77160ddea4fb61e63f703a0c19e.1510822218.git.hns@goldelico.com>
+References: <cover.1510822218.git.hns@goldelico.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1510822218.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <cover.1510822218.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+References: <cover.1510822218.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 09:46:55AM -0600, Rob Herring wrote:
-> On Thu, Nov 09, 2017 at 06:07:19PM +0100, Johan Hovold wrote:
-> > Hub nodes and host-controller nodes with child nodes must specify values
-> > for #address-cells (1) and #size-cells (0).
-> > 
-> > Also make the definition of the related reg property a bit more
-> > stringent, and add comments to the example source.
-> > 
-> > Signed-off-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/usb/usb-device.txt | 20 ++++++++++++++++----
-> >  1 file changed, 16 insertions(+), 4 deletions(-)
-> 
-> I'm happy to apply patches 1-4 for 4.15 if you want.
+We can remove the "omapdss," prefix because the
+omapdrm driver takes care of it.
 
-Sure, that would be great. Greg will probably base usb-next on 4.15-rc2,
-and otherwise the rest of the binding updates can just go through your
-tree instead.
+Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+---
+ arch/arm/boot/dts/omap3-pandora-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Johan
+diff --git a/arch/arm/boot/dts/omap3-pandora-common.dtsi b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+index 53e007abdc71..64d967ec8c58 100644
+--- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
++++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
+@@ -626,7 +626,7 @@
+ 
+ 	lcd: lcd@1 {
+ 		reg = <1>;	/* CS1 */
+-		compatible =	"omapdss,tpo,td043mtea1";
++		compatible =	"tpo,td043mtea1";
+ 		spi-max-frequency = <100000>;
+ 		spi-cpol;
+ 		spi-cpha;
+-- 
+2.12.2
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
