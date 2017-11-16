@@ -1,293 +1,80 @@
-From: SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>
-Subject: [PATCH] arm, ls1021a: add support for Moxa UC-8410A open platform
-Date: Thu, 16 Nov 2017 22:58:57 +0800
-Message-ID: <20171116145858.25966-1-sz.lin@moxa.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
+ LED driver
+Date: Thu, 16 Nov 2017 09:41:39 -0600
+Message-ID: <20171116154139.wed7qmpmv2ffyzv2@rob-hp-laptop>
+References: <20171115194203.13572-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171115194203.13572-1-dmurphy-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, Jimmy Chen <jimmy.chen-D4fb9hXD9d4@public.gmane.org>, Harry YJ Jhou <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for Moxa UC-8410A open platform
+On Wed, Nov 15, 2017 at 01:42:02PM -0600, Dan Murphy wrote:
+> This adds the devicetree bindings for the LM3692x
+> I2C LED string driver.
+> 
+> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+> ---
+> 
+> v3 - No changes
+> v2 - No changes - https://patchwork.kernel.org/patch/10056677/
+> 
+>  .../devicetree/bindings/leds/leds-lm3692x.txt      | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> new file mode 100644
+> index 000000000000..cfef67bd4100
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> @@ -0,0 +1,28 @@
+> +* Texas Instruments - LM3692x Highly Efficient Dual-String White LED Driver
+> +
+> +The LM36922 is an ultra-compact, highly efficient,
+> +two string white-LED driver designed for LCD display
+> +backlighting.
+> +
+> +Required properties:
+> +	- compatible:
+> +		"ti,lm3692x"
 
-The UC-8410A computing platform is designed
-for embedded communication-centric industrial applications
+Don't use wildcards in compatible strings.
 
-The features of UC-8410A are:
-* QSPI flash
-* SD slot
-* 3x LAN
-* 8x RS-232/422/485 ports, software-selectable
-* Mini PCIe form factor with PCIe/USB signal
-* 2x USB host
-* TPM
-* Watchdog
-* RTC
-* User LEDs
-* Beeper
+> +	- reg -  I2C slave address
+> +
+> +Optional properties:
+> +	- label - Used for naming LEDs
+> +	- enable-gpio - gpio pin to enable/disable the device.
 
-Signed-off-by: Jimmy Chen <jimmy.chen-D4fb9hXD9d4@public.gmane.org>
-Signed-off-by: Harry YJ Jhou <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>
-Signed-off-by: SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 230 ++++++++++++++++++++++++++++
- 2 files changed, 231 insertions(+)
- create mode 100644 arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+enable-gpios is the preferred form.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index eff87a344566..0165fbcb1d10 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -495,6 +495,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7s-colibri-eval-v3.dtb \
- 	imx7s-warp.dtb
- dtb-$(CONFIG_SOC_LS1021A) += \
-+	ls1021a-moxa-uc-8410a.dtb \
- 	ls1021a-qds.dtb \
- 	ls1021a-twr.dtb
- dtb-$(CONFIG_SOC_VF610) += \
-diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-new file mode 100644
-index 000000000000..4896b551505b
---- /dev/null
-+++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-@@ -0,0 +1,230 @@
-+/*
-+ * Copyright (C) 2017 Moxa Inc. - https://www.moxa.com/
-+ *
-+ * Author: Harry YJ Jhou (周亞諄) <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>
-+ *         Jimmy Chen (陳永達)    <jimmy.chen-D4fb9hXD9d4@public.gmane.org>
-+ *         SZ Lin (林上智)        <sz.lin-D4fb9hXD9d4@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+#include "ls1021a.dtsi"
-+
-+/ {
-+	model = "Moxa UC-8410A";
-+
-+	aliases {
-+		enet0_rgmii_phy = &rgmii_phy0;
-+		enet1_rgmii_phy = &rgmii_phy1;
-+		enet2_rgmii_phy = &rgmii_phy2;
-+	};
-+
-+	sys_mclk: clock-mclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24576000>;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_3p3v: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "3P3V";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		cel_pwr {
-+			label = "UC8410A:CEL_PWR";
-+			gpios = <&gpio3 23 1>;
-+			default-state = "off";
-+		};
-+
-+		cel_reset {
-+			label = "UC8410A:CEL_RESET";
-+			gpios = <&gpio3 24 1>;
-+			default-state = "off";
-+		};
-+
-+		str_led {
-+			label = "UC8410A:RED:PROG";
-+			gpios = <&gpio0 16 0>;
-+			linux,default-trigger = "mmc0";
-+		};
-+
-+		sw_ready {
-+			label = "UC8410A:GREEN:SWRDY";
-+			gpios = <&gpio0 18 0>;
-+			default-state = "on";
-+		};
-+
-+		beeper {
-+			label = "UC8410A:BEEP";
-+			gpios = <&gpio0 20 0>;
-+			default-state = "off";
-+		};
-+
-+		prog_led0 {
-+			label = "UC8410A:GREEN:PROG2";
-+			gpios = <&gpio3 14 0>;
-+			default-state = "off";
-+		};
-+
-+		prog_led1 {
-+			label = "UC8410A:GREEN:PROG1";
-+			gpios = <&gpio3 15 0>;
-+			default-state = "off";
-+		};
-+
-+		prog_led2 {
-+			label = "UC8410A:GREEN:PROG0";
-+			gpios = <&gpio3 16 0>;
-+			default-state = "off";
-+		};
-+
-+		wifi_signal0 {
-+			label = "UC8410A:GREEN:CEL2";
-+			gpios = <&gpio3 17 0>;
-+			default-state = "off";
-+		};
-+
-+		wifi_signal1 {
-+			label = "UC8410A:GREEN:CEL1";
-+			gpios = <&gpio3 18 0>;
-+			default-state = "off";
-+		};
-+
-+		wifi_signal2 {
-+			label = "UC8410A:GREEN:CEL0";
-+			gpios = <&gpio3 19 0>;
-+			default-state = "off";
-+		};
-+
-+		cpu_diag_red {
-+			label = "UC8410A:RED:DIA";
-+			gpios = <&gpio3 20 0>;
-+			default-state = "off";
-+		};
-+
-+		cpu_diag_green {
-+			label = "UC8410A:GREEN:DIA";
-+			gpios = <&gpio3 21 0>;
-+			default-state = "off";
-+		};
-+
-+		cpu_diag_yellow {
-+			label = "UC8410A:YELLOW:DIA";
-+			gpios = <&gpio3 22 0>;
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&enet0 {
-+	phy-handle = <&rgmii_phy0>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&enet1 {
-+	phy-handle = <&rgmii_phy1>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&enet2 {
-+	phy-handle = <&rgmii_phy2>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+
-+	rtc: rtc@68 {
-+		compatible = "dallas,ds1374";
-+		reg = <0x68>;
-+	};
-+
-+	tpm: tpm@20 {
-+		compatible = "infineon,slb9635tt";
-+		reg = <0x20>;
-+	};
-+};
-+
-+&lpuart0 {
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	rgmii_phy0: ethernet-phy@0 {
-+		compatible = "marvell,88e1118";
-+		reg = <0x0>;
-+		marvell,reg-init =
-+			<3 0x11 0 0x4415>, /* Reg 3,17 */
-+			<3 0x10 0 0x77>; /* Reg 3,16 */
-+	};
-+	rgmii_phy1: ethernet-phy@1 {
-+		compatible = "marvell,88e1118";
-+		reg = <0x1>;
-+		marvell,reg-init =
-+			<3 0x11 0 0x4415>, /* Reg 3,17 */
-+			<3 0x10 0 0x77>; /* Reg 3,16 */
-+	};
-+	rgmii_phy2: ethernet-phy@2 {
-+		compatible = "marvell,88e1118";
-+		reg = <0x2>;
-+		marvell,reg-init =
-+			<3 0x11 0 0x4415>, /* Reg 3,17 */
-+			<3 0x10 0 0x77>; /* Reg 3,16 */
-+	};
-+};
-+
-+&qspi {
-+	status = "okay";
-+	bus-num = <0>;
-+	fsl,spi-num-chipselects = <2>;
-+	fsl,spi-flash-chipselects = <0>;
-+	fsl,qspi-has-second-chip;
-+	flash: flash@0 {
-+		compatible = "spansion,s25fl064l", "spansion,s25fl164k";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+
-+		partitions@0 {
-+			label = "U-Boot";
-+			reg = <0x0 0x180000>;
-+		};
-+		partitions@1 {
-+			label = "U-Boot Env";
-+			reg = <0x180000 0x680000>;
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
--- 
-2.15.0
+> +	- supply - "vled" - LED supply
 
+vled-supply - ...
+
+> +
+> +Example:
+> +
+> +leds: leds@6 {
+> +	compatible = "ti,lm3692x";
+> +	reg = <0x36>;
+> +	label = "backlight_cluster";
+> +	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> +	vled-supply = <&vbatt>;
+> +}
+> +
+> +For more product information please see the link below:
+> +http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
+> -- 
+> 2.15.0.124.g7668cbc60
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
