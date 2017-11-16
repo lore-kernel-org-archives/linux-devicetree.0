@@ -1,73 +1,89 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v7 03/13] slimbus: Add SLIMbus bus type
-Date: Thu, 16 Nov 2017 21:44:26 +0530
-Message-ID: <20171116161426.GA3187@localhost>
-References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
- <20171115141043.29202-4-srinivas.kandagatla@linaro.org>
- <20171116131814.GV3187@localhost>
- <e2fa6b56-965d-74e7-af2f-77baf0f50901@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e2fa6b56-965d-74e7-af2f-77baf0f50901-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 1/4] omapdrm: fix compatible string for td028ttec1
+Date: Thu, 16 Nov 2017 17:10:56 +0100
+Message-ID: <908C52B9-83E2-49B3-B5B4-D8F27A96ECD6@goldelico.com>
+References: <cover.1510822218.git.hns@goldelico.com>
+ <474bfc72b67e1d0e2a223084a69f04d2baa1dda8.1510822218.git.hns@goldelico.com>
+ <4753a425-d050-7f2d-35ae-b387accfd99e@ti.com>
+ <130D3B71-C0CE-4755-BF06-971681F630BC@goldelico.com>
+ <d90ee1ee-8a33-de04-bb8b-2f10e0a80a61@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <d90ee1ee-8a33-de04-bb8b-2f10e0a80a61@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>, letux-kernel@openphoenux.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-fbdev@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, Sean Paul <seanpaul@chromium.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 01:40:05PM +0000, Srinivas Kandagatla wrote:
-> On 16/11/17 13:18, Vinod Koul wrote:
-> >On Wed, Nov 15, 2017 at 02:10:33PM +0000, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> >
-> >>+menuconfig SLIMBUS
-> >>+	tristate "Slimbus support"
-> >>+	help
-> >>+	  Slimbus is standard interface between System-on-Chip and audio codec,
-> >>+	  and other peripheral components in typical embedded systems.
-> >>+
-> >>+	  If unsure, choose N.
-> >>+
-> >>+if SLIMBUS
-> >>+
-> >>+# SlIMbus controllers
-> >
-> >Slimbus perhaps?
-> >
-> slimbus is specified as "SLIMbus" in the mipi specs, so I should probably
-> stay with it and make it consistent across the patchset.
+Hi Andrew,
 
-Yeah this I though was a first use, so I though this was a typo. I think
-Documentation should use the spec term (like SoundWire) and code should pick
-anyone and just be consistent on it.
+> Am 16.11.2017 um 16:53 schrieb Andrew F. Davis <afd@ti.com>:
+> 
+> On 11/16/2017 07:43 AM, H. Nikolaus Schaller wrote:
+>> 
+>>> Am 16.11.2017 um 13:32 schrieb Tomi Valkeinen <tomi.valkeinen@ti.com>:
+>>> 
+>>> On 16/11/17 10:50, H. Nikolaus Schaller wrote:
+>>>> The vendor name was "toppoly" but other panels and the vendor list
+>>>> have defined it as "tpo". So let's fix it in driver and bindings.
+>>>> 
+>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>> ---
+>>> 
+>>> 
+>>>> -MODULE_ALIAS("spi:toppoly,td028ttec1");
+>>>> +MODULE_ALIAS("spi:tpo,td028ttec1");
+>>> 
+>>> Doesn't this mean that the module won't load if you have old bindings?
+>> 
+>> Hm.
+>> 
+>> Well, I think it can load but doesn't automatically from DT strings which might
+>> be unexpected.
+>> 
+>>> Can't we have two module aliases?
+>> 
+>> I think we can. Just a random example:
+>> https://elixir.free-electrons.com/linux/latest/source/drivers/w1/slaves/w1_therm.c#L754
+>> 
+>> So we should keep both.
+> 
+> Even better would be to drop both MODULE_ALIAS and let the
+> MODULE_DEVICE_TABLE macro define them for your from the SPI id table.
 
-> >>+static int slim_device_match(struct device *dev, struct device_driver *drv)
-> >>+{
-> >>+	struct slim_device *sbdev = to_slim_device(dev);
-> >>+	struct slim_driver *sbdrv = to_slim_driver(drv);
-> >>+
-> >>+	return slim_match(sbdrv->id_table, sbdev) != NULL;
-> >
-> >return !!slim_match() ?
+Why would that be better?
 
-I guess you missed this one..
+As far as I see it will need more code and changes than adding one line of
+MODULE_ALIAS.
 
-> >>+struct slim_device_id {
-> >>+	__u16 manf_id, prod_code;
-> >>+	__u8 dev_index, instance;
-> >>+
-> >>+	/* Data private to the driver */
-> >>+	kernel_ulong_t driver_data;
-> >
-> >As Takashi pointed out in SDW patches, this needs to be aligned.
-> >
-> Okay, I will make sure that driver_data is aligned.
+> Although it doesn't look like this driver has an SPI id table, you
+> should probably add one, I be interested to see if this module is always
+> being matched through the "spi" or the "of" alias..
 
-You may want to look at comments and disucssion on the SoundWire patches
+Could you please propose how that code should look like, so that I can test?
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BR and thanks,
+Nikolaus Schaller
+
+> 
+>> 
+>> Should I submit a new version?
+>> 
+>> BR,
+>> Nikolaus
+>> 
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> 
