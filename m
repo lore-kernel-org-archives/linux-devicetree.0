@@ -1,30 +1,53 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 0/4] Add VIN support to r8a774[35]
-Date: Thu, 16 Nov 2017 18:22:47 +0000
-Message-ID: <1510856571-30281-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 1/4] dt-bindings: media: rcar_vin: Reverse SoC part number list
+Date: Thu, 16 Nov 2017 18:22:48 +0000
+Message-ID: <1510856571-30281-2-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1510856571-30281-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1510856571-30281-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Change the sorting of the part numbers from descending to ascending to
+match with other documentation.
 
-this series documents VIN related dt-bindings for r8a774[35], adds VIN[012]
-nodes to the r8a7743 SoC dtsi and adds VIN[01] nodes to the r8a7745 SoC dtsi.
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+---
+v1->v2:
+* new patch triggered by Geert's comment, see the below link for details:
+  https://www.mail-archive.com/linux-media@vger.kernel.org/msg121992.html
 
-Best regards,
+ Documentation/devicetree/bindings/media/rcar_vin.txt | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Fabrizio Castro (4):
-  dt-bindings: media: rcar_vin: Reverse SoC part number list
-  dt-bindings: media: rcar_vin: add device tree support for r8a774[35]
-  ARM: dts: r8a7743: add VIN dt support
-  ARM: dts: r8a7745: add VIN dt support
-
- .../devicetree/bindings/media/rcar_vin.txt         | 19 +++++++-----
- arch/arm/boot/dts/r8a7743.dtsi                     | 36 ++++++++++++++++++++++
- arch/arm/boot/dts/r8a7745.dtsi                     | 24 +++++++++++++++
- 3 files changed, 71 insertions(+), 8 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
+index 6e4ef8c..98931f5 100644
+--- a/Documentation/devicetree/bindings/media/rcar_vin.txt
++++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+@@ -6,14 +6,14 @@ family of devices. The current blocks are always slaves and suppot one input
+ channel which can be either RGB, YUYV or BT656.
+ 
+  - compatible: Must be one or more of the following
+-   - "renesas,vin-r8a7795" for the R8A7795 device
+-   - "renesas,vin-r8a7794" for the R8A7794 device
+-   - "renesas,vin-r8a7793" for the R8A7793 device
+-   - "renesas,vin-r8a7792" for the R8A7792 device
+-   - "renesas,vin-r8a7791" for the R8A7791 device
+-   - "renesas,vin-r8a7790" for the R8A7790 device
+-   - "renesas,vin-r8a7779" for the R8A7779 device
+    - "renesas,vin-r8a7778" for the R8A7778 device
++   - "renesas,vin-r8a7779" for the R8A7779 device
++   - "renesas,vin-r8a7790" for the R8A7790 device
++   - "renesas,vin-r8a7791" for the R8A7791 device
++   - "renesas,vin-r8a7792" for the R8A7792 device
++   - "renesas,vin-r8a7793" for the R8A7793 device
++   - "renesas,vin-r8a7794" for the R8A7794 device
++   - "renesas,vin-r8a7795" for the R8A7795 device
+    - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 compatible device.
+    - "renesas,rcar-gen3-vin" for a generic R-Car Gen3 compatible device.
+ 
 -- 
 2.7.4
