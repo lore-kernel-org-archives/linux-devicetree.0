@@ -1,89 +1,32 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Decompiled vs *tmp extended device tree
-Date: Thu, 16 Nov 2017 10:52:12 -0600
-Message-ID: <20171116165212.4caconxbvfrmbs4n@rob-hp-laptop>
-References: <CAOT_U5bV1cWsXa-d7A5sbd0e+UuhD6NmwsmyjrQcuWceqtus_A@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V1 1/4] qcom: spmi-wled: Add support for qcom wled driver
+Date: Thu, 16 Nov 2017 08:55:10 -0800
+Message-ID: <20171116165510.GP28761@minitux>
+References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
+ <1510834717-21765-2-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOT_U5bV1cWsXa-d7A5sbd0e+UuhD6NmwsmyjrQcuWceqtus_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Martinovic <alan.martinovic-+NedCK/4fiIAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1510834717-21765-2-git-send-email-kgunda@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 01:12:55PM +0100, Alan Martinovic wrote:
-> Hi,
-> I'm trying to modify a device tree to enable support of the second UART.
-> The actual device tree which is used for the example:
-> 
-> https://github.com/getsenic/senic-os-linux/blob/senic/4.13/arch/arm/boot/dts/sun8i-h3-senic-hub.dts
-> 
-> The device tree includes and overrides some additional files:
-> 
->     #include "sun8i-h3.dtsi"
->     #include "sunxi-common-regulators.dtsi"
->     #include <dt-bindings/gpio/gpio.h>
->     #include <dt-bindings/input/input.h>
->     #include <dt-bindings/pinctrl/sun4i-a10.h>
-> 
-> I would like to know to what does the extended device tree look like,
-> and use that as my base, because I don't really have the complete picture
-> by just looking at the sun8i-h3-senic-hub.dts
-> 
-> In this example I'm interested in where are "uart0_pins_a" defined.
-> sun8i-h3-senic-hub.dts references them but has no definitions,
-> so I'm assuming the definition is somewhere in the included files.
-> 
-> To help me out with this task I discovered the device tree decompiler.
-> Am expecting that the decompiled dts contains all the data that
-> end up in the dtb blob, and should, among other, contain all the information
-> available in sun8i-h3-senic-hub.dts.
-> 
->     scripts/dtc/dtc -I dtb -O dts -o expanded-devtree.dts
-> arch/arm/boot/dts/sun8i-h3-senic-hub.dtb
-> 
-> But the decompiled extended device tree also seems to have no
-> traces of "uart0_pins_a" at all :
-> 
->     grep uart0_pins_a expanded-devtree.dts
+On Thu 16 Nov 04:18 PST 2017, Kiran Gunda wrote:
 
-labels are purely a source level construct (though overlays changes 
-that some) and are lost after compiling. You have to look for 'uart0@0'.
-
+> WLED driver provides the interface to the display driver to
+> adjust the brightness of the display backlight.
 > 
-> I've also discovered the hidden .tmp files:
-> 
->     ⟫ ls arch/arm/boot/dts/.sun8i-h3-*
->     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.cmd
->     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.d.dtc.tmp
->     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.d.pre.tmp
->     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp
-> 
-> and in one of them there is a definition to "uart0_pins_a":
-> 
->     ⟫ grep uart0_pins_a  arch/arm/boot/dts/.sun8i-h3-*
->     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp:   uart0_pins_a: uart0@0 {
->     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp: pinctrl-0 =
-> <&uart0_pins_a>;
-> 
-> My question is, which one is a more accurate representation
-> of the final device tree that I should use as a basis?
 
-Compiling dts to dts is mainly useful to get rid of all the C 
-preprocessor and includes to see what the final nodes look like. You do 
-lose some things though.
+Hi Kiran,
 
-> Why isn't it correct to expect that everything from sun8i-h3-senic-hub.dts
-> will end up in the final device tree blob?
+This driver has a lot in common with the already upstream pm8941-wled.c,
+because it's just a new revision of the same block.
 
-That's true for every compiler. After compiling, preprocessor symbols 
-are gone, functions may be inlined, etc.
+Please extend the existing driver rather than providing a new one
+(and yes, renaming the file is okay).
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
