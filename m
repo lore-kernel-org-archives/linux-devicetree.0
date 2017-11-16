@@ -1,35 +1,31 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6] arm: dts: imx: Add missing #phy-cells to
- usb-nop-xceiv
-Date: Thu, 16 Nov 2017 19:10:49 +0800
-Message-ID: <20171116110729.GN25384@dragon>
-References: <20171109222614.5719-1-robh@kernel.org>
- <20171109222614.5719-2-robh@kernel.org>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm: dts: ls1021a: add "fsl, ls1021a-esdhc" compatible
+ string to esdhc node
+Date: Thu, 16 Nov 2017 09:53:41 -0200
+Message-ID: <CAOMZO5AJzzTNHP2J1ej8Kk=2ow0yQK264Cmho2D99WqRXiDm=g@mail.gmail.com>
+References: <1510583976-6661-1-git-send-email-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171109222614.5719-2-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1510583976-6661-1-git-send-email-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 09, 2017 at 04:26:10PM -0600, Rob Herring wrote:
-> "usb-nop-xceiv" is using the phy binding, but is missing #phy-cells
-> property. This is probably because the binding was the precursor to the phy
-> binding.
-> 
-> Fixes the following warning in i.MX dts files:
-> 
-> Warning (phys_property): Missing property '#phy-cells' in node ...
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Rasmus,
 
-Applied, thanks.
+On Mon, Nov 13, 2017 at 12:39 PM, Rasmus Villemoes
+<rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org> wrote:
+> Commit a22950c888e3 (mmc: sdhci-of-esdhc: add quirk
+> SDHCI_QUIRK_BROKEN_TIMEOUT_VAL for ls1021a) added logic to the driver to
+> enable the broken timeout val quirk for ls1021a, but did not add the
+> corresponding compatible string to the device tree, so it didn't really
+> have any effect. Fix that.
+>
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+
+Please resend it with Shawn Guo on Cc. Thanks
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
