@@ -1,73 +1,294 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFCv2 PATCH 31/36] iommu/arm-smmu-v3: Add support for PCI ATS
-Date: Thu, 16 Nov 2017 15:03:00 +0000
-Message-ID: <673fda01-2ae0-87e4-637e-fe27096b6be0@arm.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
-	<20171006133203.22803-32-jean-philippe.brucker@arm.com>
-	<BLUPR0201MB150565029F9260A528739ACBA52E0@BLUPR0201MB1505.namprd02.prod.outlook.com>
+From: SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>
+Subject: [PATCH] arm, ls1021a: add support for Moxa UC-8410A open platform
+Date: Thu, 16 Nov 2017 22:58:57 +0800
+Message-ID: <20171116145858.25966-1-sz.lin@moxa.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <BLUPR0201MB150565029F9260A528739ACBA52E0-hRBPhS1iNj/g9tdZWAsUFxrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, Jimmy Chen <jimmy.chen-D4fb9hXD9d4@public.gmane.org>, Harry YJ Jhou <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bharat,
+Add support for Moxa UC-8410A open platform
 
-On 16/11/17 14:19, Bharat Kumar Gogada wrote:
-> Hi Jean,
-> 
-> +static size_t
-> +arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain, int ssid,
-> +			unsigned long iova, size_t size)
-> +{
-> +	unsigned long flags;
-> +	struct arm_smmu_cmdq_ent cmd;
-> +	struct arm_smmu_master_data *master;
-> +
-> +	arm_smmu_atc_inv_to_cmd(ssid, iova, size, &cmd);
-> +
-> +	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-> +	list_for_each_entry(master, &smmu_domain->devices, list)
-> +		arm_smmu_atc_inv_master(master, &cmd);
-> +	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-> +
-> +	return size;
-> +}
-> +
->  /* IOMMU API */
->  static bool arm_smmu_capable(enum iommu_cap cap)  { @@ -2361,6 +2506,8 @@ static void arm_smmu_detach_dev(struct device *dev)
->  		__iommu_process_unbind_dev_all(&smmu_domain->domain, dev);
->  
->  	if (smmu_domain) {
-> +		arm_smmu_atc_inv_master_all(master, 0);
-> +
-> In BIND flow, when VFIO_IOMMU_UNBIND is invoked invalidation is sent on allocated PASID for this application.
-> When vfio group fd is closed after UNBIND,  arm_smmu_detach_dev is invoked now invalidation is being sent on ssid zero.
-> Why  invalidation needs to be sent on ssid zero ?
+The UC-8410A computing platform is designed
+for embedded communication-centric industrial applications
 
-It's possible to use bind/unbind and map/unmap APIs at the same time on a
-domain. map/unmap modifies non-ssid mappings as usual, for context
-descriptor 0. Note that SSID 0 is converted to "no SSID" by
-arm_smmu_atc_inv_to_cmd.
+The features of UC-8410A are:
+* QSPI flash
+* SD slot
+* 3x LAN
+* 8x RS-232/422/485 ports, software-selectable
+* Mini PCIe form factor with PCIe/USB signal
+* 2x USB host
+* TPM
+* Watchdog
+* RTC
+* User LEDs
+* Beeper
 
-That said, I think VFIO cleans all DMA mappings when the VFIO group fd is
-closed, which will send individual ATC invalidation for each mapping. But
-VFIO may not be the only user of this API, and future users may be less
-careful. It's safer to send this global invalidation whenever we detach
-the domain, to ensure we're not leaving stale ATC entries for the next user.
+Signed-off-by: Jimmy Chen <jimmy.chen-D4fb9hXD9d4@public.gmane.org>
+Signed-off-by: Harry YJ Jhou <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>
+Signed-off-by: SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 230 ++++++++++++++++++++++++++++
+ 2 files changed, 231 insertions(+)
+ create mode 100644 arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
 
-Thanks,
-Jean
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index eff87a344566..0165fbcb1d10 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -495,6 +495,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+ 	imx7s-colibri-eval-v3.dtb \
+ 	imx7s-warp.dtb
+ dtb-$(CONFIG_SOC_LS1021A) += \
++	ls1021a-moxa-uc-8410a.dtb \
+ 	ls1021a-qds.dtb \
+ 	ls1021a-twr.dtb
+ dtb-$(CONFIG_SOC_VF610) += \
+diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+new file mode 100644
+index 000000000000..4896b551505b
+--- /dev/null
++++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+@@ -0,0 +1,230 @@
++/*
++ * Copyright (C) 2017 Moxa Inc. - https://www.moxa.com/
++ *
++ * Author: Harry YJ Jhou (周亞諄) <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>
++ *         Jimmy Chen (陳永達)    <jimmy.chen-D4fb9hXD9d4@public.gmane.org>
++ *         SZ Lin (林上智)        <sz.lin-D4fb9hXD9d4@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/dts-v1/;
++
++#include "ls1021a.dtsi"
++
++/ {
++	model = "Moxa UC-8410A";
++
++	aliases {
++		enet0_rgmii_phy = &rgmii_phy0;
++		enet1_rgmii_phy = &rgmii_phy1;
++		enet2_rgmii_phy = &rgmii_phy2;
++	};
++
++	sys_mclk: clock-mclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24576000>;
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_3p3v: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "3P3V";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		cel_pwr {
++			label = "UC8410A:CEL_PWR";
++			gpios = <&gpio3 23 1>;
++			default-state = "off";
++		};
++
++		cel_reset {
++			label = "UC8410A:CEL_RESET";
++			gpios = <&gpio3 24 1>;
++			default-state = "off";
++		};
++
++		str_led {
++			label = "UC8410A:RED:PROG";
++			gpios = <&gpio0 16 0>;
++			linux,default-trigger = "mmc0";
++		};
++
++		sw_ready {
++			label = "UC8410A:GREEN:SWRDY";
++			gpios = <&gpio0 18 0>;
++			default-state = "on";
++		};
++
++		beeper {
++			label = "UC8410A:BEEP";
++			gpios = <&gpio0 20 0>;
++			default-state = "off";
++		};
++
++		prog_led0 {
++			label = "UC8410A:GREEN:PROG2";
++			gpios = <&gpio3 14 0>;
++			default-state = "off";
++		};
++
++		prog_led1 {
++			label = "UC8410A:GREEN:PROG1";
++			gpios = <&gpio3 15 0>;
++			default-state = "off";
++		};
++
++		prog_led2 {
++			label = "UC8410A:GREEN:PROG0";
++			gpios = <&gpio3 16 0>;
++			default-state = "off";
++		};
++
++		wifi_signal0 {
++			label = "UC8410A:GREEN:CEL2";
++			gpios = <&gpio3 17 0>;
++			default-state = "off";
++		};
++
++		wifi_signal1 {
++			label = "UC8410A:GREEN:CEL1";
++			gpios = <&gpio3 18 0>;
++			default-state = "off";
++		};
++
++		wifi_signal2 {
++			label = "UC8410A:GREEN:CEL0";
++			gpios = <&gpio3 19 0>;
++			default-state = "off";
++		};
++
++		cpu_diag_red {
++			label = "UC8410A:RED:DIA";
++			gpios = <&gpio3 20 0>;
++			default-state = "off";
++		};
++
++		cpu_diag_green {
++			label = "UC8410A:GREEN:DIA";
++			gpios = <&gpio3 21 0>;
++			default-state = "off";
++		};
++
++		cpu_diag_yellow {
++			label = "UC8410A:YELLOW:DIA";
++			gpios = <&gpio3 22 0>;
++			default-state = "off";
++		};
++	};
++};
++
++&enet0 {
++	phy-handle = <&rgmii_phy0>;
++	phy-connection-type = "rgmii-id";
++	status = "okay";
++};
++
++&enet1 {
++	phy-handle = <&rgmii_phy1>;
++	phy-connection-type = "rgmii-id";
++	status = "okay";
++};
++
++&enet2 {
++	phy-handle = <&rgmii_phy2>;
++	phy-connection-type = "rgmii-id";
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	clock-frequency = <100000>;
++
++	rtc: rtc@68 {
++		compatible = "dallas,ds1374";
++		reg = <0x68>;
++	};
++
++	tpm: tpm@20 {
++		compatible = "infineon,slb9635tt";
++		reg = <0x20>;
++	};
++};
++
++&lpuart0 {
++	status = "okay";
++};
++
++&mdio0 {
++	rgmii_phy0: ethernet-phy@0 {
++		compatible = "marvell,88e1118";
++		reg = <0x0>;
++		marvell,reg-init =
++			<3 0x11 0 0x4415>, /* Reg 3,17 */
++			<3 0x10 0 0x77>; /* Reg 3,16 */
++	};
++	rgmii_phy1: ethernet-phy@1 {
++		compatible = "marvell,88e1118";
++		reg = <0x1>;
++		marvell,reg-init =
++			<3 0x11 0 0x4415>, /* Reg 3,17 */
++			<3 0x10 0 0x77>; /* Reg 3,16 */
++	};
++	rgmii_phy2: ethernet-phy@2 {
++		compatible = "marvell,88e1118";
++		reg = <0x2>;
++		marvell,reg-init =
++			<3 0x11 0 0x4415>, /* Reg 3,17 */
++			<3 0x10 0 0x77>; /* Reg 3,16 */
++	};
++};
++
++&qspi {
++	status = "okay";
++	bus-num = <0>;
++	fsl,spi-num-chipselects = <2>;
++	fsl,spi-flash-chipselects = <0>;
++	fsl,qspi-has-second-chip;
++	flash: flash@0 {
++		compatible = "spansion,s25fl064l", "spansion,s25fl164k";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++
++		partitions@0 {
++			label = "U-Boot";
++			reg = <0x0 0x180000>;
++		};
++		partitions@1 {
++			label = "U-Boot Env";
++			reg = <0x180000 0x680000>;
++		};
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&sata {
++	status = "okay";
++};
+-- 
+2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
