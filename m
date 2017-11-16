@@ -1,44 +1,65 @@
 MIME-Version: 1.0
-In-Reply-To: <20171121200832.d55khzcufo2owcff@latitude>
-References: <20171120214520.dcaqvyncojwefmgt@rob-hp-laptop>
-	<mhng-dadf76d9-0823-4fc8-9177-1772629573b6@palmer-si-x1c4>
-	<20171121200832.d55khzcufo2owcff@latitude>
-Date: Tue, 28 Nov 2017 13:43:00 -0600
-Message-ID: <CAL_JsqL9XSVCgouCftMfm3FQCPgg6S2775JJ_7HhxBxqDBnB-Q@mail.gmail.com>
-Subject: Re: [patches] Re: [PATCH] dt-bindings: Add a RISC-V SBI firmware node
-From: Rob Herring <robh@kernel.org>
+In-Reply-To: <1510796793.16864.25.camel@chimera>
+References: <1510420788-25184-1-git-send-email-daniel@gimpelevich.san-francisco.ca.us>
+	<20171113112312.GZ15260@jhogan-linux>
+	<CAL_JsqJRVB928DVOAVQGrtT_EOuQBHkBhcd9+XFzqemutG65GA@mail.gmail.com>
+	<1510628754.14209.27.camel@chimera>
+	<CAL_JsqJoEEkoA1sGocGFXE7WWhCmkb5k2OxVRZ3OnigptoL8_Q@mail.gmail.com>
+	<1510796793.16864.25.camel@chimera>
+Date: Wed, 15 Nov 2017 23:26:30 -0600
+Message-ID: <CAL_Jsq+MtHo5Da2mDD6c4JCb=kZrWEyOBz9pL+=9_f0VBQNAgA@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: implement a "bootargs-append" DT property
+From: Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc: Palmer Dabbelt <palmer@sifive.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, patches@groups.riscv.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Daniel Gimpelevich <daniel@gimpelevich.san-francisco.ca.us>
+Cc: James Hogan <james.hogan@mips.com>, Linux-MIPS <linux-mips@linux-mips.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Nov 21, 2017 at 2:08 PM, Jonathan Neusch=C3=A4fer <j.neuschaefer@gm=
-x.net> wrote:
-> On Tue, Nov 21, 2017 at 09:37:02AM -0800, Palmer Dabbelt wrote:
-> [...]
->> This isn't really a big deal to me, as I'm only interested in RISC-V
->> systems, but there's been some pushback on the concept of an SBI so it
->> seemed like a simple way to allow people to build non-SBI (and there for=
- not
->> really RISC-V) systems.
+On Wed, Nov 15, 2017 at 7:46 PM, Daniel Gimpelevich <daniel@gimpelevich.san-francisco.ca.us> wrote:
+> On Tue, 2017-11-14 at 11:18 -0600, Rob Herring wrote:
+>> I understand you can't apply random strings in any order you like. I'm
+>> questioning the need to do that and what are the concrete example(s)
+>> where you need that ability.
 >
-> For those reading along: I suggested the /firmware/sbi node to Palmer,
-> because I'm interested in such "not really RISC-V" systems, (because it
-> makes the firmware's job easier to not implement the SBI =E2=80=94 speaki=
-ng with
-> my coreboot hat, here.)
+> Concrete:
+> Pre-DT bootloader provides "console=/dev/someunusualdevice" and
+> "root=/dev/mtdblock1" in argv. The dtb arranges flash differently and
+> supplies "root=/dev/mtd2" in bootargs. Kernel uses /dev/mtdblock1 and
+> panics, or alternatively uses /dev/mtd2 with no console.
+>
+>> I'd generally expect that only board specific options are in the dtb,
+>> and a distro will add it's own options common for all and the specific
+>> arch into the bootloader config files. And generally, the last thing
+>> loaded gets the last say in what is set.
+>
+> Bootloaders and their configs are not distro-dependent.
 
-Seems some property to signify "not really RISC-V" would be better than add=
-ing a node for all conformant systems. If this is just one
+For the ones that install grub, they are.
 
+>> What h/w specific options would be needed for recovery kernel? That's
+>> getting into putting not just Linux specifics into the dtb, but distro
+>> specifics there. While yes, the dts files often already have bootargs
+>> filled with Linux options, the intention is really that the bootloader
+>> fills in bootargs. And if you have multiple kernels or OSs, then the
+>> bootloader provides the mechanism to choose and boot with the right
+>> options.
 >
->> One option that wouldn't require a device tree node
->> would be to have Linux boot in machine mode [...] and then provide its
->> own SBI implementation.
+> Kernels _are_ distro-specific. A recovery kernel might also have options
+> that are not hardware specific in addition to options that are.
 >
-> I think this can work.
+>> I think the kernel (being last) should fully decide what to do:
+>> append, prepend, and/or override. There was some work a while back to
+>> support more flexible command line handling and be arch neutral, but
+>> it never got merged.
 >
+> The kernel would not always have all the information needed for this
+> decision now like it would before DT. The dtb should decide what
+> precedence its bootargs have, and the kernel should decide what
+> precedence compiled-in bootargs have. Such logic is provided by this
+> patch, but not completely, because there is still no "bootargs-prepend"
+> property. The only use case I can think of for "bootargs-prepend" would
+> be to provide a default command line that is specific to a board that
+> would sometimes have one bootloader, and sometimes another. Currently,
+> such a situation can be worked around using a board-specific kernel, but
+> this mechanism is a relic from pre-DT days.
 >
-> Thanks,
-> Jonathan Neusch=C3=A4fer
