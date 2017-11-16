@@ -1,35 +1,224 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5] ARM: dts: imx53-tx53: Fix 'ethernet-phy@0' node with
- unit name and no reg property
-Date: Thu, 16 Nov 2017 15:36:05 +0800
-Message-ID: <20171116073604.GB25384@dragon>
-References: <1509031514-30602-1-git-send-email-marco.franchi@nxp.com>
+Subject: Re: [PATCH v7 2/2] ARM: dts: TS-4600: add basic device tree
+Date: Thu, 16 Nov 2017 16:00:22 +0800
+Message-ID: <20171116080021.GD25384@dragon>
+References: <20171101170645.12918-1-sebastien.bourdelin@savoirfairelinux.com>
+ <20171101170645.12918-2-sebastien.bourdelin@savoirfairelinux.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1509031514-30602-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20171101170645.12918-2-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 26, 2017 at 01:25:14PM -0200, Marco Franchi wrote:
-> The following build warning is seen with W=1:
+On Wed, Nov 01, 2017 at 01:06:45PM -0400, Sebastien Bourdelin wrote:
+> These device trees add support for the TS-4600 by Technologic Systems.
 > 
-> Warning (unit_address_vs_reg): Node /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0 has a unit name, but no reg property
+> More details here:
+>   http://wiki.embeddedarm.com/wiki/TS-4600
 > 
-> Fix this warning by adding reg property from such node and, consequently, 
-> includes a mdio node into the fec node, with the 'address-cells' and 
-> 'size-cells' to avoid these other following warnings:
+> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> ---
+> Changes v6 -> v7:
+>   - rebase on master
+>   - remove unneeded pinctrl-name (suggested by Shawn Guo)
+>   - add reg to the node en-sd-pwr (suggested by Shawn Guo)
+>   - use define for gpio polarity (suggested by Shawn Guo)
+>   - remove the fake bus container for regulator (suggested by Shawn Guo)
 > 
-> Warning (reg_format): "reg" property in /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0 has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-> Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
-> Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/aips@60000000/ethernet@63fec000/ethernet-phy@0
+> Changes v5 -> v6:
+>   - rebase on master
+>   - split the previous patch series into series by subsystem
 > 
-> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+> Changes v4 -> v5:
+>   - fix missing signed off
+> 
+> Changes v3 -> v4:
+>   - rebase on master
+> 
+> Changes v2 -> v3:
+>   - rebase on master
+> 
+> Changes v1 -> v2:
+>   - rebase on master
+> ---
+>  arch/arm/boot/dts/Makefile                 |  2 +
+>  arch/arm/boot/dts/imx28-ts4600-common.dtsi | 74 ++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx28-ts4600-rev-a.dts   | 22 +++++++++
+>  arch/arm/boot/dts/imx28-ts4600-rev-b.dts   | 22 +++++++++
+>  4 files changed, 120 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx28-ts4600-common.dtsi
+>  create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-a.dts
+>  create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-b.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index faf46abaa4a2..430fe7f1e644 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -532,6 +532,8 @@ dtb-$(CONFIG_ARCH_MXS) += \
+>  	imx28-m28cu3.dtb \
+>  	imx28-m28evk.dtb \
+>  	imx28-sps1.dtb \
+> +	imx28-ts4600-rev-a.dtb \
+> +	imx28-ts4600-rev-b.dtb \
+>  	imx28-tx28.dtb
+>  dtb-$(CONFIG_ARCH_NOMADIK) += \
+>  	ste-nomadik-s8815.dtb \
+> diff --git a/arch/arm/boot/dts/imx28-ts4600-common.dtsi b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
+> new file mode 100644
+> index 000000000000..c5f6bef87fd5
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
+> @@ -0,0 +1,74 @@
+> +/*
+> + * Copyright (C) 2016 Savoir-Faire Linux
+> + * Author: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +#include "imx28.dtsi"
+> +#include "dt-bindings/gpio/gpio.h"
+> +
+> +/ {
+> +
+> +	compatible = "technologic,imx28-ts4600", "fsl,imx28";
+> +
+> +	apb@80000000 {
+> +		apbh@80000000 {
+> +			ssp0: ssp@80010000 {
+> +				compatible = "fsl,imx28-mmc";
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&mmc0_4bit_pins_a
+> +					     &mmc0_sck_cfg
+> +					     &en_sd_pwr>;
+> +				broken-cd = <1>;
+> +				bus-width = <4>;
+> +				vmmc-supply = <&reg_vddio_sd0>;
+> +				status = "okay";
+> +			};
+> +
+> +			pinctrl@80018000 {
+> +
+> +				en_sd_pwr: en-sd-pwr@0 {
+> +					reg = <0>;
+> +					fsl,pinmux-ids = <
+> +						MX28_PAD_PWM3__GPIO_3_28
+> +					>;
+> +					fsl,drive-strength = <MXS_DRIVE_4mA>;
+> +					fsl,voltage = <MXS_VOLTAGE_HIGH>;
+> +					fsl,pull-up = <MXS_PULL_DISABLE>;
+> +				};
+> +
+> +			};
+> +		};
+> +
+> +		apbx@80040000 {
+> +			pwm: pwm@80064000 {
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pwm2_pins_a>;
+> +				status = "okay";
+> +			};
+> +
+> +			duart: serial@80074000 {
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&duart_pins_a>;
+> +				status = "okay";
+> +			};
+> +		};
+> +	};
+> +
+> +	reg_vddio_sd0: regulator-vddio-sd0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vddio-sd0";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		gpio = <&gpio3 28 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +};
+> diff --git a/arch/arm/boot/dts/imx28-ts4600-rev-a.dts b/arch/arm/boot/dts/imx28-ts4600-rev-a.dts
+> new file mode 100644
+> index 000000000000..e8cb72988fcf
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx28-ts4600-rev-a.dts
+> @@ -0,0 +1,22 @@
+> +/*
+> + * Copyright (C) 2016 Savoir-Faire Linux
+> + * Author: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include "imx28-ts4600-common.dtsi"
+> +
+> +/ {
+> +	model = "Technologic Systems i.MX28 TS-4600 Rev A";
+> +
+> +	memory {
+> +		reg = <0x40000000 0x08000000>;   /* 128MB */
 
-Applied, thanks.
+If memory size is the only difference between Rev A and B, can we have
+device tree default to most used revision and ask bootloader to fix up
+memory node for the other revision?  In that case, we only need to
+maintain imx28-ts4600.dts then.
+
+Shawn
+
+> +	};
+> +
+> +};
+> diff --git a/arch/arm/boot/dts/imx28-ts4600-rev-b.dts b/arch/arm/boot/dts/imx28-ts4600-rev-b.dts
+> new file mode 100644
+> index 000000000000..a115f831fe2b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx28-ts4600-rev-b.dts
+> @@ -0,0 +1,22 @@
+> +/*
+> + * Copyright (C) 2016 Savoir-Faire Linux
+> + * Author: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include "imx28-ts4600-common.dtsi"
+> +
+> +/ {
+> +	model = "Technologic Systems i.MX28 TS-4600 Rev B";
+> +
+> +	memory {
+> +		reg = <0x40000000 0x10000000>;   /* 256MB */
+> +	};
+> +
+> +};
+> -- 
+> 2.13.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
