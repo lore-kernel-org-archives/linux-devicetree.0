@@ -1,30 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: arm: actions: Add Sparky
-Date: Wed, 15 Nov 2017 22:40:00 -0600
-Message-ID: <20171116044000.gfttynwbdpbeflil@rob-hp-laptop>
-References: <20171114180114.26408-1-afaerber@suse.de>
- <20171114180114.26408-3-afaerber@suse.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [GIT PULL] DeviceTree updates for 4.15
+Date: Wed, 15 Nov 2017 23:05:12 -0600
+Message-ID: <CAL_JsqLgpL+19ekd_J7h-jBic1whcQuU+Vp-HEh-VgShhvSVGQ@mail.gmail.com>
+References: <CAL_JsqLbJP4T014Mgb4-RTmuTtV7nOiFDBPPzak=d9NHb3-w9Q@mail.gmail.com>
+ <CA+55aFyPe=uWLF8gH5_bkPTbGbTP5h1Uq6XTUZA7oiNF8nd_SQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171114180114.26408-3-afaerber-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <CA+55aFyPe=uWLF8gH5_bkPTbGbTP5h1Uq6XTUZA7oiNF8nd_SQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Jeff Chen <jeff.chen-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?utf-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?utf-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?utf-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?utf-8?B?5qKF5Yip?= <harrymei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Ioan B <ioan-HmMszb9TTf4@public.gmane.org>, Sudeep Kumar <sudeepkumar-/0wLYENt7sWikuSvNLsyVV6hYfS7NtTn@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 14, 2017 at 07:01:13PM +0100, Andreas Färber wrote:
-> Define a binding for Allo.com Sparky SBC.
-> 
-> Cc: Ioan B. <ioan-HmMszb9TTf4@public.gmane.org>
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/actions.txt | 1 +
->  1 file changed, 1 insertion(+)
+On Wed, Nov 15, 2017 at 9:00 PM, Linus Torvalds
+<torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
+> So these two warnings seems to be happening:
+>
+>   drivers/of/unittest-data/testcases.dtb: Warning
+> (interrupts_extended_property): Could not get phandle node for
+> /__local_fixups__/testcase-data/interrupts/interrupts-extended0:interrupts-extended(cell
+> 3)
+>
+>   drivers/of/unittest-data/testcases.dtb: Warning
+> (interrupts_property): interrupts size is (4), expected multiple of 8
+> in /testcase-data/testcase-device2
+>
+> and honestly, warnings during "make allmodconfig" are not acceptable.
+> Right now we have a few module license warnings that I hope are going
+> to go away, but the devicetree one I didn't even notice when it
+> appeared. I'm actually surprised, because I do a "make allmodconfig"
+> in between all pulls, and I didn't notice it after doing the
+> devicetree pull.
+>
+> Of course, that is probably just exactly because those module-license
+> warnings have made me warning-blind, which is why warnings aren't
+> acceptable.
+>
+> "It's a benign warning" is never true, exactly because a couple of
+> benign warnings that people get used to then end up hiding all the
+> _bad_ cases.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+These cases are intentionally bad DT data to feed the testcase. We can
+switch off the warning (at least I think the kbuild infrastructure is
+there), but then the check is disabled for all the good cases too
+which isn't great. We probably need to split the test data into good
+and bad data dtbs, but that will take some restructuring of the tests.
+
+> I have no idea how that dts test-case is _supposed_ to work, so I'll
+> just write this plaintive email. Please fix it.
+
+Okay, we'll come up with something.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
