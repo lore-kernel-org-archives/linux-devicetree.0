@@ -1,66 +1,56 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
- LED driver
-Date: Thu, 16 Nov 2017 21:14:13 +0100
-Message-ID: <82336eb7-2b89-d37b-d688-4e4302766346@gmail.com>
-References: <20171115194203.13572-1-dmurphy@ti.com>
- <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4@gmail.com>
- <0a78c883-f074-cc19-3c0c-fc05607400e9@ti.com> <20171115222323.GA18290@amd>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] gpio: pca953x: fix vendor prefix for PCA9654
+Date: Thu, 16 Nov 2017 23:18:32 +0300
+Message-ID: <20171116201842.006310882@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171115222323.GA18290@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline; filename=gpio-pca953x-fix-vendor-prefix-for-PCA9654.patch
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan and Pavel,
+Despite commit 55020c8056a8 ("of: Add vendor prefix for ON Semiconductor
+Corp.") was made long ago, the latter commit 9f49f6dd0473 ("gpio: pca953x:
+add onsemi,pca9654 id") made use of another, undocumented vendor prefix.
+Since such prefix doesn't seem to be used in any device trees, I think we
+can just fix the "compatible" string in the driver and the bindings and be
+done with that...
 
-On 11/15/2017 11:23 PM, Pavel Machek wrote:
-> Hi!
-> 
->>> Shouldn't the driver be targeted for backlight subsystem then?
->>>
->>> Adding backlight maintainers.
->>>
->>
->> Great point!  I was not aware of the backlight subsystem.
->>
->> Looks like I need to create a back light version as well.
->>
->> Like the lp8788 did since this can be used as a LED driver beyond
->> display back lighting.
-> 
-> No, definitely not two drivers for lp8788 hardware.
+Fixes: 9f49f6dd0473 ("gpio: pca953x: add onsemi,pca9654 id")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I agree.
+---
+The patch is against the 'fixes' branch of LinusW's 'linux-gpio.git' repo.
 
-> If that does not yet exist... you want to create glue layer to be able
-> to use LED as a display backlight. (It may already exist, no idea).
-> 
-> ...
-> 
-> Actually or maybe a LED trigger. Just set LED's trigger to "this is
-> display backlight".
+ Documentation/devicetree/bindings/gpio/gpio-pca953x.txt |    2 +-
+ drivers/gpio/gpio-pca953x.c                             |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-There is one already:
-
-drivers/leds/trigger/ledtrig-backlight.c
-
-It adds a LED class device to the fb_notifier_list
-(drivers/video/fbdev/core/fb_notify.c)
-
-using fb_register_client(). The same is used in
-backlight_device_register (drivers/video/backlight/backlight.c).
-
-Actually why do you want to have this driver in the LED subsystem,
-if it is advertised as "designed for LCD display backlighting"?
-
-As a side note I can say that I've been always wondering why the two
-subsystems for similar type of hardware.
-
--- 
-Best regards,
-Jacek Anaszewski
+Index: linux-gpio/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+===================================================================
+--- linux-gpio.orig/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
++++ linux-gpio/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+@@ -27,7 +27,7 @@ Required properties:
+ 	ti,tca6424
+ 	ti,tca9539
+ 	ti,tca9554
+-	onsemi,pca9654
++	onnn,pca9654
+ 	exar,xra1202
+ 
+ Optional properties:
+Index: linux-gpio/drivers/gpio/gpio-pca953x.c
+===================================================================
+--- linux-gpio.orig/drivers/gpio/gpio-pca953x.c
++++ linux-gpio/drivers/gpio/gpio-pca953x.c
+@@ -947,7 +947,7 @@ static const struct of_device_id pca953x
+ 	{ .compatible = "ti,tca6416", .data = OF_953X(16, PCA_INT), },
+ 	{ .compatible = "ti,tca6424", .data = OF_953X(24, PCA_INT), },
+ 
+-	{ .compatible = "onsemi,pca9654", .data = OF_953X( 8, PCA_INT), },
++	{ .compatible = "onnn,pca9654", .data = OF_953X( 8, PCA_INT), },
+ 
+ 	{ .compatible = "exar,xra1202", .data = OF_953X( 8, 0), },
+ 	{ }
