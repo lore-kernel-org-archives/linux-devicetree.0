@@ -1,89 +1,27 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] ARM: dts: r8a779x: Add '#reset-cells' in cpg-mssr
-Date: Thu, 16 Nov 2017 14:35:57 +0100
-Message-ID: <1510839357-11450-1-git-send-email-geert+renesas@glider.be>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 1/2] dt-bindings: media: rcar_vin: add device tree support
+ for r8a774[35]
+Date: Thu, 16 Nov 2017 13:39:27 +0000
+Message-ID: <TY1PR06MB0895789FB2AE69CE17B8A639C02E0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1510834290-25434-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1510834290-25434-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdXVb9xE5toLGHnaFX9y+-qVzz2_NzK6qEebaDiXxAec7w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXVb9xE5toLGHnaFX9y+-qVzz2_NzK6qEebaDiXxAec7w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?TmlrbGFzIFPDtmRlcmx1bmQ=?= <niklas.soderlund@ragnatech.se>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-
-With the latest dtc, we get many warnings about the missing
-'#reset-cells' property in these controllers, e.g.:
-
-arch/arm/boot/dts/r8a7790-lager.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /can@e6e80000:resets[0])
-arch/arm/boot/dts/r8a7792-blanche.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/dma-controller@e6700000:resets[0])
-arch/arm/boot/dts/r8a7792-wheat.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/ethernet@e6800000:resets[0])
-arch/arm/boot/dts/r8a7793-gose.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /gpio@e6050000:resets[0])
-arch/arm/boot/dts/r8a7794-alt.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /i2c@e6500000:resets[0])
-arch/arm/boot/dts/r8a7794-silk.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /interrupt-controller@e61c0000:resets[0])
-
-This adds it for the three r8a779x chips that were lacking it. The
-binding mandates this as <1>, so this is the value I use.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-[geert: Add fix for r8a7793.dtsi]
-Fixes: 34fbd2b12761d111 ("ARM: dts: r8a7790: Add reset control properties")
-Fixes: 6e11a322f1d7505d ("ARM: dts: r8a7792: Add reset control properties")
-Fixes: 84fb19e1d201ba86 ("ARM: dts: r8a7793: Add reset control properties")
-Fixes: 615beb759ca494a4 ("ARM: dts: r8a7794: Add reset control properties")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7790.dtsi | 1 +
- arch/arm/boot/dts/r8a7792.dtsi | 1 +
- arch/arm/boot/dts/r8a7793.dtsi | 1 +
- arch/arm/boot/dts/r8a7794.dtsi | 1 +
- 4 files changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index e2c530c330a8eb7e..450bfc0e9796a557 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -1202,6 +1202,7 @@
- 		clock-names = "extal", "usb_extal";
- 		#clock-cells = <2>;
- 		#power-domain-cells = <0>;
-+		#reset-cells = <1>;
- 	};
- 
- 	prr: chipid@ff000044 {
-diff --git a/arch/arm/boot/dts/r8a7792.dtsi b/arch/arm/boot/dts/r8a7792.dtsi
-index 7b394273031e9a90..ac05fdb91798b88d 100644
---- a/arch/arm/boot/dts/r8a7792.dtsi
-+++ b/arch/arm/boot/dts/r8a7792.dtsi
-@@ -830,6 +830,7 @@
- 			clock-names = "extal";
- 			#clock-cells = <2>;
- 			#power-domain-cells = <0>;
-+			#reset-cells = <1>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
-index a83c2e9c5723fe2c..61dd291d907da2f5 100644
---- a/arch/arm/boot/dts/r8a7793.dtsi
-+++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -1088,6 +1088,7 @@
- 		clock-names = "extal", "usb_extal";
- 		#clock-cells = <2>;
- 		#power-domain-cells = <0>;
-+		#reset-cells = <1>;
- 	};
- 
- 	rst: reset-controller@e6160000 {
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index 96e405e70d9aeea5..106b4e1649ff695b 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -1106,6 +1106,7 @@
- 		clock-names = "extal", "usb_extal";
- 		#clock-cells = <2>;
- 		#power-domain-cells = <0>;
-+		#reset-cells = <1>;
- 	};
- 
- 	rst: reset-controller@e6160000 {
--- 
-2.7.4
+SGVsbG8gR2VlcnQsDQoNCnRoYW5rIHlvdSBmb3IgeW91ciBjb21tZW50IQ0KDQo+ID4gQWRkIGNv
+bXBhdGlibGUgc3RyaW5ncyBmb3IgcjhhNzc0MyBhbmQgcjhhNzc0NS4gTm8gZHJpdmVyIGNoYW5n
+ZQ0KPiA+IGNoYW5nZSBpcyBuZWVkZWQgYXMgInJlbmVzYXMscmNhci1nZW4yLXZpbiIgd2lsbCBh
+Y3RpdmF0ZSB0aGUgcmlnaHQNCj4NCj4gZG91YmxlICJjaGFuZ2UiDQoNCm9vb29wcywgZG8geW91
+IHRoaW5rIGEgdjIgaXMgaW4gb3JkZXI/DQoNClRoYW5rcywNCkZhYg0KDQoNCg0KUmVuZXNhcyBF
+bGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3Vy
+bmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xh
+bmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
