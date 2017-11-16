@@ -1,61 +1,42 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/8] USB: add device-tree support for interfaces
-Date: Thu, 16 Nov 2017 17:12:49 +0100
-Message-ID: <20171116161249.GJ11226@localhost>
-References: <20171109170723.10960-1-johan@kernel.org>
- <20171116144321.hlp6em77t56e5nly@rob-hp-laptop>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v7 03/13] slimbus: Add SLIMbus bus type
+Date: Thu, 16 Nov 2017 16:13:58 +0000
+Message-ID: <b02bc1c6-1107-f6b5-06d0-670700acdb26@linaro.org>
+References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-4-srinivas.kandagatla@linaro.org>
+ <20171116131814.GV3187@localhost>
+ <e2fa6b56-965d-74e7-af2f-77baf0f50901@linaro.org>
+ <20171116161426.GA3187@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171116144321.hlp6em77t56e5nly@rob-hp-laptop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171116161426.GA3187@localhost>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, jkosina@suse.cz, linux-kernel@vger.kernel.org, broonie@kernel.org, daniel@ffwll.ch, gregkh@linuxfoundation.org, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 08:43:21AM -0600, Rob Herring wrote:
-> On Thu, Nov 09, 2017 at 06:07:15PM +0100, Johan Hovold wrote:
-> > This series adds support for representing USB interfaces in device tree
-> > by implementing support for "interface nodes" and "combined nodes" from
-> > the OF specification.
-> > 
-> > This is needed to be able to describe non-discoverable properties of
-> > permanently attached USB devices and their interfaces such as any
-> > i2c-clients connected to a USB-i2c bridge (e.g. the dln2 mfd) or,
-> > eventually, devices connected to usb-serial converters (to be used with
-> > serdev).
+
+
+On 16/11/17 16:14, Vinod Koul wrote:
+>>>> +static int slim_device_match(struct device *dev, struct device_driver *drv)
+>>>> +{
+>>>> +	struct slim_device *sbdev = to_slim_device(dev);
+>>>> +	struct slim_driver *sbdrv = to_slim_driver(drv);
+>>>> +
+>>>> +	return slim_match(sbdrv->id_table, sbdev) != NULL;
+>>> return !!slim_match() ?
+> I guess you missed this one..
+Opps, It makes sense I will change it.
+
 > 
-> In the original OF binding, the firmware dynamically generated the tree 
-> for the active configuration AIUI. That doesn't really fit for the 
-> (mostly) static FDT usage and why we stopped at the device level. So how 
-> do we handle multiple configs? Or can we assume that if say the I2C bus 
-> is used, then there's only one config and interface that can use it?
-
-Multiple configuration can be used to implement different sets of
-functionality. A hypothetical device could have one i2c controller in
-one configuration and two in another. Most devices will only have one
-configuration though.
-
-A USB interface implements some functionality of the device (and this is
-what Linux USB drivers bind to). So even for single-configuration
-devices, you need to be able to say which i2c controller (bus) you are
-describing.
-
-[ And as a simplification, the combined nodes can be used for most cases
-were we only have one configuration with a single interface. ]
-
-Note that a new set of interfaces (in the kernel device model) is
-created when a new USB device configuration is selected. These new
-interfaces will be associated with any matching device-tree interface
-nodes and that these would be distinct from any nodes that matches
-another configuration.
-
-So I don't think there's any problem with dealing with the rare cases of
-multi-configuration devices. 
-
-Johan
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
