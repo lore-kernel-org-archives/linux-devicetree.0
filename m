@@ -1,98 +1,73 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
- LED driver
-Date: Thu, 16 Nov 2017 09:45:23 -0600
-Message-ID: <d3483e49-650d-1d68-bec6-eeb84d8ac48a@ti.com>
-References: <20171115194203.13572-1-dmurphy@ti.com>
- <20171116154139.wed7qmpmv2ffyzv2@rob-hp-laptop>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v2 1/4] omapdrm: fix compatible string for td028ttec1
+Date: Thu, 16 Nov 2017 09:53:59 -0600
+Message-ID: <d90ee1ee-8a33-de04-bb8b-2f10e0a80a61@ti.com>
+References: <cover.1510822218.git.hns@goldelico.com>
+ <474bfc72b67e1d0e2a223084a69f04d2baa1dda8.1510822218.git.hns@goldelico.com>
+ <4753a425-d050-7f2d-35ae-b387accfd99e@ti.com>
+ <130D3B71-C0CE-4755-BF06-971681F630BC@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171116154139.wed7qmpmv2ffyzv2@rob-hp-laptop>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <130D3B71-C0CE-4755-BF06-971681F630BC@goldelico.com>
 Content-Language: en-US
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>, letux-kernel@openphoenux.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-fbdev@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rob
-
-Thanks for the review
-
-On 11/16/2017 09:41 AM, Rob Herring wrote:
-> On Wed, Nov 15, 2017 at 01:42:02PM -0600, Dan Murphy wrote:
->> This adds the devicetree bindings for the LM3692x
->> I2C LED string driver.
+On 11/16/2017 07:43 AM, H. Nikolaus Schaller wrote:
+> 
+>> Am 16.11.2017 um 13:32 schrieb Tomi Valkeinen <tomi.valkeinen@ti.com>:
 >>
->> Acked-by: Pavel Machek <pavel@ucw.cz>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
+>> On 16/11/17 10:50, H. Nikolaus Schaller wrote:
+>>> The vendor name was "toppoly" but other panels and the vendor list
+>>> have defined it as "tpo". So let's fix it in driver and bindings.
+>>>
+>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>> ---
 >>
->> v3 - No changes
->> v2 - No changes - https://patchwork.kernel.org/patch/10056677/
 >>
->>  .../devicetree/bindings/leds/leds-lm3692x.txt      | 28 ++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+>>> -MODULE_ALIAS("spi:toppoly,td028ttec1");
+>>> +MODULE_ALIAS("spi:tpo,td028ttec1");
 >>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
->> new file mode 100644
->> index 000000000000..cfef67bd4100
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
->> @@ -0,0 +1,28 @@
->> +* Texas Instruments - LM3692x Highly Efficient Dual-String White LED Driver
->> +
->> +The LM36922 is an ultra-compact, highly efficient,
->> +two string white-LED driver designed for LCD display
->> +backlighting.
->> +
->> +Required properties:
->> +	- compatible:
->> +		"ti,lm3692x"
+>> Doesn't this mean that the module won't load if you have old bindings?
 > 
-> Don't use wildcards in compatible strings.
-
-Do you mean to remove the x?  How do we denote a family of parts then?
-
+> Hm.
 > 
->> +	- reg -  I2C slave address
->> +
->> +Optional properties:
->> +	- label - Used for naming LEDs
->> +	- enable-gpio - gpio pin to enable/disable the device.
+> Well, I think it can load but doesn't automatically from DT strings which might
+> be unexpected.
 > 
-> enable-gpios is the preferred form.
+>> Can't we have two module aliases?
+> 
+> I think we can. Just a random example:
+> https://elixir.free-electrons.com/linux/latest/source/drivers/w1/slaves/w1_therm.c#L754
+> 
+> So we should keep both.
 
-ack
+Even better would be to drop both MODULE_ALIAS and let the
+MODULE_DEVICE_TABLE macro define them for your from the SPI id table.
+Although it doesn't look like this driver has an SPI id table, you
+should probably add one, I be interested to see if this module is always
+being matched through the "spi" or the "of" alias..
 
 > 
->> +	- supply - "vled" - LED supply
+> Should I submit a new version?
 > 
-> vled-supply - ...
+> BR,
+> Nikolaus
 > 
-
-ack
-
->> +
->> +Example:
->> +
->> +leds: leds@6 {
->> +	compatible = "ti,lm3692x";
->> +	reg = <0x36>;
->> +	label = "backlight_cluster";
->> +	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->> +	vled-supply = <&vbatt>;
->> +}
->> +
->> +For more product information please see the link below:
->> +http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
->> -- 
->> 2.15.0.124.g7668cbc60
->>
-
-
--- 
-------------------
-Dan Murphy
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
