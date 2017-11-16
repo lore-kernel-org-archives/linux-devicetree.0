@@ -1,42 +1,54 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v2 8/8] arm64: dts: actions: Add S700 SPS node
-Date: Thu, 16 Nov 2017 15:16:23 +0100
-Message-ID: <fffa860b-f8a2-8a8f-ecdf-98d86cafb8f2@suse.de>
-References: <20171113233427.5386-1-afaerber@suse.de>
- <20171113233427.5386-9-afaerber@suse.de>
+From: Bharat Kumar Gogada <bharatku@xilinx.com>
+Subject: RE: [RFCv2 PATCH 31/36] iommu/arm-smmu-v3: Add support for PCI ATS
+Date: Thu, 16 Nov 2017 14:19:36 +0000
+Message-ID: <BLUPR0201MB150565029F9260A528739ACBA52E0@BLUPR0201MB1505.namprd02.prod.outlook.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <20171006133203.22803-32-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171113233427.5386-9-afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20171006133203.22803-32-jean-philippe.brucker@arm.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5qKF5Yip?= <harrymei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Jeff Chen <jeff.chen-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, xieyisheng1@huawei.co
 List-Id: devicetree@vger.kernel.org
 
-Am 14.11.2017 um 00:34 schrieb Andreas Färber:
-> Add a node to the S700 Device Tree for the Smart Power System (SPS).
-> 
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
->  v2: New
->  
->  To be squashed into 5/8 if binding gets acked.
->  
->  arch/arm64/boot/dts/actions/s700.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+Hi Jean,
 
-Squashed (on bg96-next work branch).
++static size_t
++arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain, int ssid,
++			unsigned long iova, size_t size)
++{
++	unsigned long flags;
++	struct arm_smmu_cmdq_ent cmd;
++	struct arm_smmu_master_data *master;
++
++	arm_smmu_atc_inv_to_cmd(ssid, iova, size, &cmd);
++
++	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
++	list_for_each_entry(master, &smmu_domain->devices, list)
++		arm_smmu_atc_inv_master(master, &cmd);
++	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
++
++	return size;
++}
++
+ /* IOMMU API */
+ static bool arm_smmu_capable(enum iommu_cap cap)  { @@ -2361,6 +2506,8 @@ =
+static void arm_smmu_detach_dev(struct device *dev)
+ 		__iommu_process_unbind_dev_all(&smmu_domain->domain, dev);
+=20
+ 	if (smmu_domain) {
++		arm_smmu_atc_inv_master_all(master, 0);
++
+In BIND flow, when VFIO_IOMMU_UNBIND is invoked invalidation is sent on all=
+ocated PASID for this application.
+When vfio group fd is closed after UNBIND,  arm_smmu_detach_dev is invoked =
+now invalidation is being sent on ssid zero.
+Why  invalidation needs to be sent on ssid zero ?
 
 Regards,
-Andreas
+Bharat
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
