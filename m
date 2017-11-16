@@ -1,218 +1,111 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] ARM: dts: TS-4600: add basic device tree
-Date: Thu, 16 Nov 2017 16:00:22 +0800
-Message-ID: <20171116080021.GD25384@dragon>
-References: <20171101170645.12918-1-sebastien.bourdelin@savoirfairelinux.com>
- <20171101170645.12918-2-sebastien.bourdelin@savoirfairelinux.com>
+Subject: Re: [PATCH] arm64: dts: ls1088a: add fsl-mc hardware resource
+ manager node
+Date: Thu, 16 Nov 2017 16:39:21 +0800
+Message-ID: <20171116083920.GK25384@dragon>
+References: <1510147805-24873-1-git-send-email-ioana.ciornei@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171101170645.12918-2-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1510147805-24873-1-git-send-email-ioana.ciornei-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org
+To: Ioana Ciornei <ioana.ciornei-3arQi8VN3Tc@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 01, 2017 at 01:06:45PM -0400, Sebastien Bourdelin wrote:
-> These device trees add support for the TS-4600 by Technologic Systems.
+On Wed, Nov 08, 2017 at 03:30:05PM +0200, Ioana Ciornei wrote:
+> Add the fsl-mc node in the LS1088A device tree.
 > 
-> More details here:
->   http://wiki.embeddedarm.com/wiki/TS-4600
-> 
-> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> Signed-off-by: Ioana Ciornei <ioana.ciornei-3arQi8VN3Tc@public.gmane.org>
 > ---
-> Changes v6 -> v7:
->   - rebase on master
->   - remove unneeded pinctrl-name (suggested by Shawn Guo)
->   - add reg to the node en-sd-pwr (suggested by Shawn Guo)
->   - use define for gpio polarity (suggested by Shawn Guo)
->   - remove the fake bus container for regulator (suggested by Shawn Guo)
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 62 ++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
 > 
-> Changes v5 -> v6:
->   - rebase on master
->   - split the previous patch series into series by subsystem
-> 
-> Changes v4 -> v5:
->   - fix missing signed off
-> 
-> Changes v3 -> v4:
->   - rebase on master
-> 
-> Changes v2 -> v3:
->   - rebase on master
-> 
-> Changes v1 -> v2:
->   - rebase on master
-> ---
->  arch/arm/boot/dts/Makefile                 |  2 +
->  arch/arm/boot/dts/imx28-ts4600-common.dtsi | 74 ++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/imx28-ts4600-rev-a.dts   | 22 +++++++++
->  arch/arm/boot/dts/imx28-ts4600-rev-b.dts   | 22 +++++++++
->  4 files changed, 120 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx28-ts4600-common.dtsi
->  create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-a.dts
->  create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-b.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index faf46abaa4a2..430fe7f1e644 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -532,6 +532,8 @@ dtb-$(CONFIG_ARCH_MXS) += \
->  	imx28-m28cu3.dtb \
->  	imx28-m28evk.dtb \
->  	imx28-sps1.dtb \
-> +	imx28-ts4600-rev-a.dtb \
-> +	imx28-ts4600-rev-b.dtb \
->  	imx28-tx28.dtb
->  dtb-$(CONFIG_ARCH_NOMADIK) += \
->  	ste-nomadik-s8815.dtb \
-> diff --git a/arch/arm/boot/dts/imx28-ts4600-common.dtsi b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
-> new file mode 100644
-> index 000000000000..c5f6bef87fd5
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
-> @@ -0,0 +1,74 @@
-> +/*
-> + * Copyright (C) 2016 Savoir-Faire Linux
-> + * Author: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +#include "imx28.dtsi"
-> +#include "dt-bindings/gpio/gpio.h"
-> +
-> +/ {
-> +
-> +	compatible = "technologic,imx28-ts4600", "fsl,imx28";
-> +
-> +	apb@80000000 {
-> +		apbh@80000000 {
-> +			ssp0: ssp@80010000 {
-> +				compatible = "fsl,imx28-mmc";
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&mmc0_4bit_pins_a
-> +					     &mmc0_sck_cfg
-> +					     &en_sd_pwr>;
-> +				broken-cd = <1>;
-> +				bus-width = <4>;
-> +				vmmc-supply = <&reg_vddio_sd0>;
-> +				status = "okay";
-> +			};
-> +
-> +			pinctrl@80018000 {
-> +
-> +				en_sd_pwr: en-sd-pwr@0 {
-> +					reg = <0>;
-> +					fsl,pinmux-ids = <
-> +						MX28_PAD_PWM3__GPIO_3_28
-> +					>;
-> +					fsl,drive-strength = <MXS_DRIVE_4mA>;
-> +					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-> +					fsl,pull-up = <MXS_PULL_DISABLE>;
-> +				};
-> +
-> +			};
-> +		};
-> +
-> +		apbx@80040000 {
-> +			pwm: pwm@80064000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pwm2_pins_a>;
-> +				status = "okay";
-> +			};
-> +
-> +			duart: serial@80074000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&duart_pins_a>;
-> +				status = "okay";
-> +			};
-> +		};
-> +	};
-> +
-> +	reg_vddio_sd0: regulator-vddio-sd0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vddio-sd0";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		gpio = <&gpio3 28 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +};
-> diff --git a/arch/arm/boot/dts/imx28-ts4600-rev-a.dts b/arch/arm/boot/dts/imx28-ts4600-rev-a.dts
-> new file mode 100644
-> index 000000000000..e8cb72988fcf
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx28-ts4600-rev-a.dts
-> @@ -0,0 +1,22 @@
-> +/*
-> + * Copyright (C) 2016 Savoir-Faire Linux
-> + * Author: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include "imx28-ts4600-common.dtsi"
-> +
-> +/ {
-> +	model = "Technologic Systems i.MX28 TS-4600 Rev A";
-> +
-> +	memory {
-> +		reg = <0x40000000 0x08000000>;   /* 128MB */
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index bd80e9a..aa37ffe 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -166,6 +166,68 @@
+>  			     <1 10 IRQ_TYPE_LEVEL_LOW>;/* Hypervisor PPI */
+>  	};
+>  
+> +	fsl_mc: fsl-mc@80c000000 {
 
-If memory size is the only difference between Rev A and B, can we have
-device tree default to most used revision and ask bootloader to fix up
-memory node for the other revision?  In that case, we only need to
-maintain imx28-ts4600.dts then.
+The unit-address of the node should be somehow related to 'reg'
+property.  Can you please help me understand how they are related?
+
+> +		compatible = "fsl,qoriq-mc";
+> +		reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+> +		      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+> +		msi-parent = <&its>;
+> +		#address-cells = <3>;
+> +		#size-cells = <1>;
+> +
+> +		/*
+> +		 * Region type 0x0 - MC portals
+> +		 * Region type 0x1 - QBMAN portals
+> +		 */
+> +		ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
+> +			  0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
+> +
+> +		dpmacs {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			dpmac1: dpmac@1 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <1>;
+> +			};
+
+Please have a newline in between nodes.
 
 Shawn
 
+> +			dpmac2: dpmac@2 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <2>;
+> +			};
+> +			dpmac3: dpmac@3 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <3>;
+> +			};
+> +			dpmac4: dpmac@4 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <4>;
+> +			};
+> +			dpmac5: dpmac@5 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <5>;
+> +			};
+> +			dpmac6: dpmac@6 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <6>;
+> +			};
+> +			dpmac7: dpmac@7 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <7>;
+> +			};
+> +			dpmac8: dpmac@8 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <8>;
+> +			};
+> +			dpmac9: dpmac@9 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <9>;
+> +			};
+> +			dpmac10: dpmac@10 {
+> +				compatible = "fsl,qoriq-mc-dpmac";
+> +				reg = <0xa>;
+> +			};
+> +		};
 > +	};
 > +
-> +};
-> diff --git a/arch/arm/boot/dts/imx28-ts4600-rev-b.dts b/arch/arm/boot/dts/imx28-ts4600-rev-b.dts
-> new file mode 100644
-> index 000000000000..a115f831fe2b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx28-ts4600-rev-b.dts
-> @@ -0,0 +1,22 @@
-> +/*
-> + * Copyright (C) 2016 Savoir-Faire Linux
-> + * Author: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include "imx28-ts4600-common.dtsi"
-> +
-> +/ {
-> +	model = "Technologic Systems i.MX28 TS-4600 Rev B";
-> +
-> +	memory {
-> +		reg = <0x40000000 0x10000000>;   /* 256MB */
-> +	};
-> +
-> +};
+>  	psci {
+>  		compatible = "arm,psci-0.2";
+>  		method = "smc";
 > -- 
-> 2.13.4
+> 1.9.1
 > 
 > 
 > _______________________________________________
