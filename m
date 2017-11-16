@@ -1,8 +1,8 @@
 From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 Subject: Re: [PATCH 1/2] dt-bindings: media: rcar_vin: add device tree support
  for r8a774[35]
-Date: Thu, 16 Nov 2017 14:19:33 +0100
-Message-ID: <CAMuHMdXVb9xE5toLGHnaFX9y+-qVzz2_NzK6qEebaDiXxAec7w@mail.gmail.com>
+Date: Thu, 16 Nov 2017 14:20:20 +0100
+Message-ID: <CAMuHMdW+krUp5ELO4NFxGi8NZ5-H4vrtm-=OXyvZKMCk2f-WcQ@mail.gmail.com>
 References: <1510834290-25434-1-git-send-email-fabrizio.castro@bp.renesas.com> <1510834290-25434-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -15,20 +15,23 @@ List-Id: devicetree@vger.kernel.org
 
 On Thu, Nov 16, 2017 at 1:11 PM, Fabrizio Castro
 <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
-> Add compatible strings for r8a7743 and r8a7745. No driver change
-> change is needed as "renesas,rcar-gen2-vin" will activate the right
+> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> @@ -14,7 +14,10 @@ channel which can be either RGB, YUYV or BT656.
+>     - "renesas,vin-r8a7790" for the R8A7790 device
+>     - "renesas,vin-r8a7779" for the R8A7779 device
+>     - "renesas,vin-r8a7778" for the R8A7778 device
+> -   - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 compatible device.
+> +   - "renesas,vin-r8a7745" for the R8A7745 device
+> +   - "renesas,vin-r8a7743" for the R8A7743 device
 
-double "change"
+Please keep the list sorted by SoC part number.
 
-> code. However, it is good practice to document compatible strings
-> for the specific SoC as this allows SoC specific changes to the
-> driver if needed, in addition to document SoC support and therefore
-> allow checkpatch.pl to validate compatible string values.
+> +   - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
+> +     device.
+>     - "renesas,rcar-gen3-vin" for a generic R-Car Gen3 compatible device.
 >
-> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>     When compatible with the generic version nodes must list the
 
 Gr{oetje,eeting}s,
 
