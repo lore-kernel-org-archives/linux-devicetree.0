@@ -1,71 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v7 03/13] slimbus: Add SLIMbus bus type
-Date: Thu, 16 Nov 2017 12:25:29 +0000
-Message-ID: <20171116122529.3cighqe45ptqq7wl@sirena.org.uk>
-References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
- <20171115141043.29202-4-srinivas.kandagatla@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: renesas: eagle: add EtherAVB pins
+Date: Thu, 16 Nov 2017 15:28:38 +0300
+Message-ID: <3c89ed4f-cde3-e29c-5513-060216f94c3a@cogentembedded.com>
+References: <20171110200714.406365231@cogentembedded.com>
+ <CAMuHMdWCj=CjA_zyC1GKr=KEk2CNMAtwvREw25R1uJktZucY4w@mail.gmail.com>
+ <1017d8fb-e353-f212-09a9-a28bf07eddc2@cogentembedded.com>
+ <CAMuHMdX8j__iF5xP33Na9pVM1nRWvrE7e68-zg0oE0gE5MOHXw@mail.gmail.com>
+ <a65b8740-b133-eb92-5494-fb532554127b@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8417515553709821354=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171115141043.29202-4-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, vinod.koul@intel.com, bp@suse.de, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, treding@nvidia.com, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a65b8740-b133-eb92-5494-fb532554127b-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-MW
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/15/2017 11:21 PM, Sergei Shtylyov wrote:
 
---===============8417515553709821354==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wnnjbhws6zuw4khx"
-Content-Disposition: inline
+>>>>> Add the (previously omitted) EtherAVB pin data to the Eagle board's
+>>>>> device tree.
+>>
+>>>>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+>>>>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+>>>>> @@ -34,6 +34,9 @@
+>>>
+>>> [...]
+>>>>>
+>>>>> @@ -53,6 +56,11 @@
+>>>>>    };
+>>>>>
+>>>>>    &pfc {
+>>>>> +       avb_pins: avb {
+>>>>> +               groups = "avb0_mdio", "avb0_mii";
+>>>>
+>>>>
+>>>> Oh no, its'called "avb0_mdio" here, but "avb(0)_mdc" on all other
+>>>> R-Car Gen3 SoCs?
+>>>
+>>>
+>>>     Can you remember the reason? I don;t want to follow the bad example. :-)
+>>
+>> Sorry, I don't know.
+> 
+>     Hm, you seem to have participated in the related discussions for H2/M3-W...
 
+    H3, of course...
 
---wnnjbhws6zuw4khx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> The reason was that omlu AVB_MDC signal was multiplexed, AVB_MDIO signal (and 
 
-On Wed, Nov 15, 2017 at 02:10:33PM +0000, srinivas.kandagatla@linaro.org wr=
-ote:
-> From: Sagar Dharia <sdharia@codeaurora.org>
->=20
-> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
-> developed by MIPI (Mobile Industry Processor Interface) alliance.
-> SLIMbus is a 2-wire implementation, which is used to communicate with
-> peripheral components like audio-codec.
+    s/omlu/only/.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+> AVB MII signals) was mapped to a dedicated pin without any multiplexing, so 
+> the "avb_mdc" group initially contained only AVB_MDC.
+> 
+>> Gr{oetje,eeting}s,
 
---wnnjbhws6zuw4khx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloNg7gACgkQJNaLcl1U
-h9C+WQf/YbLR3fzhTC1SlJCD1hRupAFl24IuboB4YtsjN4XafRn3yi9otOEFTYTp
-qp5EhF/hcX6TINOuyjnYsC7CnB9p5mPnTYsIaqFOcMp+S316ii2u3JOJ5Trd0o9T
-bQGdkUlKw30iB2K45ONG59pugSxhHTEmhHwdlWNfxHHn/5fzoLqk0pxlyuTxs2ks
-KUDJoSDvPhojhIje4VtWRB442qedBLVKObD+q0T1kkFma4cBBj1i+0DYHYpokgpB
-eexjcsfvBf6z6PH2t65xG3c4TIntpBQGRVFTlaKXCQrGz8yaCRRn+HZHTK0osy1r
-nP3BAxnv5n8/rEm+UPTO16yIBRWpaw==
-=6UuU
------END PGP SIGNATURE-----
-
---wnnjbhws6zuw4khx--
-
---===============8417515553709821354==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8417515553709821354==--
+MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
