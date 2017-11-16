@@ -1,86 +1,37 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: rtc-imxdi: imx53-rtc is not compatible
-Date: Thu, 16 Nov 2017 10:44:52 +0100
-Message-ID: <20171116094452.as45k3y2dkly6sga@piout.net>
-References: <20171116093425.32145-1-linux-kernel-dev@beckhoff.com>
+From: Sandy Huang <hjc@rock-chips.com>
+Subject: Re: [PATCH 0/2] add support rk3126 vop support
+Date: Thu, 16 Nov 2017 17:47:11 +0800
+Message-ID: <abe45b77-5df6-8f17-a4fc-33b967689708@rock-chips.com>
+References: <1510658851-90160-1-git-send-email-hjc@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171116093425.32145-1-linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1510658851-90160-1-git-send-email-hjc@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-The following patch was already sent by Fabio:
-http://patchwork.ozlabs.org/patch/838173/
-
-On 16/11/2017 at 10:34:25 +0100, linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org wrote:
-> From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-> 
-> rtc-imxdi driver is not compatible with imx53-rtc like the example
-> suggested.
-> Only the raw timestamp register offsets match by accident, which has the
-> effect, that during startup/shutdown system clock syncronization with
-> rtc seems to work for imx53, too.
-> However hwclock and rtctest, will not work as expected on imx53.
-> To avoid future reverts like [1], we should adjust the documentation.
-> 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2017-November/542312.html
-> 
-> Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-> 
-> ---
-> 
-> To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-> Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM)
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Cc: Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/rtc/imxdi-rtc.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt b/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-> index 323cf26374cb..af853b0ceac5 100644
-> --- a/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-> +++ b/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
-> @@ -1,6 +1,6 @@
->  * i.MX25 Real Time Clock controller
->  
-> -This binding supports the following chips: i.MX25, i.MX53
-> +This binding supports the following chips: i.MX25
->  
->  Required properties:
->  - compatible: should be: "fsl,imx25-rtc"
-> @@ -14,7 +14,7 @@ Optional properties:
->  Example:
->  
->  rtc@80056000 {
-> -	compatible = "fsl,imx53-rtc", "fsl,imx25-rtc";
-> +	compatible = "fsl,imx25-rtc";
->  	reg = <0x80056000 2000>;
->  	interrupts = <29 56>;
->  };
-> -- 
-> 2.11.0
-> 
-> 
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cHVzaGVkIHRvIGRybS1taXNjLW5leHQuCgrlnKggMjAxNy8xMS8xNCAxOToyNywgU2FuZHkgSHVh
+bmcg5YaZ6YGTOgo+IFRoZSBmb2xsb3dpbmcgcGF0Y2ggYWRkIHN1cHBvcnQgUkszMTI2IHZvcCBz
+dXBwb3J0LCB0aGVyZSBpcyBvbmx5IG9uZQo+IFZPUCBhdCBSSzMxMjYsIGFuZCB0aGUgUkszMTI2
+IFZPUCByZWdpc3RlciBsYXlvdXQgaXMgc2ltaWxhciB3aXRoIFJLMzAzNiwKPiBzbyBzb21lIGZl
+YXR1cmUgY2FuIHJldXNlIHdpdGggUkszMDM2Lgo+IAo+IFNhbmR5IEh1YW5nICgyKToKPiAgICBk
+dC1iaW5kaW5nczogYWRkIGRvY3VtZW50IGZvciByazMxMjYtdm9wCj4gICAgZHJtL3JvY2tjaGlw
+OiB2b3A6IGFkZCByazMxMjYgdm9wIHN1cHBvcnQKPiAKPiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5
+L3JvY2tjaGlwL3JvY2tjaGlwLXZvcC50eHQgICAgIHwgIDEgKwo+ICAgZHJpdmVycy9ncHUvZHJt
+L3JvY2tjaGlwL3JvY2tjaGlwX3ZvcF9yZWcuYyAgICAgICAgfCAzMCArKysrKysrKysrKysrKysr
+KysrKysrCj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfdm9wX3JlZy5oICAg
+ICAgICB8ICA2ICsrKysrCj4gICAzIGZpbGVzIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKykKPiAK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
