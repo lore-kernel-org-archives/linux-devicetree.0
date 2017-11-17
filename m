@@ -1,63 +1,101 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: meson8b: use stable UART bindings with correct gate clock
-Date: Fri, 17 Nov 2017 23:58:57 +0100
-Message-ID: <20171117225857.9571-3-martin.blumenstingl@googlemail.com>
-References: <20171117225857.9571-1-martin.blumenstingl@googlemail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] pwm: imx: Allow keeping the PWM active during suspend
+Date: Fri, 17 Nov 2017 20:59:27 -0200
+Message-ID: <1510959567-7956-1-git-send-email-festevam@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171117225857.9571-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Switch to the stable UART bindings and add the correct gate clocks
-to the non-AO UART nodes.
-This fixes the non-AO UARTs if the bootloader didn't un-gate the clocks.
+From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Acked-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In some systems it is desirable to keep the PWM active during system
+suspend.
+
+One use case is the imx6q-cubox-i board, which has an LED driven by PWM.
+When the system goes into suspend the PWM block is disabled by default,
+the PWM pin goes to zero and turn on the LED during suspend, which is
+not really the behaviour we want to see.
+
+By keeping the PWM enabled during suspend the pwm-leds driver sets
+the brightness to zero in suspend and then the LED is turned off as
+expected.
+
+Introduce the 'fsl,suspend-enable' property to indicate that the PWM
+will stay active during suspend.
+
+Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/pwm/imx-pwm.txt | 5 +++++
+ drivers/pwm/pwm-imx.c                             | 8 ++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index d75e0ceda8bb..db296e5bd88a 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -248,19 +248,27 @@
+diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+index c61bdf8..1e00a89 100644
+--- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
+@@ -14,6 +14,11 @@ See the clock consumer binding,
+ 	Documentation/devicetree/bindings/clock/clock-bindings.txt
+ - interrupts: The interrupt for the pwm controller
+ 
++Optional properties:
++- fsl,suspend-enable: Boolean property that indicates that the PWM block stays
++		      enabled during system suspend. If not present, the PWM
++		      block will be disabled during suspend.
++
+ Example:
+ 
+ pwm1: pwm@53fb4000 {
+diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
+index 2ba5c3a..b9c60fe 100644
+--- a/drivers/pwm/pwm-imx.c
++++ b/drivers/pwm/pwm-imx.c
+@@ -35,6 +35,7 @@
+ #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
+ #define MX3_PWMPR			0x10    /* PWM Period Register */
+ #define MX3_PWMCR_PRESCALER(x)		((((x) - 1) & 0xFFF) << 4)
++#define MX3_PWMCR_STOPEN		(1 << 25)
+ #define MX3_PWMCR_DOZEEN		(1 << 24)
+ #define MX3_PWMCR_WAITEN		(1 << 23)
+ #define MX3_PWMCR_DBGEN			(1 << 22)
+@@ -54,6 +55,7 @@ struct imx_chip {
+ 	void __iomem	*mmio_base;
+ 
+ 	struct pwm_chip	chip;
++	bool suspend_enable;
  };
  
- &uart_AO {
--	clocks = <&clkc CLKID_CLK81>;
-+	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
-+	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_CLK81>;
-+	clock-names = "baud", "xtal", "pclk";
- };
+ #define to_imx_chip(chip)	container_of(chip, struct imx_chip, chip)
+@@ -217,6 +219,9 @@ static int imx_pwm_apply_v2(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		if (state->polarity == PWM_POLARITY_INVERSED)
+ 			cr |= MX3_PWMCR_POUTC;
  
- &uart_A {
--	clocks = <&clkc CLKID_CLK81>;
-+	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
-+	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_UART0>;
-+	clock-names = "baud", "xtal", "pclk";
- };
++		if (imx->suspend_enable)
++			cr |= MX3_PWMCR_STOPEN;
++
+ 		writel(cr, imx->mmio_base + MX3_PWMCR);
+ 	} else if (cstate.enabled) {
+ 		writel(0, imx->mmio_base + MX3_PWMCR);
+@@ -264,6 +269,7 @@ static int imx_pwm_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *of_id =
+ 			of_match_device(imx_pwm_dt_ids, &pdev->dev);
++	struct device_node *np = pdev->dev.of_node;
+ 	const struct imx_pwm_data *data;
+ 	struct imx_chip *imx;
+ 	struct resource *r;
+@@ -301,6 +307,8 @@ static int imx_pwm_probe(struct platform_device *pdev)
+ 	if (IS_ERR(imx->mmio_base))
+ 		return PTR_ERR(imx->mmio_base);
  
- &uart_B {
--	clocks = <&clkc CLKID_CLK81>;
-+	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
-+	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_UART1>;
-+	clock-names = "baud", "xtal", "pclk";
- };
- 
- &uart_C {
--	clocks = <&clkc CLKID_CLK81>;
-+	compatible = "amlogic,meson8b-uart", "amlogic,meson-uart";
-+	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_XTAL>, <&clkc CLKID_UART2>;
-+	clock-names = "baud", "xtal", "pclk";
- };
- 
- &usb0 {
++	imx->suspend_enable = of_property_read_bool(np, "fsl,suspend-enable");
++
+ 	ret = pwmchip_add(&imx->chip);
+ 	if (ret < 0)
+ 		return ret;
 -- 
-2.15.0
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
