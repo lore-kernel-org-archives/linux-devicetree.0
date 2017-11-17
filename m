@@ -1,103 +1,110 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] pwm: imx: Allow keeping the PWM active during suspend
-Date: Fri, 17 Nov 2017 20:59:27 -0200
-Message-ID: <1510959567-7956-1-git-send-email-festevam@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V6] clk: qcom: Add spmi_pmic clock divider support
+Date: Fri, 17 Nov 2017 15:56:11 -0800
+Message-ID: <20171117235611.GA13301@codeaurora.org>
+References: <1510912127-4582-1-git-send-email-tirupath@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1510912127-4582-1-git-send-email-tirupath@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Tirupathi Reddy <tirupath@codeaurora.org>
+Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+On 11/17, Tirupathi Reddy wrote:
+> diff --git a/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
+> new file mode 100644
+> index 0000000..2cf2aba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
 
-In some systems it is desirable to keep the PWM active during system
-suspend.
+Please move this to qcom,spmi-clkdiv.txt like other qcom bindings.
 
-One use case is the imx6q-cubox-i board, which has an LED driven by PWM.
-When the system goes into suspend the PWM block is disabled by default,
-the PWM pin goes to zero and turn on the LED during suspend, which is
-not really the behaviour we want to see.
+> @@ -0,0 +1,59 @@
+> +Qualcomm Technologies, Inc. SPMI PMIC clock divider (clkdiv)
+> +
+> +clkdiv configures the clock frequency of a set of outputs on the PMIC.
+> +These clocks are typically wired through alternate functions on
+> +gpio pins.
+> +
+> +=======================
+> +Properties
+> +=======================
+> +
+> +- compatible
+> +	Usage:      required
+> +	Value type: <string>
+> +	Definition: must be "qcom,spmi-clkdiv".
+> +
+> +- reg
+> +	Usage:      required
+> +	Value type: <prop-encoded-array>
+> +	Definition: base address of CLKDIV peripherals.
+> +
+> +- qcom,num-clkdivs
+> +	Usage:      required
+> +	Value type: <u32>
+> +	Definition: number of CLKDIV peripherals.
 
-By keeping the PWM enabled during suspend the pwm-leds driver sets
-the brightness to zero in suspend and then the LED is turned off as
-expected.
+Would it work if we read the registers and looked for the clkdiv
+subtype ID? If we read something that doesn't match, break and
+stop adding clks? Or does reading the next "peripheral" cause
+some sort of crash and burn scenario where the device see an
+access control violation? Would be interesting to do it that way
+and avoid needing a new property in DT.
 
-Introduce the 'fsl,suspend-enable' property to indicate that the PWM
-will stay active during suspend.
+> +
+> +
+> +	parent_name = of_clk_get_parent_name(of_node, 0);
+> +	if (!parent_name) {
+> +		dev_err(dev, "missing parent clock\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	init.parent_names = &parent_name;
+> +	init.num_parents = 1;
+> +	init.ops = &clk_spmi_pmic_div_ops;
+> +
+> +	for (i = 0, clkdiv = cc->clks; i < nclks; i++) {
+> +		spin_lock_init(&clkdiv[i].lock);
+> +		clkdiv[i].base = start + i * 0x100;
+> +		clkdiv[i].regmap = regmap;
+> +		clkdiv[i].cxo_period_ns = NSEC_PER_SEC / cxo_hz;
+> +		init.name = kasprintf(GFP_KERNEL, "div_clk%d", i + 1);
 
-Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
----
- Documentation/devicetree/bindings/pwm/imx-pwm.txt | 5 +++++
- drivers/pwm/pwm-imx.c                             | 8 ++++++++
- 2 files changed, 13 insertions(+)
+Hmm. Maybe we should just have this on the stack. 20 characters
+should be plenty?
 
-diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-index c61bdf8..1e00a89 100644
---- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-@@ -14,6 +14,11 @@ See the clock consumer binding,
- 	Documentation/devicetree/bindings/clock/clock-bindings.txt
- - interrupts: The interrupt for the pwm controller
- 
-+Optional properties:
-+- fsl,suspend-enable: Boolean property that indicates that the PWM block stays
-+		      enabled during system suspend. If not present, the PWM
-+		      block will be disabled during suspend.
-+
- Example:
- 
- pwm1: pwm@53fb4000 {
-diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
-index 2ba5c3a..b9c60fe 100644
---- a/drivers/pwm/pwm-imx.c
-+++ b/drivers/pwm/pwm-imx.c
-@@ -35,6 +35,7 @@
- #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
- #define MX3_PWMPR			0x10    /* PWM Period Register */
- #define MX3_PWMCR_PRESCALER(x)		((((x) - 1) & 0xFFF) << 4)
-+#define MX3_PWMCR_STOPEN		(1 << 25)
- #define MX3_PWMCR_DOZEEN		(1 << 24)
- #define MX3_PWMCR_WAITEN		(1 << 23)
- #define MX3_PWMCR_DBGEN			(1 << 22)
-@@ -54,6 +55,7 @@ struct imx_chip {
- 	void __iomem	*mmio_base;
- 
- 	struct pwm_chip	chip;
-+	bool suspend_enable;
- };
- 
- #define to_imx_chip(chip)	container_of(chip, struct imx_chip, chip)
-@@ -217,6 +219,9 @@ static int imx_pwm_apply_v2(struct pwm_chip *chip, struct pwm_device *pwm,
- 		if (state->polarity == PWM_POLARITY_INVERSED)
- 			cr |= MX3_PWMCR_POUTC;
- 
-+		if (imx->suspend_enable)
-+			cr |= MX3_PWMCR_STOPEN;
-+
- 		writel(cr, imx->mmio_base + MX3_PWMCR);
- 	} else if (cstate.enabled) {
- 		writel(0, imx->mmio_base + MX3_PWMCR);
-@@ -264,6 +269,7 @@ static int imx_pwm_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *of_id =
- 			of_match_device(imx_pwm_dt_ids, &pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
- 	const struct imx_pwm_data *data;
- 	struct imx_chip *imx;
- 	struct resource *r;
-@@ -301,6 +307,8 @@ static int imx_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(imx->mmio_base))
- 		return PTR_ERR(imx->mmio_base);
- 
-+	imx->suspend_enable = of_property_read_bool(np, "fsl,suspend-enable");
-+
- 	ret = pwmchip_add(&imx->chip);
- 	if (ret < 0)
- 		return ret;
+> +		clkdiv[i].hw.init = &init;
+> +
+> +		ret = devm_clk_hw_register(dev, &clkdiv[i].hw);
+> +		kfree(init.name); /* clk framework made a copy */
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return of_clk_add_hw_provider(of_node, spmi_pmic_div_clk_hw_get, cc);
+> +}
+> +
+> +static int spmi_pmic_clkdiv_remove(struct platform_device *pdev)
+> +{
+> +	of_clk_del_provider(pdev->dev.of_node);
+> +
+> +	return 0;
+
+This can use devm now.
+
+> +}
+> +
+> +static const struct of_device_id spmi_pmic_clkdiv_match_table[] = {
+> +	{ .compatible = "qcom,spmi-clkdiv" },
+> +	{ /* sentinel */ }
+> +};
+
+Nice!
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
