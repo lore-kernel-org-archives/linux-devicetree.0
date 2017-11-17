@@ -1,205 +1,52 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2] display: panel: Add Tianma tm070rvhg71 display
- support (800x480)
-Date: Fri, 17 Nov 2017 12:36:16 +0100
-Message-ID: <20171117113616.GA1062@ulmo>
-References: <CAL_JsqJz67k_fTMkx5dHb5qFwXif9y+Cv=+PTq7OLH7woNoU=g@mail.gmail.com>
- <20171107153058.5554-1-lukma@denx.de>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFCv2 PATCH 31/36] iommu/arm-smmu-v3: Add support for PCI ATS
+Date: Fri, 17 Nov 2017 11:39:25 +0000
+Message-ID: <9da446e9-cf84-61ce-f3f5-32386387bc9f@arm.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+	<20171006133203.22803-32-jean-philippe.brucker@arm.com>
+	<BLUPR0201MB150565029F9260A528739ACBA52E0@BLUPR0201MB1505.namprd02.prod.outlook.com>
+	<673fda01-2ae0-87e4-637e-fe27096b6be0@arm.com>
+	<BLUPR0201MB1505BC86D3838D13F38665E7A52F0@BLUPR0201MB1505.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1932370280=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171107153058.5554-1-lukma@denx.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <BLUPR0201MB1505BC86D3838D13F38665E7A52F0-hRBPhS1iNj/g9tdZWAsUFxrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 17/11/17 06:11, Bharat Kumar Gogada wrote:
+[...]
+> Thanks Jean, I see that currently vfio_group_fops_open does not allow multiple instances. 
+> If a device supports multiple PASID there might be different applications running parallel. 
+> So why is multiple instances restricted ?
 
---===============1932370280==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
-Content-Disposition: inline
+You can't have multiple processes owning the same PCI device, it's
+unmanageable.
 
+For using multiple PASIDs, my idea was that the userspace driver ("the
+server"), that owns the device, would have a way to partition it into
+smaller frames. It forks to create "clients" and assigns a PASID to each
+of them (by issuing VFIO_BIND(client_pid) -> pasid, then writing the PASID
+into a privileged MMIO frame that defines the partition properties). Each
+client accesses an unprivileged MMIO frame to use a device partition (or
+sends commands to the server via IPC), and can perform DMA on its own
+virtual memory.
 
---rwEMma7ioTxnRzrJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is complete speculation of course, we have very little information on
+how PASID-capable devices will be designed, so I'm trying to imagine
+likely scenarios.
 
-On Tue, Nov 07, 2017 at 04:30:58PM +0100, Lukasz Majewski wrote:
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
->=20
-> ---
-> Changes for v2:
-> - Provide more detailed ./Documentation/devicetree/bindings/display/panel
->   entry to describe this panel device.
-> ---
->  .../bindings/display/panel/tianma,tm070rvhg71.txt  | 29 ++++++++++++++++=
-++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++=
-++++
->  2 files changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/tianm=
-a,tm070rvhg71.txt
-
-I've applied this, though I had to make a few modifications. First, I
-added a commit message. Commits should always have one.
-
-Also, please send DT bindings and driver changes as separate patches in
-the future.
-
-Device tree bindings should have a subject prefixed with any of these:
-
-	dt-bindings:
-	dt-bindings: display:
-	dt-bindings: display: panel:
-
-Though the latter two are fairly long by themselves, so you don't have a
-lot of room for the important bits.
-
-Please also prefix the subject of panel driver patches with a:
-
-	drm/panel:
-
-Which makes it easier to identify relevant patches among loads and loads
-of other email.
-
->=20
-> diff --git a/Documentation/devicetree/bindings/display/panel/tianma,tm070=
-rvhg71.txt b/Documentation/devicetree/bindings/display/panel/tianma,tm070rv=
-hg71.txt
-> new file mode 100644
-> index 000000000000..02562867444d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.=
-txt
-> @@ -0,0 +1,29 @@
-> +Tianma Micro-electronics TM070RVHG71 7.0" WXGA TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "tianma,tm070rvhg71
-
-Added a missing " at the end here.
-
-> +- power-supply: single regulator to provide the supply voltage
-> +- backlight: phandle of the backlight device attached to the panel
-> +
-> +Required nodes:
-> +- port: LVDS port mapping to connect this display
-> +
-> +This panel needs single power supply voltage. Its backlight is conntroll=
-ed
-> +via PWM signal.
-> +
-> +Example:
-> +--------
-> +
-> +Example device-tree definition when connected to iMX6Q based board
-> +
-> +	panel: panel-lvds0 {
-> +		compatible =3D "tianma,tm070rvhg71";
-> +		backlight =3D <&backlight_lvds>;
-> +		power-supply =3D <&reg_lvds>;
-> +
-> +		port {
-> +			panel_in_lvds0: endpoint {
-> +				remote-endpoint =3D <&lvds0_out>;
-> +			};
-> +		};
-> +	};
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel=
-/panel-simple.c
-> index 3d2cb8bc4d94..07188dc084df 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1831,6 +1831,30 @@ static const struct panel_desc tianma_tm070jdhg30 =
-=3D {
->  	.bus_format =3D MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
->  };
-> =20
-> +static const struct display_timing tianma_tm070rvhg71_timing =3D {
-> +	.pixelclock =3D { 27700000, 29200000, 39600000 },
-> +	.hactive =3D { 800, 800, 800 },
-> +	.hfront_porch =3D { 12, 40, 212 },
-> +	.hback_porch =3D { 88, 88, 88 },
-> +	.hsync_len =3D { 1, 1, 40 },
-> +	.vactive =3D { 480, 480, 480 },
-> +	.vfront_porch =3D { 1, 13, 88 },
-> +	.vback_porch =3D { 32, 32, 32 },
-> +	.vsync_len =3D { 1, 1, 3 },
-> +	.flags =3D DISPLAY_FLAGS_DE_HIGH,
-> +};
-> +
-> +static const struct panel_desc tianma_tm070rvhg71 =3D {
-> +	.timings =3D &tianma_tm070rvhg71_timing,
-> +	.num_timings =3D 1,
-> +	.bpc =3D 8,
-> +	.size =3D {
-> +		.width =3D 154,
-> +		.height =3D 86,
-> +	},
-> +	.bus_format =3D MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> +};
-> +
->  static const struct drm_display_mode tpk_f07a_0102_mode =3D {
->  	.clock =3D 33260,
->  	.hdisplay =3D 800,
-> @@ -2113,6 +2137,9 @@ static const struct of_device_id platform_of_match[=
-] =3D {
->  		.compatible =3D "tianma,tm070jdhg30",
->  		.data =3D &tianma_tm070jdhg30,
->  	}, {
-> +		.compatible =3D "tianma,tm070rvhg71",
-> +		.data =3D &tianma_tm070rvhg71,
-> +	}, {
->  		.compatible =3D "tpk,f07a-0102",
->  		.data =3D &tpk_f07a_0102,
->  	}, {
-
-Looks like these are actually sorted correctly in your patch. However,
-when applying these got added after the Toshiba panel that was recently
-added, so I resorted again.
-
-Thierry
-
---rwEMma7ioTxnRzrJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAloOyawACgkQ3SOs138+
-s6HIlg//Qhd2qzUCy1Mwu/lOqyYhsHXP/uf7jpBLPyRXzlP7x1tbN2TIGDcbsHpr
-UiOCZfheOQ3I8nstBrorNdKHgwG06FKC7lA1J4Unz8j7uqWoKgvwNKU2iWps6k9W
-FSDGUnyy9v5AbhUqQTGXAxUlRy5u6Ykb68G8xJiSkXVFevkRecg04T0GSX3ZTnxy
-BecBcqE6SAhe01InTb3VMopT6gNtQJ7v6UetMII6XbDaOnVlXjnvKwXZpuK2bQP0
-I1oHzDjZH+/1VuIt6URL7R9NV7S6Z5yjoA9brQTJvEslv4RYBI1cpZ1SeuPC6Pik
-Eu45tG6npYbb3WmnJ0xN8Jxrx3wumkUqQpC2QMQe5foXjZQZonYIpSOiPqTxr9Wc
-rlfuMbqZlvZTA+sPpR1iE3P2u6oFpMg6peNlMhoCvprDE4HJ52ZpF/JR0DzB8b5c
-YW3qf2+QrGW03EFzDB91wlrkv1UmdIB2numJm9GX0BUmhJNBwJVu8Wc9ztjrBq4R
-fVem4UyJu2aAPaej6NGfZPLDillkwY+hDKzTuUSCRK04XhvqIgGyMI0vP3RxIYE/
-cUa9qnNHWR80naqzUhJOPM0wV6Khkl+mFnn73Ez+2aGX/cByCoJBt535BWcsjJmr
-jNr9Q1lBRu4NQJeffYzkvQepITOIdirWSGy0DT7Lf6KwCTngWZQ=
-=DOv2
------END PGP SIGNATURE-----
-
---rwEMma7ioTxnRzrJ--
-
---===============1932370280==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1932370280==--
+Thanks,
+Jean
