@@ -1,49 +1,316 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of: Document exactly what of_find_node_by_name() puts
-Date: Thu, 16 Nov 2017 18:44:04 -0800
-Message-ID: <20171117024404.GV11955@codeaurora.org>
-References: <20171111014536.3592-1-sboyd@codeaurora.org>
- <0ef4b415-801c-cb58-5de1-01bcfba1c778@infradead.org>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 2/3] arm: dts: add Nuvoton NPCM750 device tree
+Date: Thu, 16 Nov 2017 18:50:42 -0800
+Message-ID: <CAFd5g46oNwegWc+rDzqXjwT2OezxqJRAkoMK2=9JdP7Gp8Tbqg@mail.gmail.com>
+References: <20171019225050.25410-1-brendanhiggins@google.com>
+ <20171019225050.25410-3-brendanhiggins@google.com> <CAL_JsqJGe85FAOQwt=zJ5jOBoT-F1itnK6kmc9k34FJu=3Z=bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0ef4b415-801c-cb58-5de1-01bcfba1c778-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+In-Reply-To: <CAL_JsqJGe85FAOQwt=zJ5jOBoT-F1itnK6kmc9k34FJu=3Z=bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/10, Randy Dunlap wrote:
-> On 11/10/2017 05:45 PM, Stephen Boyd wrote:
-> > It isn't clear if this function of_node_put()s the 'from'
-> > argument, or the node it finds in the search. Clearly indicate
-> > which variable is touched.
-> > 
-> > Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > ---
-> >  drivers/of/base.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index 63897531cd75..602c5d65734a 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -866,7 +866,7 @@ EXPORT_SYMBOL(of_find_node_opts_by_path);>   *	@from:	The node to start searching from or NULL, the node
-> 
->     *	@from:	The node to start searching from or %NULL; the node
-> 
-> >   *		you pass will not be searched, only the next one
-> >   *		will; typically, you pass what the previous call
-> 
->     *		will. Typically, you pass what the previous call
-> 
+Sorry for the delay. I thought all of the comments were straightforward, but
+there are a couple which need some further discussion.
 
-Rob, do you want me to fold this in?
+On Fri, Oct 20, 2017 at 12:45 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Oct 19, 2017 at 5:50 PM, Brendan Higgins
+> <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+>> Add a common device tree for all Nuvoton NPCM750 BMCs and a board
+>> specific device tree for the NPCM750 (Poleg) evaluation board.
+>>
+>> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Reviewed-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+>> Tested-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Tested-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>
+> [...]
+>
+>> diff --git a/arch/arm/boot/dts/nuvoton-npcm750.dtsi b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
+>> new file mode 100644
+>> index 000000000000..85506b3cdd39
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
+>> @@ -0,0 +1,198 @@
+>> +/*
+>> + * DTSi file for the NPCM750 SoC
+>> + *
+>> + * Copyright 2012 Tomer Maimon <tomer.maimon-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
+>> + *
+>> + * The code contained herein is licensed under the GNU General Public
+>> + * License. You may obtain a copy of the GNU General Public License
+>> + * Version 2 or later at the following locations:
+>> + *
+>> + * http://www.opensource.org/licenses/gpl-license.html
+>> + * http://www.gnu.org/copyleft/gpl.html
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/clock/nuvoton,npcm7xx-clks.h>
+>> +
+>> +/ {
+>> +       #address-cells = <1>;
+>> +       #size-cells = <1>;
+>> +       interrupt-parent = <&gic>;
+>> +
+>> +       cpus {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <0>;
+>> +               enable-method = "nuvoton,npcm7xx-smp";
+>> +
+>> +               cpu@0 {
+>> +                       device_type = "cpu";
+>> +                       compatible = "arm,cortex-a9";
+>> +                       clocks = <&clk NPCM7XX_CLK_CPU>;
+>> +                       clock-names = "clk_cpu";
+>> +                       reg = <0>;
+>> +                       next-level-cache = <&l2>;
+>> +               };
+>> +
+>> +               cpu@1 {
+>> +                       device_type = "cpu";
+>> +                       compatible = "arm,cortex-a9";
+>> +                       clocks = <&clk NPCM7XX_CLK_CPU>;
+>> +                       clock-names = "clk_cpu";
+>> +                       reg = <1>;
+>> +                       next-level-cache = <&l2>;
+>> +               };
+>> +       };
+>> +
+>> +/* external clock signal rg1refck, supplied by the phy */
+>> +clk-rg1refck {
+>> +       compatible = "fixed-clock";
+>> +       #clock-cells = <0>;
+>> +       clock-frequency = <125000000>;
+>> +};
+>> +
+>> +/* external clock signal rg2refck, supplied by the phy */
+>> +clk-rg2refck {
+>> +       compatible = "fixed-clock";
+>> +       #clock-cells = <0>;
+>> +       clock-frequency = <125000000>;
+>> +};
+>> +
+>> +clk-xin {
+>> +       compatible = "fixed-clock";
+>> +       #clock-cells = <0>;
+>> +       clock-frequency = <50000000>;
+>> +};
+>> +
+>> +       soc {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <1>;
+>> +               compatible = "simple-bus";
+>> +               interrupt-parent = <&gic>;
+>> +               ranges = <0x0 0xf0000000 0x00900000>;
+>> +
+>> +               gcr: gcr@f0800000 {
+>
+> Should be gcr@800000. Build the dtb with W=1 and it will give you
+> warnings for this.
+>
+>> +                       compatible = "nuvoton,npcm750-gcr", "syscon",
+>> +                               "simple-mfd";
+>> +                       reg = <0x800000 0x1000>;
+>> +               };
+>> +
+>> +               scu: scu@f03fe000 {
+>> +                       compatible = "arm,cortex-a9-scu";
+>> +                       reg = <0x3fe000 0x1000>;
+>> +               };
+>> +
+>> +               l2: cache-controller@f03fc000 {
+>> +                       compatible = "arm,pl310-cache";
+>> +                       reg = <0x3fc000 0x1000>;
+>> +                       interrupts = <0 21 4>;
+>> +                       cache-unified;
+>> +                       cache-level = <2>;
+>> +                       clocks = <&clk NPCM7XX_CLK_AXI>;
+>> +               };
+>> +
+>> +               gic: interrupt-controller@f03ff000 {
+>> +                       compatible = "arm,cortex-a9-gic";
+>> +                       interrupt-controller;
+>> +                       #interrupt-cells = <3>;
+>> +                       reg = <0x3ff000 0x1000>,
+>> +                           <0x3fe100 0x100>;
+>> +               };
+>> +
+>> +               timer@f03fe600 {
+>> +                       compatible = "arm,cortex-a9-twd-timer";
+>> +                       reg = <0x3fe600 0x20>;
+>> +                       interrupts = <1 13 0x304>;
+>> +                       clocks = <&clk NPCM7XX_CLK_TIMER>;
+>> +               };
+>> +       };
+>> +
+>> +       ahb {
+>> +               #address-cells = <1>;
+>> +               #size-cells = <1>;
+>> +               compatible = "simple-bus";
+>> +               interrupt-parent = <&gic>;
+>> +               ranges = <0x80000000 0x80000000 0x40010000
+>> +                         0xe0800000 0xe0800000 0x0f800000
+>> +                         0x00000000 0xf0000000 0x00900000
+>> +                         0xf8000000 0xf8000000 0x02000000
+>> +                         0xfb000000 0xfb000000 0x00002000>;
+>
+> Just do "ranges;" here if all the translation is at the next level down.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Actually we do have some peripherals that sit directly on the AHB, they
+just have not had their DTS nodes written yet. I counted at least 6
+devices which probably won't get a sub-memory space.
+
+>
+> Sorry, it's hard to say exactly what to do without knowing the whole memory map.
+
+No problem. Let me see if I can get it for you.
+
+>
+>> +
+>> +               clk: clock-controller@f0801000 {
+>
+> Seems like this belongs under /soc based on the address.
+
+No, the AHB memory space is discontiguous. The "Cortex A9 Included" space
+(/soc here) sits in one of the discontinuities.
+
+>
+>> +                       compatible = "nuvoton,npcm750-clk";
+>> +                       #clock-cells = <1>;
+>> +                       reg = <0x801000 0x1000>;
+>> +                       status = "okay";
+>> +               };
+>> +
+>> +               apb {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <1>;
+>> +                       compatible = "simple-bus";
+>> +                       interrupt-parent = <&gic>;
+>> +                       ranges = <0x0 0x0 0x00300000>;
+>
+> And then this would be "<0x0 0xf0000000 0x300000>".
+>
+>> +
+>> +                       timer0: timer@f0000000 {
+>> +                               compatible = "nuvoton,npcm750-timer";
+>> +                               interrupts = <0 32 4>;
+>> +                               reg = <0x0 0x1000>;
+>> +                               clocks = <&clk NPCM7XX_CLK_TIMER>;
+>> +                       };
+>> +
+>> +                       watchdog0: watchdog@f0008000 {
+>> +                               compatible = "nuvoton,npcm750-wdt";
+>> +                               interrupts = <0 47 4>;
+>> +                               reg = <0x8000 0x1000>;
+>> +                               status = "disabled";
+>> +                               clocks = <&clk NPCM7XX_CLK_TIMER>;
+>> +                       };
+>> +
+>> +                       watchdog1: watchdog@f0009000 {
+>> +                               compatible = "nuvoton,npcm750-wdt";
+>> +                               interrupts = <0 48 4>;
+>> +                               reg = <0x9000 0x1000>;
+>> +                               status = "disabled";
+>> +                               clocks = <&clk NPCM7XX_CLK_TIMER>;
+>> +                       };
+>> +
+>> +                       watchdog2: watchdog@f000a000 {
+>> +                               compatible = "nuvoton,npcm750-wdt";
+>> +                               interrupts = <0 49 4>;
+>> +                               reg = <0xa000 0x1000>;
+>> +                               status = "disabled";
+>> +                               clocks = <&clk NPCM7XX_CLK_TIMER>;
+>> +                       };
+>> +
+>> +                       serial0: serial@f0001000 {
+>> +                               compatible = "nuvoton,npcm750-uart";
+>> +                               reg = <0x1000 0x1000>;
+>> +                               clocks = <&clk NPCM7XX_CLK_UART_CORE>;
+>> +                               interrupts = <0 2 4>;
+>> +                               status = "disabled";
+>> +                       };
+>> +
+>> +                       serial1: serial@f0002000 {
+>> +                               compatible = "nuvoton,npcm750-uart";
+>> +                               reg = <0x2000 0x1000>;
+>> +                               clocks = <&clk NPCM7XX_CLK_UART_CORE>;
+>> +                               interrupts = <0 3 4>;
+>> +                               status = "disabled";
+>> +                       };
+>> +
+>> +                       serial2: serial@f0003000 {
+>> +                               compatible = "nuvoton,npcm750-uart";
+>> +                               reg = <0x3000 0x1000>;
+>> +                               clocks = <&clk NPCM7XX_CLK_UART_CORE>;
+>> +                               interrupts = <0 4 4>;
+>> +                               status = "disabled";
+>> +                       };
+>> +
+>> +                       serial3: serial@f0004000 {
+>> +                               compatible = "nuvoton,npcm750-uart";
+>> +                               reg = <0x4000 0x1000>;
+>> +                               clocks = <&clk NPCM7XX_CLK_UART_CORE>;
+>> +                               interrupts = <0 5 4>;
+>> +                               status = "disabled";
+>> +                       };
+>> +               };
+>> +       };
+>> +};
+>> diff --git a/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h b/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
+>> new file mode 100644
+>> index 000000000000..c69d3bbf7e42
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
+>> @@ -0,0 +1,39 @@
+>> +/*
+>> + * Copyright (C) 2016 Nuvoton Technologies,  tali.perry-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org
+>> + *
+>> + * This software is licensed under the terms of the GNU General Public
+>> + * License version 2, as published by the Free Software Foundation, and
+>> + * may be copied, distributed, and modified under those terms.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_CLK_NPCM7XX_H
+>> +#define _DT_BINDINGS_CLK_NPCM7XX_H
+>> +
+>> +#define NPCM7XX_CLK_PLL0       0
+>> +#define NPCM7XX_CLK_PLL1       1
+>> +#define NPCM7XX_CLK_PLL2       2
+>> +#define NPCM7XX_CLK_GFX                3
+>> +#define NPCM7XX_CLK_APB1       4
+>> +#define NPCM7XX_CLK_APB2       5
+>> +#define NPCM7XX_CLK_APB3       6
+>> +#define NPCM7XX_CLK_APB4       7
+>> +#define NPCM7XX_CLK_APB5       8
+>> +#define NPCM7XX_CLK_MC         9
+>> +#define NPCM7XX_CLK_CPU                10
+>> +#define NPCM7XX_CLK_SPI0       11
+>> +#define NPCM7XX_CLK_SPI3       12
+>> +#define NPCM7XX_CLK_SPIX       13
+>> +#define NPCM7XX_CLK_UART_CORE  14
+>> +#define NPCM7XX_CLK_TIMER      15
+>> +#define NPCM7XX_CLK_HOST_UART  16
+>> +#define NPCM7XX_CLK_MMC                17
+>> +#define NPCM7XX_CLK_SDHC       18
+>> +#define NPCM7XX_CLK_ADC                19
+>> +#define NPCM7XX_CLK_GFX_MEM    20
+>> +#define NPCM7XX_CLK_USB_BRIDGE 21
+>> +#define NPCM7XX_CLK_AXI                22
+>> +#define NPCM7XX_CLK_AHB                23
+>> +#define NPCM7XX_CLK_EMC                24
+>> +#define NPCM7XX_CLK_GMAC       25
+>> +
+>> +#endif
+>> --
+>> 2.15.0.rc0.271.g36b669edcc-goog
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
