@@ -1,107 +1,124 @@
-From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2] display: panel: Add Tianma tm070rvhg71 display
- support (800x480)
-Date: Fri, 17 Nov 2017 13:29:22 +0100
-Message-ID: <20171117132922.3e4aee30@jawa>
-References: <CAL_JsqJz67k_fTMkx5dHb5qFwXif9y+Cv=+PTq7OLH7woNoU=g@mail.gmail.com>
-        <20171107153058.5554-1-lukma@denx.de>
-        <20171110212423.jddj5kw32voms2oj@rob-hp-laptop>
-        <20171117110247.5d7737bc@jawa>
-        <20171117114126.GB1062@ulmo>
-        <20171117131712.0f2a0a4f@jawa>
-        <20171117122713.GA22989@ulmo>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: ls1088a: add fsl-mc hardware resource
+ manager node
+Date: Fri, 17 Nov 2017 20:35:32 +0800
+Message-ID: <20171117123530.GA25390@dragon>
+References: <1510147805-24873-1-git-send-email-ioana.ciornei@nxp.com>
+ <20171116083920.GK25384@dragon>
+ <DB6PR0401MB2264A182C4048471B53BFF89E02E0@DB6PR0401MB2264.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/exjGyF.w2kIFtmWH_X2.qrz"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171117122713.GA22989@ulmo>
+Content-Disposition: inline
+In-Reply-To: <DB6PR0401MB2264A182C4048471B53BFF89E02E0-2mNvjAGDOPl4towakvZX7o3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ioana Ciornei <ioana.ciornei-3arQi8VN3Tc@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/exjGyF.w2kIFtmWH_X2.qrz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Nov 16, 2017 at 02:24:49PM +0000, Ioana Ciornei wrote:
+...
+> > > +	fsl_mc: fsl-mc@80c000000 {
+> > 
+> > The unit-address of the node should be somehow related to 'reg'
+> > property.  Can you please help me understand how they are related?
+> 
+> The unit-address of the fsl-mc node is the base address of the MC portal described in the first region of the 'reg' property and formed using the 2 address cells.
+> Hope this helps.
 
-On Fri, 17 Nov 2017 13:27:13 +0100
-Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Ah, sorry, I forgot that the address-cells is 2.
 
-> On Fri, Nov 17, 2017 at 01:17:12PM +0100, Lukasz Majewski wrote:
-> > Hi Thierry,
-> >  =20
-> > > On Fri, Nov 17, 2017 at 11:02:47AM +0100, Lukasz Majewski wrote: =20
-> > > > Dear All,
-> > > >    =20
-> > > > > On Tue, Nov 07, 2017 at 04:30:58PM +0100, Lukasz Majewski
-> > > > > wrote:   =20
-> > > > > > Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-> > > > > >=20
-> > > > > > ---
-> > > > > > Changes for v2:
-> > > > > > - Provide more
-> > > > > > detailed ./Documentation/devicetree/bindings/display/panel
-> > > > > > entry to describe this panel device. ---
-> > > > > >  .../bindings/display/panel/tianma,tm070rvhg71.txt  | 29
-> > > > > > ++++++++++++++++++++++
-> > > > > > drivers/gpu/drm/panel/panel-simple.c               | 27
-> > > > > > ++++++++++++++++++++ 2 files changed, 56 insertions(+)
-> > > > > > create mode 100644
-> > > > > > Documentation/devicetree/bindings/display/panel/tianma,tm070rvh=
-g71.txt     =20
-> > > > >=20
-> > > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>   =20
-> > > >=20
-> > > > Is there a chance that this patch will find its way to
-> > > > v4.15-rc1 ?   =20
-> > >=20
-> > > No, that's very unlikely. We're in the middle of the merge
-> > > window, no new patches are accepted at that point. =20
-> >=20
-> > Ok. I see. I should have sent the ping earlier. =20
->=20
-> Looking at the timeline of this patch even that wouldn't have been
-> enough. You sent the original patch on October 21, which is one day
-> after the final drm-misc feature pull request was tagged. So this
-> wouldn't have made it into v4.15-rc1 no matter how early you would
-> have pinged. =3D)
+>  
+> > 
+> > > +		compatible = "fsl,qoriq-mc";
+> > > +		reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+> > > +		      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+> > > +		msi-parent = <&its>;
+> > > +		#address-cells = <3>;
+> > > +		#size-cells = <1>;
+> > > +
+> > > +		/*
+> > > +		 * Region type 0x0 - MC portals
+> > > +		 * Region type 0x1 - QBMAN portals
+> > > +		 */
+> > > +		ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
+> > > +			  0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
+> > > +
+> > > +		dpmacs {
+> > > +			#address-cells = <1>;
+> > > +			#size-cells = <0>;
+> > > +
+> > > +			dpmac1: dpmac@1 {
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <1>;
+> > > +			};
+> > 
+> > Please have a newline in between nodes.
+> 
+> Will do. 
+> 
+> Should I send a rework of this patch right away or better to wait for the merge window to close?
 
-Time's flying :-)
+Either way is fine, as I will rebase my branch to v4.15-rc1 after merge
+window closes.
 
-Anyway, thanks for help.
+> > > +			dpmac2: dpmac@2 {
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <2>;
+> > > +			};
+> > > +			dpmac3: dpmac@3 {
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <3>;
+> > > +			};
+> > > +			dpmac4: dpmac@4 {
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <4>;
+> > > +			};
+> > > +			dpmac5: dpmac@5 {
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <5>;
+> > > +			};
+> > > +			dpmac6: dpmac@6 {
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <6>;
+> > > +			};
+> > > +			dpmac7: dpmac@7 {
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <7>;
+> > > +			};
+> > > +			dpmac8: dpmac@8 {
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <8>;
+> > > +			};
+> > > +			dpmac9: dpmac@9 {
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <9>;
+> > > +			};
+> > > +			dpmac10: dpmac@10 {
 
->=20
-> Thierry
+Just noticed this - the unit-address should be hex number, so it should
+be dpmac@a rather than dpmac@10, I think.
 
+Shawn
 
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
-
---Sig_/exjGyF.w2kIFtmWH_X2.qrz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAloO1iIACgkQAR8vZIA0
-zr1yFAgAgEMHEBafM+PzhgkIV5k6RzyYWXxWDR7CkOSkrvgugK1VVVg9XVnw0LEP
-4WEtgpfHHv8e/SiVLJZldpB0VIraRlsXixp3/wIUz1QVvoV2rPH4V8zbjLunGSDj
-JIk0sJ25u7GXarHR1C/9uChW9TfRYa6JtlyVIUULj4C70mzjBBS8pq+li5zzui6Y
-m1VheXvL0AB+9ZGPCIFWi4fUu82D+Cx+j4EjJny0HtzD1IFDfZ6IWdHcJMHbYjB1
-gKZKkZJsDfqdS9ET3mKHpYwIACqiyeGmXTu5lECb/m7YAPV5dehyM/6Tn95iScRl
-ypWkXyx0g6U6W2M0YO/pWtIrb21qLQ==
-=aifc
------END PGP SIGNATURE-----
-
---Sig_/exjGyF.w2kIFtmWH_X2.qrz--
+> > > +				compatible = "fsl,qoriq-mc-dpmac";
+> > > +				reg = <0xa>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +
+> > >  	psci {
+> > >  		compatible = "arm,psci-0.2";
+> > >  		method = "smc";
+> > > --
+> > > 1.9.1
+> > >
+> > >
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
