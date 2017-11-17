@@ -1,26 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: i2c: eeprom: Add Renesas R1EX24128
-Date: Fri, 17 Nov 2017 14:30:51 -0600
-Message-ID: <20171117203051.ljd5ch3ugmxszmu3@rob-hp-laptop>
-References: <1510839994-12473-1-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH v2 1/4] dt-bindings: media: rcar_vin: Reverse SoC part
+ number list
+Date: Fri, 17 Nov 2017 14:31:48 -0600
+Message-ID: <20171117203148.anvhqgrhbp6imptt@rob-hp-laptop>
+References: <1510856571-30281-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1510856571-30281-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1510839994-12473-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1510856571-30281-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 02:46:34PM +0100, Geert Uytterhoeven wrote:
-> Document the compatible value for the Renesas R1EX24128ASAS0A two-wire
-> serial interface EEPROM, so it can be used in DTS files without causing
-> checkpatch warnings.
+On Thu, Nov 16, 2017 at 06:22:48PM +0000, Fabrizio Castro wrote:
+> Change the sorting of the part numbers from descending to ascending to
+> match with other documentation.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 > ---
->  Documentation/devicetree/bindings/eeprom/eeprom.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v1->v2:
+> * new patch triggered by Geert's comment, see the below link for details:
+>   https://www.mail-archive.com/linux-media@vger.kernel.org/msg121992.html
+> 
+>  Documentation/devicetree/bindings/media/rcar_vin.txt | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
