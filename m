@@ -1,57 +1,61 @@
-From: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFCv2 PATCH 31/36] iommu/arm-smmu-v3: Add support for PCI ATS
-Date: Fri, 17 Nov 2017 06:11:17 +0000
-Message-ID: <BLUPR0201MB1505BC86D3838D13F38665E7A52F0@BLUPR0201MB1505.namprd02.prod.outlook.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
-	<20171006133203.22803-32-jean-philippe.brucker@arm.com>
-	<BLUPR0201MB150565029F9260A528739ACBA52E0@BLUPR0201MB1505.namprd02.prod.outlook.com>
-	<673fda01-2ae0-87e4-637e-fe27096b6be0@arm.com>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V1 1/4] qcom: spmi-wled: Add support for qcom wled driver
+Date: Fri, 17 Nov 2017 12:06:05 +0530
+Message-ID: <208c7332234581909f159ddb33ede32b@codeaurora.org>
+References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
+ <1510834717-21765-2-git-send-email-kgunda@codeaurora.org>
+ <20171116165510.GP28761@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <673fda01-2ae0-87e4-637e-fe27096b6be0-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20171116165510.GP28761@minitux>
+Sender: linux-leds-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> +
-> +	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-> +	list_for_each_entry(master, &smmu_domain->devices, list)
-> +		arm_smmu_atc_inv_master(master, &cmd);
-> +	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-> +
-> +	return size;
-> +}
-> +
->  /* IOMMU API */
->  static bool arm_smmu_capable(enum iommu_cap cap)  { @@ -2361,6 +2506,8 @@ static void arm_smmu_detach_dev(struct device *dev)
->  		__iommu_process_unbind_dev_all(&smmu_domain->domain, dev);
->  
->  	if (smmu_domain) {
-> +		arm_smmu_atc_inv_master_all(master, 0);
-> +
-> In BIND flow, when VFIO_IOMMU_UNBIND is invoked invalidation is sent on allocated PASID for this application.
-> When vfio group fd is closed after UNBIND,  arm_smmu_detach_dev is invoked now invalidation is being sent on ssid zero.
-> Why  invalidation needs to be sent on ssid zero ?
+On 2017-11-16 22:25, Bjorn Andersson wrote:
+> On Thu 16 Nov 04:18 PST 2017, Kiran Gunda wrote:
+> 
+>> WLED driver provides the interface to the display driver to
+>> adjust the brightness of the display backlight.
+>> 
+> 
+> Hi Kiran,
+> 
+> This driver has a lot in common with the already upstream 
+> pm8941-wled.c,
+> because it's just a new revision of the same block.
+> 
+> Please extend the existing driver rather than providing a new one
+> (and yes, renaming the file is okay).
+> 
+> Regards,
+> Bjorn
 
-It's possible to use bind/unbind and map/unmap APIs at the same time on a domain. map/unmap modifies non-ssid mappings as usual, for context descriptor 0. Note that SSID 0 is converted to "no SSID" by arm_smmu_atc_inv_to_cmd.
+Hi Bjorn,
 
-That said, I think VFIO cleans all DMA mappings when the VFIO group fd is closed, which will send individual ATC invalidation for each mapping. But VFIO may not be the only user of this API, and future users may be less careful. It's safer to send this global invalidation whenever we detach the domain, to ensure we're not leaving stale ATC entries for the next user.
+Yes this driver design is similar to pm8941, however the WLED HW block 
+has undergone quite a few changes in
+analog and digital from PM8941 to PM8998. Few of them include splitting 
+one module into wled-ctrl
+and wled-sink peripherals, changes in the register offsets and the bit 
+interpretation. Hence we
+concluded that it was better to have a new driver to support this new 
+gen WELD module and decouple
+it from the pm8941. Also, going forward this driver will support AMOLED 
+AVDD rail (not supported by pm8941)
+touching a few more registers/configuration and newer PMICs. So spinning 
+off a new driver would make it
+cleaner and easier to extend further.
 
-Thanks Jean, I see that currently vfio_group_fops_open does not allow multiple instances. 
-If a device supports multiple PASID there might be different applications running parallel. 
-So why is multiple instances restricted ?
+Thanks,
+Kiran
 
-Regards,
-Bharat
+> --
+> To unsubscribe from this list: send the line "unsubscribe 
+> linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
