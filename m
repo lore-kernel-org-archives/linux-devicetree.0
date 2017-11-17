@@ -1,7 +1,7 @@
 From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v4 3/4] drivers/fsi: sbefifo: Add miscdevice
-Date: Fri, 17 Nov 2017 13:34:33 -0600
-Message-ID: <1510947274-7519-4-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: [PATCH v4 2/4] drivers/fsi: Add SBEFIFO FSI client device driver
+Date: Fri, 17 Nov 2017 13:34:32 -0600
+Message-ID: <1510947274-7519-3-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1510947274-7519-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1510947274-7519-1-git-send-email-eajames@linux.vnet.ibm.com>
@@ -12,413 +12,644 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Edward A. James" <eajames@us.ibm.com>
 
-Add a miscdevice for the sbefifo to allow userspace access through
-standard file operations.
+IBM POWER9 processors contain some embedded hardware and software bits
+collectively referred to as the self boot engine (SBE).  One role of
+the SBE is to act as a proxy that provides access to the registers of
+the POWER chip from other (embedded) systems.
+
+The POWER9 chip contains a hardware frontend for communicating with
+the SBE from remote systems called the SBEFIFO.  The SBEFIFO logic
+is contained within an FSI CFAM  and as such the driver implements an
+FSI bus device.
+
+The SBE expects to communicate using a defined wire protocol; however,
+the driver knows nothing of the protocol and only provides raw access
+to the fifo device to userspace applications wishing to communicate with
+the SBE using the wire protocol.
+
+The SBEFIFO consists of two hardware fifos.  The upstream fifo is used
+by the driver to transfer data to the SBE on the POWER chip, from the
+system hosting the driver.  The downstream fifo is used by the driver to
+transfer data from the SBE on the power chip to the system hosting the
+driver.
+
+Contributions from Brad Bishop <bradleyb@fuzziesquirrel.com>
 
 Signed-off-by: Edward A. James <eajames@us.ibm.com>
 ---
- drivers/fsi/fsi-sbefifo.c | 354 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 354 insertions(+)
+ drivers/fsi/Kconfig       |   7 +
+ drivers/fsi/Makefile      |   1 +
+ drivers/fsi/fsi-sbefifo.c | 575 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 583 insertions(+)
+ create mode 100644 drivers/fsi/fsi-sbefifo.c
 
+diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
+index 6821ed0..8c4d903 100644
+--- a/drivers/fsi/Kconfig
++++ b/drivers/fsi/Kconfig
+@@ -33,6 +33,13 @@ config FSI_SCOM
+ 	---help---
+ 	This option enables an FSI based SCOM device driver.
+ 
++config FSI_SBEFIFO
++	tristate "SBEFIFO FSI client device driver"
++	---help---
++	This option enables an FSI based SBEFIFO device driver. The SBEFIFO is
++	a pipe-like FSI device for communicating with the self boot engine
++	(SBE) on POWER processors.
++
+ endif
+ 
+ endmenu
+diff --git a/drivers/fsi/Makefile b/drivers/fsi/Makefile
+index 65eb99d..851182e 100644
+--- a/drivers/fsi/Makefile
++++ b/drivers/fsi/Makefile
+@@ -3,3 +3,4 @@ obj-$(CONFIG_FSI) += fsi-core.o
+ obj-$(CONFIG_FSI_MASTER_HUB) += fsi-master-hub.o
+ obj-$(CONFIG_FSI_MASTER_GPIO) += fsi-master-gpio.o
+ obj-$(CONFIG_FSI_SCOM) += fsi-scom.o
++obj-$(CONFIG_FSI_SBEFIFO) += fsi-sbefifo.o
 diff --git a/drivers/fsi/fsi-sbefifo.c b/drivers/fsi/fsi-sbefifo.c
-index 2439958..9970e2d 100644
---- a/drivers/fsi/fsi-sbefifo.c
+new file mode 100644
+index 0000000..2439958
+--- /dev/null
 +++ b/drivers/fsi/fsi-sbefifo.c
-@@ -19,6 +19,7 @@
- #include <linux/kernel.h>
- #include <linux/kref.h>
- #include <linux/list.h>
-+#include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/poll.h>
- #include <linux/sched.h>
-@@ -54,6 +55,7 @@
- struct sbefifo {
- 	struct timer_list poll_timer;
- 	struct fsi_device *fsi_dev;
-+	struct miscdevice mdev;
- 	wait_queue_head_t wait;
- 	struct list_head xfrs;
- 	struct kref kref;
-@@ -256,6 +258,99 @@ static void sbefifo_put(struct sbefifo *sbefifo)
- 	kref_put(&sbefifo->kref, sbefifo_free);
- }
- 
-+static struct sbefifo_xfr *sbefifo_enq_xfr(struct sbefifo_client *client)
+@@ -0,0 +1,575 @@
++/*
++ * Copyright (C) IBM Corporation 2017
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERGCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/fs.h>
++#include <linux/fsi.h>
++#include <linux/idr.h>
++#include <linux/kernel.h>
++#include <linux/kref.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/poll.h>
++#include <linux/sched.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
++#include <linux/timer.h>
++#include <linux/uaccess.h>
++#include <linux/wait.h>
++
++/*
++ * The SBEFIFO is a pipe-like FSI device for communicating with
++ * the self boot engine on POWER processors.
++ */
++
++#define DEVICE_NAME		"sbefifo"
++#define FSI_ENGID_SBE		0x22
++#define SBEFIFO_BUF_CNT		32
++
++#define SBEFIFO_UP		0x00	/* Up register offset */
++#define SBEFIFO_DWN		0x40	/* Down register offset */
++
++#define SBEFIFO_STS		0x04
++#define   SBEFIFO_EMPTY			BIT(20)
++#define   SBEFIFO_STS_RESET_REQ		BIT(25)
++#define SBEFIFO_EOT_RAISE	0x08
++#define   SBEFIFO_EOT_MAGIC		0xffffffff
++#define SBEFIFO_REQ_RESET	0x0C
++#define SBEFIFO_EOT_ACK		0x14
++
++#define SBEFIFO_RESCHEDULE	msecs_to_jiffies(500)
++#define SBEFIFO_MAX_RESCHDULE	msecs_to_jiffies(5000)
++
++struct sbefifo {
++	struct timer_list poll_timer;
++	struct fsi_device *fsi_dev;
++	wait_queue_head_t wait;
++	struct list_head xfrs;
++	struct kref kref;
++	spinlock_t lock;
++	char name[32];
++	int idx;
++	int rc;
++};
++
++struct sbefifo_buf {
++	u32 buf[SBEFIFO_BUF_CNT];
++	unsigned long flags;
++#define SBEFIFO_BUF_FULL		1
++	u32 *rpos;
++	u32 *wpos;
++};
++
++struct sbefifo_xfr {
++	unsigned long wait_data_timeout;
++	struct sbefifo_buf *rbuf;
++	struct sbefifo_buf *wbuf;
++	struct list_head client;
++	struct list_head xfrs;
++	unsigned long flags;
++#define SBEFIFO_XFR_WRITE_DONE		1
++#define SBEFIFO_XFR_RESP_PENDING	2
++#define SBEFIFO_XFR_COMPLETE		3
++#define SBEFIFO_XFR_CANCEL		4
++};
++
++struct sbefifo_client {
++	struct sbefifo_buf rbuf;
++	struct sbefifo_buf wbuf;
++	struct list_head xfrs;
++	struct sbefifo *dev;
++	struct kref kref;
++};
++
++static DEFINE_IDA(sbefifo_ida);
++
++static int sbefifo_inw(struct sbefifo *sbefifo, int reg, u32 *word)
 +{
-+	struct sbefifo *sbefifo = client->dev;
-+	struct sbefifo_xfr *xfr;
++	int rc;
++	__be32 raw_word;
 +
-+	if (READ_ONCE(sbefifo->rc))
-+		return ERR_PTR(sbefifo->rc);
++	rc = fsi_device_read(sbefifo->fsi_dev, reg, &raw_word,
++			     sizeof(raw_word));
++	if (rc)
++		return rc;
 +
-+	xfr = kzalloc(sizeof(*xfr), GFP_KERNEL);
-+	if (!xfr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	xfr->rbuf = &client->rbuf;
-+	xfr->wbuf = &client->wbuf;
-+	list_add_tail(&xfr->xfrs, &sbefifo->xfrs);
-+	list_add_tail(&xfr->client, &client->xfrs);
-+
-+	return xfr;
-+}
-+
-+static bool sbefifo_xfr_rsp_pending(struct sbefifo_client *client)
-+{
-+	struct sbefifo_xfr *xfr = list_first_entry_or_null(&client->xfrs,
-+							   struct sbefifo_xfr,
-+							   client);
-+
-+	if (xfr && test_bit(SBEFIFO_XFR_RESP_PENDING, &xfr->flags))
-+		return true;
-+
-+	return false;
-+}
-+
-+static struct sbefifo_client *sbefifo_new_client(struct sbefifo *sbefifo)
-+{
-+	struct sbefifo_client *client;
-+
-+	client = kzalloc(sizeof(*client), GFP_KERNEL);
-+	if (!client)
-+		return NULL;
-+
-+	kref_init(&client->kref);
-+	client->dev = sbefifo;
-+	sbefifo_buf_init(&client->rbuf);
-+	sbefifo_buf_init(&client->wbuf);
-+	INIT_LIST_HEAD(&client->xfrs);
-+
-+	sbefifo_get(sbefifo);
-+
-+	return client;
-+}
-+
-+static void sbefifo_client_release(struct kref *kref)
-+{
-+	struct sbefifo *sbefifo;
-+	struct sbefifo_client *client;
-+	struct sbefifo_xfr *xfr, *tmp;
-+
-+	client = container_of(kref, struct sbefifo_client, kref);
-+	sbefifo = client->dev;
-+
-+	if (!READ_ONCE(sbefifo->rc)) {
-+		list_for_each_entry_safe(xfr, tmp, &client->xfrs, client) {
-+			if (test_bit(SBEFIFO_XFR_COMPLETE, &xfr->flags)) {
-+				list_del(&xfr->client);
-+				kfree(xfr);
-+				continue;
-+			}
-+
-+			/*
-+			 * The client left with pending or running xfrs.
-+			 * Cancel them.
-+			 */
-+			set_bit(SBEFIFO_XFR_CANCEL, &xfr->flags);
-+			sbefifo_get(sbefifo);
-+			if (mod_timer(&client->dev->poll_timer, jiffies))
-+				sbefifo_put(sbefifo);
-+		}
-+	}
-+
-+	sbefifo_put(sbefifo);
-+	kfree(client);
-+}
-+
-+static void sbefifo_get_client(struct sbefifo_client *client)
-+{
-+	kref_get(&client->kref);
-+}
-+
-+static void sbefifo_put_client(struct sbefifo_client *client)
-+{
-+	kref_put(&client->kref, sbefifo_client_release);
-+}
-+
- static struct sbefifo_xfr *sbefifo_next_xfr(struct sbefifo *sbefifo)
- {
- 	struct sbefifo_xfr *xfr, *tmp;
-@@ -429,6 +524,251 @@ static void sbefifo_poll_timer(unsigned long data)
- 	spin_unlock(&sbefifo->lock);
- }
- 
-+static int sbefifo_open(struct inode *inode, struct file *file)
-+{
-+	struct sbefifo *sbefifo = container_of(file->private_data,
-+					       struct sbefifo, mdev);
-+	struct sbefifo_client *client;
-+	int ret;
-+
-+	ret = READ_ONCE(sbefifo->rc);
-+	if (ret)
-+		return ret;
-+
-+	client = sbefifo_new_client(sbefifo);
-+	if (!client)
-+		return -ENOMEM;
-+
-+	file->private_data = client;
++	*word = be32_to_cpu(raw_word);
 +
 +	return 0;
 +}
 +
-+static unsigned int sbefifo_poll(struct file *file, poll_table *wait)
++static int sbefifo_outw(struct sbefifo *sbefifo, int reg, u32 word)
 +{
-+	struct sbefifo_client *client = file->private_data;
-+	struct sbefifo *sbefifo = client->dev;
-+	unsigned int mask = 0;
++	__be32 raw_word = cpu_to_be32(word);
 +
-+	poll_wait(file, &sbefifo->wait, wait);
-+
-+	if (READ_ONCE(sbefifo->rc))
-+		mask |= POLLERR;
-+
-+	if (sbefifo_buf_nbreadable(&client->rbuf))
-+		mask |= POLLIN;
-+
-+	if (sbefifo_buf_nbwriteable(&client->wbuf))
-+		mask |= POLLOUT;
-+
-+	return mask;
++	return fsi_device_write(sbefifo->fsi_dev, reg, &raw_word,
++				sizeof(raw_word));
 +}
 +
-+static bool sbefifo_read_ready(struct sbefifo *sbefifo,
-+			       struct sbefifo_client *client, size_t *n,
-+			       size_t *ret)
++/* Don't flip endianness of data to/from FIFO, just pass through. */
++static int sbefifo_readw(struct sbefifo *sbefifo, u32 *word)
 +{
-+	struct sbefifo_xfr *xfr = list_first_entry_or_null(&client->xfrs,
-+							   struct sbefifo_xfr,
-+							   client);
-+
-+	*n = sbefifo_buf_nbreadable(&client->rbuf);
-+	*ret = READ_ONCE(sbefifo->rc);
-+
-+	return *ret || *n ||
-+		(xfr && test_bit(SBEFIFO_XFR_COMPLETE, &xfr->flags));
++	return fsi_device_read(sbefifo->fsi_dev, SBEFIFO_DWN, word,
++			       sizeof(*word));
 +}
 +
-+static ssize_t sbefifo_read(struct file *file, char __user *buf, size_t len,
-+			    loff_t *offset)
++static int sbefifo_writew(struct sbefifo *sbefifo, u32 word)
 +{
-+	struct sbefifo_client *client = file->private_data;
-+	struct sbefifo *sbefifo = client->dev;
-+	struct sbefifo_xfr *xfr;
++	return fsi_device_write(sbefifo->fsi_dev, SBEFIFO_UP, &word,
++				sizeof(word));
++}
++
++static int sbefifo_ack_eot(struct sbefifo *sbefifo)
++{
++	u32 discard;
++	int ret;
++
++	 /* Discard the EOT word. */
++	ret = sbefifo_readw(sbefifo, &discard);
++	if (ret)
++		return ret;
++
++	return sbefifo_outw(sbefifo, SBEFIFO_DWN | SBEFIFO_EOT_ACK,
++			    SBEFIFO_EOT_MAGIC);
++}
++
++static size_t sbefifo_dev_nwreadable(u32 sts)
++{
++	static const u32 FIFO_NTRY_CNT_MSK = 0x000f0000;
++	static const unsigned int FIFO_NTRY_CNT_SHIFT = 16;
++
++	return (sts & FIFO_NTRY_CNT_MSK) >> FIFO_NTRY_CNT_SHIFT;
++}
++
++static size_t sbefifo_dev_nwwriteable(u32 sts)
++{
++	static const size_t FIFO_DEPTH = 8;
++
++	return FIFO_DEPTH - sbefifo_dev_nwreadable(sts);
++}
++
++static void sbefifo_buf_init(struct sbefifo_buf *buf)
++{
++	WRITE_ONCE(buf->flags, 0);
++	WRITE_ONCE(buf->rpos, buf->buf);
++	WRITE_ONCE(buf->wpos, buf->buf);
++}
++
++static size_t sbefifo_buf_nbreadable(struct sbefifo_buf *buf)
++{
 +	size_t n;
-+	ssize_t ret = 0;
++	u32 *rpos = READ_ONCE(buf->rpos);
++	u32 *wpos = READ_ONCE(buf->wpos);
 +
-+	if ((len >> 2) << 2 != len)
-+		return -EINVAL;
++	if (test_bit(SBEFIFO_BUF_FULL, &buf->flags))
++		n = SBEFIFO_BUF_CNT;
++	else if (rpos <= wpos)
++		n = wpos - rpos;
++	else
++		n = (buf->buf + SBEFIFO_BUF_CNT) - rpos;
 +
-+	if ((file->f_flags & O_NONBLOCK) && !sbefifo_xfr_rsp_pending(client))
-+		return -EAGAIN;
++	return n << 2;
++}
 +
-+	sbefifo_get_client(client);
-+	if (wait_event_interruptible(sbefifo->wait,
-+				     sbefifo_read_ready(sbefifo, client, &n,
-+							&ret))) {
-+		ret = -ERESTARTSYS;
-+		goto out;
-+	}
++static size_t sbefifo_buf_nbwriteable(struct sbefifo_buf *buf)
++{
++	size_t n;
++	u32 *rpos = READ_ONCE(buf->rpos);
++	u32 *wpos = READ_ONCE(buf->wpos);
 +
-+	if (ret) {
-+		INIT_LIST_HEAD(&client->xfrs);
-+		goto out;
-+	}
++	if (test_bit(SBEFIFO_BUF_FULL, &buf->flags))
++		n = 0;
++	else if (wpos < rpos)
++		n = rpos - wpos;
++	else
++		n = (buf->buf + SBEFIFO_BUF_CNT) - wpos;
 +
-+	n = min_t(size_t, n, len);
++	return n << 2;
++}
 +
-+	if (copy_to_user(buf, READ_ONCE(client->rbuf.rpos), n)) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
++/*
++ * Update pointers and flags after doing a buffer read.  Return true if the
++ * buffer is now empty;
++ */
++static bool sbefifo_buf_readnb(struct sbefifo_buf *buf, size_t n)
++{
++	u32 *rpos = READ_ONCE(buf->rpos);
++	u32 *wpos = READ_ONCE(buf->wpos);
 +
-+	if (sbefifo_buf_readnb(&client->rbuf, n)) {
-+		xfr = list_first_entry_or_null(&client->xfrs,
-+					       struct sbefifo_xfr, client);
-+		if (!xfr) {
-+			/* should be impossible to not have an xfr here */
-+			WARN_ONCE(1, "no xfr in queue");
-+			ret = -EPROTO;
-+			goto out;
-+		}
++	if (n)
++		clear_bit(SBEFIFO_BUF_FULL, &buf->flags);
 +
-+		if (!test_bit(SBEFIFO_XFR_COMPLETE, &xfr->flags)) {
-+			/* Fill the read buffer back up. */
-+			sbefifo_get(sbefifo);
-+			if (mod_timer(&client->dev->poll_timer, jiffies))
-+				sbefifo_put(sbefifo);
-+		} else {
-+			list_del(&xfr->client);
++	rpos += (n >> 2);
++	if (rpos == buf->buf + SBEFIFO_BUF_CNT)
++		rpos = buf->buf;
++
++	WRITE_ONCE(buf->rpos, rpos);
++
++	return rpos == wpos;
++}
++
++/*
++ * Update pointers and flags after doing a buffer write.  Return true if the
++ * buffer is now full.
++ */
++static bool sbefifo_buf_wrotenb(struct sbefifo_buf *buf, size_t n)
++{
++	u32 *rpos = READ_ONCE(buf->rpos);
++	u32 *wpos = READ_ONCE(buf->wpos);
++
++	wpos += (n >> 2);
++	if (wpos == buf->buf + SBEFIFO_BUF_CNT)
++		wpos = buf->buf;
++	if (wpos == rpos)
++		set_bit(SBEFIFO_BUF_FULL, &buf->flags);
++
++	WRITE_ONCE(buf->wpos, wpos);
++
++	return rpos == wpos;
++}
++
++static void sbefifo_free(struct kref *kref)
++{
++	struct sbefifo *sbefifo = container_of(kref, struct sbefifo, kref);
++
++	kfree(sbefifo);
++}
++
++static void sbefifo_get(struct sbefifo *sbefifo)
++{
++	kref_get(&sbefifo->kref);
++}
++
++static void sbefifo_put(struct sbefifo *sbefifo)
++{
++	kref_put(&sbefifo->kref, sbefifo_free);
++}
++
++static struct sbefifo_xfr *sbefifo_next_xfr(struct sbefifo *sbefifo)
++{
++	struct sbefifo_xfr *xfr, *tmp;
++
++	list_for_each_entry_safe(xfr, tmp, &sbefifo->xfrs, xfrs) {
++		if (unlikely(test_bit(SBEFIFO_XFR_CANCEL, &xfr->flags))) {
++			/* Discard cancelled transfers. */
++			list_del(&xfr->xfrs);
 +			kfree(xfr);
-+			wake_up_interruptible(&sbefifo->wait);
++			continue;
 +		}
++
++		return xfr;
 +	}
 +
-+	ret = n;
-+
-+out:
-+	sbefifo_put_client(client);
-+	return ret;
++	return NULL;
 +}
 +
-+static bool sbefifo_write_ready(struct sbefifo *sbefifo,
-+				struct sbefifo_xfr *xfr,
-+				struct sbefifo_client *client, size_t *n)
++static void sbefifo_poll_timer(unsigned long data)
 +{
-+	struct sbefifo_xfr *next = list_first_entry_or_null(&client->xfrs,
-+							    struct sbefifo_xfr,
-+							    client);
++	static const unsigned long EOT_MASK = 0x000000ff;
++	struct sbefifo *sbefifo = (void *)data;
++	struct sbefifo_buf *rbuf, *wbuf;
++	struct sbefifo_xfr *xfr, *tmp;
++	struct sbefifo_buf drain;
++	size_t devn, bufn;
++	int eot = 0;
++	int ret = 0;
++	u32 sts;
++	int i;
 +
-+	*n = sbefifo_buf_nbwriteable(&client->wbuf);
-+	return READ_ONCE(sbefifo->rc) || (next == xfr && *n);
-+}
++	spin_lock(&sbefifo->lock);
++	xfr = list_first_entry_or_null(&sbefifo->xfrs, struct sbefifo_xfr,
++				       xfrs);
++	if (!xfr)
++		goto out_unlock;
 +
-+static ssize_t sbefifo_write(struct file *file, const char __user *buf,
-+			     size_t len, loff_t *offset)
-+{
-+	struct sbefifo_client *client = file->private_data;
-+	struct sbefifo *sbefifo = client->dev;
-+	struct sbefifo_xfr *xfr;
-+	ssize_t ret = 0;
-+	size_t n;
++	rbuf = xfr->rbuf;
++	wbuf = xfr->wbuf;
 +
-+	if ((len >> 2) << 2 != len)
-+		return -EINVAL;
-+
-+	if (!len)
-+		return 0;
-+
-+	sbefifo_get_client(client);
-+	n = sbefifo_buf_nbwriteable(&client->wbuf);
-+
-+	spin_lock_irq(&sbefifo->lock);
-+	xfr = sbefifo_next_xfr(sbefifo);	/* next xfr to be executed */
-+
-+	if ((file->f_flags & O_NONBLOCK) && xfr && n < len) {
-+		spin_unlock_irq(&sbefifo->lock);
-+		ret = -EAGAIN;
-+		goto out;
-+	}
-+
-+	xfr = sbefifo_enq_xfr(client);		/* this xfr queued up */
-+	if (IS_ERR(xfr)) {
-+		spin_unlock_irq(&sbefifo->lock);
-+		ret = PTR_ERR(xfr);
-+		goto out;
-+	}
-+
-+	spin_unlock_irq(&sbefifo->lock);
-+
-+	/*
-+	 * Partial writes are not really allowed in that EOT is sent exactly
-+	 * once per write.
-+	 */
-+	while (len) {
-+		if (wait_event_interruptible(sbefifo->wait,
-+					     sbefifo_write_ready(sbefifo, xfr,
-+								 client,
-+								 &n))) {
-+			set_bit(SBEFIFO_XFR_CANCEL, &xfr->flags);
-+			sbefifo_get(sbefifo);
-+			if (mod_timer(&sbefifo->poll_timer, jiffies))
-+				sbefifo_put(sbefifo);
-+
-+			ret = -ERESTARTSYS;
-+			goto out;
-+		}
-+
-+		if (sbefifo->rc) {
-+			INIT_LIST_HEAD(&client->xfrs);
-+			ret = sbefifo->rc;
-+			goto out;
-+		}
-+
-+		n = min_t(size_t, n, len);
-+
-+		if (copy_from_user(READ_ONCE(client->wbuf.wpos), buf, n)) {
-+			set_bit(SBEFIFO_XFR_CANCEL, &xfr->flags);
-+			sbefifo_get(sbefifo);
-+			if (mod_timer(&sbefifo->poll_timer, jiffies))
-+				sbefifo_put(sbefifo);
-+			ret = -EFAULT;
-+			goto out;
-+		}
-+
-+		buf += n;
-+
-+		sbefifo_buf_wrotenb(&client->wbuf, n);
-+		len -= n;
-+		ret += n;
-+
-+		/*
-+		 * Set this before starting timer to avoid race condition on
-+		 * this flag with the timer function writer.
-+		 */
-+		if (!len)
++	if (unlikely(test_bit(SBEFIFO_XFR_CANCEL, &xfr->flags))) {
++		/* The client left. */
++		rbuf = &drain;
++		wbuf = &drain;
++		sbefifo_buf_init(&drain);
++		if (!test_bit(SBEFIFO_XFR_RESP_PENDING, &xfr->flags))
 +			set_bit(SBEFIFO_XFR_WRITE_DONE, &xfr->flags);
++	}
 +
-+		/* Drain the write buffer. */
-+		sbefifo_get(sbefifo);
-+		if (mod_timer(&client->dev->poll_timer, jiffies))
-+			sbefifo_put(sbefifo);
++	 /* Drain the write buffer. */
++	while ((bufn = sbefifo_buf_nbreadable(wbuf))) {
++		ret = sbefifo_inw(sbefifo, SBEFIFO_UP | SBEFIFO_STS, &sts);
++		if (ret)
++			goto out;
++
++		devn = sbefifo_dev_nwwriteable(sts);
++		if (devn == 0) {
++			/* No open slot for write.  Reschedule. */
++			sbefifo->poll_timer.expires = jiffies +
++				SBEFIFO_RESCHEDULE;
++			add_timer(&sbefifo->poll_timer);
++			goto out_unlock;
++		}
++
++		devn = min_t(size_t, devn, bufn >> 2);
++		for (i = 0; i < devn; i++) {
++			ret = sbefifo_writew(sbefifo, *wbuf->rpos);
++			if (ret)
++				goto out;
++
++			sbefifo_buf_readnb(wbuf, 1 << 2);
++		}
++	}
++
++	 /* Send EOT if the writer is finished. */
++	if (test_and_clear_bit(SBEFIFO_XFR_WRITE_DONE, &xfr->flags)) {
++		ret = sbefifo_outw(sbefifo, SBEFIFO_UP | SBEFIFO_EOT_RAISE,
++				   SBEFIFO_EOT_MAGIC);
++		if (ret)
++			goto out;
++
++		/* Inform reschedules that the writer is finished. */
++		set_bit(SBEFIFO_XFR_RESP_PENDING, &xfr->flags);
++	}
++
++	/* Nothing left to do if the writer is not finished. */
++	if (!test_bit(SBEFIFO_XFR_RESP_PENDING, &xfr->flags))
++		goto out;
++
++	 /* Fill the read buffer. */
++	while ((bufn = sbefifo_buf_nbwriteable(rbuf))) {
++		ret = sbefifo_inw(sbefifo, SBEFIFO_DWN | SBEFIFO_STS, &sts);
++		if (ret)
++			goto out;
++
++		devn = sbefifo_dev_nwreadable(sts);
++		if (devn == 0) {
++			/*
++			 * Limit the maximum waiting period for data in the
++			 * FIFO. If the SBE isn't running, we will wait
++			 * forever.
++			 */
++			if (!xfr->wait_data_timeout) {
++				xfr->wait_data_timeout =
++					jiffies + SBEFIFO_MAX_RESCHDULE;
++			} else if (time_after(jiffies,
++					      xfr->wait_data_timeout)) {
++				ret = -ETIME;
++				goto out;
++			}
++
++			/* No data yet.  Reschedule. */
++			sbefifo->poll_timer.expires = jiffies +
++				SBEFIFO_RESCHEDULE;
++			add_timer(&sbefifo->poll_timer);
++			goto out_unlock;
++		} else {
++			xfr->wait_data_timeout = 0;
++		}
++
++		/* Fill.  The EOT word is discarded.  */
++		devn = min_t(size_t, devn, bufn >> 2);
++		eot = (sts & EOT_MASK) != 0;
++		if (eot)
++			devn--;
++
++		for (i = 0; i < devn; i++) {
++			ret = sbefifo_readw(sbefifo, rbuf->wpos);
++			if (ret)
++				goto out;
++
++			if (likely(!test_bit(SBEFIFO_XFR_CANCEL, &xfr->flags)))
++				sbefifo_buf_wrotenb(rbuf, 1 << 2);
++		}
++
++		if (eot) {
++			ret = sbefifo_ack_eot(sbefifo);
++			if (ret)
++				goto out;
++
++			set_bit(SBEFIFO_XFR_COMPLETE, &xfr->flags);
++			list_del(&xfr->xfrs);
++			if (unlikely(test_bit(SBEFIFO_XFR_CANCEL,
++					      &xfr->flags)))
++				kfree(xfr);
++			break;
++		}
 +	}
 +
 +out:
-+	sbefifo_put_client(client);
-+	return ret;
++	if (unlikely(ret)) {
++		sbefifo->rc = ret;
++		dev_err(&sbefifo->fsi_dev->dev,
++			"Fatal bus access failure: %d\n", ret);
++		list_for_each_entry_safe(xfr, tmp, &sbefifo->xfrs, xfrs) {
++			list_del(&xfr->xfrs);
++			kfree(xfr);
++		}
++		INIT_LIST_HEAD(&sbefifo->xfrs);
++
++	} else if (eot && sbefifo_next_xfr(sbefifo)) {
++		sbefifo_get(sbefifo);
++		sbefifo->poll_timer.expires = jiffies;
++		add_timer(&sbefifo->poll_timer);
++	}
++
++	sbefifo_put(sbefifo);
++	wake_up_interruptible(&sbefifo->wait);
++
++out_unlock:
++	spin_unlock(&sbefifo->lock);
 +}
 +
-+static int sbefifo_release(struct inode *inode, struct file *file)
++static int sbefifo_request_reset(struct sbefifo *sbefifo)
 +{
-+	struct sbefifo_client *client = file->private_data;
-+	struct sbefifo *sbefifo = client->dev;
++	int ret;
++	u32 status;
++	unsigned long start;
++	const unsigned int wait_time = 5;	/* jiffies */
++	const unsigned long timeout = msecs_to_jiffies(250);
 +
-+	sbefifo_put_client(client);
++	ret = sbefifo_outw(sbefifo, SBEFIFO_UP | SBEFIFO_REQ_RESET, 1);
++	if (ret)
++		return ret;
 +
-+	return READ_ONCE(sbefifo->rc);
++	start = jiffies;
++
++	do {
++		ret = sbefifo_inw(sbefifo, SBEFIFO_UP | SBEFIFO_STS, &status);
++		if (ret)
++			return ret;
++
++		if (!(status & SBEFIFO_STS_RESET_REQ))
++			return 0;
++
++		set_current_state(TASK_INTERRUPTIBLE);
++		if (schedule_timeout(wait_time) > 0)
++			return -EINTR;
++	} while (time_after(start + timeout, jiffies));
++
++	return -ETIME;
 +}
 +
-+static const struct file_operations sbefifo_fops = {
-+	.owner		= THIS_MODULE,
-+	.open		= sbefifo_open,
-+	.read		= sbefifo_read,
-+	.write		= sbefifo_write,
-+	.poll		= sbefifo_poll,
-+	.release	= sbefifo_release,
++static int sbefifo_probe(struct device *dev)
++{
++	struct fsi_device *fsi_dev = to_fsi_dev(dev);
++	struct sbefifo *sbefifo;
++	u32 up, down;
++	int ret;
++
++	dev_dbg(dev, "Found sbefifo device\n");
++	sbefifo = kzalloc(sizeof(*sbefifo), GFP_KERNEL);
++	if (!sbefifo)
++		return -ENOMEM;
++
++	sbefifo->fsi_dev = fsi_dev;
++
++	ret = sbefifo_inw(sbefifo, SBEFIFO_UP | SBEFIFO_STS, &up);
++	if (ret)
++		return ret;
++
++	ret = sbefifo_inw(sbefifo, SBEFIFO_DWN | SBEFIFO_STS, &down);
++	if (ret)
++		return ret;
++
++	if (!(up & SBEFIFO_EMPTY) || !(down & SBEFIFO_EMPTY)) {
++		ret = sbefifo_request_reset(sbefifo);
++		if (ret) {
++			dev_err(dev,
++				"fifos weren't empty and failed the reset\n");
++			return ret;
++		}
++	}
++
++	spin_lock_init(&sbefifo->lock);
++	kref_init(&sbefifo->kref);
++	init_waitqueue_head(&sbefifo->wait);
++	INIT_LIST_HEAD(&sbefifo->xfrs);
++
++	sbefifo->idx = ida_simple_get(&sbefifo_ida, 1, INT_MAX, GFP_KERNEL);
++	snprintf(sbefifo->name, sizeof(sbefifo->name), "sbefifo%d",
++		 sbefifo->idx);
++
++	/* This bit of silicon doesn't offer any interrupts... */
++	setup_timer(&sbefifo->poll_timer, sbefifo_poll_timer,
++		    (unsigned long)sbefifo);
++
++	dev_set_drvdata(dev, sbefifo);
++
++	return 0;
++}
++
++static int sbefifo_remove(struct device *dev)
++{
++	struct sbefifo *sbefifo = dev_get_drvdata(dev);
++	struct sbefifo_xfr *xfr, *tmp;
++
++	spin_lock(&sbefifo->lock);
++
++	WRITE_ONCE(sbefifo->rc, -ENODEV);
++	list_for_each_entry_safe(xfr, tmp, &sbefifo->xfrs, xfrs) {
++		list_del(&xfr->xfrs);
++		kfree(xfr);
++	}
++
++	INIT_LIST_HEAD(&sbefifo->xfrs);
++
++	spin_unlock(&sbefifo->lock);
++
++	wake_up_all(&sbefifo->wait);
++
++	ida_simple_remove(&sbefifo_ida, sbefifo->idx);
++
++	if (del_timer_sync(&sbefifo->poll_timer))
++		sbefifo_put(sbefifo);
++
++	sbefifo_put(sbefifo);
++
++	return 0;
++}
++
++static struct fsi_device_id sbefifo_ids[] = {
++	{
++		.engine_type = FSI_ENGID_SBE,
++		.version = FSI_VERSION_ANY,
++	},
++	{ 0 }
 +};
 +
- static int sbefifo_request_reset(struct sbefifo *sbefifo)
- {
- 	int ret;
-@@ -503,6 +843,18 @@ static int sbefifo_probe(struct device *dev)
- 	setup_timer(&sbefifo->poll_timer, sbefifo_poll_timer,
- 		    (unsigned long)sbefifo);
- 
-+	sbefifo->mdev.minor = MISC_DYNAMIC_MINOR;
-+	sbefifo->mdev.fops = &sbefifo_fops;
-+	sbefifo->mdev.name = sbefifo->name;
-+	sbefifo->mdev.parent = dev;
-+	ret = misc_register(&sbefifo->mdev);
-+	if (ret) {
-+		dev_err(dev, "failed to register miscdevice: %d\n", ret);
-+		ida_simple_remove(&sbefifo_ida, sbefifo->idx);
-+		sbefifo_put(sbefifo);
-+		return ret;
++static struct fsi_driver sbefifo_drv = {
++	.id_table = sbefifo_ids,
++	.drv = {
++		.name = DEVICE_NAME,
++		.bus = &fsi_bus_type,
++		.probe = sbefifo_probe,
++		.remove = sbefifo_remove,
 +	}
++};
 +
- 	dev_set_drvdata(dev, sbefifo);
- 
- 	return 0;
-@@ -527,6 +879,8 @@ static int sbefifo_remove(struct device *dev)
- 
- 	wake_up_all(&sbefifo->wait);
- 
-+	misc_deregister(&sbefifo->mdev);
++static int sbefifo_init(void)
++{
++	return fsi_driver_register(&sbefifo_drv);
++}
 +
- 	ida_simple_remove(&sbefifo_ida, sbefifo->idx);
- 
- 	if (del_timer_sync(&sbefifo->poll_timer))
++static void sbefifo_exit(void)
++{
++	fsi_driver_unregister(&sbefifo_drv);
++
++	ida_destroy(&sbefifo_ida);
++}
++
++module_init(sbefifo_init);
++module_exit(sbefifo_exit);
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Brad Bishop <bradleyb@fuzziesquirrel.com>");
++MODULE_AUTHOR("Eddie James <eajames@linux.vnet.ibm.com>");
++MODULE_DESCRIPTION("Linux device interface to the POWER Self Boot Engine");
 -- 
 1.8.3.1
