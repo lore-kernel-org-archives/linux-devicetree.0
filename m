@@ -1,31 +1,53 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend] arm: dts: ls1021a: add "fsl, ls1021a-esdhc"
- compatible string to esdhc node
-Date: Fri, 17 Nov 2017 20:56:42 +0800
-Message-ID: <20171117125641.GD25390@dragon>
-References: <1510583976-6661-1-git-send-email-rasmus.villemoes@prevas.dk>
- <1510834526-32730-1-git-send-email-rasmus.villemoes@prevas.dk>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/5] dt-bindings: i2c: update documentation for the
+ Meson-AXG
+Date: Fri, 17 Nov 2017 14:02:18 +0100
+Message-ID: <03c9ea24-5f8d-f5dd-6e96-f53f56db530c@baylibre.com>
+References: <20171117080236.32504-1-yixun.lan@amlogic.com>
+ <20171117080236.32504-2-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1510834526-32730-1-git-send-email-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20171117080236.32504-2-yixun.lan@amlogic.com>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 01:15:26PM +0100, Rasmus Villemoes wrote:
-> Commit a22950c888e3 (mmc: sdhci-of-esdhc: add quirk
-> SDHCI_QUIRK_BROKEN_TIMEOUT_VAL for ls1021a) added logic to the driver to
-> enable the broken timeout val quirk for ls1021a, but did not add the
-> corresponding compatible string to the device tree, so it didn't really
-> have any effect. Fix that.
+On 17/11/2017 09:02, Yixun Lan wrote:
+> From: Jian Hu <jian.hu@amlogic.com>
 > 
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+> Update the doc to explicitly add Meson-AXG to support list
+> 
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-meson.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-meson.txt b/Documentation/devicetree/bindings/i2c/i2c-meson.txt
+> index 611b934c7e10..3097d2b44dad 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-meson.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-meson.txt
+> @@ -2,6 +2,7 @@ Amlogic Meson I2C controller
+>  
+>  Required properties:
+>   - compatible: must be "amlogic,meson6-i2c" or "amlogic,meson-gxbb-i2c"
+> +						"amlogic,meson-axg-i2c"
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Yixun, Jian,
+
+Maybe you should reformat by using :
+- compatible: must be :
+	"amlogic,meson6-i2c" for Meson8 and compatible SoCs
+	"amlogic,meson-gxbb-i2c" for GXBB and compatible SoCs
+	"amlogic,meson-axg-i2c"for AXG and compatible SoCs
+
+Neil
+
+>   - reg: physical address and length of the device registers
+>   - interrupts: a single interrupt specifier
+>   - clocks: clock for the device
+> 
