@@ -1,74 +1,95 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7 04/13] slimbus: core: Add slim controllers support
-Date: Fri, 17 Nov 2017 09:13:22 +0100
-Message-ID: <20171117081322.GF10671@kroah.com>
-References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
- <20171115141043.29202-5-srinivas.kandagatla@linaro.org>
- <20171116164233.GB3187@localhost>
- <55794ca5-b70a-4866-1e80-bc0e78880c50@linaro.org>
- <20171117044222.GK3187@localhost>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V1 1/4] qcom: spmi-wled: Add support for qcom wled driver
+Date: Fri, 17 Nov 2017 08:33:42 +0000
+Message-ID: <20171117083342.usr4t7olsgarn4kp@dell>
+References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
+ <1510834717-21765-2-git-send-email-kgunda@codeaurora.org>
+ <20171116165510.GP28761@minitux>
+ <208c7332234581909f159ddb33ede32b@codeaurora.org>
+ <20171117065640.GU28761@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171117044222.GK3187@localhost>
+In-Reply-To: <20171117065640.GU28761@minitux>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: kgunda@codeaurora.org, linux-arm-msm@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 17, 2017 at 10:12:22AM +0530, Vinod Koul wrote:
-> On Thu, Nov 16, 2017 at 05:29:35PM +0000, Srinivas Kandagatla wrote:
-> > thanks for the comments.
-> > 
-> > 
-> > On 16/11/17 16:42, Vinod Koul wrote:
-> > >On Wed, Nov 15, 2017 at 02:10:34PM +0000, srinivas.kandagatla@linaro.org wrote:
-> > >
-> > >>+static void slim_dev_release(struct device *dev)
-> > >>+{
-> > >>+	struct slim_device *sbdev = to_slim_device(dev);
-> > >>+
-> > >>+	put_device(sbdev->ctrl->dev);
-> > >
-> > >which device would that be?
-> > This is controller device
-> > 
-> > >
-> > >>+static int slim_add_device(struct slim_controller *ctrl,
-> > >>+			   struct slim_device *sbdev,
-> > >>+			   struct device_node *node)
-> > >>+{
-> > >>+	sbdev->dev.bus = &slimbus_bus;
-> > >>+	sbdev->dev.parent = ctrl->dev;
-> > >>+	sbdev->dev.release = slim_dev_release;
-> > >>+	sbdev->dev.driver = NULL;
-> > >>+	sbdev->ctrl = ctrl;
-> > >>+
-> > >>+	dev_set_name(&sbdev->dev, "%x:%x:%x:%x",
-> > >>+				  sbdev->e_addr.manf_id,
-> > >>+				  sbdev->e_addr.prod_code,
-> > >>+				  sbdev->e_addr.dev_index,
-> > >>+				  sbdev->e_addr.instance);
-> > >>+
-> > >>+	get_device(ctrl->dev);
-> > >
-> > >is this controller device and you ensuring it doesnt go away while you have
-> > >slaves on it?
-> > 
-> > Yes.
+On Thu, 16 Nov 2017, Bjorn Andersson wrote:
+
+> On Thu 16 Nov 22:36 PST 2017, kgunda@codeaurora.org wrote:
 > 
-> I thought since you are marking ctrl->dev as parent, the device core should
-> ensure that parent doesn't go off when you have child device?
+> > On 2017-11-16 22:25, Bjorn Andersson wrote:
+> > > On Thu 16 Nov 04:18 PST 2017, Kiran Gunda wrote:
+> > > 
+> > > > WLED driver provides the interface to the display driver to
+> > > > adjust the brightness of the display backlight.
+> > > > 
+> > > 
+> > > Hi Kiran,
+> > > 
+> > > This driver has a lot in common with the already upstream pm8941-wled.c,
+> > > because it's just a new revision of the same block.
+> > > 
+> > > Please extend the existing driver rather than providing a new one
+> > > (and yes, renaming the file is okay).
+> > > 
+> > > Regards,
+> > > Bjorn
+> > 
+> > Hi Bjorn,
+> > 
+> > Yes this driver design is similar to pm8941, however the WLED HW block
+> > has undergone quite a few changes in analog and digital from PM8941 to
+> > PM8998.
 > 
-> Greg, is that understanding correct, if so we may not need these calls.
+> I can see that, looking at the documentation.
+> 
+> > Few of them include splitting one module into wled-ctrl and wled-sink
+> > peripherals, changes in the register offsets and the bit
+> > interpretation.
+> 
+> This is typical and something we need to handle in all these drivers, to
+> avoid having one driver per platform.
+> 
+> > Hence we concluded that it was better to have a new driver to support
+> > this new gen WELD module and decouple it from the pm8941.
+> 
+> Okay, I can see how it's easier to not have to case about anything but
+> pmi8998 in this driver, but where do you add the support for other WLED
+> versions? What about PMI8994? Will there not be similar differences
+> (registers that has moved around) in the future?
+> 
+> > Also, going forward this driver will support AMOLED AVDD rail (not
+> > supported by pm8941) touching a few more registers/configuration and
+> > newer PMICs.
+> 
+> Is this a feature that was introduced in PMI8998? Will this support not
+> be dependent on the pmic version?
+> 
+> > So spinning off a new driver would make it cleaner and easier to
+> > extend further.
+> > 
+> 
+> It's for sure easier at this point in time, but your argumentation
+> implies that PMI8998+1 should go into it's own driver as well.
+> 
+> I suspect that if you're going to reuse this driver for future PMIC
+> versions you will have to deal with register layout differences and new
+> feature set, and as such I'm not convinced that a new driver is needed.
+> 
+> Can you give any concrete examples of where it is not possible or
+> undesirable to maintain the pm8941 support in the same driver?
 
-That understanding should be correct, as the reference count is
-incremented on the parent when a child is added.
+I agree with Bjorn.  If you can support multiple devices in a single
+driver with a couple of simple ddata struct differences and a slightly
+different regmap, you should.
 
-It would be trivial for this to be tested, and yes, I am pretty sure you
-don't need this call.
-
-thanks,
-
-greg k-h
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
