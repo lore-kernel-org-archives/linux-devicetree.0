@@ -1,41 +1,74 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH 5/5] ARM64: dts: meson-axg: enable I2C Master-1 for the audio speaker
-Date: Fri, 17 Nov 2017 16:02:36 +0800
-Message-ID: <20171117080236.32504-6-yixun.lan@amlogic.com>
-References: <20171117080236.32504-1-yixun.lan@amlogic.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v7 04/13] slimbus: core: Add slim controllers support
+Date: Fri, 17 Nov 2017 09:13:22 +0100
+Message-ID: <20171117081322.GF10671@kroah.com>
+References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-5-srinivas.kandagatla@linaro.org>
+ <20171116164233.GB3187@localhost>
+ <55794ca5-b70a-4866-1e80-bc0e78880c50@linaro.org>
+ <20171117044222.GK3187@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20171117080236.32504-1-yixun.lan@amlogic.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171117044222.GK3187@localhost>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-From: Jian Hu <jian.hu@amlogic.com>
+On Fri, Nov 17, 2017 at 10:12:22AM +0530, Vinod Koul wrote:
+> On Thu, Nov 16, 2017 at 05:29:35PM +0000, Srinivas Kandagatla wrote:
+> > thanks for the comments.
+> > 
+> > 
+> > On 16/11/17 16:42, Vinod Koul wrote:
+> > >On Wed, Nov 15, 2017 at 02:10:34PM +0000, srinivas.kandagatla@linaro.org wrote:
+> > >
+> > >>+static void slim_dev_release(struct device *dev)
+> > >>+{
+> > >>+	struct slim_device *sbdev = to_slim_device(dev);
+> > >>+
+> > >>+	put_device(sbdev->ctrl->dev);
+> > >
+> > >which device would that be?
+> > This is controller device
+> > 
+> > >
+> > >>+static int slim_add_device(struct slim_controller *ctrl,
+> > >>+			   struct slim_device *sbdev,
+> > >>+			   struct device_node *node)
+> > >>+{
+> > >>+	sbdev->dev.bus = &slimbus_bus;
+> > >>+	sbdev->dev.parent = ctrl->dev;
+> > >>+	sbdev->dev.release = slim_dev_release;
+> > >>+	sbdev->dev.driver = NULL;
+> > >>+	sbdev->ctrl = ctrl;
+> > >>+
+> > >>+	dev_set_name(&sbdev->dev, "%x:%x:%x:%x",
+> > >>+				  sbdev->e_addr.manf_id,
+> > >>+				  sbdev->e_addr.prod_code,
+> > >>+				  sbdev->e_addr.dev_index,
+> > >>+				  sbdev->e_addr.instance);
+> > >>+
+> > >>+	get_device(ctrl->dev);
+> > >
+> > >is this controller device and you ensuring it doesnt go away while you have
+> > >slaves on it?
+> > 
+> > Yes.
+> 
+> I thought since you are marking ctrl->dev as parent, the device core should
+> ensure that parent doesn't go off when you have child device?
+> 
+> Greg, is that understanding correct, if so we may not need these calls.
 
-In the S400 board, The I2C master-1 is connecting to
-the audio speaker daughter board.
+That understanding should be correct, as the reference count is
+incremented on the parent when a child is added.
 
-Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+It would be trivial for this to be tested, and yes, I am pretty sure you
+don't need this call.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 7b39a9fe2b0f..74730e40f992 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -28,3 +28,9 @@
- 	pinctrl-0 = <&eth_rgmii_y_pins>;
- 	pinctrl-names = "default";
- };
-+
-+&i2c_m1 {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_m1_z_pins>;
-+	pinctrl-names = "default";
-+};
--- 
-2.14.1
+thanks,
+
+greg k-h
