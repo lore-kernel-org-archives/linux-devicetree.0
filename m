@@ -1,110 +1,66 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V6] clk: qcom: Add spmi_pmic clock divider support
-Date: Fri, 17 Nov 2017 15:56:11 -0800
-Message-ID: <20171117235611.GA13301@codeaurora.org>
-References: <1510912127-4582-1-git-send-email-tirupath@codeaurora.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
+ LED driver
+Date: Sat, 18 Nov 2017 00:58:11 +0100
+Message-ID: <20171117235811.GA26296@amd>
+References: <20171115194203.13572-1-dmurphy@ti.com>
+ <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4@gmail.com>
+ <0a78c883-f074-cc19-3c0c-fc05607400e9@ti.com>
+ <20171115222323.GA18290@amd>
+ <82336eb7-2b89-d37b-d688-4e4302766346@gmail.com>
+ <16189eab-5541-9550-c027-1c9d2b5fa6d7@ti.com>
+ <20171117112032.GA13855@amd>
+ <000b01d35fc1$57ad0500$07070f00$@gmail.com>
+ <17b8e1ce-092a-0449-4733-533162b26499@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1510912127-4582-1-git-send-email-tirupath@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Tirupathi Reddy <tirupath@codeaurora.org>
-Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+In-Reply-To: <17b8e1ce-092a-0449-4733-533162b26499@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Jingoo Han <jingoohan1@gmail.com>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 'Lee Jones' <lee.jones@linaro.org>, 'Daniel Thompson' <daniel.thompson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/17, Tirupathi Reddy wrote:
-> diff --git a/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
-> new file mode 100644
-> index 0000000..2cf2aba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
 
-Please move this to qcom,spmi-clkdiv.txt like other qcom bindings.
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> @@ -0,0 +1,59 @@
-> +Qualcomm Technologies, Inc. SPMI PMIC clock divider (clkdiv)
-> +
-> +clkdiv configures the clock frequency of a set of outputs on the PMIC.
-> +These clocks are typically wired through alternate functions on
-> +gpio pins.
-> +
-> +=======================
-> +Properties
-> +=======================
-> +
-> +- compatible
-> +	Usage:      required
-> +	Value type: <string>
-> +	Definition: must be "qcom,spmi-clkdiv".
-> +
-> +- reg
-> +	Usage:      required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address of CLKDIV peripherals.
-> +
-> +- qcom,num-clkdivs
-> +	Usage:      required
-> +	Value type: <u32>
-> +	Definition: number of CLKDIV peripherals.
+Hi!
 
-Would it work if we read the registers and looked for the clkdiv
-subtype ID? If we read something that doesn't match, break and
-stop adding clks? Or does reading the next "peripheral" cause
-some sort of crash and burn scenario where the device see an
-access control violation? Would be interesting to do it that way
-and avoid needing a new property in DT.
+> >> Well.. if it can control other LEDs than just backlight, I believe it
+> >> can stay in the LED subsystem.
+> >=20
+> > I also agree with your opinion.
+>=20
+> I will make the necessary changes for v4.
 
-> +
-> +
-> +	parent_name = of_clk_get_parent_name(of_node, 0);
-> +	if (!parent_name) {
-> +		dev_err(dev, "missing parent clock\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	init.parent_names = &parent_name;
-> +	init.num_parents = 1;
-> +	init.ops = &clk_spmi_pmic_div_ops;
-> +
-> +	for (i = 0, clkdiv = cc->clks; i < nclks; i++) {
-> +		spin_lock_init(&clkdiv[i].lock);
-> +		clkdiv[i].base = start + i * 0x100;
-> +		clkdiv[i].regmap = regmap;
-> +		clkdiv[i].cxo_period_ns = NSEC_PER_SEC / cxo_hz;
-> +		init.name = kasprintf(GFP_KERNEL, "div_clk%d", i + 1);
+I'm not sure if you need to make any changes. Just add default trigger
+to the dts and you should be done.
 
-Hmm. Maybe we should just have this on the stack. 20 characters
-should be plenty?
+> Just a heads up I won't be posting v4 until after the US holiday so you
+> don't think I abandoned everything.
 
-> +		clkdiv[i].hw.init = &init;
-> +
-> +		ret = devm_clk_hw_register(dev, &clkdiv[i].hw);
-> +		kfree(init.name); /* clk framework made a copy */
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return of_clk_add_hw_provider(of_node, spmi_pmic_div_clk_hw_get, cc);
-> +}
-> +
-> +static int spmi_pmic_clkdiv_remove(struct platform_device *pdev)
-> +{
-> +	of_clk_del_provider(pdev->dev.of_node);
-> +
-> +	return 0;
+:-)
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-This can use devm now.
+--CE+1k2dSO48ffgeK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +}
-> +
-> +static const struct of_device_id spmi_pmic_clkdiv_match_table[] = {
-> +	{ .compatible = "qcom,spmi-clkdiv" },
-> +	{ /* sentinel */ }
-> +};
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Nice!
+iEYEARECAAYFAloPd5MACgkQMOfwapXb+vI/HACgr9uF8gGupUn6i50N/pEOUEZf
+9GoAoI5zJErfVPAxa9gXiD2yPJgxhuMg
+=5lKN
+-----END PGP SIGNATURE-----
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--CE+1k2dSO48ffgeK--
