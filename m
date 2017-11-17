@@ -1,132 +1,84 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Decompiled vs *tmp extended device tree
-Date: Thu, 16 Nov 2017 22:34:04 -0500
-Message-ID: <7861cc51-29cb-1fa5-e6b1-f403c66736a4@gmail.com>
-References: <CAOT_U5bV1cWsXa-d7A5sbd0e+UuhD6NmwsmyjrQcuWceqtus_A@mail.gmail.com>
- <20171116165212.4caconxbvfrmbs4n@rob-hp-laptop>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 02/13] dt-bindings: Add SLIMbus bindings
+Date: Fri, 17 Nov 2017 09:25:56 +0530
+Message-ID: <20171117035556.GJ3187@localhost>
+References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-3-srinivas.kandagatla@linaro.org>
+ <20171116130914.GU3187@localhost>
+ <a32232fc-3995-60f6-878e-76aaed4c52d6@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171116165212.4caconxbvfrmbs4n@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <a32232fc-3995-60f6-878e-76aaed4c52d6-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Martinovic <alan.martinovic-+NedCK/4fiIAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/17 11:52, Rob Herring wrote:
-> On Thu, Nov 16, 2017 at 01:12:55PM +0100, Alan Martinovic wrote:
->> Hi,
->> I'm trying to modify a device tree to enable support of the second UART.
->> The actual device tree which is used for the example:
->>
->> https://github.com/getsenic/senic-os-linux/blob/senic/4.13/arch/arm/boot/dts/sun8i-h3-senic-hub.dts
->>
->> The device tree includes and overrides some additional files:
->>
->>     #include "sun8i-h3.dtsi"
->>     #include "sunxi-common-regulators.dtsi"
->>     #include <dt-bindings/gpio/gpio.h>
->>     #include <dt-bindings/input/input.h>
->>     #include <dt-bindings/pinctrl/sun4i-a10.h>
->>
->> I would like to know to what does the extended device tree look like,
->> and use that as my base, because I don't really have the complete picture
->> by just looking at the sun8i-h3-senic-hub.dts
->>
->> In this example I'm interested in where are "uart0_pins_a" defined.
->> sun8i-h3-senic-hub.dts references them but has no definitions,
->> so I'm assuming the definition is somewhere in the included files.
->>
->> To help me out with this task I discovered the device tree decompiler.
->> Am expecting that the decompiled dts contains all the data that
->> end up in the dtb blob, and should, among other, contain all the information
->> available in sun8i-h3-senic-hub.dts.
->>
->>     scripts/dtc/dtc -I dtb -O dts -o expanded-devtree.dts
->> arch/arm/boot/dts/sun8i-h3-senic-hub.dtb
->>
->> But the decompiled extended device tree also seems to have no
->> traces of "uart0_pins_a" at all :
->>
->>     grep uart0_pins_a expanded-devtree.dts
+On Thu, Nov 16, 2017 at 01:40:13PM +0000, Srinivas Kandagatla wrote:
+> Thanks for the review comments.
 > 
-> labels are purely a source level construct (though overlays changes 
-> that some) and are lost after compiling. You have to look for 'uart0@0'.
+> On 16/11/17 13:09, Vinod Koul wrote:
+> >On Wed, Nov 15, 2017 at 02:10:32PM +0000, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> >>From: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >
+> >>+
+> >>+Child nodes:
+> >>+Every SLIMbus controller node can contain zero or more child nodes
+> >>+representing slave devices on the bus. Every SLIMbus slave device is
+> >>+uniquely determined by the enumeration address containing 4 fields:
+> >>+Manufacturer ID, Product code, Device index, and Instance value for
+> >>+the device.
+> >>+If child node is not present and it is instantiated after device
+> >>+discovery (slave device reporting itself present).
+> >
+> >So you allow the devices to work even if the respective firmware description
+> >is absent?
+> Yes, As SLIMbus itself itself is discoverable bus.
+
+Okay, in SDW we mandate description be present in respective firmwares so we
+dont have this path. In theory this never works for you as driver cant load
+without device being created and without driver load device is not powered
+up so can't report...
+
+> >>+In some cases it may be necessary to describe non-probeable device
+> >>+details such as non-standard ways of powering up a device. In
+> >>+such cases, child nodes for those devices will be present as
+> >>+slaves of the slimbus-controller, as detailed below.
+> >>+
+> >>+Required property for SLIMbus child node if it is present:
+> >>+- reg		- Should be ('Device index', 'Instance ID') from SLIMbus
+> >>+		  Enumeration  Address.
+> >>+		  Device Index Uniquely identifies multiple Devices within
+> >>+		  a single Component.
+> >>+		  Instance ID Is for the cases where multiple Devices of the
+> >>+		  same type or Class are attached to the bus.
+> >>+
+> >>+- compatible	-"slimMID,PID". The textual representation of Manufacturer ID,
+> >>+	 	  Product Code, shall be in lower case hexadecimal with leading
+> >>+		  zeroes suppressed
+> >>+
 > 
->>
->> I've also discovered the hidden .tmp files:
->>
->>     ⟫ ls arch/arm/boot/dts/.sun8i-h3-*
->>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.cmd
->>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.d.dtc.tmp
->>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.d.pre.tmp
->>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp
->>
->> and in one of them there is a definition to "uart0_pins_a":
->>
->>     ⟫ grep uart0_pins_a  arch/arm/boot/dts/.sun8i-h3-*
->>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp:   uart0_pins_a: uart0@0 {
->>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp: pinctrl-0 =
->> <&uart0_pins_a>;
->>
->> My question is, which one is a more accurate representation
->> of the final device tree that I should use as a basis?
+> >>+		codec: wcd9310@1,0{
+> >>+			compatible = "slim217,60";
+> >>+			reg = <1 0>;
+> >>+		};
+> >>+	};
+> >
+> >Pardon my ignorance as I am not very familiar with DT nodes, but where are
+> >the Manufacturer ID, Product code, Device index, and Instance values here?
 > 
-> Compiling dts to dts is mainly useful to get rid of all the C 
-> preprocessor and includes to see what the final nodes look like. You do 
-> lose some things though.
+> Manfacturer ID and Product code is part of compatible string
+> Device index and Instance value are part of reg.
 
-Some explanation of this stuff is in the slides at:
+hmmm, wouldn't it be more helpful to have a field(s) for these which contain
+these numbers rather than coded together in a word
 
-  https://elinux.org/Device_Tree_Reference#Debugging
+compatible makes sense though
 
-  Follow the link to the slides "Solving Device Tree Issues" (updated),
-  ELCE October 2015 by Frank Rowand.
-
-Info on why some things in the original source end up in the final
-device tree and some don't (note that the tool "dtdiff" in the slides
-is now in mainline Linux, as scripts/dtc/dtx_diff):
-
-   slides
-     46 - 59
-     68 - 75
-
-Info on how to read .sun8i-h3-senic-hub.dtb.dts.tmp to find out
-where things in the final device tree came from:
-
-   slides
-     80 - 84
-
-A more elegant solution that will provide file names and line numbers
-for what dts or dtsi a node or property in the final device tree came
-from:
-
-   slides
-     85 - 92
-
-   This feature has not yet gotten into dtc, so if you want to use it
-   you need to patch the dtc source yourself.  Link to those patches
-   is at the same elinux.org page, "Supporting Resources (patches, etc)".
-
-   I am hopeful that someday I or someone else will finish implementing
-   this feature properly so that it can be accepted into dtc.
-
-
-> 
->> Why isn't it correct to expect that everything from sun8i-h3-senic-hub.dts
->> will end up in the final device tree blob?
-> 
-> That's true for every compiler. After compiling, preprocessor symbols 
-> are gone, functions may be inlined, etc.
-> 
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+-- 
+~Vinod
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
