@@ -1,436 +1,121 @@
-From: Tirupathi Reddy <tirupath-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH V6] clk: qcom: Add spmi_pmic clock divider support
-Date: Fri, 17 Nov 2017 15:18:47 +0530
-Message-ID: <1510912127-4582-1-git-send-email-tirupath@codeaurora.org>
+From: kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH V1 1/4] qcom: spmi-wled: Add support for qcom wled driver
+Date: Fri, 17 Nov 2017 15:22:32 +0530
+Message-ID: <15f6f769f5883af35f153b0c5e570442@codeaurora.org>
+References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
+ <1510834717-21765-2-git-send-email-kgunda@codeaurora.org>
+ <20171116165510.GP28761@minitux>
+ <208c7332234581909f159ddb33ede32b@codeaurora.org>
+ <20171117065640.GU28761@minitux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171117065640.GU28761@minitux>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tirupathi Reddy <tirupath-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Clkdiv module provides a clock output on the PMIC with CXO as
-the source. This clock can be routed through PMIC GPIOs. Add
-a device driver to configure this clkdiv module.
+On 2017-11-17 12:26, Bjorn Andersson wrote:
+> On Thu 16 Nov 22:36 PST 2017, kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
+> 
+>> On 2017-11-16 22:25, Bjorn Andersson wrote:
+>> > On Thu 16 Nov 04:18 PST 2017, Kiran Gunda wrote:
+>> >
+>> > > WLED driver provides the interface to the display driver to
+>> > > adjust the brightness of the display backlight.
+>> > >
+>> >
+>> > Hi Kiran,
+>> >
+>> > This driver has a lot in common with the already upstream pm8941-wled.c,
+>> > because it's just a new revision of the same block.
+>> >
+>> > Please extend the existing driver rather than providing a new one
+>> > (and yes, renaming the file is okay).
+>> >
+>> > Regards,
+>> > Bjorn
+>> 
+>> Hi Bjorn,
+>> 
+>> Yes this driver design is similar to pm8941, however the WLED HW block
+>> has undergone quite a few changes in analog and digital from PM8941 to
+>> PM8998.
+> 
+> I can see that, looking at the documentation.
+> 
+>> Few of them include splitting one module into wled-ctrl and wled-sink
+>> peripherals, changes in the register offsets and the bit
+>> interpretation.
+> 
+> This is typical and something we need to handle in all these drivers, 
+> to
+> avoid having one driver per platform.
+> 
+>> Hence we concluded that it was better to have a new driver to support
+>> this new gen WELD module and decouple it from the pm8941.
+> 
+> Okay, I can see how it's easier to not have to case about anything but
+> pmi8998 in this driver, but where do you add the support for other WLED
+> versions? What about PMI8994? Will there not be similar differences
+> (registers that has moved around) in the future?
+> 
+>> Also, going forward this driver will support AMOLED AVDD rail (not
+>> supported by pm8941) touching a few more registers/configuration and
+>> newer PMICs.
+> 
+> Is this a feature that was introduced in PMI8998? Will this support not
+> be dependent on the pmic version?
+> 
+>> So spinning off a new driver would make it cleaner and easier to
+>> extend further.
+>> 
+> 
+> It's for sure easier at this point in time, but your argumentation
+> implies that PMI8998+1 should go into it's own driver as well.
+> 
+> I suspect that if you're going to reuse this driver for future PMIC
+> versions you will have to deal with register layout differences and new
+> feature set, and as such I'm not convinced that a new driver is needed.
+> 
+> 
+> Can you give any concrete examples of where it is not possible or
+> undesirable to maintain the pm8941 support in the same driver?
+> 
+> Regards,
+> Bjorn
 
-Signed-off-by: Tirupathi Reddy <tirupath-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../bindings/clock/clk-spmi-pmic-div.txt           |  59 ++++
- drivers/clk/qcom/Kconfig                           |   9 +
- drivers/clk/qcom/Makefile                          |   1 +
- drivers/clk/qcom/clk-spmi-pmic-div.c               | 308 +++++++++++++++++++++
- 4 files changed, 377 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
- create mode 100644 drivers/clk/qcom/clk-spmi-pmic-div.c
+Hi Bjorn,
 
-diff --git a/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
-new file mode 100644
-index 0000000..2cf2aba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
-@@ -0,0 +1,59 @@
-+Qualcomm Technologies, Inc. SPMI PMIC clock divider (clkdiv)
-+
-+clkdiv configures the clock frequency of a set of outputs on the PMIC.
-+These clocks are typically wired through alternate functions on
-+gpio pins.
-+
-+=======================
-+Properties
-+=======================
-+
-+- compatible
-+	Usage:      required
-+	Value type: <string>
-+	Definition: must be "qcom,spmi-clkdiv".
-+
-+- reg
-+	Usage:      required
-+	Value type: <prop-encoded-array>
-+	Definition: base address of CLKDIV peripherals.
-+
-+- qcom,num-clkdivs
-+	Usage:      required
-+	Value type: <u32>
-+	Definition: number of CLKDIV peripherals.
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the xo clock.
-+
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "xo".
-+
-+- clock-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: shall contain 1.
-+
-+=======
-+Example
-+=======
-+
-+pm8998_clk_divs: clock-controller@5b00 {
-+	compatible = "qcom,spmi-clkdiv";
-+	reg = <0x5b00>;
-+	#clock-cells = <1>;
-+	qcom,num-clkdivs = <3>;
-+	clocks = <&xo_board>;
-+	clock-names = "xo";
-+
-+	assigned-clocks = <&pm8998_clk_divs 1>,
-+			  <&pm8998_clk_divs 2>,
-+			  <&pm8998_clk_divs 3>;
-+	assigned-clock-rates = <9600000>,
-+			       <9600000>,
-+			       <9600000>;
-+};
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 9f6c278..20b5d6f 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -196,3 +196,12 @@ config MSM_MMCC_8996
- 	  Support for the multimedia clock controller on msm8996 devices.
- 	  Say Y if you want to support multimedia devices such as display,
- 	  graphics, video encode/decode, camera, etc.
-+
-+config SPMI_PMIC_CLKDIV
-+	tristate "SPMI PMIC clkdiv Support"
-+	depends on (COMMON_CLK_QCOM && SPMI) || COMPILE_TEST
-+	help
-+	  This driver supports the clkdiv functionality on the Qualcomm
-+	  Technologies, Inc. SPMI PMIC. It configures the frequency of
-+	  clkdiv outputs of the PMIC. These clocks are typically wired
-+	  through alternate functions on GPIO pins.
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 26410d3..602af38 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -34,3 +34,4 @@ obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
- obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
- obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
- obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
-+obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
-diff --git a/drivers/clk/qcom/clk-spmi-pmic-div.c b/drivers/clk/qcom/clk-spmi-pmic-div.c
-new file mode 100644
-index 0000000..bf85a16
---- /dev/null
-+++ b/drivers/clk/qcom/clk-spmi-pmic-div.c
-@@ -0,0 +1,308 @@
-+/* Copyright (c) 2017, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/log2.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+#define REG_DIV_CTL1			0x43
-+#define DIV_CTL1_DIV_FACTOR_MASK	GENMASK(2, 0)
-+
-+#define REG_EN_CTL			0x46
-+#define REG_EN_MASK			BIT(7)
-+
-+struct clkdiv {
-+	struct regmap		*regmap;
-+	u16			base;
-+	spinlock_t		lock;
-+
-+	struct clk_hw		hw;
-+	unsigned int		cxo_period_ns;
-+};
-+
-+static inline struct clkdiv *to_clkdiv(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct clkdiv, hw);
-+}
-+
-+static inline unsigned int div_factor_to_div(unsigned int div_factor)
-+{
-+	if (!div_factor)
-+		div_factor = 1;
-+
-+	return 1 << (div_factor - 1);
-+}
-+
-+static inline unsigned int div_to_div_factor(unsigned int div)
-+{
-+	return min(ilog2(div) + 1, 7);
-+}
-+
-+static bool is_spmi_pmic_clkdiv_enabled(struct clkdiv *clkdiv)
-+{
-+	unsigned int val = 0;
-+
-+	regmap_read(clkdiv->regmap, clkdiv->base + REG_EN_CTL, &val);
-+
-+	return val & REG_EN_MASK;
-+}
-+
-+static int
-+__spmi_pmic_clkdiv_set_enable_state(struct clkdiv *clkdiv, bool enable,
-+				    unsigned int div_factor)
-+{
-+	int ret;
-+	unsigned int ns = clkdiv->cxo_period_ns;
-+	unsigned int div = div_factor_to_div(div_factor);
-+
-+	ret = regmap_update_bits(clkdiv->regmap, clkdiv->base + REG_EN_CTL,
-+				 REG_EN_MASK, enable ? REG_EN_MASK : 0);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		ndelay((2 + 3 * div) * ns);
-+	else
-+		ndelay(3 * div * ns);
-+
-+	return 0;
-+}
-+
-+static int spmi_pmic_clkdiv_set_enable_state(struct clkdiv *clkdiv, bool enable)
-+{
-+	unsigned int div_factor;
-+
-+	regmap_read(clkdiv->regmap, clkdiv->base + REG_DIV_CTL1, &div_factor);
-+	div_factor &= DIV_CTL1_DIV_FACTOR_MASK;
-+
-+	return __spmi_pmic_clkdiv_set_enable_state(clkdiv, enable, div_factor);
-+}
-+
-+static int clk_spmi_pmic_div_enable(struct clk_hw *hw)
-+{
-+	struct clkdiv *clkdiv = to_clkdiv(hw);
-+	unsigned long flags;
-+	int ret;
-+
-+	spin_lock_irqsave(&clkdiv->lock, flags);
-+	ret = spmi_pmic_clkdiv_set_enable_state(clkdiv, true);
-+	spin_unlock_irqrestore(&clkdiv->lock, flags);
-+
-+	return ret;
-+}
-+
-+static void clk_spmi_pmic_div_disable(struct clk_hw *hw)
-+{
-+	struct clkdiv *clkdiv = to_clkdiv(hw);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&clkdiv->lock, flags);
-+	spmi_pmic_clkdiv_set_enable_state(clkdiv, false);
-+	spin_unlock_irqrestore(&clkdiv->lock, flags);
-+}
-+
-+static long clk_spmi_pmic_div_round_rate(struct clk_hw *hw, unsigned long rate,
-+					 unsigned long *parent_rate)
-+{
-+	unsigned int div, div_factor;
-+
-+	div = DIV_ROUND_UP(*parent_rate, rate);
-+	div_factor = div_to_div_factor(div);
-+	div = div_factor_to_div(div_factor);
-+
-+	return *parent_rate / div;
-+}
-+
-+static unsigned long
-+clk_spmi_pmic_div_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
-+{
-+	struct clkdiv *clkdiv = to_clkdiv(hw);
-+	unsigned int div_factor;
-+
-+	regmap_read(clkdiv->regmap, clkdiv->base + REG_DIV_CTL1, &div_factor);
-+	div_factor &= DIV_CTL1_DIV_FACTOR_MASK;
-+
-+	return parent_rate / div_factor_to_div(div_factor);
-+}
-+
-+static int clk_spmi_pmic_div_set_rate(struct clk_hw *hw, unsigned long rate,
-+				      unsigned long parent_rate)
-+{
-+	struct clkdiv *clkdiv = to_clkdiv(hw);
-+	unsigned int div_factor = div_to_div_factor(parent_rate / rate);
-+	unsigned long flags;
-+	bool enabled;
-+	int ret;
-+
-+	spin_lock_irqsave(&clkdiv->lock, flags);
-+	enabled = is_spmi_pmic_clkdiv_enabled(clkdiv);
-+	if (enabled) {
-+		ret = spmi_pmic_clkdiv_set_enable_state(clkdiv, false);
-+		if (ret)
-+			goto unlock;
-+	}
-+
-+	ret = regmap_update_bits(clkdiv->regmap, clkdiv->base + REG_DIV_CTL1,
-+				 DIV_CTL1_DIV_FACTOR_MASK, div_factor);
-+	if (ret)
-+		goto unlock;
-+
-+	if (enabled)
-+		ret = __spmi_pmic_clkdiv_set_enable_state(clkdiv, true,
-+							  div_factor);
-+
-+unlock:
-+	spin_unlock_irqrestore(&clkdiv->lock, flags);
-+
-+	return ret;
-+}
-+
-+static const struct clk_ops clk_spmi_pmic_div_ops = {
-+	.enable = clk_spmi_pmic_div_enable,
-+	.disable = clk_spmi_pmic_div_disable,
-+	.set_rate = clk_spmi_pmic_div_set_rate,
-+	.recalc_rate = clk_spmi_pmic_div_recalc_rate,
-+	.round_rate = clk_spmi_pmic_div_round_rate,
-+};
-+
-+struct spmi_pmic_div_clk_cc {
-+	int		nclks;
-+	struct clkdiv	clks[];
-+};
-+
-+static struct clk_hw *
-+spmi_pmic_div_clk_hw_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct spmi_pmic_div_clk_cc *cc = data;
-+	int idx = clkspec->args[0] - 1; /* Start at 1 instead of 0 */
-+
-+	if (idx < 0 || idx >= cc->nclks) {
-+		pr_err("%s: index value %u is invalid; allowed range [1, %d]\n",
-+		       __func__, clkspec->args[0], cc->nclks);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return &cc->clks[idx].hw;
-+}
-+
-+static int spmi_pmic_clkdiv_probe(struct platform_device *pdev)
-+{
-+	struct spmi_pmic_div_clk_cc *cc;
-+	struct clk_init_data init = {};
-+	struct clkdiv *clkdiv;
-+	struct clk *cxo;
-+	struct regmap *regmap;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *of_node = dev->of_node;
-+	const char *parent_name;
-+	int nclks, i, ret, cxo_hz;
-+	u32 start;
-+
-+	ret = of_property_read_u32(of_node, "reg", &start);
-+	if (ret < 0) {
-+		dev_err(dev, "reg property reading failed\n");
-+		return ret;
-+	}
-+
-+	regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!regmap) {
-+		dev_err(dev, "Couldn't get parent's regmap\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32(of_node, "qcom,num-clkdivs", &nclks);
-+	if (ret < 0) {
-+		dev_err(dev, "qcom,num-clkdivs property reading failed, ret=%d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	if (!nclks)
-+		return -EINVAL;
-+
-+	cc = devm_kzalloc(dev, sizeof(*cc) + sizeof(*cc->clks) * nclks,
-+			  GFP_KERNEL);
-+	if (!cc)
-+		return -ENOMEM;
-+	cc->nclks = nclks;
-+
-+	cxo = clk_get(dev, "xo");
-+	if (IS_ERR(cxo)) {
-+		ret = PTR_ERR(cxo);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get xo clock\n");
-+		return ret;
-+	}
-+	cxo_hz = clk_get_rate(cxo);
-+	clk_put(cxo);
-+
-+	parent_name = of_clk_get_parent_name(of_node, 0);
-+	if (!parent_name) {
-+		dev_err(dev, "missing parent clock\n");
-+		return -ENODEV;
-+	}
-+
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+	init.ops = &clk_spmi_pmic_div_ops;
-+
-+	for (i = 0, clkdiv = cc->clks; i < nclks; i++) {
-+		spin_lock_init(&clkdiv[i].lock);
-+		clkdiv[i].base = start + i * 0x100;
-+		clkdiv[i].regmap = regmap;
-+		clkdiv[i].cxo_period_ns = NSEC_PER_SEC / cxo_hz;
-+		init.name = kasprintf(GFP_KERNEL, "div_clk%d", i + 1);
-+		clkdiv[i].hw.init = &init;
-+
-+		ret = devm_clk_hw_register(dev, &clkdiv[i].hw);
-+		kfree(init.name); /* clk framework made a copy */
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return of_clk_add_hw_provider(of_node, spmi_pmic_div_clk_hw_get, cc);
-+}
-+
-+static int spmi_pmic_clkdiv_remove(struct platform_device *pdev)
-+{
-+	of_clk_del_provider(pdev->dev.of_node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id spmi_pmic_clkdiv_match_table[] = {
-+	{ .compatible = "qcom,spmi-clkdiv" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, spmi_pmic_clkdiv_match_table);
-+
-+static struct platform_driver spmi_pmic_clkdiv_driver = {
-+	.driver		= {
-+		.name	= "qcom,spmi-pmic-clkdiv",
-+		.of_match_table = spmi_pmic_clkdiv_match_table,
-+	},
-+	.probe		= spmi_pmic_clkdiv_probe,
-+	.remove		= spmi_pmic_clkdiv_remove,
-+};
-+module_platform_driver(spmi_pmic_clkdiv_driver);
-+
-+MODULE_DESCRIPTION("QCOM SPMI PMIC clkdiv driver");
-+MODULE_LICENSE("GPL v2");
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Thanks for the inputs! Following are the reasons to go for the new 
+driver
+and this driver can support 5 PMICs.
 
+1.Majority of  register, offsets and config values don’t match  up  
+between
+  PMI8998 and PM8941
+2.Feature such as – SC protection handling in SW cannot be done for 8941 
+as
+there is no SC event/irq, AMOELD AVDD cannot supported by PM8941
+3.Feature such as – string auto-calibration even if common will have to 
+use
+different offsets/registers in the same SW logic
+4.PMI8998, PMI8994, PMI8950 and PM660 all of them have this same WLED 
+module
+(and register map) with very minor changes unlike 8941.
+
+Thanks,
+Kiran
+
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe 
+> linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
