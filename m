@@ -1,32 +1,117 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: rcar_vin: Reverse SoC part
- number list
-Date: Fri, 17 Nov 2017 14:31:48 -0600
-Message-ID: <20171117203148.anvhqgrhbp6imptt@rob-hp-laptop>
-References: <1510856571-30281-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510856571-30281-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 2/5] i2c: meson: add configurable divider factors
+Date: Fri, 17 Nov 2017 21:32:21 +0100
+Message-ID: <CAFBinCAncL21zgCoYw_+n9HZkMUeY4s+Ok0kuigAiitF+UFHyg@mail.gmail.com>
+References: <20171117080236.32504-1-yixun.lan@amlogic.com> <20171117080236.32504-3-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1510856571-30281-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20171117080236.32504-3-yixun.lan@amlogic.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 06:22:48PM +0000, Fabrizio Castro wrote:
-> Change the sorting of the part numbers from descending to ascending to
-> match with other documentation.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+On Fri, Nov 17, 2017 at 9:02 AM, Yixun Lan <yixun.lan@amlogic.com> wrote:
+> From: Jian Hu <jian.hu@amlogic.com>
+>
+> This patch try to add support for I2C controller in Meson-AXG SoC,
+> Due to the IP changes between I2C controller, we need to introduce
+> a compatible data to make the divider factor configurable.
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 > ---
-> v1->v2:
-> * new patch triggered by Geert's comment, see the below link for details:
->   https://www.mail-archive.com/linux-media@vger.kernel.org/msg121992.html
-> 
->  Documentation/devicetree/bindings/media/rcar_vin.txt | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>  drivers/i2c/busses/i2c-meson.c | 32 ++++++++++++++++++++++++++++----
+>  1 file changed, 28 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
+> index 88d15b92ec35..517f2cddeff3 100644
+> --- a/drivers/i2c/busses/i2c-meson.c
+> +++ b/drivers/i2c/busses/i2c-meson.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/types.h>
+>
+> @@ -57,6 +58,10 @@ enum {
+>         STATE_WRITE,
+>  };
+>
+> +struct meson_i2c_data {
+> +       unsigned char div_factor;
+> +};
+> +
+>  /**
+>   * struct meson_i2c - Meson I2C device private data
+>   *
+> @@ -93,6 +98,8 @@ struct meson_i2c {
+>         struct completion       done;
+>         u32                     tokens[2];
+>         int                     num_tokens;
+> +
+> +       struct meson_i2c_data *data;
+shouldn't this be const (like the definitions below)?
 
-Acked-by: Rob Herring <robh@kernel.org>
+>  };
+>
+>  static void meson_i2c_set_mask(struct meson_i2c *i2c, int reg, u32 mask,
+> @@ -128,7 +135,7 @@ static void meson_i2c_set_clk_div(struct meson_i2c *i2c, unsigned int freq)
+>         unsigned long clk_rate = clk_get_rate(i2c->clk);
+>         unsigned int div;
+>
+> -       div = DIV_ROUND_UP(clk_rate, freq * 4);
+> +       div = DIV_ROUND_UP(clk_rate, freq * i2c->data->div_factor);
+>
+>         /* clock divider has 12 bits */
+>         if (div >= (1 << 12)) {
+> @@ -376,6 +383,9 @@ static int meson_i2c_probe(struct platform_device *pdev)
+>         spin_lock_init(&i2c->lock);
+>         init_completion(&i2c->done);
+>
+> +       i2c->data = (struct meson_i2c_data *)
+> +               of_device_get_match_data(&pdev->dev);
+> +
+>         i2c->clk = devm_clk_get(&pdev->dev, NULL);
+>         if (IS_ERR(i2c->clk)) {
+>                 dev_err(&pdev->dev, "can't get device clock\n");
+> @@ -440,11 +450,25 @@ static int meson_i2c_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +static const struct meson_i2c_data i2c_meson6_data = {
+> +       .div_factor = 4,
+> +};
+> +
+> +static const struct meson_i2c_data i2c_gxbb_data = {
+> +       .div_factor = 4,
+> +};
+> +
+> +static const struct meson_i2c_data i2c_axg_data = {
+> +       .div_factor = 3,
+> +};
+> +
+>  static const struct of_device_id meson_i2c_match[] = {
+> -       { .compatible = "amlogic,meson6-i2c" },
+> -       { .compatible = "amlogic,meson-gxbb-i2c" },
+> -       { },
+> +       { .compatible = "amlogic,meson6-i2c", .data = &i2c_meson6_data },
+> +       { .compatible = "amlogic,meson-gxbb-i2c", .data = &i2c_gxbb_data },
+> +       { .compatible = "amlogic,meson-axg-i2c", .data = &i2c_axg_data },
+> +       {},
+>  };
+> +
+>  MODULE_DEVICE_TABLE(of, meson_i2c_match);
+>
+>  static struct platform_driver meson_i2c_driver = {
+> --
+> 2.14.1
+>
+>
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
