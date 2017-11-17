@@ -1,98 +1,113 @@
-From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+From: Thierry Reding <thierry.reding@gmail.com>
 Subject: Re: [PATCH v2] display: panel: Add Tianma tm070rvhg71 display
  support (800x480)
-Date: Fri, 17 Nov 2017 13:17:12 +0100
-Message-ID: <20171117131712.0f2a0a4f@jawa>
+Date: Fri, 17 Nov 2017 13:27:13 +0100
+Message-ID: <20171117122713.GA22989@ulmo>
 References: <CAL_JsqJz67k_fTMkx5dHb5qFwXif9y+Cv=+PTq7OLH7woNoU=g@mail.gmail.com>
-        <20171107153058.5554-1-lukma@denx.de>
-        <20171110212423.jddj5kw32voms2oj@rob-hp-laptop>
-        <20171117110247.5d7737bc@jawa>
-        <20171117114126.GB1062@ulmo>
+ <20171107153058.5554-1-lukma@denx.de>
+ <20171110212423.jddj5kw32voms2oj@rob-hp-laptop>
+ <20171117110247.5d7737bc@jawa> <20171117114126.GB1062@ulmo>
+ <20171117131712.0f2a0a4f@jawa>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/2i.riTZB64Ma.WsjiYd2+z7"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171117114126.GB1062@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1201923252=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171117131712.0f2a0a4f@jawa>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/2i.riTZB64Ma.WsjiYd2+z7
-Content-Type: text/plain; charset=US-ASCII
+
+--===============1201923252==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Thierry,
-
-> On Fri, Nov 17, 2017 at 11:02:47AM +0100, Lukasz Majewski wrote:
-> > Dear All,
-> >  =20
-> > > On Tue, Nov 07, 2017 at 04:30:58PM +0100, Lukasz Majewski wrote: =20
-> > > > Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+On Fri, Nov 17, 2017 at 01:17:12PM +0100, Lukasz Majewski wrote:
+> Hi Thierry,
+>=20
+> > On Fri, Nov 17, 2017 at 11:02:47AM +0100, Lukasz Majewski wrote:
+> > > Dear All,
+> > >  =20
+> > > > On Tue, Nov 07, 2017 at 04:30:58PM +0100, Lukasz Majewski wrote: =
+=20
+> > > > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > > > >=20
+> > > > > ---
+> > > > > Changes for v2:
+> > > > > - Provide more
+> > > > > detailed ./Documentation/devicetree/bindings/display/panel
+> > > > > entry to describe this panel device. ---
+> > > > >  .../bindings/display/panel/tianma,tm070rvhg71.txt  | 29
+> > > > > ++++++++++++++++++++++
+> > > > > drivers/gpu/drm/panel/panel-simple.c               | 27
+> > > > > ++++++++++++++++++++ 2 files changed, 56 insertions(+) create
+> > > > > mode 100644
+> > > > > Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg7=
+1.txt   =20
 > > > >=20
-> > > > ---
-> > > > Changes for v2:
-> > > > - Provide more
-> > > > detailed ./Documentation/devicetree/bindings/display/panel
-> > > > entry to describe this panel device. ---
-> > > >  .../bindings/display/panel/tianma,tm070rvhg71.txt  | 29
-> > > > ++++++++++++++++++++++
-> > > > drivers/gpu/drm/panel/panel-simple.c               | 27
-> > > > ++++++++++++++++++++ 2 files changed, 56 insertions(+) create
-> > > > mode 100644
-> > > > Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.=
-txt   =20
+> > > > Acked-by: Rob Herring <robh@kernel.org> =20
 > > >=20
-> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =20
+> > > Is there a chance that this patch will find its way to v4.15-rc1 ? =
+=20
 > >=20
-> > Is there a chance that this patch will find its way to v4.15-rc1 ? =20
+> > No, that's very unlikely. We're in the middle of the merge window, no
+> > new patches are accepted at that point.
 >=20
-> No, that's very unlikely. We're in the middle of the merge window, no
-> new patches are accepted at that point.
+> Ok. I see. I should have sent the ping earlier.
 
-Ok. I see. I should have sent the ping earlier.
+Looking at the timeline of this patch even that wouldn't have been
+enough. You sent the original patch on October 21, which is one day
+after the final drm-misc feature pull request was tagged. So this
+wouldn't have made it into v4.15-rc1 no matter how early you would
+have pinged. =3D)
 
->=20
-> If you want to make sure a patch goes into the next release, make sure
-> it is posted and reviewed at least a few days before -rc6 of the prior
-> release. -rc6 is a common cut-off point for subsystems (though not
-> all) in the kernel.
+Thierry
 
-Understood, thanks.
-
->=20
-> Thierry
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
-
---Sig_/2i.riTZB64Ma.WsjiYd2+z7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAloO00kACgkQAR8vZIA0
-zr3Nvwf8DecDR3MnObcgCrtvnSWEcmEbKOGimedIkKdWIFcPc7w9TBWXwJgnCY40
-d+6NGs2s7zuhKaB/ikOSxSMnaBPNwIw/JqgBes0gSmc6oedxkftpJsr1VJr2iztG
-XqODji5rikFxSwGur/JOovZ6gO5GqU+YTdHWjX2U+wxX2e/NImca4LoYvT1ydHmq
-J1x+A+4JLLR3oWkGoNkA/ZjguKhhJFyYkW66HQW3EfxqMBN0llxl2BX/vUxhqRRy
-dSUMMVbzRo40tA9GW+UJLuOfdZTrjLx+HG2tBR2bwShI8YhgfpTZhEtwdSeFDekC
-NP+JvraZmu1Qnr45qVIwBZsCHeCVEw==
-=2TKs
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAloO1Z4ACgkQ3SOs138+
+s6GiMw/+LHMIIVTJ+BfsTZMSbRO/PC1Z/0KsZBxOrHliLI/AGOU/hTjEQYWXxoIk
+2vjAz4yTnHMHn3jqVOHO/w0BnXoDdkggz/bbGT46qCpev4hiV9TWuzaBUSM9gWuR
+DjQOXL/2i6tDHsmB0FMWPNcrY/YFTCEZ1vloXJbdqOwcG/GvpyKFk1z5obEzOhim
+1i12v6MSJ1uw7BUiaKblKvVe9r7+2uHag4T6+EFK2rQxghLPA3AzgNb0CMDXifYS
+0lCDk7PN6IOjhT1wXoPs+qBnOwoZbB5XJjKfRh5yQgbesSVOPrLEMVl9Qk3DeNgB
+/WUIrQP9flGmm/bBpOHk2iZLmYWv/XrB00Fg9LA4sqd0lFxQUjIKlvJL47o9Fh3q
+hNMLT6U51/2usUK5venbkTwIM2v1dYnPjcnjDN5pvRbT21xRAFKSMjqZjZFnqmib
+/DVoyxx6mKIZTuDXjEJ1TMukEhtfF+s+U4lZ2li0zE/ve9SRjgVLXSFQz+nQwz0m
+xe1RNau2w9MCa6mep/cim7bQAK6g4w2m3g8KqxxaNHLQhDqNREyydPWT2xoHES3q
+68Cv1iCAE0HRKtM+rYTS6BMqenVDF7PQbm75aBBgVNhOYXliaT2MG8vm4z2D7coP
+5eclRbmAc/BO3iMPYyCa105ljwUHtnWB2y7A6D9DmfNlH/RfC78=
+=w1Sg
 -----END PGP SIGNATURE-----
 
---Sig_/2i.riTZB64Ma.WsjiYd2+z7--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--X1bOJ3K7DJ5YkBrT--
+
+--===============1201923252==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1201923252==--
