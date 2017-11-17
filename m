@@ -1,62 +1,49 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] dt-bindings: qspi: Add r8a7743/5 to the compatible list
-Date: Fri, 17 Nov 2017 18:08:04 +0000
-Message-ID: <20171117180804.g2jzdv4c7sq33te7@sirena.org.uk>
-References: <1504858035-3568-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <TY1PR06MB08958546062D685532669977C02F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+Subject: Re: [PATCH] ARM: dts: bcm2835-rpi: Avoid conflicts on i2c0
+Date: Fri, 17 Nov 2017 18:30:23 +0000
+Message-ID: <CAAoAYcPz6urucU1r_uNk1kvjsGg0p7VUrZwa5GZSDeDgsD=5Fw@mail.gmail.com>
+References: <1510779424-642-1-git-send-email-stefan.wahren@i2se.com>
+ <87a7zmq7wy.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="g7y6qpprvcdxghdc"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <TY1PR06MB08958546062D685532669977C02F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87a7zmq7wy.fsf@anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Mark Rutland <mark.rutland@arm.com>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 16 November 2017 at 20:34, Eric Anholt <eric@anholt.net> wrote:
+> Stefan Wahren <stefan.wahren@i2se.com> writes:
+>
+>> The GPU firmware of the Raspberry Pi 3 uses i2c0 to communicate to
+>> the FXL6408 gpio expander. It's a bad idea to use the same interface
+>> from the ARM side. Since this interface isn't used by the other
+>> RPi boards, it's save to remove the complete node and avoid this
+>> conflict.
+>
+> It's not used by other kernel drivers currently, but should we leave it
+> in for the pi0/1/2 folks that might have userspace I2C stuff using it?
+> That's a thing people do, right?  I actually don't know.
 
---g7y6qpprvcdxghdc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The firmware hasn't used BSC0 for the GPIO expander since the end of
+January. It now bit bashes it. Sorry if that information hadn't
+filtered through.
 
-On Fri, Nov 17, 2017 at 06:00:46PM +0000, Fabrizio Castro wrote:
+I've got a patch I was about to send to rpi-linux for comment which
+sets up the i2c-mux-pinctrl driver on BSC0 so that it can be used
+either on GPIOs 0&1, or the GPIOs connected to the DSI and CSI
+connectors (I want it to talk to the camera module, and I guess Eric
+won't complain for talking to the DSI display). I'll aim to sort it on
+Monday.
 
-> this patch has been around for some time now, it was reviewed-by Geert Uy=
-tterhoeven and acked-by Rob Herring, any news?
-
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, though there are some other maintainers who like them - if in
-doubt look at how patches for the subsystem are normally handled.
-
-Please submit patches using subject lines reflecting the style for the
-subsystem.  This makes it easier for people to identify relevant
-patches.  Look at what existing commits in the area you're changing are
-doing and make sure your subject lines visually resemble what they're
-doing.
-
---g7y6qpprvcdxghdc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloPJYMACgkQJNaLcl1U
-h9A4CQf9FMedXNxMM9FoMpVlhHAE6WoFlhrU9co8XYnfnRYKHxdxEthIVVgUpy0O
-8wFus5dqOp5ljJ/ytREwLvW4b3hb4/IuhZEWFo+k0+i36q71oVqJHhaSvdt4/oZV
-lwH/5LqTofWwDjPMjeKpr3VNSEc3BLNCJ/BGNfKluKi6iAA4YDnehD/qpe45LtKr
-aXfFFm1wwL/uniFhIcqmzzgHeM4vR1PakhYvZGcCqpEUNjZyWn4SVkJHlhV8wdKk
-jdgT/LihTnTE+7dK26LIsSe3Fieqabd5FyMgZpfjOpSiYo0KnY+mdhaxSHgaZCZE
-0ZqkF7WF5+N+k4ViKszJtdzbPoUhWw==
-=ICog
------END PGP SIGNATURE-----
-
---g7y6qpprvcdxghdc--
+  Dave
