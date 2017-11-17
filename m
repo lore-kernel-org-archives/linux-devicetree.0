@@ -1,55 +1,75 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 0/7] R-Car D3 (r8a77995) CAN support
-Date: Fri, 17 Nov 2017 17:17:55 +0100
-Message-ID: <20171117161754.prbpvjwnsbvo7koz@tetsubishi>
-References: <1510915289-15059-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x LED driver
+Date: Fri, 17 Nov 2017 11:30:09 -0500
+Message-ID: <000b01d35fc1$57ad0500$07070f00$@gmail.com>
+References: <20171115194203.13572-1-dmurphy@ti.com> <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4@gmail.com> <0a78c883-f074-cc19-3c0c-fc05607400e9@ti.com> <20171115222323.GA18290@amd> <82336eb7-2b89-d37b-d688-4e4302766346@gmail.com> <16189eab-5541-9550-c027-1c9d2b5fa6d7@ti.com> <20171117112032.GA13855@amd>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="coerma7qxs32s5ev"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1510915289-15059-1-git-send-email-ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org
+Content-Type: text/plain;
+        charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171117112032.GA13855@amd>
+Content-Language: en-us
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Pavel Machek' <pavel@ucw.cz>, 'Dan Murphy' <dmurphy@ti.com>
+Cc: 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 'Lee Jones' <lee.jones@linaro.org>, 'Daniel Thompson' <daniel.thompson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Friday, November 17, 2017 6:21 AM, Pavel Machek wrote:
+> 
+> Hi!
+> 
+> > >> If that does not yet exist... you want to create glue layer to be
+> able
+> > >> to use LED as a display backlight. (It may already exist, no idea).
+> > >>
+> > >> ...
+> > >>
+> > >> Actually or maybe a LED trigger. Just set LED's trigger to "this is
+> > >> display backlight".
+> > >
+> > > There is one already:
+> > >
+> > > drivers/leds/trigger/ledtrig-backlight.c
+> > >
+> > > It adds a LED class device to the fb_notifier_list
+> > > (drivers/video/fbdev/core/fb_notify.c)
+> > >
+> > > using fb_register_client(). The same is used in
+> > > backlight_device_register (drivers/video/backlight/backlight.c).
+> > >
+> > > Actually why do you want to have this driver in the LED subsystem,
+> > > if it is advertised as "designed for LCD display backlighting"?
+> >
+> > Well this is also advertised as a driver for Smart phone and tablet
+> devices.  And having worked with the Android lighting
+> > solutions this is the preferred subsystem for Android.  The Android OS
+> manages the led brightness based on ALS values and in
+> > turn calls into the driver to control the brightness register through
+> the vendor provided lighting HAL.
+> >
+> 
+> Well.. if it can control other LEDs than just backlight, I believe it
+> can stay in the LED subsystem.
 
---coerma7qxs32s5ev
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I also agree with your opinion.
 
+Best regards,
+Jingoo Han
 
-> Here's CAN and CAN FD support for the R-Car D3. This is a by-the-datasheet
-> implementation, with the datasheet missing some bits, namely the pin map.
-> I filled in the gaps with frog DNA^W^W^Wby deducing the information from
-> pin numbers already in the PFC driver, so careful scrutiny is advised.
-
-Did you have a chance to test one of the configurations?
-
-
---coerma7qxs32s5ev
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAloPC6oACgkQFA3kzBSg
-KbaPdRAAgyZlc6q+G62VlXUyIQ9wX9/5BK5C6HouYMgfPwpkqsrqjPwqOEaSD5CP
-6NVjuIj5LcigYh0r9XW8iVTmoNPmAZAeEiYzaFIqdT+4X8tYOFiJ1UbE65K8v2OP
-6ZZ5bhkAxJH3d07gGdjDwixZWiyn4A15KYqT50UZH7MGELCVjvCGdHJnaLXkmiG6
-gxmFmb9+YIPcNJOYSHiffFBXtlEcyw1tpg0g5a4Ad6ddOZLUfN6N3rYYUzU7X3uf
-DZ9w/46CYYwfkv5zFjuctX4S5tNKSuzLGgHBxBHZwsruDlfAUXQXq2AWlUavG6u/
-NgyNolHGJ4oBnPKzS8nDV0AerhSGPxLNOOeUx3k3YYaUIsxrDvnh3+RlJ0Y5cz+m
-sVzgStaclAX1DOLjG3KYxpNAeZt2S7kJX/GywGd469SLr2nRERxDRCPF84dyegoV
-YVni07CFNSnJap4TvLTavbVxWWwIYQYwIaOYCy3u2KibNVZJUqY4UJ88AVR+MPBd
-d347C8mNFDhpd/FYV+nN0bOR5+gmcXgOHaIlMH1p/l4dPLgIU8IEYJ7OAvnOSrgU
-5dcjR6mfHerkOnlVrkNfJlI+kYyeFyvVzhmb2ZiL8eOJ07OkYyLzZzcJhFYgRVpO
-zQTADvaWWVH/4fI5sThUFI3C6DQJeZZZMREaPHRoBR3uDpyqxjI=
-=MQGL
------END PGP SIGNATURE-----
-
---coerma7qxs32s5ev--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > I am going to look at the backlight source to figure out how to get the
+> same functionality using the backlight subsystem.
+> > Otherwise I will plug in this driver to the backlight subsystem through
+> the notifier.
+> >
+> 
+> The backlight trigger should be ok.
+> 
+> Best regards,
+>
+Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures)
+> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
