@@ -1,47 +1,66 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: meson-axg: add new reset DT node
-Date: Fri, 17 Nov 2017 14:08:35 +0100
-Message-ID: <04b96767-2412-7242-780c-f3e1e610a62b@baylibre.com>
-References: <20171110084659.31641-1-yixun.lan@amlogic.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: Add the support for display5 equipped with
+ Mitsubishi (800x480) display
+Date: Fri, 17 Nov 2017 21:10:48 +0800
+Message-ID: <20171117131047.GE25390@dragon>
+References: <20171117102404.6678-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171110084659.31641-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20171117102404.6678-1-lukma-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2017 09:46, Yixun Lan wrote:
-> Add reset DT node for Amlogic's Meson-AXG SoC.
+On Fri, Nov 17, 2017 at 11:24:03AM +0100, Lukasz Majewski wrote:
+> This is the support for aa070mc01-ca1 Mitsubishi display.
 > 
-> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  arch/arm/boot/dts/Makefile                         |  1 +
+>  .../imx6q-display5-mitsubishi-aa070-800x480.dts    | 51 ++++++++++++++++++++++
+>  2 files changed, 52 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6q-display5-mitsubishi-aa070-800x480.dts
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index e0fb860e12c5..65945c6c8b65 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -123,6 +123,12 @@
->  			#size-cells = <2>;
->  			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
->  
-> +			reset: reset-controller@1004 {
-> +				compatible = "amlogic,meson-axg-reset";
-> +				reg = <0x0 0x01004 0x0 0x9c>;
-> +				#reset-cells = <1>;
-> +			};
-> +
->  			uart_A: serial@24000 {
->  				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
->  				reg = <0x0 0x24000 0x0 0x14>;
-> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index d9d0c82e7d20..10b3ad078dea 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -407,6 +407,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6q-cm-fx6.dtb \
+>  	imx6q-cubox-i.dtb \
+>  	imx6q-dfi-fs700-m60.dtb \
+> +	imx6q-display5-mitsubishi-aa070-800x480.dtb \
+>  	imx6q-display5-tianma-tm070-1280x768.dtb \
+>  	imx6q-dmo-edmqmx6.dtb \
+>  	imx6q-evi.dtb \
 
-Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+<snip>
+
+> +#include "imx6q-display5.dtsi"
+> +
+> +&panel {
+> +	compatible = "mitsubishi,aa070mc01-ca1";
+> +};
+
+How many DTB files do you want to add for this display5 board?  It's
+obvious no fun to maintain a bunch of DTB files for all the panels this
+board can support.  Let's stop right here.
+
+Shawn
+
+> +
+> +&ldb {
+> +	lvds0: lvds-channel@0 {
+> +		fsl,data-mapping = "spwg";
+> +		fsl,data-width = <24>;
+> +	};
+> +};
+> -- 
+> 2.11.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
