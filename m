@@ -1,27 +1,100 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: eagle: specify EtherAVB PHY IRQ
-Date: Fri, 17 Nov 2017 06:20:18 -0800
-Message-ID: <20171117142017.g6vg7m5k2tcd7ovy@verge.net.au>
-References: <20171113213152.819421744@cogentembedded.com>
- <CAMuHMdUqX6OhsKBET5RkL0zcZO-aiTT4wHHuwuRTeVHAYkSnZg@mail.gmail.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: Add the support for display5 equipped
+ with Mitsubishi (800x480) display
+Date: Fri, 17 Nov 2017 15:36:23 +0100
+Message-ID: <1510929383.8104.3.camel@pengutronix.de>
+References: <20171117102404.6678-1-lukma@denx.de>
+         <20171117131047.GE25390@dragon> <20171117151334.041c4684@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUqX6OhsKBET5RkL0zcZO-aiTT4wHHuwuRTeVHAYkSnZg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171117151334.041c4684@jawa>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 05:15:58PM +0100, Geert Uytterhoeven wrote:
-> On Mon, Nov 13, 2017 at 10:23 PM, Sergei Shtylyov
-> <sergei.shtylyov@cogentembedded.com> wrote:
-> > Specify  EtherAVB PHY IRQ  in the Eagle board's device tree, now that we
-> > have the GPIO support (previously phylib had to resort to polling).
-> >
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Am Freitag, den 17.11.2017, 15:13 +0100 schrieb Lukasz Majewski:
+> Hi Shawn,
 > 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > On Fri, Nov 17, 2017 at 11:24:03AM +0100, Lukasz Majewski wrote:
+> > > This is the support for aa070mc01-ca1 Mitsubishi display.
+> > > 
+> > > Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+> > > ---
+> > >  arch/arm/boot/dts/Makefile                         |  1 +
+> > >  .../imx6q-display5-mitsubishi-aa070-800x480.dts    | 51
+> > > ++++++++++++++++++++++ 2 files changed, 52 insertions(+)
+> > >  create mode 100644
+> > > arch/arm/boot/dts/imx6q-display5-mitsubishi-aa070-800x480.dts
+> > > 
+> > > diff --git a/arch/arm/boot/dts/Makefile
+> > > b/arch/arm/boot/dts/Makefile
+> > > index d9d0c82e7d20..10b3ad078dea 100644
+> > > --- a/arch/arm/boot/dts/Makefile
+> > > +++ b/arch/arm/boot/dts/Makefile
+> > > @@ -407,6 +407,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+> > >  	imx6q-cm-fx6.dtb \
+> > >  	imx6q-cubox-i.dtb \
+> > >  	imx6q-dfi-fs700-m60.dtb \
+> > > +	imx6q-display5-mitsubishi-aa070-800x480.dtb \
+> > >  	imx6q-display5-tianma-tm070-1280x768.dtb \
+> > >  	imx6q-dmo-edmqmx6.dtb \
+> > >  	imx6q-evi.dtb \  
+> > 
+> > <snip>
+> > 
+> > > +#include "imx6q-display5.dtsi"
+> > > +
+> > > +&panel {
+> > > +	compatible = "mitsubishi,aa070mc01-ca1";
+> > > +};  
+> > 
+> > How many DTB files do you want to add for this display5 board?  
+> 
+> This is a single board, which can support panels which I've posted.
+> 
+> Those dtbs I do pack to u-boot' FIT image and don't need to worry
+> that
+> some display is not working (after setting bootloader env variable).
+> 
+> > It's
+> > obvious no fun to maintain a bunch of DTB files for all the panels
+> > this board can support.
+> 
+> Please note that those files excessively use #include directive, and
+> there is not so much code added (the longest part is license and
+> comments).
+> 
+> >  Let's stop right here.
+> 
+> If I may ask - how shall I proceed? What would be your suggestion to
+> move on (dtb overlays) ?
 
-Thanks, applied.
+The solution we use for the ZII RDU1 and RDU2 boards is to have the
+bootloader patch in the correct panel compatible strings. This is quite
+a bit simpler than using overlays and if you already have a environment
+variable for this it should be easy to do.
+
+> > 
+> > Shawn
+> > 
+> > > +
+> > > +&ldb {
+> > > +	lvds0: lvds-channel@0 {
+> > > +		fsl,data-mapping = "spwg";
+> > > +		fsl,data-width = <24>;
+> > > +	};
+> > > +};
+
+This isn't needed. The panel compatible implies the data mapping and
+bus width (at least if you properly filled in this information in the
+panel driver).
+
+Regards,
+Lucas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
