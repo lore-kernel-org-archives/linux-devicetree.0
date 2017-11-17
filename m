@@ -1,61 +1,101 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH] dt-bindings: qspi: Add r8a7743/5 to the compatible list
-Date: Fri, 17 Nov 2017 18:00:46 +0000
-Message-ID: <TY1PR06MB08958546062D685532669977C02F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1504858035-3568-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
+ LED driver
+Date: Fri, 17 Nov 2017 12:02:39 -0600
+Message-ID: <17b8e1ce-092a-0449-4733-533162b26499@ti.com>
+References: <20171115194203.13572-1-dmurphy@ti.com>
+ <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4@gmail.com>
+ <0a78c883-f074-cc19-3c0c-fc05607400e9@ti.com> <20171115222323.GA18290@amd>
+ <82336eb7-2b89-d37b-d688-4e4302766346@gmail.com>
+ <16189eab-5541-9550-c027-1c9d2b5fa6d7@ti.com> <20171117112032.GA13855@amd>
+ <000b01d35fc1$57ad0500$07070f00$@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1504858035-3568-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <000b01d35fc1$57ad0500$07070f00$@gmail.com>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Pavel Machek' <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: 'Jacek Anaszewski' <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Lee Jones' <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Daniel Thompson' <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear All,
+Pavel and Jacek
 
-this patch has been around for some time now, it was reviewed-by Geert Uytt=
-erhoeven and acked-by Rob Herring, any news?
+On 11/17/2017 10:30 AM, Jingoo Han wrote:
+> On Friday, November 17, 2017 6:21 AM, Pavel Machek wrote:
+>>
+>> Hi!
+>>
+>>>>> If that does not yet exist... you want to create glue layer to be
+>> able
+>>>>> to use LED as a display backlight. (It may already exist, no idea).
+>>>>>
+>>>>> ...
+>>>>>
+>>>>> Actually or maybe a LED trigger. Just set LED's trigger to "this is
+>>>>> display backlight".
+>>>>
+>>>> There is one already:
+>>>>
+>>>> drivers/leds/trigger/ledtrig-backlight.c
+>>>>
+>>>> It adds a LED class device to the fb_notifier_list
+>>>> (drivers/video/fbdev/core/fb_notify.c)
+>>>>
+>>>> using fb_register_client(). The same is used in
+>>>> backlight_device_register (drivers/video/backlight/backlight.c).
+>>>>
+>>>> Actually why do you want to have this driver in the LED subsystem,
+>>>> if it is advertised as "designed for LCD display backlighting"?
+>>>
+>>> Well this is also advertised as a driver for Smart phone and tablet
+>> devices.  And having worked with the Android lighting
+>>> solutions this is the preferred subsystem for Android.  The Android OS
+>> manages the led brightness based on ALS values and in
+>>> turn calls into the driver to control the brightness register through
+>> the vendor provided lighting HAL.
+>>>
+>>
+>> Well.. if it can control other LEDs than just backlight, I believe it
+>> can stay in the LED subsystem.
+> 
+> I also agree with your opinion.
 
-Thanks,
-Fab
+I will make the necessary changes for v4.
 
-> Subject: [PATCH] dt-bindings: qspi: Add r8a7743/5 to the compatible list
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/spi/spi-rspi.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documen=
-tation/devicetree/bindings/spi/spi-rspi.txt
-> index 8f4169f..3b02b3a 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-> @@ -5,11 +5,14 @@ Required properties:
->       "renesas,rspi-<soctype>", "renesas,rspi" as fallback.
->       For Renesas Serial Peripheral Interface on RZ/A1H:
->       "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
-> -     For Quad Serial Peripheral Interface on R-Car Gen2:
-> +     For Quad Serial Peripheral Interface on R-Car Gen2 and
-> +     RZ/G1 devices:
->       "renesas,qspi-<soctype>", "renesas,qspi" as fallback.
->       Examples with soctypes are:
->          - "renesas,rspi-sh7757" (SH)
->  - "renesas,rspi-r7s72100" (RZ/A1H)
-> +- "renesas,qspi-r8a7743" (RZ/G1M)
-> +- "renesas,qspi-r8a7745" (RZ/G1E)
->  - "renesas,qspi-r8a7790" (R-Car H2)
->  - "renesas,qspi-r8a7791" (R-Car M2-W)
->  - "renesas,qspi-r8a7792" (R-Car V2H)
-> --
-> 2.7.4
+Just a heads up I won't be posting v4 until after the US holiday so you
+don't think I abandoned everything.
+
+Dan
+
+> 
+> Best regards,
+> Jingoo Han
+> 
+>>
+>>> I am going to look at the backlight source to figure out how to get the
+>> same functionality using the backlight subsystem.
+>>> Otherwise I will plug in this driver to the backlight subsystem through
+>> the notifier.
+>>>
+>>
+>> The backlight trigger should be ok.
+>>
+>> Best regards,
+>>
+> Pavel
+>> --
+>> (english) http://www.livejournal.com/~pavelmachek
+>> (cesky, pictures)
+>> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> 
 
 
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+-- 
+------------------
+Dan Murphy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
