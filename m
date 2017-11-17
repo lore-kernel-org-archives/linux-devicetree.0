@@ -1,119 +1,97 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] ARM64: dts: meson-axg: add ethernet mac controller
-Date: Fri, 17 Nov 2017 14:12:57 +0100
-Message-ID: <4d6ef632-a28f-6598-befb-85ad17480f04@baylibre.com>
-References: <20171113080155.2463-1-yixun.lan@amlogic.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] omapdrm: hdmi4: Correct the SoC revision matching
+Date: Fri, 17 Nov 2017 15:23:24 +0200
+Message-ID: <9e104766-d224-f98b-8234-139f1280e63f@ti.com>
+References: <20171117080043.19010-1-peter.ujfalusi@ti.com>
+ <6b859419-62fa-a7ff-d3da-0a7dd03ddc11@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171113080155.2463-1-yixun.lan@amlogic.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6b859419-62fa-a7ff-d3da-0a7dd03ddc11-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, jsarha-l0cyMroinI0@public.gmane.org
+Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/11/2017 09:01, Yixun Lan wrote:
-> Add DT info for the stmmac ethernet MAC which found in
-> the Amlogic's Meson-AXG SoC, also describe the ethernet
-> pinctrl & clock information here.
+
+
+On 2017-11-17 14:55, Tomi Valkeinen wrote:
+> On 17/11/17 10:00, Peter Ujfalusi wrote:
+>> I believe the intention of the commit 2c9fc9bf45f8
+>> ("drm: omapdrm: Move FEAT_HDMI_* features to hdmi4 driver")
+>> was to identify omap4430 ES1.x, omap4430 ES2.x and other OMAP4 revisions,
+>> like omap4460.
+>>
+>> By using family=OMAP4 in the match the code will treat omap4460 ES1.x in a
+>> same way as it would treat omap4430 ES1.x
+>>
+>> This breaks HDMI audio on OMAP4460 devices (PandaES for example).
+>>
+>> Correct the match rule so we are not going to get false positive match.
+>>
+>> Fixes: 2c9fc9bf45f8 ("drm: omapdrm: Move FEAT_HDMI_* features to hdmi4 driver")
+>>
+>> CC: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 4.14
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  drivers/gpu/drm/omapdrm/dss/hdmi4_core.c | 17 ++++++++++++++---
+>>  1 file changed, 14 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+>> index 62e451162d96..07945a40c33a 100644
+>> --- a/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+>> +++ b/drivers/gpu/drm/omapdrm/dss/hdmi4_core.c
+>> @@ -902,9 +902,20 @@ static const struct hdmi4_features hdmi4_es3_features = {
+>>  };
+>>  
+>>  static const struct soc_device_attribute hdmi4_soc_devices[] = {
+>> -	{ .family = "OMAP4", .revision = "ES1.?", .data = &hdmi4_es1_features },
+>> -	{ .family = "OMAP4", .revision = "ES2.?", .data = &hdmi4_es2_features },
+>> -	{ .family = "OMAP4",			  .data = &hdmi4_es3_features },
+>> +	{
+>> +		.machine = "OMAP4430",
+>> +		.revision = "ES1.?",
+>> +		.data = &hdmi4_es1_features,
+>> +	},
+>> +	{
+>> +		.machine = "OMAP4430",
+>> +		.revision = "ES2.?",
+>> +		.data = &hdmi4_es2_features,
+>> +	},
+>> +	{
+>> +		.family = "OMAP4",
+>> +		.data = &hdmi4_es3_features,
+>> +	},
+>>  	{ /* sentinel */ }
+>>  };
+>>  
+>>
 > 
-> This is tested in the S400 dev board which use a RTL8211F PHY,
-> and the pins connect to the 'eth_rgmii_y_pins' group.
+> Looks good to me.
 > 
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  7 ++++
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 53 ++++++++++++++++++++++++++
->  2 files changed, 60 insertions(+)
+> Was there are reason to change the format from single-line to multi-line?
+
+in one line it would beyond 80 and just breaking the .data to new line
+looked ugly.
+
+> While at it, I think it would make sense to rename hdmi4_es3_features
+> to... hdmi4_features? It's not "ES3" in any way.
+
+Yes, that would make sense, but then the hdmi4_es1/2 is not really
+correct either as it should be omap4430_es1/2 ...
+
+I'll resend it on Monday with this change.
+
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> index 9eb6aaee155d..7b39a9fe2b0f 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> @@ -21,3 +21,10 @@
->  	status = "okay";
->  };
->  
-> +&ethmac {
-> +	status = "okay";
-> +	phy-mode = "rgmii";
-> +
-> +	pinctrl-0 = <&eth_rgmii_y_pins>;
-> +	pinctrl-names = "default";
-> +};
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index 65945c6c8b65..57faaa9d8013 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -157,6 +157,19 @@
->  			#address-cells = <0>;
->  		};
->  
-> +		ethmac: ethernet@ff3f0000 {
-> +			compatible = "amlogic,meson-axg-dwmac", "amlogic,meson-gxbb-dwmac", "snps,dwmac";
-> +			reg = <0x0 0xff3f0000 0x0 0x10000
-> +				0x0 0xff634540 0x0 0x8>;
-> +			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-> +			interrupt-names = "macirq";
-> +			status = "disabled";
-> +			clocks = <&clkc CLKID_ETH>,
-> +				 <&clkc CLKID_FCLK_DIV2>,
-> +				 <&clkc CLKID_MPLL2>;
-> +			clock-names = "stmmaceth", "clkin0", "clkin1";
-> +		};
-> +
->  		hiubus: hiubus@ff63c000 {
->  			compatible = "simple-bus";
->  			reg = <0x0 0xff63c000 0x0 0x1c00>;
-> @@ -203,6 +216,46 @@
->  					#gpio-cells = <2>;
->  					gpio-ranges = <&pinctrl_periphs 0 0 86>;
->  				};
-> +
-> +				eth_rgmii_x_pins: eth-x-rgmii {
-> +					mux {
-> +						groups = "eth_mdio_x",
-> +						       "eth_mdc_x",
-> +						       "eth_rgmii_rx_clk_x",
-> +						       "eth_rx_dv_x",
-> +						       "eth_rxd0_x",
-> +						       "eth_rxd1_x",
-> +						       "eth_rxd2_rgmii",
-> +						       "eth_rxd3_rgmii",
-> +						       "eth_rgmii_tx_clk",
-> +						       "eth_txen_x",
-> +						       "eth_txd0_x",
-> +						       "eth_txd1_x",
-> +						       "eth_txd2_rgmii",
-> +						       "eth_txd3_rgmii";
-> +						function = "eth";
-> +					};
-> +				};
-> +
-> +				eth_rgmii_y_pins: eth-y-rgmii {
-> +					mux {
-> +						groups = "eth_mdio_y",
-> +						       "eth_mdc_y",
-> +						       "eth_rgmii_rx_clk_y",
-> +						       "eth_rx_dv_y",
-> +						       "eth_rxd0_y",
-> +						       "eth_rxd1_y",
-> +						       "eth_rxd2_rgmii",
-> +						       "eth_rxd3_rgmii",
-> +						       "eth_rgmii_tx_clk",
-> +						       "eth_txen_y",
-> +						       "eth_txd0_y",
-> +						       "eth_txd1_y",
-> +						       "eth_txd2_rgmii",
-> +						       "eth_txd3_rgmii";
-> +						function = "eth";
-> +					};
-> +				};
->  			};
->  		};
->  
+>  Tomi
 > 
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
