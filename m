@@ -1,8 +1,10 @@
 From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 0/4] drivers/fsi: Add SBEFIFO client driver
-Date: Fri, 17 Nov 2017 13:34:30 -0600
-Message-ID: <1510947274-7519-1-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: [PATCH v4 1/4] dt-bindings: fsi: Add SBEFIFO documentation
+Date: Fri, 17 Nov 2017 13:34:31 -0600
+Message-ID: <1510947274-7519-2-git-send-email-eajames@linux.vnet.ibm.com>
+References: <1510947274-7519-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1510947274-7519-1-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org, cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
@@ -10,53 +12,56 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 
-This series adds an FSI-based device driver for the SBEFIFO.
+Document the bindings for the SBE CFAM device. SBE devices are
+located on a CFAM off an FSI bus.
 
-IBM POWER9 processors contain some embedded hardware and software bits
-collectively referred to as the self boot engine (SBE).  One role of
-the SBE is to act as a proxy that provides access to the registers of
-the POWER chip from other (embedded) systems.
-
-The POWER9 chip contains a hardware frontend for communicating with
-the SBE from remote systems called the SBEFIFO.  The SBEFIFO logic
-is contained within an FSI CFAM  and as such the driver implements an
-FSI bus device.
-
-The SBE expects to communicate using a defined wire protocol; however,
-the driver knows nothing of the protocol and only provides raw access
-to the fifo device to userspace applications wishing to communicate with
-the SBE using the wire protocol.
-
-The SBEFIFO consists of two hardware fifos. The upstream fifo is used
-by the driver to transfer data to the SBE on the POWER chip, from the
-system hosting the driver.  The downstream fifo is used by the driver to
-transfer data from the SBE on the power chip to the system hosting the
-driver.
-
-Changes since v3:
- - Add reset procedure and use it if there is data in the FIFO at probe time.
- - Add timeout for waiting for data to appear in the FIFO; if the SBE isn't
-   running, then previously we would wait forever.
- - Fix remove() order of operations.
- - Fix xfr memory leak.
- - Formatting fixes.
-
-Edward A. James (4):
-  dt-bindings: fsi: Add SBEFIFO documentation
-  drivers/fsi: Add SBEFIFO FSI client device driver
-  drivers/fsi: sbefifo: Add miscdevice
-  drivers/fsi: sbefifo: Add in-kernel API
-
- .../devicetree/bindings/fsi/ibm,p9-sbefifo.txt     |   35 +
- drivers/fsi/Kconfig                                |    7 +
- drivers/fsi/Makefile                               |    1 +
- drivers/fsi/fsi-sbefifo.c                          | 1024 ++++++++++++++++++++
- include/linux/fsi-sbefifo.h                        |   30 +
- 5 files changed, 1097 insertions(+)
+Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/fsi/ibm,p9-sbefifo.txt     | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
- create mode 100644 drivers/fsi/fsi-sbefifo.c
- create mode 100644 include/linux/fsi-sbefifo.h
 
+diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
+new file mode 100644
+index 0000000..e69b0c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
+@@ -0,0 +1,35 @@
++Device-tree bindings for P9 SBEFIFO CFAM device
++-----------------------------------------------
++
++Required properties:
++ - compatible = "ibm,p9-sbefifo";
++ - reg = < address size >;		: FSI CFAM address for the SBE engine
++					  and address space size.
++ - #address-cells = <1>;		: Number of address cells in child
++					  nodes.
++ - #size-cells = <0>;			: Number of size cells in child nodes.
++
++Optional properties:
++ - <child nodes>			: Devices that are accessible through
++					  the SBEFIFO. Child nodes are "opaque"
++					  to the SBEFIFO; the SBEFIFO needs no
++					  information about a child node other
++					  than if it exists or not.
++
++Child node optional properties:
++ - compatible = "dts-name"
++ - reg = < address >;			: Meaningful only for the child node
++
++Examples:
++
++    sbefifo@2400 {
++        compatible = "ibm,p9-sbefifo";
++        reg = < 0x2400 0x400 >;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        occ@1 {
++            compatible = "ibm,p9-occ";
++            reg = < 1 >;
++        };
++    };
 -- 
 1.8.3.1
 
