@@ -1,52 +1,84 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFCv2 PATCH 31/36] iommu/arm-smmu-v3: Add support for PCI ATS
-Date: Fri, 17 Nov 2017 11:39:25 +0000
-Message-ID: <9da446e9-cf84-61ce-f3f5-32386387bc9f@arm.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
-	<20171006133203.22803-32-jean-philippe.brucker@arm.com>
-	<BLUPR0201MB150565029F9260A528739ACBA52E0@BLUPR0201MB1505.namprd02.prod.outlook.com>
-	<673fda01-2ae0-87e4-637e-fe27096b6be0@arm.com>
-	<BLUPR0201MB1505BC86D3838D13F38665E7A52F0@BLUPR0201MB1505.namprd02.prod.outlook.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] display: panel: Add Tianma tm070rvhg71 display
+ support (800x480)
+Date: Fri, 17 Nov 2017 12:41:26 +0100
+Message-ID: <20171117114126.GB1062@ulmo>
+References: <CAL_JsqJz67k_fTMkx5dHb5qFwXif9y+Cv=+PTq7OLH7woNoU=g@mail.gmail.com>
+ <20171107153058.5554-1-lukma@denx.de>
+ <20171110212423.jddj5kw32voms2oj@rob-hp-laptop>
+ <20171117110247.5d7737bc@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <BLUPR0201MB1505BC86D3838D13F38665E7A52F0-hRBPhS1iNj/g9tdZWAsUFxrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171117110247.5d7737bc@jawa>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/11/17 06:11, Bharat Kumar Gogada wrote:
-[...]
-> Thanks Jean, I see that currently vfio_group_fops_open does not allow multiple instances. 
-> If a device supports multiple PASID there might be different applications running parallel. 
-> So why is multiple instances restricted ?
 
-You can't have multiple processes owning the same PCI device, it's
-unmanageable.
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For using multiple PASIDs, my idea was that the userspace driver ("the
-server"), that owns the device, would have a way to partition it into
-smaller frames. It forks to create "clients" and assigns a PASID to each
-of them (by issuing VFIO_BIND(client_pid) -> pasid, then writing the PASID
-into a privileged MMIO frame that defines the partition properties). Each
-client accesses an unprivileged MMIO frame to use a device partition (or
-sends commands to the server via IPC), and can perform DMA on its own
-virtual memory.
+On Fri, Nov 17, 2017 at 11:02:47AM +0100, Lukasz Majewski wrote:
+> Dear All,
+>=20
+> > On Tue, Nov 07, 2017 at 04:30:58PM +0100, Lukasz Majewski wrote:
+> > > Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+> > >=20
+> > > ---
+> > > Changes for v2:
+> > > - Provide more
+> > > detailed ./Documentation/devicetree/bindings/display/panel entry to
+> > > describe this panel device. ---
+> > >  .../bindings/display/panel/tianma,tm070rvhg71.txt  | 29
+> > > ++++++++++++++++++++++
+> > > drivers/gpu/drm/panel/panel-simple.c               | 27
+> > > ++++++++++++++++++++ 2 files changed, 56 insertions(+) create mode
+> > > 100644
+> > > Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.tx=
+t =20
+> >=20
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>=20
+> Is there a chance that this patch will find its way to v4.15-rc1 ?
 
-This is complete speculation of course, we have very little information on
-how PASID-capable devices will be designed, so I'm trying to imagine
-likely scenarios.
+No, that's very unlikely. We're in the middle of the merge window, no
+new patches are accepted at that point.
 
-Thanks,
-Jean
+If you want to make sure a patch goes into the next release, make sure
+it is posted and reviewed at least a few days before -rc6 of the prior
+release. -rc6 is a common cut-off point for subsystems (though not all)
+in the kernel.
+
+Thierry
+
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAloOyuYACgkQ3SOs138+
+s6HtIxAAtdqWqncXNxOWWZixPDw549omS39vVlSARtzEw3p7nuG6T8cWa2lzI/er
+kbFSTuiWX2Md2gn/sp4cpZB+DlHLiia43TXe6A6GFUjLlVDgnxB6Exz6G2v5tFhp
+snhXePLpURRmmxtgvdjCZJucWaLNke+sf10W/7Azz4ZHjxysA/cwNcAw39frqXWc
+p6i+/A9UKU4qh4CfyHQBJ46vp5KtK8e5iKDAeN6z5bMXRm949DzoHtIXNi4wIHhv
+25v+zrAXidwueCLhbpW4Yf8Nql1+Of2ZttTbhBULDjD7qfIOizkQL7A8APofcmMN
+xxNAE0mGMtx9+4P/0FJ6iTRalJlF1dyaATn32MzbsUpC/14zeu3io4C31SrpcsoS
+f1EQnKMjfUgMLZSrUr4fjs8JwSpm4s/wMoqCNe5WgI7z+BW/qO105+S2Opvh9tCK
+NxoPV5bwwv/e2ao5H4eSVG4GE+qpcJLAnGlwIelkXPt1gsDodUNK6PsCE7pOTQed
+gDNn7HKT/RIdftxAAVCTJ4eAQtvte3bf/N1v1CjDcQkWAZFPACqBcveeA6zqL5Zo
+USVJke+okM1yiSvKVXpH2dNZzYpMfIykZ3sSIoV/jWALscQIZZ4J/t7EUjl2VOTD
+NR9Gdn9xRuzgEaDcNvt2bXcxxzHVQbU4o0zPN+Jd64r+exrmaKM=
+=krA9
+-----END PGP SIGNATURE-----
+
+--hQiwHBbRI9kgIhsi--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
