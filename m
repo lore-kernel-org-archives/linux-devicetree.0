@@ -1,92 +1,31 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: Add the support for display5 equipped
- with Mitsubishi (800x480) display
-Date: Fri, 17 Nov 2017 16:07:18 +0100
-Message-ID: <1510931238.8104.20.camel@pengutronix.de>
-References: <20171117102404.6678-1-lukma@denx.de>
-         <20171117131047.GE25390@dragon> <20171117151334.041c4684@jawa>
-         <1510929383.8104.3.camel@pengutronix.de> <20171117160347.5c78be6e@jawa>
+From: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/2] ASoC: Correct DT binding examples IRQ usage for da7218/9
+Date: Fri, 17 Nov 2017 15:09:26 +0000
+Message-ID: <cover.1510930791.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171117160347.5c78be6e@jawa>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 17.11.2017, 16:03 +0100 schrieb Lukasz Majewski:
-> Hi Lucas,
-> 
-> > Am Freitag, den 17.11.2017, 15:13 +0100 schrieb Lukasz Majewski:
-> > > Hi Shawn,
-> > >   
-> > > > On Fri, Nov 17, 2017 at 11:24:03AM +0100, Lukasz Majewski wrote:  
-> > > > > This is the support for aa070mc01-ca1 Mitsubishi display.
-> > > > > 
-> > > > > > > > > > Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-> > > > > ---
-> > > > >  arch/arm/boot/dts/Makefile                         |  1 +
-> > > > >  .../imx6q-display5-mitsubishi-aa070-800x480.dts    | 51
-> > > > > ++++++++++++++++++++++ 2 files changed, 52 insertions(+)
-> > > > >  create mode 100644
-> > > > > arch/arm/boot/dts/imx6q-display5-mitsubishi-aa070-800x480.dts
-> > > > > 
-> > > > > diff --git a/arch/arm/boot/dts/Makefile
-> > > > > b/arch/arm/boot/dts/Makefile
-> > > > > index d9d0c82e7d20..10b3ad078dea 100644
-> > > > > --- a/arch/arm/boot/dts/Makefile
-> > > > > +++ b/arch/arm/boot/dts/Makefile
-> > > > > @@ -407,6 +407,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
-> > > > > > > > > >  	imx6q-cm-fx6.dtb \
-> > > > > > > > > >  	imx6q-cubox-i.dtb \
-> > > > > > > > > >  	imx6q-dfi-fs700-m60.dtb \
-> > > > > > > > > > +	imx6q-display5-mitsubishi-aa070-800x480.dtb \
-> > > > > > > > > >  	imx6q-display5-tianma-tm070-1280x768.dtb \
-> > > > > > > > > >  	imx6q-dmo-edmqmx6.dtb \
-> > > > >  	imx6q-evi.dtb \    
-> > > > 
-> > > > <snip>
-> > > >   
-> > > > > +#include "imx6q-display5.dtsi"
-> > > > > +
-> > > > > +&panel {
-> > > > > > > > > > +	compatible = "mitsubishi,aa070mc01-ca1";
-> > > > > +};    
-> > > > 
-> > > > How many DTB files do you want to add for this display5 board?    
-> > > 
-> > > This is a single board, which can support panels which I've posted.
-> > > 
-> > > Those dtbs I do pack to u-boot' FIT image and don't need to worry
-> > > that
-> > > some display is not working (after setting bootloader env variable).
-> > >   
-> > > > It's
-> > > > obvious no fun to maintain a bunch of DTB files for all the panels
-> > > > this board can support.  
-> > > 
-> > > Please note that those files excessively use #include directive, and
-> > > there is not so much code added (the longest part is license and
-> > > comments).
-> > >   
-> > > >  Let's stop right here.  
-> > > 
-> > > If I may ask - how shall I proceed? What would be your suggestion to
-> > > move on (dtb overlays) ?  
-> > 
-> > The solution we use for the ZII RDU1 and RDU2 boards is to have the
-> > bootloader patch in the correct panel compatible strings. 
-> 
-> Do you mean adjusting the DTB accordingly in u-boot for each display -
-> change panel/compatible to new display name ?
+Currently in the DT bindings documents for DA7218 and DA7219, the examples for
+bindings usage show ACTIVE_HIGH IRQ usage. For both devices this is incorrect
+as the devices themselves only suport ACTIVE_LOW. This patch set rectifies the
+inconsistency.
 
-Exactly. Simply let the bootloader insert the correct panel compatible
-string into the DTB.
+Adam Thomson (2):
+  ASoC: da7219: Correct IRQ level in DT binding example
+  ASoC: da7218: Correct IRQ level in DT binding example
 
-Regards,
-Lucas
+ Documentation/devicetree/bindings/sound/da7218.txt | 2 +-
+ Documentation/devicetree/bindings/sound/da7219.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
