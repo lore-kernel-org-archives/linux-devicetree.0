@@ -1,57 +1,323 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: Re: [PATCH] ARM: dts: bcm2835-rpi: Avoid conflicts on i2c0
-Date: Fri, 17 Nov 2017 19:51:57 +0000
-Message-ID: <cdafd9a1-e965-ac9a-8640-de21c3eca5e5@raspberrypi.org>
-References: <1510779424-642-1-git-send-email-stefan.wahren@i2se.com>
- <87a7zmq7wy.fsf@anholt.net>
- <CAAoAYcPz6urucU1r_uNk1kvjsGg0p7VUrZwa5GZSDeDgsD=5Fw@mail.gmail.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 5/8] ARM: dts: sunxi: Restore EMAC changes (boards)
+Date: Fri, 17 Nov 2017 21:05:57 +0100
+Message-ID: <b926cc8e-9c55-e40f-b621-460fb6d8964a@gmail.com>
+References: <20171031081915.18960-1-clabbe.montjoie@gmail.com>
+ <20171031081915.18960-6-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAAoAYcPz6urucU1r_uNk1kvjsGg0p7VUrZwa5GZSDeDgsD=5Fw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171031081915.18960-6-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/11/2017 18:30, Dave Stevenson wrote:
-> On 16 November 2017 at 20:34, Eric Anholt <eric@anholt.net> wrote:
->> Stefan Wahren <stefan.wahren@i2se.com> writes:
->>
->>> The GPU firmware of the Raspberry Pi 3 uses i2c0 to communicate to
->>> the FXL6408 gpio expander. It's a bad idea to use the same interface
->>> from the ARM side. Since this interface isn't used by the other
->>> RPi boards, it's save to remove the complete node and avoid this
->>> conflict.
->>
->> It's not used by other kernel drivers currently, but should we leave it
->> in for the pi0/1/2 folks that might have userspace I2C stuff using it?
->> That's a thing people do, right?  I actually don't know.
->
-> The firmware hasn't used BSC0 for the GPIO expander since the end of
-> January. It now bit bashes it. Sorry if that information hadn't
-> filtered through.
->
-> I've got a patch I was about to send to rpi-linux for comment which
-> sets up the i2c-mux-pinctrl driver on BSC0 so that it can be used
-> either on GPIOs 0&1, or the GPIOs connected to the DSI and CSI
-> connectors (I want it to talk to the camera module, and I guess Eric
-> won't complain for talking to the DSI display). I'll aim to sort it on
-> Monday.
+Hey,
+Sorry for the bringing this up again.
+Isn't there a: ethernet0 = &emac; for some boards missing?
 
-Regardless of the use (or not) of i2c0 by the VPU on Pi 3, i2c0 is the I2C interface
-intended for the ARM on early Pi Model Bs. The enabling or not of the I2C
-interfaces should be left to the model-specific DTS files.
+Best,
+Philipp
 
-Regards,
+(Sorry for sending this to some persons more than once! My Thunderbird 
+sent mails in html and didn't reach the mailing lists. I hope it works 
+now :) )
 
-Phil
+On 31.10.2017 09:19, Corentin Labbe wrote:
+> The original dwmac-sun8i DT bindings have some issue on how to handle
+> integrated PHY and was reverted in last RC of 4.13.
+> But now we have a solution so we need to get back that was reverted.
+> 
+> This patch restore all boards DT about dwmac-sun8i
+> This reverts partially commit fe45174b72ae ("arm: dts: sunxi: Revert EMAC changes")
+> 
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts |  9 +++++++++
+>   arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts   | 19 +++++++++++++++++++
+>   arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts     | 19 +++++++++++++++++++
+>   arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts         |  7 +++++++
+>   arch/arm/boot/dts/sun8i-h3-orangepi-2.dts         |  8 ++++++++
+>   arch/arm/boot/dts/sun8i-h3-orangepi-one.dts       |  8 ++++++++
+>   arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts   |  5 +++++
+>   arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts        |  8 ++++++++
+>   arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts      | 22 ++++++++++++++++++++++
+>   arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts    | 16 ++++++++++++++++
+>   10 files changed, 121 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> index b1502df7b509..6713d0f2b3f4 100644
+> --- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> +++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
+> @@ -56,6 +56,8 @@
+>   
+>   	aliases {
+>   		serial0 = &uart0;
+> +		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
+> +		ethernet0 = &emac;
+>   		ethernet1 = &xr819;
+>   	};
+>   
+> @@ -102,6 +104,13 @@
+>   	status = "okay";
+>   };
+>   
+> +&emac {
+> +	phy-handle = <&int_mii_phy>;
+> +	phy-mode = "mii";
+> +	allwinner,leds-active-low;
+> +	status = "okay";
+> +};
+> +
+>   &mmc0 {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&mmc0_pins_a>;
+> diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+> index e1dba9ffa94b..f2292deaa590 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+> @@ -52,6 +52,7 @@
+>   	compatible = "sinovoip,bpi-m2-plus", "allwinner,sun8i-h3";
+>   
+>   	aliases {
+> +		ethernet0 = &emac;
+>   		serial0 = &uart0;
+>   		serial1 = &uart1;
+>   	};
+> @@ -111,6 +112,24 @@
+>   	status = "okay";
+>   };
+>   
+> +&emac {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emac_rgmii_pins>;
+> +	phy-supply = <&reg_gmac_3v3>;
+> +	phy-handle = <&ext_rgmii_phy>;
+> +	phy-mode = "rgmii";
+> +
+> +	allwinner,leds-active-low;
+> +	status = "okay";
+> +};
+> +
+> +&external_mdio {
+> +	ext_rgmii_phy: ethernet-phy@1 {
+> +		compatible = "ethernet-phy-ieee802.3-c22";
+> +		reg = <0>;
+> +	};
+> +};
+> +
+>   &ir {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&ir_pins_a>;
+> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+> index 73766d38ee6c..cfb96da3cfef 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+> @@ -66,6 +66,25 @@
+>   	status = "okay";
+>   };
+>   
+> +&emac {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emac_rgmii_pins>;
+> +	phy-supply = <&reg_gmac_3v3>;
+> +	phy-handle = <&ext_rgmii_phy>;
+> +	phy-mode = "rgmii";
+> +
+> +	allwinner,leds-active-low;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&external_mdio {
+> +	ext_rgmii_phy: ethernet-phy@1 {
+> +		compatible = "ethernet-phy-ieee802.3-c22";
+> +		reg = <7>;
+> +	};
+> +};
+> +
+>   &ir {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&ir_pins_a>;
+> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+> index 8d2cc6e9a03f..78f6c24952dd 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+> @@ -46,3 +46,10 @@
+>   	model = "FriendlyARM NanoPi NEO";
+>   	compatible = "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
+>   };
+> +
+> +&emac {
+> +	phy-handle = <&int_mii_phy>;
+> +	phy-mode = "mii";
+> +	allwinner,leds-active-low;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+> index 1bf51802f5aa..b20be95b49d5 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+> @@ -54,6 +54,7 @@
+>   	aliases {
+>   		serial0 = &uart0;
+>   		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
+> +		ethernet0 = &emac;
+>   		ethernet1 = &rtl8189;
+>   	};
+>   
+> @@ -117,6 +118,13 @@
+>   	status = "okay";
+>   };
+>   
+> +&emac {
+> +	phy-handle = <&int_mii_phy>;
+> +	phy-mode = "mii";
+> +	allwinner,leds-active-low;
+> +	status = "okay";
+> +};
+> +
+>   &ir {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&ir_pins_a>;
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+> index a1c6ff6fd05d..82e5d28cd698 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+> @@ -52,6 +52,7 @@
+>   	compatible = "xunlong,orangepi-one", "allwinner,sun8i-h3";
+>   
+>   	aliases {
+> +		ethernet0 = &emac;
+>   		serial0 = &uart0;
+>   	};
+>   
+> @@ -97,6 +98,13 @@
+>   	status = "okay";
+>   };
+>   
+> +&emac {
+> +	phy-handle = <&int_mii_phy>;
+> +	phy-mode = "mii";
+> +	allwinner,leds-active-low;
+> +	status = "okay";
+> +};
+> +
+>   &mmc0 {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts
+> index 8b93f5c781a7..a10281b455f5 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts
+> @@ -53,6 +53,11 @@
+>   	};
+>   };
+>   
+> +&emac {
+> +	/* LEDs changed to active high on the plus */
+> +	/delete-property/ allwinner,leds-active-low;
+> +};
+> +
+>   &mmc1 {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&mmc1_pins_a>;
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> index d0b80fda2f6b..6d98bcfbe877 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> @@ -52,6 +52,7 @@
+>   	compatible = "xunlong,orangepi-pc", "allwinner,sun8i-h3";
+>   
+>   	aliases {
+> +		ethernet0 = &emac;
+>   		serial0 = &uart0;
+>   	};
+>   
+> @@ -117,6 +118,13 @@
+>   	status = "okay";
+>   };
+>   
+> +&emac {
+> +	phy-handle = <&int_mii_phy>;
+> +	phy-mode = "mii";
+> +	allwinner,leds-active-low;
+> +	status = "okay";
+> +};
+> +
+>   &ir {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&ir_pins_a>;
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+> index 72ca01b93f1b..cbc499b04de4 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+> @@ -47,6 +47,10 @@
+>   	model = "Xunlong Orange Pi Plus / Plus 2";
+>   	compatible = "xunlong,orangepi-plus", "allwinner,sun8i-h3";
+>   
+> +	aliases {
+> +		ethernet0 = &emac;
+> +	};
+> +
+>   	reg_gmac_3v3: gmac-3v3 {
+>   		compatible = "regulator-fixed";
+>   		regulator-name = "gmac-3v3";
+> @@ -74,6 +78,24 @@
+>   	status = "okay";
+>   };
+>   
+> +&emac {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emac_rgmii_pins>;
+> +	phy-supply = <&reg_gmac_3v3>;
+> +	phy-handle = <&ext_rgmii_phy>;
+> +	phy-mode = "rgmii";
+> +
+> +	allwinner,leds-active-low;
+> +	status = "okay";
+> +};
+> +
+> +&external_mdio {
+> +	ext_rgmii_phy: ethernet-phy@1 {
+> +		compatible = "ethernet-phy-ieee802.3-c22";
+> +		reg = <0>;
+> +	};
+> +};
+> +
+>   &mmc2 {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&mmc2_8bit_pins>;
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts
+> index 97920b12a944..6dbf7b2e0c13 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus2e.dts
+> @@ -61,3 +61,19 @@
+>   		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
+>   	};
+>   };
+> +
+> +&emac {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emac_rgmii_pins>;
+> +	phy-supply = <&reg_gmac_3v3>;
+> +	phy-handle = <&ext_rgmii_phy>;
+> +	phy-mode = "rgmii";
+> +	status = "okay";
+> +};
+> +
+> +&external_mdio {
+> +	ext_rgmii_phy: ethernet-phy@1 {
+> +		compatible = "ethernet-phy-ieee802.3-c22";
+> +		reg = <1>;
+> +	};
+> +};
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
