@@ -1,35 +1,32 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: rtc: imxdi: Improve the bindings text
-Date: Fri, 17 Nov 2017 14:26:50 -0600
-Message-ID: <20171117202650.uyxqzivywckiie6k@rob-hp-laptop>
-References: <1510750793-25564-1-git-send-email-festevam@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V1 1/4] qcom: spmi-wled: Add support for qcom wled driver
+Date: Fri, 17 Nov 2017 14:28:34 -0600
+Message-ID: <20171117202834.mqe26lslox3nlsfo@rob-hp-laptop>
+References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
+ <1510834717-21765-2-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1510750793-25564-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1510834717-21765-2-git-send-email-kgunda@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 10:59:53AM -0200, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+On Thu, Nov 16, 2017 at 05:48:34PM +0530, Kiran Gunda wrote:
+> WLED driver provides the interface to the display driver to
+> adjust the brightness of the display backlight.
 > 
-> Improve the bindings text by doing the following changes:
-> 
-> - Remove the i.MX53 reference, as the RTC on i.MX53 is a different hardware
-> - Add 'clocks' to the list of required properties
-> - Explain that the optional security violation irq is the second entry
-> - Use the real unit address and irq numbers for i.MX25
-> 
-> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/rtc/imxdi-rtc.txt | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>  .../bindings/leds/backlight/qcom-spmi-wled.txt     |  90 ++++
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please split bindings to separate patch.
+
+>  drivers/video/backlight/Kconfig                    |   9 +
+>  drivers/video/backlight/Makefile                   |   1 +
+>  drivers/video/backlight/qcom-spmi-wled.c           | 504 +++++++++++++++++++++
+>  4 files changed, 604 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
+>  create mode 100644 drivers/video/backlight/qcom-spmi-wled.c
