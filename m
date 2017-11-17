@@ -1,73 +1,61 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH v2] dt-bindings: mtd: Add sst25vf016b to the list of
- supported chip names
-Date: Fri, 17 Nov 2017 17:40:38 +0000
-Message-ID: <TY1PR06MB0895AE979956C2B4EB2D47FAC02F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1505118928-3987-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1508853032-25229-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <658ceb2b-5d2b-9349-f140-27858459e5a8@wedev4u.fr>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH] dt-bindings: qspi: Add r8a7743/5 to the compatible list
+Date: Fri, 17 Nov 2017 18:00:46 +0000
+Message-ID: <TY1PR06MB08958546062D685532669977C02F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1504858035-3568-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <658ceb2b-5d2b-9349-f140-27858459e5a8-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1504858035-3568-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gQ3lyaWxsZSwNCg0KaXQncyBvaywgdGhhbmsgeW91IGZvciB0aGUgZmVlZGJhY2suDQoN
-CkJlc3QgcmVnYXJkcywNCkZhYg0KDQo+IEhpIEZhYnJpemlvLA0KPg0KPiBzb3JyeSBidXQgSSB3
-b24ndCBhcHBseSB0aGlzIHBhdGNoLg0KPg0KPiBOZXcgdmFsdWVzIGZvciB0aGUgJ2NvbXBhdGli
-bGUnIERUIHByb3BlcnRpZXMgc2hvdWxkIG9ubHkgYmUgYWRkZWQgZm9yDQo+IG1lbW9yeSBwYXJ0
-cyBub3Qgc3VwcG9ydGluZyB0aGUgSkVERUMgUkVBRCBJRCAoMHg5RikgY29tbWFuZC4NCj4NCj4g
-U1NUMjUgbWVtb3JpZXMgZG8gc3VwcG9ydCB0aGlzIGNvbW1hbmQgaGVuY2Ugc2hvdWxkIHVzZSB0
-aGUgImplZGVjLHNwaS1ub3IiDQo+IHZhbHVlIGFsb25lLiBGb3IgaGlzdG9yaWNhbCByZWFzb25z
-LCBzb21lIERUIG5vZGVzIHNldCB0aGVpciAnY29tcGF0aWJsZScNCj4gc3RyaW5nIHRvIHNvbWV0
-aGluZyBsaWtlICI8dmVuZG9yPiw8bW9kZWw+IiwgImplZGVjLHNwaS1ub3IiLg0KPiBJdCBzaG91
-bGQgd29yayBhcyBleHBlY3RlZCBpbiBtb3N0IGNhc2UgaG93ZXZlciBJIGRpc2NvdXJhZ2UgZnJv
-bSBkb2luZyBzbw0KPiBpbiBuZXcgZGV2aWNlIHRyZWVzIGJlY2F1c2UgaXQgbWF5IGhhdmUgc29t
-ZSBzaWRlIGVmZmVjdHMgZXNwZWNpYWxseSB3aGVuDQo+IHRoZSBtMjVwODAuYyBkcml2ZXIgaXMg
-dXNlZCBiZXR3ZWVuIHRoZSBzcGktbm9yLmMgZHJpdmVyIGFuZCB0aGUgU1BJDQo+IGNvbnRyb2xs
-ZXIgZHJpdmVyLg0KPg0KPiBJdCdzIGFsbCBhYm91dCBzZXR0aW5nIHRoZSAybmQgcGFyYW1ldGVy
-IG9mIHNwaV9ub3Jfc2NhbigpLCB0aGUgJ25hbWUnDQo+IHBhcmFtZXRlciwgYXMgTlVMTCB3aGVu
-IHBvc3NpYmxlLiBUaGlzIHBhcmFtZXRlciBzaG91bGQgYmUgc2V0IHRvIGEgbm9uIE5VTEwNCj4g
-dmFsdWUgb25seSBmb3IgbWVtb3JpZXMgbm90IHN1cHBvcnRpbmcgdGhlIEpFREVDIFJFQUQgSUQg
-b3AgY29kZSAoMHg5RikuDQo+DQo+IEJlc3QgcmVnYXJkcywNCj4NCj4gQ3lyaWxsZQ0KPg0KPiBM
-ZSAyNC8xMC8yMDE3IMOgIDE1OjUwLCBGYWJyaXppbyBDYXN0cm8gYSDDqWNyaXQgOg0KPiA+IFRo
-ZXJlIGFyZSBhIGZldyBEVCBmaWxlcyB0aGF0IG1ha2UgdXNlIG9mIHNzdDI1dmYwMTZiIGluIHRo
-ZWlyDQo+ID4gY29tcGF0aWJsZSBzdHJpbmdzLCBhbmQgdGhlIGRyaXZlciBzdXBwb3J0cyB0aGlz
-IGNoaXAgYWxyZWFkeS4NCj4gPiBUaGlzIHBhdGNoIGltcHJvdmVzIHRoZSBkb2N1bWVudGF0aW9u
-IGFuZCB0aGVyZWZvcmUgdGhlIHJlc3VsdA0KPiA+IG9mIC4vc2NyaXB0cy9jaGVja3BhdGNoLnBs
-Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0
-cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGF0ZXJzb24gPENo
-cmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT4NCj4gPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4NCj4gPiBBY2tlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCty
-ZW5lc2FzQGdsaWRlci5iZT4NCj4gPiAtLS0NCj4gPiBUaGFuayB5b3UgUm9iLCB0aGFuayB5b3Ug
-R2VlcnQsIGFuZCBzb3JyeSBmb3IgdGhlIGRlbGF5IG9uIHRoaXMgb25lLg0KPiA+IEhlcmUgaXMg
-djIuDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+ICogZml4ZWQgc3ViamVjdCBwcmVmaXgN
-Cj4gPiAqIGFkZGVkIGNoYW5nZWxvZw0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQgfCAxICsNCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9qZWRlYyxzcGktbm9yLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvamVkZWMsc3BpLQ0KPiBub3IudHh0DQo+ID4gaW5kZXgg
-NGNhYjVkOC4uYmY1NmQ3NyAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbXRkL2plZGVjLHNwaS1ub3IudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9qZWRlYyxzcGktbm9yLnR4dA0KPiA+IEBAIC0zMSw2
-ICszMSw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gICAgICAgICAgICAgICAgICAgczI1
-c2wxMjgwMQ0KPiA+ICAgICAgICAgICAgICAgICAgIHMyNWZsMDA4aw0KPiA+ICAgICAgICAgICAg
-ICAgICAgIHMyNWZsMDY0aw0KPiA+ICsgICAgICAgICAgICAgICAgIHNzdDI1dmYwMTZiDQo+ID4g
-ICAgICAgICAgICAgICAgICAgc3N0MjV2ZjA0MGINCj4gPiAgICAgICAgICAgICAgICAgICBzc3Qy
-NXdmMDQwYg0KPiA+ICAgICAgICAgICAgICAgICAgIG0yNXA0MA0KPiA+DQo+DQo+IC0tDQo+IFRv
-IHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBk
-ZXZpY2V0cmVlIiBpbg0KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIu
-a2VybmVsLm9yZw0KPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwu
-b3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3Bl
-IEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hh
-bXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIg
-UmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dear All,
+
+this patch has been around for some time now, it was reviewed-by Geert Uytt=
+erhoeven and acked-by Rob Herring, any news?
+
+Thanks,
+Fab
+
+> Subject: [PATCH] dt-bindings: qspi: Add r8a7743/5 to the compatible list
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/spi/spi-rspi.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documen=
+tation/devicetree/bindings/spi/spi-rspi.txt
+> index 8f4169f..3b02b3a 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+> @@ -5,11 +5,14 @@ Required properties:
+>       "renesas,rspi-<soctype>", "renesas,rspi" as fallback.
+>       For Renesas Serial Peripheral Interface on RZ/A1H:
+>       "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
+> -     For Quad Serial Peripheral Interface on R-Car Gen2:
+> +     For Quad Serial Peripheral Interface on R-Car Gen2 and
+> +     RZ/G1 devices:
+>       "renesas,qspi-<soctype>", "renesas,qspi" as fallback.
+>       Examples with soctypes are:
+>          - "renesas,rspi-sh7757" (SH)
+>  - "renesas,rspi-r7s72100" (RZ/A1H)
+> +- "renesas,qspi-r8a7743" (RZ/G1M)
+> +- "renesas,qspi-r8a7745" (RZ/G1E)
+>  - "renesas,qspi-r8a7790" (R-Car H2)
+>  - "renesas,qspi-r8a7791" (R-Car M2-W)
+>  - "renesas,qspi-r8a7792" (R-Car V2H)
+> --
+> 2.7.4
+
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
