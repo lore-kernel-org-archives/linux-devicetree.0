@@ -1,48 +1,97 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: Re: [PATCH v11 02/10] i2c: i2c-smbus: Move i2c_setup_smbus_alert from
- i2c-smbus to i2c-core-smbus
-Date: Fri, 17 Nov 2017 20:15:59 +0800
-Message-ID: <c5a9309b-a595-c663-1e39-f83ed08c8c07@electromag.com.au>
-References: <1503567070-115646-1-git-send-email-preid@electromag.com.au>
- <1503567070-115646-3-git-send-email-preid@electromag.com.au>
- <20171029154408.vmjkpj7ybqyrj3ke@ninjato>
- <1397131b-c22d-9872-dbe0-9b691553cb9e@electromag.com.au>
- <20171106213646.2h3zsitnlablblli@ninjato>
- <2eaccb51-62cf-b764-d313-84008c6c8f87@electromag.com.au>
- <20171107072254.s43mwpyplx3hdkyo@ninjato>
+From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2] display: panel: Add Tianma tm070rvhg71 display
+ support (800x480)
+Date: Fri, 17 Nov 2017 13:17:12 +0100
+Message-ID: <20171117131712.0f2a0a4f@jawa>
+References: <CAL_JsqJz67k_fTMkx5dHb5qFwXif9y+Cv=+PTq7OLH7woNoU=g@mail.gmail.com>
+        <20171107153058.5554-1-lukma@denx.de>
+        <20171110212423.jddj5kw32voms2oj@rob-hp-laptop>
+        <20171117110247.5d7737bc@jawa>
+        <20171117114126.GB1062@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/2i.riTZB64Ma.WsjiYd2+z7"; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171107072254.s43mwpyplx3hdkyo@ninjato>
-Content-Language: en-AU
+In-Reply-To: <20171117114126.GB1062@ulmo>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/11/2017 15:22, Wolfram Sang wrote:
-> 
->> I was just thinking that all that's in the file now is smbus-alert code.
->> The other smbus (host notify) code was moved to i2c-core
->> So maybe i2c-core-smbus-alert and as you say use makefile to include it.
-> 
-> Aaaah, i2c-core-smbus-alert.c. Yes, that probably makes sense. I was
-> wondering about i2c-smbus-alert.c (without -core)...
-> 
->> I've tried this and it seems to work for the various combinations.
->> I'll wait a bit for Jean to offer an opinion.
-> 
-> Well, if you have code already, can you post it as RFC and CC Jean?
-> It usually is easier to talk over code, even if it is not perfect yet...
-> 
+--Sig_/2i.riTZB64Ma.WsjiYd2+z7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes will do. Was hoping to clean it up into some incremental patches and post this week.
-But it looks like next week now.
+Hi Thierry,
 
--- 
-Regards
-Phil Reid
+> On Fri, Nov 17, 2017 at 11:02:47AM +0100, Lukasz Majewski wrote:
+> > Dear All,
+> >  =20
+> > > On Tue, Nov 07, 2017 at 04:30:58PM +0100, Lukasz Majewski wrote: =20
+> > > > Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+> > > >=20
+> > > > ---
+> > > > Changes for v2:
+> > > > - Provide more
+> > > > detailed ./Documentation/devicetree/bindings/display/panel
+> > > > entry to describe this panel device. ---
+> > > >  .../bindings/display/panel/tianma,tm070rvhg71.txt  | 29
+> > > > ++++++++++++++++++++++
+> > > > drivers/gpu/drm/panel/panel-simple.c               | 27
+> > > > ++++++++++++++++++++ 2 files changed, 56 insertions(+) create
+> > > > mode 100644
+> > > > Documentation/devicetree/bindings/display/panel/tianma,tm070rvhg71.=
+txt   =20
+> > >=20
+> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> =20
+> >=20
+> > Is there a chance that this patch will find its way to v4.15-rc1 ? =20
+>=20
+> No, that's very unlikely. We're in the middle of the merge window, no
+> new patches are accepted at that point.
+
+Ok. I see. I should have sent the ping earlier.
+
+>=20
+> If you want to make sure a patch goes into the next release, make sure
+> it is posted and reviewed at least a few days before -rc6 of the prior
+> release. -rc6 is a common cut-off point for subsystems (though not
+> all) in the kernel.
+
+Understood, thanks.
+
+>=20
+> Thierry
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
+
+--Sig_/2i.riTZB64Ma.WsjiYd2+z7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAloO00kACgkQAR8vZIA0
+zr3Nvwf8DecDR3MnObcgCrtvnSWEcmEbKOGimedIkKdWIFcPc7w9TBWXwJgnCY40
+d+6NGs2s7zuhKaB/ikOSxSMnaBPNwIw/JqgBes0gSmc6oedxkftpJsr1VJr2iztG
+XqODji5rikFxSwGur/JOovZ6gO5GqU+YTdHWjX2U+wxX2e/NImca4LoYvT1ydHmq
+J1x+A+4JLLR3oWkGoNkA/ZjguKhhJFyYkW66HQW3EfxqMBN0llxl2BX/vUxhqRRy
+dSUMMVbzRo40tA9GW+UJLuOfdZTrjLx+HG2tBR2bwShI8YhgfpTZhEtwdSeFDekC
+NP+JvraZmu1Qnr45qVIwBZsCHeCVEw==
+=2TKs
+-----END PGP SIGNATURE-----
+
+--Sig_/2i.riTZB64Ma.WsjiYd2+z7--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
