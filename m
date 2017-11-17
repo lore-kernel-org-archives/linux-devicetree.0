@@ -1,7 +1,7 @@
 From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] MIPS: BMIPS: Add Broadcom STB watchdog nodes
-Date: Fri, 17 Nov 2017 11:19:44 +0900
-Message-ID: <20171117021944.894-4-jaedon.shin@gmail.com>
+Subject: [PATCH 2/3] MIPS: BMIPS: Add Broadcom STB wake-up timer nodes
+Date: Fri, 17 Nov 2017 11:19:43 +0900
+Message-ID: <20171117021944.894-3-jaedon.shin@gmail.com>
 References: <20171117021944.894-1-jaedon.shin@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20171117021944.894-1-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,292 +10,221 @@ To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, James Hogan <ja
 Cc: Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds watchdog device nodes to BCM7xxx MIPS based SoCs.
+Adds wake-up timer device nodes to BCM7xxx MIPS based SoCs.
 
 Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/mips/boot/dts/brcm/bcm7125.dtsi      | 7 +++++++
- arch/mips/boot/dts/brcm/bcm7346.dtsi      | 7 +++++++
- arch/mips/boot/dts/brcm/bcm7358.dtsi      | 7 +++++++
- arch/mips/boot/dts/brcm/bcm7360.dtsi      | 7 +++++++
- arch/mips/boot/dts/brcm/bcm7362.dtsi      | 7 +++++++
- arch/mips/boot/dts/brcm/bcm7420.dtsi      | 7 +++++++
- arch/mips/boot/dts/brcm/bcm7425.dtsi      | 7 +++++++
- arch/mips/boot/dts/brcm/bcm7435.dtsi      | 7 +++++++
- arch/mips/boot/dts/brcm/bcm97125cbmb.dts  | 4 ++++
- arch/mips/boot/dts/brcm/bcm97346dbsmb.dts | 4 ++++
- arch/mips/boot/dts/brcm/bcm97358svmb.dts  | 4 ++++
- arch/mips/boot/dts/brcm/bcm97360svmb.dts  | 4 ++++
- arch/mips/boot/dts/brcm/bcm97362svmb.dts  | 4 ++++
- arch/mips/boot/dts/brcm/bcm97420c.dts     | 4 ++++
- arch/mips/boot/dts/brcm/bcm97425svmb.dts  | 4 ++++
- arch/mips/boot/dts/brcm/bcm97435svmb.dts  | 4 ++++
- 16 files changed, 88 insertions(+)
+ arch/mips/boot/dts/brcm/bcm7346.dtsi      | 10 ++++++++++
+ arch/mips/boot/dts/brcm/bcm7358.dtsi      | 10 ++++++++++
+ arch/mips/boot/dts/brcm/bcm7360.dtsi      | 10 ++++++++++
+ arch/mips/boot/dts/brcm/bcm7362.dtsi      | 10 ++++++++++
+ arch/mips/boot/dts/brcm/bcm7425.dtsi      | 10 ++++++++++
+ arch/mips/boot/dts/brcm/bcm7435.dtsi      | 10 ++++++++++
+ arch/mips/boot/dts/brcm/bcm97346dbsmb.dts |  4 ++++
+ arch/mips/boot/dts/brcm/bcm97358svmb.dts  |  4 ++++
+ arch/mips/boot/dts/brcm/bcm97360svmb.dts  |  4 ++++
+ arch/mips/boot/dts/brcm/bcm97362svmb.dts  |  4 ++++
+ arch/mips/boot/dts/brcm/bcm97425svmb.dts  |  4 ++++
+ arch/mips/boot/dts/brcm/bcm97435svmb.dts  |  4 ++++
+ 12 files changed, 84 insertions(+)
 
-diff --git a/arch/mips/boot/dts/brcm/bcm7125.dtsi b/arch/mips/boot/dts/brcm/bcm7125.dtsi
-index 2f9ef565e5d0..5bf77b6fcceb 100644
---- a/arch/mips/boot/dts/brcm/bcm7125.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7125.dtsi
-@@ -198,6 +198,13 @@
- 			status = "disabled";
- 		};
- 
-+		watchdog: watchdog@4067e8 {
-+			clocks = <&upg_clk>;
-+			compatible = "brcm,bcm7038-wdt";
-+			reg = <0x4067e8 0x14>;
-+			status = "disabled";
-+		};
-+
- 		upg_gio: gpio@406700 {
- 			compatible = "brcm,brcmstb-gpio";
- 			reg = <0x406700 0x80>;
 diff --git a/arch/mips/boot/dts/brcm/bcm7346.dtsi b/arch/mips/boot/dts/brcm/bcm7346.dtsi
-index 228184dedada..2afa0dada575 100644
+index 8aa5b72d652d..228184dedada 100644
 --- a/arch/mips/boot/dts/brcm/bcm7346.dtsi
 +++ b/arch/mips/boot/dts/brcm/bcm7346.dtsi
-@@ -233,6 +233,13 @@
+@@ -494,6 +494,16 @@
+ 			interrupt-names = "mspi_done";
  			status = "disabled";
  		};
- 
-+		watchdog: watchdog@4067e8 {
++
++		waketimer: waketimer@408e80 {
++			compatible = "brcm,brcmstb-waketimer";
++			reg = <0x408e80 0x14>;
++			interrupts = <0x3>;
++			interrupt-parent = <&aon_pm_l2_intc>;
++			interrupt-names = "timer";
 +			clocks = <&upg_clk>;
-+			compatible = "brcm,bcm7038-wdt";
-+			reg = <0x4067e8 0x14>;
 +			status = "disabled";
 +		};
-+
- 		aon_pm_l2_intc: interrupt-controller@408440 {
- 			compatible = "brcm,l2-intc";
- 			reg = <0x408440 0x30>;
+ 	};
+ 
+ 	memory_controllers {
 diff --git a/arch/mips/boot/dts/brcm/bcm7358.dtsi b/arch/mips/boot/dts/brcm/bcm7358.dtsi
-index 398521c7070f..6375fc77f389 100644
+index 1089d6ebc841..398521c7070f 100644
 --- a/arch/mips/boot/dts/brcm/bcm7358.dtsi
 +++ b/arch/mips/boot/dts/brcm/bcm7358.dtsi
-@@ -217,6 +217,13 @@
+@@ -362,5 +362,15 @@
+ 			interrupt-names = "mspi_done";
  			status = "disabled";
  		};
- 
-+		watchdog: watchdog@4066a8 {
++
++		waketimer: waketimer@408e80 {
++			compatible = "brcm,brcmstb-waketimer";
++			reg = <0x408e80 0x14>;
++			interrupts = <0x3>;
++			interrupt-parent = <&aon_pm_l2_intc>;
++			interrupt-names = "timer";
 +			clocks = <&upg_clk>;
-+			compatible = "brcm,bcm7038-wdt";
-+			reg = <0x4066a8 0x14>;
 +			status = "disabled";
 +		};
-+
- 		aon_pm_l2_intc: interrupt-controller@408240 {
- 			compatible = "brcm,l2-intc";
- 			reg = <0x408240 0x30>;
+ 	};
+ };
 diff --git a/arch/mips/boot/dts/brcm/bcm7360.dtsi b/arch/mips/boot/dts/brcm/bcm7360.dtsi
-index 28f5a0c1c149..a57cacea91cf 100644
+index f68285c2dff0..28f5a0c1c149 100644
 --- a/arch/mips/boot/dts/brcm/bcm7360.dtsi
 +++ b/arch/mips/boot/dts/brcm/bcm7360.dtsi
-@@ -209,6 +209,13 @@
+@@ -413,6 +413,16 @@
+ 			interrupt-names = "mspi_done";
  			status = "disabled";
  		};
- 
-+		watchdog: watchdog@4066a8 {
++
++		waketimer: waketimer@408e80 {
++			compatible = "brcm,brcmstb-waketimer";
++			reg = <0x408e80 0x14>;
++			interrupts = <0x3>;
++			interrupt-parent = <&aon_pm_l2_intc>;
++			interrupt-names = "timer";
 +			clocks = <&upg_clk>;
-+			compatible = "brcm,bcm7038-wdt";
-+			reg = <0x4066a8 0x14>;
 +			status = "disabled";
 +		};
-+
- 		aon_pm_l2_intc: interrupt-controller@408440 {
- 			compatible = "brcm,l2-intc";
- 			reg = <0x408440 0x30>;
+ 	};
+ 
+ 	memory_controllers {
 diff --git a/arch/mips/boot/dts/brcm/bcm7362.dtsi b/arch/mips/boot/dts/brcm/bcm7362.dtsi
-index ab2dd57571a0..728b9e9f84b8 100644
+index a4bfa5f2b006..ab2dd57571a0 100644
 --- a/arch/mips/boot/dts/brcm/bcm7362.dtsi
 +++ b/arch/mips/boot/dts/brcm/bcm7362.dtsi
-@@ -205,6 +205,13 @@
+@@ -409,6 +409,16 @@
+ 			interrupt-names = "mspi_done";
  			status = "disabled";
  		};
- 
-+		watchdog: watchdog@4066a8 {
++
++		waketimer: waketimer@408e80 {
++			compatible = "brcm,brcmstb-waketimer";
++			reg = <0x408e80 0x14>;
++			interrupts = <0x3>;
++			interrupt-parent = <&aon_pm_l2_intc>;
++			interrupt-names = "timer";
 +			clocks = <&upg_clk>;
-+			compatible = "brcm,bcm7038-wdt";
-+			reg = <0x4066a8 0x14>;
 +			status = "disabled";
 +		};
-+
- 		aon_pm_l2_intc: interrupt-controller@408440 {
- 			compatible = "brcm,l2-intc";
- 			reg = <0x408440 0x30>;
-diff --git a/arch/mips/boot/dts/brcm/bcm7420.dtsi b/arch/mips/boot/dts/brcm/bcm7420.dtsi
-index d262e11bc3f9..9540c27f12e7 100644
---- a/arch/mips/boot/dts/brcm/bcm7420.dtsi
-+++ b/arch/mips/boot/dts/brcm/bcm7420.dtsi
-@@ -214,6 +214,13 @@
- 			status = "disabled";
- 		};
+ 	};
  
-+		watchdog: watchdog@4067e8 {
-+			clocks = <&upg_clk>;
-+			compatible = "brcm,bcm7038-wdt";
-+			reg = <0x4067e8 0x14>;
-+			status = "disabled";
-+		};
-+
- 		upg_gio: gpio@406700 {
- 			compatible = "brcm,brcmstb-gpio";
- 			reg = <0x406700 0x80>;
+ 	memory_controllers {
 diff --git a/arch/mips/boot/dts/brcm/bcm7425.dtsi b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-index 23479f988aa5..410e61ebaf9e 100644
+index 6cb535235efa..23479f988aa5 100644
 --- a/arch/mips/boot/dts/brcm/bcm7425.dtsi
 +++ b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-@@ -232,6 +232,13 @@
+@@ -505,6 +505,16 @@
+ 			interrupt-names = "mspi_done";
  			status = "disabled";
  		};
- 
-+		watchdog: watchdog@4067e8 {
++
++		waketimer: waketimer@409580 {
++			compatible = "brcm,brcmstb-waketimer";
++			reg = <0x409580 0x14>;
++			interrupts = <0x3>;
++			interrupt-parent = <&aon_pm_l2_intc>;
++			interrupt-names = "timer";
 +			clocks = <&upg_clk>;
-+			compatible = "brcm,bcm7038-wdt";
-+			reg = <0x4067e8 0x14>;
 +			status = "disabled";
 +		};
-+
- 		aon_pm_l2_intc: interrupt-controller@408440 {
- 			compatible = "brcm,l2-intc";
- 			reg = <0x408440 0x30>;
+ 	};
+ 
+ 	memory_controllers {
 diff --git a/arch/mips/boot/dts/brcm/bcm7435.dtsi b/arch/mips/boot/dts/brcm/bcm7435.dtsi
-index af75b0123c06..8398b7f68bf4 100644
+index 1e0545c7f5b7..af75b0123c06 100644
 --- a/arch/mips/boot/dts/brcm/bcm7435.dtsi
 +++ b/arch/mips/boot/dts/brcm/bcm7435.dtsi
-@@ -247,6 +247,13 @@
+@@ -520,6 +520,16 @@
+ 			interrupt-names = "mspi_done";
  			status = "disabled";
  		};
- 
-+		watchdog: watchdog@4067e8 {
++
++		waketimer: waketimer@409580 {
++			compatible = "brcm,brcmstb-waketimer";
++			reg = <0x409580 0x14>;
++			interrupts = <0x3>;
++			interrupt-parent = <&aon_pm_l2_intc>;
++			interrupt-names = "timer";
 +			clocks = <&upg_clk>;
-+			compatible = "brcm,bcm7038-wdt";
-+			reg = <0x4067e8 0x14>;
 +			status = "disabled";
 +		};
-+
- 		aon_pm_l2_intc: interrupt-controller@408440 {
- 			compatible = "brcm,l2-intc";
- 			reg = <0x408440 0x30>;
-diff --git a/arch/mips/boot/dts/brcm/bcm97125cbmb.dts b/arch/mips/boot/dts/brcm/bcm97125cbmb.dts
-index 7f59ea2ded6c..79e9769f7e00 100644
---- a/arch/mips/boot/dts/brcm/bcm97125cbmb.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97125cbmb.dts
-@@ -50,6 +50,10 @@
- 	status = "okay";
- };
+ 	};
  
-+&watchdog {
-+	status = "okay";
-+};
-+
- /* FIXME: USB is wonky; disable it for now */
- &ehci0 {
- 	status = "disabled";
+ 	memory_controllers {
 diff --git a/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts b/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
-index b50dbb3cbeee..28370ff77eeb 100644
+index 9e7d5228f2b7..b50dbb3cbeee 100644
 --- a/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
 +++ b/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
-@@ -59,6 +59,10 @@
+@@ -114,3 +114,7 @@
+ &mspi {
  	status = "okay";
  };
- 
-+&watchdog {
++
++&waketimer {
 +	status = "okay";
 +};
-+
- &enet0 {
- 	status = "okay";
- };
 diff --git a/arch/mips/boot/dts/brcm/bcm97358svmb.dts b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
-index 2986ce353e57..41c1b510c230 100644
+index 708207a0002d..2986ce353e57 100644
 --- a/arch/mips/boot/dts/brcm/bcm97358svmb.dts
 +++ b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
-@@ -55,6 +55,10 @@
+@@ -106,3 +106,7 @@
+ &mspi {
  	status = "okay";
  };
- 
-+&watchdog {
++
++&waketimer {
 +	status = "okay";
 +};
-+
- &enet0 {
- 	status = "okay";
- };
 diff --git a/arch/mips/boot/dts/brcm/bcm97360svmb.dts b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-index 8d48ae317b8c..9f6c6c9b7ea7 100644
+index 73c6dc9c8c6d..8d48ae317b8c 100644
 --- a/arch/mips/boot/dts/brcm/bcm97360svmb.dts
 +++ b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-@@ -50,6 +50,10 @@
+@@ -109,3 +109,7 @@
+ &mspi {
  	status = "okay";
  };
- 
-+&watchdog {
++
++&waketimer {
 +	status = "okay";
 +};
-+
- &enet0 {
- 	status = "okay";
- };
 diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-index 4a1d0631e9e6..df8b755c390f 100644
+index 37bacfdcf9d9..4a1d0631e9e6 100644
 --- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
 +++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-@@ -47,6 +47,10 @@
+@@ -78,3 +78,7 @@
+ &mspi {
  	status = "okay";
  };
- 
-+&watchdog {
++
++&waketimer {
 +	status = "okay";
 +};
-+
- &enet0 {
- 	status = "okay";
- };
-diff --git a/arch/mips/boot/dts/brcm/bcm97420c.dts b/arch/mips/boot/dts/brcm/bcm97420c.dts
-index f96241e94874..086faeaa384a 100644
---- a/arch/mips/boot/dts/brcm/bcm97420c.dts
-+++ b/arch/mips/boot/dts/brcm/bcm97420c.dts
-@@ -60,6 +60,10 @@
- 	status = "okay";
- };
- 
-+&watchdog {
-+	status = "okay";
-+};
-+
- /* FIXME: MAC driver comes up but cannot attach to PHY */
- &enet0 {
- 	status = "disabled";
 diff --git a/arch/mips/boot/dts/brcm/bcm97425svmb.dts b/arch/mips/boot/dts/brcm/bcm97425svmb.dts
-index 488e12a9e4aa..0ed22217bf3a 100644
+index ce762c7b2e54..488e12a9e4aa 100644
 --- a/arch/mips/boot/dts/brcm/bcm97425svmb.dts
 +++ b/arch/mips/boot/dts/brcm/bcm97425svmb.dts
-@@ -61,6 +61,10 @@
+@@ -144,3 +144,7 @@
+ &mspi {
  	status = "okay";
  };
- 
-+&watchdog {
++
++&waketimer {
 +	status = "okay";
 +};
-+
- &enet0 {
- 	status = "okay";
- };
 diff --git a/arch/mips/boot/dts/brcm/bcm97435svmb.dts b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
-index e14337cc51fd..2c145a883aef 100644
+index d4dd31a543fd..e14337cc51fd 100644
 --- a/arch/mips/boot/dts/brcm/bcm97435svmb.dts
 +++ b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
-@@ -61,6 +61,10 @@
+@@ -120,3 +120,7 @@
+ &mspi {
  	status = "okay";
  };
- 
-+&watchdog {
++
++&waketimer {
 +	status = "okay";
 +};
-+
- &enet0 {
- 	status = "okay";
- };
 -- 
 2.15.0
 
