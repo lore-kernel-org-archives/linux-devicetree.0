@@ -1,75 +1,73 @@
-From: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Subject: Re: [PATCH v2] dt-bindings: mtd: Add sst25vf016b to the list of
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH v2] dt-bindings: mtd: Add sst25vf016b to the list of
  supported chip names
-Date: Fri, 17 Nov 2017 18:36:40 +0100
-Message-ID: <658ceb2b-5d2b-9349-f140-27858459e5a8@wedev4u.fr>
+Date: Fri, 17 Nov 2017 17:40:38 +0000
+Message-ID: <TY1PR06MB0895AE979956C2B4EB2D47FAC02F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
 References: <1505118928-3987-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1508853032-25229-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <658ceb2b-5d2b-9349-f140-27858459e5a8@wedev4u.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1508853032-25229-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <658ceb2b-5d2b-9349-f140-27858459e5a8-yU5RGvR974pGWvitb5QawA@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, linux-kernel@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>, linux-mtd@lists.infradead.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
-
-sorry but I won't apply this patch.
-
-New values for the 'compatible' DT properties should only be added for
-memory parts not supporting the JEDEC READ ID (0x9F) command.
-
-SST25 memories do support this command hence should use the "jedec,spi-nor"
-value alone. For historical reasons, some DT nodes set their 'compatible'
-string to something like "<vendor>,<model>", "jedec,spi-nor".
-It should work as expected in most case however I discourage from doing so
-in new device trees because it may have some side effects especially when
-the m25p80.c driver is used between the spi-nor.c driver and the SPI
-controller driver.
-
-It's all about setting the 2nd parameter of spi_nor_scan(), the 'name'
-parameter, as NULL when possible. This parameter should be set to a non NULL
-value only for memories not supporting the JEDEC READ ID op code (0x9F).
-
-Best regards,
-
-Cyrille
-
-Le 24/10/2017 à 15:50, Fabrizio Castro a écrit :
-> There are a few DT files that make use of sst25vf016b in their
-> compatible strings, and the driver supports this chip already.
-> This patch improves the documentation and therefore the result
-> of ./scripts/checkpatch.pl.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Thank you Rob, thank you Geert, and sorry for the delay on this one.
-> Here is v2.
-> 
-> Changes in v2:
-> * fixed subject prefix
-> * added changelog
-> 
->  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> index 4cab5d8..bf56d77 100644
-> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> @@ -31,6 +31,7 @@ Required properties:
->                   s25sl12801
->                   s25fl008k
->                   s25fl064k
-> +                 sst25vf016b
->                   sst25vf040b
->                   sst25wf040b
->                   m25p40
-> 
+SGVsbG8gQ3lyaWxsZSwNCg0KaXQncyBvaywgdGhhbmsgeW91IGZvciB0aGUgZmVlZGJhY2suDQoN
+CkJlc3QgcmVnYXJkcywNCkZhYg0KDQo+IEhpIEZhYnJpemlvLA0KPg0KPiBzb3JyeSBidXQgSSB3
+b24ndCBhcHBseSB0aGlzIHBhdGNoLg0KPg0KPiBOZXcgdmFsdWVzIGZvciB0aGUgJ2NvbXBhdGli
+bGUnIERUIHByb3BlcnRpZXMgc2hvdWxkIG9ubHkgYmUgYWRkZWQgZm9yDQo+IG1lbW9yeSBwYXJ0
+cyBub3Qgc3VwcG9ydGluZyB0aGUgSkVERUMgUkVBRCBJRCAoMHg5RikgY29tbWFuZC4NCj4NCj4g
+U1NUMjUgbWVtb3JpZXMgZG8gc3VwcG9ydCB0aGlzIGNvbW1hbmQgaGVuY2Ugc2hvdWxkIHVzZSB0
+aGUgImplZGVjLHNwaS1ub3IiDQo+IHZhbHVlIGFsb25lLiBGb3IgaGlzdG9yaWNhbCByZWFzb25z
+LCBzb21lIERUIG5vZGVzIHNldCB0aGVpciAnY29tcGF0aWJsZScNCj4gc3RyaW5nIHRvIHNvbWV0
+aGluZyBsaWtlICI8dmVuZG9yPiw8bW9kZWw+IiwgImplZGVjLHNwaS1ub3IiLg0KPiBJdCBzaG91
+bGQgd29yayBhcyBleHBlY3RlZCBpbiBtb3N0IGNhc2UgaG93ZXZlciBJIGRpc2NvdXJhZ2UgZnJv
+bSBkb2luZyBzbw0KPiBpbiBuZXcgZGV2aWNlIHRyZWVzIGJlY2F1c2UgaXQgbWF5IGhhdmUgc29t
+ZSBzaWRlIGVmZmVjdHMgZXNwZWNpYWxseSB3aGVuDQo+IHRoZSBtMjVwODAuYyBkcml2ZXIgaXMg
+dXNlZCBiZXR3ZWVuIHRoZSBzcGktbm9yLmMgZHJpdmVyIGFuZCB0aGUgU1BJDQo+IGNvbnRyb2xs
+ZXIgZHJpdmVyLg0KPg0KPiBJdCdzIGFsbCBhYm91dCBzZXR0aW5nIHRoZSAybmQgcGFyYW1ldGVy
+IG9mIHNwaV9ub3Jfc2NhbigpLCB0aGUgJ25hbWUnDQo+IHBhcmFtZXRlciwgYXMgTlVMTCB3aGVu
+IHBvc3NpYmxlLiBUaGlzIHBhcmFtZXRlciBzaG91bGQgYmUgc2V0IHRvIGEgbm9uIE5VTEwNCj4g
+dmFsdWUgb25seSBmb3IgbWVtb3JpZXMgbm90IHN1cHBvcnRpbmcgdGhlIEpFREVDIFJFQUQgSUQg
+b3AgY29kZSAoMHg5RikuDQo+DQo+IEJlc3QgcmVnYXJkcywNCj4NCj4gQ3lyaWxsZQ0KPg0KPiBM
+ZSAyNC8xMC8yMDE3IMOgIDE1OjUwLCBGYWJyaXppbyBDYXN0cm8gYSDDqWNyaXQgOg0KPiA+IFRo
+ZXJlIGFyZSBhIGZldyBEVCBmaWxlcyB0aGF0IG1ha2UgdXNlIG9mIHNzdDI1dmYwMTZiIGluIHRo
+ZWlyDQo+ID4gY29tcGF0aWJsZSBzdHJpbmdzLCBhbmQgdGhlIGRyaXZlciBzdXBwb3J0cyB0aGlz
+IGNoaXAgYWxyZWFkeS4NCj4gPiBUaGlzIHBhdGNoIGltcHJvdmVzIHRoZSBkb2N1bWVudGF0aW9u
+IGFuZCB0aGVyZWZvcmUgdGhlIHJlc3VsdA0KPiA+IG9mIC4vc2NyaXB0cy9jaGVja3BhdGNoLnBs
+Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0
+cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGF0ZXJzb24gPENo
+cmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT4NCj4gPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4NCj4gPiBBY2tlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCty
+ZW5lc2FzQGdsaWRlci5iZT4NCj4gPiAtLS0NCj4gPiBUaGFuayB5b3UgUm9iLCB0aGFuayB5b3Ug
+R2VlcnQsIGFuZCBzb3JyeSBmb3IgdGhlIGRlbGF5IG9uIHRoaXMgb25lLg0KPiA+IEhlcmUgaXMg
+djIuDQo+ID4NCj4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+ICogZml4ZWQgc3ViamVjdCBwcmVmaXgN
+Cj4gPiAqIGFkZGVkIGNoYW5nZWxvZw0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQgfCAxICsNCj4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9qZWRlYyxzcGktbm9yLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvamVkZWMsc3BpLQ0KPiBub3IudHh0DQo+ID4gaW5kZXgg
+NGNhYjVkOC4uYmY1NmQ3NyAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbXRkL2plZGVjLHNwaS1ub3IudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9qZWRlYyxzcGktbm9yLnR4dA0KPiA+IEBAIC0zMSw2
+ICszMSw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gICAgICAgICAgICAgICAgICAgczI1
+c2wxMjgwMQ0KPiA+ICAgICAgICAgICAgICAgICAgIHMyNWZsMDA4aw0KPiA+ICAgICAgICAgICAg
+ICAgICAgIHMyNWZsMDY0aw0KPiA+ICsgICAgICAgICAgICAgICAgIHNzdDI1dmYwMTZiDQo+ID4g
+ICAgICAgICAgICAgICAgICAgc3N0MjV2ZjA0MGINCj4gPiAgICAgICAgICAgICAgICAgICBzc3Qy
+NXdmMDQwYg0KPiA+ICAgICAgICAgICAgICAgICAgIG0yNXA0MA0KPiA+DQo+DQo+IC0tDQo+IFRv
+IHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBk
+ZXZpY2V0cmVlIiBpbg0KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIu
+a2VybmVsLm9yZw0KPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwu
+b3JnL21ham9yZG9tby1pbmZvLmh0bWwNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3Bl
+IEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hh
+bXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIg
+UmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
