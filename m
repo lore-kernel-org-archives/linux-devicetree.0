@@ -1,85 +1,52 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V1 1/4] qcom: spmi-wled: Add support for qcom wled driver
-Date: Thu, 16 Nov 2017 22:56:40 -0800
-Message-ID: <20171117065640.GU28761@minitux>
-References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
- <1510834717-21765-2-git-send-email-kgunda@codeaurora.org>
- <20171116165510.GP28761@minitux>
- <208c7332234581909f159ddb33ede32b@codeaurora.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v7 05/13] slimbus: core: add support to
+ device tree helper
+Date: Fri, 17 Nov 2017 12:41:05 +0530
+Message-ID: <20171117071104.GL3187@localhost>
+References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-6-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <208c7332234581909f159ddb33ede32b@codeaurora.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: kgunda@codeaurora.org
-Cc: linux-arm-msm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+In-Reply-To: <20171115141043.29202-6-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 16 Nov 22:36 PST 2017, kgunda@codeaurora.org wrote:
+On Wed, Nov 15, 2017 at 02:10:35PM +0000, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> +
+> +	for_each_child_of_node(ctrl->dev->of_node, node) {
+> +		struct slim_device *sbdev;
+> +		struct slim_eaddr e_addr;
+> +		const char *compat = NULL;
+> +		int reg[2], ret;
+> +		int manf_id, prod_code;
+> +
+> +		compat = of_get_property(node, "compatible", NULL);
+> +		if (!compat)
+> +			continue;
+> +
+> +		ret = sscanf(compat, "slim%x,%x", &manf_id, &prod_code);
+> +		if (ret != 2) {
+> +			dev_err(dev, "Manf ID & Product code not found %s\n",
+> +				compat);
+> +			continue;
+> +		}
 
-> On 2017-11-16 22:25, Bjorn Andersson wrote:
-> > On Thu 16 Nov 04:18 PST 2017, Kiran Gunda wrote:
-> > 
-> > > WLED driver provides the interface to the display driver to
-> > > adjust the brightness of the display backlight.
-> > > 
-> > 
-> > Hi Kiran,
-> > 
-> > This driver has a lot in common with the already upstream pm8941-wled.c,
-> > because it's just a new revision of the same block.
-> > 
-> > Please extend the existing driver rather than providing a new one
-> > (and yes, renaming the file is okay).
-> > 
-> > Regards,
-> > Bjorn
-> 
-> Hi Bjorn,
-> 
-> Yes this driver design is similar to pm8941, however the WLED HW block
-> has undergone quite a few changes in analog and digital from PM8941 to
-> PM8998.
+can we do xxx_property_read_u32() on compat and then use bit manupliations
+to get ids rather than scanf.
 
-I can see that, looking at the documentation.
+> +
+> +		ret = of_property_read_u32_array(node, "reg", reg, 2);
 
-> Few of them include splitting one module into wled-ctrl and wled-sink
-> peripherals, changes in the register offsets and the bit
-> interpretation.
+I typically prefer using device_property_read_u32() but then this is of_
+code so I will leave this upto you...
 
-This is typical and something we need to handle in all these drivers, to
-avoid having one driver per platform.
-
-> Hence we concluded that it was better to have a new driver to support
-> this new gen WELD module and decouple it from the pm8941.
-
-Okay, I can see how it's easier to not have to case about anything but
-pmi8998 in this driver, but where do you add the support for other WLED
-versions? What about PMI8994? Will there not be similar differences
-(registers that has moved around) in the future?
-
-> Also, going forward this driver will support AMOLED AVDD rail (not
-> supported by pm8941) touching a few more registers/configuration and
-> newer PMICs.
-
-Is this a feature that was introduced in PMI8998? Will this support not
-be dependent on the pmic version?
-
-> So spinning off a new driver would make it cleaner and easier to
-> extend further.
-> 
-
-It's for sure easier at this point in time, but your argumentation
-implies that PMI8998+1 should go into it's own driver as well.
-
-I suspect that if you're going to reuse this driver for future PMIC
-versions you will have to deal with register layout differences and new
-feature set, and as such I'm not convinced that a new driver is needed.
-
-
-Can you give any concrete examples of where it is not possible or
-undesirable to maintain the pm8941 support in the same driver?
-
-Regards,
-Bjorn
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
