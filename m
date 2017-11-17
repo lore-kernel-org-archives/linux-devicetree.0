@@ -1,7 +1,7 @@
 From: Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v3 1/3] dt-bindings: clk: Hi3660: Document stub clock
-Date: Fri, 17 Nov 2017 17:27:30 +0800
-Message-ID: <1510910852-2175-2-git-send-email-xuyiping@hisilicon.com>
+Subject: [PATCH v3 3/3] arm64: dts: Hi3660: Add binding for stub clock
+Date: Fri, 17 Nov 2017 17:27:32 +0800
+Message-ID: <1510910852-2175-4-git-send-email-xuyiping@hisilicon.com>
 References: <1510910852-2175-1-git-send-email-xuyiping@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,57 +12,37 @@ To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+
 Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuezhiliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 
-Document the DT binding for stub clock which is used for CPU,
-GPU and DDR frequency scaling.
+Add DT binding for Hi3660 stub clock driver.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Kai Zhao <zhaokai1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Tao Wang <kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Ruyi Wang <wangruyi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/hi3660-clock.txt | 6 ++++++
- include/dt-bindings/clock/hi3660-clock.h                 | 7 +++++++
- 2 files changed, 13 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/hi3660-clock.txt b/Documentation/devicetree/bindings/clock/hi3660-clock.txt
-index 0035a7e..946da7c 100644
---- a/Documentation/devicetree/bindings/clock/hi3660-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/hi3660-clock.txt
-@@ -13,12 +13,18 @@ Required Properties:
- 	- "hisilicon,hi3660-pmuctrl"
- 	- "hisilicon,hi3660-sctrl"
- 	- "hisilicon,hi3660-iomcu"
-+	- "hisilicon,hi3660-stub-clk"
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 451b6bf..cbbc7f1 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -293,6 +293,13 @@
+ 			#mbox-cells = <3>;
+ 		};
  
- - reg: physical base address of the controller and length of memory mapped
-   region.
- 
- - #clock-cells: should be 1.
- 
-+Optional Properties:
++		stub_clock: stub_clock@e896b500 {
++			compatible = "hisilicon,hi3660-stub-clk";
++			reg = <0x0 0xe896b500 0x0 0x0100>;
++			#clock-cells = <1>;
++			mboxes = <&mailbox 13 3 0>;
++		};
 +
-+- mboxes: Phandle to the mailbox for sending message to MCU.
-+            (See: ../mailbox/hisilicon,hi3660-mailbox.txt for more info)
-+
- Each clock is assigned an identifier and client nodes use this identifier
- to specify the clock which they consume.
- 
-diff --git a/include/dt-bindings/clock/hi3660-clock.h b/include/dt-bindings/clock/hi3660-clock.h
-index adb768d..75d583e 100644
---- a/include/dt-bindings/clock/hi3660-clock.h
-+++ b/include/dt-bindings/clock/hi3660-clock.h
-@@ -208,4 +208,11 @@
- #define HI3660_CLK_I2C6_IOMCU		3
- #define HI3660_CLK_IOMCU_PERI0		4
- 
-+/* clk in stub clock */
-+#define HI3660_CLK_STUB_CLUSTER0	0
-+#define HI3660_CLK_STUB_CLUSTER1	1
-+#define HI3660_CLK_STUB_GPU		2
-+#define HI3660_CLK_STUB_DDR		3
-+#define HI3660_CLK_STUB_NUM		4
-+
- #endif	/* __DTS_HI3660_CLOCK_H */
+ 		dual_timer0: timer@fff14000 {
+ 			compatible = "arm,sp804", "arm,primecell";
+ 			reg = <0x0 0xfff14000 0x0 0x1000>;
 -- 
 1.9.1
 
