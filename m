@@ -1,61 +1,32 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 6/7] can: rcar_can: document r8a77995 (R-Car D3)
- compatibility strings
-Date: Fri, 17 Nov 2017 07:39:01 -0800
-Message-ID: <20171117153900.7is6baf4wtb4acly@verge.net.au>
-References: <1510915289-15059-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1510915289-15059-7-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77970: add GPIO support
+Date: Fri, 17 Nov 2017 19:11:18 +0300
+Message-ID: <e64bc97b-28b2-a8b5-cde7-804f1a3e24f7@cogentembedded.com>
+References: <20171113213149.295833059@cogentembedded.com>
+ <CAMuHMdX9n6U8vP0NWRW0hFZqLQbMKvcf4U1HZkP4nJdaS4-qNg@mail.gmail.com>
+ <20171117141950.r6vzq6ndapopfidr@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1510915289-15059-7-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, geert@linux-m68k.org, magnus.damm@gmail.com, chris.paterson2@renesas.com, ramesh.shanmugasundaram@bp.renesas.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171117141950.r6vzq6ndapopfidr@verge.net.au>
+Content-Language: en-MW
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 17, 2017 at 11:41:28AM +0100, Ulrich Hecht wrote:
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> ---
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> index 06bb7cc..f7d0358 100644
-> --- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> +++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> @@ -11,6 +11,7 @@ Required properties:
->  	      "renesas,can-r8a7794" if CAN controller is a part of R8A7794 SoC.
->  	      "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
->  	      "renesas,can-r8a7796" if CAN controller is a part of R8A7796 SoC.
-> +	      "renesas,can-r8a77995" if CAN controller is a part of R8A77995 SoC.
->  	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
->  	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 compatible device.
->  	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device.
-> @@ -25,12 +26,12 @@ Required properties:
->  - pinctrl-0: pin control group to be used for this controller.
->  - pinctrl-names: must be "default".
->  
-> -Required properties for "renesas,can-r8a7795" and "renesas,can-r8a7796"
-> -compatible:
-> -In R8A7795 and R8A7796 SoCs, "clkp2" can be CANFD clock. This is a div6 clock
-> -and can be used by both CAN and CAN FD controller at the same time. It needs to
-> -be scaled to maximum frequency if any of these controllers use it. This is done
-> -using the below properties:
-> +Required properties for "renesas,can-r8a7795", "renesas,can-r8a7796" and
-> +"renesas,can-r8a77995" compatible:
+On 11/17/2017 05:19 PM, Simon Horman wrote:
 
-Not strictly related to this patch, but aren't these requirements also
-applicable to "renesas,rcar-gen3-can"?
-
-> +In R8A7795, R8A7796 and R8A77995 SoCs, "clkp2" can be CANFD clock. This is a
-> +div6 clock and can be used by both CAN and CAN FD controller at the same
-> +time. It needs to be scaled to maximum frequency if any of these
-> +controllers use it. This is done using the below properties:
->  
->  - assigned-clocks: phandle of clkp2(CANFD) clock.
->  - assigned-clock-rates: maximum frequency of this clock.
-> -- 
-> 2.7.4
+>>> Describe all 6 GPIO controllers in the R8A77970 device tree.
+>>>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
+> Thanks, applied.
+
+    It doesn't build w/o PFC support (and I thought I mde it clearin the cover 
+letter), so please either merge R8A77970 PFC patch or pull this one out!
+
+MBR, Segei
