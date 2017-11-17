@@ -1,316 +1,132 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 2/3] arm: dts: add Nuvoton NPCM750 device tree
-Date: Thu, 16 Nov 2017 18:50:42 -0800
-Message-ID: <CAFd5g46oNwegWc+rDzqXjwT2OezxqJRAkoMK2=9JdP7Gp8Tbqg@mail.gmail.com>
-References: <20171019225050.25410-1-brendanhiggins@google.com>
- <20171019225050.25410-3-brendanhiggins@google.com> <CAL_JsqJGe85FAOQwt=zJ5jOBoT-F1itnK6kmc9k34FJu=3Z=bg@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Decompiled vs *tmp extended device tree
+Date: Thu, 16 Nov 2017 22:34:04 -0500
+Message-ID: <7861cc51-29cb-1fa5-e6b1-f403c66736a4@gmail.com>
+References: <CAOT_U5bV1cWsXa-d7A5sbd0e+UuhD6NmwsmyjrQcuWceqtus_A@mail.gmail.com>
+ <20171116165212.4caconxbvfrmbs4n@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJGe85FAOQwt=zJ5jOBoT-F1itnK6kmc9k34FJu=3Z=bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20171116165212.4caconxbvfrmbs4n@rob-hp-laptop>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Martinovic <alan.martinovic-+NedCK/4fiIAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry for the delay. I thought all of the comments were straightforward, but
-there are a couple which need some further discussion.
-
-On Fri, Oct 20, 2017 at 12:45 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Oct 19, 2017 at 5:50 PM, Brendan Higgins
-> <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
->> Add a common device tree for all Nuvoton NPCM750 BMCs and a board
->> specific device tree for the NPCM750 (Poleg) evaluation board.
+On 11/16/17 11:52, Rob Herring wrote:
+> On Thu, Nov 16, 2017 at 01:12:55PM +0100, Alan Martinovic wrote:
+>> Hi,
+>> I'm trying to modify a device tree to enable support of the second UART.
+>> The actual device tree which is used for the example:
 >>
->> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Reviewed-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
->> Tested-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Tested-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->
-> [...]
->
->> diff --git a/arch/arm/boot/dts/nuvoton-npcm750.dtsi b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
->> new file mode 100644
->> index 000000000000..85506b3cdd39
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/nuvoton-npcm750.dtsi
->> @@ -0,0 +1,198 @@
->> +/*
->> + * DTSi file for the NPCM750 SoC
->> + *
->> + * Copyright 2012 Tomer Maimon <tomer.maimon-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org>
->> + *
->> + * The code contained herein is licensed under the GNU General Public
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
->> +
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/clock/nuvoton,npcm7xx-clks.h>
->> +
->> +/ {
->> +       #address-cells = <1>;
->> +       #size-cells = <1>;
->> +       interrupt-parent = <&gic>;
->> +
->> +       cpus {
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +               enable-method = "nuvoton,npcm7xx-smp";
->> +
->> +               cpu@0 {
->> +                       device_type = "cpu";
->> +                       compatible = "arm,cortex-a9";
->> +                       clocks = <&clk NPCM7XX_CLK_CPU>;
->> +                       clock-names = "clk_cpu";
->> +                       reg = <0>;
->> +                       next-level-cache = <&l2>;
->> +               };
->> +
->> +               cpu@1 {
->> +                       device_type = "cpu";
->> +                       compatible = "arm,cortex-a9";
->> +                       clocks = <&clk NPCM7XX_CLK_CPU>;
->> +                       clock-names = "clk_cpu";
->> +                       reg = <1>;
->> +                       next-level-cache = <&l2>;
->> +               };
->> +       };
->> +
->> +/* external clock signal rg1refck, supplied by the phy */
->> +clk-rg1refck {
->> +       compatible = "fixed-clock";
->> +       #clock-cells = <0>;
->> +       clock-frequency = <125000000>;
->> +};
->> +
->> +/* external clock signal rg2refck, supplied by the phy */
->> +clk-rg2refck {
->> +       compatible = "fixed-clock";
->> +       #clock-cells = <0>;
->> +       clock-frequency = <125000000>;
->> +};
->> +
->> +clk-xin {
->> +       compatible = "fixed-clock";
->> +       #clock-cells = <0>;
->> +       clock-frequency = <50000000>;
->> +};
->> +
->> +       soc {
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               compatible = "simple-bus";
->> +               interrupt-parent = <&gic>;
->> +               ranges = <0x0 0xf0000000 0x00900000>;
->> +
->> +               gcr: gcr@f0800000 {
->
-> Should be gcr@800000. Build the dtb with W=1 and it will give you
-> warnings for this.
->
->> +                       compatible = "nuvoton,npcm750-gcr", "syscon",
->> +                               "simple-mfd";
->> +                       reg = <0x800000 0x1000>;
->> +               };
->> +
->> +               scu: scu@f03fe000 {
->> +                       compatible = "arm,cortex-a9-scu";
->> +                       reg = <0x3fe000 0x1000>;
->> +               };
->> +
->> +               l2: cache-controller@f03fc000 {
->> +                       compatible = "arm,pl310-cache";
->> +                       reg = <0x3fc000 0x1000>;
->> +                       interrupts = <0 21 4>;
->> +                       cache-unified;
->> +                       cache-level = <2>;
->> +                       clocks = <&clk NPCM7XX_CLK_AXI>;
->> +               };
->> +
->> +               gic: interrupt-controller@f03ff000 {
->> +                       compatible = "arm,cortex-a9-gic";
->> +                       interrupt-controller;
->> +                       #interrupt-cells = <3>;
->> +                       reg = <0x3ff000 0x1000>,
->> +                           <0x3fe100 0x100>;
->> +               };
->> +
->> +               timer@f03fe600 {
->> +                       compatible = "arm,cortex-a9-twd-timer";
->> +                       reg = <0x3fe600 0x20>;
->> +                       interrupts = <1 13 0x304>;
->> +                       clocks = <&clk NPCM7XX_CLK_TIMER>;
->> +               };
->> +       };
->> +
->> +       ahb {
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               compatible = "simple-bus";
->> +               interrupt-parent = <&gic>;
->> +               ranges = <0x80000000 0x80000000 0x40010000
->> +                         0xe0800000 0xe0800000 0x0f800000
->> +                         0x00000000 0xf0000000 0x00900000
->> +                         0xf8000000 0xf8000000 0x02000000
->> +                         0xfb000000 0xfb000000 0x00002000>;
->
-> Just do "ranges;" here if all the translation is at the next level down.
-
-Actually we do have some peripherals that sit directly on the AHB, they
-just have not had their DTS nodes written yet. I counted at least 6
-devices which probably won't get a sub-memory space.
-
->
-> Sorry, it's hard to say exactly what to do without knowing the whole memory map.
-
-No problem. Let me see if I can get it for you.
-
->
->> +
->> +               clk: clock-controller@f0801000 {
->
-> Seems like this belongs under /soc based on the address.
-
-No, the AHB memory space is discontiguous. The "Cortex A9 Included" space
-(/soc here) sits in one of the discontinuities.
-
->
->> +                       compatible = "nuvoton,npcm750-clk";
->> +                       #clock-cells = <1>;
->> +                       reg = <0x801000 0x1000>;
->> +                       status = "okay";
->> +               };
->> +
->> +               apb {
->> +                       #address-cells = <1>;
->> +                       #size-cells = <1>;
->> +                       compatible = "simple-bus";
->> +                       interrupt-parent = <&gic>;
->> +                       ranges = <0x0 0x0 0x00300000>;
->
-> And then this would be "<0x0 0xf0000000 0x300000>".
->
->> +
->> +                       timer0: timer@f0000000 {
->> +                               compatible = "nuvoton,npcm750-timer";
->> +                               interrupts = <0 32 4>;
->> +                               reg = <0x0 0x1000>;
->> +                               clocks = <&clk NPCM7XX_CLK_TIMER>;
->> +                       };
->> +
->> +                       watchdog0: watchdog@f0008000 {
->> +                               compatible = "nuvoton,npcm750-wdt";
->> +                               interrupts = <0 47 4>;
->> +                               reg = <0x8000 0x1000>;
->> +                               status = "disabled";
->> +                               clocks = <&clk NPCM7XX_CLK_TIMER>;
->> +                       };
->> +
->> +                       watchdog1: watchdog@f0009000 {
->> +                               compatible = "nuvoton,npcm750-wdt";
->> +                               interrupts = <0 48 4>;
->> +                               reg = <0x9000 0x1000>;
->> +                               status = "disabled";
->> +                               clocks = <&clk NPCM7XX_CLK_TIMER>;
->> +                       };
->> +
->> +                       watchdog2: watchdog@f000a000 {
->> +                               compatible = "nuvoton,npcm750-wdt";
->> +                               interrupts = <0 49 4>;
->> +                               reg = <0xa000 0x1000>;
->> +                               status = "disabled";
->> +                               clocks = <&clk NPCM7XX_CLK_TIMER>;
->> +                       };
->> +
->> +                       serial0: serial@f0001000 {
->> +                               compatible = "nuvoton,npcm750-uart";
->> +                               reg = <0x1000 0x1000>;
->> +                               clocks = <&clk NPCM7XX_CLK_UART_CORE>;
->> +                               interrupts = <0 2 4>;
->> +                               status = "disabled";
->> +                       };
->> +
->> +                       serial1: serial@f0002000 {
->> +                               compatible = "nuvoton,npcm750-uart";
->> +                               reg = <0x2000 0x1000>;
->> +                               clocks = <&clk NPCM7XX_CLK_UART_CORE>;
->> +                               interrupts = <0 3 4>;
->> +                               status = "disabled";
->> +                       };
->> +
->> +                       serial2: serial@f0003000 {
->> +                               compatible = "nuvoton,npcm750-uart";
->> +                               reg = <0x3000 0x1000>;
->> +                               clocks = <&clk NPCM7XX_CLK_UART_CORE>;
->> +                               interrupts = <0 4 4>;
->> +                               status = "disabled";
->> +                       };
->> +
->> +                       serial3: serial@f0004000 {
->> +                               compatible = "nuvoton,npcm750-uart";
->> +                               reg = <0x4000 0x1000>;
->> +                               clocks = <&clk NPCM7XX_CLK_UART_CORE>;
->> +                               interrupts = <0 5 4>;
->> +                               status = "disabled";
->> +                       };
->> +               };
->> +       };
->> +};
->> diff --git a/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h b/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
->> new file mode 100644
->> index 000000000000..c69d3bbf7e42
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
->> @@ -0,0 +1,39 @@
->> +/*
->> + * Copyright (C) 2016 Nuvoton Technologies,  tali.perry-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org
->> + *
->> + * This software is licensed under the terms of the GNU General Public
->> + * License version 2, as published by the Free Software Foundation, and
->> + * may be copied, distributed, and modified under those terms.
->> + */
->> +
->> +#ifndef _DT_BINDINGS_CLK_NPCM7XX_H
->> +#define _DT_BINDINGS_CLK_NPCM7XX_H
->> +
->> +#define NPCM7XX_CLK_PLL0       0
->> +#define NPCM7XX_CLK_PLL1       1
->> +#define NPCM7XX_CLK_PLL2       2
->> +#define NPCM7XX_CLK_GFX                3
->> +#define NPCM7XX_CLK_APB1       4
->> +#define NPCM7XX_CLK_APB2       5
->> +#define NPCM7XX_CLK_APB3       6
->> +#define NPCM7XX_CLK_APB4       7
->> +#define NPCM7XX_CLK_APB5       8
->> +#define NPCM7XX_CLK_MC         9
->> +#define NPCM7XX_CLK_CPU                10
->> +#define NPCM7XX_CLK_SPI0       11
->> +#define NPCM7XX_CLK_SPI3       12
->> +#define NPCM7XX_CLK_SPIX       13
->> +#define NPCM7XX_CLK_UART_CORE  14
->> +#define NPCM7XX_CLK_TIMER      15
->> +#define NPCM7XX_CLK_HOST_UART  16
->> +#define NPCM7XX_CLK_MMC                17
->> +#define NPCM7XX_CLK_SDHC       18
->> +#define NPCM7XX_CLK_ADC                19
->> +#define NPCM7XX_CLK_GFX_MEM    20
->> +#define NPCM7XX_CLK_USB_BRIDGE 21
->> +#define NPCM7XX_CLK_AXI                22
->> +#define NPCM7XX_CLK_AHB                23
->> +#define NPCM7XX_CLK_EMC                24
->> +#define NPCM7XX_CLK_GMAC       25
->> +
->> +#endif
->> --
->> 2.15.0.rc0.271.g36b669edcc-goog
+>> https://github.com/getsenic/senic-os-linux/blob/senic/4.13/arch/arm/boot/dts/sun8i-h3-senic-hub.dts
 >>
+>> The device tree includes and overrides some additional files:
+>>
+>>     #include "sun8i-h3.dtsi"
+>>     #include "sunxi-common-regulators.dtsi"
+>>     #include <dt-bindings/gpio/gpio.h>
+>>     #include <dt-bindings/input/input.h>
+>>     #include <dt-bindings/pinctrl/sun4i-a10.h>
+>>
+>> I would like to know to what does the extended device tree look like,
+>> and use that as my base, because I don't really have the complete picture
+>> by just looking at the sun8i-h3-senic-hub.dts
+>>
+>> In this example I'm interested in where are "uart0_pins_a" defined.
+>> sun8i-h3-senic-hub.dts references them but has no definitions,
+>> so I'm assuming the definition is somewhere in the included files.
+>>
+>> To help me out with this task I discovered the device tree decompiler.
+>> Am expecting that the decompiled dts contains all the data that
+>> end up in the dtb blob, and should, among other, contain all the information
+>> available in sun8i-h3-senic-hub.dts.
+>>
+>>     scripts/dtc/dtc -I dtb -O dts -o expanded-devtree.dts
+>> arch/arm/boot/dts/sun8i-h3-senic-hub.dtb
+>>
+>> But the decompiled extended device tree also seems to have no
+>> traces of "uart0_pins_a" at all :
+>>
+>>     grep uart0_pins_a expanded-devtree.dts
+> 
+> labels are purely a source level construct (though overlays changes 
+> that some) and are lost after compiling. You have to look for 'uart0@0'.
+> 
+>>
+>> I've also discovered the hidden .tmp files:
+>>
+>>     ⟫ ls arch/arm/boot/dts/.sun8i-h3-*
+>>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.cmd
+>>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.d.dtc.tmp
+>>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.d.pre.tmp
+>>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp
+>>
+>> and in one of them there is a definition to "uart0_pins_a":
+>>
+>>     ⟫ grep uart0_pins_a  arch/arm/boot/dts/.sun8i-h3-*
+>>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp:   uart0_pins_a: uart0@0 {
+>>     arch/arm/boot/dts/.sun8i-h3-senic-hub.dtb.dts.tmp: pinctrl-0 =
+>> <&uart0_pins_a>;
+>>
+>> My question is, which one is a more accurate representation
+>> of the final device tree that I should use as a basis?
+> 
+> Compiling dts to dts is mainly useful to get rid of all the C 
+> preprocessor and includes to see what the final nodes look like. You do 
+> lose some things though.
+
+Some explanation of this stuff is in the slides at:
+
+  https://elinux.org/Device_Tree_Reference#Debugging
+
+  Follow the link to the slides "Solving Device Tree Issues" (updated),
+  ELCE October 2015 by Frank Rowand.
+
+Info on why some things in the original source end up in the final
+device tree and some don't (note that the tool "dtdiff" in the slides
+is now in mainline Linux, as scripts/dtc/dtx_diff):
+
+   slides
+     46 - 59
+     68 - 75
+
+Info on how to read .sun8i-h3-senic-hub.dtb.dts.tmp to find out
+where things in the final device tree came from:
+
+   slides
+     80 - 84
+
+A more elegant solution that will provide file names and line numbers
+for what dts or dtsi a node or property in the final device tree came
+from:
+
+   slides
+     85 - 92
+
+   This feature has not yet gotten into dtc, so if you want to use it
+   you need to patch the dtc source yourself.  Link to those patches
+   is at the same elinux.org page, "Supporting Resources (patches, etc)".
+
+   I am hopeful that someday I or someone else will finish implementing
+   this feature properly so that it can be accepted into dtc.
+
+
+> 
+>> Why isn't it correct to expect that everything from sun8i-h3-senic-hub.dts
+>> will end up in the final device tree blob?
+> 
+> That's true for every compiler. After compiling, preprocessor symbols 
+> are gone, functions may be inlined, etc.
+> 
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
