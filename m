@@ -1,35 +1,26 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V1 2/4] qcom: spmi-wled: Add support for short circuit
- handling
-Date: Fri, 17 Nov 2017 14:30:14 -0600
-Message-ID: <20171117203014.66r2n6x5mwuc6doe@rob-hp-laptop>
-References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
- <1510834717-21765-3-git-send-email-kgunda@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: i2c: eeprom: Add Renesas R1EX24128
+Date: Fri, 17 Nov 2017 14:30:51 -0600
+Message-ID: <20171117203051.ljd5ch3ugmxszmu3@rob-hp-laptop>
+References: <1510839994-12473-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1510834717-21765-3-git-send-email-kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1510839994-12473-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 05:48:35PM +0530, Kiran Gunda wrote:
-> Handle the short circuit(SC) interrupt and check if the SC interrupt
-> is valid. Re-enable the module to check if it goes away. Disable the
-> module altogether if the SC event persists.
+On Thu, Nov 16, 2017 at 02:46:34PM +0100, Geert Uytterhoeven wrote:
+> Document the compatible value for the Renesas R1EX24128ASAS0A two-wire
+> serial interface EEPROM, so it can be used in DTS files without causing
+> checkpatch warnings.
 > 
-> Signed-off-by: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  .../bindings/leds/backlight/qcom-spmi-wled.txt     |  22 ++++
+>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-... and also put all the binding in one patch. I want to review the full 
-view of the h/w, not piecemeal.
-
->  drivers/video/backlight/qcom-spmi-wled.c           | 126 ++++++++++++++++++++-
->  2 files changed, 142 insertions(+), 6 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
