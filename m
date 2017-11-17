@@ -1,50 +1,65 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCHv2] of: Document exactly what of_find_node_by_name() puts
-Date: Fri, 17 Nov 2017 08:53:21 -0800
-Message-ID: <20171117165321.18591-1-sboyd@codeaurora.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: Fix omap4 hang with GPS connected to USB by using wakeupgen
+Date: Fri, 17 Nov 2017 08:56:58 -0800
+Message-ID: <20171117165658.21003-1-tony@atomide.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It isn't clear if this function of_node_put()s the 'from'
-argument, or the node it searches. Clearly indicate which
-variable is touched. Fold in some more fixes from Randy too
-because we're in the area.
+There's been a reproducable USB OHCI/EHCI cpuidle related hang on omap4
+for a while that happens after about 20 - 40 minutes on an idle system
+with some data feeding device being connected, like a USB GPS device or
+a cellular modem.
 
-Cc: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+This issue happens in cpuidle states C2 and C3 and does not happen if
+cpuidle is limited to C1 state only. The symptoms are that the whole
+system hangs and never wakes up from idle, and if a watchdog is
+configured the system reboots after a while.
+
+Turns out that OHCI/EHCI devices on omap4 are trying to use the GIC
+interrupt controller directly as a parent instead of the WUGEN. We
+need to pass the interrupts through WUGEN to GIC to provide the wakeup
+events for the processor.
+
+Let's fix the issue by removing the gic interrupt-parent and use the
+default interrupt-parent wakeupgen instead. Note that omap5.dtsi had
+this already fixes earlier by commit 7136d457f365 ("ARM: omap: convert
+wakeupgen to stacked domains") but we somehow missed omap4 at that
+point.
+
+Fixes: 7136d457f365 ("ARM: omap: convert wakeupgen to stacked domains")
+Cc: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 ---
+ arch/arm/boot/dts/omap4.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-Changes from v1:
- * Fold in Randy's fixes
-
- drivers/of/base.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 63897531cd75..4368a878df88 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -863,10 +863,10 @@ EXPORT_SYMBOL(of_find_node_opts_by_path);
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -1081,14 +1081,12 @@
+ 			usbhsohci: ohci@4a064800 {
+ 				compatible = "ti,ohci-omap3";
+ 				reg = <0x4a064800 0x400>;
+-				interrupt-parent = <&gic>;
+ 				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
  
- /**
-  *	of_find_node_by_name - Find a node by its "name" property
-- *	@from:	The node to start searching from or NULL, the node
-+ *	@from:	The node to start searching from or NULL; the node
-  *		you pass will not be searched, only the next one
-- *		will; typically, you pass what the previous call
-- *		returned. of_node_put() will be called on it
-+ *		will. Typically, you pass what the previous call
-+ *		returned. of_node_put() will be called on @from.
-  *	@name:	The name string to match against
-  *
-  *	Returns a node pointer with refcount incremented, use
+ 			usbhsehci: ehci@4a064c00 {
+ 				compatible = "ti,ehci-omap";
+ 				reg = <0x4a064c00 0x400>;
+-				interrupt-parent = <&gic>;
+ 				interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 		};
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+2.15.0
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
