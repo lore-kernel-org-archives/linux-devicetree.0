@@ -1,74 +1,52 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v5 3/4] pmbus (core): Add virtual page config bit
-Date: Sat, 18 Nov 2017 13:56:05 +1030
-Message-ID: <c5ccfeab881181dfbfdbdfb26051bb4cd332f6e6.1510974230.git-series.andrew@aj.id.au>
-References: <cover.8f64654fcede136901874050318e64de7f1a68cb.1510974230.git-series.andrew@aj.id.au>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <cover.8f64654fcede136901874050318e64de7f1a68cb.1510974230.git-series.andrew@aj.id.au>
-In-Reply-To: <cover.8f64654fcede136901874050318e64de7f1a68cb.1510974230.git-series.andrew@aj.id.au>
-References: <cover.8f64654fcede136901874050318e64de7f1a68cb.1510974230.git-series.andrew@aj.id.au>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-hwmon@vger.kernel.org
-Cc: Andrew Jeffery <andrew@aj.id.au>, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] kbuild: create built-in.o automatically if parent
+ directory wants it
+Date: Sat, 18 Nov 2017 13:06:24 +0900
+Message-ID: <CAK7LNASt+4oNw3niSOcM=++Z8D0CF5jy8z1d2oz7Lp=CT2b6tg@mail.gmail.com>
+References: <1510072307-16819-1-git-send-email-yamada.masahiro@socionext.com> <1510072307-16819-2-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1510072307-16819-2-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Linux-MIPS <linux-mips@linux-mips.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <mmarek@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-Some circumstances call for virtual pages, to expose multiple values
-packed into an extended PMBus register in a manner non-compliant with
-the PMBus standard. An example of this is the Maxim MAX31785 controller, which
-extends the READ_FAN_SPEED_1 PMBus register from two to four bytes to support
-tach readings for both rotors of a dual rotor fan. This extended register
-contains two word-sized values, one reporting the rate of the fastest rotor,
-the other the rate of the slowest. The concept of virtual pages aids this
-situation by mapping the page number onto the value to be selected from the
-vectored result.
+2017-11-08 1:31 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> "obj-y += foo/" syntax requires Kbuild to visit the "foo" subdirectory
+> and link built-in.o from that directory.  This means foo/Makefile is
+> responsible for creating built-in.o even if there is no object to
+> link (in this case, built-in.o is an empty archive).
+>
+> We have had several fixups like commit 4b024242e8a4 ("kbuild: Fix
+> linking error built-in.o no such file or directory"), then ended up
+> with a complex condition as follows:
+>
+>   ifneq ($(strip $(obj-y) $(obj-m) $(obj-) $(subdir-m) $(lib-target)),)
+>   builtin-target := $(obj)/built-in.o
+>   endif
+>
+> We still have more cases not covered by the above, so we need to add
+>   obj- := dummy.o
+> in several places just for creating empty built-in.o.
+>
+> A key point is, the parent Makefile knows whether built-in.o is needed
+> or not.  If a subdirectory needs to create built-in.o, its parent can
+> tell the fact when Kbuild descends into it.
+>
+> If non-empty $(need-builtin) flag is passed from the parent, built-in.o
+> should be created.  $(obj-y) should be still checked to support the
+> single target "%/".  All of ugly tricks will go away.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
 
-We should not try to set virtual pages on the device as such a page explicitly
-doesn't exist; add a flag so we can avoid doing so.
+Applied to linux-kbuild/kbuild.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/hwmon/pmbus/pmbus.h      |  2 ++
- drivers/hwmon/pmbus/pmbus_core.c | 10 +++++++---
- 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
-index b54d7604d3ef..d39d506aa63e 100644
---- a/drivers/hwmon/pmbus/pmbus.h
-+++ b/drivers/hwmon/pmbus/pmbus.h
-@@ -372,6 +372,8 @@ enum pmbus_sensor_classes {
- #define PMBUS_HAVE_PWM12	BIT(20)
- #define PMBUS_HAVE_PWM34	BIT(21)
- 
-+#define PMBUS_PAGE_VIRTUAL	BIT(31)
-+
- enum pmbus_data_format { linear = 0, direct, vid };
- enum vrm_version { vr11 = 0, vr12, vr13 };
- 
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index 631db88526b6..ba97230fcde7 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -164,14 +164,18 @@ int pmbus_set_page(struct i2c_client *client, int page)
- 	int rv = 0;
- 	int newpage;
- 
--	if (page >= 0 && page != data->currpage) {
-+	if (page < 0 || page == data->currpage)
-+		return 0;
-+
-+	if (!(data->info->func[page] & PMBUS_PAGE_VIRTUAL)) {
- 		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
- 		newpage = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
- 		if (newpage != page)
- 			rv = -EIO;
--		else
--			data->currpage = page;
- 	}
-+
-+	data->currpage = page;
-+
- 	return rv;
- }
- EXPORT_SYMBOL_GPL(pmbus_set_page);
+
 -- 
-git-series 0.9.1
+Best Regards
+Masahiro Yamada
