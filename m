@@ -1,28 +1,47 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: trivial-devices: Remove fsl,mc13892
-Date: Sat, 18 Nov 2017 20:04:20 -0200
-Message-ID: <CAOMZO5COZOiK2MBX8=tkUTURa7r+h13sjrfA=PvRPRP3HORGhQ@mail.gmail.com>
-References: <20171118022232.16835-1-j.neuschaefer@gmx.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v2 0/3] iio: Add Intersil isl76683 light sensor support
+Date: Sun, 19 Nov 2017 00:20:27 +0100
+Message-ID: <1511047230-7021-1-git-send-email-chf.fritz@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171118022232.16835-1-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 18, 2017 at 12:22 AM, Jonathan Neusch=C3=A4fer
-<j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org> wrote:
-> This device's bindings are not trivial: Additional properties are
-> documented in in Documentation/devicetree/bindings/mfd/mc13xxx.txt.
->
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+This patchset adds initial support for isl76683 light sensor.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Changes since v1:
+ - introduce dt property suffix -kilo-ohms
+ - rename optinal dt property to isil,external-resistor-kilo-ohms
+ - purge dynamic buffer in favour of simple static 16 byte IIO_LE
+ - use iio_device_claim/release_direct_mode() instead of flag variable
+ - return with IRQ_HANDLED in all cases in isl76683_trigger_handler()
+ - simplify return in isl76683_set_config
+ - rename isl76683_read_lux() to isl76683_get_sensordata()
+ - use IIO_CHAN_INFO_SCALE instead of IIO_CHAN_INFO_HARDWAREGAIN
+ - rename macro ISL76683_REG_SENSOR_L/M to ISL76683_REG_SENSOR_LSB/MSB
+ - rename marcro ISL76683_CHANNEL_2 to ISL76683_CHANNEL
+ - use GENMASK for ISL76683_PHOTOD_MASK
 
-Thanks
+Christoph Fritz (3):
+  iio: light: Add support for Intersil isl76683 sensor
+  dt-bindings: iio: add Intersil isl76683 light sensor bindings
+  iio: light: isl76683 add way to adjust irq threshold
+
+ .../ABI/testing/sysfs-bus-iio-light-isl76683       |  17 +
+ .../devicetree/bindings/iio/light/isl76683.txt     |  26 +
+ .../devicetree/bindings/property-units.txt         |   1 +
+ drivers/iio/light/Kconfig                          |  12 +
+ drivers/iio/light/Makefile                         |   1 +
+ drivers/iio/light/isl76683.c                       | 714 +++++++++++++++++++++
+ 6 files changed, 771 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-isl76683
+ create mode 100644 Documentation/devicetree/bindings/iio/light/isl76683.txt
+ create mode 100644 drivers/iio/light/isl76683.c
+
+-- 
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
