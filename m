@@ -1,53 +1,367 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] dt-bindings: i2c: eeprom: Add Renesas R1EX24128
-Date: Sat, 18 Nov 2017 08:38:44 +0100
-Message-ID: <20171118073844.frst3frcmitivh6m@tetsubishi>
-References: <1510839994-12473-1-git-send-email-geert+renesas@glider.be>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [RESEND PATCH v2 4/6] dt: bindings: as3645a: Improve label
+ documentation, DT example
+Date: Sat, 18 Nov 2017 14:38:07 +0100
+Message-ID: <add4f657-be92-39c9-cbdf-a33ddb01262c@gmail.com>
+References: <20170918102349.8935-1-sakari.ailus@linux.intel.com>
+ <20170918102349.8935-5-sakari.ailus@linux.intel.com>
+ <20170918105655.GA14591@amd>
+ <20170918144923.dnhrxkirle3fvdfo@valkosipuli.retiisi.org.uk>
+ <20170918205407.GA1849@amd> <809f7590-7641-e8bc-c009-4fed05d5827c@gmail.com>
+ <20170920205327.qmgz65kn45aavomx@rob-hp-laptop>
+ <6a6651f9-b5fb-0ec7-1f40-f72b1a630e70@gmail.com>
+ <4e69932a-18af-416a-b280-16236fc4c2b3@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vwsfiqtmd42r5jfm"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1510839994-12473-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <4e69932a-18af-416a-b280-16236fc4c2b3@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-leds@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---vwsfiqtmd42r5jfm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Any thoughts on my analysis? Do you think that LED function naming
+standardization would really make sense having the abundance
+of LED functions categories present in the mainline dts files?
 
-On Thu, Nov 16, 2017 at 02:46:34PM +0100, Geert Uytterhoeven wrote:
-> Document the compatible value for the Renesas R1EX24128ASAS0A two-wire
-> serial interface EEPROM, so it can be used in DTS files without causing
-> checkpatch warnings.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The list of standard LED function names would have to be
+continuously extended as people would be adding new boards.
+Limiting users to only existing set of LED functions wouldn't
+be practical IMHO.
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+I'd propose only to modify 'label' property description in LED common
+bindings, so that it would explicitly state that it should contain only
+"colour:functon" segments. It would be driver's responsibility to add
+"devicename:" prefix to the label and use the whole string for a LED
+class device name. Some drivers do that already. All DT bindings, dts
+files and LED class drivers that don't adhere to this rule would have
+to be updated accordingly.
 
+Regarding colour - the "devicename:colour:function" LED device naming
+convention defined in Documentation/leds/leds-class.txt is around for
+a long time. Since LED colour can vary from board two board and is
+independent of a driver, we have to have a means for defining it in
+DT. Would you see providing separate 'colour' DT property as a solution?
 
---vwsfiqtmd42r5jfm
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+Jacek Anaszewski
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAloP43wACgkQFA3kzBSg
-KbY73RAAmG9kFv3lSEmoja0/49GNwSGJ4KaVXwOyqr0N2YmajdyflrcudsmHgYS0
-0iu1VArPwG9ZjTvCJ/MSA9JgVjMU6txZiOytMXRuzVrs+w2yf3VqPNFMvlboz8ot
-ZhROBh4wjO9WqKFes33mpSzSHvOdr4mYexeEcPtUj8wAUujun5pcQVJbKrsbTV4V
-0jVzYivQ8AkglpoYGPRTTy3na0PMd7yhEgpHBxkgIEkCfrnWu89LSiHzaE6oF9P0
-eNcVEXC7v+a3yB9y80l/RpzC1zUwcMeKO8+ve9GF97Sf1fKjncVwjTDqrZOG0LwV
-LBtC7i1nARM5x1DnCu+qYA57SUq2koczM14l8DagnjvkFwXq0P6F1t1gCFrlkGBW
-PQu/ATYNdSIRDR8uYXcDXxZ4sYlc2QY4fA4FdRgUI+5TfnjjboJiFPZi3GwQRiPp
-hnge5zPiZCQkFWIxXaatcKEI9t2Jx94K6YL2/rp/6mmxM0PzXqNdoSfABapr4P6R
-3G/+6PJu0j4/40pcc4m8GsaH82jdi6QTsfGMZrOzIsUXHdLFdbDdPihJ3QgmqK0o
-DmZImFpkFa/JS7X5j8Eg1kuSFlU0ePcOEqpSdYv8CiU12wHvhYdXRlrnGmYOrRh7
-HhcbmlXNuDM5ilVYBoNFHjZ0LG1VQi25KocFjyfKKXVksaL1WX4=
-=1Om5
------END PGP SIGNATURE-----
-
---vwsfiqtmd42r5jfm--
+On 09/23/2017 11:12 PM, Jacek Anaszewski wrote:
+> On 09/22/2017 11:07 PM, Jacek Anaszewski wrote:
+>> On 09/20/2017 10:53 PM, Rob Herring wrote:
+>>> On Tue, Sep 19, 2017 at 11:01:02PM +0200, Jacek Anaszewski wrote:
+>>>> Hi Pavel,
+>>>>
+>>>> On 09/18/2017 10:54 PM, Pavel Machek wrote:
+>>>>> On Mon 2017-09-18 17:49:23, Sakari Ailus wrote:
+>>>>>> Hi Pavel,
+>>>>>>
+>>>>>> On Mon, Sep 18, 2017 at 12:56:55PM +0200, Pavel Machek wrote:
+>>>>>>> Hi!
+>>>>>>>
+>>>>>>>> Specify the exact label used if the label property is omitted in DT, as
+>>>>>>>> well as use label in the example that conforms to LED device naming.
+>>>>>>>>
+>>>>>>>> @@ -69,11 +73,11 @@ Example
+>>>>>>>>  			flash-max-microamp = <320000>;
+>>>>>>>>  			led-max-microamp = <60000>;
+>>>>>>>>  			ams,input-max-microamp = <1750000>;
+>>>>>>>> -			label = "as3645a:flash";
+>>>>>>>> +			label = "as3645a:white:flash";
+>>>>>>>>  		};
+>>>>>>>>  		indicator@1 {
+>>>>>>>>  			reg = <0x1>;
+>>>>>>>>  			led-max-microamp = <10000>;
+>>>>>>>> -			label = "as3645a:indicator";
+>>>>>>>> +			label = "as3645a:red:indicator";
+>>>>>>>>  		};
+>>>>>>>>  	};
+>>>>>>>
+>>>>>>> Ok, but userspace still has no chance to determine if this is flash
+>>>>>>> from main camera or flash for front camera; todays smartphones have
+>>>>>>> flashes on both cameras.
+>>>>>>>
+>>>>>>> So.. Can I suggset as3645a:white:main_camera_flash or main_flash or
+>>>>>>> ....?
+>>>>>>
+>>>>>> If there's just a single one in the device, could you use that?
+>>>>>>
+>>>>>> Even if we name this so for N9 (and N900), the application still would only
+>>>>>> work with the two devices.
+>>>>>
+>>>>> Well, I'd plan to name it on other devices, too.
+>>>>>
+>>>>>> My suggestion would be to look for a flash LED, and perhaps the maximum
+>>>>>> current as well. That should generally work better than assumptions on the
+>>>>>> label.
+>>>>>
+>>>>> If you just look for flash LED, you don't know if it is front one or
+>>>>> back one. Its true that if you have just one flash it is usually on
+>>>>> the back camera, but you can't know if maybe driver is not available
+>>>>> for the main flash.
+>>>>>
+>>>>> Lets get this right, please "main_camera_flash" is 12 bytes more than
+>>>>> "flash", and it saves application logic.. more than 12 bytes, I'm sure. 
+>>>>
+>>>> What you are trying to introduce is yet another level of LED class
+>>>> device naming standard, one level below devicename:colour:function.
+>>>> It seems you want also to come up with the set of standarized LED
+>>>> function names. This would certainly have to be covered for consistency.
+>>>
+>>> I really dislike how this naming convention is used for label. label is 
+>>> supposed to be the phyically identifiable name. Having the devicename 
+>>> defeats that. Perhaps color, too. We'd be better off with a color 
+>>> property. It seems we're overloading the naming with too many things. 
+>>> Now we're adding device association.
+>>
+>> Regarding devicename - there is indeed inconsistency in the way how LED
+>> DT bindings use label, as some of them use it for defining full LED
+>> class device name, and the rest fill only colour and function, leaving
+>> addition of a devicename to the driver.
+>>
+>> The problem is also in current definition of label in LED common
+>> bindings documentation, which says:
+>>
+>> "It has to uniquely identify a device, i.e. no other LED class device
+>> can be assigned the same label."
+>>
+>> In view of your above words this is not true, and we probably should
+>> remove this sentence (it doesn't have DT maintainer ack btw).
+>>
+>>> I do want to see standard names though. On 96boards for example, there 
+>>> are defined LEDs and locations. The function on some are defined (e.g. 
+>>> WiFi/BT) and somewhat undefined on others (user{1-4}). I'd like to see 
+>>> the same label across all boards.
+>>
+>> Currently we have following LED functions (obtained with
+>> grep label Documentation/devicetree/bindings/leds/* | sed
+>> s'/^.*label/label/g' | awk -F"=" '{print $2}' | sed '/^$/d' | sed
+>> s'/.*:\(.*\)";/\1/' | sed '/^\s\{1,\}/d' | sort -u)
+>>
+>> 0
+>> 1
+>> 2
+>> 2g
+>> 3
+>> 4
+>> 5
+>> 6
+>> 7
+>> adsl
+>> alarm
+>> alive
+>> aux
+>> broadband
+>> chrg
+>> dsl
+>> flash
+>> green
+>> indicator
+>> inet
+>> keypad
+>> phone
+>> power
+>> red
+>> sata
+>> sata0
+>> sata1
+>> tel
+>> tv
+>> upgrading
+>> usb
+>> usr0
+>> usr1
+>> usr35
+>> wan
+>> white
+>> wireless
+>> wps
+>> yellow
+>>
+>> By extracting numerical pattern names and replacing numbers with N
+>> we're getting something like this:
+>>
+>> N
+>> Ng
+>> colour
+>> adsl
+>> alarm
+>> alive
+>> aux
+>> broadband
+>> chrg
+>> dsl
+>> flash
+>> indicator
+>> inet
+>> keypad
+>> phone
+>> power
+>> sataN
+>> tel
+>> tv
+>> upgrading
+>> usb
+>> usrN
+>> wan
+>> wireless
+>> wps
+>>
+>> Is this list something you'd like to see as a base of standard LED
+>> functions? It seems that this list would have to be continuously
+>> supplemented with new positions.
+>>
+> 
+> Even better option is to grep through all *.dts* files in the arch
+> directory. A slightly modified command chain. which removes numerical
+> postfixes (there are some not covered corner cases though)
+> 
+> find arch -name "*.dts*" | xargs grep label | sed s'/^.*label/label/g' |
+> awk -F"=" '{print $2}' | sed s'/.*:\(.*\)";/\1/' | sed '/^\s\{1,\}/d' |
+> sed s'/\([^0-9]*\)\([0-9]*\)/\1/' | sed '/^$/d' | sort -u
+> 
+> gives following 135 positions (~5 colours percolated due
+> to some non-covered corner cases), and some of them don't belong
+> to LED DT nodes unfortunately, as e.g. gpio-keys use also ":" as
+> a delimiter in their labels, but the whole set gives reasonable
+> overview I think:
+> 
+> active
+> activity_led
+> adsl
+> alarm
+> alive
+> all
+> amber
+> app
+> aux
+> backup
+> backup_led
+> bl
+> blue
+> bluetooth
+> boot
+> bottom
+> brick-status
+> bt
+> CEL
+> chrg
+> COM
+> copy
+> core_module
+> cpu
+> D
+> debug
+> DIA
+> disk
+> disk_led
+> down
+> dsl
+> enocean
+> enter
+> err
+> error
+> esata
+> ethernet-status
+> fail
+> fault
+> front
+> func
+> function
+> g
+> ghz
+> ghz-1
+> ghz-2
+> gpio
+> green
+> gsm
+> HD
+> hdd
+> hdderr
+> health
+> health_led
+> heart
+> heartbeat
+> home
+> inet
+> info
+> internet
+> keypad
+> L
+> lan
+> led
+> ledb
+> left
+> l_hdd
+> live
+> logo
+> microSD
+> misc
+> mmc
+> nand
+> network
+> on
+> orange
+> os
+> panel
+> pmu_stat
+> power
+> power_led
+> programming
+> proximitysensor
+> pulse
+> pwr
+> qss
+> rebuild_led
+> red
+> r_hdd
+> right
+> router
+> rs
+> rx
+> sata
+> sata-l
+> sata-r
+> sd
+> SD
+> sleep
+> standby
+> stat
+> state
+> status
+> Status
+> sw
+> sys
+> system
+> system-status
+> tel
+> top
+> tv
+> tx
+> up
+> usb
+> USB
+> usb_1
+> usb_2
+> usb_copy
+> usb-port1
+> usb-port2
+> user
+> USER
+> usr
+> wan
+> white
+> wifi
+> wifi_ap
+> wifi-status
+> wireless
+> wlan
+> wlan_g
+> wmode
+> wps
+> WPS
+> yellow
+> 
