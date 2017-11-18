@@ -1,40 +1,50 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Subject: [PATCH] dt-bindings: trivial-devices: Remove fsl,mc13892
-Date: Sat, 18 Nov 2017 03:22:32 +0100
-Message-ID: <20171118022232.16835-1-j.neuschaefer@gmx.net>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] arm64: dts: sort vendor subdirectories in Makefile
+ alphabetically
+Date: Sat, 18 Nov 2017 12:10:03 +0900
+Message-ID: <1510974603-7463-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This device's bindings are not trivial: Additional properties are
-documented in in Documentation/devicetree/bindings/mfd/mc13xxx.txt.
+The list is almost sorted.  Move "lg" up to complete it.
 
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- Documentation/devicetree/bindings/trivial-devices.txt | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-index af284fbd4d23..6e8fa1183210 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -57,7 +57,6 @@ epson,rx8010		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
- epson,rx8025		High-Stability. I2C-Bus INTERFACE REAL TIME CLOCK MODULE
- epson,rx8581		I2C-BUS INTERFACE REAL TIME CLOCK MODULE
- fsl,mag3110		MAG3110: Xtrinsic High Accuracy, 3D Magnetometer
--fsl,mc13892		MC13892: Power Management Integrated Circuit (PMIC) for i.MX35/51
- fsl,mma7660		MMA7660FC: 3-Axis Orientation/Motion Detection Sensor
- fsl,mma8450		MMA8450Q: Xtrinsic Low-power, 3-axis Xtrinsic Accelerometer
- fsl,mpl3115		MPL3115: Absolute Digital Pressure Sensor
+ arch/arm64/boot/dts/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index d7c22d5..4aa50b9 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -12,6 +12,7 @@ subdir-y += cavium
+ subdir-y += exynos
+ subdir-y += freescale
+ subdir-y += hisilicon
++subdir-y += lg
+ subdir-y += marvell
+ subdir-y += mediatek
+ subdir-y += nvidia
+@@ -22,5 +23,4 @@ subdir-y += rockchip
+ subdir-y += socionext
+ subdir-y += sprd
+ subdir-y += xilinx
+-subdir-y += lg
+ subdir-y += zte
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
