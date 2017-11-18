@@ -1,48 +1,68 @@
 From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 0/3] iio: Add Intersil isl76683 light sensor support
-Date: Sun, 19 Nov 2017 00:20:27 +0100
-Message-ID: <1511047230-7021-1-git-send-email-chf.fritz@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v2 2/3] dt-bindings: iio: add Intersil isl76683 light sensor bindings
+Date: Sun, 19 Nov 2017 00:20:29 +0100
+Message-ID: <1511047230-7021-3-git-send-email-chf.fritz@googlemail.com>
+References: <1511047230-7021-1-git-send-email-chf.fritz@googlemail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1511047230-7021-1-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds initial support for isl76683 light sensor.
+This patch adds documentation of device tree bindings for Intersil
+isl76683 light sensor.
 
-Changes since v1:
- - introduce dt property suffix -kilo-ohms
- - rename optinal dt property to isil,external-resistor-kilo-ohms
- - purge dynamic buffer in favour of simple static 16 byte IIO_LE
- - use iio_device_claim/release_direct_mode() instead of flag variable
- - return with IRQ_HANDLED in all cases in isl76683_trigger_handler()
- - simplify return in isl76683_set_config
- - rename isl76683_read_lux() to isl76683_get_sensordata()
- - use IIO_CHAN_INFO_SCALE instead of IIO_CHAN_INFO_HARDWAREGAIN
- - rename macro ISL76683_REG_SENSOR_L/M to ISL76683_REG_SENSOR_LSB/MSB
- - rename marcro ISL76683_CHANNEL_2 to ISL76683_CHANNEL
- - use GENMASK for ISL76683_PHOTOD_MASK
-
-Christoph Fritz (3):
-  iio: light: Add support for Intersil isl76683 sensor
-  dt-bindings: iio: add Intersil isl76683 light sensor bindings
-  iio: light: isl76683 add way to adjust irq threshold
-
- .../ABI/testing/sysfs-bus-iio-light-isl76683       |  17 +
- .../devicetree/bindings/iio/light/isl76683.txt     |  26 +
- .../devicetree/bindings/property-units.txt         |   1 +
- drivers/iio/light/Kconfig                          |  12 +
- drivers/iio/light/Makefile                         |   1 +
- drivers/iio/light/isl76683.c                       | 714 +++++++++++++++++++++
- 6 files changed, 771 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-isl76683
+Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ .../devicetree/bindings/iio/light/isl76683.txt     | 26 ++++++++++++++++++++++
+ .../devicetree/bindings/property-units.txt         |  1 +
+ 2 files changed, 27 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/light/isl76683.txt
- create mode 100644 drivers/iio/light/isl76683.c
 
+diff --git a/Documentation/devicetree/bindings/iio/light/isl76683.txt b/Documentation/devicetree/bindings/iio/light/isl76683.txt
+new file mode 100644
+index 0000000..b1a8a67
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/isl76683.txt
+@@ -0,0 +1,26 @@
++* ISL76683 ambient light sensor
++
++http://www.intersil.com/content/dam/Intersil/documents/isl7/isl76683.pdf
++
++Required properties:
++
++  - compatible: must be "isil,isl76683"
++  - reg: the I2C address of the sensor
++  - interrupt-parent: should be the phandle for the interrupt controller
++  - interrupts: interrupt mapping for GPIO IRQ
++
++Optional properties:
++
++  - isil,external-resistor-kilo-ohms: integer in kilo Ohms of external resistor
++    R_ext.  Valid values are from 1 to 1000.  If not supplied, 100 kilo Ohms
++    will be assumed.
++
++Example:
++
++isl76683@44 {
++	compatible = "isil,isl76683";
++	reg = <0x44>;
++	interrupt-parent = <&gpio1>;
++	interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
++	isil,external-resistor-kilo-ohms = <50>;
++};
+diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+index 45ce054..5f9c71a 100644
+--- a/Documentation/devicetree/bindings/property-units.txt
++++ b/Documentation/devicetree/bindings/property-units.txt
+@@ -28,6 +28,7 @@ Electricity
+ -microamp-hours : micro amp-hours
+ -ohms		: Ohms
+ -micro-ohms	: micro Ohms
++-kilo-ohms	: kilo Ohms
+ -microwatt-hours: micro Watt-hours
+ -microvolt	: micro volts
+ -picofarads	: picofarads
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
