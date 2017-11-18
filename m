@@ -1,100 +1,53 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH v2] pwm: imx: Allow keeping the PWM active during suspend
-Date: Sat, 18 Nov 2017 12:36:08 -0200
-Message-ID: <1511015768-14140-1-git-send-email-festevam@gmail.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com
-Cc: robh+dt@kernel.org, linux@arm.linux.org.uk, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: iio: at91-sama5d2_adc: add optional
+ dma property
+Date: Sat, 18 Nov 2017 16:07:12 +0000
+Message-ID: <20171118160712.36414451@archlinux>
+References: <1510750608-8697-1-git-send-email-eugen.hristev@microchip.com>
+        <1510750608-8697-2-git-send-email-eugen.hristev@microchip.com>
+        <20171115152746.w4giwt7kdqm4i3yl@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171115152746.w4giwt7kdqm4i3yl@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In some systems it is desirable to keep the PWM active during system
-suspend.
+On Wed, 15 Nov 2017 09:27:46 -0600
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-One use case is the imx6q-cubox-i board, which has an LED driven by PWM.
-When the system goes into suspend the PWM block is disabled by default,
-the PWM pin goes to zero and turn on the LED during suspend, which is
-not really the behaviour we want to see.
+> On Wed, Nov 15, 2017 at 02:56:45PM +0200, Eugen Hristev wrote:
+> > Added property for DMA configuration of the device.
+> > 
+> > Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> > ---
+> >  Changes in v3:
+> > None, but we discussed on the ML about whether we should have "dma-names"
+> > present in the binding even if it's only one.
+> > The helpers in the kernel to retrieve the channel info rely on the
+> > presence of this property, so I am resending the patch based on this.
+> > If another solution is better, please advise and I can try it and
+> > resend the patch.  
+> 
+> Really the kernel APIs should accept a NULL name and return the DMA 
+> channel when there is only one. This is how the clk_get API works for 
+> example.
+> 
+> >  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
+> >  1 file changed, 7 insertions(+)  
+> 
+> In any case, not really a big deal.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Applied to the togreg branch of iio.git and pushed out as testing.
 
-By keeping the PWM enabled during suspend the pwm-leds driver sets
-the brightness to zero in suspend and then the LED is turned off as
-expected.
+Thanks,
 
-Introduce the 'fsl,active-in-suspend' property to indicate that the
-PWM will stay active during suspend.
-
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
-Changes since v1:
-- Rename the property to 'fsl,active-in-suspend' to better describe
-its purpose.
-
- Documentation/devicetree/bindings/pwm/imx-pwm.txt | 5 +++++
- drivers/pwm/pwm-imx.c                             | 8 ++++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/imx-pwm.txt b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-index c61bdf8..ec2a84c 100644
---- a/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/imx-pwm.txt
-@@ -14,6 +14,11 @@ See the clock consumer binding,
- 	Documentation/devicetree/bindings/clock/clock-bindings.txt
- - interrupts: The interrupt for the pwm controller
- 
-+Optional properties:
-+- fsl,active-in-suspend: Boolean property that indicates that the PWM block
-+			 stays active during system suspend. If not present,
-+			 the PWM block stays inactive during suspend.
-+
- Example:
- 
- pwm1: pwm@53fb4000 {
-diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
-index 2ba5c3a..afa1b20 100644
---- a/drivers/pwm/pwm-imx.c
-+++ b/drivers/pwm/pwm-imx.c
-@@ -35,6 +35,7 @@
- #define MX3_PWMSAR			0x0C    /* PWM Sample Register */
- #define MX3_PWMPR			0x10    /* PWM Period Register */
- #define MX3_PWMCR_PRESCALER(x)		((((x) - 1) & 0xFFF) << 4)
-+#define MX3_PWMCR_STOPEN		(1 << 25)
- #define MX3_PWMCR_DOZEEN		(1 << 24)
- #define MX3_PWMCR_WAITEN		(1 << 23)
- #define MX3_PWMCR_DBGEN			(1 << 22)
-@@ -54,6 +55,7 @@ struct imx_chip {
- 	void __iomem	*mmio_base;
- 
- 	struct pwm_chip	chip;
-+	bool active;
- };
- 
- #define to_imx_chip(chip)	container_of(chip, struct imx_chip, chip)
-@@ -217,6 +219,9 @@ static int imx_pwm_apply_v2(struct pwm_chip *chip, struct pwm_device *pwm,
- 		if (state->polarity == PWM_POLARITY_INVERSED)
- 			cr |= MX3_PWMCR_POUTC;
- 
-+		if (imx->active)
-+			cr |= MX3_PWMCR_STOPEN;
-+
- 		writel(cr, imx->mmio_base + MX3_PWMCR);
- 	} else if (cstate.enabled) {
- 		writel(0, imx->mmio_base + MX3_PWMCR);
-@@ -264,6 +269,7 @@ static int imx_pwm_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *of_id =
- 			of_match_device(imx_pwm_dt_ids, &pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
- 	const struct imx_pwm_data *data;
- 	struct imx_chip *imx;
- 	struct resource *r;
-@@ -301,6 +307,8 @@ static int imx_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(imx->mmio_base))
- 		return PTR_ERR(imx->mmio_base);
- 
-+	imx->active = of_property_read_bool(np, "fsl,active-in-suspend");
-+
- 	ret = pwmchip_add(&imx->chip);
- 	if (ret < 0)
- 		return ret;
--- 
-2.7.4
+Jonathan
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
