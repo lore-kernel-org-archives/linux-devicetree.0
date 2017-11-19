@@ -1,43 +1,58 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v2 0/4] DRM driver for ILI9225 display panels
-Date: Sun, 19 Nov 2017 14:12:04 -0600
-Message-ID: <1511122328-31133-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v2 2/4] dt-bindings: Add binding for Ilitek ILI9225 display
+ panels
+Date: Sun, 19 Nov 2017 14:12:06 -0600
+Message-ID: <1511122328-31133-3-git-send-email-david@lechnology.com>
+References: <1511122328-31133-1-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1511122328-31133-1-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a new driver for ILI9225 based display panels.
-
-v2 changes:
-* New patch for ilitek vendor prefix.
-* Use "ilitek" instead of "generic" in dt-bindings
-* New patch to export 2 mipi_dbi_* functions
-* Clean up ILI9225 driver based on feedback
-
-David Lechner (4):
-  dt-bindings: Add vendor prefix for ilitek
-  dt-bindings: Add binding for Ilitek ILI9225 display panels
-  drm/tinydrm: export mipi_dbi_buf_copy and mipi_dbi_spi_cmd_max_speed
-  drm/tinydrm: add driver for ILI9225 panels
-
- .../devicetree/bindings/display/ilitek,ili9225.txt |  25 ++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- MAINTAINERS                                        |   6 +
- drivers/gpu/drm/tinydrm/Kconfig                    |  10 +
- drivers/gpu/drm/tinydrm/Makefile                   |   1 +
- drivers/gpu/drm/tinydrm/ili9225.c                  | 468 +++++++++++++++++++++
- drivers/gpu/drm/tinydrm/mipi-dbi.c                 |  24 +-
- include/drm/tinydrm/mipi-dbi.h                     |   4 +-
- 8 files changed, 534 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9225.txt
- create mode 100644 drivers/gpu/drm/tinydrm/ili9225.c
-
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIGEgbmV3IGJpbmRpbmcgZm9yIGRpc3BsYXkgcGFuZWxzIHRoYXQgdXNlIGFuIEls
+aXRlayBJTEk5MjI1CmNvbnRyb2xsZXIuCgpUaGUgImlsaXRlayxpbGk5MjI1LTIuMmluLTE3Nngy
+MjAiIGRldmljZSBsaXN0ZWQgaGFzIG5vIGlkZW50aWZpY2F0aW9uCm1hcmtpbmdzIHdoYXRzb2V2
+ZXIgYW5kIGFuIGhvdXIgb2YgZ29vZ2xpbmcgdHVybmVkIHVwIG5vdGhpbmcsIGhlbmNlIHRoZSB1
+c2UKb2YgdGhlIHNpemUgYW5kIHJlc29sdXRpb24gaW4gdGhlIG5hbWUgaW5zdGVhZCBvZiBhIG1v
+ZGVsIG5hbWUuCgpBbiBleGFtcGxlIG9mIHRoaXMgbmFtZWxlc3MgZGV2aWNlIGNhbiBiZSBmb3Vu
+ZCBhdDoKaHR0cHM6Ly9naXRodWIuY29tL05rYXd1L1RGVF8yMl9JTEk5MjI1CgpTaWduZWQtb2Zm
+LWJ5OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4KLS0tCgp2MiBjaGFuZ2Vz
+OgoqIHJlbmFtZWQgY29tcGF0aWJsZSBzdHJpbmcgYmFzZWQgb24gZmVlZGJhY2sKCiAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lsaXRlayxpbGk5MjI1LnR4dCB8IDI1ICsrKysrKysr
+KysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxp
+dGVrLGlsaTkyMjUudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkyMjUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaWxpdGVrLGlsaTkyMjUudHh0Cm5ldyBmaWxlIG1vZGUgMTAw
+NjQ0CmluZGV4IDAwMDAwMDAuLjIxNjA3YTUKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbGl0ZWssaWxpOTIyNS50eHQKQEAgLTAs
+MCArMSwyNSBAQAorSWxpdGVrIElMSTkyMjUgZGlzcGxheSBwYW5lbHMKKworVGhpcyBiaW5kaW5n
+IGlzIGZvciBkaXNwbGF5IHBhbmVscyB1c2luZyBhbiBJbGl0ZWsgSUxJOTIyNSBjb250cm9sbGVy
+IGluIFNQSQorbW9kZS4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZToJImls
+aXRlayxpbGk5MjI1LTIuMmluLTE3NngyMjAiCistIHJzLWdwaW9zOglSZWdpc3RlciBzZWxlY3Qg
+c2lnbmFsCistIHJlc2V0LWdwaW9zOglSZXNldCBwaW4KKworVGhlIG5vZGUgZm9yIHRoaXMgZHJp
+dmVyIG11c3QgYmUgYSBjaGlsZCBub2RlIG9mIGEgU1BJIGNvbnRyb2xsZXIsIGhlbmNlCithbGwg
+bWFuZGF0b3J5IHByb3BlcnRpZXMgZGVzY3JpYmVkIGluIC4uL3NwaS9zcGktYnVzLnR4dCBtdXN0
+IGJlIHNwZWNpZmllZC4KKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gcm90YXRpb246CXBhbmVs
+IHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2UgKDAsOTAsMTgwLDI3MCkKKwor
+RXhhbXBsZToKKwlkaXNwbGF5QDB7CisJCWNvbXBhdGlibGUgPSAiaWxpdGVrLGlsaTkyMjUtMi4y
+aW4tMTc2eDIyMCI7CisJCXJlZyA9IDwwPjsKKwkJc3BpLW1heC1mcmVxdWVuY3kgPSA8MTIwMDAw
+MDA+OworCQlycy1ncGlvcyA9IDwmZ3BpbzAgOSBHUElPX0FDVElWRV9ISUdIPjsKKwkJcmVzZXQt
+Z3Bpb3MgPSA8JmdwaW8wIDggR1BJT19BQ1RJVkVfSElHSD47CisJCXJvdGF0aW9uID0gPDI3MD47
+CisJfTsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
