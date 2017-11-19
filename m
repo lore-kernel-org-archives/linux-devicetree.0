@@ -1,151 +1,60 @@
-From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 3/3] iio: light: isl76683 add way to adjust irq threshold
-Date: Sun, 19 Nov 2017 00:20:30 +0100
-Message-ID: <1511047230-7021-4-git-send-email-chf.fritz@googlemail.com>
-References: <1511047230-7021-1-git-send-email-chf.fritz@googlemail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511047230-7021-1-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC v1 7/8] Bluetooth: hci_serdev: remove the
+ HCI_UART_INIT_PENDING check
+Date: Sun, 19 Nov 2017 09:21:19 +0100
+Message-ID: <56889A64-AFB2-454C-9889-FAA4C051168A@holtmann.org>
+References: <20171117223543.32429-1-martin.blumenstingl@googlemail.com>
+ <20171117223543.32429-8-martin.blumenstingl@googlemail.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171117223543.32429-8-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds sysfs read/write support for upper and lower irq
-thresholds. So it's possible that only on certain lux ranges the
-irq triggered measurement happens.
+Hi Martin,
 
-Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- .../ABI/testing/sysfs-bus-iio-light-isl76683       | 17 +++++++
- drivers/iio/light/isl76683.c                       | 57 ++++++++++++++++++++--
- 2 files changed, 71 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-light-isl76683
+> The three-wire (H5) protocol is the only protocol which uses
+> HCI_UART_INIT_PENDING.
+> Unfortunately the protocol implementation never receives data with this
+> check still in place. For the H5 protocol this means that the
+> initialization never completes and thus the firmware download never
+> starts. Even if the initialization would succeed later on the drivers
+> would call hci_uart_init_ready() which schedules the registration which
+> is currently not implemented by hci_serdev.c.
+> 
+> Removing the HCI_UART_INIT_PENDING check makes the code easier to read
+> and also fixes the initalization of devices (implemented with the serdev
+> library) which use the H5 protocol.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+> drivers/bluetooth/hci_serdev.c | 3 ---
+> 1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+> index e0e6461b9200..fe67eb6d4278 100644
+> --- a/drivers/bluetooth/hci_serdev.c
+> +++ b/drivers/bluetooth/hci_serdev.c
+> @@ -333,9 +333,6 @@ int hci_uart_register_device(struct hci_uart *hu,
+> 	else
+> 		hdev->dev_type = HCI_PRIMARY;
+> 
+> -	if (test_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags))
+> -		return 0;
+> -
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-light-isl76683 b/Documentation/ABI/testing/sysfs-bus-iio-light-isl76683
-new file mode 100644
-index 0000000..c7e08d7
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-light-isl76683
-@@ -0,0 +1,17 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_threshold_low
-+Date:		November 2017
-+KernelVersion:	4.15.0
-+Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+Description:
-+		Raw value of lower threshold for the interrupt.
-+		Reading returns 8-bit MSB data of a 16-bit threshold.
-+		Writing 0...255 represents 8-bit MSB data of a 16-bit threshold.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/in_illuminance_threshold_up
-+Date:		November 2017
-+KernelVersion:	4.15.0
-+Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+Description:
-+		Raw value of upper threshold for the interrupt.
-+		Reading returns 8-bit MSB data of a 16-bit threshold.
-+		Writing 0...255 represents 8-bit MSB data of a 16-bit threshold.
-diff --git a/drivers/iio/light/isl76683.c b/drivers/iio/light/isl76683.c
-index 4d158f6..1507158 100644
---- a/drivers/iio/light/isl76683.c
-+++ b/drivers/iio/light/isl76683.c
-@@ -74,11 +74,14 @@ static const int isl76683_lux_ranges_available[] = {
- #define ISL76683_KOHM_MAX		1000
- #define ISL76683_INTPERS_DEFAULT	0x0
- #define ISL76683_THR_DEFAULT		0x7f
-+#define ISL76683_THR_MAX		0xFF
- 
- struct isl76683_chip {
- 	enum isl76683_lux_range	luxrange;
- 	int			external_resistor;
- 	enum isl76683_dmode	photodiode;
-+	int			threshold_up;
-+	int			threshold_low;
- 	struct i2c_client	*client;
- 	struct regmap		*rmp;
- 	struct completion	irq_complete;
-@@ -157,13 +160,12 @@ static int isl76683_set_config(struct isl76683_chip *chip)
- 	if (ret < 0)
- 		return ret;
- 
--	ret = regmap_write(chip->rmp, ISL76683_REG_THR_HI,
--				ISL76683_THR_DEFAULT);
-+	ret = regmap_write(chip->rmp, ISL76683_REG_THR_HI, chip->threshold_up);
- 	if (ret < 0)
- 		return ret;
- 
- 	return regmap_write(chip->rmp, ISL76683_REG_THR_LO,
--				ISL76683_THR_DEFAULT);
-+				chip->threshold_low);
- }
- 
- static int isl76683_power(struct isl76683_chip *chip, bool on)
-@@ -402,11 +404,58 @@ static int isl76683_write_raw(struct iio_dev *indio_dev,
- 	return -EINVAL;
- }
- 
-+#define ISL76683_SYSFS_STORE(ident, _max)				\
-+static ssize_t in_illuminance_##ident##_store(struct device *dev,	\
-+					struct device_attribute *attr,	\
-+					const char *buf, size_t len)	\
-+{									\
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);		\
-+	struct isl76683_chip *chip = iio_priv(indio_dev);		\
-+	unsigned int val;						\
-+	int ret;							\
-+									\
-+	if (kstrtouint(buf, 10, &val))					\
-+		return -EINVAL;						\
-+									\
-+	if (val > _max)							\
-+		return -EINVAL;						\
-+									\
-+	mutex_lock(&chip->lock);					\
-+	chip->ident = val;						\
-+	ret = isl76683_set_config(chip);				\
-+	mutex_unlock(&chip->lock);					\
-+									\
-+	if (ret)							\
-+		return -EIO;						\
-+									\
-+	return len;							\
-+}
-+
-+ISL76683_SYSFS_STORE(threshold_low, ISL76683_THR_MAX)
-+ISL76683_SYSFS_STORE(threshold_up, ISL76683_THR_MAX)
-+
-+#define ISL76683_SYSFS_SHOW(ident, show_val)				\
-+static ssize_t in_illuminance_##ident##_show(struct device *dev,	\
-+			struct device_attribute *attr, char *buf)	\
-+{									\
-+	struct iio_dev *indio_dev = dev_to_iio_dev(dev);		\
-+	struct isl76683_chip *chip = iio_priv(indio_dev);		\
-+									\
-+	return snprintf(buf, PAGE_SIZE, "%i\n", show_val);		\
-+}
-+
-+ISL76683_SYSFS_SHOW(threshold_up, chip->threshold_up)
-+ISL76683_SYSFS_SHOW(threshold_low, chip->threshold_low)
-+
- static IIO_CONST_ATTR(in_illuminance_scale_available,
- 		ISL76683_LUXRANGE_STR);
-+static IIO_DEVICE_ATTR_RW(in_illuminance_threshold_up, 0);
-+static IIO_DEVICE_ATTR_RW(in_illuminance_threshold_low, 0);
- 
- static struct attribute *isl76683_attributes[] = {
- 	&iio_const_attr_in_illuminance_scale_available.dev_attr.attr,
-+	&iio_dev_attr_in_illuminance_threshold_up.dev_attr.attr,
-+	&iio_dev_attr_in_illuminance_threshold_low.dev_attr.attr,
- 	NULL
- };
- 
-@@ -508,6 +557,8 @@ static int isl76683_probe(struct i2c_client *client,
- 	chip->luxrange = ISL76683_LUX_RANGE_DEFAULT;
- 	chip->external_resistor = rs;
- 	chip->photodiode = ISL76683_DIODE_DEFAULT;
-+	chip->threshold_up = ISL76683_THR_DEFAULT;
-+	chip->threshold_low = ISL76683_THR_DEFAULT;
- 
- 	chip->rmp = devm_regmap_init_i2c(client, &isl76683_regmap_config);
- 	if (IS_ERR(chip->rmp)) {
--- 
-2.1.4
+then lets also remove the flag definition itself. Or if that is still needed for some legacy operation, then describe this. For example I also see it used in hci_serdev.c and main question would be if it is used there as well or some legacy cruft.
+
+Regards
+
+Marcel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
