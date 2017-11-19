@@ -1,185 +1,188 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: light: add support to UVIS25 sensor
-Date: Sun, 19 Nov 2017 16:44:52 +0000
-Message-ID: <20171119164452.4f457021@archlinux>
-References: <20171025181609.3803-1-lorenzo.bianconi@st.com>
-        <20171025181609.3803-2-lorenzo.bianconi@st.com>
-        <20171026183540.288dfdea@archlinux>
-        <CAA2SeN+WGorb6t52euEnVYOp+R8Mxa0_Y9eeM0qo6=-MsnZ3EQ@mail.gmail.com>
+From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] iio: adc: stm32: remove const channel names
+ definition
+Date: Sun, 19 Nov 2017 16:48:37 +0000
+Message-ID: <20171119164837.245007af@archlinux>
+References: <1508923665-2274-1-git-send-email-fabrice.gasnier@st.com>
+        <1508923665-2274-3-git-send-email-fabrice.gasnier@st.com>
+        <20171026184522.576fbd8d@archlinux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAA2SeN+WGorb6t52euEnVYOp+R8Mxa0_Y9eeM0qo6=-MsnZ3EQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20171026184522.576fbd8d@archlinux>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Oct 2017 15:26:09 +0200
-Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Thu, 26 Oct 2017 18:45:22 +0100
+Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-> > On Wed, 25 Oct 2017 20:16:08 +0200
-> > Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> > Really minor English comment to start.
-> > add support 'for' UVIS25 sensor
+> On Wed, 25 Oct 2017 11:27:44 +0200
+> Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
+> 
+> > Remove const array that defines channels. Build channels definition
+> > at probe time, when initializing channels (only for requested ones).
+> > This will ease adding differential channels support.
+> > 
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>  
+> 
+> Looks good to me.  Only held on Rob finding some time for a final glance
+> at the bindings..
+Applied.
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+> > ---
+> > Changes in v2:
+> > - Improve val variable names in stm32_adc_chan_init_one()
+> >   definition as suggested by Jonathan.
+> > ---
+> >  drivers/iio/adc/stm32-adc.c | 66 ++++++++++-----------------------------------
+> >  1 file changed, 14 insertions(+), 52 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> > index 4df32cf..417a894 100644
+> > --- a/drivers/iio/adc/stm32-adc.c
+> > +++ b/drivers/iio/adc/stm32-adc.c
+> > @@ -153,6 +153,8 @@ enum stm32h7_adc_dmngt {
+> >  /* BOOST bit must be set on STM32H7 when ADC clock is above 20MHz */
+> >  #define STM32H7_BOOST_CLKRATE		20000000UL
 > >  
-> 
-> Hi Jonathan,
-> 
-> I added regmap support, thanks for the hint, the code is much better :)
-> Just wondering how to manage drdy issue in more elegant way.
-> As you outlined, the problem is due to the fact the trigger interrupt
-> is currently masked
-> but st_uvis25_set_enable() in st_uvis25_read_oneshot() actually
-> enables interrupt generation
-> so during the msleep() we get tons of interrupts if we configured the
-> line as IRQ_TYPE_LEVEL_HIGH.
-Can you clear it with a single read at the start of the read_oneshot?
-
-> One possible solution could be to drop trigger support and push data
-> to iio buffer directly in main irq thread handler (but in this way we
-> are force to use just this kind of trigger).
-> What do you think?
-
-Not ideal... It's another case of hardware doing something unhelpful
-for software.  We'll have to paper over it as usual ;)
-
-Go with which ever route you think works out nicest.
-
-Sorry for the delay on this reply - I missed your reply on my first
-pass through my emails in amongst the other parts of the thread.
-
-> 
-> Reagrds,
-> Lorenzo
-> 
-<snip>
-> 
-> >> +
-> >> +     err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
-> >> +     if (err < 0) {
-> >> +             dev_err(hw->dev, "failed to read %02x register\n", addr);
-> >> +             goto unlock;
-> >> +     }
-> >> +
-> >> +     data = (data & ~mask) | ((val << __ffs(mask)) & mask);
-> >> +
-> >> +     err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
-> >> +     if (err < 0)
-> >> +             dev_err(hw->dev, "failed to write %02x register\n", addr);
-> >> +
-> >> +unlock:
-> >> +     mutex_unlock(&hw->lock);
-> >> +
-> >> +     return err < 0 ? err : 0;
-> >> +}
-> >> +
-> >> +int st_uvis25_set_enable(struct st_uvis25_hw *hw, bool enable)
-> >> +{
-> >> +     int err;
-> >> +
-> >> +     err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
-> >> +                                     ST_UVIS25_REG_ODR_MASK, enable);
-> >> +     if (err < 0)
-> >> +             return err;
-> >> +
-> >> +     hw->enabled = enable;
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static int st_uvis25_read_oneshot(struct st_uvis25_hw *hw, u8 addr, int *val)
-> >> +{
-> >> +     u8 data;
-> >> +     int err;
-> >> +
-> >> +     err = st_uvis25_set_enable(hw, true);
-> >> +     if (err < 0)
-> >> +             return err;
-> >> +
-> >> +     msleep(1500);  
-> >
-> > Could drive this off the interrupt rather than disabling the interrupt?
-> > Would that be a little neater (simple completion here).
+> > +#define STM32_ADC_CH_MAX		20	/* max number of channels */
+> > +#define STM32_ADC_CH_SZ			5	/* max channel name size */
+> >  #define STM32_ADC_MAX_SQ		16	/* SQ1..SQ16 */
+> >  #define STM32_ADC_MAX_SMP		7	/* SMPx range is [0..7] */
+> >  #define STM32_ADC_TIMEOUT_US		100000
+> > @@ -300,6 +302,7 @@ struct stm32_adc_cfg {
+> >   * @pcsel		bitmask to preselect channels on some devices
+> >   * @smpr_val:		sampling time settings (e.g. smpr1 / smpr2)
+> >   * @cal:		optional calibration data on some devices
+> > + * @chan_name:		channel name array
+> >   */
+> >  struct stm32_adc {
+> >  	struct stm32_adc_common	*common;
+> > @@ -321,69 +324,28 @@ struct stm32_adc {
+> >  	u32			pcsel;
+> >  	u32			smpr_val[2];
+> >  	struct stm32_adc_calib	cal;
+> > -};
+> > -
+> > -/**
+> > - * struct stm32_adc_chan_spec - specification of stm32 adc channel
+> > - * @type:	IIO channel type
+> > - * @channel:	channel number (single ended)
+> > - * @name:	channel name (single ended)
+> > - */
+> > -struct stm32_adc_chan_spec {
+> > -	enum iio_chan_type	type;
+> > -	int			channel;
+> > -	const char		*name;
+> > +	char			chan_name[STM32_ADC_CH_MAX][STM32_ADC_CH_SZ];
+> >  };
 > >  
-> 
-> What do you mean? I did not get you.
-If the interrupt 'stuck' case wasn't occuring you could basically
-let the buffered path run once in order to get the oneshot read.
-Thus you could use an interrupt instead of a sleep.
-Doesn't really matter though.
-
-> 
-> >> +
-> >> +     err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
-> >> +     if (err < 0)
-> >> +             return err;  
-> >
-> > Is there a potential race here if for some reason we managed to
-> > got to sleep for another conversion?  I think to be completely
-> > safe you need force an additional read after the disable (or
-> > will that fail to clear the data ready?
+> >  /**
+> >   * struct stm32_adc_info - stm32 ADC, per instance config data
+> > - * @channels:		Reference to stm32 channels spec
+> >   * @max_channels:	Number of channels
+> >   * @resolutions:	available resolutions
+> >   * @num_res:		number of available resolutions
+> >   */
+> >  struct stm32_adc_info {
+> > -	const struct stm32_adc_chan_spec *channels;
+> >  	int max_channels;
+> >  	const unsigned int *resolutions;
+> >  	const unsigned int num_res;
+> >  };
 > >  
-> 
-> We can move the read access after the st_uvis25_set_enable(hw, false)
-> in order to avoid an unnecessary read, do you agree?
-You could perhaps get a later reading if you did that?
-I don't suppose it really matters.
-> 
-> >> +
-> >> +     st_uvis25_set_enable(hw, false);
-> >> +
-> >> +     *val = data;
-> >> +
-> >> +     return IIO_VAL_INT;
-> >> +}
-> >> +
-> >> +static int st_uvis25_read_raw(struct iio_dev *iio_dev,
-> >> +                           struct iio_chan_spec const *ch,
-> >> +                           int *val, int *val2, long mask)
-> >> +{
-> >> +     int ret;
-> >> +
-> >> +     ret = iio_device_claim_direct_mode(iio_dev);
-> >> +     if (ret)
-> >> +             return ret;
-> >> +
-> >> +     switch (mask) {
-> >> +     case IIO_CHAN_INFO_PROCESSED: {
-> >> +             struct st_uvis25_hw *hw = iio_priv(iio_dev);
-> >> +
-> >> +             /*
-> >> +              * mask irq line during oneshot read since the sensor
-> >> +              * does not export the capability to disable data-ready line
-> >> +              * in the register map and it is enabled by default.
-> >> +              * If the line is unmasked during read_raw() it will be set
-> >> +              * active and never reset since the trigger is disabled
-> >> +              */  
-> >
-> > Nasty but well documented...
-> >
-> > I wonder if there is a nicer way to handle this... If we leave it on
-> > the issues is that we end up with the status being checked by the interrupt
-> > handler for the trigger (harmless if a waste of time) then the trigger
-> > being fired (with nothing associated with it).  No consumers are attached
-> > so we call notify done for all of them and finally that will result in
-> > a try reenable. You could supply one of those that results in a read
-> > to the device.  It think that would always deal with your case of
-> > the data ready getting stuck high..
-> >
-> > (Not totally sure though as it's been a while since I dealt with a
-> > sensor with this particular issue).
+> > -/*
+> > - * Input definitions common for all instances:
+> > - * stm32f4 can have up to 16 channels
+> > - * stm32h7 can have up to 20 channels
+> > - */
+> > -static const struct stm32_adc_chan_spec stm32_adc_channels[] = {
+> > -	{ IIO_VOLTAGE, 0, "in0" },
+> > -	{ IIO_VOLTAGE, 1, "in1" },
+> > -	{ IIO_VOLTAGE, 2, "in2" },
+> > -	{ IIO_VOLTAGE, 3, "in3" },
+> > -	{ IIO_VOLTAGE, 4, "in4" },
+> > -	{ IIO_VOLTAGE, 5, "in5" },
+> > -	{ IIO_VOLTAGE, 6, "in6" },
+> > -	{ IIO_VOLTAGE, 7, "in7" },
+> > -	{ IIO_VOLTAGE, 8, "in8" },
+> > -	{ IIO_VOLTAGE, 9, "in9" },
+> > -	{ IIO_VOLTAGE, 10, "in10" },
+> > -	{ IIO_VOLTAGE, 11, "in11" },
+> > -	{ IIO_VOLTAGE, 12, "in12" },
+> > -	{ IIO_VOLTAGE, 13, "in13" },
+> > -	{ IIO_VOLTAGE, 14, "in14" },
+> > -	{ IIO_VOLTAGE, 15, "in15" },
+> > -	{ IIO_VOLTAGE, 16, "in16" },
+> > -	{ IIO_VOLTAGE, 17, "in17" },
+> > -	{ IIO_VOLTAGE, 18, "in18" },
+> > -	{ IIO_VOLTAGE, 19, "in19" },
+> > -};
+> > -
+> >  static const unsigned int stm32f4_adc_resolutions[] = {
+> >  	/* sorted values so the index matches RES[1:0] in STM32F4_ADC_CR1 */
+> >  	12, 10, 8, 6,
+> >  };
 > >  
-> >> +             if (hw->irq > 0)
-> >> +                     disable_irq(hw->irq);
-> >> +             ret = st_uvis25_read_oneshot(hw, ch->address, val);
-> >> +             if (hw->irq > 0)
-> >> +                     enable_irq(hw->irq);
-> >> +             break;
-> >> +     }
-> >> +     default:
-> >> +             ret = -EINVAL;
-> >> +             break;
-> >> +     }
+> > +/* stm32f4 can have up to 16 channels */
+> >  static const struct stm32_adc_info stm32f4_adc_info = {
+> > -	.channels = stm32_adc_channels,
+> >  	.max_channels = 16,
+> >  	.resolutions = stm32f4_adc_resolutions,
+> >  	.num_res = ARRAY_SIZE(stm32f4_adc_resolutions),
+> > @@ -394,9 +356,9 @@ struct stm32_adc_info {
+> >  	16, 14, 12, 10, 8,
+> >  };
+> >  
+> > +/* stm32h7 can have up to 20 channels */
+> >  static const struct stm32_adc_info stm32h7_adc_info = {
+> > -	.channels = stm32_adc_channels,
+> > -	.max_channels = 20,
+> > +	.max_channels = STM32_ADC_CH_MAX,
+> >  	.resolutions = stm32h7_adc_resolutions,
+> >  	.num_res = ARRAY_SIZE(stm32h7_adc_resolutions),
+> >  };
+> > @@ -1628,15 +1590,16 @@ static void stm32_adc_smpr_init(struct stm32_adc *adc, int channel, u32 smp_ns)
+> >  }
+> >  
+> >  static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
+> > -				    struct iio_chan_spec *chan,
+> > -				    const struct stm32_adc_chan_spec *channel,
+> > +				    struct iio_chan_spec *chan, u32 vinp,
+> >  				    int scan_index, u32 smp)
+> >  {
+> >  	struct stm32_adc *adc = iio_priv(indio_dev);
+> > +	char *name = adc->chan_name[vinp];
+> >  
+> > -	chan->type = channel->type;
+> > -	chan->channel = channel->channel;
+> > -	chan->datasheet_name = channel->name;
+> > +	chan->type = IIO_VOLTAGE;
+> > +	chan->channel = vinp;
+> > +	snprintf(name, STM32_ADC_CH_SZ, "in%d", vinp);
+> > +	chan->datasheet_name = name;
+> >  	chan->scan_index = scan_index;
+> >  	chan->indexed = 1;
+> >  	chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
+> > @@ -1699,8 +1662,7 @@ static int stm32_adc_chan_of_init(struct iio_dev *indio_dev)
+> >  					   scan_index, &smp);
+> >  
+> >  		stm32_adc_chan_init_one(indio_dev, &channels[scan_index],
+> > -					&adc_info->channels[val],
+> > -					scan_index, smp);
+> > +					val, scan_index, smp);
+> >  		scan_index++;
+> >  	}
+> >    
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
