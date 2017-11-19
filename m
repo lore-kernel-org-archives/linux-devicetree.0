@@ -1,57 +1,97 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: iio: adc: stm32: add support for
- diff channels
-Date: Sun, 19 Nov 2017 16:48:03 +0000
-Message-ID: <20171119164803.22cd7f7f@archlinux>
-References: <1508923665-2274-1-git-send-email-fabrice.gasnier@st.com>
- <1508923665-2274-2-git-send-email-fabrice.gasnier@st.com>
- <20171027143729.7oqcps43qvieko4r@rob-hp-laptop>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5 3/4] pmbus (core): Add virtual page config bit
+Date: Sun, 19 Nov 2017 08:49:19 -0800
+Message-ID: <3e84eca8-7a10-abd3-b8df-babb5f4ac8a0@roeck-us.net>
+References: <cover.8f64654fcede136901874050318e64de7f1a68cb.1510974230.git-series.andrew@aj.id.au>
+ <c5ccfeab881181dfbfdbdfb26051bb4cd332f6e6.1510974230.git-series.andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171027143729.7oqcps43qvieko4r@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, Fabrice Gasnier <fabrice.gasnier@st.com>, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c5ccfeab881181dfbfdbdfb26051bb4cd332f6e6.1510974230.git-series.andrew@aj.id.au>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, linux-hwmon@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Oct 2017 09:37:29 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> On Wed, Oct 25, 2017 at 11:27:43AM +0200, Fabrice Gasnier wrote:
-> > STM32H7 ADC channels may be configured either as single-ended or
-> > differential.
-> > Add 'st,adc-diff-channels' property to support differential channels.
-> > Differential channels are defined as a pair of positive and negative
-> > inputs: vinp & vinn.
-> > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > ---
-> > Changes in v2:
-> > - Add differential channels example
-> > - Add a note on mixed single-ended / differential channels
-> > ---
-> >  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 24 ++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)  
+On 11/17/2017 07:26 PM, Andrew Jeffery wrote:
+> Some circumstances call for virtual pages, to expose multiple values
+> packed into an extended PMBus register in a manner non-compliant with
+> the PMBus standard. An example of this is the Maxim MAX31785 controller, which
+> extends the READ_FAN_SPEED_1 PMBus register from two to four bytes to support
+> tach readings for both rotors of a dual rotor fan. This extended register
+> contains two word-sized values, one reporting the rate of the fastest rotor,
+> the other the rate of the slowest. The concept of virtual pages aids this
+> situation by mapping the page number onto the value to be selected from the
+> vectored result.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> We should not try to set virtual pages on the device as such a page explicitly
+> doesn't exist; add a flag so we can avoid doing so.
 > 
-Thanks.  Applied to the togreg branch of iio.git and pushed out as
-testing for the autobuilders to play with it.
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>   drivers/hwmon/pmbus/pmbus.h      |  2 ++
+>   drivers/hwmon/pmbus/pmbus_core.c | 10 +++++++---
+>   2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
+> index b54d7604d3ef..d39d506aa63e 100644
+> --- a/drivers/hwmon/pmbus/pmbus.h
+> +++ b/drivers/hwmon/pmbus/pmbus.h
+> @@ -372,6 +372,8 @@ enum pmbus_sensor_classes {
+>   #define PMBUS_HAVE_PWM12	BIT(20)
+>   #define PMBUS_HAVE_PWM34	BIT(21)
+>   
+> +#define PMBUS_PAGE_VIRTUAL	BIT(31)
+> +
+>   enum pmbus_data_format { linear = 0, direct, vid };
+>   enum vrm_version { vr11 = 0, vr12, vr13 };
+>   
+> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+> index 631db88526b6..ba97230fcde7 100644
+> --- a/drivers/hwmon/pmbus/pmbus_core.c
+> +++ b/drivers/hwmon/pmbus/pmbus_core.c
+> @@ -164,14 +164,18 @@ int pmbus_set_page(struct i2c_client *client, int page)
+>   	int rv = 0;
+>   	int newpage;
+>   
+> -	if (page >= 0 && page != data->currpage) {
+> +	if (page < 0 || page == data->currpage)
+> +		return 0;
+> +
+> +	if (!(data->info->func[page] & PMBUS_PAGE_VIRTUAL)) {
+>   		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
+>   		newpage = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
+>   		if (newpage != page)
+>   			rv = -EIO;
 
-Thanks,
+This should probably be something like
+		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
+		if (rv < 0)
+			return rv;
+		newpage = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
+		if (newpage < 0)
+			return newpage;
+		if (newpage != page)
+			return -EIO;
 
-Jonathan
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We can actually drop 'newpage' and just use 'rv'.
+
+> -		else
+> -			data->currpage = page;
+>   	}
+> +
+> +	data->currpage = page;
+> +
+
+... otherwise currpage is set even on error.
+
+>   	return rv;
+
+this can then be
+	return 0;
+
+>   }
+>   EXPORT_SYMBOL_GPL(pmbus_set_page);
+> 
