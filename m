@@ -1,349 +1,829 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC v1 6/8] Bluetooth: hci_h5: add support for Realtek UART
- Bluetooth modules
-Date: Sun, 19 Nov 2017 09:29:36 +0100
-Message-ID: <665B6C30-D115-437A-B991-999A862736FE@holtmann.org>
-References: <20171117223543.32429-1-martin.blumenstingl@googlemail.com>
- <20171117223543.32429-7-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171117223543.32429-7-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] iio: light: Add support for Intersil isl76683
+ sensor
+Date: Sun, 19 Nov 2017 11:10:49 +0000
+Message-ID: <20171119111049.6f4323f0@archlinux>
+References: <1511047230-7021-1-git-send-email-chf.fritz@googlemail.com>
+        <1511047230-7021-2-git-send-email-chf.fritz@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1511047230-7021-2-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+On Sun, 19 Nov 2017 00:20:28 +0100
+Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
 
-> Realtek RTL8723BS and RTL8723DS are SDIO wifi chips with an embedded
-> Bluetooth controller which connects to the host via UART.
-> The H5 protocol is used for communication between host and device.
+> This patch adds support for Intersil isl76683 light sensor.
 > 
-> The Realtek "rtl8723bs_bt" and "rtl8723ds_bt" userspace Bluetooth UART
-> initialization tools (rtk_hciattach) use the following sequence:
-> 1) send H5 sync pattern (already supported by hci_h5)
-> 2) get LMP version (already supported by btrtl)
-> 3) get ROM version (already supported by btrtl)
-> 4) load the firmware and config for the current chipset (already
->   supported by btrtl)
-> 5) read UART settings from the config blob (already supported by btrtl)
-> 6) send UART settings via a vendor command to the device (which changes
->   the baudrate of the device and enables or disables flow control
->   depending on the config)
-> 7) change the baudrate and flow control settings on the host
-> 8) send the firmware and config blob to the device (already supported by
->   btrtl)
-> 
-> This uses the serdev library as well as the existing btrtl driver to
-> initialize the Bluetooth functionality, which consists of:
-> - identifying the device and loading the corresponding firmware and
->  config blobs (steps #2, #3 and #4)
-> - configuring the baudrate and flow control (steps #6 and #7)
-> - uploading the firmware to the device (step #8)
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+
+Hi Christoph, 
+
+Sorry my review on V1 was so superficial.  I missed some bigger stuff.
+Anyhow, comments inline.
+
+Main one is that you are hand spinning a tight loop trigger here.
+There is no need to do so given we have one already that does this cleaner
+(I wrote it as a response to the last time we had a driver doing what you
+have here).  Use that and you'll have a much more generic result whilst
+achieving much the same result as you have here.
+
+Jonathan
+
 > ---
-> drivers/bluetooth/Kconfig  |   1 +
-> drivers/bluetooth/hci_h5.c | 195 ++++++++++++++++++++++++++++++++++++++++++++-
-> 2 files changed, 195 insertions(+), 1 deletion(-)
+>  drivers/iio/light/Kconfig    |  12 +
+>  drivers/iio/light/Makefile   |   1 +
+>  drivers/iio/light/isl76683.c | 663 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 676 insertions(+)
+>  create mode 100644 drivers/iio/light/isl76683.c
 > 
-> diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
-> index 60e1c7d6986d..3001f1200c72 100644
-> --- a/drivers/bluetooth/Kconfig
-> +++ b/drivers/bluetooth/Kconfig
-> @@ -146,6 +146,7 @@ config BT_HCIUART_LL
-> config BT_HCIUART_3WIRE
-> 	bool "Three-wire UART (H5) protocol support"
-> 	depends on BT_HCIUART
-> +	select BT_RTL if SERIAL_DEV_BUS
-> 	help
-> 	  The HCI Three-wire UART Transport Layer makes it possible to
-> 	  user the Bluetooth HCI over a serial port interface. The HCI
-> diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
-> index 6a8d0d06aba7..7d584e5928bf 100644
-> --- a/drivers/bluetooth/hci_h5.c
-> +++ b/drivers/bluetooth/hci_h5.c
-> @@ -28,7 +28,14 @@
-> #include <net/bluetooth/bluetooth.h>
-> #include <net/bluetooth/hci_core.h>
-> 
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/serdev.h>
+> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+> index 2356ed9..4f0882c 100644
+> --- a/drivers/iio/light/Kconfig
+> +++ b/drivers/iio/light/Kconfig
+> @@ -194,6 +194,18 @@ config ISL29125
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called isl29125.
+>  
+> +config ISL76683
+> +	tristate "Intersil ISL76683 light sensor"
+> +	depends on I2C
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	  Say Y here if you want to build a driver for the Intersil ISL76683
+> +	  light sensor for I2C.
 > +
-> #include "hci_uart.h"
-> +#include "btrtl.h"
-> 
-> #define HCI_3WIRE_ACK_PKT	0
-> #define HCI_3WIRE_LINK_PKT	15
-> @@ -97,6 +104,13 @@ struct h5 {
-> 	} sleep;
-> };
-> 
-> +struct h5_device {
-> +	struct hci_uart hu;
-> +	struct gpio_desc *disable_gpio;
-> +	struct gpio_desc *reset_gpio;
-> +	int (*vendor_setup)(struct h5_device *h5_dev);
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called isl76683.
+> +
+>  config HID_SENSOR_ALS
+>  	depends on HID_SENSOR_HUB
+>  	select IIO_BUFFER
+> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+> index fa32fa4..886a51f 100644
+> --- a/drivers/iio/light/Makefile
+> +++ b/drivers/iio/light/Makefile
+> @@ -22,6 +22,7 @@ obj-$(CONFIG_HID_SENSOR_PROX)	+= hid-sensor-prox.o
+>  obj-$(CONFIG_SENSORS_ISL29018)	+= isl29018.o
+>  obj-$(CONFIG_SENSORS_ISL29028)	+= isl29028.o
+>  obj-$(CONFIG_ISL29125)		+= isl29125.o
+> +obj-$(CONFIG_ISL76683)		+= isl76683.o
+>  obj-$(CONFIG_JSA1212)		+= jsa1212.o
+>  obj-$(CONFIG_SENSORS_LM3533)	+= lm3533-als.o
+>  obj-$(CONFIG_LTR501)		+= ltr501.o
+> diff --git a/drivers/iio/light/isl76683.c b/drivers/iio/light/isl76683.c
+> new file mode 100644
+> index 0000000..4d158f6
+> --- /dev/null
+> +++ b/drivers/iio/light/isl76683.c
+> @@ -0,0 +1,663 @@
+> +/*
+> + * IIO driver for the light sensor ISL76683.
+> + *
+> + * Copyright (c) 2017 Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * Datasheet:
+> + *  http://www.intersil.com/content/dam/Intersil/documents/isl7/isl76683.pdf
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/util_macros.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +
+> +#define ISL76683_REG_CMD		0x00
+> +#define ISL76683_REG_CTRL		0x01
+> +#define ISL76683_REG_THR_HI		0x02
+> +#define ISL76683_REG_THR_LO		0x03
+> +#define ISL76683_REG_SENSOR_LSB		0x04
+> +#define ISL76683_REG_SENSOR_MSB		0x05
+> +#define ISL76683_REG_CLEAR_INT		0x40
+> +#define ISL76683_REGMAP_MAX		0x40
+> +
+> +#define ISL76683_CMD_ENABLE		BIT(7)
+> +#define ISL76683_CMD_PWRDWN		BIT(6)
+> +#define ISL76683_WIDTH_MASK		0x3
+> +#define ISL76683_PHOTOD_SHFT		2
+> +#define ISL76683_PHOTOD_MASK		GENMASK(3, ISL76683_PHOTOD_SHFT)
+> +#define ISL76683_INTPERS_MASK		0x3
+> +#define ISL76683_LUXRANGE_SHFT		2
+> +#define ISL76683_LUXRANGE_MASK		(0x3 << ISL76683_LUXRANGE_SHFT)
+> +#define ISL76683_LUXRANGE_STR		"1000 4000 16000 64000"
+> +
+> +enum isl76683_dmode {
+> +	ISL76683_DIODE_0 = 0,
+> +	ISL76683_DIODE_IR,
+> +	ISL76683_DIODE_DIFF,
 > +};
 > +
-> static void h5_reset_rx(struct h5 *h5);
-> 
-> static void h5_link_control(struct hci_uart *hu, const void *data, size_t len)
-> @@ -190,6 +204,7 @@ static int h5_open(struct hci_uart *hu)
-> {
-> 	struct h5 *h5;
-> 	const unsigned char sync[] = { 0x01, 0x7e };
-> +	int err;
-> 
-> 	BT_DBG("hu %p", hu);
-> 
-> @@ -210,6 +225,14 @@ static int h5_open(struct hci_uart *hu)
-> 
-> 	h5->tx_win = H5_TX_WIN_MAX;
-> 
-> +	if (hu->serdev) {
-> +		err = serdev_device_open(hu->serdev);
-> +		if (err) {
-> +			bt_dev_err(hu->hdev, "failed to open serdev: %d", err);
-> +			return err;
-> +		}
+> +enum isl76683_lux_range {
+> +	ISL76683_LUX_1000 = 0,
+> +	ISL76683_LUX_4000,
+> +	ISL76683_LUX_16000,
+> +	ISL76683_LUX_64000,
+> +};
+> +
+> +static const int isl76683_lux_ranges_available[] = {
+> +	1000, 4000, 16000, 64000};
+> +
+> +#define ISL76683_LUX_RANGE_DEFAULT	ISL76683_LUX_1000
+> +#define ISL76683_DIODE_MAX		ISL76683_DIODE_DIFF
+> +#define ISL76683_DIODE_DEFAULT		ISL76683_DIODE_0
+> +#define ISL76683_WIDTH_DEFAULT		0x0
+> +#define ISL76683_RESOLUTION_DEFAULT	16
+> +#define ISL76683_EXT_RESISTOR_DEFAULT	100
+> +#define ISL76683_KOHM_MIN		1
+> +#define ISL76683_KOHM_MAX		1000
+> +#define ISL76683_INTPERS_DEFAULT	0x0
+> +#define ISL76683_THR_DEFAULT		0x7f
+> +
+> +struct isl76683_chip {
+> +	enum isl76683_lux_range	luxrange;
+> +	int			external_resistor;
+> +	enum isl76683_dmode	photodiode;
+> +	struct i2c_client	*client;
+> +	struct regmap		*rmp;
+> +	struct completion	irq_complete;
+> +	struct iio_trigger	*trig;
+> +	bool			trig_enabled;
+> +	struct mutex		lock;
+> +	s64			time_ns;
+> +};
+> +
+> +static bool isl76683_readable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case ISL76683_REG_CMD:
+> +	case ISL76683_REG_CTRL:
+> +	case ISL76683_REG_THR_HI:
+> +	case ISL76683_REG_THR_LO:
+> +	case ISL76683_REG_SENSOR_LSB:
+> +	case ISL76683_REG_SENSOR_MSB:
+> +	case ISL76683_REG_CLEAR_INT:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static bool isl76683_writeable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case ISL76683_REG_CMD:
+> +	case ISL76683_REG_CTRL:
+> +	case ISL76683_REG_THR_HI:
+> +	case ISL76683_REG_THR_LO:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static bool isl76683_is_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case ISL76683_REG_SENSOR_LSB:
+> +	case ISL76683_REG_SENSOR_MSB:
+> +	case ISL76683_REG_CLEAR_INT:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static const struct regmap_config isl76683_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = ISL76683_REGMAP_MAX,
+> +	.readable_reg = isl76683_readable_reg,
+> +	.writeable_reg = isl76683_writeable_reg,
+> +	.volatile_reg = isl76683_is_volatile_reg,
+> +	.cache_type = REGCACHE_RBTREE,
+> +};
+> +
+> +static int isl76683_set_config(struct isl76683_chip *chip)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(chip->rmp, ISL76683_REG_CTRL,
+> +				ISL76683_LUXRANGE_MASK | ISL76683_INTPERS_MASK,
+> +				(chip->luxrange << ISL76683_LUXRANGE_SHFT) |
+> +				ISL76683_INTPERS_DEFAULT);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = regmap_update_bits(chip->rmp, ISL76683_REG_CMD,
+> +				ISL76683_PHOTOD_MASK | ISL76683_WIDTH_MASK,
+> +				(chip->photodiode << ISL76683_PHOTOD_SHFT) |
+> +				ISL76683_WIDTH_DEFAULT);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = regmap_write(chip->rmp, ISL76683_REG_THR_HI,
+> +				ISL76683_THR_DEFAULT);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return regmap_write(chip->rmp, ISL76683_REG_THR_LO,
+> +				ISL76683_THR_DEFAULT);
+> +}
+> +
+> +static int isl76683_power(struct isl76683_chip *chip, bool on)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_update_bits(chip->rmp, ISL76683_REG_CMD,
+> +				ISL76683_CMD_ENABLE | ISL76683_CMD_PWRDWN,
+> +				0x0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = regmap_update_bits(chip->rmp, ISL76683_REG_CMD,
+> +				ISL76683_CMD_ENABLE | ISL76683_CMD_PWRDWN,
+> +				on ? ISL76683_CMD_ENABLE : ISL76683_CMD_PWRDWN);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return on ? isl76683_set_config(chip) : 0;
+> +}
+> +
+> +static int isl76683_reset(struct isl76683_chip *chip)
+> +{
+> +	int ret;
+> +
+> +	ret = isl76683_power(chip, false);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return isl76683_power(chip, true);
+> +}
+> +
+> +static int isl76683_get_sensordata(struct isl76683_chip *chip,
+> +			     bool is_processed, int *val)
+> +{
+> +	unsigned int sensor_data, range, fsr;
+> +	__le16 sensor_raw;
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(chip->rmp, ISL76683_REG_SENSOR_LSB,
+> +				&sensor_raw, sizeof(sensor_raw));
+> +	if (ret)
+> +		return ret;
+> +
+> +	sensor_data = le16_to_cpu(sensor_raw);
+> +
+> +	if (!is_processed) {
+> +		*val = sensor_data;
+> +		return 0;
 > +	}
 > +
-> 	set_bit(HCI_UART_INIT_PENDING, &hu->hdev_flags);
-> 
-> 	/* Send initial sync request */
-> @@ -219,6 +242,23 @@ static int h5_open(struct hci_uart *hu)
-> 	return 0;
-> }
-> 
-> +static int h5_setup(struct hci_uart *hu)
-> +{
-> +	int err;
-> +	struct h5_device *h5_dev;
+> +	/* range values taken from datasheet (table 9) */
+> +	if (chip->luxrange == ISL76683_LUX_1000)
+> +		range = 973;
+> +	else if (chip->luxrange == ISL76683_LUX_4000)
+> +		range = 3892;
+> +	else if (chip->luxrange == ISL76683_LUX_16000)
+> +		range = 15568;
+> +	else if (chip->luxrange == ISL76683_LUX_64000)
+> +		range = 62272;
+> +	else
+> +		return -EINVAL;
 > +
-> +	if (!hu->serdev)
-> +		return 0;
-> +
-> +	h5_dev = serdev_device_get_drvdata(hu->serdev);
-> +
-> +	err = h5_dev->vendor_setup(h5_dev);
-> +	if (err)
-> +		return err;
+> +	/* equations from datasheet (EQ.3 and EQ.4) */
+> +	fsr = (100 * range) / chip->external_resistor;
+> +	*val = (fsr * sensor_data) / (1 << ISL76683_RESOLUTION_DEFAULT);
 
-	if (h5_dev->vendor_setup)
-		return h5_dev->vendor_setup(h5_dev);
+Why is it necessary to do this processing in kernel?
 
 > +
 > +	return 0;
 > +}
 > +
-> static int h5_close(struct hci_uart *hu)
-> {
-> 	struct h5 *h5 = hu->priv;
-> @@ -229,6 +269,15 @@ static int h5_close(struct hci_uart *hu)
-> 	skb_queue_purge(&h5->rel);
-> 	skb_queue_purge(&h5->unrel);
-> 
-> +	if (hu->serdev) {
-> +		struct h5_device *h5_dev;
-> +
-> +		h5_dev = serdev_device_get_drvdata(hu->serdev);
-> +		gpiod_set_value_cansleep(h5_dev->disable_gpio, 1);
-> +
-> +		serdev_device_close(hu->serdev);
-> +	}
-> +
-> 	kfree(h5);
-> 
-> 	return 0;
-> @@ -316,7 +365,10 @@ static void h5_handle_internal_rx(struct hci_uart *hu)
-> 			h5->tx_win = (data[2] & 0x07);
-> 		BT_DBG("Three-wire init complete. tx_win %u", h5->tx_win);
-> 		h5->state = H5_ACTIVE;
-> -		hci_uart_init_ready(hu);
-> +
-> +		/* serdev does not support the "init_ready" signal */
-> +		if (!hu->serdev)
-> +			hci_uart_init_ready(hu);
-> 		return;
-> 	} else if (memcmp(data, sleep_req, 2) == 0) {
-> 		BT_DBG("Peer went to sleep");
-> @@ -739,10 +791,147 @@ static int h5_flush(struct hci_uart *hu)
-> 	return 0;
-> }
-> 
-> +#if IS_ENABLED(CONFIG_SERIAL_DEV_BUS)
-> +static int h5_setup_realtek(struct h5_device *h5_dev)
+> +static irqreturn_t isl76683_interrupt_handler(int irq, void *private)
 > +{
-> +	struct hci_uart *hu = &h5_dev->hu;
-> +	int err = 0, retry = 3;
-> +	struct sk_buff *skb;
-> +	struct btrtl_device_info *btrtl_dev;
-> +	__le32 baudrate_data;
-> +	u32 device_baudrate;
-> +	unsigned int controller_baudrate;
-> +	bool flow_control;
+> +	struct iio_dev *indio_dev = private;
+> +	struct isl76683_chip *chip = iio_priv(indio_dev);
 > +
-> +	/* devices always start with flow control disabled and even parity */
-> +	serdev_device_set_flow_control(hu->serdev, false);
-> +	serdev_device_set_parity(hu->serdev, true, false);
+> +	chip->time_ns = iio_get_time_ns(indio_dev);
 > +
-> +	do {
-> +		/* Configure BT_DISn and BT_RST_N to LOW state */
-> +		gpiod_set_value_cansleep(h5_dev->reset_gpio, 1);
-> +		gpiod_set_value_cansleep(h5_dev->disable_gpio, 1);
-> +		msleep(500);
-> +		gpiod_set_value_cansleep(h5_dev->reset_gpio, 0);
-> +		gpiod_set_value_cansleep(h5_dev->disable_gpio, 0);
-> +		msleep(500);
-
-I really hate random msleep() without comments. Explain in the comment block why this specific wait is good.
-
+> +	if (chip->trig_enabled)
+> +		iio_trigger_poll(chip->trig);
 > +
-> +		btrtl_dev = btrtl_initialize(hu->hdev);
-> +		if (!IS_ERR(btrtl_dev))
-> +			break;
+> +	if (!completion_done(&chip->irq_complete))
+> +		complete(&chip->irq_complete);
 > +
-> +		/* Toggle BT_DISn and retry */
-> +	} while (retry--);
-> +
-> +	if (IS_ERR(btrtl_dev))
-> +		return PTR_ERR(btrtl_dev);
-> +
-> +	err = btrtl_get_uart_settings(hu->hdev, btrtl_dev,
-> +				      &controller_baudrate, &device_baudrate,
-> +				      &flow_control);
-> +	if (err)
-> +		goto out_free;
-> +
-> +	baudrate_data = cpu_to_le32(device_baudrate);
-> +	skb = __hci_cmd_sync(hu->hdev, 0xfc17, sizeof(baudrate_data),
-> +			     &baudrate_data, HCI_INIT_TIMEOUT);
-> +	if (IS_ERR(skb)) {
-> +		bt_dev_err(hu->hdev, "set baud rate command failed");
-> +		err = -PTR_ERR(skb);
-> +		goto out_free;
-> +	} else {
-> +		kfree_skb(skb);
-> +	}
-> +
-> +	msleep(500);
-
-Same here, explain why this time is the right time to wait.
-
-> +
-> +	serdev_device_set_baudrate(hu->serdev, controller_baudrate);
-> +	serdev_device_set_flow_control(hu->serdev, flow_control);
-> +
-> +	err = btrtl_download_firmware(hu->hdev, btrtl_dev);
-> +
-> +out_free:
-> +	btrtl_free(btrtl_dev);
-> +
-> +	return err;
+> +	return IRQ_HANDLED;
 > +}
 > +
-> +static const struct hci_uart_proto h5p;
-> +
-> +static int hci_h5_probe(struct serdev_device *serdev)
+> +static inline int isl76683_start_measurement(struct isl76683_chip *chip)
 > +{
-> +	struct hci_uart *hu;
-> +	struct h5_device *h5_dev;
+> +	int dummy;
 > +
-> +	h5_dev = devm_kzalloc(&serdev->dev, sizeof(*h5_dev), GFP_KERNEL);
-> +	if (!h5_dev)
+> +	/* dummy read is clearing irq and triggers new measurement */
+> +	return regmap_read(chip->rmp, ISL76683_REG_CLEAR_INT, &dummy);
+> +}
+> +
+> +static int isl76683_singleshot_conversion(struct isl76683_chip *chip,
+> +					  const struct iio_chan_spec *chan,
+> +					  bool is_processed, int *val)
+> +{
+> +	long timeout;
+> +	int ret;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_LIGHT_BOTH:
+> +		chip->photodiode = ISL76683_DIODE_DIFF;
+> +		break;
+> +	case IIO_MOD_LIGHT_IR:
+> +		chip->photodiode = ISL76683_DIODE_IR;
+> +		break;
+> +	default:
+> +		chip->photodiode = ISL76683_DIODE_0;
+> +	}
+> +
+> +	ret = isl76683_set_config(chip);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = isl76683_start_measurement(chip);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* wait for measurement to complete */
+> +	timeout = wait_for_completion_interruptible_timeout(
+> +			&chip->irq_complete,
+> +			msecs_to_jiffies(5000));
+> +	if (timeout == 0) {
+> +		dev_err(&chip->client->dev, "measurement timed out\n");
+> +		return -ETIMEDOUT;
+> +	} else if (timeout < 0) {
+> +		dev_err(&chip->client->dev, "wait for measurement failed\n");
+> +		return -EINTR;
+> +	}
+> +
+> +	ret = isl76683_get_sensordata(chip, is_processed, val);
+> +	if (ret) {
+> +		dev_err(&chip->client->dev, "%s: Error %d reading lux\n",
+> +				__func__, ret);
+> +		return ret;
+> +	}
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static irqreturn_t isl76683_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct isl76683_chip *chip = iio_priv(indio_dev);
+> +	u8 data[16] = { }; /* 2x 8-bit data + padding + 8 bytes timestamp */
+> +	__le16 buf;
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(chip->rmp, ISL76683_REG_SENSOR_LSB, &buf,
+> +			       sizeof(buf));
+> +	if (ret)
+> +		return IRQ_HANDLED;
+> +
+> +	data[0] = buf;
+
+Only the bottom 8 bits?
+
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, data, chip->time_ns);
+> +
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	ret = isl76683_start_measurement(chip);
+> +	if (ret < 0)
+> +		return IRQ_HANDLED;
+
+Not really worth checking ret :)  Anyhow, this will go away I think given
+comments below.
+
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int isl76683_buffer_preenable(struct iio_dev *indio_dev)
+> +{
+> +	struct isl76683_chip *chip = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	chip->photodiode = indio_dev->channels[0].channel2;
+> +	ret = isl76683_set_config(chip);
+
+This is configuring the device to match the scan mode requested.
+Right callback for that is update scan_mode in struct iio_info.
+
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct iio_buffer_setup_ops isl76683_buffer_setup_ops = {
+> +	.preenable = &isl76683_buffer_preenable,
+> +	.predisable = iio_triggered_buffer_predisable,
+> +	.postenable = iio_triggered_buffer_postenable,
+> +	.validate_scan_mask = &iio_validate_scan_mask_onehot,
+> +};
+> +
+> +static int isl76683_read_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int *val, int *val2, long mask)
+> +{
+> +	struct isl76683_chip *chip = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = isl76683_singleshot_conversion(chip, chan, false, val);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		return ret;
+> +	case IIO_CHAN_INFO_PROCESSED:
+> +		ret = iio_device_claim_direct_mode(indio_dev);
+> +		if (ret)
+> +			return ret;
+> +		ret = isl76683_singleshot_conversion(chip, chan, true, val);
+> +		iio_device_release_direct_mode(indio_dev);
+> +		return ret;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = isl76683_lux_ranges_available[chip->luxrange];
+> +		return IIO_VAL_INT;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int isl76683_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     int val, int val2, long mask)
+> +{
+> +	struct isl76683_chip *chip = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		mutex_lock(&chip->lock);
+> +		chip->luxrange = find_closest(val,
+> +			isl76683_lux_ranges_available,
+> +			ARRAY_SIZE(isl76683_lux_ranges_available));
+> +		ret = isl76683_set_config(chip);
+> +		mutex_unlock(&chip->lock);
+> +		return ret;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static IIO_CONST_ATTR(in_illuminance_scale_available,
+> +		ISL76683_LUXRANGE_STR);
+> +
+> +static struct attribute *isl76683_attributes[] = {
+> +	&iio_const_attr_in_illuminance_scale_available.dev_attr.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group isl76683_attribute_group = {
+> +	.attrs = isl76683_attributes,
+> +};
+> +
+> +#define ISL76683_CHANNEL(_ch2, _si) { \
+> +	.type = IIO_LIGHT, \
+> +	.modified = 1, \
+> +	.channel2 = _ch2, \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
+> +			BIT(IIO_CHAN_INFO_PROCESSED), \
+
+Channels should not be provided in both raw and processed forms.
+The only time to provide processed data is when there is a reason
+we can't provide the raw data (usually annoying non linear scaling etc).
+So just provide the raw form here.
+
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
+> +	.scan_index = _si, \
+> +	.scan_type = { \
+> +		.sign = 'u', \
+> +		.realbits = 16, \
+> +		.storagebits = 16, \
+> +		.endianness = IIO_LE, \
+> +	}, \
+> +}
+> +
+> +static const struct iio_chan_spec isl76683_channels[] = {
+> +	{
+> +		.type = IIO_LIGHT,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +			BIT(IIO_CHAN_INFO_PROCESSED),
+
+Again, provide raw only. Conversion up to userspace (which has
+the advantage of floating point maths!)
+
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index = 0,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 16,
+> +			.storagebits = 16,
+> +			.endianness = IIO_LE,
+> +		},
+> +	},
+> +	ISL76683_CHANNEL(IIO_MOD_LIGHT_IR, 1),
+> +	ISL76683_CHANNEL(IIO_MOD_LIGHT_BOTH, 2),
+> +	IIO_CHAN_SOFT_TIMESTAMP(3),
+> +};
+> +
+> +static const struct iio_info isl76683_info = {
+> +	.read_raw = isl76683_read_raw,
+> +	.write_raw = isl76683_write_raw,
+> +	.attrs = &isl76683_attribute_group,
+> +};
+> +
+> +static int isl76683_set_trigger_state(struct iio_trigger *trig, bool enable)
+> +{
+> +	struct isl76683_chip *chip = iio_trigger_get_drvdata(trig);
+> +	int ret;
+> +
+> +	if (enable) {
+> +		chip->trig_enabled = true;
+
+This is a little unusual.
+
+Superficially it looks the device doesn't really have an internal sequencer, but
+rather is triggered on demand and you are doing that in a fairly tight loop?
+
+For that we have the generic iio-trig-loop.   Please look at whether
+that can meet your usecase. It basically relies on using a thread to call
+the irq thread of a device in a tight loop.
+
+So the threaded part of the irq handler would do:
+1. isl76683_start_measurement
+2. Wait on completion
+3. (completion from the actual interrupt handler)
+4. grab data to buffer and return - then the loop trigger would restart
+the sequence.
+
+This makes it compatible with other triggers as well so a high resolution timer
+trigger of sysfs trigger would work fine as well.
+
+> +		ret = isl76683_start_measurement(chip);
+> +		if (ret < 0)
+> +			return ret;
+> +	} else
+> +		chip->trig_enabled = false;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_trigger_ops isl76683_trigger_ops = {
+> +	.owner = THIS_MODULE,
+
+This field is gone.  So drop the .owner from here.  If not I
+can clean up when applying.   Note we dropped this in favour
+of doing the equivalent using some macro magic.
+
+> +	.set_trigger_state = isl76683_set_trigger_state,
+> +	.validate_device = iio_trigger_validate_own_device,
+> +};
+> +
+> +static int isl76683_probe(struct i2c_client *client,
+> +			  const struct i2c_device_id *id)
+> +{
+> +	struct isl76683_chip *chip;
+> +	struct iio_dev *indio_dev;
+> +	struct device_node *np = client->dev.of_node;
+> +	int rs = ISL76683_EXT_RESISTOR_DEFAULT;
+> +	int v, ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*chip));
+> +	if (!indio_dev)
 > +		return -ENOMEM;
 > +
-> +	hu = &h5_dev->hu;
-> +	hu->serdev = serdev;
+> +	chip = iio_priv(indio_dev);
 > +
-> +	serdev_device_set_drvdata(serdev, h5_dev);
+> +	i2c_set_clientdata(client, indio_dev);
+> +	chip->client = client;
 > +
-> +	h5_dev->vendor_setup = of_device_get_match_data(&serdev->dev);
+> +	if (np) {
+> +		ret = of_property_read_u32(np,
+> +				"isil,external-resistor-kilo-ohms", &v);
+> +		if (ret || v < ISL76683_KOHM_MIN || v > ISL76683_KOHM_MAX)
+> +			dev_warn(&client->dev,
+> +				"assuming %i kOhm resistor\n", rs);
+> +		else
+> +			rs = v;
+> +	}
 > +
-> +	h5_dev->disable_gpio = devm_gpiod_get_optional(&serdev->dev, "disable",
-> +						       GPIOD_OUT_LOW);
-> +	if (IS_ERR(h5_dev->disable_gpio))
-> +		return PTR_ERR(h5_dev->disable_gpio);
+> +	chip->luxrange = ISL76683_LUX_RANGE_DEFAULT;
+> +	chip->external_resistor = rs;
+> +	chip->photodiode = ISL76683_DIODE_DEFAULT;
 > +
-> +	h5_dev->reset_gpio = devm_gpiod_get_optional(&serdev->dev, "reset",
-> +						     GPIOD_OUT_LOW);
-> +	if (IS_ERR(h5_dev->reset_gpio))
-> +		return PTR_ERR(h5_dev->reset_gpio);
+> +	chip->rmp = devm_regmap_init_i2c(client, &isl76683_regmap_config);
+> +	if (IS_ERR(chip->rmp)) {
+> +		ret = PTR_ERR(chip->rmp);
+> +		dev_err(&client->dev, "%s: Error %d initializing regmap\n",
+> +			__func__, ret);
+> +		return ret;
+> +	}
 > +
-> +	hci_uart_set_speeds(hu, 115200, 0);
+> +	mutex_init(&chip->lock);
 > +
-> +	return hci_uart_register_device(hu, &h5p);
+> +	init_completion(&chip->irq_complete);
+> +
+> +	if (!client->irq) {
+> +		dev_err(&client->dev, "no interrupt configured\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	indio_dev->dev.parent = &client->dev;
+> +	indio_dev->info = &isl76683_info;
+> +	indio_dev->channels = isl76683_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(isl76683_channels);
+> +	indio_dev->name = id->name;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	chip->trig_enabled = false;
+> +	chip->trig = devm_iio_trigger_alloc(&client->dev, "%s-dev%d",
+> +			indio_dev->name, indio_dev->id);
+> +	if (!chip->trig)
+> +		return -ENOMEM;
+> +
+> +	chip->trig->ops = &isl76683_trigger_ops;
+> +	chip->trig->dev.parent = &client->dev;
+> +	iio_trigger_set_drvdata(chip->trig, chip);
+> +
+> +	ret = devm_request_irq(&client->dev, client->irq,
+> +			isl76683_interrupt_handler,
+> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +			"isl76683_event", indio_dev);
+> +	if (ret) {
+> +		dev_err(&client->dev, "irq request error\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_iio_trigger_register(&client->dev, chip->trig);
+> +	if (ret) {
+> +		dev_err(&client->dev, "iio_trigger register error\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = isl76683_reset(chip);
+> +	if (ret) {
+> +		dev_err(&client->dev, "reset failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = isl76683_get_sensordata(chip, false, &v);
+> +	if (ret) {
+> +		dev_err(&client->dev, "initial dummy readout failed\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev, NULL,
+> +			&isl76683_trigger_handler, &isl76683_buffer_setup_ops);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_iio_device_register(&client->dev, indio_dev);
+
+This always rings alarm bells.  The moment we have a devm register
+(which exposes the device to both in kernel and userspace consumers)
+and we still have a remove function, that almost always means we
+are looking at potential races.
+
+The key thing is that the unregister for this will occur after the
+remove function below.  Hence everything should still be working until
+that point...  Given you turn the chip off in remove - that seems
+rather unlikely!
+
+Upshot, you can't use managed device registration, but need to
+do use iio_device_register and iio_device_unregister to ensure the
+ordering is correct.
+
+> +	if (ret) {
+> +		dev_err(&client->dev,
+> +			"%s(): iio registration failed with error %d\n",
+> +			__func__, ret);
+> +	}
+> +
+> +	return ret;
 > +}
 > +
-> +static void hci_h5_remove(struct serdev_device *serdev)
+> +static int isl76683_remove(struct i2c_client *client)
 > +{
-> +	struct h5_device *h5_dev = serdev_device_get_drvdata(serdev);
-> +	struct hci_uart *hu = &h5_dev->hu;
-> +	struct hci_dev *hdev = hu->hdev;
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct isl76683_chip *chip = iio_priv(indio_dev);
 > +
-> +	cancel_work_sync(&hu->write_work);
+> +	pm_runtime_disable(&client->dev);
+> +	pm_runtime_set_suspended(&client->dev);
+
+So what form of pm runtime are you aiming for?  I'm guessing
+that the intent was to do a power down on idle?  That needs
+to be set up, otherwise this won't do runtime pm at all..
+
+If the intent is just to allow for that support later, then
+I'd prefer you actually just did standard suspend and
+resume for now and then made the change to the runtime forms
+when that support is ready.
+
+> +	isl76683_power(chip, false);
 > +
-> +	hci_unregister_dev(hdev);
-> +	hci_free_dev(hdev);
-> +	hu->proto->close(hu);
+> +	return 0;
 > +}
 > +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id hci_h5_of_match[] = {
-> +	{
-> +		.compatible = "realtek,rtl8723bs-bluetooth",
-> +		.data = h5_setup_realtek
-> +	},
-> +	{
-> +		.compatible = "realtek,rtl8723ds-bluetooth",
-> +		.data = h5_setup_realtek
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, hci_h5_of_match);
+> +#if defined(CONFIG_PM_SLEEP) || defined(CONFIG_PM)
+
+On this the growing movement in the kernel is not to bother
+with the ifdef fun, but instead mark these functions
+as __maybe_unused.  The compiler will happily drop them
+anyway as they aren't used.
+
+
+> +static int isl76683_runtime_suspend(struct device *dev)
+> +{
+> +	struct isl76683_chip *chip =
+> +		iio_priv(i2c_get_clientdata(to_i2c_client(dev)));
+> +	int ret;
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = isl76683_power(chip, false);
+> +	regcache_mark_dirty(chip->rmp);
+> +	mutex_unlock(&chip->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int isl76683_runtime_resume(struct device *dev)
+> +{
+> +	struct isl76683_chip *chip =
+> +		iio_priv(i2c_get_clientdata(to_i2c_client(dev)));
+> +	int ret;
+> +
+> +	mutex_lock(&chip->lock);
+> +	ret = isl76683_power(chip, true);
+> +	mutex_unlock(&chip->lock);
+> +
+> +	return ret;
+> +}
 > +#endif
 > +
-> +static struct serdev_device_driver hci_h5_drv = {
-> +	.driver		= {
-> +		.name	= "hci-h5",
-> +		.of_match_table = of_match_ptr(hci_h5_of_match),
-> +	},
-> +	.probe	= hci_h5_probe,
-> +	.remove	= hci_h5_remove,
+> +static const struct dev_pm_ops isl76683_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				pm_runtime_force_resume)
+> +	SET_RUNTIME_PM_OPS(isl76683_runtime_suspend,
+> +			   isl76683_runtime_resume, NULL)
 > +};
-> +#endif
 > +
-> static const struct hci_uart_proto h5p = {
-> 	.id		= HCI_UART_3WIRE,
-> 	.name		= "Three-wire (H5)",
-> 	.open		= h5_open,
-> +	.setup		= h5_setup,
-> 	.close		= h5_close,
-> 	.recv		= h5_recv,
-> 	.enqueue	= h5_enqueue,
-> @@ -752,10 +941,14 @@ static const struct hci_uart_proto h5p = {
-> 
-> int __init h5_init(void)
-> {
-> +	serdev_device_driver_register(&hci_h5_drv);
+> +static const struct i2c_device_id isl76683_id[] = {
+> +	{"isl76683", 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, isl76683_id);
 > +
-> 	return hci_uart_register_proto(&h5p);
-> }
-> 
-> int __exit h5_deinit(void)
-> {
-> +	serdev_device_driver_unregister(&hci_h5_drv);
+> +static const struct of_device_id isl76683_of_match[] = {
+> +	{ .compatible = "isil,isl76683", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, isl76683_of_match);
 > +
-> 	return hci_uart_unregister_proto(&h5p);
-> }
-
-Regards
-
-Marcel
+> +static struct i2c_driver isl76683_driver = {
+> +	.driver  = {
+> +		.name = "isl76683",
+> +		.of_match_table = isl76683_of_match,
+> +		.pm = &isl76683_pm_ops,
+> +	},
+> +	.probe = isl76683_probe,
+> +	.remove = isl76683_remove,
+> +	.id_table = isl76683_id,
+> +};
+> +
+> +module_i2c_driver(isl76683_driver);
+> +
+> +MODULE_DESCRIPTION("ISL76683 Ambient Light Sensor driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>");
