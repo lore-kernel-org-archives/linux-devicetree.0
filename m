@@ -1,97 +1,217 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5 3/4] pmbus (core): Add virtual page config bit
-Date: Sun, 19 Nov 2017 08:49:19 -0800
-Message-ID: <3e84eca8-7a10-abd3-b8df-babb5f4ac8a0@roeck-us.net>
-References: <cover.8f64654fcede136901874050318e64de7f1a68cb.1510974230.git-series.andrew@aj.id.au>
- <c5ccfeab881181dfbfdbdfb26051bb4cd332f6e6.1510974230.git-series.andrew@aj.id.au>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: light: add support to UVIS25 sensor
+Date: Sun, 19 Nov 2017 18:24:58 +0100
+Message-ID: <CAA2SeNL7FT+S9OjNggZ=rY9jnMaKNoZiF8JMYKSB-TmH-10UKw@mail.gmail.com>
+References: <20171025181609.3803-1-lorenzo.bianconi@st.com>
+ <20171025181609.3803-2-lorenzo.bianconi@st.com> <20171026183540.288dfdea@archlinux>
+ <CAA2SeN+WGorb6t52euEnVYOp+R8Mxa0_Y9eeM0qo6=-MsnZ3EQ@mail.gmail.com> <20171119164452.4f457021@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c5ccfeab881181dfbfdbdfb26051bb4cd332f6e6.1510974230.git-series.andrew@aj.id.au>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, linux-hwmon@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171119164452.4f457021@archlinux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/17/2017 07:26 PM, Andrew Jeffery wrote:
-> Some circumstances call for virtual pages, to expose multiple values
-> packed into an extended PMBus register in a manner non-compliant with
-> the PMBus standard. An example of this is the Maxim MAX31785 controller, which
-> extends the READ_FAN_SPEED_1 PMBus register from two to four bytes to support
-> tach readings for both rotors of a dual rotor fan. This extended register
-> contains two word-sized values, one reporting the rate of the fastest rotor,
-> the other the rate of the slowest. The concept of virtual pages aids this
-> situation by mapping the page number onto the value to be selected from the
-> vectored result.
-> 
-> We should not try to set virtual pages on the device as such a page explicitly
-> doesn't exist; add a flag so we can avoid doing so.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->   drivers/hwmon/pmbus/pmbus.h      |  2 ++
->   drivers/hwmon/pmbus/pmbus_core.c | 10 +++++++---
->   2 files changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
-> index b54d7604d3ef..d39d506aa63e 100644
-> --- a/drivers/hwmon/pmbus/pmbus.h
-> +++ b/drivers/hwmon/pmbus/pmbus.h
-> @@ -372,6 +372,8 @@ enum pmbus_sensor_classes {
->   #define PMBUS_HAVE_PWM12	BIT(20)
->   #define PMBUS_HAVE_PWM34	BIT(21)
->   
-> +#define PMBUS_PAGE_VIRTUAL	BIT(31)
-> +
->   enum pmbus_data_format { linear = 0, direct, vid };
->   enum vrm_version { vr11 = 0, vr12, vr13 };
->   
-> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-> index 631db88526b6..ba97230fcde7 100644
-> --- a/drivers/hwmon/pmbus/pmbus_core.c
-> +++ b/drivers/hwmon/pmbus/pmbus_core.c
-> @@ -164,14 +164,18 @@ int pmbus_set_page(struct i2c_client *client, int page)
->   	int rv = 0;
->   	int newpage;
->   
-> -	if (page >= 0 && page != data->currpage) {
-> +	if (page < 0 || page == data->currpage)
-> +		return 0;
-> +
-> +	if (!(data->info->func[page] & PMBUS_PAGE_VIRTUAL)) {
->   		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
->   		newpage = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
->   		if (newpage != page)
->   			rv = -EIO;
+Hi Jonathan,
 
-This should probably be something like
-		rv = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
-		if (rv < 0)
-			return rv;
-		newpage = i2c_smbus_read_byte_data(client, PMBUS_PAGE);
-		if (newpage < 0)
-			return newpage;
-		if (newpage != page)
-			return -EIO;
+comments inline.
 
-We can actually drop 'newpage' and just use 'rv'.
+> On Fri, 27 Oct 2017 15:26:09 +0200
+> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> > On Wed, 25 Oct 2017 20:16:08 +0200
+>> > Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >
+>> > Really minor English comment to start.
+>> > add support 'for' UVIS25 sensor
+>> >
+>>
+>> Hi Jonathan,
+>>
+>> I added regmap support, thanks for the hint, the code is much better :)
+>> Just wondering how to manage drdy issue in more elegant way.
+>> As you outlined, the problem is due to the fact the trigger interrupt
+>> is currently masked
+>> but st_uvis25_set_enable() in st_uvis25_read_oneshot() actually
+>> enables interrupt generation
+>> so during the msleep() we get tons of interrupts if we configured the
+>> line as IRQ_TYPE_LEVEL_HIGH.
+> Can you clear it with a single read at the start of the read_oneshot?
 
-> -		else
-> -			data->currpage = page;
->   	}
-> +
-> +	data->currpage = page;
-> +
+I guess we could have a potential race doing in that way right?
 
-... otherwise currpage is set even on error.
+>
+>> One possible solution could be to drop trigger support and push data
+>> to iio buffer directly in main irq thread handler (but in this way we
+>> are force to use just this kind of trigger).
+>> What do you think?
+>
+> Not ideal... It's another case of hardware doing something unhelpful
+> for software.  We'll have to paper over it as usual ;)
+>
+> Go with which ever route you think works out nicest.
 
->   	return rv;
+I guess the less ugly approach is to mask the irq line for one-shot reading.
+Right, in this case hw is doing something unhelpful for sw guys :)
 
-this can then be
-	return 0;
+>
+> Sorry for the delay on this reply - I missed your reply on my first
+> pass through my emails in amongst the other parts of the thread.
+>
 
->   }
->   EXPORT_SYMBOL_GPL(pmbus_set_page);
-> 
+No worries, I knew you were traveling :)
+Btw I have to send the v2 with a different Signed-off-by, my email
+address is no more valid since I moved to a different company
+
+Regards,
+Lorenzo
+
+>>
+>> Reagrds,
+>> Lorenzo
+>>
+> <snip>
+>>
+>> >> +
+>> >> +     err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
+>> >> +     if (err < 0) {
+>> >> +             dev_err(hw->dev, "failed to read %02x register\n", addr);
+>> >> +             goto unlock;
+>> >> +     }
+>> >> +
+>> >> +     data = (data & ~mask) | ((val << __ffs(mask)) & mask);
+>> >> +
+>> >> +     err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
+>> >> +     if (err < 0)
+>> >> +             dev_err(hw->dev, "failed to write %02x register\n", addr);
+>> >> +
+>> >> +unlock:
+>> >> +     mutex_unlock(&hw->lock);
+>> >> +
+>> >> +     return err < 0 ? err : 0;
+>> >> +}
+>> >> +
+>> >> +int st_uvis25_set_enable(struct st_uvis25_hw *hw, bool enable)
+>> >> +{
+>> >> +     int err;
+>> >> +
+>> >> +     err = st_uvis25_write_with_mask(hw, ST_UVIS25_REG_CTRL1_ADDR,
+>> >> +                                     ST_UVIS25_REG_ODR_MASK, enable);
+>> >> +     if (err < 0)
+>> >> +             return err;
+>> >> +
+>> >> +     hw->enabled = enable;
+>> >> +
+>> >> +     return 0;
+>> >> +}
+>> >> +
+>> >> +static int st_uvis25_read_oneshot(struct st_uvis25_hw *hw, u8 addr, int *val)
+>> >> +{
+>> >> +     u8 data;
+>> >> +     int err;
+>> >> +
+>> >> +     err = st_uvis25_set_enable(hw, true);
+>> >> +     if (err < 0)
+>> >> +             return err;
+>> >> +
+>> >> +     msleep(1500);
+>> >
+>> > Could drive this off the interrupt rather than disabling the interrupt?
+>> > Would that be a little neater (simple completion here).
+>> >
+>>
+>> What do you mean? I did not get you.
+> If the interrupt 'stuck' case wasn't occuring you could basically
+> let the buffered path run once in order to get the oneshot read.
+> Thus you could use an interrupt instead of a sleep.
+> Doesn't really matter though.
+>
+>>
+>> >> +
+>> >> +     err = hw->tf->read(hw->dev, addr, sizeof(data), &data);
+>> >> +     if (err < 0)
+>> >> +             return err;
+>> >
+>> > Is there a potential race here if for some reason we managed to
+>> > got to sleep for another conversion?  I think to be completely
+>> > safe you need force an additional read after the disable (or
+>> > will that fail to clear the data ready?
+>> >
+>>
+>> We can move the read access after the st_uvis25_set_enable(hw, false)
+>> in order to avoid an unnecessary read, do you agree?
+> You could perhaps get a later reading if you did that?
+> I don't suppose it really matters.
+
+The output register will keep the right value since the ODR is just
+1Hz, so I guess it does not matter
+
+>>
+>> >> +
+>> >> +     st_uvis25_set_enable(hw, false);
+>> >> +
+>> >> +     *val = data;
+>> >> +
+>> >> +     return IIO_VAL_INT;
+>> >> +}
+>> >> +
+>> >> +static int st_uvis25_read_raw(struct iio_dev *iio_dev,
+>> >> +                           struct iio_chan_spec const *ch,
+>> >> +                           int *val, int *val2, long mask)
+>> >> +{
+>> >> +     int ret;
+>> >> +
+>> >> +     ret = iio_device_claim_direct_mode(iio_dev);
+>> >> +     if (ret)
+>> >> +             return ret;
+>> >> +
+>> >> +     switch (mask) {
+>> >> +     case IIO_CHAN_INFO_PROCESSED: {
+>> >> +             struct st_uvis25_hw *hw = iio_priv(iio_dev);
+>> >> +
+>> >> +             /*
+>> >> +              * mask irq line during oneshot read since the sensor
+>> >> +              * does not export the capability to disable data-ready line
+>> >> +              * in the register map and it is enabled by default.
+>> >> +              * If the line is unmasked during read_raw() it will be set
+>> >> +              * active and never reset since the trigger is disabled
+>> >> +              */
+>> >
+>> > Nasty but well documented...
+>> >
+>> > I wonder if there is a nicer way to handle this... If we leave it on
+>> > the issues is that we end up with the status being checked by the interrupt
+>> > handler for the trigger (harmless if a waste of time) then the trigger
+>> > being fired (with nothing associated with it).  No consumers are attached
+>> > so we call notify done for all of them and finally that will result in
+>> > a try reenable. You could supply one of those that results in a read
+>> > to the device.  It think that would always deal with your case of
+>> > the data ready getting stuck high..
+>> >
+>> > (Not totally sure though as it's been a while since I dealt with a
+>> > sensor with this particular issue).
+>> >
+>> >> +             if (hw->irq > 0)
+>> >> +                     disable_irq(hw->irq);
+>> >> +             ret = st_uvis25_read_oneshot(hw, ch->address, val);
+>> >> +             if (hw->irq > 0)
+>> >> +                     enable_irq(hw->irq);
+>> >> +             break;
+>> >> +     }
+>> >> +     default:
+>> >> +             ret = -EINVAL;
+>> >> +             break;
+>> >> +     }
+
+
+
+-- 
+UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
+umount; make clean; sleep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
