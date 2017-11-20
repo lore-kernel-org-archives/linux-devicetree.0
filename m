@@ -1,140 +1,377 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v3 11/12] hwmon (occ): Add error handling
-Date: Mon, 20 Nov 2017 17:53:40 -0600
-Message-ID: <1511222021-562-12-git-send-email-eajames@linux.vnet.ibm.com>
+From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 06/12] hwmon (occ): Add command transport method for P8 and P9
+Date: Mon, 20 Nov 2017 17:53:35 -0600
+Message-ID: <1511222021-562-7-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1511222021-562-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1511222021-562-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, joel@jms.id.au, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1511222021-562-1-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 
-Add logic to detect a number of error scenarios on the OCC. Export any
-errors through an additional non-hwmon device attribute. The error
-counting and state verification are required by the OCC hardware
-specification.
+For the P8 OCC, add the procedure to send a command to the OCC over I2C
+bus. This involves writing the OCC command registers with serial
+communication operations (SCOMs) interpreted by the I2C slave. For the
+P9 OCC, add a procedure to use the OCC in-kernel API to send a command
+to the OCC through the SBE engine.
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
+Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/hwmon/occ/common.c | 55 +++++++++++++++++++++++++++++++++++++++++++++-
- drivers/hwmon/occ/common.h |  4 ++++
- 2 files changed, 58 insertions(+), 1 deletion(-)
+ drivers/hwmon/occ/p8_i2c.c | 185 ++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/hwmon/occ/p9_sbe.c |  95 ++++++++++++++++++++++-
+ 2 files changed, 278 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
-index 53e3592..7a0606d 100644
---- a/drivers/hwmon/occ/common.c
-+++ b/drivers/hwmon/occ/common.c
-@@ -18,6 +18,11 @@
+diff --git a/drivers/hwmon/occ/p8_i2c.c b/drivers/hwmon/occ/p8_i2c.c
+index 025471f..8032c0b 100644
+--- a/drivers/hwmon/occ/p8_i2c.c
++++ b/drivers/hwmon/occ/p8_i2c.c
+@@ -9,11 +9,29 @@
+ 
+ #include <linux/device.h>
+ #include <linux/errno.h>
++#include <linux/fsi-occ.h>
+ #include <linux/i2c.h>
++#include <linux/jiffies.h>
+ #include <linux/module.h>
++#include <linux/sched.h>
++#include <asm/unaligned.h>
  
  #include "common.h"
  
-+#define OCC_ERROR_COUNT_THRESHOLD	2	/* OCC HW defined */
++#define OCC_TIMEOUT_MS			1000
++#define OCC_CMD_IN_PRG_WAIT_MS		50
 +
-+#define OCC_STATE_SAFE			4
-+#define OCC_SAFE_TIMEOUT		msecs_to_jiffies(60000) /* 1 min */
++/* OCB (on-chip control bridge - interface to OCC) registers */
++#define OCB_DATA1			0x6B035
++#define OCB_ADDR			0x6B070
++#define OCB_DATA3			0x6B075
 +
- #define OCC_UPDATE_FREQUENCY		msecs_to_jiffies(1000)
++/* OCC SRAM address space */
++#define OCC_SRAM_ADDR_CMD		0xFFFF6000
++#define OCC_SRAM_ADDR_RESP		0xFFFF7000
++
++#define OCC_DATA_ATTN			0x20010000
++
+ struct p8_i2c_occ {
+ 	struct occ occ;
+ 	struct i2c_client *client;
+@@ -21,9 +39,174 @@ struct p8_i2c_occ {
  
- #define OCC_TEMP_SENSOR_FAULT		0xFF
-@@ -131,10 +136,22 @@ struct extended_sensor {
- 	u8 data[6];
- } __packed;
+ #define to_p8_i2c_occ(x)	container_of((x), struct p8_i2c_occ, occ)
  
-+static ssize_t occ_show_error(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
++static int p8_i2c_occ_getscom(struct i2c_client *client, u32 address, u8 *data)
 +{
-+	struct occ *occ = dev_get_drvdata(dev);
++	ssize_t rc;
++	__be64 buf;
++	struct i2c_msg msgs[2];
 +
-+	return snprintf(buf, PAGE_SIZE - 1, "%d\n", occ->error);
++	/* p8 i2c slave requires shift */
++	address <<= 1;
++
++	msgs[0].addr = client->addr;
++	msgs[0].flags = client->flags & I2C_M_TEN;
++	msgs[0].len = sizeof(u32);
++	/* address is a scom address; bus-endian */
++	msgs[0].buf = (char *)&address;
++
++	/* data from OCC is big-endian */
++	msgs[1].addr = client->addr;
++	msgs[1].flags = (client->flags & I2C_M_TEN) | I2C_M_RD;
++	msgs[1].len = sizeof(u64);
++	msgs[1].buf = (char *)&buf;
++
++	rc = i2c_transfer(client->adapter, msgs, 2);
++	if (rc < 0)
++		return rc;
++
++	*(u64 *)data = be64_to_cpu(buf);
++
++	return 0;
 +}
 +
-+static DEVICE_ATTR(occ_error, 0444, occ_show_error, NULL);
++static int p8_i2c_occ_putscom(struct i2c_client *client, u32 address, u8 *data)
++{
++	u32 buf[3];
++	ssize_t rc;
 +
- static int occ_poll(struct occ *occ)
- {
-+	struct occ_poll_response_header *header;
- 	u16 checksum = occ->poll_cmd_data + 1;
- 	u8 cmd[8];
-+	int rc;
- 
- 	/* big endian */
- 	cmd[0] = 0;			/* sequence number */
-@@ -147,7 +164,33 @@ static int occ_poll(struct occ *occ)
- 	cmd[7] = 0;
- 
- 	/* mutex should already be locked if necessary */
--	return occ->send_cmd(occ, cmd);
-+	rc = occ->send_cmd(occ, cmd);
-+	if (rc) {
-+		if (occ->error_count++ > OCC_ERROR_COUNT_THRESHOLD)
-+			occ->error = rc;
++	/* p8 i2c slave requires shift */
++	address <<= 1;
 +
++	/* address is bus-endian; data passed through from user as-is */
++	buf[0] = address;
++	memcpy(&buf[1], &data[4], sizeof(u32));
++	memcpy(&buf[2], data, sizeof(u32));
++
++	rc = i2c_master_send(client, (const char *)buf, sizeof(buf));
++	if (rc < 0)
 +		return rc;
++	else if (rc != sizeof(buf))
++		return -EIO;
++
++	return 0;
++}
++
++static int p8_i2c_occ_putscom_u32(struct i2c_client *client, u32 address,
++				  u32 data0, u32 data1)
++{
++	u8 buf[8];
++
++	memcpy(buf, &data0, 4);
++	memcpy(buf + 4, &data1, 4);
++
++	return p8_i2c_occ_putscom(client, address, buf);
++}
++
++static int p8_i2c_occ_putscom_be(struct i2c_client *client, u32 address,
++				 u8 *data)
++{
++	__be32 data0, data1;
++
++	memcpy(&data0, data, 4);
++	memcpy(&data1, data + 4, 4);
++
++	return p8_i2c_occ_putscom_u32(client, address, be32_to_cpu(data0),
++				      be32_to_cpu(data1));
++}
++
+ static int p8_i2c_occ_send_cmd(struct occ *occ, u8 *cmd)
+ {
+-	return -EOPNOTSUPP;
++	int i, rc;
++	unsigned long start;
++	u16 data_length;
++	const unsigned long timeout = msecs_to_jiffies(OCC_TIMEOUT_MS);
++	const long int wait_time = msecs_to_jiffies(OCC_CMD_IN_PRG_WAIT_MS);
++	struct p8_i2c_occ *p8_i2c_occ = to_p8_i2c_occ(occ);
++	struct i2c_client *client = p8_i2c_occ->client;
++	struct occ_response *resp = &occ->resp;
++
++	start = jiffies;
++
++	/* set sram address for command */
++	rc = p8_i2c_occ_putscom_u32(client, OCB_ADDR, OCC_SRAM_ADDR_CMD, 0);
++	if (rc)
++		return rc;
++
++	/* write command (expected to already be BE), we need bus-endian... */
++	rc = p8_i2c_occ_putscom_be(client, OCB_DATA3, cmd);
++	if (rc)
++		return rc;
++
++	/* trigger OCC attention */
++	rc = p8_i2c_occ_putscom_u32(client, OCB_DATA1, OCC_DATA_ATTN, 0);
++	if (rc)
++		return rc;
++
++	do {
++		/* set sram address for response */
++		rc = p8_i2c_occ_putscom_u32(client, OCB_ADDR,
++					    OCC_SRAM_ADDR_RESP, 0);
++		if (rc)
++			return rc;
++
++		rc = p8_i2c_occ_getscom(client, OCB_DATA3, (u8 *)resp);
++		if (rc)
++			return rc;
++
++		/* wait for OCC */
++		if (resp->return_status == OCC_RESP_CMD_IN_PRG) {
++			rc = -EALREADY;
++
++			if (time_after(jiffies, start + timeout))
++				break;
++
++			set_current_state(TASK_INTERRUPTIBLE);
++			schedule_timeout(wait_time);
++		}
++	} while (rc);
++
++	/* check the OCC response */
++	switch (resp->return_status) {
++	case OCC_RESP_CMD_IN_PRG:
++		rc = -ETIMEDOUT;
++		break;
++	case OCC_RESP_SUCCESS:
++		rc = 0;
++		break;
++	case OCC_RESP_CMD_INVAL:
++	case OCC_RESP_CMD_LEN_INVAL:
++	case OCC_RESP_DATA_INVAL:
++	case OCC_RESP_CHKSUM_ERR:
++		rc = -EINVAL;
++		break;
++	case OCC_RESP_INT_ERR:
++	case OCC_RESP_BAD_STATE:
++	case OCC_RESP_CRIT_EXCEPT:
++	case OCC_RESP_CRIT_INIT:
++	case OCC_RESP_CRIT_WATCHDOG:
++	case OCC_RESP_CRIT_OCB:
++	case OCC_RESP_CRIT_HW:
++		rc = -EREMOTEIO;
++		break;
++	default:
++		rc = -EPROTO;
 +	}
 +
-+	/* clear error since communication was successful */
-+	occ->error_count = 0;
-+	occ->error = 0;
++	if (rc < 0)
++		return rc;
 +
-+	/* check for safe state */
-+	header = (struct occ_poll_response_header *)occ->resp.data;
-+	if (header->occ_state == OCC_STATE_SAFE) {
-+		if (occ->last_safe) {
-+			if (time_after(jiffies,
-+				       occ->last_safe + OCC_SAFE_TIMEOUT))
-+				occ->error = -EHOSTDOWN;
-+		} else {
-+			occ->last_safe = jiffies;
-+		}
-+	} else {
-+		occ->last_safe = 0;
++	data_length = get_unaligned_be16(&resp->data_length);
++	if (data_length > OCC_RESP_DATA_BYTES)
++		return -EMSGSIZE;
++
++	/* fetch the rest of the response data */
++	for (i = 8; i < data_length + 7; i += 8) {
++		rc = p8_i2c_occ_getscom(client, OCB_DATA3, ((u8 *)resp) + i);
++		if (rc)
++			return rc;
 +	}
 +
 +	return 0;
  }
  
- static int occ_set_user_power_cap(struct occ *occ, u16 user_power_cap)
-@@ -176,6 +219,15 @@ static int occ_set_user_power_cap(struct occ *occ, u16 user_power_cap)
+ static int p8_i2c_occ_probe(struct i2c_client *client,
+diff --git a/drivers/hwmon/occ/p9_sbe.c b/drivers/hwmon/occ/p9_sbe.c
+index 58c3bb2..be3a469 100644
+--- a/drivers/hwmon/occ/p9_sbe.c
++++ b/drivers/hwmon/occ/p9_sbe.c
+@@ -9,21 +9,102 @@
  
- 	mutex_unlock(&occ->lock);
+ #include <linux/device.h>
+ #include <linux/errno.h>
++#include <linux/fsi-occ.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/spinlock.h>
  
-+	if (rc) {
-+		if (occ->error_count++ > OCC_ERROR_COUNT_THRESHOLD)
-+			occ->error = rc;
-+	} else {
-+		/* successful communication so clear the error */
-+		occ->error_count = 0;
-+		occ->error = 0;
+ #include "common.h"
+ 
+ struct p9_sbe_occ {
+ 	struct occ occ;
+ 	struct device *sbe;
++
++	/*
++	 * Pointer to occ device client. We store this so that we can cancel
++	 * the client operations in remove() if necessary. We only need one
++	 * pointer since we do one OCC operation (open, write, read, close) at
++	 * a time (access to p9_sbe_occ_send_cmd is locked in the common code
++	 * with occ.lock).
++	 */
++	struct occ_client *client;
++
++	/*
++	 * This lock controls access to the client pointer and ensures atomic
++	 * open, close and NULL assignment. This prevents simultaneous opening
++	 * and closing of the client, or closing multiple times.
++	 */
++	spinlock_t lock;
+ };
+ 
+ #define to_p9_sbe_occ(x)	container_of((x), struct p9_sbe_occ, occ)
+ 
++static void p9_sbe_occ_close_client(struct p9_sbe_occ *occ)
++{
++	unsigned long flags;
++	struct occ_client *tmp_client;
++
++	spin_lock_irqsave(&occ->lock, flags);
++	tmp_client = occ->client;
++	occ->client = NULL;
++	occ_drv_release(tmp_client);
++	spin_unlock_irqrestore(&occ->lock, flags);
++}
++
+ static int p9_sbe_occ_send_cmd(struct occ *occ, u8 *cmd)
+ {
+-	return -EOPNOTSUPP;
++	int rc;
++	unsigned long flags;
++	struct occ_response *resp = &occ->resp;
++	struct p9_sbe_occ *p9_sbe_occ = to_p9_sbe_occ(occ);
++
++	spin_lock_irqsave(&p9_sbe_occ->lock, flags);
++	if (p9_sbe_occ->sbe)
++		p9_sbe_occ->client = occ_drv_open(p9_sbe_occ->sbe, 0);
++	spin_unlock_irqrestore(&p9_sbe_occ->lock, flags);
++
++	if (!p9_sbe_occ->client)
++		return -ENODEV;
++
++	/* skip first byte (sequence number), OCC driver handles it */
++	rc = occ_drv_write(p9_sbe_occ->client, (const char *)&cmd[1], 7);
++	if (rc < 0)
++		goto err;
++
++	rc = occ_drv_read(p9_sbe_occ->client, (char *)resp, sizeof(*resp));
++	if (rc < 0)
++		goto err;
++
++	/* check the OCC response */
++	switch (resp->return_status) {
++	case OCC_RESP_CMD_IN_PRG:
++		rc = -ETIMEDOUT;
++		break;
++	case OCC_RESP_SUCCESS:
++		rc = 0;
++		break;
++	case OCC_RESP_CMD_INVAL:
++	case OCC_RESP_CMD_LEN_INVAL:
++	case OCC_RESP_DATA_INVAL:
++	case OCC_RESP_CHKSUM_ERR:
++		rc = -EINVAL;
++		break;
++	case OCC_RESP_INT_ERR:
++	case OCC_RESP_BAD_STATE:
++	case OCC_RESP_CRIT_EXCEPT:
++	case OCC_RESP_CRIT_INIT:
++	case OCC_RESP_CRIT_WATCHDOG:
++	case OCC_RESP_CRIT_OCB:
++	case OCC_RESP_CRIT_HW:
++		rc = -EREMOTEIO;
++		break;
++	default:
++		rc = -EPROTO;
 +	}
 +
- 	return rc;
++err:
++	p9_sbe_occ_close_client(p9_sbe_occ);
++	return rc;
  }
  
-@@ -1184,6 +1236,7 @@ static ssize_t occ_show_status(struct device *dev,
- 	&sensor_dev_attr_occ_quick_drop.dev_attr.attr,
- 	&sensor_dev_attr_occ_status.dev_attr.attr,
- 	&sensor_dev_attr_occs_present.dev_attr.attr,
-+	&dev_attr_occ_error.attr,
- 	NULL
- };
+ static int p9_sbe_occ_probe(struct platform_device *pdev)
+@@ -46,6 +127,17 @@ static int p9_sbe_occ_probe(struct platform_device *pdev)
+ 	return occ_setup(occ, "p9_occ");
+ }
  
-diff --git a/drivers/hwmon/occ/common.h b/drivers/hwmon/occ/common.h
-index dc9e06d..cef2174 100644
---- a/drivers/hwmon/occ/common.h
-+++ b/drivers/hwmon/occ/common.h
-@@ -107,6 +107,10 @@ struct occ {
- 	struct occ_attribute *attrs;
- 	struct attribute_group group;
- 	const struct attribute_group *groups[2];
++static int p9_sbe_occ_remove(struct platform_device *pdev)
++{
++	struct occ *occ = platform_get_drvdata(pdev);
++	struct p9_sbe_occ *p9_sbe_occ = to_p9_sbe_occ(occ);
 +
-+	int error;
-+	unsigned int error_count;	/* number of errors observed */
-+	unsigned long last_safe;	/* time OCC entered safe state */
++	p9_sbe_occ->sbe = NULL;
++	p9_sbe_occ_close_client(p9_sbe_occ);
++
++	return 0;
++}
++
+ static const struct of_device_id p9_sbe_occ_of_match[] = {
+ 	{ .compatible = "ibm,p9-occ-hwmon" },
+ 	{ },
+@@ -57,6 +149,7 @@ static int p9_sbe_occ_probe(struct platform_device *pdev)
+ 		.of_match_table	= p9_sbe_occ_of_match,
+ 	},
+ 	.probe	= p9_sbe_occ_probe,
++	.remove = p9_sbe_occ_remove,
  };
  
- int occ_setup(struct occ *occ, const char *name);
+ module_platform_driver(p9_sbe_occ_driver);
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
