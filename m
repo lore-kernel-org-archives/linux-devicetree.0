@@ -1,29 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: i2c: update documentation for the
- Meson-AXG
-Date: Mon, 20 Nov 2017 15:33:03 -0600
-Message-ID: <20171120213303.7emjj2ranix45otc@rob-hp-laptop>
-References: <20171120145415.6581-1-yixun.lan@amlogic.com>
- <20171120145415.6581-2-yixun.lan@amlogic.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: net: add mt76 wireless device binding
+Date: Mon, 20 Nov 2017 15:34:23 -0600
+Message-ID: <20171120213423.kzjtoq6ggrylomh5@rob-hp-laptop>
+References: <20171120193549.80831-1-nbd@nbd.name>
+ <20171120193549.80831-2-nbd@nbd.name>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171120145415.6581-2-yixun.lan@amlogic.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20171120193549.80831-2-nbd-Vt+b4OUoWG0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 10:54:11PM +0800, Yixun Lan wrote:
-> From: Jian Hu <jian.hu@amlogic.com>
+On Mon, Nov 20, 2017 at 08:35:47PM +0100, Felix Fietkau wrote:
+> Add documentation describing how device tree can be used to configure
+> wireless chips supported by the mt76 driver.
 > 
-> Update the doc to explicitly add Meson-AXG to support list
-> 
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-meson.txt | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  .../bindings/net/wireless/mediatek,mt76.txt        | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
