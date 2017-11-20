@@ -1,88 +1,83 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: Re: [PATCH] arm64: dts: renesas: ulcb-kf: add pfc node for USB3.0
- channel 0
-Date: Mon, 20 Nov 2017 11:08:53 +0300
-Message-ID: <51d9e15a-31e4-2e6e-c0d6-9c38643b60e0@cogentembedded.com>
-References: <1510146398-31805-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdX+7cHF4ZWBkZ8jQzhuycKYGNdFuZK5Ge9e9coX9pUKcQ@mail.gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Fix omap4 hang with GPS connected to USB by
+ using wakeupgen
+Date: Mon, 20 Nov 2017 10:44:56 +0200
+Message-ID: <72bb574b-146c-ce2d-b63d-7a5662973879@ti.com>
+References: <20171117165658.21003-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX+7cHF4ZWBkZ8jQzhuycKYGNdFuZK5Ge9e9coX9pUKcQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171117165658.21003-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-Thank you for valuable review.
+On 17/11/17 18:56, Tony Lindgren wrote:
+> There's been a reproducable USB OHCI/EHCI cpuidle related hang on omap4
+> for a while that happens after about 20 - 40 minutes on an idle system
+> with some data feeding device being connected, like a USB GPS device or
+> a cellular modem.
+> 
+> This issue happens in cpuidle states C2 and C3 and does not happen if
+> cpuidle is limited to C1 state only. The symptoms are that the whole
+> system hangs and never wakes up from idle, and if a watchdog is
+> configured the system reboots after a while.
+> 
+> Turns out that OHCI/EHCI devices on omap4 are trying to use the GIC
+> interrupt controller directly as a parent instead of the WUGEN. We
+> need to pass the interrupts through WUGEN to GIC to provide the wakeup
+> events for the processor.
+> 
+> Let's fix the issue by removing the gic interrupt-parent and use the
+> default interrupt-parent wakeupgen instead. Note that omap5.dtsi had
+> this already fixes earlier by commit 7136d457f365 ("ARM: omap: convert
+> wakeupgen to stacked domains") but we somehow missed omap4 at that
+> point.
+> 
+> Fixes: 7136d457f365 ("ARM: omap: convert wakeupgen to stacked domains")
+> Cc: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
-On 15.11.2017 19:49, Geert Uytterhoeven wrote:
-> Hi Vladimir,
->
-> On Wed, Nov 8, 2017 at 2:06 PM, Vladimir Barinov
-> <vladimir.barinov@cogentembedded.com> wrote:
->> Adds the pfc node for USB3.0 channel 0.
->>
->> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->> ---
->>   arch/arm64/boot/dts/renesas/ulcb-kf.dtsi | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
->> index 48a2e8f..2ecb6ac 100644
->> --- a/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/ulcb-kf.dtsi
->> @@ -173,6 +173,11 @@
->>                  groups = "usb0";
->>                  function = "usb0";
->>          };
->> +
->> +       usb30_pins: usb30 {
->> +               groups = "usb30";
->> +               function = "usb30";
-> This enabled USB30_PWEN and USB30_OVC.
->
-> However, these pins are routed via CN1A pins A97/A98 to HDMI_CS_A
-> and HDMI_CS_B, not to a USB PHY?
->
-> USB30_PWEN of the real USB PHY is provided by the i2c GPIO
-> expander U11.
->
-> I'm a bit puzzled by this... What am I missing?
-This is my fault.
-(Seems I've been looking for older KF schematic).
+Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
-Please ignore this patch.
-
->
->> +       };
->>   };
->>
->>   &scif1 {
->> @@ -191,5 +196,8 @@
->>   };
->>
->>   &xhci0 {
->> +       pinctrl-0 = <&usb30_pins>;
->> +       pinctrl-names = "default";
->> +
->>          status = "okay";
->>   };
-> Gr{oetje,eeting}s,
->
->                          Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                  -- Linus Torvalds
-
+> ---
+>  arch/arm/boot/dts/omap4.dtsi | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -1081,14 +1081,12 @@
+>  			usbhsohci: ohci@4a064800 {
+>  				compatible = "ti,ohci-omap3";
+>  				reg = <0x4a064800 0x400>;
+> -				interrupt-parent = <&gic>;
+>  				interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+>  			};
+>  
+>  			usbhsehci: ehci@4a064c00 {
+>  				compatible = "ti,ehci-omap";
+>  				reg = <0x4a064c00 0x400>;
+> -				interrupt-parent = <&gic>;
+>  				interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+>  			};
+>  		};
+> 
 
 -- 
-Regards,
-Vladimir
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
