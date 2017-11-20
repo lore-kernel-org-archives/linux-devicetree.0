@@ -1,80 +1,253 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v1 8/8] dt-bindings: net: bluetooth: add
- support for Realtek Bluetooth chips
-Date: Mon, 20 Nov 2017 15:09:52 -0600
-Message-ID: <20171120210952.7ky2r2oj7otn3umi@rob-hp-laptop>
-References: <20171117223543.32429-1-martin.blumenstingl@googlemail.com>
- <20171117223543.32429-9-martin.blumenstingl@googlemail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 2/3] leds: Add driver for Qualcomm LPG
+Date: Mon, 20 Nov 2017 13:10:33 -0800
+Message-ID: <20171120211033.GZ28761@minitux>
+References: <20171115071345.24331-1-bjorn.andersson@linaro.org>
+ <20171115071345.24331-3-bjorn.andersson@linaro.org>
+ <19018aa2-c460-1d5e-8dd2-1cfa557be2f2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBJUJZXIAKGQEUFIDP2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171117223543.32429-9-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org
+In-Reply-To: <19018aa2-c460-1d5e-8dd2-1cfa557be2f2@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 17, 2017 at 11:35:43PM +0100, Martin Blumenstingl wrote:
-> This adds the documentation for Bluetooth functionality of the Realtek
-> RTL8723BS and RTL8723DS.
-> Both are SDIO wifi chips with an additional Bluetooth module which is
-> connected via UART to the host.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/realtek-bluetooth.txt  | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth.txt b/Documentation/devicetree/bindings/net/realtek-bluetooth.txt
-> new file mode 100644
-> index 000000000000..c919e06469f8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/realtek-bluetooth.txt
-> @@ -0,0 +1,31 @@
-> +Realtek Bluetooth Chips
-> +-----------------------
-> +
-> +This documents the binding structure and common properties for serial
-> +attached Realtek devices.
-> +
-> +Serial attached Realtek devices shall be a child node of the host UART
-> +device the slave device is attached to. See ../serial/slave-device.txt
-> +for more information
-> +
-> +Required properties:
-> +- compatible: should contain one of the following:
-> +    * "realtek,rtl8723bs-bluetooth"
-> +    * "realtek,rtl8723ds-bluetooth"
-> +
-> +Optional properties:
-> +- disable-gpios: GPIO specifier, used to enable/disable the BT module
+On Sun 19 Nov 13:36 PST 2017, Jacek Anaszewski wrote:
 
-We generally use 'enable-gpios' or 'powerdown-gpios' even if the h/w 
-name is somewhat different.
-
-> +- reset-gpios: GPIO specifier, used to reset the BT module
-> +
-> +
-> +Example:
-> +
-> +&uart {
-> +	...
-> +
-> +	bluetooth {
-> +		compatible = "realtek,rtl8723bs-bluetooth";
-> +		disable-gpios = <&gpio 20 GPIO_ACTIVE_LOW>;
-> +		reset-gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> -- 
-> 2.15.0
+> Hi Bjorn,
 > 
+> Thanks for the patch. Please refer to my comments in the code.
+> 
+> On 11/15/2017 08:13 AM, Bjorn Andersson wrote:
+[..]
+> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> > index 52ea34e337cd..ccc3aa4b2474 100644
+> > --- a/drivers/leds/Kconfig
+> > +++ b/drivers/leds/Kconfig
+> > @@ -651,6 +651,13 @@ config LEDS_POWERNV
+> >  	  To compile this driver as a module, choose 'm' here: the module
+> >  	  will be called leds-powernv.
+> >  
+> > +config LEDS_QCOM_LPG
+> > +	tristate "LED support for Qualcomm LPG"
+> > +	depends on LEDS_CLASS
+> 
+> You were mentioning that this driver is for a MFD child block,
+> so we should probably depend on the parent MFD driver?
+> 
+
+There's no build time dependency between the two, so it's not strictly
+necessary.
+
+Adding a dependency on MFD_SPMI_PMIC would indirectly add a dependency
+on ARCH_QCOM, which limit build testing and stop some static code
+checkers to check the driver.
+
+So, unless you strongly object I would prefer not to mention the MFD.
+
+> > +	help
+> > +	  This option enables support for the Light Pulse Generator found in a
+> > +	  wide variety of Qualcomm PMICs.
+> > +
+[..]
+> > diff --git a/drivers/leds/leds-qcom-lpg.c b/drivers/leds/leds-qcom-lpg.c
+[..]
+> > +#define LPG_PATTERN_CONFIG_REG	0x40
+> > +#define LPG_SIZE_CLK_REG	0x41
+> > +#define LPG_PREDIV_CLK_REG	0x42
+> > +#define PWM_TYPE_CONFIG_REG	0x43
+> > +#define PWM_VALUE_REG		0x44
+> > +#define PWM_ENABLE_CONTROL_REG	0x46
+> > +#define PWM_SYNC_REG		0x47
+> > +#define LPG_RAMP_DURATION_REG	0x50
+> > +#define LPG_HI_PAUSE_REG	0x52
+> > +#define LPG_LO_PAUSE_REG	0x54
+> > +#define LPG_HI_IDX_REG		0x56
+> > +#define LPG_LO_IDX_REG		0x57
+> > +#define PWM_SEC_ACCESS_REG	0xd0
+> > +#define PWM_DTEST_REG(x)	(0xe2 + (x) - 1)
+> > +
+> > +#define TRI_LED_SRC_SEL		0x45
+> > +#define TRI_LED_EN_CTL		0x46
+> > +#define TRI_LED_ATC_CTL		0x47
+> > +
+> > +#define LPG_LUT_REG(x)		(0x40 + (x) * 2)
+> > +#define RAMP_CONTROL_REG	0xc8
+> 
+> Please add QCOM_ namespacing prefix to the macros.
+> At least PWM prefix is reserved for pwm subsystem.
+> 
+
+Will fix.
+
+[..]
+> > +static void lpg_calc_freq(struct lpg_channel *chan, unsigned int period_us)
+> > +{
+> > +	int             n, m, clk, div;
+> > +	int             best_m, best_div, best_clk;
+> > +	unsigned int    last_err, cur_err, min_err;
+> > +	unsigned int    tmp_p, period_n;
+> > +
+> > +	if (period_us == chan->period_us)
+> > +		return;
+> > +
+> > +	/* PWM Period / N */
+> > +	if (period_us < ((unsigned int)(-1) / NSEC_PER_USEC)) {
+> > +		period_n = (period_us * NSEC_PER_USEC) >> 6;
+> > +		n = 6;
+> > +	} else {
+> > +		period_n = (period_us >> 9) * NSEC_PER_USEC;
+> > +		n = 9;
+> > +	}
+> 
+> Please provide macros for 6 and 9 magic numbers.
+> 
+
+They really aren't magic numbers, they represent the number of bits of
+resolution, referred to as "size" in the rest of the driver.
+
+I'll replace "n" with "pwm_size" to clarify this. Ok?
+
+[..]
+> > +static void lpg_apply_freq(struct lpg_channel *chan)
+> > +{
+> > +	unsigned long val;
+> > +	struct lpg *lpg = chan->lpg;
+> > +
+> > +	if (!chan->enabled)
+> > +		return;
+> > +
+> > +	/* Clock register values are off-by-one from lpg_clk_table */
+> > +	val = chan->clk + 1;
+> > +
+> > +	if (chan->pwm_size == 9)
+> > +		val |= lpg->data->pwm_9bit_mask;
+> > +
+> > +	regmap_write(lpg->map, chan->base + LPG_SIZE_CLK_REG, val);
+> > +
+> > +	val = chan->pre_div << 5 | chan->pre_div_exp;
+> > +	regmap_write(lpg->map, chan->base + LPG_PREDIV_CLK_REG, val);
+> 
+> Please provide macros for 5 and 9.
+> 
+
+5 definitely deserves a macro.
+
+9 is, as above, the number of bits of resolution (or "size of the pwm").
+Is there a name different than "pwm_size" that would make this more
+obvious?
+
+[..]
+> > +static void lpg_brightness_set(struct led_classdev *cdev,
+> > +			      enum led_brightness value)
+> > +{
+[..]
+> > +	/* Trigger start of ramp generator(s) */
+> > +	if (lut_mask)
+> > +		lpg_lut_sync(lpg, lut_mask);
+> 
+> We need some synchronization while changing device state in
+> few steps, to prevent troubles when we are preempted by other
+> process in the middle. spin_lock() in this case since it seems
+> that we are not going to sleep while accessing device registers.
+> 
+
+You're right, we need to protect the TRILED during the read-modify-write
+of the enable bits and we also need a lock around the allocation of bits
+in the LUT block. Will fix this.
+
+As far as I can see the framework is expected to protect me from
+concurrent accesses on the same LED though.
+
+[..]
+> > +static int lpg_add_led(struct lpg *lpg, struct device_node *np)
+> > +{
+> > +	struct lpg_led *led;
+> > +	const char *state;
+> > +	int sources;
+> > +	int size;
+> > +	u32 chan;
+> > +	int ret;
+> > +	int i;
+> > +
+> > +	sources = of_property_count_u32_elems(np, "led-sources");
+> > +	if (sources <= 0) {
+> > +		dev_err(lpg->dev, "invalid led-sources of %s\n",
+> > +			np->name);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	size = sizeof(*led) + sources * sizeof(struct lpg_channel*);
+> 
+> To fix checkpatch.pl complaint:
+> 
+> s/lpg_channel*/lpg_channel */
+> 
+
+Sorry, will fix.
+
+> > +	led = devm_kzalloc(lpg->dev, size, GFP_KERNEL);
+> > +	if (!led)
+> > +		return -ENOMEM;
+> > +
+> > +	led->lpg = lpg;
+> > +	led->num_channels = sources;
+> > +
+> > +	for (i = 0; i < sources; i++) {
+> > +		ret = of_property_read_u32_index(np, "led-sources",
+> > +						 i, &chan);
+> > +		if (ret || !chan || chan > lpg->num_channels) {
+> > +			dev_err(lpg->dev,
+> > +				"invalid led-sources of %s\n",
+> > +				np->name);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		led->channels[i] = &lpg->channels[chan - 1];
+> > +
+> > +		led->channels[i]->in_use = true;
+> > +	}
+> > +
+> > +	/* Use label else node name */
+> > +	led->cdev.name = of_get_property(np, "label", NULL) ? : np->name;
+> 
+> Documentation/leds/leds-class.txt states that LED class device name
+> pattern is devicename:colour:function.
+> 
+> This is not explicitly stated in the common LED DT bindings, but label
+> should be prepended with devicename by the driver.
+
+I was under the impression that "devicename" referred to the board name,
+but I presume then that this refer to the name of the "LED hardware"?
+
+> Not all LED class drivers adhere to this rule and we have some mess in
+> this area currently, but we will fix it soon I hope.
+> 
+
+I presume the default name should be built on the form of
+dev_name(dev)::of_node->name then?
+
+Unfortunately I can't find a single driver that does this, so please
+let me know the format you would like and I'll update the driver with
+this.
+
+> > +	led->cdev.default_trigger = of_get_property(np, "linux,default-trigger", NULL);
+> > +	led->cdev.brightness_set = lpg_brightness_set;
+> > +	led->cdev.brightness_get = lpg_brightness_get;
+> > +	led->cdev.blink_set = lpg_blink_set;
+> > +	led->cdev.max_brightness = 255;
+> 
+> You can skip this line, since it will be set to LED_FULL
+> in case passed 0 to led_classdev_init().
+> 
+
+Convenient.
+
+
+Thank you for the review!
+
+Regards,
+Bjorn
