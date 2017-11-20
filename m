@@ -1,30 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v3 1/2] documentation: Add compatibles for Amlogic
- Meson AXG pin controllers
-Date: Mon, 20 Nov 2017 15:32:15 -0600
-Message-ID: <20171120213215.ftxasp7eebip3to3@rob-hp-laptop>
-References: <20171120102354.5354-1-yixun.lan@amlogic.com>
- <20171120102354.5354-2-yixun.lan@amlogic.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: i2c: update documentation for the
+ Meson-AXG
+Date: Mon, 20 Nov 2017 15:33:03 -0600
+Message-ID: <20171120213303.7emjj2ranix45otc@rob-hp-laptop>
+References: <20171120145415.6581-1-yixun.lan@amlogic.com>
+ <20171120145415.6581-2-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171120102354.5354-2-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20171120145415.6581-2-yixun.lan@amlogic.com>
+Sender: linux-i2c-owner@vger.kernel.org
 To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Xingyu Chen <xingyu.chen@amlogic.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 06:23:53PM +0800, Yixun Lan wrote:
-> From: Xingyu Chen <xingyu.chen@amlogic.com>
+On Mon, Nov 20, 2017 at 10:54:11PM +0800, Yixun Lan wrote:
+> From: Jian Hu <jian.hu@amlogic.com>
 > 
-> Add compatibles for Amlogic Meson AXG pin controllers
+> Update the doc to explicitly add Meson-AXG to support list
 > 
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 > Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 > ---
->  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/i2c/i2c-meson.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
