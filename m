@@ -1,45 +1,52 @@
-From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Subject: [RESEND PATCH v3 1/2] documentation: Add compatibles for Amlogic Meson AXG pin controllers
-Date: Mon, 20 Nov 2017 18:23:53 +0800
-Message-ID: <20171120102354.5354-2-yixun.lan@amlogic.com>
-References: <20171120102354.5354-1-yixun.lan@amlogic.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r8a779x: Add '#reset-cells' in cpg-mssr
+Date: Mon, 20 Nov 2017 11:26:12 +0100
+Message-ID: <20171120102611.hyrufkxou27gspah@verge.net.au>
+References: <1510839357-11450-1-git-send-email-geert+renesas@glider.be>
+ <20171120094957.2seep3qw4j274zrv@verge.net.au>
+ <CAMuHMdXPrv4bwZbGxE=DJp2nufjF5Q6JwFAERDvBFi+UsAXVsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171120102354.5354-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXPrv4bwZbGxE=DJp2nufjF5Q6JwFAERDvBFi+UsAXVsA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+On Mon, Nov 20, 2017 at 10:57:07AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Mon, Nov 20, 2017 at 10:49 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Thu, Nov 16, 2017 at 02:35:57PM +0100, Geert Uytterhoeven wrote:
+> >> From: Arnd Bergmann <arnd@arndb.de>
+> >>
+> >> With the latest dtc, we get many warnings about the missing
+> >> '#reset-cells' property in these controllers, e.g.:
+> >>
+> >> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /can@e6e80000:resets[0])
+> >> arch/arm/boot/dts/r8a7792-blanche.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/dma-controller@e6700000:resets[0])
+> >> arch/arm/boot/dts/r8a7792-wheat.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/ethernet@e6800000:resets[0])
+> >> arch/arm/boot/dts/r8a7793-gose.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /gpio@e6050000:resets[0])
+> >> arch/arm/boot/dts/r8a7794-alt.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /i2c@e6500000:resets[0])
+> >> arch/arm/boot/dts/r8a7794-silk.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /interrupt-controller@e61c0000:resets[0])
+> >>
+> >> This adds it for the three r8a779x chips that were lacking it. The
+> >> binding mandates this as <1>, so this is the value I use.
+> >>
+> >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >> [geert: Add fix for r8a7793.dtsi]
+> >> Fixes: 34fbd2b12761d111 ("ARM: dts: r8a7790: Add reset control properties")
+> >> Fixes: 6e11a322f1d7505d ("ARM: dts: r8a7792: Add reset control properties")
+> >> Fixes: 84fb19e1d201ba86 ("ARM: dts: r8a7793: Add reset control properties")
+> >> Fixes: 615beb759ca494a4 ("ARM: dts: r8a7794: Add reset control properties")
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > Thanks for following up on this, its been fouling up my todo list for a
+> > while now. Applied for v4.16.
+> 
+> As this is a fix for changes made in v4.15-rc1, don't we want it in v4.15?
 
-Add compatibles for Amlogic Meson AXG pin controllers
-
-Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index 2392557ede27..2c12f9789116 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -9,6 +9,8 @@ Required properties for the root node:
- 		      "amlogic,meson-gxbb-aobus-pinctrl"
- 		      "amlogic,meson-gxl-periphs-pinctrl"
- 		      "amlogic,meson-gxl-aobus-pinctrl"
-+		      "amlogic,meson-axg-periphs-pinctrl"
-+		      "amlogic,meson-axg-aobus-pinctrl"
-  - reg: address and size of registers controlling irq functionality
- 
- === GPIO sub-nodes ===
--- 
-2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Do the changes have any run-time effect?
+If not I'd prefer not to push them into v4.15 as fixes.
