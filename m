@@ -1,34 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2] of: Document exactly what of_find_node_by_name() puts
-Date: Mon, 20 Nov 2017 14:44:58 -0600
-Message-ID: <20171120204458.swv43avbsjgvy3km@rob-hp-laptop>
-References: <20171117165321.18591-1-sboyd@codeaurora.org>
+Subject: Re: [PATCH v8 2/3] arm: dts: add Nuvoton NPCM750 device tree
+Date: Mon, 20 Nov 2017 15:07:41 -0600
+Message-ID: <20171120210741.vi6hq3x7xiowd6zh@rob-hp-laptop>
+References: <20171117190747.21642-1-brendanhiggins@google.com>
+ <20171117190747.21642-3-brendanhiggins@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171117165321.18591-1-sboyd@codeaurora.org>
+In-Reply-To: <20171117190747.21642-3-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: linux@armlinux.org.uk, mark.rutland@arm.com, tmaimon77@gmail.com, avifishman70@gmail.com, raltherr@google.com, f.fainelli@gmail.com, julien.thierry@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 17, 2017 at 08:53:21AM -0800, Stephen Boyd wrote:
-> It isn't clear if this function of_node_put()s the 'from'
-> argument, or the node it searches. Clearly indicate which
-> variable is touched. Fold in some more fixes from Randy too
-> because we're in the area.
+On Fri, Nov 17, 2017 at 11:07:46AM -0800, Brendan Higgins wrote:
+> Add a common device tree for all Nuvoton NPCM750 BMCs and a board
+> specific device tree for the NPCM750 (Poleg) evaluation board.
 > 
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Tomer Maimon <tmaimon77@gmail.com>
+> Reviewed-by: Avi Fishman <avifishman70@gmail.com>
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
+> Tested-by: Tomer Maimon <tmaimon77@gmail.com>
+> Tested-by: Avi Fishman <avifishman70@gmail.com>
 > ---
-> 
-> Changes from v1:
->  * Fold in Randy's fixes
-> 
->  drivers/of/base.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Changes since v7:
+>   - Added arm,shared-override to l2 cache
+>   - Cleaned up node names
+>   - Cleaned up ranges properties
+>   - Fixed address for nuvoton,npcm750-timer
+>   - Dropped watchdog nodes for now since the properties in them are wrong
+> ---
+>  .../arm/cpu-enable-method/nuvoton,npcm7xx-smp      |  42 +++++
+>  .../devicetree/bindings/arm/npcm/npcm.txt          |   6 +
+>  arch/arm/boot/dts/nuvoton-npcm750-evb.dts          |  44 ++++++
+>  arch/arm/boot/dts/nuvoton-npcm750.dtsi             | 171 +++++++++++++++++++++
+>  include/dt-bindings/clock/nuvoton,npcm7xx-clks.h   |  39 +++++
+>  5 files changed, 302 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/nuvoton,npcm7xx-smp
+>  create mode 100644 Documentation/devicetree/bindings/arm/npcm/npcm.txt
+>  create mode 100644 arch/arm/boot/dts/nuvoton-npcm750-evb.dts
+>  create mode 100644 arch/arm/boot/dts/nuvoton-npcm750.dtsi
+>  create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
