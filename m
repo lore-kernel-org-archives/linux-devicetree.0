@@ -1,54 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/5] checks: check for #{size,address}-cells without child nodes
-Date: Mon, 20 Nov 2017 10:22:53 -0600
-Message-ID: <CAL_JsqJoiBvD-QE5bgk5ob3qc65ar371xWxx-1D+fKGh7+P=Zw@mail.gmail.com>
-References: <20171117144515.10870-1-robh@kernel.org> <20171117144515.10870-5-robh@kernel.org>
- <20171120001438.GJ19214@umbus.fritz.box>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: RFC: Copying Device Tree File into reserved area of VMLINUX
+ before deployment
+Date: Mon, 20 Nov 2017 11:38:11 -0500
+Message-ID: <eb654f41-c0be-ddb6-b730-22ad3dd451eb@gmail.com>
+References: <0b31e22b-202f-6fca-28f2-e16e6af6c6b7@emagii.com>
+ <a0f9d598-04af-fddd-58ad-09db10ec19da@gmail.com>
+ <20171120114405.cpsf4xtvvfpuk76u@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171120001438.GJ19214-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+In-Reply-To: <20171120114405.cpsf4xtvvfpuk76u-agMKViyK24J5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-AoFPY8dbyRPQT0dZR+AlfA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 19, 2017 at 6:14 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Fri, Nov 17, 2017 at 08:45:14AM -0600, Rob Herring wrote:
->> nodes with a 'reg' property nor a ranges property.
+Ulf,
+
+On 11/20/17 06:44, Mark Rutland wrote:
+> On Sun, Nov 19, 2017 at 11:23:42PM -0500, Frank Rowand wrote:
+>> adding devicetree list, devicetree maintainers
 >>
->> An exception may be an overlay that adds nodes, but this case would
->> need
->
-> Sentence doesn't seem finished..
+>> On 11/18/17 12:59, Ulf Samuelsson wrote:
+>>> I noticed when checking out the OpenWRT support for the board that they have a method to avoid having to pass the device tree address to the kernel, and can thus boot device tree based kernels with U-boots that
+>>> does not support device trees.
+>>>
+>>> Is this something that would be considered useful for including in mainstream:
+> 
+> On 32-bit arm, we support an appended DTB for cases like this. The DTB
+> is appended to the end of the kernel image, rather than being embedded.
 
-It was there until I rebased. Since the line started with #, git dropped it...
+That is CONFIG_ARM_APPENDED_DTB, if you want to see what it looks like.
 
-"#{size,address}-cells in the overlay to properly compile already."
 
-> In any case, I'm not sure this is a good idea.  It's not uncommon to
-> have bus bridge nodes that ought to have a well defined #address and
-> #size cells, but just don't happen to have any plugged devices yet.
-> An overlay that adds nodes is one possibility, but a bus where the
-> children can be probed is another.
+> Does mips not support something similar?
+> 
+> Thanks,
+> Mark.
+> 
 
-Wouldn't an overlay without #{size,address}-cells have warnings from
-avoid_default_addr_size?
-
-As long as there are no child nodes, the check is not run. So we're
-limited to false positives if we have a mixture of nodes with and
-without unit addresses and only the nodes without unit addresses are
-populated. I have seen this with PCI hosts with an interrupt
-controller child node.
-
-In general, I'm struggling with how to have tests that check for
-things that we generally want to avoid, but we still allow exceptions.
-Some of these may be things we want to avoid in new bindings, but
-wouldn't fix for existing cases. Another example is things that
-were/are valid for OF, but not FDT.
-
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
