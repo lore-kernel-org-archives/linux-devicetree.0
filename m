@@ -1,65 +1,165 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 5/8] dt-bindings: fsi: Add OCC documentation
-Date: Mon, 20 Nov 2017 15:39:13 -0600
-Message-ID: <20171120213913.6j7qgcgobc2ocqey@rob-hp-laptop>
-References: <1511207217-14075-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1511207217-14075-6-git-send-email-eajames@linux.vnet.ibm.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: RFC: Copying Device Tree File into reserved area of VMLINUX
+ before deployment
+Date: Mon, 20 Nov 2017 16:39:20 -0500
+Message-ID: <0e54f9f0-1226-7f2e-3143-ea4e450058e6@gmail.com>
+References: <0b31e22b-202f-6fca-28f2-e16e6af6c6b7@emagii.com>
+ <a0f9d598-04af-fddd-58ad-09db10ec19da@gmail.com>
+ <fe7925f3-30d4-ec03-a6c5-61a8644dcdfe@gmail.com>
+ <ee33abcc-8d23-8b4c-e3ef-7adce8495ef3@emagii.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1511207217-14075-6-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org, cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ee33abcc-8d23-8b4c-e3ef-7adce8495ef3@emagii.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@emagii.com, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 01:46:54PM -0600, Eddie James wrote:
-> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> 
-> Document the bindings for the P9 OCC device. OCC devices are accessed
-> through the SBEFIFO.
-> 
-> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-> new file mode 100644
-> index 0000000..79094f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-> @@ -0,0 +1,18 @@
-> +Device-tree bindings for P9 On-Chip Controller
-> +----------------------------------------------
-> +
-> +The POWER9 On-Chip Controller is accessed through the SBEFIFO. All OCC nodes
-> +must be child nodes of SBEFIFO devices (see ibm,p9-sbefifo.txt).
-> +
-> +Required properties:
-> + - compatible = "ibm,p9-occ";
-> +
-> +Optional properties:
-> + - reg = <processor index>;	: Index for the processor this OCC is on.
+Hi Ulf, Rob,
 
-reg should be how the parent (SBEFIFO) addresses this device. Would all 
-of these child devices be a unique processor?
-
-I think a phandle to the cpu node would be more appropriate here.
-
-> +
-> +Examples:
-> +
-> +    occ@1 {
-> +        compatible = "ibm,p9-occ";
-> +        reg = <1>;
-> +    };
-> -- 
-> 1.8.3.1
+On 11/20/17 15:19, Ulf Samuelsson wrote:
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> On 2017-11-20 05:32, Frank Rowand wrote:
+>> Hi Ulf,
+>>
+>>
+>> On 11/19/17 23:23, Frank Rowand wrote:
+>>> adding devicetree list, devicetree maintainers
+>>>
+>>> On 11/18/17 12:59, Ulf Samuelsson wrote:
+>>>> I noticed when checking out the OpenWRT support for the board that they have a method to avoid having to pass the device tree address to the kernel, and can thus boot device tree based kernels with U-boots that
+>>>> does not support device trees.
+>>>>
+>>>> Is this something that would be considered useful for including in mainstream:
+>>>>
+>>>> BACKGROUND:
+>>>> Trying to load a yocto kernel into a MIPS target (MT7620A based),
+>>>> and the U-Boot is more than stupid.
+>>>> Does not support the "run" command as an example.
+>>>> They modified the U-Boot MAGIC Word to complicate things.
+>>>> The U-Boot is not configured to use device tree files.
+>>>> The board runs a 2.6 kernel right now.
+>>>>
+>>>> Several attempts by me a and others to rebuild U-Boot according to
+>>>> the H/W vendors source code and build instructions results in a
+>>>> bricked unit. Bricked units cannot be recovered.
+>>
+>> Hopefully you have brought this to the attention of the vendor.  U-Boot
+>> is GPL v2 (or in some ways possibly GPL v2 or later), so if you can not
+>> build U-Boot that is equivalent to the binary U-Boot they shipped, the
+>> vendor may want to ensure that they are shipping the proper source and
+>> build instructions.
+>>
+> 
+> I am not the one in contact with the H/W vendor.
+> The U-boot is pretty old, and from comments from those
+> in contact with them, the U-Boot knowledge at the H/W vendor
+> is minimal at best.
+> It might even be that they program an U-boot where the upgrade of the U-boot is broken...
+> 
+> 
+>>
+>>>> Not my choice of H/W, so I cannot change it.
+>>>>
+>>>>
+>>>> ===================================================================
+>>>> OPENWRT:
+>>>> I noticed when checking out the OpenWRT support for the board that
+>>>> they have a method to avoid having to pass the device tree address
+>>>> to the kernel, and can thus boot device tree based kernels with
+>>>> U-boots that does not support device trees.
+>>>>
+>>>> What they do is to reserve 16 kB of kernel space, and tag it with
+>>>> an ASCII string "OWRTDTB:". After the kernel and dtb is built, a
+>>>> utility "patch-dtb" will update the vmlinux binary, copying in the
+>>>> device tree file.
+>>>>
+>>>> ===================================================================
+>>>> It would be useful to me, and I could of course patch the
+>>>> mainstream kernel, but first I would like to check if this is of
+>>>> interest for mainstream.
+>>
+>> Not in this form.  Hard coding a fixed size area in the boot image
+>> to contain the FDT (aka DTB) is a non-starter.
+> 
+> OK, Is it the fixed size, which is a problem?
+
+Yes, it is the fixed size which is a problem.
+
+> Is generally combining an image with a DTB into a single file also a non-starter?
+
+Can you jump in here Rob?  My understanding is that CONFIG_ARM_APPENDED_DTB,
+which is the ARM based solution that Mark mentioned, was envisioned as a
+temporary stop gap until boot loaders could add devicetree support.  I don't
+know if there is a desire to limit this approach or to remove it in the
+future.
+
+I'm not sure why this feature should not be permanently supported.  I'm being
+cautious, just in case I'm overlooking or missing an important issue, thus
+asking for Rob's input.  I do know that this feature does not advance the
+desires of people who want a single kernel (single boot image?) that runs on
+many different systems, instead of a boot image that is unique to each
+target platform.  But I don't see why that desire precludes also having
+an option to have a target specific boot image.
+
+-Frank
+
+
+>>
+>> And again, I would first approach the H/W vendor before trying to
+>> come up with a work around like this.
+>>
+>>
+>>>> I envisage the support would look something like:
+>>>>
+>>>> ============
+>>>> Kconfig.
+>>>> config MIPS
+>>>>      select    HAVE_IMAGE_DTB
+>>>>
+>>>> config    HAVE_IMAGE_DTB
+>>>>      bool
+>>>>
+>>>> if HAVE_IMAGE_DTB
+>>>> config     IMAGE_DTB
+>>>>      bool    "Allocated space for DTB within image
+>>>>
+>>>> config    DTB_SIZE
+>>>>      int    "DTB space (kB)
+>>>>
+>>>> config    DTB_TAG
+>>>>      string    "DTB space tag"
+>>>>      default    "OWRTDTB:"
+>>>> endif
+>>>>
+>>>> ============
+>>>> Some Makefile
+>>>> obj-$(CONFIG_INCLUDE_DTB) += image_dtb.o
+>>>>
+>>>> ============
+>>>> image_dtb.S:
+>>>>      .text
+>>>>      .align    5
+>>>>      .ascii    CONFIG_DTB_TAG
+>>>>      EXPORT(__image_dtb)
+>>>>      .fill    DTB_SIZE * 1024
+>>>>
+>>>> ===================
+>>>> arch/mips/xxx/of.c:
+>>>>
+>>>> #if    defined(CONFIG_IMAGE_DTB)
+>>>>      if (<conditions to boot from dtb_space>)
+>>>>          __dt_setup_arch(__dtb_start);
+>>>>      else
+>>>>          __dt_setup_arch(&__image_dtb);
+>>>> #else
+>>>>      __dt_setup_arch(__dtb_start);
+>>>> #endif
+>>>>
+>>>> I imagine that if the support is enabled for a target, it should
+>>>> be possible to override it with a CMDLINE argument
+>>>>           They do something similar for the CMDLINE; copying it into the vmlinux, to allow a smaller boot
+> 
