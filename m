@@ -1,31 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/3] dt-bindings: net: add mt76 wireless device binding
-Date: Mon, 20 Nov 2017 15:34:23 -0600
-Message-ID: <20171120213423.kzjtoq6ggrylomh5@rob-hp-laptop>
-References: <20171120193549.80831-1-nbd@nbd.name>
- <20171120193549.80831-2-nbd@nbd.name>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/8] dt-bindings: fsi: Add SBEFIFO documentation
+Date: Mon, 20 Nov 2017 15:35:47 -0600
+Message-ID: <20171120213547.gjqmsiskugnkrqgx@rob-hp-laptop>
+References: <1511207217-14075-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1511207217-14075-2-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171120193549.80831-2-nbd-Vt+b4OUoWG0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1511207217-14075-2-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, mark.rutland@arm.com, bradleyb@fuzziesquirrel.com, cbostic@linux.vnet.ibm.com, joel@jms.id.au, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 08:35:47PM +0100, Felix Fietkau wrote:
-> Add documentation describing how device tree can be used to configure
-> wireless chips supported by the mt76 driver.
+On Mon, Nov 20, 2017 at 01:46:50PM -0600, Eddie James wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
 > 
-> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+> Document the bindings for the SBE CFAM device. SBE devices are
+> located on a CFAM off an FSI bus.
+> 
+> Signed-off-by: Edward A. James <eajames@us.ibm.com>
 > ---
->  .../bindings/net/wireless/mediatek,mt76.txt        | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+>  .../devicetree/bindings/fsi/ibm,p9-sbefifo.txt     | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
