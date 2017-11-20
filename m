@@ -1,40 +1,39 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v2 1/2] documentation: Add compatibles for Amlogic Meson AXG pin controllers
-Date: Mon, 20 Nov 2017 18:08:50 +0800
-Message-ID: <20171120100851.17366-2-yixun.lan@amlogic.com>
-References: <20171120100851.17366-1-yixun.lan@amlogic.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH  0/3] ARM: dts: Add PCIEC support
+Date: Mon, 20 Nov 2017 11:16:50 +0100
+Message-ID: <20171120101649.laatlo7lj5mpuswd@verge.net.au>
+References: <1510594992-63806-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171120100851.17366-1-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1510594992-63806-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Xingyu Chen <xingyu.chen@amlogic.com>
+On Mon, Nov 13, 2017 at 05:43:09PM +0000, Biju Das wrote:
+> Hello,
+> 
+> This series aims to add PCIEC support for iWave RZ/G1M (R8A7743) board.
+> 
+> This patch has documentation dependency on below patch
+> 
+> * dt-bindings: PCI: rcar: Add device tree support for r8a7743
+> https://patchwork.kernel.org/patch/10056407/
+> 
+> This patch series has dependency on below patches
+> 
+> * ARM: dts: r8a7743: Add CAN[01] SoC support
+> https://patchwork.kernel.org/patch/10046875/
+> 
+> * ARM: dts: iwg20d-q7-common: Add can0 support to carrier board
+> https://patchwork.kernel.org/patch/10046879/
+> 
+> Biju Das (3):
+>   ARM: dts: r8a7743: Add default PCIe bus clock
+>   ARM: dts: r8a7743: Add PCIe Controller device node
+>   ARM: dts: iwg20d-q7: Enable PCIe Controller
 
-Add compatibles for Amlogic Meson AXG pin controllers
-
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index 2392557ede27..2c12f9789116 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -9,6 +9,8 @@ Required properties for the root node:
- 		      "amlogic,meson-gxbb-aobus-pinctrl"
- 		      "amlogic,meson-gxl-periphs-pinctrl"
- 		      "amlogic,meson-gxl-aobus-pinctrl"
-+		      "amlogic,meson-axg-periphs-pinctrl"
-+		      "amlogic,meson-axg-aobus-pinctrl"
-  - reg: address and size of registers controlling irq functionality
- 
- === GPIO sub-nodes ===
--- 
-2.15.0
+Thanks, applied.
