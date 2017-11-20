@@ -1,72 +1,249 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: r8a779x: Add '#reset-cells' in cpg-mssr
-Date: Mon, 20 Nov 2017 11:34:30 +0100
-Message-ID: <20171120103430.2v2sbzdzbiyabpcb@verge.net.au>
-References: <1510839357-11450-1-git-send-email-geert+renesas@glider.be>
- <20171120094957.2seep3qw4j274zrv@verge.net.au>
- <CAMuHMdXPrv4bwZbGxE=DJp2nufjF5Q6JwFAERDvBFi+UsAXVsA@mail.gmail.com>
- <20171120102611.hyrufkxou27gspah@verge.net.au>
- <CAK8P3a345J8JfVu4g+refG+y8r8VmMsjKPkUnYen4kMhQYvtEg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a345J8JfVu4g+refG+y8r8VmMsjKPkUnYen4kMhQYvtEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH] arm64: dts: renesas: r8a7795: Move nodes which have no reg property out of bus
+Date: Mon, 20 Nov 2017 12:01:25 +0100
+Message-ID: <20171120110125.12267-1-horms+renesas@verge.net.au>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 11:30:49AM +0100, Arnd Bergmann wrote:
-> On Mon, Nov 20, 2017 at 11:26 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> > On Mon, Nov 20, 2017 at 10:57:07AM +0100, Geert Uytterhoeven wrote:
-> >> Hi Simon,
-> >>
-> >> On Mon, Nov 20, 2017 at 10:49 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> >> > On Thu, Nov 16, 2017 at 02:35:57PM +0100, Geert Uytterhoeven wrote:
-> >> >> From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> >> >>
-> >> >> With the latest dtc, we get many warnings about the missing
-> >> >> '#reset-cells' property in these controllers, e.g.:
-> >> >>
-> >> >> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /can@e6e80000:resets[0])
-> >> >> arch/arm/boot/dts/r8a7792-blanche.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/dma-controller@e6700000:resets[0])
-> >> >> arch/arm/boot/dts/r8a7792-wheat.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/ethernet@e6800000:resets[0])
-> >> >> arch/arm/boot/dts/r8a7793-gose.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /gpio@e6050000:resets[0])
-> >> >> arch/arm/boot/dts/r8a7794-alt.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /i2c@e6500000:resets[0])
-> >> >> arch/arm/boot/dts/r8a7794-silk.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /interrupt-controller@e61c0000:resets[0])
-> >> >>
-> >> >> This adds it for the three r8a779x chips that were lacking it. The
-> >> >> binding mandates this as <1>, so this is the value I use.
-> >> >>
-> >> >> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> >> >> [geert: Add fix for r8a7793.dtsi]
-> >> >> Fixes: 34fbd2b12761d111 ("ARM: dts: r8a7790: Add reset control properties")
-> >> >> Fixes: 6e11a322f1d7505d ("ARM: dts: r8a7792: Add reset control properties")
-> >> >> Fixes: 84fb19e1d201ba86 ("ARM: dts: r8a7793: Add reset control properties")
-> >> >> Fixes: 615beb759ca494a4 ("ARM: dts: r8a7794: Add reset control properties")
-> >> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> >> >
-> >> > Thanks for following up on this, its been fouling up my todo list for a
-> >> > while now. Applied for v4.16.
-> >>
-> >> As this is a fix for changes made in v4.15-rc1, don't we want it in v4.15?
-> >
-> > Do the changes have any run-time effect?
-> > If not I'd prefer not to push them into v4.15 as fixes.
-> 
-> The main effect right now is that we're up from no warnings in the
-> default build to
-> hundreds of warnings, which is really annoying. Obviously there is
-> little gain in
-> fixing these but not the other warnings that were introduced, but I would either
-> want to fix them all, or disable the warning for one more release.
-> 
-> Rob, what do you think we should do here?
+Move pmu_a5[73], timer and thermal-zones nodes from soc node to root node.
+The nodes that have been moved do not have any register properties and thus
+shouldn't be placed on the bus.
 
-Ok, I'll queued these up as fixes for v4.15 as it seems to move things
-in your desired direction.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This problem is flagged by the compiler as follows:
+$ make
+...
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb
+arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb
+arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb
+arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ Based on renesas-devel-20171120-v4.14
+
+ If acceptable I plan to create patches to fix this problem
+ in the DT of other Renesas ARM and arm64 based SoCs.
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 160 +++++++++++++++----------------
+ 1 file changed, 80 insertions(+), 80 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index a438d58f1b50..67ef06416bc4 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -126,6 +126,86 @@
+ 		};
+ 	};
+ 
++	pmu_a57 {
++		compatible = "arm,cortex-a57-pmu";
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&a57_0>,
++				     <&a57_1>,
++				     <&a57_2>,
++				     <&a57_3>;
++	};
++
++	pmu_a53 {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&a53_0>,
++				     <&a53_1>,
++				     <&a53_2>,
++				     <&a53_3>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	thermal-zones {
++		sensor_thermal1: sensor-thermal1 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&tsc 0>;
++
++			trips {
++				sensor1_crit: sensor1-crit {
++					temperature = <120000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		sensor_thermal2: sensor-thermal2 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&tsc 1>;
++
++			trips {
++				sensor2_crit: sensor2-crit {
++					temperature = <120000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		sensor_thermal3: sensor-thermal3 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&tsc 2>;
++
++			trips {
++				sensor3_crit: sensor3-crit {
++					temperature = <120000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++	};
++
+ 	extal_clk: extal {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -338,42 +418,6 @@
+ 			resets = <&cpg 905>;
+ 		};
+ 
+-		pmu_a57 {
+-			compatible = "arm,cortex-a57-pmu";
+-			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-affinity = <&a57_0>,
+-					     <&a57_1>,
+-					     <&a57_2>,
+-					     <&a57_3>;
+-		};
+-
+-		pmu_a53 {
+-			compatible = "arm,cortex-a53-pmu";
+-			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-affinity = <&a53_0>,
+-					     <&a53_1>,
+-					     <&a53_2>,
+-					     <&a53_3>;
+-		};
+-
+-		timer {
+-			compatible = "arm,armv8-timer";
+-			interrupts = <GIC_PPI 13
+-					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 14
+-					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 11
+-					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 10
+-					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+-		};
+-
+ 		cpg: clock-controller@e6150000 {
+ 			compatible = "renesas,r8a7795-cpg-mssr";
+ 			reg = <0 0xe6150000 0 0x1000>;
+@@ -2331,49 +2375,5 @@
+ 			#thermal-sensor-cells = <1>;
+ 			status = "okay";
+ 		};
+-
+-		thermal-zones {
+-			sensor_thermal1: sensor-thermal1 {
+-				polling-delay-passive = <250>;
+-				polling-delay = <1000>;
+-				thermal-sensors = <&tsc 0>;
+-
+-				trips {
+-					sensor1_crit: sensor1-crit {
+-						temperature = <120000>;
+-						hysteresis = <2000>;
+-						type = "critical";
+-					};
+-				};
+-			};
+-
+-			sensor_thermal2: sensor-thermal2 {
+-				polling-delay-passive = <250>;
+-				polling-delay = <1000>;
+-				thermal-sensors = <&tsc 1>;
+-
+-				trips {
+-					sensor2_crit: sensor2-crit {
+-						temperature = <120000>;
+-						hysteresis = <2000>;
+-						type = "critical";
+-					};
+-				};
+-			};
+-
+-			sensor_thermal3: sensor-thermal3 {
+-				polling-delay-passive = <250>;
+-				polling-delay = <1000>;
+-				thermal-sensors = <&tsc 2>;
+-
+-				trips {
+-					sensor3_crit: sensor3-crit {
+-						temperature = <120000>;
+-						hysteresis = <2000>;
+-						type = "critical";
+-					};
+-				};
+-			};
+-		};
+ 	};
+ };
+-- 
+2.11.0
