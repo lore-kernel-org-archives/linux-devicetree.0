@@ -1,65 +1,61 @@
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Subject: [PATCH] ARM: dts: imx6qdl-udoo: disable AC'97 input pins pad drivers
-Date: Mon, 20 Nov 2017 20:08:30 +0100
-Message-ID: <94862a4d-bec5-cf19-95e6-512d88dd07dc@maciej.szmigiero.name>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Subject: [PATCH v7 1/3] dt-bindings: net: add mt76 wireless device binding
+Date: Mon, 20 Nov 2017 20:35:47 +0100
+Message-ID: <20171120193549.80831-2-nbd@nbd.name>
+References: <20171120193549.80831-1-nbd@nbd.name>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171120193549.80831-1-nbd-Vt+b4OUoWG0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-AC'97 interface RXD and TXC pins are only used as SoC inputs, let's disable
-pad drivers for them so we will be protected if, for example, TCLKDIR is
-set by mistake in AUDMUX and causes TXC pin to be configured as an output.
+Add documentation describing how device tree can be used to configure
+wireless chips supported by the mt76 driver.
 
-This also changes pull direction on these pins from pull-up to pull-down
-to match what the board AC'97 CODEC chip (VT1613) has on these pins.
-
-Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-udoo.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ .../bindings/net/wireless/mediatek,mt76.txt        | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
 
-diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-index a173de20ee73..dd69e8397116 100644
---- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-@@ -199,8 +199,8 @@
- 			fsl,pins = <
- 				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
- 				MX6QDL_PAD_DI0_PIN3__AUD6_TXFS		0x1b0b0
--				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
--				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x13080
-+				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x13080
- 				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
- 			>;
- 		};
-@@ -209,8 +209,8 @@
- 			fsl,pins = <
- 				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
- 				MX6QDL_PAD_DI0_PIN3__GPIO4_IO19		0x1b0b0
--				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
--				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x13080
-+				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x13080
- 				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
- 			>;
- 		};
-@@ -219,8 +219,8 @@
- 			fsl,pins = <
- 				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18		0x1b0b0
- 				MX6QDL_PAD_DI0_PIN3__GPIO4_IO19		0x1b0b0
--				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
--				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
-+				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x13080
-+				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x13080
- 				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
- 			>;
- 		};
+diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+new file mode 100644
+index 000000000000..0c17a0ec9b7b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+@@ -0,0 +1,32 @@
++* MediaTek mt76xx devices
++
++This node provides properties for configuring the MediaTek mt76xx wireless
++device. The node is expected to be specified as a child node of the PCI
++controller to which the wireless chip is connected.
++
++Optional properties:
++
++- mac-address: See ethernet.txt in the parent directory
++- local-mac-address: See ethernet.txt in the parent directory
++- ieee80211-freq-limit: See ieee80211.txt
++- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
++
++Optional nodes:
++- led: Properties for a connected LED
++  Optional properties:
++    - led-sources: See Documentation/devicetree/bindings/leds/common.txt
++
++&pcie {
++	pcie0 {
++		wifi@0,0 {
++			compatible = "mediatek,mt76";
++			reg = <0x0000 0 0 0 0>;
++			ieee80211-freq-limit = <5000000 6000000>;
++			mediatek,mtd-eeprom = <&factory 0x8000>;
++
++			led {
++				led-sources = <2>;
++			};
++		};
++	};
++};
 -- 
-2.14.1
+2.14.2
