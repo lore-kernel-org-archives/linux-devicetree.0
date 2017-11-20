@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V5 06/12] clk: sprd: add composite clock support
-Date: Mon, 20 Nov 2017 14:01:31 +0800
-Message-ID: <20171120060137.27380-7-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V5 08/12] dt-bindings: Add Spreadtrum clock binding documentation
+Date: Mon, 20 Nov 2017 14:01:33 +0800
+Message-ID: <20171120060137.27380-9-chunyan.zhang@spreadtrum.com>
 References: <20171120060137.27380-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,154 +12,84 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduced composite driver for Spreadtrum's SoCs. The
-functions of this composite clock simply consist of divider and
-mux clocks.
+Introduce a new binding with its documentation for Spreadtrum clock
+sub-framework.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/sprd/Makefile    |  1 +
- drivers/clk/sprd/composite.c | 62 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/sprd/composite.h | 53 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 116 insertions(+)
- create mode 100644 drivers/clk/sprd/composite.c
- create mode 100644 drivers/clk/sprd/composite.h
+ Documentation/devicetree/bindings/clock/sprd.txt | 63 ++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd.txt
 
-diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
-index 80e6039..2262e76 100644
---- a/drivers/clk/sprd/Makefile
-+++ b/drivers/clk/sprd/Makefile
-@@ -4,3 +4,4 @@ clk-sprd-y	+= common.o
- clk-sprd-y	+= gate.o
- clk-sprd-y	+= mux.o
- clk-sprd-y	+= div.o
-+clk-sprd-y	+= composite.o
-diff --git a/drivers/clk/sprd/composite.c b/drivers/clk/sprd/composite.c
+diff --git a/Documentation/devicetree/bindings/clock/sprd.txt b/Documentation/devicetree/bindings/clock/sprd.txt
 new file mode 100644
-index 0000000..218e17c
+index 0000000..e9d179e
 --- /dev/null
-+++ b/drivers/clk/sprd/composite.c
-@@ -0,0 +1,62 @@
-+/*
-+ * Spreadtrum composite clock driver
-+ *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
-+ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
++++ b/Documentation/devicetree/bindings/clock/sprd.txt
+@@ -0,0 +1,63 @@
++Spreadtrum Clock Binding
++------------------------
 +
-+#include <linux/clk-provider.h>
++Required properties:
++- compatible: should contain the following compatible strings:
++	- "sprd,sc9860-pmu-gate"
++	- "sprd,sc9860-pll"
++	- "sprd,sc9860-ap-clk"
++	- "sprd,sc9860-aon-prediv"
++	- "sprd,sc9860-apahb-gate"
++	- "sprd,sc9860-aon-gate"
++	- "sprd,sc9860-aonsecure-clk"
++	- "sprd,sc9860-agcp-gate"
++	- "sprd,sc9860-gpu-clk"
++	- "sprd,sc9860-vsp-clk"
++	- "sprd,sc9860-vsp-gate"
++	- "sprd,sc9860-cam-clk"
++	- "sprd,sc9860-cam-gate"
++	- "sprd,sc9860-disp-clk"
++	- "sprd,sc9860-disp-gate"
++	- "sprd,sc9860-apapb-gate"
 +
-+#include "composite.h"
++- #clock-cells: must be 1
 +
-+static long sprd_comp_round_rate(struct clk_hw *hw, unsigned long rate,
-+				unsigned long *parent_rate)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
++- clocks : Should be the input parent clock(s) phandle for the clock, this
++	   property here just simply shows which clock group the clocks'
++	   parents are in, since each clk node would represent many clocks
++	   which are defined in the driver.  The detailed dependency
++	   relationship (i.e. how many parents and which are the parents)
++	   are implemented in driver code.
 +
-+	return sprd_div_helper_round_rate(&cc->common, &cc->div,
-+					 rate, parent_rate);
-+}
++Optional properties:
 +
-+static unsigned long sprd_comp_recalc_rate(struct clk_hw *hw,
-+					  unsigned long parent_rate)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
++- reg:	Contain the registers base address and length. It must be configured
++	only if no 'sprd,syscon' under the node.
 +
-+	return sprd_div_helper_recalc_rate(&cc->common, &cc->div, parent_rate);
-+}
++- sprd,syscon: phandle to the syscon which is in the same address area with
++	       the clock, and so we can get regmap for the clocks from the
++	       syscon device.
 +
-+static int sprd_comp_set_rate(struct clk_hw *hw, unsigned long rate,
-+			     unsigned long parent_rate)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
++Example:
 +
-+	return sprd_div_helper_set_rate(&cc->common, &cc->div,
-+				       rate, parent_rate);
-+}
++	pmu_gate: pmu-gate {
++		compatible = "sprd,sc9860-pmu-gate";
++		sprd,syscon = <&pmu_regs>;
++		clocks = <&ext_26m>;
++		#clock-cells = <1>;
++	};
 +
-+static u8 sprd_comp_get_parent(struct clk_hw *hw)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
++	pll: pll {
++		compatible = "sprd,sc9860-pll";
++		sprd,syscon = <&ana_regs>;
++		clocks = <&pmu_gate 0>;
++		#clock-cells = <1>;
++	};
 +
-+	return sprd_mux_helper_get_parent(&cc->common, &cc->mux);
-+}
-+
-+static int sprd_comp_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
-+
-+	return sprd_mux_helper_set_parent(&cc->common, &cc->mux, index);
-+}
-+
-+const struct clk_ops sprd_comp_ops = {
-+	.get_parent	= sprd_comp_get_parent,
-+	.set_parent	= sprd_comp_set_parent,
-+
-+	.round_rate	= sprd_comp_round_rate,
-+	.recalc_rate	= sprd_comp_recalc_rate,
-+	.set_rate	= sprd_comp_set_rate,
-+};
-+EXPORT_SYMBOL_GPL(sprd_comp_ops);
-diff --git a/drivers/clk/sprd/composite.h b/drivers/clk/sprd/composite.h
-new file mode 100644
-index 0000000..b337bda
---- /dev/null
-+++ b/drivers/clk/sprd/composite.h
-@@ -0,0 +1,53 @@
-+/*
-+ * Spreadtrum composite clock driver
-+ *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
-+ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
-+
-+#ifndef _SPRD_COMPOSITE_H_
-+#define _SPRD_COMPOSITE_H_
-+
-+#include "common.h"
-+#include "mux.h"
-+#include "div.h"
-+
-+struct sprd_comp {
-+	struct sprd_mux_ssel	mux;
-+	struct sprd_div_internal	div;
-+	struct sprd_clk_common	common;
-+};
-+
-+#define SPRD_COMP_CLK_TABLE(_struct, _name, _parent, _reg, _table,	\
-+			_mshift, _mwidth, _dshift, _dwidth, _flags)	\
-+	struct sprd_comp _struct = {					\
-+		.mux	= _SPRD_MUX_CLK(_mshift, _mwidth, _table),	\
-+		.div	= _SPRD_DIV_CLK(_dshift, _dwidth),		\
-+		.common = {						\
-+			.regmap		= NULL,				\
-+			.reg		= _reg,				\
-+			.hw.init = CLK_HW_INIT_PARENTS(_name,		\
-+						       _parent,		\
-+						       &sprd_comp_ops,	\
-+						       _flags),		\
-+			 }						\
-+	}
-+
-+#define SPRD_COMP_CLK(_struct, _name, _parent, _reg, _mshift,	\
-+			_mwidth, _dshift, _dwidth, _flags)	\
-+	SPRD_COMP_CLK_TABLE(_struct, _name, _parent, _reg,	\
-+			    NULL, _mshift, _mwidth,		\
-+			    _dshift, _dwidth, _flags)
-+
-+static inline struct sprd_comp *hw_to_sprd_comp(const struct clk_hw *hw)
-+{
-+	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
-+
-+	return container_of(common, struct sprd_comp, common);
-+}
-+
-+extern const struct clk_ops sprd_comp_ops;
-+
-+#endif /* _SPRD_COMPOSITE_H_ */
++	ap_clk: clock-controller@20000000 {
++		compatible = "sprd,sc9860-ap-clk";
++		reg = <0 0x20000000 0 0x400>;
++		clocks = <&ext_26m>, <&pll 0>,
++			 <&pmu_gate 0>;
++		#clock-cells = <1>;
++	};
 -- 
 2.7.4
