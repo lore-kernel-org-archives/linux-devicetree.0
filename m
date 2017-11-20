@@ -1,35 +1,65 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: mailbox: Introduce Hi3660 controller
- binding
-Date: Mon, 20 Nov 2017 13:03:20 -0600
-Message-ID: <20171120190320.vg73gsms7grouieg@rob-hp-laptop>
-References: <1510910672-1409-1-git-send-email-xuyiping@hisilicon.com>
- <1510910672-1409-2-git-send-email-xuyiping@hisilicon.com>
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Subject: [PATCH] ARM: dts: imx6qdl-udoo: disable AC'97 input pins pad drivers
+Date: Mon, 20 Nov 2017 20:08:30 +0100
+Message-ID: <94862a4d-bec5-cf19-95e6-512d88dd07dc@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1510910672-1409-2-git-send-email-xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuezhiliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 17, 2017 at 05:24:30PM +0800, Xu YiPing wrote:
-> From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Introduce a binding for the Hi3660 mailbox controller, the mailbox is
-> used within application processor (AP), communication processor (CP),
-> HIFI and MCU, etc.
-> 
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/mailbox/hisilicon,hi3660-mailbox.txt  | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
+AC'97 interface RXD and TXC pins are only used as SoC inputs, let's disable
+pad drivers for them so we will be protected if, for example, TCLKDIR is
+set by mistake in AUDMUX and causes TXC pin to be configured as an output.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This also changes pull direction on these pins from pull-up to pull-down
+to match what the board AC'97 CODEC chip (VT1613) has on these pins.
+
+Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+---
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+index a173de20ee73..dd69e8397116 100644
+--- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -199,8 +199,8 @@
+ 			fsl,pins = <
+ 				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
+ 				MX6QDL_PAD_DI0_PIN3__AUD6_TXFS		0x1b0b0
+-				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
+-				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
++				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x13080
++				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x13080
+ 				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
+ 			>;
+ 		};
+@@ -209,8 +209,8 @@
+ 			fsl,pins = <
+ 				MX6QDL_PAD_DI0_PIN2__AUD6_TXD		0x1b0b0
+ 				MX6QDL_PAD_DI0_PIN3__GPIO4_IO19		0x1b0b0
+-				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
+-				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
++				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x13080
++				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x13080
+ 				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
+ 			>;
+ 		};
+@@ -219,8 +219,8 @@
+ 			fsl,pins = <
+ 				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18		0x1b0b0
+ 				MX6QDL_PAD_DI0_PIN3__GPIO4_IO19		0x1b0b0
+-				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x1b0b0
+-				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x1b0b0
++				MX6QDL_PAD_DI0_PIN4__AUD6_RXD		0x13080
++				MX6QDL_PAD_DI0_PIN15__AUD6_TXC		0x13080
+ 				MX6QDL_PAD_EIM_EB2__GPIO2_IO30		0x1b0b0
+ 			>;
+ 		};
+-- 
+2.14.1
