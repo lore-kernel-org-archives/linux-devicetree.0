@@ -1,53 +1,60 @@
 From: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] dt-bindings: Add a RISC-V SBI firmware node
-Date: Mon, 20 Nov 2017 11:50:00 -0800
-Message-ID: <20171120195000.2070-1-palmer@sifive.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH] dt-bindings: Add an enable method to RISC-V
+Date: Mon, 20 Nov 2017 11:50:22 -0800
+Message-ID: <20171120195022.2307-1-palmer@sifive.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>, nathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Cc: patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The RISC-V privileged ISA mandates the presence of an SBI, but there's
-no reason not to put it in the device tree.  This would allow us to
-possibly remove the SBI later.
+RISC-V doesn't currently specify a mechanism for enabling or disabling
+CPUs.  Instead, we assume that all CPUs are enabled on boot, and if
+someone wants to save power we instead put a CPU to sleep via a WFI
+loop.
 
-CC: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+This patch adds "enable-method" to the RISC-V CPU binding, which
+currently only has the value "none".  This allows us to change the
+enable method in the future.
+
+CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Signed-off-by: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/firmware/riscv.sbi.txt       | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/riscv.sbi.txt
+ Documentation/devicetree/bindings/riscv/cpus.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/firmware/riscv.sbi.txt b/Documentation/devicetree/bindings/firmware/riscv.sbi.txt
-new file mode 100644
-index 000000000000..42384d5d52cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/riscv.sbi.txt
-@@ -0,0 +1,20 @@
-+RISC-V Supervisor Binary Interface (SBI)
-+
-+The RISC-V privileged ISA specification mandates the presence of a supervisor
-+binary interface that performs some operations which might otherwise require
-+particularly complicated instructions.  This interface includes
-+inter-processor interrupts, TLB flushes, i-cache and TLB shootdowns, a
-+console, and power management.
-+
-+Required properties:
-+- compatible: must contain one of the following
-+ * "riscv,sbi" for the SBI defined by the privileged specification of the
-+   system.
-+
-+Example:
-+
-+firmware {
-+	sbi {
-+		compatible = "riscv,sbi";
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
+index adf7b7af5dc3..dd9e1ae197e2 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.txt
++++ b/Documentation/devicetree/bindings/riscv/cpus.txt
+@@ -82,6 +82,11 @@ described below.
+                 Value type: <string>
+                 Definition: Contains the RISC-V ISA string of this hart.  These
+                             ISA strings are defined by the RISC-V ISA manual.
++        - cpu-enable-method:
++		Usage: required
++		Value type: <stringlist>
++		Definition: Must be one of
++			"none": This CPU's state cannot be changed.
+ 
+ Example: SiFive Freedom U540G Development Kit
+ ---------------------------------------------
+@@ -105,6 +110,7 @@ Linux is allowed to run on.
+                         reg = <0>;
+                         riscv,isa = "rv64imac";
+                         status = "disabled";
++                        enable-method = "none";
+                         L10: interrupt-controller {
+                                 #interrupt-cells = <1>;
+                                 compatible = "riscv,cpu-intc";
+@@ -130,6 +136,7 @@ Linux is allowed to run on.
+                         reg = <1>;
+                         riscv,isa = "rv64imafdc";
+                         status = "okay";
++                        enable-method = "none";
+                         tlb-split;
+                         L13: interrupt-controller {
+                                 #interrupt-cells = <1>;
 -- 
 2.13.6
 
