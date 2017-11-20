@@ -1,41 +1,31 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: r8a779x: Add '#reset-cells' in cpg-mssr
-Date: Mon, 20 Nov 2017 10:49:58 +0100
-Message-ID: <20171120094957.2seep3qw4j274zrv@verge.net.au>
-References: <1510839357-11450-1-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH 0/2] ARM: dts: renesas: Correct primary compatible value
+ for eeprom
+Date: Mon, 20 Nov 2017 10:54:02 +0100
+Message-ID: <20171120095401.nf6evazijmainarm@verge.net.au>
+References: <1510840296-12767-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1510839357-11450-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1510840296-12767-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 02:35:57PM +0100, Geert Uytterhoeven wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Nov 16, 2017 at 02:51:34PM +0100, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
 > 
-> With the latest dtc, we get many warnings about the missing
-> '#reset-cells' property in these controllers, e.g.:
+> The Renesas part numbers of the two-wire serial interface EEPROMs do not
+> follow the 24Cxx pattern, but the R1EX24xxx pattern.
 > 
-> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /can@e6e80000:resets[0])
-> arch/arm/boot/dts/r8a7792-blanche.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/dma-controller@e6700000:resets[0])
-> arch/arm/boot/dts/r8a7792-wheat.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/ethernet@e6800000:resets[0])
-> arch/arm/boot/dts/r8a7793-gose.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /gpio@e6050000:resets[0])
-> arch/arm/boot/dts/r8a7794-alt.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /i2c@e6500000:resets[0])
-> arch/arm/boot/dts/r8a7794-silk.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /interrupt-controller@e61c0000:resets[0])
+> Hence change the primary compatible values to the appropriate variant of
+> "renesas,r1ex24xxx", like is already done on Gose.
 > 
-> This adds it for the three r8a779x chips that were lacking it. The
-> binding mandates this as <1>, so this is the value I use.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> [geert: Add fix for r8a7793.dtsi]
-> Fixes: 34fbd2b12761d111 ("ARM: dts: r8a7790: Add reset control properties")
-> Fixes: 6e11a322f1d7505d ("ARM: dts: r8a7792: Add reset control properties")
-> Fixes: 84fb19e1d201ba86 ("ARM: dts: r8a7793: Add reset control properties")
-> Fixes: 615beb759ca494a4 ("ARM: dts: r8a7794: Add reset control properties")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Note that the second patch depends on (trivial) "[PATCH] dt-bindings:
+> i2c: eeprom: Add Renesas R1EX24128" to please checkpatch.
 
-Thanks for following up on this, its been fouling up my todo list for a
-while now. Applied for v4.16.
+Noted.
+
+I have applied these patches for v4.16.
