@@ -1,55 +1,63 @@
-From: Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 0/2] Tegra PCIe end point config space map code
- refactoring
-Date: Mon, 20 Nov 2017 15:57:18 +0530
-Message-ID: <2d2ec183-c14c-1eb8-0cd5-fd62d8b36779@nvidia.com>
-References: <1508827489-10842-1-git-send-email-vidyas@nvidia.com>
- <20171024201512.GG21840@bhelgaas-glaptop.roam.corp.google.com>
- <20171106195123.GG31930@bhelgaas-glaptop.roam.corp.google.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] ARM: dts: r8a779x: Add '#reset-cells' in cpg-mssr
+Date: Mon, 20 Nov 2017 11:30:49 +0100
+Message-ID: <CAK8P3a345J8JfVu4g+refG+y8r8VmMsjKPkUnYen4kMhQYvtEg@mail.gmail.com>
+References: <1510839357-11450-1-git-send-email-geert+renesas@glider.be>
+ <20171120094957.2seep3qw4j274zrv@verge.net.au> <CAMuHMdXPrv4bwZbGxE=DJp2nufjF5Q6JwFAERDvBFi+UsAXVsA@mail.gmail.com>
+ <20171120102611.hyrufkxou27gspah@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171106195123.GG31930-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171120102611.hyrufkxou27gspah@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Thierry, Can you please Ack it so that we can target it for next release?
+On Mon, Nov 20, 2017 at 11:26 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Mon, Nov 20, 2017 at 10:57:07AM +0100, Geert Uytterhoeven wrote:
+>> Hi Simon,
+>>
+>> On Mon, Nov 20, 2017 at 10:49 AM, Simon Horman <horms@verge.net.au> wrote:
+>> > On Thu, Nov 16, 2017 at 02:35:57PM +0100, Geert Uytterhoeven wrote:
+>> >> From: Arnd Bergmann <arnd@arndb.de>
+>> >>
+>> >> With the latest dtc, we get many warnings about the missing
+>> >> '#reset-cells' property in these controllers, e.g.:
+>> >>
+>> >> arch/arm/boot/dts/r8a7790-lager.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /can@e6e80000:resets[0])
+>> >> arch/arm/boot/dts/r8a7792-blanche.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/dma-controller@e6700000:resets[0])
+>> >> arch/arm/boot/dts/r8a7792-wheat.dtb: Warning (resets_property): Missing property '#reset-cells' in node /soc/clock-controller@e6150000 or bad phandle (referred from /soc/ethernet@e6800000:resets[0])
+>> >> arch/arm/boot/dts/r8a7793-gose.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /gpio@e6050000:resets[0])
+>> >> arch/arm/boot/dts/r8a7794-alt.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /i2c@e6500000:resets[0])
+>> >> arch/arm/boot/dts/r8a7794-silk.dtb: Warning (resets_property): Missing property '#reset-cells' in node /clock-controller@e6150000 or bad phandle (referred from /interrupt-controller@e61c0000:resets[0])
+>> >>
+>> >> This adds it for the three r8a779x chips that were lacking it. The
+>> >> binding mandates this as <1>, so this is the value I use.
+>> >>
+>> >> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> >> [geert: Add fix for r8a7793.dtsi]
+>> >> Fixes: 34fbd2b12761d111 ("ARM: dts: r8a7790: Add reset control properties")
+>> >> Fixes: 6e11a322f1d7505d ("ARM: dts: r8a7792: Add reset control properties")
+>> >> Fixes: 84fb19e1d201ba86 ("ARM: dts: r8a7793: Add reset control properties")
+>> >> Fixes: 615beb759ca494a4 ("ARM: dts: r8a7794: Add reset control properties")
+>> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> >
+>> > Thanks for following up on this, its been fouling up my todo list for a
+>> > while now. Applied for v4.16.
+>>
+>> As this is a fix for changes made in v4.15-rc1, don't we want it in v4.15?
+>
+> Do the changes have any run-time effect?
+> If not I'd prefer not to push them into v4.15 as fixes.
 
-On Tuesday 07 November 2017 01:21 AM, Bjorn Helgaas wrote:
-> On Tue, Oct 24, 2017 at 03:15:12PM -0500, Bjorn Helgaas wrote:
->> On Tue, Oct 24, 2017 at 12:14:47PM +0530, Vidya Sagar wrote:
->>> PCIe host controller in Tegra SoCs has 1GB of aperture available
->>> for mapping end points config space, IO and BARs. In that, currently
->>> 256MB is being reserved for mapping end points configuration space
->>> which leaves less memory space available for mapping end points BARs
->>> on some of the platforms.
->>> This patch series attempts to map only 4K space from 1GB aperture to
->>> access end points configuration space.
->>>
->>> Currently, this change can benefit T20 and T186 in saving (i.e. repurposed
->>> to use for BAR mapping) physical space as well as kernel virtual mapping space,
->>> it saves only kernel virtual address space in T30, T124, T132 and T210.
->>>
->>> NOTE: Since T186 PCIe DT entry is not yet present in main line (it is currently
->>> merged to 'for-4.15/arm64/dt' branch), nothing gets broken with this change for T186.
->>> For older platforms (T20, T30, T124, T132, T210), this change works fine without any
->>> DT modifications
->>>
->>> Testing Done on T124, T210 & T186:
->>>   Enumeration and basic functionality of immediate devices
->>>   Enumeration of devices behind a PCIe switch
->>>   Complete 4K configuration space access
->>>
->>> Vidya Sagar (2):
->>>    PCI: tegra: refactor config space mapping code
->>>    ARM64: tegra: limit PCIe config space mapping to 4K for T186
->>>
->>>   arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
->>>   drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------------------
->>>   2 files changed, 44 insertions(+), 89 deletions(-)
->> Seems OK to me; waiting for Thierry's ack.
-> Dropping for lack of an ack.  Please repost if/when Thierry acks it.
+The main effect right now is that we're up from no warnings in the
+default build to
+hundreds of warnings, which is really annoying. Obviously there is
+little gain in
+fixing these but not the other warnings that were introduced, but I would either
+want to fix them all, or disable the warning for one more release.
+
+Rob, what do you think we should do here?
+
+       Arnd
