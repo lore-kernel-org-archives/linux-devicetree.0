@@ -1,42 +1,38 @@
-From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH v5 13/18] bindings: PCI: artpec: Add support for endpoint mode
-Date: Mon, 20 Nov 2017 14:32:16 +0100
-Message-ID: <20171120133222.27771-14-niklas.cassel@axis.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH v5 17/18] bindings: PCI: artpec: Add support for the ARTPEC-7 SoC
+Date: Mon, 20 Nov 2017 14:32:20 +0100
+Message-ID: <20171120133222.27771-18-niklas.cassel@axis.com>
 References: <20171120133222.27771-1-niklas.cassel@axis.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171120133222.27771-1-niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, Jesper Nilsson <jespern-VrBV9hrLPhE@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171120133222.27771-1-niklas.cassel@axis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklass@axis.com>, Jesper Nilsson <jespern@axis.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The PCIe controller integrated in ARTPEC-6 SoCs is capable of operating in
-endpoint mode. Add endpoint mode support to the artpec6 driver.
+Add support for the ARTPEC-7 SoC in the artpec6 driver.
+The ARTPEC-6 SoC and the ARTPEC-7 SoC are very similar.
+Unfortunately, some fields in the PCIECFG and PCIESTAT
+register have changed.
 
-Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-index 4e4aee4439ea..33eef7ae5a23 100644
+index 33eef7ae5a23..979dc7b6cfe8 100644
 --- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
 +++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-@@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsys DesignWare PCIe IP
- and thus inherits all the common properties defined in designware-pcie.txt.
- 
+@@ -6,6 +6,8 @@ and thus inherits all the common properties defined in designware-pcie.txt.
  Required properties:
--- compatible: "axis,artpec6-pcie", "snps,dw-pcie"
-+- compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
-+	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
+ - compatible: "axis,artpec6-pcie", "snps,dw-pcie" for ARTPEC-6 in RC mode;
+ 	      "axis,artpec6-pcie-ep", "snps,dw-pcie" for ARTPEC-6 in EP mode;
++	      "axis,artpec7-pcie", "snps,dw-pcie" for ARTPEC-7 in RC mode;
++	      "axis,artpec7-pcie-ep", "snps,dw-pcie" for ARTPEC-7 in EP mode;
  - reg: base addresses and lengths of the PCIe controller (DBI),
  	the PHY controller, and configuration address space.
  - reg-names: Must include the following entries:
 -- 
 2.14.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
