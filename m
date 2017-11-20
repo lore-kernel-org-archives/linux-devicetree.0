@@ -1,135 +1,71 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2] dt-bindings: mtd: Add sst25vf016b to the list of
- supported chip names
-Date: Mon, 20 Nov 2017 09:49:33 +0100
-Message-ID: <CAMuHMdWZ=71XvVyzsiPyiAz+0RsCZjmWqqvOKs=bDdSQMpLmnA@mail.gmail.com>
-References: <1505118928-3987-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1508853032-25229-1-git-send-email-fabrizio.castro@bp.renesas.com> <658ceb2b-5d2b-9349-f140-27858459e5a8@wedev4u.fr>
+From: "sudeep kumar" <sudeepkumar@cem-solutions.net>
+Subject: RE: [PATCH 3/3] arm: dts: owl-s500: Add Sparky
+Date: Mon, 20 Nov 2017 14:32:20 +0530
+Message-ID: <003e01d361de$4e1c0710$ea541530$@cem-solutions.net>
+References: <20171114180114.26408-1-afaerber@suse.de>
+ <20171114180114.26408-4-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <658ceb2b-5d2b-9349-f140-27858459e5a8-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171114180114.26408-4-afaerber@suse.de>
+Content-Language: en-us
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?utf-8?Q?'Andreas_F=C3=A4rber'?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?utf-8?B?J+W8oOWkqeebiic=?= <tyzhang@actions-semi.com>, =?utf-8?B?J+aiheWIqSc=?= <harrymei@actions-semi.com>, linux-kernel@vger.kernel.org, 'Thomas Liau' <thomas.liau@actions-semi.com>, 'Russell King' <linux@armlinux.org.uk>, 'Rob Herring' <robh+dt@kernel.org>, =?utf-8?B?J+W8oOS4nOmjjic=?= <zhangdf@actions-semi.com>, =?utf-8?B?J+WImOeCnCc=?= <liuwei@actions-semi.com>, 'Ioan B' <ioan@allo.com>, 'Jeff Chen' <jeff.chen@actions-semi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Cyrille,
-
-On Fri, Nov 17, 2017 at 6:36 PM, Cyrille Pitchen
-<cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org> wrote:
-> sorry but I won't apply this patch.
->
-> New values for the 'compatible' DT properties should only be added for
-> memory parts not supporting the JEDEC READ ID (0x9F) command.
-
-I tent to disagree. Documenting part numbers in the DT bindings serves two
-purposes:
-  1. Documenting which parts are supported,
-  2. Allowing checkpatch to validate compatible values in DTS files (see
-     below).
-
-Unfortunately the current
-Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-is useless for the latter, as the values listed don't contain the vendor
-prefixes, still causing warnings like
-
-WARNING: DT compatible string "sst,sst25vf016b" appears un-documented
--- check ./Documentation/devicetree/bindings/
-#79: FILE: arch/arm/boot/dts/r8a7743-iwg20m.dtsi:79:
-+ compatible =3D "sst,sst25vf016b", "jedec,spi-nor";
-
-So I suggest prepending all part number with the appropriate vendor prefixe=
-s
-in jedec,spi-nor.txt.
-
-BTW, "sst" (for Silicon Storage Technology) should be added to
-Documentation/devicetree/bindings/vendor-prefixes.txt, too, to avoid anothe=
-r
-warning:
-
-WARNING: DT compatible string vendor "sst" appears un-documented --
-check ./Documentation/devicetree/bindings/vendor-prefixes.txt
-#79: FILE: arch/arm/boot/dts/r8a7743-iwg20m.dtsi:79:
-+ compatible =3D "sst,sst25vf016b", "jedec,spi-nor";
-
-> SST25 memories do support this command hence should use the "jedec,spi-no=
-r"
-> value alone. For historical reasons, some DT nodes set their 'compatible'
-> string to something like "<vendor>,<model>", "jedec,spi-nor".
-> It should work as expected in most case however I discourage from doing s=
-o
-> in new device trees because it may have some side effects especially when
-> the m25p80.c driver is used between the spi-nor.c driver and the SPI
-> controller driver.
-
-It is considered good practice to always have in DT a compatible value for
-the real part number, not just for a generic fallback.
-This allows to discriminate using the real part number, in case an anomaly
-shows up later.
-How else are you gonna handle e.g. a production batch that accidentally
-contains a wrong JEDEC ID? And adding the part-specific compatible value
-after the discovery won't help, as it won't be present in existing DTSes.
-
-> It's all about setting the 2nd parameter of spi_nor_scan(), the 'name'
-> parameter, as NULL when possible. This parameter should be set to a non N=
-ULL
-> value only for memories not supporting the JEDEC READ ID op code (0x9F).
->
-> Best regards,
->
-> Cyrille
->
-> Le 24/10/2017 =C3=A0 15:50, Fabrizio Castro a =C3=A9crit :
->> There are a few DT files that make use of sst25vf016b in their
->> compatible strings, and the driver supports this chip already.
->> This patch improves the documentation and therefore the result
->> of ./scripts/checkpatch.pl.
->>
->> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> Signed-off-by: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> ---
->> Thank you Rob, thank you Geert, and sorry for the delay on this one.
->> Here is v2.
->>
->> Changes in v2:
->> * fixed subject prefix
->> * added changelog
->>
->>  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/D=
-ocumentation/devicetree/bindings/mtd/jedec,spi-nor.txt
->> index 4cab5d8..bf56d77 100644
->> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
->> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
->> @@ -31,6 +31,7 @@ Required properties:
->>                   s25sl12801
->>                   s25fl008k
->>                   s25fl064k
->> +                 sst25vf016b
->>                   sst25vf040b
->>                   sst25wf040b
->>                   m25p40
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWNrZWQtYnkgOiBzdWRlZXAKCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCkZyb206IEFuZHJl
+YXMgRsOkcmJlciBbbWFpbHRvOmFmYWVyYmVyQHN1c2UuZGVdIApTZW50OiBUdWVzZGF5LCBOb3Zl
+bWJlciAxNCwgMjAxNyAxMTozMSBQTQpUbzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCkNjOiBUaG9tYXMgTGlhdSA8dGhvbWFzLmxpYXVAYWN0aW9ucy1zZW1pLmNvbT47IEpl
+ZmYgQ2hlbiA8amVmZi5jaGVuQGFjdGlvbnMtc2VtaS5jb20+OyDlvKDkuJzpo44gPHpoYW5nZGZA
+YWN0aW9ucy1zZW1pLmNvbT47IOWImOeCnCA8bGl1d2VpQGFjdGlvbnMtc2VtaS5jb20+OyDlvKDl
+pKnnm4ogPHR5emhhbmdAYWN0aW9ucy1zZW1pLmNvbT47IOaiheWIqSA8aGFycnltZWlAYWN0aW9u
+cy1zZW1pLmNvbT47IElvYW4gQiA8aW9hbkBhbGxvLmNvbT47IFN1ZGVlcCBLdW1hciA8c3VkZWVw
+a3VtYXJAY2VtLXNvbHV0aW9ucy5uZXQ+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBB
+bmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBr
+ZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFJ1c3NlbGwg
+S2luZyA8bGludXhAYXJtbGludXgub3JnLnVrPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcK
+U3ViamVjdDogW1BBVENIIDMvM10gYXJtOiBkdHM6IG93bC1zNTAwOiBBZGQgU3Bhcmt5CgpBZGQg
+YSBEZXZpY2UgVHJlZSBmb3IgdGhlIEFsbG8uY29tIFNwYXJreSBTQkMuCgpTaWduZWQtb2ZmLWJ5
+OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0tLQogYXJjaC9hcm0vYm9vdC9k
+dHMvTWFrZWZpbGUgICAgICAgICAgICB8ICAzICsrLQogYXJjaC9hcm0vYm9vdC9kdHMvb3dsLXM1
+MDAtc3Bhcmt5LmR0cyB8IDQ0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAy
+IGZpbGVzIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkgIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9vd2wtczUwMC1zcGFya3kuZHRzCgpkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgYi9hcmNoL2FybS9ib290L2R0cy9NYWtl
+ZmlsZSBpbmRleCBkMDM4MWU5Y2FmMjEuLmFkNzdmNzY1NmE3MCAxMDA2NDQKLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKQEAg
+LTcwNyw3ICs3MDcsOCBAQCBkdGItJChDT05GSUdfQVJDSF9PUklPTjVYKSArPSBcCiAJb3Jpb241
+eC1yZDg4ZjUxODItbmFzLmR0YgogZHRiLSQoQ09ORklHX0FSQ0hfQUNUSU9OUykgKz0gXAogCW93
+bC1zNTAwLWN1YmllYm9hcmQ2LmR0YiBcCi0Jb3dsLXM1MDAtZ3VpdGFyLWJiLXJldi1iLmR0Ygor
+CW93bC1zNTAwLWd1aXRhci1iYi1yZXYtYi5kdGIgXAorCW93bC1zNTAwLXNwYXJreS5kdGIKIGR0
+Yi0kKENPTkZJR19BUkNIX1BSSU1BMikgKz0gXAogCXByaW1hMi1ldmIuZHRiCiBkdGItJChDT05G
+SUdfQVJDSF9PWE5BUykgKz0gXApkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvb3dsLXM1
+MDAtc3Bhcmt5LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL293bC1zNTAwLXNwYXJreS5kdHMKbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5mNjIwNTQ4YzZjMGIKLS0tIC9k
+ZXYvbnVsbAorKysgYi9hcmNoL2FybS9ib290L2R0cy9vd2wtczUwMC1zcGFya3kuZHRzCkBAIC0w
+LDAgKzEsNDQgQEAKKy8qCisgKiBBbGxvLmNvbSBTcGFya3kKKyAqCisgKiBDb3B5cmlnaHQgKGMp
+IDIwMTcgQW5kcmVhcyBGw6RyYmVyCisgKgorICogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChH
+UEwtMi4wKyBPUiBNSVQpICAqLworCisvZHRzLXYxLzsKKworI2luY2x1ZGUgIm93bC1zNTAwLmR0
+c2kiCisKKy8geworCWNvbXBhdGlibGUgPSAiYWxsbyxzcGFya3kiLCAiYWN0aW9ucyxzNTAwIjsK
+Kwltb2RlbCA9ICJBbGxvLmNvbSBTcGFya3kiOworCisJYWxpYXNlcyB7CisJCXNlcmlhbDMgPSAm
+dWFydDM7CisJfTsKKworCWNob3NlbiB7CisJCXN0ZG91dC1wYXRoID0gInNlcmlhbDM6MTE1MjAw
+bjgiOworCX07CisKKwltZW1vcnlAMCB7CisJCWRldmljZV90eXBlID0gIm1lbW9yeSI7CisJCXJl
+ZyA9IDwweDAgMHg0MDAwMDAwMD47IC8qIDEgb3IgMiBHaUIgKi8KKwl9OworCisJdWFydDNfY2xr
+OiB1YXJ0My1jbGsgeworCQljb21wYXRpYmxlID0gImZpeGVkLWNsb2NrIjsKKwkJY2xvY2stZnJl
+cXVlbmN5ID0gPDkyMTYwMD47CisJCSNjbG9jay1jZWxscyA9IDwwPjsKKwl9OworfTsKKworJnRp
+bWVyIHsKKwljbG9ja3MgPSA8Jmhvc2M+OworfTsKKworJnVhcnQzIHsKKwlzdGF0dXMgPSAib2th
+eSI7CisJY2xvY2tzID0gPCZ1YXJ0M19jbGs+OworfTsKLS0KMi4xMy42CgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
