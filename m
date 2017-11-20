@@ -1,34 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio: pca953x: fix vendor prefix for PCA9654
-Date: Mon, 20 Nov 2017 13:01:22 -0600
-Message-ID: <20171120190122.vzg3d6ikgxablfu6@rob-hp-laptop>
-References: <20171116201842.006310882@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: mailbox: Introduce Hi3660 controller
+ binding
+Date: Mon, 20 Nov 2017 13:03:20 -0600
+Message-ID: <20171120190320.vg73gsms7grouieg@rob-hp-laptop>
+References: <1510910672-1409-1-git-send-email-xuyiping@hisilicon.com>
+ <1510910672-1409-2-git-send-email-xuyiping@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171116201842.006310882@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1510910672-1409-2-git-send-email-xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuezhiliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 11:18:32PM +0300, Sergei Shtylyov wrote:
-> Despite commit 55020c8056a8 ("of: Add vendor prefix for ON Semiconductor
-> Corp.") was made long ago, the latter commit 9f49f6dd0473 ("gpio: pca953x:
-> add onsemi,pca9654 id") made use of another, undocumented vendor prefix.
-> Since such prefix doesn't seem to be used in any device trees, I think we
-> can just fix the "compatible" string in the driver and the bindings and be
-> done with that...
+On Fri, Nov 17, 2017 at 05:24:30PM +0800, Xu YiPing wrote:
+> From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> Fixes: 9f49f6dd0473 ("gpio: pca953x: add onsemi,pca9654 id")
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Introduce a binding for the Hi3660 mailbox controller, the mailbox is
+> used within application processor (AP), communication processor (CP),
+> HIFI and MCU, etc.
 > 
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
-> The patch is against the 'fixes' branch of LinusW's 'linux-gpio.git' repo.
-> 
->  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt |    2 +-
->  drivers/gpio/gpio-pca953x.c                             |    2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  .../bindings/mailbox/hisilicon,hi3660-mailbox.txt  | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
