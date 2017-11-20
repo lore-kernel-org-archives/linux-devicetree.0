@@ -1,47 +1,62 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Fix fifo size for EP 6,7
-Date: Mon, 20 Nov 2017 13:48:36 +0100
-Message-ID: <56581c3c-9159-8e07-288b-5ccc793e1fa1@i2se.com>
-References: <1507371414-21688-1-git-send-email-stefan.wahren@i2se.com>
- <160210128.18582.1509137904239@email.1und1.de> <871slkw3ms.fsf@anholt.net>
- <1506055926.93787.1509439381859@email.1und1.de>
- <2056429546.196128.1510871632211@email.1und1.de>
- <410670D7E743164D87FA6160E7907A560113A3F8F0@am04wembxa.internal.synopsys.com>
- <2145990636.312534.1511036500613@email.1und1.de>
- <410670D7E743164D87FA6160E7907A560113A409A8@am04wembxa.internal.synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <410670D7E743164D87FA6160E7907A560113A409A8-ouFQeoKRuQ8bQ7k9MBbv4fufCSb+aD3WLzEdoUbNIic@public.gmane.org>
-Content-Language: de-DE
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Minas Harutyunyan <Minas.Harutyunyan-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH v5 00/18] dwc MSI fixes, ARTPEC-6 EP mode support, ARTPEC-7 SoC support
+Date: Mon, 20 Nov 2017 14:32:03 +0100
+Message-ID: <20171120133222.27771-1-niklas.cassel@axis.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@axis.com, linux-pci@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: Niklas Cassel <niklass@axis.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Minas,
+This is a series that adds:
+- PCI endpoint mode support in the ARTPEC-6 driver.
+- ARTPEC-7 SoC support in the ARTPEC-6 driver (the SoCs are very similar).
+- Small fixes for MSI in designware-ep and designware-host,
+  needed to get endpoint mode support working for ARTPEC-6.
+- Cleanups in pci-dra7xx to better prepare for endpoint mode in other
+  DWC based PCIe drivers.
 
-Am 20.11.2017 um 12:59 schrieb Minas Harutyunyan:
-> Hi Stefan,
-> Looks like I know cause of issue... but I'm overloaded today and will able to check it tomorrow. Sorry for delay.
+New in V5:
+-Replaced ep->page_size with epc->mem->page_size in patch
+ ("PCI: designware-ep: Pre-allocate memory for MSI in dw_pcie_ep_init") and
+ in patch ("PCI: designware-ep: Add generic function for raising MSI irq").
+-Included a new patch in this patch series:
+ ("PCI: dwc: artpec6: Deassert the core before waiting for PHY").
 
-thanks for your reply. There is no need to hurry, because the merge
-window isn't open yet, but i like to get this fixed for the next kernel
-release.
+Niklas Cassel (18):
+  PCI: dwc: Use the DMA-API to get the MSI address
+  PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
+  PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be
+    writable
+  PCI: designware-ep: Pre-allocate memory for MSI in dw_pcie_ep_init
+  PCI: designware-ep: Remove static keyword from dw_pcie_ep_reset_bar()
+  PCI: designware-ep: Add generic function for raising MSI irq
+  PCI: dwc: dra7xx: Refactor Kconfig and Makefile handling for host/ep
+    mode
+  PCI: dwc: dra7xx: Assign pp->ops in dra7xx_add_pcie_port() rather than
+    in probe
+  PCI: dwc: dra7xx: Help compiler to remove unused code
+  PCI: dwc: artpec6: Remove unused defines
+  PCI: dwc: artpec6: Use BIT and GENMASK macros
+  PCI: dwc: artpec6: Split artpec6_pcie_establish_link() into smaller
+    functions
+  bindings: PCI: artpec: Add support for endpoint mode
+  PCI: dwc: artpec6: Add support for endpoint mode
+  PCI: dwc: Make cpu_addr_fixup take struct dw_pcie as argument
+  PCI: dwc: artpec6: Deassert the core before waiting for PHY
+  bindings: PCI: artpec: Add support for the ARTPEC-7 SoC
+  PCI: dwc: artpec6: Add support for the ARTPEC-7 SoC
 
-I have the suspicion this is related to the fact that u-boot already
-initialize the USB IP, before dwc2 driver is loaded.
+ .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   5 +-
+ drivers/pci/dwc/Kconfig                            |  68 +--
+ drivers/pci/dwc/Makefile                           |   4 +-
+ drivers/pci/dwc/pci-dra7xx.c                       |  27 +-
+ drivers/pci/dwc/pcie-artpec6.c                     | 470 ++++++++++++++++++---
+ drivers/pci/dwc/pcie-designware-ep.c               |  59 ++-
+ drivers/pci/dwc/pcie-designware-host.c             |  15 +-
+ drivers/pci/dwc/pcie-designware.c                  |   2 +-
+ drivers/pci/dwc/pcie-designware.h                  |  22 +-
+ 9 files changed, 554 insertions(+), 118 deletions(-)
 
-Regards
-Stefan
-
->
-> Thanks,
-> Minas
->
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.14.2
