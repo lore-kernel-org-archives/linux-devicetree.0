@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V5 12/12] arm64: dts: add clocks for SC9860
-Date: Mon, 20 Nov 2017 14:01:37 +0800
-Message-ID: <20171120060137.27380-13-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V5 03/12] clk: sprd: add gate clock support
+Date: Mon, 20 Nov 2017 14:01:28 +0800
+Message-ID: <20171120060137.27380-4-chunyan.zhang@spreadtrum.com>
 References: <20171120060137.27380-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,161 +12,212 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Some clocks on SC9860 are in the same address area with syscon devices,
-those are what have a property of 'sprd,syscon' which would refer to
-syscon devices, others would have a reg property indicated their address
-ranges.
+Some clocks on the Spreadtrum's SoCs are just simple gates. Add
+support for those clocks.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 ---
- arch/arm64/boot/dts/sprd/sc9860.dtsi | 115 +++++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/whale2.dtsi |   2 +-
- 2 files changed, 116 insertions(+), 1 deletion(-)
+ drivers/clk/sprd/Makefile |   1 +
+ drivers/clk/sprd/gate.c   | 113 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sprd/gate.h   |  61 +++++++++++++++++++++++++
+ 3 files changed, 175 insertions(+)
+ create mode 100644 drivers/clk/sprd/gate.c
+ create mode 100644 drivers/clk/sprd/gate.h
 
-diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-index 7b7d8ce..bf03da4 100644
---- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
-+++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-@@ -7,6 +7,7 @@
-  */
+diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
+index 74f4b80..8cd5592 100644
+--- a/drivers/clk/sprd/Makefile
++++ b/drivers/clk/sprd/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_SPRD_COMMON_CLK)	+= clk-sprd.o
  
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/sprd,sc9860-clk.h>
- #include "whale2.dtsi"
- 
- / {
-@@ -183,6 +184,120 @@
- 	};
- 
- 	soc {
-+		pmu_gate: pmu-gate {
-+			compatible = "sprd,sc9860-pmu-gate";
-+			sprd,syscon = <&pmu_regs>; /* 0x402b0000 */
-+			clocks = <&ext_26m>;
-+			#clock-cells = <1>;
-+		};
+ clk-sprd-y	+= common.o
++clk-sprd-y	+= gate.o
+diff --git a/drivers/clk/sprd/gate.c b/drivers/clk/sprd/gate.c
+new file mode 100644
+index 0000000..5dcc6a8
+--- /dev/null
++++ b/drivers/clk/sprd/gate.c
+@@ -0,0 +1,113 @@
++/*
++ * Spreadtrum gate clock driver
++ *
++ * Copyright (C) 2017 Spreadtrum, Inc.
++ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ */
 +
-+		pll: pll {
-+			compatible = "sprd,sc9860-pll";
-+			sprd,syscon = <&ana_regs>; /* 0x40400000 */
-+			clocks = <&pmu_gate 0>;
-+			#clock-cells = <1>;
-+		};
++#include <linux/clk-provider.h>
++#include <linux/regmap.h>
 +
-+		ap_clk: clock-controller@20000000 {
-+			compatible = "sprd,sc9860-ap-clk";
-+			reg = <0 0x20000000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>,
-+				 <&pmu_gate 0>;
-+			#clock-cells = <1>;
-+		};
++#include "gate.h"
 +
-+		aon_prediv: aon-prediv {
-+			compatible = "sprd,sc9860-aon-prediv";
-+			reg = <0 0x402d0000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>,
-+				 <&pmu_gate 0>;
-+			#clock-cells = <1>;
-+		};
++static void clk_gate_toggle(const struct sprd_gate *sg, bool en)
++{
++	const struct sprd_clk_common *common = &sg->common;
++	unsigned int reg;
++	bool set = sg->flags & CLK_GATE_SET_TO_DISABLE ? true : false;
 +
-+		apahb_gate: apahb-gate {
-+			compatible = "sprd,sc9860-apahb-gate";
-+			sprd,syscon = <&ap_ahb_regs>; /* 0x20210000 */
-+			clocks = <&aon_prediv 0>;
-+			#clock-cells = <1>;
-+		};
++	set ^= en;
 +
-+		aon_gate: aon-gate {
-+			compatible = "sprd,sc9860-aon-gate";
-+			sprd,syscon = <&aon_regs>; /* 0x402e0000 */
-+			clocks = <&aon_prediv 0>;
-+			#clock-cells = <1>;
-+		};
++	sprd_regmap_read(common->regmap, common->reg, &reg);
 +
-+		aonsecure_clk: clock-controller@40880000 {
-+			compatible = "sprd,sc9860-aonsecure-clk";
-+			reg = <0 0x40880000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++	if (set)
++		reg |= sg->enable_mask;
++	else
++		reg &= ~sg->enable_mask;
 +
-+		agcp_gate: agcp-gate {
-+			compatible = "sprd,sc9860-agcp-gate";
-+			sprd,syscon = <&agcp_regs>; /* 0x415e0000 */
-+			clocks = <&aon_prediv 0>;
-+			#clock-cells = <1>;
-+		};
++	sprd_regmap_write(common->regmap, common->reg, reg);
++}
 +
-+		gpu_clk: clock-controller@60200000 {
-+			compatible = "sprd,sc9860-gpu-clk";
-+			reg = <0 0x60200000 0 0x400>;
-+			clocks = <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++static void clk_sc_gate_toggle(const struct sprd_gate *sg, bool en)
++{
++	const struct sprd_clk_common *common = &sg->common;
++	bool set = sg->flags & CLK_GATE_SET_TO_DISABLE ? 1 : 0;
++	unsigned int offset;
 +
-+		vsp_clk: clock-controller@61000000 {
-+			compatible = "sprd,sc9860-vsp-clk";
-+			reg = <0 0x61000000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++	set ^= en;
 +
-+		vsp_gate: vsp-gate {
-+			compatible = "sprd,sc9860-vsp-gate";
-+			sprd,syscon = <&vsp_regs>; /* 0x61100000 */
-+			clocks = <&vsp_clk 0>;
-+			#clock-cells = <1>;
-+		};
++	/*
++	 * Each set/clear gate clock has three registers:
++	 * common->reg			- base register
++	 * common->reg + offset		- set register
++	 * common->reg + 2 * offset	- clear register
++	 */
++	offset = set ? sg->sc_offset : sg->sc_offset * 2;
 +
-+		cam_clk: clock-controller@62000000 {
-+			compatible = "sprd,sc9860-cam-clk";
-+			reg = <0 0x62000000 0 0x4000>;
-+			clocks = <&ext_26m>, <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++	sprd_regmap_write(common->regmap, common->reg + offset,
++			  sg->enable_mask);
++}
 +
-+		cam_gate: cam-gate {
-+			compatible = "sprd,sc9860-cam-gate";
-+			sprd,syscon = <&cam_regs>; /* 0x62100000 */
-+			clocks = <&cam_clk 0>;
-+			#clock-cells = <1>;
-+		};
++static void sprd_gate_disable(struct clk_hw *hw)
++{
++	struct sprd_gate *sg = hw_to_sprd_gate(hw);
 +
-+		disp_clk: clock-controller@63000000 {
-+			compatible = "sprd,sc9860-disp-clk";
-+			reg = <0 0x63000000 0 0x400>;
-+			clocks = <&ext_26m>, <&pll 0>;
-+			#clock-cells = <1>;
-+		};
++	clk_gate_toggle(sg, false);
++}
 +
-+		disp_gate: disp-gate {
-+			compatible = "sprd,sc9860-disp-gate";
-+			sprd,syscon = <&disp_regs>; /* 0x63100000 */
-+			clocks = <&disp_clk 0>;
-+			#clock-cells = <1>;
-+		};
++static int sprd_gate_enable(struct clk_hw *hw)
++{
++	struct sprd_gate *sg = hw_to_sprd_gate(hw);
 +
-+		apapb_gate: apapb-gate {
-+			compatible = "sprd,sc9860-apapb-gate";
-+			sprd,syscon = <&ap_apb_regs>; /* 0x70b00000 */
-+			clocks = <&ap_clk 0>;
-+			#clock-cells = <1>;
-+		};
++	clk_gate_toggle(sg, true);
 +
- 		funnel@10001000 { /* SoC Funnel */
- 			compatible = "arm,coresight-funnel", "arm,primecell";
- 			reg = <0 0x10001000 0 0x1000>;
-diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-index 6ea3a75..eb004bb 100644
---- a/arch/arm64/boot/dts/sprd/whale2.dtsi
-+++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-@@ -110,6 +110,6 @@
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <26000000>;
--		clock-output-names = "ext_26m";
-+		clock-output-names = "ext-26m";
- 	};
- };
++	return 0;
++}
++
++static void sprd_sc_gate_disable(struct clk_hw *hw)
++{
++	struct sprd_gate *sg = hw_to_sprd_gate(hw);
++
++	clk_sc_gate_toggle(sg, false);
++}
++
++static int sprd_sc_gate_enable(struct clk_hw *hw)
++{
++	struct sprd_gate *sg = hw_to_sprd_gate(hw);
++
++	clk_sc_gate_toggle(sg, true);
++
++	return 0;
++}
++static int sprd_gate_is_enabled(struct clk_hw *hw)
++{
++	struct sprd_gate *sg = hw_to_sprd_gate(hw);
++	struct sprd_clk_common *common = &sg->common;
++	unsigned int reg;
++
++	sprd_regmap_read(common->regmap, common->reg, &reg);
++
++	if (sg->flags & CLK_GATE_SET_TO_DISABLE)
++		reg ^= sg->enable_mask;
++
++	reg &= sg->enable_mask;
++
++	return reg ? 1 : 0;
++}
++
++const struct clk_ops sprd_gate_ops = {
++	.disable	= sprd_gate_disable,
++	.enable		= sprd_gate_enable,
++	.is_enabled	= sprd_gate_is_enabled,
++};
++EXPORT_SYMBOL_GPL(sprd_gate_ops);
++
++const struct clk_ops sprd_sc_gate_ops = {
++	.disable	= sprd_sc_gate_disable,
++	.enable		= sprd_sc_gate_enable,
++	.is_enabled	= sprd_gate_is_enabled,
++};
++EXPORT_SYMBOL_GPL(sprd_sc_gate_ops);
++
+diff --git a/drivers/clk/sprd/gate.h b/drivers/clk/sprd/gate.h
+new file mode 100644
+index 0000000..72e5b1a5
+--- /dev/null
++++ b/drivers/clk/sprd/gate.h
+@@ -0,0 +1,61 @@
++/*
++ * Spreadtrum gate clock driver
++ *
++ * Copyright (C) 2017 Spreadtrum, Inc.
++ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ */
++
++#ifndef _SPRD_GATE_H_
++#define _SPRD_GATE_H_
++
++#include "common.h"
++
++struct sprd_gate {
++	u32			enable_mask;
++	u16			flags;
++	u16			sc_offset;
++
++	struct sprd_clk_common	common;
++};
++
++#define SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, _sc_offset,	\
++			     _enable_mask, _flags, _gate_flags, _ops)	\
++	struct sprd_gate _struct = {					\
++		.enable_mask	= _enable_mask,				\
++		.sc_offset	= _sc_offset,				\
++		.flags		= _gate_flags,				\
++		.common	= {						\
++			.regmap		= NULL,				\
++			.reg		= _reg,				\
++			.hw.init	= CLK_HW_INIT(_name,		\
++						      _parent,		\
++						      _ops,		\
++						      _flags),		\
++		}							\
++	}
++
++#define SPRD_GATE_CLK(_struct, _name, _parent, _reg,			\
++		      _enable_mask, _flags, _gate_flags)		\
++	SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, 0,		\
++			     _enable_mask, _flags, _gate_flags,		\
++			     &sprd_gate_ops)
++
++#define SPRD_SC_GATE_CLK(_struct, _name, _parent, _reg, _sc_offset,	\
++			 _enable_mask, _flags, _gate_flags)		\
++	SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, _sc_offset,	\
++			     _enable_mask, _flags, _gate_flags,		\
++			     &sprd_sc_gate_ops)
++
++static inline struct sprd_gate *hw_to_sprd_gate(const struct clk_hw *hw)
++{
++	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
++
++	return container_of(common, struct sprd_gate, common);
++}
++
++extern const struct clk_ops sprd_gate_ops;
++extern const struct clk_ops sprd_sc_gate_ops;
++
++#endif /* _SPRD_GATE_H_ */
 -- 
 2.7.4
