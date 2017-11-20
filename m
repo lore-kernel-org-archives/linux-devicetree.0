@@ -1,95 +1,99 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/5] checks: add a string checks for label, bootargs and
- stdout-path
-Date: Mon, 20 Nov 2017 11:09:54 +1100
-Message-ID: <20171120000954.GF19214@umbus.fritz.box>
+Subject: Re: [PATCH 4/5] checks: check for #{size,address}-cells without
+ child nodes
+Date: Mon, 20 Nov 2017 11:14:38 +1100
+Message-ID: <20171120001438.GJ19214@umbus.fritz.box>
 References: <20171117144515.10870-1-robh@kernel.org>
- <20171117144515.10870-2-robh@kernel.org>
+ <20171117144515.10870-5-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eMnpOGXCMazMAbfp"
+        protocol="application/pgp-signature"; boundary="VSVNCtZB1QZ8vhj+"
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171117144515.10870-2-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20171117144515.10870-5-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---eMnpOGXCMazMAbfp
+--VSVNCtZB1QZ8vhj+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 17, 2017 at 08:45:11AM -0600, Rob Herring wrote:
-> Add more string property checks for label, bootargs, and stdout-path.
+On Fri, Nov 17, 2017 at 08:45:14AM -0600, Rob Herring wrote:
+> nodes with a 'reg' property nor a ranges property.
+>=20
+> An exception may be an overlay that adds nodes, but this case would
+> need
 
-Where does 'label' appear?  I'm not immediately recalling it as a
-property with global meaning.
+Sentence doesn't seem finished..
 
-bootargs and stdout-path are from /chosen of course.  I have some
-mixed feelings about whether it's reasonable to check it's a string
-everywhere, rather than specifically just in /chosen.
+In any case, I'm not sure this is a good idea.  It's not uncommon to
+have bus bridge nodes that ought to have a well defined #address and
+#size cells, but just don't happen to have any plugged devices yet.
+An overlay that adds nodes is one possibility, but a bus where the
+children can be probed is another.
 
+The check for 'ranges' will get some of those cases, but a bus bridge
+which doesn't directly map the child address space into the parents
+(e.g. indirect access) is perfectly legitimate still.
+
+>=20
 > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  checks.c                   | 4 ++++
->  tests/bad-string-props.dts | 3 +++
->  tests/run_tests.sh         | 2 +-
->  3 files changed, 8 insertions(+), 1 deletion(-)
+>  checks.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 >=20
 > diff --git a/checks.c b/checks.c
-> index f5bf5f97a3ad..a4a9d37ca19b 100644
+> index 346b0256f9cb..a785b81bea07 100644
 > --- a/checks.c
 > +++ b/checks.c
-> @@ -586,6 +586,9 @@ WARNING_IF_NOT_CELL(interrupt_cells_is_cell, "#interr=
-upt-cells");
->  WARNING_IF_NOT_STRING(device_type_is_string, "device_type");
->  WARNING_IF_NOT_STRING(model_is_string, "model");
->  WARNING_IF_NOT_STRING(status_is_string, "status");
-> +WARNING_IF_NOT_STRING(label_is_string, "label");
-> +WARNING_IF_NOT_STRING(bootargs_is_string, "bootargs");
-> +WARNING_IF_NOT_STRING(stdout_path_is_string, "stdout-path");
+> @@ -982,6 +982,31 @@ static void check_avoid_default_addr_size(struct che=
+ck *c, struct dt_info *dti,
+>  WARNING(avoid_default_addr_size, check_avoid_default_addr_size, NULL,
+>  	&addr_size_cells);
 > =20
->  static void fixup_addr_size_cells(struct check *c, struct dt_info *dti,
->  				  struct node *node)
-> @@ -1236,6 +1239,7 @@ static struct check *check_table[] =3D {
+> +static void check_avoid_unecessary_addr_size(struct check *c, struct dt_=
+info *dti,
+> +					     struct node *node)
+> +{
+> +	struct property *prop;
+> +	struct node *child;
+> +	bool has_reg =3D false;
+> +
+> +	if (!node->parent || node->addr_cells < 0 || node->size_cells < 0)
+> +		return;
+> +
+> +	if (get_property(node, "ranges") || !node->children)
+> +		return;
+> +
+> +	for_each_child(node, child) {
+> +		prop =3D get_property(child, "reg");
+> +		if (prop)
+> +			has_reg =3D true;
+> +	}
+> +
+> +	if (!has_reg)
+> +		FAIL(c, dti, "unnecessary #address-cells/#size-cells without \"ranges\=
+" or child \"reg\" property in %s",
+> +		     node->fullpath);
+> +}
+> +WARNING(avoid_unecessary_addr_size, check_avoid_unecessary_addr_size, NU=
+LL, &avoid_default_addr_size);
+> +
+>  static void check_obsolete_chosen_interrupt_controller(struct check *c,
+>  						       struct dt_info *dti,
+>  						       struct node *node)
+> @@ -1306,6 +1331,7 @@ static struct check *check_table[] =3D {
+>  	&simple_bus_reg,
 > =20
->  	&address_cells_is_cell, &size_cells_is_cell, &interrupt_cells_is_cell,
->  	&device_type_is_string, &model_is_string, &status_is_string,
-> +	&label_is_string, &bootargs_is_string, &stdout_path_is_string,
+>  	&avoid_default_addr_size,
+> +	&avoid_unecessary_addr_size,
+>  	&obsolete_chosen_interrupt_controller,
 > =20
->  	&property_name_chars_strict,
->  	&node_name_chars_strict,
-> diff --git a/tests/bad-string-props.dts b/tests/bad-string-props.dts
-> index 396f82069cf7..9b5a7a1736ee 100644
-> --- a/tests/bad-string-props.dts
-> +++ b/tests/bad-string-props.dts
-> @@ -4,4 +4,7 @@
->  	device_type =3D <0xdeadbeef>;
->  	model =3D <0xdeadbeef>;
->  	status =3D <0xdeadbeef>;
-> +	bootargs =3D <0xdeadbeef>;
-> +	stdout-path =3D <0xdeadbeef>;
-> +	label =3D <0xdeadbeef>;
->  };
-> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-> index 850bc165e757..c610aaeb053e 100755
-> --- a/tests/run_tests.sh
-> +++ b/tests/run_tests.sh
-> @@ -546,7 +546,7 @@ dtc_tests () {
->      check_tests bad-name-property.dts name_properties
-> =20
->      check_tests bad-ncells.dts address_cells_is_cell size_cells_is_cell =
-interrupt_cells_is_cell
-> -    check_tests bad-string-props.dts device_type_is_string model_is_stri=
-ng status_is_string
-> +    check_tests bad-string-props.dts device_type_is_string model_is_stri=
-ng status_is_string bootargs_is_string stdout_path_is_string label_is_string
->      check_tests bad-reg-ranges.dts reg_format ranges_format
->      check_tests bad-empty-ranges.dts ranges_format
->      check_tests reg-ranges-root.dts reg_format ranges_format
+>  	&clocks_property,
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -97,24 +101,24 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---eMnpOGXCMazMAbfp
+--VSVNCtZB1QZ8vhj+
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAloSHVIACgkQbDjKyiDZ
-s5JU+BAAiEmvmljXcE061xgFMbaJO7eARHENUmhPqCFJW9W6DYRJ7KDw6x/SW0Lv
-aVJI++oU1bTpTnuxtD5m/YLRn7JoC3Oii3xUis10ZVqZNG0JbWoOX6ZfTzGp5YMk
-sv6FVKUtnQKfBAiF/Ul0fyvPMG36AYJMsRgcbygwFtxMKIh/GZcY9B5nlgcMKSbb
-tWGIvESyv9vXLbt++yGKSV5lYmIHgwoHk9SQUfNt4dCkeBNIq/pRe7+4U/kkq/FO
-nr1XvZXOR9mUDf1Q2hLsQCaxk5Crmm9wUcd7DVT8k6Wbpdk5/nAXVjd9uEgJsCPS
-cIlGAvYn0BzqFTOzaabZZcjV6n6MaOLvz8CVSl5sy3dGdFh+5mZQaKyAGRTvla9z
-LbGt75DL79vA6NnFPujfPsSPhAe6X788AtRFpGgNjcey05IOJAO6ERCq05aZGUMF
-eR61ueWzQjisHUGmKS0Hj94A6As0UNrfnxK5ZXKbIKOApPNH2Pol0ikNl4l4uZJK
-sbU3/WEQpjzh+IIFee92+i/BnXzSW84E2SCPZwsbTjBfixGG9F9nmObC0vy+yA2q
-WB5wkfHJLFznAhRvKHc5YmUI+QekrukqGi/unmMLOI8FLr+vYhqdBAif3JS62FzE
-sx8VRdyNnDytIpebGXck3j+i38WPDEcfRTTypj3drjyBXC9PLKg=
-=HOZ4
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAloSHm4ACgkQbDjKyiDZ
+s5JC1BAAuWM/46F8fEXvi+K2F7D2jPCNEcMtTdG9yvumlTUioBqk412syhYSFepy
++EiWSyYoafb9r/8tUKQzDs4MrgpmBQKNlz78rZ7g3lh/x5piIuszP88Gvs90TzI7
+cZ2gRjIGMqJdfBkqfDq6Ws1C/EY0iw6FKUw1OE510jiM4Vu4RjUSAig771j8YOwh
+ttXGJ0tguR6M+IZSpUZTfYsRaAjvhqKAWgkzDt+6imOaHf6Y2HXjkf4KoVcSTd4F
+Z0257VZbew+8p+WqniMLLbKqcgZaGpOQe3itHHOJ3b9aciJQdrn4IQRS05VMl/J8
+TsziJVUDJ/pu9RbY9b348eXxQrnwEAuZYSNdQbJoY7AaeHOQbz2E/drcIsbsrd9m
+u1iSvElg62r3yy6zM3kFyXH4sQ5Kg3CTS+zbfuDkKc63RJNA9GNe5JAfcSlIpmcx
+zlnFksm2xTNKHDeE8+pYHR2iKZSfxAHK0BSbUQBuhd9swbeQG36ep1mxnLeQUiTq
+BJs26Fs2n8+Y66zmqv+jXrFqdevd7rSNwSuNyT4EsxawbhTrDgWft+n35p0fb4Lm
+lmRbdmUn4bBbeVGw4qbz/d+wG7w3101bt/XjCdlGdQTGWPAYUHchG/eu6Ao2aQ9x
+uHvGqeQs6gtoOEICsnWXA6vnd1bogQzjXmNXaSQXgR/KUbRtRpg=
+=w50M
 -----END PGP SIGNATURE-----
 
---eMnpOGXCMazMAbfp--
+--VSVNCtZB1QZ8vhj+--
