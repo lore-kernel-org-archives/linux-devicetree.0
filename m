@@ -1,33 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [v5 RESEND 07/17] regulator: arizona-micsupp: Add support for
- Cirrus Logic Madera codecs
-Date: Mon, 20 Nov 2017 12:47:15 -0600
-Message-ID: <20171120184715.odltgj6frwixcr4p@rob-hp-laptop>
-References: <20171120141051.29467-1-rf@opensource.cirrus.com>
- <20171120141051.29467-8-rf@opensource.cirrus.com>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: sunxi: document new
+ generic binding
+Date: Mon, 20 Nov 2017 12:52:12 -0600
+Message-ID: <20171120185212.h2v2ewslxpl7q23l@rob-hp-laptop>
+References: <20171113012523.2328-1-andre.przywara@arm.com>
+ <20171113012523.2328-2-andre.przywara@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171120141051.29467-8-rf@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+In-Reply-To: <20171113012523.2328-2-andre.przywara@arm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Icenowy Zheng <icenowy@aosc.xyz>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 02:10:41PM +0000, Richard Fitzgerald wrote:
-> From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+On Mon, Nov 13, 2017 at 01:25:21AM +0000, Andre Przywara wrote:
+> So far all the Allwinner pinctrl drivers provided a table in the
+> kernel to describe all the pins and the link between the pinctrl functions
+> names (strings) and their respective mux values (register values).
 > 
-> This adds a new driver identity "madera-micsupp" and probe function
-> so that this driver can be used to control the micsupp regulator on
-> Cirrus Logic Madera codecs.
+> Extend the binding to put those mappings in the DT, so that any SoC can
+> describe its pinctrl and GPIO data fully there instead of relying on
+> tables.
+> This uses a generic compatible name, to be prepended with an SoC
+> specific name in the node.
 > 
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 > ---
->  .../bindings/regulator/arizona-regulator.txt       |  3 +-
+>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   | 58 ++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
 
-Please add acks when posting a new version.
+I'm leaving this one to Linus...
 
->  drivers/regulator/Kconfig                          |  7 ++-
->  drivers/regulator/arizona-micsupp.c                | 71 +++++++++++++++++++++-
->  3 files changed, 76 insertions(+), 5 deletions(-)
+Generally, this has not been the direction we've wanted to go. What 
+makes this unique to Allwinner?
+
+Rob
