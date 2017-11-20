@@ -1,130 +1,61 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: RFC: Copying Device Tree File into reserved area of VMLINUX
- before deployment
-Date: Sun, 19 Nov 2017 23:32:24 -0500
-Message-ID: <fe7925f3-30d4-ec03-a6c5-61a8644dcdfe@gmail.com>
-References: <0b31e22b-202f-6fca-28f2-e16e6af6c6b7@emagii.com>
- <a0f9d598-04af-fddd-58ad-09db10ec19da@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a0f9d598-04af-fddd-58ad-09db10ec19da-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-AoFPY8dbyRPQT0dZR+AlfA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v6 0/4] pmbus: Expand fan support and add MAX31785 driver
+Date: Mon, 20 Nov 2017 15:12:02 +1030
+Message-ID: <cover.dfb0a63462b38b9384b1d077fd62d17a11a7a0dd.1511152748.git-series.andrew@aj.id.au>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-hwmon@vger.kernel.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hello,
 
+This series introduces support for the MAX31785 intelligent fan controller, a
+PMBus device providing closed-loop fan control among a number of other
+features. Along the way the series adds support to control fans and create
+virtual pages to the PMBus core, the latter to support some of the more
+annoying design decisions found in the 'A' variant of the chip.
 
-On 11/19/17 23:23, Frank Rowand wrote:
-> adding devicetree list, devicetree maintainers
-> 
-> On 11/18/17 12:59, Ulf Samuelsson wrote:
->> I noticed when checking out the OpenWRT support for the board that they have a method to avoid having to pass the device tree address to the kernel, and can thus boot device tree based kernels with U-boots that
->> does not support device trees.
->>
->> Is this something that would be considered useful for including in mainstream:
->>
->> BACKGROUND:
->> Trying to load a yocto kernel into a MIPS target (MT7620A based),
->> and the U-Boot is more than stupid.
->> Does not support the "run" command as an example.
->> They modified the U-Boot MAGIC Word to complicate things.
->> The U-Boot is not configured to use device tree files.
->> The board runs a 2.6 kernel right now.
->>
->> Several attempts by me a and others to rebuild U-Boot according to
->> the H/W vendors source code and build instructions results in a
->> bricked unit. Bricked units cannot be recovered.
+This is the sixth spin of the series. v5 can be found here:
 
-Hopefully you have brought this to the attention of the vendor.  U-Boot
-is GPL v2 (or in some ways possibly GPL v2 or later), so if you can not
-build U-Boot that is equivalent to the binary U-Boot they shipped, the
-vendor may want to ensure that they are shipping the proper source and
-build instructions.
+    https://lkml.org/lkml/2017/11/17/910
 
+v6 fixes an error-handling bug I introduced in pmbus_set_page() with PATCH 3/4,
+as pointed out by Guenter on v5[1]. The rework implements his suggested
+solution.
 
->> Not my choice of H/W, so I cannot change it.
->>
->>
->> ===================================================================
->> OPENWRT:
->> I noticed when checking out the OpenWRT support for the board that
->> they have a method to avoid having to pass the device tree address
->> to the kernel, and can thus boot device tree based kernels with
->> U-boots that does not support device trees.
->> 
->> What they do is to reserve 16 kB of kernel space, and tag it with
->> an ASCII string "OWRTDTB:". After the kernel and dtb is built, a
->> utility "patch-dtb" will update the vmlinux binary, copying in the
->> device tree file.
->>
->> ===================================================================
->> It would be useful to me, and I could of course patch the
->> mainstream kernel, but first I would like to check if this is of
->> interest for mainstream.
+A few other other minor fixes are included:
 
-Not in this form.  Hard coding a fixed size area in the boot image
-to contain the FDT (aka DTB) is a non-starter.
+* PATCH 1/4:
+  * Avoid potential NULL dereference in pmbus_get_fan_rate(). It
+    amounts to being an error path that should never happen in practice, but
+    lets make sure we don't die if we do hit it.
+  * Drop a redundant test for the presence of FAN_COMMAND_x in
+    pmbus_add_fan_ctrl(); document that its presence is a precondition to
+    calling it (this was already tested at the one call-site).
 
-And again, I would first approach the H/W vendor before trying to
-come up with a work around like this.
+* PATCH 2/4: Avoid scaling an error code in pmbus_pwm_enable(). Rather, test
+  the result of pmbus_get_fan_rate_cached() before performing the scaling when
+  switching to PWM mode.
 
+[1] https://lkml.org/lkml/2017/11/19/280
 
->> I envisage the support would look something like:
->>
->> ============
->> Kconfig.
->> config MIPS
->>     select    HAVE_IMAGE_DTB
->>
->> config    HAVE_IMAGE_DTB
->>     bool
->>
->> if HAVE_IMAGE_DTB
->> config     IMAGE_DTB
->>     bool    "Allocated space for DTB within image
->>
->> config    DTB_SIZE
->>     int    "DTB space (kB)
->>
->> config    DTB_TAG
->>     string    "DTB space tag"
->>     default    "OWRTDTB:"
->> endif
->>
->> ============
->> Some Makefile
->> obj-$(CONFIG_INCLUDE_DTB) += image_dtb.o
->>
->> ============
->> image_dtb.S:
->>     .text
->>     .align    5
->>     .ascii    CONFIG_DTB_TAG
->>     EXPORT(__image_dtb)
->>     .fill    DTB_SIZE * 1024
->>
->> ===================
->> arch/mips/xxx/of.c:
->>
->> #if    defined(CONFIG_IMAGE_DTB)
->>     if (<conditions to boot from dtb_space>)
->>         __dt_setup_arch(__dtb_start);
->>     else
->>         __dt_setup_arch(&__image_dtb);
->> #else
->>     __dt_setup_arch(__dtb_start);
->> #endif
->>
->> I imagine that if the support is enabled for a target, it should
->> be possible to override it with a CMDLINE argument
->>     
->>     
->> They do something similar for the CMDLINE; copying it into the vmlinux, to allow a smaller boot
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please review!
+
+Andrew
+
+Andrew Jeffery (4):
+  pmbus (core): Add fan control support
+  pmbus (max31785): Add fan control
+  pmbus (core): Add virtual page config bit
+  pmbus (max31785): Add dual tachometer support
+
+ Documentation/hwmon/max31785     |  15 +-
+ drivers/hwmon/pmbus/max31785.c   | 285 +++++++++++++++++++++++++++++++-
+ drivers/hwmon/pmbus/pmbus.h      |  41 ++++-
+ drivers/hwmon/pmbus/pmbus_core.c | 265 +++++++++++++++++++++++++++---
+ 4 files changed, 575 insertions(+), 31 deletions(-)
+
+base-commit: ded0eb83449e8fcba22fd2736826336e101ffbcb
+-- 
+git-series 0.9.1
