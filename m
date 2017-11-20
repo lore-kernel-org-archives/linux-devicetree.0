@@ -1,39 +1,59 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: sunxi: document new
- generic binding
-Date: Mon, 20 Nov 2017 12:52:12 -0600
-Message-ID: <20171120185212.h2v2ewslxpl7q23l@rob-hp-laptop>
-References: <20171113012523.2328-1-andre.przywara@arm.com>
- <20171113012523.2328-2-andre.przywara@arm.com>
+Subject: Re: [RFC v2 1/2] backlight: pwm_bl: linear interpolation between
+ values of brightness-levels
+Date: Mon, 20 Nov 2017 12:58:35 -0600
+Message-ID: <20171120185835.r4ded43i62wnu3jo@rob-hp-laptop>
+References: <20171116141151.21171-1-enric.balletbo@collabora.com>
+ <20171116141151.21171-2-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171113012523.2328-2-andre.przywara@arm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Icenowy Zheng <icenowy@aosc.xyz>
+In-Reply-To: <20171116141151.21171-2-enric.balletbo@collabora.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Doug Anderson <dianders@google.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 13, 2017 at 01:25:21AM +0000, Andre Przywara wrote:
-> So far all the Allwinner pinctrl drivers provided a table in the
-> kernel to describe all the pins and the link between the pinctrl functions
-> names (strings) and their respective mux values (register values).
+On Thu, Nov 16, 2017 at 03:11:50PM +0100, Enric Balletbo i Serra wrote:
+> Setting use-linear-interpolation in the dts will allow you to have linear
+> interpolation between values of brightness-levels.
 > 
-> Extend the binding to put those mappings in the DT, so that any SoC can
-> describe its pinctrl and GPIO data fully there instead of relying on
-> tables.
-> This uses a generic compatible name, to be prepended with an SoC
-> specific name in the node.
+> There are now 256 between each of the values of brightness-levels. If
+> something is requested halfway between 2 values, we'll use linear
+> interpolation.
 > 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> This way a high resolution pwm duty cycle can be used without having to
+> list out every possible value in the dts. 
+
+I thought we already had a way to do that.
+
+> This system also allows for
+> gamma corrected values (eg: "brightness-levels = <0 2 4 8 16 32>;").
+> 
+> Patch based on the Alexandru M Stan work done for ChromeOS kernels.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
->  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
+>  .../bindings/leds/backlight/pwm-backlight.txt      |  2 +
+>  drivers/video/backlight/pwm_bl.c                   | 55 +++++++++++++++++-----
+>  include/linux/pwm_backlight.h                      |  2 +
+>  3 files changed, 47 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> index 764db86..7c48f20 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> @@ -17,6 +17,8 @@ Optional properties:
+>                 "pwms" property (see PWM binding[0])
+>    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+>                    and disables the backlight (see GPIO binding[1])
+> +  - use-linear-interpolation: set this propriety to enable linear interpolation
+> +                              between each of the values of brightness-levels.
 
-I'm leaving this one to Linus...
-
-Generally, this has not been the direction we've wanted to go. What 
-makes this unique to Allwinner?
+Isn't this really just whether you allow values not listed because what 
+other kind of interpolation would you do? Seems like you should just be 
+able to query the resolution of the PWM and decide if it can take more 
+values than listed.
 
 Rob
