@@ -1,7 +1,7 @@
 From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v5 7/8] drivers/fsi: occ: Add miscdevice
-Date: Mon, 20 Nov 2017 13:46:56 -0600
-Message-ID: <1511207217-14075-8-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: [PATCH v5 8/8] drivers/fsi: occ: Add in-kernel API
+Date: Mon, 20 Nov 2017 13:46:57 -0600
+Message-ID: <1511207217-14075-9-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1511207217-14075-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1511207217-14075-1-git-send-email-eajames@linux.vnet.ibm.com>
@@ -12,323 +12,324 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Edward A. James" <eajames@us.ibm.com>
 
-Add a miscdevice for the occ to allow userspace access through standard
-file operations.
+Add an in-kernel read/write API with exported functions. This is
+necessary for other drivers which want to directly interact with the
+OCC. Also add a child platform device node for the associated hwmon
+device.
 
 Signed-off-by: Edward A. James <eajames@us.ibm.com>
 ---
- drivers/fsi/fsi-occ.c | 264 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 264 insertions(+)
+ drivers/fsi/fsi-occ.c   | 138 ++++++++++++++++++++++++++++++++++++++++--------
+ include/linux/fsi-occ.h |  41 ++++++++++++++
+ 2 files changed, 157 insertions(+), 22 deletions(-)
+ create mode 100644 include/linux/fsi-occ.h
 
 diff --git a/drivers/fsi/fsi-occ.c b/drivers/fsi/fsi-occ.c
-index 99dbfa3..1aeb67d 100644
+index 1aeb67d..1713550 100644
 --- a/drivers/fsi/fsi-occ.c
 +++ b/drivers/fsi/fsi-occ.c
-@@ -16,6 +16,7 @@
- #include <linux/idr.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-+#include <linux/miscdevice.h>
+@@ -19,7 +19,9 @@
+ #include <linux/miscdevice.h>
  #include <linux/module.h>
  #include <linux/mutex.h>
++#include <linux/fsi-occ.h>
  #include <linux/of.h>
-@@ -40,6 +41,7 @@ struct occ {
- 	struct device *sbefifo;
- 	char name[32];
- 	int idx;
-+	struct miscdevice mdev;
- 	struct list_head xfrs;
- 	spinlock_t list_lock;		/* lock access to the xfrs list */
- 	struct mutex occ_lock;		/* lock access to the hardware */
-@@ -113,6 +115,29 @@ struct occ_client {
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+@@ -32,8 +34,6 @@
+ #define OCC_CMD_DATA_BYTES	4090
+ #define OCC_RESP_DATA_BYTES	4089
  
- static DEFINE_IDA(occ_ida);
+-#define OCC_RESP_CMD_IN_PRG    0xFF
+-
+ #define OCC_TIMEOUT_MS		1000
+ #define OCC_CMD_IN_PRG_WAIT_MS	50
  
-+static int occ_enqueue_xfr(struct occ_xfr *xfr)
-+{
-+	int empty;
-+	unsigned long flags;
-+	struct occ_client *client = to_client(xfr);
-+	struct occ *occ = client->occ;
-+
-+	if (occ->cancel)
-+		return -ENODEV;
-+
-+	spin_lock_irqsave(&occ->list_lock, flags);
-+
-+	empty = list_empty(&occ->xfrs);
-+	list_add_tail(&xfr->link, &occ->xfrs);
-+
-+	spin_unlock_irqrestore(&occ->list_lock, flags);
-+
-+	if (empty)
-+		queue_work(occ_wq, &occ->work);
-+
-+	return 0;
-+}
-+
- static void occ_get_client(struct occ_client *client)
- {
- 	kref_get(&client->kref);
-@@ -131,6 +156,230 @@ static void occ_put_client(struct occ_client *client)
+@@ -156,23 +156,34 @@ static void occ_put_client(struct occ_client *client)
  	kref_put(&client->kref, occ_client_release);
  }
  
+-static int occ_open(struct inode *inode, struct file *file)
++static struct occ_client *occ_open_common(struct occ *occ, unsigned long flags)
+ {
+-	struct miscdevice *mdev = file->private_data;
+-	struct occ *occ = to_occ(mdev);
+ 	struct occ_client *client = kzalloc(sizeof(*client), GFP_KERNEL);
+ 
+ 	if (!client)
+-		return -ENOMEM;
++		return NULL;
+ 
+ 	client->occ = occ;
+ 	kref_init(&client->kref);
+ 	spin_lock_init(&client->lock);
+ 	init_waitqueue_head(&client->wait);
+ 
+-	if (file->f_flags & O_NONBLOCK)
++	if (flags & O_NONBLOCK)
+ 		set_bit(CLIENT_NONBLOCKING, &client->flags);
+ 
++	return client;
++}
++
 +static int occ_open(struct inode *inode, struct file *file)
 +{
++	struct occ_client *client;
 +	struct miscdevice *mdev = file->private_data;
 +	struct occ *occ = to_occ(mdev);
-+	struct occ_client *client = kzalloc(sizeof(*client), GFP_KERNEL);
 +
++	client = occ_open_common(occ, file->f_flags);
 +	if (!client)
 +		return -ENOMEM;
 +
-+	client->occ = occ;
-+	kref_init(&client->kref);
-+	spin_lock_init(&client->lock);
-+	init_waitqueue_head(&client->wait);
-+
-+	if (file->f_flags & O_NONBLOCK)
-+		set_bit(CLIENT_NONBLOCKING, &client->flags);
-+
-+	file->private_data = client;
-+
-+	return 0;
-+}
-+
-+static inline bool occ_read_ready(struct occ_xfr *xfr, struct occ *occ)
-+{
-+	return test_bit(XFR_COMPLETE, &xfr->flags) ||
-+		test_bit(XFR_CANCELED, &xfr->flags) || occ->cancel;
-+}
-+
+ 	file->private_data = client;
+ 
+ 	return 0;
+@@ -184,15 +195,14 @@ static inline bool occ_read_ready(struct occ_xfr *xfr, struct occ *occ)
+ 		test_bit(XFR_CANCELED, &xfr->flags) || occ->cancel;
+ }
+ 
+-static ssize_t occ_read(struct file *file, char __user *buf, size_t len,
+-			loff_t *offset)
++static ssize_t occ_read_common(struct occ_client *client, char __user *ubuf,
++			       char *kbuf, size_t len)
+ {
+ 	int rc;
+ 	unsigned long flags;
+ 	size_t bytes;
+ 	struct occ_xfr *xfr;
+ 	struct occ *occ;
+-	struct occ_client *client = file->private_data;
+ 
+ 	if (!client)
+ 		return -ENODEV;
+@@ -247,9 +257,14 @@ static ssize_t occ_read(struct file *file, char __user *buf, size_t len,
+ 	}
+ 
+ 	bytes = min(len, xfr->resp_data_length - client->read_offset);
+-	if (copy_to_user(buf, &xfr->buf[client->read_offset], bytes)) {
+-		rc = -EFAULT;
+-		goto done;
++	if (ubuf) {
++		if (copy_to_user(ubuf, &xfr->buf[client->read_offset],
++				 bytes)) {
++			rc = -EFAULT;
++			goto done;
++		}
++	} else {
++		memcpy(kbuf, &xfr->buf[client->read_offset], bytes);
+ 	}
+ 
+ 	client->read_offset += bytes;
+@@ -266,15 +281,23 @@ static ssize_t occ_read(struct file *file, char __user *buf, size_t len,
+ 	return rc;
+ }
+ 
+-static ssize_t occ_write(struct file *file, const char __user *buf,
+-			 size_t len, loff_t *offset)
 +static ssize_t occ_read(struct file *file, char __user *buf, size_t len,
 +			loff_t *offset)
 +{
-+	int rc;
-+	unsigned long flags;
-+	size_t bytes;
-+	struct occ_xfr *xfr;
-+	struct occ *occ;
 +	struct occ_client *client = file->private_data;
 +
-+	if (!client)
-+		return -ENODEV;
-+
-+	if (len > OCC_SRAM_BYTES)
-+		return -EINVAL;
-+
-+	occ_get_client(client);
-+	xfr = &client->xfr;
-+	occ = client->occ;
-+
-+	spin_lock_irqsave(&client->lock, flags);
-+
-+	if (!test_bit(CLIENT_XFR_PENDING, &client->flags)) {
-+		/* we just finished reading all data, return 0 */
-+		if (client->read_offset) {
-+			rc = 0;
-+			client->read_offset = 0;
-+		} else {
-+			rc = -ENOMSG;
-+		}
-+
-+		goto done;
-+	}
-+
-+	if (!test_bit(XFR_COMPLETE, &xfr->flags)) {
-+		if (test_bit(CLIENT_NONBLOCKING, &client->flags)) {
-+			rc = -EAGAIN;
-+			goto done;
-+		}
-+
-+		spin_unlock_irqrestore(&client->lock, flags);
-+
-+		rc = wait_event_interruptible(client->wait,
-+					      occ_read_ready(xfr, occ));
-+
-+		spin_lock_irqsave(&client->lock, flags);
-+
-+		if (!test_bit(XFR_COMPLETE, &xfr->flags)) {
-+			if (occ->cancel || test_bit(XFR_CANCELED, &xfr->flags))
-+				rc = -ENODEV;
-+			else
-+				rc = -EINTR;
-+
-+			goto done;
-+		}
-+	}
-+
-+	if (xfr->rc) {
-+		rc = xfr->rc;
-+		goto done;
-+	}
-+
-+	bytes = min(len, xfr->resp_data_length - client->read_offset);
-+	if (copy_to_user(buf, &xfr->buf[client->read_offset], bytes)) {
-+		rc = -EFAULT;
-+		goto done;
-+	}
-+
-+	client->read_offset += bytes;
-+
-+	/* xfr done */
-+	if (client->read_offset == xfr->resp_data_length)
-+		clear_bit(CLIENT_XFR_PENDING, &client->flags);
-+
-+	rc = bytes;
-+
-+done:
-+	spin_unlock_irqrestore(&client->lock, flags);
-+	occ_put_client(client);
-+	return rc;
++	return occ_read_common(client, buf, NULL, len);
 +}
 +
++static ssize_t occ_write_common(struct occ_client *client,
++				const char __user *ubuf, const char *kbuf,
++				size_t len)
+ {
+ 	int rc;
+ 	unsigned long flags;
+ 	unsigned int i;
+ 	u16 data_length, checksum = 0;
+ 	struct occ_xfr *xfr;
+-	struct occ_client *client = file->private_data;
+ 
+ 	if (!client)
+ 		return -ENODEV;
+@@ -301,9 +324,13 @@ static ssize_t occ_write(struct file *file, const char __user *buf,
+ 	 * bytes 1-2: data length (msb first)
+ 	 * bytes 3-n: data
+ 	 */
+-	if (copy_from_user(&xfr->buf[1], buf, len)) {
+-		rc = -EFAULT;
+-		goto done;
++	if (ubuf) {
++		if (copy_from_user(&xfr->buf[1], ubuf, len)) {
++			rc = -EFAULT;
++			goto done;
++		}
++	} else {
++		memcpy(&xfr->buf[1], kbuf, len);
+ 	}
+ 
+ 	data_length = (xfr->buf[2] << 8) + xfr->buf[3];
+@@ -334,12 +361,19 @@ static ssize_t occ_write(struct file *file, const char __user *buf,
+ 	return rc;
+ }
+ 
+-static int occ_release(struct inode *inode, struct file *file)
 +static ssize_t occ_write(struct file *file, const char __user *buf,
 +			 size_t len, loff_t *offset)
 +{
-+	int rc;
-+	unsigned long flags;
-+	unsigned int i;
-+	u16 data_length, checksum = 0;
-+	struct occ_xfr *xfr;
 +	struct occ_client *client = file->private_data;
 +
-+	if (!client)
-+		return -ENODEV;
-+
-+	if (len > (OCC_CMD_DATA_BYTES + 3) || len < 3)
-+		return -EINVAL;
-+
-+	occ_get_client(client);
-+	xfr = &client->xfr;
-+
-+	spin_lock_irqsave(&client->lock, flags);
-+
-+	if (test_bit(CLIENT_XFR_PENDING, &client->flags)) {
-+		rc = -EBUSY;
-+		goto done;
-+	}
-+
-+	memset(xfr, 0, sizeof(*xfr));	/* clear out the transfer */
-+	xfr->buf[0] = 1;		/* occ sequence number */
-+
-+	/*
-+	 * Assume user data follows the occ command format.
-+	 * byte 0: command type
-+	 * bytes 1-2: data length (msb first)
-+	 * bytes 3-n: data
-+	 */
-+	if (copy_from_user(&xfr->buf[1], buf, len)) {
-+		rc = -EFAULT;
-+		goto done;
-+	}
-+
-+	data_length = (xfr->buf[2] << 8) + xfr->buf[3];
-+	if (data_length > OCC_CMD_DATA_BYTES) {
-+		rc = -EINVAL;
-+		goto done;
-+	}
-+
-+	for (i = 0; i < data_length + 4; ++i)
-+		checksum += xfr->buf[i];
-+
-+	xfr->buf[data_length + 4] = checksum >> 8;
-+	xfr->buf[data_length + 5] = checksum & 0xFF;
-+
-+	xfr->cmd_data_length = data_length + 6;
-+	client->read_offset = 0;
-+
-+	rc = occ_enqueue_xfr(xfr);
-+	if (rc)
-+		goto done;
-+
-+	set_bit(CLIENT_XFR_PENDING, &client->flags);
-+	rc = len;
-+
-+done:
-+	spin_unlock_irqrestore(&client->lock, flags);
-+	occ_put_client(client);
-+	return rc;
++	return occ_write_common(client, buf, NULL, len);
 +}
 +
++static int occ_release_common(struct occ_client *client)
+ {
+ 	unsigned long flags;
+ 	struct occ *occ;
+ 	struct occ_xfr *xfr;
+-	struct occ_client *client = file->private_data;
+ 
+ 	if (!client)
+ 		return -ENODEV;
+@@ -372,6 +406,13 @@ static int occ_release(struct inode *inode, struct file *file)
+ 	return 0;
+ }
+ 
 +static int occ_release(struct inode *inode, struct file *file)
 +{
-+	unsigned long flags;
-+	struct occ *occ;
-+	struct occ_xfr *xfr;
 +	struct occ_client *client = file->private_data;
 +
-+	if (!client)
-+		return -ENODEV;
++	return occ_release_common(client);
++}
 +
-+	xfr = &client->xfr;
-+	occ = client->occ;
+ static const struct file_operations occ_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = occ_open,
+@@ -665,12 +706,55 @@ static void occ_worker(struct work_struct *work)
+ 		goto again;
+ }
+ 
++struct occ_client *occ_drv_open(struct device *dev, unsigned long flags)
++{
++	struct occ *occ = dev_get_drvdata(dev);
 +
-+	spin_lock_irqsave(&client->lock, flags);
++	if (!occ)
++		return NULL;
 +
-+	set_bit(XFR_CANCELED, &xfr->flags);
-+	if (!test_bit(CLIENT_XFR_PENDING, &client->flags))
-+		goto done;
++	return occ_open_common(occ, flags);
++}
++EXPORT_SYMBOL_GPL(occ_drv_open);
 +
-+	spin_lock(&occ->list_lock);
++int occ_drv_read(struct occ_client *client, char *buf, size_t len)
++{
++	return occ_read_common(client, NULL, buf, len);
++}
++EXPORT_SYMBOL_GPL(occ_drv_read);
 +
-+	if (!test_bit(XFR_IN_PROGRESS, &xfr->flags)) {
-+		/* already deleted from list if complete */
-+		if (!test_bit(XFR_COMPLETE, &xfr->flags))
-+			list_del(&xfr->link);
-+	}
++int occ_drv_write(struct occ_client *client, const char *buf, size_t len)
++{
++	return occ_write_common(client, NULL, buf, len);
++}
++EXPORT_SYMBOL_GPL(occ_drv_write);
 +
-+	spin_unlock(&occ->list_lock);
++void occ_drv_release(struct occ_client *client)
++{
++	occ_release_common(client);
++}
++EXPORT_SYMBOL_GPL(occ_drv_release);
 +
-+	wake_up_all(&client->wait);
++static int occ_unregister_child(struct device *dev, void *data)
++{
++	struct platform_device *child = to_platform_device(dev);
 +
-+done:
-+	spin_unlock_irqrestore(&client->lock, flags);
++	of_device_unregister(child);
++	if (dev->of_node)
++		of_node_clear_flag(dev->of_node, OF_POPULATED);
 +
-+	occ_put_client(client);
 +	return 0;
 +}
 +
-+static const struct file_operations occ_fops = {
-+	.owner = THIS_MODULE,
-+	.open = occ_open,
-+	.read = occ_read,
-+	.write = occ_write,
-+	.release = occ_release,
-+};
-+
- static int occ_write_sbefifo(struct sbefifo_client *client, const char *buf,
- 			     ssize_t len)
+ static int occ_probe(struct platform_device *pdev)
  {
-@@ -450,6 +699,19 @@ static int occ_probe(struct platform_device *pdev)
- 		occ->idx = ida_simple_get(&occ_ida, 1, INT_MAX, GFP_KERNEL);
+-	int rc;
++	int rc, child_idx = 0;
+ 	u32 reg;
+ 	struct occ *occ;
++	struct device_node *np;
++	struct platform_device *child;
+ 	struct device *dev = &pdev->dev;
++	char child_name[32];
+ 
+ 	occ = devm_kzalloc(dev, sizeof(*occ), GFP_KERNEL);
+ 	if (!occ)
+@@ -712,6 +796,15 @@ static int occ_probe(struct platform_device *pdev)
+ 		return rc;
  	}
  
-+	snprintf(occ->name, sizeof(occ->name), "occ%d", occ->idx);
-+	occ->mdev.fops = &occ_fops;
-+	occ->mdev.minor = MISC_DYNAMIC_MINOR;
-+	occ->mdev.name = occ->name;
-+	occ->mdev.parent = dev;
-+
-+	rc = misc_register(&occ->mdev);
-+	if (rc) {
-+		dev_err(dev, "failed to register miscdevice: %d\n", rc);
-+		ida_simple_remove(&occ_ida, occ->idx);
-+		return rc;
++	/* create platform devs for dts child nodes (hwmon, etc) */
++	for_each_available_child_of_node(dev->of_node, np) {
++		snprintf(child_name, sizeof(child_name), "occ%d-dev%d",
++			 occ->idx, child_idx++);
++		child = of_platform_device_create(np, child_name, dev);
++		if (!child)
++			dev_warn(dev, "failed to create child node dev\n");
 +	}
 +
  	platform_set_drvdata(pdev, occ);
  
  	return 0;
-@@ -471,6 +733,8 @@ static int occ_remove(struct platform_device *pdev)
- 	}
+@@ -734,6 +827,7 @@ static int occ_remove(struct platform_device *pdev)
  	spin_unlock_irqrestore(&occ->list_lock, flags);
  
-+	misc_deregister(&occ->mdev);
-+
+ 	misc_deregister(&occ->mdev);
++	device_for_each_child(&pdev->dev, NULL, occ_unregister_child);
+ 
  	cancel_work_sync(&occ->work);
  
- 	ida_simple_remove(&occ_ida, occ->idx);
+diff --git a/include/linux/fsi-occ.h b/include/linux/fsi-occ.h
+new file mode 100644
+index 0000000..0a4a54a
+--- /dev/null
++++ b/include/linux/fsi-occ.h
+@@ -0,0 +1,41 @@
++/*
++ * Copyright (C) IBM Corporation 2017
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERGCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef LINUX_FSI_OCC_H
++#define LINUX_FSI_OCC_H
++
++struct device;
++struct occ_client;
++
++#define OCC_RESP_CMD_IN_PRG		0xFF
++#define OCC_RESP_SUCCESS		0
++#define OCC_RESP_CMD_INVAL		0x11
++#define OCC_RESP_CMD_LEN_INVAL		0x12
++#define OCC_RESP_DATA_INVAL		0x13
++#define OCC_RESP_CHKSUM_ERR		0x14
++#define OCC_RESP_INT_ERR		0x15
++#define OCC_RESP_BAD_STATE		0x16
++#define OCC_RESP_CRIT_EXCEPT		0xE0
++#define OCC_RESP_CRIT_INIT		0xE1
++#define OCC_RESP_CRIT_WATCHDOG		0xE2
++#define OCC_RESP_CRIT_OCB		0xE3
++#define OCC_RESP_CRIT_HW		0xE4
++
++extern struct occ_client *occ_drv_open(struct device *dev,
++				       unsigned long flags);
++extern int occ_drv_read(struct occ_client *client, char *buf, size_t len);
++extern int occ_drv_write(struct occ_client *client, const char *buf,
++			 size_t len);
++extern void occ_drv_release(struct occ_client *client);
++
++#endif /* LINUX_FSI_OCC_H */
 -- 
 1.8.3.1
