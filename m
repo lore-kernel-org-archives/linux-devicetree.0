@@ -1,61 +1,50 @@
-From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Subject: [PATCH v7 1/3] dt-bindings: net: add mt76 wireless device binding
-Date: Mon, 20 Nov 2017 20:35:47 +0100
-Message-ID: <20171120193549.80831-2-nbd@nbd.name>
-References: <20171120193549.80831-1-nbd@nbd.name>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171120193549.80831-1-nbd-Vt+b4OUoWG0@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject: Re: [patches] Re: [PATCH v9 03/12] dt-bindings: RISC-V CPU Bindings
+Date: Mon, 20 Nov 2017 11:45:32 -0800 (PST)
+Message-ID: <mhng-5bdbcbfc-d8aa-4c7e-ad08-c0a2ff786dd1@palmer-si-x1c4>
+References: <20171120073528.xkv4cydyniuhzshf@latitude>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171120073528.xkv4cydyniuhzshf@latitude>
+Sender: linux-kernel-owner@vger.kernel.org
+To: j.neuschaefer@gmx.net, Mark Rutland <mark.rutland@arm.com>
+Cc: patches@groups.riscv.org, Arnd Bergmann <arnd@arndb.de>, Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, albert@sifive.com, yamada.masahiro@socionext.com, mmarek@suse.com, Will Deacon <will.deacon@arm.com>, peterz@infradead.org, boqun.feng@gmail.com, oleg@redhat.com, mingo@redhat.com, devicetree@vger.kernel.org, rminnich@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add documentation describing how device tree can be used to configure
-wireless chips supported by the mt76 driver.
+On Sun, 19 Nov 2017 23:35:28 PST (-0800), j.neuschaefer@gmx.net wrote:
+> Hi Palmer,
+>
+> On Thu, Oct 05, 2017 at 11:16:33AM +0100, Mark Rutland wrote:
+> [...]
+>> I would *strongly* recommend that from day one, you determine the SMP
+>> bringup mechanism via an enable-method property, and document the
+>> contract with FW/bootloader somewhere in the kernel tree.
 
-Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
----
- .../bindings/net/wireless/mediatek,mt76.txt        | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+Sorry, I forgot about this.  I've prepared a patch.
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-new file mode 100644
-index 000000000000..0c17a0ec9b7b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-@@ -0,0 +1,32 @@
-+* MediaTek mt76xx devices
-+
-+This node provides properties for configuring the MediaTek mt76xx wireless
-+device. The node is expected to be specified as a child node of the PCI
-+controller to which the wireless chip is connected.
-+
-+Optional properties:
-+
-+- mac-address: See ethernet.txt in the parent directory
-+- local-mac-address: See ethernet.txt in the parent directory
-+- ieee80211-freq-limit: See ieee80211.txt
-+- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
-+
-+Optional nodes:
-+- led: Properties for a connected LED
-+  Optional properties:
-+    - led-sources: See Documentation/devicetree/bindings/leds/common.txt
-+
-+&pcie {
-+	pcie0 {
-+		wifi@0,0 {
-+			compatible = "mediatek,mt76";
-+			reg = <0x0000 0 0 0 0>;
-+			ieee80211-freq-limit = <5000000 6000000>;
-+			mediatek,mtd-eeprom = <&factory 0x8000>;
-+
-+			led {
-+				led-sources = <2>;
-+			};
-+		};
-+	};
-+};
--- 
-2.14.2
+> Somewhat, but not quite related: Please consider making the availability
+> of the Supervisor Binary Interface explicit in the devicetree.
+> I understand that the general plan is to make the SBI a mandatory
+> feature of every RISC-V system capable of running Linux, but I do want
+> to explore the possibility of running without run-time resident firmware
+> at some point in the future. Thus it would be nice if the devicetree
+> would indicate the presence of the SBI from the start, to avoid having
+> to invent a way to express its *absence* later on.
+>
+> It could look something like this (modelled after qcom,scm):
+>
+> / {
+> 	firmware {
+> 		sbi {
+> 			compatible = "riscv,sbi";
+> 		};
+> 	};
+> };
+>
+> This topic may warrant some discussion, because other people may have
+> different opinions, and there hasn't been a discussion about it, AFAICS.
+
+I don't think there's any penalty to putting it in the device tree, I'll send a 
+patch.
