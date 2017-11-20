@@ -1,71 +1,87 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 5/8] dt-bindings: fsi: Add OCC documentation
-Date: Mon, 20 Nov 2017 17:41:45 -0600
-Message-ID: <CAL_JsqLj_Lag-6c67=fuaTuaPhs18u=y8Su+Tu7ga1gFZV+voQ@mail.gmail.com>
-References: <1511207217-14075-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1511207217-14075-6-git-send-email-eajames@linux.vnet.ibm.com>
- <20171120213913.6j7qgcgobc2ocqey@rob-hp-laptop> <647df116-c434-ae4e-8a16-54145f57ab5c@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <647df116-c434-ae4e-8a16-54145f57ab5c-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org, Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH v3 00/12] hwmon: Add On-Chip Controller hwmon driver
+Date: Mon, 20 Nov 2017 17:53:29 -0600
+Message-ID: <1511222021-562-1-git-send-email-eajames@linux.vnet.ibm.com>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, joel@jms.id.au, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 4:03 PM, Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
->
->
-> On 11/20/2017 03:39 PM, Rob Herring wrote:
->>
->> On Mon, Nov 20, 2017 at 01:46:54PM -0600, Eddie James wrote:
->>>
->>> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
->>>
->>> Document the bindings for the P9 OCC device. OCC devices are accessed
->>> through the SBEFIFO.
->>>
->>> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>   Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt | 18
->>> ++++++++++++++++++
->>>   1 file changed, 18 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
->>> b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
->>> new file mode 100644
->>> index 0000000..79094f5
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
->>> @@ -0,0 +1,18 @@
->>> +Device-tree bindings for P9 On-Chip Controller
->>> +----------------------------------------------
->>> +
->>> +The POWER9 On-Chip Controller is accessed through the SBEFIFO. All OCC
->>> nodes
->>> +must be child nodes of SBEFIFO devices (see ibm,p9-sbefifo.txt).
->>> +
->>> +Required properties:
->>> + - compatible = "ibm,p9-occ";
->>> +
->>> +Optional properties:
->>> + - reg = <processor index>;    : Index for the processor this OCC is on.
->>
->> reg should be how the parent (SBEFIFO) addresses this device. Would all
->> of these child devices be a unique processor?
->
->
-> Yes. The "processor" here is indicating which P9 processor in the system,
-> not whatever processor(s) this kernel is running on. We use this device tree
-> on the service processor, which can be talking to multiple P9 chips (over
-> SBEFIFO). This could probably be clarified by saying "P9 chip" or something.
+From: "Edward A. James" <eajames@us.ibm.com>
 
-Ah, okay.
+This series adds a hwmon driver to support the OCC on POWER8 and POWER9
+processors. The OCC is an embedded processor that provides realtime power and
+thermal monitoring and management.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This driver has two different platform drivers as a "base" for the
+hwmon interface, as the means of communicating with the OCC on P8 and P9 is
+completely different. For P8, the driver is an I2C client driver. For P9 the
+driver is an FSI-based OCC client driver, and uses the OCC driver in-kernel
+API. The OCC driver is on the LKML (latest https://lkml.org/lkml/2017/11/20/631).
+
+Changes since v2:
+ * Add sysfs_notify for the error and throttling attributes when change is
+   detected.
+ * Removed occs_present counting of devices bound.
+ * Improved remove() of P9 driver to avoid bad behavior with relation to OCC
+   driver when unbound.
+ * Added default cases (return EINVAL) for all sensor show functions.
+ * Added temperature fault sensor.
+ * Added back dt binding documentation for P9 to address checkpatch warning.
+ * Added occs_present attribute from the poll response.
+
+Changes since v1:
+ * Remove wait loop in P9 code, as that is now handled by FSI OCC driver.
+ * Removed dt binding documentation for P9, FSI OCC driver will probe OCC hwmon
+   driver automatically.
+ * Moved OCC response code definitions to the OCC include file.
+ * Fixed includes.
+ * Changed some structure fields to __beXX as that is what they are.
+ * Changed some errnos.
+ * Removed some dev_err().
+ * Refactored P8 code a bit to use #defined addresses and magic values, and
+   changed "goto retry" to a loop.
+ * Refactored error handling a bit.
+
+Edward A. James (12):
+  Documentation: hwmon: Add OCC documentation
+  Documentation: ABI: Add occ-hwmon driver sysfs documentation
+  dt-bindings: i2c: Add P8 OCC hwmon device documentation
+  dt-bindings: fsi: Add P9 OCC hwmon device documentation
+  hwmon (occ): Add On-Chip Controller (OCC) hwmon driver
+  hwmon (occ): Add command transport method for P8 and P9
+  hwmon (occ): Parse OCC poll response
+  hwmon (occ): Add sensor types and versions
+  hwmon (occ): Add sensor attributes and register hwmon device
+  hwmon (occ): Add non-hwmon attributes
+  hwmon (occ): Add error handling
+  hwmon (occ): Add sysfs notification for errors and throttling
+
+ Documentation/ABI/testing/sysfs-driver-occ-hwmon   |   85 ++
+ .../devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt   |   16 +
+ .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   |   25 +
+ Documentation/hwmon/occ                            |   75 ++
+ drivers/hwmon/Kconfig                              |    2 +
+ drivers/hwmon/Makefile                             |    1 +
+ drivers/hwmon/occ/Kconfig                          |   28 +
+ drivers/hwmon/occ/Makefile                         |   11 +
+ drivers/hwmon/occ/common.c                         | 1387 ++++++++++++++++++++
+ drivers/hwmon/occ/common.h                         |  124 ++
+ drivers/hwmon/occ/p8_i2c.c                         |  262 ++++
+ drivers/hwmon/occ/p9_sbe.c                         |  161 +++
+ 12 files changed, 2177 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-occ-hwmon
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+ create mode 100644 Documentation/hwmon/occ
+ create mode 100644 drivers/hwmon/occ/Kconfig
+ create mode 100644 drivers/hwmon/occ/Makefile
+ create mode 100644 drivers/hwmon/occ/common.c
+ create mode 100644 drivers/hwmon/occ/common.h
+ create mode 100644 drivers/hwmon/occ/p8_i2c.c
+ create mode 100644 drivers/hwmon/occ/p9_sbe.c
+
+-- 
+1.8.3.1
+
