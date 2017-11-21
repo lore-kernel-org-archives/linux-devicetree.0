@@ -1,36 +1,58 @@
-From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Subject: Re: [v7,1/3] dt-bindings: net: add mt76 wireless device binding
-Date: Tue, 21 Nov 2017 09:45:02 +0100
-Message-ID: <d6e4c888-d6f8-7e20-d27a-a36a3ec01ccf@nbd.name>
-References: <20171120193549.80831-2-nbd@nbd.name>
- <20171121070837.AA354607EA@smtp.codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171121070837.AA354607EA-4h6buKAYkuurB/BPivuO70B+6BGkLq7r@public.gmane.org>
-Content-Language: en-US
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/3] spi: xilinx: Add support for xlnx,axi-quad-spi-1.00.a
+Date: Tue, 21 Nov 2017 10:09:03 +0100
+Message-ID: <20171121090904.6901-2-ricardo.ribalda@gmail.com>
+References: <20171121090904.6901-1-ricardo.ribalda@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171121090904.6901-1-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-11-21 08:08, Kalle Valo wrote:
-> Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> wrote:
-> 
->> Add documentation describing how device tree can be used to configure
->> wireless chips supported by the mt76 driver.
->> 
->> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Fails to compile:
-> 
-> drivers/net/wireless/mediatek/mt76/mac80211.c: In function ‘mt76_led_init’:
-> drivers/net/wireless/mediatek/mt76/mac80211.c:111:7: error: implicit declaration of function ‘of_get_child_by_name’ [-Werror=implicit-function-declaration]
->   np = of_get_child_by_name(np, "led");
->        ^
-Sorry about that, I must have mixed up something while updating the
-patches based on my git tree. Will send out a fixed version later today.
+The driver has been successfully tested with Xilinx's core
+axi-quad-spi-1.0.0a. Documented on DS843:
 
-- Felix
+https://www.xilinx.com/support/documentation/ip_documentation/axi_quad_spi/v1_00_a/ds843_axi_quad_spi.pdf
+
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/spi-xilinx.txt | 2 +-
+ drivers/spi/spi-xilinx.c                             | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+index c7b7856bd528..7bf61efc66c8 100644
+--- a/Documentation/devicetree/bindings/spi/spi-xilinx.txt
++++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+@@ -2,7 +2,7 @@ Xilinx SPI controller Device Tree Bindings
+ -------------------------------------------------
+ 
+ Required properties:
+-- compatible		: Should be "xlnx,xps-spi-2.00.a" or "xlnx,xps-spi-2.00.b"
++- compatible		: Should be "xlnx,xps-spi-2.00.a", "xlnx,xps-spi-2.00.b" or "xlnx,axi-quad-spi-1.00.a"
+ - reg			: Physical base address and size of SPI registers map.
+ - interrupts		: Property with a value describing the interrupt
+ 			  number.
+diff --git a/drivers/spi/spi-xilinx.c b/drivers/spi/spi-xilinx.c
+index e0b9fe1d0e37..63fedc49ae9c 100644
+--- a/drivers/spi/spi-xilinx.c
++++ b/drivers/spi/spi-xilinx.c
+@@ -381,6 +381,7 @@ static int xilinx_spi_find_buffer_size(struct xilinx_spi *xspi)
+ }
+ 
+ static const struct of_device_id xilinx_spi_of_match[] = {
++	{ .compatible = "xlnx,axi-quad-spi-1.00.a", },
+ 	{ .compatible = "xlnx,xps-spi-2.00.a", },
+ 	{ .compatible = "xlnx,xps-spi-2.00.b", },
+ 	{}
+-- 
+2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
