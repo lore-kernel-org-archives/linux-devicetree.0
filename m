@@ -1,86 +1,77 @@
-From: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v10 1/3] Documentation: Add device tree binding for Goldfish PIC driver
-Date: Tue, 21 Nov 2017 16:44:53 +0100
-Message-ID: <1511279122-12916-2-git-send-email-aleksandar.markovic@rt-rk.com>
-References: <1511279122-12916-1-git-send-email-aleksandar.markovic@rt-rk.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511279122-12916-1-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] media: V3s: Add support for
+ Allwinner CSI.
+Date: Tue, 21 Nov 2017 16:48:27 +0100
+Message-ID: <20171121154827.5a35xa6zlqrrvkxx@flea.lan>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+ <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="curnxkdqsfdlcs6k"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTEV2HIAKGQESHIRJPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1501131697-1359-2-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinu
 List-Id: devicetree@vger.kernel.org
 
-From: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
 
-Add documentation for DT binding of Goldfish PIC driver. The compatible
-string used by OS for binding the driver is "google,goldfish-pic".
+--curnxkdqsfdlcs6k
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
-Signed-off-by: Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>
-Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../interrupt-controller/google,goldfish-pic.txt   | 30 ++++++++++++++++++++++
- MAINTAINERS                                        |  5 ++++
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-new file mode 100644
-index 0000000..35f7527
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-@@ -0,0 +1,30 @@
-+Android Goldfish PIC
-+
-+Android Goldfish programmable interrupt device used by Android
-+emulator.
-+
-+Required properties:
-+
-+- compatible : should contain "google,goldfish-pic"
-+- reg        : <registers mapping>
-+- interrupts : <interrupt mapping>
-+
-+Example for mips when used in cascade mode:
-+
-+        cpuintc {
-+                #interrupt-cells = <0x1>;
-+                #address-cells = <0>;
-+                interrupt-controller;
-+                compatible = "mti,cpu-interrupt-controller";
-+        };
-+
-+        interrupt-controller@1f000000 {
-+                compatible = "google,goldfish-pic";
-+                reg = <0x1f000000 0x1000>;
-+
-+                interrupt-controller;
-+                #interrupt-cells = <0x1>;
-+
-+                interrupt-parent = <&cpuintc>;
-+                interrupts = <0x2>;
-+        };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 650aa0e..998e705 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -872,6 +872,11 @@ S:	Supported
- F:	drivers/android/
- F:	drivers/staging/android/
- 
-+ANDROID GOLDFISH PIC DRIVER
-+M:	Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
-+S:	Supported
-+F:	Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
-+
- ANDROID GOLDFISH RTC DRIVER
- M:	Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>
- S:	Supported
+On Thu, Jul 27, 2017 at 01:01:35PM +0800, Yong Deng wrote:
+> Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
+> and CSI1 is used for parallel interface. This is not documented in
+> datasheet but by testing and guess.
+> 
+> This patch implement a v4l2 framework driver for it.
+> 
+> Currently, the driver only support the parallel interface. MIPI-CSI2,
+> ISP's support are not included in this patch.
+> 
+> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+
+Thanks again for this driver.
+
+It seems like at least this iteration is behaving in a weird way with
+DMA transfers for at least YU12 and NV12 (and I would assume YV12).
+
+Starting a transfer of multiple frames in either of these formats,
+using either ffmpeg (ffmpeg -f v4l2 -video_size 640x480 -framerate 30
+-i /dev/video0 output.mkv) or yavta (yavta -c80 -p -F --skip 0 -f NV12
+-s 640x480 $(media-c tl -e 'sun6i-csi')) will end up in a panic.
+
+The panic seems to be generated with random data going into parts of
+the kernel memory, the pattern being in my case something like
+0x8287868a which is very odd (always around 0x88)
+
+It turns out that when you cover the sensor, the values change to
+around 0x28, so it really seems like it's pixels that have been copied
+there.
+
+I've looked quickly at the DMA setup, and it seems reasonable to
+me. Do you have the same issue on your side? Have you been able to
+test those formats using your hardware?
+
+Given that they all are planar formats and YUYV and the likes work
+just fine, maybe we can leave them aside for now?
+
+Thanks!
+Maxime
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--curnxkdqsfdlcs6k--
