@@ -1,167 +1,39 @@
-From: Minas Harutyunyan <Minas.Harutyunyan-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Fix fifo size for EP 6,7
-Date: Tue, 21 Nov 2017 12:02:32 +0000
-Message-ID: <410670D7E743164D87FA6160E7907A560113A41084@am04wembxa.internal.synopsys.com>
-References: <1507371414-21688-1-git-send-email-stefan.wahren@i2se.com>
- <160210128.18582.1509137904239@email.1und1.de> <871slkw3ms.fsf@anholt.net>
- <1506055926.93787.1509439381859@email.1und1.de>
- <2056429546.196128.1510871632211@email.1und1.de>
- <410670D7E743164D87FA6160E7907A560113A3F8F0@am04wembxa.internal.synopsys.com>
- <2145990636.312534.1511036500613@email.1und1.de>
- <410670D7E743164D87FA6160E7907A560113A409A8@am04wembxa.internal.synopsys.com>
- <56581c3c-9159-8e07-288b-5ccc793e1fa1@i2se.com>
+From: "Marty E. Plummer" <hanetzer@startmail.com>
+Subject: Re: [PATCH v2 1/3] clk: hisilicon: add CRG driver Hi3521A SoC
+Date: Tue, 21 Nov 2017 05:56:12 -0600
+Message-ID: <20171121115611.bmdriap3uoazmyiw@proprietary-killer.fossland>
+References: <20171017223854.6980-1-hanetzer@startmail.com>
+ <20171017223854.6980-2-hanetzer@startmail.com>
+ <20171024184250.d4wmzr6osd4o53oz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-        boundary="_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Minas Harutyunyan <Minas.Harutyunyan-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171024184250.d4wmzr6osd4o53oz@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, xuejiancheng@hisilicon.com, zhangfei.gao@linaro.org, wnpan@hisilicon.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, xuwei5@hisilicon.com, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
---_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Oct 24, 2017 at 01:42:50PM -0500, Rob Herring wrote:
+> On Tue, Oct 17, 2017 at 05:38:52PM -0500, Marty E. Plummer wrote:
+> > Add CRG driver for Hi3521A SoC. CRG (Clock and Reset Generator) module
+> > generates clock and reset signals used by other module blocks on SoC.
+> > 
+> > Signed-off-by: Marty E. Plummer <hanetzer@startmail.com>
+> > ---
+> > Changes in v2:
+> >   - Switched to SPDX tags and GPL-2.0+
+> > 
+> >  drivers/clk/hisilicon/Kconfig             |   7 ++
+> >  drivers/clk/hisilicon/Makefile            |   1 +
+> >  drivers/clk/hisilicon/crg-hi3521a.c       | 196 ++++++++++++++++++++++++++++++
+> 
+> >  include/dt-bindings/clock/hi3521a-clock.h |  23 ++++
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+Actually nack this for now. I need to change some stuff over to use a
+different clock for the sp804 timer@12000000, apparently I'm going to
+need to use CLK_OF_DECLARE to get the clock in question working that
+early in boot.
 
-On 11/20/2017 4:48 PM, Stefan Wahren wrote:=0A=
-> Hi Minas,=0A=
-> =0A=
-> Am 20.11.2017 um 12:59 schrieb Minas Harutyunyan:=0A=
->> Hi Stefan,=0A=
->> Looks like I know cause of issue... but I'm overloaded today and will ab=
-le to check it tomorrow. Sorry for delay.=0A=
-> =0A=
-> thanks for your reply. There is no need to hurry, because the merge=0A=
-> window isn't open yet, but i like to get this fixed for the next kernel=
-=0A=
-> release.=0A=
-> =0A=
-> I have the suspicion this is related to the fact that u-boot already=0A=
-> initialize the USB IP, before dwc2 driver is loaded.=0A=
-> =0A=
-> Regards=0A=
-> Stefan=0A=
-> =0A=
->>=0A=
->> Thanks,=0A=
->> Minas=0A=
->>=0A=
-> =0A=
-> =0A=
-Hi Stefan,=0A=
-=0A=
-We have prepared patch for this issue in July-August'17.=0A=
-Find attached 2 patch files. Please apply patches and test. If issue =0A=
-gone, we will send these patches to LKML by regular flow.=0A=
-=0A=
-Thanks,=0A=
-Minas=0A=
-=0A=
-
---_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_
-Content-Type: text/plain; name="8eff278.diff"
-Content-Description: 8eff278.diff
-Content-Disposition: attachment; filename="8eff278.diff"; size=2553;
-	creation-date="Tue, 21 Nov 2017 12:02:32 GMT";
-	modification-date="Tue, 21 Nov 2017 12:02:32 GMT"
-Content-Transfer-Encoding: base64
-
-RnJvbSA4ZWZmMjc4NTUyYWFmMjQ4MTYxZGY5YWYwNGY4YjkzZjAzNTI2YmNkIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBHZXZvcmcgU2FoYWt5YW4gPHNhaGFreWFuQHN5bm9wc3lzLmNv
-bT4KRGF0ZTogTW9uLCAzMSBKdWwgMjAxNyAxNzoxOTo1MSArMDQwMApTdWJqZWN0OiBbUEFUQ0hd
-IHVzYjogZHdjMjogRml4IFR4RklGTyBzZXR1cCBpc3N1ZQoKSW4gaG9zdCBtb2RlIHJlYWRpbmcg
-ZnJvbSBEUFRYU0labiByZXR1cm5pbmcgaW52YWxpZCB2YWx1ZSgwKSBpbgpkd2MyX2NoZWNrX3Bh
-cmFtX3R4X2ZpZm9fc2l6ZXMgZnVuY3Rpb24uCgpBZGRlZCBnX3R4X2ZpZm9fc2l6ZSBhcnJheSBp
-biBkd2MyX2h3X3BhcmFtcyBzdHJ1Y3R1cmUgaW4gd2hpY2ggc3RvcmVkCnBvd2VyIG9uIHJlc2V0
-IHZhbHVzIG9mIERQVFhTSVpuIHJlZ2lzdGVycyBpbiBkZXZpY2UgbW9kZSAoZm9yY2VkIHRvCmRl
-dmljZSkuCgpVcGRhdGVkIGR3YzJfZ2V0X2h3cGFyYW1zIGZ1bmN0aW9uIHRvIHdyaXRlIERQVFhG
-U0labiB0byBhcnJheS4KCk1vZHlmaWVkIGR3YzJfY2hlY2tfcGFyYW1fdHhfZmlmb19zaXplcyBm
-dW5jdGlvbiBhY2NvcmRpbmdseS4KCkNoYW5nZS1JZDogSTYxZDNkYjc1M2IxYmMwNmYwZjJjYWY0
-MGRmMzUwYTA5NjU1ZjE4ZmQKU2lnbmVkLW9mZi1ieTogR2V2b3JnIFNhaGFreWFuIDxzYWhha3lh
-bkBzeW5vcHN5cy5jb20+Ci0tLQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2R3YzIvY29yZS5o
-IGIvZHJpdmVycy91c2IvZHdjMi9jb3JlLmgKaW5kZXggNTAyOWRkZS4uM2I3MWI0OSAxMDA2NDQK
-LS0tIGEvZHJpdmVycy91c2IvZHdjMi9jb3JlLmgKKysrIGIvZHJpdmVycy91c2IvZHdjMi9jb3Jl
-LmgKQEAgLTUzMyw2ICs1MzMsNyBAQAogCXVuc2lnbmVkIHV0bWlfcGh5X2RhdGFfd2lkdGg6MjsK
-IAl1MzIgc25wc2lkOwogCXUzMiBkZXZfZXBfZGlyczsKKwl1MzIgZ190eF9maWZvX3NpemVbTUFY
-X0VQU19DSEFOTkVMU107CiB9OwogCiAvKiBTaXplIG9mIGNvbnRyb2wgYW5kIEVQMCBidWZmZXJz
-ICovCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9kd2MyL3BhcmFtcy5jIGIvZHJpdmVycy91c2Iv
-ZHdjMi9wYXJhbXMuYwppbmRleCA3MDE1MTZlLi43OTA4MGE5IDEwMDY0NAotLS0gYS9kcml2ZXJz
-L3VzYi9kd2MyL3BhcmFtcy5jCisrKyBiL2RyaXZlcnMvdXNiL2R3YzIvcGFyYW1zLmMKQEAgLTQ1
-Miw3ICs0NTIsNiBAQAogCWludCBmaWZvOwogCWludCBtaW47CiAJdTMyIHRvdGFsID0gMDsKLQl1
-MzIgZHB0eGZzem47CiAKIAlmaWZvX2NvdW50ID0gZHdjMl9oc290Z190eF9maWZvX2NvdW50KGhz
-b3RnKTsKIAltaW4gPSBoc290Zy0+aHdfcGFyYW1zLmVuX211bHRpcGxlX3R4X2ZpZm8gPyAxNiA6
-IDQ7CkBAIC00NjcsMTUgKzQ2NiwxNSBAQAogCX0KIAogCWZvciAoZmlmbyA9IDE7IGZpZm8gPD0g
-Zmlmb19jb3VudDsgZmlmbysrKSB7Ci0JCWRwdHhmc3puID0gKGR3YzJfcmVhZGwoaHNvdGcsIERQ
-VFhGU0laTihmaWZvKSkgJgotCQkJRklGT1NJWkVfREVQVEhfTUFTSykgPj4gRklGT1NJWkVfREVQ
-VEhfU0hJRlQ7CiAKIAkJaWYgKGhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPCBt
-aW4gfHwKLQkJICAgIGhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPiAgZHB0eGZz
-em4pIHsKKwkJICAgIGhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPgorCQkgICAg
-aHNvdGctPmh3X3BhcmFtcy5nX3R4X2ZpZm9fc2l6ZVtmaWZvXSkgewogCQkJZGV2X3dhcm4oaHNv
-dGctPmRldiwgIiVzOiBJbnZhbGlkIHBhcmFtZXRlciBnX3R4X2ZpZm9fc2l6ZVslZF09JWRcbiIs
-CiAJCQkJIF9fZnVuY19fLCBmaWZvLAogCQkJCSBoc290Zy0+cGFyYW1zLmdfdHhfZmlmb19zaXpl
-W2ZpZm9dKTsKLQkJCWhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPSBkcHR4ZnN6
-bjsKKwkJCWhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPQorCQkgICAgaHNvdGct
-Pmh3X3BhcmFtcy5nX3R4X2ZpZm9fc2l6ZVtmaWZvXTsKIAkJfQogCX0KIH0KQEAgLTYwNyw2ICs2
-MDYsNyBAQAogewogCXN0cnVjdCBkd2MyX2h3X3BhcmFtcyAqaHcgPSAmaHNvdGctPmh3X3BhcmFt
-czsKIAl1bnNpZ25lZCBpbnQgd2lkdGg7CisJaW50IGZpZm8sIGZpZm9fY291bnQ7CiAJdTMyIGh3
-Y2ZnMSwgaHdjZmcyLCBod2NmZzMsIGh3Y2ZnNDsKIAl1MzIgZ3J4ZnNpejsKIApAQCAtNjc1LDYg
-KzY3NSwxMiBAQAogCWh3LT5yeF9maWZvX3NpemUgPSAoZ3J4ZnNpeiAmIEdSWEZTSVpfREVQVEhf
-TUFTSykgPj4KIAkJCQlHUlhGU0laX0RFUFRIX1NISUZUOwogCisJZmlmb19jb3VudCA9IGR3YzJf
-aHNvdGdfdHhfZmlmb19jb3VudChoc290Zyk7CisKKwlmb3IgKGZpZm8gPSAxOyBmaWZvIDw9IGZp
-Zm9fY291bnQ7IGZpZm8rKykgeworCQlody0+Z190eF9maWZvX3NpemVbZmlmb10gPSAoZHdjMl9y
-ZWFkbChoc290ZywgRFBUWEZTSVpOKGZpZm8pKSAmCisJCQlGSUZPU0laRV9ERVBUSF9NQVNLKSA+
-PiBGSUZPU0laRV9ERVBUSF9TSElGVDsKKwl9CiAJcmV0dXJuIDA7CiB9CiAK
-
---_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_
-Content-Type: text/plain; name="c6f7e1c.diff"
-Content-Description: c6f7e1c.diff
-Content-Disposition: attachment; filename="c6f7e1c.diff"; size=2138;
-	creation-date="Tue, 21 Nov 2017 12:02:32 GMT";
-	modification-date="Tue, 21 Nov 2017 12:02:32 GMT"
-Content-Transfer-Encoding: base64
-
-RnJvbSBjNmY3ZTFjNzkwYzRlZjMwYmE4MThiMTE5YTE3N2ZkY2Q5Y2E3YjM0IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBHZXZvcmcgU2FoYWt5YW4gPHNhaGFreWFuQHN5bm9wc3lzLmNv
-bT4KRGF0ZTogVHVlLCAwOCBBdWcgMjAxNyAxNTo0NTozMiArMDQwMApTdWJqZWN0OiBbUEFUQ0hd
-IHVzYjogZHdjMjogRml4IHR4X2ZpZm9fdG90YWxfZGVwdGggY2FsY3VsYXRpb24KClJlbW92ZWQg
-ZXBfaW5mbyBzdWJ0cmFjdGlvbiBkdXJpbmcgY2FsY3VsYXRpb24gdHhfYWRkcl9tYXggaW4KZHdj
-Ml9oc290Z190eF9maWZvX3RvdGFsX2RlcHRoIGZ1bmN0aW9uLCBiZWNhdXNlIGl0cyBhbHJlYWR5
-CmRvbmUgaW4gaGFyZHdhcmUuCgpBbHNvIHJlbW92ZWQgZHdjMl9oc290Z19lcF9pbmZvX3NpemUg
-ZnVuY3Rpb24gYXMgbm8gbW9yZSBuZWVkLgoKQ2hhbmdlLUlkOiBJZjlhOWY4YWIxMTVhNmU5OTg3
-MzZhYjk5MTA1NmYzNzRlYWI5Zjc0NwpTaWduZWQtb2ZmLWJ5OiBHZXZvcmcgU2FoYWt5YW4gPHNh
-aGFreWFuQHN5bm9wc3lzLmNvbT4KLS0tCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMi9n
-YWRnZXQuYyBiL2RyaXZlcnMvdXNiL2R3YzIvZ2FkZ2V0LmMKaW5kZXggOThhNGE3OS4uM2M1MmY0
-NiAxMDA2NDQKLS0tIGEvZHJpdmVycy91c2IvZHdjMi9nYWRnZXQuYworKysgYi9kcml2ZXJzL3Vz
-Yi9kd2MyL2dhZGdldC5jCkBAIC0yMDYsNDcgKzIwNiwxMSBAQAogfQogCiAvKioKLSAqIGR3YzJf
-aHNvdGdfZXBfaW5mb19zaXplIC0gcmV0dXJuIEVuZHBvaW50IEluZm8gQ29udHJvbCBibG9jayBz
-aXplIGluIERXT1JEcwotICovCi1zdGF0aWMgaW50IGR3YzJfaHNvdGdfZXBfaW5mb19zaXplKHN0
-cnVjdCBkd2MyX2hzb3RnICpoc290ZykKLXsKLQlpbnQgdmFsID0gMDsKLQlpbnQgaTsKLQl1MzIg
-ZXBfZGlyczsKLQotCS8qCi0JICogRG9uJ3QgbmVlZCBhZGRpdGlvbmFsIHNwYWNlIGZvciBlcCBp
-bmZvIGNvbnRyb2wgcmVnaXN0ZXJzIGluCi0JICogc2xhdmUgbW9kZS4KLQkgKi8KLQlpZiAoIXVz
-aW5nX2RtYShoc290ZykpIHsKLQkJZGV2X2RiZyhoc290Zy0+ZGV2LCAiQnVmZmVyIERNQSBlcCBp
-bmZvIHNpemUgMFxuIik7Ci0JCXJldHVybiAwOwotCX0KLQotCS8qCi0JICogQnVmZmVyIERNQSBt
-b2RlIC0gMSBsb2NhdGlvbiBwZXIgZW5kcG9pdAotCSAqIERlc2NyaXB0b3IgRE1BIG1vZGUgLSA0
-IGxvY2F0aW9ucyBwZXIgZW5kcG9pbnQKLQkgKi8KLQllcF9kaXJzID0gaHNvdGctPmh3X3BhcmFt
-cy5kZXZfZXBfZGlyczsKLQotCWZvciAoaSA9IDA7IGkgPD0gaHNvdGctPmh3X3BhcmFtcy5udW1f
-ZGV2X2VwOyBpKyspIHsKLQkJdmFsICs9IGVwX2RpcnMgJiAzID8gMSA6IDI7Ci0JCWVwX2RpcnMg
-Pj49IDI7Ci0JfQotCi0JaWYgKHVzaW5nX2Rlc2NfZG1hKGhzb3RnKSkKLQkJdmFsID0gdmFsICog
-NDsKLQotCXJldHVybiB2YWw7Ci19Ci0KLS8qKgogICogZHdjMl9oc290Z190eF9maWZvX3RvdGFs
-X2RlcHRoIC0gcmV0dXJuIHRvdGFsIEZJRk8gZGVwdGggYXZhaWxhYmxlIGZvcgogICogZGV2aWNl
-IG1vZGUgVFggRklGT3MKICAqLwogaW50IGR3YzJfaHNvdGdfdHhfZmlmb190b3RhbF9kZXB0aChz
-dHJ1Y3QgZHdjMl9oc290ZyAqaHNvdGcpCiB7Ci0JaW50IGVwX2luZm9fc2l6ZTsKIAlpbnQgYWRk
-cjsKIAlpbnQgdHhfYWRkcl9tYXg7CiAJdTMyIG5wX3R4X2ZpZm9fc2l6ZTsKQEAgLTI1NCw5ICsy
-MTgsNyBAQAogCW5wX3R4X2ZpZm9fc2l6ZSA9IG1pbl90KHUzMiwgaHNvdGctPmh3X3BhcmFtcy5k
-ZXZfbnBlcmlvX3R4X2ZpZm9fc2l6ZSwKIAkJCQloc290Zy0+cGFyYW1zLmdfbnBfdHhfZmlmb19z
-aXplKTsKIAotCS8qIEdldCBFbmRwb2ludCBJbmZvIENvbnRyb2wgYmxvY2sgc2l6ZSBpbiBEV09S
-RHMuICovCi0JZXBfaW5mb19zaXplID0gZHdjMl9oc290Z19lcF9pbmZvX3NpemUoaHNvdGcpOwot
-CXR4X2FkZHJfbWF4ID0gaHNvdGctPmh3X3BhcmFtcy50b3RhbF9maWZvX3NpemUgLSBlcF9pbmZv
-X3NpemU7CisJdHhfYWRkcl9tYXggPSBoc290Zy0+aHdfcGFyYW1zLnRvdGFsX2ZpZm9fc2l6ZTsK
-IAogCWFkZHIgPSBoc290Zy0+cGFyYW1zLmdfcnhfZmlmb19zaXplICsgbnBfdHhfZmlmb19zaXpl
-OwogCWlmICh0eF9hZGRyX21heCA8PSBhZGRyKQo=
-
---_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
