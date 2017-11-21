@@ -1,44 +1,37 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: [PATCH v3 0/5] pinctrl: mcp32s08: add open drain config for irq
-Date: Tue, 21 Nov 2017 16:21:26 +0800
-Message-ID: <1511252491-79952-1-git-send-email-preid@electromag.com.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Phil Reid <preid@electromag.com.au>
+Subject: [PATCH v3 5/5] dt-bindings: pinctrl: deprecate 'microchip,irq-active-high' property
+Date: Tue, 21 Nov 2017 16:21:31 +0800
+Message-ID: <1511252491-79952-6-git-send-email-preid@electromag.com.au>
+References: <1511252491-79952-1-git-send-email-preid@electromag.com.au>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1511252491-79952-1-git-send-email-preid@electromag.com.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, preid@electromag.com.au, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a continuation of patch 4/5/6 from my previous series 
-"gpio: mcp23s08: add support for mcp23018"
-The other patches from that series having already been applied.
+The irq output polarity can be determined from the 'interrupts'
+configuration. So 'microchip,irq-active-high' is not required.
 
-Hopefully I've address all of Linus's concerns.
-Wasn't too sure on how to handle the depcrated property documentation.
+Signed-off-by: Phil Reid <preid@electromag.com.au>
+---
+ Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Changes from v2:
-- Use standard 'drive-open-drain' for irq output configuration
-- deprecate 'microchip,irq-active-high' property and extract
-  the irq polarity from the 'interrupts' property.
-- 'microchip,irq-active-high' property is now ignored except
-  for a warning if the property exists. 
-  This is probably safe as the 'interrupts' property is most 
-  likely setup correctly. 
-
-
-Phil Reid (5):
-  pinctrl: mcp23s08: remove hard coded irq polarity in irq_setup
-  dt-bindings: pinctrl: mcp23s08: add documentation for drive-open-drain
-  pinctrl: mcp23s08: add open drain configuration for irq output
-  pinctrl: mcp23s08: configure irq polarity using irq data
-  dt-bindings: pinctrl: deprecate 'microchip,irq-active-high' property
-
- .../bindings/pinctrl/pinctrl-mcp23s08.txt          |  6 +++--
- drivers/pinctrl/pinctrl-mcp23s08.c                 | 28 ++++++++++++----------
- 2 files changed, 20 insertions(+), 14 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+index a5a8322..72bac30 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+@@ -58,8 +58,8 @@ Optional device specific properties:
+         occurred on. If it is not set, the interrupt are only generated for the
+         bank they belong to.
+         On devices with only one interrupt output this property is useless.
+-- microchip,irq-active-high: Sets the INTPOL flag in the IOCON register. This
+-        configures the IRQ output polarity as active high.
++- microchip,irq-active-high: (DEPRECATED)
++        irq polarity is determined from the 'interrupts' configuration
+ 
+ Example I2C (with interrupt):
+ gpiom1: gpio@20 {
 -- 
 1.8.3.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
