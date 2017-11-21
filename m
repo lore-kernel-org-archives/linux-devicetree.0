@@ -1,32 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] clk: qoriq: add more divider clocks support
-Date: Tue, 21 Nov 2017 12:30:38 -0600
-Message-ID: <20171121183038.4jntjiqlfnewmmwt@rob-hp-laptop>
-References: <20171121061300.23464-1-andy.tang@nxp.com>
+Subject: Re: [PATCH v3 03/12] dt-bindings: i2c: Add P8 OCC hwmon device
+ documentation
+Date: Tue, 21 Nov 2017 12:34:32 -0600
+Message-ID: <20171121183432.53ndwjf3czzehwtf@rob-hp-laptop>
+References: <1511222021-562-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1511222021-562-4-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171121061300.23464-1-andy.tang@nxp.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: andy.tang@nxp.com
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1511222021-562-4-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, joel@jms.id.au, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 21, 2017 at 02:13:00PM +0800, andy.tang@nxp.com wrote:
-> From: Yuantian Tang <andy.tang@nxp.com>
+On Mon, Nov 20, 2017 at 05:53:32PM -0600, Eddie James wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
 > 
-> More divider clocks are needed by IP. So enlarge the PLL divider
-> array to accommodate more divider clocks.
+> Document the bindings for I2C-based OCC hwmon device.
 > 
-> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+> Signed-off-by: Edward A. James <eajames@us.ibm.com>
 > ---
-> v2:
->   - fix a logical error
-> 
->  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 1 +
+>  .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
 
-Please add acks when posting new versions.
-
->  drivers/clk/clk-qoriq.c                                 | 9 ++++++++-
->  2 files changed, 9 insertions(+), 1 deletion(-)
+Acked-by: Rob Herring <robh@kernel.org>
