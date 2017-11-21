@@ -1,98 +1,48 @@
-From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 1/2] usb: xhci: add relaxed timing quirk bit
-Date: Tue, 21 Nov 2017 12:18:09 -0500
-Message-ID: <1511284690-3878-2-git-send-email-awallis@codeaurora.org>
-References: <1511284690-3878-1-git-send-email-awallis@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511284690-3878-1-git-send-email-awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [patches] Re: [PATCH] dt-bindings: Add a RISC-V SBI firmware node
+Date: Tue, 21 Nov 2017 09:37:02 -0800 (PST)
+Message-ID: <mhng-dadf76d9-0823-4fc8-9177-1772629573b6@palmer-si-x1c4>
+References: <20171120214520.dcaqvyncojwefmgt@rob-hp-laptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171120214520.dcaqvyncojwefmgt@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh@kernel.org, j.neuschaefer@gmx.net
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, patches@groups.riscv.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Certain systems may run with CPUs at a very slow frequency. This
-patch adds a quirk bit that can be used to relax certain timings, etc.
+On Mon, 20 Nov 2017 13:45:20 PST (-0800), robh@kernel.org wrote:
+> On Mon, Nov 20, 2017 at 11:50:00AM -0800, Palmer Dabbelt wrote:
+>> The RISC-V privileged ISA mandates the presence of an SBI, but there's
+>> no reason not to put it in the device tree.  This would allow us to
+>> possibly remove the SBI later.
+>
+> If it is mandatory, then it should not be in DT. DT is not a driver
+> instantiation mechanism.
+>
+> If your ISA can vary, I'd recommend you make that discoverable. DT is
+> for what we failed to make discoverable.
 
-This quirk might be needed for other fields in the future, but
-initially, it will be used only on the IRQ control register to allow
-firmare to control the value of the register. This can prevent an
-"interrupt storm" effect on certain systems.
+OK, that makes sense.  Since this the presence of an SBI is mandated by the ISA 
+there's no way to discover it (just like there's no way to discover a load 
+instruction).  For extensibility reasons you can, of course, determine which 
+SBI calls are implemented, but this mechanism assumes you have something 
+running to catch the SBI calls on the other end (SBI calls are just system 
+calls from the Linux).  I think the original goal here was to avoid an SBI 
+entirely, which isn't something the ISA is designed for.
 
-Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb-xhci.txt |  1 +
- drivers/usb/host/xhci.c                            | 25 +++++++++++++++-------
- drivers/usb/host/xhci.h                            |  1 +
- 3 files changed, 19 insertions(+), 8 deletions(-)
+This isn't really a big deal to me, as I'm only interested in RISC-V systems, 
+but there's been some pushback on the concept of an SBI so it seemed like a 
+simple way to allow people to build non-SBI (and there for not really RISC-V) 
+systems.  One option that wouldn't require a device tree node would be to have 
+Linux boot in machine mode (where the SBI implementation lives on systems 
+without a hypervisor, if you've got a hypervisor then I assume the SBI isn't a 
+problem) and then provide its own SBI implementation.  This wouldn't impose any 
+additional burden: if there's no SBI then Linux will need to start in machine 
+mode because that's where you need to be in order to do the things the SBI 
+implementation needs to go.  This will be awkward to implement, but having a 
+device tree entry won't help with any of that.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index ae6e484..af2faa24 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -29,6 +29,7 @@ Optional properties:
-   - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
-   - usb3-lpm-capable: determines if platform is USB3 LPM capable
-   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-+  - quirk-relaxed-timing: allows firmware to relax timing on certain registers
- 
- Example:
- 	usb@f0931000 {
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 327ba8b..e14a204 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -582,16 +582,25 @@ int xhci_run(struct usb_hcd *hcd)
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
- 			"ERST deq = 64'h%0lx", (long unsigned int) temp_64);
- 
--	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
--			"// Set the interrupt modulation register");
--	temp = readl(&xhci->ir_set->irq_control);
--	temp &= ~ER_IRQ_INTERVAL_MASK;
- 	/*
--	 * the increment interval is 8 times as much as that defined
--	 * in xHCI spec on MTK's controller
-+	 * Systems with slow CPUs may not be able to tolerate
-+	 * agressive interrupt timing that silicon can tolerate. The
-+	 * XHCI_RELAXED_TIMING will allow firmware to set the IRQ
-+	 * Control field.
- 	 */
--	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
--	writel(temp, &xhci->ir_set->irq_control);
-+	if (!(xhci->quirks & XHCI_RELAXED_TIMING_QUIRK)) {
-+		xhci_dbg_trace(xhci, trace_xhci_dbg_init,
-+				"// Set the interrupt modulation register");
-+		temp = readl(&xhci->ir_set->irq_control);
-+		temp &= ~ER_IRQ_INTERVAL_MASK;
-+
-+		/*
-+		 * the increment interval is 8 times as much as that defined
-+		 * in xHCI spec on MTK's controller
-+		 */
-+		temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
-+		writel(temp, &xhci->ir_set->irq_control);
-+	}
- 
- 	/* Set the HCD state before we enable the irqs */
- 	temp = readl(&xhci->op_regs->command);
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 99a014a..6d451be 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1823,6 +1823,7 @@ struct xhci_hcd {
- /* Reserved. It was XHCI_U2_DISABLE_WAKE */
- #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
- #define XHCI_HW_LPM_DISABLE	(1 << 29)
-+#define XHCI_RELAXED_TIMING_QUIRK	(1 << 30)
- 
- 	unsigned int		num_active_eps;
- 	unsigned int		limit_active_eps;
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think the right thing to do here is just not define a device tree entry.
