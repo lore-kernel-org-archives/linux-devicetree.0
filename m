@@ -1,164 +1,76 @@
-From: Ulf Samuelsson <linux-kernel@emagii.com>
-Subject: Re: RFC: Copying Device Tree File into reserved area of VMLINUX
- before deployment
-Date: Tue, 21 Nov 2017 21:03:09 +0100
-Message-ID: <4ce82f7e-a785-c152-3c48-8700534881d1@emagii.com>
-References: <0b31e22b-202f-6fca-28f2-e16e6af6c6b7@emagii.com>
- <a0f9d598-04af-fddd-58ad-09db10ec19da@gmail.com>
- <fe7925f3-30d4-ec03-a6c5-61a8644dcdfe@gmail.com>
- <ee33abcc-8d23-8b4c-e3ef-7adce8495ef3@emagii.com>
- <0e54f9f0-1226-7f2e-3143-ea4e450058e6@gmail.com>
- <CAL_JsqJZbBDcp_GCNjW8mpPTi2Gv9J5bkbb5co0wRFxYf4aPpw@mail.gmail.com>
-Reply-To: linux-kernel@emagii.com
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: xhci: add relaxed timing quirk bit
+Date: Tue, 21 Nov 2017 14:06:13 -0600
+Message-ID: <CAL_JsqLZgnTTEiLXD8ZOK-0qd58i16e7h_-2yjHN+zRFfqvH4Q@mail.gmail.com>
+References: <1511284690-3878-1-git-send-email-awallis@codeaurora.org>
+ <1511284690-3878-2-git-send-email-awallis@codeaurora.org> <20171121191103.5oczqvrlo4gtwjqc@rob-hp-laptop>
+ <f200ce55-ac67-02f9-4dbf-7a3ba5b52b39@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJZbBDcp_GCNjW8mpPTi2Gv9J5bkbb5co0wRFxYf4aPpw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f200ce55-ac67-02f9-4dbf-7a3ba5b52b39-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2017-11-21 18:09, Rob Herring wrote:
-> On Mon, Nov 20, 2017 at 3:39 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->> Hi Ulf, Rob,
+On Tue, Nov 21, 2017 at 1:49 PM, Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 11/21/2017 2:11 PM, Rob Herring wrote:
+>> On Tue, Nov 21, 2017 at 12:18:09PM -0500, Adam Wallis wrote:
+>>> Certain systems may run with CPUs at a very slow frequency. This
+>>> patch adds a quirk bit that can be used to relax certain timings, etc.
+>>>
+>>> This quirk might be needed for other fields in the future, but
+>>> initially, it will be used only on the IRQ control register to allow
+>>> firmare to control the value of the register. This can prevent an
 >>
->> On 11/20/17 15:19, Ulf Samuelsson wrote:
->>>
->>>
->>> On 2017-11-20 05:32, Frank Rowand wrote:
->>>> Hi Ulf,
->>>>
->>>>
->>>> On 11/19/17 23:23, Frank Rowand wrote:
->>>>> adding devicetree list, devicetree maintainers
->>>>>
->>>>> On 11/18/17 12:59, Ulf Samuelsson wrote:
->>>>>> I noticed when checking out the OpenWRT support for the board that they have a method to avoid having to pass the device tree address to the kernel, and can thus boot device tree based kernels with U-boots that
->>>>>> does not support device trees.
->>>>>>
->>>>>> Is this something that would be considered useful for including in mainstream:
->>>>>>
->>>>>> BACKGROUND:
->>>>>> Trying to load a yocto kernel into a MIPS target (MT7620A based),
->>>>>> and the U-Boot is more than stupid.
->>>>>> Does not support the "run" command as an example.
->>>>>> They modified the U-Boot MAGIC Word to complicate things.
->>>>>> The U-Boot is not configured to use device tree files.
->>>>>> The board runs a 2.6 kernel right now.
->>>>>>
->>>>>> Several attempts by me a and others to rebuild U-Boot according to
->>>>>> the H/W vendors source code and build instructions results in a
->>>>>> bricked unit. Bricked units cannot be recovered.
->>>>
->>>> Hopefully you have brought this to the attention of the vendor.  U-Boot
->>>> is GPL v2 (or in some ways possibly GPL v2 or later), so if you can not
->>>> build U-Boot that is equivalent to the binary U-Boot they shipped, the
->>>> vendor may want to ensure that they are shipping the proper source and
->>>> build instructions.
->>>>
->>>
->>> I am not the one in contact with the H/W vendor.
->>> The U-boot is pretty old, and from comments from those
->>> in contact with them, the U-Boot knowledge at the H/W vendor
->>> is minimal at best.
->>> It might even be that they program an U-boot where the upgrade of the U-boot is broken...
->>>
->>>
->>>>
->>>>>> Not my choice of H/W, so I cannot change it.
->>>>>>
->>>>>>
->>>>>> ===================================================================
->>>>>> OPENWRT:
->>>>>> I noticed when checking out the OpenWRT support for the board that
->>>>>> they have a method to avoid having to pass the device tree address
->>>>>> to the kernel, and can thus boot device tree based kernels with
->>>>>> U-boots that does not support device trees.
->>>>>>
->>>>>> What they do is to reserve 16 kB of kernel space, and tag it with
->>>>>> an ASCII string "OWRTDTB:". After the kernel and dtb is built, a
->>>>>> utility "patch-dtb" will update the vmlinux binary, copying in the
->>>>>> device tree file.
->>>>>>
->>>>>> ===================================================================
->>>>>> It would be useful to me, and I could of course patch the
->>>>>> mainstream kernel, but first I would like to check if this is of
->>>>>> interest for mainstream.
->>>>
->>>> Not in this form.  Hard coding a fixed size area in the boot image
->>>> to contain the FDT (aka DTB) is a non-starter.
->>>
->>> OK, Is it the fixed size, which is a problem?
+>> s/firmare/firmware/
 >>
->> Yes, it is the fixed size which is a problem.
+>
+> Thanks, good catch.
+>
+>> By firmware control, you mean the register is initialized on boot and
+>> then not touched by the kernel? What if the XHCI block is reset? Not
+>> sure if that's possible.
 >>
->>> Is generally combining an image with a DTB into a single file also a non-starter?
+>>> "interrupt storm" effect on certain systems.
 >>
->> Can you jump in here Rob?  My understanding is that CONFIG_ARM_APPENDED_DTB,
->> which is the ARM based solution that Mark mentioned, was envisioned as a
->> temporary stop gap until boot loaders could add devicetree support.  I don't
->> know if there is a desire to limit this approach or to remove it in the
->> future.
-> 
-> Yes, but I doubt we'll ever remove it. Most android devices use it (or
-> the multiple appended dtb stuff Qcom did) and there's out of tree
-> patches to do appended dtb on arm64. However, arm64 is a done a bit
-> differently in that the bootloader has to find the dtb rather than the
-> kernel (or really the decompressor). The purpose for arm64 is people
-> like the single kernel+dtb image, not legacy bootloader support as DT
-> support was there from day 1.
-> 
-> Another option is to do what's called an impedance matcher like this[1].
-> 
->> I'm not sure why this feature should not be permanently supported.  I'm being
->> cautious, just in case I'm overlooking or missing an important issue, thus
->> asking for Rob's input.  I do know that this feature does not advance the
->> desires of people who want a single kernel (single boot image?) that runs on
->> many different systems, instead of a boot image that is unique to each
->> target platform.  But I don't see why that desire precludes also having
->> an option to have a target specific boot image.
-> 
-> MIPS already supports built-in dtbs which is an in-kernel way to get
-> the dtb rather than the decompressor. The addition in this case is
-> just putting in a dummy dtb and putting in the real dtb later. I'm not
-> sure what MIPS image header looks like, but seems like it should be
-> possible to have the "built-in dtb" point to an appended dtb and just
-> update sizes in the image file. Then you don't have the fixed size.
-> 
-> But now that I finished writing this, I see there is already appended
-> DTB support in MIPS.
+>> So now we have 2 ways to deal with this? The existing MediaTek quirk and
+>> now this one.
+>
+> I do agree that 2 different ways to deal with it is not ideal. I also think that
+> having one hard-coded value (and one alternate for MTK) is also not ideal.
 
-I just managed to complete a build using yocto where I made the 
-following changes.
+Agreed.
 
-I build the dtbs before linking the uImage.
+>>
+>> I think you should change the existing quirk to a value and set the
+>> value based on compatible strings.
+>
+> I like where you are going with this. Are you saying that I could read for a
+> device property read from firmware (for DTB or ACPI) like DWC3 does for
+> "snps,hird-threshold"?
 
-I add some configuration variables, which define
-* if the dtb should be included
-* which dtb file should be included
+Is that for the same thing? If so, drop the vendor prefix and use
+that. Otherwise, a separate property should really be something that
+is per board rather than per SoC.
 
-uImage always gziped
+> If you mean this, where do you recommend I store the
+> desired IRQ_CONTROL value - in struct xhci_hcd ?
 
-Checking the resulting uImage, shows that the ".appended_dtb" section 
-now contains the dtb file.
+No idea.
 
-I have not loaded it into a board yet, but the default init seems to 
-check if there is a U-boot header in the ".appended_dtb" section.
+> Or by "compatible" strings, did you mean storing hard-coded values in the
+> of_device_id usb_xhci_of_match[] array? This would still be hard-coding (which I
+> would like to avoid) and also would not work for the ACPI case.
 
-My bootloader has a custom MAGIC so loading still won't work.
+ACPI has match tables too?
 
+It would only be hardcoded per compatible which should be per SoC. Do
+you need per board/device tuning? If so, use a property.
 
-> 
-> Rob
-> 
-> [1] https://github.com/zonque/pxa-impedance-matcher
-> 
-
--- 
-Best Regards
-Ulf Samuelsson
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
