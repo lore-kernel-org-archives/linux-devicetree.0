@@ -1,238 +1,68 @@
-From: Ulf Samuelsson <linux-kernel@emagii.com>
-Subject: Re: RFC: Copying Device Tree File into reserved area of VMLINUX
- before deployment
-Date: Tue, 21 Nov 2017 07:19:22 +0100
-Message-ID: <4d2f0bf4-d49a-27bc-75aa-11c78bc074fa@emagii.com>
-References: <0b31e22b-202f-6fca-28f2-e16e6af6c6b7@emagii.com>
- <a0f9d598-04af-fddd-58ad-09db10ec19da@gmail.com>
- <fe7925f3-30d4-ec03-a6c5-61a8644dcdfe@gmail.com>
- <ee33abcc-8d23-8b4c-e3ef-7adce8495ef3@emagii.com>
- <0e54f9f0-1226-7f2e-3143-ea4e450058e6@gmail.com>
- <872e81dc-82ba-f838-c4f8-88d2208d23d2@emagii.com>
-Reply-To: linux-kernel@emagii.com
+From: <andy.tang@nxp.com>
+Subject: [PATCH v2] clk: qoriq: add more divider clocks support
+Date: Tue, 21 Nov 2017 14:13:00 +0800
+Message-ID: <20171121061300.23464-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <872e81dc-82ba-f838-c4f8-88d2208d23d2@emagii.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Yuantian Tang <andy.tang@nxp.com>
 
+More divider clocks are needed by IP. So enlarge the PLL divider
+array to accommodate more divider clocks.
 
-On 2017-11-21 00:09, Ulf Samuelsson wrote:
-> 
-> 
-> On 2017-11-20 22:39, Frank Rowand wrote:
->> Hi Ulf, Rob,
->>
->> On 11/20/17 15:19, Ulf Samuelsson wrote:
->>>
->>>
->>> On 2017-11-20 05:32, Frank Rowand wrote:
->>>> Hi Ulf,
->>>>
->>>>
->>>> On 11/19/17 23:23, Frank Rowand wrote:
->>>>> adding devicetree list, devicetree maintainers
->>>>>
->>>>> On 11/18/17 12:59, Ulf Samuelsson wrote:
->>>>>> I noticed when checking out the OpenWRT support for the board that 
->>>>>> they have a method to avoid having to pass the device tree address 
->>>>>> to the kernel, and can thus boot device tree based kernels with 
->>>>>> U-boots that
->>>>>> does not support device trees.
->>>>>>
->>>>>> Is this something that would be considered useful for including in 
->>>>>> mainstream:
->>>>>>
->>>>>> BACKGROUND:
->>>>>> Trying to load a yocto kernel into a MIPS target (MT7620A based),
->>>>>> and the U-Boot is more than stupid.
->>>>>> Does not support the "run" command as an example.
->>>>>> They modified the U-Boot MAGIC Word to complicate things.
->>>>>> The U-Boot is not configured to use device tree files.
->>>>>> The board runs a 2.6 kernel right now.
->>>>>>
->>>>>> Several attempts by me a and others to rebuild U-Boot according to
->>>>>> the H/W vendors source code and build instructions results in a
->>>>>> bricked unit. Bricked units cannot be recovered.
->>>>
->>>> Hopefully you have brought this to the attention of the vendor.  U-Boot
->>>> is GPL v2 (or in some ways possibly GPL v2 or later), so if you can not
->>>> build U-Boot that is equivalent to the binary U-Boot they shipped, the
->>>> vendor may want to ensure that they are shipping the proper source and
->>>> build instructions.
->>>>
->>>
->>> I am not the one in contact with the H/W vendor.
->>> The U-boot is pretty old, and from comments from those
->>> in contact with them, the U-Boot knowledge at the H/W vendor
->>> is minimal at best.
->>> It might even be that they program an U-boot where the upgrade of the 
->>> U-boot is broken...
->>>
->>>
->>>>
->>>>>> Not my choice of H/W, so I cannot change it.
->>>>>>
->>>>>>
->>>>>> ===================================================================
->>>>>> OPENWRT:
->>>>>> I noticed when checking out the OpenWRT support for the board that
->>>>>> they have a method to avoid having to pass the device tree address
->>>>>> to the kernel, and can thus boot device tree based kernels with
->>>>>> U-boots that does not support device trees.
->>>>>>
->>>>>> What they do is to reserve 16 kB of kernel space, and tag it with
->>>>>> an ASCII string "OWRTDTB:". After the kernel and dtb is built, a
->>>>>> utility "patch-dtb" will update the vmlinux binary, copying in the
->>>>>> device tree file.
->>>>>>
->>>>>> ===================================================================
->>>>>> It would be useful to me, and I could of course patch the
->>>>>> mainstream kernel, but first I would like to check if this is of
->>>>>> interest for mainstream.
->>>>
->>>> Not in this form.  Hard coding a fixed size area in the boot image
->>>> to contain the FDT (aka DTB) is a non-starter.
->>>
->>> OK, Is it the fixed size, which is a problem?
->>
->> Yes, it is the fixed size which is a problem.
-> 
-> The size can of course be changed, by setting the size configuration 
-> option (DTB_SIZE).
-> OpenWRT does not support that, but I think it needs to be there for a 
-> generic option (but You have to recompile the kernel to increase the size).
-> 
-> One problem is that you normally compile and link the kernel before you
-> compile the dtbs, so you do not know what size is until afterwards.
-> 
-Found this link:	https://csl.name/post/embedding-binary-data/
+Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+---
+v2:
+  - fix a logical error
 
-=======================================
-...
-Let's say you have an image target.dtb and want to embed it into your 
-application. You can create an object file with
+ Documentation/devicetree/bindings/clock/qoriq-clock.txt | 1 +
+ drivers/clk/clk-qoriq.c                                 | 9 ++++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-
-image_dtb.o:	<target dtb>
-	mv <target dtb>   image_dtb
-	ld -r -b binary image_dtb -o image_dtb.o
-
-The object file will have three symbols in it,
-
-$ nm cat.o
-0000000000000512 D _binary_image_dtb_end
-0000000000000512 A _binary_image_dtb_size
-0000000000000000 D _binary_image_dtb_start
-=======================================
-
-This assumes that the dtbs are built before the kernel is linked.
-The copy step is neccessary, since the generated names are
-taken from the name of the "in file".
-(Would have been better, if they used the "out file")
-
-Otherwise you can create an assembler file which "incbin's" the dtb file.
-
-
-
-
-> 
->>
->>> Is generally combining an image with a DTB into a single file also a 
->>> non-starter?
->>
->> Can you jump in here Rob?  My understanding is that 
->> CONFIG_ARM_APPENDED_DTB,
->> which is the ARM based solution that Mark mentioned, was envisioned as a
->> temporary stop gap until boot loaders could add devicetree support.  I 
->> don't
->> know if there is a desire to limit this approach or to remove it in the
->> future.
->>
->> I'm not sure why this feature should not be permanently supported.  
->> I'm being
->> cautious, just in case I'm overlooking or missing an important issue, 
->> thus
->> asking for Rob's input.  I do know that this feature does not advance the
->> desires of people who want a single kernel (single boot image?) that 
->> runs on
->> many different systems, instead of a boot image that is unique to each
->> target platform.  But I don't see why that desire precludes also having
->> an option to have a target specific boot image.
-> The main reason to keep it is when you are really constrained for memory.
-> The U-Boot on the board is 96 kB, which is just a fraction of a more 
-> normal U-Boot.
-> Also, the u-boot is old.
-> 
-> 
->>
->> -Frank
->>
->>
->>>>
->>>> And again, I would first approach the H/W vendor before trying to
->>>> come up with a work around like this.
->>>>
->>>>
->>>>>> I envisage the support would look something like:
->>>>>>
->>>>>> ============
->>>>>> Kconfig.
->>>>>> config MIPS
->>>>>>       select    HAVE_IMAGE_DTB
->>>>>>
->>>>>> config    HAVE_IMAGE_DTB
->>>>>>       bool
->>>>>>
->>>>>> if HAVE_IMAGE_DTB
->>>>>> config     IMAGE_DTB
->>>>>>       bool    "Allocated space for DTB within image
->>>>>>
->>>>>> config    DTB_SIZE
->>>>>>       int    "DTB space (kB)
->>>>>>
->>>>>> config    DTB_TAG
->>>>>>       string    "DTB space tag"
->>>>>>       default    "OWRTDTB:"
->>>>>> endif
->>>>>>
->>>>>> ============
->>>>>> Some Makefile
->>>>>> obj-$(CONFIG_INCLUDE_DTB) += image_dtb.o
->>>>>>
->>>>>> ============
->>>>>> image_dtb.S:
->>>>>>       .text
->>>>>>       .align    5
->>>>>>       .ascii    CONFIG_DTB_TAG
->>>>>>       EXPORT(__image_dtb)
->>>>>>       .fill    DTB_SIZE * 1024
->>>>>>
->>>>>> ===================
->>>>>> arch/mips/xxx/of.c:
->>>>>>
->>>>>> #if    defined(CONFIG_IMAGE_DTB)
->>>>>>       if (<conditions to boot from dtb_space>)
->>>>>>           __dt_setup_arch(__dtb_start);
->>>>>>       else
->>>>>>           __dt_setup_arch(&__image_dtb);
->>>>>> #else
->>>>>>       __dt_setup_arch(__dtb_start);
->>>>>> #endif
->>>>>>
->>>>>> I imagine that if the support is enabled for a target, it should
->>>>>> be possible to override it with a CMDLINE argument
->>>>>>            They do something similar for the CMDLINE; copying it 
->>>>>> into the vmlinux, to allow a smaller boot
->>>
->>
-> 
-
+diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+index 6498e1fdbb33..97f46adac85f 100644
+--- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
++++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+@@ -78,6 +78,7 @@ second cell is the clock index for the specified type.
+ 	2	hwaccel		index (n in CLKCGnHWACSR)
+ 	3	fman		0 for fm1, 1 for fm2
+ 	4	platform pll	0=pll, 1=pll/2, 2=pll/3, 3=pll/4
++				4=pll/5, 5=pll/6, 6=pll/7, 7=pll/8
+ 	5	coreclk		must be 0
+ 
+ 3. Example
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index b0ea753b8709..3a1812f65e5d 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -41,7 +41,7 @@ struct clockgen_pll_div {
+ };
+ 
+ struct clockgen_pll {
+-	struct clockgen_pll_div div[4];
++	struct clockgen_pll_div div[8];
+ };
+ 
+ #define CLKSEL_VALID	1
+@@ -1127,6 +1127,13 @@ static void __init create_one_pll(struct clockgen *cg, int idx)
+ 		struct clk *clk;
+ 		int ret;
+ 
++		/*
++		 * For platform PLL, there are 8 divider clocks.
++		 * For core PLL, there are 4 divider clocks at most.
++		 */
++		if (idx != PLATFORM_PLL && i >= 4)
++			break;
++
+ 		snprintf(pll->div[i].name, sizeof(pll->div[i].name),
+ 			 "cg-pll%d-div%d", idx, i + 1);
+ 
 -- 
-Best Regards
-Ulf Samuelsson
+2.14.1
+
