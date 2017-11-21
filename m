@@ -1,286 +1,166 @@
-From: Ulf Samuelsson <linux-kernel-AoFPY8dbyRPQT0dZR+AlfA@public.gmane.org>
-Subject: Re: RFC: Copying Device Tree File into reserved area of VMLINUX
- before deployment
-Date: Tue, 21 Nov 2017 13:02:07 +0100
-Message-ID: <e8bd1d93-6893-1db5-c92c-d9f6e2a72336@emagii.com>
-References: <0b31e22b-202f-6fca-28f2-e16e6af6c6b7@emagii.com>
- <a0f9d598-04af-fddd-58ad-09db10ec19da@gmail.com>
- <fe7925f3-30d4-ec03-a6c5-61a8644dcdfe@gmail.com>
- <ee33abcc-8d23-8b4c-e3ef-7adce8495ef3@emagii.com>
- <0e54f9f0-1226-7f2e-3143-ea4e450058e6@gmail.com>
- <872e81dc-82ba-f838-c4f8-88d2208d23d2@emagii.com>
- <4d2f0bf4-d49a-27bc-75aa-11c78bc074fa@emagii.com>
-Reply-To: linux-kernel-AoFPY8dbyRPQT0dZR+AlfA@public.gmane.org
+From: Minas Harutyunyan <Minas.Harutyunyan-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Fix fifo size for EP 6,7
+Date: Tue, 21 Nov 2017 12:02:32 +0000
+Message-ID: <410670D7E743164D87FA6160E7907A560113A41084@am04wembxa.internal.synopsys.com>
+References: <1507371414-21688-1-git-send-email-stefan.wahren@i2se.com>
+ <160210128.18582.1509137904239@email.1und1.de> <871slkw3ms.fsf@anholt.net>
+ <1506055926.93787.1509439381859@email.1und1.de>
+ <2056429546.196128.1510871632211@email.1und1.de>
+ <410670D7E743164D87FA6160E7907A560113A3F8F0@am04wembxa.internal.synopsys.com>
+ <2145990636.312534.1511036500613@email.1und1.de>
+ <410670D7E743164D87FA6160E7907A560113A409A8@am04wembxa.internal.synopsys.com>
+ <56581c3c-9159-8e07-288b-5ccc793e1fa1@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed;
+        boundary="_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4d2f0bf4-d49a-27bc-75aa-11c78bc074fa-AoFPY8dbyRPQT0dZR+AlfA@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Minas Harutyunyan <Minas.Harutyunyan-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+--_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
+On 11/20/2017 4:48 PM, Stefan Wahren wrote:=0A=
+> Hi Minas,=0A=
+> =0A=
+> Am 20.11.2017 um 12:59 schrieb Minas Harutyunyan:=0A=
+>> Hi Stefan,=0A=
+>> Looks like I know cause of issue... but I'm overloaded today and will ab=
+le to check it tomorrow. Sorry for delay.=0A=
+> =0A=
+> thanks for your reply. There is no need to hurry, because the merge=0A=
+> window isn't open yet, but i like to get this fixed for the next kernel=
+=0A=
+> release.=0A=
+> =0A=
+> I have the suspicion this is related to the fact that u-boot already=0A=
+> initialize the USB IP, before dwc2 driver is loaded.=0A=
+> =0A=
+> Regards=0A=
+> Stefan=0A=
+> =0A=
+>>=0A=
+>> Thanks,=0A=
+>> Minas=0A=
+>>=0A=
+> =0A=
+> =0A=
+Hi Stefan,=0A=
+=0A=
+We have prepared patch for this issue in July-August'17.=0A=
+Find attached 2 patch files. Please apply patches and test. If issue =0A=
+gone, we will send these patches to LKML by regular flow.=0A=
+=0A=
+Thanks,=0A=
+Minas=0A=
+=0A=
 
-On 2017-11-21 07:19, Ulf Samuelsson wrote:
-> 
-> 
-> On 2017-11-21 00:09, Ulf Samuelsson wrote:
->>
->>
->> On 2017-11-20 22:39, Frank Rowand wrote:
->>> Hi Ulf, Rob,
->>>
->>> On 11/20/17 15:19, Ulf Samuelsson wrote:
->>>>
->>>>
->>>> On 2017-11-20 05:32, Frank Rowand wrote:
->>>>> Hi Ulf,
->>>>>
->>>>>
->>>>> On 11/19/17 23:23, Frank Rowand wrote:
->>>>>> adding devicetree list, devicetree maintainers
->>>>>>
->>>>>> On 11/18/17 12:59, Ulf Samuelsson wrote:
->>>>>>> I noticed when checking out the OpenWRT support for the board 
->>>>>>> that they have a method to avoid having to pass the device tree 
->>>>>>> address to the kernel, and can thus boot device tree based 
->>>>>>> kernels with U-boots that
->>>>>>> does not support device trees.
->>>>>>>
->>>>>>> Is this something that would be considered useful for including 
->>>>>>> in mainstream:
->>>>>>>
->>>>>>> BACKGROUND:
->>>>>>> Trying to load a yocto kernel into a MIPS target (MT7620A based),
->>>>>>> and the U-Boot is more than stupid.
->>>>>>> Does not support the "run" command as an example.
->>>>>>> They modified the U-Boot MAGIC Word to complicate things.
->>>>>>> The U-Boot is not configured to use device tree files.
->>>>>>> The board runs a 2.6 kernel right now.
->>>>>>>
->>>>>>> Several attempts by me a and others to rebuild U-Boot according to
->>>>>>> the H/W vendors source code and build instructions results in a
->>>>>>> bricked unit. Bricked units cannot be recovered.
->>>>>
->>>>> Hopefully you have brought this to the attention of the vendor.  
->>>>> U-Boot
->>>>> is GPL v2 (or in some ways possibly GPL v2 or later), so if you can 
->>>>> not
->>>>> build U-Boot that is equivalent to the binary U-Boot they shipped, the
->>>>> vendor may want to ensure that they are shipping the proper source and
->>>>> build instructions.
->>>>>
->>>>
->>>> I am not the one in contact with the H/W vendor.
->>>> The U-boot is pretty old, and from comments from those
->>>> in contact with them, the U-Boot knowledge at the H/W vendor
->>>> is minimal at best.
->>>> It might even be that they program an U-boot where the upgrade of 
->>>> the U-boot is broken...
->>>>
->>>>
->>>>>
->>>>>>> Not my choice of H/W, so I cannot change it.
->>>>>>>
->>>>>>>
->>>>>>> ===================================================================
->>>>>>> OPENWRT:
->>>>>>> I noticed when checking out the OpenWRT support for the board that
->>>>>>> they have a method to avoid having to pass the device tree address
->>>>>>> to the kernel, and can thus boot device tree based kernels with
->>>>>>> U-boots that does not support device trees.
->>>>>>>
->>>>>>> What they do is to reserve 16 kB of kernel space, and tag it with
->>>>>>> an ASCII string "OWRTDTB:". After the kernel and dtb is built, a
->>>>>>> utility "patch-dtb" will update the vmlinux binary, copying in the
->>>>>>> device tree file.
->>>>>>>
->>>>>>> ===================================================================
->>>>>>> It would be useful to me, and I could of course patch the
->>>>>>> mainstream kernel, but first I would like to check if this is of
->>>>>>> interest for mainstream.
->>>>>
->>>>> Not in this form.  Hard coding a fixed size area in the boot image
->>>>> to contain the FDT (aka DTB) is a non-starter.
->>>>
->>>> OK, Is it the fixed size, which is a problem?
->>>
->>> Yes, it is the fixed size which is a problem.
->>
->> The size can of course be changed, by setting the size configuration 
->> option (DTB_SIZE).
->> OpenWRT does not support that, but I think it needs to be there for a 
->> generic option (but You have to recompile the kernel to increase the 
->> size).
->>
->> One problem is that you normally compile and link the kernel before you
->> compile the dtbs, so you do not know what size is until afterwards.
->>
-> Found this link:    https://csl.name/post/embedding-binary-data/
-> 
-> =======================================
-> ...
-> Let's say you have an image target.dtb and want to embed it into your 
-> application. You can create an object file with
-> 
-> 
-> image_dtb.o:    <target dtb>
->      mv <target dtb>   image_dtb
->      ld -r -b binary image_dtb -o image_dtb.o
-> 
-> The object file will have three symbols in it,
-> 
-> $ nm cat.o
-> 0000000000000512 D _binary_image_dtb_end
-> 0000000000000512 A _binary_image_dtb_size
-> 0000000000000000 D _binary_image_dtb_start
-> =======================================
-> 
-> This assumes that the dtbs are built before the kernel is linked.
-> The copy step is neccessary, since the generated names are
-> taken from the name of the "in file".
-> (Would have been better, if they used the "out file")
-> 
-> Otherwise you can create an assembler file which "incbin's" the dtb file.
-> 
+--_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_
+Content-Type: text/plain; name="8eff278.diff"
+Content-Description: 8eff278.diff
+Content-Disposition: attachment; filename="8eff278.diff"; size=2553;
+	creation-date="Tue, 21 Nov 2017 12:02:32 GMT";
+	modification-date="Tue, 21 Nov 2017 12:02:32 GMT"
+Content-Transfer-Encoding: base64
 
-Just checked the kernel source, and it appears that the discussion is 
-somewhat redundant, since the support is already in the linux kernel
-for some MIPS boards
+RnJvbSA4ZWZmMjc4NTUyYWFmMjQ4MTYxZGY5YWYwNGY4YjkzZjAzNTI2YmNkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBHZXZvcmcgU2FoYWt5YW4gPHNhaGFreWFuQHN5bm9wc3lzLmNv
+bT4KRGF0ZTogTW9uLCAzMSBKdWwgMjAxNyAxNzoxOTo1MSArMDQwMApTdWJqZWN0OiBbUEFUQ0hd
+IHVzYjogZHdjMjogRml4IFR4RklGTyBzZXR1cCBpc3N1ZQoKSW4gaG9zdCBtb2RlIHJlYWRpbmcg
+ZnJvbSBEUFRYU0labiByZXR1cm5pbmcgaW52YWxpZCB2YWx1ZSgwKSBpbgpkd2MyX2NoZWNrX3Bh
+cmFtX3R4X2ZpZm9fc2l6ZXMgZnVuY3Rpb24uCgpBZGRlZCBnX3R4X2ZpZm9fc2l6ZSBhcnJheSBp
+biBkd2MyX2h3X3BhcmFtcyBzdHJ1Y3R1cmUgaW4gd2hpY2ggc3RvcmVkCnBvd2VyIG9uIHJlc2V0
+IHZhbHVzIG9mIERQVFhTSVpuIHJlZ2lzdGVycyBpbiBkZXZpY2UgbW9kZSAoZm9yY2VkIHRvCmRl
+dmljZSkuCgpVcGRhdGVkIGR3YzJfZ2V0X2h3cGFyYW1zIGZ1bmN0aW9uIHRvIHdyaXRlIERQVFhG
+U0labiB0byBhcnJheS4KCk1vZHlmaWVkIGR3YzJfY2hlY2tfcGFyYW1fdHhfZmlmb19zaXplcyBm
+dW5jdGlvbiBhY2NvcmRpbmdseS4KCkNoYW5nZS1JZDogSTYxZDNkYjc1M2IxYmMwNmYwZjJjYWY0
+MGRmMzUwYTA5NjU1ZjE4ZmQKU2lnbmVkLW9mZi1ieTogR2V2b3JnIFNhaGFreWFuIDxzYWhha3lh
+bkBzeW5vcHN5cy5jb20+Ci0tLQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2R3YzIvY29yZS5o
+IGIvZHJpdmVycy91c2IvZHdjMi9jb3JlLmgKaW5kZXggNTAyOWRkZS4uM2I3MWI0OSAxMDA2NDQK
+LS0tIGEvZHJpdmVycy91c2IvZHdjMi9jb3JlLmgKKysrIGIvZHJpdmVycy91c2IvZHdjMi9jb3Jl
+LmgKQEAgLTUzMyw2ICs1MzMsNyBAQAogCXVuc2lnbmVkIHV0bWlfcGh5X2RhdGFfd2lkdGg6MjsK
+IAl1MzIgc25wc2lkOwogCXUzMiBkZXZfZXBfZGlyczsKKwl1MzIgZ190eF9maWZvX3NpemVbTUFY
+X0VQU19DSEFOTkVMU107CiB9OwogCiAvKiBTaXplIG9mIGNvbnRyb2wgYW5kIEVQMCBidWZmZXJz
+ICovCmRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9kd2MyL3BhcmFtcy5jIGIvZHJpdmVycy91c2Iv
+ZHdjMi9wYXJhbXMuYwppbmRleCA3MDE1MTZlLi43OTA4MGE5IDEwMDY0NAotLS0gYS9kcml2ZXJz
+L3VzYi9kd2MyL3BhcmFtcy5jCisrKyBiL2RyaXZlcnMvdXNiL2R3YzIvcGFyYW1zLmMKQEAgLTQ1
+Miw3ICs0NTIsNiBAQAogCWludCBmaWZvOwogCWludCBtaW47CiAJdTMyIHRvdGFsID0gMDsKLQl1
+MzIgZHB0eGZzem47CiAKIAlmaWZvX2NvdW50ID0gZHdjMl9oc290Z190eF9maWZvX2NvdW50KGhz
+b3RnKTsKIAltaW4gPSBoc290Zy0+aHdfcGFyYW1zLmVuX211bHRpcGxlX3R4X2ZpZm8gPyAxNiA6
+IDQ7CkBAIC00NjcsMTUgKzQ2NiwxNSBAQAogCX0KIAogCWZvciAoZmlmbyA9IDE7IGZpZm8gPD0g
+Zmlmb19jb3VudDsgZmlmbysrKSB7Ci0JCWRwdHhmc3puID0gKGR3YzJfcmVhZGwoaHNvdGcsIERQ
+VFhGU0laTihmaWZvKSkgJgotCQkJRklGT1NJWkVfREVQVEhfTUFTSykgPj4gRklGT1NJWkVfREVQ
+VEhfU0hJRlQ7CiAKIAkJaWYgKGhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPCBt
+aW4gfHwKLQkJICAgIGhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPiAgZHB0eGZz
+em4pIHsKKwkJICAgIGhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPgorCQkgICAg
+aHNvdGctPmh3X3BhcmFtcy5nX3R4X2ZpZm9fc2l6ZVtmaWZvXSkgewogCQkJZGV2X3dhcm4oaHNv
+dGctPmRldiwgIiVzOiBJbnZhbGlkIHBhcmFtZXRlciBnX3R4X2ZpZm9fc2l6ZVslZF09JWRcbiIs
+CiAJCQkJIF9fZnVuY19fLCBmaWZvLAogCQkJCSBoc290Zy0+cGFyYW1zLmdfdHhfZmlmb19zaXpl
+W2ZpZm9dKTsKLQkJCWhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPSBkcHR4ZnN6
+bjsKKwkJCWhzb3RnLT5wYXJhbXMuZ190eF9maWZvX3NpemVbZmlmb10gPQorCQkgICAgaHNvdGct
+Pmh3X3BhcmFtcy5nX3R4X2ZpZm9fc2l6ZVtmaWZvXTsKIAkJfQogCX0KIH0KQEAgLTYwNyw2ICs2
+MDYsNyBAQAogewogCXN0cnVjdCBkd2MyX2h3X3BhcmFtcyAqaHcgPSAmaHNvdGctPmh3X3BhcmFt
+czsKIAl1bnNpZ25lZCBpbnQgd2lkdGg7CisJaW50IGZpZm8sIGZpZm9fY291bnQ7CiAJdTMyIGh3
+Y2ZnMSwgaHdjZmcyLCBod2NmZzMsIGh3Y2ZnNDsKIAl1MzIgZ3J4ZnNpejsKIApAQCAtNjc1LDYg
+KzY3NSwxMiBAQAogCWh3LT5yeF9maWZvX3NpemUgPSAoZ3J4ZnNpeiAmIEdSWEZTSVpfREVQVEhf
+TUFTSykgPj4KIAkJCQlHUlhGU0laX0RFUFRIX1NISUZUOwogCisJZmlmb19jb3VudCA9IGR3YzJf
+aHNvdGdfdHhfZmlmb19jb3VudChoc290Zyk7CisKKwlmb3IgKGZpZm8gPSAxOyBmaWZvIDw9IGZp
+Zm9fY291bnQ7IGZpZm8rKykgeworCQlody0+Z190eF9maWZvX3NpemVbZmlmb10gPSAoZHdjMl9y
+ZWFkbChoc290ZywgRFBUWEZTSVpOKGZpZm8pKSAmCisJCQlGSUZPU0laRV9ERVBUSF9NQVNLKSA+
+PiBGSUZPU0laRV9ERVBUSF9TSElGVDsKKwl9CiAJcmV0dXJuIDA7CiB9CiAK
 
-arch/mips/Kconfig:
-	config MIPS_ELF_APPENDED_DTB
-		bool "vmlinux"
-		help
-		  With this option, the boot code will look for a device tree binary
-		  DTB) included in the vmlinux ELF section .appended_dtb. By default
-		  it is empty and the DTB can be appended using binutils command
-		  objcopy:
+--_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_
+Content-Type: text/plain; name="c6f7e1c.diff"
+Content-Description: c6f7e1c.diff
+Content-Disposition: attachment; filename="c6f7e1c.diff"; size=2138;
+	creation-date="Tue, 21 Nov 2017 12:02:32 GMT";
+	modification-date="Tue, 21 Nov 2017 12:02:32 GMT"
+Content-Transfer-Encoding: base64
 
-		    objcopy --update-section .appended_dtb=<filename>.dtb vmlinux
+RnJvbSBjNmY3ZTFjNzkwYzRlZjMwYmE4MThiMTE5YTE3N2ZkY2Q5Y2E3YjM0IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBHZXZvcmcgU2FoYWt5YW4gPHNhaGFreWFuQHN5bm9wc3lzLmNv
+bT4KRGF0ZTogVHVlLCAwOCBBdWcgMjAxNyAxNTo0NTozMiArMDQwMApTdWJqZWN0OiBbUEFUQ0hd
+IHVzYjogZHdjMjogRml4IHR4X2ZpZm9fdG90YWxfZGVwdGggY2FsY3VsYXRpb24KClJlbW92ZWQg
+ZXBfaW5mbyBzdWJ0cmFjdGlvbiBkdXJpbmcgY2FsY3VsYXRpb24gdHhfYWRkcl9tYXggaW4KZHdj
+Ml9oc290Z190eF9maWZvX3RvdGFsX2RlcHRoIGZ1bmN0aW9uLCBiZWNhdXNlIGl0cyBhbHJlYWR5
+CmRvbmUgaW4gaGFyZHdhcmUuCgpBbHNvIHJlbW92ZWQgZHdjMl9oc290Z19lcF9pbmZvX3NpemUg
+ZnVuY3Rpb24gYXMgbm8gbW9yZSBuZWVkLgoKQ2hhbmdlLUlkOiBJZjlhOWY4YWIxMTVhNmU5OTg3
+MzZhYjk5MTA1NmYzNzRlYWI5Zjc0NwpTaWduZWQtb2ZmLWJ5OiBHZXZvcmcgU2FoYWt5YW4gPHNh
+aGFreWFuQHN5bm9wc3lzLmNvbT4KLS0tCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMi9n
+YWRnZXQuYyBiL2RyaXZlcnMvdXNiL2R3YzIvZ2FkZ2V0LmMKaW5kZXggOThhNGE3OS4uM2M1MmY0
+NiAxMDA2NDQKLS0tIGEvZHJpdmVycy91c2IvZHdjMi9nYWRnZXQuYworKysgYi9kcml2ZXJzL3Vz
+Yi9kd2MyL2dhZGdldC5jCkBAIC0yMDYsNDcgKzIwNiwxMSBAQAogfQogCiAvKioKLSAqIGR3YzJf
+aHNvdGdfZXBfaW5mb19zaXplIC0gcmV0dXJuIEVuZHBvaW50IEluZm8gQ29udHJvbCBibG9jayBz
+aXplIGluIERXT1JEcwotICovCi1zdGF0aWMgaW50IGR3YzJfaHNvdGdfZXBfaW5mb19zaXplKHN0
+cnVjdCBkd2MyX2hzb3RnICpoc290ZykKLXsKLQlpbnQgdmFsID0gMDsKLQlpbnQgaTsKLQl1MzIg
+ZXBfZGlyczsKLQotCS8qCi0JICogRG9uJ3QgbmVlZCBhZGRpdGlvbmFsIHNwYWNlIGZvciBlcCBp
+bmZvIGNvbnRyb2wgcmVnaXN0ZXJzIGluCi0JICogc2xhdmUgbW9kZS4KLQkgKi8KLQlpZiAoIXVz
+aW5nX2RtYShoc290ZykpIHsKLQkJZGV2X2RiZyhoc290Zy0+ZGV2LCAiQnVmZmVyIERNQSBlcCBp
+bmZvIHNpemUgMFxuIik7Ci0JCXJldHVybiAwOwotCX0KLQotCS8qCi0JICogQnVmZmVyIERNQSBt
+b2RlIC0gMSBsb2NhdGlvbiBwZXIgZW5kcG9pdAotCSAqIERlc2NyaXB0b3IgRE1BIG1vZGUgLSA0
+IGxvY2F0aW9ucyBwZXIgZW5kcG9pbnQKLQkgKi8KLQllcF9kaXJzID0gaHNvdGctPmh3X3BhcmFt
+cy5kZXZfZXBfZGlyczsKLQotCWZvciAoaSA9IDA7IGkgPD0gaHNvdGctPmh3X3BhcmFtcy5udW1f
+ZGV2X2VwOyBpKyspIHsKLQkJdmFsICs9IGVwX2RpcnMgJiAzID8gMSA6IDI7Ci0JCWVwX2RpcnMg
+Pj49IDI7Ci0JfQotCi0JaWYgKHVzaW5nX2Rlc2NfZG1hKGhzb3RnKSkKLQkJdmFsID0gdmFsICog
+NDsKLQotCXJldHVybiB2YWw7Ci19Ci0KLS8qKgogICogZHdjMl9oc290Z190eF9maWZvX3RvdGFs
+X2RlcHRoIC0gcmV0dXJuIHRvdGFsIEZJRk8gZGVwdGggYXZhaWxhYmxlIGZvcgogICogZGV2aWNl
+IG1vZGUgVFggRklGT3MKICAqLwogaW50IGR3YzJfaHNvdGdfdHhfZmlmb190b3RhbF9kZXB0aChz
+dHJ1Y3QgZHdjMl9oc290ZyAqaHNvdGcpCiB7Ci0JaW50IGVwX2luZm9fc2l6ZTsKIAlpbnQgYWRk
+cjsKIAlpbnQgdHhfYWRkcl9tYXg7CiAJdTMyIG5wX3R4X2ZpZm9fc2l6ZTsKQEAgLTI1NCw5ICsy
+MTgsNyBAQAogCW5wX3R4X2ZpZm9fc2l6ZSA9IG1pbl90KHUzMiwgaHNvdGctPmh3X3BhcmFtcy5k
+ZXZfbnBlcmlvX3R4X2ZpZm9fc2l6ZSwKIAkJCQloc290Zy0+cGFyYW1zLmdfbnBfdHhfZmlmb19z
+aXplKTsKIAotCS8qIEdldCBFbmRwb2ludCBJbmZvIENvbnRyb2wgYmxvY2sgc2l6ZSBpbiBEV09S
+RHMuICovCi0JZXBfaW5mb19zaXplID0gZHdjMl9oc290Z19lcF9pbmZvX3NpemUoaHNvdGcpOwot
+CXR4X2FkZHJfbWF4ID0gaHNvdGctPmh3X3BhcmFtcy50b3RhbF9maWZvX3NpemUgLSBlcF9pbmZv
+X3NpemU7CisJdHhfYWRkcl9tYXggPSBoc290Zy0+aHdfcGFyYW1zLnRvdGFsX2ZpZm9fc2l6ZTsK
+IAogCWFkZHIgPSBoc290Zy0+cGFyYW1zLmdfcnhfZmlmb19zaXplICsgbnBfdHhfZmlmb19zaXpl
+OwogCWlmICh0eF9hZGRyX21heCA8PSBhZGRyKQo=
 
-		  This is meant as a backward compatiblity convenience for those
-		  systems with a bootloader that can't be upgraded to accommodate
-		  the documented boot protocol using a device tree.
-
-arch/mips/kernel/setup.c:
-#ifdef CONFIG_MIPS_ELF_APPENDED_DTB
-const char __section(.appended_dtb) __appended_dtb[0x100000];
-#endif /* CONFIG_MIPS_ELF_APPENDED_DTB */
-
-arch/mips/bmips/setup.c
-
-#ifdef CONFIG_MIPS_ELF_APPENDED_DTB
-	if (!fdt_check_header(&__appended_dtb))
-		dtb = (void *)&__appended_dtb;
-	else
-#endif
-
-
-
-
-> 
-> 
-> 
->>
->>>
->>>> Is generally combining an image with a DTB into a single file also a 
->>>> non-starter?
->>>
->>> Can you jump in here Rob?  My understanding is that 
->>> CONFIG_ARM_APPENDED_DTB,
->>> which is the ARM based solution that Mark mentioned, was envisioned as a
->>> temporary stop gap until boot loaders could add devicetree support.  
->>> I don't
->>> know if there is a desire to limit this approach or to remove it in the
->>> future.
->>>
->>> I'm not sure why this feature should not be permanently supported. 
->>> I'm being
->>> cautious, just in case I'm overlooking or missing an important issue, 
->>> thus
->>> asking for Rob's input.  I do know that this feature does not advance 
->>> the
->>> desires of people who want a single kernel (single boot image?) that 
->>> runs on
->>> many different systems, instead of a boot image that is unique to each
->>> target platform.  But I don't see why that desire precludes also having
->>> an option to have a target specific boot image.
->> The main reason to keep it is when you are really constrained for memory.
->> The U-Boot on the board is 96 kB, which is just a fraction of a more 
->> normal U-Boot.
->> Also, the u-boot is old.
->>
->>
->>>
->>> -Frank
->>>
->>>
->>>>>
->>>>> And again, I would first approach the H/W vendor before trying to
->>>>> come up with a work around like this.
->>>>>
->>>>>
->>>>>>> I envisage the support would look something like:
->>>>>>>
->>>>>>> ============
->>>>>>> Kconfig.
->>>>>>> config MIPS
->>>>>>>       select    HAVE_IMAGE_DTB
->>>>>>>
->>>>>>> config    HAVE_IMAGE_DTB
->>>>>>>       bool
->>>>>>>
->>>>>>> if HAVE_IMAGE_DTB
->>>>>>> config     IMAGE_DTB
->>>>>>>       bool    "Allocated space for DTB within image
->>>>>>>
->>>>>>> config    DTB_SIZE
->>>>>>>       int    "DTB space (kB)
->>>>>>>
->>>>>>> config    DTB_TAG
->>>>>>>       string    "DTB space tag"
->>>>>>>       default    "OWRTDTB:"
->>>>>>> endif
->>>>>>>
->>>>>>> ============
->>>>>>> Some Makefile
->>>>>>> obj-$(CONFIG_INCLUDE_DTB) += image_dtb.o
->>>>>>>
->>>>>>> ============
->>>>>>> image_dtb.S:
->>>>>>>       .text
->>>>>>>       .align    5
->>>>>>>       .ascii    CONFIG_DTB_TAG
->>>>>>>       EXPORT(__image_dtb)
->>>>>>>       .fill    DTB_SIZE * 1024
->>>>>>>
->>>>>>> ===================
->>>>>>> arch/mips/xxx/of.c:
->>>>>>>
->>>>>>> #if    defined(CONFIG_IMAGE_DTB)
->>>>>>>       if (<conditions to boot from dtb_space>)
->>>>>>>           __dt_setup_arch(__dtb_start);
->>>>>>>       else
->>>>>>>           __dt_setup_arch(&__image_dtb);
->>>>>>> #else
->>>>>>>       __dt_setup_arch(__dtb_start);
->>>>>>> #endif
->>>>>>>
->>>>>>> I imagine that if the support is enabled for a target, it should
->>>>>>> be possible to override it with a CMDLINE argument
->>>>>>>            They do something similar for the CMDLINE; copying it 
->>>>>>> into the vmlinux, to allow a smaller boot
->>>>
->>>
->>
-> 
-
--- 
-Best Regards
-Ulf Samuelsson
+--_003_410670D7E743164D87FA6160E7907A560113A41084am04wembxaint_--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
