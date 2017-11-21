@@ -1,173 +1,129 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 4/5] pinctrl: mcp23s08: configure irq polarity using
- irq data
-Date: Tue, 21 Nov 2017 17:30:04 +0100
-Message-ID: <20171121163004.luw5wol2gordgom2@earth>
-References: <1511252491-79952-1-git-send-email-preid@electromag.com.au>
- <c191a9d6-3ebb-e95b-7342-aa18598ddf2b@electromag.com.au>
- <20171121152142.zg3r57gl2kenjwgi@earth>
- <2197074.iKMxQHLgca@ws-stein>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: RFC: Copying Device Tree File into reserved area of VMLINUX
+ before deployment
+Date: Tue, 21 Nov 2017 11:09:33 -0600
+Message-ID: <CAL_JsqJZbBDcp_GCNjW8mpPTi2Gv9J5bkbb5co0wRFxYf4aPpw@mail.gmail.com>
+References: <0b31e22b-202f-6fca-28f2-e16e6af6c6b7@emagii.com>
+ <a0f9d598-04af-fddd-58ad-09db10ec19da@gmail.com> <fe7925f3-30d4-ec03-a6c5-61a8644dcdfe@gmail.com>
+ <ee33abcc-8d23-8b4c-e3ef-7adce8495ef3@emagii.com> <0e54f9f0-1226-7f2e-3143-ea4e450058e6@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="duxiiwsryoxxov43"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2197074.iKMxQHLgca@ws-stein>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Stein <alexander.stein@systec-electronic.com>
-Cc: Phil Reid <preid@electromag.com.au>, robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0e54f9f0-1226-7f2e-3143-ea4e450058e6@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: linux-kernel@emagii.com, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---duxiiwsryoxxov43
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Nov 21, 2017 at 05:04:51PM +0100, Alexander Stein wrote:
-> Hi,
->=20
-> On Tuesday, November 21, 2017, 4:21:42 PM CET Sebastian Reichel wrote:
-> >[...]
-> > --------------------------------------------
-> > gpio: host-gpio {
-> >     random-properties;
-> > }
-> >=20
-> > inv: line-inverter {
-> >     /*
-> >      * configure the gpio controller input to be active low
-> >      * and the inverter interrupt output to be active low
-> >      */
-> >     interrupts =3D <&gpio ACTIVE_LOW>;
-> > };
-> >=20
-> > mcp23xxx {
-> >     random-properties;
-> >=20
-> >     /*
-> >      * configure the chip interrupt output to be active high=20
-> >      * and the inverter interrupt input to be active high
-> >      */
-> >     interrupts =3D <&inv ACTIVE_HIGH>;
-> > }
-> > --------------------------------------------
-> >=20
-> > versus
-> >=20
-> > --------------------------------------------
-> > gpio: host-gpio {
-> >     random-properties;
-> > }
-> >=20
-> > mcp23xxx {
-> >     random-properties;
-> >=20
-> >     /* configure host interrupt input pin to be active low */
-> >     interrupts =3D <&gpio ACTIVE_LOW>;
-> >=20
-> >     /* configure chip interrupt output pin to be active high */
-> >     microchip,irq-active-high;
-> > }
-> > --------------------------------------------
-> >=20
-> > I think this is something, that Rob should comment on. Obviously at
-> > least in the mainline kernel nobody implemented the first solution
-> > (since there is no fitting interrupt-invert driver), but there are
-> > a few instances of the second variant. On the other hand the first
-> > solution describes the hardware more detailed.
-> >
-> > > And if someone is relying on that implicit behaviour are we allowed
-> > > to break things? Probably ok with this one as it's currently not poss=
-ible
-> > > due to code patch 1 removes.
-> > >=20
-> > > If we need to model the invert to get the patches accepted I look int=
-o that.
-> > > I don't actually need it for my system as I can set open-drain with o=
-verrides
-> > > the active-high control on this device, while have active high irq co=
-nsumer.
-> > > :)
-> >=20
-> > IMHO the explicit line-inverter is a bit over-engineered and
-> > implicit line-inverter is enough, but I'm fine with both solutions.
-> > I think the DT binding maintainers should comment on this though,
-> > since it's pretty much a core decision about interrupt specifiers.
->=20
-> Once you have a hardware, where one of several IRQ users is not attached =
-to the
-> inverter you need this inverter node anyway, caused by the mixed polariti=
-es.
-> Also some IRQ controllers, like ARM GIC, only support rising edge interru=
-pts
-> (also level high).
+On Mon, Nov 20, 2017 at 3:39 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> Hi Ulf, Rob,
 >
-> This might get important if there are dedicated IRQ pads connected to sev=
-eral
-> users.
+> On 11/20/17 15:19, Ulf Samuelsson wrote:
+>>
+>>
+>> On 2017-11-20 05:32, Frank Rowand wrote:
+>>> Hi Ulf,
+>>>
+>>>
+>>> On 11/19/17 23:23, Frank Rowand wrote:
+>>>> adding devicetree list, devicetree maintainers
+>>>>
+>>>> On 11/18/17 12:59, Ulf Samuelsson wrote:
+>>>>> I noticed when checking out the OpenWRT support for the board that they have a method to avoid having to pass the device tree address to the kernel, and can thus boot device tree based kernels with U-boots that
+>>>>> does not support device trees.
+>>>>>
+>>>>> Is this something that would be considered useful for including in mainstream:
+>>>>>
+>>>>> BACKGROUND:
+>>>>> Trying to load a yocto kernel into a MIPS target (MT7620A based),
+>>>>> and the U-Boot is more than stupid.
+>>>>> Does not support the "run" command as an example.
+>>>>> They modified the U-Boot MAGIC Word to complicate things.
+>>>>> The U-Boot is not configured to use device tree files.
+>>>>> The board runs a 2.6 kernel right now.
+>>>>>
+>>>>> Several attempts by me a and others to rebuild U-Boot according to
+>>>>> the H/W vendors source code and build instructions results in a
+>>>>> bricked unit. Bricked units cannot be recovered.
+>>>
+>>> Hopefully you have brought this to the attention of the vendor.  U-Boot
+>>> is GPL v2 (or in some ways possibly GPL v2 or later), so if you can not
+>>> build U-Boot that is equivalent to the binary U-Boot they shipped, the
+>>> vendor may want to ensure that they are shipping the proper source and
+>>> build instructions.
+>>>
+>>
+>> I am not the one in contact with the H/W vendor.
+>> The U-boot is pretty old, and from comments from those
+>> in contact with them, the U-Boot knowledge at the H/W vendor
+>> is minimal at best.
+>> It might even be that they program an U-boot where the upgrade of the U-boot is broken...
+>>
+>>
+>>>
+>>>>> Not my choice of H/W, so I cannot change it.
+>>>>>
+>>>>>
+>>>>> ===================================================================
+>>>>> OPENWRT:
+>>>>> I noticed when checking out the OpenWRT support for the board that
+>>>>> they have a method to avoid having to pass the device tree address
+>>>>> to the kernel, and can thus boot device tree based kernels with
+>>>>> U-boots that does not support device trees.
+>>>>>
+>>>>> What they do is to reserve 16 kB of kernel space, and tag it with
+>>>>> an ASCII string "OWRTDTB:". After the kernel and dtb is built, a
+>>>>> utility "patch-dtb" will update the vmlinux binary, copying in the
+>>>>> device tree file.
+>>>>>
+>>>>> ===================================================================
+>>>>> It would be useful to me, and I could of course patch the
+>>>>> mainstream kernel, but first I would like to check if this is of
+>>>>> interest for mainstream.
+>>>
+>>> Not in this form.  Hard coding a fixed size area in the boot image
+>>> to contain the FDT (aka DTB) is a non-starter.
+>>
+>> OK, Is it the fixed size, which is a problem?
+>
+> Yes, it is the fixed size which is a problem.
+>
+>> Is generally combining an image with a DTB into a single file also a non-starter?
+>
+> Can you jump in here Rob?  My understanding is that CONFIG_ARM_APPENDED_DTB,
+> which is the ARM based solution that Mark mentioned, was envisioned as a
+> temporary stop gap until boot loaders could add devicetree support.  I don't
+> know if there is a desire to limit this approach or to remove it in the
+> future.
 
-Both binding formats support this use-case as far as I can tell.
-Since you seem to understand how it looks like with the inverter
-node here is an example without it:
+Yes, but I doubt we'll ever remove it. Most android devices use it (or
+the multiple appended dtb stuff Qcom did) and there's out of tree
+patches to do appended dtb on arm64. However, arm64 is a done a bit
+differently in that the bootloader has to find the dtb rather than the
+kernel (or really the decompressor). The purpose for arm64 is people
+like the single kernel+dtb image, not legacy bootloader support as DT
+support was there from day 1.
 
-irqctrl: irq-controller {
-    random-properties;
-}
+Another option is to do what's called an impedance matcher like this[1].
 
-mcp23xxx0 {
-    random-properties;
+> I'm not sure why this feature should not be permanently supported.  I'm being
+> cautious, just in case I'm overlooking or missing an important issue, thus
+> asking for Rob's input.  I do know that this feature does not advance the
+> desires of people who want a single kernel (single boot image?) that runs on
+> many different systems, instead of a boot image that is unique to each
+> target platform.  But I don't see why that desire precludes also having
+> an option to have a target specific boot image.
 
-    /*=20
-     * configure host interrupt input pin to be active high, since
-     * nothing else is supported by the interrupt controller
-     */
-    interrupts =3D <&irqctrl ACTIVE_HIGH>;
+MIPS already supports built-in dtbs which is an in-kernel way to get
+the dtb rather than the decompressor. The addition in this case is
+just putting in a dummy dtb and putting in the real dtb later. I'm not
+sure what MIPS image header looks like, but seems like it should be
+possible to have the "built-in dtb" point to an appended dtb and just
+update sizes in the image file. Then you don't have the fixed size.
 
-    /*
-     * configure chip interrupt output pin to be active low due to
-     * line invert
-     */
-    microchip,irq-active-high;
-}
+But now that I finished writing this, I see there is already appended
+DTB support in MIPS.
 
-mcp23xxx1 {
-    random-properties;
+Rob
 
-    /*=20
-     * shared irq, see description from other chip
-     */
-    interrupts =3D <&irqctrl ACTIVE_HIGH>;
-
-    /*
-     * configure chip interrupt output pin to be active high, since
-     * it's routed through the line invert
-     */
-    /* microchip,irq-active-high; */
-}
-
--- Sebastian
-
---duxiiwsryoxxov43
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAloUVIoACgkQ2O7X88g7
-+poOjBAAjQFqHFC2f2xZbEFcrV/gvI3nONqghMRrWyHirz+I+TyiOFAKtngOk8ZL
-NIY+G3k+jPrFEGgrbHh90ORBfKFBsg/YuGFpNN4vHDQOkmKf+NyvEfhA1oB8zvCM
-fF3E+QgG8U8/GM6ATQEjiHC+YBySXlrSkC9KId1MwtpM66g5ldl6rAHryxThvL5f
-Oe4HwBsB3WvQu54ceLmh0Uz1qKPyRG4EDvqQ8nDpidB2omrQvErb92MmJLInj/dc
-AMA6FcI1b3wQFwss4oTlhKZ0+4m+k+p+b4vQz3Elekp6FZvisjHVnAuO/gAZwmhO
-jlvr1COr6OTmAn6L/wHBqN1i1Ct4ftcSuZar7v0M3d3tPBgDjAx1zmqHreZ+8OBZ
-QhBbU7FNfc5jB+p1tSgWuPjSoi0/eM/oPmkpbwoxBphhfCUPyGPTtX4E7BZb6GBo
-6CY9ItgVdp5ohSCuMc8BHCsytc14Qp0/r/B6ZBiHpfuchpbMj4RtZonVmF0jbC9M
-RD0S5Hc1+9PtJowEG2hWUTzMmIcwsN0/SUGu9bmYxWjDV4SXzmDtrZ/38tOIeEvX
-vUoVyMEk6yKb1sxJ83SJZcoR1NGZAcEzoE+Wad4Z6GnHNMW2VGdFgS+ZufFv7Wkd
-ZSBbFrDsni0+8ZoE+nKbMrU+L5l/UGc0Xf+Nh8staRzHN6DX8to=
-=xvOF
------END PGP SIGNATURE-----
-
---duxiiwsryoxxov43--
+[1] https://github.com/zonque/pxa-impedance-matcher
