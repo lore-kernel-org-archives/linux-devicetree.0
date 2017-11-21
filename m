@@ -1,109 +1,71 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v3 4/5] pinctrl: mcp23s08: configure irq polarity using
- irq data
-Date: Tue, 21 Nov 2017 14:34:34 +0100
-Message-ID: <20171121133434.tuvxtrrbabjk4zeg@earth>
-References: <1511252491-79952-1-git-send-email-preid@electromag.com.au>
- <1511252491-79952-5-git-send-email-preid@electromag.com.au>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
+Date: Tue, 21 Nov 2017 19:11:00 +0530
+Message-ID: <CAMty3ZDQqaiZ0RxtngWdX9PCW2+tzXLVB64heHLjRBeVF2-FCQ@mail.gmail.com>
+References: <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
+ <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter> <20171106122633.5mnqfh6xhmmxr45s@flea>
+ <20171106161306.tq6yeq6bq36ridj3@speedy.hunter> <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg@mail.gmail.com>
+ <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA@mail.gmail.com>
+ <20171107201245.gptgfli54o6eqmrj@speedy.hunter> <CAMty3ZB3aXCsd9VkibjxPdA=BXvXr3nMbGJJvtZN_z2SGVUAXA@mail.gmail.com>
+ <20171113192411.kmohcthzickk4n5v@speedy.hunter> <20171114143941.3qgdlqn4xfarfhql@flea.lan>
+ <20171114185315.gwyacchfct4zvyif@speedy.hunter>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="llqy5ouemfbgccz3"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1511252491-79952-5-git-send-email-preid@electromag.com.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171114185315.gwyacchfct4zvyif-tVm4GcgtBpsfMUw/CLfKLg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 15, 2017 at 12:23 AM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hello Maxime, Jagan,
+>
+>> > > >> >>> > Did you try to boot from sdcard ? I am not able to boot my board from
+>> > > >> >>> > sd-card without this change. As I mentioned earlier in my email
+>> > > >> >>> > to buildroot mailing list, with mmc debug enabled I see that mmc
+>> > > >> >>> > tries to init sd-card when I remove it from the slot.
+>> > > >> >>> >
+>> > > >> >>> > Maybe there is a minor differences between h/w versions or batches ?
+>> > > >> >>> > What is you board version ? I tested on board v1.0.
+>> > > >> >>>
+>> > > >> >>> Looking at the schematics, it definitely looks like it's active low.
+>> > > >> >>
+>> > > >> >> Is it ok to merge it then ? Or using 'cd-inverted' property
+>> > > >> >> is the preferable option ?
+>> > > >> >
+>> > > >> > W/o any change mainline works unstable for me, it wasn't booting
+>> > > >> > at-all[1] did you find the same?
+>> > > >> >
+>> > > >> > Even tried with active LOW and cd-inverted.
+>> > > >> >
+>> > > >> > [1] https://paste.ubuntu.com/25909064/
+>> > > >>
+>> > > >> Look like something broken for H5 and A64 between v4.14-rc8 to latest
+>> > > >
+>> > > > Both 4.13.7 and 4.14-rc8 (synched today) kernels worked fine for me.
+>> > > > DTS behavior is all the same:
+>> > >
+>> > > I've tried fresh sync [2] but still see the issue, can you check the
+>> > > Image size of log(suspecting on that area)
+>> >
+>> > Do you plan to accept this patch as well ? Or you would prefer to wait
+>> > for the confirmation from Jagan as well ?
+>>
+>> I'm happy with the patch, but I was under the impression that the
+>> discussion had not settled yet. If it did, then yeah I'll merge it :)
+>
+> Both schematics and my tests on v1.0 board confirm that this fix is ok.
+> However we haven't yet got the ACK from Jagan, the original submitter
+> of this dts file. FWIW discussion was mostly about the problems with
+> his setup and not about the fix itself.
+>
+> Jagan,
+> did you have a chance to resolve the issues with your setup and verify
+> that boot from sd-card is fixed by this patch ?
 
---llqy5ouemfbgccz3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Nov 21, 2017 at 04:21:30PM +0800, Phil Reid wrote:
-> The irq polarity is already encoded in the irq config. Use that to
-> determine the polarity for the mcp32s08 irq output instead of the
-> custom microchip,irq-active-high property.
->=20
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> ---
-
-I don't like, that we use the flags for configuring the host
-interrupt input and the mcp23xxx interrupt output. Usually
-when the interrupt line has an inverter on it, board DTS files
-just toggle the interrupts polarity. This will not work with
-this patch applied. We would need to explicitly add an inverter
-in the interrupt line, which is completely different to how its
-implemented everywhere else (I know at least some Tegra devices
-have implicit inverters on interrupt lines).
-
-In case this is really wanted, this patch and the first patch
-should be merged to avoid temporarily exposing the splitted
-logic.
-
--- Sebastian
-
->  drivers/pinctrl/pinctrl-mcp23s08.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl=
--mcp23s08.c
-> index 8ff9b77..6b3f810 100644
-> --- a/drivers/pinctrl/pinctrl-mcp23s08.c
-> +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-> @@ -773,6 +773,7 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, s=
-truct device *dev,
->  	bool mirror =3D false;
->  	bool irq_active_high =3D false;
->  	bool open_drain =3D false;
-> +	u32 irq_trig;
-> =20
->  	mutex_init(&mcp->lock);
-> =20
-> @@ -863,9 +864,13 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, =
-struct device *dev,
->  	mcp->irq_controller =3D
->  		device_property_read_bool(dev, "interrupt-controller");
->  	if (mcp->irq && mcp->irq_controller) {
-> -		irq_active_high =3D
-> -			device_property_read_bool(dev,
-> -					      "microchip,irq-active-high");
-> +		if (device_property_present(dev, "microchip,irq-active-high"))
-> +			dev_warn(dev,
-> +				 "microchip,irq-active-high is deprecated\n");
-> +
-> +		irq_trig =3D irqd_get_trigger_type(irq_get_irq_data(mcp->irq));
-> +		if (irq_trig =3D=3D IRQF_TRIGGER_HIGH)
-> +			irq_active_high =3D true;
-> =20
->  		mirror =3D device_property_read_bool(dev, "microchip,irq-mirror");
->  		open_drain =3D device_property_read_bool(dev, "drive-open-drain");
-> --=20
-> 1.8.3.1
->=20
-
---llqy5ouemfbgccz3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAloUK18ACgkQ2O7X88g7
-+pphEQ/9HJ30zkX/9YtQ84+YqkQZ6ICtG5wUVJn8LY4mLEjZmCeHTxq/dQurX/UB
-zOY8Zydn/JWjDH7RnmHoRdWAeYl3TXtWnIawOFRCOUT34stglx9KkLghPVTyA/G7
-17pa/XL3TZHr+VZg1zT3TbMKCMN2J5G9xO+MD7wOTLQrLzWuGbzLK+/Xa1419tIJ
-N2hDOVsFGaVkUHGbBt5H6Ee43zwCF2/lGAJO9Fv8yfCrUkb5p8tmCo9FoiZRYjvU
-tr1ZL+b1OpsabOXq1baS8RJkRKXH7BqRpO69Z1dBFEG6cgtkd3MOC4uXqy7apknC
-ZwjteNGgPIT9JyYsmgY+BJk5JQwINOp9iP2orWfwsGQ44nxSPI6YHng6Pd2X1t/j
-ttFNn2n1mFVvoo5mtot39TziB8t8xA6lbhesVlD39nEIWYbGPFgAO0TcriyZTWXP
-MhG2QwCqN9IH0QAa4vZlAhHPqmP+MWbpa+IQjKfPcguOfhdi2ThjgsvmDX/FZtFG
-t6hDuKElRaLgL8Z9EC9K/2PTfCOX5V+5chRu9oGYGwNubZ0Ma/wQgc6CXQ0aNFyS
-I5GQZf75YjKW3wBnTK8JGgplvdlab7GUz8PLMKv9lR/TNh+v77AA5D5eBgYJa8Ba
-MHq6rdFY41RnVy42qrda/6z4c0nQtqBOeuRF50/opki1i66/emk=
-=5uJG
------END PGP SIGNATURE-----
-
---llqy5ouemfbgccz3--
+Acked-by: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
