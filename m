@@ -1,28 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/5] dt-bindings: pinctrl: deprecate
- 'microchip,irq-active-high' property
-Date: Tue, 21 Nov 2017 12:37:37 -0600
-Message-ID: <20171121183737.d6l4pw4mkdxrvb7i@rob-hp-laptop>
-References: <1511252491-79952-1-git-send-email-preid@electromag.com.au>
- <1511252491-79952-6-git-send-email-preid@electromag.com.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] spi: xilinx: Add support for xlnx,axi-quad-spi-1.00.a
+Date: Tue, 21 Nov 2017 12:38:08 -0600
+Message-ID: <20171121183808.7zennr53uz3yi7bb@rob-hp-laptop>
+References: <20171121090904.6901-1-ricardo.ribalda@gmail.com>
+ <20171121090904.6901-2-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1511252491-79952-6-git-send-email-preid@electromag.com.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: linus.walleij@linaro.org, mark.rutland@arm.com, sre@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20171121090904.6901-2-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 21, 2017 at 04:21:31PM +0800, Phil Reid wrote:
-> The irq output polarity can be determined from the 'interrupts'
-> configuration. So 'microchip,irq-active-high' is not required.
+On Tue, Nov 21, 2017 at 10:09:03AM +0100, Ricardo Ribalda Delgado wrote:
+> The driver has been successfully tested with Xilinx's core
+> axi-quad-spi-1.0.0a. Documented on DS843:
 > 
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> https://www.xilinx.com/support/documentation/ip_documentation/axi_quad_spi/v1_00_a/ds843_axi_quad_spi.pdf
+> 
+> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/spi/spi-xilinx.txt | 2 +-
+>  drivers/spi/spi-xilinx.c                             | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
