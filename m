@@ -1,91 +1,112 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: Add an enable method to RISC-V
-Date: Tue, 21 Nov 2017 11:04:52 +0000
-Message-ID: <20171121110451.qm5cy5s4audfvwu5@lakrids.cambridge.arm.com>
-References: <20171120195022.2307-1-palmer@sifive.com>
+From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] iio: light: isl76683 add way to adjust irq
+ threshold
+Date: Tue, 21 Nov 2017 12:10:22 +0100
+Message-ID: <1511262622.1737.96.camel@googlemail.com>
+References: <1511047230-7021-1-git-send-email-chf.fritz@googlemail.com>
+         <1511047230-7021-4-git-send-email-chf.fritz@googlemail.com>
+         <20171119112625.073f5d66@archlinux>
+Reply-To: chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171120195022.2307-1-palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171119112625.073f5d66@archlinux>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Palmer,
+Hi Jonathan,
 
-On Mon, Nov 20, 2017 at 11:50:22AM -0800, Palmer Dabbelt wrote:
-> RISC-V doesn't currently specify a mechanism for enabling or disabling
-> CPUs.  Instead, we assume that all CPUs are enabled on boot, and if
-> someone wants to save power we instead put a CPU to sleep via a WFI
-> loop.
+ thanks for your input. Please see my questions and answers below.
+
+On Sun, 2017-11-19 at 11:26 +0000, Jonathan Cameron wrote:
+> On Sun, 19 Nov 2017 00:20:30 +0100
+> Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
 > 
-> This patch adds "enable-method" to the RISC-V CPU binding, which
-> currently only has the value "none".  This allows us to change the
-> enable method in the future.
-
-I think you might want to be a bit more explicit about what this means,
-and this could do with a better name, as "none" sounds like the CPU is
-unusable, rather than it having been placed within the kernel already by
-the FW/bootloader (which IIUC is what happens currently).
-
-As previosuly commented, I also really think you'll want to define a
-simple boot protocol (like PPC spin-table) whereby the kernel can bring
-each CPU into the kernel independently. That will save you a lot of pain
-in future with things like kexec, suspend/resume, etc.
-
-For arm64 we had a spin-table clone (implemented in our boot-wrapper
-firmware) that allowed us to bring CPUs into the kernel explicitly.
-However, we made the mistake of allowing CPUs to share a mailbox, and we
-couldn't tell how many CPUs were stuck in the kernel at any point in
-time (rendering kexec, suspend, etc impossible).
-
-Thanks,
-Mark.
-
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/riscv/cpus.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+> > This patch adds sysfs read/write support for upper and lower irq
+> > thresholds. So it's possible that only on certain lux ranges the
+> > irq triggered measurement happens.
+> > 
+> > Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
-> index adf7b7af5dc3..dd9e1ae197e2 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.txt
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.txt
-> @@ -82,6 +82,11 @@ described below.
->                  Value type: <string>
->                  Definition: Contains the RISC-V ISA string of this hart.  These
->                              ISA strings are defined by the RISC-V ISA manual.
-> +        - cpu-enable-method:
-> +		Usage: required
-> +		Value type: <stringlist>
-> +		Definition: Must be one of
-> +			"none": This CPU's state cannot be changed.
->  
->  Example: SiFive Freedom U540G Development Kit
->  ---------------------------------------------
-> @@ -105,6 +110,7 @@ Linux is allowed to run on.
->                          reg = <0>;
->                          riscv,isa = "rv64imac";
->                          status = "disabled";
-> +                        enable-method = "none";
->                          L10: interrupt-controller {
->                                  #interrupt-cells = <1>;
->                                  compatible = "riscv,cpu-intc";
-> @@ -130,6 +136,7 @@ Linux is allowed to run on.
->                          reg = <1>;
->                          riscv,isa = "rv64imafdc";
->                          status = "okay";
-> +                        enable-method = "none";
->                          tlb-split;
->                          L13: interrupt-controller {
->                                  #interrupt-cells = <1>;
-> -- 
-> 2.13.6
+> hmm, this is 'unusual' to say the least...
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> From the datasheet it initially looks like a straight forward threshold
+> interrupt - which should be supported as an IIO event.
+> 
+> However, there seems to not be a generic monitoring mode, but rather the
+> device has to be polled?  (which makes this a 'funny' sort of interrupt..)
+
+It's not polling, it's just that in this "external timing mode" host has
+to do one part of adc integration timing (accurate waiting) on its own.
+
+This is suboptimal because doing timing in the driver cannot be that
+accurate as the external osc beside the chip with its "internal timing
+mode". To compensate this inaccuracy there are Timing-Registers which
+would then need to be red and finally calculated too.
+
+So I prefer "internal timing mode" (with IRQ) because I do get data as
+accurate and as fast as possible (especially in buffered mode) without
+the hassle of compensation.
+
+> 
+> So I think you are ultimately using this threshold interrupt to provide
+> a dataready signal when there isn't a real one provided?
+
+I don't get this point. Why shouldn't the IRQ be a real data-ready
+signal?
+
+The usage is this:
+    set threshold,
+  in a loop for example(
+    clear IRQ               isl76683_start_measurement()
+    now wait for IRQ which triggers when sensordata passes threshold
+    read the data           isl76683_get_sensordata()
+  )
+
+ What may confuse is that this chip needs to get the IRQ cleared before
+a next "data-ready-because-it-passed-threshold-IRQ"?
+
+By the way, without this patch sensordata always passes threshold and
+the IRQ is a real "data-ready-IRQ".
+
+> 
+> That's horrible and makes it very hard to fit this device into standard
+> frameworks.  My gut feeling would be to:
+
+If you don't like the adjustable threshold because you really feel it
+doesn't fit into iio-framework, you can purge patch 3 and I'll keep it
+away from mainline. And it would be great if you could
+reconsider :-) ...
+
+> 
+> * stop using the interrupt for data ready at all, but dead reckon
+>   that with a timer delay. 
+
+Please see my points above why using "internal timing mode" adds
+complexity.
+
+> * use this 'interrupt' (actually a hardware threshold signal rather than
+>   an interrupt really)
+
+Please see above: Why shouldn't the IRQ be a real data-ready signal?
+
+>  for event detection and handle it
+>   as an event with all the standard infrastructure that is in place
+>   for that.
+> 
+> I can see the hardware designers logic that you might only want to read
+> the values back when the light level has changed from your expected value,
+> but given you have to manually trigger readings, the utility of this is
+> somewhat limited...
+
+No, adc readings are done continuously inside the chip if sensor value
+fails threshold test. You get an IRQ if light changes so that threshold
+test gets passed.
+
+What do you think?
+
+Thanks
+ -- Christoph
