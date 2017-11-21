@@ -1,45 +1,41 @@
-From: Tirupathi Reddy T <tirupath@codeaurora.org>
-Subject: Re: [PATCH V6] clk: qcom: Add spmi_pmic clock divider support
-Date: Tue, 21 Nov 2017 14:42:51 +0530
-Message-ID: <396227ab-d628-ba5e-1e63-ad51f5cae253@codeaurora.org>
-References: <1510912127-4582-1-git-send-email-tirupath@codeaurora.org>
- <20171117202243.you76ej4qvk3ul3g@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: [PATCH v3 08/16] dt-bindings: phy-qcom-qusb2: Update binding for QUSB2 V2 version
+Date: Tue, 21 Nov 2017 14:53:18 +0530
+Message-ID: <1511256206-1587-9-git-send-email-mgautam@codeaurora.org>
+References: <1511256206-1587-1-git-send-email-mgautam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171117202243.you76ej4qvk3ul3g@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <1511256206-1587-1-git-send-email-mgautam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Update generic compatible string for QUSB2 V2 PHY. This will allow
+all targets using QUSB2 V2 use same string.
 
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
+---
+ Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On 11/18/2017 1:52 AM, Rob Herring wrote:
-> On Fri, Nov 17, 2017 at 03:18:47PM +0530, Tirupathi Reddy wrote:
->> Clkdiv module provides a clock output on the PMIC with CXO as
->> the source. This clock can be routed through PMIC GPIOs. Add
->> a device driver to configure this clkdiv module.
->>
->> Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
->> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> Normally your S-o-B would be last.
-Addressed in next patch version [7]
->
->> ---
->>   .../bindings/clock/clk-spmi-pmic-div.txt           |  59 ++++
-> Please split bindings to a separate patch.
-Addressed in next patch version [7]
->
-> Otherwise,
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
->>   drivers/clk/qcom/Kconfig                           |   9 +
->>   drivers/clk/qcom/Makefile                          |   1 +
->>   drivers/clk/qcom/clk-spmi-pmic-div.c               | 308 +++++++++++++++++++++
->>   4 files changed, 377 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/clk-spmi-pmic-div.txt
->>   create mode 100644 drivers/clk/qcom/clk-spmi-pmic-div.c
+diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+index aa0fcb0..42c9742 100644
+--- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
++++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+@@ -4,7 +4,10 @@ Qualcomm QUSB2 phy controller
+ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+ 
+ Required properties:
+- - compatible: compatible list, contains "qcom,msm8996-qusb2-phy".
++ - compatible: compatible list, contains
++	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
++	       "qcom,qusb2-v2-phy" for QUSB2 V2 PHY.
++
+  - reg: offset and length of the PHY register set.
+  - #phy-cells: must be 0.
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
