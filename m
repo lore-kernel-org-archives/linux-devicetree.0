@@ -1,70 +1,39 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
-Date: Tue, 21 Nov 2017 19:11:00 +0530
-Message-ID: <CAMty3ZDQqaiZ0RxtngWdX9PCW2+tzXLVB64heHLjRBeVF2-FCQ@mail.gmail.com>
-References: <CAMty3ZCs8kq1vUGLOi0ZghY7n0iXgUQ1E=ngBO6Y4wm7wMLF7Q@mail.gmail.com>
- <20171104154221.ao7kkcwqhnja3cxe@speedy.hunter> <20171106122633.5mnqfh6xhmmxr45s@flea>
- <20171106161306.tq6yeq6bq36ridj3@speedy.hunter> <CAMty3ZCYQx0MfiJnOZPtO4nSAtOrGicOzw_x_AznTiEW8h2sLg@mail.gmail.com>
- <CAMty3ZANhL7cHqYw4VY2Sj_JUZGyqFZ+7pLssc1tniN3BdupOA@mail.gmail.com>
- <20171107201245.gptgfli54o6eqmrj@speedy.hunter> <CAMty3ZB3aXCsd9VkibjxPdA=BXvXr3nMbGJJvtZN_z2SGVUAXA@mail.gmail.com>
- <20171113192411.kmohcthzickk4n5v@speedy.hunter> <20171114143941.3qgdlqn4xfarfhql@flea.lan>
- <20171114185315.gwyacchfct4zvyif@speedy.hunter>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: rtc: imxdi: Improve the bindings text
+Date: Tue, 21 Nov 2017 14:46:17 +0100
+Message-ID: <20171121134617.hbpc5of3wtl7hztg@piout.net>
+References: <1510750793-25564-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171114185315.gwyacchfct4zvyif-tVm4GcgtBpsfMUw/CLfKLg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1510750793-25564-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 12:23 AM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hello Maxime, Jagan,
->
->> > > >> >>> > Did you try to boot from sdcard ? I am not able to boot my board from
->> > > >> >>> > sd-card without this change. As I mentioned earlier in my email
->> > > >> >>> > to buildroot mailing list, with mmc debug enabled I see that mmc
->> > > >> >>> > tries to init sd-card when I remove it from the slot.
->> > > >> >>> >
->> > > >> >>> > Maybe there is a minor differences between h/w versions or batches ?
->> > > >> >>> > What is you board version ? I tested on board v1.0.
->> > > >> >>>
->> > > >> >>> Looking at the schematics, it definitely looks like it's active low.
->> > > >> >>
->> > > >> >> Is it ok to merge it then ? Or using 'cd-inverted' property
->> > > >> >> is the preferable option ?
->> > > >> >
->> > > >> > W/o any change mainline works unstable for me, it wasn't booting
->> > > >> > at-all[1] did you find the same?
->> > > >> >
->> > > >> > Even tried with active LOW and cd-inverted.
->> > > >> >
->> > > >> > [1] https://paste.ubuntu.com/25909064/
->> > > >>
->> > > >> Look like something broken for H5 and A64 between v4.14-rc8 to latest
->> > > >
->> > > > Both 4.13.7 and 4.14-rc8 (synched today) kernels worked fine for me.
->> > > > DTS behavior is all the same:
->> > >
->> > > I've tried fresh sync [2] but still see the issue, can you check the
->> > > Image size of log(suspecting on that area)
->> >
->> > Do you plan to accept this patch as well ? Or you would prefer to wait
->> > for the confirmation from Jagan as well ?
->>
->> I'm happy with the patch, but I was under the impression that the
->> discussion had not settled yet. If it did, then yeah I'll merge it :)
->
-> Both schematics and my tests on v1.0 board confirm that this fix is ok.
-> However we haven't yet got the ACK from Jagan, the original submitter
-> of this dts file. FWIW discussion was mostly about the problems with
-> his setup and not about the fix itself.
->
-> Jagan,
-> did you have a chance to resolve the issues with your setup and verify
-> that boot from sd-card is fixed by this patch ?
+On 15/11/2017 at 10:59:53 -0200, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> 
+> Improve the bindings text by doing the following changes:
+> 
+> - Remove the i.MX53 reference, as the RTC on i.MX53 is a different hardware
+> - Add 'clocks' to the list of required properties
+> - Explain that the optional security violation irq is the second entry
+> - Use the real unit address and irq numbers for i.MX25
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/rtc/imxdi-rtc.txt | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+Applied, thanks.
 
-Acked-by: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
