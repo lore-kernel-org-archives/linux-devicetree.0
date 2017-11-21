@@ -1,68 +1,98 @@
-From: <andy.tang@nxp.com>
-Subject: [PATCH v2] clk: qoriq: add more divider clocks support
-Date: Tue, 21 Nov 2017 14:13:00 +0800
-Message-ID: <20171121061300.23464-1-andy.tang@nxp.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [v7,1/3] dt-bindings: net: add mt76 wireless device binding
+Date: Tue, 21 Nov 2017 07:08:37 +0000 (UTC)
+Message-ID: <20171121070837.F1BCF607F4@smtp.codeaurora.org>
+References: <20171120193549.80831-2-nbd@nbd.name>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171120193549.80831-2-nbd-Vt+b4OUoWG0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yuantian Tang <andy.tang@nxp.com>
+Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> wrote:
 
-More divider clocks are needed by IP. So enlarge the PLL divider
-array to accommodate more divider clocks.
+> Add documentation describing how device tree can be used to configure
+> wireless chips supported by the mt76 driver.
+> 
+> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
----
-v2:
-  - fix a logical error
+Fails to compile:
 
- Documentation/devicetree/bindings/clock/qoriq-clock.txt | 1 +
- drivers/clk/clk-qoriq.c                                 | 9 ++++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+drivers/net/wireless/mediatek/mt76/mac80211.c: In function ‘mt76_led_init’:
+drivers/net/wireless/mediatek/mt76/mac80211.c:111:7: error: implicit declaration of function ‘of_get_child_by_name’ [-Werror=implicit-function-declaration]
+  np = of_get_child_by_name(np, "led");
+       ^
+drivers/net/wireless/mediatek/mt76/mac80211.c:111:5: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+  np = of_get_child_by_name(np, "led");
+     ^
+drivers/net/wireless/mediatek/mt76/mac80211.c:113:8: error: implicit declaration of function ‘of_property_read_u32’ [-Werror=implicit-function-declaration]
+   if (!of_property_read_u32(np, "led-sources", &led_pin))
+        ^
+drivers/net/wireless/mediatek/mt76/mac80211.c:115:17: error: implicit declaration of function ‘of_property_read_bool’ [-Werror=implicit-function-declaration]
+   dev->led_al = of_property_read_bool(np, "led-active-low");
+                 ^
+cc1: some warnings being treated as errors
+make[5]: *** [drivers/net/wireless/mediatek/mt76/mac80211.o] Error 1
+make[5]: *** Waiting for unfinished jobs....
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c: In function ‘mt76x2_mac_process_rate’:
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:49:20: error: ‘RX_FLAG_SHORTPRE’ undeclared (first use in this function)
+    status->flag |= RX_FLAG_SHORTPRE;
+                    ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:49:20: note: each undeclared identifier is reported only once for each function it appears in
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:58:19: error: ‘RX_FLAG_HT_GF’ undeclared (first use in this function)
+   status->flag |= RX_FLAG_HT_GF;
+                   ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:61:19: error: ‘RX_FLAG_HT’ undeclared (first use in this function)
+   status->flag |= RX_FLAG_HT;
+                   ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:65:19: error: ‘RX_FLAG_VHT’ undeclared (first use in this function)
+   status->flag |= RX_FLAG_VHT;
+                   ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:67:9: error: ‘struct ieee80211_rx_status’ has no member named ‘vht_nss’
+   status->vht_nss = FIELD_GET(MT_RATE_INDEX_VHT_NSS, idx) + 1;
+         ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:75:19: error: ‘RX_FLAG_LDPC’ undeclared (first use in this function)
+   status->flag |= RX_FLAG_LDPC;
+                   ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:78:19: error: ‘RX_FLAG_SHORT_GI’ undeclared (first use in this function)
+   status->flag |= RX_FLAG_SHORT_GI;
+                   ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:81:24: error: ‘RX_FLAG_STBC_SHIFT’ undeclared (first use in this function)
+   status->flag |= 1 << RX_FLAG_STBC_SHIFT;
+                        ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:87:19: error: ‘RX_FLAG_40MHZ’ undeclared (first use in this function)
+   status->flag |= RX_FLAG_40MHZ;
+                   ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:90:9: error: ‘struct ieee80211_rx_status’ has no member named ‘vht_flag’
+   status->vht_flag |= RX_VHT_FLAG_80MHZ;
+         ^
+drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:90:23: error: ‘RX_VHT_FLAG_80MHZ’ undeclared (first use in this function)
+   status->vht_flag |= RX_VHT_FLAG_80MHZ;
+                       ^
+make[5]: *** [drivers/net/wireless/mediatek/mt76/mt76x2_mac.o] Error 1
+make[4]: *** [drivers/net/wireless/mediatek/mt76] Error 2
+make[3]: *** [drivers/net/wireless/mediatek] Error 2
+make[2]: *** [drivers/net/wireless] Error 2
+make[1]: *** [drivers/net] Error 2
+make: *** [drivers] Error 2
 
-diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-index 6498e1fdbb33..97f46adac85f 100644
---- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-@@ -78,6 +78,7 @@ second cell is the clock index for the specified type.
- 	2	hwaccel		index (n in CLKCGnHWACSR)
- 	3	fman		0 for fm1, 1 for fm2
- 	4	platform pll	0=pll, 1=pll/2, 2=pll/3, 3=pll/4
-+				4=pll/5, 5=pll/6, 6=pll/7, 7=pll/8
- 	5	coreclk		must be 0
- 
- 3. Example
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index b0ea753b8709..3a1812f65e5d 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -41,7 +41,7 @@ struct clockgen_pll_div {
- };
- 
- struct clockgen_pll {
--	struct clockgen_pll_div div[4];
-+	struct clockgen_pll_div div[8];
- };
- 
- #define CLKSEL_VALID	1
-@@ -1127,6 +1127,13 @@ static void __init create_one_pll(struct clockgen *cg, int idx)
- 		struct clk *clk;
- 		int ret;
- 
-+		/*
-+		 * For platform PLL, there are 8 divider clocks.
-+		 * For core PLL, there are 4 divider clocks at most.
-+		 */
-+		if (idx != PLATFORM_PLL && i >= 4)
-+			break;
-+
- 		snprintf(pll->div[i].name, sizeof(pll->div[i].name),
- 			 "cg-pll%d-div%d", idx, i + 1);
- 
+3 patches set to Changes Requested.
+
+10067143 [v7,1/3] dt-bindings: net: add mt76 wireless device binding
+10067141 [v7,2/3] mt76: add common code shared between multiple chipsets
+10067145 [v7,3/3] mt76: add driver code for MT76x2e
+
 -- 
-2.14.1
+https://patchwork.kernel.org/patch/10067143/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
