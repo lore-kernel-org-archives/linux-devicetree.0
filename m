@@ -1,46 +1,45 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 05/20] firmware: arm_scmi: add scmi protocol bus to
- enumerate protocol devices
-Date: Tue, 21 Nov 2017 18:04:39 +0000
-Message-ID: <273d655b-b1f2-0788-aa60-3d97b84e7304@arm.com>
-References: <1509720477-18936-1-git-send-email-sudeep.holla@arm.com>
- <1509720477-18936-6-git-send-email-sudeep.holla@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] arm: dts: marvell: Add missing #phy-cells to usb-nop-xceiv
+Date: Tue, 21 Nov 2017 12:29:48 -0600
+Message-ID: <CAL_JsqJhq7TqdaS+i8yk8rRJM0hH2hyk8eybXsnR0D8QoncXZg@mail.gmail.com>
+References: <20171109222614.5719-1-robh@kernel.org> <20171109222614.5719-3-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509720477-18936-6-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171109222614.5719-3-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Thu, Nov 9, 2017 at 4:26 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> "usb-nop-xceiv" is using the phy binding, but is missing #phy-cells
+> property. This is probably because the binding was the precursor to the phy
+> binding.
+>
+> Fixes the following warning in Marvell dts files:
+>
+> Warning (phys_property): Missing property '#phy-cells' in node ...
+>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Please apply to Marvell tree.
 
-On 03/11/17 14:47, Sudeep Holla wrote:
-> The SCMI specification encompasses various protocols. However, not every
-> protocol has to be present on a given platform/implementation as not
-> every protocol is relevant for it.
-> 
-> Furthermore, the platform chooses which protocols it exposes to a given
-> agent. The only protocol that must be implemented is the base protocol.
-> The base protocol is used by an agent to discover which protocols are
-> available to it.
-> 
-> In order to enumerate the discovered implemented protocols, this patch
-> adds support for a separate scmi protocol bus. It also adds mechanism to
-> register support for different protocols.
-> 
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Extremely sorry to both during merge window, but just wanted to check if
-you can spare sometime reviewing these SCMI patches. I know it's too
-early for v4.16 but with holiday period ahead, thought of checking so
-that I won't miss v4.16
+Ping.
 
--- 
-Regards,
-Sudeep
+Arnd, can you apply if you'd like the warnings fixed and Marvell
+maintainers don't respond.
+
+>
+>  arch/arm/boot/dts/armada-385-db-ap.dts          | 1 +
+>  arch/arm/boot/dts/armada-385-linksys.dtsi       | 1 +
+>  arch/arm/boot/dts/armada-385-synology-ds116.dts | 2 ++
+>  arch/arm/boot/dts/armada-388-gp.dts             | 2 ++
+>  4 files changed, 6 insertions(+)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
