@@ -1,95 +1,53 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] pinctrl: mcp23s08: configure irq polarity using irq data
-Date: Tue, 21 Nov 2017 17:04:51 +0100
-Message-ID: <2197074.iKMxQHLgca@ws-stein>
-References: <1511252491-79952-1-git-send-email-preid@electromag.com.au> <c191a9d6-3ebb-e95b-7342-aa18598ddf2b@electromag.com.au> <20171121152142.zg3r57gl2kenjwgi@earth>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [v5 RESEND 02/17] mfd: madera: Add DT bindings for
+ Cirrus Logic Madera codecs
+Date: Tue, 21 Nov 2017 16:14:07 +0000
+Message-ID: <e8b2015d-ef98-41a7-cfaf-1817bca1f263@opensource.wolfsonmicro.com>
+References: <20171120141051.29467-1-rf@opensource.cirrus.com>
+ <20171120141051.29467-3-rf@opensource.cirrus.com>
+ <20171120184622.yor2xemxbbvicmmi@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171121152142.zg3r57gl2kenjwgi@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171120184622.yor2xemxbbvicmmi@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>, Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Sorry all, I don't know what's gone wrong here. The acks are there on my 
+computer and I double-checked before I sent but somewhere all the acks 
+have been stripped.
 
-On Tuesday, November 21, 2017, 4:21:42 PM CET Sebastian Reichel wrote:
->[...]
-> --------------------------------------------
-> gpio: host-gpio {
->     random-properties;
-> }
-> 
-> inv: line-inverter {
->     /*
->      * configure the gpio controller input to be active low
->      * and the inverter interrupt output to be active low
->      */
->     interrupts = <&gpio ACTIVE_LOW>;
-> };
-> 
-> mcp23xxx {
->     random-properties;
-> 
->     /*
->      * configure the chip interrupt output to be active high 
->      * and the inverter interrupt input to be active high
->      */
->     interrupts = <&inv ACTIVE_HIGH>;
-> }
-> --------------------------------------------
-> 
-> versus
-> 
-> --------------------------------------------
-> gpio: host-gpio {
->     random-properties;
-> }
-> 
-> mcp23xxx {
->     random-properties;
-> 
->     /* configure host interrupt input pin to be active low */
->     interrupts = <&gpio ACTIVE_LOW>;
-> 
->     /* configure chip interrupt output pin to be active high */
->     microchip,irq-active-high;
-> }
-> --------------------------------------------
-> 
-> I think this is something, that Rob should comment on. Obviously at
-> least in the mainline kernel nobody implemented the first solution
-> (since there is no fitting interrupt-invert driver), but there are
-> a few instances of the second variant. On the other hand the first
-> solution describes the hardware more detailed.
+When I've figured out what went wrong I'll re-send the chain with the acks.
+
+
+On 20/11/17 18:46, Rob Herring wrote:
+> On Mon, Nov 20, 2017 at 02:10:36PM +0000, Richard Fitzgerald wrote:
+>> From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+>>
+>> Specification of the bindings for the parent MFD driver component
+>> of the Cirrus Logic Madera codec drivers.
+>>
+>> Note that although the interrupt controller and GPIO are child
+>> drivers their required bindings are trivial, mandatory, and exist
+>> within the parent MFD node so are documented here.
+>>
+>> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+>> ---
+>>   Documentation/devicetree/bindings/mfd/madera.txt | 102 +++++++++++++++++++++++
+>>   1 file changed, 102 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/madera.txt
+> Please add acks when posting new versions.
 >
-> > And if someone is relying on that implicit behaviour are we allowed
-> > to break things? Probably ok with this one as it's currently not possible
-> > due to code patch 1 removes.
-> > 
-> > If we need to model the invert to get the patches accepted I look into that.
-> > I don't actually need it for my system as I can set open-drain with overrides
-> > the active-high control on this device, while have active high irq consumer.
-> > :)
-> 
-> IMHO the explicit line-inverter is a bit over-engineered and
-> implicit line-inverter is enough, but I'm fine with both solutions.
-> I think the DT binding maintainers should comment on this though,
-> since it's pretty much a core decision about interrupt specifiers.
-
-Once you have a hardware, where one of several IRQ users is not attached to the
-inverter you need this inverter node anyway, caused by the mixed polarities.
-Also some IRQ controllers, like ARM GIC, only support rising edge interrupts
-(also level high).
-This might get important if there are dedicated IRQ pads connected to several
-users.
-
-Just my 2 cents.
-Alexander
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Rob
