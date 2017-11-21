@@ -1,156 +1,164 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/4] [media] dt-bindings: Document BCM283x CSI2/CCP2 receiver
-Date: Tue, 21 Nov 2017 13:58:27 -0600
-Message-ID: <CAL_JsqJ51jd8nkYAKvLUEf8n7+eJsd8JxW-8YJ6gfx1_Y1LzdA@mail.gmail.com>
-References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
- <fae3d29bba67825030c0077dd9c79534b6888512.1505916622.git.dave.stevenson@raspberrypi.org>
- <1814950930.414004.1506062733728@email.1und1.de> <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg@mail.gmail.com>
- <20170927215124.6k3j54qf2qscnzc2@rob-hp-laptop> <CAAoAYcM0m6Z8hUDn+FuNb-O28geAYJqHWrhKPDP_Jvh2P-YE3A@mail.gmail.com>
- <877euje8mc.fsf@anholt.net>
+From: Ulf Samuelsson <linux-kernel@emagii.com>
+Subject: Re: RFC: Copying Device Tree File into reserved area of VMLINUX
+ before deployment
+Date: Tue, 21 Nov 2017 21:03:09 +0100
+Message-ID: <4ce82f7e-a785-c152-3c48-8700534881d1@emagii.com>
+References: <0b31e22b-202f-6fca-28f2-e16e6af6c6b7@emagii.com>
+ <a0f9d598-04af-fddd-58ad-09db10ec19da@gmail.com>
+ <fe7925f3-30d4-ec03-a6c5-61a8644dcdfe@gmail.com>
+ <ee33abcc-8d23-8b4c-e3ef-7adce8495ef3@emagii.com>
+ <0e54f9f0-1226-7f2e-3143-ea4e450058e6@gmail.com>
+ <CAL_JsqJZbBDcp_GCNjW8mpPTi2Gv9J5bkbb5co0wRFxYf4aPpw@mail.gmail.com>
+Reply-To: linux-kernel@emagii.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <877euje8mc.fsf@anholt.net>
-Sender: linux-media-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.org>, Stefan Wahren <stefan.wahren@i2se.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hans.verkuil@cisco.com>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJZbBDcp_GCNjW8mpPTi2Gv9J5bkbb5co0wRFxYf4aPpw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 21, 2017 at 1:26 PM, Eric Anholt <eric@anholt.net> wrote:
-> Dave Stevenson <dave.stevenson@raspberrypi.org> writes:
->
->> Hi Rob
+
+
+On 2017-11-21 18:09, Rob Herring wrote:
+> On Mon, Nov 20, 2017 at 3:39 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> Hi Ulf, Rob,
 >>
->> On 27 September 2017 at 22:51, Rob Herring <robh@kernel.org> wrote:
->>> On Fri, Sep 22, 2017 at 05:07:22PM +0100, Dave Stevenson wrote:
->>>> Hi Stefan
->>>>
->>>> On 22 September 2017 at 07:45, Stefan Wahren <stefan.wahren@i2se.com> wrote:
->>>> > Hi Dave,
->>>> >
->>>> >> Dave Stevenson <dave.stevenson@raspberrypi.org> hat am 20. September 2017 um 18:07 geschrieben:
->>>> >>
->>>> >>
->>>> >> Document the DT bindings for the CSI2/CCP2 receiver peripheral
->>>> >> (known as Unicam) on BCM283x SoCs.
->>>> >>
->>>> >> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
->>>> >> ---
->>>> >>
->>>> >> Changes since v2
->>>> >> - Removed all references to Linux drivers.
->>>> >> - Reworded section about disabling the firmware driver.
->>>> >> - Renamed clock from "lp_clock" to "lp" in description and example.
->>>> >> - Referred to video-interfaces.txt and stated requirements on remote-endpoint
->>>> >>   and data-lanes.
->>>> >> - Corrected typo in example from csi to csi1.
->>>> >> - Removed unnecessary #address-cells and #size-cells in example.
->>>> >> - Removed setting of status from the example.
->>>> >>
->>>> >>  .../devicetree/bindings/media/bcm2835-unicam.txt   | 85 ++++++++++++++++++++++
->>>> >>  1 file changed, 85 insertions(+)
->>>> >>  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
->>>> >>
->>>> >> diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
->>>> >> new file mode 100644
->>>> >> index 0000000..7714fb3
->>>> >> --- /dev/null
->>>> >> +++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
->>>> >> @@ -0,0 +1,85 @@
->>>> >> +Broadcom BCM283x Camera Interface (Unicam)
->>>> >> +------------------------------------------
->>>> >> +
->>>> >> +The Unicam block on BCM283x SoCs is the receiver for either
->>>> >> +CSI-2 or CCP2 data from image sensors or similar devices.
->>>> >> +
->>>> >> +The main platform using this SoC is the Raspberry Pi family of boards.
->>>> >> +On the Pi the VideoCore firmware can also control this hardware block,
->>>> >> +and driving it from two different processors will cause issues.
->>>> >> +To avoid this, the firmware checks the device tree configuration
->>>> >> +during boot. If it finds device tree nodes called csi0 or csi1 then
->>>> >> +it will stop the firmware accessing the block, and it can then
->>>> >> +safely be used via the device tree binding.
->>>> >> +
->>>> >> +Required properties:
->>>> >> +===================
->>>> >> +- compatible : must be "brcm,bcm2835-unicam".
->>>> >> +- reg                : physical base address and length of the register sets for the
->>>> >> +               device.
->>>> >> +- interrupts : should contain the IRQ line for this Unicam instance.
->>>> >> +- clocks     : list of clock specifiers, corresponding to entries in
->>>> >> +               clock-names property.
->>>> >> +- clock-names        : must contain an "lp" entry, matching entries in the
->>>> >> +               clocks property.
->>>> >> +
->>>> >> +Unicam supports a single port node. It should contain one 'port' child node
->>>> >> +with child 'endpoint' node. Please refer to the bindings defined in
->>>> >> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->>>> >> +
->>>> >> +Within the endpoint node the "remote-endpoint" and "data-lanes" properties
->>>> >> +are mandatory.
->>>> >> +Data lane reordering is not supported so the data lanes must be in order,
->>>> >> +starting at 1. The number of data lanes should represent the number of
->>>> >> +usable lanes for the hardware block. That may be limited by either the SoC or
->>>> >> +how the platform presents the interface, and the lower value must be used.
->>>> >> +
->>>> >> +Lane reordering is not supported on the clock lane either, so the optional
->>>> >> +property "clock-lane" will implicitly be <0>.
->>>> >> +Similarly lane inversion is not supported, therefore "lane-polarities" will
->>>> >> +implicitly be <0 0 0 0 0>.
->>>> >> +Neither of these values will be checked.
->>>> >> +
->>>> >> +Example:
->>>> >> +     csi1: csi1@7e801000 {
->>>> >> +             compatible = "brcm,bcm2835-unicam";
->>>> >> +             reg = <0x7e801000 0x800>,
->>>> >> +                   <0x7e802004 0x4>;
->>>> >
->>>> > sorry, i didn't noticed this before. I'm afraid this is using a small range of the CMI. Are there possible other users of this range? Does it make sense to handle this by a separate clock driver?
->>>>
->>>> CMI (Clock Manager Image) consists of a total of 4 registers.
->>>> 0x7e802000 is CMI_CAM0, with only bits 0-5 used for gating and
->>>> inversion of the clock and data lanes (2 data lanes available on
->>>> CAM0).
->>>> 0x7e802004 is CMI_CAM1, with only bits 0-9 used for gating and
->>>> inversion of the clock and data lanes (4 data lanes available on
->>>> CAM1).
->>>> 0x7e802008 is CMI_CAMTEST which I have no documentation or drivers for.
->>>> 0x7e802010 is CMI_USBCTL. Only bit 6 is documented and is a reset. The
->>>> default value is the required value. Nothing touches it that I can
->>>> find.
->>>>
->>>> The range listed only covers the one register associated with that
->>>> Unicam instance, so no other users. The other two aren't touched.
->>>> Do 16 active register bits solely for camera clock gating really
->>>> warrant a full clock driver?
+>> On 11/20/17 15:19, Ulf Samuelsson wrote:
 >>>
->>> You should describe all the registers in DT, not just what the driver
->>> (currently) uses.
+>>>
+>>> On 2017-11-20 05:32, Frank Rowand wrote:
+>>>> Hi Ulf,
+>>>>
+>>>>
+>>>> On 11/19/17 23:23, Frank Rowand wrote:
+>>>>> adding devicetree list, devicetree maintainers
+>>>>>
+>>>>> On 11/18/17 12:59, Ulf Samuelsson wrote:
+>>>>>> I noticed when checking out the OpenWRT support for the board that they have a method to avoid having to pass the device tree address to the kernel, and can thus boot device tree based kernels with U-boots that
+>>>>>> does not support device trees.
+>>>>>>
+>>>>>> Is this something that would be considered useful for including in mainstream:
+>>>>>>
+>>>>>> BACKGROUND:
+>>>>>> Trying to load a yocto kernel into a MIPS target (MT7620A based),
+>>>>>> and the U-Boot is more than stupid.
+>>>>>> Does not support the "run" command as an example.
+>>>>>> They modified the U-Boot MAGIC Word to complicate things.
+>>>>>> The U-Boot is not configured to use device tree files.
+>>>>>> The board runs a 2.6 kernel right now.
+>>>>>>
+>>>>>> Several attempts by me a and others to rebuild U-Boot according to
+>>>>>> the H/W vendors source code and build instructions results in a
+>>>>>> bricked unit. Bricked units cannot be recovered.
+>>>>
+>>>> Hopefully you have brought this to the attention of the vendor.  U-Boot
+>>>> is GPL v2 (or in some ways possibly GPL v2 or later), so if you can not
+>>>> build U-Boot that is equivalent to the binary U-Boot they shipped, the
+>>>> vendor may want to ensure that they are shipping the proper source and
+>>>> build instructions.
+>>>>
+>>>
+>>> I am not the one in contact with the H/W vendor.
+>>> The U-boot is pretty old, and from comments from those
+>>> in contact with them, the U-Boot knowledge at the H/W vendor
+>>> is minimal at best.
+>>> It might even be that they program an U-boot where the upgrade of the U-boot is broken...
+>>>
+>>>
+>>>>
+>>>>>> Not my choice of H/W, so I cannot change it.
+>>>>>>
+>>>>>>
+>>>>>> ===================================================================
+>>>>>> OPENWRT:
+>>>>>> I noticed when checking out the OpenWRT support for the board that
+>>>>>> they have a method to avoid having to pass the device tree address
+>>>>>> to the kernel, and can thus boot device tree based kernels with
+>>>>>> U-boots that does not support device trees.
+>>>>>>
+>>>>>> What they do is to reserve 16 kB of kernel space, and tag it with
+>>>>>> an ASCII string "OWRTDTB:". After the kernel and dtb is built, a
+>>>>>> utility "patch-dtb" will update the vmlinux binary, copying in the
+>>>>>> device tree file.
+>>>>>>
+>>>>>> ===================================================================
+>>>>>> It would be useful to me, and I could of course patch the
+>>>>>> mainstream kernel, but first I would like to check if this is of
+>>>>>> interest for mainstream.
+>>>>
+>>>> Not in this form.  Hard coding a fixed size area in the boot image
+>>>> to contain the FDT (aka DTB) is a non-starter.
+>>>
+>>> OK, Is it the fixed size, which is a problem?
 >>
->> I'm not clear what you're asking for here.
+>> Yes, it is the fixed size which is a problem.
 >>
->> This binding is for the Unicam block, not for CMI (Clock Manager
->> Imaging). In order for a Unicam instance to work, it needs to enable
->> the relevant clock gating via 1 CMI register, and it will only ever be
->> one register.
->
-> Rob, the CMI just a small bit of glue required by the crossing of a
-> power domain in a unicam instance, and the two unicam instances in this
-> HW have their CMI regs next to each other.  It's not really a separate
-> block, and I think describing the unicam's CMI reg in the unicam binding
-> is appropriate.
->
-> What would you need from Dave to ack this binding?
+>>> Is generally combining an image with a DTB into a single file also a non-starter?
+>>
+>> Can you jump in here Rob?  My understanding is that CONFIG_ARM_APPENDED_DTB,
+>> which is the ARM based solution that Mark mentioned, was envisioned as a
+>> temporary stop gap until boot loaders could add devicetree support.  I don't
+>> know if there is a desire to limit this approach or to remove it in the
+>> future.
+> 
+> Yes, but I doubt we'll ever remove it. Most android devices use it (or
+> the multiple appended dtb stuff Qcom did) and there's out of tree
+> patches to do appended dtb on arm64. However, arm64 is a done a bit
+> differently in that the bootloader has to find the dtb rather than the
+> kernel (or really the decompressor). The purpose for arm64 is people
+> like the single kernel+dtb image, not legacy bootloader support as DT
+> support was there from day 1.
+> 
+> Another option is to do what's called an impedance matcher like this[1].
+> 
+>> I'm not sure why this feature should not be permanently supported.  I'm being
+>> cautious, just in case I'm overlooking or missing an important issue, thus
+>> asking for Rob's input.  I do know that this feature does not advance the
+>> desires of people who want a single kernel (single boot image?) that runs on
+>> many different systems, instead of a boot image that is unique to each
+>> target platform.  But I don't see why that desire precludes also having
+>> an option to have a target specific boot image.
+> 
+> MIPS already supports built-in dtbs which is an in-kernel way to get
+> the dtb rather than the decompressor. The addition in this case is
+> just putting in a dummy dtb and putting in the real dtb later. I'm not
+> sure what MIPS image header looks like, but seems like it should be
+> possible to have the "built-in dtb" point to an appended dtb and just
+> update sizes in the image file. Then you don't have the fixed size.
+> 
+> But now that I finished writing this, I see there is already appended
+> DTB support in MIPS.
 
-Sorry, had started to reply on this and got distracted.
+I just managed to complete a build using yocto where I made the 
+following changes.
 
-I guess since there seems to be only 1 other bit that could possibly
-be used (CMI_USBCTL) it is fine like this. However, my concern would
-be if the CMI registers are integrated in a different way in some
-future chip that has the same unicam instances. Or just if the
-register bits are rearranged. Those are not an uncommon occurrence.
-You would have to provide access to those registers in some other way.
-It can be dealt with, but then you have to support both cases in the
-driver. If you all are fine with that, then:
+I build the dtbs before linking the uImage.
 
-Acked-by: Rob Herring <robh@kernel.org>
+I add some configuration variables, which define
+* if the dtb should be included
+* which dtb file should be included
+
+uImage always gziped
+
+Checking the resulting uImage, shows that the ".appended_dtb" section 
+now contains the dtb file.
+
+I have not loaded it into a board yet, but the default init seems to 
+check if there is a U-boot header in the ".appended_dtb" section.
+
+My bootloader has a custom MAGIC so loading still won't work.
+
+
+> 
+> Rob
+> 
+> [1] https://github.com/zonque/pxa-impedance-matcher
+> 
+
+-- 
+Best Regards
+Ulf Samuelsson
