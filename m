@@ -1,82 +1,63 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v2 4/4] drm: omapdrm: Fix DPI on platforms using the DSI VDDS
-Date: Tue, 21 Nov 2017 11:38:13 +0100
-Message-ID: <040DF543-B168-4537-A3B1-B0D4A2BD1E7D@goldelico.com>
-References: <cover.1510822218.git.hns@goldelico.com> <dd2427920427440e051951071377265fc0a830d4.1510822218.git.hns@goldelico.com> <7f34033e-4af7-f5f5-47ef-759249ddfe39@ti.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [patches] Re: [PATCH] dt-bindings: Add a RISC-V SBI firmware node
+Date: Tue, 21 Nov 2017 10:43:57 +0000
+Message-ID: <20171121104357.kpp4xs7n5uqo3jau@lakrids.cambridge.arm.com>
+References: <20171120202856.nptoirhm5luiamt7@latitude>
+ <mhng-4a3ed3c5-a562-427c-817e-cd897789d5c0@palmer-si-x1c4>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7f34033e-4af7-f5f5-47ef-759249ddfe39@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <mhng-4a3ed3c5-a562-427c-817e-cd897789d5c0@palmer-si-x1c4>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
+Cc: j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Palmer,
 
-> Am 21.11.2017 um 11:25 schrieb Tomi Valkeinen <tomi.valkeinen@ti.com>:
->=20
-> On 16/11/17 10:50, H. Nikolaus Schaller wrote:
->> From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>=20
->> Commit d178e034d565 ("drm: omapdrm: Move FEAT_DPI_USES_VDDS_DSI =
-feature
->> to dpi code") replaced usage of platform data version with SoC =
-matching
->> to configure DPI VDDS. The SoC match entries were incorrect, they =
-should
->> have matched on the machine name instead of the SoC family. Fix it.
->>=20
->> The result was observed on OpenPandora with OMAP3530 where the panel =
-only
->> had the Blue channel and Red&Green were missing. It was not observed =
-on
->> GTA04 with DM3730.
->>=20
->> Fixes: d178e034d565 ("drm: omapdrm: Move FEAT_DPI_USES_VDDS_DSI =
-feature to dpi code")
->> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
->> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> drivers/gpu/drm/omapdrm/dss/dpi.c | 4 ++--
->> 1 file changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/drivers/gpu/drm/omapdrm/dss/dpi.c =
-b/drivers/gpu/drm/omapdrm/dss/dpi.c
->> index 4ed5fde11313..a91e5f1a0490 100644
->> --- a/drivers/gpu/drm/omapdrm/dss/dpi.c
->> +++ b/drivers/gpu/drm/omapdrm/dss/dpi.c
->> @@ -566,8 +566,8 @@ static int dpi_verify_pll(struct dss_pll *pll)
->> }
->>=20
->> static const struct soc_device_attribute dpi_soc_devices[] =3D {
->> -	{ .family =3D "OMAP3[456]*" },
->> -	{ .family =3D "[AD]M37*" },
->> +	{ .machine =3D "OMAP3[456]*" },
->> +	{ .machine =3D "[AD]M37*" },
->> 	{ /* sentinel */ }
->> };
->>=20
->>=20
->=20
-> I have picked this one.
+On Mon, Nov 20, 2017 at 01:28:01PM -0800, Palmer Dabbelt wrote:
+> On Mon, 20 Nov 2017 12:28:56 PST (-0800), j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org wrote:
+> > On Mon, Nov 20, 2017 at 11:50:00AM -0800, Palmer Dabbelt wrote:
+> > > +RISC-V Supervisor Binary Interface (SBI)
+> > > +
+> > > +The RISC-V privileged ISA specification mandates the presence of a supervisor
+> > > +binary interface that performs some operations which might otherwise require
+> > > +particularly complicated instructions.  This interface includes
+> > > +inter-processor interrupts, TLB flushes, i-cache and TLB shootdowns, a
+> > > +console, and power management.
+> > > +
+> > > +Required properties:
+> > > +- compatible: must contain one of the following
+> > > + * "riscv,sbi" for the SBI defined by the privileged specification of the
+> > > +   system.
+> > 
+> > "of the system" seems to imply that different RISC-V systems (different
+> > RISC-V implementations) can have different privileged specifications.
+> 
+> Actually, that was intentional -- I wrote it this way because different
+> RISC-V systems do have different privileged specifications.  The RISC-V
+> specifications aren't frozen in time, they're just guaranteed to be
+> compatible in the future. 
 
-Fine.
+If that's the case, then you can define a version of the document that
+is a baseline. e.g. 
 
-> I think the rest of the patches are more of a
-> cleanup, right? And you'll be sending v3 at some point.
+ * "riscv,sbi" for an SBI implementation compatible with that defined
+   in $XYZ_DOCUMENT version $N
 
-Yes. Should we wait for more comments or should I send now?
+If every new feature can be probed from that point onwards, then that's
+all you'll ever need. Otherwise, if there are backwards-incompatible
+changes or non-probeable features, you can add additional strings, and
+there's no ambiguity.
 
-BR and thanks,
-Nikolaus Schaller
+See Documentation/devicetree/bindings/arm/psci.txt for an similar
+example on ARM systems. That's explicitly versioned, though we don't
+list each and every document number, and we probably should.
 
-
->=20
-> Tomi
->=20
-> --=20
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
