@@ -1,199 +1,132 @@
-From: Olivier Moysan <olivier.moysan@st.com>
-Subject: [PATCH 2/3] ASoC: stm32: sai: simplify sync modes
-	management
-Date: Wed, 22 Nov 2017 16:02:26 +0100
-Message-ID: <1511362947-14747-3-git-send-email-olivier.moysan@st.com>
-References: <1511362947-14747-1-git-send-email-olivier.moysan@st.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v3, 02/12] Documentation: ABI: Add occ-hwmon driver sysfs
+ documentation
+Date: Wed, 22 Nov 2017 07:15:10 -0800
+Message-ID: <20171122151510.GA11174@roeck-us.net>
+References: <1511222021-562-3-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1511362947-14747-1-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1511222021-562-3-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: eajames@linux.vnet.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, joel@jms.id.au, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Use function of_find_device_by_node() to retrieve SAI
-synchro provider device and private data.
-This allows to remove registration of probed SAI
-in a linked list.
+On Mon, Nov 20, 2017 at 05:53:31PM -0600, eajames@linux.vnet.ibm.com wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
+> 
+> Detail the sysfs attributes provided by the occ-hwmon driver.
+> 
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_sai.c | 105 ++++++++++------------------------------------
- 1 file changed, 22 insertions(+), 83 deletions(-)
+This describes my problem with this driver: All the sysfs attributes
+described here are not really hardware monitoring related. A later patch
+describes this in more detail:
 
-diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
-index d6f71a3..0a1f064 100644
---- a/sound/soc/stm/stm32_sai.c
-+++ b/sound/soc/stm/stm32_sai.c
-@@ -28,16 +28,6 @@
- 
- #include "stm32_sai.h"
- 
--static LIST_HEAD(sync_providers);
--static DEFINE_MUTEX(sync_mutex);
--
--struct sync_provider {
--	struct list_head link;
--	struct device_node *node;
--	int  (*sync_conf)(void *data, int synco);
--	void *data;
--};
--
- static const struct stm32_sai_conf stm32_sai_conf_f4 = {
- 	.version = SAI_STM32F4,
- };
-@@ -70,9 +60,8 @@ static int stm32_sai_sync_conf_client(struct stm32_sai_data *sai, int synci)
- 	return 0;
- }
- 
--static int stm32_sai_sync_conf_provider(void *data, int synco)
-+static int stm32_sai_sync_conf_provider(struct stm32_sai_data *sai, int synco)
- {
--	struct stm32_sai_data *sai = (struct stm32_sai_data *)data;
- 	u32 prev_synco;
- 	int ret;
- 
-@@ -103,73 +92,34 @@ static int stm32_sai_sync_conf_provider(void *data, int synco)
- 	return 0;
- }
- 
--static int stm32_sai_set_sync_provider(struct device_node *np, int synco)
-+static int stm32_sai_set_sync(struct stm32_sai_data *sai_client,
-+			      struct device_node *np_provider,
-+			      int synco, int synci)
- {
--	struct sync_provider *provider;
-+	struct platform_device *pdev = of_find_device_by_node(np_provider);
-+	struct stm32_sai_data *sai_provider;
- 	int ret;
- 
--	mutex_lock(&sync_mutex);
--	list_for_each_entry(provider, &sync_providers, link) {
--		if (provider->node == np) {
--			ret = provider->sync_conf(provider->data, synco);
--			mutex_unlock(&sync_mutex);
--			return ret;
--		}
-+	if (!pdev) {
-+		dev_err(&sai_client->pdev->dev,
-+			"Device not found for node %s\n", np_provider->name);
-+		return -ENODEV;
- 	}
--	mutex_unlock(&sync_mutex);
- 
--	/* SAI sync provider not found */
--	return -ENODEV;
--}
--
--static int stm32_sai_set_sync(struct stm32_sai_data *sai,
--			      struct device_node *np_provider,
--			      int synco, int synci)
--{
--	int ret;
-+	sai_provider = platform_get_drvdata(pdev);
-+	if (!sai_provider) {
-+		dev_err(&sai_client->pdev->dev,
-+			"SAI sync provider data not found\n");
-+		return -EINVAL;
-+	}
- 
- 	/* Configure sync client */
--	stm32_sai_sync_conf_client(sai, synci);
-+	ret = stm32_sai_sync_conf_client(sai_client, synci);
-+	if (ret < 0)
-+		return ret;
- 
- 	/* Configure sync provider */
--	ret = stm32_sai_set_sync_provider(np_provider, synco);
--
--	return ret;
--}
--
--static int stm32_sai_sync_add_provider(struct platform_device *pdev,
--				       void *data)
--{
--	struct sync_provider *sp;
--
--	sp = devm_kzalloc(&pdev->dev, sizeof(*sp), GFP_KERNEL);
--	if (!sp)
--		return -ENOMEM;
--
--	sp->node = of_node_get(pdev->dev.of_node);
--	sp->data = data;
--	sp->sync_conf = &stm32_sai_sync_conf_provider;
--
--	mutex_lock(&sync_mutex);
--	list_add(&sp->link, &sync_providers);
--	mutex_unlock(&sync_mutex);
--
--	return 0;
--}
--
--static void stm32_sai_sync_del_provider(struct device_node *np)
--{
--	struct sync_provider *sp;
--
--	mutex_lock(&sync_mutex);
--	list_for_each_entry(sp, &sync_providers, link) {
--		if (sp->node == np) {
--			list_del(&sp->link);
--			of_node_put(sp->node);
--			break;
--		}
--	}
--	mutex_unlock(&sync_mutex);
-+	return stm32_sai_sync_conf_provider(sai_provider, synco);
- }
- 
- static int stm32_sai_probe(struct platform_device *pdev)
-@@ -179,7 +129,6 @@ static int stm32_sai_probe(struct platform_device *pdev)
- 	struct reset_control *rst;
- 	struct resource *res;
- 	const struct of_device_id *of_id;
--	int ret;
- 
- 	sai = devm_kzalloc(&pdev->dev, sizeof(*sai), GFP_KERNEL);
- 	if (!sai)
-@@ -231,27 +180,17 @@ static int stm32_sai_probe(struct platform_device *pdev)
- 		reset_control_deassert(rst);
- 	}
- 
--	ret = stm32_sai_sync_add_provider(pdev, sai);
--	if (ret < 0)
--		return ret;
--	sai->set_sync = &stm32_sai_set_sync;
--
- 	sai->pdev = pdev;
-+	sai->set_sync = &stm32_sai_set_sync;
- 	platform_set_drvdata(pdev, sai);
- 
--	ret = of_platform_populate(np, NULL, NULL, &pdev->dev);
--	if (ret < 0)
--		stm32_sai_sync_del_provider(np);
--
--	return ret;
-+	return of_platform_populate(np, NULL, NULL, &pdev->dev);
- }
- 
- static int stm32_sai_remove(struct platform_device *pdev)
- {
- 	of_platform_depopulate(&pdev->dev);
- 
--	stm32_sai_sync_del_provider(pdev->dev.of_node);
--
- 	return 0;
- }
- 
--- 
-1.9.1
+"The OCC can provide the raw sensor data as well as perform thermal
+ and power management on the system."
+
+Is it possible to extract the non-hwmon functionality (maybe into an
+mfd driver) and limit the hwmon part to just hardware monitoring ?
+
+Guenter
+
+
+> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> ---
+>  Documentation/ABI/testing/sysfs-driver-occ-hwmon | 85 ++++++++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-driver-occ-hwmon
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-driver-occ-hwmon b/Documentation/ABI/testing/sysfs-driver-occ-hwmon
+> new file mode 100644
+> index 0000000..8873cc3
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-driver-occ-hwmon
+> @@ -0,0 +1,85 @@
+> +What:		/sys/bus/platform/drivers/occ-hwmon/<dev>/occ_active
+> +Date:		November 2017
+> +KernelVersion:	4.14
+> +Contact:	eajames@us.ibm.com
+> +Description:
+> +		A read-only attribute that indicates (with a "1" or a "0",
+> +		respectively) whether or not this OCC is in the "active" state.
+> +
+> +What:		/sys/bus/platform/drivers/occ-hwmon/<dev>/occ_dvfs_ot
+> +Date:		November 2017
+> +KernelVersion:	4.14
+> +Contact:	eajames@us.ibm.com
+> +Description:
+> +		A read-only attribute that indicates (with a "1" or a "0",
+> +		respectively) whether or not this OCC has limited the processor
+> +		frequency due to over-temperature.
+> +
+> +What:		/sys/bus/platform/drivers/occ-hwmon/<dev>/occ_dvfs_power
+> +Date:		November 2017
+> +KernelVersion:	4.14
+> +Contact:	eajames@us.ibm.com
+> +Description:
+> +		A read-only attribute that indicates (with a "1" or a "0",
+> +		respectively) whether or not this OCC has limited the processor
+> +		frequency due to power usage.
+> +
+> +What:		/sys/bus/platform/drivers/occ-hwmon/<dev>/occ_error
+> +Date:		November 2017
+> +KernelVersion:	4.14
+> +Contact:	eajames@us.ibm.com
+> +Description:
+> +		A read-only attribute that indicates any error condition
+> +		observed by the OCC or detected by the driver. Reading the
+> +		attribute will return an integer. A negative integer indicates
+> +		either an error response from the OCC or bus error or other
+> +		error condition detected by the driver. A "0" indicates no
+> +		error.
+> +
+> +What:		/sys/bus/platform/drivers/occ-hwmon/<dev>/occ_master
+> +Date:		November 2017
+> +KernelVersion:	4.14
+> +Contact:	eajames@us.ibm.com
+> +Description:
+> +		A read-only attribute that indicates (with a "1" or a "0",
+> +		respectively) whether or not this OCC is the "master" OCC.
+> +
+> +What:		/sys/bus/platform/drivers/occ-hwmon/<dev>/occ_mem_throttle
+> +Date:		November 2017
+> +KernelVersion:	4.14
+> +Contact:	eajames@us.ibm.com
+> +Description:
+> +		A read-only attribute that indicates (with a "1" or a "0",
+> +		respectively) whether or not the OCC has throttled memory due
+> +		to over-temperature.
+> +
+> +What:		/sys/bus/platform/drivers/occ-hwmon/<dev>/occs_present
+> +Date:		November 2017
+> +KernelVersion:	4.14
+> +Contact:	eajames@us.ibm.com
+> +Description:
+> +		A read-only attribute that indicates the number of OCCs present
+> +		on the system.
+> +
+> +What:		/sys/bus/platform/drivers/occ-hwmon/<dev>/occ_quick_drop
+> +Date:		November 2017
+> +KernelVersion:	4.14
+> +Contact:	eajames@us.ibm.com
+> +Description:
+> +		A read-only attribute that indicates (with a "1" or a "0",
+> +		respectively) whether or not this OCC has asserted the "quick
+> +		power drop" signal.
+> +
+> +What:		/sys/bus/platform/drivers/occ-hwmon/<dev>/occ_status
+> +Date:		November 2017
+> +KernelVersion:	4.14
+> +Contact:	eajames@us.ibm.com
+> +Description:
+> +		A read-only attribute that indicates the current OCC state. The
+> +		value of the attribute will be one of the following states:
+> +		0: Reserved
+> +		1: Standby
+> +		2: Observation
+> +		3: Active
+> +		4: Safe
+> +		5: Characterization
