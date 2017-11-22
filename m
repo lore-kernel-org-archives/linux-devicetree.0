@@ -1,64 +1,83 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v3 2/3] leds: Add driver for Qualcomm LPG
-Date: Tue, 21 Nov 2017 23:01:40 +0100
-Message-ID: <d291deae-d962-5ca1-2c84-721b90bd0bce@gmail.com>
-References: <20171115071345.24331-1-bjorn.andersson@linaro.org>
- <20171115071345.24331-3-bjorn.andersson@linaro.org>
- <19018aa2-c460-1d5e-8dd2-1cfa557be2f2@gmail.com>
- <20171120211033.GZ28761@minitux> <20171120232211.GC13906@amd>
+From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: xhci: add relaxed timing quirk bit
+Date: Tue, 21 Nov 2017 19:07:09 -0500
+Message-ID: <32f8dc7e-9fde-5e45-1570-a9ec372579fa@codeaurora.org>
+References: <1511284690-3878-1-git-send-email-awallis@codeaurora.org>
+ <1511284690-3878-2-git-send-email-awallis@codeaurora.org>
+ <20171121191103.5oczqvrlo4gtwjqc@rob-hp-laptop>
+ <f200ce55-ac67-02f9-4dbf-7a3ba5b52b39@codeaurora.org>
+ <CAL_JsqLZgnTTEiLXD8ZOK-0qd58i16e7h_-2yjHN+zRFfqvH4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171120232211.GC13906@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLZgnTTEiLXD8ZOK-0qd58i16e7h_-2yjHN+zRFfqvH4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2017 12:22 AM, Pavel Machek wrote:
-> On Mon 2017-11-20 13:10:33, Bjorn Andersson wrote:
->> On Sun 19 Nov 13:36 PST 2017, Jacek Anaszewski wrote:
->>
->>> Hi Bjorn,
->>>
->>> Thanks for the patch. Please refer to my comments in the code.
->>>
->>> On 11/15/2017 08:13 AM, Bjorn Andersson wrote:
->> [..]
->>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
->>>> index 52ea34e337cd..ccc3aa4b2474 100644
->>>> --- a/drivers/leds/Kconfig
->>>> +++ b/drivers/leds/Kconfig
->>>> @@ -651,6 +651,13 @@ config LEDS_POWERNV
->>>>  	  To compile this driver as a module, choose 'm' here: the module
->>>>  	  will be called leds-powernv.
->>>>  
->>>> +config LEDS_QCOM_LPG
->>>> +	tristate "LED support for Qualcomm LPG"
->>>> +	depends on LEDS_CLASS
->>>
->>> You were mentioning that this driver is for a MFD child block,
->>> so we should probably depend on the parent MFD driver?
->>>
->>
->> There's no build time dependency between the two, so it's not strictly
->> necessary.
->>
->> Adding a dependency on MFD_SPMI_PMIC would indirectly add a dependency
->> on ARCH_QCOM, which limit build testing and stop some static code
->> checkers to check the driver.
->>
->> So, unless you strongly object I would prefer not to mention the
->> MFD.
-> 
-> OTOH, this way even users that can't have qualcom LPG are asked the
-> question.
-> 
-> So right way is depends on LEdS_CLASS && (BUILD_TEST || MFD_SPMI_PMIC).
+On 11/21/2017 3:06 PM, Rob Herring wrote:
 
-Ack.
+[..]
+
+>> I like where you are going with this. Are you saying that I could read for a
+>> device property read from firmware (for DTB or ACPI) like DWC3 does for
+>> "snps,hird-threshold"?
+> 
+> Is that for the same thing? If so, drop the vendor prefix and use
+> that. Otherwise, a separate property should really be something that
+> is per board rather than per SoC.
+
+I don't think that's exactly the same property, but it's the same idea I would
+prefer to go with. That way, an integer can be passed in via the firmware tables.
+
+> 
+>> If you mean this, where do you recommend I store the
+>> desired IRQ_CONTROL value - in struct xhci_hcd ?
+> 
+> No idea.
+> 
+>> Or by "compatible" strings, did you mean storing hard-coded values in the
+>> of_device_id usb_xhci_of_match[] array? This would still be hard-coding (which I
+>> would like to avoid) and also would not work for the ACPI case.
+> 
+> ACPI has match tables too?
+> 
+
+Yes, you can use DSD in a way that is similar to OF properties
+
+> It would only be hardcoded per compatible which should be per SoC. Do
+> you need per board/device tuning? If so, use a property.
+> 
+
+The reason why I think it should dynamic via firmware tables is that
+
+* It's much less invasive for vendors to update their DT tables if they need to
+adjust on a per device/controller/family/etc basis then to adjust a properties
+table in xhci-plat
+* This would lead to less polluting in xhci-plat code
+
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+I will provide an updated proposed patch sometime this week. I also hope to get
+some feedback from Mathias to see what he prefers.
+
+Thanks again for the feedback Rob.
+
 
 -- 
-Best regards,
-Jacek Anaszewski
+Adam Wallis
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
