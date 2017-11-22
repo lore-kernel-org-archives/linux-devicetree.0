@@ -1,40 +1,114 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/7] R-Car D3 (r8a77995) CAN support
-Date: Wed, 22 Nov 2017 19:10:45 +0100
-Message-ID: <20171122181045.5pstmikwp43idts5@verge.net.au>
-References: <1510915289-15059-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: xhci: add relaxed timing quirk bit
+Date: Wed, 22 Nov 2017 14:56:01 -0500
+Message-ID: <fa14acbc-268e-be31-fbb9-4772d3840579@codeaurora.org>
+References: <1511284690-3878-1-git-send-email-awallis@codeaurora.org>
+ <1511284690-3878-2-git-send-email-awallis@codeaurora.org>
+ <20171121191103.5oczqvrlo4gtwjqc@rob-hp-laptop>
+ <f200ce55-ac67-02f9-4dbf-7a3ba5b52b39@codeaurora.org>
+ <CAL_JsqLZgnTTEiLXD8ZOK-0qd58i16e7h_-2yjHN+zRFfqvH4Q@mail.gmail.com>
+ <32f8dc7e-9fde-5e45-1570-a9ec372579fa@codeaurora.org>
+ <ee0ca959-1812-a4e4-346f-d57a1fdade13@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1510915289-15059-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, linux-can@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, geert@linux-m68k.org, magnus.damm@gmail.com, chris.paterson2@renesas.com, ramesh.shanmugasundaram@bp.renesas.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ee0ca959-1812-a4e4-346f-d57a1fdade13-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 17, 2017 at 11:41:22AM +0100, Ulrich Hecht wrote:
-> Hi!
+On 11/22/2017 10:24 AM, Mathias Nyman wrote:
+> On 22.11.2017 02:07, Adam Wallis wrote:
+>> On 11/21/2017 3:06 PM, Rob Herring wrote:
+>>
+>> [..]
+>>
+>>>> I like where you are going with this. Are you saying that I could read for a
+>>>> device property read from firmware (for DTB or ACPI) like DWC3 does for
+>>>> "snps,hird-threshold"?
+>>>
+>>> Is that for the same thing? If so, drop the vendor prefix and use
+>>> that. Otherwise, a separate property should really be something that
+>>> is per board rather than per SoC.
+>>
+>> I don't think that's exactly the same property, but it's the same idea I would
+>> prefer to go with. That way, an integer can be passed in via the firmware tables.
+>>
+>>>
+>>>> If you mean this, where do you recommend I store the
+>>>> desired IRQ_CONTROL value - in struct xhci_hcd ?
+>>>
+>>> No idea.
+>>>
+>>>> Or by "compatible" strings, did you mean storing hard-coded values in the
+>>>> of_device_id usb_xhci_of_match[] array? This would still be hard-coding
+>>>> (which I
+>>>> would like to avoid) and also would not work for the ACPI case.
+>>>
+>>> ACPI has match tables too?
+>>>
+>>
+>> Yes, you can use DSD in a way that is similar to OF properties
+>>
+>>> It would only be hardcoded per compatible which should be per SoC. Do
+>>> you need per board/device tuning? If so, use a property.
+>>>
+>>
+>> The reason why I think it should dynamic via firmware tables is that
+>>
+>> * It's much less invasive for vendors to update their DT tables if they need to
+>> adjust on a per device/controller/family/etc basis then to adjust a properties
+>> table in xhci-plat
+>> * This would lead to less polluting in xhci-plat code
+>>
+>>> Rob
+>>> -- 
+>>> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>
+>> I will provide an updated proposed patch sometime this week. I also hope to get
+>> some feedback from Mathias to see what he prefers.
 > 
-> Here's CAN and CAN FD support for the R-Car D3. This is a by-the-datasheet
-> implementation, with the datasheet missing some bits, namely the pin map.
-> I filled in the gaps with frog DNA^W^W^Wby deducing the information from
-> pin numbers already in the PFC driver, so careful scrutiny is advised.
+> We know have at least two hosts/platforms that need custom interrupt moderation
+> values
 > 
-> CU
-> Uli
+> How about adding a u32 device property for xhci with the interrupt moderation
+> interval in
+> nanoseconds?  And also add a u32 imod_interval variable to struct xhci_hcd?
+>  
+> imod_interval can be set to the current default 40000ns (160*250ns) and
+> overwritten if
+> device_property_read_u32() returns something else.
 > 
+> XHCI_MTK_HOST could then use whatever preferred device propery interval value,
+> and we can get rid of using XHCI_MTK_HOST quirk flag when setting up the IMODI
+>  
+> -Mathias
 > 
-> Ulrich Hecht (7):
->   pinctrl: sh-pfc: r8a77995: Add CAN support
->   pinctrl: sh-pfc: r8a77995: Add CAN FD support
->   arm64: dts: r8a77995: Add CAN external clock support
->   arm64: dts: r8a77995: Add CAN support
->   arm64: dts: r8a77995: Add CAN FD support
->   can: rcar_can: document r8a77995 (R-Car D3) compatibility strings
->   can: rcar_canfd: document r8a77995 (R-Car D3) compatibility strings
 
-Hi Ulrich,
+This sounds excellent Mathias. Let me put together a patch along these lines.
+Thanks for the feedback!
 
-is it safe, from a regression point of view, to apply the dts patches
-to a tree that does not have the other patches present?
+Adam
+
+> 
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+-- 
+Adam Wallis
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
