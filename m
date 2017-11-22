@@ -1,246 +1,100 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 2/5] media: dt-bindings: Add bindings for
-	TDA1997X
-Date: Wed, 22 Nov 2017 09:36:06 +0200
-Message-ID: <20171122073606.56ldk3bzg23dkkfm@valkosipuli.retiisi.org.uk>
-References: <1510253136-14153-1-git-send-email-tharvey@gateworks.com>
- <1510253136-14153-3-git-send-email-tharvey@gateworks.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] media: V3s: Add support for
+ Allwinner CSI.
+Date: Wed, 22 Nov 2017 10:45:26 +0100
+Message-ID: <20171122094526.nqxfy2e5jzxw7nl4@flea.lan>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+ <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
+ <20171121154827.5a35xa6zlqrrvkxx@flea.lan>
+ <20171122093306.d30fe641f269d62daa1f66b4@magewell.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="u6lfy6vuiynj7llz"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQMO2XIAKGQEAKCRMHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1510253136-14153-3-git-send-email-tharvey@gateworks.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org, linux-media@vger.kernel.org
+In-Reply-To: <20171122093306.d30fe641f269d62daa1f66b4-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinu
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim,
 
-On Thu, Nov 09, 2017 at 10:45:33AM -0800, Tim Harvey wrote:
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
-> v3:
->  - fix typo
+--u6lfy6vuiynj7llz
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Hi,
+
+On Wed, Nov 22, 2017 at 09:33:06AM +0800, Yong wrote:
+> > On Thu, Jul 27, 2017 at 01:01:35PM +0800, Yong Deng wrote:
+> > > Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
+> > > and CSI1 is used for parallel interface. This is not documented in
+> > > datasheet but by testing and guess.
+> > > 
+> > > This patch implement a v4l2 framework driver for it.
+> > > 
+> > > Currently, the driver only support the parallel interface. MIPI-CSI2,
+> > > ISP's support are not included in this patch.
+> > > 
+> > > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> > 
+> > Thanks again for this driver.
+> > 
+> > It seems like at least this iteration is behaving in a weird way with
+> > DMA transfers for at least YU12 and NV12 (and I would assume YV12).
+> > 
+> > Starting a transfer of multiple frames in either of these formats,
+> > using either ffmpeg (ffmpeg -f v4l2 -video_size 640x480 -framerate 30
+> > -i /dev/video0 output.mkv) or yavta (yavta -c80 -p -F --skip 0 -f NV12
+> > -s 640x480 $(media-c tl -e 'sun6i-csi')) will end up in a panic.
+> > 
+> > The panic seems to be generated with random data going into parts of
+> > the kernel memory, the pattern being in my case something like
+> > 0x8287868a which is very odd (always around 0x88)
+> > 
+> > It turns out that when you cover the sensor, the values change to
+> > around 0x28, so it really seems like it's pixels that have been copied
+> > there.
+> > 
+> > I've looked quickly at the DMA setup, and it seems reasonable to
+> > me. Do you have the same issue on your side? Have you been able to
+> > test those formats using your hardware?
 > 
-> v2:
->  - add vendor prefix and remove _ from vidout-portcfg
->  - remove _ from labels
->  - remove max-pixel-rate property
->  - describe and provide example for single output port
->  - update to new audio port bindings
-> ---
->  .../devicetree/bindings/media/i2c/tda1997x.txt     | 179 +++++++++++++++++++++
->  1 file changed, 179 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+> I had tested the following formats with BT1120 input:
+> V4L2_PIX_FMT_NV12		-> NV12
+> V4L2_PIX_FMT_NV21		-> NV21
+> V4L2_PIX_FMT_NV16		-> NV16
+> V4L2_PIX_FMT_NV61		-> NV61
+> V4L2_PIX_FMT_YUV420		-> YU12
+> V4L2_PIX_FMT_YVU420		-> YV12
+> V4L2_PIX_FMT_YUV422P		-> 422P
+> And they all work fine.
+
+Ok, that's good to know.
+
+> > Given that they all are planar formats and YUYV and the likes work
+> > just fine, maybe we can leave them aside for now?
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tda1997x.txt b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-> new file mode 100644
-> index 0000000..dd37f14
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-> @@ -0,0 +1,179 @@
-> +Device-Tree bindings for the NXP TDA1997x HDMI receiver
-> +
-> +The TDA19971/73 are HDMI video receivers.
-> +
-> +The TDA19971 Video port output pins can be used as follows:
-> + - RGB 8bit per color (24 bits total): R[11:4] B[11:4] G[11:4]
-> + - YUV444 8bit per color (24 bits total): Y[11:4] Cr[11:4] Cb[11:4]
-> + - YUV422 semi-planar 8bit per component (16 bits total): Y[11:4] CbCr[11:4]
-> + - YUV422 semi-planar 10bit per component (20 bits total): Y[11:2] CbCr[11:2]
-> + - YUV422 semi-planar 12bit per component (24 bits total): - Y[11:0] CbCr[11:0]
-> + - YUV422 BT656 8bit per component (8 bits total): YCbCr[11:4] (2-cycles)
-> + - YUV422 BT656 10bit per component (10 bits total): YCbCr[11:2] (2-cycles)
-> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
-> +
-> +The TDA19973 Video port output pins can be used as follows:
-> + - RGB 12bit per color (36 bits total): R[11:0] B[11:0] G[11:0]
-> + - YUV444 12bit per color (36 bits total): Y[11:0] Cb[11:0] Cr[11:0]
-> + - YUV422 semi-planar 12bit per component (24 bits total): Y[11:0] CbCr[11:0]
-> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
-> +
-> +The Video port output pins are mapped via 4-bit 'pin groups' allowing
-> +for a variety of connection possibilities including swapping pin order within
-> +pin groups. The video_portcfg device-tree property consists of register mapping
-> +pairs which map a chip-specific VP output register to a 4-bit pin group. If
-> +the pin group needs to be bit-swapped you can use the *_S pin-group defines.
-> +
-> +Required Properties:
-> + - compatible          :
-> +  - "nxp,tda19971" for the TDA19971
-> +  - "nxp,tda19973" for the TDA19973
-> + - reg                 : I2C slave address
-> + - interrupts          : The interrupt number
-> + - DOVDD-supply        : Digital I/O supply
-> + - DVDD-supply         : Digital Core supply
-> + - AVDD-supply         : Analog supply
-> + - nxp,vidout-portcfg  : array of pairs mapping VP output pins to pin groups.
-> +
-> +Optional Properties:
-> + - nxp,audout-format   : DAI bus format: "i2s" or "spdif".
-> + - nxp,audout-width    : width of audio output data bus (1-4).
-> + - nxp,audout-layout   : data layout (0=AP0 used, 1=AP0/AP1/AP2/AP3 used).
-> + - nxp,audout-mclk-fs  : Multiplication factor between stream rate and codec
-> +                         mclk.
-> +
-> +The device node must contain one 'port' child node for its digital output
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-Could you add that this port has one endpoint node as well? (Unless you
-support multiple, that is.)
-
-> +
-> +Optional Endpoint Properties:
-> +  The following three properties are defined in video-interfaces.txt and
-> +  are valid for source endpoints only:
-
-Transmitters? Don't you have an endpoint only in the port representing the
-transmitter?
-
-> +  - hsync-active: Horizontal synchronization polarity. Defaults to active high.
-> +  - vsync-active: Vertical synchronization polarity. Defaults to active high.
-> +  - data-active: Data polarity. Defaults to active high.
-> +
-> +Examples:
-> + - VP[15:0] connected to IMX6 CSI_DATA[19:4] for 16bit YUV422
-> +   16bit I2S layout0 with a 128*fs clock (A_WS, AP0, A_CLK pins)
-> +	hdmi-receiver@48 {
-> +		compatible = "nxp,tda19971";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_tda1997x>;
-> +		reg = <0x48>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-> +		DOVDD-supply = <&reg_3p3v>;
-> +		AVDD-supply = <&reg_1p8v>;
-> +		DVDD-supply = <&reg_1p8v>;
-> +		/* audio */
-> +		#sound-dai-cells = <0>;
-> +		nxp,audout-format = "i2s";
-> +		nxp,audout-layout = <0>;
-> +		nxp,audout-width = <16>;
-> +		nxp,audout-mclk-fs = <128>;
-> +		/*
-> +		 * The 8bpp YUV422 semi-planar mode outputs CbCr[11:4]
-> +		 * and Y[11:4] across 16bits in the same pixclk cycle.
-> +		 */
-> +		nxp,vidout-portcfg =
-> +			/* Y[11:8]<->VP[15:12]<->CSI_DATA[19:16] */
-> +			< TDA1997X_VP24_V15_12 TDA1997X_G_Y_11_8 >,
-> +			/* Y[7:4]<->VP[11:08]<->CSI_DATA[15:12] */
-> +			< TDA1997X_VP24_V11_08 TDA1997X_G_Y_7_4 >,
-> +			/* CbCc[11:8]<->VP[07:04]<->CSI_DATA[11:8] */
-> +			< TDA1997X_VP24_V07_04 TDA1997X_R_CR_CBCR_11_8 >,
-> +			/* CbCr[7:4]<->VP[03:00]<->CSI_DATA[7:4] */
-> +			< TDA1997X_VP24_V03_00 TDA1997X_R_CR_CBCR_7_4 >;
-> +
-> +		port {
-> +			tda1997x_to_ipu1_csi0_mux: endpoint {
-> +				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-> +				bus-width = <16>;
-> +				hsync-active = <1>;
-> +				vsync-active = <1>;
-> +				data-active = <1>;
-> +			};
-> +		};
-> +	};
-> + - VP[15:8] connected to IMX6 CSI_DATA[19:12] for 8bit BT656
-> +   16bit I2S layout0 with a 128*fs clock (A_WS, AP0, A_CLK pins)
-> +	hdmi-receiver@48 {
-> +		compatible = "nxp,tda19971";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_tda1997x>;
-> +		reg = <0x48>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-> +		DOVDD-supply = <&reg_3p3v>;
-> +		AVDD-supply = <&reg_1p8v>;
-> +		DVDD-supply = <&reg_1p8v>;
-> +		/* audio */
-> +		#sound-dai-cells = <0>;
-> +		nxp,audout-format = "i2s";
-> +		nxp,audout-layout = <0>;
-> +		nxp,audout-width = <16>;
-> +		nxp,audout-mclk-fs = <128>;
-> +		/*
-> +		 * The 8bpp YUV422 semi-planar mode outputs CbCr[11:4]
-> +		 * and Y[11:4] across 16bits in the same pixclk cycle.
-> +		 */
-> +		nxp,vidout-portcfg =
-> +			/* Y[11:8]<->VP[15:12]<->CSI_DATA[19:16] */
-> +			< TDA1997X_VP24_V15_12 TDA1997X_G_Y_11_8 >,
-> +			/* Y[7:4]<->VP[11:08]<->CSI_DATA[15:12] */
-> +			< TDA1997X_VP24_V11_08 TDA1997X_G_Y_7_4 >,
-> +			/* CbCc[11:8]<->VP[07:04]<->CSI_DATA[11:8] */
-> +			< TDA1997X_VP24_V07_04 TDA1997X_R_CR_CBCR_11_8 >,
-> +			/* CbCr[7:4]<->VP[03:00]<->CSI_DATA[7:4] */
-> +			< TDA1997X_VP24_V03_00 TDA1997X_R_CR_CBCR_7_4 >;
-> +
-> +		port {
-> +			tda1997x_to_ipu1_csi0_mux: endpoint {
-> +				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-> +				bus-width = <16>;
-> +				hsync-active = <1>;
-> +				vsync-active = <1>;
-> +				data-active = <1>;
-> +			};
-> +		};
-> +	};
-> + - VP[15:8] connected to IMX6 CSI_DATA[19:12] for 8bit BT656
-> +   16bit I2S layout0 with a 128*fs clock (A_WS, AP0, A_CLK pins)
-> +	hdmi-receiver@48 {
-> +		compatible = "nxp,tda19971";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_tda1997x>;
-> +		reg = <0x48>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-> +		DOVDD-supply = <&reg_3p3v>;
-> +		AVDD-supply = <&reg_1p8v>;
-> +		DVDD-supply = <&reg_1p8v>;
-> +		/* audio */
-> +		#sound-dai-cells = <0>;
-> +		nxp,audout-format = "i2s";
-> +		nxp,audout-layout = <0>;
-> +		nxp,audout-width = <16>;
-> +		nxp,audout-mclk-fs = <128>;
-> +		/*
-> +		 * The 8bpp BT656 mode outputs YCbCr[11:4] across 8bits over
-> +		 * 2 pixclk cycles.
-> +		 */
-> +		nxp,vidout-portcfg =
-> +			/* YCbCr[11:8]<->VP[15:12]<->CSI_DATA[19:16] */
-> +			< TDA1997X_VP24_V15_12 TDA1997X_R_CR_CBCR_11_8 >,
-> +			/* YCbCr[7:4]<->VP[11:08]<->CSI_DATA[15:12] */
-> +			< TDA1997X_VP24_V11_08 TDA1997X_R_CR_CBCR_7_4 >,
-> +
-> +		port {
-> +			tda1997x_to_ipu1_csi0_mux: endpoint {
-> +				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-> +				bus-width = <16>;
-> +				hsync-active = <1>;
-> +				vsync-active = <1>;
-> +				data-active = <1>;
-> +			};
-> +		};
-> +	};
-> +
-> -- 
-> 2.7.4
+> V4L2_PIX_FMT_YUV422P and V4L2_PIX_FMT_YUYV is OK, and V4L2_PIX_FMT_NV12
+> is bad? It's really weird.
 > 
+> What's your input bus code format, type and width?
+
+The sensor is an ov5640, so the MBUS code for the bus is
+MEDIA_BUS_FMT_YUYV8_2X8.
+
+Thanks!
+Maxime
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--u6lfy6vuiynj7llz--
