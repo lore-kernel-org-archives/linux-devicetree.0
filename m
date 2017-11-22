@@ -1,82 +1,37 @@
-From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: xhci: add relaxed timing quirk bit
-Date: Tue, 21 Nov 2017 19:07:09 -0500
-Message-ID: <32f8dc7e-9fde-5e45-1570-a9ec372579fa@codeaurora.org>
-References: <1511284690-3878-1-git-send-email-awallis@codeaurora.org>
- <1511284690-3878-2-git-send-email-awallis@codeaurora.org>
- <20171121191103.5oczqvrlo4gtwjqc@rob-hp-laptop>
- <f200ce55-ac67-02f9-4dbf-7a3ba5b52b39@codeaurora.org>
- <CAL_JsqLZgnTTEiLXD8ZOK-0qd58i16e7h_-2yjHN+zRFfqvH4Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [patches] Re: [PATCH] dt-bindings: Add a RISC-V SBI firmware node
+Date: Tue, 21 Nov 2017 16:36:22 -0800 (PST)
+Message-ID: <mhng-40a689c5-fa7b-4cff-9739-555b7c65981f@palmer-si-x1c4>
+References: <20171121200832.d55khzcufo2owcff@latitude>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLZgnTTEiLXD8ZOK-0qd58i16e7h_-2yjHN+zRFfqvH4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171121200832.d55khzcufo2owcff@latitude>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2017 3:06 PM, Rob Herring wrote:
+On Tue, 21 Nov 2017 12:08:32 PST (-0800), j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org wrote:
+> On Tue, Nov 21, 2017 at 09:37:02AM -0800, Palmer Dabbelt wrote:
+> [...]
+>> This isn't really a big deal to me, as I'm only interested in RISC-V
+>> systems, but there's been some pushback on the concept of an SBI so it
+>> seemed like a simple way to allow people to build non-SBI (and there for not
+>> really RISC-V) systems.
+>
+> For those reading along: I suggested the /firmware/sbi node to Palmer,
+> because I'm interested in such "not really RISC-V" systems, (because it
+> makes the firmware's job easier to not implement the SBI — speaking with
+> my coreboot hat, here.)
+>
+>> One option that wouldn't require a device tree node
+>> would be to have Linux boot in machine mode [...] and then provide its
+>> own SBI implementation.
+>
+> I think this can work.
 
-[..]
-
->> I like where you are going with this. Are you saying that I could read for a
->> device property read from firmware (for DTB or ACPI) like DWC3 does for
->> "snps,hird-threshold"?
-> 
-> Is that for the same thing? If so, drop the vendor prefix and use
-> that. Otherwise, a separate property should really be something that
-> is per board rather than per SoC.
-
-I don't think that's exactly the same property, but it's the same idea I would
-prefer to go with. That way, an integer can be passed in via the firmware tables.
-
-> 
->> If you mean this, where do you recommend I store the
->> desired IRQ_CONTROL value - in struct xhci_hcd ?
-> 
-> No idea.
-> 
->> Or by "compatible" strings, did you mean storing hard-coded values in the
->> of_device_id usb_xhci_of_match[] array? This would still be hard-coding (which I
->> would like to avoid) and also would not work for the ACPI case.
-> 
-> ACPI has match tables too?
-> 
-
-Yes, you can use DSD in a way that is similar to OF properties
-
-> It would only be hardcoded per compatible which should be per SoC. Do
-> you need per board/device tuning? If so, use a property.
-> 
-
-The reason why I think it should dynamic via firmware tables is that
-
-* It's much less invasive for vendors to update their DT tables if they need to
-adjust on a per device/controller/family/etc basis then to adjust a properties
-table in xhci-plat
-* This would lead to less polluting in xhci-plat code
-
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
-I will provide an updated proposed patch sometime this week. I also hope to get
-some feedback from Mathias to see what he prefers.
-
-Thanks again for the feedback Rob.
-
-
--- 
-Adam Wallis
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+OK, sounds good!
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
