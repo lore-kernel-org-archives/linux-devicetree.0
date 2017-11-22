@@ -1,157 +1,94 @@
-From: Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2] arm64: dts: ls1088a: Add USB support
-Date: Wed, 22 Nov 2017 01:32:22 +0000
-Message-ID: <VI1PR04MB1262DD3C6A18257DEE2E907DE9200@VI1PR04MB1262.eurprd04.prod.outlook.com>
-References: <20170913091009.21448-1-yinbo.zhu@nxp.com>
- <20170922065454.GF26358@dragon>
- <VI1PR04MB1262D160BA8625330E32CAF9E9470@VI1PR04MB1262.eurprd04.prod.outlook.com>
- <AM3PR04MB12515DB71B8ACF7422A20244E9280@AM3PR04MB1251.eurprd04.prod.outlook.com>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] media: V3s: Add support for
+ Allwinner CSI.
+Date: Wed, 22 Nov 2017 09:33:06 +0800
+Message-ID: <20171122093306.d30fe641f269d62daa1f66b4@magewell.com>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+	<1501131697-1359-2-git-send-email-yong.deng@magewell.com>
+	<20171121154827.5a35xa6zlqrrvkxx@flea.lan>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AM3PR04MB12515DB71B8ACF7422A20244E9280-f56W/S9L6NR31AIMYRlgnc9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Catalin Marinas )" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "Will Deacon )" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, Raghav Dogra <raghav.dogra-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>, Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBB25H2PIAKGQEGMVQEOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171121154827.5a35xa6zlqrrvkxx-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sun
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Tue, 21 Nov 2017 16:48:27 +0100
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
------Original Message-----
-From: Yinbo Zhu=20
-Sent: Tuesday, November 14, 2017 4:00 PM
-To: 'Shawn Guo' <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; 'Mark Rutland' <mark.rutland-AbSShOkvfpQ@public.gmane.org=
-m>; 'Catalin Marinas )' <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; 'Will Deacon )' <will.de=
-acon-5wv7dgnIgG8@public.gmane.org>; Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>; 'Raghav Dogra' <ragha=
-v.dogra-3arQi8VN3Tc@public.gmane.org>; Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>; Andy Tang <andy.tang=
-@nxp.com>; 'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS' <de=
-vicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; 'linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org' <linux-ar=
-m-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>; 'open list' <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Subject: RE: [PATCH v2] arm64: dts: ls1088a: Add USB support
+> Hi,
+> 
+> On Thu, Jul 27, 2017 at 01:01:35PM +0800, Yong Deng wrote:
+> > Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
+> > and CSI1 is used for parallel interface. This is not documented in
+> > datasheet but by testing and guess.
+> > 
+> > This patch implement a v4l2 framework driver for it.
+> > 
+> > Currently, the driver only support the parallel interface. MIPI-CSI2,
+> > ISP's support are not included in this patch.
+> > 
+> > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> 
+> Thanks again for this driver.
+> 
+> It seems like at least this iteration is behaving in a weird way with
+> DMA transfers for at least YU12 and NV12 (and I would assume YV12).
+> 
+> Starting a transfer of multiple frames in either of these formats,
+> using either ffmpeg (ffmpeg -f v4l2 -video_size 640x480 -framerate 30
+> -i /dev/video0 output.mkv) or yavta (yavta -c80 -p -F --skip 0 -f NV12
+> -s 640x480 $(media-c tl -e 'sun6i-csi')) will end up in a panic.
+> 
+> The panic seems to be generated with random data going into parts of
+> the kernel memory, the pattern being in my case something like
+> 0x8287868a which is very odd (always around 0x88)
+> 
+> It turns out that when you cover the sensor, the values change to
+> around 0x28, so it really seems like it's pixels that have been copied
+> there.
+> 
+> I've looked quickly at the DMA setup, and it seems reasonable to
+> me. Do you have the same issue on your side? Have you been able to
+> test those formats using your hardware?
 
+I had tested the following formats with BT1120 input:
+V4L2_PIX_FMT_NV12		-> NV12
+V4L2_PIX_FMT_NV21		-> NV21
+V4L2_PIX_FMT_NV16		-> NV16
+V4L2_PIX_FMT_NV61		-> NV61
+V4L2_PIX_FMT_YUV420		-> YU12
+V4L2_PIX_FMT_YVU420		-> YV12
+V4L2_PIX_FMT_YUV422P		-> 422P
+And they all work fine.
 
+> 
+> Given that they all are planar formats and YUYV and the likes work
+> just fine, maybe we can leave them aside for now?
 
------Original Message-----
-From: Yinbo Zhu=20
-Sent: Tuesday, October 24, 2017 5:15 PM
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; =
-Catalin Marinas ) <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; Will Deacon ) <will.deacon@arm=
-.com>; Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>; Raghav Dogra <raghav.dogra@nx=
-p.com>; Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>; Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>;=
- open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vge=
-r.kernel.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; open list <linux-kerne=
-l@vger.kernel.org>
-Subject: RE: [PATCH v2] arm64: dts: ls1088a: Add USB support
+V4L2_PIX_FMT_YUV422P and V4L2_PIX_FMT_YUYV is OK, and V4L2_PIX_FMT_NV12
+is bad? It's really weird.
 
+What's your input bus code format, type and width?
 
------Original Message-----
-From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]=20
-Sent: Friday, September 22, 2017 2:55 PM
-To: Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; =
-Catalin Marinas ) <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; Will Deacon ) <will.deacon@arm=
-.com>; Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>; Raghav Dogra <raghav.dogra@nx=
-p.com>; Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>; Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>;=
- open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vge=
-r.kernel.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; open list <linux-kerne=
-l@vger.kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: ls1088a: Add USB support
+> 
+> Thanks!
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
-On Wed, Sep 13, 2017 at 05:10:09PM +0800, yinbo.zhu-3arQi8VN3Tc@public.gmane.org wrote:
-> From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
->=20
-> Fix the issue that usb is not detected on ls1088ardb
-
->It's not really about fixing issue but adding support.
-
-The patch had been tested on upstream 4.14 code, it can fix the issue.=20
->=20
-> Signed-off-by: yinbo.zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
-> ---
-
->You should better have a version history here to tell what's changed betwe=
-en version.
-
->I will add a version history on next v3 patch
-Hi,
-
-I had modified the code as v4 version,=20
-https://patchwork.kernel.org/patch/10027393/
-please check.
 
 Thanks,
-BRs
->  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 20 +++++++++++++++++=
-+++
->  2 files changed, 28 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts=20
-> b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> index 213abb72de93..6c3c3bc4b681 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> @@ -118,6 +118,14 @@
->  	status =3D "okay";
->  };
-> =20
-> +&usb0 {
-> +	status =3D "okay";
-> +};
-> +
-> +&usb1 {
-> +	status =3D "okay";
-> +};
-> +
->  &esdhc {
-
->Please sort these labeled nodes alphabetically.
-
->Shawn
-
->  	status =3D "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi=20
-> b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index c144d06a6e33..c23fede8cf5d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -359,6 +359,26 @@
->  			status =3D "disabled";
->  		};
-> =20
-> +		usb0: usb3@3100000 {
-> +			compatible =3D "snps,dwc3";
-> +			reg =3D <0x0 0x3100000 0x0 0x10000>;
-> +			interrupts =3D <0 80 IRQ_TYPE_LEVEL_HIGH>;
-> +			dr_mode =3D "host";
-> +			snps,quirk-frame-length-adjustment =3D <0x20>;
-> +			snps,dis_rxdet_inp3_quirk;
-> +			status =3D "disabled";
-> +		};
-> +
-> +		usb1: usb3@3110000 {
-> +			compatible =3D "snps,dwc3";
-> +			reg =3D <0x0 0x3110000 0x0 0x10000>;
-> +			interrupts =3D <0 81 IRQ_TYPE_LEVEL_HIGH>;
-> +			dr_mode =3D "host";
-> +			snps,quirk-frame-length-adjustment =3D <0x20>;
-> +			snps,dis_rxdet_inp3_quirk;
-> +			status =3D "disabled";
-> +		};
-> +
->  		sata: sata@3200000 {
->  			compatible =3D "fsl,ls1088a-ahci";
->  			reg =3D <0x0 0x3200000 0x0 0x10000>,
-> --
-> 2.14.1
->=20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yong
