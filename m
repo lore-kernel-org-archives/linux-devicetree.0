@@ -1,205 +1,175 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [v3,10/12] hwmon (occ): Add non-hwmon attributes
-Date: Wed, 22 Nov 2017 07:23:19 -0800
-Message-ID: <20171122152319.GA32326@roeck-us.net>
-References: <1511222021-562-11-git-send-email-eajames@linux.vnet.ibm.com>
+From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+Subject: Re: [PATCH v3 2/4] [media] dt-bindings: Document BCM283x CSI2/CCP2 receiver
+Date: Wed, 22 Nov 2017 16:39:21 +0000
+Message-ID: <CAAoAYcMaL9m9fN8XHAYaUhVsrWxH7rwuYW1F+K9Wjjde_E242w@mail.gmail.com>
+References: <cover.1505916622.git.dave.stevenson@raspberrypi.org>
+ <fae3d29bba67825030c0077dd9c79534b6888512.1505916622.git.dave.stevenson@raspberrypi.org>
+ <1814950930.414004.1506062733728@email.1und1.de> <CAAoAYcMFm82vo5k-iCCpARbndyrLDt1UMV_kRUDHiHA0iMzhMg@mail.gmail.com>
+ <20170927215124.6k3j54qf2qscnzc2@rob-hp-laptop> <CAAoAYcM0m6Z8hUDn+FuNb-O28geAYJqHWrhKPDP_Jvh2P-YE3A@mail.gmail.com>
+ <877euje8mc.fsf@anholt.net> <CAL_JsqJ51jd8nkYAKvLUEf8n7+eJsd8JxW-8YJ6gfx1_Y1LzdA@mail.gmail.com>
+ <87bmjvcpyv.fsf@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1511222021-562-11-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <87bmjvcpyv.fsf@anholt.net>
+Sender: linux-media-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: Rob Herring <robh@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hans.verkuil@cisco.com>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 05:53:39PM -0600, eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org wrote:
-> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> 
-> Create device attributes for additional OCC properties that do not
-> belong as hwmon sensors. These provide additional information as to the
-> state of the processor and system.
-> 
-... and those attributes should really not be part of the hwmon driver.
+On 21 November 2017 at 20:54, Eric Anholt <eric@anholt.net> wrote:
+> Rob Herring <robh@kernel.org> writes:
+>
+>> On Tue, Nov 21, 2017 at 1:26 PM, Eric Anholt <eric@anholt.net> wrote:
+>>> Dave Stevenson <dave.stevenson@raspberrypi.org> writes:
+>>>
+>>>> Hi Rob
+>>>>
+>>>> On 27 September 2017 at 22:51, Rob Herring <robh@kernel.org> wrote:
+>>>>> On Fri, Sep 22, 2017 at 05:07:22PM +0100, Dave Stevenson wrote:
+>>>>>> Hi Stefan
+>>>>>>
+>>>>>> On 22 September 2017 at 07:45, Stefan Wahren <stefan.wahren@i2se.com> wrote:
+>>>>>> > Hi Dave,
+>>>>>> >
+>>>>>> >> Dave Stevenson <dave.stevenson@raspberrypi.org> hat am 20. September 2017 um 18:07 geschrieben:
+>>>>>> >>
+>>>>>> >>
+>>>>>> >> Document the DT bindings for the CSI2/CCP2 receiver peripheral
+>>>>>> >> (known as Unicam) on BCM283x SoCs.
+>>>>>> >>
+>>>>>> >> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
+>>>>>> >> ---
+>>>>>> >>
+>>>>>> >> Changes since v2
+>>>>>> >> - Removed all references to Linux drivers.
+>>>>>> >> - Reworded section about disabling the firmware driver.
+>>>>>> >> - Renamed clock from "lp_clock" to "lp" in description and example.
+>>>>>> >> - Referred to video-interfaces.txt and stated requirements on remote-endpoint
+>>>>>> >>   and data-lanes.
+>>>>>> >> - Corrected typo in example from csi to csi1.
+>>>>>> >> - Removed unnecessary #address-cells and #size-cells in example.
+>>>>>> >> - Removed setting of status from the example.
+>>>>>> >>
+>>>>>> >>  .../devicetree/bindings/media/bcm2835-unicam.txt   | 85 ++++++++++++++++++++++
+>>>>>> >>  1 file changed, 85 insertions(+)
+>>>>>> >>  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
+>>>>>> >>
+>>>>>> >> diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
+>>>>>> >> new file mode 100644
+>>>>>> >> index 0000000..7714fb3
+>>>>>> >> --- /dev/null
+>>>>>> >> +++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
+>>>>>> >> @@ -0,0 +1,85 @@
+>>>>>> >> +Broadcom BCM283x Camera Interface (Unicam)
+>>>>>> >> +------------------------------------------
+>>>>>> >> +
+>>>>>> >> +The Unicam block on BCM283x SoCs is the receiver for either
+>>>>>> >> +CSI-2 or CCP2 data from image sensors or similar devices.
+>>>>>> >> +
+>>>>>> >> +The main platform using this SoC is the Raspberry Pi family of boards.
+>>>>>> >> +On the Pi the VideoCore firmware can also control this hardware block,
+>>>>>> >> +and driving it from two different processors will cause issues.
+>>>>>> >> +To avoid this, the firmware checks the device tree configuration
+>>>>>> >> +during boot. If it finds device tree nodes called csi0 or csi1 then
+>>>>>> >> +it will stop the firmware accessing the block, and it can then
+>>>>>> >> +safely be used via the device tree binding.
+>>>>>> >> +
+>>>>>> >> +Required properties:
+>>>>>> >> +===================
+>>>>>> >> +- compatible : must be "brcm,bcm2835-unicam".
+>>>>>> >> +- reg                : physical base address and length of the register sets for the
+>>>>>> >> +               device.
+>>>>>> >> +- interrupts : should contain the IRQ line for this Unicam instance.
+>>>>>> >> +- clocks     : list of clock specifiers, corresponding to entries in
+>>>>>> >> +               clock-names property.
+>>>>>> >> +- clock-names        : must contain an "lp" entry, matching entries in the
+>>>>>> >> +               clocks property.
+>>>>>> >> +
+>>>>>> >> +Unicam supports a single port node. It should contain one 'port' child node
+>>>>>> >> +with child 'endpoint' node. Please refer to the bindings defined in
+>>>>>> >> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+>>>>>> >> +
+>>>>>> >> +Within the endpoint node the "remote-endpoint" and "data-lanes" properties
+>>>>>> >> +are mandatory.
+>>>>>> >> +Data lane reordering is not supported so the data lanes must be in order,
+>>>>>> >> +starting at 1. The number of data lanes should represent the number of
+>>>>>> >> +usable lanes for the hardware block. That may be limited by either the SoC or
+>>>>>> >> +how the platform presents the interface, and the lower value must be used.
+>>>>>> >> +
+>>>>>> >> +Lane reordering is not supported on the clock lane either, so the optional
+>>>>>> >> +property "clock-lane" will implicitly be <0>.
+>>>>>> >> +Similarly lane inversion is not supported, therefore "lane-polarities" will
+>>>>>> >> +implicitly be <0 0 0 0 0>.
+>>>>>> >> +Neither of these values will be checked.
+>>>>>> >> +
+>>>>>> >> +Example:
+>>>>>> >> +     csi1: csi1@7e801000 {
+>>>>>> >> +             compatible = "brcm,bcm2835-unicam";
+>>>>>> >> +             reg = <0x7e801000 0x800>,
+>>>>>> >> +                   <0x7e802004 0x4>;
+>>>>>> >
+>>>>>> > sorry, i didn't noticed this before. I'm afraid this is using a small range of the CMI. Are there possible other users of this range? Does it make sense to handle this by a separate clock driver?
+>>>>>>
+>>>>>> CMI (Clock Manager Image) consists of a total of 4 registers.
+>>>>>> 0x7e802000 is CMI_CAM0, with only bits 0-5 used for gating and
+>>>>>> inversion of the clock and data lanes (2 data lanes available on
+>>>>>> CAM0).
+>>>>>> 0x7e802004 is CMI_CAM1, with only bits 0-9 used for gating and
+>>>>>> inversion of the clock and data lanes (4 data lanes available on
+>>>>>> CAM1).
+>>>>>> 0x7e802008 is CMI_CAMTEST which I have no documentation or drivers for.
+>>>>>> 0x7e802010 is CMI_USBCTL. Only bit 6 is documented and is a reset. The
+>>>>>> default value is the required value. Nothing touches it that I can
+>>>>>> find.
+>>>>>>
+>>>>>> The range listed only covers the one register associated with that
+>>>>>> Unicam instance, so no other users. The other two aren't touched.
+>>>>>> Do 16 active register bits solely for camera clock gating really
+>>>>>> warrant a full clock driver?
+>>>>>
+>>>>> You should describe all the registers in DT, not just what the driver
+>>>>> (currently) uses.
+>>>>
+>>>> I'm not clear what you're asking for here.
+>>>>
+>>>> This binding is for the Unicam block, not for CMI (Clock Manager
+>>>> Imaging). In order for a Unicam instance to work, it needs to enable
+>>>> the relevant clock gating via 1 CMI register, and it will only ever be
+>>>> one register.
+>>>
+>>> Rob, the CMI just a small bit of glue required by the crossing of a
+>>> power domain in a unicam instance, and the two unicam instances in this
+>>> HW have their CMI regs next to each other.  It's not really a separate
+>>> block, and I think describing the unicam's CMI reg in the unicam binding
+>>> is appropriate.
+>>>
+>>> What would you need from Dave to ack this binding?
+>>
+>> Sorry, had started to reply on this and got distracted.
+>>
+>> I guess since there seems to be only 1 other bit that could possibly
+>> be used (CMI_USBCTL) it is fine like this. However, my concern would
+>> be if the CMI registers are integrated in a different way in some
+>> future chip that has the same unicam instances. Or just if the
+>> register bits are rearranged. Those are not an uncommon occurrence.
+>> You would have to provide access to those registers in some other way.
+>> It can be dealt with, but then you have to support both cases in the
+>> driver. If you all are fine with that, then:
+>
+> The bigisland chips match bcm2835.  For capri the lane enables are
+> shifted down by two and the clock is up at bit 20.  That would be
+> trivial to handle based on the compatible string, except that we can't
+> talk to capri's hardware from ARM anyway :(
 
-> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/hwmon/occ/common.c | 93 ++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/hwmon/occ/common.h |  1 +
->  drivers/hwmon/occ/p8_i2c.c | 10 +++++
->  drivers/hwmon/occ/p9_sbe.c |  2 +
->  4 files changed, 106 insertions(+)
-> 
-> diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
-> index 337f286b..53e3592 100644
-> --- a/drivers/hwmon/occ/common.c
-> +++ b/drivers/hwmon/occ/common.c
-> @@ -24,6 +24,14 @@
->  
->  #define OCC_FRU_TYPE_VRM		0x3
->  
-> +/* OCC status bits */
-> +#define OCC_STAT_MASTER			0x80
-> +#define OCC_STAT_ACTIVE			0x01
-> +#define OCC_EXT_STAT_DVFS_OT		0x80
-> +#define OCC_EXT_STAT_DVFS_POWER		0x40
-> +#define OCC_EXT_STAT_MEM_THROTTLE	0x20
-> +#define OCC_EXT_STAT_QUICK_DROP		0x10
-> +
->  /* OCC sensor type and version definitions */
->  
->  struct temp_sensor_1 {
-> @@ -1108,6 +1116,81 @@ static int occ_setup_sensor_attrs(struct occ *occ)
->  	return 0;
->  }
->  
-> +static ssize_t occ_show_status(struct device *dev,
-> +			       struct device_attribute *attr, char *buf)
-> +{
-> +	int rc;
-> +	int val = 0;
-> +	struct occ *occ = dev_get_drvdata(dev);
-> +	struct occ_poll_response_header *header;
-> +	struct sensor_device_attribute *sattr = to_sensor_dev_attr(attr);
-> +
-> +	rc = occ_update_response(occ);
-> +	if (rc)
-> +		return rc;
-> +
-> +	header = (struct occ_poll_response_header *)occ->resp.data;
-> +
-> +	switch (sattr->index) {
-> +	case 0:
-> +		val = (header->status & OCC_STAT_MASTER) ? 1 : 0;
-> +		break;
-> +	case 1:
-> +		val = (header->status & OCC_STAT_ACTIVE) ? 1 : 0;
-> +		break;
-> +	case 2:
-> +		val = (header->ext_status & OCC_EXT_STAT_DVFS_OT) ? 1 : 0;
-> +		break;
-> +	case 3:
-> +		val = (header->ext_status & OCC_EXT_STAT_DVFS_POWER) ? 1 : 0;
-> +		break;
-> +	case 4:
-> +		val = (header->ext_status & OCC_EXT_STAT_MEM_THROTTLE) ? 1 : 0;
-> +		break;
-> +	case 5:
-> +		val = (header->ext_status & OCC_EXT_STAT_QUICK_DROP) ? 1 : 0;
-> +		break;
-> +	case 6:
-> +		val = header->occ_state;
-> +		break;
-> +	case 7:
-> +		if (header->status & OCC_STAT_MASTER)
-> +			val = hweight8(header->occs_present);
-> +		else
-> +			val = 1;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return snprintf(buf, PAGE_SIZE - 1, "%d\n", val);
-> +}
-> +
-> +static SENSOR_DEVICE_ATTR(occ_master, 0444, occ_show_status, NULL, 0);
-> +static SENSOR_DEVICE_ATTR(occ_active, 0444, occ_show_status, NULL, 1);
-> +static SENSOR_DEVICE_ATTR(occ_dvfs_ot, 0444, occ_show_status, NULL, 2);
-> +static SENSOR_DEVICE_ATTR(occ_dvfs_power, 0444, occ_show_status, NULL, 3);
-> +static SENSOR_DEVICE_ATTR(occ_mem_throttle, 0444, occ_show_status, NULL, 4);
-> +static SENSOR_DEVICE_ATTR(occ_quick_drop, 0444, occ_show_status, NULL, 5);
-> +static SENSOR_DEVICE_ATTR(occ_status, 0444, occ_show_status, NULL, 6);
-> +static SENSOR_DEVICE_ATTR(occs_present, 0444, occ_show_status, NULL, 7);
-> +
-> +static struct attribute *occ_attributes[] = {
-> +	&sensor_dev_attr_occ_master.dev_attr.attr,
-> +	&sensor_dev_attr_occ_active.dev_attr.attr,
-> +	&sensor_dev_attr_occ_dvfs_ot.dev_attr.attr,
-> +	&sensor_dev_attr_occ_dvfs_power.dev_attr.attr,
-> +	&sensor_dev_attr_occ_mem_throttle.dev_attr.attr,
-> +	&sensor_dev_attr_occ_quick_drop.dev_attr.attr,
-> +	&sensor_dev_attr_occ_status.dev_attr.attr,
-> +	&sensor_dev_attr_occs_present.dev_attr.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group occ_attr_group = {
-> +	.attrs = occ_attributes,
-> +};
-> +
->  /* only need to do this once at startup, as OCC won't change sensors on us */
->  static void occ_parse_poll_response(struct occ *occ)
->  {
-> @@ -1188,5 +1271,15 @@ int occ_setup(struct occ *occ, const char *name)
->  		return rc;
->  	}
->  
-> +	rc = sysfs_create_group(&occ->bus_dev->kobj, &occ_attr_group);
-> +	if (rc)
-> +		dev_warn(occ->bus_dev, "failed to create status attrs: %d\n",
-> +			 rc);
-> +
->  	return 0;
->  }
-> +
-> +void occ_shutdown(struct occ *occ)
-> +{
-> +	sysfs_remove_group(&occ->bus_dev->kobj, &occ_attr_group);
-> +}
-> diff --git a/drivers/hwmon/occ/common.h b/drivers/hwmon/occ/common.h
-> index 049c3b4..dc9e06d 100644
-> --- a/drivers/hwmon/occ/common.h
-> +++ b/drivers/hwmon/occ/common.h
-> @@ -110,5 +110,6 @@ struct occ {
->  };
->  
->  int occ_setup(struct occ *occ, const char *name);
-> +void occ_shutdown(struct occ *occ);
->  
->  #endif /* OCC_COMMON_H */
-> diff --git a/drivers/hwmon/occ/p8_i2c.c b/drivers/hwmon/occ/p8_i2c.c
-> index 8032c0b..d719632 100644
-> --- a/drivers/hwmon/occ/p8_i2c.c
-> +++ b/drivers/hwmon/occ/p8_i2c.c
-> @@ -230,6 +230,15 @@ static int p8_i2c_occ_probe(struct i2c_client *client,
->  	return occ_setup(occ, "p8_occ");
->  }
->  
-> +static int p8_i2c_occ_remove(struct i2c_client *client)
-> +{
-> +	struct occ *occ = dev_get_drvdata(&client->dev);
-> +
-> +	occ_shutdown(occ);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id p8_i2c_occ_of_match[] = {
->  	{ .compatible = "ibm,p8-occ-hwmon" },
->  	{}
-> @@ -243,6 +252,7 @@ static int p8_i2c_occ_probe(struct i2c_client *client,
->  		.of_match_table = p8_i2c_occ_of_match,
->  	},
->  	.probe = p8_i2c_occ_probe,
-> +	.remove = p8_i2c_occ_remove,
->  };
->  
->  module_i2c_driver(p8_i2c_occ_driver);
-> diff --git a/drivers/hwmon/occ/p9_sbe.c b/drivers/hwmon/occ/p9_sbe.c
-> index be3a469..7dbe4d5 100644
-> --- a/drivers/hwmon/occ/p9_sbe.c
-> +++ b/drivers/hwmon/occ/p9_sbe.c
-> @@ -135,6 +135,8 @@ static int p9_sbe_occ_remove(struct platform_device *pdev)
->  	p9_sbe_occ->sbe = NULL;
->  	p9_sbe_occ_close_client(p9_sbe_occ);
->  
-> +	occ_shutdown(occ);
-> +
->  	return 0;
->  }
->  
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you both.
+
+The Java and Hawaii chips also have the same Unicam block, but appear
+to be missing CMI totally based on the BCM Android kernel source.
+They aren't chips I have any interest in, but as Eric says it can be
+supported easily via the compatible string, or by making the resource
+optional. The latter is easy to do, so I'll add that to v4 of the
+patch set.
+
+Cheers,
+  Dave
