@@ -1,77 +1,77 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v7 08/13] regmap: add SLIMbus support
-Date: Thu, 23 Nov 2017 07:49:25 +0000
-Message-ID: <20171123074925.hk3omwaqkg7swwmw@localhost.localdomain>
-References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
- <20171115141043.29202-9-srinivas.kandagatla@linaro.org>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/6] ARM: dts: keystone-k2g-evm: Fix botched up merge
+Date: Thu, 23 Nov 2017 13:21:50 +0530
+Message-ID: <20171123075154.3938-3-vigneshr@ti.com>
+References: <20171123075154.3938-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20171115141043.29202-9-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, vinod.koul@intel.com, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, broonie@kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171123075154.3938-1-vigneshr-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 02:10:38PM +0000, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> This patch adds support to read/write slimbus value elements.
-> Currently it only supports byte read/write. Adding this support in
-> regmap would give codec drivers more flexibility when there are more
-> than 2 control interfaces like slimbus, i2c.
-> 
-> Without this patch each codec driver has to directly call slimbus value
-> element apis, and this could would get messy once we want to add i2c
-> interface to it.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> +
-> +static int regmap_slimbus_byte_reg_read(void *context, unsigned int reg,
-> +					unsigned int *val)
-> +{
-> +	struct slim_device *sdev = context;
-> +	int v;
-> +
-> +	if (!sdev)
-> +		return 0;
+spi1 and ecap0 pinmuxes ended up under root node instead of k2g_pinctrl
+node. Fix this by moving them under k2g_pinctrl node.
 
-Is there a specific reason we are checking the context here? The
-other regmap buses don't both and whilst I don't mind checking
-shouldn't we return an error if we don't have a context rather
-than pretending to succeed?
+Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/keystone-k2g-evm.dts | 30 ++++++++++++++----------------
+ 1 file changed, 14 insertions(+), 16 deletions(-)
 
-> +
-> +	v = slim_readb(sdev, reg);
-> +
-> +	if (v < 0)
-> +		return v;
-> +
-> +	*val = v;
-> +
-> +	return 0;
-> +}
-> +
-> +static int regmap_slimbus_byte_reg_write(void *context, unsigned int reg,
-> +					 unsigned int val)
-> +{
-> +	struct slim_device *sdev = context;
-> +
-> +	if (!sdev)
-> +		return 0;
+diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
+index 656af194a518..298a50555e46 100644
+--- a/arch/arm/boot/dts/keystone-k2g-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
+@@ -45,22 +45,6 @@
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+ 	};
+-
+-	ecap0_pins: ecap0_pins {
+-		pinctrl-single,pins = <
+-			K2G_CORE_IOPAD(0x1374) (BUFFER_CLASS_B | MUX_MODE4)	/* pr1_mdio_data.ecap0_in_apwm0_out */
+-		>;
+-	};
+-
+-	spi1_pins: pinmux_spi1_pins {
+-		pinctrl-single,pins = <
+-			K2G_CORE_IOPAD(0x11a4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_scs0.spi1_scs0 */
+-			K2G_CORE_IOPAD(0x11ac) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_clk.spi1_clk */
+-			K2G_CORE_IOPAD(0x11b0) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_miso.spi1_miso */
+-			K2G_CORE_IOPAD(0x11b4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_mosi.spi1_mosi */
+-		>;
+-	};
+-
+ };
+ 
+ &k2g_pinctrl {
+@@ -105,6 +89,20 @@
+ 		>;
+ 	};
+ 
++	ecap0_pins: ecap0_pins {
++		pinctrl-single,pins = <
++			K2G_CORE_IOPAD(0x1374) (BUFFER_CLASS_B | MUX_MODE4)	/* pr1_mdio_data.ecap0_in_apwm0_out */
++		>;
++	};
++
++	spi1_pins: pinmux_spi1_pins {
++		pinctrl-single,pins = <
++			K2G_CORE_IOPAD(0x11a4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_scs0.spi1_scs0 */
++			K2G_CORE_IOPAD(0x11ac) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_clk.spi1_clk */
++			K2G_CORE_IOPAD(0x11b0) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_miso.spi1_miso */
++			K2G_CORE_IOPAD(0x11b4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_mosi.spi1_mosi */
++		>;
++	};
+ };
+ 
+ &uart0 {
+-- 
+2.15.0
 
-ditto.
-
-Thanks,
-Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
