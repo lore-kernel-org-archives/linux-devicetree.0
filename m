@@ -1,137 +1,39 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 2/5] media: dt-bindings: Add bindings for
-	TDA1997X
-Date: Thu, 23 Nov 2017 10:25:32 +0200
-Message-ID: <20171123082532.znxnmwpgrdjbhxbi@valkosipuli.retiisi.org.uk>
-References: <1510253136-14153-1-git-send-email-tharvey@gateworks.com>
- <1510253136-14153-3-git-send-email-tharvey@gateworks.com>
- <20171122073606.56ldk3bzg23dkkfm@valkosipuli.retiisi.org.uk>
- <CAJ+vNU1FEp5aU6aXXOuGr3ifcngfP0Pj0rnBBxDh_mVtQyvLAQ@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [v4,2/3] drivers: hwmon: Add W83773G driver
+Date: Thu, 23 Nov 2017 01:01:10 -0800
+Message-ID: <3f12394e-d086-43b6-9cff-da2e93aaa02d@roeck-us.net>
+References: <1510543655-27059-3-git-send-email-mine260309@gmail.com>
+ <20171118161533.GA2810@roeck-us.net>
+ <CACPK8Xc5zmHCmDikYFPA+GdVCydHwgiLMY0X1RTyOmzS+m9W7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU1FEp5aU6aXXOuGr3ifcngfP0Pj0rnBBxDh_mVtQyvLAQ@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Rob Herring <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACPK8Xc5zmHCmDikYFPA+GdVCydHwgiLMY0X1RTyOmzS+m9W7A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 22, 2017 at 08:37:04PM -0800, Tim Harvey wrote:
-> On Tue, Nov 21, 2017 at 11:36 PM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > Hi Tim,
-> >
-> > On Thu, Nov 09, 2017 at 10:45:33AM -0800, Tim Harvey wrote:
-> >> Cc: Rob Herring <robh@kernel.org>
-> >> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> >> ---
-> >> v3:
-> >>  - fix typo
-> >>
-> >> v2:
-> >>  - add vendor prefix and remove _ from vidout-portcfg
-> >>  - remove _ from labels
-> >>  - remove max-pixel-rate property
-> >>  - describe and provide example for single output port
-> >>  - update to new audio port bindings
-> >> ---
-> >>  .../devicetree/bindings/media/i2c/tda1997x.txt     | 179 +++++++++++++++++++++
-> >>  1 file changed, 179 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/tda1997x.txt b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-> >> new file mode 100644
-> >> index 0000000..dd37f14
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/i2c/tda1997x.txt
-> >> @@ -0,0 +1,179 @@
-> >> +Device-Tree bindings for the NXP TDA1997x HDMI receiver
-> >> +
-> >> +The TDA19971/73 are HDMI video receivers.
-> >> +
-> >> +The TDA19971 Video port output pins can be used as follows:
-> >> + - RGB 8bit per color (24 bits total): R[11:4] B[11:4] G[11:4]
-> >> + - YUV444 8bit per color (24 bits total): Y[11:4] Cr[11:4] Cb[11:4]
-> >> + - YUV422 semi-planar 8bit per component (16 bits total): Y[11:4] CbCr[11:4]
-> >> + - YUV422 semi-planar 10bit per component (20 bits total): Y[11:2] CbCr[11:2]
-> >> + - YUV422 semi-planar 12bit per component (24 bits total): - Y[11:0] CbCr[11:0]
-> >> + - YUV422 BT656 8bit per component (8 bits total): YCbCr[11:4] (2-cycles)
-> >> + - YUV422 BT656 10bit per component (10 bits total): YCbCr[11:2] (2-cycles)
-> >> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
-> >> +
-> >> +The TDA19973 Video port output pins can be used as follows:
-> >> + - RGB 12bit per color (36 bits total): R[11:0] B[11:0] G[11:0]
-> >> + - YUV444 12bit per color (36 bits total): Y[11:0] Cb[11:0] Cr[11:0]
-> >> + - YUV422 semi-planar 12bit per component (24 bits total): Y[11:0] CbCr[11:0]
-> >> + - YUV422 BT656 12bit per component (12 bits total): YCbCr[11:0] (2-cycles)
-> >> +
-> >> +The Video port output pins are mapped via 4-bit 'pin groups' allowing
-> >> +for a variety of connection possibilities including swapping pin order within
-> >> +pin groups. The video_portcfg device-tree property consists of register mapping
-> >> +pairs which map a chip-specific VP output register to a 4-bit pin group. If
-> >> +the pin group needs to be bit-swapped you can use the *_S pin-group defines.
-> >> +
-> >> +Required Properties:
-> >> + - compatible          :
-> >> +  - "nxp,tda19971" for the TDA19971
-> >> +  - "nxp,tda19973" for the TDA19973
-> >> + - reg                 : I2C slave address
-> >> + - interrupts          : The interrupt number
-> >> + - DOVDD-supply        : Digital I/O supply
-> >> + - DVDD-supply         : Digital Core supply
-> >> + - AVDD-supply         : Analog supply
-> >> + - nxp,vidout-portcfg  : array of pairs mapping VP output pins to pin groups.
-> >> +
-> >> +Optional Properties:
-> >> + - nxp,audout-format   : DAI bus format: "i2s" or "spdif".
-> >> + - nxp,audout-width    : width of audio output data bus (1-4).
-> >> + - nxp,audout-layout   : data layout (0=AP0 used, 1=AP0/AP1/AP2/AP3 used).
-> >> + - nxp,audout-mclk-fs  : Multiplication factor between stream rate and codec
-> >> +                         mclk.
-> >> +
-> >> +The device node must contain one 'port' child node for its digital output
-> >> +video port, in accordance with the video interface bindings defined in
-> >> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> >
-> > Could you add that this port has one endpoint node as well? (Unless you
-> > support multiple, that is.)
+On 11/22/2017 10:32 PM, Joel Stanley wrote:
+> On Sun, Nov 19, 2017 at 2:45 AM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>> On Mon, Nov 13, 2017 at 11:27:33AM +0800, Lei YU wrote:
+>>> Nuvoton W83773G is a hardware monitor IC providing one local
+>>> temperature and two remote temperature sensors.
+>>>
+>>> Signed-off-by: Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Applied to hwmon-next.
 > 
-> Sure... will clarify as:
+> Where does hwmon-next live? I was looking on kernel.org and I can't
+> seem to find it.
 > 
-> The device node must contain one endpoint 'port' child node for its
-> digital output
-> video port, in accordance with the video interface bindings defined in
-> Documentation/devicetree/bindings/media/video-interfaces.txt.
+git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
+branch hwmon-next, but I('ll only push it after the commit window closes.
 
-I think it'd be clearer if you just add "The port node shall contain one
-endpoint child node".
-
-> 
-> >> +
-> >> +Optional Endpoint Properties:
-> >> +  The following three properties are defined in video-interfaces.txt and
-> >> +  are valid for source endpoints only:
-> >
-> > Transmitters? Don't you have an endpoint only in the port representing the
-> > transmitter?
-> 
-> I'm not usre what you mean.
-> 
-> The TDA1997x is an HDMI receiver meaning it receives HDMI and decodes
-> it to a parallel video bus. HDMI transmitters are the opposite.
-
-The parallel bus. If you mean that, then you could just say that. "Source
-endpoint" is a bit vague, or requires knowing V4L2.
-
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
