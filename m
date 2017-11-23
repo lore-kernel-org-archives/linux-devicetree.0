@@ -1,62 +1,49 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v7 02/13] dt-bindings: Add SLIMbus bindings
-Date: Thu, 23 Nov 2017 07:41:15 +0000
-Message-ID: <20171123074115.5wvniuoiil4dplow@localhost.localdomain>
-References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
- <20171115141043.29202-3-srinivas.kandagatla@linaro.org>
- <20171116051500.qlzgxglom2s3dhkt@rob-hp-laptop>
+From: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/7] R-Car D3 (r8a77995) CAN support
+Date: Thu, 23 Nov 2017 08:43:18 +0100
+Message-ID: <CAO3366xk+Spa=z6bFW9TfqPk_8wUEd5scMK35JbXwpxZ2z7L2w@mail.gmail.com>
+References: <1510915289-15059-1-git-send-email-ulrich.hecht+renesas@gmail.com> <20171122181045.5pstmikwp43idts5@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20171116051500.qlzgxglom2s3dhkt@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, srinivas.kandagatla@linaro.org, andreas.noever@gmail.com, arnd@arndb.de, vinod.koul@intel.com, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, broonie@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171122181045.5pstmikwp43idts5-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 11:15:00PM -0600, Rob Herring wrote:
-> On Wed, Nov 15, 2017 at 02:10:32PM +0000, srinivas.kandagatla@linaro.org wrote:
-> > From: Sagar Dharia <sdharia@codeaurora.org>
-> > 
-> > SLIMbus (Serial Low Power Interchip Media Bus) is a specification
-> > developed by MIPI (Mobile Industry Processor Interface) alliance.
-> > SLIMbus is a 2-wire implementation, which is used to communicate with
-> > peripheral components like audio-codec.
-> > 
-> > This patch adds device tree bindings for the slimbus.
-> > 
-> > Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/slimbus/bus.txt | 50 +++++++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed, Nov 22, 2017 at 7:10 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> On Fri, Nov 17, 2017 at 11:41:22AM +0100, Ulrich Hecht wrote:
+>> Hi!
+>>
+>> Here's CAN and CAN FD support for the R-Car D3. This is a by-the-datasheet
+>> implementation, with the datasheet missing some bits, namely the pin map.
+>> I filled in the gaps with frog DNA^W^W^Wby deducing the information from
+>> pin numbers already in the PFC driver, so careful scrutiny is advised.
+>>
+>> CU
+>> Uli
+>>
+>>
+>> Ulrich Hecht (7):
+>>   pinctrl: sh-pfc: r8a77995: Add CAN support
+>>   pinctrl: sh-pfc: r8a77995: Add CAN FD support
+>>   arm64: dts: r8a77995: Add CAN external clock support
+>>   arm64: dts: r8a77995: Add CAN support
+>>   arm64: dts: r8a77995: Add CAN FD support
+>>   can: rcar_can: document r8a77995 (R-Car D3) compatibility strings
+>>   can: rcar_canfd: document r8a77995 (R-Car D3) compatibility strings
+>
+> Hi Ulrich,
+>
+> is it safe, from a regression point of view, to apply the dts patches
+> to a tree that does not have the other patches present?
 
-I still have some reservations about the putting the MID and PID
-in the compatible sting, are we sure this is what we want to do?
-As has been discussed previous the discoverability of SLIMbus
-is really theoretical since you really always need to bind a
-driver to power on the device, since power is not part of the bus
-itself.
+I believe it is.
 
-Many devices (ours included) will support SLIMbus and other
-interfaces, this means we will need a different compatible
-string between SLIMbus and I2C/SPI, which feels a little
-icky.  Additionally it does make the compatible strings really
-unreadable and which is a little annoying when looking at device
-trees as you can't easily see what things are.
-
-Thanks,
-Charles
+CU
+Uli
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
