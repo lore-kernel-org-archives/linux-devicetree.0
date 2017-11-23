@@ -1,179 +1,149 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] arm64: allwinner: a64: Enable AXP803 for
- Orangepi Win
-Date: Thu, 23 Nov 2017 23:05:36 +0530
-Message-ID: <1511458536-5315-1-git-send-email-jagan@amarulasolutions.com>
-Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?utf-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Subject: Re: [PATCH 2/3] hwrng: exynos - add Samsung Exynos True RNG driver
+Date: Thu, 23 Nov 2017 19:46:24 +0100
+Message-ID: <87o9nsde9r.fsf%l.stelmach@samsung.com>
+References: <CAJKOXPfaofwB7Sp5Lg0JuZzFwC2RahdWDG5KfsJyNcKDt3b_mA@mail.gmail.com>
+        <CGME20171123184736eucas1p15d4e73d5a6596a6cba1f940dcc473c9a@eucas1p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRBI4Q3TIAKGQEFVA5CVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAJKOXPfaofwB7Sp5Lg0JuZzFwC2RahdWDG5KfsJyNcKDt3b_mA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable AXP803 PMIC and regulators for Orangepi Win.
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- .../boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 125 +++++++++++++++++++--
- 1 file changed, 117 insertions(+), 8 deletions(-)
+It was <2017-11-23 czw 17:31>, when Krzysztof Kozlowski wrote:
+> On Thu, Nov 23, 2017 at 4:09 PM, =C5=81ukasz Stelmach <l.stelmach@samsung=
+.com> wrote:
+>> Add support for True Random Number Generator found in Samsung Exynos
+>> 5250+ SoCs.
+>>
+>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+>> ---
+>>  MAINTAINERS                          |   7 +
+>>  drivers/char/hw_random/Kconfig       |  12 ++
+>>  drivers/char/hw_random/Makefile      |   1 +
+>>  drivers/char/hw_random/exynos-trng.c | 256 ++++++++++++++++++++++++++++=
++++++++
+>>  4 files changed, 276 insertions(+)
+>>  create mode 100644 drivers/char/hw_random/exynos-trng.c
+>>
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 5f8ff40..240d357 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -57,13 +57,6 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
--
--	reg_vcc3v3: vcc3v3 {
--		compatible = "regulator-fixed";
--		regulator-name = "vcc3v3";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--	};
- };
- 
- &ehci1 {
-@@ -73,7 +66,7 @@
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
--	vmmc-supply = <&reg_vcc3v3>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
- 	cd-inverted;
- 	status = "okay";
-@@ -83,6 +76,122 @@
- 	status = "okay";
- };
- 
-+&r_rsb {
-+	status = "okay";
-+
-+	axp803: pmic@3a3 {
-+		compatible = "x-powers,axp803";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+#include "axp803.dtsi"
-+
-+&reg_aldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "afvcc-csi";
-+};
-+
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-pl";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-pll-avcc";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-3v3";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1040000>;
-+	regulator-max-microvolt = <1300000>;
-+	regulator-name = "vdd-cpux";
-+};
-+
-+/* DCDC3 is polyphased with DCDC2 */
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+&reg_dcdc6 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1100000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-sys";
-+};
-+
-+&reg_dldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-hdmi-dsi";
-+};
-+
-+&reg_dldo2 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi";
-+};
-+
-+&reg_dldo3 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "avdd-csi";
-+};
-+
-+&reg_dldo4 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi-io";
-+};
-+
-+&reg_eldo1 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "cpvdd";
-+};
-+
-+&reg_fldo1 {
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vcc-1v2-hsic";
-+};
-+
-+/*
-+ * The A64 chip cannot work without this regulator off, although
-+ * it seems to be only driving the AR100 core.
-+ * Maybe we don't still know well about CPUs domain.
-+ */
-+&reg_fldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1100000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-cpus";
-+};
-+
-+&reg_rtc_ldo {
-+	regulator-name = "vcc-rtc";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.7.4
+[...]
+
+>>  endif # HW_RANDOM
+>
+> Thanks for working on TRNG.
+>
+> 1. I was rather thinking about extending existing exynos-rng.c [1] so
+> it would be using TRNG as seed for PRNG as this gives you much more
+> random data. Instead you developed totally separate driver which has
+> its own benefits - one can choose which interface he wants. Although
+> it is a little bit duplication.
+
+As far as I can tell, these are two different devices. However, PRNG
+shares hardware with the hash engine. Indeed there is a hardware to
+connect TRNG and PRNG, but, IMHO, it might be hard to model that
+dependency in kernel. To me it seems easier to read TRNG (or
+/dev/random) and and write the result to PRNG manually (in software).
+
+> 2. I understand that in your current version of TRNG driver there is
+> no conflict with PRNG and they can work both at the same time?
+
+I guess so. I expect no problems as long as TRNG_SEED_START is not set
+in the HASH_SEED_CONF register.
+
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
+rivers/crypto/exynos-rng.c
+>
+
+>> +
+>> +       trng->rng.init =3D exynos_trng_init;
+>> +       trng->rng.read =3D exynos_trng_do_read;
+>> +       trng->rng.priv =3D (unsigned long) trng;
+>> +
+>> +       platform_set_drvdata(pdev, trng);
+>> +       trng->dev =3D &pdev->dev;
+>> +
+>> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       trng->mem =3D devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(trng->mem)) {
+>> +               dev_err(&pdev->dev, "Couldn't map IO resources.\n");
+>> +               ret =3D PTR_ERR(trng->mem);
+>> +               goto err_ioremap;
+>> +       }
+>> +
+>> +       pm_runtime_enable(&pdev->dev);
+>> +       ret =3D pm_runtime_get_sync(&pdev->dev);
+>> +       if (ret < 0) {
+>> +               dev_err(&pdev->dev, "pm_runtime_get_sync() failed: %d.\n=
+", ret);
+>> +               goto err_ioremap;
+>
+> Missing pm_runtime_disable?
+
+Added a separate label down below.
+
+>> +               dev_err(&pdev->dev, "Couldn't get clock.\n");
+>> +               ret =3D PTR_ERR(trng->clk);
+>> +               goto err_clock;
+>> +       }
+>> +
+>> +       ret =3D clk_prepare_enable(trng->clk);
+>> +       if (ret) {
+>> +               dev_err(&pdev->dev, "Unable to enable the clk: %d.\n", r=
+et);
+>> +               goto err_clock;
+>> +       }
+>> +
+>> +       ret =3D hwrng_register(&trng->rng);
+>> +       if (ret) {
+>> +               dev_err(&pdev->dev, "Couldn't register hwrng device.\n");
+>> +               goto err_register;
+>> +       }
+>> +
+>> +       dev_info(&pdev->dev, "Exynos True Random Number Generator.\n");
+>> +
+>> +       return 0;
+>> +
+>> +err_register:
+>> +       clk_disable_unprepare(trng->clk);
+>> +
+>> +err_clock:
+>> +       trng->mem =3D NULL;
+>
+> Why this has to be null-ified?
+
+I found this pattern in omap-rng.c.
+
+Removed.
+
+I'll wait a little bit more before posting v2.
+
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQEcBAEBCAAGBQJaFxeAAAoJELCuHpyYpYAQlbgH/3M4djvomtz2/xlNiURwk5xG
+XEao8jOBO8voEi17NR3rOSkSTQ/w+tEBEdKntlmCms4z0KfOzwQF4CbKubLtb56K
+cdpRzvXNd6BxrV998in2pDfLYPHRvpL0IJnDVxnhCzYBv7eBitXaYizogokRTQgI
+hldTBgzBKU8ul1hQXjDOd6PIR8DLUTcXMnyV1Xtw2P9jENMvupWWDzxO1Thp51uB
+wC6XdX6YC89wvu5p3PevzxiHaRQCok7fLiLNth6zlPpXVG+Cy5vOmXO9q8cSI4Qz
+wurANxC/KMbZBovNP+LzKKfkvV9Vaoy4kjGVzwdyfqeYKaLK48l2Eqtnjtspo/U=
+=IiNf
+-----END PGP SIGNATURE-----
+--=-=-=--
