@@ -1,39 +1,81 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [v4,2/3] drivers: hwmon: Add W83773G driver
-Date: Thu, 23 Nov 2017 01:01:10 -0800
-Message-ID: <3f12394e-d086-43b6-9cff-da2e93aaa02d@roeck-us.net>
-References: <1510543655-27059-3-git-send-email-mine260309@gmail.com>
- <20171118161533.GA2810@roeck-us.net>
- <CACPK8Xc5zmHCmDikYFPA+GdVCydHwgiLMY0X1RTyOmzS+m9W7A@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a7795: Move nodes which have no
+ reg property out of bus
+Date: Thu, 23 Nov 2017 10:27:55 +0100
+Message-ID: <CAMuHMdXqPqhiCZFseBGFDEh9R+_kFcrmjWWgCSudtnHkuXoFgw@mail.gmail.com>
+References: <20171120110125.12267-1-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACPK8Xc5zmHCmDikYFPA+GdVCydHwgiLMY0X1RTyOmzS+m9W7A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171120110125.12267-1-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/22/2017 10:32 PM, Joel Stanley wrote:
-> On Sun, Nov 19, 2017 at 2:45 AM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->> On Mon, Nov 13, 2017 at 11:27:33AM +0800, Lei YU wrote:
->>> Nuvoton W83773G is a hardware monitor IC providing one local
->>> temperature and two remote temperature sensors.
->>>
->>> Signed-off-by: Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Applied to hwmon-next.
-> 
-> Where does hwmon-next live? I was looking on kernel.org and I can't
-> seem to find it.
-> 
-git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
-branch hwmon-next, but I('ll only push it after the commit window closes.
+Hi Simon,
 
-Guenter
+On Mon, Nov 20, 2017 at 12:01 PM, Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> Move pmu_a5[73], timer and thermal-zones nodes from soc node to root node.
+> The nodes that have been moved do not have any register properties and thus
+> shouldn't be placed on the bus.
+>
+> This problem is flagged by the compiler as follows:
+> $ make
+> ...
+>   DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb
+> arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+> arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+> arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+> arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+
+[...]
+
+Thanks for your patch!
+
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -126,6 +126,86 @@
+
+The node above is called "cpus".
+
+>                 };
+>         };
+>
+> +       pmu_a57 {
+
+> +       };
+> +
+> +       pmu_a53 {
+
+> +       };
+> +
+> +       timer {
+
+> +       };
+> +
+> +       thermal-zones {
+
+> +       };
+> +
+>         extal_clk: extal {
+>                 compatible = "fixed-clock";
+>                 #clock-cells = <0>;
+
+Any sorting rules (alphabetically?) for nodes at the root level?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
