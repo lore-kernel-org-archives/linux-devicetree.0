@@ -1,77 +1,50 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/6] ARM: dts: keystone-k2g-evm: Fix botched up merge
-Date: Thu, 23 Nov 2017 13:21:50 +0530
-Message-ID: <20171123075154.3938-3-vigneshr@ti.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH 3/6] ARM: dts: keystone-k2g: Move ti,non-removable property to board dts
+Date: Thu, 23 Nov 2017 13:21:51 +0530
+Message-ID: <20171123075154.3938-4-vigneshr@ti.com>
 References: <20171123075154.3938-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171123075154.3938-1-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171123075154.3938-1-vigneshr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-spi1 and ecap0 pinmuxes ended up under root node instead of k2g_pinctrl
-node. Fix this by moving them under k2g_pinctrl node.
+On 66AK2G EVM mmc1 is connected to emmc whereas 66AK2G ICE baord has SD
+card slot connected to mmc1. Therefore move emmc specific
+ti,non-removable property from SoC file to EVM's dts file.
 
-Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2g-evm.dts | 30 ++++++++++++++----------------
- 1 file changed, 14 insertions(+), 16 deletions(-)
+ arch/arm/boot/dts/keystone-k2g-evm.dts | 1 +
+ arch/arm/boot/dts/keystone-k2g.dtsi    | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/keystone-k2g-evm.dts b/arch/arm/boot/dts/keystone-k2g-evm.dts
-index 656af194a518..298a50555e46 100644
+index 298a50555e46..03b3e7c5dc8e 100644
 --- a/arch/arm/boot/dts/keystone-k2g-evm.dts
 +++ b/arch/arm/boot/dts/keystone-k2g-evm.dts
-@@ -45,22 +45,6 @@
- 		regulator-max-microvolt = <3300000>;
- 		regulator-always-on;
- 	};
--
--	ecap0_pins: ecap0_pins {
--		pinctrl-single,pins = <
--			K2G_CORE_IOPAD(0x1374) (BUFFER_CLASS_B | MUX_MODE4)	/* pr1_mdio_data.ecap0_in_apwm0_out */
--		>;
--	};
--
--	spi1_pins: pinmux_spi1_pins {
--		pinctrl-single,pins = <
--			K2G_CORE_IOPAD(0x11a4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_scs0.spi1_scs0 */
--			K2G_CORE_IOPAD(0x11ac) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_clk.spi1_clk */
--			K2G_CORE_IOPAD(0x11b0) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_miso.spi1_miso */
--			K2G_CORE_IOPAD(0x11b4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_mosi.spi1_mosi */
--		>;
--	};
--
+@@ -127,6 +127,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	vmmc-supply = <&vcc3v3_dcin_reg>; /* VCC3V3_EMMC is connected to VCC3V3_DCIN */
++	ti,non-removable;
+ 	status = "okay";
  };
  
- &k2g_pinctrl {
-@@ -105,6 +89,20 @@
- 		>;
- 	};
- 
-+	ecap0_pins: ecap0_pins {
-+		pinctrl-single,pins = <
-+			K2G_CORE_IOPAD(0x1374) (BUFFER_CLASS_B | MUX_MODE4)	/* pr1_mdio_data.ecap0_in_apwm0_out */
-+		>;
-+	};
-+
-+	spi1_pins: pinmux_spi1_pins {
-+		pinctrl-single,pins = <
-+			K2G_CORE_IOPAD(0x11a4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_scs0.spi1_scs0 */
-+			K2G_CORE_IOPAD(0x11ac) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_clk.spi1_clk */
-+			K2G_CORE_IOPAD(0x11b0) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_miso.spi1_miso */
-+			K2G_CORE_IOPAD(0x11b4) (BUFFER_CLASS_B | PULL_DISABLE | MUX_MODE0)	/* spi1_mosi.spi1_mosi */
-+		>;
-+	};
- };
- 
- &uart0 {
+diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+index 01d29320b04c..ef82c0a6e607 100644
+--- a/arch/arm/boot/dts/keystone-k2g.dtsi
++++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+@@ -372,7 +372,6 @@
+ 			dma-names = "tx", "rx";
+ 			bus-width = <8>;
+ 			ti,needs-special-reset;
+-			ti,non-removable;
+ 			max-frequency = <96000000>;
+ 			power-domains = <&k2g_pds 0xc>;
+ 			clocks = <&k2g_clks 0xc 1>, <&k2g_clks 0xc 2>;
 -- 
 2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
