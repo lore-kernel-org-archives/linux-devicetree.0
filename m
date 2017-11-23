@@ -1,41 +1,90 @@
-From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/5] PCI: Add vendor ID for Cadence
-Date: Thu, 23 Nov 2017 16:01:46 +0100
-Message-ID: <a93032cbbe02dc9efef8536a4b2a851d1b08ab6f.1511439189.git.cyrille.pitchen@free-electrons.com>
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: [PATCH 2/5] dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host controller
+Date: Thu, 23 Nov 2017 16:01:47 +0100
+Message-ID: <895cbb8f862c712b78f780a53e05d5429d24cc35.1511439189.git.cyrille.pitchen@free-electrons.com>
 References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1511439189.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.1511439189.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.1511439189.git.cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+In-Reply-To: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org
+Cc: adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new PCI vendor ID for Cadence.
+From: Scott Telford <stelford@cadence.com>
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+This patch adds documentation for the DT bindings of the Cadence PCIe
+controller when configured in host (Root Complex) mode.
+
+Signed-off-by: Scott Telford <stelford@cadence.com>
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+
+dt-bindings: PCI: cadence: host fixup
 ---
- include/linux/pci_ids.h | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/pci/cdns,cdns-pcie-host.txt           | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index ab20dc5db423..eb13e84e1fef 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2381,6 +2381,8 @@
- 
- #define PCI_VENDOR_ID_LENOVO		0x17aa
- 
-+#define PCI_VENDOR_ID_CDNS		0x17cd
+diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+new file mode 100644
+index 000000000000..4b3df8ffd5e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+@@ -0,0 +1,54 @@
++* Cadence PCIe host controller
 +
- #define PCI_VENDOR_ID_ARECA		0x17d3
- #define PCI_DEVICE_ID_ARECA_1110	0x1110
- #define PCI_DEVICE_ID_ARECA_1120	0x1120
++This PCIe controller inherits the base properties defined in
++host-generic-pci.txt.
++
++Required properties:
++- compatible: should contain "cdns,cdns-pcie-host" to identify the IP used.
++- reg: Should contain the PCIe configuration window base address, controller
++  register base address, and AXI interface region base address respectively.
++- reg-names: Must be "cfg", "reg" and "mem" respectively.
++- #address-cells: set to <3>
++- #size-cells: set to <2>
++- device_type: set to "pci"
++- ranges: ranges for the PCI memory and I/O regions
++- #interrupt-cells: set to <1>
++- interrupt-map-mask and interrupt-map: standard PCI
++	properties to define the mapping of the PCIe interface to interrupt
++	numbers.
++
++Example:
++
++	pci@fb000000 {
++		compatible = "cdns,cdns-pcie-host";
++		device_type = "pci";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		bus-range = <0x0 0xff>;
++		linux,pci-domain = <0>;
++
++		// CPU_PHYSICAL(2)  SIZE(2)
++		reg = <0x0 0x41000000  0x0 0x00001000>, /* Config space */
++		      <0x0 0xfb000000  0x0 0x01000000>, /* Base Address */
++		      <0x0 0x40000000  0x0 0x04000000>; /* AXI region */
++		reg-names = "cfg", "reg", "mem";
++
++		// BUS_ADDRESS(3)  CPU_PHYSICAL(1)  SIZE(2)
++		ranges =
++			<0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
++			<0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
++
++
++		#interrupt-cells = <0x1>;
++
++		// PCI_DEVICE(3)  INT#(1)  CONTROLLER(PHANDLE)  CONTROLLER_DATA(5)
++		interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1
++				 0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1
++				 0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1
++				 0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
++
++		// PCI_DEVICE(3)  INT#(1)
++		interrupt-map-mask = <0x0000 0x0 0x0  0x7>;
++
++		msi-parent = <&its_pci>;
++	};
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
