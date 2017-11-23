@@ -1,16 +1,16 @@
 From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v7 07/13] slimbus: Add support for
-	'clock-pause' feature
-Date: Thu, 23 Nov 2017 07:28:00 +0000
-Message-ID: <20171123072800.z2pkmelom374zr63@localhost.localdomain>
+Subject: Re: [PATCH v7 02/13] dt-bindings: Add SLIMbus bindings
+Date: Thu, 23 Nov 2017 07:41:15 +0000
+Message-ID: <20171123074115.5wvniuoiil4dplow@localhost.localdomain>
 References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
- <20171115141043.29202-8-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-3-srinivas.kandagatla@linaro.org>
+ <20171116051500.qlzgxglom2s3dhkt@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20171115141043.29202-8-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20171116051500.qlzgxglom2s3dhkt@rob-hp-laptop>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -20,43 +20,43 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, vinod.koul@intel.com, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, broonie@kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, srinivas.kandagatla@linaro.org, andreas.noever@gmail.com, arnd@arndb.de, vinod.koul@intel.com, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, broonie@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 15, 2017 at 02:10:37PM +0000, srinivas.kandagatla@linaro.org wrote:
-> From: Sagar Dharia <sdharia@codeaurora.org>
+On Wed, Nov 15, 2017 at 11:15:00PM -0600, Rob Herring wrote:
+> On Wed, Nov 15, 2017 at 02:10:32PM +0000, srinivas.kandagatla@linaro.org wrote:
+> > From: Sagar Dharia <sdharia@codeaurora.org>
+> > 
+> > SLIMbus (Serial Low Power Interchip Media Bus) is a specification
+> > developed by MIPI (Mobile Industry Processor Interface) alliance.
+> > SLIMbus is a 2-wire implementation, which is used to communicate with
+> > peripheral components like audio-codec.
+> > 
+> > This patch adds device tree bindings for the slimbus.
+> > 
+> > Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/slimbus/bus.txt | 50 +++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/slimbus/bus.txt
 > 
-> Per slimbus specification, a reconfiguration sequence known as
-> 'clock pause' needs to be broadcast over the bus while entering low-
-> power mode. Clock-pause is initiated by the controller driver.
-> To exit clock-pause, controller typically wakes up the framer device.
-> Since wakeup precedure is controller-specific, framework calls it via
-> controller's function pointer to invoke it.
-> 
-> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> +/**
-> + * struct slim_sched: Framework uses this structure internally for scheduling.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Missing kernel doc for clkgear here.
+I still have some reservations about the putting the MID and PID
+in the compatible sting, are we sure this is what we want to do?
+As has been discussed previous the discoverability of SLIMbus
+is really theoretical since you really always need to bind a
+driver to power on the device, since power is not part of the bus
+itself.
 
-> + * @clk_state: Controller's clock state from enum slim_clk_state
-> + * @pause_comp: Signals completion of clock pause sequence. This is useful when
-> + *	client tries to call slimbus transaction when controller is entering
-> + *	clock pause.
-> + * @m_reconf: This mutex is held until current reconfiguration (data channel
-> + *	scheduling, message bandwidth reservation) is done. Message APIs can
-> + *	use the bus concurrently when this mutex is held since elemental access
-> + *	messages can be sent on the bus when reconfiguration is in progress.
-> + */
-> +struct slim_sched {
-> +	int			clkgear;
-> +	enum slim_clk_state	clk_state;
-> +	struct completion	pause_comp;
-> +	struct mutex		m_reconf;
-> +};
+Many devices (ours included) will support SLIMbus and other
+interfaces, this means we will need a different compatible
+string between SLIMbus and I2C/SPI, which feels a little
+icky.  Additionally it does make the compatible strings really
+unreadable and which is a little annoying when looking at device
+trees as you can't easily see what things are.
 
 Thanks,
 Charles
