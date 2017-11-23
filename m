@@ -1,48 +1,80 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/7] R-Car D3 (r8a77995) CAN support
-Date: Thu, 23 Nov 2017 09:43:47 +0000
-Message-ID: <20171123094336.h376j4iuewaqys4i@verge.net.au>
-References: <1510915289-15059-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <20171122181045.5pstmikwp43idts5@verge.net.au>
- <CAO3366xk+Spa=z6bFW9TfqPk_8wUEd5scMK35JbXwpxZ2z7L2w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a7795: Move nodes which have no
+ reg property out of bus
+Date: Thu, 23 Nov 2017 09:46:58 +0000
+Message-ID: <20171123094657.r2wjbmvrn24ohrn6@verge.net.au>
+References: <20171120110125.12267-1-horms+renesas@verge.net.au>
+ <CAMuHMdXqPqhiCZFseBGFDEh9R+_kFcrmjWWgCSudtnHkuXoFgw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAO3366xk+Spa=z6bFW9TfqPk_8wUEd5scMK35JbXwpxZ2z7L2w@mail.gmail.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-can@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+In-Reply-To: <CAMuHMdXqPqhiCZFseBGFDEh9R+_kFcrmjWWgCSudtnHkuXoFgw@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 23, 2017 at 08:43:18AM +0100, Ulrich Hecht wrote:
-> On Wed, Nov 22, 2017 at 7:10 PM, Simon Horman <horms@verge.net.au> wrote:
-> > On Fri, Nov 17, 2017 at 11:41:22AM +0100, Ulrich Hecht wrote:
-> >> Hi!
-> >>
-> >> Here's CAN and CAN FD support for the R-Car D3. This is a by-the-datasheet
-> >> implementation, with the datasheet missing some bits, namely the pin map.
-> >> I filled in the gaps with frog DNA^W^W^Wby deducing the information from
-> >> pin numbers already in the PFC driver, so careful scrutiny is advised.
-> >>
-> >> CU
-> >> Uli
-> >>
-> >>
-> >> Ulrich Hecht (7):
-> >>   pinctrl: sh-pfc: r8a77995: Add CAN support
-> >>   pinctrl: sh-pfc: r8a77995: Add CAN FD support
-> >>   arm64: dts: r8a77995: Add CAN external clock support
-> >>   arm64: dts: r8a77995: Add CAN support
-> >>   arm64: dts: r8a77995: Add CAN FD support
-> >>   can: rcar_can: document r8a77995 (R-Car D3) compatibility strings
-> >>   can: rcar_canfd: document r8a77995 (R-Car D3) compatibility strings
-> >
-> > Hi Ulrich,
-> >
-> > is it safe, from a regression point of view, to apply the dts patches
-> > to a tree that does not have the other patches present?
+On Thu, Nov 23, 2017 at 10:27:55AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
 > 
-> I believe it is.
+> On Mon, Nov 20, 2017 at 12:01 PM, Simon Horman
+> <horms+renesas@verge.net.au> wrote:
+> > Move pmu_a5[73], timer and thermal-zones nodes from soc node to root node.
+> > The nodes that have been moved do not have any register properties and thus
+> > shouldn't be placed on the bus.
+> >
+> > This problem is flagged by the compiler as follows:
+> > $ make
+> > ...
+> >   DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb
+> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+> 
+> [...]
+> 
+> Thanks for your patch!
+> 
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > @@ -126,6 +126,86 @@
+> 
+> The node above is called "cpus".
+> 
+> >                 };
+> >         };
+> >
+> > +       pmu_a57 {
+> 
+> > +       };
+> > +
+> > +       pmu_a53 {
+> 
+> > +       };
+> > +
+> > +       timer {
+> 
+> > +       };
+> > +
+> > +       thermal-zones {
+> 
+> > +       };
+> > +
+> >         extal_clk: extal {
+> >                 compatible = "fixed-clock";
+> >                 #clock-cells = <0>;
+> 
+> Any sorting rules (alphabetically?) for nodes at the root level?
 
-Thanks. I have applied them for v4.16.
+Now would be a good time to decide on an alternate on an order as
+I plan to submit similar patches for several other SoCs.
+
+I took used order they were already present (with other nodes) in the
+cpu node. They appear to be sorted alphabetically. Should I keep that
+sort order relative to existing nodes present in the root node?
