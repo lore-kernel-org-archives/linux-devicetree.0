@@ -1,152 +1,38 @@
-From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Subject: [PATCH v8 2/2] ARM: dts: TS-4600: add basic device tree
-Date: Thu, 23 Nov 2017 16:04:10 -0500
-Message-ID: <20171123210410.7107-2-sebastien.bourdelin@savoirfairelinux.com>
-References: <20171123210410.7107-1-sebastien.bourdelin@savoirfairelinux.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171123210410.7107-1-sebastien.bourdelin@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, kernel@savoirfairelinux.com, linux-arm-kernel@lists.infradead.org, fabio.estevam@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: mark@embeddedarm.com, kris@embeddedarm.com, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] Add support for UVIS25 uv sensor
+Date: Thu, 23 Nov 2017 23:59:04 +0100
+Message-ID: <20171123225906.31838-1-lorenzo.bianconi83@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-These device trees add support for the TS-4600 by Technologic Systems.
+Changes since v1:
+- use regmap API
+- rename devicetree binding file to match compatible string
+- move buffer/trigger code in st_uvis25_core.c
+- improve comments
+- fix potential race st_uvis25_read_oneshot()
+- address Peter's comments
 
-More details here:
-  http://wiki.embeddedarm.com/wiki/TS-4600
+Lorenzo Bianconi (2):
+  iio: light: add support for UVIS25 sensor
+  dt-bindings: iio: light: add UVIS25 device bindings
 
-Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
----
-Changes v7 -> v8:
-  - rebase on master
-  - merge the rev A and B into one device tree based on the last rev B
-  because only the memory size change between the two rev currently
-  (suggested by Shawn Guo)
+ .../devicetree/bindings/iio/light/uvis25.txt       |  23 ++
+ drivers/iio/light/Kconfig                          |  24 ++
+ drivers/iio/light/Makefile                         |   3 +
+ drivers/iio/light/st_uvis25.h                      |  37 +++
+ drivers/iio/light/st_uvis25_core.c                 | 360 +++++++++++++++++++++
+ drivers/iio/light/st_uvis25_i2c.c                  |  69 ++++
+ drivers/iio/light/st_uvis25_spi.c                  |  68 ++++
+ 7 files changed, 584 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/uvis25.txt
+ create mode 100644 drivers/iio/light/st_uvis25.h
+ create mode 100644 drivers/iio/light/st_uvis25_core.c
+ create mode 100644 drivers/iio/light/st_uvis25_i2c.c
+ create mode 100644 drivers/iio/light/st_uvis25_spi.c
 
-Changes v6 -> v7:
-  - rebase on master
-  - remove unneeded pinctrl-name (suggested by Shawn Guo)
-  - add reg to the node en-sd-pwr (suggested by Shawn Guo)
-  - use define for gpio polarity (suggested by Shawn Guo)
-  - remove the fake bus container for regulator (suggested by Shawn Guo)
-
-Changes v5 -> v6:
-  - rebase on master
-  - split the previous patch series into series by subsystem
-
-Changes v4 -> v5:
-  - fix missing signed off
-
-Changes v3 -> v4:
-  - rebase on master
-
-Changes v2 -> v3:
-  - rebase on master
-
-Changes v1 -> v2:
-  - rebase on master
----
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/imx28-ts4600.dts | 79 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx28-ts4600.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d0381e9caf21..678373d299d8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -558,6 +558,7 @@ dtb-$(CONFIG_ARCH_MXS) += \
- 	imx28-m28cu3.dtb \
- 	imx28-m28evk.dtb \
- 	imx28-sps1.dtb \
-+	imx28-ts4600.dtb \
- 	imx28-tx28.dtb
- dtb-$(CONFIG_ARCH_NOMADIK) += \
- 	ste-nomadik-s8815.dtb \
-diff --git a/arch/arm/boot/dts/imx28-ts4600.dts b/arch/arm/boot/dts/imx28-ts4600.dts
-new file mode 100644
-index 000000000000..f37d81381620
---- /dev/null
-+++ b/arch/arm/boot/dts/imx28-ts4600.dts
-@@ -0,0 +1,79 @@
-+/*
-+ * Copyright (C) 2016 Savoir-Faire Linux
-+ * Author: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include "imx28.dtsi"
-+#include "dt-bindings/gpio/gpio.h"
-+
-+/ {
-+
-+	model = "Technologic Systems i.MX28 TS-4600";
-+	compatible = "technologic,imx28-ts4600", "fsl,imx28";
-+
-+	memory {
-+		reg = <0x40000000 0x10000000>;   /* 256MB */
-+	};
-+
-+	apb@80000000 {
-+		apbh@80000000 {
-+			ssp0: ssp@80010000 {
-+				compatible = "fsl,imx28-mmc";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&mmc0_4bit_pins_a
-+					     &mmc0_sck_cfg
-+					     &en_sd_pwr>;
-+				broken-cd = <1>;
-+				bus-width = <4>;
-+				vmmc-supply = <&reg_vddio_sd0>;
-+				status = "okay";
-+			};
-+
-+			pinctrl@80018000 {
-+
-+				en_sd_pwr: en-sd-pwr@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_PWM3__GPIO_3_28
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+			};
-+		};
-+
-+		apbx@80040000 {
-+			pwm: pwm@80064000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pwm2_pins_a>;
-+				status = "okay";
-+			};
-+
-+			duart: serial@80074000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&duart_pins_a>;
-+				status = "okay";
-+			};
-+		};
-+	};
-+
-+	reg_vddio_sd0: regulator-vddio-sd0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vddio-sd0";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		gpio = <&gpio3 28 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+};
 -- 
 2.15.0
