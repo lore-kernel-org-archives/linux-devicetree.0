@@ -1,48 +1,29 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH] arm64: dts: Hi3660: Fix state id for 'CPU_NAP' state
-Date: Thu, 23 Nov 2017 13:40:14 +0800
-Message-ID: <1511415614-9859-1-git-send-email-leo.yan@linaro.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [v4,2/3] drivers: hwmon: Add W83773G driver
+Date: Thu, 23 Nov 2017 17:02:05 +1030
+Message-ID: <CACPK8Xc5zmHCmDikYFPA+GdVCydHwgiLMY0X1RTyOmzS+m9W7A@mail.gmail.com>
+References: <1510543655-27059-3-git-send-email-mine260309@gmail.com> <20171118161533.GA2810@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171118161533.GA2810@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Leo Yan <leo.yan@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Lei YU <mine260309@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Jiri Kosina <trivial@kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Thanks a lot for Vincent Guittot careful work to find bug for 'CPU_NAP'
-idle state. From ftrace log we can observe CA73 CPUs can be easily waken
-up from 'CPU_NAP' state but the 'waken up' CPUs doesn't handle anything
-and sleep again; so there have tons of trace events for CA73 CPUs
-entering and exiting idle state.
+On Sun, Nov 19, 2017 at 2:45 AM, Guenter Roeck <linux@roeck-us.net> wrote:
+> On Mon, Nov 13, 2017 at 11:27:33AM +0800, Lei YU wrote:
+>> Nuvoton W83773G is a hardware monitor IC providing one local
+>> temperature and two remote temperature sensors.
+>>
+>> Signed-off-by: Lei YU <mine260309@gmail.com>
+>
+> Applied to hwmon-next.
 
-On Hi3660 CA73 has retention state 'CPU_NAP' for CPU idle, this state we
-set its psci parameter as '0x0000001' and from this parameter it can
-calculate state id is 1. Unfortunately ARM trusted firmware (ARM-TF)
-takes 1 as a invalid value for state id, so the CPU cannot enter idle
-state and directly bail out to kernel.
+Where does hwmon-next live? I was looking on kernel.org and I can't
+seem to find it.
 
-This commit changes psci parameter to '0x00000000' for state id = 0;
-this id is accepted by ARM trusted firmware and finally CPU can stay
-properly in 'CPU_NAP' state.
+Cheers,
 
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index ab0b95b..5666d29 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -147,7 +147,7 @@
- 
- 			CPU_NAP: cpu-nap {
- 				compatible = "arm,idle-state";
--				arm,psci-suspend-param = <0x0000001>;
-+				arm,psci-suspend-param = <0x0000000>;
- 				entry-latency-us = <7>;
- 				exit-latency-us = <2>;
- 				min-residency-us = <15>;
--- 
-2.7.4
+Joel
