@@ -1,73 +1,59 @@
-From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: xhci: add relaxed timing quirk bit
-Date: Thu, 23 Nov 2017 12:59:45 +0200
-Message-ID: <c46e19a2-4b37-473c-a563-6fddf0c62070@linux.intel.com>
-References: <1511284690-3878-1-git-send-email-awallis@codeaurora.org>
- <1511284690-3878-2-git-send-email-awallis@codeaurora.org>
- <20171121191103.5oczqvrlo4gtwjqc@rob-hp-laptop>
- <f200ce55-ac67-02f9-4dbf-7a3ba5b52b39@codeaurora.org>
- <CAL_JsqLZgnTTEiLXD8ZOK-0qd58i16e7h_-2yjHN+zRFfqvH4Q@mail.gmail.com>
- <32f8dc7e-9fde-5e45-1570-a9ec372579fa@codeaurora.org>
- <ee0ca959-1812-a4e4-346f-d57a1fdade13@linux.intel.com>
- <3c44d4d0-e10c-bacc-8e7f-df04bed5dc21@codeaurora.org>
+From: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v2 1/4] Documentation : can : flexcan : Add big-endian
+ property to device tree
+Date: Thu, 23 Nov 2017 12:08:03 +0000
+Message-ID: <AM0PR0402MB3940CFEA5C70EE517E553CDBF1210@AM0PR0402MB3940.eurprd04.prod.outlook.com>
+References: <1511430935-29783-1-git-send-email-pankaj.bansal@nxp.com>
+ <f859951e-072f-499b-5e86-1aaeb789a549@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3c44d4d0-e10c-bacc-8e7f-df04bed5dc21-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <f859951e-072f-499b-5e86-1aaeb789a549-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Varun Sethi <V.Sethi-3arQi8VN3Tc@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23.11.2017 01:32, Adam Wallis wrote:
-> On 11/22/2017 10:24 AM, Mathias Nyman wrote:
-> [..]
->>
->> We know have at least two hosts/platforms that need custom interrupt moderation
->> values
->>
->> How about adding a u32 device property for xhci with the interrupt moderation
->> interval in
->> nanoseconds?  And also add a u32 imod_interval variable to struct xhci_hcd?
->>   
->> imod_interval can be set to the current default 40000ns (160*250ns) and
->> overwritten if
->> device_property_read_u32() returns something else.
->>
-> 
-> Isn't the 160 value quite aggressive anyway? Section 5.5.2.2 of the xHCI spec
-> says that maximum observable interrupt rate should never exceed 8000
-> interrupts/second. I believe the IMOD value in the most aggressive case would
-> then be 500 by this statement [ 1 / (250e-9 * 500) = 8000 irqs/second ]
-> 
-> Perhaps I am misreading the spec or just doing the math wrong? With the default
-> value of 160, we are interrupting 25,000 irq/second...which is over 3 times the
-> maximum stated value (again, assuming I did the math right)
-> 
-> Anyway, my preference would be to set the IMOD default val to 4000 (~1ms) per
-> the recommended value in Table 49 of the spec and allow platforms to adjust as
-> necessary from that point.
-> 
-> Thoughts on this?
-> 
-
-I think current 40us is still reasonable, it's about ~3 times per
-usb microframe (125us) .8000 interrupts per second just covers the microframe rate,
-which is the shortest interval a interrupt transfer can require service.
-
-1ms interrupt interval is too long. In the worst case ~8 microframes could pass
-before the driver is aware of a error it needs to take care of.
-USB 3.1 devices can transfer 6 burst of 16 max sized packets (6 x 16 x 2014) bytes
-per microframe.
-
-closer to 125us could probably work as well, but unless we are fixing some issue or
-getting some other bigger benefit out of it I don't think it's worth changing it
-just to see if it breaks stuff.
-
-Thanks
--Mathias
+SEkgTWFyYywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJjIEts
+ZWluZS1CdWRkZSBbbWFpbHRvOm1rbEBwZW5ndXRyb25peC5kZV0NCj4gU2VudDogVGh1cnNkYXks
+IE5vdmVtYmVyIDIzLCAyMDE3IDM6MzIgUE0NCj4gVG86IFBhbmthaiBCYW5zYWwgPHBhbmthai5i
+YW5zYWxAbnhwLmNvbT47IHdnQGdyYW5kZWdnZXIuY29tOyBsaW51eC0NCj4gY2FuQHZnZXIua2Vy
+bmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gZGV2
+aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IFZhcnVuIFNldGhpIDxWLlNldGhpQG54cC5j
+b20+OyBQb29uYW0gQWdncndhbA0KPiA8cG9vbmFtLmFnZ3J3YWxAbnhwLmNvbT4NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2MiAxLzRdIERvY3VtZW50YXRpb24gOiBjYW4gOiBmbGV4Y2FuIDogQWRk
+IGJpZy1lbmRpYW4NCj4gcHJvcGVydHkgdG8gZGV2aWNlIHRyZWUNCj4gDQo+IE9uIDExLzIzLzIw
+MTcgMTA6NTUgQU0sIFBhbmthaiBCYW5zYWwgd3JvdGU6DQo+ID4gVGhlIEZsZXhDQU4gY29udHJv
+bGxlciBjYW4gYmUgbW9kZWxsZWQgYXMgbGl0dGxlIG9yIGJpZyBlbmRpYW4NCj4gPiBkZXBlbmRp
+bmcgb24gU09DIGRlc2lnbi4gVGhpcyBkZXZpY2UgdHJlZSBwcm9wZXJ0eSBpZGVudGlmaWVzIHRo
+ZQ0KPiA+IGNvbnRyb2xsZXIgZW5kaWFubmVzcyBhbmQgdGhlIGRyaXZlciByZWFkcy93cml0ZXMg
+Y29udHJvbGxlciByZWdpc3RlcnMNCj4gPiBiYXNlZCBvbiB0aGF0Lg0KPiA+DQo+ID4gVGhpcyBp
+cyBvcHRpb25hbCBwcm9wZXJ0eS4gaS5lLiBpZiB0aGlzIHByb3BlcnR5IGlzIG5vdCBwcmVzZW50
+IGluDQo+ID4gZGV2aWNlIHRyZWUgbm9kZSB0aGVuIGNvbnRyb2xsZXIgaXMgYXNzdW1lZCB0byBi
+ZSBsaXR0bGUgZW5kaWFuLiBpZg0KPiA+IHRoaXMgcHJvcGVydHkgaXMgcHJlc2VudCB0aGVuIGNv
+bnRyb2xsZXIgaXMgYXNzdW1lZCB0byBiZSBiaWcgZW5kaWFuLg0KPiA+DQo+ID4gU2lnbmVkLW9m
+Zi1ieTogUGFua2FqIEJhbnNhbCA8cGFua2FqLmJhbnNhbEBueHAuY29tPg0KPiA+IFJldmlld2Vk
+LWJ5OiBQb29uYW0gQWdncndhbCA8cG9vbmFtLmFnZ3J3YWxAbnhwLmNvbT4NCj4gDQo+IFBsZWFz
+ZSBkb2N1bWVudCB0aGUgZGVmYXVsdCBiZWhhdmlvdXIgaW4gdGhlIGJpbmRpbmdzIGlmIHRoZSBi
+aWctZW5kaWFuDQo+IHByb3BlcnR5IGlzIG1pc3NpbmcuDQoNCk9rLg0KDQo+IA0KPiBUaGlzIGFu
+ZCB0aGUgb3RoZXIgc2VyaWVzIGhhdmUgdG8gYmUgYXBwbGllZCBpbiB0aGUgY29ycmVjdCBvcmRl
+ciwgb3RoZXJ3aXNlDQo+IHlvdSBicmVhayBiaXNlY3RhYmlsaXR5IHdoZW4gcmVtb3ZpbmcgdGhl
+ICJmc2wscDEwMTAtZmxleGNhbiINCj4gZnJvbSB0aGUgbXh7MjUsMzUsNTN9IGRldmljZXRyZWUg
+YmVmb3JlIGFkZGluZyB0aGUgY29tcGF0aWJsZSB0byB0aGUgZHJpdmVyLg0KPiBNYXliZSBtZXJn
+ZSB0aGVzZSB0d28gc2VyaWVzPw0KPiANCg0KQ2FuIHdlIG1lcmdlIHRoZXNlIDIgc2VyaWVzID8g
+b25lIHNldCBvZiBjaGFuZ2VzIGFyZSBpbiBuZXQvY2FuIGRpcmVjdG9yeSB3aGljaCBpcyBtYW5h
+Z2VkIGluIGNhbi1uZXh0IGJyYW5jaC4NCk90aGVyIHNldCBvZiBjaGFuZ2VzIGFyZSBpbiBkZXZp
+Y2UgdHJlZSB3aGljaCBpcyBtYW5hZ2VkIGluIGR0LW5leHQgYnJhbmNoLg0KSSB0aG91Z2h0IGJv
+dGggdGhlc2UgYnJhbmNoZXMgYXJlIGluZGVwZW5kZW50bHkgdXBkYXRlZCBhbmQgdGhlbiBhbGwg
+dGhlc2UgYnJhbmNoZXMNCmFyZSBtZXJnZWQgaW4gbGludXgtbmV4dC4NClBsZWFzZSBjb3JyZWN0
+IG1lIGlmIEkgYW0gd3JvbmcuDQoNCj4gTWFyYw0KPiANCj4gLS0NCj4gUGVuZ3V0cm9uaXggZS5L
+LiAgICAgICAgICAgICAgICAgIHwgTWFyYyBLbGVpbmUtQnVkZGUgICAgICAgICAgIHwNCj4gSW5k
+dXN0cmlhbCBMaW51eCBTb2x1dGlvbnMgICAgICAgIHwgUGhvbmU6ICs0OS0yMzEtMjgyNi05MjQg
+ICAgIHwNCj4gVmVydHJldHVuZyBXZXN0L0RvcnRtdW5kICAgICAgICAgIHwgRmF4OiAgICs0OS01
+MTIxLTIwNjkxNy01NTU1IHwNCj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgIHwg
+aHR0cDovL3d3dy5wZW5ndXRyb25peC5kZSAgIHwNCg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
