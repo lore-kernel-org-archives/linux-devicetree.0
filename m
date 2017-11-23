@@ -1,51 +1,97 @@
-From: Jan Tuerk <jan.tuerk@emtrion.com>
-Subject: [PATCH 3/5] ARM: dts: imx: Add an cpu0 label for imx6dl devices.
-Date: Thu, 23 Nov 2017 13:55:53 +0100
-Message-ID: <20171123125600.41562-4-jan.tuerk@emtrion.com>
-References: <20171123125600.41562-1-jan.tuerk@emtrion.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171123125600.41562-1-jan.tuerk@emtrion.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Jan Tuerk <jan.tuerk@emtrion.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Kevin Hilman <khilman@baylibre.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, SZ Lin <sz.lin@moxa.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Subject: [PATCH] ARM: dts: move G2D node to exynos5
+Date: Thu, 23 Nov 2017 14:58:21 +0100
+Message-ID: <20171123135821.29489-1-tjakobi@math.uni-bielefeld.de>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: m.szyprowski@samsung.com, devicetree@vger.kernel.org, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
 List-Id: devicetree@vger.kernel.org
 
-Adding the label cpu0 allows the adjustment of cpu-parameters
-by reference in overlaying dtsi files in the same way as it
-is possible for imx6q devices.
+Current the node is only defined in the exynos5250 DT, while
+the corresponding MMUs are also to be found in the exynos5420
+DT. Move the node to exynos5 and only setup the MMUs in the
+corresponding DT.
 
-Signed-off-by: Jan Tuerk <jan.tuerk@emtrion.com>
+Disable the node by default, since exynos5410 also includes
+the dtsi, but currently does not define the G2D clock.
+
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
 ---
- arch/arm/boot/dts/imx6dl.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5.dtsi    |  7 +++++++
+ arch/arm/boot/dts/exynos5250.dtsi | 16 +++++++---------
+ arch/arm/boot/dts/exynos5420.dtsi |  7 +++++++
+ 3 files changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 4d693a75ce98..623c12519b81 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -21,7 +21,7 @@
-                #address-cells = <1>;
-                #size-cells = <0>;
-
--               cpu@0 {
-+               cpu0: cpu@0 {
-                        compatible = "arm,cortex-a9";
-                        device_type = "cpu";
-                        reg = <0>;
---
-2.11.0
-
-
-emtrion GmbH
-Kreativpark - Alter Schlachthof 45
-76131 Karlsruhe
-GERMANY
-http://www.emtrion.de
-_______________________________________
-
-Amtsgericht Mannheim
-HRB 110 300
-Geschäftsführer: Dieter Baur, Ramona Maurer
-_______________________________________
+diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+index 66d22521c976..f3fec03a7595 100644
+--- a/arch/arm/boot/dts/exynos5.dtsi
++++ b/arch/arm/boot/dts/exynos5.dtsi
+@@ -204,5 +204,12 @@
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
++
++		g2d: g2d@10850000 {
++			compatible = "samsung,exynos5250-g2d";
++			reg = <0x10850000 0x1000>;
++			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 5286084e1032..b6a8a2ef499a 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -245,15 +245,6 @@
+ 			samsung,syscon-phandle = <&pmu_system_controller>;
+ 		};
+ 
+-		g2d@10850000 {
+-			compatible = "samsung,exynos5250-g2d";
+-			reg = <0x10850000 0x1000>;
+-			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&clock CLK_G2D>;
+-			clock-names = "fimg2d";
+-			iommus = <&sysmmu_g2d>;
+-		};
+-
+ 		mfc: codec@11000000 {
+ 			compatible = "samsung,mfc-v6";
+ 			reg = <0x11000000 0x10000>;
+@@ -1024,6 +1015,13 @@
+ 	iommus = <&sysmmu_fimd1>;
+ };
+ 
++&g2d {
++	iommus = <&sysmmu_g2d>;
++	clocks = <&clock CLK_G2D>;
++	clock-names = "fimg2d";
++	status = "okay";
++};
++
+ &i2c_0 {
+ 	clocks = <&clock CLK_I2C0>;
+ 	clock-names = "i2c";
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 8aa2cc7aa125..81447fffcc94 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -1349,6 +1349,13 @@
+ 	iommu-names = "m0", "m1";
+ };
+ 
++&g2d {
++	iommus = <&sysmmu_g2dr>, <&sysmmu_g2dw>;
++	clocks = <&clock CLK_G2D>;
++	clock-names = "fimg2d";
++	status = "okay";
++};
++
+ &i2c_0 {
+ 	clocks = <&clock CLK_I2C0>;
+ 	clock-names = "i2c";
+-- 
+2.13.5
