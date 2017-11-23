@@ -1,385 +1,658 @@
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 2/3] hwrng: exynos - add Samsung Exynos True RNG driver
-Date: Thu, 23 Nov 2017 09:45:52 -0600
-Message-ID: <f3dd4bbc-9792-3732-bd7a-0bd0ab089c09@ti.com>
-References: <20171123150914.31462-1-l.stelmach@samsung.com>
- <CGME20171123151007eucas1p1cb231b31169771df3f9d57e515057413@eucas1p1.samsung.com>
- <20171123150914.31462-3-l.stelmach@samsung.com>
+Subject: Re: [PATCH v4 3/5] misc serdev: Add w2sg0004 (gps receiver) power
+ control driver
+Date: Thu, 23 Nov 2017 10:06:11 -0600
+Message-ID: <8dcd4cbb-02eb-b1d4-186e-63823199d5bb@ti.com>
+References: <cover.1510781875.git.hns@goldelico.com>
+ <871b744f878be8a0a4758ce549ff6ecaea8b6894.1510781876.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20171123150914.31462-3-l.stelmach@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <871b744f878be8a0a4758ce549ff6ecaea8b6894.1510781876.git.hns@goldelico.com>
 Content-Language: en-US
-Sender: linux-crypto-owner@vger.kernel.org
-To: =?UTF-8?Q?=c5=81ukasz_Stelmach?= <l.stelmach@samsung.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kevin Hilman <khilman@baylibre.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pyra-handheld.com, letux-kernel@openphoenux.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2017 09:09 AM, Łukasz Stelmach wrote:
-> Add support for True Random Number Generator found in Samsung Exynos
-> 5250+ SoCs.
+On 11/15/2017 03:37 PM, H. Nikolaus Schaller wrote:
+> Add driver for Wi2Wi W2SG0004/84 GPS module connected through uart.
 > 
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> Use serdev API hooks to monitor and forward the UART traffic to /dev/ttyGPSn
+> and turn on/off the module. It also detects if the module is turned on (sends data)
+> but should be off, e.g. if it was already turned on during boot or power-on-reset.
+> 
+> Additionally, rfkill block/unblock can be used to control an external LNA
+> (and power down the module if not needed).
+> 
+> The driver concept is based on code developed by NeilBrown <neilb@suse.de>
+> but simplified and adapted to use the new serdev API introduced in 4.11.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
->  MAINTAINERS                          |   7 +
->  drivers/char/hw_random/Kconfig       |  12 ++
->  drivers/char/hw_random/Makefile      |   1 +
->  drivers/char/hw_random/exynos-trng.c | 256 +++++++++++++++++++++++++++++++++++
->  4 files changed, 276 insertions(+)
->  create mode 100644 drivers/char/hw_random/exynos-trng.c
+>  drivers/misc/Kconfig    |  10 +
+>  drivers/misc/Makefile   |   1 +
+>  drivers/misc/w2sg0004.c | 545 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 556 insertions(+)
+>  create mode 100644 drivers/misc/w2sg0004.c
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2811a211632c..992074cca612 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11780,6 +11780,13 @@ S:	Maintained
->  F:	drivers/crypto/exynos-rng.c
->  F:	Documentation/devicetree/bindings/rng/samsung,exynos-rng4.txt
->  
-> +SAMSUNG EXYNOS TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
-> +M:	Łukasz Stelmach <l.stelmach@samsung.com>
-> +L:	linux-samsung-soc@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/char/hw_random/exynos-trng.c
-> +F:	Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 8136dc7e863d..09d171d68408 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -518,4 +518,14 @@ source "drivers/misc/mic/Kconfig"
+>  source "drivers/misc/genwqe/Kconfig"
+>  source "drivers/misc/echo/Kconfig"
+>  source "drivers/misc/cxl/Kconfig"
 > +
->  SAMSUNG FRAMEBUFFER DRIVER
->  M:	Jingoo Han <jingoohan1@gmail.com>
->  L:	linux-fbdev@vger.kernel.org
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index 95a031e9eced..a788ac07081b 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -449,6 +449,18 @@ config HW_RANDOM_S390
->  
->  	  If unsure, say Y.
->  
-> +config HW_RANDOM_EXYNOS
-> +       tristate "Samsung Exynos True Random Number Generator support"
-> +       depends on ARCH_EXYNOS || COMPILE_TEST
-> +       default HW_RANDOM
-> +       ---help---
-> +         This driver provides support for the True Random Number
-> +         Generator available in Exynos SoCs.
+> +config W2SG0004
+> +	tristate "W2SG00x4 on/off control"
+> +	depends on GPIOLIB && SERIAL_DEV_BUS
+> +	help
+> +          Enable on/off control of W2SG00x4 GPS moduled connected
+> +	  to some SoC UART to allow powering up/down if the /dev/ttyGPSn
+> +	  is opened/closed.
+> +	  It also provides a rfkill gps name to control the LNA power.
 > +
-
-Some whitespace strangness here.
-
-> +	 To compile this driver as a module, choose M here: the module
-> +	 will be called exynos-trng.
-> +
-> +	 If unsure, say Y.
->  endif # HW_RANDOM
->  
->  config UML_RANDOM
-> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-> index f3728d008fff..5595df97da7a 100644
-> --- a/drivers/char/hw_random/Makefile
-> +++ b/drivers/char/hw_random/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_HW_RANDOM_GEODE) += geode-rng.o
->  obj-$(CONFIG_HW_RANDOM_N2RNG) += n2-rng.o
->  n2-rng-y := n2-drv.o n2-asm.o
->  obj-$(CONFIG_HW_RANDOM_VIA) += via-rng.o
-> +obj-$(CONFIG_HW_RANDOM_EXYNOS) += exynos-trng.o
->  obj-$(CONFIG_HW_RANDOM_IXP4XX) += ixp4xx-rng.o
->  obj-$(CONFIG_HW_RANDOM_OMAP) += omap-rng.o
->  obj-$(CONFIG_HW_RANDOM_OMAP3_ROM) += omap3-rom-rng.o
-> diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_random/exynos-trng.c
+>  endmenu
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index ad0e64fdba34..abcb667e0ff0 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
+>  obj-y				+= mic/
+>  obj-$(CONFIG_GENWQE)		+= genwqe/
+>  obj-$(CONFIG_ECHO)		+= echo/
+> +obj-$(CONFIG_W2SG0004)		+= w2sg0004.o
+>  obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
+>  obj-$(CONFIG_CXL_BASE)		+= cxl/
+>  obj-$(CONFIG_ASPEED_LPC_CTRL)	+= aspeed-lpc-ctrl.o
+> diff --git a/drivers/misc/w2sg0004.c b/drivers/misc/w2sg0004.c
 > new file mode 100644
-> index 000000000000..340e106cae24
+> index 000000000000..12e14b5e0a99
 > --- /dev/null
-> +++ b/drivers/char/hw_random/exynos-trng.c
-> @@ -0,0 +1,256 @@
+> +++ b/drivers/misc/w2sg0004.c
+> @@ -0,0 +1,545 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+Damn this looks ugly, oh well :/
+
 > +/*
-> + * RNG driver for Exynos TRNGs
+> + * Driver for power controlling the w2sg0004/w2sg0084 GPS receiver.
 > + *
-> + * Author: Łukasz Stelmach <l.stelmach@samsung.com>
+
+
+Think you still need copyright tag here somewhere.
+
+> + * This receiver has an ON/OFF pin which must be toggled to
+> + * turn the device 'on' of 'off'.  A high->low->high toggle
+> + * will switch the device on if it is off, and off if it is on.
 > + *
-> + * Copyright 2017 (c) Samsung Electronics Software, Inc.
+> + * To enable receiving on/off requests we register with the
+> + * UART power management notifications.
 > + *
-> + * Based on the Exynos PRNG driver drivers/crypto/exynos-rng by
-> + * Krzysztof Kozłowski <krzk@kernel.org>
+> + * It is not possible to directly detect the state of the device.
+> + * However when it is on it will send characters on a UART line
+> + * regularly.
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation;
+> + * To detect that the power state is out of sync (e.g. if GPS
+> + * was enabled before a reboot), we register for UART data received
+> + * notifications.
 > + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
+> + * In addition we register as a rfkill client so that we can
+> + * control the LNA power.
+> + *
 > + */
 > +
-> +#include <linux/clk.h>
-> +#include <linux/crypto.h>
 > +#include <linux/delay.h>
 > +#include <linux/err.h>
-> +#include <linux/hw_random.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
 > +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_gpio.h>
 > +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/rfkill.h>
+> +#include <linux/serdev.h>
+> +#include <linux/sched.h>
+> +#include <linux/slab.h>
+> +#include <linux/tty.h>
+> +#include <linux/tty_flip.h>
+> +#include <linux/workqueue.h>
 > +
-> +#define EXYNOS_TRNG_CLKDIV         (0x0)
-> +#define EXYNOS_TRNG_CTRL           (0x20)
-> +#define EXYNOS_TRNG_POST_CTRL      (0x30)
-> +#define EXYNOS_TRNG_ONLINE_CTRL    (0x40)
-> +#define EXYNOS_TRNG_ONLINE_STAT    (0x44)
-> +#define EXYNOS_TRNG_ONLINE_MAXCHI2 (0x48)
-> +#define EXYNOS_TRNG_FIFO_CTRL      (0x50)
-> +#define EXYNOS_TRNG_FIFO_0         (0x80)
-> +#define EXYNOS_TRNG_FIFO_1         (0x84)
-> +#define EXYNOS_TRNG_FIFO_2         (0x88)
-> +#define EXYNOS_TRNG_FIFO_3         (0x8c)
-> +#define EXYNOS_TRNG_FIFO_4         (0x90)
-> +#define EXYNOS_TRNG_FIFO_5         (0x94)
-> +#define EXYNOS_TRNG_FIFO_6         (0x98)
-> +#define EXYNOS_TRNG_FIFO_7         (0x9c)
-> +#define EXYNOS_TRNG_FIFO_LEN       (8)
-> +#define EXYNOS_TRNG_CLOCK_RATE     (500000)
+> +/*
+> + * There seems to be restrictions on how quickly we can toggle the
+> + * on/off line.  data sheets says "two rtc ticks", whatever that means.
+> + * If we do it too soon it doesn't work.
+> + * So we have a state machine which uses the common work queue to ensure
+> + * clean transitions.
+> + * When a change is requested we record that request and only act on it
+> + * once the previous change has completed.
+> + * A change involves a 10ms low pulse, and a 990ms raised level, so only
+> + * one change per second.
+> + */
 > +
-> +struct exynos_trng_dev {
-> +	struct device    *dev;
-> +	void __iomem     *mem;
-> +	struct clk       *clk;
-> +	struct hwrng rng;
+> +enum w2sg_state {
+> +	W2SG_IDLE,	/* is not changing state */
+> +	W2SG_PULSE,	/* activate on/off impulse */
+> +	W2SG_NOPULSE	/* deactivate on/off impulse */
 > +};
 > +
-> +struct exynos_trng_dev *exynos_trng_dev;
-
-
-This only seems to be used as a flag to block this driver from probing
-twice, but it doesn't even do that as it is not ever set to anything.
-Even if it was, why block a system from having two?
-
+> +struct w2sg_data {
+> +	struct		rfkill *rf_kill;
+> +	struct		regulator *lna_regulator;
+> +	int		lna_blocked;	/* rfkill block gps active */
+> +	int		lna_is_off;	/* LNA is currently off */
+> +	int		is_on;		/* current state (0/1) */
+> +	unsigned long	last_toggle;
+> +	unsigned long	backoff;	/* time to wait since last_toggle */
+> +	int		on_off_gpio;	/* the on-off gpio number */
+> +	struct		serdev_device *uart;	/* uart connected to the chip */
+> +	struct		tty_driver *tty_drv;	/* this is the user space tty */
+> +	struct		device *dev;	/* from tty_port_register_device() */
+> +	struct		tty_port port;
+> +	int		open_count;	/* how often we were opened */
+> +	enum		w2sg_state state;
+> +	int		requested;	/* requested state (0/1) */
+> +	int		suspended;
+> +	struct delayed_work work;
+> +	int		discard_count;
+> +};
 > +
-> +static inline void exynos_trng_set_reg(struct exynos_trng_dev *trng, u16 reg,
-> +				       u32 val)
+
+Kernel doc style.
+
+> +static struct w2sg_data *w2sg_by_minor[1];
+> +
+
+If you can only have one right now then just drop the array.
+
+> +static int w2sg_set_lna_power(struct w2sg_data *data)
 > +{
-> +	/* Check range of reg? */
-> +	__raw_writel(val, trng->mem + reg);
-
-If you are not checking, then just drop this one line function, it adds
-nothing.
-
-> +}
+> +	int ret = 0;
+> +	int off = data->suspended || !data->requested || data->lna_blocked;
 > +
-> +static inline u32 exynos_trng_get_reg(struct exynos_trng_dev *trng, u16 reg)
-> +{
-> +	/* Check range of reg? */
-> +	return __raw_readl(trng->mem + reg);
-
-Same
-
-> +}
+> +	pr_debug("%s: %s\n", __func__, off ? "off" : "on");
 > +
-> +static int exynos_trng_do_read(struct hwrng *rng, void *data, size_t max,
-> +			       bool wait)
-> +{
-> +	struct exynos_trng_dev *trng;
-> +	u32 val;
-> +
-> +	max = max > (EXYNOS_TRNG_FIFO_LEN * 4) ?
-> +		(EXYNOS_TRNG_FIFO_LEN * 4) : max;
-
-min()
-
-> +
-> +	trng = (struct exynos_trng_dev *)rng->priv;
-> +
-> +	exynos_trng_set_reg(trng, EXYNOS_TRNG_FIFO_CTRL, max * 8);
-> +	val = readl_poll_timeout(trng->mem + EXYNOS_TRNG_FIFO_CTRL, val,
-> +				 val == 0, 200, 1000000);
-> +	if (val < 0)
-> +		return val;
-> +
-> +	memcpy_fromio(data, trng->mem + EXYNOS_TRNG_FIFO_0, max);
-> +
-> +	return max;
-> +}
-> +
-> +static int exynos_trng_init(struct hwrng *rng)
-> +{
-> +	struct exynos_trng_dev *trng;
-> +	unsigned long sss_rate;
-> +	u32 val;
-> +
-> +	trng = (struct exynos_trng_dev *)rng->priv;
-
-Move up to initializer.
-
-> +	sss_rate = clk_get_rate(trng->clk);
-> +
-> +	/* For most TRNG circuits the clock frequency of under 500 kHz
-> +	 * is safe.
-> +	 */
-> +	val = sss_rate / (EXYNOS_TRNG_CLOCK_RATE * 2);
-> +	if (val > 0x7fff) {
-> +		dev_err(trng->dev, "clock divider too large: %d", val);
-> +		return -ERANGE;
-> +	}
-> +	val = val << 1;
-> +	exynos_trng_set_reg(trng, EXYNOS_TRNG_CLKDIV, val);
-> +
-> +	/* Enable the generator. */
-> +	val = 1 << 31;
-
-#define TRNG_CTRL_ENABLE BIT(31)
-
-> +	exynos_trng_set_reg(trng, EXYNOS_TRNG_CTRL, val);
-> +
-> +	/* Disable post processing. /dev/hwrng is supposed to deliver
-> +	 * unprocessed data.
-> +	 */
-> +	exynos_trng_set_reg(trng, EXYNOS_TRNG_POST_CTRL, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int exynos_trng_probe(struct platform_device *pdev)
-> +{
-> +	struct exynos_trng_dev *trng;
-> +	struct resource *res;
-> +	int ret = -ENOMEM;
-> +
-> +	if (exynos_trng_dev)
-> +		return -EEXIST;
-> +
-> +	trng = devm_kzalloc(&pdev->dev, sizeof(*trng), GFP_KERNEL);
-> +	if (!trng)
-> +		goto err_ioremap;
-> +
-> +	trng->rng.name = devm_kstrdup(&pdev->dev, dev_name(&pdev->dev),
-> +				      GFP_KERNEL);
-> +	if (!trng->rng.name)
-> +		goto err_ioremap;
-> +
-> +	trng->rng.init = exynos_trng_init;
-> +	trng->rng.read = exynos_trng_do_read;
-> +	trng->rng.priv = (unsigned long) trng;
-> +
-> +	platform_set_drvdata(pdev, trng);
-> +	trng->dev = &pdev->dev;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	trng->mem = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(trng->mem)) {
-> +		dev_err(&pdev->dev, "Couldn't map IO resources.\n");
-> +		ret = PTR_ERR(trng->mem);
-> +		goto err_ioremap;
+> +	if (off != data->lna_is_off) {
+> +		data->lna_is_off = off;
+> +		if (!IS_ERR_OR_NULL(data->lna_regulator)) {
+> +			if (off)
+> +				regulator_disable(data->lna_regulator);
+> +			else
+> +				ret = regulator_enable(data->lna_regulator);
+> +		}
 > +	}
 > +
-> +	pm_runtime_enable(&pdev->dev);
-> +	ret = pm_runtime_get_sync(&pdev->dev);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "pm_runtime_get_sync() failed: %d.\n", ret);
-
-"Could not get runtime PM",
-
-Be descriptive an consistent, the other dev_errs don't print ret, it
-will get printed as part of the probe fail message.
-
-> +		goto err_ioremap;
-> +	}
-> +
-> +	trng->clk = devm_clk_get(&pdev->dev, "secss");
-> +	if (IS_ERR(trng->clk)) {
-> +		/* XXX: EPROBE_DEFER ? */
-
-Are you asking? If it's posible the clock is not available then yes, you
-should not print the below message and exit gracefully.
-
-> +		dev_err(&pdev->dev, "Couldn't get clock.\n");
-> +		ret = PTR_ERR(trng->clk);
-> +		goto err_clock;
-> +	}
-> +
-> +	ret = clk_prepare_enable(trng->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Unable to enable the clk: %d.\n", ret);
-> +		goto err_clock;
-> +	}
-> +
-> +	ret = hwrng_register(&trng->rng);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Couldn't register hwrng device.\n");
-> +		goto err_register;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "Exynos True Random Number Generator.\n");
-> +
-> +	return 0;
-> +
-> +err_register:
-> +	clk_disable_unprepare(trng->clk);
-> +
-> +err_clock:
-> +	trng->mem = NULL;
-> +	pm_runtime_put_sync(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +err_ioremap:
-> +	dev_err(&pdev->dev, "Initialisation failed.\n");
 > +	return ret;
 > +}
 > +
-> +static int exynos_trng_remove(struct platform_device *pdev)
+> +static void w2sg_set_power(void *pdata, int val)
 > +{
-
-pm_runtime_*, or just use devm_ versions and drop this function.
-
-> +	exynos_trng_dev = NULL;
+> +	struct w2sg_data *data = (struct w2sg_data *) pdata;
 > +
-> +	return 0;
+> +	pr_debug("%s to state=%d (requested=%d)\n", __func__, val, data->requested);
+> +
+> +	if (val && !data->requested) {
+> +		data->requested = true;
+> +	} else if (!val && data->requested) {
+> +		data->backoff = HZ;
+> +		data->requested = false;
+> +	} else
+> +		return;
+> +
+> +	pr_debug("w2sg00x4 scheduled for %d\n", data->requested);
+> +
+> +	if (!data->suspended)
+> +		schedule_delayed_work(&data->work, 0);
 > +}
 > +
-> +static int __maybe_unused exynos_trng_suspend(struct device *dev)
-> +{
-> +	pm_runtime_put_sync(dev);
+> +/* called each time data is received by the UART (i.e. sent by the w2sg0004) */
 > +
-> +	return 0;
+> +static int w2sg_uart_receive_buf(struct serdev_device *serdev,
+> +				const unsigned char *rxdata,
+> +				size_t count)
+> +{
+> +	struct w2sg_data *data =
+> +		(struct w2sg_data *) serdev_device_get_drvdata(serdev);
+> +
+> +	if (!data->requested && !data->is_on) {
+> +		/*
+> +		 * we have received characters while the w2sg
+> +		 * should have been be turned off
+> +		 */
+> +		data->discard_count += count;
+> +		if ((data->state == W2SG_IDLE) &&
+> +		    time_after(jiffies,
+> +		    data->last_toggle + data->backoff)) {
+> +			/* Should be off by now, time to toggle again */
+> +			pr_debug("w2sg00x4 has sent %d characters data although it should be off!\n",
+> +				data->discard_count);
+> +
+> +			data->discard_count = 0;
+> +
+> +			data->is_on = true;
+> +			data->backoff *= 2;
+> +			if (!data->suspended)
+> +				schedule_delayed_work(&data->work, 0);
+> +		}
+> +	} else if (data->open_count > 0) {
+> +		int n;
+> +
+> +		pr_debug("w2sg00x4: push %lu chars to tty port\n",
+> +			(unsigned long) count);
+> +
+> +		/* pass to user-space */
+> +		n = tty_insert_flip_string(&data->port, rxdata, count);
+> +		if (n != count)
+> +			pr_err("w2sg00x4: did loose %lu characters\n",
+> +				(unsigned long) (count - n));
+> +		tty_flip_buffer_push(&data->port);
+> +		return n;
+> +	}
+> +
+> +	/* assume we have processed everything */
+> +	return count;
 > +}
 > +
-> +static int __maybe_unused exynos_trng_resume(struct device *dev)
-> +{
-> +	int ret;
+> +/* try to toggle the power state by sending a pulse to the on-off GPIO */
 > +
-> +	ret = pm_runtime_get_sync(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "pm_runtime_get_sync() failed: %d.\n", ret);
-> +		pm_runtime_put_noidle(dev);
-> +		return ret;
+
+drop extra line, same everywhere
+
+> +static void toggle_work(struct work_struct *work)
+> +{
+> +	struct w2sg_data *data = container_of(work, struct w2sg_data,
+> +					      work.work);
+> +
+> +	switch (data->state) {
+> +	case W2SG_IDLE:
+> +		if (data->requested == data->is_on)
+> +			return;
+> +
+> +		w2sg_set_lna_power(data);	/* update LNA power state */
+> +		gpio_set_value_cansleep(data->on_off_gpio, 0);
+> +		data->state = W2SG_PULSE;
+> +
+> +		pr_debug("w2sg: power gpio ON\n");
+> +
+> +		schedule_delayed_work(&data->work,
+> +				      msecs_to_jiffies(10));
+> +		break;
+> +
+> +	case W2SG_PULSE:
+> +		gpio_set_value_cansleep(data->on_off_gpio, 1);
+> +		data->last_toggle = jiffies;
+> +		data->state = W2SG_NOPULSE;
+> +		data->is_on = !data->is_on;
+> +
+> +		pr_debug("w2sg: power gpio OFF\n");
+> +
+> +		schedule_delayed_work(&data->work,
+> +				      msecs_to_jiffies(10));
+> +		break;
+> +
+> +	case W2SG_NOPULSE:
+> +		data->state = W2SG_IDLE;
+> +
+> +		pr_debug("w2sg: idle\n");
+> +
+> +		break;
+> +
+> +	}
+> +}
+> +
+> +static int w2sg_rfkill_set_block(void *pdata, bool blocked)
+> +{
+> +	struct w2sg_data *data = pdata;
+> +
+> +	pr_debug("%s: blocked: %d\n", __func__, blocked);
+> +
+> +	data->lna_blocked = blocked;
+> +
+> +	return w2sg_set_lna_power(data);
+> +}
+> +
+> +static struct rfkill_ops w2sg0004_rfkill_ops = {
+> +	.set_block = w2sg_rfkill_set_block,
+> +};
+> +
+> +static struct serdev_device_ops serdev_ops = {
+> +	.receive_buf = w2sg_uart_receive_buf,
+> +};
+> +
+> +/*
+> + * we are a man-in the middle between the user-space visible tty port
+> + * and the serdev tty where the chip is connected.
+> + * This allows us to recognise when the device should be powered on
+> + * or off and handle the "false" state that data arrives while no
+> + * users-space tty client exists.
+> + */
+> +
+> +static struct w2sg_data *w2sg_get_by_minor(unsigned int minor)
+> +{
+> +	return w2sg_by_minor[minor];
+> +}
+> +
+> +static int w2sg_tty_install(struct tty_driver *driver, struct tty_struct *tty)
+> +{
+> +	struct w2sg_data *data;
+> +	int retval;
+> +
+> +	pr_debug("%s() tty = %p\n", __func__, tty);
+> +
+> +	data = w2sg_get_by_minor(tty->index);
+> +
+> +	if (!data)
+> +		return -ENODEV;
+> +
+> +	retval = tty_standard_install(driver, tty);
+> +	if (retval)
+> +		goto error_init_termios;
+> +
+> +	tty->driver_data = data;
+> +
+> +	return 0;
+> +
+> +error_init_termios:
+> +	tty_port_put(&data->port);
+> +	return retval;
+> +}
+> +
+> +static int w2sg_tty_open(struct tty_struct *tty, struct file *file)
+> +{
+> +	struct w2sg_data *data = tty->driver_data;
+> +
+> +	pr_debug("%s() data = %p open_count = ++%d\n", __func__, data, data->open_count);
+> +
+> +	w2sg_set_power(data, ++data->open_count > 0);
+> +
+> +	return tty_port_open(&data->port, tty, file);
+> +}
+> +
+> +static void w2sg_tty_close(struct tty_struct *tty, struct file *file)
+> +{
+> +	struct w2sg_data *data = tty->driver_data;
+> +
+> +	pr_debug("%s()\n", __func__);
+> +
+> +	w2sg_set_power(data, --data->open_count > 0);
+> +
+> +	tty_port_close(&data->port, tty, file);
+> +}
+> +
+> +static int w2sg_tty_write(struct tty_struct *tty,
+> +		const unsigned char *buffer, int count)
+> +{
+> +	struct w2sg_data *data = tty->driver_data;
+> +
+> +	/* simply pass down to UART */
+> +	return serdev_device_write_buf(data->uart, buffer, count);
+> +}
+> +
+> +static const struct tty_operations w2sg_serial_ops = {
+> +	.install = w2sg_tty_install,
+> +	.open = w2sg_tty_open,
+> +	.close = w2sg_tty_close,
+> +	.write = w2sg_tty_write,
+> +};
+> +
+> +static const struct tty_port_operations w2sg_port_ops = {
+> +};
+
+drop the brackets? or use NULL below, not sure if this needs memory.
+
+> +
+> +static int w2sg_probe(struct serdev_device *serdev)
+> +{
+> +	struct w2sg_data *data;
+> +	struct rfkill *rf_kill;
+> +	int err;
+> +	int minor;
+> +	enum of_gpio_flags flags;
+> +
+> +	pr_debug("%s()\n", __func__);
+> +
+> +	minor = 0;
+> +	if (w2sg_by_minor[minor]) {
+> +		pr_err("w2sg minor is already in use!\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	data = devm_kzalloc(&serdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (data == NULL)
+> +		return -ENOMEM;
+> +
+> +	w2sg_by_minor[minor] = data;
+> +
+> +	serdev_device_set_drvdata(serdev, data);
+> +
+> +	data->on_off_gpio = of_get_named_gpio_flags(serdev->dev.of_node,
+> +						     "enable-gpios", 0,
+> +						     &flags);
+> +	/* defer until we have all gpios */
+> +	if (data->on_off_gpio == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> +
+> +	data->lna_regulator = devm_regulator_get_optional(&serdev->dev,
+> +							"lna");
+> +	if (IS_ERR(data->lna_regulator)) {
+> +		/* defer until we can get the regulator */
+> +		if (PTR_ERR(data->lna_regulator) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		data->lna_regulator = NULL;
+> +	}
+> +	pr_debug("%s() lna_regulator = %p\n", __func__, data->lna_regulator);
+> +
+> +	data->lna_blocked = true;
+> +	data->lna_is_off = true;
+> +
+> +	data->is_on = false;
+> +	data->requested = false;
+> +	data->state = W2SG_IDLE;
+> +	data->last_toggle = jiffies;
+> +	data->backoff = HZ;
+> +
+> +	data->uart = serdev;
+> +
+> +	INIT_DELAYED_WORK(&data->work, toggle_work);
+> +
+> +	err = devm_gpio_request(&serdev->dev, data->on_off_gpio,
+> +				"w2sg0004-on-off");
+> +	if (err < 0)
+> +		goto out;
+> +
+> +	gpio_direction_output(data->on_off_gpio, false);
+> +
+> +	serdev_device_set_client_ops(data->uart, &serdev_ops);
+> +	serdev_device_open(data->uart);
+> +
+> +	serdev_device_set_baudrate(data->uart, 9600);
+> +	serdev_device_set_flow_control(data->uart, false);
+> +
+> +	rf_kill = rfkill_alloc("GPS", &serdev->dev, RFKILL_TYPE_GPS,
+> +				&w2sg0004_rfkill_ops, data);
+> +	if (rf_kill == NULL) {
+> +		err = -ENOMEM;
+> +		goto err_rfkill;
+> +	}
+> +
+> +	err = rfkill_register(rf_kill);
+> +	if (err) {
+> +		dev_err(&serdev->dev, "Cannot register rfkill device\n");
+> +		goto err_rfkill;
+> +	}
+> +
+> +	data->rf_kill = rf_kill;
+> +
+> +	/* allocate the tty driver */
+> +	data->tty_drv = alloc_tty_driver(1);
+> +	if (!data->tty_drv)
+> +		return -ENOMEM;
+> +
+> +	/* initialize the tty driver */
+> +	data->tty_drv->owner = THIS_MODULE;
+> +	data->tty_drv->driver_name = "w2sg0004";
+> +	data->tty_drv->name = "ttyGPS";
+> +	data->tty_drv->major = 0;
+> +	data->tty_drv->minor_start = 0;
+> +	data->tty_drv->type = TTY_DRIVER_TYPE_SERIAL;
+> +	data->tty_drv->subtype = SERIAL_TYPE_NORMAL;
+> +	data->tty_drv->flags = TTY_DRIVER_REAL_RAW | TTY_DRIVER_DYNAMIC_DEV;
+> +	data->tty_drv->init_termios = tty_std_termios;
+> +	data->tty_drv->init_termios.c_cflag = B9600 | CS8 | CREAD |
+> +					      HUPCL | CLOCAL;
+> +	/*
+> +	 * optional:
+> +	 * tty_termios_encode_baud_rate(&data->tty_drv->init_termios,
+> +					115200, 115200);
+> +	 * w2sg_tty_termios(&data->tty_drv->init_termios);
+> +	 */
+> +	tty_set_operations(data->tty_drv, &w2sg_serial_ops);
+> +
+> +	/* register the tty driver */
+> +	err = tty_register_driver(data->tty_drv);
+> +	if (err) {
+> +		pr_err("%s - tty_register_driver failed(%d)\n",
+> +			__func__, err);
+> +		put_tty_driver(data->tty_drv);
+> +		goto err_rfkill;
+> +	}
+> +
+> +	tty_port_init(&data->port);
+> +	data->port.ops = &w2sg_port_ops;
+> +
+> +	pr_debug("w2sg call tty_port_register_device\n");
+> +
+> +	data->dev = tty_port_register_device(&data->port,
+> +			data->tty_drv, minor, &serdev->dev);
+> +
+> +	pr_debug("w2sg probed\n");
+> +
+> +	/* keep off until user space requests the device */
+> +	w2sg_set_power(data, false);
+> +
+> +	return 0;
+> +
+> +err_rfkill:
+> +	rfkill_destroy(rf_kill);
+> +	serdev_device_close(data->uart);
+> +out:
+> +	return err;
+> +}
+> +
+> +static void w2sg_remove(struct serdev_device *serdev)
+> +{
+> +	struct w2sg_data *data = serdev_device_get_drvdata(serdev);
+> +	int minor;
+> +
+> +	cancel_delayed_work_sync(&data->work);
+> +
+> +	/* what is the right sequence to avoid problems? */
+> +	serdev_device_close(data->uart);
+> +
+> +	minor = 0;
+> +	tty_unregister_device(data->tty_drv, minor);
+> +
+> +	tty_unregister_driver(data->tty_drv);
+> +}
+> +
+> +static int w2sg_suspend(struct device *dev)
+
+__maybe_unused, or if PM is disabled you will get a warning.
+
+> +{
+> +	struct w2sg_data *data = dev_get_drvdata(dev);
+> +
+> +	data->suspended = true;
+> +
+> +	cancel_delayed_work_sync(&data->work);
+> +
+> +	w2sg_set_lna_power(data);	/* shuts down if needed */
+> +
+> +	if (data->state == W2SG_PULSE) {
+> +		msleep(10);
+> +		gpio_set_value_cansleep(data->on_off_gpio, 1);
+> +		data->last_toggle = jiffies;
+> +		data->is_on = !data->is_on;
+> +		data->state = W2SG_NOPULSE;
+> +	}
+> +
+> +	if (data->state == W2SG_NOPULSE) {
+> +		msleep(10);
+> +		data->state = W2SG_IDLE;
+> +	}
+> +
+> +	if (data->is_on) {
+> +		pr_info("GPS off for suspend %d %d %d\n", data->requested,
+> +			data->is_on, data->lna_is_off);
+> +
+> +		gpio_set_value_cansleep(data->on_off_gpio, 0);
+> +		msleep(10);
+> +		gpio_set_value_cansleep(data->on_off_gpio, 1);
+> +		data->is_on = 0;
 > +	}
 > +
 > +	return 0;
 > +}
 > +
-> +static SIMPLE_DEV_PM_OPS(exynos_trng_pm_ops, exynos_trng_suspend,
-> +			 exynos_trng_resume);
+> +static int w2sg_resume(struct device *dev)
+> +{
+> +	struct w2sg_data *data = dev_get_drvdata(dev);
 > +
-> +static const struct of_device_id exynos_trng_dt_match[] = {
-> +	{
-> +		.compatible = "samsung,exynos5250-trng",
-> +	},
-> +	{ },
+> +	data->suspended = false;
+> +
+> +	pr_info("GPS resuming %d %d %d\n", data->requested,
+> +		data->is_on, data->lna_is_off);
+> +
+> +	schedule_delayed_work(&data->work, 0);	/* enables LNA if needed */
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id w2sg0004_of_match[] = {
+> +	{ .compatible = "wi2wi,w2sg0004" },
+> +	{ .compatible = "wi2wi,w2sg0084" },
+> +	{},
 > +};
-> +MODULE_DEVICE_TABLE(of, exynos_rng_dt_match);
+> +MODULE_DEVICE_TABLE(of, w2sg0004_of_match);
 > +
-> +static struct platform_driver exynos_trng_driver = {
+> +SIMPLE_DEV_PM_OPS(w2sg_pm_ops, w2sg_suspend, w2sg_resume);
+> +
+> +static struct serdev_device_driver w2sg_driver = {
+> +	.probe		= w2sg_probe,
+> +	.remove		= w2sg_remove,
 > +	.driver = {
-> +		.name = "exynos-trng",
-> +		.pm = &exynos_trng_pm_ops,
-> +		.of_match_table = exynos_trng_dt_match,
+> +		.name	= "w2sg0004",
+> +		.owner	= THIS_MODULE,
+> +		.pm	= &w2sg_pm_ops,
+> +		.of_match_table = of_match_ptr(w2sg0004_of_match)
 > +	},
-> +	.probe = exynos_trng_probe,
-> +	.remove = exynos_trng_remove,
 > +};
 > +
-> +module_platform_driver(exynos_trng_driver);
-> +MODULE_AUTHOR("Łukasz Stelmach");
-> +MODULE_DESCRIPTION("H/W TRNG driver for Exynos chips");
-> +MODULE_LICENSE("GPL");
+> +module_serdev_device_driver(w2sg_driver);
+> +
+> +MODULE_ALIAS("w2sg0004");
+
+Is this needed?
+
+> +
+> +MODULE_AUTHOR("NeilBrown <neilb@suse.de>");
+
+Who really wrote this?
+
+> +MODULE_DESCRIPTION("w2sg0004 GPS power management driver");
+> +MODULE_LICENSE("GPL v2");
 > 
