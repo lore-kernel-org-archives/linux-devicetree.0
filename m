@@ -1,55 +1,144 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH 2/3] libnvdimm: Add a device-tree interface
-Date: Fri, 24 Nov 2017 17:36:33 +1100
-Message-ID: <87ine018um.fsf@concordia.ellerman.id.au>
-References: <20171115175131.23631-1-oohall@gmail.com> <20171115175131.23631-2-oohall@gmail.com> <20171116142840.er7st25ll3o6jr7s@rob-hp-laptop>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Hi3660: Fix state id for 'CPU_NAP' state
+Date: Fri, 24 Nov 2017 14:56:23 +0800
+Message-ID: <20171124065623.GD13184@leoy-linaro>
+References: <1511415614-9859-1-git-send-email-leo.yan@linaro.org>
+ <17639ecc-8ff8-e118-f6e1-51e2cfe4342b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171116142840.er7st25ll3o6jr7s@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <17639ecc-8ff8-e118-f6e1-51e2cfe4342b-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
-> On Thu, Nov 16, 2017 at 04:51:30AM +1100, Oliver O'Halloran wrote:
-...
->> diff --git a/drivers/nvdimm/of_nvdimm.c b/drivers/nvdimm/of_nvdimm.c
->> new file mode 100644
->> index 000000000000..765cbbae8bcb
->> --- /dev/null
->> +++ b/drivers/nvdimm/of_nvdimm.c
->> @@ -0,0 +1,202 @@
->> +/*
->> + * Copyright 2017, IBM Corporation
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program; if not, you can access it online at
->> + * http://www.gnu.org/licenses/gpl-2.0.html.
->
-> This can be SPDX tag.
+Hi Sudeep,
 
-Specifically:
+On Thu, Nov 23, 2017 at 02:03:51PM +0000, Sudeep Holla wrote:
+> Hi Daniel,
+> 
+> Thanks a lot for pointing me to this and having some useful discussion
+> in private. That helped to dig a bit further on this.
+> 
+> On 23/11/17 05:40, Leo Yan wrote:
+> > Thanks a lot for Vincent Guittot careful work to find bug for 'CPU_NAP'
+> > idle state. From ftrace log we can observe CA73 CPUs can be easily waken
+> > up from 'CPU_NAP' state but the 'waken up' CPUs doesn't handle anything
+> > and sleep again; so there have tons of trace events for CA73 CPUs
+> > entering and exiting idle state.
+> > 
+> > On Hi3660 CA73 has retention state 'CPU_NAP' for CPU idle, this state we
+> > set its psci parameter as '0x0000001' and from this parameter it can
+> > calculate state id is 1. Unfortunately ARM trusted firmware (ARM-TF)
+> > takes 1 as a invalid value for state id, so the CPU cannot enter idle
+> > state and directly bail out to kernel.
+> > 
+> > This commit changes psci parameter to '0x00000000' for state id = 0;
+> > this id is accepted by ARM trusted firmware and finally CPU can stay
+> > properly in 'CPU_NAP' state.
+> > 
+> 
+> I would like to conditionally NACK this patch. If we can't update the
+> ARM TF at all then, I will agree with this change reluctantly.
 
-// SPDX-License-Identifier: GPL-2.0+
-/*
- * Copyright 2017, IBM Corporation
- */
+Thanks for reviewing. Just like Daniel said, we need to figure out the
+right method for this. So suggestions are very welcome!
 
-...
+> This looks like an artifact of copy paste in ARM TF port for this
+> platform. If you look as PSCI specification, CPU suspend parameter has
+> some recommendations and it's good to follow then unless you have strong
+> reasons not to.
+> 
+> As Daniel pointed to me, this patch is required to satisfy TF
+> particularly [1]. Now that looks like copy pasted from Juno or FVP port
+> and if you look deeper, it's clearly under !ARM_RECOM_STATE_ID_ENC [2]
+> which was not copied IIUC :).
 
-cheers
+Thanks for sharing pointers. It's shame that the copying is not
+correct for Hikey960 :)
+
+Come back to recommended state id, I reviewed Juno board defintion and
+I found it's not align with PSCI spec defintion, in ARM-TF Juno code
+defines state as below [1]:
+
+#define ARM_LOCAL_STATE_RUN     0
+#define ARM_LOCAL_STATE_RET     1
+#define ARM_LOCAL_STATE_OFF     2
+
+In PSCI spec chapter "6.5 Recommended StateID Encoding" recommends power
+state id as below:
+
+0: Run
+1: Standby
+2: Retention
+3: Powerdown
+
+So could you confirm on Hikey960 we should follow PSCI definition for
+state id definition?
+
+> Juno's implementation is legacy as these recommendations were added
+> later in the specification while Juno is 3 year old platform now.
+> 
+> Though strictly speaking it's not violation of the PSCI specification,
+> but I would rather get this fixed not before it's too late and copied to
+> the next generation of platforms. Since the firmware can be easily
+> upgraded that shouldn't be that difficult.
+
+If completely compliant with PSCI recommended state id, we need change
+both for ARM-TF and kernel for this. In ARM-TF, I have sent PR [2].
+
+For the kernel patch, we should change state id as below. Please let me
+know if you have suggestion for this.
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 12544c3..812437a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -179,7 +179,7 @@
+ 
+                        CPU_NAP: cpu-nap {
+                                compatible = "arm,idle-state";
+-                               arm,psci-suspend-param = <0x0000001>;
++                               arm,psci-suspend-param = <0x0000002>;
+                                entry-latency-us = <7>;
+                                exit-latency-us = <2>;
+                                min-residency-us = <15>;
+@@ -188,7 +188,7 @@
+                        CPU_SLEEP: cpu-sleep {
+                                compatible = "arm,idle-state";
+                                local-timer-stop;
+-                               arm,psci-suspend-param = <0x0010000>;
++                               arm,psci-suspend-param = <0x0010003>;
+                                entry-latency-us = <40>;
+                                exit-latency-us = <70>;
+                                min-residency-us = <3000>;
+@@ -197,7 +197,7 @@
+                        CLUSTER_SLEEP_0: cluster-sleep-0 {
+                                compatible = "arm,idle-state";
+                                local-timer-stop;
+-                               arm,psci-suspend-param = <0x1010000>;
++                               arm,psci-suspend-param = <0x1010033>;
+                                entry-latency-us = <500>;
+                                exit-latency-us = <5000>;
+                                min-residency-us = <20000>;
+@@ -206,7 +206,7 @@
+                        CLUSTER_SLEEP_1: cluster-sleep-1 {
+                                compatible = "arm,idle-state";
+                                local-timer-stop;
+-                               arm,psci-suspend-param = <0x1010000>;
++                               arm,psci-suspend-param = <0x1010033>;
+                                entry-latency-us = <1000>;
+                                exit-latency-us = <5000>;
+                                min-residency-us = <20000>;
+
+
+[1] https://github.com/ARM-software/arm-trusted-firmware/blob/master/include/plat/arm/common/arm_def.h#L43
+[2] https://github.com/ARM-software/arm-trusted-firmware/pull/1171/commits/13d30c1c33609eb6cffadd50954e4301d2cab909
+
+Thanks,
+Leo Yan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
