@@ -1,32 +1,65 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 03/10] PM / QoS: Fix device resume latency for non PM QoS devices
-Date: Fri, 24 Nov 2017 17:50:42 +0100
-Message-ID: <CAJZ5v0ghcwSHdrbZd_=XA=tHz7=aTUVd66dHkMYRNyXpnqP84w@mail.gmail.com>
-References: <1511538800-8275-1-git-send-email-mmaddireddy@nvidia.com> <1511538800-8275-4-git-send-email-mmaddireddy@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1511538800-8275-4-git-send-email-mmaddireddy@nvidia.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thomas Gleixner <tglx@linutronix.de>, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>
+From: Otavio Salvador <otavio@ossystems.com.br>
+Subject: [PATCH v2] ARM: dts: imx6qdl-nitrogen6x: Add SPI NOR partitions
+Date: Fri, 24 Nov 2017 15:00:04 -0200
+Message-ID: <20171124170004.31133-1-otavio@ossystems.com.br>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Gary Bisson <gary.bisson@boundarydevices.com>, Otavio Salvador <otavio@ossystems.com.br>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 24, 2017 at 4:53 PM, Manikanta Maddireddy
-<mmaddireddy@nvidia.com> wrote:
-> In 'commit 0cc2b4e5a020 ("PM / QoS: Fix device resume latency PM QoS")'
-> PM QoS resume latency modified 0 as "no latency at all". However
-> dev_pm_qos_raw_read_value() returns 0 for devices which doesn't have
-> PM QoS constraints. This is blocking runtime suspend for these devices
-> in rpm_check_suspend_allowed(). Return PM_QOS_RESUME_LATENCY_NO_CONSTRAINT
-> when PM QoS constraints are not available for a particular device.
->
-> Fixes: 0cc2b4e5a020 ("PM / QoS: Fix device resume latency PM QoS")
+This adds the partitions definition for the SPI NOR to provide
+backward compatibility with the documented[1] layout used with
+Boundary Devices BSP.
 
-That commit has been reverted, so this patch is not applicable and
-therefore the whole series isn't.
+1. https://boundarydevices.com/boot-flash-access-linux/
 
-What kernel is it based off?
+It exports to Linux:
 
-Thanks,
-Rafael
+ mtd0: bootloader
+ mtd1: env
+ mtd2: splash
+
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+---
+
+Changes in v2:
+ - rework labels (Fabio Estevam)
+ - add read-only flags (Fabio Estevam)
+
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index 4bdf29169d2a..28545412577a 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -276,6 +276,26 @@
+ 		compatible = "sst,sst25vf016b", "jedec,spi-nor";
+ 		spi-max-frequency = <20000000>;
+ 		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "bootloader";
++			reg = <0x0 0xc0000>;
++			read-only;
++		};
++
++		partition@c0000 {
++			label = "env";
++			reg = <0xc0000 0x2000>;
++			read-only;
++		};
++
++		partition@c2000 {
++			label = "splash";
++			reg = <0xc2000 0x13e000>;
++			read-only;
++		};
+ 	};
+ };
+ 
+-- 
+2.15.0
