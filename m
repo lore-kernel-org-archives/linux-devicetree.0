@@ -1,85 +1,232 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: sunxi: document new
- generic binding
-Date: Fri, 24 Nov 2017 11:52:40 +0100
-Message-ID: <20171124105240.GB3792@ulmo>
-References: <20171113012523.2328-1-andre.przywara@arm.com>
- <20171113012523.2328-2-andre.przywara@arm.com>
- <CACRpkdbpfkM4odz425+4qyUCF5vqPWBQ=F5Yk7AtJL5SqXghpg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="98e8jtXdkpgskNou"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbpfkM4odz425+4qyUCF5vqPWBQ=F5Yk7AtJL5SqXghpg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Andre Przywara <andre.przywara@arm.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Icenowy Zheng <icenowy@aosc.xyz>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v2] arm64: dts: renesas: r8a7795: Move nodes which have no reg property out of bus
+Date: Fri, 24 Nov 2017 10:52:34 +0000
+Message-ID: <20171124105234.25774-1-horms+renesas@verge.net.au>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
+Move pmu_a5[73], timer and thermal-zones nodes from soc node to root node.
+The nodes that have been moved do not have any register properties and thus
+shouldn't be placed on the bus.
 
---98e8jtXdkpgskNou
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This problem is flagged by the compiler as follows:
+$ make
+...
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb
+arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb
+arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb
+arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
 
-On Fri, Nov 24, 2017 at 11:19:52AM +0100, Linus Walleij wrote:
-> On Mon, Nov 13, 2017 at 2:25 AM, Andre Przywara <andre.przywara@arm.com> =
-wrote:
->=20
-> > So far all the Allwinner pinctrl drivers provided a table in the
-> > kernel to describe all the pins and the link between the pinctrl functi=
-ons
-> > names (strings) and their respective mux values (register values).
-> >
-> > Extend the binding to put those mappings in the DT, so that any SoC can
-> > describe its pinctrl and GPIO data fully there instead of relying on
-> > tables.
-> > This uses a generic compatible name, to be prepended with an SoC
-> > specific name in the node.
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+v2
+* Preserve alphabetical order of nodes present in root node.
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 134 +++++++++++++++----------------
+ 1 file changed, 67 insertions(+), 67 deletions(-)
 
-This seems backwards to me. I'm not sure if Rob has any hard rules on
-this, but in the past I've seen a lot of drivers stick this kind of data
-into drivers. I personally also prefer that approach because the data is
-completely static and there's no way for any specific board to customize
-it. So the tables are in fact implied completely by the SoC compatible
-string.
-
-Moving all of this data into device tree has a number of disadvantages:
-
-  * Existing boards already use the static tables in the driver, and the
-    device trees don't contain any data, so you can't get rid of any of
-    the existing tables because it would break ABI.
-
-  * Moving the table into the DT doesn't actually solve anything because
-    the driver would have to validate the DT description to make sure it
-    contains valid data. And in order to validate DT content, the driver
-    would need a copy of the table anyway.
-
-I don't think you're going to do yourself any favours by pushing this. I
-also don't see the commit description give any reason why you want to
-move the table into device tree. Do you see any advantages in doing so?
-
-Thierry
-
---98e8jtXdkpgskNou
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAloX+fgACgkQ3SOs138+
-s6GECA/6AhoheN1vOHn3tsv1of8EzrTButkbflD6wIGdmG0aiZ0isIU8aOvarsTi
-YESN5J//BrRpiV0EMfvSnKinYXW0Plptcxqu1ltyB3TXrQlou9k28+v4xSyf7tyF
-B5tsC84nubafEF2dmLg2+eCOcAEvzrn+bdUiCD2X0hAbnBvMAhC5p3lD3LTaBueK
-dx/o3JsXvkKWxsVKkTZy+ZK8BV2+LY0BOd+4ArTD8G/luEvhL6lg5t/HyL7AjRXi
-GuS7ncaMkZtIFlNw3iJtKHM+i0u+8b3w165X9z5P8gcfNhlC25oNFgzz2/dVJktd
-8x2+/9DbLPQInv19jNMupHPJN6o3OLpXaXseGp31bYjtrI2T9NTwJwMfnUL/7Lex
-It33pO8vWO/DfnTfjZ1xX9id1eQDf7ohpYqCM0QmsJwg5yORxOOwi+mohJC+KaAq
-/QPro6/GXo9TMkJCqhZ4qmlmh14DfCbc7t84JJy9YBRBt03wCRcLSRMDqEST3Mth
-SRXA6SNZGAznuiaOwBQg2pmFYtVly4ckzQKx8yTKSjIHK1rsVa8GQ+7rEJLpNvAi
-sgFuz/YgALV2h1whqFZN5RzRz58sABWgC48BzH4WyJ/jyUCDZCrk/5XKyavzQJm2
-ZVGUWySV67FKU1d5IYFW8s3x8EFgZJMvTHpH+409JNDv0gFX1rI=
-=f/oA
------END PGP SIGNATURE-----
-
---98e8jtXdkpgskNou--
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 6db4f10376a1..1e80b7b6516a 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -184,6 +184,30 @@
+ 		clock-frequency = <0>;
+ 	};
+ 
++	pmu_a57 {
++		compatible = "arm,cortex-a57-pmu";
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&a57_0>,
++				     <&a57_1>,
++				     <&a57_2>,
++				     <&a57_3>;
++	};
++
++	pmu_a53 {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&a53_0>,
++				     <&a53_1>,
++				     <&a53_2>,
++				     <&a53_3>;
++	};
++
+ 	soc: soc {
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&gic>;
+@@ -338,42 +362,6 @@
+ 			resets = <&cpg 905>;
+ 		};
+ 
+-		pmu_a57 {
+-			compatible = "arm,cortex-a57-pmu";
+-			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-affinity = <&a57_0>,
+-					     <&a57_1>,
+-					     <&a57_2>,
+-					     <&a57_3>;
+-		};
+-
+-		pmu_a53 {
+-			compatible = "arm,cortex-a53-pmu";
+-			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-affinity = <&a53_0>,
+-					     <&a53_1>,
+-					     <&a53_2>,
+-					     <&a53_3>;
+-		};
+-
+-		timer {
+-			compatible = "arm,armv8-timer";
+-			interrupts = <GIC_PPI 13
+-					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 14
+-					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 11
+-					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 10
+-					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+-		};
+-
+ 		cpg: clock-controller@e6150000 {
+ 			compatible = "renesas,r8a7795-cpg-mssr";
+ 			reg = <0 0xe6150000 0 0x1000>;
+@@ -2331,47 +2319,59 @@
+ 			#thermal-sensor-cells = <1>;
+ 			status = "okay";
+ 		};
++	};
+ 
+-		thermal-zones {
+-			sensor_thermal1: sensor-thermal1 {
+-				polling-delay-passive = <250>;
+-				polling-delay = <1000>;
+-				thermal-sensors = <&tsc 0>;
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10
++				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
++	};
+ 
+-				trips {
+-					sensor1_crit: sensor1-crit {
+-						temperature = <120000>;
+-						hysteresis = <2000>;
+-						type = "critical";
+-					};
++	thermal-zones {
++		sensor_thermal1: sensor-thermal1 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&tsc 0>;
++
++			trips {
++				sensor1_crit: sensor1-crit {
++					temperature = <120000>;
++					hysteresis = <2000>;
++					type = "critical";
+ 				};
+ 			};
++		};
+ 
+-			sensor_thermal2: sensor-thermal2 {
+-				polling-delay-passive = <250>;
+-				polling-delay = <1000>;
+-				thermal-sensors = <&tsc 1>;
++		sensor_thermal2: sensor-thermal2 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&tsc 1>;
+ 
+-				trips {
+-					sensor2_crit: sensor2-crit {
+-						temperature = <120000>;
+-						hysteresis = <2000>;
+-						type = "critical";
+-					};
++			trips {
++				sensor2_crit: sensor2-crit {
++					temperature = <120000>;
++					hysteresis = <2000>;
++					type = "critical";
+ 				};
+ 			};
++		};
+ 
+-			sensor_thermal3: sensor-thermal3 {
+-				polling-delay-passive = <250>;
+-				polling-delay = <1000>;
+-				thermal-sensors = <&tsc 2>;
++		sensor_thermal3: sensor-thermal3 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&tsc 2>;
+ 
+-				trips {
+-					sensor3_crit: sensor3-crit {
+-						temperature = <120000>;
+-						hysteresis = <2000>;
+-						type = "critical";
+-					};
++			trips {
++				sensor3_crit: sensor3-crit {
++					temperature = <120000>;
++					hysteresis = <2000>;
++					type = "critical";
+ 				};
+ 			};
+ 		};
+-- 
+2.11.0
