@@ -1,53 +1,158 @@
-From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: clocksource: Add Spreadtrum SC9860 timer
-Date: Fri, 24 Nov 2017 13:37:47 +0800
-Message-ID: <2aaad500b5faf51c55fc6f0ad361d9078a521db8.1511501514.git.baolin.wang@spreadtrum.com>
+From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 00/11] Rockchip ISP1 Driver
+Date: Fri, 24 Nov 2017 14:15:51 +0800
+Message-ID: <CAFLEztQaQf2EHGEkZN-KT-SF-xoB+MCz0+P2T=4bQwHp0YEqgA@mail.gmail.com>
+References: <20171124023706.5702-1-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171124023706.5702-1-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
+To: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Allon Huang <allon.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation of device tree bindings for the timers
-found on Spreadtrum SC9860 platform.
+HI all,
 
-Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
----
- .../bindings/timer/spreadtrum,sprd-timer.txt       |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/spreadtrum,sprd-timer.txt
+2017-11-24 10:36 GMT+08:00 Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>:
+> This patch series add a ISP(Camera) v4l2 driver for rockchip rk3288/rk3399 SoC.
+>
+> Kernel Branch:
+> https://github.com/wzyy2/linux/tree/rkisp1/drivers/media/platform/rockchip/isp1
+>
+> Below are some infomations about driver/hardware:
+>
+> Rockchip ISP1 have many Hardware Blocks(simplied):
+>
+>   MIPI      --> ISP --> DCrop(Mainpath) --> RSZ(Mainpath) --> DMA(Mainpath)
+>   DMA-Input -->     --> DCrop(Selfpath) --> RSZ(Selfpath) --> DMA(Selfpath);)
+>
+> (Acutally the TRM(rk3288, isp) could be found online...... which contains a more detailed block diagrams ;-P)
+>
+> The funcitons of each hardware block:
+>
+>   Mainpath : up to 4k resolution, support raw/yuv format
+>   Selfpath : up tp 1080p, support rotate, support rgb/yuv format
+>   RSZ: scaling
+>   DCrop: crop
+>   ISP: 3A, Color processing, Crop
+>   MIPI: MIPI Camera interface
+>
+> Media pipelines:
+>
+>   Mainpath, Selfpath <-- ISP subdev <-- MIPI  <-- Sensor
+>   3A stats           <--            <-- 3A parms
+>
+> Code struct:
+>
+>   capture.c : Mainpath, Selfpath, RSZ, DCROP : capture device.
+>   rkisp1.c : ISP : v4l2 sub-device.
+>   isp_params.c : 3A parms : output device.
+>   isp_stats.c : 3A stats : capture device.
+>   mipi_dphy_sy.c : MIPI : sperated v4l2 sub-device.
+>
+> Usage:
+>   ChromiumOS:
+>     use below v4l2-ctl command to capture frames.
+>
+>       v4l2-ctl --verbose -d /dev/video4 --stream-mmap=2
+>       --stream-to=/tmp/stream.out --stream-count=60 --stream-poll
+>
+>     use below command to playback the video on your PC.
+>
+>       mplayer /tmp/stream.out -loop 0 --demuxer=rawvideo
+>       --rawvideo=w=800:h=600:size=$((800*600*2)):format=yuy2
+>     or
+>       mplayer ./stream.out -loop 0 -demuxer rawvideo -rawvideo
+>       w=800:h=600:size=$((800*600*2)):format=yuy2
+>
+>   Linux:
+>     use rkcamsrc gstreamer plugin(just a modified v4l2src) to preview.
+>
+>       gst-launch-1.0 rkcamsrc device=/dev/video0 io-mode=4 disable-3A=true
+>       videoconvert ! video/x-raw,format=NV12,width=640,height=480 ! kmssink
+>
+> Jacob Chen (7):
+>   media: rkisp1: add rockchip isp1 driver
+>   media: rkisp1: add Rockchip MIPI Synopsys DPHY driver
+>   dt-bindings: Document the Rockchip ISP1 bindings
+>   dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+>   ARM: dts: rockchip: add isp node for rk3288
+>   ARM: dts: rockchip: add rx0 mipi-phy for rk3288
+>   MAINTAINERS: add entry for Rockchip ISP1 driver
+>
+> Jeffy Chen (1):
+>   media: rkisp1: Add user space ABI definitions
+>
+> Shunqian Zheng (3):
+>   media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
+>   arm64: dts: rockchip: add isp0 node for rk3399
+>   arm64: dts: rockchip: add rx0 mipi-phy for rk3399
+>
+>  .../devicetree/bindings/media/rockchip-isp1.txt    |   61 +
+>  .../bindings/media/rockchip-mipi-dphy.txt          |   77 +
+>  MAINTAINERS                                        |   10 +
+>  arch/arm/boot/dts/rk3288.dtsi                      |   24 +
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   26 +
+>  drivers/media/platform/Kconfig                     |   10 +
+>  drivers/media/platform/Makefile                    |    1 +
+>  drivers/media/platform/rockchip/isp1/Makefile      |    8 +
+>  drivers/media/platform/rockchip/isp1/capture.c     | 1691 ++++++++++++++++++++
+>  drivers/media/platform/rockchip/isp1/capture.h     |   46 +
+>  drivers/media/platform/rockchip/isp1/common.h      |  330 ++++
+>  drivers/media/platform/rockchip/isp1/dev.c         |  632 ++++++++
+>  drivers/media/platform/rockchip/isp1/isp_params.c  | 1556 ++++++++++++++++++
+>  drivers/media/platform/rockchip/isp1/isp_params.h  |   81 +
+>  drivers/media/platform/rockchip/isp1/isp_stats.c   |  537 +++++++
+>  drivers/media/platform/rockchip/isp1/isp_stats.h   |   81 +
+>  .../media/platform/rockchip/isp1/mipi_dphy_sy.c    |  805 ++++++++++
+>  drivers/media/platform/rockchip/isp1/regs.c        |  251 +++
+>  drivers/media/platform/rockchip/isp1/regs.h        | 1578 ++++++++++++++++++
+>  drivers/media/platform/rockchip/isp1/rkisp1.c      | 1230 ++++++++++++++
+>  drivers/media/platform/rockchip/isp1/rkisp1.h      |  130 ++
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |    2 +
+>  include/uapi/linux/rkisp1-config.h                 |  554 +++++++
+>  include/uapi/linux/videodev2.h                     |    4 +
+>  24 files changed, 9725 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+>  create mode 100644 drivers/media/platform/rockchip/isp1/Makefile
+>  create mode 100644 drivers/media/platform/rockchip/isp1/capture.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/capture.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/common.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/dev.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/regs.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/regs.h
+>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
+>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
+>  create mode 100644 include/uapi/linux/rkisp1-config.h
+>
+> --
+> 2.15.0
+>
 
-diff --git a/Documentation/devicetree/bindings/timer/spreadtrum,sprd-timer.txt b/Documentation/devicetree/bindings/timer/spreadtrum,sprd-timer.txt
-new file mode 100644
-index 0000000..f9d5eb9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/spreadtrum,sprd-timer.txt
-@@ -0,0 +1,20 @@
-+Spreadtrum timers
-+
-+The Spreadtrum SC9860 platform provides 3 general-purpose timers.
-+These timers can support 32bit or 64bit counter, as well as supporting
-+period mode or one-shot mode, and they are can be wakeup source
-+during deep sleep.
-+
-+Required properties:
-+- compatible: should be "sprd,sc9860-timer" for SC9860 platform.
-+- reg: The register address of the timer device.
-+- interrupts: Should contain the interrupt for the timer device.
-+- clock-frequency: The frequency of the clock that drives the counter, in Hz.
-+
-+Example:
-+	timer@40050000 {
-+		compatible = "sprd,sc9860-timer";
-+		reg = <0 0x40050000 0 0x20>;
-+		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <32768>;
-+	};
--- 
-1.7.9.5
 
+Sorry, i forget to add a changelog.
+
+changes in V2:
+  mipi-phy:
+    - use async probing
+    - make it be a child device of the GRF
+
+  isp:
+    - add dummy buffer
+    - change the way to get bus configuration, which make it possible to
+            add parallel sensor support in the future(without mipi-phy driver).
+
+
+I resend it for now because i think v2 patch looks more clearly than
+the old one,
+the v1 patch could just be superseded.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
