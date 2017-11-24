@@ -1,46 +1,46 @@
-From: Bob Liu <liubo95@huawei.com>
-Subject: Re: [RFCv2 PATCH 10/36] vfio: Add support for Shared Virtual Memory
-Date: Fri, 24 Nov 2017 16:23:26 +0800
-Message-ID: <419afe22-816d-263f-9c85-1a9e28c723b7@huawei.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-11-jean-philippe.brucker@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/2] gpio: gpiolib: Generalise state persistence beyond sleep
+Date: Fri, 24 Nov 2017 10:50:47 +0100
+Message-ID: <CACRpkdaar7b_RJ9GneJB84TGRGasSy8PwzJRr81BAooYmF_VAw@mail.gmail.com>
+References: <20171101040457.1200-1-andrew@aj.id.au> <20171101040457.1200-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171006133203.22803-11-jean-philippe.brucker@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc: mark.rutland@arm.com, xieyisheng1@huawei.com, gabriele.paoloni@huawei.com, catalin.marinas@arm.com, will.deacon@arm.com, okaya@codeaurora.org, yi.l.liu@intel.com, lorenzo.pieralisi@arm.com, ashok.raj@intel.com, tn@semihalf.com, joro@8bytes.org, rfranz@cavium.com, lenb@kernel.org, jacob.jun.pan@linux.intel.com, alex.williamson@redhat.com, robh+dt@kernel.org, thunder.leizhen@huawei.com, bhelgaas@google.com, dwmw2@infradead.org, rjw@rjwysocki.net, robdclark@gmail.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, robin.murphy@arm.com, nwatters@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171101040457.1200-2-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Joel Stanley <joel@jms.id.au>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Ryan Chen <ryan_chen@aspeedtech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017/10/6 21:31, Jean-Philippe Brucker wrote:
-> Add two new ioctl for VFIO containers. VFIO_DEVICE_BIND_PROCESS creates a
-> bond between a container and a process address space, identified by a
-> device-specific ID named PASID. This allows the device to target DMA
-> transactions at the process virtual addresses without a need for mapping
-> and unmapping buffers explicitly in the IOMMU. The process page tables are
-> shared with the IOMMU, and mechanisms such as PCI ATS/PRI may be used to
-> handle faults. VFIO_DEVICE_UNBIND_PROCESS removed a bond identified by a
-> PASID.
-> 
+On Wed, Nov 1, 2017 at 5:04 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
-How about hide bind/unbind into ioctl(VFIO_SET_IOMMU)? 
-e.g always bind to current process in SET_IOMMU.
+> General support for state persistence is added to gpiolib with the
+> introduction of a new pinconf parameter to propagate the request to
+> hardware. The existing persistence support for sleep is adapted to
+> include hardware support if the GPIO driver provides it. Persistence
+> continues to be enabled by default; in-kernel consumers can opt out, but
+> userspace (currently) does not have a choice.
+>
+> The *_SLEEP_MAY_LOSE_VALUE and *_SLEEP_MAINTAIN_VALUE symbols are
+> renamed, dropping the SLEEP prefix to reflect that the concept is no
+> longer sleep-specific.  I feel that renaming to just *_MAY_LOSE_VALUE
+> could initially be misinterpreted, so I've further changed the symbols
+> to *_TRANSITORY and *_PERSISTENT to address this.
+>
+> The sysfs interface is modified only to keep consistency with the
+> chardev interface in enforcing persistence for userspace exports.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-Not sure about the real use case.
+This does not apply to the Torvalds master HEAD anymore
+so please:
 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 243 +++++++++++++++++++++++++++++++++++++++-
->  include/uapi/linux/vfio.h       |  69 ++++++++++++
->  2 files changed, 311 insertions(+), 1 deletion(-)
-> 
+- Collect ACKs
+- Rebase on Torvalds tree or v4.15-rc1 when it's out
+- Resend
+
+The functionality per se looks very nice :) so I want to apply this
+ASAP.
+
+Yours,
+Linus Walleij
