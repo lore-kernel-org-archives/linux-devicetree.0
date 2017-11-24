@@ -1,124 +1,143 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] arm64: dts: Hi3660: Fix state id for 'CPU_NAP' state
-Date: Fri, 24 Nov 2017 14:39:47 +0000
-Message-ID: <b62517be-1d4d-7b2e-7a6e-1c2abbb4ecee@arm.com>
-References: <1511415614-9859-1-git-send-email-leo.yan@linaro.org>
- <17639ecc-8ff8-e118-f6e1-51e2cfe4342b@arm.com>
- <20171124065623.GD13184@leoy-linaro>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v7 11/13] slimbus: qcom: Add Qualcomm Slimbus controller
+ driver
+Date: Fri, 24 Nov 2017 14:39:59 +0000
+Message-ID: <6e0b6516-c5dd-d76c-15e8-1cbe0550059f@linaro.org>
+References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-12-srinivas.kandagatla@linaro.org>
+ <20171123100703.gqwcdm7qij63cuwz@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171124065623.GD13184@leoy-linaro>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171123100703.gqwcdm7qij63cuwz@localhost.localdomain>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, vinod.koul@intel.com, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
+Thanks for your review,
 
-
-On 24/11/17 06:56, Leo Yan wrote:
-> Hi Sudeep,
+On 23/11/17 10:07, Charles Keepax wrote:
+>> +static irqreturn_t qcom_slim_handle_rx_irq(struct qcom_slim_ctrl *ctrl,
+>> +					   u32 stat)
+>> +{
+>> +	u32 *rx_buf, pkt[10];
+>> +	bool q_rx = false;
+>> +	u8 la, *buf, mc, mt, len, *b = (u8 *)&pkt[0];
+>> +	u16 ele;
+>> +
 > 
-> On Thu, Nov 23, 2017 at 02:03:51PM +0000, Sudeep Holla wrote:
->> Hi Daniel,
->>
->> Thanks a lot for pointing me to this and having some useful discussion
->> in private. That helped to dig a bit further on this.
->>
->> On 23/11/17 05:40, Leo Yan wrote:
->>> Thanks a lot for Vincent Guittot careful work to find bug for 'CPU_NAP'
->>> idle state. From ftrace log we can observe CA73 CPUs can be easily waken
->>> up from 'CPU_NAP' state but the 'waken up' CPUs doesn't handle anything
->>> and sleep again; so there have tons of trace events for CA73 CPUs
->>> entering and exiting idle state.
->>>
->>> On Hi3660 CA73 has retention state 'CPU_NAP' for CPU idle, this state we
->>> set its psci parameter as '0x0000001' and from this parameter it can
->>> calculate state id is 1. Unfortunately ARM trusted firmware (ARM-TF)
->>> takes 1 as a invalid value for state id, so the CPU cannot enter idle
->>> state and directly bail out to kernel.
->>>
->>> This commit changes psci parameter to '0x00000000' for state id = 0;
->>> this id is accepted by ARM trusted firmware and finally CPU can stay
->>> properly in 'CPU_NAP' state.
->>>
->>
->> I would like to conditionally NACK this patch. If we can't update the
->> ARM TF at all then, I will agree with this change reluctantly.
+> This function feels pretty funky, we basically have rx_buf, pkt,
+> b and buf all of which basically point to the same thing. Can we
+> simplify it a little?
+I will give that a try before I send next version.
 > 
-> Thanks for reviewing. Just like Daniel said, we need to figure out the
-> right method for this. So suggestions are very welcome!
+>> +	pkt[0] = readl_relaxed(ctrl->base + MGR_RX_MSG);
+>> +	mt = SLIM_HEADER_GET_MT(b[0]);
+>> +	len = SLIM_HEADER_GET_RL(b[0]);
+>> +	mc = SLIM_HEADER_GET_MC(b[1]);
+>> +
+>> +	/*
+...
+
+>> +
+>> +	puc = (u8 *)pbuf;
+>> +	head = (u32 *)pbuf;
+>> +
+>> +	if (txn->dt == SLIM_MSG_DEST_LOGICALADDR)
+>> +		*head = SLIM_MSG_ASM_FIRST_WORD(txn->rl, txn->mt, txn->mc, 0,
+>> +						la);
+>> +	else
+>> +		*head = SLIM_MSG_ASM_FIRST_WORD(txn->rl, txn->mt, txn->mc, 1,
+>> +						la);
+>> +
+>> +	if (txn->dt == SLIM_MSG_DEST_LOGICALADDR)
+>> +		puc += 3;
+>> +	else
+>> +		puc += 2;
 > 
+> Combine these two if statements, makes it much clearer the actions
+> are related.
+I agree!!
 
-Sure, thanks for such a quick response and resolution :)
-
->> This looks like an artifact of copy paste in ARM TF port for this
->> platform. If you look as PSCI specification, CPU suspend parameter has
->> some recommendations and it's good to follow then unless you have strong
->> reasons not to.
->>
->> As Daniel pointed to me, this patch is required to satisfy TF
->> particularly [1]. Now that looks like copy pasted from Juno or FVP port
->> and if you look deeper, it's clearly under !ARM_RECOM_STATE_ID_ENC [2]
->> which was not copied IIUC :).
 > 
-> Thanks for sharing pointers. It's shame that the copying is not
-> correct for Hikey960 :)
+>> +
+>> +	if (txn->mt == SLIM_MSG_MT_CORE && slim_tid_txn(txn->mt, txn->mc))
 > 
-
-Indeed.
-
-> Come back to recommended state id, I reviewed Juno board defintion and
-> I found it's not align with PSCI spec defintion, in ARM-TF Juno code
-> defines state as below [1]:
+> slim_tid_txn checks for SLIM_MSG_MT_CORE so the check here should
+> be redundant.
 > 
+Yep, will remove this in next version.
 
-Yes Juno is almost 4 years old now, so it may not be too good a
-reference platform for latest and greatest platforms like hikey2 ;)
-As I said, Juno predates the recommendation in the PSCI spec.
-
-> #define ARM_LOCAL_STATE_RUN     0
-> #define ARM_LOCAL_STATE_RET     1
-> #define ARM_LOCAL_STATE_OFF     2
+>> +		*(puc++) = txn->tid;
+>> +
+>> +	if ((txn->mt == SLIM_MSG_MT_CORE) &&
+>> +		((txn->mc >= SLIM_MSG_MC_REQUEST_INFORMATION &&
+>> +		txn->mc <= SLIM_MSG_MC_REPORT_INFORMATION) ||
+>> +		(txn->mc >= SLIM_MSG_MC_REQUEST_VALUE &&
+>> +		 txn->mc <= SLIM_MSG_MC_CHANGE_VALUE))) {
+>> +		*(puc++) = (txn->ec & 0xFF);
+>> +		*(puc++) = (txn->ec >> 8) & 0xFF;
+>> +	}
 > 
-> In PSCI spec chapter "6.5 Recommended StateID Encoding" recommends power
-> state id as below:
-> 
-> 0: Run
-> 1: Standby
-> 2: Retention
-> 3: Powerdown
-> 
-> So could you confirm on Hikey960 we should follow PSCI definition for
-> state id definition?
-> 
+> As you already have slim_tid_txn, would it be worth adding
+> something like slim_ec_txn? 
+I will give it a go and see how it looks like..
 
-Yes, I don't see any reason not to, as this may become reference to some
-other platform, it's good to keep it aligned so that copy paste happens
-in a good sense for future platforms. :)
-
->> Juno's implementation is legacy as these recommendations were added
->> later in the specification while Juno is 3 year old platform now.
->>
->> Though strictly speaking it's not violation of the PSCI specification,
->> but I would rather get this fixed not before it's too late and copied to
->> the next generation of platforms. Since the firmware can be easily
->> upgraded that shouldn't be that difficult.
+To state if an element code is
+> required, feels like other controls will probably want to do a
+> similar thing and would make the code a little more readable
+> here.
 > 
-> If completely compliant with PSCI recommended state id, we need change
-> both for ARM-TF and kernel for this. In ARM-TF, I have sent PR [2].
+>> +
+>> +	if (txn->msg && txn->msg->wbuf)
+>> +		memcpy(puc, txn->msg->wbuf, txn->msg->num_bytes);
+>> +
+>> +	qcom_slim_queue_tx(ctrl, head, txn->rl, MGR_TX_MSG);
+>> +	timeout = wait_for_completion_timeout(&done, msecs_to_jiffies(ms));
+>> +
+>> +	if (!timeout) {
+>> +		dev_err(ctrl->dev, "TX timed out:MC:0x%x,mt:0x%x", txn->mc,
+>> +					txn->mt);
+>> +		ret = -ETIMEDOUT;
+>> +	}
+>> +
+>> +	return ret;
+>> +
+>> +}
+>> +
+>> +static void qcom_slim_rxwq(struct work_struct *work)
+>> +{
+>> +	u8 buf[SLIM_MSGQ_BUF_LEN];
+>> +	u8 mc, mt, len;
+>> +	int i, ret;
+>> +	struct qcom_slim_ctrl *ctrl = container_of(work, struct qcom_slim_ctrl,
+>> +						 wd);
+>> +
+>> +	while ((slim_get_current_rxbuf(ctrl, buf)) != -ENODATA) {
+>> +		len = SLIM_HEADER_GET_RL(buf[0]);
+>> +		mt = SLIM_HEADER_GET_MT(buf[0]);
+>> +		mc = SLIM_HEADER_GET_MC(buf[1]);
+>> +		if (mt == SLIM_MSG_MT_CORE &&
+>> +			mc == SLIM_MSG_MC_REPORT_PRESENT) {
+>> +			u8 laddr;
+>> +			struct slim_eaddr ea;
+>> +			u8 e_addr[6];
+>> +
+>> +			for (i = 0; i < 6; i++)
+>> +				e_addr[i] = buf[7-i];
+>> +
+>> +			ea.manf_id = (u16)(e_addr[5] << 8) | e_addr[4];
+>> +			ea.prod_code = (u16)(e_addr[3] << 8) | e_addr[2];
+>> +			ea.dev_index = e_addr[1];
+>> +			ea.instance = e_addr[0];
 > 
-
-OK
-
-> For the kernel patch, we should change state id as below. Please let me
-> know if you have suggestion for this.
+> If we are just bitshifting this out of the bytes does it really
+> make it much more clear to reverse the byte order first? Feels
+> like you might as well shift it out of buf directly.
 > 
-
-I would wait until ATF changes are merged before you patch DT in the kernel.
-
--- 
-Regards,
-Sudeep
+> Also we didn't bother to reverse the bytes for the element code
+> above, so feels more consistent.
+I will try Jonathan Neuschäfer Suggestion to simplify this area of code.
