@@ -1,48 +1,133 @@
-From: "Y.b. Lu" <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH] arm: dts: ls1021a: fix the value of TMR_FIPER1
-Date: Fri, 24 Nov 2017 02:31:13 +0000
-Message-ID: <DB6PR0401MB2536A92B16A744BB51BA0197F8260@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-References: <20171110015847.29635-1-yangbo.lu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 00/11] Rockchip ISP1 Driver
+Date: Fri, 24 Nov 2017 10:36:55 +0800
+Message-ID: <20171124023706.5702-1-jacob-chen@iotwrt.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171110015847.29635-1-yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Y.b. Lu" <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, allon.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW55IGNvbW1lbnRzPw0KDQorU2hhd24NCg0KVGhhbmtzLg0KDQotLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KRnJvbTogWWFuZ2JvIEx1IFttYWlsdG86eWFuZ2JvLmx1QG54cC5jb21dIA0KU2Vu
-dDogMjAxN8TqMTHUwjEwyNUgOTo1OQ0KVG86IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmc7IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQg
-PG1hcmsucnV0bGFuZEBhcm0uY29tPjsgUnVzc2VsbCBLaW5nIDxsaW51eEBhcm1saW51eC5vcmcu
-dWs+DQpDYzogWS5iLiBMdSA8eWFuZ2JvLmx1QG54cC5jb20+DQpTdWJqZWN0OiBbUEFUQ0hdIGFy
-bTogZHRzOiBsczEwMjFhOiBmaXggdGhlIHZhbHVlIG9mIFRNUl9GSVBFUjENCg0KVGhlIHRpbWVy
-IGZpeGVkIGludGVydmFsIHBlcmlvZCBwdWxzZSBnZW5lcmF0b3IgcmVnaXN0ZXIgaXMgdXNlZCB0
-byBnZW5lcmF0ZSBwZXJpb2RpYyBwdWxzZXMuIFRoZSBkb3duIGNvdW50IHJlZ2lzdGVyIGxvYWRz
-IHRoZSB2YWx1ZSBwcm9ncmFtbWVkIGluIHRoZSBmaXhlZCBwZXJpb2QgaW50ZXJ2YWwgKEZJUEVS
-KS4gQXQgZXZlcnkgdGljayBvZiB0aGUgdGltZXIgYWNjdW11bGF0b3Igb3ZlcmZsb3csIHRoZSBj
-b3VudGVyIGRlY3JlbWVudHMgYnkgdGhlIHZhbHVlIG9mIFRNUl9DVFJMW1RDTEtfUEVSSU9EXS4g
-SXQgZ2VuZXJhdGVzIGEgcHVsc2Ugd2hlbiB0aGUgZG93biBjb3VudGVyIHZhbHVlIHJlYWNoZXMg
-emVyby4gSXQgcmVsb2FkcyB0aGUgZG93biBjb3VudGVyIGluIHRoZSBjeWNsZSBmb2xsb3dpbmcg
-YSBwdWxzZS4gVG8gdXNlIHRoZSBUTVJfRklQRVIxIHJlZ2lzdGVyIHRvIGdlbmVyYXRlIGEgMSBQ
-UFMgZXZlbnQsIHRoZSB2YWx1ZQ0KKDEwXjkgbmFub3NlY29uZHMpIC0gVENMS19QRVJJT0Qgc2hv
-dWxkIGJlIHByb2dyYW1tZWQuDQpJdCBzaG91bGQgYmUgOTk5OTk5OTk1IG5vdCA5OTk5OTk5OTAg
-c2luY2UgVENMS19QRVJJT0QgaXMgNS4NCg0KU2lnbmVkLW9mZi1ieTogWWFuZ2JvIEx1IDx5YW5n
-Ym8ubHVAbnhwLmNvbT4NCi0tLQ0KIGFyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaSB8IDIg
-Ky0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaSBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2xzMTAyMWEuZHRzaSBpbmRleCA5MzE5ZTFmMGYxZDguLjEwZTUzNmYzMzhmNyAxMDA2NDQN
-Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQ0KKysrIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvbHMxMDIxYS5kdHNpDQpAQCAtNTc1LDcgKzU3NSw3IEBADQogCQkJZnNsLHRjbGstcGVy
-aW9kID0gPDU+Ow0KIAkJCWZzbCx0bXItcHJzYyAgICA9IDwyPjsNCiAJCQlmc2wsdG1yLWFkZCAg
-ICAgPSA8MHhhYWFhYWFhYj47DQotCQkJZnNsLHRtci1maXBlcjEgID0gPDk5OTk5OTk5MD47DQor
-CQkJZnNsLHRtci1maXBlcjEgID0gPDk5OTk5OTk5NT47DQogCQkJZnNsLHRtci1maXBlcjIgID0g
-PDk5OTkwPjsNCiAJCQlmc2wsbWF4LWFkaiAgICAgPSA8NDk5OTk5OTk5PjsNCiAJCX07DQotLQ0K
-Mi4xNC4xDQoNCg==
+This patch series add a ISP(Camera) v4l2 driver for rockchip rk3288/rk3399 SoC.
+
+Kernel Branch:
+https://github.com/wzyy2/linux/tree/rkisp1/drivers/media/platform/rockchip/isp1
+
+Below are some infomations about driver/hardware:
+
+Rockchip ISP1 have many Hardware Blocks(simplied):
+
+  MIPI      --> ISP --> DCrop(Mainpath) --> RSZ(Mainpath) --> DMA(Mainpath)
+  DMA-Input -->     --> DCrop(Selfpath) --> RSZ(Selfpath) --> DMA(Selfpath);)
+
+(Acutally the TRM(rk3288, isp) could be found online...... which contains a more detailed block diagrams ;-P)
+
+The funcitons of each hardware block:
+
+  Mainpath : up to 4k resolution, support raw/yuv format
+  Selfpath : up tp 1080p, support rotate, support rgb/yuv format
+  RSZ: scaling 
+  DCrop: crop
+  ISP: 3A, Color processing, Crop
+  MIPI: MIPI Camera interface
+
+Media pipelines:
+
+  Mainpath, Selfpath <-- ISP subdev <-- MIPI  <-- Sensor
+  3A stats           <--            <-- 3A parms
+
+Code struct:
+
+  capture.c : Mainpath, Selfpath, RSZ, DCROP : capture device.
+  rkisp1.c : ISP : v4l2 sub-device.
+  isp_params.c : 3A parms : output device.
+  isp_stats.c : 3A stats : capture device.
+  mipi_dphy_sy.c : MIPI : sperated v4l2 sub-device.
+
+Usage:
+  ChromiumOS:
+    use below v4l2-ctl command to capture frames.
+
+      v4l2-ctl --verbose -d /dev/video4 --stream-mmap=2
+      --stream-to=/tmp/stream.out --stream-count=60 --stream-poll
+
+    use below command to playback the video on your PC.
+
+      mplayer /tmp/stream.out -loop 0 --demuxer=rawvideo
+      --rawvideo=w=800:h=600:size=$((800*600*2)):format=yuy2
+    or
+      mplayer ./stream.out -loop 0 -demuxer rawvideo -rawvideo
+      w=800:h=600:size=$((800*600*2)):format=yuy2
+
+  Linux:
+    use rkcamsrc gstreamer plugin(just a modified v4l2src) to preview.
+
+      gst-launch-1.0 rkcamsrc device=/dev/video0 io-mode=4 disable-3A=true
+      videoconvert ! video/x-raw,format=NV12,width=640,height=480 ! kmssink
+
+Jacob Chen (7):
+  media: rkisp1: add rockchip isp1 driver
+  media: rkisp1: add Rockchip MIPI Synopsys DPHY driver
+  dt-bindings: Document the Rockchip ISP1 bindings
+  dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+  ARM: dts: rockchip: add isp node for rk3288
+  ARM: dts: rockchip: add rx0 mipi-phy for rk3288
+  MAINTAINERS: add entry for Rockchip ISP1 driver
+
+Jeffy Chen (1):
+  media: rkisp1: Add user space ABI definitions
+
+Shunqian Zheng (3):
+  media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
+  arm64: dts: rockchip: add isp0 node for rk3399
+  arm64: dts: rockchip: add rx0 mipi-phy for rk3399
+
+ .../devicetree/bindings/media/rockchip-isp1.txt    |   61 +
+ .../bindings/media/rockchip-mipi-dphy.txt          |   77 +
+ MAINTAINERS                                        |   10 +
+ arch/arm/boot/dts/rk3288.dtsi                      |   24 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   26 +
+ drivers/media/platform/Kconfig                     |   10 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/rockchip/isp1/Makefile      |    8 +
+ drivers/media/platform/rockchip/isp1/capture.c     | 1691 ++++++++++++++++++++
+ drivers/media/platform/rockchip/isp1/capture.h     |   46 +
+ drivers/media/platform/rockchip/isp1/common.h      |  330 ++++
+ drivers/media/platform/rockchip/isp1/dev.c         |  632 ++++++++
+ drivers/media/platform/rockchip/isp1/isp_params.c  | 1556 ++++++++++++++++++
+ drivers/media/platform/rockchip/isp1/isp_params.h  |   81 +
+ drivers/media/platform/rockchip/isp1/isp_stats.c   |  537 +++++++
+ drivers/media/platform/rockchip/isp1/isp_stats.h   |   81 +
+ .../media/platform/rockchip/isp1/mipi_dphy_sy.c    |  805 ++++++++++
+ drivers/media/platform/rockchip/isp1/regs.c        |  251 +++
+ drivers/media/platform/rockchip/isp1/regs.h        | 1578 ++++++++++++++++++
+ drivers/media/platform/rockchip/isp1/rkisp1.c      | 1230 ++++++++++++++
+ drivers/media/platform/rockchip/isp1/rkisp1.h      |  130 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    2 +
+ include/uapi/linux/rkisp1-config.h                 |  554 +++++++
+ include/uapi/linux/videodev2.h                     |    4 +
+ 24 files changed, 9725 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+ create mode 100644 drivers/media/platform/rockchip/isp1/Makefile
+ create mode 100644 drivers/media/platform/rockchip/isp1/capture.c
+ create mode 100644 drivers/media/platform/rockchip/isp1/capture.h
+ create mode 100644 drivers/media/platform/rockchip/isp1/common.h
+ create mode 100644 drivers/media/platform/rockchip/isp1/dev.c
+ create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.c
+ create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.h
+ create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.c
+ create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.h
+ create mode 100644 drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
+ create mode 100644 drivers/media/platform/rockchip/isp1/regs.c
+ create mode 100644 drivers/media/platform/rockchip/isp1/regs.h
+ create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
+ create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
+ create mode 100644 include/uapi/linux/rkisp1-config.h
+
+-- 
+2.15.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
