@@ -1,46 +1,96 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/2] gpio: gpiolib: Generalise state persistence beyond sleep
-Date: Fri, 24 Nov 2017 10:50:47 +0100
-Message-ID: <CACRpkdaar7b_RJ9GneJB84TGRGasSy8PwzJRr81BAooYmF_VAw@mail.gmail.com>
-References: <20171101040457.1200-1-andrew@aj.id.au> <20171101040457.1200-2-andrew@aj.id.au>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: sunxi: document new generic binding
+Date: Fri, 24 Nov 2017 11:19:52 +0100
+Message-ID: <CACRpkdbpfkM4odz425+4qyUCF5vqPWBQ=F5Yk7AtJL5SqXghpg@mail.gmail.com>
+References: <20171113012523.2328-1-andre.przywara@arm.com> <20171113012523.2328-2-andre.przywara@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171101040457.1200-2-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, Joel Stanley <joel@jms.id.au>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Ryan Chen <ryan_chen@aspeedtech.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, linux-aspeed@lists.ozlabs.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20171113012523.2328-2-andre.przywara@arm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andre Przywara <andre.przywara@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Icenowy Zheng <icenowy@aosc.xyz>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 1, 2017 at 5:04 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
+On Mon, Nov 13, 2017 at 2:25 AM, Andre Przywara <andre.przywara@arm.com> wrote:
 
-> General support for state persistence is added to gpiolib with the
-> introduction of a new pinconf parameter to propagate the request to
-> hardware. The existing persistence support for sleep is adapted to
-> include hardware support if the GPIO driver provides it. Persistence
-> continues to be enabled by default; in-kernel consumers can opt out, but
-> userspace (currently) does not have a choice.
+> So far all the Allwinner pinctrl drivers provided a table in the
+> kernel to describe all the pins and the link between the pinctrl functions
+> names (strings) and their respective mux values (register values).
 >
-> The *_SLEEP_MAY_LOSE_VALUE and *_SLEEP_MAINTAIN_VALUE symbols are
-> renamed, dropping the SLEEP prefix to reflect that the concept is no
-> longer sleep-specific.  I feel that renaming to just *_MAY_LOSE_VALUE
-> could initially be misinterpreted, so I've further changed the symbols
-> to *_TRANSITORY and *_PERSISTENT to address this.
+> Extend the binding to put those mappings in the DT, so that any SoC can
+> describe its pinctrl and GPIO data fully there instead of relying on
+> tables.
+> This uses a generic compatible name, to be prepended with an SoC
+> specific name in the node.
 >
-> The sysfs interface is modified only to keep consistency with the
-> chardev interface in enforcing persistence for userspace exports.
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+(...)
 
-This does not apply to the Torvalds master HEAD anymore
-so please:
+I definately want feedback from Maxime before I do anything with
+this patch series.
 
-- Collect ACKs
-- Rebase on Torvalds tree or v4.15-rc1 when it's out
-- Resend
+> +** Generic pinctrl binding
+> +The above binding requires knowledge of the actual mux setting values for
+> +each supported SoC in the code parsing the DT (for instance the kernel).
+> +The generic binding puts this information in the DT. It uses the
+> +"allwinner,sunxi-pinctrl" compatible, in addition to some SoC specific string.
+> +It extends the above described binding as follows:
+> +Required properties:
+> +- allwinner,gpio-pins: An array of 32-bit numbers to denote the number of
+> +  implemented pins per pin controller port. Non-implemented ports can specify
+> +  0 here. There will be as many ports as this array has elements.
 
-The functionality per se looks very nice :) so I want to apply this
-ASAP.
+I don't understand what this adds that gpio-ranges does not already
+provide.
+Documentation/devicetree/bindings/gpio/gpio.txt
+at the end of the file.
+
+These ranges exist exactly to map pin controller pins in a pin controller
+to GPIO lines in a gpiochip.
+
+> +- allwinner,irq-pin-map: Contains a number of IRQ port maps, describing the
+> +  relationship between interrupt banks and GPIO pins. Each map has six 32-bit
+> +  members:
+> +  <[IRQ port] [1st IRQ pin] [GPIO port] [1st GPIO pin] [mux value] [length]>
+> +  This maps the first [length] IRQ pins starting with [IRQ port]:[1st IRQ pin]
+> +  to [GPIO port]:[1st GPIO pin], all using [mux value] to select the IRQ
+> +  functionality.
+
+We have recently added GPIO "bank" awareness into gpiolib
+via Thierry Reding's patches, so a gpiochip can use the generic
+GPIOLIB_IRQCHIP and specify multiple IRQ parents with a map.
+
+Please see if you can use this instead.
+
+If any of this should be expressed in the DT bindings it should
+be genericized and not use any "allwinner,*" prefixes, and it
+should preferably just be hard-coded in the driver and switched
+in from the compatible string IMO.
+
+> +Optional properties:
+> +- allwinner,port-base: The number of GPIO ports to skip at the beginning.
+> +- allwinner,irq-bank-base: The number of IRQ banks to skip at the beginning.
+
+I don't understand this. It looks hacky. Can you elaborate why this
+is needed?
+
+> +- allwinner,irq-read-needs-mux: Specifies that reading the line level of
+> +  a pin configured as an IRQ pin is not possible. A driver needs to switch
+> +  to the GPIO-in function to be able to read the level.
+
+I guess it is a bool flag?
+
+> +Required properties for subnodes:
+> +- pinmux: An array of mux values to write into the respective MMIO register
+> +  bits for this pin when selecting the function. If this array has less
+> +  elements than pins, the *last* value will be used for all pins beyond that.
+> +  This allows to use a single element for the (likely) case all pins use the
+> +  same mux value.
+
+This is a standard bindings so I don't have much against it. But I
+need Maxime's input here, I think we should keep Allwinner consistent
+across SoCs.
 
 Yours,
 Linus Walleij
