@@ -1,109 +1,105 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: sunxi: document new generic
- binding
-Date: Fri, 24 Nov 2017 12:04:12 +0000
-Message-ID: <20efcf8f-85a5-3cad-a84b-434ee5cad68e@arm.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [RFC PATCH 0/3] pinctrl: sunxi: Add DT-based generic pinctrl
+ driver
+Date: Fri, 24 Nov 2017 12:05:37 +0000
+Message-ID: <54ecfdf7-cf4a-3eae-2661-47fa668a6066@arm.com>
 References: <20171113012523.2328-1-andre.przywara@arm.com>
- <20171113012523.2328-2-andre.przywara@arm.com>
- <CACRpkdbpfkM4odz425+4qyUCF5vqPWBQ=F5Yk7AtJL5SqXghpg@mail.gmail.com>
- <20171124105240.GB3792@ulmo>
+ <CACRpkdYFoUmGJYdKz0t9gsrkK=u8-oJjaRBXtNYHaUt9kSa3_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171124105240.GB3792@ulmo>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYFoUmGJYdKz0t9gsrkK=u8-oJjaRBXtNYHaUt9kSa3_g@mail.gmail.com>
 Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Icenowy Zheng <icenowy@aosc.xyz>, "linux-sunxi@googlegroups.com" <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-(adding linux-sunxi, which I forgot at the initial post).
-
-On 24/11/17 10:52, Thierry Reding wrote:
-> On Fri, Nov 24, 2017 at 11:19:52AM +0100, Linus Walleij wrote:
->> On Mon, Nov 13, 2017 at 2:25 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->>> So far all the Allwinner pinctrl drivers provided a table in the
->>> kernel to describe all the pins and the link between the pinctrl functions
->>> names (strings) and their respective mux values (register values).
->>>
->>> Extend the binding to put those mappings in the DT, so that any SoC can
->>> describe its pinctrl and GPIO data fully there instead of relying on
->>> tables.
->>> This uses a generic compatible name, to be prepended with an SoC
->>> specific name in the node.
+On 24/11/17 10:28, Linus Walleij wrote:
+> On Mon, Nov 13, 2017 at 2:25 AM, Andre Przywara <andre.przywara@arm.com> wrote:
 > 
-> This seems backwards to me. I'm not sure if Rob has any hard rules on
-> this, but in the past I've seen a lot of drivers stick this kind of data
-> into drivers. I personally also prefer that approach because the data is
-> completely static and there's no way for any specific board to customize
-> it. So the tables are in fact implied completely by the SoC compatible
-> string.
-
-But this is just *data*, and I believe it is actually package specific.
-We need the DT to describe the relation between devices and pins anyway,
-it's just that we use arbitrary strings today instead of the actual
-register value. This is what the generic pinmux property fixes.
-
-> Moving all of this data into device tree has a number of disadvantages:
+>> so far the pinctrl driver for supporting a particular Allwinner SoC requires
+>> a hardcoded table in the kernel code.
+> (...)
+>> This series here moves the data encoded in the table so far into the DT itself,
+>> removing the need for a hardcoded table in the kernel.
+> (...)
 > 
->   * Existing boards already use the static tables in the driver, and the
->     device trees don't contain any data, so you can't get rid of any of
->     the existing tables because it would break ABI.
+> The DT maintainers have been pretty clear on that they don't like
+> using the the DT as a generic fit-all information dump. They
+> prefer to look up hardware data from per-soc compatible strings.
+> 
+> I have been sceptic about it too, on the grounds that I think it
+> make configuration and multiplatform kernels easy, while making
+> debugging and reading code+device tree hard, also affecting
+> maintenance cost.
+> 
+> I'd like to have Maxime's buy-in before we progress and also some
+> discussion on these themes in general.
 
-Yes, my DeLorean is in the garage, so I can't really change this anymore
-;-) But that doesn't mean we have to go on with this forever, I think.
+Indeed this was one of the goals of this series. I can understand were
+we came from and that we had those in-kernel tables in the past.
+I am just a bit worried that with Allwinner recently playing the SKU
+game we end up with tons of tables for only slightly different SoCs (see
+the H3 and H5, for instance). And with single image kernels we pile up
+quite some *data* in each kernel, which is of little interest for
+everyone else.
 
->   * Moving the table into the DT doesn't actually solve anything because
->     the driver would have to validate the DT description to make sure it
->     contains valid data. And in order to validate DT content, the driver
->     would need a copy of the table anyway.
+Also my understanding is that the actual Allwinner pin controller IP
+(register map) is very much the same across all SoCs. Mostly the only
+difference is the mapping between pins and mux functions, which we
+express in the DT already anyway (in the subnodes). And this is really a
+poster book example of what DT should be doing: express the specific
+mappings of a particular implementation. I don't see why this would need
+to be per-board only, if we can pull this up to the SoC level.
 
-I don't get what the driver would need to validate? We rely on DT
-information to be correct anyway, otherwise your board just won't work.
-If the DT is wrong, you have much bigger problems.
+>> The approach taken here is to parse the DT and generate the table with
+>> the help of additional properties, then hand this table over to the existing
+>> driver. This is covered by three basic extensions to the DT binding:
+> 
+> I adressed this in the bindings patch.
+> 
+>> The benefit of this series is two-fold:
+>> - Future SoCs don't need an in-kernel table anymore. They can describe
+>>   everything in the DT,
+> 
+> It can be debated whether that is really a good thing or actually
+> a bad thing for the reasons stated above.
 
-Actually we gain something, because we only commit information that can
-actually be tested. Right now we have a lot of information which is
-copied from the manual, and nobody knows if pin H24 on the A10 is really
-PATA-CS1 or not. Plus we have bugs when creating the table, plus
-copy&paste bugs. I found some while grep-ing for patterns - will send
-fixes ASAP.
+The point is that we already rely on the DT anyway, just that we use a
+*string* to specify a certain mux function. The in-kernel table just
+maps this to an actual SoC-specific register value. I think the GPIO
+subsystem needs the name, hence I am just adding the pinmux property.
 
-In the moment all the table gives us is a mapping between a *string* and
-the respective mux register value (per pin), plus the number of pins in
-each bank. This can *easily* be put in the DT and should belong there.
+> Also an additional bad thing is inconsistency between different
+> SoCs.
 
-Actually I believe that the current binding is not correct, because it
-makes those mux strings a part of the binding, though this is not
-documented anywhere. A developer cannot take the binding and write a
-working driver or even a DT without looking at the code.
-Plus we already changed those names in the past (for instance commit
-bc0f566a98c4), basically breaking compatibility.
+Well, does that mean that we should never change anything? Consistency
+is nice, but should not be an excuse for not improving things. And I
+tried to embrace the existing driver by designing this on top of it.
 
-> I don't think you're going to do yourself any favours by pushing this. I
-> also don't see the commit description give any reason why you want to
-> move the table into device tree. Do you see any advantages in doing so?
+> What we have in the kernel for all-DT is pinctrl-single.c.
+> 
+> This exists for the case where there is exactly one register per
+> pin and all you have is strange macro files from the ASIC people
+> that noone understands. OMAP and HiSilicon is using this.
+> It's a compromise, I'm not super-happy with that driver at all times
+> but it is for a very strongly specified case.
+> 
+> Would it be possible for you guys to simply use/embrace/extend
+> pinctrl-single.c if you want to go this route?
 
-We stop adding tables with SoC specific *data* in the kernel *code*
-base. With being boolean Kconfig options, this gets added to every
-single-image kernel.
+Thanks for the pointer, I will have a look.
 
-More important: those tables help Linux, but other DT consumers (*BSD,
-U-Boot) have to replicate them, which is just wrong, IMHO.
+> Any higher order of complexity than "one register per pin" I think
+> is better handled by open coding it than trying to push things into
+> the device tree, because of readability, debuggability and maintenance
+> issues.
 
-I believe the kernel is a nice collection of really good code for
-complicated file systems, high performance network protocols and
-sophisticated memory management, among others. It shouldn't be a dumping
-ground for arbitrary, very SoC specific information. Cf. LinusT 2011.
-DT is out there to fix this, so we should do so.
+I don't see how this binding would make this worse.
 
 Cheers,
 Andre.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
