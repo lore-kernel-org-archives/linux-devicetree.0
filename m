@@ -1,52 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: renesas: v3msk: add EtherAVB support
-Date: Fri, 24 Nov 2017 23:59:45 +0300
-Message-ID: <20171124210317.285946395@cogentembedded.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 01/10] genirq: Export irq_set_msi_desc()
+Date: Sat, 25 Nov 2017 00:55:33 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1711250050520.2316@nanos>
+References: <1511538800-8275-1-git-send-email-mmaddireddy@nvidia.com> <1511538800-8275-2-git-send-email-mmaddireddy@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=arm64-dts-renesas-v3msk-add-EtherAVB-support.patch
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1511538800-8275-2-git-send-email-mmaddireddy@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rjw@rjwysocki.net, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Define the V3M Starter Kit board dependent part of the EtherAVB
-device node.
+On Fri, 24 Nov 2017, Manikanta Maddireddy wrote:
 
-Based on the original (and large) patch by Vladimir Barinov.
+Please CC the proper mailing list for irq related changes.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> PCI bus support MSI interrupts, allow PCI host driver to set MSI descriptor
+> data for an irq.
 
----
- arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+This is not really an explanation why this export is needed.
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-@@ -31,6 +31,17 @@
- 	};
- };
- 
-+&avb {
-+	renesas,no-ether-link;
-+	phy-handle = <&phy0>;
-+	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		rxc-skew-ps = <1500>;
-+		reg = <0>;
-+	};
-+};
-+
- &extal_clk {
- 	clock-frequency = <16666666>;
- };
+Thanks,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	tglx
+
+> 
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+>  kernel/irq/chip.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+> index 5a2ef92c2782..bfbd17386bc4 100644
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -136,6 +136,7 @@ int irq_set_msi_desc(unsigned int irq, struct msi_desc *entry)
+>  {
+>  	return irq_set_msi_desc_off(irq, 0, entry);
+>  }
+> +EXPORT_SYMBOL(irq_set_msi_desc);
+>  
+>  /**
+>   *	irq_set_chip_data - set irq chip data for an irq
+> -- 
+> 2.1.4
+> 
+> 
