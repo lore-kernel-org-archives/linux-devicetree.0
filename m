@@ -1,105 +1,74 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [RFC PATCH 0/3] pinctrl: sunxi: Add DT-based generic pinctrl
- driver
-Date: Fri, 24 Nov 2017 12:05:37 +0000
-Message-ID: <54ecfdf7-cf4a-3eae-2661-47fa668a6066@arm.com>
-References: <20171113012523.2328-1-andre.przywara@arm.com>
- <CACRpkdYFoUmGJYdKz0t9gsrkK=u8-oJjaRBXtNYHaUt9kSa3_g@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/3] hwrng: exynos - add Samsung Exynos True RNG driver
+Date: Fri, 24 Nov 2017 13:09:06 +0100
+Message-ID: <CAJKOXPc2MGf_b3xA=R=p2_fQ0+SQvwLL8vfZLGhGAAEssD=hJA@mail.gmail.com>
+References: <CGME20171123184736eucas1p15d4e73d5a6596a6cba1f940dcc473c9a@eucas1p1.samsung.com>
+ <CAJKOXPfaofwB7Sp5Lg0JuZzFwC2RahdWDG5KfsJyNcKDt3b_mA@mail.gmail.com> <87o9nsde9r.fsf%l.stelmach@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYFoUmGJYdKz0t9gsrkK=u8-oJjaRBXtNYHaUt9kSa3_g@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Icenowy Zheng <icenowy@aosc.xyz>, "linux-sunxi@googlegroups.com" <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87o9nsde9r.fsf%l.stelmach@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, =?UTF-8?Q?Stephan_M=C3=BCller?= <smueller@chronox.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Nov 23, 2017 at 7:46 PM, Łukasz Stelmach <l.stelmach@samsung.com> wrote:
+> It was <2017-11-23 czw 17:31>, when Krzysztof Kozlowski wrote:
+>> On Thu, Nov 23, 2017 at 4:09 PM, Łukasz Stelmach <l.stelmach@samsung.com> wrote:
+>>> Add support for True Random Number Generator found in Samsung Exynos
+>>> 5250+ SoCs.
+>>>
+>>> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+>>> ---
+>>>  MAINTAINERS                          |   7 +
+>>>  drivers/char/hw_random/Kconfig       |  12 ++
+>>>  drivers/char/hw_random/Makefile      |   1 +
+>>>  drivers/char/hw_random/exynos-trng.c | 256 +++++++++++++++++++++++++++++++++++
+>>>  4 files changed, 276 insertions(+)
+>>>  create mode 100644 drivers/char/hw_random/exynos-trng.c
+>>>
+>
 
-On 24/11/17 10:28, Linus Walleij wrote:
-> On Mon, Nov 13, 2017 at 2:25 AM, Andre Przywara <andre.przywara@arm.com> wrote:
-> 
->> so far the pinctrl driver for supporting a particular Allwinner SoC requires
->> a hardcoded table in the kernel code.
-> (...)
->> This series here moves the data encoded in the table so far into the DT itself,
->> removing the need for a hardcoded table in the kernel.
-> (...)
-> 
-> The DT maintainers have been pretty clear on that they don't like
-> using the the DT as a generic fit-all information dump. They
-> prefer to look up hardware data from per-soc compatible strings.
-> 
-> I have been sceptic about it too, on the grounds that I think it
-> make configuration and multiplatform kernels easy, while making
-> debugging and reading code+device tree hard, also affecting
-> maintenance cost.
-> 
-> I'd like to have Maxime's buy-in before we progress and also some
-> discussion on these themes in general.
++Cc Stephan Müller, who reviewed intensively exynos-rng.c.
 
-Indeed this was one of the goals of this series. I can understand were
-we came from and that we had those in-kernel tables in the past.
-I am just a bit worried that with Allwinner recently playing the SKU
-game we end up with tons of tables for only slightly different SoCs (see
-the H3 and H5, for instance). And with single image kernels we pile up
-quite some *data* in each kernel, which is of little interest for
-everyone else.
+> [...]
+>
+>>>  endif # HW_RANDOM
+>>
+>> Thanks for working on TRNG.
+>>
+>> 1. I was rather thinking about extending existing exynos-rng.c [1] so
+>> it would be using TRNG as seed for PRNG as this gives you much more
+>> random data. Instead you developed totally separate driver which has
+>> its own benefits - one can choose which interface he wants. Although
+>> it is a little bit duplication.
+>
+> As far as I can tell, these are two different devices. However, PRNG
+> shares hardware with the hash engine. Indeed there is a hardware to
+> connect TRNG and PRNG, but, IMHO, it might be hard to model that
+> dependency in kernel.
 
-Also my understanding is that the actual Allwinner pin controller IP
-(register map) is very much the same across all SoCs. Mostly the only
-difference is the mapping between pins and mux functions, which we
-express in the DT already anyway (in the subnodes). And this is really a
-poster book example of what DT should be doing: express the specific
-mappings of a particular implementation. I don't see why this would need
-to be per-board only, if we can pull this up to the SoC level.
+It should be as simple as setting few more registers in SSS module
+(actually maybe just enabling TRNG_SEED_START in PRNG). You do not
+have to model it in a kernel like connecting some hw_rng entity to
+cryptoai's rng_alg. See the jitterentropy-kcapi.c. I understand that
+in that case existing exynos-rng.c could expose two different RNG
+devices - one PRNG based on user's seed and second TRNG (actually
+TRNG+PRNG).
 
->> The approach taken here is to parse the DT and generate the table with
->> the help of additional properties, then hand this table over to the existing
->> driver. This is covered by three basic extensions to the DT binding:
-> 
-> I adressed this in the bindings patch.
-> 
->> The benefit of this series is two-fold:
->> - Future SoCs don't need an in-kernel table anymore. They can describe
->>   everything in the DT,
-> 
-> It can be debated whether that is really a good thing or actually
-> a bad thing for the reasons stated above.
+It does not seem difficult to model but the question is whether that
+makes sense.
 
-The point is that we already rely on the DT anyway, just that we use a
-*string* to specify a certain mux function. The in-kernel table just
-maps this to an actual SoC-specific register value. I think the GPIO
-subsystem needs the name, hence I am just adding the pinmux property.
 
-> Also an additional bad thing is inconsistency between different
-> SoCs.
+> To me it seems easier to read TRNG (or
+> /dev/random) and and write the result to PRNG manually (in software).
 
-Well, does that mean that we should never change anything? Consistency
-is nice, but should not be an excuse for not improving things. And I
-tried to embrace the existing driver by designing this on top of it.
+Indeed this gives more flexibility to the user (choice of engine) but
+first, it is slower, and second it reduces the quality of random
+numbers (PRNG reseeds itself... but in this model cannot reseed from
+TRNG).
 
-> What we have in the kernel for all-DT is pinctrl-single.c.
-> 
-> This exists for the case where there is exactly one register per
-> pin and all you have is strange macro files from the ASIC people
-> that noone understands. OMAP and HiSilicon is using this.
-> It's a compromise, I'm not super-happy with that driver at all times
-> but it is for a very strongly specified case.
-> 
-> Would it be possible for you guys to simply use/embrace/extend
-> pinctrl-single.c if you want to go this route?
-
-Thanks for the pointer, I will have a look.
-
-> Any higher order of complexity than "one register per pin" I think
-> is better handled by open coding it than trying to push things into
-> the device tree, because of readability, debuggability and maintenance
-> issues.
-
-I don't see how this binding would make this worse.
-
-Cheers,
-Andre.
+Best regards,
+Krzysztof
