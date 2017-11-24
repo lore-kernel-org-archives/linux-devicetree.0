@@ -1,7 +1,7 @@
 From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v2 10/11] arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-Date: Fri, 24 Nov 2017 10:37:05 +0800
-Message-ID: <20171124023706.5702-11-jacob-chen@iotwrt.com>
+Subject: [PATCH v2 11/11] MAINTAINERS: add entry for Rockchip ISP1 driver
+Date: Fri, 24 Nov 2017 10:37:06 +0800
+Message-ID: <20171124023706.5702-12-jacob-chen@iotwrt.com>
 References: <20171124023706.5702-1-jacob-chen@iotwrt.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171124023706.5702-1-jacob-chen@iotwrt.com>
@@ -10,37 +10,37 @@ To: linux-rockchip@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, allon.huang@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, Jacob Chen <jacob2.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Shunqian Zheng <zhengsq@rock-chips.com>
+From: Jacob Chen <jacob2.chen@rock-chips.com>
 
-It's a Designware MIPI D-PHY, used for ISP0 in rk3399.
+Add MAINTAINERS entry for the rockchip isp1 driver.
+This driver is maintained by rockchip officially and it
+will be used for rockchip SoC on all linux-kernel based OS.
 
-Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
 Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 66a912fab5dd..a65b110afaf3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1292,6 +1292,17 @@
- 			status = "disabled";
- 		};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b05bc2c5e85c..614196ed7265 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11665,6 +11665,16 @@ F:	drivers/hid/hid-roccat*
+ F:	include/linux/hid-roccat*
+ F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
  
-+		mipi_dphy_rx0: mipi-dphy-rx0 {
-+			compatible = "rockchip,rk3399-mipi-dphy";
-+			clocks = <&cru SCLK_MIPIDPHY_REF>,
-+				<&cru SCLK_DPHY_RX0_CFG>,
-+				<&cru PCLK_VIO_GRF>;
-+			clock-names = "dphy-ref", "dphy-cfg", "grf";
-+			power-domains = <&power RK3399_PD_VIO>;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
++ROCKCHIP ISP V1 DRIVER
++M:	Jacob chen <jacob2.chen@rock-chips.com>
++M:	Shunqian Zheng <zhengsq@rock-chips.com>
++M:	Yichong Zhong <zyc@rock-chips.com>
++L:	linux-media@vger.kernel.org
++S:	Maintained
++F:	drivers/media/platform/rockchip/isp1/
++F:	Documentation/devicetree/bindings/media/rockchip-isp1.txt
++F:	Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
 +
- 		u2phy0: usb2-phy@e450 {
- 			compatible = "rockchip,rk3399-usb2phy";
- 			reg = <0xe450 0x10>;
+ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+ M:	Jacob chen <jacob2.chen@rock-chips.com>
+ L:	linux-media@vger.kernel.org
 -- 
 2.15.0
