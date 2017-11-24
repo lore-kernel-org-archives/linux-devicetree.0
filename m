@@ -1,159 +1,20 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH] ARM: dts: add minimal device tree for compute model 3
-Date: Fri, 24 Nov 2017 21:57:37 +0100 (CET)
-Message-ID: <787908872.337073.1511557057220@email.1und1.de>
-References: <20171124121813.11318-1-kernel@martin.sperl.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171124121813.11318-1-kernel@martin.sperl.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <linux@armlinux.org.uk>, kernel@martin.sperl.org, eric@anholt.net, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/2] Add V3M Starter Kit board support
+Date: Fri, 24 Nov 2017 23:59:43 +0300
+Message-ID: <20171124205943.310383519@cogentembedded.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Hello.
 
-thanks for working on this.
+Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20171124v2-v4.14' tag. I'm adding the device tree support for
+the R8A77970-based V3M Starter Kit board.
 
-> kernel@martin.sperl.org hat am 24. November 2017 um 13:18 geschrieben:
-> 
-> 
-> From: Martin Sperl <kernel@martin.sperl.org>
-> 
-> Add a minimal working device tree for the compute model 3
-> for both arm and arm64.
+[1/2] arm64: dts: renesas: initial V3MSK board device tree
+[2/2] arm64: dts: renesas: v3msk: add EtherAVB support
 
-i think it's worth to provide more context:
-
-The Raspberry Compute Module 3 is a SoM which contains a BCM2837 processor, 1 GB RAM and a 4 GB eMMC. There is also a carrier board which is called Compute Module IO Board V3.
-
-Datasheet:
-https://www.raspberrypi.org/documentation/hardware/computemodule/RPI-CM-DATASHEET-V1_0.pdf
-
-> 
-> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> ---
->  arch/arm/boot/dts/Makefile                       |  1 +
->  arch/arm/boot/dts/bcm2837-rpi-cm3.dts            | 38 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/broadcom/Makefile            |  1 +
->  arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3.dts |  2 ++
->  4 files changed, 42 insertions(+)
->  create mode 100644 arch/arm/boot/dts/bcm2837-rpi-cm3.dts
->  create mode 100644 arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index eff87a344566..b24a682c450d 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -75,6 +75,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
->  	bcm2835-rpi-a-plus.dtb \
->  	bcm2836-rpi-2-b.dtb \
->  	bcm2837-rpi-3-b.dtb \
-> +	bcm2837-rpi-cm3.dtb \
-
-Since we need always 2 boards (SoM + carrier), i like to see two separate DT files. A DTSI file for the SoM (describe RAM, eMMC) and a DTS file for the carrier board (please look at arm/boot/dts/imx6ul-tx6ul.dtsi and arm/boot/dts/imx6ul-tx6ul-mainboard.dts as an example).
-
-Suggested include hierarchy:
-
-  bcm2837.dtsi
-    bcm2837-rpi-cm3.dtsi
-      bcm2837-rpi-cm3-io3.dts
-
->  	bcm2835-rpi-zero.dtb \
->  	bcm2835-rpi-zero-w.dtb
->  dtb-$(CONFIG_ARCH_BCM_5301X) += \
-> diff --git a/arch/arm/boot/dts/bcm2837-rpi-cm3.dts b/arch/arm/boot/dts/bcm2837-rpi-cm3.dts
-> new file mode 100644
-> index 000000000000..f387bd8bd707
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm2837-rpi-cm3.dts
-> @@ -0,0 +1,38 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/dts-v1/;
-> +#include "bcm2837.dtsi"
-> +#include "bcm2835-rpi.dtsi"
-> +#include "bcm283x-rpi-usb-host.dtsi"
-> +
-> +/ {
-> +	compatible = "raspberrypi,3-compute-model", "brcm,bcm2837";
-
-s/compute-model/compute-module/
-
-> +	model = "Raspberry Pi Compute Module 3";
-
-Raspberry Pi Compute Module 3 on a IO board V3
-
-> +
-> +	memory {
-> +		reg = <0 0x40000000>;
-> +	};
-> +
-> +	leds {
-> +		act {
-> +			gpios = <&gpio 47 0>;
-
-Please use GPIO_ACTIVE_HIGH here
-
-> +		};
-> +	};
-> +};
-> +
-> +&hdmi {
-> +	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_gpio14>;
-> +	status = "okay";
-> +};
-> +
-> +/* SDHOST is used to drive the SD card */
-
-Since this is an eMMC please drop this misleading comment.
-
-> +&sdhost {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdhost_gpio48>;
-> +	status = "okay";
-> +	bus-width = <4>;
-
-non-removable;
-
-> +};
-> diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
-> index 3df2db7f8878..aecf58f503ae 100644
-> --- a/arch/arm64/boot/dts/broadcom/Makefile
-> +++ b/arch/arm64/boot/dts/broadcom/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb
-> +dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-cm3.dtb
->  
->  dts-dirs	+= northstar2
->  dts-dirs	+= stingray
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3.dts
-> new file mode 100644
-> index 000000000000..a1bba71462ed
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3.dts
-> @@ -0,0 +1,2 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "arm/bcm2837-rpi-cm3.dts"
-> -- 
-> 2.11.0
-> 
-> 
-> _______________________________________________
-> linux-rpi-kernel mailing list
-> linux-rpi-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel
+WBR, Sergei
