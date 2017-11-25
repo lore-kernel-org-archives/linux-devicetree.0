@@ -1,52 +1,141 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH 0/2] Microchip mcp2517fd can controller driver
-Date: Sat, 25 Nov 2017 13:03:36 +0100
-Message-ID: <3d355c51-09a3-40b8-46bf-8437e26a95f3@hartkopp.net>
-References: <20171124183509.12810-1-kernel@martin.sperl.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20171124183509.12810-1-kernel@martin.sperl.org>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: kernel@martin.sperl.org
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH] ARM: dts: bcm283x: Use GPIO polarity defines consequently
+Date: Sat, 25 Nov 2017 14:34:05 +0100
+Message-ID: <1511616845-16298-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Martin,
+Currently most of the Raspberry Pi DTS have a mixture of magic
+numbers and the proper GPIO polarity defines. So use the latter
+one consequently.
 
-thanks for the contribution!
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts | 4 ++--
+ arch/arm/boot/dts/bcm2835-rpi-a.dts      | 2 +-
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 4 ++--
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
+ arch/arm/boot/dts/bcm2835-rpi-b.dts      | 2 +-
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts    | 4 ++--
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts    | 2 +-
+ 7 files changed, 10 insertions(+), 10 deletions(-)
 
-Unfortunately [PATCH 2/2] only hit the devicetree mailing list but not 
-the linux-can mailing list for the review.
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+index f81ae0a..aa1fc7b 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+@@ -10,12 +10,12 @@
+ 
+ 	leds {
+ 		act {
+-			gpios = <&gpio 47 0>;
++			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+ 		pwr {
+ 			label = "PWR";
+-			gpios = <&gpio 35 0>;
++			gpios = <&gpio 35 GPIO_ACTIVE_HIGH>;
+ 			default-state = "keep";
+ 			linux,default-trigger = "default-on";
+ 		};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm2835-rpi-a.dts
+index 7a960a0..425f6b0 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
+@@ -10,7 +10,7 @@
+ 
+ 	leds {
+ 		act {
+-			gpios = <&gpio 16 1>;
++			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index 0161a84..effa195 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -11,12 +11,12 @@
+ 
+ 	leds {
+ 		act {
+-			gpios = <&gpio 47 0>;
++			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+ 		pwr {
+ 			label = "PWR";
+-			gpios = <&gpio 35 0>;
++			gpios = <&gpio 35 GPIO_ACTIVE_HIGH>;
+ 			default-state = "keep";
+ 			linux,default-trigger = "default-on";
+ 		};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 4bc70ef..772ec3b 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -11,7 +11,7 @@
+ 
+ 	leds {
+ 		act {
+-			gpios = <&gpio 16 1>;
++			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index cca4a75..434483d 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -11,7 +11,7 @@
+ 
+ 	leds {
+ 		act {
+-			gpios = <&gpio 16 1>;
++			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index 6669355..5c339ad 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -15,12 +15,12 @@
+ 
+ 	leds {
+ 		act {
+-			gpios = <&gpio 47 0>;
++			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
+ 		};
+ 
+ 		pwr {
+ 			label = "PWR";
+-			gpios = <&gpio 35 0>;
++			gpios = <&gpio 35 GPIO_ACTIVE_HIGH>;
+ 			default-state = "keep";
+ 			linux,default-trigger = "default-on";
+ 		};
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+index a8844d0..3e4ed7c 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -20,7 +20,7 @@
+ 
+ 	leds {
+ 		act {
+-			gpios = <&gpio 47 0>;
++			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
+ 		};
+ 	};
+ };
+-- 
+2.7.4
 
-Btw. I already have two questions from the description:
-
-On 11/24/2017 07:35 PM, kernel@martin.sperl.org wrote:
-
-(..)
-
-> The driver has been heavily optimized so that it can handle
-> a 100% utilized 1MHz Can-bus (with 11 bit can frames with DLC=0)
-> even on less powerfull SOCs like the raspberry pi 1 without
-> dropping frames due to driver/spi latencies
-
-(..)
-
- > The driver implements a lock-less design for transmissions
- > making use instead of prepared spi messages submitted via spi_async
- > for transmission in the start_xmit_start code without requireing
- > an extra workqueue and the corresponding latencies.
-
-Seems you improved the SPI handling here. Would it make sense to 
-separate the SPI-related part of the code to a separate C-file so that 
-the existing mcp251x driver can benefit from these improvements too?
-
-> (still dropps are observed in the can/network stack).
-
-Are you sure drops are taking place in the network layer? Can you give 
-me some more details about this statement?
-
-Best regards,
-Oliver
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
