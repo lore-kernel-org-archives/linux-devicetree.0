@@ -1,211 +1,42 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] iio: light: isl76683 add way to adjust irq
- threshold
-Date: Sat, 25 Nov 2017 15:08:30 +0000
-Message-ID: <20171125150830.3f9b4b58@archlinux>
-References: <1511047230-7021-1-git-send-email-chf.fritz@googlemail.com>
-        <1511047230-7021-4-git-send-email-chf.fritz@googlemail.com>
-        <20171119112625.073f5d66@archlinux>
-        <1511262622.1737.96.camel@googlemail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: allwinner: a64: Enable AXP803 for
+ Orangepi Win
+Date: Sat, 25 Nov 2017 16:56:40 +0100
+Message-ID: <20171125155640.4ejcymgwrngfkgzc@flea.lan>
+References: <1511458536-5315-1-git-send-email-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511262622.1737.96.camel-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mitqzle44taqxrkw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRFF43IAKGQEJ6YFOIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1511458536-5315-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Nov 2017 12:10:22 +0100
-Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
 
-> Hi Jonathan,
+--mitqzle44taqxrkw
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Thu, Nov 23, 2017 at 11:05:36PM +0530, Jagan Teki wrote:
+> Enable AXP803 PMIC and regulators for Orangepi Win.
 > 
->  thanks for your input. Please see my questions and answers below.
-> 
-> On Sun, 2017-11-19 at 11:26 +0000, Jonathan Cameron wrote:
-> > On Sun, 19 Nov 2017 00:20:30 +0100
-> > Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> >   
-> > > This patch adds sysfs read/write support for upper and lower irq
-> > > thresholds. So it's possible that only on certain lux ranges the
-> > > irq triggered measurement happens.
-> > > 
-> > > Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>  
-> > 
-> > hmm, this is 'unusual' to say the least...
-> > 
-> > From the datasheet it initially looks like a straight forward threshold
-> > interrupt - which should be supported as an IIO event.
-> > 
-> > However, there seems to not be a generic monitoring mode, but rather the
-> > device has to be polled?  (which makes this a 'funny' sort of interrupt..)  
-> 
-> It's not polling, it's just that in this "external timing mode" host has
-> to do one part of adc integration timing (accurate waiting) on its own.
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-> 
-> This is suboptimal because doing timing in the driver cannot be that
-> accurate as the external osc beside the chip with its "internal timing
-> mode". To compensate this inaccuracy there are Timing-Registers which
-> would then need to be red and finally calculated too.
-> 
-> So I prefer "internal timing mode" (with IRQ) because I do get data as
-> accurate and as fast as possible (especially in buffered mode) without
-> the hassle of compensation.
-Yes, that's fine, but as I read it you still need to actually start
-the reading?
+Applied, thanks!
+Maxime
 
-Reading on below I think I may have missunderstood this due to unfortunate
-choice of function naming in the driver and frankly a less than clear
-datasheet.
-
-So, when in internal mode is this device:
-
-1) Always capturing readings on a internally timed sequence?
-2) Only capturing a reading when an explicit signal is sent to ask
-it to do so?
-
-> 
-> > 
-> > So I think you are ultimately using this threshold interrupt to provide
-> > a dataready signal when there isn't a real one provided?  
-> 
-> I don't get this point. Why shouldn't the IRQ be a real data-ready
-> signal?
-Because it isn't. It's a data ready that only fires in some
-circumstances, not simply when the data is ready...
-
-I have no problem with an 'event' in IIO terminology (a
-threshold pass) being used to provide a trigger.  We have
-devices already doing this - though we could provide better
-generic infrastructure for it - but that doesn't make it
-a dataready trigger. It's a threshold trigger.
-
-> 
-> The usage is this:
->     set threshold,
->   in a loop for example(
->     clear IRQ               isl76683_start_measurement()
->     now wait for IRQ which triggers when sensordata passes threshold
->     read the data           isl76683_get_sensordata()
->   )
-> 
->  What may confuse is that this chip needs to get the IRQ cleared before
-> a next "data-ready-because-it-passed-threshold-IRQ"?
-
-That's absolutely fine, but a data ready trigger is about data ready,
-not some other condition AND data ready.
-
-> 
-> By the way, without this patch sensordata always passes threshold and
-> the IRQ is a real "data-ready-IRQ".
-
-OK, in that case it is a valid data ready signal in the conventional
-sense - but only in that case.
-
-> 
-> > 
-> > That's horrible and makes it very hard to fit this device into standard
-> > frameworks.  My gut feeling would be to:  
-> 
-> If you don't like the adjustable threshold because you really feel it
-> doesn't fit into iio-framework, you can purge patch 3 and I'll keep it
-> away from mainline. And it would be great if you could
-> reconsider :-) ...
-
-The issue here is that we are introducing new ABI that no standard
-userspace tooling is going to know what to do with.  Hmm. Lets
-think about how we could at least make this more standard that it is
-and then consider that...
-
-> 
-> > 
-> > * stop using the interrupt for data ready at all, but dead reckon
-> >   that with a timer delay.   
-> 
-> Please see my points above why using "internal timing mode" adds
-> complexity.
-Not really - you just add a slight margin (typically 10%) to the timing
-you know it is set to and then read the data after that... Simple
-sleep really.
-
-> 
-> > * use this 'interrupt' (actually a hardware threshold signal rather than
-> >   an interrupt really)  
-> 
-> Please see above: Why shouldn't the IRQ be a real data-ready signal?
-
-When we use the term data-ready it has to correspond to the standard
-understanding of what a data ready signal is across other parts - otherwise
-userspace will have no idea what to expect.
-
-Data ready is used when you have an internally clocked sequencer that
-generates a series of samples at a particular sampling frequency - each
-set of which results in an interrupt.
-
-I'm still not sure whether that is true here or not?
-
-> 
-> >  for event detection and handle it
-> >   as an event with all the standard infrastructure that is in place
-> >   for that.
-> > 
-> > I can see the hardware designers logic that you might only want to read
-> > the values back when the light level has changed from your expected value,
-> > but given you have to manually trigger readings, the utility of this is
-> > somewhat limited...  
-> 
-> No, adc readings are done continuously inside the chip if sensor value
-> fails threshold test. You get an IRQ if light changes so that threshold
-> test gets passed.
-
-I'm really confused.  Your driver seems to always start a capture manually.
-Ah - maybe this is because what you have called it is:
-
-isl76683_start_measurement when all it is actually doing is clearing
-the interrupt and the documentation that says that it triggers
-a new measurement is wrong? 
-
-If it just clears the interrupt to allow us to know when a new capture
-has finished which would have been running anyway then rename it
-to make that clear.
-
-> 
-> What do you think?
-
-That I'm really confused!
-
-Anyhow I'm going to assume that we actually have a fully self clocked chip
-here and that start measurement is actually 'reset_interrupt' which
-allows us to see the end of the previous interrupt. If this is true
-then we want the following changes at the minimum...
-
-1) The reset should not be in the try_reenable callback of the trigger
-- it is a facet of the trigger not the buffer - this also removes the
-need to ensure this trigger is only used for this device.  The initial
-trigger enable can clear it once to start the process.  The trigger
-disable will ensure the reenable is not called again (check this - I'm
-not 100% sure what the core will do and we may need to modify it slightly
-or if we have to disable the irq to avoid false triggers after disable).
-
-2) The threshold changes you are making here are characteristics of
-the trigger not the device so the new ABI needs to be trigger abi
-under /sys/bus/iio/devices/iio:triggerX/ not the device.
-
-Whether we claim it is a dataready trigger with some 'quirks' or
-a threshold trigger that we can set to fire for all values isn't
-clear yet.
-
-Jonathan
-
-> 
-> Thanks
->  -- Christoph
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--mitqzle44taqxrkw--
