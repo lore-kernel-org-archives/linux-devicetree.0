@@ -1,192 +1,211 @@
-From: kernel@martin.sperl.org
-Subject: Re: [PATCH 0/2] Microchip mcp2517fd can controller driver
-Date: Sat, 25 Nov 2017 15:47:58 +0100
-Message-ID: <263BAF25-3F9A-4BE8-8E19-757B3C22A037@martin.sperl.org>
-References: <20171124183509.12810-1-kernel@martin.sperl.org> <3d355c51-09a3-40b8-46bf-8437e26a95f3@hartkopp.net>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <3d355c51-09a3-40b8-46bf-8437e26a95f3@hartkopp.net>
-Sender: linux-can-owner@vger.kernel.org
-To: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, devicetree@vger.kernel.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] iio: light: isl76683 add way to adjust irq
+ threshold
+Date: Sat, 25 Nov 2017 15:08:30 +0000
+Message-ID: <20171125150830.3f9b4b58@archlinux>
+References: <1511047230-7021-1-git-send-email-chf.fritz@googlemail.com>
+        <1511047230-7021-4-git-send-email-chf.fritz@googlemail.com>
+        <20171119112625.073f5d66@archlinux>
+        <1511262622.1737.96.camel@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1511262622.1737.96.camel-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Oliver!
+On Tue, 21 Nov 2017 12:10:22 +0100
+Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
 
-> On 25.11.2017, at 13:03, Oliver Hartkopp <socketcan@hartkopp.net> wrote:
+> Hi Jonathan,
 > 
-> Hello Martin,
+>  thanks for your input. Please see my questions and answers below.
 > 
-> thanks for the contribution!
+> On Sun, 2017-11-19 at 11:26 +0000, Jonathan Cameron wrote:
+> > On Sun, 19 Nov 2017 00:20:30 +0100
+> > Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> >   
+> > > This patch adds sysfs read/write support for upper and lower irq
+> > > thresholds. So it's possible that only on certain lux ranges the
+> > > irq triggered measurement happens.
+> > > 
+> > > Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>  
+> > 
+> > hmm, this is 'unusual' to say the least...
+> > 
+> > From the datasheet it initially looks like a straight forward threshold
+> > interrupt - which should be supported as an IIO event.
+> > 
+> > However, there seems to not be a generic monitoring mode, but rather the
+> > device has to be polled?  (which makes this a 'funny' sort of interrupt..)  
 > 
-> Unfortunately [PATCH 2/2] only hit the devicetree mailing list but not the linux-can mailing list for the review.
-
-I have no idea why you have not received it, but I have sent all
-of them to the same  Recipient list!
-
-I even got a relayed confirmation for all 3 of them:
-19:35:28.689 2 DEQUEUER [7520159] SMTP(vger.kernel.org)linux-can@vger.kernel.org relayed: relayed via vger.kernel.org
-19:35:29.823 2 DEQUEUER [7520154] SMTP(vger.kernel.org)linux-can@vger.kernel.org relayed: relayed via vger.kernel.org
-19:35:31.902 2 DEQUEUER [7520160] SMTP(vger.kernel.org)linux-can@vger.kernel.org relayed: relayed via vger.kernel.org
-
-So they should all have arrived!
-
-> 
-> Btw. I already have two questions from the description:
-> 
-> On 11/24/2017 07:35 PM, kernel@martin.sperl.org wrote:
-> 
-> (..)
-> 
->> The driver has been heavily optimized so that it can handle
->> a 100% utilized 1MHz Can-bus (with 11 bit can frames with DLC=0)
->> even on less powerfull SOCs like the raspberry pi 1 without
->> dropping frames due to driver/spi latencies
-> 
-> (..)
-> 
-> > The driver implements a lock-less design for transmissions
-> > making use instead of prepared spi messages submitted via spi_async
-> > for transmission in the start_xmit_start code without requireing
-> > an extra workqueue and the corresponding latencies.
-> 
-> Seems you improved the SPI handling here. Would it make sense to separate the SPI-related part of the code to a separate C-file so that the existing mcp251x driver can benefit from these improvements too?
-
-The biggest problem is that the Register-design of the mcp2517fd is totally 
-different compared to mcp251x, so most of those “optimizations” for the 
-mcp2517 do not apply to the mcp251x (SPI-API wise IMO the mcp2515 is much
- more efficient - better still when having dedicated gpios for the RX lines
-to avoid having to query the status first via spi (reduces latencies
-and thus reduces packet loss/overflow on a saturated CAN bus).
-
-I have a spi_async only version of the mcp251x as well (which has been dormant
-for a long time, as the mcp251x stopped showing interrupt stopped issues...).
+> It's not polling, it's just that in this "external timing mode" host has
+> to do one part of adc integration timing (accurate waiting) on its own.
 
 > 
->> (still dropps are observed in the can/network stack).
+> This is suboptimal because doing timing in the driver cannot be that
+> accurate as the external osc beside the chip with its "internal timing
+> mode". To compensate this inaccuracy there are Timing-Registers which
+> would then need to be red and finally calculated too.
 > 
-> Are you sure drops are taking place in the network layer? Can you give me some more details about this statement?
-Well - when I increase net->stat.rx_dropped there is always a 
-dev_warn_ratelimited that comes along. Also rx_errors is increased at the 
-same time. And I see the drops counters increase while there are no messages
-in dmesg.
+> So I prefer "internal timing mode" (with IRQ) because I do get data as
+> accurate and as fast as possible (especially in buffered mode) without
+> the hassle of compensation.
+Yes, that's fine, but as I read it you still need to actually start
+the reading?
 
-Also note that the driver is only incrementing rx_packets and rx_bytes only 
-when netif_rx_ni(skb) is called.
+Reading on below I think I may have missunderstood this due to unfortunate
+choice of function naming in the driver and frankly a less than clear
+datasheet.
 
-So the setup is this:
-* raspberry pi 2 with the mcp2517fd
-* beagle bone black
-* 1MHz CAN2.0 bus
+So, when in internal mode is this device:
 
-Beagle bone black:
-root@beaglebone:~# cangen can0 -g0.0 -L0 -n 1000000 -p10 -Ii
+1) Always capturing readings on a internally timed sequence?
+2) Only capturing a reading when an explicit signal is sent to ask
+it to do so?
 
-This saturates the CAN BUS to 100%
+> 
+> > 
+> > So I think you are ultimately using this threshold interrupt to provide
+> > a dataready signal when there isn't a real one provided?  
+> 
+> I don't get this point. Why shouldn't the IRQ be a real data-ready
+> signal?
+Because it isn't. It's a data ready that only fires in some
+circumstances, not simply when the data is ready...
 
-on the RPI2 I have no consumer (candump or similar) and the module has
-just been reloaded (counters are reset).
+I have no problem with an 'event' in IIO terminology (a
+threshold pass) being used to provide a trigger.  We have
+devices already doing this - though we could provide better
+generic infrastructure for it - but that doesn't make it
+a dataready trigger. It's a threshold trigger.
 
-I see the following counters:
-7: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 10
-    link/can  promiscuity 0
-    can <ONE-SHOT,BERR-REPORTING> state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 0
-	  bitrate 1000000 sample-point 0.750
-	  tq 25 prop-seg 14 phase-seg1 15 phase-seg2 10 sjw 1
-	  mcp2517fd: tseg1 2..256 tseg2 1..128 sjw 1..128 brp 1..256 brp-inc 1
-	  mcp2517fd: dtseg1 1..32 dtseg2 1..16 dsjw 1..16 dbrp 1..256 dbrp-inc 1
-	  clock 40000000
-	  re-started bus-errors arbit-lost error-warn error-pass bus-off
-	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-    RX: bytes  packets  errors  dropped overrun mcast
-    0          998774   703     4588    0       0
-    TX: bytes  packets  errors  dropped carrier collsns
-    0          0        0       0       0       0
+> 
+> The usage is this:
+>     set threshold,
+>   in a loop for example(
+>     clear IRQ               isl76683_start_measurement()
+>     now wait for IRQ which triggers when sensordata passes threshold
+>     read the data           isl76683_get_sensordata()
+>   )
+> 
+>  What may confuse is that this chip needs to get the IRQ cleared before
+> a next "data-ready-because-it-passed-threshold-IRQ"?
 
-So you see that packets + dropped > transmitted (1000000).
+That's absolutely fine, but a data ready trigger is about data ready,
+not some other condition AND data ready.
 
-In a different setup with 4 bytes of data payload:
-root@beaglebone:~# cangen can0 -g0.0 -L0 -n 10000 -L4 -p10 -Ii
-root@beaglebone:~# cangen can0 -g0.0 -L0 -n 100000 -L4 -p10 -Ii
+> 
+> By the way, without this patch sensordata always passes threshold and
+> the IRQ is a real "data-ready-IRQ".
 
-I get the following statistics:
-root@rasp2a:~# ip -details -statistics link show can0
-8: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 10
-    link/can  promiscuity 0
-    can <ONE-SHOT,BERR-REPORTING> state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 0
-	  bitrate 1000000 sample-point 0.750
-	  tq 25 prop-seg 14 phase-seg1 15 phase-seg2 10 sjw 1
-	  mcp2517fd: tseg1 2..256 tseg2 1..128 sjw 1..128 brp 1..256 brp-inc 1
-	  mcp2517fd: dtseg1 1..32 dtseg2 1..16 dsjw 1..16 dbrp 1..256 dbrp-inc 1
-	  clock 40000000
-	  re-started bus-errors arbit-lost error-warn error-pass bus-off
-	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-    RX: bytes  packets  errors  dropped overrun mcast
-    440000     110000   0       4343    0       0
-    TX: bytes  packets  errors  dropped carrier collsns
-    0          0        0       0       0       0
-Here 1 get 100% reception rates (bytes and packets are exactly what they 
-are supposed to be) but still 0.1% dropped.
+OK, in that case it is a valid data ready signal in the conventional
+sense - but only in that case.
 
-When CAN FD is configured on the mcp2517 then things look different
-even on a RPI2:
-root@beaglebone:~# cangen can0 -g0.0 -L0 -n 1000000 -L0 -p10 -Ii
-root@rasp2a:~# ip -details -statistics link show can0
-13: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 72 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 10
-    link/can  promiscuity 0
-    can <ONE-SHOT,BERR-REPORTING,FD> state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 0
-	  bitrate 1000000 sample-point 0.750
-	  tq 25 prop-seg 14 phase-seg1 15 phase-seg2 10 sjw 1
-	  mcp2517fd: tseg1 2..256 tseg2 1..128 sjw 1..128 brp 1..256 brp-inc 1
-	  dbitrate 2000000 dsample-point 0.750
-	  dtq 25 dprop-seg 7 dphase-seg1 7 dphase-seg2 5 dsjw 1
-	  mcp2517fd: dtseg1 1..32 dtseg2 1..16 dsjw 1..16 dbrp 1..256 dbrp-inc 1
-	  clock 40000000
-	  re-started bus-errors arbit-lost error-warn error-pass bus-off
-	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
-    RX: bytes  packets  errors  dropped overrun mcast
-    0          999840   3       752028  0       0
-    TX: bytes  packets  errors  dropped carrier collsns
-    0          0        0       0       0       0
+> 
+> > 
+> > That's horrible and makes it very hard to fit this device into standard
+> > frameworks.  My gut feeling would be to:  
+> 
+> If you don't like the adjustable threshold because you really feel it
+> doesn't fit into iio-framework, you can purge patch 3 and I'll keep it
+> away from mainline. And it would be great if you could
+> reconsider :-) ...
 
-In this case the number of packets actually lost on the controller is 0.01%
-But the number of dropped packets on the stack is 75%.
+The issue here is that we are introducing new ABI that no standard
+userspace tooling is going to know what to do with.  Hmm. Lets
+think about how we could at least make this more standard that it is
+and then consider that...
 
-The shorter the interval the lower the dropped count.
+> 
+> > 
+> > * stop using the interrupt for data ready at all, but dead reckon
+> >   that with a timer delay.   
+> 
+> Please see my points above why using "internal timing mode" adds
+> complexity.
+Not really - you just add a slight margin (typically 10%) to the timing
+you know it is set to and then read the data after that... Simple
+sleep really.
 
-Ciao,
-	Martin
+> 
+> > * use this 'interrupt' (actually a hardware threshold signal rather than
+> >   an interrupt really)  
+> 
+> Please see above: Why shouldn't the IRQ be a real data-ready signal?
 
-P.s: For the last test-case here the fifo utilization statistics:
-root@rasp2a:~# cat /sys/kernel/debug/mcp2517fd-can0/fifo_usage/* | awk '{ C=C+$1; printf "%8i %s\n",C,$0}’
-Total    Count/fifo
-  384401 384401
-  674306 289905
-  960133 285827
-  990117 29984
-  994351 4234
-  996745 2394
-  997668 923
-  998217 549
-  998593 376
-  998849 256
-  999059 210
-  999240 181
-  999385 145
-  999508 123
-  999604 96
-  999680 76
-  999745 65
-  999797 52
-  999840 43
-root@rasp2a:~# cat /sys/kernel/debug/mcp2517fd-can0/rx/fifo_count
-19
-root@rasp2a:~# dmesg
-[77843.229423] mcp2517fd spi0.0: RX MAB overflow
-[77856.329824] mcp2517fd spi0.0: RX MAB overflow
-[77883.299221] mcp2517fd spi0.0: RX MAB overflow
+When we use the term data-ready it has to correspond to the standard
+understanding of what a data ready signal is across other parts - otherwise
+userspace will have no idea what to expect.
 
-These dmesg lines correspond with the errors (and would also increase “dropped” by 3)
+Data ready is used when you have an internally clocked sequencer that
+generates a series of samples at a particular sampling frequency - each
+set of which results in an interrupt.
 
+I'm still not sure whether that is true here or not?
+
+> 
+> >  for event detection and handle it
+> >   as an event with all the standard infrastructure that is in place
+> >   for that.
+> > 
+> > I can see the hardware designers logic that you might only want to read
+> > the values back when the light level has changed from your expected value,
+> > but given you have to manually trigger readings, the utility of this is
+> > somewhat limited...  
+> 
+> No, adc readings are done continuously inside the chip if sensor value
+> fails threshold test. You get an IRQ if light changes so that threshold
+> test gets passed.
+
+I'm really confused.  Your driver seems to always start a capture manually.
+Ah - maybe this is because what you have called it is:
+
+isl76683_start_measurement when all it is actually doing is clearing
+the interrupt and the documentation that says that it triggers
+a new measurement is wrong? 
+
+If it just clears the interrupt to allow us to know when a new capture
+has finished which would have been running anyway then rename it
+to make that clear.
+
+> 
+> What do you think?
+
+That I'm really confused!
+
+Anyhow I'm going to assume that we actually have a fully self clocked chip
+here and that start measurement is actually 'reset_interrupt' which
+allows us to see the end of the previous interrupt. If this is true
+then we want the following changes at the minimum...
+
+1) The reset should not be in the try_reenable callback of the trigger
+- it is a facet of the trigger not the buffer - this also removes the
+need to ensure this trigger is only used for this device.  The initial
+trigger enable can clear it once to start the process.  The trigger
+disable will ensure the reenable is not called again (check this - I'm
+not 100% sure what the core will do and we may need to modify it slightly
+or if we have to disable the irq to avoid false triggers after disable).
+
+2) The threshold changes you are making here are characteristics of
+the trigger not the device so the new ABI needs to be trigger abi
+under /sys/bus/iio/devices/iio:triggerX/ not the device.
+
+Whether we claim it is a dataready trigger with some 'quirks' or
+a threshold trigger that we can set to fire for all values isn't
+clear yet.
+
+Jonathan
+
+> 
+> Thanks
+>  -- Christoph
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
