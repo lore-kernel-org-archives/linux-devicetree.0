@@ -1,90 +1,48 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH] ARM: dts: add minimal device tree for compute model 3
-Date: Sat, 25 Nov 2017 10:50:04 +0100 (CET)
-Message-ID: <905313235.319254.1511603404501@email.1und1.de>
-References: <20171124121813.11318-1-kernel@martin.sperl.org>
- <787908872.337073.1511557057220@email.1und1.de>
- <84679F1A-7EF2-44FD-B8CC-F2D01C313E17@martin.sperl.org>
+From: Otavio Salvador <otavio.salvador-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6qdl-nitrogen6x: Add SPI NOR partitions
+Date: Sat, 25 Nov 2017 07:55:53 -0200
+Message-ID: <CAP9ODKoefNEcQtrCCLEa7hzx2D_2vJTit0t8ooQGTx7Uyds1mQ@mail.gmail.com>
+References: <20171124170004.31133-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <84679F1A-7EF2-44FD-B8CC-F2D01C313E17@martin.sperl.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kernel@martin.sperl.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Russell King <linux@armlinux.org.uk>, eric@anholt.net, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171124170004.31133-1-otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kernel development list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFydGluLAoKPiBrZXJuZWxAbWFydGluLnNwZXJsLm9yZyBoYXQgYW0gMjUuIE5vdmVtYmVy
-IDIwMTcgdW0gMDg6MzIgZ2VzY2hyaWViZW46Cj4gCj4gCj4gCj4gPiBPbiAyNC4xMS4yMDE3LCBh
-dCAyMTo1NywgU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4gd3JvdGU6Cj4g
-PiBTaW5jZSB3ZSBuZWVkIGFsd2F5cyAyIGJvYXJkcyAoU29NICsgY2FycmllciksIGkgbGlrZSB0
-byBzZWUgdHdvIHNlcGFyYXRlIERUIGZpbGVzLiBBIERUU0kgZmlsZSBmb3IgdGhlIFNvTSAoZGVz
-Y3JpYmUgUkFNLCBlTU1DKSBhbmQgYSBEVFMgZmlsZSBmb3IgdGhlIGNhcnJpZXIgYm9hcmQgKHBs
-ZWFzZSBsb29rIGF0IGFybS9ib290L2R0cy9pbXg2dWwtdHg2dWwuZHRzaSBhbmQgYXJtL2Jvb3Qv
-ZHRzL2lteDZ1bC10eDZ1bC1tYWluYm9hcmQuZHRzIGFzIGFuIGV4YW1wbGUpLgo+ID4gCj4gPiBT
-dWdnZXN0ZWQgaW5jbHVkZSBoaWVyYXJjaHk6Cj4gPiAKPiA+ICBiY20yODM3LmR0c2kKPiA+ICAg
-IGJjbTI4MzctcnBpLWNtMy5kdHNpCj4gPiAgICAgIGJjbTI4MzctcnBpLWNtMy1pbzMuZHRzCj4g
-PiAKPiAKPiBJIHNoYWxsIGdpdmUgaXQgYSB0cnkuCj4gCj4gQnV0IGl0IHdvdWxkIHJlcXVpcmUg
-cG9zc2libHkgMiB2ZXJzaW9ucyBvZiB0aGUgY20tbW9kdWxlOgo+ICogdGhlIG9uZSBpbmNsdWRp
-bmcgZW1tYwo+ICogdGhlIG9uZSBleHBvc2luZyB0aGUgc2QtY2FyZCBwb3J0cy9waW5zIChDTTMt
-TGl0ZSkKCkkgZG9uJ3QgaGF2ZSB0aG9zZSBtb2R1bGVzLiBJbiBjYXNlIGl0J3MgcG9zc2libGUg
-dG8gY3JlYXRlIGEgRFRTSSB3aGljaCBhcHBsaWVzIGZvciBib3RoIG9mIHRoZW0gdGhlbiBpIHBy
-ZWZlciB0aGlzLiBJbiB0aGVvcnkgdGhlcmUgYXJlIHR3byBleHRyZW1lczoKCjEpIENyZWF0ZSBh
-IERUUyBmb3IgYWxsIENvbXB1dGUgTW9kdWxlcyAobGlrZSB0aGUgUmFzcGJlcnJ5IFBpIGZvdW5k
-YXRpb24pCjIpIENyZWF0ZSBEVFMvRFRTSSBmaWxlcyBmb3IgYWxsIHBvc3NpYmxlIGNvbWJpbmF0
-aW9ucwoKSSB0aGluayBub25lIG9mIHRoZW0gYXJlIHByYWN0aWNhbC4gSW4gY2FzZSAxIDNyZCBw
-YXJ0eSB2ZW5kb3JzIHdvdWxkIHN0YXJ0IHRvIGNvcHkgdGhlIERUUyBmaWxlIGFuZCBjYXNlIDIg
-aXMgaGFyZCB0byBtYWludGFpbi4gU28gd2UgbmVlZCB0byB0cnkgc29tZXRoaW5nIGluIHRoZSBt
-aWRkbGUgYnkgc3RhcnRpbmcgd2l0aCBhIERUU0kgZmlsZSB3aGljaCBhcHBsaWVzIHRvIGFsbCBD
-TTMgKGluY2x1ZGluZyB0aGUgTGl0ZSkgYW5kIGEgRFRTIHdoaWNoIGFwcGxpZXMgdG8gYWxsIFJh
-c3BiZXJyeSBQaSBJTyBCb2FyZHMgYW5kIGluY2x1ZGUgdGhlIENNMyBEVFNJLgoKPiAKPiBCdXQg
-dGhlbiBJIGNvdWxkIGdvIGFzIGZhciBhcyBpbmNsdWRpbmcgdGhlIOKAnGNsYXNzaWPigJ0gQ00g
-VjEgYXMgd2VsbC4uLgoKWWVhaCwgdGhhdCdzIHRoZSBpZGVhLgoKPiAKPiA+PiAJYmNtMjgzNS1y
-cGktemVyby5kdGIgXAo+ID4+IAliY20yODM1LXJwaS16ZXJvLXcuZHRiCj4gPj4gZHRiLSQoQ09O
-RklHX0FSQ0hfQkNNXzUzMDFYKSArPSBcCj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2JjbTI4MzctcnBpLWNtMy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY20yODM3LXJwaS1j
-bTMuZHRzCj4gPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+PiBpbmRleCAwMDAwMDAwMDAwMDAu
-LmYzODdiZDhiZDcwNwo+ID4+IC0tLSAvZGV2L251bGwKPiA+PiArKysgYi9hcmNoL2FybS9ib290
-L2R0cy9iY20yODM3LXJwaS1jbTMuZHRzCj4gPj4gQEAgLTAsMCArMSwzOCBAQAo+ID4+ICsvLyBT
-UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+ID4+ICsvZHRzLXYxLzsKPiA+PiArI2lu
-Y2x1ZGUgImJjbTI4MzcuZHRzaSIKPiA+PiArI2luY2x1ZGUgImJjbTI4MzUtcnBpLmR0c2kiCj4g
-Pj4gKyNpbmNsdWRlICJiY20yODN4LXJwaS11c2ItaG9zdC5kdHNpIgo+ID4+ICsKPiA+PiArLyB7
-Cj4gPj4gKwljb21wYXRpYmxlID0gInJhc3BiZXJyeXBpLDMtY29tcHV0ZS1tb2RlbCIsICJicmNt
-LGJjbTI4MzciOwo+ID4gCj4gPiBzL2NvbXB1dGUtbW9kZWwvY29tcHV0ZS1tb2R1bGUvCgpCdHcg
-aSBmb3Jnb3QgdG8gbWVudGlvbiB0aGlzIG5lZWRzIHRvIGJlIGRvY3VtZW50ZWQgaGVyZSBbMV0g
-aW4gYSBzZXBhcmF0ZSBwYXRjaC4KCj4gPiAKPiA+PiArCW1vZGVsID0gIlJhc3BiZXJyeSBQaSBD
-b21wdXRlIE1vZHVsZSAzIjsKPiA+IAo+ID4gUmFzcGJlcnJ5IFBpIENvbXB1dGUgTW9kdWxlIDMg
-b24gYSBJTyBib2FyZCBWMwo+ID4gCj4gCj4gVGhhdCBpcyBub3QgbmVjZXNzYXJpbHkgdHJ1ZSAt
-IEkgYW0gcnVubmluZyB0aGUgQ00zIG9uIGEgSU8tYm9hcmQgdjEgc28gdGhhdCBvbmUgaXMgY29t
-cGF0aWJsZeKApgoKQUZBSUsgdGhpcyBjb21iaW5hdGlvbiBpcyBub3QgcmVjb21tZW5kLCBiZWNh
-dXNlIHRoZSBvbGQgSU8gYm9hcmQgZG9lc24ndCBwcm92aWRlIGVub3VnaCBwb3dlciBmb3IgYWxs
-IHVzZSBjYXNlcy4gQnV0IHRoYXQncyBub3QgdGhlIHBvaW50IGFib3V0IG15IGNvbW1lbnQuIFdl
-IG5lZWQgdG8gZGVzY3JpYmUgdGhlIGNvbWJpbmF0aW9uLgoKSG93IGFib3V0ICJSYXNwYmVycnkg
-UGkgQ29tcHV0ZSBNb2R1bGUgMyBvbiBhIElPIGJvYXJkIiBhbmQgImJjbTI4MzctcnBpLWNtMy1p
-by5kdHMiID8KCj4gCj4gPj4gCj4gPj4gKy8qIFNESE9TVCBpcyB1c2VkIHRvIGRyaXZlIHRoZSBT
-RCBjYXJkICovCj4gPiAKPiA+IFNpbmNlIHRoaXMgaXMgYW4gZU1NQyBwbGVhc2UgZHJvcCB0aGlz
-IG1pc2xlYWRpbmcgY29tbWVudC4KPiA+IAo+IAo+IGZvciBhIENNMy1MaXRlIGl0IGlzIGV4cG9z
-aW5nIHNkIGNhcmQgcGlucwo+IAo+ID4+ICsmc2Rob3N0IHsKPiA+PiArCXBpbmN0cmwtbmFtZXMg
-PSAiZGVmYXVsdCI7Cj4gPj4gKwlwaW5jdHJsLTAgPSA8JnNkaG9zdF9ncGlvNDg+Owo+ID4+ICsJ
-c3RhdHVzID0gIm9rYXkiOwo+ID4+ICsJYnVzLXdpZHRoID0gPDQ+Owo+ID4gCj4gPiBub24tcmVt
-b3ZhYmxlOwo+IAo+IFNlZSBjb21tZW50IGFib3V0IExpdGUuLi4KCk9rYXksIGknbSBmaW5lIHdp
-dGhvdXQgaXQgYnV0IHRoZW4gd2UgbmVlZCBhIGNvbW1lbnQgdGhhdCB0aGUgdXBjb21pbmcgRFRT
-SSBzaG91bGQgYXBwbHkgdG8gQ00zIGFuZCBDTTMtTGl0ZS4gQWxzbyB0aGUgY29tbWl0IGxvZyBz
-aG91bGQgbWVudGlvbiB0aGUgQ00zLUxpdGUgc28gZXZlcnlib2R5IHVuZGVyc3RhbmQgaXQuCgpQ
-bGVhc2Ugd2FpdCBhIGxpdHRsZSBiaXQgYmVmb3JlIHNlbmRpbmcgeW91ciBzZWNvbmQgdmVyc2lv
-biB0byBnaXZlIHRoZSBvdGhlcnMgc29tZSB0aW1lIGZvciBjb21tZW50cy4KClRoYW5rcwpTdGVm
-YW4KClsxXSAtIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
-L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9hcm0vYmNtL2JyY20sYmNtMjgzNS50eHQKCj4gCj4gTWFydGluCj4KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Nov 24, 2017 at 3:00 PM, Otavio Salvador
+<otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org> wrote:
+> This adds the partitions definition for the SPI NOR to provide
+> backward compatibility with the documented[1] layout used with
+> Boundary Devices BSP.
+>
+> 1. https://boundarydevices.com/boot-flash-access-linux/
+>
+> It exports to Linux:
+>
+>  mtd0: bootloader
+>  mtd1: env
+>  mtd2: splash
+>
+> Signed-off-by: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+
+After thinking a bit about Fabio's recommendation to use 'read-only'
+to protect the partitions, I think it'd be better to use 'lock' so it
+is still possible to write them on Linux but it requires a unlock
+prior changing it.
+
+In my case, I am interested in being capable of upgrading the
+bootloader from Linux.
+
+What people think?
+
+-- 
+Otavio Salvador                             O.S. Systems
+http://www.ossystems.com.br        http://code.ossystems.com.br
+Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
