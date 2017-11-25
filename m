@@ -1,47 +1,64 @@
-From: Otavio Salvador <otavio.salvador-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6qdl-nitrogen6x: Add SPI NOR partitions
-Date: Sat, 25 Nov 2017 07:55:53 -0200
-Message-ID: <CAP9ODKoefNEcQtrCCLEa7hzx2D_2vJTit0t8ooQGTx7Uyds1mQ@mail.gmail.com>
-References: <20171124170004.31133-1-otavio@ossystems.com.br>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 0/2] pinctrl: sunxi: Fix H5 MMC access
+Date: Sat, 25 Nov 2017 12:01:58 +0000
+Message-ID: <20171125120200.23294-1-andre.przywara@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171124170004.31133-1-otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kernel development list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 24, 2017 at 3:00 PM, Otavio Salvador
-<otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org> wrote:
-> This adds the partitions definition for the SPI NOR to provide
-> backward compatibility with the documented[1] layout used with
-> Boundary Devices BSP.
->
-> 1. https://boundarydevices.com/boot-flash-access-linux/
->
-> It exports to Linux:
->
->  mtd0: bootloader
->  mtd1: env
->  mtd2: splash
->
-> Signed-off-by: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+Commit 1396007286b1 ("pinctrl: sunxi: Enforce the strict mode by default")
+enabled the strict mode for the H5 pin controller driver, so that it denies
+multiple requests for a single pin.
+However the existing DTs for the Allwinner H5 boards reference the CD pin
+for the micro SD card (MMC0) *twice* in their node, so that the driver
+stumbles upon the new strict mode and refuses to load:
 
-After thinking a bit about Fabio's recommendation to use 'read-only'
-to protect the partitions, I think it'd be better to use 'lock' so it
-is still possible to write them on Linux but it requires a unlock
-prior changing it.
+...
+sun50i-h5-pinctrl 1c20800.pinctrl: pin PF6 already requested by 1c0f000.mmc; cannot claim for 1c20800.pinctrl:166
+sun50i-h5-pinctrl 1c20800.pinctrl: pin-166 (1c20800.pinctrl:166) status -22
+sunxi-mmc: probe of 1c0f000.mmc failed with error -22
+...
 
-In my case, I am interested in being capable of upgrading the
-bootloader from Linux.
+This prevents booting (from SD cards) on H5 boards.
+This can be rather easily fixed by removing the redundant CD pin reference
+from the pinctrl-0 property of the MMC0 node, which patch 1/2 actually does.
 
-What people think?
+However this now prevents existing DTs to boot with newer kernels (current
+Linus' HEAD, for instance), so we have to disable strict mode for the H5
+as well (as we do with other SoCs already, including the H3).
+
+Tested on the OrangePi PC2:
+- current 4.15-rc0 boots with fixed DT (patch 1/2), but fails with older DTs
+- 4.14 (and older) kernels boot with both older and this fixed DT
+- 4.15-rc0 with patch 2/2 applied boots with both older and this fixed DTs
+
+Thanks to Chris Obbard for reporting this.
+
+Cheers,
+Andre.
+
+P.S. I was wondering if we should teach the MMC driver to cope with failing
+CD pin requests or let it detect the redundancy and avoid the second GPIO
+request instead. AFAICT this would allow to enable strict mode for the H5
+again?
+
+Andre Przywara (2):
+  arm64: dts: allwinner: H5: remove redundant MMC0 card detect pin
+  pinctrl: sunxi: Disable strict mode for H5 driver
+
+ arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts    | 2 +-
+ arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts         | 2 +-
+ arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts        | 2 +-
+ arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts      | 2 +-
+ arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c                       | 6 ++++--
+ 6 files changed, 9 insertions(+), 7 deletions(-)
 
 -- 
-Otavio Salvador                             O.S. Systems
-http://www.ossystems.com.br        http://code.ossystems.com.br
-Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
+2.14.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
