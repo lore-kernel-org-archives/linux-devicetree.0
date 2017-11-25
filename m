@@ -1,139 +1,57 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH] ARM: dts: bcm283x: Use GPIO polarity defines consequently
-Date: Sat, 25 Nov 2017 14:34:05 +0100
-Message-ID: <1511616845-16298-1-git-send-email-stefan.wahren@i2se.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] iio: adc: aspeed: Deassert reset in probe
+Date: Sat, 25 Nov 2017 14:22:44 +0000
+Message-ID: <20171125142244.6be06099@archlinux>
+References: <20171031021203.18248-1-joel@jms.id.au>
+        <CA+gwMcdVpq1P5kWAWzkg2A+Ah-fKyTk0adhGdg4465gkOY3EKA@mail.gmail.com>
+        <CACPK8Xc1d89MXBjSJw7Jz0oqkCcoxKbymaVDmJq-kHFK6qG0Sw@mail.gmail.com>
+        <20171102144932.00001e17@huawei.com>
+        <20171119160318.41d7e85a@archlinux>
+        <CACPK8XdwpKOLydSvdfNY0D049ysCc526Vj8E1Om3VVkWbVuhdg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACPK8XdwpKOLydSvdfNY0D049ysCc526Vj8E1Om3VVkWbVuhdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently most of the Raspberry Pi DTS have a mixture of magic
-numbers and the proper GPIO polarity defines. So use the latter
-one consequently.
+On Mon, 20 Nov 2017 15:22:38 +1030
+Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi-a.dts      | 2 +-
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 2 +-
- arch/arm/boot/dts/bcm2835-rpi-b.dts      | 2 +-
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts    | 4 ++--
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts    | 2 +-
- 7 files changed, 10 insertions(+), 10 deletions(-)
+> On Mon, Nov 20, 2017 at 2:33 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Thu, 2 Nov 2017 14:49:32 +0000
+> > Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:  
+> >> IIO is closed for this cycle anyway now.
+> >> Otherwise, series looks good.
+> >>
+> >> Will pick up when back with my main PC as traveling for this week and
+> >> next.  
+> >
+> > Forgot to ask, do you want me to pick this up as a fix?
+> > Also does it make sense to tag it for stable?
+> >
+> > If not I can pick it up for the coming cycle. Given the code changes
+> > are small and well isolated I'm happy to do any of the 3 options,
+> > it really depends on whether the rest of the platform works well enough
+> > to be worth rushing these through?  
+> 
+> Without the clock driver upstream there's no rush to merge this. I'm
+> still waiting on review from the clock guys.
+> 
+> Please queue them for 4.16. Thanks!
+Done - applied to the togreg branch of iio.git which will be pushed
+out as testing for the autobuilders to play with it.
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-index f81ae0a..aa1fc7b 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-@@ -10,12 +10,12 @@
- 
- 	leds {
- 		act {
--			gpios = <&gpio 47 0>;
-+			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
- 		};
- 
- 		pwr {
- 			label = "PWR";
--			gpios = <&gpio 35 0>;
-+			gpios = <&gpio 35 GPIO_ACTIVE_HIGH>;
- 			default-state = "keep";
- 			linux,default-trigger = "default-on";
- 		};
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-index 7a960a0..425f6b0 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-@@ -10,7 +10,7 @@
- 
- 	leds {
- 		act {
--			gpios = <&gpio 16 1>;
-+			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index 0161a84..effa195 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -11,12 +11,12 @@
- 
- 	leds {
- 		act {
--			gpios = <&gpio 47 0>;
-+			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
- 		};
- 
- 		pwr {
- 			label = "PWR";
--			gpios = <&gpio 35 0>;
-+			gpios = <&gpio 35 GPIO_ACTIVE_HIGH>;
- 			default-state = "keep";
- 			linux,default-trigger = "default-on";
- 		};
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index 4bc70ef..772ec3b 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -11,7 +11,7 @@
- 
- 	leds {
- 		act {
--			gpios = <&gpio 16 1>;
-+			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-index cca4a75..434483d 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -11,7 +11,7 @@
- 
- 	leds {
- 		act {
--			gpios = <&gpio 16 1>;
-+			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-index 6669355..5c339ad 100644
---- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -15,12 +15,12 @@
- 
- 	leds {
- 		act {
--			gpios = <&gpio 47 0>;
-+			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
- 		};
- 
- 		pwr {
- 			label = "PWR";
--			gpios = <&gpio 35 0>;
-+			gpios = <&gpio 35 GPIO_ACTIVE_HIGH>;
- 			default-state = "keep";
- 			linux,default-trigger = "default-on";
- 		};
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-index a8844d0..3e4ed7c 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-@@ -20,7 +20,7 @@
- 
- 	leds {
- 		act {
--			gpios = <&gpio 47 0>;
-+			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- };
--- 
-2.7.4
+Thanks,
+
+Jonathan
+> 
+> Cheers,
+> 
+> Joel
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
