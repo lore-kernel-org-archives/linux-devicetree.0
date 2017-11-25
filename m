@@ -1,105 +1,192 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 09/12] IIO: ADC: add stm32 DFSDM support for PDM
- microphone
-Date: Sat, 25 Nov 2017 14:36:10 +0000
-Message-ID: <20171125143610.3dba71da@archlinux>
-References: <1510222354-15290-1-git-send-email-arnaud.pouliquen@st.com>
-        <1510222354-15290-10-git-send-email-arnaud.pouliquen@st.com>
-        <20171119141830.29f1cfc9@archlinux>
-        <4362763f-2182-a3cf-cbd6-6c71df59af52@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: kernel@martin.sperl.org
+Subject: Re: [PATCH 0/2] Microchip mcp2517fd can controller driver
+Date: Sat, 25 Nov 2017 15:47:58 +0100
+Message-ID: <263BAF25-3F9A-4BE8-8E19-757B3C22A037@martin.sperl.org>
+References: <20171124183509.12810-1-kernel@martin.sperl.org> <3d355c51-09a3-40b8-46bf-8437e26a95f3@hartkopp.net>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4362763f-2182-a3cf-cbd6-6c71df59af52-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <3d355c51-09a3-40b8-46bf-8437e26a95f3@hartkopp.net>
+Sender: linux-can-owner@vger.kernel.org
+To: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 Nov 2017 15:52:26 +0100
-Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org> wrote:
+Hi Oliver!
 
-> On 11/19/2017 03:18 PM, Jonathan Cameron wrote:
-> > On Thu, 9 Nov 2017 11:12:31 +0100
-> > Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org> wrote:
-> >   
-> >> This code offers a way to handle PDM audio microphones in
-> >> ASOC framework. Audio driver should use consumer API.
-> >> A specific management is implemented for DMA, with a
-> >> callback, to allows to handle audio buffers efficiently.
-> >> 
-> >> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>  
-> > 
-> > A few minor points inline.  I'm not sure I really 'like' the
-> > solution we've ended up with currently but if it works it will
-> > do just fine for now :)
-> > 
-> > Jonathan
-> > 
-> >   
-> >> ---
-> >> V3 -> V4 changes:
-> >>  - Merge audio implementation in stm32-dfsdm-adc.c instead of creating separate file
-> >>  - Add sysfs document for exported attributes
-> >> 
-> >>  .../ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32      |  22 +
-> >>  drivers/iio/adc/stm32-dfsdm-adc.c                  | 517 ++++++++++++++++++++-
-> >>  include/linux/iio/adc/stm32-dfsdm-adc.h            |  27 ++
-> >>  3 files changed, 562 insertions(+), 4 deletions(-)
-> >>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
-> >>  create mode 100644 include/linux/iio/adc/stm32-dfsdm-adc.h
-> >> 
-> >> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32 b/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
-> >> new file mode 100644
-> >> index 0000000..0ce5508
-> >> --- /dev/null
-> >> +++ b/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
-> >> @@ -0,0 +1,22 @@
-> >> +What:                /sys/bus/iio/devices/iio:deviceX/in_voltage_audio_sampling_rate
-> >> +KernelVersion:       4.14
-> >> +Contact:     arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
-> >> +Description:
-> >> +             For audio purpose only.
-> >> +             Used by audio driver to set/get the audio sampling rate.
-> >> +             Reading returns current audio sample frequency.
-> >> +             Writing value before starting conversions.  
-> > 
-> > I would like to see a note here on why sampling_frequency can't be used for
-> > this purpose.  
-> The IIO_CHAN_INFO_SAMP_FREQ can not be used because consumer API allows
-> only to access to ext_info attributes.
-> An alternate is to export channel attribute functions the consumer API.
-> - iio_read_channel_attribute (already exist)
-> - iio_write_channel_attribute
+> On 25.11.2017, at 13:03, Oliver Hartkopp <socketcan@hartkopp.net> wrote:
+> 
+> Hello Martin,
+> 
+> thanks for the contribution!
+> 
+> Unfortunately [PATCH 2/2] only hit the devicetree mailing list but not the linux-can mailing list for the review.
 
-Yes - add these please.  Just not been a usecase before for the general write.
+I have no idea why you have not received it, but I have sent all
+of them to the same  Recipient list!
+
+I even got a relayed confirmation for all 3 of them:
+19:35:28.689 2 DEQUEUER [7520159] SMTP(vger.kernel.org)linux-can@vger.kernel.org relayed: relayed via vger.kernel.org
+19:35:29.823 2 DEQUEUER [7520154] SMTP(vger.kernel.org)linux-can@vger.kernel.org relayed: relayed via vger.kernel.org
+19:35:31.902 2 DEQUEUER [7520160] SMTP(vger.kernel.org)linux-can@vger.kernel.org relayed: relayed via vger.kernel.org
+
+So they should all have arrived!
 
 > 
-> Please, tell me your preference.
+> Btw. I already have two questions from the description:
+> 
+> On 11/24/2017 07:35 PM, kernel@martin.sperl.org wrote:
+> 
+> (..)
+> 
+>> The driver has been heavily optimized so that it can handle
+>> a 100% utilized 1MHz Can-bus (with 11 bit can frames with DLC=0)
+>> even on less powerfull SOCs like the raspberry pi 1 without
+>> dropping frames due to driver/spi latencies
+> 
+> (..)
+> 
+> > The driver implements a lock-less design for transmissions
+> > making use instead of prepared spi messages submitted via spi_async
+> > for transmission in the start_xmit_start code without requireing
+> > an extra workqueue and the corresponding latencies.
+> 
+> Seems you improved the SPI handling here. Would it make sense to separate the SPI-related part of the code to a separate C-file so that the existing mcp251x driver can benefit from these improvements too?
 
-<snip>
+The biggest problem is that the Register-design of the mcp2517fd is totally 
+different compared to mcp251x, so most of those “optimizations” for the 
+mcp2517 do not apply to the mcp251x (SPI-API wise IMO the mcp2515 is much
+ more efficient - better still when having dedicated gpios for the RX lines
+to avoid having to query the status first via spi (reduces latencies
+and thus reduces packet loss/overflow on a saturated CAN bus).
 
-> >> +/**
-> >> + * stm32_dfsdm_get_buff_cb - register a callback
-> >> + *   that will be called when DMA transfer period is achieved.  
-> > Please run kernel-doc over this file. I'm fairly sure this isn't
-> > quite meeting the spec...  
-> Sorry it is not crystal clear for me, could you detail what you would
-> mean by
-> "I'm fairly sure this isn't quite meeting the spec.."?
-
-I don't think it lets you have multiple lines for the short description
-IIRC.  Not sure about the indented function parameters.. Might be
-new since I last looked!
+I have a spi_async only version of the mcp251x as well (which has been dormant
+for a long time, as the mcp251x stopped showing interrupt stopped issues...).
 
 > 
-> >   
-> >> + *
-> >> + * @iio_dev: Handle to IIO device.
-> >> + * @cb: pointer to callback function.
-> >> + *   @data: pointer to data buffer
-> >> + *   @size: size in byte of the data buffer
-> >> + *   @private: pointer to consumer private structure
-> >> + * @private: pointer to consumer private structure
-> >> + */
+>> (still dropps are observed in the can/network stack).
+> 
+> Are you sure drops are taking place in the network layer? Can you give me some more details about this statement?
+Well - when I increase net->stat.rx_dropped there is always a 
+dev_warn_ratelimited that comes along. Also rx_errors is increased at the 
+same time. And I see the drops counters increase while there are no messages
+in dmesg.
+
+Also note that the driver is only incrementing rx_packets and rx_bytes only 
+when netif_rx_ni(skb) is called.
+
+So the setup is this:
+* raspberry pi 2 with the mcp2517fd
+* beagle bone black
+* 1MHz CAN2.0 bus
+
+Beagle bone black:
+root@beaglebone:~# cangen can0 -g0.0 -L0 -n 1000000 -p10 -Ii
+
+This saturates the CAN BUS to 100%
+
+on the RPI2 I have no consumer (candump or similar) and the module has
+just been reloaded (counters are reset).
+
+I see the following counters:
+7: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 10
+    link/can  promiscuity 0
+    can <ONE-SHOT,BERR-REPORTING> state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 0
+	  bitrate 1000000 sample-point 0.750
+	  tq 25 prop-seg 14 phase-seg1 15 phase-seg2 10 sjw 1
+	  mcp2517fd: tseg1 2..256 tseg2 1..128 sjw 1..128 brp 1..256 brp-inc 1
+	  mcp2517fd: dtseg1 1..32 dtseg2 1..16 dsjw 1..16 dbrp 1..256 dbrp-inc 1
+	  clock 40000000
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+    RX: bytes  packets  errors  dropped overrun mcast
+    0          998774   703     4588    0       0
+    TX: bytes  packets  errors  dropped carrier collsns
+    0          0        0       0       0       0
+
+So you see that packets + dropped > transmitted (1000000).
+
+In a different setup with 4 bytes of data payload:
+root@beaglebone:~# cangen can0 -g0.0 -L0 -n 10000 -L4 -p10 -Ii
+root@beaglebone:~# cangen can0 -g0.0 -L0 -n 100000 -L4 -p10 -Ii
+
+I get the following statistics:
+root@rasp2a:~# ip -details -statistics link show can0
+8: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 10
+    link/can  promiscuity 0
+    can <ONE-SHOT,BERR-REPORTING> state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 0
+	  bitrate 1000000 sample-point 0.750
+	  tq 25 prop-seg 14 phase-seg1 15 phase-seg2 10 sjw 1
+	  mcp2517fd: tseg1 2..256 tseg2 1..128 sjw 1..128 brp 1..256 brp-inc 1
+	  mcp2517fd: dtseg1 1..32 dtseg2 1..16 dsjw 1..16 dbrp 1..256 dbrp-inc 1
+	  clock 40000000
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+    RX: bytes  packets  errors  dropped overrun mcast
+    440000     110000   0       4343    0       0
+    TX: bytes  packets  errors  dropped carrier collsns
+    0          0        0       0       0       0
+Here 1 get 100% reception rates (bytes and packets are exactly what they 
+are supposed to be) but still 0.1% dropped.
+
+When CAN FD is configured on the mcp2517 then things look different
+even on a RPI2:
+root@beaglebone:~# cangen can0 -g0.0 -L0 -n 1000000 -L0 -p10 -Ii
+root@rasp2a:~# ip -details -statistics link show can0
+13: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 72 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 10
+    link/can  promiscuity 0
+    can <ONE-SHOT,BERR-REPORTING,FD> state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 0
+	  bitrate 1000000 sample-point 0.750
+	  tq 25 prop-seg 14 phase-seg1 15 phase-seg2 10 sjw 1
+	  mcp2517fd: tseg1 2..256 tseg2 1..128 sjw 1..128 brp 1..256 brp-inc 1
+	  dbitrate 2000000 dsample-point 0.750
+	  dtq 25 dprop-seg 7 dphase-seg1 7 dphase-seg2 5 dsjw 1
+	  mcp2517fd: dtseg1 1..32 dtseg2 1..16 dsjw 1..16 dbrp 1..256 dbrp-inc 1
+	  clock 40000000
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+    RX: bytes  packets  errors  dropped overrun mcast
+    0          999840   3       752028  0       0
+    TX: bytes  packets  errors  dropped carrier collsns
+    0          0        0       0       0       0
+
+In this case the number of packets actually lost on the controller is 0.01%
+But the number of dropped packets on the stack is 75%.
+
+The shorter the interval the lower the dropped count.
+
+Ciao,
+	Martin
+
+P.s: For the last test-case here the fifo utilization statistics:
+root@rasp2a:~# cat /sys/kernel/debug/mcp2517fd-can0/fifo_usage/* | awk '{ C=C+$1; printf "%8i %s\n",C,$0}’
+Total    Count/fifo
+  384401 384401
+  674306 289905
+  960133 285827
+  990117 29984
+  994351 4234
+  996745 2394
+  997668 923
+  998217 549
+  998593 376
+  998849 256
+  999059 210
+  999240 181
+  999385 145
+  999508 123
+  999604 96
+  999680 76
+  999745 65
+  999797 52
+  999840 43
+root@rasp2a:~# cat /sys/kernel/debug/mcp2517fd-can0/rx/fifo_count
+19
+root@rasp2a:~# dmesg
+[77843.229423] mcp2517fd spi0.0: RX MAB overflow
+[77856.329824] mcp2517fd spi0.0: RX MAB overflow
+[77883.299221] mcp2517fd spi0.0: RX MAB overflow
+
+These dmesg lines correspond with the errors (and would also increase “dropped” by 3)
+
