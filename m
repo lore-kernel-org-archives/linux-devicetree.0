@@ -1,62 +1,101 @@
-From: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 03/10] PM / QoS: Fix device resume latency for non PM QoS
- devices
-Date: Sun, 26 Nov 2017 01:16:42 +0530
-Message-ID: <d6abebcf-5397-33d4-f41f-a96f3c81ac14@nvidia.com>
-References: <1511538800-8275-1-git-send-email-mmaddireddy@nvidia.com>
- <1511538800-8275-4-git-send-email-mmaddireddy@nvidia.com>
- <CAJZ5v0ghcwSHdrbZd_=XA=tHz7=aTUVd66dHkMYRNyXpnqP84w@mail.gmail.com>
- <20171124203940.GA12811@mithrandir>
- <CAJZ5v0h1EdMV5u-5noMv_1_OpS13nH2NW_6Aua9+LMoWH0tL2w@mail.gmail.com>
+From: Pankaj Bansal <pankaj.bansal-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v4 1/6] can: flexcan: Remodel FlexCAN register r/w APIs
+ for big endian FlexCAN controllers.
+Date: Sun, 26 Nov 2017 02:20:32 +0000
+Message-ID: <AM0PR0402MB39405B9B5E5C04B2492221D6F1240@AM0PR0402MB3940.eurprd04.prod.outlook.com>
+References: <1511529733-27942-1-git-send-email-pankaj.bansal@nxp.com>
+ <1511529733-27942-2-git-send-email-pankaj.bansal@nxp.com>
+ <44f37aef-7f45-a7c7-7320-01a62e23fbde@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJZ5v0h1EdMV5u-5noMv_1_OpS13nH2NW_6Aua9+LMoWH0tL2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <44f37aef-7f45-a7c7-7320-01a62e23fbde-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PCI <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org" <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Varun Sethi <V.Sethi-3arQi8VN3Tc@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-3arQi8VN3Tc@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sakar Arora <Sakar.Arora-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 25-Nov-17 5:32 AM, Rafael J. Wysocki wrote:
-> On Fri, Nov 24, 2017 at 9:39 PM, Thierry Reding
-> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, Nov 24, 2017 at 05:50:42PM +0100, Rafael J. Wysocki wrote:
->>> On Fri, Nov 24, 2017 at 4:53 PM, Manikanta Maddireddy
->>> <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>> In 'commit 0cc2b4e5a020 ("PM / QoS: Fix device resume latency PM QoS")'
->>>> PM QoS resume latency modified 0 as "no latency at all". However
->>>> dev_pm_qos_raw_read_value() returns 0 for devices which doesn't have
->>>> PM QoS constraints. This is blocking runtime suspend for these devices
->>>> in rpm_check_suspend_allowed(). Return PM_QOS_RESUME_LATENCY_NO_CONSTRAINT
->>>> when PM QoS constraints are not available for a particular device.
->>>>
->>>> Fixes: 0cc2b4e5a020 ("PM / QoS: Fix device resume latency PM QoS")
->>>
->>> That commit has been reverted, so this patch is not applicable and
->>> therefore the whole series isn't.
->>>
->>> What kernel is it based off?
->>
->> It looks like this might have crept in via commit 0759e80b84e3 ("PM /
->> QoS: Fix device resume latency framework"). But checking more closely,
->> that commit actually incorporates this change already.
->>
->> According to the git log the correct commit for this showed up in
->> linux-next only today, which is probably why Manikanta missed it.
-> 
-> Well, it's been in the Linus' tree for a week, though.
-> 
-> Thanks,
-> Rafael
-> 
-I dropped this patch in V2.
-
-Thanks,
-Manikanta
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMgS2xlaW5lLUJ1ZGRl
+IFttYWlsdG86bWtsQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiBGcmlkYXksIE5vdmVtYmVyIDI0
+LCAyMDE3IDg6MzMgUE0NCj4gVG86IFBhbmthaiBCYW5zYWwgPHBhbmthai5iYW5zYWxAbnhwLmNv
+bT47IHdnQGdyYW5kZWdnZXIuY29tOyBsaW51eC0NCj4gY2FuQHZnZXIua2VybmVsLm9yZzsgcm9i
+aCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmcNCj4gQ2M6IFZhcnVuIFNldGhpIDxWLlNldGhpQG54cC5jb20+OyBQb29uYW0g
+QWdncndhbA0KPiA8cG9vbmFtLmFnZ3J3YWxAbnhwLmNvbT47IEJodXBlc2ggU2hhcm1hDQo+IDxi
+aHVwZXNoLnNoYXJtYUBmcmVlc2NhbGUuY29tPjsgU2FrYXIgQXJvcmENCj4gPFNha2FyLkFyb3Jh
+QGZyZWVzY2FsZS5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMS82XSBjYW46IGZsZXhj
+YW46IFJlbW9kZWwgRmxleENBTiByZWdpc3RlciByL3cgQVBJcw0KPiBmb3IgYmlnIGVuZGlhbiBG
+bGV4Q0FOIGNvbnRyb2xsZXJzLg0KPiANCj4gT24gMTEvMjQvMjAxNyAwMjoyMiBQTSwgUGFua2Fq
+IEJhbnNhbCB3cm90ZToNCj4gPiBUaGUgRmxleENBTiBkcml2ZXIgYXNzdW1lZCB0aGF0IEZsZXhD
+QU4gY29udHJvbGxlciBpcyBiaWcgZW5kaWFuIGZvcg0KPiA+IHBvd2VycGMgYXJjaGl0ZWN0dXJl
+IGFuZCBsaXR0bGUgZW5kaWFuIGZvciBvdGhlciBhcmNoaXRlY3R1cmVzLg0KPiA+DQo+ID4gQnV0
+IHRoaXMgbWF5IG5vdCBiZSB0aGUgY2FzZS4gRmxleENBTiBjb250cm9sbGVyIGNhbiBiZSBsaXR0
+bGUgb3IgYmlnDQo+ID4gZW5kaWFuIG9uIGFueSBhcmNoaXRlY3R1cmUuIEZvciBlLmcuIE5YUCBM
+UzEwMjFBIEFSTSBiYXNlZCBTT0MgaGFzIGJpZw0KPiA+IGVuZGlhbiBGbGV4Q0FOIGNvbnRyb2xs
+ZXIuDQo+ID4NCj4gPiBUaGVyZWZvcmUsIHRoZSBkcml2ZXIgaGFzIGJlZW4gbW9kaWZpZWQgdG8g
+YWRkIGEgcHJvdmlzaW9uIGZvciBib3RoDQo+ID4gdHlwZXMgb2YgY29udHJvbGxlcnMgdXNpbmcg
+YW4gYWRkaXRpb25hbCBkZXZpY2UgdHJlZSBwcm9wZXJ0eS4gT24gYQ0KPiA+ICJmc2wscDEwMTAt
+ZmxleGNhbiIgZGV2aWNlIEJFIGlzIGRlZmF1bHQsIG9uIGFsbCBvdGhlciBkZXZpY2VzIExFIGlz
+Lg0KPiA+DQo+ID4gQmlnIEVuZGlhbiBjb250cm9sbGVycyBzaG91bGQgaGF2ZSAiYmlnLWVuZGlh
+biIgc2V0IGluIHRoZSBkZXZpY2UgdHJlZS4NCj4gPiBjaGVjayAiRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL25ldC9jYW4vZnNsLWZsZXhjYW4udHh0IiBmb3INCj4gPiB1c2FnZS4N
+Cj4gPg0KPiA+IFRoaXMgaXMgdGhlIHN0YW5kYXJkIHByYWN0aWNlIGZvbGxvd2VkIGluIGxpbnV4
+LiBmb3IgbW9yZSBpbmZvIGNoZWNrOg0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9jb21tb24tcHJvcGVydGllcy50eHQNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBhbmth
+aiBCYW5zYWwgPHBhbmthai5iYW5zYWxAbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCaHVw
+ZXNoIFNoYXJtYSA8Ymh1cGVzaC5zaGFybWFAZnJlZXNjYWxlLmNvbT4NCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBTYWthciBBcm9yYSA8U2FrYXIuQXJvcmFAZnJlZXNjYWxlLmNvbT4NCj4gPiBSZXZpZXdl
+ZC1ieTogWmhlbmd4aW9uZyBKaW4gPEphc29uLkppbkBmcmVlc2NhbGUuY29tPg0KPiA+IFJldmll
+d2VkLWJ5OiBQb29uYW0gQWdncndhbCA8cG9vbmFtLmFnZ3J3YWxAbnhwLmNvbT4NCj4gPiAtLS0N
+Cj4gPiBDaGFuZ2VzIGluIHY0Og0KPiA+ICAgLSBNZXJnZWQgZGV2aWNlIHRyZWUgY2hhbmdlcyBh
+bmQgZHJpdmVyIGNoYW5nZXMgaW4gb25lIHNlcmllcw0KPiA+IENoYW5nZXMgaW4gdjM6DQo+ID4g
+ICAtIEFkZGVkIGZzbCxpbXgyNS1mbGV4Y2FuLCBmc2wsaW14MzUtZmxleGNhbiBhbmQgZnNsLGlt
+eDUzLWZsZXhjYW4NCj4gPiAgICAgc3VwcG9ydCB0byB0aGUgZHJpdmVyLg0KPiA+ICAgLSBNb2Rp
+ZmllZCBwYXRjaCBkZWNpcHRpb24gdG8gc3RhdGUgZGVmYXVsdCBlbmRpYW5uZXNzIGZvbGxvd2Vk
+IGFuZA0KPiA+ICAgICB0byBpbmNsdWRlIGZzbC1mbGV4Y2FuLnR4dCByZWZlcmFuY2UuDQo+ID4g
+Q2hhbmdlcyBpbiB2MjoNCj4gPiAgIC0gTW9kaWZpZWQgcGF0Y2ggZGVjaXB0aW9uIHRvIGluY2x1
+ZGUgY29tbW9uLXByb3BlcnRpZXMudHh0IHJlZmVyZW5jZS4NCj4gPiAgIC0gUmVvcmRlciB0aGUg
+TEUvQkUgcmVhZC93cml0ZSBBUElzIGZvciBiZXR0ZXIgcmVhZGFiaWxpdHkgb2YgY29kZQ0KPiA+
+ICAgLSBBZGRlZCBhbiBleGNlcHRpb24gdG8gZm9yY2UgQkUgQVBJIHNlbGVjdGlvbiwgZm9yIHBv
+d2VycGMgYmFzZWQNCj4gcGxhdGZvcm0NCj4gPiAgICAgUDEwMTAuIFRoaXMgZW5zdXJlcyB0aGF0
+IG5ldyBsaW51eCBrZXJuZWwgd29ya3Mgd2l0aCBvbGQgUDEwMTANCj4gPiAgICAgZGV2aWNlLXRy
+ZWUsIHdoaWxlIGZ1dHVyZSBwb3dlcnBjIHBsYXRmb3JtcyB0aGF0IHVzZSBiaWcgZW5kaWFuDQo+
+ID4gICAgIEZsZXhDQU4gY29udHJvbGxlciBuZWVkIHRvIHNwZWNpZnkgYmlnLWVuZGlhbiBpbiBk
+ZXZpY2UgdHJlZSBpbg0KPiA+ICAgICBGbGV4Q0FOIG5vZGUuDQo+ID4gICAtIFRlc3RlZCBvbiBQ
+MTAxMCBhZnRlciBiYWNrcG9ydGluZyB0byBmcmVlc2NhbGUgc2RrIDEuNCBsaW51eCwgd2l0aG91
+dA0KPiA+ICAgICBhbnkgY2hhbmdlIGluIGRldmljZS10cmVlLg0KPiA+ICAgLSBUZXN0ZWQgb24g
+TlhQIExTMTAyMUEgYXJtIGJhc2VkIHBsYXRmb3JtLg0KPiA+DQo+ID4gIGRyaXZlcnMvbmV0L2Nh
+bi9mbGV4Y2FuLmMgfCAyMzMgKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tDQo+
+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMzEgaW5zZXJ0aW9ucygrKSwgMTAyIGRlbGV0aW9ucygtKQ0K
+PiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2Nhbi9mbGV4Y2FuLmMgYi9kcml2ZXJz
+L25ldC9jYW4vZmxleGNhbi5jDQo+ID4gaW5kZXggYTEzYTQ4OS4uNGM4NzNmYiAxMDA2NDQNCj4g
+PiAtLS0gYS9kcml2ZXJzL25ldC9jYW4vZmxleGNhbi5jDQo+ID4gKysrIGIvZHJpdmVycy9uZXQv
+Y2FuL2ZsZXhjYW4uYw0KPiANCj4gWy4uLl0NCj4gSSB0aGluayB0aGlzIHdpbGwgc2VsZWN0IExF
+IGZvciBub24gRFQgZGV2aWNlcywgcmlnaHQ/DQo+IA0KDQpZZXMuICBBcyBwZXIgYmVsb3cgY29k
+ZSBzbmlwcGV0Og0KDQpzdGF0aWMgc3RydWN0IHByb3BlcnR5ICpfX29mX2ZpbmRfcHJvcGVydHko
+Y29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpucCwNCgkJCQkJICAgY29uc3QgY2hhciAqbmFtZSwg
+aW50ICpsZW5wKQ0Kew0KCXN0cnVjdCBwcm9wZXJ0eSAqcHA7DQoNCglpZiAoIW5wKQ0KCQlyZXR1
+cm4gTlVMTDsNCiAgICAgICAgICAgICAgLi4uLg0KfQ0KDQpJZiBubyBkZXZpY2Ugbm9kZSBpcyBw
+cmVzZW50IG51bGwgaXMgcmV0dXJuZWQuDQpTbyB3ZSBzZWxlY3QgbGUgYXMgZGVmYXVsdC4NCg0K
+PiA+ICsJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChwZGV2LT5kZXYub2Zfbm9kZSwgImJpZy1l
+bmRpYW4iKSkgew0KPiA+ICsJCXByaXYtPnJlYWQgPSBmbGV4Y2FuX3JlYWRfYmU7DQo+ID4gKwkJ
+cHJpdi0+d3JpdGUgPSBmbGV4Y2FuX3dyaXRlX2JlOw0KPiA+ICsJfSBlbHNlIHsNCj4gPiArCQlp
+ZiAob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUocGRldi0+ZGV2Lm9mX25vZGUsDQo+ID4gKwkJCQkJ
+ICAgICJmc2wscDEwMTAtZmxleGNhbiIpKSB7DQo+ID4gKwkJCXByaXYtPnJlYWQgPSBmbGV4Y2Fu
+X3JlYWRfYmU7DQo+ID4gKwkJCXByaXYtPndyaXRlID0gZmxleGNhbl93cml0ZV9iZTsNCj4gPiAr
+CQl9IGVsc2Ugew0KPiA+ICsJCQlwcml2LT5yZWFkID0gZmxleGNhbl9yZWFkX2xlOw0KPiA+ICsJ
+CQlwcml2LT53cml0ZSA9IGZsZXhjYW5fd3JpdGVfbGU7DQo+ID4gKwkJfQ0KPiA+ICsJfQ0KPiA+
+ICsNCj4gPiAgCXByaXYtPmNhbi5jbG9jay5mcmVxID0gY2xvY2tfZnJlcTsNCj4gPiAgCXByaXYt
+PmNhbi5iaXR0aW1pbmdfY29uc3QgPSAmZmxleGNhbl9iaXR0aW1pbmdfY29uc3Q7DQo+ID4gIAlw
+cml2LT5jYW4uZG9fc2V0X21vZGUgPSBmbGV4Y2FuX3NldF9tb2RlOw0KPiA+DQo+IA0KPiBNYXJj
+DQo+IA0KPiAtLQ0KPiBQZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgfCBNYXJjIEts
+ZWluZS1CdWRkZSAgICAgICAgICAgfA0KPiBJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAg
+ICAgfCBQaG9uZTogKzQ5LTIzMS0yODI2LTkyNCAgICAgfA0KPiBWZXJ0cmV0dW5nIFdlc3QvRG9y
+dG11bmQgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfA0KPiBBbXRzZ2Vy
+aWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlICAg
+fA0KDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
