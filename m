@@ -1,30 +1,107 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: hwrng: Add Samsung Exynos 5250+ True
- RNG bindings
-Date: Sun, 26 Nov 2017 16:07:09 -0600
-Message-ID: <20171126220709.3wmbndorzny2okar@rob-hp-laptop>
-References: <20171123150914.31462-1-l.stelmach@samsung.com>
- <CGME20171123151002eucas1p207b8eb77fce5a2977a9f520e05dfe9f5@eucas1p2.samsung.com>
- <20171123150914.31462-2-l.stelmach@samsung.com>
+Subject: Re: [PATCH v2 05/11] dt-bindings: Document the Rockchip ISP1 bindings
+Date: Sun, 26 Nov 2017 16:14:39 -0600
+Message-ID: <20171126221439.iodzrhdmd6nu6vga@rob-hp-laptop>
+References: <20171124023706.5702-1-jacob-chen@iotwrt.com>
+ <20171124023706.5702-6-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171123150914.31462-2-l.stelmach@samsung.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <20171124023706.5702-6-jacob-chen@iotwrt.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacob Chen <jacob-chen@iotwrt.com>
+Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, allon.huang@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 23, 2017 at 04:09:12PM +0100, Łukasz Stelmach wrote:
-> Add binding documentation for the True Random Number Generator
-> found on Samsung Exynos 5250+ SoCs.
+On Fri, Nov 24, 2017 at 10:37:00AM +0800, Jacob Chen wrote:
+> From: Jacob Chen <jacob2.chen@rock-chips.com>
 > 
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> Add DT bindings documentation for Rockchip ISP1
+> 
+> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
 > ---
->  .../devicetree/bindings/rng/samsung,exynos5250-trng.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>  .../devicetree/bindings/media/rockchip-isp1.txt    | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/rockchip-isp1.txt b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
+> new file mode 100644
+> index 000000000000..5e5b72edcf81
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
+> @@ -0,0 +1,61 @@
+> +Rockchip SoC Image Signal Processing unit v1
+> +----------------------------------------------
+> +
+> +Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
+> +which contains image processing, scaling, and compression funcitons.
+> +
+> +Currently device tree nodes for the Rockchip ISP1 driver includes:
 
-Acked-by: Rob Herring <robh@kernel.org>
+Bindings describe the h/w, not drivers.
+
+> +MIPI D-PHY, ISP.
+> +
+> +Required properties:
+> +  - compatible: value should be one of the following
+> +      "rockchip,rk3288-cif-isp";
+> +      "rockchip,rk3399-cif-isp";
+> +  - reg : offset and length of the register set for the device.
+> +  - interrupts: should contain ISP interrupt.
+> +  - clocks: phandle to the required clocks.
+> +  - clock-names: required clock name.
+> +  - iommus: required a iommu node.
+> +
+> +The device node should contain one 'port' child node with child 'endpoint'
+> +nodes, according to the bindings defined in Documentation/devicetree/bindings/
+> +media/video-interfaces.txt.
+
+You need to enumerate the endpoints (mipi and parallel), too.
+ 
+> +
+> +Example:
+> +SoC-specific DT entry:
+> +	isp0: isp0@ff910000 {
+> +		compatible = "rockchip,rk3399-cif-isp";
+> +		reg = <0x0 0xff910000 0x0 0x4000>;
+> +		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		clocks = <&cru SCLK_ISP0>,
+> +			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+> +			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+> +		clock-names = "clk_isp",
+> +			      "aclk_isp", "aclk_isp_wrap",
+> +			      "hclk_isp", "hclk_isp_wrap";
+> +		power-domains = <&power RK3399_PD_ISP0>;
+> +		iommus = <&isp0_mmu>;
+> +		status = "disabled";
+> +	};
+> +
+> +Board-specific:
+
+Just show the complete example. The SoC and board split is purely source 
+level convention.
+
+> +	isp0: isp0@ff910000 {
+> +		port {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			/* mipi */
+> +			isp0_mipi_in: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&dphy_rx0_out>;
+> +			};
+> +
+> +			/* parallel */
+> +			isp0_parallel_in: endpoint@1 {
+> +				reg = <1>;
+> +				remote-endpoint = <&ov5640_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +The MIPI-DPHY device binding is defined in rockchip-mipi-dphy.txt.
+> -- 
+> 2.15.0
+> 
