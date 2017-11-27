@@ -1,65 +1,40 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: exynos: fix property values of LDO15/17 for
- ODROID-XU3/4
-Date: Mon, 27 Nov 2017 18:47:07 +0100
-Message-ID: <20171127174707.34kgjdggqo3qhs7b@kozik-lap>
-References: <20171028173329.15368-1-tobetter@gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] of: overlay locking fixes
+Date: Mon, 27 Nov 2017 12:49:22 -0500
+Message-ID: <0b416bdd-7f3b-38cf-ddd5-a3c14804dcb0@gmail.com>
+References: <1511793987-315-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171028173329.15368-1-tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1511793987-315-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 28, 2017 at 01:32:48PM -0400, tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Dongjin Kim <tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 11/27/17 09:46, Geert Uytterhoeven wrote:
+> 	Hi Pantelis, Rob, Frank,
 > 
-> Looking at the schematic, LDO15 and LDO17 are tied as a power source of a
-> builtin network chipset. The voltage on LDO15 is corrected to 3.3V and the
-> name of LDO17 is corrected to "vdd_ldo17".
+> Here are two locking fixes for OF overlays, found by code inspection.
 > 
-> Signed-off-by: Dongjin Kim <tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> They were compile-tested only, as I'm still working on getting "real"
+> (configfs) overlays working again in v4.15-rc1...
+> 
+> Geert Uytterhoeven (2):
+>   of: overlay: Fix cleanup order in of_overlay_apply()
+>   of: unittest: Remove bogus overlay mutex release from
+>     overlay_data_add()
+> 
+>  drivers/of/overlay.c  | 6 +++---
+>  drivers/of/unittest.c | 1 -
+>  2 files changed, 3 insertions(+), 4 deletions(-)
 > 
 
-Patch does not apply on top of v4.15-rc1. Please rebase on v4.15-rc1 (or
-on my next/dt branch).
+All patches:
 
-Best regards,
-Krzysztof
-
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> index a183b56283f8..68780569371d 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> @@ -372,8 +372,8 @@
->  
->  			ldo15_reg: LDO15 {
->  				regulator-name = "vdd_ldo15";
-> -				regulator-min-microvolt = <3100000>;
-> -				regulator-max-microvolt = <3100000>;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
->  				regulator-always-on;
->  			};
->  
-> @@ -385,7 +385,7 @@
->  			};
->  
->  			ldo17_reg: LDO17 {
-> -				regulator-name = "tsp_avdd";
-> +				regulator-name = "vdd_ldo17";
->  				regulator-min-microvolt = <3300000>;
->  				regulator-max-microvolt = <3300000>;
->  				regulator-always-on;
-> -- 
-> 2.11.0
-> 
+Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
