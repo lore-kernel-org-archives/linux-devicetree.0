@@ -1,21 +1,21 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "spi: xilinx: Add support for xlnx,axi-quad-spi-1.00.a" to the spi tree
-Date: Mon, 27 Nov 2017 18:54:49 +0000
-Message-ID: <E1eJOYL-0007dA-VP@debutante>
-References: <20171121090904.6901-2-ricardo.ribalda@gmail.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171121090904.6901-2-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgRicardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: stm32: sai: use devm_of_platform_populate()" to the asoc tree
+Date: Mon, 27 Nov 2017 18:53:14 +0000
+Message-ID: <E1eJOWo-0007Dq-Qf@debutante>
+References: <1511362947-14747-4-git-send-email-olivier.moysan@st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1511362947-14747-4-git-send-email-olivier.moysan@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Olivier Moysan <olivier.moysan@st.com>, Mark Brown <broonie@kernel.org>, lgirdwood@gmail.combroonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.orgolivier.moysan@st.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.comBenjamin Gaignard <benjamin.gaignard@linaro.org>alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   spi: xilinx: Add support for xlnx,axi-quad-spi-1.00.a
+   ASoC: stm32: sai: use devm_of_platform_populate()
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -36,56 +36,56 @@ to this mail.
 Thanks,
 Mark
 
->From a094c2fa093cf7fd0fe23d15cc2abca4083c6a45 Mon Sep 17 00:00:00 2001
-From: Ricardo Ribalda <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Tue, 21 Nov 2017 10:09:03 +0100
-Subject: [PATCH] spi: xilinx: Add support for xlnx,axi-quad-spi-1.00.a
+>From 512d1bb4e86bd0fd4d665d4e454a3486236a419f Mon Sep 17 00:00:00 2001
+From: olivier moysan <olivier.moysan@st.com>
+Date: Wed, 22 Nov 2017 16:02:27 +0100
+Subject: [PATCH] ASoC: stm32: sai: use devm_of_platform_populate()
 
-The driver has been successfully tested with Xilinx's core
-axi-quad-spi-1.0.0a. Documented on DS843:
+Use devm_of_platform_populate() instead of of_platform_depopulate()
+to simplify driver code.
 
-https://www.xilinx.com/support/documentation/ip_documentation/axi_quad_spi/v1_00_a/ds843_axi_quad_spi.pdf
-
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/spi-xilinx.txt | 2 +-
- drivers/spi/spi-xilinx.c                             | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ sound/soc/stm/stm32_sai.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-index c7b7856bd528..7bf61efc66c8 100644
---- a/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-@@ -2,7 +2,7 @@ Xilinx SPI controller Device Tree Bindings
- -------------------------------------------------
+diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
+index 0a1f06418bf4..d743b7dd52fb 100644
+--- a/sound/soc/stm/stm32_sai.c
++++ b/sound/soc/stm/stm32_sai.c
+@@ -124,7 +124,6 @@ static int stm32_sai_set_sync(struct stm32_sai_data *sai_client,
  
- Required properties:
--- compatible		: Should be "xlnx,xps-spi-2.00.a" or "xlnx,xps-spi-2.00.b"
-+- compatible		: Should be "xlnx,xps-spi-2.00.a", "xlnx,xps-spi-2.00.b" or "xlnx,axi-quad-spi-1.00.a"
- - reg			: Physical base address and size of SPI registers map.
- - interrupts		: Property with a value describing the interrupt
- 			  number.
-diff --git a/drivers/spi/spi-xilinx.c b/drivers/spi/spi-xilinx.c
-index e0b9fe1d0e37..63fedc49ae9c 100644
---- a/drivers/spi/spi-xilinx.c
-+++ b/drivers/spi/spi-xilinx.c
-@@ -381,6 +381,7 @@ static int xilinx_spi_find_buffer_size(struct xilinx_spi *xspi)
+ static int stm32_sai_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct stm32_sai_data *sai;
+ 	struct reset_control *rst;
+ 	struct resource *res;
+@@ -184,14 +183,7 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ 	sai->set_sync = &stm32_sai_set_sync;
+ 	platform_set_drvdata(pdev, sai);
+ 
+-	return of_platform_populate(np, NULL, NULL, &pdev->dev);
+-}
+-
+-static int stm32_sai_remove(struct platform_device *pdev)
+-{
+-	of_platform_depopulate(&pdev->dev);
+-
+-	return 0;
++	return devm_of_platform_populate(&pdev->dev);
  }
  
- static const struct of_device_id xilinx_spi_of_match[] = {
-+	{ .compatible = "xlnx,axi-quad-spi-1.00.a", },
- 	{ .compatible = "xlnx,xps-spi-2.00.a", },
- 	{ .compatible = "xlnx,xps-spi-2.00.b", },
- 	{}
+ MODULE_DEVICE_TABLE(of, stm32_sai_ids);
+@@ -202,7 +194,6 @@ static struct platform_driver stm32_sai_driver = {
+ 		.of_match_table = stm32_sai_ids,
+ 	},
+ 	.probe = stm32_sai_probe,
+-	.remove = stm32_sai_remove,
+ };
+ 
+ module_platform_driver(stm32_sai_driver);
 -- 
 2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
