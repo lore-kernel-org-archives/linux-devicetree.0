@@ -1,60 +1,38 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v2 0/2] Sluggish AT91 I2C driver causes SMBus timeouts
-Date: Mon, 27 Nov 2017 17:30:59 +0100
-Message-ID: <20171127163101.27859-1-peda@axentia.se>
+Subject: [PATCH v2 2/2] ARM: dts: at91: disable the nxp,se97b SMBUS timeout on the TSE-850
+Date: Mon, 27 Nov 2017 17:31:01 +0100
+Message-ID: <20171127163101.27859-3-peda@axentia.se>
+References: <20171127163101.27859-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Sender: linux-hwmon-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171127163101.27859-1-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+The I2C adapter driver is sometimes slow, causing the SCL line to
+be stuck low for more than the stipulated SMBUS timeout of 25-35 ms.
+This causes the client device to give up which in turn causes silent
+corruption of data. So, disable the SMBUS timeout in the client device.
 
-[I was waiting for a comment from Rob for the initial submission,
- but that never came and I nearly forgot. Instead of pinging again,
- I'm resubmitting with the review comment from Guenter fixed, hoping
- that Rob will react this time.]
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ arch/arm/boot/dts/at91-tse850-3.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-This is a workaround for a problem in the AT91 I2C adapter driver
-(or perhaps the hardware?) when it drives the TWI peripheral on an
-Atmel sama5d3 chip as I2C.
-
-Apparently, that driver can delay in excess of 100 ms just after
-the transfer of the 7th bit of the last byte. When it does this
-the I2C bus, when viewed from SMBUS client devices, appears
-stuck with SCL low. Some SMBUS devices times out under these
-conditions, in particular temperature sensors. The I2C adapter
-driver does however not notice the timeout, and thinks the transfer
-completed successfully when it finally desides to finish the
-transaction. When this happens, the 8th bit of the last byte is
-always set, and thus quite possibly corrupted.
-
-The chip this was observed with (an nxp SE97) has a means to disable
-the SMBUS timeout detector, which "fixes" things. Do that.
-
-This should probably go to stable?
-
-Previous discussion: https://lkml.org/lkml/2017/10/12/227
-
-Changes since v1:    https://lkml.org/lkml/2017/10/13/184
-- Added #include of bitops.h
-- Rebased to v4.15-rc1
-
-Cheers,
-Peter
-
-Peter Rosin (2):
-  hwmon: (jc42) optionally try to disable the SMBUS timeout
-  ARM: dts: at91: disable the nxp,se97b SMBUS timeout on the TSE-850
-
- Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
- arch/arm/boot/dts/at91-tse850-3.dts              |  1 +
- drivers/hwmon/jc42.c                             | 21 +++++++++++++++++++++
- 3 files changed, 26 insertions(+)
-
+diff --git a/arch/arm/boot/dts/at91-tse850-3.dts b/arch/arm/boot/dts/at91-tse850-3.dts
+index 5f29010cdbd8..9b82cc8843e1 100644
+--- a/arch/arm/boot/dts/at91-tse850-3.dts
++++ b/arch/arm/boot/dts/at91-tse850-3.dts
+@@ -221,6 +221,7 @@
+ 	jc42@18 {
+ 		compatible = "nxp,se97b", "jedec,jc-42.4-temp";
+ 		reg = <0x18>;
++		smbus-timeout-disable;
+ 	};
+ 
+ 	dpot: mcp4651-104@28 {
 -- 
 2.11.0
-
