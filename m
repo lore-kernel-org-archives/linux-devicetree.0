@@ -1,96 +1,65 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 29/35] dt-bindings: nds32 CPU Bindings
-Date: Mon, 27 Nov 2017 13:42:32 +0000
-Message-ID: <20171127134232.q343uymer47zt74m@lakrids.cambridge.arm.com>
-References: <cover.1511785528.git.green.hu@gmail.com>
- <20a04f4a5b08dcec221e0c511e42ff3df711ae66.1511785528.git.green.hu@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2 0/2] add clk controller driver for Meson-AXG SoC
+Date: Mon, 27 Nov 2017 14:48:09 +0100
+Message-ID: <1511790489.30519.11.camel@baylibre.com>
+References: <20171127094844.16742-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20a04f4a5b08dcec221e0c511e42ff3df711ae66.1511785528.git.green.hu@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, Vincent Chen <vincentc@andestech.com>, Rick Chen <rick@andestech.com>, Zong Li <zong@andestech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20171127094844.16742-1-yixun.lan@amlogic.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Him
-
-On Mon, Nov 27, 2017 at 08:28:16PM +0800, Greentime Hu wrote:
-> From: Greentime Hu <greentime@andestech.com>
+On Mon, 2017-11-27 at 17:48 +0800, Yixun Lan wrote:
+> Add driver for the clk controller which found in Meson AXG SoC
 > 
-> This patch adds nds32 CPU binding documents.
+>   Note, we deliberately create a seperate source file for the Meson AXG
+> series, instead of sharing code with previous GXBB/GXL - the file axg.c
+> It would help us maintaining the code more easily.
+
+But this will be the last meson SoC added this way. We need factor the code the
+between meson8, gx and axg series since there is a lot of duplication there.
+
 > 
-> Signed-off-by: Vincent Chen <vincentc@andestech.com>
-> Signed-off-by: Rick Chen <rick@andestech.com>
-> Signed-off-by: Zong Li <zong@andestech.com>
-> Signed-off-by: Greentime Hu <greentime@andestech.com>
-> ---
->  Documentation/devicetree/bindings/nds32/cpus.txt |   32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nds32/cpus.txt
+> Changes since v1 [1]:
+>  - rework register definion, use '(offset << 2)' to better match
+
+As previously discussed, please drop these calculations and just write what the
+offset actually are. Putting one comment at the top, explaining the translation,
+would be nice though. 
+
+>    the description from data sheet
+>  - drop "#include dt-bindings/clock/gxbb-aoclkc.h" from dts
+>  - rebase code to v4.15-rc1
 > 
-> diff --git a/Documentation/devicetree/bindings/nds32/cpus.txt b/Documentation/devicetree/bindings/nds32/cpus.txt
-> new file mode 100644
-> index 0000000..c302c89
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nds32/cpus.txt
-> @@ -0,0 +1,32 @@
-> +* Andestech Processor Binding
-> +
-> +This binding specifies what properties must be available in the device tree
-> +representation of a Andestech Processor Core, which is the root node in the
-> +tree.
-> +
-> +Required properties:
-> +
-> +	- compatible:
-> +		Usage: required
-> +		Value type: <string>
-> +		Definition: should be one of:
-> +			"andestech,n13"
-> +			"andestech,n15"
-> +			"andestech,d15"
-> +			"andestech,n10"
-> +			"andestech,d10"
-> +			"andestech,nds32v3"
+> [1] 
+>   http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005239.html
+>   http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005240.html
+>   http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005241.html
+> 
+> 
+> Qiufang Dai (2):
 
-Are these specific parts, or architecture versions?
+First patch of the series should be adding the compatible documentation, which
+is missing here (unless it has gone through another channel and I missed it)
 
-I guess "andestech,nds32v3" is an architecture version, and the rest are
-specific parts?
+>   clk: meson-axg: add clock controller drivers
+>   arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
+> 
+>  arch/arm64/Kconfig.platforms               |   1 +
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi |  15 +
+>  drivers/clk/meson/Kconfig                  |   8 +
+>  drivers/clk/meson/Makefile                 |   1 +
+>  drivers/clk/meson/axg.c                    | 948
+> +++++++++++++++++++++++++++++
+>  drivers/clk/meson/axg.h                    | 126 ++++
+>  include/dt-bindings/clock/axg-clkc.h       |  72 +++
+>  7 files changed, 1171 insertions(+)
+>  create mode 100644 drivers/clk/meson/axg.c
+>  create mode 100644 drivers/clk/meson/axg.h
+>  create mode 100644 include/dt-bindings/clock/axg-clkc.h
+> 
 
-> +	- device_type
-> +		Usage: required
-> +		Value type: <string>
-> +		Definition: must be "cpu"
-> +	- clock-frequency: Contains the clock frequency for CPU, in Hz.
-> +
-> +* Examples
-> +
-> +/ {
-> +	cpu {
-> +		device_type = "cpu";
-> +		compatible = "andestech,n13", "andestech,nds32v3";
-> +	};
-
-This is missing the required clock-frequency property.
-
-There should be a /cpus node, with each CPU listed under that, to align
-with the devicetree spec. Even if you never support SMP, there's no
-reason to be different from other architectures.
-
-You should have something like:
-
-/ {
-	cpus {
-		cpu {
-			device_type = "cpu";
-			compatible = "andestech,n13";
-			clock-frequency = <...>;
-		};
-	};
-};
-
-Thanks,
-Mark.
