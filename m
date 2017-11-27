@@ -1,65 +1,72 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v2 0/2] add clk controller driver for Meson-AXG SoC
-Date: Mon, 27 Nov 2017 14:48:09 +0100
-Message-ID: <1511790489.30519.11.camel@baylibre.com>
-References: <20171127094844.16742-1-yixun.lan@amlogic.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 06/35] nds32: MMU fault handling and page table
+ management
+Date: Mon, 27 Nov 2017 13:51:36 +0000
+Message-ID: <20171127135136.3gnguzaf6d52tcpd@lakrids.cambridge.arm.com>
+References: <cover.1511785528.git.green.hu@gmail.com>
+ <ba92adae5d20d99c7c18e75146642a2ccbd5d047.1511785528.git.green.hu@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171127094844.16742-1-yixun.lan@amlogic.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ba92adae5d20d99c7c18e75146642a2ccbd5d047.1511785528.git.green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org, dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Chen <vincentc-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-11-27 at 17:48 +0800, Yixun Lan wrote:
-> Add driver for the clk controller which found in Meson AXG SoC
-> 
->   Note, we deliberately create a seperate source file for the Meson AXG
-> series, instead of sharing code with previous GXBB/GXL - the file axg.c
-> It would help us maintaining the code more easily.
+Hi,
 
-But this will be the last meson SoC added this way. We need factor the code the
-between meson8, gx and axg series since there is a lot of duplication there.
+On Mon, Nov 27, 2017 at 08:27:53PM +0800, Greentime Hu wrote:
+> +void do_page_fault(unsigned long entry, unsigned long addr,
+> +		   unsigned int error_code, struct pt_regs *regs)
+> +{
 
-> 
-> Changes since v1 [1]:
->  - rework register definion, use '(offset << 2)' to better match
+> +	/*
+> +	 * As per x86, we may deadlock here. However, since the kernel only
+> +	 * validly references user space from well defined areas of the code,
+> +	 * we can bug out early if this is from code which shouldn't.
+> +	 */
+> +	if (unlikely(!down_read_trylock(&mm->mmap_sem))) {
+> +		if (!user_mode(regs) &&
+> +		    !search_exception_tables(instruction_pointer(regs)))
+> +			goto no_context;
+> +retry:
+> +		down_read(&mm->mmap_sem);
+> +	} else {
+> +		/*
+> +		 * The above down_read_trylock() might have succeeded in which
+> +		 * case, we'll have missed the might_sleep() from down_read().
+> +		 */
+> +		might_sleep();
+> +		if (IS_ENABLED(CONFIG_DEBUG_VM)) {
+> +			if (!user_mode(regs) &&
+> +			    !search_exception_tables(instruction_pointer(regs)))
+> +				goto no_context;
+> +		}
+> +	}
 
-As previously discussed, please drop these calculations and just write what the
-offset actually are. Putting one comment at the top, explaining the translation,
-would be nice though. 
+> +	fault = handle_mm_fault(vma, addr, flags);
+> +
+> +	/*
+> +	 * If we need to retry but a fatal signal is pending, handle the
+> +	 * signal first. We do not need to release the mmap_sem because it
+> +	 * would already be released in __lock_page_or_retry in mm/filemap.c.
+> +	 */
+> +	if ((fault & VM_FAULT_RETRY) && fatal_signal_pending(current))
+> +		return;
 
->    the description from data sheet
->  - drop "#include dt-bindings/clock/gxbb-aoclkc.h" from dts
->  - rebase code to v4.15-rc1
-> 
-> [1] 
->   http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005239.html
->   http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005240.html
->   http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005241.html
-> 
-> 
-> Qiufang Dai (2):
+I believe you can get stuck in a livelock here (with an unkillable
+task), if a uaccess primitive tries to access a region protected by a
+userfaultfd. Please see:
 
-First patch of the series should be adding the compatible documentation, which
-is missing here (unless it has gone through another channel and I missed it)
+  https://lkml.kernel.org/r/1499782590-31366-1-git-send-email-mark.rutland-5wv7dgnIgG8@public.gmane.org
 
->   clk: meson-axg: add clock controller drivers
->   arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
-> 
->  arch/arm64/Kconfig.platforms               |   1 +
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi |  15 +
->  drivers/clk/meson/Kconfig                  |   8 +
->  drivers/clk/meson/Makefile                 |   1 +
->  drivers/clk/meson/axg.c                    | 948
-> +++++++++++++++++++++++++++++
->  drivers/clk/meson/axg.h                    | 126 ++++
->  include/dt-bindings/clock/axg-clkc.h       |  72 +++
->  7 files changed, 1171 insertions(+)
->  create mode 100644 drivers/clk/meson/axg.c
->  create mode 100644 drivers/clk/meson/axg.h
->  create mode 100644 include/dt-bindings/clock/axg-clkc.h
-> 
+... for details and a test case.
 
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
