@@ -1,56 +1,36 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] dt-bindings: i2c: eeprom: Add Renesas R1EX24128
-Date: Mon, 27 Nov 2017 19:05:28 +0100
-Message-ID: <20171127180528.rg5imhfthbso477s@ninjato>
-References: <1510839994-12473-1-git-send-email-geert+renesas@glider.be>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: exynos: Switch to dedicated Odroid-XU3
+ sound card binding
+Date: Mon, 27 Nov 2017 19:12:13 +0100
+Message-ID: <20171127181213.lxtbbiw75wbz2dbz@kozik-lap>
+References: <20171103165446.15438-1-s.nawrocki@samsung.com>
+ <CGME20171103165539epcas1p48cc87811574dace9dfe91d8e9ec6f7ca@epcas1p4.samsung.com>
+ <20171103165446.15438-2-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vtjpyzk5q4hbyh24"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1510839994-12473-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20171103165446.15438-2-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: kgene@kernel.org, mihailescu2m@gmail.com, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 03, 2017 at 05:54:45PM +0100, Sylwester Nawrocki wrote:
+> The new sound card DT binding is used for Odroid XU3 in order
+> to properly support the HDMI audio path.
+> Clocks configuration is changed so the I2S controller is now the bit
+> and the frame clock master with EPLL as the root clock source.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi                    |  1 +
+>  arch/arm/boot/dts/exynos5420.dtsi                 |  1 +
+>  arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 60 ++++++++++++++---------
+>  3 files changed, 40 insertions(+), 22 deletions(-)
+> 
 
---vtjpyzk5q4hbyh24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, applied both.
 
-Bartosz,
-
->  Documentation/devicetree/bindings/eeprom/eeprom.txt | 2 +-
-
-I just noticed this file is missing in the AT24 entry in MAINTAINERS. I
-wanted to prepare a patch for that but then I was wondering if the name
-"eeprom.txt" is really suitable? I have doubts. Would "at24.txt" be a
-better name maybe? Rob?
-
-Kind regards,
-
-   Wolfram
-
-
---vtjpyzk5q4hbyh24
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlocU+gACgkQFA3kzBSg
-KbaUFQ/8Dctrm53qMYcofekgJNuenK4WnuuWwkIgVRpxQupH5nKCMEoiS/Nx74XR
-enH+0Lz+cJCDLLQiGj2X9wvnave6oM/mNRTz10id5eHXRIfsb9XvZGeIRrJjgP71
-JsP46DhsdU54h6VN0E3oVjwsZrR2MCdLoxIUTnu6xqogKbD9DbXOSiXMdD5QEjjB
-hb8E1SfTnurZFO7M6Cdg+MAFlmSD1AxiyNX4jdyB91CeQvMhnXspJrTUtBjOHyOw
-6PXe89VlfUCLY+Ju5fE+cWyvOvlltz+PkmkDsfTO/GoIq55iOsUfpMUB2+Wgk3E4
-vJCvm7Wx1tZwr45ZhfRPF37WzfFV+kHcxT8wy4utCTAhIRESNgfxvjPyLziwCpbG
-x46a9OrfbhC2BWzluJcHjIkGdTErM1MKRUYQZXThlg91dJdEfcGKIfJ1X21eYVNP
-r1LCcTvi7PAzvlTjVL3rS0KuEGVKftU9LGLqLooZ7dR5FWSTnjEeVzhigQ3N3Ve/
-TFf0YM8QorNEOBpuM43GOalyoCSoZOfWo4++zMqlLMY56d5yRI+2p3+2LIRX05AZ
-cdlp7Ij+wS+FPHeUQ1MDh+IaNLQlT+0ck73s/eHGNbcNLDmaFReUNGARX2VWibcv
-TA0yXDBcZLKYxBSz/89PJ748SbNqjiLuvkY/N6ueXIszDLJgEUk=
-=1y0k
------END PGP SIGNATURE-----
-
---vtjpyzk5q4hbyh24--
+Best regards,
+Krzysztof
