@@ -1,18 +1,17 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: da7218: Correct IRQ level in DT binding example" to the asoc tree
-Date: Mon, 27 Nov 2017 18:52:20 +0000
-Message-ID: <E1eJOVw-0006wA-Tl@debutante>
-References: <c57eabe7cd6bb5a5466c774725c5150cc33d1ab5.1510930791.git.Adam.Thomson.Opensource@diasemi.com>
+Subject: Applied "ASoC: stm32: fix sync property description in SAI bindings" to the asoc tree
+Date: Mon, 27 Nov 2017 18:53:21 +0000
+Message-ID: <E1eJOWv-0007GX-88@debutante>
+References: <1511362947-14747-2-git-send-email-olivier.moysan@st.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c57eabe7cd6bb5a5466c774725c5150cc33d1ab5.1510930791.git.Adam.Thomson.Opensource@diasemi.com>
+In-Reply-To: <1511362947-14747-2-git-send-email-olivier.moysan@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>alsa-devel@alsa-project.org
+Cc: Olivier Moysan <olivier.moysan@st.com>, Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, lgirdwood@gmail.combroonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.orgrobh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.orgolivier.moysan@st.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.comalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: da7218: Correct IRQ level in DT binding example
+   ASoC: stm32: fix sync property description in SAI bindings
 
 has been applied to the asoc tree at
 
@@ -37,35 +36,52 @@ to this mail.
 Thanks,
 Mark
 
->From b7926c464d6479fc62a4297ca4f48a5da5fb0988 Mon Sep 17 00:00:00 2001
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Date: Fri, 17 Nov 2017 15:09:28 +0000
-Subject: [PATCH] ASoC: da7218: Correct IRQ level in DT binding example
+>From 4be0ffdf284046eb7289fa66cc7b2eb8d7efdc64 Mon Sep 17 00:00:00 2001
+From: olivier moysan <olivier.moysan@st.com>
+Date: Wed, 22 Nov 2017 16:02:25 +0100
+Subject: [PATCH] ASoC: stm32: fix sync property description in SAI bindings
 
-Current DT binding documentation shows an example where the IRQ
-for the device is chosen to be ACTIVE_HIGH. This is incorrect as
-the device only supports ACTIVE_LOW, so this commit fixes that
-discrepancy.
+SAI sync property must be described in SAI subnodes
+section, as it is a property of child node.
+This patch fixes commit 14f0e5f8d97e632695d92f41f2e91d10d8005d47
+"ASoC: stm32: Add synchronization to SAI bindings".
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/da7218.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/sound/st,stm32-sai.txt | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/da7218.txt b/Documentation/devicetree/bindings/sound/da7218.txt
-index 5ca5a709b6aa..3ab9dfef38d1 100644
---- a/Documentation/devicetree/bindings/sound/da7218.txt
-+++ b/Documentation/devicetree/bindings/sound/da7218.txt
-@@ -73,7 +73,7 @@ Example:
- 		compatible = "dlg,da7218";
- 		reg = <0x1a>;
- 		interrupt-parent = <&gpio6>;
--		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
- 		wakeup-source;
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+index 1f9cd7095337..b1acc1a256ba 100644
+--- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
++++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+@@ -20,11 +20,6 @@ Required properties:
  
- 		VDD-supply = <&reg_audio>;
+ Optional properties:
+   - resets: Reference to a reset controller asserting the SAI
+-  - st,sync: specify synchronization mode.
+-	By default SAI sub-block is in asynchronous mode.
+-	This property sets SAI sub-block as slave of another SAI sub-block.
+-	Must contain the phandle and index of the sai sub-block providing
+-	the synchronization.
+ 
+ SAI subnodes:
+ Two subnodes corresponding to SAI sub-block instances A et B can be defined.
+@@ -44,6 +39,13 @@ SAI subnodes required properties:
+   - pinctrl-names: should contain only value "default"
+   - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
+ 
++SAI subnodes Optional properties:
++  - st,sync: specify synchronization mode.
++	By default SAI sub-block is in asynchronous mode.
++	This property sets SAI sub-block as slave of another SAI sub-block.
++	Must contain the phandle and index of the sai sub-block providing
++	the synchronization.
++
+ The device node should contain one 'port' child node with one child 'endpoint'
+ node, according to the bindings defined in Documentation/devicetree/bindings/
+ graph.txt.
 -- 
 2.15.0
