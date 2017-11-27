@@ -1,50 +1,71 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: Re: [PATCH v2] ARM: dts: imx6qdl-nitrogen6x: Add SPI NOR partitions
-Date: Mon, 27 Nov 2017 11:17:39 +0100
-Message-ID: <20171127101739.qs6ws3232hd5qwgv@t450s.lan>
-References: <20171124170004.31133-1-otavio@ossystems.com.br>
- <CAP9ODKoefNEcQtrCCLEa7hzx2D_2vJTit0t8ooQGTx7Uyds1mQ@mail.gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v2 01/11] media: videodev2.h, v4l2-ioctl: add rkisp1 meta
+ buffer format
+Date: Mon, 27 Nov 2017 11:17:50 +0100
+Message-ID: <cae70249-d558-0e6d-19d4-1289630d20e7@xs4all.nl>
+References: <20171124023706.5702-1-jacob-chen@iotwrt.com>
+ <20171124023706.5702-2-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP9ODKoefNEcQtrCCLEa7hzx2D_2vJTit0t8ooQGTx7Uyds1mQ@mail.gmail.com>
+In-Reply-To: <20171124023706.5702-2-jacob-chen@iotwrt.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Otavio Salvador <otavio.salvador@ossystems.com.br>
-Cc: Otavio Salvador <otavio@ossystems.com.br>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Fabio Estevam <fabio.estevam@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kernel development list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>
+To: Jacob Chen <jacob-chen@iotwrt.com>, linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, allon.huang@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, Jacob Chen <jacob2.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Otavio,
+On 11/24/2017 03:36 AM, Jacob Chen wrote:
+> From: Shunqian Zheng <zhengsq@rock-chips.com>
+> 
+> Add the Rockchip ISP1 specific processing parameter format
+> V4L2_META_FMT_RK_ISP1_PARAMS and metadata format
+> V4L2_META_FMT_RK_ISP1_STAT_3A for 3A.
 
-On Sat, Nov 25, 2017 at 07:55:53AM -0200, Otavio Salvador wrote:
-> On Fri, Nov 24, 2017 at 3:00 PM, Otavio Salvador
-> <otavio@ossystems.com.br> wrote:
-> > This adds the partitions definition for the SPI NOR to provide
-> > backward compatibility with the documented[1] layout used with
-> > Boundary Devices BSP.
-> >
-> > 1. https://boundarydevices.com/boot-flash-access-linux/
-> >
-> > It exports to Linux:
-> >
-> >  mtd0: bootloader
-> >  mtd1: env
-> >  mtd2: splash
-> >
-> > Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
-> 
-> After thinking a bit about Fabio's recommendation to use 'read-only'
-> to protect the partitions, I think it'd be better to use 'lock' so it
-> is still possible to write them on Linux but it requires a unlock
-> prior changing it.
-> 
-> In my case, I am interested in being capable of upgrading the
-> bootloader from Linux.
-> 
-> What people think?
-
-Agreed, I would rather have the lock option, especially for the splash
-and environment.
+These formats are not documented in the V4L2 spec. I think it is documented in
+rkisp1-config.h, so you need to add something to meta-formats.rst. It's OK to
+refer to that header, as long as it is clear where the documentation of the
+format can be found.
 
 Regards,
-Gary
+
+	Hans
+
+> 
+> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
+>  include/uapi/linux/videodev2.h       | 4 ++++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index d6587b3ec33e..0604ae9ea444 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -1252,6 +1252,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+>  	case V4L2_TCH_FMT_TU08:		descr = "8-bit unsigned touch data"; break;
+>  	case V4L2_META_FMT_VSP1_HGO:	descr = "R-Car VSP1 1-D Histogram"; break;
+>  	case V4L2_META_FMT_VSP1_HGT:	descr = "R-Car VSP1 2-D Histogram"; break;
+> +	case V4L2_META_FMT_RK_ISP1_PARAMS:	descr = "Rockchip ISP1 3A params"; break;
+> +	case V4L2_META_FMT_RK_ISP1_STAT_3A:	descr = "Rockchip ISP1 3A statistics"; break;
+>  
+>  	default:
+>  		/* Compressed formats */
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 7c871291c1fa..961545e64c12 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -691,6 +691,10 @@ struct v4l2_pix_format {
+>  #define V4L2_META_FMT_VSP1_HGO    v4l2_fourcc('V', 'S', 'P', 'H') /* R-Car VSP1 1-D Histogram */
+>  #define V4L2_META_FMT_VSP1_HGT    v4l2_fourcc('V', 'S', 'P', 'T') /* R-Car VSP1 2-D Histogram */
+>  
+> +/* Vendor specific - used for IPU3 camera sub-system */
+> +#define V4L2_META_FMT_RK_ISP1_PARAMS	v4l2_fourcc('R', 'K', '1', 'P') /* Rockchip ISP1 params */
+> +#define V4L2_META_FMT_RK_ISP1_STAT_3A	v4l2_fourcc('R', 'K', '1', 'S') /* Rockchip ISP1 3A statistics */
+> +
+>  /* priv field value to indicates that subsequent fields are valid. */
+>  #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
+>  
+> 
