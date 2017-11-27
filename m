@@ -1,43 +1,57 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v7 06/13] slimbus: Add messaging APIs to slimbus framework
-Date: Mon, 27 Nov 2017 11:26:06 +0530
-Message-ID: <20171127055606.GR3187@localhost>
-References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
- <20171115141043.29202-7-srinivas.kandagatla@linaro.org>
- <20171117074834.GM3187@localhost>
- <d58b8cca-7b28-75be-8081-dad6595f499d@linaro.org>
+From: =?utf-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Subject: Re: [PATCH 2/3] hwrng: exynos - add Samsung Exynos True RNG driver
+Date: Mon, 27 Nov 2017 08:23:50 +0100
+Message-ID: <87indwchh5.fsf%l.stelmach@samsung.com>
+References: <CANc+2y4=Eas-i0jRwgTxqFeAngpPMKoUjVwsXWeU7G24g4252w@mail.gmail.com>
+        <CGME20171127072355eucas1p218e3cbaeb1ba16b5a1262deda350d850@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d58b8cca-7b28-75be-8081-dad6595f499d@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, arnd@arndb.de
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-reply-to: <CANc+2y4=Eas-i0jRwgTxqFeAngpPMKoUjVwsXWeU7G24g4252w@mail.gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 06:47:52AM +0000, Srinivas Kandagatla wrote:
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-> >>+ *	-ENOTCONN: If the transmitted message was not ACKed by destination
-> >>+ *	device.
-> >
-> >I am preferring ENODATA in SDW for this case, as Slaves didnt respond or
-> >ACK.
-> Isn't that a timeout error then.
-> 
-> ENODATA is for "No data available", reporting ENODATA would be misleading.
+It was <2017-11-24 pi=C4=85 16:25>, when PrasannaKumar Muralidharan wrote:
+>> +}
+>> +
+>> +static int exynos_trng_do_read(struct hwrng *rng, void *data, size_t ma=
+x,
+>> +                              bool wait)
+>> +{
+>> +       struct exynos_trng_dev *trng;
+>> +       u32 val;
+>> +
+>> +       max =3D max > (EXYNOS_TRNG_FIFO_LEN * 4) ?
+>> +               (EXYNOS_TRNG_FIFO_LEN * 4) : max;
+>
+> max is always > 32. This condition is not required.
 
-Do you get a explict NACK or no response for this
+No, it is not. http://elixir.free-electrons.com/linux/latest/source/drivers=
+/char/hw_random/core.c#L67
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
-> 
-> >
-> >ENOTCONN is defined as /* Transport endpoint is not connected */ which is
-> >not the case here, connected yes but not responded.
-> 
-> Code as it is would not return this, so i will be deleting ENOTCONN from
-> kernel doc.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-ok
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
--- 
-~Vinod
+iQEcBAEBCAAGBQJaG72GAAoJELCuHpyYpYAQ7TwH/RluMZvecCAMUJ+TOwqhwmo8
+Pnd91DSwwzYfQdNuXapahStONC3jjrQOd6eRaKrxo6084H9iUpSeJIiZhBMvduDu
+jvgi3Se+IkrlNZgsXeLHeTrxDoUvutib7tklV2yhrNEx5K/Yduf5/h5cK+jwCTzU
+8ptGH41kAbRcMSwEau2MBYf48a0gWru27cFiSTIymdIjqHMBZH41BZSpdh0ivKnW
+7nDd3+ZIANec+xyzt03fvHijtPOJlDjTN5N1ai+BC7DSc18EnPb58TaoYa1A1LQD
+NjXi3SlzW9c2Xa3KdogCxQcOdLGMcGmEMq+KsFIkN0uJzS3aHMed2b+Gudo7GvU=
+=mKSe
+-----END PGP SIGNATURE-----
+--=-=-=--
