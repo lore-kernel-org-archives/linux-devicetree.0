@@ -1,34 +1,83 @@
-From: Emil Lenngren <emil.lenngren-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v1 5/8] Bluetooth: btrtl: add support for the RTL8723BS and
- RTL8723DS chips
-Date: Sun, 26 Nov 2017 23:47:45 +0100
-Message-ID: <CAO1O6scD4-h+qjWH-_X4xw5HpeNj7Pw78dWT_dNu0CgLzn=KOA@mail.gmail.com>
-References: <20171117223543.32429-1-martin.blumenstingl@googlemail.com>
- <20171117223543.32429-6-martin.blumenstingl@googlemail.com>
- <109FA59C-9875-4EAA-9DA5-EC811BAA77AE@holtmann.org> <CAFBinCCtHUFMbbSOeKWYSJZKvFbNqhaMOrS-xgzr3E9hbkpnnw@mail.gmail.com>
- <4B23C5B4-DCB8-4B1C-B1BF-A99B1E5E10B0@holtmann.org> <CAFBinCD+P6kBOXjp9YZf8DbsetvF+q6yfp3X+OTRfN_Pv8R88w@mail.gmail.com>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Hi3660: Fix state id for 'CPU_NAP' state
+Date: Mon, 27 Nov 2017 10:01:28 +0800
+Message-ID: <20171127020128.GB26822@leoy-linaro>
+References: <1511415614-9859-1-git-send-email-leo.yan@linaro.org>
+ <17639ecc-8ff8-e118-f6e1-51e2cfe4342b@arm.com>
+ <20171124065623.GD13184@leoy-linaro>
+ <b62517be-1d4d-7b2e-7a6e-1c2abbb4ecee@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCD+P6kBOXjp9YZf8DbsetvF+q6yfp3X+OTRfN_Pv8R88w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <b62517be-1d4d-7b2e-7a6e-1c2abbb4ecee-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Sudeep,
 
-2017-11-26 23:23 GMT+01:00 Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>:
->>> c) we have to stick with this config file
-> I'm afraid this would be our last option if I can't get b) working
-> a datasheet for these chips or some advice from someone who has access
-> to the datasheet/knowledge about the internals would be of great help
->
+On Fri, Nov 24, 2017 at 02:39:47PM +0000, Sudeep Holla wrote:
 
-FYI I happen to have the confidential 37 pages long datasheet for
-rtl8723ds, but unfortunately it doesn't contain any info about the
-format of the config file. I suggest you should reach out to the guys
-at NextThing and ask if they have some documentation from Realtek.
+[...]
 
-/Emil
+> > Come back to recommended state id, I reviewed Juno board defintion and
+> > I found it's not align with PSCI spec defintion, in ARM-TF Juno code
+> > defines state as below [1]:
+> > 
+> 
+> Yes Juno is almost 4 years old now, so it may not be too good a
+> reference platform for latest and greatest platforms like hikey2 ;)
+> As I said, Juno predates the recommendation in the PSCI spec.
+> 
+> > #define ARM_LOCAL_STATE_RUN     0
+> > #define ARM_LOCAL_STATE_RET     1
+> > #define ARM_LOCAL_STATE_OFF     2
+> > 
+> > In PSCI spec chapter "6.5 Recommended StateID Encoding" recommends power
+> > state id as below:
+> > 
+> > 0: Run
+> > 1: Standby
+> > 2: Retention
+> > 3: Powerdown
+> > 
+> > So could you confirm on Hikey960 we should follow PSCI definition for
+> > state id definition?
+> > 
+> 
+> Yes, I don't see any reason not to, as this may become reference to some
+> other platform, it's good to keep it aligned so that copy paste happens
+> in a good sense for future platforms. :)
+
+Thanks for upper confirmation.
+
+> >> Juno's implementation is legacy as these recommendations were added
+> >> later in the specification while Juno is 3 year old platform now.
+> >>
+> >> Though strictly speaking it's not violation of the PSCI specification,
+> >> but I would rather get this fixed not before it's too late and copied to
+> >> the next generation of platforms. Since the firmware can be easily
+> >> upgraded that shouldn't be that difficult.
+> > 
+> > If completely compliant with PSCI recommended state id, we need change
+> > both for ARM-TF and kernel for this. In ARM-TF, I have sent PR [2].
+> > 
+> 
+> OK
+> 
+> > For the kernel patch, we should change state id as below. Please let me
+> > know if you have suggestion for this.
+> > 
+> 
+> I would wait until ATF changes are merged before you patch DT in the kernel.
+
+Agree, will sent new version patch after ATF patch merging ahead.
+
+Thank you for suggestions.
+Leo Yan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
