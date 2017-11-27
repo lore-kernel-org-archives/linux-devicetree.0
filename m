@@ -1,55 +1,39 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 11/35] nds32: Device specific operations
-Date: Mon, 27 Nov 2017 15:51:31 +0100
-Message-ID: <CAK8P3a3aXU6mkffcZbxrgAJupwZZ9zCDjTKGDBCwP_gEP3=HVw@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <ab110d0eaa525b07b1790d67bbb020046fb78792.1511785528.git.green.hu@gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: imx6qdl-nitrogen6x: Add SPI NOR partitions
+Date: Mon, 27 Nov 2017 14:17:04 -0200
+Message-ID: <CAOMZO5Dtf6mjWt1wg_5NDUNAe4XZ3jvxu0KC2CaUo0wE7gjaRQ@mail.gmail.com>
+References: <20171127133127.16985-1-otavio@ossystems.com.br>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <ab110d0eaa525b07b1790d67bbb020046fb78792.1511785528.git.green.hu@gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Vincent Chen <vincentc@andestech.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171127133127.16985-1-otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 27, 2017 at 1:27 PM, Greentime Hu <green.hu@gmail.com> wrote:
-> From: Greentime Hu <greentime@andestech.com>
+On Mon, Nov 27, 2017 at 11:31 AM, Otavio Salvador
+<otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org> wrote:
+> This adds the partitions definition for the SPI NOR to provide
+> backward compatibility with the documented[1] layout used with
+> Boundary Devices BSP.
 >
-> This patch introduces ioremap implementations.
+> 1. https://boundarydevices.com/boot-flash-access-linux/
 >
-> Signed-off-by: Vincent Chen <vincentc@andestech.com>
-> Signed-off-by: Greentime Hu <greentime@andestech.com>
-> ---
->  arch/nds32/include/asm/io.h |   25 +++++++++++++++
->  arch/nds32/mm/ioremap.c     |   75 +++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 100 insertions(+)
->  create mode 100644 arch/nds32/include/asm/io.h
->  create mode 100644 arch/nds32/mm/ioremap.c
+> It exports to Linux:
 >
-> diff --git a/arch/nds32/include/asm/io.h b/arch/nds32/include/asm/io.h
-> new file mode 100644
-> index 0000000..b83dea1
-> --- /dev/null
-> +++ b/arch/nds32/include/asm/io.h
-> @@ -0,0 +1,25 @@
+>  mtd0: bootloader
+>  mtd1: env
+>  mtd2: splash
+>
+> Signed-off-by: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
 
-> +#ifndef __ASM_NDS32_IO_H
-> +#define __ASM_NDS32_IO_H
-> +
-> +#ifdef __KERNEL__
-> +void iounmap(void __iomem * addr);
-> +#include <asm-generic/io.h>
-> +
-> +#endif /* __KERNEL__ */
-> +#endif /* __ASM_NDS32_IO_H */
+Has this been tested? I mean, have you tested the locking mechanism is
+really working in this SPI NOR flash?
 
-Here, you should define a lot of the I/O accessor functions,
-dereferencing a pointer
-is generally not enough to guarantee an atomic MMIO operation. You need to
-force the access to use the correct size to prevent the compiler from issuing
-byte-sized operations when it thinks the pointer might be unaligned, and
-there should be barriers that ensure a memory access is synchronized with
-a DMA that might be triggered by a writel, or claimed to be completed after
-a readl. Please see the risc-v header for this, it has many good explanations.
-
-        Arnd
+As far as I can see the SPI locking mechanism does not need device
+tree properties.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
