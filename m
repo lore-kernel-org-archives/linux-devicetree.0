@@ -1,57 +1,73 @@
-From: Otavio Salvador <otavio.salvador@ossystems.com.br>
-Subject: Re: [PATCH v2] ARM: dts: imx6qdl-nitrogen6x: Add SPI NOR partitions
-Date: Mon, 27 Nov 2017 11:28:03 -0200
-Message-ID: <CAP9ODKr-5Q3TgZQHFPNHQcjNfm9NZM0a-C8f-MuFQtRCj1FiAQ@mail.gmail.com>
-References: <20171124170004.31133-1-otavio@ossystems.com.br>
- <CAP9ODKoefNEcQtrCCLEa7hzx2D_2vJTit0t8ooQGTx7Uyds1mQ@mail.gmail.com> <20171127101739.qs6ws3232hd5qwgv@t450s.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171127101739.qs6ws3232hd5qwgv@t450s.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gary Bisson <gary.bisson@boundarydevices.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Otavio Salvador <otavio@ossystems.com.br>, Kernel development list <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+Subject: [PATCH v3] ARM: dts: imx6qdl-nitrogen6x: Add SPI NOR partitions
+Date: Mon, 27 Nov 2017 11:31:27 -0200
+Message-ID: <20171127133127.16985-1-otavio@ossystems.com.br>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 27, 2017 at 8:17 AM, Gary Bisson
-<gary.bisson@boundarydevices.com> wrote:
-> Hi Otavio,
->
-> On Sat, Nov 25, 2017 at 07:55:53AM -0200, Otavio Salvador wrote:
->> On Fri, Nov 24, 2017 at 3:00 PM, Otavio Salvador
->> <otavio@ossystems.com.br> wrote:
->> > This adds the partitions definition for the SPI NOR to provide
->> > backward compatibility with the documented[1] layout used with
->> > Boundary Devices BSP.
->> >
->> > 1. https://boundarydevices.com/boot-flash-access-linux/
->> >
->> > It exports to Linux:
->> >
->> >  mtd0: bootloader
->> >  mtd1: env
->> >  mtd2: splash
->> >
->> > Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
->>
->> After thinking a bit about Fabio's recommendation to use 'read-only'
->> to protect the partitions, I think it'd be better to use 'lock' so it
->> is still possible to write them on Linux but it requires a unlock
->> prior changing it.
->>
->> In my case, I am interested in being capable of upgrading the
->> bootloader from Linux.
->>
->> What people think?
->
-> Agreed, I would rather have the lock option, especially for the splash
-> and environment.
+This adds the partitions definition for the SPI NOR to provide
+backward compatibility with the documented[1] layout used with
+Boundary Devices BSP.
 
-I will prepare a new patch using the lock option on the three
-partitions so we allow the user to change them but knowing it may
-break the system.
+1. https://boundarydevices.com/boot-flash-access-linux/
 
+It exports to Linux:
+
+ mtd0: bootloader
+ mtd1: env
+ mtd2: splash
+
+Signed-off-by: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
+---
+
+Changes in v3:
+ - use lock instead of read-only (Gary Bisson)
+
+Changes in v2:
+ - rework labels (Fabio Estevam)
+ - add read-only flags (Fabio Estevam)
+
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index 4bdf29169d2a..f855d802533e 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -276,6 +276,26 @@
+ 		compatible = "sst,sst25vf016b", "jedec,spi-nor";
+ 		spi-max-frequency = <20000000>;
+ 		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "bootloader";
++			reg = <0x0 0xc0000>;
++			lock;
++		};
++
++		partition@c0000 {
++			label = "env";
++			reg = <0xc0000 0x2000>;
++			lock;
++		};
++
++		partition@c2000 {
++			label = "splash";
++			reg = <0xc2000 0x13e000>;
++			lock;
++		};
+ 	};
+ };
+ 
 -- 
-Otavio Salvador                             O.S. Systems
-http://www.ossystems.com.br        http://code.ossystems.com.br
-Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
+2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
