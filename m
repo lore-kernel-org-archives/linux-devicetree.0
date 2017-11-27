@@ -1,84 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 14/35] nds32: System calls handling
-Date: Mon, 27 Nov 2017 15:46:00 +0100
-Message-ID: <CAK8P3a3V7=4LjT38xT2VBQW4sTgpKergar2KoO8brbMZjR--1w@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <ee45d9c7b0388c87a93a26484e859001477eb3a2.1511785528.git.green.hu@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ee45d9c7b0388c87a93a26484e859001477eb3a2.1511785528.git.green.hu@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Vincent Chen <vincentc@andestech.com>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/2] of: overlay locking fixes
+Date: Mon, 27 Nov 2017 15:46:25 +0100
+Message-ID: <1511793987-315-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
+	Hi Pantelis, Rob, Frank,
 
-> diff --git a/arch/nds32/include/asm/syscalls.h b/arch/nds32/include/asm/syscalls.h
-> new file mode 100644
-> index 0000000..741ccdc
-> --- /dev/null
-> +++ b/arch/nds32/include/asm/syscalls.h
-> @@ -0,0 +1,27 @@
-> +/*
-> + * Copyright (C) 2005-2017 Andes Technology Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef __ASM_NDS32_SYSCALLS_H
-> +#define __ASM_NDS32_SYSCALLS_H
-> +
-> +int sys_cacheflush(unsigned long addr, unsigned long len, unsigned int op);
-> +long sys_fadvise64_64_wrapper(int fd, int advice, loff_t offset, loff_t len);
-> +asmlinkage int sys_syscall(void);
-> +asmlinkage int sys_rt_sigreturn_wrapper(void);
+Here are two locking fixes for OF overlays, found by code inspection.
 
-You mentioned that sys_syscall() should be removed in this version.
+They were compile-tested only, as I'm still working on getting "real"
+(configfs) overlays working again in v4.15-rc1...
 
-By convention, all syscall declarations should start with 'asmlinkage long',
-even though this has no effect in your architecture.
+Geert Uytterhoeven (2):
+  of: overlay: Fix cleanup order in of_overlay_apply()
+  of: unittest: Remove bogus overlay mutex release from
+    overlay_data_add()
 
-> diff --git a/arch/nds32/include/uapi/asm/unistd.h b/arch/nds32/include/uapi/asm/unistd.h
-> new file mode 100644
-> index 0000000..2bad1e7
-> --- /dev/null
-> +++ b/arch/nds32/include/uapi/asm/unistd.h
+ drivers/of/overlay.c  | 6 +++---
+ drivers/of/unittest.c | 1 -
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-> +
-> +#define __ARCH_WANT_RENAMEAT
-> +#define __ARCH_WANT_SYSCALL_OFF_T
+-- 
+2.7.4
 
-These two should not be here.
+Gr{oetje,eeting}s,
 
-> +#define __ARCH_WANT_SYNC_FILE_RANGE2
+						Geert
 
-This one is fine though
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-> +/* Use the standard ABI for syscalls */
-> +#include <asm-generic/unistd.h>
-> +
-> +__SYSCALL(__NR_fadvise64_64, sys_fadvise64_64_wrapper)
-> +__SYSCALL(__NR_rt_sigreturn, sys_rt_sigreturn_wrapper)
-
-I think you are overriding the array assignment here, this may cause a
-compiler warning when building with "make C=1 V=1" since you have
-the same index assigned to two pointers. A better way to do this
-is to override the name:
-
-#define sys_rt_sigreturn sys_rt_sigreturn_wrapper
-#define sys_fadvise64_64 sys_fadvise64_64_wrapper
-#include <asm-generic/unistd.h>
-
-
-      Arnd
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
