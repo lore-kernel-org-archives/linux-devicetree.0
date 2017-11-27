@@ -1,40 +1,57 @@
-From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [RFC 0/2] of: Add whitelist
-Date: Mon, 27 Nov 2017 14:58:02 -0600
-Message-ID: <1511816284-12145-1-git-send-email-atull@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alan Tull <atull@kernel.org>
+Subject: [RFC 2/2] fpga: of region: add of-fpga-region to whitelist
+Date: Mon, 27 Nov 2017 14:58:04 -0600
+Message-ID: <1511816284-12145-3-git-send-email-atull@kernel.org>
+References: <1511816284-12145-1-git-send-email-atull@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1511816284-12145-1-git-send-email-atull@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Here's a proposal for a whitelist to lock down the dynamic device tree.
+During each FPGA region's probe, add to whitelist.  Remove
+during driver remove.
 
-For an overlay to be accepted, all of its targets are required to be
-on a target node whitelist.
+Signed-off-by: Alan Tull <atull@kernel.org>
+---
+ drivers/fpga/of-fpga-region.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Currently the only way I have to get on the whitelist is calling a
-function to add a node.  That works for fpga regions, but I think
-other uses will need a way of having adding specific nodes from the
-base device tree, such as by adding a property like 'allow-overlay;'
-or 'allow-overlay = "okay";' If that is acceptable, I could use some
-advice on where that particular code should go.
-
-Alan
-
-Alan Tull (2):
-  of: overlay: add whitelist
-  fpga: of region: add of-fpga-region to whitelist
-
- drivers/fpga/of-fpga-region.c |  9 ++++++
- drivers/of/overlay.c          | 73 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/of.h            | 12 +++++++
- 3 files changed, 94 insertions(+)
-
+diff --git a/drivers/fpga/of-fpga-region.c b/drivers/fpga/of-fpga-region.c
+index 7dfaa95..abb57a9 100644
+--- a/drivers/fpga/of-fpga-region.c
++++ b/drivers/fpga/of-fpga-region.c
+@@ -435,6 +435,10 @@ static int of_fpga_region_probe(struct platform_device *pdev)
+ 	/* Specify how to get bridges for this type of region. */
+ 	region->get_bridges = of_fpga_region_get_bridges;
+ 
++	ret = of_add_whitelist_node(np);
++	if (ret)
++		goto eprobe_wl_err;
++
+ 	ret = fpga_region_register(region);
+ 	if (ret)
+ 		goto eprobe_mgr_put;
+@@ -447,6 +451,8 @@ static int of_fpga_region_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ eprobe_mgr_put:
++	of_remove_whitelist_node(np);
++eprobe_wl_err:
+ 	fpga_mgr_put(mgr);
+ 	return ret;
+ }
+@@ -454,7 +460,10 @@ static int of_fpga_region_probe(struct platform_device *pdev)
+ static int of_fpga_region_remove(struct platform_device *pdev)
+ {
+ 	struct fpga_region *region = platform_get_drvdata(pdev);
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 
++	of_remove_whitelist_node(np);
+ 	fpga_region_unregister(region);
+ 	fpga_mgr_put(region->mgr);
+ 
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
