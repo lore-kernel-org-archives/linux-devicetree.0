@@ -1,21 +1,21 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: stm32: fix sync property description in SAI bindings" to the asoc tree
-Date: Mon, 27 Nov 2017 18:53:21 +0000
-Message-ID: <E1eJOWv-0007GX-88@debutante>
-References: <1511362947-14747-2-git-send-email-olivier.moysan@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1511362947-14747-2-git-send-email-olivier.moysan@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Olivier Moysan <olivier.moysan@st.com>, Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, lgirdwood@gmail.combroonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.orgrobh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.orgolivier.moysan@st.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.comalsa-devel@alsa-project.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "spi: xilinx: Add support for xlnx,axi-quad-spi-1.00.a" to the spi tree
+Date: Mon, 27 Nov 2017 18:54:49 +0000
+Message-ID: <E1eJOYL-0007dA-VP@debutante>
+References: <20171121090904.6901-2-ricardo.ribalda@gmail.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171121090904.6901-2-ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgRicardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: fix sync property description in SAI bindings
+   spi: xilinx: Add support for xlnx,axi-quad-spi-1.00.a
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -36,52 +36,56 @@ to this mail.
 Thanks,
 Mark
 
->From 4be0ffdf284046eb7289fa66cc7b2eb8d7efdc64 Mon Sep 17 00:00:00 2001
-From: olivier moysan <olivier.moysan@st.com>
-Date: Wed, 22 Nov 2017 16:02:25 +0100
-Subject: [PATCH] ASoC: stm32: fix sync property description in SAI bindings
+>From a094c2fa093cf7fd0fe23d15cc2abca4083c6a45 Mon Sep 17 00:00:00 2001
+From: Ricardo Ribalda <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Tue, 21 Nov 2017 10:09:03 +0100
+Subject: [PATCH] spi: xilinx: Add support for xlnx,axi-quad-spi-1.00.a
 
-SAI sync property must be described in SAI subnodes
-section, as it is a property of child node.
-This patch fixes commit 14f0e5f8d97e632695d92f41f2e91d10d8005d47
-"ASoC: stm32: Add synchronization to SAI bindings".
+The driver has been successfully tested with Xilinx's core
+axi-quad-spi-1.0.0a. Documented on DS843:
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+https://www.xilinx.com/support/documentation/ip_documentation/axi_quad_spi/v1_00_a/ds843_axi_quad_spi.pdf
+
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/sound/st,stm32-sai.txt | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/spi/spi-xilinx.txt | 2 +-
+ drivers/spi/spi-xilinx.c                             | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-index 1f9cd7095337..b1acc1a256ba 100644
---- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
-@@ -20,11 +20,6 @@ Required properties:
+diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+index c7b7856bd528..7bf61efc66c8 100644
+--- a/Documentation/devicetree/bindings/spi/spi-xilinx.txt
++++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+@@ -2,7 +2,7 @@ Xilinx SPI controller Device Tree Bindings
+ -------------------------------------------------
  
- Optional properties:
-   - resets: Reference to a reset controller asserting the SAI
--  - st,sync: specify synchronization mode.
--	By default SAI sub-block is in asynchronous mode.
--	This property sets SAI sub-block as slave of another SAI sub-block.
--	Must contain the phandle and index of the sai sub-block providing
--	the synchronization.
+ Required properties:
+-- compatible		: Should be "xlnx,xps-spi-2.00.a" or "xlnx,xps-spi-2.00.b"
++- compatible		: Should be "xlnx,xps-spi-2.00.a", "xlnx,xps-spi-2.00.b" or "xlnx,axi-quad-spi-1.00.a"
+ - reg			: Physical base address and size of SPI registers map.
+ - interrupts		: Property with a value describing the interrupt
+ 			  number.
+diff --git a/drivers/spi/spi-xilinx.c b/drivers/spi/spi-xilinx.c
+index e0b9fe1d0e37..63fedc49ae9c 100644
+--- a/drivers/spi/spi-xilinx.c
++++ b/drivers/spi/spi-xilinx.c
+@@ -381,6 +381,7 @@ static int xilinx_spi_find_buffer_size(struct xilinx_spi *xspi)
+ }
  
- SAI subnodes:
- Two subnodes corresponding to SAI sub-block instances A et B can be defined.
-@@ -44,6 +39,13 @@ SAI subnodes required properties:
-   - pinctrl-names: should contain only value "default"
-   - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/pinctrl-stm32.txt
- 
-+SAI subnodes Optional properties:
-+  - st,sync: specify synchronization mode.
-+	By default SAI sub-block is in asynchronous mode.
-+	This property sets SAI sub-block as slave of another SAI sub-block.
-+	Must contain the phandle and index of the sai sub-block providing
-+	the synchronization.
-+
- The device node should contain one 'port' child node with one child 'endpoint'
- node, according to the bindings defined in Documentation/devicetree/bindings/
- graph.txt.
+ static const struct of_device_id xilinx_spi_of_match[] = {
++	{ .compatible = "xlnx,axi-quad-spi-1.00.a", },
+ 	{ .compatible = "xlnx,xps-spi-2.00.a", },
+ 	{ .compatible = "xlnx,xps-spi-2.00.b", },
+ 	{}
 -- 
 2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
