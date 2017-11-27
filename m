@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V6 05/12] clk: sprd: add divider clock support
-Date: Mon, 27 Nov 2017 18:01:08 +0800
-Message-ID: <20171127100115.20655-6-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V6 12/12] arm64: dts: add clocks for SC9860
+Date: Mon, 27 Nov 2017 18:01:15 +0800
+Message-ID: <20171127100115.20655-13-chunyan.zhang@spreadtrum.com>
 References: <20171127100115.20655-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,207 +12,161 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a feature that can also be found in sprd composite clocks,
-provide a bunch of helpers that can be reused later on.
+Some clocks on SC9860 are in the same address area with syscon devices,
+those are what have a property of 'sprd,syscon' which would refer to
+syscon devices, others would have a reg property indicated their address
+ranges.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 ---
- drivers/clk/sprd/Makefile |  1 +
- drivers/clk/sprd/div.c    | 92 +++++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/sprd/div.h    | 77 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 170 insertions(+)
- create mode 100644 drivers/clk/sprd/div.c
- create mode 100644 drivers/clk/sprd/div.h
+ arch/arm64/boot/dts/sprd/sc9860.dtsi | 115 +++++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/sprd/whale2.dtsi |   2 +-
+ 2 files changed, 116 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
-index cee36b5..80e6039 100644
---- a/drivers/clk/sprd/Makefile
-+++ b/drivers/clk/sprd/Makefile
-@@ -3,3 +3,4 @@ obj-$(CONFIG_SPRD_COMMON_CLK)	+= clk-sprd.o
- clk-sprd-y	+= common.o
- clk-sprd-y	+= gate.o
- clk-sprd-y	+= mux.o
-+clk-sprd-y	+= div.o
-diff --git a/drivers/clk/sprd/div.c b/drivers/clk/sprd/div.c
-new file mode 100644
-index 0000000..8c7196f
---- /dev/null
-+++ b/drivers/clk/sprd/div.c
-@@ -0,0 +1,92 @@
-+/*
-+ * Spreadtrum divider clock driver
-+ *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
-+ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
+diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+index 7b7d8ce..bf03da4 100644
+--- a/arch/arm64/boot/dts/sprd/sc9860.dtsi
++++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+@@ -7,6 +7,7 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/sprd,sc9860-clk.h>
+ #include "whale2.dtsi"
+ 
+ / {
+@@ -183,6 +184,120 @@
+ 	};
+ 
+ 	soc {
++		pmu_gate: pmu-gate {
++			compatible = "sprd,sc9860-pmu-gate";
++			sprd,syscon = <&pmu_regs>; /* 0x402b0000 */
++			clocks = <&ext_26m>;
++			#clock-cells = <1>;
++		};
 +
-+#include <linux/clk-provider.h>
++		pll: pll {
++			compatible = "sprd,sc9860-pll";
++			sprd,syscon = <&ana_regs>; /* 0x40400000 */
++			clocks = <&pmu_gate 0>;
++			#clock-cells = <1>;
++		};
 +
-+#include "div.h"
++		ap_clk: clock-controller@20000000 {
++			compatible = "sprd,sc9860-ap-clk";
++			reg = <0 0x20000000 0 0x400>;
++			clocks = <&ext_26m>, <&pll 0>,
++				 <&pmu_gate 0>;
++			#clock-cells = <1>;
++		};
 +
-+long sprd_div_helper_round_rate(struct sprd_clk_common *common,
-+				const struct sprd_div_internal *div,
-+				unsigned long rate,
-+				unsigned long *parent_rate)
-+{
-+	return divider_round_rate(&common->hw, rate, parent_rate,
-+				  NULL, div->width, 0);
-+}
-+EXPORT_SYMBOL_GPL(sprd_div_helper_round_rate);
++		aon_prediv: aon-prediv {
++			compatible = "sprd,sc9860-aon-prediv";
++			reg = <0 0x402d0000 0 0x400>;
++			clocks = <&ext_26m>, <&pll 0>,
++				 <&pmu_gate 0>;
++			#clock-cells = <1>;
++		};
 +
-+static long sprd_div_round_rate(struct clk_hw *hw, unsigned long rate,
-+				unsigned long *parent_rate)
-+{
-+	struct sprd_div *cd = hw_to_sprd_div(hw);
++		apahb_gate: apahb-gate {
++			compatible = "sprd,sc9860-apahb-gate";
++			sprd,syscon = <&ap_ahb_regs>; /* 0x20210000 */
++			clocks = <&aon_prediv 0>;
++			#clock-cells = <1>;
++		};
 +
-+	return sprd_div_helper_round_rate(&cd->common, &cd->div,
-+					  rate, parent_rate);
-+}
++		aon_gate: aon-gate {
++			compatible = "sprd,sc9860-aon-gate";
++			sprd,syscon = <&aon_regs>; /* 0x402e0000 */
++			clocks = <&aon_prediv 0>;
++			#clock-cells = <1>;
++		};
 +
-+unsigned long sprd_div_helper_recalc_rate(struct sprd_clk_common *common,
-+					  const struct sprd_div_internal *div,
-+					  unsigned long parent_rate)
-+{
-+	unsigned long val;
-+	unsigned int reg;
++		aonsecure_clk: clock-controller@40880000 {
++			compatible = "sprd,sc9860-aonsecure-clk";
++			reg = <0 0x40880000 0 0x400>;
++			clocks = <&ext_26m>, <&pll 0>;
++			#clock-cells = <1>;
++		};
 +
-+	sprd_regmap_read(common->regmap, common->reg, &reg);
-+	val = reg >> div->shift;
-+	val &= (1 << div->width) - 1;
++		agcp_gate: agcp-gate {
++			compatible = "sprd,sc9860-agcp-gate";
++			sprd,syscon = <&agcp_regs>; /* 0x415e0000 */
++			clocks = <&aon_prediv 0>;
++			#clock-cells = <1>;
++		};
 +
-+	return divider_recalc_rate(&common->hw, parent_rate, val, NULL, 0);
-+}
-+EXPORT_SYMBOL_GPL(sprd_div_helper_recalc_rate);
++		gpu_clk: clock-controller@60200000 {
++			compatible = "sprd,sc9860-gpu-clk";
++			reg = <0 0x60200000 0 0x400>;
++			clocks = <&pll 0>;
++			#clock-cells = <1>;
++		};
 +
-+static unsigned long sprd_div_recalc_rate(struct clk_hw *hw,
-+					  unsigned long parent_rate)
-+{
-+	struct sprd_div *cd = hw_to_sprd_div(hw);
++		vsp_clk: clock-controller@61000000 {
++			compatible = "sprd,sc9860-vsp-clk";
++			reg = <0 0x61000000 0 0x400>;
++			clocks = <&ext_26m>, <&pll 0>;
++			#clock-cells = <1>;
++		};
 +
-+	return sprd_div_helper_recalc_rate(&cd->common, &cd->div, parent_rate);
-+}
++		vsp_gate: vsp-gate {
++			compatible = "sprd,sc9860-vsp-gate";
++			sprd,syscon = <&vsp_regs>; /* 0x61100000 */
++			clocks = <&vsp_clk 0>;
++			#clock-cells = <1>;
++		};
 +
-+int sprd_div_helper_set_rate(const struct sprd_clk_common *common,
-+			     const struct sprd_div_internal *div,
-+			     unsigned long rate,
-+			     unsigned long parent_rate)
-+{
-+	unsigned long val;
-+	unsigned int reg;
++		cam_clk: clock-controller@62000000 {
++			compatible = "sprd,sc9860-cam-clk";
++			reg = <0 0x62000000 0 0x4000>;
++			clocks = <&ext_26m>, <&pll 0>;
++			#clock-cells = <1>;
++		};
 +
-+	val = divider_get_val(rate, parent_rate, NULL,
-+			      div->width, 0);
++		cam_gate: cam-gate {
++			compatible = "sprd,sc9860-cam-gate";
++			sprd,syscon = <&cam_regs>; /* 0x62100000 */
++			clocks = <&cam_clk 0>;
++			#clock-cells = <1>;
++		};
 +
-+	sprd_regmap_read(common->regmap, common->reg, &reg);
-+	reg &= ~GENMASK(div->width + div->shift - 1, div->shift);
++		disp_clk: clock-controller@63000000 {
++			compatible = "sprd,sc9860-disp-clk";
++			reg = <0 0x63000000 0 0x400>;
++			clocks = <&ext_26m>, <&pll 0>;
++			#clock-cells = <1>;
++		};
 +
-+	sprd_regmap_write(common->regmap, common->reg,
-+			  reg | (val << div->shift));
++		disp_gate: disp-gate {
++			compatible = "sprd,sc9860-disp-gate";
++			sprd,syscon = <&disp_regs>; /* 0x63100000 */
++			clocks = <&disp_clk 0>;
++			#clock-cells = <1>;
++		};
 +
-+	return 0;
++		apapb_gate: apapb-gate {
++			compatible = "sprd,sc9860-apapb-gate";
++			sprd,syscon = <&ap_apb_regs>; /* 0x70b00000 */
++			clocks = <&ap_clk 0>;
++			#clock-cells = <1>;
++		};
 +
-+}
-+EXPORT_SYMBOL_GPL(sprd_div_helper_set_rate);
-+
-+static int sprd_div_set_rate(struct clk_hw *hw, unsigned long rate,
-+			     unsigned long parent_rate)
-+{
-+	struct sprd_div *cd = hw_to_sprd_div(hw);
-+
-+	return sprd_div_helper_set_rate(&cd->common, &cd->div,
-+					rate, parent_rate);
-+}
-+
-+const struct clk_ops sprd_div_ops = {
-+	.recalc_rate = sprd_div_recalc_rate,
-+	.round_rate = sprd_div_round_rate,
-+	.set_rate = sprd_div_set_rate,
-+};
-+EXPORT_SYMBOL_GPL(sprd_div_ops);
-diff --git a/drivers/clk/sprd/div.h b/drivers/clk/sprd/div.h
-new file mode 100644
-index 0000000..fb59fe5
---- /dev/null
-+++ b/drivers/clk/sprd/div.h
-@@ -0,0 +1,77 @@
-+/*
-+ * Spreadtrum divider clock driver
-+ *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
-+ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
-+
-+#ifndef _SPRD_DIV_H_
-+#define _SPRD_DIV_H_
-+
-+#include "common.h"
-+
-+/**
-+ * struct sprd_div_internal - Internal divider description
-+ * @shift: Bit offset of the divider in its register
-+ * @width: Width of the divider field in its register
-+ *
-+ * That structure represents a single divider, and is meant to be
-+ * embedded in other structures representing the various clock
-+ * classes.
-+ */
-+struct sprd_div_internal {
-+	u8	shift;
-+	u8	width;
-+};
-+
-+#define _SPRD_DIV_CLK(_shift, _width)	\
-+	{				\
-+		.shift	= _shift,	\
-+		.width	= _width,	\
-+	}
-+
-+struct sprd_div {
-+	struct sprd_div_internal	div;
-+	struct sprd_clk_common	common;
-+};
-+
-+#define SPRD_DIV_CLK(_struct, _name, _parent, _reg,			\
-+			_shift, _width, _flags)				\
-+	struct sprd_div _struct = {					\
-+		.div	= _SPRD_DIV_CLK(_shift, _width),		\
-+		.common	= {						\
-+			.regmap		= NULL,				\
-+			.reg		= _reg,				\
-+			.hw.init	= CLK_HW_INIT(_name,		\
-+						      _parent,		\
-+						      &sprd_div_ops,	\
-+						      _flags),		\
-+		}							\
-+	}
-+
-+static inline struct sprd_div *hw_to_sprd_div(const struct clk_hw *hw)
-+{
-+	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
-+
-+	return container_of(common, struct sprd_div, common);
-+}
-+
-+long sprd_div_helper_round_rate(struct sprd_clk_common *common,
-+				const struct sprd_div_internal *div,
-+				unsigned long rate,
-+				unsigned long *parent_rate);
-+
-+unsigned long sprd_div_helper_recalc_rate(struct sprd_clk_common *common,
-+					  const struct sprd_div_internal *div,
-+					  unsigned long parent_rate);
-+
-+int sprd_div_helper_set_rate(const struct sprd_clk_common *common,
-+			     const struct sprd_div_internal *div,
-+			     unsigned long rate,
-+			     unsigned long parent_rate);
-+
-+extern const struct clk_ops sprd_div_ops;
-+
-+#endif /* _SPRD_DIV_H_ */
+ 		funnel@10001000 { /* SoC Funnel */
+ 			compatible = "arm,coresight-funnel", "arm,primecell";
+ 			reg = <0 0x10001000 0 0x1000>;
+diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
+index 6ea3a75..eb004bb 100644
+--- a/arch/arm64/boot/dts/sprd/whale2.dtsi
++++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
+@@ -110,6 +110,6 @@
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <26000000>;
+-		clock-output-names = "ext_26m";
++		clock-output-names = "ext-26m";
+ 	};
+ };
 -- 
 2.7.4
