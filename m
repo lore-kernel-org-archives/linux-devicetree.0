@@ -1,109 +1,75 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] arm64: dts: renesas: r8a7795: Move nodes which have no
- reg property out of bus
-Date: Mon, 27 Nov 2017 12:15:39 +0100
-Message-ID: <CAMuHMdUm=PiGVWVg9pyNTR5z2WjLcoG1uecBNBeKsSxbAxBt8w@mail.gmail.com>
-References: <20171124105234.25774-1-horms+renesas@verge.net.au>
- <CAMuHMdW9V6Bkh5uS9qNA7awtygEs=qRd7jigwSHmpV2VM3n9dA@mail.gmail.com> <20171127110430.ulgjrzgy3pdugs2s@verge.net.au>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [RFC v2 1/2] backlight: pwm_bl: linear interpolation between
+ values of brightness-levels
+Date: Mon, 27 Nov 2017 12:21:45 +0100
+Message-ID: <CAFqH_50VqFJ-p=gRp9md4eHDHM5NpD6zPFfjwPY4LKTh2x6sHQ@mail.gmail.com>
+References: <20171116141151.21171-1-enric.balletbo@collabora.com>
+ <20171116141151.21171-2-enric.balletbo@collabora.com> <20171120185835.r4ded43i62wnu3jo@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171127110430.ulgjrzgy3pdugs2s@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171120185835.r4ded43i62wnu3jo@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Doug Anderson <dianders@google.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi Rob,
 
-On Mon, Nov 27, 2017 at 12:04 PM, Simon Horman <horms@verge.net.au> wrote:
-> On Fri, Nov 24, 2017 at 12:09:47PM +0100, Geert Uytterhoeven wrote:
->> On Fri, Nov 24, 2017 at 11:52 AM, Simon Horman
->> <horms+renesas@verge.net.au> wrote:
->> > Move pmu_a5[73], timer and thermal-zones nodes from soc node to root node.
->> > The nodes that have been moved do not have any register properties and thus
->> > shouldn't be placed on the bus.
->> >
->> > This problem is flagged by the compiler as follows:
->> > $ make
->> > ...
->> >   DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb
->> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
->> >   DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb
->> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
->> >   DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb
->> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
->> >   DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb
->> > arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
->> >   DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
->> >   DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
->> >   DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
->> > arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
->> >
->> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
->> > ---
->> > v2
->> > * Preserve alphabetical order of nodes present in root node.
+2017-11-20 19:58 GMT+01:00 Rob Herring <robh@kernel.org>:
+> On Thu, Nov 16, 2017 at 03:11:50PM +0100, Enric Balletbo i Serra wrote:
+>> Setting use-linear-interpolation in the dts will allow you to have linear
+>> interpolation between values of brightness-levels.
 >>
->> Thanks for the update!
+>> There are now 256 between each of the values of brightness-levels. If
+>> something is requested halfway between 2 values, we'll use linear
+>> interpolation.
 >>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> This way a high resolution pwm duty cycle can be used without having to
+>> list out every possible value in the dts.
 >
-> I just noticed that with this patch applied I now see:
+> I thought we already had a way to do that.
 >
-> arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a57
-> arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a53
-> arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a57
-> arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a53arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (interrupts_property): Missing interrupt-parent for /timer
+>> This system also allows for
+>> gamma corrected values (eg: "brightness-levels = <0 2 4 8 16 32>;").
+>>
+>> Patch based on the Alexandru M Stan work done for ChromeOS kernels.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>  .../bindings/leds/backlight/pwm-backlight.txt      |  2 +
+>>  drivers/video/backlight/pwm_bl.c                   | 55 +++++++++++++++++-----
+>>  include/linux/pwm_backlight.h                      |  2 +
+>>  3 files changed, 47 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> index 764db86..7c48f20 100644
+>> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>> @@ -17,6 +17,8 @@ Optional properties:
+>>                 "pwms" property (see PWM binding[0])
+>>    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+>>                    and disables the backlight (see GPIO binding[1])
+>> +  - use-linear-interpolation: set this propriety to enable linear interpolation
+>> +                              between each of the values of brightness-levels.
 >
-> arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (interrupts_property): Missing interrupt-parent for /timer
+> Isn't this really just whether you allow values not listed because what
+> other kind of interpolation would you do?
 
-Right, the "interrupt-parent = <&gic>;" inside the /soc node applies to child
-nodes of the /soc node only.
+Yes, the idea behind this is just allow values not listed.
 
-You can find this in two ways:
+> Seems like you should just be
+> able to query the resolution of the PWM and decide if it can take more
+> values than listed.
+>
 
-  1. Add "interrupt-parent = <&gic>;" to the /pmu_a57 and /pmu_a53 nodes.
-  2. Switch those nodes from "interrupt" to "interrupts-extended", e.g. turn
+Without using a new DT propriety and let decide the driver when use
+intepolation and when not? Shouldn't this break current behavior then?
+You can have a high resolution PWM but I'm not sure if you want allow
+always more values than listed.
 
-        interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+Regards,
+ Enric
 
-     into
 
-        interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-
-The latter is what e.g. arch/arm/boot/dts/armada-375.dtsi does.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Rob
