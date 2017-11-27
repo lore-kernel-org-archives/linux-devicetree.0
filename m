@@ -1,8 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 10/13] ARM: dts: imx6qdl-hummingboard: rename regulators to
- match schematic
-Date: Mon, 27 Nov 2017 16:52:56 +0000
-Message-ID: <E1eJMeO-0002rX-0U@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 08/13] ARM: dts: ixm6qdl-microsom: add support for eMMC
+Date: Mon, 27 Nov 2017 16:52:45 +0000
+Message-ID: <E1eJMeD-0002rI-Nn@rmk-PC.armlinux.org.uk>
 References: <20171127165134.GH31757@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -15,119 +14,90 @@ To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Jon Nettleton <jon.nettleton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Make the regulators match the schematic - name the regulators after
-one of their schematic supply names, and arrange them into their
-heirarchy.
+Rev 1.5 microsoms include eMMC support on-board.  Add a microsom include
+file which can be used to add support for this.
 
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 43 +++++++++++++++++++----------
- 1 file changed, 29 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/imx6qdl-microsom-emmc.dtsi | 70 ++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6qdl-microsom-emmc.dtsi
 
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index 1b33cd6752f4..66bda5a04582 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -51,12 +51,21 @@
- 		pinctrl-0 = <&pinctrl_hummingboard_gpio3_5>;
- 	};
- 
--	reg_3p3v: 3p3v {
-+	v_3v2: regulator-v-3v2 {
- 		compatible = "regulator-fixed";
--		regulator-name = "3P3V";
--		regulator-min-microvolt = <3300000>;
-+		regulator-always-on;
- 		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "v_3v2";
-+		vin-supply = <&v_5v0>;
+diff --git a/arch/arm/boot/dts/imx6qdl-microsom-emmc.dtsi b/arch/arm/boot/dts/imx6qdl-microsom-emmc.dtsi
+new file mode 100644
+index 000000000000..5f3b8baab20f
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-microsom-emmc.dtsi
+@@ -0,0 +1,70 @@
++/*
++ * Copyright (C) 2013,2014 Russell King
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++&iomuxc {
++	microsom {
++		pinctrl_microsom_usdhc3: microsom-usdhc3 {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
++				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10059
++				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17059
++				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17059
++				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17059
++				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17059
++				MX6QDL_PAD_SD3_DAT4__SD3_DATA4 0x17059
++				MX6QDL_PAD_SD3_DAT5__SD3_DATA5 0x17059
++				MX6QDL_PAD_SD3_DAT6__SD3_DATA6 0x17059
++				MX6QDL_PAD_SD3_DAT7__SD3_DATA7 0x17059
++				MX6QDL_PAD_SD3_RST__SD3_RESET  0x17059
++			>;
++		};
 +	};
++};
 +
-+	v_5v0: regulator-v-5v0 {
-+		compatible = "regulator-fixed";
- 		regulator-always-on;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_5v0";
- 	};
- 
- 	v_sd: regulator-v-sd {
-@@ -69,29 +78,31 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-name = "v_sd";
- 		startup-delay-us = <1000>;
--		vin-supply = <&reg_3p3v>;
-+		vin-supply = <&v_3v2>;
- 	};
- 
--	reg_usbh1_vbus: usb-h1-vbus {
-+	v_usb2: regulator-v-usb2 {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
- 		gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_hummingboard_usbh1_vbus>;
--		regulator-name = "usb_h1_vbus";
--		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb2";
-+		vin-supply = <&v_5v0>;
- 	};
- 
--	reg_usbotg_vbus: usb-otg-vbus {
-+	v_usb1: regulator-v-usb1 {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
- 		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_hummingboard_usbotg_vbus>;
--		regulator-name = "usb_otg_vbus";
--		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb1";
-+		vin-supply = <&v_5v0>;
- 	};
- 
- 	sound-sgtl5000 {
-@@ -151,8 +162,8 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_hummingboard_sgtl5000>;
- 		reg = <0x0a>;
--		VDDA-supply = <&reg_3p3v>;
--		VDDIO-supply = <&reg_3p3v>;
-+		VDDA-supply = <&v_3v2>;
-+		VDDIO-supply = <&v_3v2>;
- 	};
- };
- 
-@@ -292,7 +303,7 @@
- 
- &usbh1 {
- 	disable-over-current;
--	vbus-supply = <&reg_usbh1_vbus>;
-+	vbus-supply = <&v_usb2>;
- 	status = "okay";
- };
- 
-@@ -300,7 +311,7 @@
- 	disable-over-current;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hummingboard_usbotg_id>;
--	vbus-supply = <&reg_usbotg_vbus>;
-+	vbus-supply = <&v_usb1>;
- 	status = "okay";
- };
- 
-@@ -314,3 +325,7 @@
- 	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
-+
-+&vcc_3v3 {
-+	vin-supply = <&v_3v2>;
++/* USDHC3 - eMMC */
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_microsom_usdhc3>;
++	bus-width = <8>;
++	non-removable;
++	vmmc-supply = <&vcc_3v3>;
++	status = "okay";
 +};
 -- 
 2.7.4
