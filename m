@@ -1,73 +1,96 @@
-From: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: imx6qdl-nitrogen6x: Add SPI NOR partitions
-Date: Mon, 27 Nov 2017 11:31:27 -0200
-Message-ID: <20171127133127.16985-1-otavio@ossystems.com.br>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 29/35] dt-bindings: nds32 CPU Bindings
+Date: Mon, 27 Nov 2017 13:42:32 +0000
+Message-ID: <20171127134232.q343uymer47zt74m@lakrids.cambridge.arm.com>
+References: <cover.1511785528.git.green.hu@gmail.com>
+ <20a04f4a5b08dcec221e0c511e42ff3df711ae66.1511785528.git.green.hu@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20a04f4a5b08dcec221e0c511e42ff3df711ae66.1511785528.git.green.hu@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, Vincent Chen <vincentc@andestech.com>, Rick Chen <rick@andestech.com>, Zong Li <zong@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the partitions definition for the SPI NOR to provide
-backward compatibility with the documented[1] layout used with
-Boundary Devices BSP.
+Him
 
-1. https://boundarydevices.com/boot-flash-access-linux/
+On Mon, Nov 27, 2017 at 08:28:16PM +0800, Greentime Hu wrote:
+> From: Greentime Hu <greentime@andestech.com>
+> 
+> This patch adds nds32 CPU binding documents.
+> 
+> Signed-off-by: Vincent Chen <vincentc@andestech.com>
+> Signed-off-by: Rick Chen <rick@andestech.com>
+> Signed-off-by: Zong Li <zong@andestech.com>
+> Signed-off-by: Greentime Hu <greentime@andestech.com>
+> ---
+>  Documentation/devicetree/bindings/nds32/cpus.txt |   32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nds32/cpus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nds32/cpus.txt b/Documentation/devicetree/bindings/nds32/cpus.txt
+> new file mode 100644
+> index 0000000..c302c89
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nds32/cpus.txt
+> @@ -0,0 +1,32 @@
+> +* Andestech Processor Binding
+> +
+> +This binding specifies what properties must be available in the device tree
+> +representation of a Andestech Processor Core, which is the root node in the
+> +tree.
+> +
+> +Required properties:
+> +
+> +	- compatible:
+> +		Usage: required
+> +		Value type: <string>
+> +		Definition: should be one of:
+> +			"andestech,n13"
+> +			"andestech,n15"
+> +			"andestech,d15"
+> +			"andestech,n10"
+> +			"andestech,d10"
+> +			"andestech,nds32v3"
 
-It exports to Linux:
+Are these specific parts, or architecture versions?
 
- mtd0: bootloader
- mtd1: env
- mtd2: splash
+I guess "andestech,nds32v3" is an architecture version, and the rest are
+specific parts?
 
-Signed-off-by: Otavio Salvador <otavio-fKevB0iiKLMBZ+LybsDmbA@public.gmane.org>
----
+> +	- device_type
+> +		Usage: required
+> +		Value type: <string>
+> +		Definition: must be "cpu"
+> +	- clock-frequency: Contains the clock frequency for CPU, in Hz.
+> +
+> +* Examples
+> +
+> +/ {
+> +	cpu {
+> +		device_type = "cpu";
+> +		compatible = "andestech,n13", "andestech,nds32v3";
+> +	};
 
-Changes in v3:
- - use lock instead of read-only (Gary Bisson)
+This is missing the required clock-frequency property.
 
-Changes in v2:
- - rework labels (Fabio Estevam)
- - add read-only flags (Fabio Estevam)
+There should be a /cpus node, with each CPU listed under that, to align
+with the devicetree spec. Even if you never support SMP, there's no
+reason to be different from other architectures.
 
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+You should have something like:
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index 4bdf29169d2a..f855d802533e 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -276,6 +276,26 @@
- 		compatible = "sst,sst25vf016b", "jedec,spi-nor";
- 		spi-max-frequency = <20000000>;
- 		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "bootloader";
-+			reg = <0x0 0xc0000>;
-+			lock;
-+		};
-+
-+		partition@c0000 {
-+			label = "env";
-+			reg = <0xc0000 0x2000>;
-+			lock;
-+		};
-+
-+		partition@c2000 {
-+			label = "splash";
-+			reg = <0xc2000 0x13e000>;
-+			lock;
-+		};
- 	};
- };
- 
--- 
-2.15.0
+/ {
+	cpus {
+		cpu {
+			device_type = "cpu";
+			compatible = "andestech,n13";
+			clock-frequency = <...>;
+		};
+	};
+};
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
