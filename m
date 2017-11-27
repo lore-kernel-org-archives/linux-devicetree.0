@@ -1,45 +1,158 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/13] SolidRun Hummingboard DT updates
-Date: Mon, 27 Nov 2017 18:18:40 -0200
-Message-ID: <CAOMZO5DY+6BkaFSVHg-mbZ6_vcM_wcwin16WmPbp22p1AX4yzA@mail.gmail.com>
-References: <20171127165134.GH31757@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171127165134.GH31757-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Nettleton <jon.nettleton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Alan Tull <atull@kernel.org>
+Subject: [RFC 1/2] of: overlay: add whitelist
+Date: Mon, 27 Nov 2017 14:58:03 -0600
+Message-ID: <1511816284-12145-2-git-send-email-atull@kernel.org>
+References: <1511816284-12145-1-git-send-email-atull@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1511816284-12145-1-git-send-email-atull@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 27, 2017 at 2:51 PM, Russell King - ARM Linux
-<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-> Hi Shawn,
->
-> This series updates the SolidRun Hummingboard platforms to:
-> (a) make the DT more reflective of the schematics
-> (b) re-organise how we deal with the differences between various board
->     versions in preparation for the new 1.5 microsom.
->
-> The idea with (b) is that we add the support for the board + usom
-> combination by including the appropriate dtsi files.
->
-> For example, in mainline at the moment, we support two variants of the
-> Hummingboards - both with Broadcom Wi-Fi and without eMMC.  Going
-> forward, when a 1.5 usom is fitted (which modern Hummingboards will all
-> have) the boards will have TI Wi-Fi and potentially eMMC on the usom.
->
-> So, this prepares the ground to support these combinations, and maybe
-> if I can get agreement from Jon, move forward with Hummingboard2
-> support.
+Add simple whitelist.  When an overlay is submitted, if any target in
+the overlay is not in the whitelist, the overlay is rejected.  Drivers
+that support dynamic configuration can register their device node with:
 
-Looks good. Only a few minor nits that I found and replied in the
-respective patches.
+  int of_add_whitelist_node(struct device_node *np)
 
-For the whole series:
+and remove themselves with:
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  void of_remove_whitelist_node(struct device_node *np)
+
+Signed-off-by: Alan Tull <atull@kernel.org>
+---
+ drivers/of/overlay.c | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h   | 12 +++++++++
+ 2 files changed, 85 insertions(+)
+
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index c150abb..5f952a1 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -21,6 +21,7 @@
+ #include <linux/slab.h>
+ #include <linux/err.h>
+ #include <linux/idr.h>
++#include <linux/spinlock.h>
+ 
+ #include "of_private.h"
+ 
+@@ -646,6 +647,74 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
+ 	kfree(ovcs);
+ }
+ 
++/* lock for adding/removing device nodes to the whitelist */
++static spinlock_t whitelist_lock;
++
++static struct list_head whitelist_list = LIST_HEAD_INIT(whitelist_list);
++
++struct dt_overlay_whitelist {
++	struct device_node *np;
++	struct list_head node;
++};
++
++int of_add_whitelist_node(struct device_node *np)
++{
++	unsigned long flags;
++	struct dt_overlay_whitelist *wln;
++
++	wln = kzalloc(sizeof(*wln), GFP_KERNEL);
++	if (!wln)
++		return -ENOMEM;
++
++	wln->np = np;
++
++	spin_lock_irqsave(&whitelist_lock, flags);
++	list_add(&wln->node, &whitelist_list);
++	spin_unlock_irqrestore(&whitelist_lock, flags);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_add_whitelist_node);
++
++void of_remove_whitelist_node(struct device_node *np)
++{
++	struct dt_overlay_whitelist *wln;
++	unsigned long flags;
++
++	list_for_each_entry(wln, &whitelist_list, node) {
++		if (np == wln->np) {
++			spin_lock_irqsave(&whitelist_lock, flags);
++			list_del(&wln->node);
++			spin_unlock_irqrestore(&whitelist_lock, flags);
++			kfree(wln);
++			return;
++		}
++	}
++}
++EXPORT_SYMBOL_GPL(of_remove_whitelist_node);
++
++static int of_check_whitelist(struct overlay_changeset *ovcs)
++{
++	struct dt_overlay_whitelist *wln;
++	struct device_node *target;
++	int i;
++
++	for (i = 0; i < ovcs->count; i++) {
++		target = ovcs->fragments[i].target;
++		if (!of_node_cmp(target->name, "__symbols__"))
++			continue;
++
++		list_for_each_entry(wln, &whitelist_list, node)
++			if (target == wln->np)
++				break;
++
++		if (target != wln->np)
++			return -ENODEV;
++	}
++
++	return 0;
++}
++
+ /**
+  * of_overlay_apply() - Create and apply an overlay changeset
+  * @tree:	Expanded overlay device tree
+@@ -717,6 +786,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+ 	if (ret)
+ 		goto err_free_overlay_changeset;
+ 
++	ret = of_check_whitelist(ovcs);
++	if (ret)
++		goto err_free_overlay_changeset;
++
+ 	ret = overlay_notify(ovcs, OF_OVERLAY_PRE_APPLY);
+ 	if (ret) {
+ 		pr_err("overlay changeset pre-apply notify error %d\n", ret);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index d3dea1d..5bf652a1 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1364,6 +1364,9 @@ int of_overlay_remove_all(void);
+ int of_overlay_notifier_register(struct notifier_block *nb);
+ int of_overlay_notifier_unregister(struct notifier_block *nb);
+ 
++int of_add_whitelist_node(struct device_node *np);
++void of_remove_whitelist_node(struct device_node *np);
++
+ #else
+ 
+ static inline int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+@@ -1391,6 +1394,15 @@ static inline int of_overlay_notifier_unregister(struct notifier_block *nb)
+ 	return 0;
+ }
+ 
++static inline int of_add_whitelist_node(struct device_node *np)
++{
++	return 0;
++}
++
++static inline void of_remove_whitelist_node(struct device_node *np)
++{
++}
++
+ #endif
+ 
+ #endif /* _LINUX_OF_H */
+-- 
+2.7.4
