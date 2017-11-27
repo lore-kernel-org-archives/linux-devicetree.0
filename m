@@ -1,143 +1,35 @@
-From: Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH 1/1] ARM: dts: sunxi: Update dts for A20-OLinuXino boards
-Date: Mon, 27 Nov 2017 14:03:51 +0200
-Message-ID: <1511784231-6485-1-git-send-email-stefan@olimex.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 2/6] dt-bindings: Add vendor prefix for Solomon Goldentek Display Corporation
+Date: Mon, 27 Nov 2017 13:28:32 +0100
+Message-ID: <1511785716-23492-3-git-send-email-narmstrong@baylibre.com>
+References: <1511785716-23492-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1511785716-23492-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There will be option with 16MB flash for the following boards:
+Solomon Goldentek Display Corporation is a Taiwanese LCD/LCM manufacturer.
+Company Site: http://www.goldentek.com.tw
 
-  * A20-OLinuXino-MICRO Rev.K
-  * A20-OLinuXino-LIME Rev.J
-  * A20-OLinuXino-LIME2 Rev.J
-  * A20-SOM-EVB Rev.E
-
-The used flash chip is Winbond W25Q128FV, which is connected to
-SPI0 port. Since this is optional feature, spi0 node is dissabled
-by default. Also this option is incompatible with NAND flash, so
-they shouldn't be enabled at the same time.
-
-Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts  | 14 ++++++++++++++
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts  | 14 ++++++++++++++
- arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts | 14 ++++++++++++++
- arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 14 ++++++++++++++
- 4 files changed, 56 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-index 64c8ef9..98b7697 100644
---- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-@@ -291,6 +291,20 @@
- 	status = "okay";
- };
- 
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_b>,<&spi0_cs0_pins_b>;
-+	status = "disabled";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "winbond,w25q128","jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <40000000>;
-+	};
-+};
-+
- &spi1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&spi1_pins_a>,
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
-index edf9c3c..354af5d 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
-@@ -218,6 +218,20 @@
- 	status = "okay";
- };
- 
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_b>,<&spi0_cs0_pins_b>;
-+	status = "disabled";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "winbond,w25q128","jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <40000000>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-index ba25018..6fcdd6e 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
-@@ -268,6 +268,20 @@
- 	status = "okay";
- };
- 
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_b>,<&spi0_cs0_pins_b>;
-+	status = "disabled";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "winbond,w25q128","jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <40000000>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-index dffbaa2..db85895 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-@@ -331,6 +331,20 @@
- 	status = "okay";
- };
- 
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_b>,<&spi0_cs0_pins_b>;
-+	status = "disabled";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "winbond,w25q128","jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <40000000>;
-+	};
-+};
-+
- &spi1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&spi1_pins_a>,
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 0994bdd..b0d3bef 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -305,6 +305,7 @@ seagate	Seagate Technology PLC
+ semtech	Semtech Corporation
+ sensirion	Sensirion AG
+ sff	Small Form Factor Committee
++sgd	Solomon Goldentek Display Corporation
+ sgx	SGX Sensortech
+ sharp	Sharp Corporation
+ shimafuji	Shimafuji Electric, Inc.
 -- 
 2.7.4
