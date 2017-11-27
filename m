@@ -1,50 +1,75 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: allwinner: H5: remove
- redundant MMC0 card detect pin
-Date: Mon, 27 Nov 2017 09:23:50 +0100
-Message-ID: <20171127082350.7yzg44mdmei3w47i@flea.home>
-References: <20171125120200.23294-1-andre.przywara@arm.com>
- <20171125120200.23294-2-andre.przywara@arm.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC 2/2] drivers: dma-mapping: parse per device reserved mem
+ at probe time
+Date: Mon, 27 Nov 2017 09:31:00 +0100
+Message-ID: <875c3a8c-a857-823e-0243-487d1dd9bee7@samsung.com>
+References: <20171126131346.12532-1-peng.fan@nxp.com>
+        <CGME20171126131432epcas4p23145c6f438f7f186545456960f284b91@epcas4p2.samsung.com>
+        <20171126131346.12532-2-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="njkxzg6f6bo5d52c"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIUX57IAKGQEHBADHUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20171125120200.23294-2-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20171126131346.12532-2-peng.fan-3arQi8VN3Tc@public.gmane.org>
+Content-language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>, hch-jcswGhMUV9g@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi
 
---njkxzg6f6bo5d52c
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+On 2017-11-26 14:13, Peng Fan wrote:
+> Invoke of_reserved_mem_device_init at dma_configure, then
+> there is no need to call of_reserved_mem_device_init in device
+> specific probe function.
+>
+> Signed-off-by: Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>
 
-On Sat, Nov 25, 2017 at 12:01:59PM +0000, Andre Przywara wrote:
-> PF6 is mostly used as the CD pin for the microSD slot on H5 based
-> boards. So far we were referencing this pin twice: once using the
-> mmc0_cd_pin phandle, and then again directly as a GPIO via the pinctrl
-> phandle.
-> This will cause problems if the pinctrl driver enables strict mode, as
-> the second request will fail now, leading to a driver init failure.
-> Remove the redundant pin reference via the mmc0_cd_pin phandle.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> Reported-by: Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This has been already tried long time ago, without success:
+http://patches.linaro.org/patch/33558/
 
-Applied for 4.16, thanks!
-Maxime
+> ---
+>   drivers/base/dma-mapping.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/base/dma-mapping.c b/drivers/base/dma-mapping.c
+> index e584eddef0a7..55dca06a7b55 100644
+> --- a/drivers/base/dma-mapping.c
+> +++ b/drivers/base/dma-mapping.c
+> @@ -12,6 +12,7 @@
+>   #include <linux/export.h>
+>   #include <linux/gfp.h>
+>   #include <linux/of_device.h>
+> +#include <linux/of_reserved_mem.h>
+>   #include <linux/slab.h>
+>   #include <linux/vmalloc.h>
+>   
+> @@ -351,7 +352,9 @@ int dma_configure(struct device *dev)
+>   	}
+>   
+>   	if (dma_dev->of_node) {
+> -		ret = of_dma_configure(dev, dma_dev->of_node);
+> +		ret = of_reserved_mem_device_init(dev);
+> +		if (ret)
+> +			ret = of_dma_configure(dev, dma_dev->of_node);
+>   	} else if (has_acpi_companion(dma_dev)) {
+>   		attr = acpi_get_dma_attr(to_acpi_device_node(dma_dev->fwnode));
+>   		if (attr != DEV_DMA_NOT_SUPPORTED)
+> @@ -367,5 +370,6 @@ int dma_configure(struct device *dev)
+>   void dma_deconfigure(struct device *dev)
+>   {
+>   	of_dma_deconfigure(dev);
+> +	of_reserved_mem_device_release(dev);
+>   	acpi_dma_deconfigure(dev);
+>   }
 
+Best regards
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---njkxzg6f6bo5d52c--
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
