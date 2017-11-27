@@ -1,78 +1,39 @@
-From: Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [RFC 1/2] of: reserved_mem: check return value of_dma_configure
-Date: Mon, 27 Nov 2017 04:15:55 +0000
-Message-ID: <DB6PR04MB32219685985135A408F39FFB88250@DB6PR04MB3221.eurprd04.prod.outlook.com>
-References: <20171126131346.12532-1-peng.fan@nxp.com>
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clocksource: Add Spreadtrum SC9860 timer
+Date: Mon, 27 Nov 2017 13:14:10 +0800
+Message-ID: <CAMz4kuLjxAPqvUq48ZdVxjZiqkWu_searSimasRNbcY0ocxsPQ@mail.gmail.com>
+References: <2aaad500b5faf51c55fc6f0ad361d9078a521db8.1511501514.git.baolin.wang@spreadtrum.com>
+ <20171126221749.jjz4bstzvgzgt4ty@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20171126131346.12532-1-peng.fan-3arQi8VN3Tc@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171126221749.jjz4bstzvgzgt4ty@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On 27 November 2017 at 06:17, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Nov 24, 2017 at 01:37:47PM +0800, Baolin Wang wrote:
+>> This patch adds documentation of device tree bindings for the timers
+>> found on Spreadtrum SC9860 platform.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> ---
+>>  .../bindings/timer/spreadtrum,sprd-timer.txt       |   20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/timer/spreadtrum,sprd-timer.txt
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> -----Original Message-----
-> From: Peng Fan
-> Sent: Sunday, November 26, 2017 9:14 PM
-> To: hch-jcswGhMUV9g@public.gmane.org; m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org; robin.murphy-5wv7dgnIgG8@public.gmane.org;
-> gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; Peng Fan
-> <peng.fan-3arQi8VN3Tc@public.gmane.org>
-> Subject: [RFC 1/2] of: reserved_mem: check return value of_dma_configure
-> 
-> In commit <7b07cbefb6>("iommu: of: Handle IOMMU lookup failure with
-> deferred probing or error"), there is possibility that of_dma_configure may fail.
-> So in of_reserved_mem_device_init_by_idx,
-> also need to propagate the return value of_dma_configure to caller, when
-> need to use reserved memory for a device which needs iommu.
+Thanks Rob.
 
-Seems my understanding is wrong, with iommu enabled, reserved memory will not be used
-for devices with memory-region. Please still help review RFC 2/2.
-
-Thanks,
-Peng.
-
-> 
-> Signed-off-by: Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>
-> ---
->  drivers/of/of_reserved_mem.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-> index 22b75c82e377..61523819b50e 100644
-> --- a/drivers/of/of_reserved_mem.c
-> +++ b/drivers/of/of_reserved_mem.c
-> @@ -357,9 +357,12 @@ int of_reserved_mem_device_init_by_idx(struct
-> device *dev,
->  		/* ensure that dma_ops is set for virtual devices
->  		 * using reserved memory
->  		 */
-> -		of_dma_configure(dev, np);
-> -
-> -		dev_info(dev, "assigned reserved memory node %s\n", rmem-
-> >name);
-> +		ret = of_dma_configure(dev, np);
-> +		if (ret)
-> +			of_reserved_mem_device_release(dev);
-> +		else
-> +			dev_info(dev, "assigned reserved memory node %s\n",
-> +				 rmem->name);
->  	} else {
->  		kfree(rd);
->  	}
-> --
-> 2.14.1
+-- 
+Baolin Wang
+Best Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
