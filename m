@@ -1,38 +1,108 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v2 2/2] ARM: dts: at91: disable the nxp,se97b SMBUS timeout on the TSE-850
-Date: Mon, 27 Nov 2017 17:31:01 +0100
-Message-ID: <20171127163101.27859-3-peda@axentia.se>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v2 1/2] hwmon: (jc42) optionally try to disable the SMBUS timeout
+Date: Mon, 27 Nov 2017 17:31:00 +0100
+Message-ID: <20171127163101.27859-2-peda@axentia.se>
 References: <20171127163101.27859-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171127163101.27859-1-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171127163101.27859-1-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The I2C adapter driver is sometimes slow, causing the SCL line to
-be stuck low for more than the stipulated SMBUS timeout of 25-35 ms.
-This causes the client device to give up which in turn causes silent
-corruption of data. So, disable the SMBUS timeout in the client device.
+With a nxp,se97 chip on an atmel sama5d31 board, the I2C adapter driver
+is not always capable of avoiding the 25-35 ms timeout as specified by
+the SMBUS protocol. This may cause silent corruption of the last bit of
+any transfer, e.g. a one is read instead of a zero if the sensor chip
+times out. This also affects the eeprom half of the nxp-se97 chip, where
+this silent corruption was originally noticed. Other I2C adapters probably
+suffer similar issues, e.g. bit-banging comes to mind as risky...
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
+The SMBUS register in the nxp chip is not a standard Jedec register, but
+it is not special to the nxp chips either, at least the atmel chips
+have the same mechanism. Therefore, do not special case this on the
+manufacturer, it is opt-in via the device property anyway.
+
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 ---
- arch/arm/boot/dts/at91-tse850-3.dts | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/hwmon/jc42.txt |  4 ++++
+ drivers/hwmon/jc42.c                             | 21 +++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91-tse850-3.dts b/arch/arm/boot/dts/at91-tse850-3.dts
-index 5f29010cdbd8..9b82cc8843e1 100644
---- a/arch/arm/boot/dts/at91-tse850-3.dts
-+++ b/arch/arm/boot/dts/at91-tse850-3.dts
-@@ -221,6 +221,7 @@
- 	jc42@18 {
- 		compatible = "nxp,se97b", "jedec,jc-42.4-temp";
- 		reg = <0x18>;
-+		smbus-timeout-disable;
- 	};
+diff --git a/Documentation/devicetree/bindings/hwmon/jc42.txt b/Documentation/devicetree/bindings/hwmon/jc42.txt
+index 07a250498fbb..f569db58f64a 100644
+--- a/Documentation/devicetree/bindings/hwmon/jc42.txt
++++ b/Documentation/devicetree/bindings/hwmon/jc42.txt
+@@ -34,6 +34,10 @@ Required properties:
  
- 	dpot: mcp4651-104@28 {
+ - reg: I2C address
+ 
++Optional properties:
++- smbus-timeout-disable: When set, the smbus timeout function will be disabled.
++			 This is not supported on all chips.
++
+ Example:
+ 
+ temp-sensor@1a {
+diff --git a/drivers/hwmon/jc42.c b/drivers/hwmon/jc42.c
+index 5f11dc014ed6..e5234f953a6d 100644
+--- a/drivers/hwmon/jc42.c
++++ b/drivers/hwmon/jc42.c
+@@ -22,6 +22,7 @@
+  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
+ 
++#include <linux/bitops.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+@@ -45,6 +46,7 @@ static const unsigned short normal_i2c[] = {
+ #define JC42_REG_TEMP		0x05
+ #define JC42_REG_MANID		0x06
+ #define JC42_REG_DEVICEID	0x07
++#define JC42_REG_SMBUS		0x22 /* NXP and Atmel, possibly others? */
+ 
+ /* Status bits in temperature register */
+ #define JC42_ALARM_CRIT_BIT	15
+@@ -75,6 +77,9 @@ static const unsigned short normal_i2c[] = {
+ #define GT_MANID		0x1c68	/* Giantec */
+ #define GT_MANID2		0x132d	/* Giantec, 2nd mfg ID */
+ 
++/* SMBUS register */
++#define SMBUS_STMOUT		BIT(7)  /* SMBus time-out, active low */
++
+ /* Supported chips */
+ 
+ /* Analog Devices */
+@@ -495,6 +500,22 @@ static int jc42_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 
+ 	data->extended = !!(cap & JC42_CAP_RANGE);
+ 
++	if (device_property_read_bool(dev, "smbus-timeout-disable")) {
++		int smbus;
++
++		/*
++		 * Not all chips support this register, but from a
++		 * quick read of various datasheets no chip appears
++		 * incompatible with the below attempt to disable
++		 * the timeout. And the whole thing is opt-in...
++		 */
++		smbus = i2c_smbus_read_word_swapped(client, JC42_REG_SMBUS);
++		if (smbus < 0)
++			return smbus;
++		i2c_smbus_write_word_swapped(client, JC42_REG_SMBUS,
++					     smbus | SMBUS_STMOUT);
++	}
++
+ 	config = i2c_smbus_read_word_swapped(client, JC42_REG_CONFIG);
+ 	if (config < 0)
+ 		return config;
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
