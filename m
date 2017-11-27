@@ -1,8 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 01/13] ARM: dts: imx6qdl: SolidRun: remove redundant
- regulators node
-Date: Mon, 27 Nov 2017 16:52:09 +0000
-Message-ID: <E1eJMdd-0002qR-Or@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 02/13] ARM: dts: imx6qdl: SolidRun: move AR8035 into microsom
+Date: Mon, 27 Nov 2017 16:52:14 +0000
+Message-ID: <E1eJMdi-0002qY-Ta@rmk-PC.armlinux.org.uk>
 References: <20171127165134.GH31757@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -15,189 +14,232 @@ To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Jon Nettleton <jon.nettleton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The regulators node is redundant, and serves no useful function.
-Remove it from i.MX6 SolidRun platforms.
+As all SolidRun microsoms are fitted with an AR8035, it's pointless
+having the ethernet support as a separate include file.  Move the
+AR8035 support into the main imx6qdl-microsom file.
 
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 56 ++++++++++++++---------------
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 56 ++++++++++++++---------------
- arch/arm/boot/dts/imx6qdl-microsom.dtsi     | 24 ++++++-------
- 3 files changed, 62 insertions(+), 74 deletions(-)
+ arch/arm/boot/dts/imx6q-h100.dts               |  1 -
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi         |  1 -
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi    |  1 -
+ arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi | 99 --------------------------
+ arch/arm/boot/dts/imx6qdl-microsom.dtsi        | 53 ++++++++++++++
+ 5 files changed, 53 insertions(+), 102 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
 
+diff --git a/arch/arm/boot/dts/imx6q-h100.dts b/arch/arm/boot/dts/imx6q-h100.dts
+index a3269f57df2b..bf5dfc9c8127 100644
+--- a/arch/arm/boot/dts/imx6q-h100.dts
++++ b/arch/arm/boot/dts/imx6q-h100.dts
+@@ -43,7 +43,6 @@
+ 
+ #include "imx6q.dtsi"
+ #include "imx6qdl-microsom.dtsi"
+-#include "imx6qdl-microsom-ar8035.dtsi"
+ 
+ / {
+ 	model = "Auvidea H100";
 diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-index 14fff4ee6516..b20508237046 100644
+index b20508237046..57ce2dbb6ad9 100644
 --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-@@ -64,38 +64,34 @@
- 		};
- 	};
+@@ -39,7 +39,6 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include "imx6qdl-microsom.dtsi"
+-#include "imx6qdl-microsom-ar8035.dtsi"
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/gpio/gpio.h>
  
--	regulators {
--		compatible = "simple-bus";
--
--		reg_3p3v: 3p3v {
--			compatible = "regulator-fixed";
--			regulator-name = "3P3V";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			regulator-always-on;
--		};
-+	reg_3p3v: 3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
- 
--		reg_usbh1_vbus: usb-h1-vbus {
--			compatible = "regulator-fixed";
--			enable-active-high;
--			gpio = <&gpio1 0 0>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_cubox_i_usbh1_vbus>;
--			regulator-name = "usb_h1_vbus";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--		};
-+	reg_usbh1_vbus: usb-h1-vbus {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio1 0 0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_cubox_i_usbh1_vbus>;
-+		regulator-name = "usb_h1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
- 
--		reg_usbotg_vbus: usb-otg-vbus {
--			compatible = "regulator-fixed";
--			enable-active-high;
--			gpio = <&gpio3 22 0>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_cubox_i_usbotg_vbus>;
--			regulator-name = "usb_otg_vbus";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--		};
-+	reg_usbotg_vbus: usb-otg-vbus {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio3 22 0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_cubox_i_usbotg_vbus>;
-+		regulator-name = "usb_otg_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
- 	};
- 
- 	sound-spdif {
 diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index 37c07c0748aa..0a0a7e4b956b 100644
+index 0a0a7e4b956b..afd981e9b5e3 100644
 --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -53,38 +53,34 @@
- 		pinctrl-0 = <&pinctrl_hummingboard_gpio3_5>;
- 	};
+@@ -39,7 +39,6 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include "imx6qdl-microsom.dtsi"
+-#include "imx6qdl-microsom-ar8035.dtsi"
  
--	regulators {
--		compatible = "simple-bus";
+ / {
+ 	chosen {
+diff --git a/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi b/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
+deleted file mode 100644
+index 900e8c781f91..000000000000
+--- a/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
++++ /dev/null
+@@ -1,99 +0,0 @@
+-/*
+- * Copyright (C) 2013,2014 Russell King
+- *
+- * This describes the hookup for an AR8035 to the iMX6 on the SolidRun
+- * MicroSOM.
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+- */
+-&fec {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_microsom_enet_ar8035>;
+-	phy-mode = "rgmii";
+-	phy-reset-duration = <2>;
+-	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+-	status = "okay";
+-};
 -
--		reg_3p3v: 3p3v {
--			compatible = "regulator-fixed";
--			regulator-name = "3P3V";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			regulator-always-on;
+-&iomuxc {
+-	enet {
+-		pinctrl_microsom_enet_ar8035: microsom-enet-ar8035 {
+-			fsl,pins = <
+-				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b8b0
+-				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
+-				/* AR8035 reset */
+-				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x130b0
+-				/* AR8035 interrupt */
+-				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18		0x80000000
+-				/* GPIO16 -> AR8035 25MHz */
+-				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0xc0000000
+-				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x80000000
+-				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
+-				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
+-				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
+-				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
+-				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
+-				/* AR8035 CLK_25M --> ENET_REF_CLK (V22) */
+-				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x0a0b1
+-				/* AR8035 pin strapping: IO voltage: pull up */
+-				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
+-				/* AR8035 pin strapping: PHYADDR#0: pull down */
+-				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x13030
+-				/* AR8035 pin strapping: PHYADDR#1: pull down */
+-				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x13030
+-				/* AR8035 pin strapping: MODE#1: pull up */
+-				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
+-				/* AR8035 pin strapping: MODE#3: pull up */
+-				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
+-				/* AR8035 pin strapping: MODE#0: pull down */
+-				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x13030
+-
+-				/*
+-				 * As the RMII pins are also connected to RGMII
+-				 * so that an AR8030 can be placed, set these
+-				 * to high-z with the same pulls as above.
+-				 * Use the GPIO settings to avoid changing the
+-				 * input select registers.
+-				 */
+-				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x03000
+-				MX6QDL_PAD_ENET_RXD0__GPIO1_IO27	0x03000
+-				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x03000
+-			>;
 -		};
-+	reg_3p3v: 3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
- 
--		reg_usbh1_vbus: usb-h1-vbus {
--			compatible = "regulator-fixed";
--			enable-active-high;
--			gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_hummingboard_usbh1_vbus>;
--			regulator-name = "usb_h1_vbus";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--		};
-+	reg_usbh1_vbus: usb-h1-vbus {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_hummingboard_usbh1_vbus>;
-+		regulator-name = "usb_h1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
- 
--		reg_usbotg_vbus: usb-otg-vbus {
--			compatible = "regulator-fixed";
--			enable-active-high;
--			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_hummingboard_usbotg_vbus>;
--			regulator-name = "usb_otg_vbus";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--		};
-+	reg_usbotg_vbus: usb-otg-vbus {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_hummingboard_usbotg_vbus>;
-+		regulator-name = "usb_otg_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
- 	};
- 
- 	sound-sgtl5000 {
+-	};
+-};
 diff --git a/arch/arm/boot/dts/imx6qdl-microsom.dtsi b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
-index 6a410160c9ee..f7266ae2534c 100644
+index f7266ae2534c..c1541f2ecf3a 100644
 --- a/arch/arm/boot/dts/imx6qdl-microsom.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
-@@ -48,20 +48,16 @@
- 		enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
+@@ -69,6 +69,15 @@
  	};
+ };
  
--	regulators {
--		compatible = "simple-bus";
--
--		reg_brcm: brcm-reg {
--			compatible = "regulator-fixed";
--			enable-active-high;
--			gpio = <&gpio3 19 0>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_microsom_brcm_reg>;
--			regulator-name = "brcm_reg";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			startup-delay-us = <200000>;
--		};
-+	reg_brcm: brcm-reg {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio3 19 0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_microsom_brcm_reg>;
-+		regulator-name = "brcm_reg";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <200000>;
- 	};
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_microsom_enet_ar8035>;
++	phy-mode = "rgmii";
++	phy-reset-duration = <2>;
++	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
+ &iomuxc {
+ 	microsom {
+ 		pinctrl_microsom_brcm_bt: microsom-brcm-bt {
+@@ -100,6 +109,50 @@
+ 			>;
+ 		};
  
- 	usdhc1_pwrseq: usdhc1_pwrseq {
++		pinctrl_microsom_enet_ar8035: microsom-enet-ar8035 {
++			fsl,pins = <
++				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b8b0
++				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++				/* AR8035 reset */
++				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x130b0
++				/* AR8035 interrupt */
++				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18		0x80000000
++				/* GPIO16 -> AR8035 25MHz */
++				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0xc0000000
++				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x80000000
++				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
++				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
++				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
++				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
++				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
++				/* AR8035 CLK_25M --> ENET_REF_CLK (V22) */
++				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x0a0b1
++				/* AR8035 pin strapping: IO voltage: pull up */
++				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
++				/* AR8035 pin strapping: PHYADDR#0: pull down */
++				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x13030
++				/* AR8035 pin strapping: PHYADDR#1: pull down */
++				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x13030
++				/* AR8035 pin strapping: MODE#1: pull up */
++				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
++				/* AR8035 pin strapping: MODE#3: pull up */
++				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
++				/* AR8035 pin strapping: MODE#0: pull down */
++				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x13030
++
++				/*
++				 * As the RMII pins are also connected to RGMII
++				 * so that an AR8030 can be placed, set these
++				 * to high-z with the same pulls as above.
++				 * Use the GPIO settings to avoid changing the
++				 * input select registers.
++				 */
++				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x03000
++				MX6QDL_PAD_ENET_RXD0__GPIO1_IO27	0x03000
++				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x03000
++			>;
++		};
++
+ 		pinctrl_microsom_uart1: microsom-uart1 {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
 -- 
 2.7.4
 
