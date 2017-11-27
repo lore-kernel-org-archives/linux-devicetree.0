@@ -1,46 +1,59 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 1/3] dt-bindings: Add vendor prefix for Allo.com
-Date: Mon, 27 Nov 2017 23:51:31 +0100
-Message-ID: <3365cccb-7a29-4ab0-d241-f27e537b9b02@suse.de>
-References: <20171114180114.26408-1-afaerber@suse.de>
- <20171114180114.26408-2-afaerber@suse.de>
- <00d801d364d8$fcd8da60$f68a8f20$@cem-solutions.net>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 02/13] ARM: dts: imx6qdl: SolidRun: move AR8035 into
+ microsom
+Date: Mon, 27 Nov 2017 23:13:32 +0000
+Message-ID: <20171127231332.GP31757@n2100.armlinux.org.uk>
+References: <20171127165134.GH31757@n2100.armlinux.org.uk>
+ <E1eJMdi-0002qY-Ta@rmk-PC.armlinux.org.uk>
+ <CAOMZO5C+z2nFv0pFz5XDY-DGtj2YvhU_kNh1H8mdq6GOUqc_Mg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <00d801d364d8$fcd8da60$f68a8f20$@cem-solutions.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: sudeep kumar <sudeepkumar@cem-solutions.net>, linux-arm-kernel@lists.infradead.org, 'Rob Herring' <robh+dt@kernel.org>
-Cc: 'Thomas Liau' <thomas.liau@actions-semi.com>, 'Jeff Chen' <jeff.chen@actions-semi.com>, =?UTF-8?B?J+W8oOS4nOmjjic=?= <zhangdf@actions-semi.com>, =?UTF-8?B?J+WImOeCnCc=?= <liuwei@actions-semi.com>, =?UTF-8?B?J+W8oOWkqeebiic=?= <tyzhang@actions-semi.com>, =?UTF-8?B?J+aiheWIqSc=?= <harrymei@actions-semi.com>, 'Ioan B' <ioan@allo.com>, linux-kernel@vger.kernel.org, 'Mark Rutland' <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5C+z2nFv0pFz5XDY-DGtj2YvhU_kNh1H8mdq6GOUqc_Mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Nettleton <jon.nettleton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 24.11.2017 um 05:01 schrieb sudeep kumar:
-> Acked-by : sudeep <sudeepkumar@cem-solutions.net>
-
-Thanks, adjusted, and all three queued on v4.16/dt:
-https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.16/dt
-
-> -----Original Message-----
-> From: Andreas Färber [mailto:afaerber@suse.de] 
-> Sent: Tuesday, November 14, 2017 11:31 PM
-> To: linux-arm-kernel@lists.infradead.org
-> Cc: Thomas Liau <thomas.liau@actions-semi.com>; Jeff Chen <jeff.chen@actions-semi.com>; 张东风 <zhangdf@actions-semi.com>; 刘炜 <liuwei@actions-semi.com>; 张天益 <tyzhang@actions-semi.com>; 梅利 <harrymei@actions-semi.com>; Ioan B <ioan@allo.com>; Sudeep Kumar <sudeepkumar@cem-solutions.net>; linux-kernel@vger.kernel.org; Andreas Färber <afaerber@suse.de>; Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org
-> Subject: [PATCH 1/3] dt-bindings: Add vendor prefix for Allo.com
+On Mon, Nov 27, 2017 at 06:12:38PM -0200, Fabio Estevam wrote:
+> On Mon, Nov 27, 2017 at 2:52 PM, Russell King
+> <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
 > 
-> ALLO is a Canadian-Indian manufacturer of telecommunications hardware.
+> > +               pinctrl_microsom_enet_ar8035: microsom-enet-ar8035 {
+> > +                       fsl,pins = <
+> > +                               MX6QDL_PAD_ENET_MDIO__ENET_MDIO         0x1b8b0
+> > +                               MX6QDL_PAD_ENET_MDC__ENET_MDC           0x1b0b0
+> > +                               /* AR8035 reset */
+> > +                               MX6QDL_PAD_KEY_ROW4__GPIO4_IO15         0x130b0
+> > +                               /* AR8035 interrupt */
+> > +                               MX6QDL_PAD_DI0_PIN2__GPIO4_IO18         0x80000000
 > 
-> Cc: Ioan B. <ioan@allo.com>
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Please avoid  0x80000000 and use the real IOMUX value instead.
+> 
+> > +                               /* GPIO16 -> AR8035 25MHz */
+> > +                               MX6QDL_PAD_GPIO_16__ENET_REF_CLK        0xc0000000
+> 
+> Ditto.
+> 
+> > +                               MX6QDL_PAD_RGMII_TXC__RGMII_TXC         0x80000000
+> 
+> Ditto.
 
-Regards,
-Andreas
+This isn't new, this is merely moving the definition from an existing
+file, and when moving definitions, the golden rule is you don't
+modify them.  If changes are required they should be a separate
+patch.
+
+I'll try to read the correct values from the registers, but I see
+this as an entirely separate thing from this series, and not
+something that this series should be concerned with.
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
