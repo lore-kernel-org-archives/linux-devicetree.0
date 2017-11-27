@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V6 04/12] clk: sprd: add mux clock support
-Date: Mon, 27 Nov 2017 18:01:07 +0800
-Message-ID: <20171127100115.20655-5-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V6 02/12] clk: sprd: Add common infrastructure
+Date: Mon, 27 Nov 2017 18:01:05 +0800
+Message-ID: <20171127100115.20655-3-chunyan.zhang@spreadtrum.com>
 References: <20171127100115.20655-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,36 +12,74 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds clock multiplexor support for Spreadtrum platforms,
-the mux clocks also can be found in sprd composite clocks, so
-provides two helpers that can be reused later on.
+Added Spreadtrum's clock driver framework together with common
+structures and interface functions.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 ---
- drivers/clk/sprd/Makefile |  1 +
- drivers/clk/sprd/mux.c    | 78 +++++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/sprd/mux.h    | 76 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 155 insertions(+)
- create mode 100644 drivers/clk/sprd/mux.c
- create mode 100644 drivers/clk/sprd/mux.h
+ drivers/clk/Kconfig       |  1 +
+ drivers/clk/Makefile      |  1 +
+ drivers/clk/sprd/Kconfig  |  4 ++
+ drivers/clk/sprd/Makefile |  3 ++
+ drivers/clk/sprd/common.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sprd/common.h | 52 +++++++++++++++++++++++++
+ 6 files changed, 160 insertions(+)
+ create mode 100644 drivers/clk/sprd/Kconfig
+ create mode 100644 drivers/clk/sprd/Makefile
+ create mode 100644 drivers/clk/sprd/common.c
+ create mode 100644 drivers/clk/sprd/common.h
 
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 1c4e1aa..ce1a32be 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -236,6 +236,7 @@ source "drivers/clk/mvebu/Kconfig"
+ source "drivers/clk/qcom/Kconfig"
+ source "drivers/clk/renesas/Kconfig"
+ source "drivers/clk/samsung/Kconfig"
++source "drivers/clk/sprd/Kconfig"
+ source "drivers/clk/sunxi-ng/Kconfig"
+ source "drivers/clk/tegra/Kconfig"
+ source "drivers/clk/ti/Kconfig"
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index f7f761b..d880d13 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -85,6 +85,7 @@ obj-$(CONFIG_COMMON_CLK_SAMSUNG)	+= samsung/
+ obj-$(CONFIG_ARCH_SIRF)			+= sirf/
+ obj-$(CONFIG_ARCH_SOCFPGA)		+= socfpga/
+ obj-$(CONFIG_PLAT_SPEAR)		+= spear/
++obj-$(CONFIG_ARCH_SPRD)			+= sprd/
+ obj-$(CONFIG_ARCH_STI)			+= st/
+ obj-$(CONFIG_ARCH_SUNXI)		+= sunxi/
+ obj-$(CONFIG_ARCH_SUNXI)		+= sunxi-ng/
+diff --git a/drivers/clk/sprd/Kconfig b/drivers/clk/sprd/Kconfig
+new file mode 100644
+index 0000000..67a3287
+--- /dev/null
++++ b/drivers/clk/sprd/Kconfig
+@@ -0,0 +1,4 @@
++config SPRD_COMMON_CLK
++	tristate "Clock support for Spreadtrum SoCs"
++	depends on ARCH_SPRD || COMPILE_TEST
++	default ARCH_SPRD
 diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
-index 8cd5592..cee36b5 100644
---- a/drivers/clk/sprd/Makefile
+new file mode 100644
+index 0000000..74f4b80
+--- /dev/null
 +++ b/drivers/clk/sprd/Makefile
-@@ -2,3 +2,4 @@ obj-$(CONFIG_SPRD_COMMON_CLK)	+= clk-sprd.o
- 
- clk-sprd-y	+= common.o
- clk-sprd-y	+= gate.o
-+clk-sprd-y	+= mux.o
-diff --git a/drivers/clk/sprd/mux.c b/drivers/clk/sprd/mux.c
+@@ -0,0 +1,3 @@
++obj-$(CONFIG_SPRD_COMMON_CLK)	+= clk-sprd.o
++
++clk-sprd-y	+= common.o
+diff --git a/drivers/clk/sprd/common.c b/drivers/clk/sprd/common.c
 new file mode 100644
-index 0000000..05ef9f0
+index 0000000..4e38b74a
 --- /dev/null
-+++ b/drivers/clk/sprd/mux.c
-@@ -0,0 +1,78 @@
++++ b/drivers/clk/sprd/common.c
+@@ -0,0 +1,99 @@
 +/*
-+ * Spreadtrum multiplexer clock driver
++ * Spreadtrum clock infrastructure
 + *
 + * Copyright (C) 2017 Spreadtrum, Inc.
 + * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
@@ -49,156 +87,153 @@ index 0000000..05ef9f0
 + * SPDX-License-Identifier: GPL-2.0
 + */
 +
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
 +#include <linux/regmap.h>
-+
-+#include "mux.h"
-+
-+u8 sprd_mux_helper_get_parent(const struct sprd_clk_common *common,
-+			      const struct sprd_mux_ssel *mux)
-+{
-+	unsigned int reg;
-+	u8 parent;
-+	int num_parents;
-+	int i;
-+
-+	sprd_regmap_read(common->regmap, common->reg, &reg);
-+	parent = reg >> mux->shift;
-+	parent &= (1 << mux->width) - 1;
-+
-+	if (!mux->table)
-+		return parent;
-+
-+	num_parents = clk_hw_get_num_parents(&common->hw);
-+
-+	for (i = 0; i < num_parents - 1; i++)
-+		if (parent >= mux->table[i] && parent < mux->table[i + 1])
-+			return i;
-+
-+	return num_parents - 1;
-+}
-+EXPORT_SYMBOL_GPL(sprd_mux_helper_get_parent);
-+
-+static u8 sprd_mux_get_parent(struct clk_hw *hw)
-+{
-+	struct sprd_mux *cm = hw_to_sprd_mux(hw);
-+
-+	return sprd_mux_helper_get_parent(&cm->common, &cm->mux);
-+}
-+
-+int sprd_mux_helper_set_parent(const struct sprd_clk_common *common,
-+			       const struct sprd_mux_ssel *mux,
-+			       u8 index)
-+{
-+	unsigned int reg;
-+
-+	if (mux->table)
-+		index = mux->table[index];
-+
-+	sprd_regmap_read(common->regmap, common->reg, &reg);
-+	reg &= ~GENMASK(mux->width + mux->shift - 1, mux->shift);
-+	sprd_regmap_write(common->regmap, common->reg,
-+			  reg | (index << mux->shift));
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(sprd_mux_helper_set_parent);
-+
-+static int sprd_mux_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct sprd_mux *cm = hw_to_sprd_mux(hw);
-+
-+	return sprd_mux_helper_set_parent(&cm->common, &cm->mux, index);
-+}
-+
-+const struct clk_ops sprd_mux_ops = {
-+	.get_parent = sprd_mux_get_parent,
-+	.set_parent = sprd_mux_set_parent,
-+	.determine_rate = __clk_mux_determine_rate,
-+};
-+EXPORT_SYMBOL_GPL(sprd_mux_ops);
-diff --git a/drivers/clk/sprd/mux.h b/drivers/clk/sprd/mux.h
-new file mode 100644
-index 0000000..683d63a
---- /dev/null
-+++ b/drivers/clk/sprd/mux.h
-@@ -0,0 +1,76 @@
-+/*
-+ * Spreadtrum multiplexer clock driver
-+ *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
-+ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
-+
-+#ifndef _SPRD_MUX_H_
-+#define _SPRD_MUX_H_
 +
 +#include "common.h"
 +
-+/**
-+ * struct sprd_mux_ssel - Mux clock's source select bits in its register
-+ * @shift: Bit offset of the divider in its register
-+ * @width: Width of the divider field in its register
-+ * @table: For some mux clocks, not all sources are used on some special
-+ *	   chips, this matches the value of mux clock's register and the
-+ *	   sources which are used for this mux clock
-+ */
-+struct sprd_mux_ssel {
-+	u8		shift;
-+	u8		width;
-+	const u8	*table;
++static const struct regmap_config sprdclk_regmap_config = {
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.val_bits	= 32,
++	.max_register	= 0xffff,
++	.fast_io	= true,
 +};
 +
-+struct sprd_mux {
-+	struct sprd_mux_ssel mux;
-+	struct sprd_clk_common	common;
-+};
-+
-+#define _SPRD_MUX_CLK(_shift, _width, _table)		\
-+	{						\
-+		.shift	= _shift,			\
-+		.width	= _width,			\
-+		.table	= _table,			\
-+	}
-+
-+#define SPRD_MUX_CLK_TABLE(_struct, _name, _parents, _table,		\
-+				     _reg, _shift, _width,		\
-+				     _flags)				\
-+	struct sprd_mux _struct = {					\
-+		.mux	= _SPRD_MUX_CLK(_shift, _width, _table),	\
-+		.common	= {						\
-+			.regmap		= NULL,				\
-+			.reg		= _reg,				\
-+			.hw.init = CLK_HW_INIT_PARENTS(_name,		\
-+						       _parents,	\
-+						       &sprd_mux_ops,	\
-+						       _flags),		\
-+		}							\
-+	}
-+
-+#define SPRD_MUX_CLK(_struct, _name, _parents, _reg,		\
-+		     _shift, _width, _flags)			\
-+	SPRD_MUX_CLK_TABLE(_struct, _name, _parents, NULL,	\
-+			   _reg, _shift, _width, _flags)
-+
-+static inline struct sprd_mux *hw_to_sprd_mux(const struct clk_hw *hw)
++static void sprd_clk_set_regmap(const struct sprd_clk_desc *desc,
++			 struct regmap *regmap)
 +{
-+	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
++	int i;
++	struct sprd_clk_common *cclk;
 +
-+	return container_of(common, struct sprd_mux, common);
++	for (i = 0; i < desc->num_clk_clks; i++) {
++		cclk = desc->clk_clks[i];
++		if (!cclk)
++			continue;
++
++		cclk->regmap = regmap;
++	}
 +}
 +
-+extern const struct clk_ops sprd_mux_ops;
++int sprd_clk_regmap_init(struct platform_device *pdev,
++			 const struct sprd_clk_desc *desc)
++{
++	void __iomem *base;
++	struct device_node *node = pdev->dev.of_node;
++	struct regmap *regmap = NULL;
 +
-+u8 sprd_mux_helper_get_parent(const struct sprd_clk_common *common,
-+			      const struct sprd_mux_ssel *mux);
-+int sprd_mux_helper_set_parent(const struct sprd_clk_common *common,
-+			       const struct sprd_mux_ssel *mux,
-+			       u8 index);
++	if (of_find_property(node, "sprd,syscon", NULL)) {
++		regmap = syscon_regmap_lookup_by_phandle(node, "sprd,syscon");
++		if (IS_ERR(regmap)) {
++			pr_err("%s: failed to get syscon regmap\n", __func__);
++			return PTR_ERR(regmap);
++		}
++	} else {
++		base = of_iomap(node, 0);
++		regmap = devm_regmap_init_mmio(&pdev->dev, base,
++					       &sprdclk_regmap_config);
++		if (IS_ERR(regmap)) {
++			pr_err("failed to init regmap.\n");
++			return PTR_ERR(regmap);
++		}
++	}
 +
-+#endif /* _SPRD_MUX_H_ */
++	sprd_clk_set_regmap(desc, regmap);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(sprd_clk_regmap_init);
++
++int sprd_clk_probe(struct device *dev, struct clk_hw_onecell_data *clkhw)
++{
++	int i, ret = 0;
++	struct clk_hw *hw;
++
++	for (i = 0; i < clkhw->num; i++) {
++
++		hw = clkhw->hws[i];
++
++		if (!hw)
++			continue;
++
++		ret = devm_clk_hw_register(dev, hw);
++		if (ret) {
++			dev_err(dev, "Couldn't register clock %d - %s\n",
++				i, hw->init->name);
++			return ret;
++		}
++	}
++
++	ret = of_clk_add_hw_provider(dev->of_node, of_clk_hw_onecell_get,
++				     clkhw);
++	if (ret)
++		dev_err(dev, "Failed to add clock provider.\n");
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(sprd_clk_probe);
++
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/clk/sprd/common.h b/drivers/clk/sprd/common.h
+new file mode 100644
+index 0000000..8cd774e
+--- /dev/null
++++ b/drivers/clk/sprd/common.h
+@@ -0,0 +1,52 @@
++/*
++ * Spreadtrum clock infrastructure
++ *
++ * Copyright (C) 2017 Spreadtrum, Inc.
++ * Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ */
++
++#ifndef _SPRD_CLK_COMMON_H_
++#define _SPRD_CLK_COMMON_H_
++
++#include <linux/clk-provider.h>
++#include <linux/of_platform.h>
++#include <linux/regmap.h>
++
++#include "../clk_common.h"
++
++struct device_node;
++
++struct sprd_clk_common {
++	struct regmap	*regmap;
++	u32		reg;
++	struct clk_hw	hw;
++};
++
++struct sprd_clk_desc {
++	struct sprd_clk_common		**clk_clks;
++	unsigned long			num_clk_clks;
++	struct clk_hw_onecell_data      *hw_clks;
++};
++
++#define sprd_regmap_read(map, reg, val)				\
++({								\
++	(map) ? regmap_read((map), (reg), (val)) : (-EINVAL);	\
++})
++
++#define sprd_regmap_write(map, reg, val)			\
++({								\
++	(map) ? regmap_write((map), (reg), (val)) : (-EINVAL);	\
++})
++
++static inline struct sprd_clk_common *
++	hw_to_sprd_clk_common(const struct clk_hw *hw)
++{
++	return container_of(hw, struct sprd_clk_common, hw);
++}
++int sprd_clk_regmap_init(struct platform_device *pdev,
++			 const struct sprd_clk_desc *desc);
++int sprd_clk_probe(struct device *dev, struct clk_hw_onecell_data *clkhw);
++
++#endif /* _SPRD_CLK_COMMON_H_ */
 -- 
 2.7.4
