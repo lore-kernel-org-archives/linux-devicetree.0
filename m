@@ -1,102 +1,142 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC v1 5/8] Bluetooth: btrtl: add support for the RTL8723BS and
- RTL8723DS chips
-Date: Mon, 27 Nov 2017 11:00:52 +0100
-Message-ID: <B777FE38-EEFA-4B0F-A6EB-12B8286511F3@holtmann.org>
-References: <20171117223543.32429-1-martin.blumenstingl@googlemail.com>
- <20171117223543.32429-6-martin.blumenstingl@googlemail.com>
- <109FA59C-9875-4EAA-9DA5-EC811BAA77AE@holtmann.org>
- <CAFBinCCtHUFMbbSOeKWYSJZKvFbNqhaMOrS-xgzr3E9hbkpnnw@mail.gmail.com>
- <4B23C5B4-DCB8-4B1C-B1BF-A99B1E5E10B0@holtmann.org>
- <CAFBinCD+P6kBOXjp9YZf8DbsetvF+q6yfp3X+OTRfN_Pv8R88w@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCD+P6kBOXjp9YZf8DbsetvF+q6yfp3X+OTRfN_Pv8R88w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Larry.Finger-tQ5ms3gMjBLk1uMJSBkQmQ@public.gmane.org
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V6 00/12] add clock driver for Spreadtrum platforms
+Date: Mon, 27 Nov 2017 18:01:03 +0800
+Message-ID: <20171127100115.20655-1-chunyan.zhang@spreadtrum.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+From: Chunyan Zhang <zhang.chunyan@linaro.org>
 
->>>>> The Realtek RTL8723BS and RTL8723DS chipsets are SDIO wifi chips. They
->>>>> also contain a Bluetooth module which is connected via UART to the host.
->>>>> 
->>>>> Realtek's userspace initialization tool (rtk_hciattach) differentiates
->>>>> these two via the HCI version and revision returned by the
->>>>> HCI_OP_READ_LOCAL_VERSION command.
->>>>> Additionally we apply these checks only the for UART devices. Everything
->>>>> else is assumed to be a "RTL8723B" which was originally supported by the
->>>>> driver (communicating via USB).
->>>>> 
->>>>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->>>>> ---
->>>>> drivers/bluetooth/btrtl.c | 32 ++++++++++++++++++++++++++++++--
->>>>> 1 file changed, 30 insertions(+), 2 deletions(-)
->>>>> 
->>>>> diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
->>>>> index 45b872f5ad22..d896f9421250 100644
->>>>> --- a/drivers/bluetooth/btrtl.c
->>>>> +++ b/drivers/bluetooth/btrtl.c
->>>>> @@ -418,9 +418,33 @@ struct btrtl_device_info *btrtl_initialize(struct hci_dev *hdev)
->>>>>             has_rom_version = false;
->>>>>             break;
->>>>>     case RTL_ROM_LMP_8723B:
->>>>> -             fw_name = "rtl_bt/rtl8723b_fw.bin";
->>>>> -             cfg_name = "rtl_bt/rtl8723b_config.bin";
->>>>> +             /* all variants support reading the ROM version */
->>>>>             has_rom_version = true;
->>>>> +
->>>>> +             /*
->>>>> +              * RTL8723 devices exist in different variants:
->>>>> +              * - RTL8723BS (SDIO chip with UART Bluetooth)
->>>>> +              * - RTL8723DS (SDIO chip with UART Bluetooth)
->>>>> +              * - for backwards-compatibility everything else is assumed to
->>>>> +              *   be an RTL8723B communicating over USB
->>>>> +              *
->>>>> +              * Only UART devices really need the config because that
->>>>> +              * contains the UART speed / flow control settings.
->>>>> +              */
->>>>> +             if (hdev->bus == HCI_UART && resp->hci_ver == 6 &&
->>>>> +                 le16_to_cpu(resp->hci_rev) == 0xb) {
->>>>> +                     fw_name = "rtl_bt/rtl8723bs_fw.bin";
->>>>> +                     cfg_name = "rtl_bt/rtl8723bs_config.bin";
->>>>> +                     cfg_needed = true;
->>>>> +             } else if (hdev->bus == HCI_UART && resp->hci_ver == 8 &&
->>>>> +                        le16_to_cpu(resp->hci_rev) == 0xd) {
->>>>> +                     fw_name = "rtl_bt/rtl8723ds_fw.bin";
->>>>> +                     cfg_name = "rtl_bt/rtl872ds_config.bin";
->>>>> +                     cfg_needed = true;
->>>>> +             } else {
->>>>> +                     fw_name = "rtl_bt/rtl8723b_fw.bin";
->>>>> +                     cfg_name = "rtl_bt/rtl8723b_config.bin";
->>>>> +             }
->>>> 
->>>> so the main question is why is this a config file in the first place? So far all other drivers have expressed UART settings via DT (or even via ACPI). If we are just getting the baudrates, then better have this in DT. Since otherwise we end up with board specific filesystems again where different config files need to be installed. That is really not useful in the end.
->>> this is an excellent question (and also the reason why it's an "RFC" patch)!
->>> I'll try to figure out whether:
->>> a) we can skip the config file completely
-> skipping the config blob causes it to time out at the end of the
-> firmware download (where the config seems to be applied internally)
-> 
->>> b) we can generate the config file in-memory
-> I tried this as well with a very minimal version (where only the
-> "known" bits are used)
-> unfortunately this shows the same symptoms as skipping the config blob
-> I'll try experimenting with this to see if I can get it to work somehow
-> 
->>> c) we have to stick with this config file
-> I'm afraid this would be our last option if I can't get b) working
-> a datasheet for these chips or some advice from someone who has access
-> to the datasheet/knowledge about the internals would be of great help
+This series adds Spreadtrum clock support together with its binding
+documentation and devicetree data.
 
-since they are all HCI commands, lets add tracing support in btmon for these and then check which one is needed and which one can be done via DT information. It might be as simple as that the chip needs a special reset command and the coded it in the config blob. I have seen some manufactures do that.
+This patchset also added a few common clock mactos into drivers/clk/clk_common.h,
+which are generally useful for all vendors' clock driver, sunxi-ng, zte, sprd
+(added in this patchse) use them (or part of them) at present, once this patchset
+is merged, I can help to remove the duplicated code which is under the vendors'
+respective directories.
 
-For starters just run btmon -w trace.log before you load the module (or attach the device) and then see what goes on during loading phase.
+Thanks,
+Chunyan
 
-Regards
+Changes from V5: (https://lkml.org/lkml/2017/11/20/21)
+* Rebased the whole patch-set to 4.15-rc1;
+* Fixed kbuild-test warnings;
+* Switched to use devm_clk_hw_register() instead of clk_hw_register();
+* Removed useless debug information from sc9860-clk.c.
+  
+Changes from V4: (https://lkml.org/lkml/2017/11/10/30)
+* Added acked-by of Rob Herring;
+* Removed spin lock from Spreadtrum's gate, mux, div drivers, since we have
+  switched to use regmap.
 
-Marcel
+Changes from V3: (https://lkml.org/lkml/2017/11/2/61)
+* Addressed comments from Julien Thierry:
+  - Clean the if branch of sprd_mux_helper_get_parent()
+  - Have the Gate clock macros and ops for both mode (i.e. sc_gate and gate) separate;
+  - Have the Mux clock macros with/without table separate, and same changes
+    for the composite clock.
+* Switched the function name from _endisable to _toggle;
+* Fixed Kbuild test error:
+  - Added exporting sprd_clk_regmap_init() which would be used in other module(s);
+* Change the function sprd_clk_set_regmap() to the static one, and removed the
+  declear from the include file;
+* Addressed comments from Rob:
+  - Separate the dt-binding include file from the driver patch;
+  - Documented more for the property "clocks"
+* Changed the syscon device names;
+* Changed the name of 'sprd_mux_internal' to 'sprd_mux_ssel'
+  
+
+Changes from V2: (http://lkml.iu.edu/hypermail/linux/kernel/1707.1/01504.html)
+* Switch to use regmap to access registers;
+* Splited all clocks into 16 separated nodes, for each belongs to a single address area; 
+* Rearranged the order of clock declaration in sc9860-clk.c, sorted them upon the address area;
+* Added syscon device tree nodes which will be quoted by the node of clocks which are in
+  the same address area with the syscon device;
+* Revised the binding documentation according to the dt modification. 
+
+Changes from V1: (https://lkml.org/lkml/2017/6/17/356)
+* Address Stephen's comments:
+  - Switch to use platform device driver instead of the DT probing mechanism.
+  - Move the common clock macro out from vendor directory, but need to remove those
+    overlap code from other vendors (such as sunxi-ng) once this get merged.
+  - Add support to be built as a module.
+  - Add 'sprd_' prefix for all spin locks used in these drivers.
+  - Mark input parameter of sprd_x with const.
+  - Remove unreasonable dependencies to CONFIG_64BIT.
+  - Add readl() after writing the same register.
+  - Remove CLK_IS_BASIC which is no longer used.
+  - Remove unnecessery CLK_IGNORE_UNUSED when defining a clock.
+  - Change to expose all clock index.
+  - Use clk_ instead of ccu.
+  - Add Kconfig for sprd clocks.
+  - Move the fixed clocks out from the soc node.
+  - Switch to use 64-bit math in pll driver instead of 32-bit math.
+* Revise binding documentation according to dt modification.
+* Rename sc9860.c to sc9860-clk.c
+
+
+Chunyan Zhang (12):
+  drivers: move clock common macros out from vendor directories
+  clk: sprd: Add common infrastructure
+  clk: sprd: add gate clock support
+  clk: sprd: add mux clock support
+  clk: sprd: add divider clock support
+  clk: sprd: add composite clock support
+  clk: sprd: add adjustable pll support
+  dt-bindings: Add Spreadtrum clock binding documentation
+  clk: sprd: Add dt-bindings include file for SC9860
+  clk: sprd: add clocks support for SC9860
+  arm64: dts: add syscon for whale2 platform
+  arm64: dts: add clocks for SC9860
+
+ Documentation/devicetree/bindings/clock/sprd.txt |   63 +
+ arch/arm64/boot/dts/sprd/sc9860.dtsi             |  115 ++
+ arch/arm64/boot/dts/sprd/whale2.dtsi             |   48 +-
+ drivers/clk/Kconfig                              |    1 +
+ drivers/clk/Makefile                             |    1 +
+ drivers/clk/clk_common.h                         |   60 +
+ drivers/clk/sprd/Kconfig                         |   14 +
+ drivers/clk/sprd/Makefile                        |   11 +
+ drivers/clk/sprd/common.c                        |   99 ++
+ drivers/clk/sprd/common.h                        |   52 +
+ drivers/clk/sprd/composite.c                     |   62 +
+ drivers/clk/sprd/composite.h                     |   53 +
+ drivers/clk/sprd/div.c                           |   92 +
+ drivers/clk/sprd/div.h                           |   77 +
+ drivers/clk/sprd/gate.c                          |  113 ++
+ drivers/clk/sprd/gate.h                          |   61 +
+ drivers/clk/sprd/mux.c                           |   78 +
+ drivers/clk/sprd/mux.h                           |   76 +
+ drivers/clk/sprd/pll.c                           |  268 +++
+ drivers/clk/sprd/pll.h                           |  110 ++
+ drivers/clk/sprd/sc9860-clk.c                    | 1981 ++++++++++++++++++++++
+ include/dt-bindings/clock/sprd,sc9860-clk.h      |  408 +++++
+ 22 files changed, 3841 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd.txt
+ create mode 100644 drivers/clk/clk_common.h
+ create mode 100644 drivers/clk/sprd/Kconfig
+ create mode 100644 drivers/clk/sprd/Makefile
+ create mode 100644 drivers/clk/sprd/common.c
+ create mode 100644 drivers/clk/sprd/common.h
+ create mode 100644 drivers/clk/sprd/composite.c
+ create mode 100644 drivers/clk/sprd/composite.h
+ create mode 100644 drivers/clk/sprd/div.c
+ create mode 100644 drivers/clk/sprd/div.h
+ create mode 100644 drivers/clk/sprd/gate.c
+ create mode 100644 drivers/clk/sprd/gate.h
+ create mode 100644 drivers/clk/sprd/mux.c
+ create mode 100644 drivers/clk/sprd/mux.h
+ create mode 100644 drivers/clk/sprd/pll.c
+ create mode 100644 drivers/clk/sprd/pll.h
+ create mode 100644 drivers/clk/sprd/sc9860-clk.c
+ create mode 100644 include/dt-bindings/clock/sprd,sc9860-clk.h
+
+-- 
+2.7.4
