@@ -1,17 +1,29 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: stm32: sai: use devm_of_platform_populate()" to the asoc tree
-Date: Mon, 27 Nov 2017 18:53:14 +0000
-Message-ID: <E1eJOWo-0007Dq-Qf@debutante>
-References: <1511362947-14747-4-git-send-email-olivier.moysan@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1511362947-14747-4-git-send-email-olivier.moysan@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Olivier Moysan <olivier.moysan@st.com>, Mark Brown <broonie@kernel.org>, lgirdwood@gmail.combroonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.orgolivier.moysan@st.com, arnaud.pouliquen@st.com, benjamin.gaignard@st.comBenjamin Gaignard <benjamin.gaignard@linaro.org>alsa-devel@alsa-project.org
+Subject: Applied "ASoC: stm32: sai: simplify sync modes management" to the
+ asoc tree
+Date: Mon, 27 Nov 2017 18:53:18 +0000
+Message-ID: <E1eJOWs-0007FC-7e@debutante>
+References: <1511362947-14747-3-git-send-email-olivier.moysan@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1511362947-14747-3-git-send-email-olivier.moysan@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, olivier.moysan@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, broonie@kernel.org, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, perex@perex.cz, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: sai: use devm_of_platform_populate()
+   ASoC: stm32: sai: simplify sync modes management
 
 has been applied to the asoc tree at
 
@@ -36,56 +48,184 @@ to this mail.
 Thanks,
 Mark
 
->From 512d1bb4e86bd0fd4d665d4e454a3486236a419f Mon Sep 17 00:00:00 2001
+>From 7dd0d835582ff72b0b3bd0f4fa074967dff1ce82 Mon Sep 17 00:00:00 2001
 From: olivier moysan <olivier.moysan@st.com>
-Date: Wed, 22 Nov 2017 16:02:27 +0100
-Subject: [PATCH] ASoC: stm32: sai: use devm_of_platform_populate()
+Date: Wed, 22 Nov 2017 16:02:26 +0100
+Subject: [PATCH] ASoC: stm32: sai: simplify sync modes management
 
-Use devm_of_platform_populate() instead of of_platform_depopulate()
-to simplify driver code.
+Use function of_find_device_by_node() to retrieve SAI
+synchro provider device and private data.
+This allows to remove registration of probed SAI
+in a linked list.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_sai.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ sound/soc/stm/stm32_sai.c | 105 ++++++++++------------------------------------
+ 1 file changed, 22 insertions(+), 83 deletions(-)
 
 diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
-index 0a1f06418bf4..d743b7dd52fb 100644
+index d6f71a3406e9..0a1f06418bf4 100644
 --- a/sound/soc/stm/stm32_sai.c
 +++ b/sound/soc/stm/stm32_sai.c
-@@ -124,7 +124,6 @@ static int stm32_sai_set_sync(struct stm32_sai_data *sai_client,
+@@ -28,16 +28,6 @@
  
- static int stm32_sai_probe(struct platform_device *pdev)
- {
--	struct device_node *np = pdev->dev.of_node;
- 	struct stm32_sai_data *sai;
- 	struct reset_control *rst;
- 	struct resource *res;
-@@ -184,14 +183,7 @@ static int stm32_sai_probe(struct platform_device *pdev)
- 	sai->set_sync = &stm32_sai_set_sync;
- 	platform_set_drvdata(pdev, sai);
+ #include "stm32_sai.h"
  
--	return of_platform_populate(np, NULL, NULL, &pdev->dev);
--}
+-static LIST_HEAD(sync_providers);
+-static DEFINE_MUTEX(sync_mutex);
 -
--static int stm32_sai_remove(struct platform_device *pdev)
--{
--	of_platform_depopulate(&pdev->dev);
+-struct sync_provider {
+-	struct list_head link;
+-	struct device_node *node;
+-	int  (*sync_conf)(void *data, int synco);
+-	void *data;
+-};
 -
--	return 0;
-+	return devm_of_platform_populate(&pdev->dev);
+ static const struct stm32_sai_conf stm32_sai_conf_f4 = {
+ 	.version = SAI_STM32F4,
+ };
+@@ -70,9 +60,8 @@ static int stm32_sai_sync_conf_client(struct stm32_sai_data *sai, int synci)
+ 	return 0;
  }
  
- MODULE_DEVICE_TABLE(of, stm32_sai_ids);
-@@ -202,7 +194,6 @@ static struct platform_driver stm32_sai_driver = {
- 		.of_match_table = stm32_sai_ids,
- 	},
- 	.probe = stm32_sai_probe,
--	.remove = stm32_sai_remove,
- };
+-static int stm32_sai_sync_conf_provider(void *data, int synco)
++static int stm32_sai_sync_conf_provider(struct stm32_sai_data *sai, int synco)
+ {
+-	struct stm32_sai_data *sai = (struct stm32_sai_data *)data;
+ 	u32 prev_synco;
+ 	int ret;
  
- module_platform_driver(stm32_sai_driver);
+@@ -103,73 +92,34 @@ static int stm32_sai_sync_conf_provider(void *data, int synco)
+ 	return 0;
+ }
+ 
+-static int stm32_sai_set_sync_provider(struct device_node *np, int synco)
++static int stm32_sai_set_sync(struct stm32_sai_data *sai_client,
++			      struct device_node *np_provider,
++			      int synco, int synci)
+ {
+-	struct sync_provider *provider;
++	struct platform_device *pdev = of_find_device_by_node(np_provider);
++	struct stm32_sai_data *sai_provider;
+ 	int ret;
+ 
+-	mutex_lock(&sync_mutex);
+-	list_for_each_entry(provider, &sync_providers, link) {
+-		if (provider->node == np) {
+-			ret = provider->sync_conf(provider->data, synco);
+-			mutex_unlock(&sync_mutex);
+-			return ret;
+-		}
++	if (!pdev) {
++		dev_err(&sai_client->pdev->dev,
++			"Device not found for node %s\n", np_provider->name);
++		return -ENODEV;
+ 	}
+-	mutex_unlock(&sync_mutex);
+ 
+-	/* SAI sync provider not found */
+-	return -ENODEV;
+-}
+-
+-static int stm32_sai_set_sync(struct stm32_sai_data *sai,
+-			      struct device_node *np_provider,
+-			      int synco, int synci)
+-{
+-	int ret;
++	sai_provider = platform_get_drvdata(pdev);
++	if (!sai_provider) {
++		dev_err(&sai_client->pdev->dev,
++			"SAI sync provider data not found\n");
++		return -EINVAL;
++	}
+ 
+ 	/* Configure sync client */
+-	stm32_sai_sync_conf_client(sai, synci);
++	ret = stm32_sai_sync_conf_client(sai_client, synci);
++	if (ret < 0)
++		return ret;
+ 
+ 	/* Configure sync provider */
+-	ret = stm32_sai_set_sync_provider(np_provider, synco);
+-
+-	return ret;
+-}
+-
+-static int stm32_sai_sync_add_provider(struct platform_device *pdev,
+-				       void *data)
+-{
+-	struct sync_provider *sp;
+-
+-	sp = devm_kzalloc(&pdev->dev, sizeof(*sp), GFP_KERNEL);
+-	if (!sp)
+-		return -ENOMEM;
+-
+-	sp->node = of_node_get(pdev->dev.of_node);
+-	sp->data = data;
+-	sp->sync_conf = &stm32_sai_sync_conf_provider;
+-
+-	mutex_lock(&sync_mutex);
+-	list_add(&sp->link, &sync_providers);
+-	mutex_unlock(&sync_mutex);
+-
+-	return 0;
+-}
+-
+-static void stm32_sai_sync_del_provider(struct device_node *np)
+-{
+-	struct sync_provider *sp;
+-
+-	mutex_lock(&sync_mutex);
+-	list_for_each_entry(sp, &sync_providers, link) {
+-		if (sp->node == np) {
+-			list_del(&sp->link);
+-			of_node_put(sp->node);
+-			break;
+-		}
+-	}
+-	mutex_unlock(&sync_mutex);
++	return stm32_sai_sync_conf_provider(sai_provider, synco);
+ }
+ 
+ static int stm32_sai_probe(struct platform_device *pdev)
+@@ -179,7 +129,6 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ 	struct reset_control *rst;
+ 	struct resource *res;
+ 	const struct of_device_id *of_id;
+-	int ret;
+ 
+ 	sai = devm_kzalloc(&pdev->dev, sizeof(*sai), GFP_KERNEL);
+ 	if (!sai)
+@@ -231,27 +180,17 @@ static int stm32_sai_probe(struct platform_device *pdev)
+ 		reset_control_deassert(rst);
+ 	}
+ 
+-	ret = stm32_sai_sync_add_provider(pdev, sai);
+-	if (ret < 0)
+-		return ret;
+-	sai->set_sync = &stm32_sai_set_sync;
+-
+ 	sai->pdev = pdev;
++	sai->set_sync = &stm32_sai_set_sync;
+ 	platform_set_drvdata(pdev, sai);
+ 
+-	ret = of_platform_populate(np, NULL, NULL, &pdev->dev);
+-	if (ret < 0)
+-		stm32_sai_sync_del_provider(np);
+-
+-	return ret;
++	return of_platform_populate(np, NULL, NULL, &pdev->dev);
+ }
+ 
+ static int stm32_sai_remove(struct platform_device *pdev)
+ {
+ 	of_platform_depopulate(&pdev->dev);
+ 
+-	stm32_sai_sync_del_provider(pdev->dev.of_node);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.15.0
