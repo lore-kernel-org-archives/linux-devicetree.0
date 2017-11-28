@@ -1,87 +1,54 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v3 4/4] DTS: Pandora: fix panel compatibility string
-Date: Tue, 28 Nov 2017 17:14:06 +0100
-Message-ID: <ADAFBBA4-6AC4-4EC4-AB0E-98B59718E12E@goldelico.com>
-References: <cover.1511884135.git.hns@goldelico.com>
- <b6001c7b7fb98e7a3ad4c712084fea9dae9e6b27.1511884135.git.hns@goldelico.com>
- <20171128160437.GD28152@atomide.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171128160437.GD28152@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, Tomi Valkeinen <tomi.valkeinen@ti.com>, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC V7 2/2] OPP: Allow "opp-hz" and "opp-microvolt" to contain
+ magic values
+Date: Tue, 28 Nov 2017 17:14:57 +0100
+Message-ID: <CAPDyKFrBsb_gKQpPkSTNpSjqYGir9nXKzSE09qkyU=zr_S-5xA@mail.gmail.com>
+References: <cover.1509453284.git.viresh.kumar@linaro.org> <23ba51eaa6b52117458165dccc00a95cf8e86e1d.1509453284.git.viresh.kumar@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <23ba51eaa6b52117458165dccc00a95cf8e86e1d.1509453284.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, Rafael Wysocki <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On 31 October 2017 at 13:47, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On some platforms the exact frequency or voltage may be hidden from the
+> OS by the firmware. Allow such configurations to pass magic values in
+> the "opp-hz" or the "opp-microvolt" properties, which should be
+> interpreted in a platform dependent way.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-> Am 28.11.2017 um 17:04 schrieb Tony Lindgren <tony@atomide.com>:
-> 
-> * H. Nikolaus Schaller <hns@goldelico.com> [171128 15:52]:
->> We can remove the unnecessary "omapdss," prefix because
->> the omapdrm driver takes care of it when matching with
->> the driver table.
-> 
-> So is this needed as a fix or is this another clean-up?
-> 
-> So is this is really needed as a fix?
+This seems like a reasonable extension to me!
 
-Hm. How do you differentiate between "fix" and "cleanup"?
-Maybe it is more a wording than a content issue...
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-For me it is a "fix" because it is semantically wrong to have
-a prefix where it is not needed. And "fixing" it changes the
-compiler output by 8 bytes.
+Kind regards
+Uffe
 
-"Cleanup" would be for me removing whitespace or empty lines
-or typos in comments.
-
-> 
-> If this is just clean-up, again, please resend once the driver
-> changes have cleared.
-
-There is no change to the pandora driver involved here. The Pandora
-panel driver is already correct. Just the DTS has some redundant
-content which should be removed.
-
-So there is no dependency for this patch.
-
-BR,
-Nikolaus
-
-> 
-> Regards,
-> 
-> Tony
-> 
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> arch/arm/boot/dts/omap3-pandora-common.dtsi | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/arch/arm/boot/dts/omap3-pandora-common.dtsi b/arch/arm/boot/dts/omap3-pandora-common.dtsi
->> index 53e007abdc71..64d967ec8c58 100644
->> --- a/arch/arm/boot/dts/omap3-pandora-common.dtsi
->> +++ b/arch/arm/boot/dts/omap3-pandora-common.dtsi
->> @@ -626,7 +626,7 @@
->> 
->> 	lcd: lcd@1 {
->> 		reg = <1>;	/* CS1 */
->> -		compatible =	"omapdss,tpo,td043mtea1";
->> +		compatible =	"tpo,td043mtea1";
->> 		spi-max-frequency = <100000>;
->> 		spi-cpol;
->> 		spi-cpha;
->> -- 
->> 2.12.2
->> 
+> ---
+>  Documentation/devicetree/bindings/opp/opp.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 203e09fe7698..9c5056fb120f 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -166,6 +166,12 @@ properties.
+>    "power-domains" property. Also, either all or none of the OPP nodes in an OPP
+>    table should have it set.
+>
+> +
+> +On some platforms the exact frequency or voltage may be hidden from the OS by
+> +the firmware and the "opp-hz" or the "opp-microvolt" properties may contain
+> +magic values that represent the frequency or voltage in a firmware dependent
+> +way, for example an index of an array in the firmware.
+> +
+>  Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+>
+>  / {
+> --
+> 2.15.0.rc1.236.g92ea95045093
+>
