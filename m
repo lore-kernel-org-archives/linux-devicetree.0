@@ -1,7 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH v2 07/16] ARM: dts: imx6qdl-sr-som-brcm: rename sdio clock
-Date: Tue, 28 Nov 2017 15:02:30 +0000
-Message-ID: <E1eJhP4-0006Nk-PT@rmk-PC.armlinux.org.uk>
+Subject: [PATCH v2 10/16] ARM: dts: ixm6qdl-sr-som: add support for eMMC
+Date: Tue, 28 Nov 2017 15:02:46 +0000
+Message-ID: <E1eJhPK-0006O6-5I@rmk-PC.armlinux.org.uk>
 References: <20171128150045.GV31757@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -14,35 +14,91 @@ To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The SDIO clock is really the Broadcom clock.  Rename it as such.
+Rev 1.5 microsoms include eMMC support on-board.  Add a microsom include
+file which can be used to add support for this.
 
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6qdl-sr-som-emmc.dtsi | 70 ++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6qdl-sr-som-emmc.dtsi
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi
-index 809d7896775c..b55af61dfeca 100644
---- a/arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi
-@@ -40,7 +40,7 @@
-  */
- #include <dt-bindings/gpio/gpio.h>
- / {
--	clk_sdio: sdio-clock {
-+	clk_brcm: brcm-clock {
- 		compatible = "gpio-gate-clock";
- 		#clock-cells = <0>;
- 		pinctrl-names = "default";
-@@ -64,7 +64,7 @@
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&gpio5 26 GPIO_ACTIVE_LOW>,
- 			      <&gpio6 0 GPIO_ACTIVE_LOW>;
--		clocks = <&clk_sdio>;
-+		clocks = <&clk_brcm>;
- 		clock-names = "ext_clock";
- 	};
- };
+diff --git a/arch/arm/boot/dts/imx6qdl-sr-som-emmc.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som-emmc.dtsi
+new file mode 100644
+index 000000000000..5f3b8baab20f
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-sr-som-emmc.dtsi
+@@ -0,0 +1,70 @@
++/*
++ * Copyright (C) 2013,2014 Russell King
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++&iomuxc {
++	microsom {
++		pinctrl_microsom_usdhc3: microsom-usdhc3 {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
++				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10059
++				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17059
++				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17059
++				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17059
++				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17059
++				MX6QDL_PAD_SD3_DAT4__SD3_DATA4 0x17059
++				MX6QDL_PAD_SD3_DAT5__SD3_DATA5 0x17059
++				MX6QDL_PAD_SD3_DAT6__SD3_DATA6 0x17059
++				MX6QDL_PAD_SD3_DAT7__SD3_DATA7 0x17059
++				MX6QDL_PAD_SD3_RST__SD3_RESET  0x17059
++			>;
++		};
++	};
++};
++
++/* USDHC3 - eMMC */
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_microsom_usdhc3>;
++	bus-width = <8>;
++	non-removable;
++	vmmc-supply = <&vcc_3v3>;
++	status = "okay";
++};
 -- 
 2.7.4
 
