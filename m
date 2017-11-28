@@ -1,222 +1,83 @@
-From: Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH v7 2/6] soc: mediatek: extend bus protection API
-Date: Tue, 28 Nov 2017 15:28:18 +0800
-Message-ID: <1511854102-23195-4-git-send-email-weiyi.lu@mediatek.com>
-References: <1511854102-23195-1-git-send-email-weiyi.lu@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1511854102-23195-1-git-send-email-weiyi.lu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>
-Cc: James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, Weiyi Lu <weiyi.lu@mediatek.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH] dt-bindings: uniphier: add bindings for UniPhier SoC family
+Date: Tue, 28 Nov 2017 16:29:10 +0900
+Message-ID: <1511854150-26346-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-MT2712 add "set/clear" bus control register to each control register set
-instead of providing only one "enable" control register, we could avoid
-the read-modify-write racing by declaring "bus_prot_reg_update" as "false"
-in scp_soc_data or declaring as "true" to use the legacy update method.
-By improving the mtk-infracfg bus protection implementation to
-support set/clear bus protection control method by IC configuration.
-
-Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 ---
- drivers/soc/mediatek/mtk-infracfg.c   | 26 ++++++++++++++++++++++----
- drivers/soc/mediatek/mtk-scpsys.c     | 28 ++++++++++++++++++++--------
- include/linux/soc/mediatek/infracfg.h |  7 ++++---
- 3 files changed, 46 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/soc/mediatek/mtk-infracfg.c b/drivers/soc/mediatek/mtk-infracfg.c
-index dba3055..8c310de 100644
---- a/drivers/soc/mediatek/mtk-infracfg.c
-+++ b/drivers/soc/mediatek/mtk-infracfg.c
-@@ -19,23 +19,33 @@
- 
- #define INFRA_TOPAXI_PROTECTEN		0x0220
- #define INFRA_TOPAXI_PROTECTSTA1	0x0228
-+#define INFRA_TOPAXI_PROTECTEN_SET	0x0260
-+#define INFRA_TOPAXI_PROTECTEN_CLR	0x0264
- 
- /**
-  * mtk_infracfg_set_bus_protection - enable bus protection
-  * @regmap: The infracfg regmap
-  * @mask: The mask containing the protection bits to be enabled.
-+ * @reg_update: The boolean flag determines to set the protection bits
-+ *              by regmap_update_bits with enable register(PROTECTEN) or
-+ *              by regmap_write with set register(PROTECTEN_SET).
-  *
-  * This function enables the bus protection bits for disabled power
-  * domains so that the system does not hang when some unit accesses the
-  * bus while in power down.
-  */
--int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask)
-+int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
-+		bool reg_update)
- {
- 	unsigned long expired;
- 	u32 val;
- 	int ret;
- 
--	regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, mask);
-+	if (reg_update)
-+		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask,
-+				mask);
-+	else
-+		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_SET, mask);
- 
- 	expired = jiffies + HZ;
- 
-@@ -59,16 +69,24 @@ int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask)
-  * mtk_infracfg_clear_bus_protection - disable bus protection
-  * @regmap: The infracfg regmap
-  * @mask: The mask containing the protection bits to be disabled.
-+ * @reg_update: The boolean flag determines to clear the protection bits
-+ *              by regmap_update_bits with enable register(PROTECTEN) or
-+ *              by regmap_write with clear register(PROTECTEN_CLR).
-  *
-  * This function disables the bus protection bits previously enabled with
-  * mtk_infracfg_set_bus_protection.
-  */
--int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask)
+ Documentation/devicetree/bindings/arm/uniphier.txt | 40 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/uniphier.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/uniphier.txt b/Documentation/devicetree/bindings/arm/uniphier.txt
+new file mode 100644
+index 0000000..08d3cf3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/uniphier.txt
+@@ -0,0 +1,40 @@
++Socionext UniPhier SoC family
 +
-+int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask,
-+		bool reg_update)
- {
- 	unsigned long expired;
- 	int ret;
- 
--	regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
-+	if (reg_update)
-+		regmap_update_bits(infracfg, INFRA_TOPAXI_PROTECTEN, mask, 0);
-+	else
-+		regmap_write(infracfg, INFRA_TOPAXI_PROTECTEN_CLR, mask);
- 
- 	expired = jiffies + HZ;
- 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index e570b6a..4c484b1 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -134,6 +134,7 @@ struct scp {
- 	void __iomem *base;
- 	struct regmap *infracfg;
- 	struct scp_ctrl_reg ctrl_reg;
-+	bool bus_prot_reg_update;
- };
- 
- struct scp_subdomain {
-@@ -147,6 +148,7 @@ struct scp_soc_data {
- 	const struct scp_subdomain *subdomains;
- 	int num_subdomains;
- 	const struct scp_ctrl_reg regs;
-+	bool bus_prot_reg_update;
- };
- 
- static int scpsys_domain_is_on(struct scp_domain *scpd)
-@@ -254,7 +256,8 @@ static int scpsys_power_on(struct generic_pm_domain *genpd)
- 
- 	if (scpd->data->bus_prot_mask) {
- 		ret = mtk_infracfg_clear_bus_protection(scp->infracfg,
--				scpd->data->bus_prot_mask);
-+				scpd->data->bus_prot_mask,
-+				scp->bus_prot_reg_update);
- 		if (ret)
- 			goto err_pwr_ack;
- 	}
-@@ -289,7 +292,8 @@ static int scpsys_power_off(struct generic_pm_domain *genpd)
- 
- 	if (scpd->data->bus_prot_mask) {
- 		ret = mtk_infracfg_set_bus_protection(scp->infracfg,
--				scpd->data->bus_prot_mask);
-+				scpd->data->bus_prot_mask,
-+				scp->bus_prot_reg_update);
- 		if (ret)
- 			goto out;
- 	}
-@@ -371,7 +375,8 @@ static void init_clks(struct platform_device *pdev, struct clk **clk)
- 
- static struct scp *init_scp(struct platform_device *pdev,
- 			const struct scp_domain_data *scp_domain_data, int num,
--			const struct scp_ctrl_reg *scp_ctrl_reg)
-+			const struct scp_ctrl_reg *scp_ctrl_reg,
-+			bool bus_prot_reg_update)
- {
- 	struct genpd_onecell_data *pd_data;
- 	struct resource *res;
-@@ -386,6 +391,8 @@ static struct scp *init_scp(struct platform_device *pdev,
- 	scp->ctrl_reg.pwr_sta_offs = scp_ctrl_reg->pwr_sta_offs;
- 	scp->ctrl_reg.pwr_sta2nd_offs = scp_ctrl_reg->pwr_sta2nd_offs;
- 
-+	scp->bus_prot_reg_update = bus_prot_reg_update;
++Required properties in the root node:
++  - compatible: should contain board and SoC compatible strings
 +
- 	scp->dev = &pdev->dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -806,7 +813,8 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- 	.regs = {
- 		.pwr_sta_offs = SPM_PWR_STATUS,
- 		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
--	}
-+	},
-+	.bus_prot_reg_update = true,
- };
- 
- static const struct scp_soc_data mt6797_data = {
-@@ -817,7 +825,8 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- 	.regs = {
- 		.pwr_sta_offs = SPM_PWR_STATUS_MT6797,
- 		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND_MT6797
--	}
-+	},
-+	.bus_prot_reg_update = true,
- };
- 
- static const struct scp_soc_data mt7622_data = {
-@@ -826,7 +835,8 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- 	.regs = {
- 		.pwr_sta_offs = SPM_PWR_STATUS,
- 		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
--	}
-+	},
-+	.bus_prot_reg_update = true,
- };
- 
- static const struct scp_soc_data mt8173_data = {
-@@ -837,7 +847,8 @@ static void mtk_register_power_domains(struct platform_device *pdev,
- 	.regs = {
- 		.pwr_sta_offs = SPM_PWR_STATUS,
- 		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
--	}
-+	},
-+	.bus_prot_reg_update = true,
- };
- 
- /*
-@@ -874,7 +885,8 @@ static int scpsys_probe(struct platform_device *pdev)
- 	match = of_match_device(of_scpsys_match_tbl, &pdev->dev);
- 	soc = (const struct scp_soc_data *)match->data;
- 
--	scp = init_scp(pdev, soc->domains, soc->num_domains, &soc->regs);
-+	scp = init_scp(pdev, soc->domains, soc->num_domains, &soc->regs,
-+			soc->bus_prot_reg_update);
- 	if (IS_ERR(scp))
- 		return PTR_ERR(scp);
- 
-diff --git a/include/linux/soc/mediatek/infracfg.h b/include/linux/soc/mediatek/infracfg.h
-index e8d9f0d..b0a507d 100644
---- a/include/linux/soc/mediatek/infracfg.h
-+++ b/include/linux/soc/mediatek/infracfg.h
-@@ -28,7 +28,8 @@
- #define MT7622_TOP_AXI_PROT_EN_WB		(BIT(2) | BIT(6) | \
- 						 BIT(7) | BIT(8))
- 
--int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask);
--int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask);
--
-+int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
-+		bool reg_update);
-+int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask,
-+		bool reg_update);
- #endif /* __SOC_MEDIATEK_INFRACFG_H */
++    SoC compatibles:
++      - "socionext,uniphier-ld4"   - LD4 SoC
++      - "socionext,uniphier-pro4"  - Pro4 SoC
++      - "socionext,uniphier-sld8"  - sLD8 SoC
++      - "socionext,uniphier-pro5"  - Pro5 SoC
++      - "socionext,uniphier-pxs2"  - PXs2 SoC
++      - "socionext,uniphier-ld6b"  - LD6b SoC
++      - "socionext,uniphier-ld11"  - LD11 SoC
++      - "socionext,uniphier-ld20"  - LD20 SoC
++      - "socionext,uniphier-pxs3"  - PXs3 SoC
++
++    Board compatibles:
++      - "socionext,uniphier-ld4-ref"      - LD4 Reference Board
++      - "socionext,uniphier-pro4-ref"     - Pro4 Reference Board
++      - "socionext,uniphier-pro4-ace"     - Pro4 Ace Board
++      - "socionext,uniphier-pro4-sanji"   - Pro4 Sanji Board
++      - "socionext,uniphier-sld8-ref"     - sLD8 Reference Board
++      - "socionext,uniphier-pxs2-gentil"  - PXs2 Gentil Board
++      - "socionext,uniphier-pxs2-vodka"   - PXs2 Vodka Board
++      - "socionext,uniphier-ld6b-ref"     - LD6b Reference Board
++      - "socionext,uniphier-ld11-ref"     - LD11 Reference Board
++      - "socionext,uniphier-ld11-global"  - LD11 Global Board
++      - "socionext,uniphier-ld20-ref"     - LD20 Reference Board
++      - "socionext,uniphier-ld20-global"  - LD20 Global Board
++      - "socionext,uniphier-pxs3-ref"     - PXs3 Reference Board
++
++Example:
++
++/dts-v1/;
++
++/ {
++	compatible = "socionext,uniphier-ld20-ref", "socionext,uniphier-ld20";
++
++	...
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cbb89bb..1fcbd65 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2041,6 +2041,7 @@ M:	Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+ S:	Maintained
++F:	Documentation/devicetree/bindings/arm/uniphier.txt
+ F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+ F:	arch/arm/boot/dts/uniphier*
+ F:	arch/arm/include/asm/hardware/cache-uniphier.h
 -- 
-1.9.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
