@@ -1,87 +1,308 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v7 1/2] dt-bindings: watchdog: Add Spreadtrum watchdog
- documentation
-Date: Mon, 27 Nov 2017 20:09:18 -0800
-Message-ID: <445d1641-de20-860c-5448-4b1533426441@roeck-us.net>
-References: <61f88b7f9c1ac8a2d4bd7dbab672ad913bd2707d.1511835645.git.eric.long@spreadtrum.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun8i: h3: Add dts file for Libre
+ Computer Board ALL-H3-CC H3 ver.
+Date: Tue, 28 Nov 2017 12:12:11 +0800
+Message-ID: <20171128041211.17375-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <61f88b7f9c1ac8a2d4bd7dbab672ad913bd2707d.1511835645.git.eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huitao.yue-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBJ6E6PIAKGQESKYYGZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/2017 06:18 PM, Eric Long wrote:
-> This patch adds the documentation for Spreadtrum watchdog driver.
-> 
-> Signed-off-by: Eric Long <eric.long-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+The Libre Computer Board ALL-H3-CC from Libre Technology is a Raspberry
+Pi B+ form factor single board computer based on the Allwinner H3 SoC.
+The board has 1GB DDR3 SDRAM, provided by 4 2Gb chips. The mounting holes
+and connectors are in the exact same position as on the Raspberry Pi B+.
 
-The patch series is in my tree, and will ultimately find its way into Wim's tree.
-No need to resend it anymore.
+Raspberry Pi B+ like peripherals supported on this board include:
 
-In general, if a patch is available in
-git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git watchdog-next
-there is no need to resend it.
+  - Power input through micro-USB connector (without USB OTG)
+  - Native 100 Mbps ethernet using the internal PHY, as opposed to
+    USB-based on the RPi
+  - 4x USB 2.0 host ports, directly connected to the SoC, as opposed to
+    being connected through a USB 2.0 hub on the RPi
+  - TV and audio output on a 3.5mm TRRS jack
+  - HDMI output
+  - Micro-SD card slot
+  - Standard RPi B+ GPIO header, with the standard peripherals routed to
+    the same pins.
 
-Thanks,
-Guenter
+    * 5V, 3.3V power, and ground
+    * I2C0 on the H3 is routed to I2C1 pins on the RPi header
+    * I2C1 on the H3 is routed to I2C0 pins on the RPi header
+    * UART1 on the H3 is routed to UART0 pins on the RPi header
+    * SPI0 on the H3 is routed to SPI0 pins on the RPi header,
+      with GPIO pin PA17 replacing the missing Chip Select 1
+    * I2S1 on the H3 is routed to PCM pins on the RPi header
 
-> ---
-> Changes since v6:
-> - No updates.
-> 
-> Changes since v5:
-> - No updates.
-> 
-> Changes since v4:
-> - No updates.
-> 
-> Changes since v3:
-> - No updates.
-> 
-> Changes since v2:
-> - Add acked tag from Rob.
-> 
-> Changes since v1:
-> - No updates.
-> ---
->   .../devicetree/bindings/watchdog/sprd-wdt.txt         | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
-> new file mode 100644
-> index 0000000..aeaf3e0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/sprd-wdt.txt
-> @@ -0,0 +1,19 @@
-> +Spreadtrum SoCs Watchdog timer
-> +
-> +Required properties:
-> +- compatible : Should be "sprd,sp9860-wdt".
-> +- reg : Specifies base physical address and size of the registers.
-> +- interrupts : Exactly one interrupt specifier.
-> +- timeout-sec : Contain the default watchdog timeout in seconds.
-> +- clock-names : Contain the input clock names.
-> +- clocks : Phandles to input clocks.
-> +
-> +Example:
-> +	watchdog: watchdog@40310000 {
-> +		compatible = "sprd,sp9860-wdt";
-> +		reg = <0 0x40310000 0 0x1000>;
-> +		interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> +		timeout-sec = <12>;
-> +		clock-names = "enable", "rtc_enable";
-> +		clocks = <&clk_aon_apb_gates1 8>, <&clk_aon_apb_rtc_gates 9>;
-> +	};
-> 
+  - Additional peripherals from the H3 are available on different pins.
+    These include I2S0, JTAG, PWM1, SPDIF, SPI1, and UART3
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In addition, there are a number of new features:
+
+  - Console UART header
+  - Consumer IR receiver
+  - Camera interface (not compatible with RPi)
+  - Onboard microphone
+  - eMMC expansion module port
+  - Heatsink mounting holes
+
+This patch adds a dts file for this board that enables all "onboard"
+peripherals currently supported. This means no display or camera
+support.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+
+There are two other variants [1] of this board, with different SoCs and
+DRAM configuration. But the board remains the same, thanks to the SoCs
+being pin compatible.
+
+Do we need different board compatible strings? FWIW the soc compatible
+string already encodes the soc variant, and the DRAM stuff is handled
+by the bootloader. The filename also has the SoC family and chip name.
+The displayed board model also has the SoC variant included. The board
+itself is named "ALL-H3-CC".
+
+I'm asking as we have the same issue with the Bananapi M2+ [2], where
+they've released new variants with different SoCs and DRAM capacities
+using the same board. Not sure if they are commercially available though.
+
+Last, the LED polarity is wrong. This is due to the EMAC driver not
+following the DT binding and looking for the "allwinner,leds-active-low"
+under the PHY node, instead of the EMAC node. I've notified Corentin of
+this issue.
+
+[1] https://www.kickstarter.com/projects/librecomputer/libre-computer-board-tritium-sbc-linux-android-7-n
+[2] http://www.banana-pi.org/m2plus.html
+---
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 196 +++++++++++++++++++++
+ 2 files changed, 197 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 3c139c63098f..aa68f719692f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -953,6 +953,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-h2-plus-orangepi-zero.dtb \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
+ 	sun8i-h3-beelink-x2.dtb \
++	sun8i-h3-libretech-all-h3-cc.dtb \
+ 	sun8i-h3-nanopi-m1.dtb	\
+ 	sun8i-h3-nanopi-m1-plus.dtb \
+ 	sun8i-h3-nanopi-neo.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+new file mode 100644
+index 000000000000..6f544e007f71
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+@@ -0,0 +1,196 @@
++/*
++ * Copyright (C) 2017 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "Libre Computer Board ALL-H3-CC H3";
++	compatible = "libretech,all-h3-cc", "allwinner,sun8i-h3";
++
++	aliases {
++		ethernet0 = &emac;
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		pwr_led {
++			label = "librecomputer:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
++			default-state = "on";
++		};
++
++		status_led {
++			label = "librecomputer:status";
++			gpios = <&pio 0 7 GPIO_ACTIVE_HIGH>; /* PA7 */
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++
++		recovery {
++			label = "recovery";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
++		};
++	};
++
++	reg_vcc1v2: vcc1v2 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc1v2";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&r_pio 0 8 GPIO_ACTIVE_HIGH>; /* PL8 */
++		enable-active-high;
++	};
++
++	reg_vcc3v3: vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&reg_vcc5v0>;
++	};
++
++	/* This represents the board's 5V input */
++	reg_vcc5v0: vcc5v0 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
++	reg_vcc_dram: vcc-dram {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-dram";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&r_pio 0 9 GPIO_ACTIVE_HIGH>; /* PL9 */
++		enable-active-high;
++	};
++
++	reg_vcc_io: vcc-io {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-io";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&reg_vcc3v3>;
++		gpio = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL5 */
++	};
++
++	reg_vdd_cpux: vdd-cpux {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd-cpux";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&r_pio 0 8 GPIO_ACTIVE_HIGH>; /* PL8 */
++		enable-active-high;
++	};
++};
++
++&codec {
++	allwinner,audio-routing =
++		"Line Out", "LINEOUT",
++		"MIC1", "Mic",
++		"Mic",  "MBIAS";
++	status = "okay";
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&ehci2 {
++	status = "okay";
++};
++
++&ehci3 {
++	status = "okay";
++};
++
++&emac {
++	phy-handle = <&int_mii_phy>;
++	phy-mode = "mii";
++	allwinner,leds-active-low;
++	status = "okay";
++};
++
++&ir {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>;
++	vmmc-supply = <&reg_vcc_io>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&ohci2 {
++	status = "okay";
++};
++
++&ohci3 {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbphy {
++	/* VBUS on USB ports are always on */
++	usb0_vbus-supply = <&reg_vcc5v0>;
++	usb1_vbus-supply = <&reg_vcc5v0>;
++	usb2_vbus-supply = <&reg_vcc5v0>;
++	usb3_vbus-supply = <&reg_vcc5v0>;
++	status = "okay";
++};
+-- 
+2.15.0
