@@ -1,42 +1,56 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3 1/3] dt-bindings: clock: add compatible variant for the Meson-AXG
-Date: Tue, 28 Nov 2017 20:53:28 +0800
-Message-ID: <20171128125330.363-2-yixun.lan@amlogic.com>
-References: <20171128125330.363-1-yixun.lan@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] media: i2c: adv748x: Restore full DT paths in kernel messages
+Date: Tue, 28 Nov 2017 14:01:24 +0100
+Message-ID: <1511874084-5068-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171128125330.363-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Kieran Bingham <kieran.bingham@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Update the documentation to support clock driver for the Amlogic's
-Meson-AXG SoC.
+As of_node_full_name() now returns only the basename, the endpoint
+information printed became useless:
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+    adv748x 4-0070: Endpoint endpoint on port 7
+    adv748x 4-0070: Endpoint endpoint on port 8
+    adv748x 4-0070: Endpoint endpoint on port 10
+    adv748x 4-0070: Endpoint endpoint on port 11
+
+Restore the old behavior by using "%pOF" instead:
+
+    adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@7/endpoint on port 7
+    adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@8/endpoint on port 8
+    adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@10/endpoint on port 10
+    adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@11/endpoint on port 11
+
+Fixes: a7e4cfb0a7ca4773 ("of/fdt: only store the device node basename in full_name")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/media/i2c/adv748x/adv748x-core.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-index 924040769186..e2b377ed6f91 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-@@ -5,8 +5,11 @@ controllers within the SoC.
+diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+index 5ee14f2c27478e3a..c1001db6a172e256 100644
+--- a/drivers/media/i2c/adv748x/adv748x-core.c
++++ b/drivers/media/i2c/adv748x/adv748x-core.c
+@@ -646,14 +646,12 @@ static int adv748x_parse_dt(struct adv748x_state *state)
  
- Required Properties:
+ 	for_each_endpoint_of_node(state->dev->of_node, ep_np) {
+ 		of_graph_parse_endpoint(ep_np, &ep);
+-		adv_info(state, "Endpoint %s on port %d",
+-				of_node_full_name(ep.local_node),
+-				ep.port);
++		adv_info(state, "Endpoint %pOF on port %d", ep.local_node,
++			 ep.port);
  
--- compatible: should be "amlogic,gxbb-clkc" for GXBB SoC,
--	      or "amlogic,gxl-clkc" for GXL and GXM SoC.
-+- compatible: should be:
-+		"amlogic,gxbb-clkc" for GXBB SoC,
-+		"amlogic,gxl-clkc" for GXL and GXM SoC,
-+		"amlogic,axg-clkc" for AXG SoC.
-+
- - reg: physical base address of the clock controller and length of memory
-        mapped region.
+ 		if (ep.port >= ADV748X_PORT_MAX) {
+-			adv_err(state, "Invalid endpoint %s on port %d",
+-				of_node_full_name(ep.local_node),
+-				ep.port);
++			adv_err(state, "Invalid endpoint %pOF on port %d",
++				ep.local_node, ep.port);
  
+ 			continue;
+ 		}
 -- 
-2.15.0
+2.7.4
