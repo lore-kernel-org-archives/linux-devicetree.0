@@ -1,38 +1,95 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v3 3/4] DTS: GTA04: fix panel compatibility string
-Date: Tue, 28 Nov 2017 16:48:56 +0100
-Message-ID: <5f68789942fb8063ba5a98f5dd7989a05f94c0d6.1511884135.git.hns@goldelico.com>
-References: <cover.1511884135.git.hns@goldelico.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 0/5] PCI: Add support to the Cadence PCIe controller
+Date: Tue, 28 Nov 2017 15:50:39 +0000
+Message-ID: <20171128155039.GA17154@red-moon>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1511884135.git.hns@goldelico.com>
-In-Reply-To: <cover.1511884135.git.hns@goldelico.com>
-References: <cover.1511884135.git.hns@goldelico.com>
+Content-Disposition: inline
+In-Reply-To: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Cc: bhelgaas@google.com, kishon@ti.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Official vendor string is now "tpo" and not "toppoly".
+On Thu, Nov 23, 2017 at 04:01:45PM +0100, Cyrille Pitchen wrote:
+> Hi all,
+> 
+> this series of patches adds support to the Cadence PCIe controller.
+> It was tested on a ARM64 platform emulated by a Palladium running both
+> linux-next (next-20171123) and pci-next kernels.
+> 
+> The host mode was tested with some PCIe devices connected to the Palladium
+> through a speed-bridge. Some of those devices were a USB host controller
+> and a SATA controller. The PCIe host controller was also tested with a
+> second controller configured in endpoint mode and connected back to back
+> to the first controller.
+> 
+> The EndPoint Controller (EPC) driver of this series was tested with the
+> pci-epf-test.c EndPoint Function (EPF) driver and the pcitest userspace
+> program.
+> 
+> For linux-next, I applied this series on top of Kishon's patch
+> ("PCI: endpoint: Use EPC's device in dma_alloc_coherent/dma_free_coherent")
+> otherwise dma_alloc_coherent() fails when called by pci_epf_alloc_space().
+> 
+> Also, I patched drivers/Makefile rather than drivers/pci/Makefile to make
+> the drivers/pci/cadence/pcie-cadence-ep.o linked after
+> drivers/pci/endpoint/*.o objects, otherwise the built-in pci-cadence-ep
+> driver would be probed before the PCI endpoint framework would have been
+> initialized, which results in a kernel crash.
 
-Requires patch "omapdrm: panel: fix compatible vendor string for td028ttec1"
+Nice :( - isn't there a way to improve this (ie probe deferral or
+registering the EPF bus earlier) ?
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> I guess this is the reason why the "pci/dwc" line was also put in
+> drivers/Makefile, right after the "pci/endpoint" line.
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 4504908c23fe..ec27ed67a22a 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -86,7 +86,7 @@
- 
- 		/* lcd panel */
- 		lcd: td028ttec1@0 {
--			compatible = "toppoly,td028ttec1";
-+			compatible = "tpo,td028ttec1";
- 			reg = <0>;
- 			spi-max-frequency = <100000>;
- 			spi-cpol;
--- 
-2.12.2
+Or probably the other way around - see commit 5e8cb4033807
+
+@Kishon, thoughts ?
+
+Thanks,
+Lorenzo
+
+> Best regards,
+> 
+> Cyrille
+> 
+> Cyrille Pitchen (4):
+>   PCI: Add vendor ID for Cadence
+>   PCI: cadence: Add host driver for Cadence PCIe controller
+>   dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe endpoint
+>     controller
+>   PCI: cadence: add EndPoint Controller driver for Cadence PCIe
+>     controller
+> 
+> Scott Telford (1):
+>   dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host
+>     controller
+> 
+>  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |  20 +
+>  .../bindings/pci/cdns,cdns-pcie-host.txt           |  54 ++
+>  drivers/Makefile                                   |   1 +
+>  drivers/pci/Kconfig                                |   1 +
+>  drivers/pci/cadence/Kconfig                        |  33 ++
+>  drivers/pci/cadence/Makefile                       |   3 +
+>  drivers/pci/cadence/pcie-cadence-ep.c              | 553 +++++++++++++++++++++
+>  drivers/pci/cadence/pcie-cadence-host.c            | 425 ++++++++++++++++
+>  drivers/pci/cadence/pcie-cadence.c                 | 110 ++++
+>  drivers/pci/cadence/pcie-cadence.h                 | 325 ++++++++++++
+>  include/linux/pci_ids.h                            |   2 +
+>  11 files changed, 1527 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
+>  create mode 100644 drivers/pci/cadence/Kconfig
+>  create mode 100644 drivers/pci/cadence/Makefile
+>  create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
+>  create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
+>  create mode 100644 drivers/pci/cadence/pcie-cadence.c
+>  create mode 100644 drivers/pci/cadence/pcie-cadence.h
+> 
+> -- 
+> 2.11.0
+> 
