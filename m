@@ -1,47 +1,243 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 14/35] nds32: System calls handling
-Date: Tue, 28 Nov 2017 10:23:50 +0100
-Message-ID: <CAK8P3a2WuJGi8vdMHzGtRS6dny9VeTpWL8ShAFqzuxL4yZ2zhw@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <ee45d9c7b0388c87a93a26484e859001477eb3a2.1511785528.git.green.hu@gmail.com>
- <CAK8P3a3V7=4LjT38xT2VBQW4sTgpKergar2KoO8brbMZjR--1w@mail.gmail.com> <CAJsyPhyep2xp1tANCUO=p9GwsAFZGcV=EdFnjdem8v3-o--O=Q@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun8i: h3: Add dts file for
+ Libre Computer Board ALL-H3-CC H3 ver.
+Date: Tue, 28 Nov 2017 17:26:37 +0800
+Message-ID: <CAGb2v67dg1dCw+n3aQ1aFqtZXU245v6jQ0E=4onPYjUOpUHjPw@mail.gmail.com>
+References: <20171128041211.17375-1-wens@csie.org> <20171128084359.rzplftb3z53cgukp@flea.home>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAJsyPhyep2xp1tANCUO=p9GwsAFZGcV=EdFnjdem8v3-o--O=Q@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Vincent Chen <deanbo422@gmail.com>
-Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Vincent Chen <vincentc@andestech.com>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB2GX6TIAKGQEOIP32NI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171128084359.rzplftb3z53cgukp-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 3:18 AM, Vincent Chen <deanbo422@gmail.com> wrote:
-> 2017-11-27 22:46 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->> On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
-
->>> diff --git a/arch/nds32/include/uapi/asm/unistd.h b/arch/nds32/include/uapi/asm/unistd.h
->>> new file mode 100644
->>> index 0000000..2bad1e7
->>> --- /dev/null
->>> +++ b/arch/nds32/include/uapi/asm/unistd.h
->>
->>> +
->>> +#define __ARCH_WANT_RENAMEAT
->>> +#define __ARCH_WANT_SYSCALL_OFF_T
->>
->> These two should not be here.
->>
+On Tue, Nov 28, 2017 at 4:43 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
 >
-> Thanks.
-> But, I don't know I should move these two macro to which file.
-> In asm-generic/unistd.h, these two are used to decide whether relative
-> syscall number is defined or not.
-> Therefore,  I put these two macros here in order that these two
-> definitions are available in user space.
+> On Tue, Nov 28, 2017 at 12:12:11PM +0800, Chen-Yu Tsai wrote:
+>> The Libre Computer Board ALL-H3-CC from Libre Technology is a Raspberry
+>> Pi B+ form factor single board computer based on the Allwinner H3 SoC.
+>> The board has 1GB DDR3 SDRAM, provided by 4 2Gb chips. The mounting holes
+>> and connectors are in the exact same position as on the Raspberry Pi B+.
+>>
+>> Raspberry Pi B+ like peripherals supported on this board include:
+>>
+>>   - Power input through micro-USB connector (without USB OTG)
+>>   - Native 100 Mbps ethernet using the internal PHY, as opposed to
+>>     USB-based on the RPi
+>>   - 4x USB 2.0 host ports, directly connected to the SoC, as opposed to
+>>     being connected through a USB 2.0 hub on the RPi
+>>   - TV and audio output on a 3.5mm TRRS jack
+>>   - HDMI output
+>>   - Micro-SD card slot
+>>   - Standard RPi B+ GPIO header, with the standard peripherals routed to
+>>     the same pins.
+>>
+>>     * 5V, 3.3V power, and ground
+>>     * I2C0 on the H3 is routed to I2C1 pins on the RPi header
+>>     * I2C1 on the H3 is routed to I2C0 pins on the RPi header
+>>     * UART1 on the H3 is routed to UART0 pins on the RPi header
+>>     * SPI0 on the H3 is routed to SPI0 pins on the RPi header,
+>>       with GPIO pin PA17 replacing the missing Chip Select 1
+>>     * I2S1 on the H3 is routed to PCM pins on the RPi header
+>>
+>>   - Additional peripherals from the H3 are available on different pins.
+>>     These include I2S0, JTAG, PWM1, SPDIF, SPI1, and UART3
+>>
+>> In addition, there are a number of new features:
+>>
+>>   - Console UART header
+>>   - Consumer IR receiver
+>>   - Camera interface (not compatible with RPi)
+>>   - Onboard microphone
+>>   - eMMC expansion module port
+>>   - Heatsink mounting holes
+>>
+>> This patch adds a dts file for this board that enables all "onboard"
+>> peripherals currently supported. This means no display or camera
+>> support.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>
+>> There are two other variants [1] of this board, with different SoCs and
+>> DRAM configuration. But the board remains the same, thanks to the SoCs
+>> being pin compatible.
+>>
+>> Do we need different board compatible strings?
+>
+> Yes.
+>
+>> FWIW the soc compatible string already encodes the soc variant, and
+>> the DRAM stuff is handled by the bootloader. The filename also has
+>> the SoC family and chip name.  The displayed board model also has
+>> the SoC variant included. The board itself is named "ALL-H3-CC".
+>
+> The point of a board compatible is to identify the way a board
+> behaves. If we ever need to make any quirks for one particular board,
+> we have to have a compatible that uniquely identifies it.
+>
+> However, we can have an intermediate compatible as well to catch all
+> those similar boards.
+>
+> Something like:
+>    compatible = "libretech,h3-tritium", "libretech,tritium", "allwinner,sun8i-h3";
 
-What I meant is that they should not be available to user space.
+compatible = "libretech,all-h3-cc-h3", "libretech,all-h3-cc",
+"allwinner,sun8i-h3";
 
-The C libraries implement the user space interfaces based
-on the replacement system calls, e.g. an application calling
-the glibc stat() function will end up in the sys_stat64() system
-call entry point, not the older sys_newstat().
+(See below about the names.) Does that look confusing?
 
-      Arnd
+>
+>> I'm asking as we have the same issue with the Bananapi M2+ [2], where
+>> they've released new variants with different SoCs and DRAM capacities
+>> using the same board. Not sure if they are commercially available though.
+>
+> You can have a look at the way we handled all the q8 tablets that were
+> pretty much in the same case. It's been working quite well.
+
+You mean the sun?i-reference-tablet-design.dtsi files? I'm thinking we
+might not have to go that far. The other variants could have:
+
+    #include "sun8i-h3-libretech-all-h3-cc.dts"
+    #include "sun8i-h5.dtsi"
+
+    And then override the board compatible and model.
+
+Might not work. I'm not sure at this moment.
+
+>
+>> Last, the LED polarity is wrong. This is due to the EMAC driver not
+>> following the DT binding and looking for the "allwinner,leds-active-low"
+>> under the PHY node, instead of the EMAC node. I've notified Corentin of
+>> this issue.
+>
+> The DT should be correct, even if the code isn't. This seems to be a
+> driver bug that should be fixed, but we don't want to change the DT.
+
+So I'll leave it as is, as in the DT is correct.
+
+>
+>> [1] https://www.kickstarter.com/projects/librecomputer/libre-computer-board-tritium-sbc-linux-android-7-n
+>> [2] http://www.banana-pi.org/m2plus.html
+>> ---
+>>  arch/arm/boot/dts/Makefile                         |   1 +
+>>  arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 196 +++++++++++++++++++++
+>>  2 files changed, 197 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 3c139c63098f..aa68f719692f 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -953,6 +953,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>>       sun8i-h2-plus-orangepi-zero.dtb \
+>>       sun8i-h3-bananapi-m2-plus.dtb \
+>>       sun8i-h3-beelink-x2.dtb \
+>> +     sun8i-h3-libretech-all-h3-cc.dtb \
+>
+> Any reason to use the code name and not the "marketing" name?
+
+I've asked and this is the preferred name. "Tritium" is more of an internal
+codename.
+
+>
+>>       sun8i-h3-nanopi-m1.dtb  \
+>>       sun8i-h3-nanopi-m1-plus.dtb \
+>>       sun8i-h3-nanopi-neo.dtb \
+>> diff --git a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+>> new file mode 100644
+>> index 000000000000..6f544e007f71
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+>> @@ -0,0 +1,196 @@
+>> +/*
+>> + * Copyright (C) 2017 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> + *
+>> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun8i-h3.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +
+>> +/ {
+>> +     model = "Libre Computer Board ALL-H3-CC H3";
+>> +     compatible = "libretech,all-h3-cc", "allwinner,sun8i-h3";
+>> +
+>> +     aliases {
+>> +             ethernet0 = &emac;
+>> +             serial0 = &uart0;
+>> +     };
+>> +
+>> +     chosen {
+>> +             stdout-path = "serial0:115200n8";
+>> +     };
+>> +
+>> +     leds {
+>> +             compatible = "gpio-leds";
+>> +
+>> +             pwr_led {
+>> +                     label = "librecomputer:pwr";
+>
+> You should have the color there too.
+>
+>> +                     gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
+>> +                     default-state = "on";
+>> +             };
+>> +
+>> +             status_led {
+>> +                     label = "librecomputer:status";
+>
+> Same thing here.
+
+OK.
+
+>
+>> +                     gpios = <&pio 0 7 GPIO_ACTIVE_HIGH>; /* PA7 */
+>> +             };
+>> +     };
+>> +
+>> +     gpio_keys {
+>> +             compatible = "gpio-keys";
+>> +
+>> +             recovery {
+>> +                     label = "recovery";
+>> +                     linux,code = <BTN_0>;
+>
+> How did you pick that keycode?
+
+It's the same as the Orange Pis. The board however does mark it as
+"Power Key". However the H3 (on mainline) does not have the ability
+to come back up once powered down, nor do we have the ability to
+power it off right now. (We could turn it off using "gpio-poweroff",
+though I'm sensing the GPIO usage would conflict with the regulator
+drivers.) I'll ask about the intended usage and behavior.
+
+ChenYu
+
+>
+> Looks good otherwise, thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
