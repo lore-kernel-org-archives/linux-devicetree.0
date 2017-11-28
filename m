@@ -1,55 +1,118 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: spicc: update compatible string for the
- Meson-AXG
-Date: Tue, 28 Nov 2017 20:20:40 +0000
-Message-ID: <20171128202040.q6et5al2koy3msze@sirena.org.uk>
-References: <20171128132926.19051-1-yixun.lan@amlogic.com>
- <20171128132926.19051-2-yixun.lan@amlogic.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 1/2] arm64: dts: renesas: r8a77970: use CPG core clock macros
+Date: Tue, 28 Nov 2017 23:15:44 +0300
+Message-ID: <20171128202105.552196002@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uebcxbinwfxwdvt2"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171128132926.19051-2-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Sunny Luo <sunny.luo-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline; filename=arm64-dts-renesas-r8a77970-use-CPG-core-clock-macros.patch
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
+Now that the commit ecadea00f588 ("dt-bindings: clock: Add R8A77970 CPG
+core clock definitions") has hit Linus' tree, we  can replace the bare
+numbers (we had to use to avoid a cross tree dependency) with these macro
+definitions...
 
---uebcxbinwfxwdvt2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-On Tue, Nov 28, 2017 at 09:29:24PM +0800, Yixun Lan wrote:
-> From: Sunny Luo <sunny.luo-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
->=20
-> Update the compatbile string to support Meson-AXG SoCs.
+---
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi |   20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-Please submit patches using subject lines reflecting the style for the
-subsystem.  This makes it easier for people to identify relevant
-patches.  Look at what existing commits in the area you're changing are
-doing and make sure your subject lines visually resemble what they're
-doing.
-
---uebcxbinwfxwdvt2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlodxRgACgkQJNaLcl1U
-h9CkbAf42sxSUGfUFvs84zdUpd4wf7vMfY5Oy0YOkKUfxlj9p201run0T8S78ssj
-SrkE4+ACa+xRuGVj9USWF0/vifKgmmeH5z3YclF/gVrTrx9qHxDCFiEzjYJZWe11
-mwlg/uQhfGGpl0EF3FzJnU46xOALr8G4dPmtJofDY3sx/bZF+K8aCpkBASd7avC8
-AftUeixy6SiORHt9ufw1T7jTQdLX4xBXf+x9ec2oUzYMjBMm982jedVZ2UqXabvG
-CnGXl+gSBkKeKOXcw2e9ztxj2dYhRJOw2T4ARN8k7b5u5DI+YSGrK87qVEXmdPzN
-iQt+6M291DHuhRYVhPjEdpDLSgqk
-=Wq+J
------END PGP SIGNATURE-----
-
---uebcxbinwfxwdvt2--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
++++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -9,7 +9,7 @@
+  * kind, whether express or implied.
+  */
+ 
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
++#include <dt-bindings/clock/r8a77970-cpg-mssr.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/power/r8a77970-sysc.h>
+@@ -32,7 +32,7 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0>;
+-			clocks = <&cpg CPG_CORE 0>;
++			clocks = <&cpg CPG_CORE R8A77970_CLK_Z2>;
+ 			power-domains = <&sysc 5>;
+ 			next-level-cache = <&L2_CA53>;
+ 			enable-method = "psci";
+@@ -262,7 +262,7 @@
+ 			reg = <0 0xe6540000 0 96>;
+ 			interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 520>,
+-				 <&cpg CPG_CORE 9>,
++				 <&cpg CPG_CORE R8A77970_CLK_S2D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac1 0x31>, <&dmac1 0x30>,
+@@ -280,7 +280,7 @@
+ 			reg = <0 0xe6550000 0 96>;
+ 			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 519>,
+-				 <&cpg CPG_CORE 9>,
++				 <&cpg CPG_CORE R8A77970_CLK_S2D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac1 0x33>, <&dmac1 0x32>,
+@@ -298,7 +298,7 @@
+ 			reg = <0 0xe6560000 0 96>;
+ 			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 518>,
+-				 <&cpg CPG_CORE 9>,
++				 <&cpg CPG_CORE R8A77970_CLK_S2D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac1 0x35>, <&dmac1 0x34>,
+@@ -315,7 +315,7 @@
+ 			reg = <0 0xe66a0000 0 96>;
+ 			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 517>,
+-				 <&cpg CPG_CORE 9>,
++				 <&cpg CPG_CORE R8A77970_CLK_S2D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac1 0x37>, <&dmac1 0x36>,
+@@ -333,7 +333,7 @@
+ 			reg = <0 0xe6e60000 0 64>;
+ 			interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 207>,
+-				 <&cpg CPG_CORE 9>,
++				 <&cpg CPG_CORE R8A77970_CLK_S2D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac1 0x51>, <&dmac1 0x50>,
+@@ -351,7 +351,7 @@
+ 			reg = <0 0xe6e68000 0 64>;
+ 			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 206>,
+-				 <&cpg CPG_CORE 9>,
++				 <&cpg CPG_CORE R8A77970_CLK_S2D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac1 0x53>, <&dmac1 0x52>,
+@@ -369,7 +369,7 @@
+ 			reg = <0 0xe6c50000 0 64>;
+ 			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 204>,
+-				 <&cpg CPG_CORE 9>,
++				 <&cpg CPG_CORE R8A77970_CLK_S2D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac1 0x57>, <&dmac1 0x56>,
+@@ -386,7 +386,7 @@
+ 			reg = <0 0xe6c40000 0 64>;
+ 			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 203>,
+-				 <&cpg CPG_CORE 9>,
++				 <&cpg CPG_CORE R8A77970_CLK_S2D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			dmas = <&dmac1 0x59>, <&dmac1 0x58>,
