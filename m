@@ -1,243 +1,216 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun8i: h3: Add dts file for
- Libre Computer Board ALL-H3-CC H3 ver.
-Date: Tue, 28 Nov 2017 17:26:37 +0800
-Message-ID: <CAGb2v67dg1dCw+n3aQ1aFqtZXU245v6jQ0E=4onPYjUOpUHjPw@mail.gmail.com>
-References: <20171128041211.17375-1-wens@csie.org> <20171128084359.rzplftb3z53cgukp@flea.home>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 27/35] irqchip: Andestech Internal Vector Interrupt
+ Controller driver
+Date: Tue, 28 Nov 2017 09:37:21 +0000
+Message-ID: <c7447c93-9905-2840-e2d8-01837b9fdecd@arm.com>
+References: <cover.1511785528.git.green.hu@gmail.com>
+ <e82831165cd9e45a7d03af9c870560a6384e1603.1511785528.git.green.hu@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB2GX6TIAKGQEOIP32NI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171128084359.rzplftb3z53cgukp-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e82831165cd9e45a7d03af9c870560a6384e1603.1511785528.git.green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org, dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rick Chen <rick-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 4:43 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Tue, Nov 28, 2017 at 12:12:11PM +0800, Chen-Yu Tsai wrote:
->> The Libre Computer Board ALL-H3-CC from Libre Technology is a Raspberry
->> Pi B+ form factor single board computer based on the Allwinner H3 SoC.
->> The board has 1GB DDR3 SDRAM, provided by 4 2Gb chips. The mounting holes
->> and connectors are in the exact same position as on the Raspberry Pi B+.
->>
->> Raspberry Pi B+ like peripherals supported on this board include:
->>
->>   - Power input through micro-USB connector (without USB OTG)
->>   - Native 100 Mbps ethernet using the internal PHY, as opposed to
->>     USB-based on the RPi
->>   - 4x USB 2.0 host ports, directly connected to the SoC, as opposed to
->>     being connected through a USB 2.0 hub on the RPi
->>   - TV and audio output on a 3.5mm TRRS jack
->>   - HDMI output
->>   - Micro-SD card slot
->>   - Standard RPi B+ GPIO header, with the standard peripherals routed to
->>     the same pins.
->>
->>     * 5V, 3.3V power, and ground
->>     * I2C0 on the H3 is routed to I2C1 pins on the RPi header
->>     * I2C1 on the H3 is routed to I2C0 pins on the RPi header
->>     * UART1 on the H3 is routed to UART0 pins on the RPi header
->>     * SPI0 on the H3 is routed to SPI0 pins on the RPi header,
->>       with GPIO pin PA17 replacing the missing Chip Select 1
->>     * I2S1 on the H3 is routed to PCM pins on the RPi header
->>
->>   - Additional peripherals from the H3 are available on different pins.
->>     These include I2S0, JTAG, PWM1, SPDIF, SPI1, and UART3
->>
->> In addition, there are a number of new features:
->>
->>   - Console UART header
->>   - Consumer IR receiver
->>   - Camera interface (not compatible with RPi)
->>   - Onboard microphone
->>   - eMMC expansion module port
->>   - Heatsink mounting holes
->>
->> This patch adds a dts file for this board that enables all "onboard"
->> peripherals currently supported. This means no display or camera
->> support.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>
->> There are two other variants [1] of this board, with different SoCs and
->> DRAM configuration. But the board remains the same, thanks to the SoCs
->> being pin compatible.
->>
->> Do we need different board compatible strings?
->
-> Yes.
->
->> FWIW the soc compatible string already encodes the soc variant, and
->> the DRAM stuff is handled by the bootloader. The filename also has
->> the SoC family and chip name.  The displayed board model also has
->> the SoC variant included. The board itself is named "ALL-H3-CC".
->
-> The point of a board compatible is to identify the way a board
-> behaves. If we ever need to make any quirks for one particular board,
-> we have to have a compatible that uniquely identifies it.
->
-> However, we can have an intermediate compatible as well to catch all
-> those similar boards.
->
-> Something like:
->    compatible = "libretech,h3-tritium", "libretech,tritium", "allwinner,sun8i-h3";
+On 27/11/17 12:28, Greentime Hu wrote:
+> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
+> 
+> This patch adds the Andestech Internal Vector Interrupt Controller
+> driver. You can find the spec here. Ch4.9 of AndeStar SPA V3 Manual.
+> http://www.andestech.com/product.php?cls=9
+> 
+> Signed-off-by: Rick Chen <rick-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
+> Signed-off-by: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
+> ---
+>  drivers/irqchip/Makefile       |    1 +
+>  drivers/irqchip/irq-ativic32.c |  119 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 120 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-ativic32.c
+> 
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index b842dfd..201ca9f 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -80,3 +80,4 @@ obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
+>  obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
+>  obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
+>  obj-$(CONFIG_IRQ_UNIPHIER_AIDET)	+= irq-uniphier-aidet.o
+> +obj-$(CONFIG_NDS32)			+= irq-ativic32.o
+> diff --git a/drivers/irqchip/irq-ativic32.c b/drivers/irqchip/irq-ativic32.c
+> new file mode 100644
+> index 0000000..c4d6f86
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-ativic32.c
+> @@ -0,0 +1,119 @@
+> +/*
+> + * Copyright (C) 2005-2017 Andes Technology Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/irq.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/irqchip.h>
+> +#include <nds32_intrinsic.h>
+> +
+> +static void ativic32_ack_irq(struct irq_data *data)
+> +{
+> +	__nds32__mtsr_dsb(1 << data->hwirq, NDS32_SR_INT_PEND2);
 
-compatible = "libretech,all-h3-cc-h3", "libretech,all-h3-cc",
-"allwinner,sun8i-h3";
+Consider writing (1 << data->hwirq) as BIT(data->hwirq).
 
-(See below about the names.) Does that look confusing?
+> +}
+> +
+> +static void ativic32_mask_irq(struct irq_data *data)
+> +{
+> +	unsigned long int_mask2 = __nds32__mfsr(NDS32_SR_INT_MASK2);
+> +	__nds32__mtsr_dsb(int_mask2 & (~(1 << data->hwirq)), NDS32_SR_INT_MASK2);
 
->
->> I'm asking as we have the same issue with the Bananapi M2+ [2], where
->> they've released new variants with different SoCs and DRAM capacities
->> using the same board. Not sure if they are commercially available though.
->
-> You can have a look at the way we handled all the q8 tablets that were
-> pretty much in the same case. It's been working quite well.
+Same here.
 
-You mean the sun?i-reference-tablet-design.dtsi files? I'm thinking we
-might not have to go that far. The other variants could have:
+> +}
+> +
+> +static void ativic32_mask_ack_irq(struct irq_data *data)
+> +{
+> +	unsigned long int_mask2 = __nds32__mfsr(NDS32_SR_INT_MASK2);
+> +	__nds32__mtsr_dsb(int_mask2 & (~(1 << data->hwirq)), NDS32_SR_INT_MASK2);
+> +	__nds32__mtsr_dsb((1 << data->hwirq), NDS32_SR_INT_PEND2);
 
-    #include "sun8i-h3-libretech-all-h3-cc.dts"
-    #include "sun8i-h5.dtsi"
+This is effectively MASK+ACK, so you're better off just writing it as
+such. And since there is no advantage in your implementation in having
+MASK_ACK over MASK+ACK, I suggest you remove this function completely,
+and rely on the core code which will call them in sequence.
 
-    And then override the board compatible and model.
+> +
+> +}
+> +
+> +static void ativic32_unmask_irq(struct irq_data *data)
+> +{
+> +	unsigned long int_mask2 = __nds32__mfsr(NDS32_SR_INT_MASK2);
+> +	__nds32__mtsr_dsb(int_mask2 | (1 << data->hwirq), NDS32_SR_INT_MASK2);
 
-Might not work. I'm not sure at this moment.
+Same BIT() here.
 
->
->> Last, the LED polarity is wrong. This is due to the EMAC driver not
->> following the DT binding and looking for the "allwinner,leds-active-low"
->> under the PHY node, instead of the EMAC node. I've notified Corentin of
->> this issue.
->
-> The DT should be correct, even if the code isn't. This seems to be a
-> driver bug that should be fixed, but we don't want to change the DT.
+> +}
+> +
+> +static struct irq_chip ativic32_chip = {
+> +	.name = "ativic32",
+> +	.irq_ack = ativic32_ack_irq,
+> +	.irq_mask = ativic32_mask_irq,
+> +	.irq_mask_ack = ativic32_mask_ack_irq,
+> +	.irq_unmask = ativic32_unmask_irq,
+> +};
+> +
+> +static unsigned int __initdata nivic_map[6] = { 6, 2, 10, 16, 24, 32 };
+> +
+> +static struct irq_domain *root_domain;
+> +static int ativic32_irq_domain_map(struct irq_domain *id, unsigned int virq,
+> +				  irq_hw_number_t hw)
+> +{
+> +
+> +	unsigned long int_trigger_type;
+> +	int_trigger_type = __nds32__mfsr(NDS32_SR_INT_TRIGGER);
+> +	if (int_trigger_type & (1 << hw))
 
-So I'll leave it as is, as in the DT is correct.
+And here.
 
->
->> [1] https://www.kickstarter.com/projects/librecomputer/libre-computer-board-tritium-sbc-linux-android-7-n
->> [2] http://www.banana-pi.org/m2plus.html
->> ---
->>  arch/arm/boot/dts/Makefile                         |   1 +
->>  arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 196 +++++++++++++++++++++
->>  2 files changed, 197 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 3c139c63098f..aa68f719692f 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -953,6 +953,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->>       sun8i-h2-plus-orangepi-zero.dtb \
->>       sun8i-h3-bananapi-m2-plus.dtb \
->>       sun8i-h3-beelink-x2.dtb \
->> +     sun8i-h3-libretech-all-h3-cc.dtb \
->
-> Any reason to use the code name and not the "marketing" name?
+> +		irq_set_chip_and_handler(virq, &ativic32_chip, handle_edge_irq);
+> +	else
+> +		irq_set_chip_and_handler(virq, &ativic32_chip, handle_level_irq);
 
-I've asked and this is the preferred name. "Tritium" is more of an internal
-codename.
+Since you do not express the trigger in DT, you need to tell the core
+about it by calling irqd_set_trigger_type() with the right setting.
 
->
->>       sun8i-h3-nanopi-m1.dtb  \
->>       sun8i-h3-nanopi-m1-plus.dtb \
->>       sun8i-h3-nanopi-neo.dtb \
->> diff --git a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
->> new file mode 100644
->> index 000000000000..6f544e007f71
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
->> @@ -0,0 +1,196 @@
->> +/*
->> + * Copyright (C) 2017 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> + *
->> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> + */
->> +
->> +/dts-v1/;
->> +#include "sun8i-h3.dtsi"
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/input/input.h>
->> +
->> +/ {
->> +     model = "Libre Computer Board ALL-H3-CC H3";
->> +     compatible = "libretech,all-h3-cc", "allwinner,sun8i-h3";
->> +
->> +     aliases {
->> +             ethernet0 = &emac;
->> +             serial0 = &uart0;
->> +     };
->> +
->> +     chosen {
->> +             stdout-path = "serial0:115200n8";
->> +     };
->> +
->> +     leds {
->> +             compatible = "gpio-leds";
->> +
->> +             pwr_led {
->> +                     label = "librecomputer:pwr";
->
-> You should have the color there too.
->
->> +                     gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
->> +                     default-state = "on";
->> +             };
->> +
->> +             status_led {
->> +                     label = "librecomputer:status";
->
-> Same thing here.
+> +
+> +	return 0;
+> +}
+> +
+> +static struct irq_domain_ops ativic32_ops = {
+> +	.map = ativic32_irq_domain_map,
+> +	.xlate = irq_domain_xlate_onecell
+> +};
+> +
+> +static int get_intr_src(void)
 
-OK.
+I'm not sure "int" is the best return type here. I suspect something
+unsigned would be preferable, or even the irq_hw_number_t type.
+> +{
+> +	return ((__nds32__mfsr(NDS32_SR_ITYPE)&ITYPE_mskVECTOR) >> ITYPE_offVECTOR)
 
->
->> +                     gpios = <&pio 0 7 GPIO_ACTIVE_HIGH>; /* PA7 */
->> +             };
->> +     };
->> +
->> +     gpio_keys {
->> +             compatible = "gpio-keys";
->> +
->> +             recovery {
->> +                     label = "recovery";
->> +                     linux,code = <BTN_0>;
->
-> How did you pick that keycode?
+Spaces around '&'.
 
-It's the same as the Orange Pis. The board however does mark it as
-"Power Key". However the H3 (on mainline) does not have the ability
-to come back up once powered down, nor do we have the ability to
-power it off right now. (We could turn it off using "gpio-poweroff",
-though I'm sensing the GPIO usage would conflict with the regulator
-drivers.) I'll ask about the intended usage and behavior.
+> +		- NDS32_VECTOR_offINTERRUPT;
+> +}
+> +
+> +asmlinkage void asm_do_IRQ(struct pt_regs *regs)
+> +{
+> +	int hwirq = get_intr_src();
 
-ChenYu
+irq_hw_number_t.
 
->
-> Looks good otherwise, thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+> +	handle_domain_irq(root_domain, hwirq, regs);
+> +}
+> +
+> +int __init ativic32_init_irq(struct device_node *node, struct device_node *parent)
+> +{
+> +	unsigned long int_vec_base, nivic;
+> +
+> +	if (WARN(parent, "non-root ativic32 are not supported"))
+> +		return -EINVAL;
+> +
+> +	int_vec_base = __nds32__mfsr(NDS32_SR_IVB);
+> +
+> +	if (((int_vec_base & IVB_mskIVIC_VER) >> IVB_offIVIC_VER) == 0)
+> +		panic("Unable to use atcivic32 for this cpu.\n");
+> +
+> +	nivic = (int_vec_base & IVB_mskNIVIC) >> IVB_offNIVIC;
+> +	if (nivic >= (sizeof nivic_map / sizeof nivic_map[0]))
+
+This should be:
+	if (nivic >= ARRAY_SIZE(NIVIC_MAP))
+
+> +		panic("The number of input for ativic32 is not supported.\n");
+> +
+> +	nivic = nivic_map[nivic];
+
+I'd rather you use another variable (nr_ints?).
+
+> +
+> +	root_domain = irq_domain_add_linear(node, nivic,
+> +			&ativic32_ops, NULL);
+> +
+> +	if (!root_domain)
+> +		panic("%s: unable to create IRQ domain\n", node->full_name);
+> +
+> +	return 0;
+> +}
+> +IRQCHIP_DECLARE(ativic32, "andestech,ativic32", ativic32_init_irq);
+> 
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
