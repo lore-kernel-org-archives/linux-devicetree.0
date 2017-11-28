@@ -1,27 +1,57 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Spelling s/changset/changeset/
-Date: Tue, 28 Nov 2017 09:27:41 -0600
-Message-ID: <20171128152741.v2ip3kglbf72b5ld@rob-hp-laptop>
-References: <1511857523-18241-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1511857523-18241-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: [PATCH 02/13] dt-bindings: interrupt-controller: Add binding for the Microsemi Ocelot interrupt controller
+Date: Tue, 28 Nov 2017 16:26:32 +0100
+Message-ID: <20171128152643.20463-3-alexandre.belloni@free-electrons.com>
+References: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 09:25:23AM +0100, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> ---
->  drivers/of/dynamic.c | 4 ++--
->  drivers/of/overlay.c | 8 ++++----
->  2 files changed, 6 insertions(+), 6 deletions(-)
+Add the Device Tree binding documentation for the Microsemi Ocelot
+interrupt controller that is part of the ICPU. It is connected directly to
+the MIPS core interrupt controller.
 
-Applied.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+
+ .../interrupt-controller/mscc,ocelot-icpu-intr.txt | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt
+new file mode 100644
+index 000000000000..b47a8a02b17b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt
+@@ -0,0 +1,22 @@
++Microsemi Ocelot SoC ICPU Interrupt Controller
++
++Required properties:
++
++- compatible : should be "mscc,ocelot-icpu-intr"
++- reg : Specifies base physical address and size of the registers.
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++- interrupt-parent : phandle of the CPU interrupt controller.
++- interrupts : Specifies the CPU interrupt the controller is connected to.
++
++Example:
++
++		intc: interrupt-controller@70000070 {
++			compatible = "mscc,ocelot-icpu-intr";
++			reg = <0x70000070 0x70>;
++			#interrupt-cells = <1>;
++			interrupt-controller;
++			interrupt-parent = <&cpuintc>;
++			interrupts = <2>;
++		};
+-- 
+2.15.0
