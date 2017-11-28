@@ -1,8 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH v2 12/16] ARM: dts: imx6qdl: SolidRun: rename regulators to
- match schematic
-Date: Tue, 28 Nov 2017 15:02:56 +0000
-Message-ID: <E1eJhPU-0006OK-DD@rmk-PC.armlinux.org.uk>
+Subject: [PATCH v2 13/16] ARM: dts: imx6qdl: SolidRun: fix node names
+Date: Tue, 28 Nov 2017 15:03:01 +0000
+Message-ID: <E1eJhPZ-0006OR-He@rmk-PC.armlinux.org.uk>
 References: <20171128150045.GV31757@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -15,201 +14,48 @@ To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Make the regulators match the schematic - name the regulators after
-one of their schematic supply names, and arrange them into their
-heirarchy.
+Node names are supposed to be generic, fix the RTC and codec node
+names for both Hummingboard and Cubox-i.
 
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 32 ++++++++++++---------
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 43 +++++++++++++++++++----------
- 2 files changed, 48 insertions(+), 27 deletions(-)
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 2 +-
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-index 98ec7ce1f2a3..7a3fba776661 100644
+index 7a3fba776661..ca04ec56d2af 100644
 --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-@@ -62,34 +62,36 @@
- 		};
- 	};
+@@ -135,7 +135,7 @@
  
--	reg_3p3v: 3p3v {
-+	v_5v0: regulator-v-5v0 {
- 		compatible = "regulator-fixed";
--		regulator-name = "3P3V";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
- 		regulator-always-on;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_5v0";
- 	};
- 
--	reg_usbh1_vbus: usb-h1-vbus {
-+	v_usb2: regulator-v-usb2 {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
- 		gpio = <&gpio1 0 0>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_cubox_i_usbh1_vbus>;
--		regulator-name = "usb_h1_vbus";
--		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb2";
-+		vin-supply = <&v_5v0>;
- 	};
- 
--	reg_usbotg_vbus: usb-otg-vbus {
-+	v_usb1: regulator-v-usb1 {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
- 		gpio = <&gpio3 22 0>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_cubox_i_usbotg_vbus>;
--		regulator-name = "usb_otg_vbus";
--		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb1";
-+		vin-supply = <&v_5v0>;
- 	};
- 
- 	sound-spdif {
-@@ -237,21 +239,25 @@
- &usbh1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_cubox_i_usbh1>;
--	vbus-supply = <&reg_usbh1_vbus>;
-+	vbus-supply = <&v_usb2>;
  	status = "okay";
- };
  
- &usbotg {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_cubox_i_usbotg>;
--	vbus-supply = <&reg_usbotg_vbus>;
-+	vbus-supply = <&v_usb1>;
- 	status = "okay";
- };
- 
- &usdhc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_cubox_i_usdhc2_aux &pinctrl_cubox_i_usdhc2>;
--	vmmc-supply = <&reg_3p3v>;
-+	vmmc-supply = <&vcc_3v3>;
- 	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
-+
-+&vcc_3v3 {
-+	vin-supply = <&v_5v0>;
-+};
+-	rtc: pcf8523@68 {
++	rtc@68 {
+ 		compatible = "nxp,pcf8523";
+ 		reg = <0x68>;
+ 	};
 diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index 1b33cd6752f4..66bda5a04582 100644
+index 66bda5a04582..92583238ca4a 100644
 --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -51,12 +51,21 @@
- 		pinctrl-0 = <&pinctrl_hummingboard_gpio3_5>;
- 	};
- 
--	reg_3p3v: 3p3v {
-+	v_3v2: regulator-v-3v2 {
- 		compatible = "regulator-fixed";
--		regulator-name = "3P3V";
--		regulator-min-microvolt = <3300000>;
-+		regulator-always-on;
- 		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "v_3v2";
-+		vin-supply = <&v_5v0>;
-+	};
-+
-+	v_5v0: regulator-v-5v0 {
-+		compatible = "regulator-fixed";
- 		regulator-always-on;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_5v0";
- 	};
- 
- 	v_sd: regulator-v-sd {
-@@ -69,29 +78,31 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-name = "v_sd";
- 		startup-delay-us = <1000>;
--		vin-supply = <&reg_3p3v>;
-+		vin-supply = <&v_3v2>;
- 	};
- 
--	reg_usbh1_vbus: usb-h1-vbus {
-+	v_usb2: regulator-v-usb2 {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
- 		gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_hummingboard_usbh1_vbus>;
--		regulator-name = "usb_h1_vbus";
--		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb2";
-+		vin-supply = <&v_5v0>;
- 	};
- 
--	reg_usbotg_vbus: usb-otg-vbus {
-+	v_usb1: regulator-v-usb1 {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
- 		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_hummingboard_usbotg_vbus>;
--		regulator-name = "usb_otg_vbus";
--		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb1";
-+		vin-supply = <&v_5v0>;
- 	};
- 
- 	sound-sgtl5000 {
-@@ -151,8 +162,8 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_hummingboard_sgtl5000>;
- 		reg = <0x0a>;
--		VDDA-supply = <&reg_3p3v>;
--		VDDIO-supply = <&reg_3p3v>;
-+		VDDA-supply = <&v_3v2>;
-+		VDDIO-supply = <&v_3v2>;
- 	};
- };
- 
-@@ -292,7 +303,7 @@
- 
- &usbh1 {
- 	disable-over-current;
--	vbus-supply = <&reg_usbh1_vbus>;
-+	vbus-supply = <&v_usb2>;
+@@ -150,13 +150,13 @@
  	status = "okay";
- };
  
-@@ -300,7 +311,7 @@
- 	disable-over-current;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hummingboard_usbotg_id>;
--	vbus-supply = <&reg_usbotg_vbus>;
-+	vbus-supply = <&v_usb1>;
- 	status = "okay";
- };
+ 	/* Pro baseboard model */
+-	rtc: pcf8523@68 {
++	rtc@68 {
+ 		compatible = "nxp,pcf8523";
+ 		reg = <0x68>;
+ 	};
  
-@@ -314,3 +325,7 @@
- 	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
-+
-+&vcc_3v3 {
-+	vin-supply = <&v_3v2>;
-+};
+ 	/* Pro baseboard model */
+-	sgtl5000: sgtl5000@a {
++	sgtl5000: codec@a {
+ 		clocks = <&clks IMX6QDL_CLK_CKO>;
+ 		compatible = "fsl,sgtl5000";
+ 		pinctrl-names = "default";
 -- 
 2.7.4
 
