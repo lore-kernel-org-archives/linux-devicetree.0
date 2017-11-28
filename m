@@ -1,70 +1,50 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH] media: i2c: adv748x: Restore full DT paths in kernel
- messages
-Date: Tue, 28 Nov 2017 14:02:25 +0000
-Message-ID: <60496d91-446a-435e-41a4-3e579c6fe08b@ideasonboard.com>
-References: <1511874084-5068-1-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] irqchip/gic-v3: Support MSIs via aliases and distributor
+Date: Tue, 28 Nov 2017 08:04:56 -0600
+Message-ID: <20171128140456.mexpe542h24s6ycy@rob-hp-laptop>
+References: <20171127102408.6631-1-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1511874084-5068-1-git-send-email-geert+renesas@glider.be>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171127102408.6631-1-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thanks for the patch.
-
-On 28/11/17 13:01, Geert Uytterhoeven wrote:
-> As of_node_full_name() now returns only the basename, the endpoint
-> information printed became useless:
+On Mon, Nov 27, 2017 at 02:24:08AM -0800, Stephen Boyd wrote:
+> Some GIC configurations don't have an accessible ITS, but they
+> want to support MSIs through the distributor's SETSPI registers
+> or through the IMPLEMENTATION DEFINED message-based interrupt
+> request register region. This mode of operation is similar to the
+> v2m support on gic-400, but we don't necessarily know what
+> particular SPIs are supported as MSIs so we need some help from
+> firmware to know what to do.
 > 
->     adv748x 4-0070: Endpoint endpoint on port 7
->     adv748x 4-0070: Endpoint endpoint on port 8
->     adv748x 4-0070: Endpoint endpoint on port 10
->     adv748x 4-0070: Endpoint endpoint on port 11
+> Introduce an "arm,spi-ranges" property for this, similar to the
+> "marvell,spi-ranges" property, that indicates the base and size
+> of each MSI range. This property applies equally to the
+> distributor and alias registers. In either case, we detect this
+> mode of operation by looking for a node with the "msi-controller"
+> property and then probe the v2m frame code on top of it. Assume
+> these nodes will have the "arm,spi-ranges" property in them so
+> that the v2m code works mostly unmodified.
 > 
-> Restore the old behavior by using "%pOF" instead:
-> 
->     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@7/endpoint on port 7
->     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@8/endpoint on port 8
->     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@10/endpoint on port 10
->     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@11/endpoint on port 11
-> 
-> Fixes: a7e4cfb0a7ca4773 ("of/fdt: only store the device node basename in full_name")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Acked-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
+> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
->  drivers/media/i2c/adv748x/adv748x-core.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-> index 5ee14f2c27478e3a..c1001db6a172e256 100644
-> --- a/drivers/media/i2c/adv748x/adv748x-core.c
-> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
-> @@ -646,14 +646,12 @@ static int adv748x_parse_dt(struct adv748x_state *state)
->  
->  	for_each_endpoint_of_node(state->dev->of_node, ep_np) {
->  		of_graph_parse_endpoint(ep_np, &ep);
-> -		adv_info(state, "Endpoint %s on port %d",
-> -				of_node_full_name(ep.local_node),
-> -				ep.port);
-> +		adv_info(state, "Endpoint %pOF on port %d", ep.local_node,
-> +			 ep.port);
->  
->  		if (ep.port >= ADV748X_PORT_MAX) {
-> -			adv_err(state, "Invalid endpoint %s on port %d",
-> -				of_node_full_name(ep.local_node),
-> -				ep.port);
-> +			adv_err(state, "Invalid endpoint %pOF on port %d",
-> +				ep.local_node, ep.port);
->  
->  			continue;
->  		}
-> 
+>  .../bindings/interrupt-controller/arm,gic-v3.txt   |  48 +++++++++-
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/irqchip/irq-gic-v2m.c                      | 102 ++++++++++++++++-----
+>  drivers/irqchip/irq-gic-v3.c                       |   4 +
+>  include/linux/irqchip/arm-gic-common.h             |   3 +
+>  4 files changed, 129 insertions(+), 28 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
