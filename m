@@ -1,159 +1,109 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [RFC V7 1/2] OPP: Allow OPP table to be used for power-domains
-Date: Tue, 28 Nov 2017 16:50:32 +0100
-Message-ID: <CAPDyKFp_6VD6+7XJGy4oWOf+YQH4Ah6Q7BfmQsuz2OYp4KGjzA@mail.gmail.com>
-References: <cover.1509453284.git.viresh.kumar@linaro.org> <2b244ea0a09deaf50237fb8b7578273a8284499e.1509453284.git.viresh.kumar@linaro.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v3 1/4] omapdrm: panel: fix compatible vendor string for
+ td028ttec1
+Date: Tue, 28 Nov 2017 16:48:54 +0100
+Message-ID: <6ae8f4b7d794c536650cc99025e5b026089cea30.1511884135.git.hns@goldelico.com>
+References: <cover.1511884135.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2b244ea0a09deaf50237fb8b7578273a8284499e.1509453284.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1511884135.git.hns@goldelico.com>
+In-Reply-To: <cover.1511884135.git.hns@goldelico.com>
+References: <cover.1511884135.git.hns@goldelico.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pyra-handheld.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 31 October 2017 at 13:47, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> Power-domains can also have their active states and this patch enhances
-> the OPP binding to define those.
->
-> The power domains can use the OPP bindings mostly as is. Though there
-> are some changes required to support special cases:
->
-> - Allow "operating-points-v2" to contain multiple phandles for power
->   domain providers providing multiple domains.
->
-> - A new property "power-domain-opp" is added for devices to specify the
->   minimum required OPP of the master domain for the functioning of the
->   device. We can add this property directly to device's node if the
->   device has a fixed minimum OPP requirement from the master power
+The vendor name was "toppoly" but other panels and the vendor list
+have defined it as "tpo". So let's fix it in driver and bindings.
 
-Please avoid the terminology "master power domain", it's confusing.
-Instead use only "power domain". This applies to a couple of more
-places of $subject patch, please fix those as well.
+We keep the old definition in parallel to stay compatible with
+potential older DTB setup.
 
->   domain. Or we can add this property to each OPP node of the device, if
->   different OPP nodes have different minimum OPP requirement from the
->   master power domain.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt      | 12 +++++
->  .../devicetree/bindings/power/power_domain.txt     | 62 ++++++++++++++++++++++
->  2 files changed, 74 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index 9d733af26be7..203e09fe7698 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -45,6 +45,11 @@ Devices supporting OPPs must set their "operating-points-v2" property with
->  phandle to a OPP table in their DT node. The OPP core will use this phandle to
->  find the operating points for the device.
->
-> +This can contain more than one phandle for power domain providers that provide
-> +multiple power domains. That is, one phandle for each power domain. If only one
-> +phandle is available, then the same OPP table will be used for all power domains
-> +provided by the power domain provider.
-> +
->  If required, this can be extended for SoC vendor specific bindings. Such bindings
->  should be documented as Documentation/devicetree/bindings/power/<vendor>-opp.txt
->  and should have a compatible description like: "operating-points-v2-<vendor>".
-> @@ -154,6 +159,13 @@ properties.
->
->  - status: Marks the node enabled/disabled.
->
-> +- power-domain-opp: This contains phandle to one of the OPP nodes of the master
-> +  power domain. This specifies the minimum required OPP of the master domain for
-> +  the functioning of the device in this OPP (where this property is present).
-> +  This property can only be set for a device if the device node contains the
-> +  "power-domains" property. Also, either all or none of the OPP nodes in an OPP
-> +  table should have it set.
-> +
->  Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
->
->  / {
-> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> index 14bd9e945ff6..0d8608f2d133 100644
-> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -40,6 +40,12 @@ phandle arguments (so called PM domain specifiers) of length specified by the
->    domain's idle states. In the absence of this property, the domain would be
->    considered as capable of being powered-on or powered-off.
->
-> +- operating-points-v2 : Phandles to the OPP tables of power domains provided by
-> +  a power domain provider. If the provider provides a single power domain only
-> +  or all the power domains provided by the provider have identical OPP tables,
-> +  then this shall contain a single phandle. Refer to ../opp/opp.txt for more
-> +  information.
-> +
->  Example:
->
->         power: power-controller@12340000 {
-> @@ -120,4 +126,60 @@ The node above defines a typical PM domain consumer device, which is located
->  inside a PM domain with index 0 of a power controller represented by a node
->  with the label "power".
->
-> +Optional properties:
-> +- power-domain-opp: This contains phandle to one of the OPP nodes of the master
-> +  power domain. This specifies the minimum required OPP of the master domain for
-> +  the functioning of the device. This property can only be set for a device, if
-> +  the device node contains the "power-domains" property.
-> +
-> +Example:
-> +- OPP table for domain provider that provides two domains.
-> +
-> +       domain0_opp_table: opp_table0 {
-> +               compatible = "operating-points-v2";
-> +
-> +               domain0_opp_0: opp-1000000000 {
-> +                       opp-hz = /bits/ 64 <1000000000>;
-> +                       opp-microvolt = <975000 970000 985000>;
-> +               };
-> +               domain0_opp_1: opp-1100000000 {
-> +                       opp-hz = /bits/ 64 <1100000000>;
-> +                       opp-microvolt = <1000000 980000 1010000>;
-> +               };
-> +       };
-> +
-> +       domain1_opp_table: opp_table1 {
-> +               compatible = "operating-points-v2";
-> +
-> +               domain1_opp_0: opp-1200000000 {
-> +                       opp-hz = /bits/ 64 <1200000000>;
-> +                       opp-microvolt = <975000 970000 985000>;
-> +               };
-> +               domain1_opp_1: opp-1300000000 {
-> +                       opp-hz = /bits/ 64 <1300000000>;
-> +                       opp-microvolt = <1000000 980000 1010000>;
-> +               };
-> +       };
-> +
-> +       parent: power-controller@12340000 {
-> +               compatible = "foo,power-controller";
-> +               reg = <0x12340000 0x1000>;
-> +               #power-domain-cells = <1>;
-> +               operating-points-v2 = <&domain0_opp_table>, <&domain1_opp_table>;
-> +       };
-> +
-> +       leaky-device0@12350000 {
-> +               compatible = "foo,i-leak-current";
-> +               reg = <0x12350000 0x1000>;
-> +               power-domains = <&parent 0>;
-> +               power-domain-opp = <&domain0_opp_0>;
-> +       };
-> +
-> +       leaky-device1@12350000 {
-> +               compatible = "foo,i-leak-current";
-> +               reg = <0x12350000 0x1000>;
-> +               power-domains = <&parent 1>;
-> +               power-domain-opp = <&domain1_opp_1>;
-> +       };
-> +
->  [1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
-> --
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ .../display/panel/{toppoly,td028ttec1.txt => tpo,td028ttec1.txt}      | 4 ++--
+ drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c               | 3 +++
+ drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.c      | 3 +++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+ rename Documentation/devicetree/bindings/display/panel/{toppoly,td028ttec1.txt => tpo,td028ttec1.txt} (84%)
 
-Besides the minor nitpick(s), this looks good to me. Feel free to add:
-
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
+diff --git a/Documentation/devicetree/bindings/display/panel/toppoly,td028ttec1.txt b/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
+similarity index 84%
+rename from Documentation/devicetree/bindings/display/panel/toppoly,td028ttec1.txt
+rename to Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
+index 7175dc3740ac..ed34253d9fb1 100644
+--- a/Documentation/devicetree/bindings/display/panel/toppoly,td028ttec1.txt
++++ b/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
+@@ -2,7 +2,7 @@ Toppoly TD028TTEC1 Panel
+ ========================
+ 
+ Required properties:
+-- compatible: "toppoly,td028ttec1"
++- compatible: "tpo,td028ttec1"
+ 
+ Optional properties:
+ - label: a symbolic name for the panel
+@@ -14,7 +14,7 @@ Example
+ -------
+ 
+ lcd-panel: td028ttec1@0 {
+-	compatible = "toppoly,td028ttec1";
++	compatible = "tpo,td028ttec1";
+ 	reg = <0>;
+ 	spi-max-frequency = <100000>;
+ 	spi-cpol;
+diff --git a/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c b/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c
+index 0a38a0e8c925..a0dfa14f4fab 100644
+--- a/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c
++++ b/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c
+@@ -452,6 +452,8 @@ static int td028ttec1_panel_remove(struct spi_device *spi)
+ }
+ 
+ static const struct of_device_id td028ttec1_of_match[] = {
++	{ .compatible = "omapdss,tpo,td028ttec1", },
++	/* keep to not break older DTB */
+ 	{ .compatible = "omapdss,toppoly,td028ttec1", },
+ 	{},
+ };
+@@ -471,6 +473,7 @@ static struct spi_driver td028ttec1_spi_driver = {
+ 
+ module_spi_driver(td028ttec1_spi_driver);
+ 
++MODULE_ALIAS("spi:tpo,td028ttec1");
+ MODULE_ALIAS("spi:toppoly,td028ttec1");
+ MODULE_AUTHOR("H. Nikolaus Schaller <hns@goldelico.com>");
+ MODULE_DESCRIPTION("Toppoly TD028TTEC1 panel driver");
+diff --git a/drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.c b/drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.c
+index 57e9e146ff74..4aeb908f2d1e 100644
+--- a/drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.c
++++ b/drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.c
+@@ -455,6 +455,8 @@ static int td028ttec1_panel_remove(struct spi_device *spi)
+ }
+ 
+ static const struct of_device_id td028ttec1_of_match[] = {
++	{ .compatible = "omapdss,tpo,td028ttec1", },
++	/* keep to not break older DTB */
+ 	{ .compatible = "omapdss,toppoly,td028ttec1", },
+ 	{},
+ };
+@@ -474,6 +476,7 @@ static struct spi_driver td028ttec1_spi_driver = {
+ 
+ module_spi_driver(td028ttec1_spi_driver);
+ 
++MODULE_ALIAS("spi:tpo,td028ttec1");
+ MODULE_ALIAS("spi:toppoly,td028ttec1");
+ MODULE_AUTHOR("H. Nikolaus Schaller <hns@goldelico.com>");
+ MODULE_DESCRIPTION("Toppoly TD028TTEC1 panel driver");
+-- 
+2.12.2
