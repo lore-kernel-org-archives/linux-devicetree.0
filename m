@@ -1,93 +1,121 @@
-From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v1] usb: xhci: allow imod-interval to be configurable
-Date: Tue, 28 Nov 2017 15:32:29 -0500
-Message-ID: <22b57b69-3728-d879-42c6-92e87e7c7955@codeaurora.org>
-References: <1511889106-9239-1-git-send-email-awallis@codeaurora.org>
- <20171128193500.GA30609@kroah.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 3/5] PCI: cadence: Add host driver for Cadence PCIe
+ controller
+Date: Tue, 28 Nov 2017 14:41:14 -0600
+Message-ID: <20171128204114.GE11228@bhelgaas-glaptop.roam.corp.google.com>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171128193500.GA30609-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Cc: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2017 2:35 PM, Greg Kroah-Hartman wrote:
-> On Tue, Nov 28, 2017 at 12:11:46PM -0500, Adam Wallis wrote:
->> The xHCI driver currently has the IMOD set to 160, which
->> translates to an IMOD interval of 40,000ns (160 * 250)ns
->>
-[..]
->> --- a/drivers/usb/host/xhci-plat.c
->> +++ b/drivers/usb/host/xhci-plat.c
->> @@ -23,6 +23,7 @@
->>  #include "xhci-plat.h"
->>  #include "xhci-mvebu.h"
->>  #include "xhci-rcar.h"
->> +#include "xhci-mtk.h"
->>  
->>  static struct hc_driver __read_mostly xhci_plat_hc_driver;
->>  
->> @@ -269,6 +270,20 @@ static int xhci_plat_probe(struct platform_device *pdev)
->>  	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
->>  		xhci->quirks |= XHCI_BROKEN_PORT_PED;
->>  
->> +	/* imod interval in nanoseconds */
->> +	if (device_property_read_u32(sysdev,
->> +		"imod-interval", &xhci->imod_interval))
->> +		xhci->imod_interval = 40000;
+On Thu, Nov 23, 2017 at 04:01:48PM +0100, Cyrille Pitchen wrote:
+> This patch adds support to the Cadence PCIe controller in host mode.
 > 
-> So no matter what value you read, you set it to 40000?  Or am I reading
-> this code incorrectly?
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+> ---
+>  drivers/Makefile                        |   1 +
+>  drivers/pci/Kconfig                     |   1 +
+>  drivers/pci/cadence/Kconfig             |  24 ++
+>  drivers/pci/cadence/Makefile            |   2 +
+>  drivers/pci/cadence/pcie-cadence-host.c | 425 ++++++++++++++++++++++++++++++++
+>  drivers/pci/cadence/pcie-cadence.c      | 110 +++++++++
+>  drivers/pci/cadence/pcie-cadence.h      | 325 ++++++++++++++++++++++++
+>  7 files changed, 888 insertions(+)
+>  create mode 100644 drivers/pci/cadence/Kconfig
+>  create mode 100644 drivers/pci/cadence/Makefile
+>  create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
+>  create mode 100644 drivers/pci/cadence/pcie-cadence.c
+>  create mode 100644 drivers/pci/cadence/pcie-cadence.h
 
-I think you may be reading the code incorrectly. device_property_read_u32()
-returns 0 when the property is found and valid...and stored into
-xhci->imod_interval. When 0 is returned in this case, the default value of
-40,000 is skipped over.
+I prefer a single file per driver.  I assume you're anticipating
+something like dwc, where the DesignWare core is incorporated into
+several devices in slightly different ways.  But it doesn't look like
+that's here yet, and personally, I'd rather split out the required
+things when they actually become required, not ahead of time.
 
-If the property is not found, a number of different errors could be returned,
-but any of them will cause the default value to be used.
+> diff --git a/drivers/Makefile b/drivers/Makefile
+> index 1d034b680431..27bdd98784d9 100644
+> --- a/drivers/Makefile
+> +++ b/drivers/Makefile
+> @@ -18,6 +18,7 @@ obj-y				+= pwm/
+>  
+>  obj-$(CONFIG_PCI)		+= pci/
+>  obj-$(CONFIG_PCI_ENDPOINT)	+= pci/endpoint/
+> +obj-$(CONFIG_PCI_CADENCE)	+= pci/cadence/
 
-> There's a good reason putting function calls inside if() is considered a
-> bad coding style :)
+I can't remember why we added CONFIG_PCI_ENDPOINT here instead of in
+drivers/pci/Makefile.  Is there any way to move both CONFIG_PCI_ENDPOINT
+and CONFIG_PCI_CADENCE into drivers/pci/Makefile so this is better
+encapsulated?
 
-I do not disagree with you, however, I was trying to maintain style consistency
-with the device property reads with the xhci_plat_probe function.
+>  # PCI dwc controller drivers
+>  obj-y				+= pci/dwc/
+>...
 
-If I break that consistency, a couple of ways I might write this cleaner
+> + * struct cdns_pcie_rc_data - hardware specific data
 
-1) set xhci->imod_interval to 40,000 before the call to
-device_property_read_u32. If the property exists in a firmware node, it will
-update the imod_interval value...if it does not exist, it will not update this
-value and the default will be used. In this case, I would not even check the
-return value. This method is used quite a bit in the kernel.
+"cdns" is a weird abbreviation for "Cadence", since "Cadence" doesn't
+contain an "s".
 
-2) use a if (device_property_present()) and check to see if that property is
-even present. If so, call device_property_read_u32() without check return value.
-This has the downside of still using a function call within the if() which you
-have already indicated is not your preference.
+>...
+> +static int cdns_pcie_parse_request_of_pci_ranges(struct device *dev,
+> +						 struct list_head *resources,
+> +						 struct resource **bus_range)
+> +{
+> +	int err, res_valid = 0;
+> +	struct device_node *np = dev->of_node;
+> +	resource_size_t iobase;
+> +	struct resource_entry *win, *tmp;
+> +
+> +	err = of_pci_get_host_bridge_resources(np, 0, 0xff, resources, &iobase);
+> +	if (err)
+> +		return err;
+> +
+> +	err = devm_request_pci_bus_resources(dev, resources);
+> +	if (err)
+> +		return err;
+> +
+> +	resource_list_for_each_entry_safe(win, tmp, resources) {
+> +		struct resource *res = win->res;
+> +
+> +		switch (resource_type(res)) {
+> +		case IORESOURCE_IO:
+> +			err = pci_remap_iospace(res, iobase);
+> +			if (err) {
+> +				dev_warn(dev, "error %d: failed to map resource %pR\n",
+> +					 err, res);
+> +				resource_list_destroy_entry(win);
+> +			}
+> +			break;
+> +		case IORESOURCE_MEM:
+> +			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+> +			break;
+> +		case IORESOURCE_BUS:
+> +			*bus_range = res;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (res_valid)
+> +		return 0;
+> +
+> +	dev_err(dev, "non-prefetchable memory resource required\n");
+> +	return -EINVAL;
+> +}
 
-3) add a retval and test off of this instead of using the function directly in
-the if()
+The code above is starting to look awfully familiar.  I wonder if it's
+time to think about some PCI-internal interface that can encapsulate
+this.  In this case, there's really nothing Cadence-specific here.
+There are other callers where there *is* vendor-specific code, but
+possibly that could be handled by returning pointers to bus number,
+I/O port, and MMIO resources so the caller could do the
+vendor-specific stuff?
 
-> thanks,
-> 
-> greg k-h
-
-Thanks for taking time to review my patch. I really have no strong preference on
-how call device_property_read_u32() is tested and I am open to any suggestions.
-Adam
-
-
--- 
-Adam Wallis
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
