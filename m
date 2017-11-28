@@ -1,233 +1,155 @@
-Return-Path: <SRS0=F6Ff=C2=gmail.com=jon.nettleton@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <E1eJMdo-0002qf-2D@rmk-PC.armlinux.org.uk>
-References: <20171127165134.GH31757@n2100.armlinux.org.uk> <E1eJMdo-0002qf-2D@rmk-PC.armlinux.org.uk>
-From: Jon Nettleton <jon.nettleton@gmail.com>
-Date: Tue, 28 Nov 2017 05:46:07 +0100
-Message-ID: <CALHpu36Kjy4SSn1m8ZOYwEr+9u67dobfNHiOX6s75UFGVm3atw@mail.gmail.com>
-Subject: Re: [PATCH 03/13] ARM: dts: imx6qdl: SolidRun: move microsom includes
- into .dts
-Content-Type: multipart/alternative; boundary="94eb2c07188cb9b0e6055f03b311"
-To: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+In-Reply-To: <mhng-53fb904e-d47e-4887-b661-560a8dd25313@palmer-si-x1c4>
+References: <20171121110451.qm5cy5s4audfvwu5@lakrids.cambridge.arm.com>
+	<mhng-53fb904e-d47e-4887-b661-560a8dd25313@palmer-si-x1c4>
+Date: Tue, 28 Nov 2017 13:41:01 -0600
+Message-ID: <CAL_Jsq+2U-Bz2_FEJWcdCAdHhvsF0MdDWPOP14wDj-4Wh2CYzw@mail.gmail.com>
+Subject: Re: [patches] Re: [PATCH] dt-bindings: Add an enable method to RISC-V
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Palmer Dabbelt <palmer@sifive.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, patches@groups.riscv.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---94eb2c07188cb9b0e6055f03b311
-Content-Type: text/plain; charset="UTF-8"
-
-On Mon, Nov 27, 2017 at 5:52 PM, Russell King <rmk+kernel@armlinux.org.uk>
-wrote:
-
-> Move the microsom includes into the .dts files so different options can
-> be accomodated at the lowest level.
+On Wed, Nov 22, 2017 at 11:11 AM, Palmer Dabbelt <palmer@sifive.com> wrote:
+> On Tue, 21 Nov 2017 03:04:52 PST (-0800), mark.rutland@arm.com wrote:
+>>
+>> Hi Palmer,
+>>
+>> On Mon, Nov 20, 2017 at 11:50:22AM -0800, Palmer Dabbelt wrote:
+>>>
+>>> RISC-V doesn't currently specify a mechanism for enabling or disabling
+>>> CPUs.  Instead, we assume that all CPUs are enabled on boot, and if
+>>> someone wants to save power we instead put a CPU to sleep via a WFI
+>>> loop.
+>>>
+>>> This patch adds "enable-method" to the RISC-V CPU binding, which
+>>> currently only has the value "none".  This allows us to change the
+>>> enable method in the future.
+>>
+>>
+>> I think you might want to be a bit more explicit about what this means,
+>> and this could do with a better name, as "none" sounds like the CPU is
+>> unusable, rather than it having been placed within the kernel already by
+>> the FW/bootloader (which IIUC is what happens currently).
 >
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> ---
->  arch/arm/boot/dts/imx6dl-cubox-i.dts        | 1 +
->  arch/arm/boot/dts/imx6dl-hummingboard.dts   | 1 +
->  arch/arm/boot/dts/imx6q-cubox-i.dts         | 1 +
->  arch/arm/boot/dts/imx6q-hummingboard.dts    | 1 +
->  arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 1 -
->  arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 1 -
->  6 files changed, 4 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/arm/boot/dts/imx6dl-cubox-i.dts
-> b/arch/arm/boot/dts/imx6dl-cubox-i.dts
-> index f10a36b8647d..222c269f687a 100644
-> --- a/arch/arm/boot/dts/imx6dl-cubox-i.dts
-> +++ b/arch/arm/boot/dts/imx6dl-cubox-i.dts
-> @@ -41,6 +41,7 @@
->  /dts-v1/;
+> It was proposed to make "enable-method" optional, and have the lack of an
+> enable method signify the current scheme.  The current scheme is that the
+> bootloader starts every hart at the kernel's entry point.
 >
->  #include "imx6dl.dtsi"
-> +#include "imx6qdl-microsom.dtsi"
->  #include "imx6qdl-cubox-i.dtsi"
+> Calling this "always-enabled" was also suggested, which seems fine to me.
 >
->  / {
-> diff --git a/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> index 39c2602fa87c..1709810de77e 100644
-> --- a/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> +++ b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-> @@ -42,6 +42,7 @@
->  /dts-v1/;
+>> As previosuly commented, I also really think you'll want to define a
+>> simple boot protocol (like PPC spin-table) whereby the kernel can bring
+>> each CPU into the kernel independently. That will save you a lot of pain
+>> in future with things like kexec, suspend/resume, etc.
+>>
+>> For arm64 we had a spin-table clone (implemented in our boot-wrapper
+>> firmware) that allowed us to bring CPUs into the kernel explicitly.
+>> However, we made the mistake of allowing CPUs to share a mailbox, and we
+>> couldn't tell how many CPUs were stuck in the kernel at any point in
+>> time (rendering kexec, suspend, etc impossible).
 >
->  #include "imx6dl.dtsi"
-> +#include "imx6qdl-microsom.dtsi"
->  #include "imx6qdl-hummingboard.dtsi"
 >
->  / {
-> diff --git a/arch/arm/boot/dts/imx6q-cubox-i.dts
-> b/arch/arm/boot/dts/imx6q-cubox-i.dts
-> index b68aa0e57f20..8f39682c33a9 100644
-> --- a/arch/arm/boot/dts/imx6q-cubox-i.dts
-> +++ b/arch/arm/boot/dts/imx6q-cubox-i.dts
-> @@ -41,6 +41,7 @@
->  /dts-v1/;
+> This is actually why I'm kind of pushing back on this: because we don't know
+> how we're actually going to handle this, I don't want to go build an
+> interface to the firmware that might be broken.  Essentially what we're
+> doing now is just keeping the spin table entirely within Linux, so we can
+> change this interface whenever we want.  The start of our kernel looks like
 >
->  #include "imx6q.dtsi"
-> +#include "imx6qdl-microsom.dtsi"
->  #include "imx6qdl-cubox-i.dtsi"
+>  _start(char *dtb_pointer, long hartid)
+>    if (atomic_increment_return(hart_lottery) == 0)
+>      start_kernel()
+>    else
+>      while (READ_ONCE(__cpu_up_has_turned_on_hart[hartid]) == 0)
+>        wait_for_interrupt()
+>      smp_callin()
 >
->  / {
-> diff --git a/arch/arm/boot/dts/imx6q-hummingboard.dts
-> b/arch/arm/boot/dts/imx6q-hummingboard.dts
-> index 69a7a0a1cb21..6fc692940e6b 100644
-> --- a/arch/arm/boot/dts/imx6q-hummingboard.dts
-> +++ b/arch/arm/boot/dts/imx6q-hummingboard.dts
-> @@ -42,6 +42,7 @@
->  /dts-v1/;
+> If I understand correctly, this is essentially what the spin tables are
+> doing in arm64.  Our mechanism is a bit different because we can expose a
+> much more complicated interface here, but since the interface can change
+> (it's a kernel-internal interface, not a firmware->kernel interface) that's
+> the natural thing to do.
 >
->  #include "imx6q.dtsi"
-> +#include "imx6qdl-microsom.dtsi"
->  #include "imx6qdl-hummingboard.dtsi"
+> While I haven't actually gone through and looked at any of this (and I admit
+> I have only a vague idea of how it works), I think this should work fine for
+> kexec, CPU hotplug, and suspend.  kexec is easy: the fresh kernel's image
+> will boot exactly like a regular one, as all the harts can just jump to the
+> entry point at the same time.  Since "hart_lottery" is initialized to 0 by
+> the ELF there isn't anything special required to make it work.
 >
->  / {
-> diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> index 57ce2dbb6ad9..98ec7ce1f2a3 100644
-> --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> @@ -38,7 +38,6 @@
->   *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->   *     OTHER DEALINGS IN THE SOFTWARE.
->   */
-> -#include "imx6qdl-microsom.dtsi"
->  #include <dt-bindings/input/input.h>
->  #include <dt-bindings/gpio/gpio.h>
+> Actually turning off harts will require us to add an interface that does so,
+> which will probably happen via an SBI call.  We haven't actually designed
+> the interface yet, but I'm assuming it'll just reset the hart.  In general,
+> we like to make any interface that sleeps also work as a NOP, so for now
+> let's just pretend that this interface does nothing and go straight
+> to_start.  This should map pretty well, our __cpu_down could just be the
+> mirror of __cpu_up
 >
-> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> index afd981e9b5e3..84e6392fee1f 100644
-> --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> @@ -38,7 +38,6 @@
->   *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->   *     OTHER DEALINGS IN THE SOFTWARE.
->   */
-> -#include "imx6qdl-microsom.dtsi"
+>  __cpu_down(int hartid)
+>    __cpu_up_has_turned_on_hart[hartid] = false;
+>    atomic_decrement(hart_lottery);
+>    __sbi_suspend_hart();
+>    jump _start
 >
->  / {
->         chosen {
+> That should cover hotplug, and then suspend is just a matter of hotplugging
+> out the last CPU.  I assume that lots of our stuff will blow up when we
+> start removing harts at runtime, but that'll all happen regardless of how we
+> wake them up.  There's also a bit of a race here (bringing up a hart while
+> the last one is suspending), and that counter overflows, but those seem
+> solvable.
 >
-
-Since we are going through and adding the som dtsi include to all the
-device-tree files, would it make sense to rename the microsom.dtsi at this
-point in time?  Perhaps something like imx6qdl-sr-microsom.dtsi?
-
--Jon
-
---94eb2c07188cb9b0e6055f03b311
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Mon, Nov 27, 2017 at 5:52 PM, Russell King <span dir=3D"ltr">&lt;<a =
-href=3D"mailto:rmk+kernel@armlinux.org.uk" target=3D"_blank">rmk+kernel@arm=
-linux.org.uk</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" sty=
-le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
-ng-left:1ex">Move the microsom includes into the .dts files so different op=
-tions can<br>
-be accomodated at the lowest level.<br>
-<br>
-Signed-off-by: Russell King &lt;<a href=3D"mailto:rmk%2Bkernel@armlinux.org=
-.uk">rmk+kernel@armlinux.org.uk</a>&gt;<br>
----<br>
-=C2=A0arch/arm/boot/dts/imx6dl-<wbr>cubox-i.dts=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-| 1 +<br>
-=C2=A0arch/arm/boot/dts/imx6dl-<wbr>hummingboard.dts=C2=A0 =C2=A0| 1 +<br>
-=C2=A0arch/arm/boot/dts/imx6q-cubox-<wbr>i.dts=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0| 1 +<br>
-=C2=A0arch/arm/boot/dts/imx6q-<wbr>hummingboard.dts=C2=A0 =C2=A0 | 1 +<br>
-=C2=A0arch/arm/boot/dts/imx6qdl-<wbr>cubox-i.dtsi=C2=A0 =C2=A0 =C2=A0 | 1 -=
-<br>
-=C2=A0arch/arm/boot/dts/imx6qdl-<wbr>hummingboard.dtsi | 1 -<br>
-=C2=A06 files changed, 4 insertions(+), 2 deletions(-)<br>
-<br>
-diff --git a/arch/arm/boot/dts/imx6dl-<wbr>cubox-i.dts b/arch/arm/boot/dts/=
-imx6dl-<wbr>cubox-i.dts<br>
-index f10a36b8647d..222c269f687a 100644<br>
---- a/arch/arm/boot/dts/imx6dl-<wbr>cubox-i.dts<br>
-+++ b/arch/arm/boot/dts/imx6dl-<wbr>cubox-i.dts<br>
-@@ -41,6 +41,7 @@<br>
-=C2=A0/dts-v1/;<br>
-<br>
-=C2=A0#include &quot;imx6dl.dtsi&quot;<br>
-+#include &quot;imx6qdl-microsom.dtsi&quot;<br>
-=C2=A0#include &quot;imx6qdl-cubox-i.dtsi&quot;<br>
-<br>
-=C2=A0/ {<br>
-diff --git a/arch/arm/boot/dts/imx6dl-<wbr>hummingboard.dts b/arch/arm/boot=
-/dts/imx6dl-<wbr>hummingboard.dts<br>
-index 39c2602fa87c..1709810de77e 100644<br>
---- a/arch/arm/boot/dts/imx6dl-<wbr>hummingboard.dts<br>
-+++ b/arch/arm/boot/dts/imx6dl-<wbr>hummingboard.dts<br>
-@@ -42,6 +42,7 @@<br>
-=C2=A0/dts-v1/;<br>
-<br>
-=C2=A0#include &quot;imx6dl.dtsi&quot;<br>
-+#include &quot;imx6qdl-microsom.dtsi&quot;<br>
-=C2=A0#include &quot;imx6qdl-hummingboard.dtsi&quot;<br>
-<br>
-=C2=A0/ {<br>
-diff --git a/arch/arm/boot/dts/imx6q-<wbr>cubox-i.dts b/arch/arm/boot/dts/i=
-mx6q-<wbr>cubox-i.dts<br>
-index b68aa0e57f20..8f39682c33a9 100644<br>
---- a/arch/arm/boot/dts/imx6q-<wbr>cubox-i.dts<br>
-+++ b/arch/arm/boot/dts/imx6q-<wbr>cubox-i.dts<br>
-@@ -41,6 +41,7 @@<br>
-=C2=A0/dts-v1/;<br>
-<br>
-=C2=A0#include &quot;imx6q.dtsi&quot;<br>
-+#include &quot;imx6qdl-microsom.dtsi&quot;<br>
-=C2=A0#include &quot;imx6qdl-cubox-i.dtsi&quot;<br>
-<br>
-=C2=A0/ {<br>
-diff --git a/arch/arm/boot/dts/imx6q-<wbr>hummingboard.dts b/arch/arm/boot/=
-dts/imx6q-<wbr>hummingboard.dts<br>
-index 69a7a0a1cb21..6fc692940e6b 100644<br>
---- a/arch/arm/boot/dts/imx6q-<wbr>hummingboard.dts<br>
-+++ b/arch/arm/boot/dts/imx6q-<wbr>hummingboard.dts<br>
-@@ -42,6 +42,7 @@<br>
-=C2=A0/dts-v1/;<br>
-<br>
-=C2=A0#include &quot;imx6q.dtsi&quot;<br>
-+#include &quot;imx6qdl-microsom.dtsi&quot;<br>
-=C2=A0#include &quot;imx6qdl-hummingboard.dtsi&quot;<br>
-<br>
-=C2=A0/ {<br>
-diff --git a/arch/arm/boot/dts/imx6qdl-<wbr>cubox-i.dtsi b/arch/arm/boot/dt=
-s/imx6qdl-<wbr>cubox-i.dtsi<br>
-index 57ce2dbb6ad9..98ec7ce1f2a3 100644<br>
---- a/arch/arm/boot/dts/imx6qdl-<wbr>cubox-i.dtsi<br>
-+++ b/arch/arm/boot/dts/imx6qdl-<wbr>cubox-i.dtsi<br>
-@@ -38,7 +38,6 @@<br>
-=C2=A0 *=C2=A0 =C2=A0 =C2=A0FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE=
- OR THE USE OR<br>
-=C2=A0 *=C2=A0 =C2=A0 =C2=A0OTHER DEALINGS IN THE SOFTWARE.<br>
-=C2=A0 */<br>
--#include &quot;imx6qdl-microsom.dtsi&quot;<br>
-=C2=A0#include &lt;dt-bindings/input/input.h&gt;<br>
-=C2=A0#include &lt;dt-bindings/gpio/gpio.h&gt;<br>
-<br>
-diff --git a/arch/arm/boot/dts/imx6qdl-<wbr>hummingboard.dtsi b/arch/arm/bo=
-ot/dts/imx6qdl-<wbr>hummingboard.dtsi<br>
-index afd981e9b5e3..84e6392fee1f 100644<br>
---- a/arch/arm/boot/dts/imx6qdl-<wbr>hummingboard.dtsi<br>
-+++ b/arch/arm/boot/dts/imx6qdl-<wbr>hummingboard.dtsi<br>
-@@ -38,7 +38,6 @@<br>
-=C2=A0 *=C2=A0 =C2=A0 =C2=A0FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE=
- OR THE USE OR<br>
-=C2=A0 *=C2=A0 =C2=A0 =C2=A0OTHER DEALINGS IN THE SOFTWARE.<br>
-=C2=A0 */<br>
--#include &quot;imx6qdl-microsom.dtsi&quot;<br>
-<br>
-=C2=A0/ {<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 chosen {<br></blockquote><div><br></div>Since w=
-e are going through and adding the som dtsi include to all the device-tree =
-files, would it make sense to rename the microsom.dtsi at this point in tim=
-e?=C2=A0 Perhaps something like imx6qdl-sr-microsom.dtsi?</div><div class=
-=3D"gmail_quote"><br></div><div class=3D"gmail_quote">-Jon</div></div></div=
+> Does that sound sane?  If not, I'd be happy to go and design a spin table
+> firmware interface.  We just like to avoid inventing external interfaces
+> until we really know what we're doing :).
 >
-
---94eb2c07188cb9b0e6055f03b311--
+>
+>> Thanks,
+>> Mark.
+>>
+>>> CC: Mark Rutland <mark.rutland@arm.com>
+>>> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/riscv/cpus.txt | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt
+>>> b/Documentation/devicetree/bindings/riscv/cpus.txt
+>>> index adf7b7af5dc3..dd9e1ae197e2 100644
+>>> --- a/Documentation/devicetree/bindings/riscv/cpus.txt
+>>> +++ b/Documentation/devicetree/bindings/riscv/cpus.txt
+>>> @@ -82,6 +82,11 @@ described below.
+>>>                  Value type: <string>
+>>>                  Definition: Contains the RISC-V ISA string of this hart.
+>>> These
+>>>                              ISA strings are defined by the RISC-V ISA
+>>> manual.
+>>> +        - cpu-enable-method:
+>>> +               Usage: required
+>>> +               Value type: <stringlist>
+>>> +               Definition: Must be one of
+>>> +                       "none": This CPU's state cannot be changed.
+>>>
+>>>  Example: SiFive Freedom U540G Development Kit
+>>>  ---------------------------------------------
+>>> @@ -105,6 +110,7 @@ Linux is allowed to run on.
+>>>                          reg = <0>;
+>>>                          riscv,isa = "rv64imac";
+>>>                          status = "disabled";
+>>> +                        enable-method = "none";
+>>>                          L10: interrupt-controller {
+>>>                                  #interrupt-cells = <1>;
+>>>                                  compatible = "riscv,cpu-intc";
+>>> @@ -130,6 +136,7 @@ Linux is allowed to run on.
+>>>                          reg = <1>;
+>>>                          riscv,isa = "rv64imafdc";
+>>>                          status = "okay";
+>>> +                        enable-method = "none";
+>>>                          tlb-split;
+>>>                          L13: interrupt-controller {
+>>>                                  #interrupt-cells = <1>;
+>>> --
+>>> 2.13.6
+>>>
+>
