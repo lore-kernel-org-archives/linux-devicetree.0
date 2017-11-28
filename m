@@ -1,77 +1,53 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?=
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH] media: i2c: adv748x: Restore full DT paths in kernel
- messages
-Date: Tue, 28 Nov 2017 14:44:37 +0100
-Message-ID: <20171128134437.GK23832@bigcity.dyn.berto.se>
-References: <1511874084-5068-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 06/12] ARM: dts: r8a73a4: Remove CMT renesas,channels-mask
+Date: Tue, 28 Nov 2017 14:47:30 +0100
+Message-ID: <1511876856-9495-7-git-send-email-geert+renesas@glider.be>
+References: <1511876856-9495-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1511874084-5068-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1511876856-9495-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Magnus Damm <damm+renesas@opensource.se>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+From: Magnus Damm <damm+renesas@opensource.se>
 
-Thanks for your patch.
+Update the DTS to remove the now deprecated "renesas,channels-mask"
+property.
 
-On 2017-11-28 14:01:24 +0100, Geert Uytterhoeven wrote:
-> As of_node_full_name() now returns only the basename, the endpoint
-> information printed became useless:
-> 
->     adv748x 4-0070: Endpoint endpoint on port 7
->     adv748x 4-0070: Endpoint endpoint on port 8
->     adv748x 4-0070: Endpoint endpoint on port 10
->     adv748x 4-0070: Endpoint endpoint on port 11
-> 
-> Restore the old behavior by using "%pOF" instead:
-> 
->     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@7/endpoint on port 7
->     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@8/endpoint on port 8
->     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@10/endpoint on port 10
->     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@11/endpoint on port 11
-> 
-> Fixes: a7e4cfb0a7ca4773 ("of/fdt: only store the device node basename in full_name")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The channel information is now kept in the device driver and can easily
+be determined based on the compat string.
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v4:
+  - Rebased against renesas-devel-20171127-v4.15-rc1,
 
-> ---
->  drivers/media/i2c/adv748x/adv748x-core.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-> index 5ee14f2c27478e3a..c1001db6a172e256 100644
-> --- a/drivers/media/i2c/adv748x/adv748x-core.c
-> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
-> @@ -646,14 +646,12 @@ static int adv748x_parse_dt(struct adv748x_state *state)
->  
->  	for_each_endpoint_of_node(state->dev->of_node, ep_np) {
->  		of_graph_parse_endpoint(ep_np, &ep);
-> -		adv_info(state, "Endpoint %s on port %d",
-> -				of_node_full_name(ep.local_node),
-> -				ep.port);
-> +		adv_info(state, "Endpoint %pOF on port %d", ep.local_node,
-> +			 ep.port);
->  
->  		if (ep.port >= ADV748X_PORT_MAX) {
-> -			adv_err(state, "Invalid endpoint %s on port %d",
-> -				of_node_full_name(ep.local_node),
-> -				ep.port);
-> +			adv_err(state, "Invalid endpoint %pOF on port %d",
-> +				ep.local_node, ep.port);
->  
->  			continue;
->  		}
-> -- 
-> 2.7.4
-> 
+v3:
+  - Take over from Magnus,
+  - Split in per-SoC patches,
 
+v2:
+  - Rebased on top of power-domain changes,
+  - Added Acked-by and Tested-by from Geert.
+---
+ arch/arm/boot/dts/r8a73a4.dtsi | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 805b0fd70f53820d..8e48090e4fdc1412 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -138,9 +138,6 @@
+ 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
+ 		clock-names = "fck";
+ 		power-domains = <&pd_c5>;
+-
+-		renesas,channels-mask = <0xff>;
+-
+ 		status = "disabled";
+ 	};
+ 
 -- 
-Regards,
-Niklas Söderlund
+2.7.4
