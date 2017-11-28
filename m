@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 06/12] ARM: dts: r8a73a4: Remove CMT renesas,channels-mask
-Date: Tue, 28 Nov 2017 14:47:30 +0100
-Message-ID: <1511876856-9495-7-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 09/12] ARM: dts: r8a7791: Remove CMT renesas,channels-mask
+Date: Tue, 28 Nov 2017 14:47:33 +0100
+Message-ID: <1511876856-9495-10-git-send-email-geert+renesas@glider.be>
 References: <1511876856-9495-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1511876856-9495-1-git-send-email-geert+renesas@glider.be>
@@ -32,18 +32,26 @@ v2:
   - Rebased on top of power-domain changes,
   - Added Acked-by and Tested-by from Geert.
 ---
- arch/arm/boot/dts/r8a73a4.dtsi | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/arm/boot/dts/r8a7791.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-index 805b0fd70f53820d..8e48090e4fdc1412 100644
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -138,9 +138,6 @@
- 		clocks = <&mstp3_clks R8A73A4_CLK_CMT1>;
- 		clock-names = "fck";
- 		power-domains = <&pd_c5>;
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index a69d6f883b34519f..dfc1c406179fbf3a 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -266,8 +266,6 @@
+ 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+ 		resets = <&cpg 124>;
+ 
+-		renesas,channels-mask = <0x60>;
 -
+ 		status = "disabled";
+ 	};
+ 
+@@ -287,8 +285,6 @@
+ 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+ 		resets = <&cpg 329>;
+ 
 -		renesas,channels-mask = <0xff>;
 -
  		status = "disabled";
