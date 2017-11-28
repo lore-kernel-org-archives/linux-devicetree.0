@@ -1,50 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] irqchip/gic-v3: Support MSIs via aliases and distributor
-Date: Tue, 28 Nov 2017 08:04:56 -0600
-Message-ID: <20171128140456.mexpe542h24s6ycy@rob-hp-laptop>
-References: <20171127102408.6631-1-sboyd@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 26/35] dt-bindings: interrupt-controller: Andestech
+ Internal Vector Interrupt Controller
+Date: Tue, 28 Nov 2017 08:05:45 -0600
+Message-ID: <20171128140545.6sicdf6eau66xn75@rob-hp-laptop>
+References: <cover.1511785528.git.green.hu@gmail.com>
+ <d2539a0128f8c1cf0b32fd5151fd2f8775e5c511.1511785528.git.green.hu@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171127102408.6631-1-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <d2539a0128f8c1cf0b32fd5151fd2f8775e5c511.1511785528.git.green.hu@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, Rick Chen <rick@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 27, 2017 at 02:24:08AM -0800, Stephen Boyd wrote:
-> Some GIC configurations don't have an accessible ITS, but they
-> want to support MSIs through the distributor's SETSPI registers
-> or through the IMPLEMENTATION DEFINED message-based interrupt
-> request register region. This mode of operation is similar to the
-> v2m support on gic-400, but we don't necessarily know what
-> particular SPIs are supported as MSIs so we need some help from
-> firmware to know what to do.
+On Mon, Nov 27, 2017 at 08:28:13PM +0800, Greentime Hu wrote:
+> From: Greentime Hu <greentime@andestech.com>
 > 
-> Introduce an "arm,spi-ranges" property for this, similar to the
-> "marvell,spi-ranges" property, that indicates the base and size
-> of each MSI range. This property applies equally to the
-> distributor and alias registers. In either case, we detect this
-> mode of operation by looking for a node with the "msi-controller"
-> property and then probe the v2m frame code on top of it. Assume
-> these nodes will have the "arm,spi-ranges" property in them so
-> that the v2m code works mostly unmodified.
+> This patch adds an irqchip driver document for the Andestech Internal Vector
+> Interrupt Controller.
 > 
-> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Rick Chen <rick@andestech.com>
+> Signed-off-by: Greentime Hu <greentime@andestech.com>
 > ---
->  .../bindings/interrupt-controller/arm,gic-v3.txt   |  48 +++++++++-
+>  .../interrupt-controller/andestech,ativic32.txt    |   19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/irqchip/irq-gic-v2m.c                      | 102 ++++++++++++++++-----
->  drivers/irqchip/irq-gic-v3.c                       |   4 +
->  include/linux/irqchip/arm-gic-common.h             |   3 +
->  4 files changed, 129 insertions(+), 28 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
