@@ -1,27 +1,81 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: clock: add compatible variant for
- the Meson-AXG
-Date: Tue, 28 Nov 2017 09:29:20 -0600
-Message-ID: <20171128152920.yz6v7blobxsylqgz@rob-hp-laptop>
-References: <20171128125330.363-1-yixun.lan@amlogic.com>
- <20171128125330.363-2-yixun.lan@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171128125330.363-2-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: [PATCH 04/13] dt-bindings: pinctrl: Add bindings for Microsemi Ocelot
+Date: Tue, 28 Nov 2017 16:26:34 +0100
+Message-ID: <20171128152643.20463-5-alexandre.belloni@free-electrons.com>
+References: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 08:53:28PM +0800, Yixun Lan wrote:
-> Update the documentation to support clock driver for the Amlogic's
-> Meson-AXG SoC.
-> 
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+Add the documentation for the Microsemi Ocelot pinmuxing and gpio
+controller.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+
+ .../bindings/pinctrl/mscc,ocelot-pinctrl.txt       | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+new file mode 100644
+index 000000000000..24a210e0c59a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+@@ -0,0 +1,39 @@
++Microsemi Ocelot pin controller Device Tree Bindings
++----------------------------------------------------
++
++Required properties:
++ - compatible		: Should be "mscc,ocelot-pinctrl"
++ - reg			: Address and length of the register set for the device
++ - gpio-controller	: Indicates this device is a GPIO controller
++ - #gpio-cells		: Must be 2.
++			  The first cell is the pin number and the
++			  second cell specifies GPIO flags, as defined in
++			  <dt-bindings/gpio/gpio.h>.
++ - gpio-ranges		: Range of pins managed by the GPIO controller.
++
++
++The ocelot-pinctrl driver uses the generic pin multiplexing and generic pin
++configuration documented in pinctrl-bindings.txt.
++
++The following generic properties are supported:
++ - function
++ - pins
++
++Example:
++	gpio: pinctrl@71070034 {
++		compatible = "mscc,ocelot-pinctrl";
++		reg = <0x71070034 0x28>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-ranges = <&gpio 0 0 22>;
++
++		uart_pins: uart-pins {
++				pins = "GPIO_6", "GPIO_7";
++				function = "uart";
++		};
++
++		uart2_pins: uart2-pins {
++				pins = "GPIO_12", "GPIO_13";
++				function = "uart2";
++		};
++	};
+-- 
+2.15.0
