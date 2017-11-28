@@ -1,95 +1,159 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 0/5] PCI: Add support to the Cadence PCIe controller
-Date: Tue, 28 Nov 2017 15:50:39 +0000
-Message-ID: <20171128155039.GA17154@red-moon>
-References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC V7 1/2] OPP: Allow OPP table to be used for power-domains
+Date: Tue, 28 Nov 2017 16:50:32 +0100
+Message-ID: <CAPDyKFp_6VD6+7XJGy4oWOf+YQH4Ah6Q7BfmQsuz2OYp4KGjzA@mail.gmail.com>
+References: <cover.1509453284.git.viresh.kumar@linaro.org> <2b244ea0a09deaf50237fb8b7578273a8284499e.1509453284.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+In-Reply-To: <2b244ea0a09deaf50237fb8b7578273a8284499e.1509453284.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Cc: bhelgaas@google.com, kishon@ti.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Kevin Hilman <khilman@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 23, 2017 at 04:01:45PM +0100, Cyrille Pitchen wrote:
-> Hi all,
-> 
-> this series of patches adds support to the Cadence PCIe controller.
-> It was tested on a ARM64 platform emulated by a Palladium running both
-> linux-next (next-20171123) and pci-next kernels.
-> 
-> The host mode was tested with some PCIe devices connected to the Palladium
-> through a speed-bridge. Some of those devices were a USB host controller
-> and a SATA controller. The PCIe host controller was also tested with a
-> second controller configured in endpoint mode and connected back to back
-> to the first controller.
-> 
-> The EndPoint Controller (EPC) driver of this series was tested with the
-> pci-epf-test.c EndPoint Function (EPF) driver and the pcitest userspace
-> program.
-> 
-> For linux-next, I applied this series on top of Kishon's patch
-> ("PCI: endpoint: Use EPC's device in dma_alloc_coherent/dma_free_coherent")
-> otherwise dma_alloc_coherent() fails when called by pci_epf_alloc_space().
-> 
-> Also, I patched drivers/Makefile rather than drivers/pci/Makefile to make
-> the drivers/pci/cadence/pcie-cadence-ep.o linked after
-> drivers/pci/endpoint/*.o objects, otherwise the built-in pci-cadence-ep
-> driver would be probed before the PCI endpoint framework would have been
-> initialized, which results in a kernel crash.
+On 31 October 2017 at 13:47, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> Power-domains can also have their active states and this patch enhances
+> the OPP binding to define those.
+>
+> The power domains can use the OPP bindings mostly as is. Though there
+> are some changes required to support special cases:
+>
+> - Allow "operating-points-v2" to contain multiple phandles for power
+>   domain providers providing multiple domains.
+>
+> - A new property "power-domain-opp" is added for devices to specify the
+>   minimum required OPP of the master domain for the functioning of the
+>   device. We can add this property directly to device's node if the
+>   device has a fixed minimum OPP requirement from the master power
 
-Nice :( - isn't there a way to improve this (ie probe deferral or
-registering the EPF bus earlier) ?
+Please avoid the terminology "master power domain", it's confusing.
+Instead use only "power domain". This applies to a couple of more
+places of $subject patch, please fix those as well.
 
-> I guess this is the reason why the "pci/dwc" line was also put in
-> drivers/Makefile, right after the "pci/endpoint" line.
+>   domain. Or we can add this property to each OPP node of the device, if
+>   different OPP nodes have different minimum OPP requirement from the
+>   master power domain.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/opp/opp.txt      | 12 +++++
+>  .../devicetree/bindings/power/power_domain.txt     | 62 ++++++++++++++++++++++
+>  2 files changed, 74 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 9d733af26be7..203e09fe7698 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -45,6 +45,11 @@ Devices supporting OPPs must set their "operating-points-v2" property with
+>  phandle to a OPP table in their DT node. The OPP core will use this phandle to
+>  find the operating points for the device.
+>
+> +This can contain more than one phandle for power domain providers that provide
+> +multiple power domains. That is, one phandle for each power domain. If only one
+> +phandle is available, then the same OPP table will be used for all power domains
+> +provided by the power domain provider.
+> +
+>  If required, this can be extended for SoC vendor specific bindings. Such bindings
+>  should be documented as Documentation/devicetree/bindings/power/<vendor>-opp.txt
+>  and should have a compatible description like: "operating-points-v2-<vendor>".
+> @@ -154,6 +159,13 @@ properties.
+>
+>  - status: Marks the node enabled/disabled.
+>
+> +- power-domain-opp: This contains phandle to one of the OPP nodes of the master
+> +  power domain. This specifies the minimum required OPP of the master domain for
+> +  the functioning of the device in this OPP (where this property is present).
+> +  This property can only be set for a device if the device node contains the
+> +  "power-domains" property. Also, either all or none of the OPP nodes in an OPP
+> +  table should have it set.
+> +
+>  Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+>
+>  / {
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index 14bd9e945ff6..0d8608f2d133 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -40,6 +40,12 @@ phandle arguments (so called PM domain specifiers) of length specified by the
+>    domain's idle states. In the absence of this property, the domain would be
+>    considered as capable of being powered-on or powered-off.
+>
+> +- operating-points-v2 : Phandles to the OPP tables of power domains provided by
+> +  a power domain provider. If the provider provides a single power domain only
+> +  or all the power domains provided by the provider have identical OPP tables,
+> +  then this shall contain a single phandle. Refer to ../opp/opp.txt for more
+> +  information.
+> +
+>  Example:
+>
+>         power: power-controller@12340000 {
+> @@ -120,4 +126,60 @@ The node above defines a typical PM domain consumer device, which is located
+>  inside a PM domain with index 0 of a power controller represented by a node
+>  with the label "power".
+>
+> +Optional properties:
+> +- power-domain-opp: This contains phandle to one of the OPP nodes of the master
+> +  power domain. This specifies the minimum required OPP of the master domain for
+> +  the functioning of the device. This property can only be set for a device, if
+> +  the device node contains the "power-domains" property.
+> +
+> +Example:
+> +- OPP table for domain provider that provides two domains.
+> +
+> +       domain0_opp_table: opp_table0 {
+> +               compatible = "operating-points-v2";
+> +
+> +               domain0_opp_0: opp-1000000000 {
+> +                       opp-hz = /bits/ 64 <1000000000>;
+> +                       opp-microvolt = <975000 970000 985000>;
+> +               };
+> +               domain0_opp_1: opp-1100000000 {
+> +                       opp-hz = /bits/ 64 <1100000000>;
+> +                       opp-microvolt = <1000000 980000 1010000>;
+> +               };
+> +       };
+> +
+> +       domain1_opp_table: opp_table1 {
+> +               compatible = "operating-points-v2";
+> +
+> +               domain1_opp_0: opp-1200000000 {
+> +                       opp-hz = /bits/ 64 <1200000000>;
+> +                       opp-microvolt = <975000 970000 985000>;
+> +               };
+> +               domain1_opp_1: opp-1300000000 {
+> +                       opp-hz = /bits/ 64 <1300000000>;
+> +                       opp-microvolt = <1000000 980000 1010000>;
+> +               };
+> +       };
+> +
+> +       parent: power-controller@12340000 {
+> +               compatible = "foo,power-controller";
+> +               reg = <0x12340000 0x1000>;
+> +               #power-domain-cells = <1>;
+> +               operating-points-v2 = <&domain0_opp_table>, <&domain1_opp_table>;
+> +       };
+> +
+> +       leaky-device0@12350000 {
+> +               compatible = "foo,i-leak-current";
+> +               reg = <0x12350000 0x1000>;
+> +               power-domains = <&parent 0>;
+> +               power-domain-opp = <&domain0_opp_0>;
+> +       };
+> +
+> +       leaky-device1@12350000 {
+> +               compatible = "foo,i-leak-current";
+> +               reg = <0x12350000 0x1000>;
+> +               power-domains = <&parent 1>;
+> +               power-domain-opp = <&domain1_opp_1>;
+> +       };
+> +
+>  [1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
+> --
 
-Or probably the other way around - see commit 5e8cb4033807
+Besides the minor nitpick(s), this looks good to me. Feel free to add:
 
-@Kishon, thoughts ?
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Thanks,
-Lorenzo
-
-> Best regards,
-> 
-> Cyrille
-> 
-> Cyrille Pitchen (4):
->   PCI: Add vendor ID for Cadence
->   PCI: cadence: Add host driver for Cadence PCIe controller
->   dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe endpoint
->     controller
->   PCI: cadence: add EndPoint Controller driver for Cadence PCIe
->     controller
-> 
-> Scott Telford (1):
->   dt-bindings: PCI: cadence: Add DT bindings for Cadence PCIe host
->     controller
-> 
->  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  |  20 +
->  .../bindings/pci/cdns,cdns-pcie-host.txt           |  54 ++
->  drivers/Makefile                                   |   1 +
->  drivers/pci/Kconfig                                |   1 +
->  drivers/pci/cadence/Kconfig                        |  33 ++
->  drivers/pci/cadence/Makefile                       |   3 +
->  drivers/pci/cadence/pcie-cadence-ep.c              | 553 +++++++++++++++++++++
->  drivers/pci/cadence/pcie-cadence-host.c            | 425 ++++++++++++++++
->  drivers/pci/cadence/pcie-cadence.c                 | 110 ++++
->  drivers/pci/cadence/pcie-cadence.h                 | 325 ++++++++++++
->  include/linux/pci_ids.h                            |   2 +
->  11 files changed, 1527 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
->  create mode 100644 drivers/pci/cadence/Kconfig
->  create mode 100644 drivers/pci/cadence/Makefile
->  create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
->  create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
->  create mode 100644 drivers/pci/cadence/pcie-cadence.c
->  create mode 100644 drivers/pci/cadence/pcie-cadence.h
-> 
-> -- 
-> 2.11.0
-> 
+Kind regards
+Uffe
