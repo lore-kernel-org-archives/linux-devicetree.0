@@ -1,382 +1,239 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: pinctrl: add bindings for MediaTek
- MT7622 SoC
-Date: Tue, 28 Nov 2017 09:20:55 -0600
-Message-ID: <20171128152055.rfhfqi4ucp6bdxsf@rob-hp-laptop>
-References: <cover.1511840374.git.sean.wang@mediatek.com>
- <6e88d5b34241b32206f95279117afad4bb3d8661.1511840374.git.sean.wang@mediatek.com>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: Re: [PATCH 04/11] dt-bindings: clock: qcom: add remaining clocks for
+ IPQ8074
+Date: Tue, 28 Nov 2017 20:54:33 +0530
+Message-ID: <8db28dda018f43ac3038d33f1020eb57@codeaurora.org>
+References: <1506428644-2996-1-git-send-email-absahu@codeaurora.org>
+ <1506428644-2996-5-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6e88d5b34241b32206f95279117afad4bb3d8661.1511840374.git.sean.wang@mediatek.com>
+In-Reply-To: <1506428644-2996-5-git-send-email-absahu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: mark.rutland@arm.com, linus.walleij@linaro.org, matthias.bgg@gmail.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 11:49:59AM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On 2017-09-26 17:53, Abhishek Sahu wrote:
+> This patch adds the DT bindings for following IPQ8074 clocks
 > 
-> Add devicetree bindings for MediaTek MT7622 pinctrl driver.
+>  - General PLL’s, NSS UBI PLL and NSS Crypto PLL.
+>  - 2 instances of PCIE, USB, SDCC.
+>  - 2 NSS UBI core and common NSS clocks. NSS is network switching
+>    system which accelerates the ethernet traffic. IPQ8074
+>    NSS has two UBI cores. Some clocks are separate for each UBI core
+>    and remaining NSS clocks are common.
+>  - NSS ethernet port clocks. IPQ8074 has 6 ethernet ports and
+>    each port uses different TX and RX clocks.
+>  - Crypto engine clocks.
+>  - General purpose clocks which comes over GPIO.
 > 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+
+Hi Rob,
+
+Could you please review this DT bindings change and give
+your Acked-by if its OK.
+
+Thanks,
+Abhishek
+
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 > ---
->  .../devicetree/bindings/pinctrl/pinctrl-mt7622.txt | 330 +++++++++++++++++++++
->  1 file changed, 330 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
+>  include/dt-bindings/clock/qcom,gcc-ipq8074.h | 180 
+> +++++++++++++++++++++++++++
+>  1 file changed, 180 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> new file mode 100644
-> index 0000000..ce86d45
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
-> @@ -0,0 +1,330 @@
-> +== MediaTek MT7622 pinctrl controller ==
-> +
-> +Required properties for the root node:
-> + - compatible: Should be one of the following
-> +	       "mediatek,mt7622-pinctrl" for MT7622 SoC
-> + - reg: offset and length of the pinctrl space
-> +
-> + - gpio-controller: Marks the device node as a GPIO controller.
-> + - #gpio-cells: Should be two. The first cell is the pin number and the
-> +   second is the GPIO flags.
-> +
-> +Please refer to pinctrl-bindings.txt in this directory for details of the
-> +common pinctrl bindings used by client devices, including the meaning of the
-> +phrase "pin configuration node".
-> +
-> +MT7622 pin configuration nodes act as a container for an arbitrary number of
-> +subnodes. Each of these subnodes represents some desired configuration for a
-> +pin, a group, or a list of pins or groups. This configuration can include the
-> +mux function to select on those pin(s)/group(s), and various pin configuration
-> +parameters, such as pull-up, slew rate, etc.
-> +
-> +We support 2 types of configuration nodes. Those nodes can be either pinmux
-> +nodes or pinconf nodes. Each configuration node can consist of multiple nodes
-> +describing the pinmux and pinconf options.
-> +
-> +The name of each subnode is no matter as long as it is unique; all subnodes
-
-s/is no matter/doesn't matter/
-
-> +should be enumerated and processed purely based on their content.
-> +
-> +== pinmux nodes content ==
-> +
-> +The following generic properties as defined in pinctrl-bindings.txt are valid
-> +to specify in a pinmux subnode:
-> +
-> +Required properties are:
-> + - groups: An array of strings. Each string contains the name of a group.
-> +  Valid values for these names are listed below.
-> + - function: A string containing the name of the function to mux to the
-> +  group. Valid values for function names are listed below.
-> +
-> +== pinconf nodes content ==
-> +
-> +The following generic properties as defined in pinctrl-bindings.txt are valid
-> +to specify in a pinconf subnode:
-> +
-> +Required properties are:
-> + - pins: An array of strings. Each string contains the name of a pin.
-> +  Valid values for these names are listed below.
-> + - groups: An array of strings. Each string contains the name of a group.
-> +  Valid values for these names are listed below.
-> +
-> +Optional properies are:
-> + bias-disable, bias-pull, bias-pull-down, input-enable,
-> + input-schmitt-enable, input-schmitt-disable, output-enable
-> + output-low, output-high, drive-strength, slew-rate
-> +
-> + Valid arguments for 'slew-rate' are '0' and '1' to select between slow and
-> + fast respectively.
-> + Valid arguments for 'drive-strength', 4, 8, 12, or 16 in mA.
-> +
-> +The following specific properties as defined are valid to specify in a pinconf
-> +subnode:
-> +
-> +Optional properties are:
-> + - mediatek,tdsel: Valid arguments are from 0 to 15
-> + - mediatek,rdsel: Valid arguments are from 0 to 63
-
-What are these properties controlling?
-
-> +
-> +== Valid values for pins, function and groups on MT7622 ==
-> +
-> +Valid values for pins are:
-> +pins can be referenced via the pin names as the below table shown and the
-> +related physical number is also put ahead of those names which helps cross
-> +references to pins between groups to know whether pins assignment conflict
-> +happens among devices try to acquire those available pins.
-> +
-> +	Pin #:  Valid values for pins
-> +	-----------------------------
-> +	PIN 0: "GPIO_A"
-> +	PIN 1: "I2S1_IN"
-> +	PIN 2: "I2S1_OUT"
-> +	PIN 3: "I2S_BCLK"
-> +	PIN 4: "I2S_WS"
-> +	PIN 5: "I2S_MCLK"
-> +	PIN 6: "TXD0"
-> +	PIN 7: "RXD0"
-> +	PIN 8: "SPI_WP"
-> +	PIN 9: "SPI_HOLD"
-> +	PIN 10: "SPI_CLK"
-> +	PIN 11: "SPI_MOSI"
-> +	PIN 12: "SPI_MISO"
-> +	PIN 13: "SPI_CS"
-> +	PIN 14: "SPI_SDA"
-> +	PIN 15: "SPI_SCL"
-> +	PIN 16: "I2S2_IN"
-> +	PIN 17: "I2S3_IN"
-> +	PIN 18: "I2S4_IN"
-> +	PIN 19: "I2S2_OUT"
-> +	PIN 20: "I2S3_OUT"
-> +	PIN 21: "I2S4_OUT"
-> +	PIN 22: "GPIO_B"
-> +	PIN 23: "MDC"
-> +	PIN 24: "MDIO"
-> +	PIN 25: "G2_TXD0"
-> +	PIN 26: "G2_TXD1"
-> +	PIN 27: "G2_TXD2"
-> +	PIN 28: "G2_TXD3"
-> +	PIN 29: "G2_TXEN"
-> +	PIN 30: "G2_TXC"
-> +	PIN 31: "G2_RXD0"
-> +	PIN 32: "G2_RXD1"
-> +	PIN 33: "G2_RXD2"
-> +	PIN 34: "G2_RXD3"
-> +	PIN 35: "G2_RXDV"
-> +	PIN 36: "G2_RXC"
-> +	PIN 37: "NCEB"
-> +	PIN 38: "NWEB"
-> +	PIN 39: "NREB"
-> +	PIN 40: "NDL4"
-> +	PIN 41: "NDL5"
-> +	PIN 42: "NDL6"
-> +	PIN 43: "NDL7"
-> +	PIN 44: "NRB"
-> +	PIN 45: "NCLE"
-> +	PIN 46: "NALE"
-> +	PIN 47: "NDL0"
-> +	PIN 48: "NDL1"
-> +	PIN 49: "NDL2"
-> +	PIN 50: "NDL3"
-> +	PIN 51: "MDI_TP_P0"
-> +	PIN 52: "MDI_TN_P0"
-> +	PIN 53: "MDI_RP_P0"
-> +	PIN 54: "MDI_RN_P0"
-> +	PIN 55: "MDI_TP_P1"
-> +	PIN 56: "MDI_TN_P1"
-> +	PIN 57: "MDI_RP_P1"
-> +	PIN 58: "MDI_RN_P1"
-> +	PIN 59: "MDI_RP_P2"
-> +	PIN 60: "MDI_RN_P2"
-> +	PIN 61: "MDI_TP_P2"
-> +	PIN 62: "MDI_TN_P2"
-> +	PIN 63: "MDI_TP_P3"
-> +	PIN 64: "MDI_TN_P3"
-> +	PIN 65: "MDI_RP_P3"
-> +	PIN 66: "MDI_RN_P3"
-> +	PIN 67: "MDI_RP_P4"
-> +	PIN 68: "MDI_RN_P4"
-> +	PIN 69: "MDI_TP_P4"
-> +	PIN 70: "MDI_TN_P4"
-> +	PIN 71: "SPI2_CK"
-> +	PIN 72: "SPI2_DATA"
-> +	PIN 73: "SPIC1_CLK"
-> +	PIN 74: "SPIC1_MOSI"
-> +	PIN 75: "SPIC1_MISO"
-> +	PIN 76: "SPIC1_CS"
-> +	PIN 77: "GPIO_D"
-> +	PIN 78: "WATCHDOG"
-> +	PIN 79: "RTS3_N"
-> +	PIN 80: "CTS3_N"
-> +	PIN 81: "TXD3"
-> +	PIN 82: "RXD3"
-> +	PIN 83: "PERST0_N"
-> +	PIN 84: "PERST1_N"
-> +	PIN 85: "WLED_N"
-> +	PIN 86: "EPHY_LED0_N"
-> +	PIN 87: "AUXIN0"
-> +	PIN 88: "AUXIN1"
-> +	PIN 89: "AUXIN2"
-> +	PIN 90: "AUXIN3"
-> +	PIN 91: "TXD4"
-> +	PIN 92: "RXD4"
-> +	PIN 93: "RTS4_IN"
-> +	PIN 94: "CST4_IN"
-> +	PIN 95: "PWM1"
-> +	PIN 96: "PWM2"
-> +	PIN 97: "PWM3"
-> +	PIN 98: "PWM4"
-> +	PIN 99: "PWM5"
-> +	PIN 100: "PWM6"
-> +	PIN 101: "PWM7"
-> +	PIN 102: "GPIO_E"
-> +
-> +Valid values for function are:
-> +	"emmc", "eth", "i2c", "i2s", "ir", "led", "flash", "pcie",
-> +	"pwm", "sd", "spi", "tdm", "uart"
-> +
-> +Valid values for groups are:
-> +additional data is put followingly with valid value allowing us to know which
-> +applicable function and which relevant pins (in pin#) are able applied for that
-> +group.
-> +
-> +	Valid value			function	pins (in pin#)
-> +	-------------------------------------------------------------------------
-> +	"emmc"				"emmc"		40, 41, 42, 43, 44, 45,
-> +							47, 48, 49, 50
-> +	"esw"				"eth"		59, 60, 61, 62, 63, 64,
-> +							65, 66, 67, 68, 69, 70
-> +	"mdc_mdio"			"eth"		23, 24
-> +	"gmac1"				"eth"		59, 60, 61, 62, 63, 64,
-> +							65, 66, 67, 68, 69, 70
-> +	"gmac2"				"eth"		25, 26, 27, 28, 29, 30,
-> +							31, 32, 33, 34, 35, 36
-> +	"i2c0"				"i2c"		14, 15
-> +	"i2c1_0"			"i2c"		55, 56
-> +	"i2c1_1"			"i2c"		73, 74
-> +	"i2c1_2"			"i2c"		87, 88
-> +	"i2c2_0"			"i2c"		57, 58
-> +	"i2c2_1"			"i2c"		75, 76
-> +	"i2c2_2"			"i2c"		89, 90
-> +	"i2s_in_bclk_ws_mclk"		"i2s"		3, 4, 5
-> +	"i2s1_in_data"			"i2s"		1
-> +	"i2s2_in_data"			"i2s"		16
-> +	"i2s3_in_data"			"i2s"		17
-> +	"i2s4_in_data"			"i2s"		18
-> +	"i2s_out_bclk_ws_mclk"		"i2s"		3, 4, 5
-> +	"i2s1_out_data"			"i2s"		2
-> +	"i2s2_out_data"			"i2s"		19
-> +	"i2s3_out_data"			"i2s"		20
-> +	"i2s4_out_data"			"i2s"		21
-> +	"ir_0_tx"			"ir"		16
-> +	"ir_1_tx"			"ir"		59
-> +	"ir_2_tx"			"ir"		99
-> +	"ir_0_rx"			"ir"		17
-> +	"ir_1_rx"			"ir"		60
-> +	"ir_2_rx"			"ir"		100
-> +	"ephy0_led"			"led"		86
-> +	"ephy1_led"			"led"		91
-> +	"ephy2_led"			"led"		92
-> +	"ephy3_led"			"led"		93
-> +	"ephy4_led"			"led"		94
-> +	"wled"				"led"		85
-> +	"par_nand"			"flash"		37, 38, 39, 40, 41, 42,
-> +							43, 44, 45, 46, 47, 48,
-> +							49, 50
-> +	"snfi"				"flash"		8, 9, 10, 11, 12, 13
-> +	"spi_nor"			"flash"		8, 9, 10, 11, 12, 13
-> +	"pcie0_0_waken_clkreq"		"pcie"		14, 15
-> +	"pcie0_1_waken_clkreq"		"pcie"		79, 80
-> +	"pcie1_0_waken_clkreq"		"pcie"		14, 15
-> +	"pcie0_pad_perst"		"pcie"		83
-> +	"pcie1_pad_perst"		"pcie"		84
-> +	"pwm_ch1_0"			"pwm"		51
-> +	"pwm_ch1_1"			"pwm"		73
-> +	"pwm_ch1_2"			"pwm"		95
-> +	"pwm_ch2_0"			"pwm"		52
-> +	"pwm_ch2_1"			"pwm"		74
-> +	"pwm_ch2_2"			"pwm"		96
-> +	"pwm_ch3_0"			"pwm"		53
-> +	"pwm_ch3_1"			"pwm"		75
-> +	"pwm_ch3_2"			"pwm"		97
-> +	"pwm_ch4_0"			"pwm"		54
-> +	"pwm_ch4_1"			"pwm"		67
-> +	"pwm_ch4_2"			"pwm"		76
-> +	"pwm_ch4_3"			"pwm"		98
-> +	"pwm_ch5_0"			"pwm"		68
-> +	"pwm_ch5_1"			"pwm"		77
-> +	"pwm_ch5_2"			"pwm"		99
-> +	"pwm_ch6_0"			"pwm"		69
-> +	"pwm_ch6_1"			"pwm"		78
-> +	"pwm_ch6_2"			"pwm"		81
-> +	"pwm_ch6_3"			"pwm"		100
-> +	"pwm_ch7_0"			"pwm"		70
-> +	"pwm_ch7_1"			"pwm"		82
-> +	"pwm_ch7_2" 			"pwm"		101
-
-Mixed space and tabs.
-
-> +	"sd_0"				"sd"		16, 17, 18, 19, 20, 21
-> +	"sd_1"				"sd"		25, 26, 27, 28, 29, 30
-> +	"spic0_0"			"spi"		63, 64, 65, 66
-> +	"spic0_1"			"spi"		79, 80, 81, 82
-> +	"spic1_0"			"spi"		67, 68, 69, 70
-> +	"spic1_1"			"spi"		73, 74, 75, 76
-> +	"tdm_0_out_mclk_bclk"		"tdm"		8, 9, 10
-> +	"tdm_0_in_mclk_bclk_ws"		"tdm"		11, 12, 13
-> +	"tdm_0_out_data"		"tdm"		20
-> +	"tdm_0_in_data"			"tdm"		21
-> +	"tdm_1_out_mclk_bclk"		"tdm"		57, 58, 59
-> +	"tdm_1_in_mclk_bclk_ws"		"tdm"		60, 61, 62
-> +	"tdm_1_out_data"		"tdm"		55
-> +	"tdm_1_in_data"			"tdm"		56
-> +	"uart0_0_tx_rx"			"uart"		6, 7
-> +	"uart1_0_tx_rx"			"uart"		55, 56
-> +	"uart1_0_rts_cts"		"uart"		57, 58
-> +	"uart1_1_tx_rx"			"uart"		73, 74
-> +	"uart1_1_rts_cts"		"uart"		75, 76
-> +	"uart2_0_tx_rx"			"uart"		3, 4
-> +	"uart2_0_rts_cts"		"uart"		1, 2
-> +	"uart2_1_tx_rx"			"uart"		51, 52
-> +	"uart2_1_rts_cts"		"uart"		53, 54
-> +	"uart2_2_tx_rx"			"uart"		59, 60
-> +	"uart2_2_rts_cts"		"uart"		61, 62
-> +	"uart2_3_tx_rx"			"uart"		95, 96
-> +	"uart3_0_tx_rx"			"uart"		57, 58
-> +	"uart3_1_tx_rx"			"uart"		81, 82
-> +	"uart3_1_rts_cts"		"uart"		79, 80
-> +	"uart4_0_tx_rx"			"uart"		61, 62
-> +	"uart4_1_tx_rx"			"uart"		91, 92
-> +	"uart4_1_rts_cts"		"uart"		93, 94
-> +	"uart4_2_tx_rx"			"uart"		97, 98
-> +	"uart4_2_rts_cts"		"uart"		95, 96
-> +
-> +Example:
-> +
-> +	pio: pinctrl@10211000 {
-> +		compatible = "mediatek,mt7622-pinctrl";
-> +		reg = <0 0x10211000 0 0x1000>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		pinctrl_eth_default: eth-default {
-> +			mux_mdio {
-
-s/_/-/
-
-> +				groups = "mdc_mdio";
-> +				function = "eth";
-> +				drive-strength = <12>;
-> +			};
-> +
-> +			mux_gmac2 {
-
-ditto
-
-> +				groups = "gmac2";
-> +				function = "eth";
-> +				drive-strength = <12>;
-> +			};
-> +
-> +			mux_esw {
-> +				groups = "esw";
-> +				function = "eth";
-> +				drive-strength = <8>;
-> +			};
-> +
-> +			conf_mdio {
-> +				pins = "MDC";
-> +				bias-pull-up;
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.7.4
+> diff --git a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+> b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+> index 370c83c..ff0b4ac 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-ipq8074.h
+> @@ -58,6 +58,186 @@
+>  #define GCC_QPIC_AHB_CLK			41
+>  #define GCC_QPIC_CLK				42
+>  #define PCNOC_BFDCD_CLK_SRC			43
+> +#define GPLL2_MAIN				44
+> +#define GPLL2					45
+> +#define GPLL4_MAIN				46
+> +#define GPLL4					47
+> +#define GPLL6_MAIN				48
+> +#define GPLL6					49
+> +#define UBI32_PLL_MAIN				50
+> +#define UBI32_PLL				51
+> +#define NSS_CRYPTO_PLL_MAIN			52
+> +#define NSS_CRYPTO_PLL				53
+> +#define PCIE0_AXI_CLK_SRC			54
+> +#define PCIE0_AUX_CLK_SRC			55
+> +#define PCIE0_PIPE_CLK_SRC			56
+> +#define PCIE1_AXI_CLK_SRC			57
+> +#define PCIE1_AUX_CLK_SRC			58
+> +#define PCIE1_PIPE_CLK_SRC			59
+> +#define SDCC1_APPS_CLK_SRC			60
+> +#define SDCC1_ICE_CORE_CLK_SRC			61
+> +#define SDCC2_APPS_CLK_SRC			62
+> +#define USB0_MASTER_CLK_SRC			63
+> +#define USB0_AUX_CLK_SRC			64
+> +#define USB0_MOCK_UTMI_CLK_SRC			65
+> +#define USB0_PIPE_CLK_SRC			66
+> +#define USB1_MASTER_CLK_SRC			67
+> +#define USB1_AUX_CLK_SRC			68
+> +#define USB1_MOCK_UTMI_CLK_SRC			69
+> +#define USB1_PIPE_CLK_SRC			70
+> +#define GCC_XO_CLK_SRC				71
+> +#define SYSTEM_NOC_BFDCD_CLK_SRC		72
+> +#define NSS_CE_CLK_SRC				73
+> +#define NSS_NOC_BFDCD_CLK_SRC			74
+> +#define NSS_CRYPTO_CLK_SRC			75
+> +#define NSS_UBI0_CLK_SRC			76
+> +#define NSS_UBI0_DIV_CLK_SRC			77
+> +#define NSS_UBI1_CLK_SRC			78
+> +#define NSS_UBI1_DIV_CLK_SRC			79
+> +#define UBI_MPT_CLK_SRC				80
+> +#define NSS_IMEM_CLK_SRC			81
+> +#define NSS_PPE_CLK_SRC				82
+> +#define NSS_PORT1_RX_CLK_SRC			83
+> +#define NSS_PORT1_RX_DIV_CLK_SRC		84
+> +#define NSS_PORT1_TX_CLK_SRC			85
+> +#define NSS_PORT1_TX_DIV_CLK_SRC		86
+> +#define NSS_PORT2_RX_CLK_SRC			87
+> +#define NSS_PORT2_RX_DIV_CLK_SRC		88
+> +#define NSS_PORT2_TX_CLK_SRC			89
+> +#define NSS_PORT2_TX_DIV_CLK_SRC		90
+> +#define NSS_PORT3_RX_CLK_SRC			91
+> +#define NSS_PORT3_RX_DIV_CLK_SRC		92
+> +#define NSS_PORT3_TX_CLK_SRC			93
+> +#define NSS_PORT3_TX_DIV_CLK_SRC		94
+> +#define NSS_PORT4_RX_CLK_SRC			95
+> +#define NSS_PORT4_RX_DIV_CLK_SRC		96
+> +#define NSS_PORT4_TX_CLK_SRC			97
+> +#define NSS_PORT4_TX_DIV_CLK_SRC		98
+> +#define NSS_PORT5_RX_CLK_SRC			99
+> +#define NSS_PORT5_RX_DIV_CLK_SRC		100
+> +#define NSS_PORT5_TX_CLK_SRC			101
+> +#define NSS_PORT5_TX_DIV_CLK_SRC		102
+> +#define NSS_PORT6_RX_CLK_SRC			103
+> +#define NSS_PORT6_RX_DIV_CLK_SRC		104
+> +#define NSS_PORT6_TX_CLK_SRC			105
+> +#define NSS_PORT6_TX_DIV_CLK_SRC		106
+> +#define CRYPTO_CLK_SRC				107
+> +#define GP1_CLK_SRC				108
+> +#define GP2_CLK_SRC				109
+> +#define GP3_CLK_SRC				110
+> +#define GCC_PCIE0_AHB_CLK			111
+> +#define GCC_PCIE0_AUX_CLK			112
+> +#define GCC_PCIE0_AXI_M_CLK			113
+> +#define GCC_PCIE0_AXI_S_CLK			114
+> +#define GCC_PCIE0_PIPE_CLK			115
+> +#define GCC_SYS_NOC_PCIE0_AXI_CLK		116
+> +#define GCC_PCIE1_AHB_CLK			117
+> +#define GCC_PCIE1_AUX_CLK			118
+> +#define GCC_PCIE1_AXI_M_CLK			119
+> +#define GCC_PCIE1_AXI_S_CLK			120
+> +#define GCC_PCIE1_PIPE_CLK			121
+> +#define GCC_SYS_NOC_PCIE1_AXI_CLK		122
+> +#define GCC_USB0_AUX_CLK			123
+> +#define GCC_SYS_NOC_USB0_AXI_CLK		124
+> +#define GCC_USB0_MASTER_CLK			125
+> +#define GCC_USB0_MOCK_UTMI_CLK			126
+> +#define GCC_USB0_PHY_CFG_AHB_CLK		127
+> +#define GCC_USB0_PIPE_CLK			128
+> +#define GCC_USB0_SLEEP_CLK			129
+> +#define GCC_USB1_AUX_CLK			130
+> +#define GCC_SYS_NOC_USB1_AXI_CLK		131
+> +#define GCC_USB1_MASTER_CLK			132
+> +#define GCC_USB1_MOCK_UTMI_CLK			133
+> +#define GCC_USB1_PHY_CFG_AHB_CLK		134
+> +#define GCC_USB1_PIPE_CLK			135
+> +#define GCC_USB1_SLEEP_CLK			136
+> +#define GCC_SDCC1_AHB_CLK			137
+> +#define GCC_SDCC1_APPS_CLK			138
+> +#define GCC_SDCC1_ICE_CORE_CLK			139
+> +#define GCC_SDCC2_AHB_CLK			140
+> +#define GCC_SDCC2_APPS_CLK			141
+> +#define GCC_MEM_NOC_NSS_AXI_CLK			142
+> +#define GCC_NSS_CE_APB_CLK			143
+> +#define GCC_NSS_CE_AXI_CLK			144
+> +#define GCC_NSS_CFG_CLK				145
+> +#define GCC_NSS_CRYPTO_CLK			146
+> +#define GCC_NSS_CSR_CLK				147
+> +#define GCC_NSS_EDMA_CFG_CLK			148
+> +#define GCC_NSS_EDMA_CLK			149
+> +#define GCC_NSS_IMEM_CLK			150
+> +#define GCC_NSS_NOC_CLK				151
+> +#define GCC_NSS_PPE_BTQ_CLK			152
+> +#define GCC_NSS_PPE_CFG_CLK			153
+> +#define GCC_NSS_PPE_CLK				154
+> +#define GCC_NSS_PPE_IPE_CLK			155
+> +#define GCC_NSS_PTP_REF_CLK			156
+> +#define GCC_NSSNOC_CE_APB_CLK			157
+> +#define GCC_NSSNOC_CE_AXI_CLK			158
+> +#define GCC_NSSNOC_CRYPTO_CLK			159
+> +#define GCC_NSSNOC_PPE_CFG_CLK			160
+> +#define GCC_NSSNOC_PPE_CLK			161
+> +#define GCC_NSSNOC_QOSGEN_REF_CLK		162
+> +#define GCC_NSSNOC_SNOC_CLK			163
+> +#define GCC_NSSNOC_TIMEOUT_REF_CLK		164
+> +#define GCC_NSSNOC_UBI0_AHB_CLK			165
+> +#define GCC_NSSNOC_UBI1_AHB_CLK			166
+> +#define GCC_UBI0_AHB_CLK			167
+> +#define GCC_UBI0_AXI_CLK			168
+> +#define GCC_UBI0_NC_AXI_CLK			169
+> +#define GCC_UBI0_CORE_CLK			170
+> +#define GCC_UBI0_MPT_CLK			171
+> +#define GCC_UBI1_AHB_CLK			172
+> +#define GCC_UBI1_AXI_CLK			173
+> +#define GCC_UBI1_NC_AXI_CLK			174
+> +#define GCC_UBI1_CORE_CLK			175
+> +#define GCC_UBI1_MPT_CLK			176
+> +#define GCC_CMN_12GPLL_AHB_CLK			177
+> +#define GCC_CMN_12GPLL_SYS_CLK			178
+> +#define GCC_MDIO_AHB_CLK			179
+> +#define GCC_UNIPHY0_AHB_CLK			180
+> +#define GCC_UNIPHY0_SYS_CLK			181
+> +#define GCC_UNIPHY1_AHB_CLK			182
+> +#define GCC_UNIPHY1_SYS_CLK			183
+> +#define GCC_UNIPHY2_AHB_CLK			184
+> +#define GCC_UNIPHY2_SYS_CLK			185
+> +#define GCC_NSS_PORT1_RX_CLK			186
+> +#define GCC_NSS_PORT1_TX_CLK			187
+> +#define GCC_NSS_PORT2_RX_CLK			188
+> +#define GCC_NSS_PORT2_TX_CLK			189
+> +#define GCC_NSS_PORT3_RX_CLK			190
+> +#define GCC_NSS_PORT3_TX_CLK			191
+> +#define GCC_NSS_PORT4_RX_CLK			192
+> +#define GCC_NSS_PORT4_TX_CLK			193
+> +#define GCC_NSS_PORT5_RX_CLK			194
+> +#define GCC_NSS_PORT5_TX_CLK			195
+> +#define GCC_NSS_PORT6_RX_CLK			196
+> +#define GCC_NSS_PORT6_TX_CLK			197
+> +#define GCC_PORT1_MAC_CLK			198
+> +#define GCC_PORT2_MAC_CLK			199
+> +#define GCC_PORT3_MAC_CLK			200
+> +#define GCC_PORT4_MAC_CLK			201
+> +#define GCC_PORT5_MAC_CLK			202
+> +#define GCC_PORT6_MAC_CLK			203
+> +#define GCC_UNIPHY0_PORT1_RX_CLK		204
+> +#define GCC_UNIPHY0_PORT1_TX_CLK		205
+> +#define GCC_UNIPHY0_PORT2_RX_CLK		206
+> +#define GCC_UNIPHY0_PORT2_TX_CLK		207
+> +#define GCC_UNIPHY0_PORT3_RX_CLK		208
+> +#define GCC_UNIPHY0_PORT3_TX_CLK		209
+> +#define GCC_UNIPHY0_PORT4_RX_CLK		210
+> +#define GCC_UNIPHY0_PORT4_TX_CLK		211
+> +#define GCC_UNIPHY0_PORT5_RX_CLK		212
+> +#define GCC_UNIPHY0_PORT5_TX_CLK		213
+> +#define GCC_UNIPHY1_PORT5_RX_CLK		214
+> +#define GCC_UNIPHY1_PORT5_TX_CLK		215
+> +#define GCC_UNIPHY2_PORT6_RX_CLK		216
+> +#define GCC_UNIPHY2_PORT6_TX_CLK		217
+> +#define GCC_CRYPTO_AHB_CLK			218
+> +#define GCC_CRYPTO_AXI_CLK			219
+> +#define GCC_CRYPTO_CLK				220
+> +#define GCC_GP1_CLK				221
+> +#define GCC_GP2_CLK				222
+> +#define GCC_GP3_CLK				223
 > 
+>  #define GCC_BLSP1_BCR				0
+>  #define GCC_BLSP1_QUP1_BCR			1
