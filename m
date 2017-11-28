@@ -1,109 +1,67 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH v2 04/16] ARM: dts: imx6qdl: SolidRun: move microsom includes
- into .dts
-Date: Tue, 28 Nov 2017 15:02:15 +0000
-Message-ID: <E1eJhOp-0006NO-Ci@rmk-PC.armlinux.org.uk>
-References: <20171128150045.GV31757@n2100.armlinux.org.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 2/4] DTS: GTA04: fix panel compatibility string
+Date: Tue, 28 Nov 2017 07:10:39 -0800
+Message-ID: <20171128151039.GZ28152@atomide.com>
+References: <cover.1510822218.git.hns@goldelico.com>
+ <09d975dd62afa1dfa43d94079cc9a44731af4b3b.1510822218.git.hns@goldelico.com>
+ <20171128145727.GY28152@atomide.com>
+ <C108B0B6-FED7-44DB-9A18-39E3BE93E586@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171128150045.GV31757-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <C108B0B6-FED7-44DB-9A18-39E3BE93E586@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Move the microsom includes into the .dts files so different options can
-be accomodated at the lowest level.
+* H. Nikolaus Schaller <hns@goldelico.com> [171128 15:04]:
+> Hi Tony,
+> 
+> > Am 28.11.2017 um 15:57 schrieb Tony Lindgren <tony@atomide.com>:
+> > 
+> > * H. Nikolaus Schaller <hns@goldelico.com> [171116 08:53]:
+> >> Vendor string is "tpo" and not "toppoly".
+> >> 
+> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >> ---
+> >> arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
+> >> 1 file changed, 1 insertion(+), 1 deletion(-)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> >> index 4504908c23fe..ec27ed67a22a 100644
+> >> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> >> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> >> @@ -86,7 +86,7 @@
+> >> 
+> >> 		/* lcd panel */
+> >> 		lcd: td028ttec1@0 {
+> >> -			compatible = "toppoly,td028ttec1";
+> >> +			compatible = "tpo,td028ttec1";
+> >> 			reg = <0>;
+> >> 			spi-max-frequency = <100000>;
+> >> 			spi-cpol;
+> > 
+> > Applying into omap-for-v4.15/fixes thanks. The other dts patch seems
+> > like it can wait for v4.16 merge window.
+> 
+> Hm. Not really. It needs the panel driver to match. So either both or
+> none should be applied or it will break the panel from working.
+> 
+> I am just 1-2 hours away from submitting a -v3 (rebased and tested
+> on top of 4.15-rc1).
 
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
----
- arch/arm/boot/dts/imx6dl-cubox-i.dts        | 1 +
- arch/arm/boot/dts/imx6dl-hummingboard.dts   | 1 +
- arch/arm/boot/dts/imx6q-cubox-i.dts         | 1 +
- arch/arm/boot/dts/imx6q-hummingboard.dts    | 1 +
- arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 1 -
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 1 -
- 6 files changed, 4 insertions(+), 2 deletions(-)
+OK fine dropping both. Please update the description in both dts
+patches to make it clear they are needed as a fix. Preferrably
+with a proper fixes tag.
 
-diff --git a/arch/arm/boot/dts/imx6dl-cubox-i.dts b/arch/arm/boot/dts/imx6dl-cubox-i.dts
-index f10a36b8647d..045e59de5ffe 100644
---- a/arch/arm/boot/dts/imx6dl-cubox-i.dts
-+++ b/arch/arm/boot/dts/imx6dl-cubox-i.dts
-@@ -41,6 +41,7 @@
- /dts-v1/;
- 
- #include "imx6dl.dtsi"
-+#include "imx6qdl-sr-som.dtsi"
- #include "imx6qdl-cubox-i.dtsi"
- 
- / {
-diff --git a/arch/arm/boot/dts/imx6dl-hummingboard.dts b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-index 39c2602fa87c..c3b826f4cab9 100644
---- a/arch/arm/boot/dts/imx6dl-hummingboard.dts
-+++ b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-@@ -42,6 +42,7 @@
- /dts-v1/;
- 
- #include "imx6dl.dtsi"
-+#include "imx6qdl-sr-som.dtsi"
- #include "imx6qdl-hummingboard.dtsi"
- 
- / {
-diff --git a/arch/arm/boot/dts/imx6q-cubox-i.dts b/arch/arm/boot/dts/imx6q-cubox-i.dts
-index b68aa0e57f20..b9f581d0fa86 100644
---- a/arch/arm/boot/dts/imx6q-cubox-i.dts
-+++ b/arch/arm/boot/dts/imx6q-cubox-i.dts
-@@ -41,6 +41,7 @@
- /dts-v1/;
- 
- #include "imx6q.dtsi"
-+#include "imx6qdl-sr-som.dtsi"
- #include "imx6qdl-cubox-i.dtsi"
- 
- / {
-diff --git a/arch/arm/boot/dts/imx6q-hummingboard.dts b/arch/arm/boot/dts/imx6q-hummingboard.dts
-index 69a7a0a1cb21..5f218856c3e5 100644
---- a/arch/arm/boot/dts/imx6q-hummingboard.dts
-+++ b/arch/arm/boot/dts/imx6q-hummingboard.dts
-@@ -42,6 +42,7 @@
- /dts-v1/;
- 
- #include "imx6q.dtsi"
-+#include "imx6qdl-sr-som.dtsi"
- #include "imx6qdl-hummingboard.dtsi"
- 
- / {
-diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-index 0bc1734d8bdf..98ec7ce1f2a3 100644
---- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-@@ -38,7 +38,6 @@
-  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
--#include "imx6qdl-sr-som.dtsi"
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/gpio.h>
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index 246984992ad0..84e6392fee1f 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -38,7 +38,6 @@
-  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
--#include "imx6qdl-sr-som.dtsi"
- 
- / {
- 	chosen {
--- 
-2.7.4
+Having "We can remove the "omapdss," prefix" in the description sure
+does not sounds like it's needed as a fix :)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sounds like maybe these two should be just a single patch for
+a proper fix?
+
+Regards,
+
+Tony
