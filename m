@@ -1,69 +1,66 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?=
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v2 2/4] dt-bindings: media: rcar_vin: add device tree
- support for r8a774[35]
-Date: Tue, 28 Nov 2017 14:35:32 +0100
-Message-ID: <20171128133532.GJ23832@bigcity.dyn.berto.se>
-References: <1510856571-30281-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1510856571-30281-3-git-send-email-fabrizio.castro@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1510856571-30281-3-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v4] ARM: dts: r8a7794: Add SMP support
+Date: Tue, 28 Nov 2017 14:39:01 +0100
+Message-ID: <1511876341-8639-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-11-16 18:22:49 +0000, Fabrizio Castro wrote:
-> Add compatible strings for r8a7743 and r8a7745. No driver change
-> is needed as "renesas,rcar-gen2-vin" will activate the right code.
-> However, it is good practice to document compatible strings for the
-> specific SoC as this allows SoC specific changes to the driver if
-> needed, in addition to document SoC support and therefore allow
-> checkpatch.pl to validate compatible string values.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Acked-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Add the device tree node for the Advanced Power Management Unit (APMU).
+Use the "enable-method" prop to  point out that the APMU should be used
+for the SMP support.
 
-> ---
-> v1->v2:
-> * Fixed double "change" in changelog
-> 
->  Documentation/devicetree/bindings/media/rcar_vin.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> index 98931f5..ff9697e 100644
-> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> @@ -6,6 +6,8 @@ family of devices. The current blocks are always slaves and suppot one input
->  channel which can be either RGB, YUYV or BT656.
->  
->   - compatible: Must be one or more of the following
-> +   - "renesas,vin-r8a7743" for the R8A7743 device
-> +   - "renesas,vin-r8a7745" for the R8A7745 device
->     - "renesas,vin-r8a7778" for the R8A7778 device
->     - "renesas,vin-r8a7779" for the R8A7779 device
->     - "renesas,vin-r8a7790" for the R8A7790 device
-> @@ -14,7 +16,8 @@ channel which can be either RGB, YUYV or BT656.
->     - "renesas,vin-r8a7793" for the R8A7793 device
->     - "renesas,vin-r8a7794" for the R8A7794 device
->     - "renesas,vin-r8a7795" for the R8A7795 device
-> -   - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 compatible device.
-> +   - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
-> +     device.
->     - "renesas,rcar-gen3-vin" for a generic R-Car Gen3 compatible device.
->  
->     When compatible with the generic version nodes must list the
-> -- 
-> 2.7.4
-> 
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+Dependency 3fd45a136ff61bb5 ("ARM: shmobile: rcar-gen2: Make sure
+CNTVOFF is initialized on CA7/15") is part of v4.15-rc1.
 
+v4:
+  - Rebased against renesas-devel-20171127-v4.15-rc1,
+
+v3:
+  - No changes,
+
+v2:
+  - No changes.
+---
+ arch/arm/boot/dts/r8a7794.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index ef7fb1d2c3a31a6e..2437598ca2f5b034 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -37,6 +37,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "renesas,apmu";
+ 
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+@@ -66,6 +67,12 @@
+ 		};
+ 	};
+ 
++	apmu@e6151000 {
++		compatible = "renesas,r8a7794-apmu", "renesas,apmu";
++		reg = <0 0xe6151000 0 0x188>;
++		cpus = <&cpu0 &cpu1>;
++	};
++
+ 	gic: interrupt-controller@f1001000 {
+ 		compatible = "arm,gic-400";
+ 		#interrupt-cells = <3>;
 -- 
-Regards,
-Niklas Söderlund
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
