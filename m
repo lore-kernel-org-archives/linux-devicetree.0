@@ -1,52 +1,87 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v2 2/4] DTS: GTA04: fix panel compatibility string
-Date: Tue, 28 Nov 2017 17:04:38 +0100
-Message-ID: <AB65CE5D-C055-4344-9872-F3556981BCEE@goldelico.com>
-References: <cover.1510822218.git.hns@goldelico.com> <09d975dd62afa1dfa43d94079cc9a44731af4b3b.1510822218.git.hns@goldelico.com> <20171128145727.GY28152@atomide.com> <C108B0B6-FED7-44DB-9A18-39E3BE93E586@goldelico.com> <20171128151039.GZ28152@atomide.com> <F14B3797-8154-4958-82AB-8E39C75BB97B@goldelico.com> <20171128160057.GB28152@atomide.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171128160057.GB28152@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+From: James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>
+Subject: Re: [PATCH 01/13] dt-bindings: Add vendor prefix for Microsemi
+ Corporation
+Date: Tue, 28 Nov 2017 16:10:14 +0000
+Message-ID: <20171128161014.GG27409@jhogan-linux.mipstec.com>
+References: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
+ <20171128152643.20463-2-alexandre.belloni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xkXJwpr35CY/Lc3I"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171128152643.20463-2-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--xkXJwpr35CY/Lc3I
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Am 28.11.2017 um 17:00 schrieb Tony Lindgren <tony@atomide.com>:
-> 
-> * H. Nikolaus Schaller <hns@goldelico.com> [171128 15:51]:
->>> Am 28.11.2017 um 16:10 schrieb Tony Lindgren <tony@atomide.com>:
->>> OK fine dropping both. Please update the description in both dts
->>> patches to make it clear they are needed as a fix. Preferrably
->>> with a proper fixes tag.
->> 
->> Well, it is not "needed" in a strong sense since current mainline&stable
->> works. It is more a style and consistency fix to use "tpo," everywhere.
->> 
->>> 
->>> Having "We can remove the "omapdss," prefix" in the description sure
->>> does not sounds like it's needed as a fix :)
->> 
->> The description has been improved on -v3.
-> 
-> Thanks.
-> 
->>> Sounds like maybe these two should be just a single patch for
->>> a proper fix?
->> 
->> Hm. I usually get the feedback to separate DT and driver fixes into
->> separate commits... Therefore I submit patch sets in the hope they
->> are not picked apart :)
-> 
-> See "both dts patches" part above. Yes the dts patches can and should
-> be sent separately. In almost every case if the dts patches cannot be
-> applied separately it means your driver changes are breaking things.
+On Tue, Nov 28, 2017 at 04:26:31PM +0100, Alexandre Belloni wrote:
+> Microsemi Corporation provides semiconductor and system solutions for
+> aerospace & defense, communications, data center and industrial markets.
+>=20
+> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-That is why the v3 driver now accepts both, the old and the new vendor
-name. This means applying the driver alone is safe. Applying or not
-applying DTS patch afterwards is also safe.
+Nit: Usually the Cc list goes before the --- line so that it is included
+in the git history (i.e. these people had the opportunity to comment).
 
-BR,
-Nikolaus
+Cheers
+James
+
+>=20
+>=20
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Docu=
+mentation/devicetree/bindings/vendor-prefixes.txt
+> index 0994bdd82cd3..7b880084fd37 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -219,6 +219,7 @@ motorola	Motorola, Inc.
+>  moxa	Moxa Inc.
+>  mpl	MPL AG
+>  mqmaker	mqmaker Inc.
+> +mscc	Microsemi Corporation
+>  msi	Micro-Star International Co. Ltd.
+>  mti	Imagination Technologies Ltd. (formerly MIPS Technologies Inc.)
+>  multi-inno	Multi-Inno Technology Co.,Ltd
+> --=20
+> 2.15.0
+>=20
+>=20
+
+--xkXJwpr35CY/Lc3I
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlodimYACgkQbAtpk944
+dnr87A//ZRd9S96D6M6KvgykqRA/eGrYQHsgg3SVKLEHOs8dXOuULXBFKfH3q6TC
+0ojY+7kA0Ch34UbOIcM9QArzbZil77Y/dpgm/Glsk1yh7GuGn6EjcWBBi4YkebGX
+oTEuwI9jVvvGAyeDIOcXlwXW9+zohN2ufNXUNz+12ae50WqRFDtN0wrerSD2si+F
+Cf7imr1V56TdAFIzPKEj3oCyI62t7AAE3H7JWMAfyj/3swJCSWF7rLjwSnQGGNjz
+hV3IFslOqLQTzSzfkkxbWcVBpoYSLgkiDAjtNLoDGOWO1YDNlDF0DnBJimOjwjp6
+D2dVNF8VSig2FT9JuRYqnm+Nh9nd24sZu4OoELWif/PXgXDo+o45NfY38YHNji4n
+PpBxYEYrv1cYxRJDIcbhj3OFHOFoeKdv0a/I3PCbSCGy+a5wqh4TveD9O4HjRcKB
+MfVW0jWSzwJob4Ld4MNnD+lV7P1C3xjrbqvYJhmugprAoMasj/gJdPU6lrMS49mK
+gdylYdsF6KHh0WUofg2pEt8o65vwE+EbY7BnU3PzRFYNIhzff0Pf38fcV27fIynt
+aFxcKzTGJp7u9H35gev8G71kjiD8uEz1hSsx+ZeD436mn5wTk74APTk4n7w4/Alv
+QWwSgnbu5E94G7pTf2Y83tFVeK7qINhPR+7XACS6UCgM/DPFP7s=
+=/5tY
+-----END PGP SIGNATURE-----
+
+--xkXJwpr35CY/Lc3I--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
