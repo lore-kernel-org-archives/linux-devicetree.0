@@ -1,37 +1,27 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH 08/13] dt-bindings: mips: Add bindings for Microsemi SoCs
-Date: Tue, 28 Nov 2017 16:26:38 +0100
-Message-ID: <20171128152643.20463-9-alexandre.belloni@free-electrons.com>
-References: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: clock: add compatible variant for
+ the Meson-AXG
+Date: Tue, 28 Nov 2017 09:29:20 -0600
+Message-ID: <20171128152920.yz6v7blobxsylqgz@rob-hp-laptop>
+References: <20171128125330.363-1-yixun.lan@amlogic.com>
+ <20171128125330.363-2-yixun.lan@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
+Content-Disposition: inline
+In-Reply-To: <20171128125330.363-2-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for Microsemi SoCs. Currently only Ocelot is supported.
+On Tue, Nov 28, 2017 at 08:53:28PM +0800, Yixun Lan wrote:
+> Update the documentation to support clock driver for the Amlogic's
+> Meson-AXG SoC.
+> 
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+>  Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-
- Documentation/devicetree/bindings/mips/mscc.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/mscc.txt
-
-diff --git a/Documentation/devicetree/bindings/mips/mscc.txt b/Documentation/devicetree/bindings/mips/mscc.txt
-new file mode 100644
-index 000000000000..2c52e76b7142
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/mscc.txt
-@@ -0,0 +1,6 @@
-+* Microsemi MIPS CPUs
-+
-+Required properties:
-+- compatible: "brcm,ocelot"
-+
-+- mips-hpt-frequency: CPU counter frequency.
--- 
-2.15.0
+Acked-by: Rob Herring <robh@kernel.org>
