@@ -1,54 +1,77 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: sunxi: add support for Allwinner
- H6 main pin controller
-Date: Tue, 28 Nov 2017 13:13:45 +0100
-Message-ID: <20171128121345.xc3pbsx4hoaoapu4@flea.home>
-References: <20171128110614.9303-1-icenowy@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH v2 0/2] add clk controller driver for Meson-AXG SoC
+Date: Tue, 28 Nov 2017 20:47:09 +0800
+Message-ID: <78b268eb-6aff-a9c4-e358-f91069e12da5@amlogic.com>
+References: <20171127094844.16742-1-yixun.lan@amlogic.com>
+ <1511790489.30519.11.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lr2zmg7xkhfj7te2"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6VF6XIAKGQEPQ47MPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20171128110614.9303-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1511790489.30519.11.camel@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: yixun.lan@amlogic.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi jerome:
 
---lr2zmg7xkhfj7te2
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
 
-Hi,
-
-On Tue, Nov 28, 2017 at 07:06:14PM +0800, Icenowy Zheng wrote:
-> Allwinner H6 SoC has two pin controllers like other Allwinner SoCs with
-> ARISC: one main pin controller (called CPUX-PORT in user manual) and one
-> pin controller in the CPUs power domain (called CPUS-PORT in user
-> manual).
+On 11/27/17 21:48, Jerome Brunet wrote:
+> On Mon, 2017-11-27 at 17:48 +0800, Yixun Lan wrote:
+>> Add driver for the clk controller which found in Meson AXG SoC
+>>
+>>   Note, we deliberately create a seperate source file for the Meson AXG
+>> series, instead of sharing code with previous GXBB/GXL - the file axg.c
+>> It would help us maintaining the code more easily.
 > 
-> This commit adds support for the main pin controller in the H6 SoC.
+> But this will be the last meson SoC added this way. We need factor the code the
+> between meson8, gx and axg series since there is a lot of duplication there.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>
+>> Changes since v1 [1]:
+>>  - rework register definion, use '(offset << 2)' to better match
+> 
+> As previously discussed, please drop these calculations and just write what the
+> offset actually are. Putting one comment at the top, explaining the translation,
+> would be nice though. 
+> 
+can drop the calculations, but there is already a comment at top here..
 
-This looks mostly fine, but we've had issues in the past with pinctrl
-drivers submitted without SoC support, and we'll have to support them
-forever.
+>>    the description from data sheet
+>>  - drop "#include dt-bindings/clock/gxbb-aoclkc.h" from dts
+>>  - rebase code to v4.15-rc1
+>>
+>> [1] 
+>>   http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005239.html
+>>   http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005240.html
+>>   http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005241.html
+>>
+>>
+>> Qiufang Dai (2):
+> 
+> First patch of the series should be adding the compatible documentation, which
+> is missing here (unless it has gone through another channel and I missed it)
+> 
+I missed the dt-binding, will fix in next version
 
-Please resend this as part your upcoming serie to enable the H6.
+>>   clk: meson-axg: add clock controller drivers
+>>   arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
+>>
+>>  arch/arm64/Kconfig.platforms               |   1 +
+>>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi |  15 +
+>>  drivers/clk/meson/Kconfig                  |   8 +
+>>  drivers/clk/meson/Makefile                 |   1 +
+>>  drivers/clk/meson/axg.c                    | 948
+>> +++++++++++++++++++++++++++++
+>>  drivers/clk/meson/axg.h                    | 126 ++++
+>>  include/dt-bindings/clock/axg-clkc.h       |  72 +++
+>>  7 files changed, 1171 insertions(+)
+>>  create mode 100644 drivers/clk/meson/axg.c
+>>  create mode 100644 drivers/clk/meson/axg.h
+>>  create mode 100644 include/dt-bindings/clock/axg-clkc.h
+>>
+> 
+> .
+> 
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---lr2zmg7xkhfj7te2--
