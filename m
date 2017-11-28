@@ -1,79 +1,84 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] dt-bindings: pinctrl: uniphier: add UniPhier pinctrl binding
-Date: Tue, 28 Nov 2017 16:49:45 +0900
-Message-ID: <1511855386-10421-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-gpio@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] of: Spelling s/changset/changeset/
+Date: Tue, 28 Nov 2017 09:25:23 +0100
+Message-ID: <1511857523-18241-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver has been in the tree for a while, but its binding document
-is missing.  Hence, here it is.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
+ drivers/of/dynamic.c | 4 ++--
+ drivers/of/overlay.c | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
- .../pinctrl/socionext,uniphier-pinctrl.txt         | 27 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
-new file mode 100644
-index 0000000..8173b12
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
-@@ -0,0 +1,27 @@
-+UniPhier SoCs pin controller
-+
-+Required properties:
-+- compatible: should be one of the following:
-+    "socionext,uniphier-ld4-pinctrl"  - for LD4 SoC
-+    "socionext,uniphier-pro4-pinctrl" - for Pro4 SoC
-+    "socionext,uniphier-sld8-pinctrl" - for sLD8 SoC
-+    "socionext,uniphier-pro5-pinctrl" - for Pro5 SoC
-+    "socionext,uniphier-pxs2-pinctrl" - for PXs2 SoC
-+    "socionext,uniphier-ld6b-pinctrl" - for LD6b SoC
-+    "socionext,uniphier-ld11-pinctrl" - for LD11 SoC
-+    "socionext,uniphier-ld20-pinctrl" - for LD20 SoC
-+    "socionext,uniphier-pxs3-pinctrl" - for PXs3 SoC
-+
-+Note:
-+The UniPhier pinctrl should be a subnode of a "syscon" compatible node.
-+
-+Example:
-+	soc-glue@5f800000 {
-+		compatible = "socionext,uniphier-pro4-soc-glue",
-+			     "simple-mfd", "syscon";
-+		reg = <0x5f800000 0x2000>;
-+
-+		pinctrl: pinctrl {
-+			compatible = "socionext,uniphier-pro4-pinctrl";
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa71ab52f..38b0ddc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2042,6 +2042,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
- S:	Maintained
- F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-+F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
- F:	arch/arm/boot/dts/uniphier*
- F:	arch/arm/include/asm/hardware/cache-uniphier.h
- F:	arch/arm/mach-uniphier/
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index c454941b34ec8aa7..ab988d88704da0d2 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -695,7 +695,7 @@ int __of_changeset_apply_entries(struct of_changeset *ocs, int *ret_revert)
+ /*
+  * Returns 0 on success, a negative error value in case of an error.
+  *
+- * If multiple changset entry notification errors occur then only the
++ * If multiple changeset entry notification errors occur then only the
+  * final notification error is reported.
+  */
+ int __of_changeset_apply_notify(struct of_changeset *ocs)
+@@ -795,7 +795,7 @@ int __of_changeset_revert_entries(struct of_changeset *ocs, int *ret_apply)
+ }
+ 
+ /*
+- * If multiple changset entry notification errors occur then only the
++ * If multiple changeset entry notification errors occur then only the
+  * final notification error is reported.
+  */
+ int __of_changeset_revert_notify(struct of_changeset *ocs)
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 3b7a3980ff50d6bf..8676411bd3e6f29f 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -660,14 +660,14 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
+  * A non-zero return value will not have created the changeset if error is from:
+  *   - parameter checks
+  *   - building the changeset
+- *   - overlay changset pre-apply notifier
++ *   - overlay changeset pre-apply notifier
+  *
+  * If an error is returned by an overlay changeset pre-apply notifier
+  * then no further overlay changeset pre-apply notifier will be called.
+  *
+  * A non-zero return value will have created the changeset if error is from:
+  *   - overlay changeset entry notifier
+- *   - overlay changset post-apply notifier
++ *   - overlay changeset post-apply notifier
+  *
+  * If an error is returned by an overlay changeset post-apply notifier
+  * then no further overlay changeset post-apply notifier will be called.
+@@ -871,7 +871,7 @@ static int overlay_removal_is_ok(struct overlay_changeset *remove_ovcs)
+  *
+  * A non-zero return value will not revert the changeset if error is from:
+  *   - parameter checks
+- *   - overlay changset pre-remove notifier
++ *   - overlay changeset pre-remove notifier
+  *   - overlay changeset entry revert
+  *
+  * If an error is returned by an overlay changeset pre-remove notifier
+@@ -882,7 +882,7 @@ static int overlay_removal_is_ok(struct overlay_changeset *remove_ovcs)
+  *
+  * A non-zero return value will revert the changeset if error is from:
+  *   - overlay changeset entry notifier
+- *   - overlay changset post-remove notifier
++ *   - overlay changeset post-remove notifier
+  *
+  * If an error is returned by an overlay changeset post-remove notifier
+  * then no further overlay changeset post-remove notifier will be called.
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
