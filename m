@@ -1,53 +1,207 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v2 2/4] DTS: GTA04: fix panel compatibility string
-Date: Tue, 28 Nov 2017 16:01:02 +0100
-Message-ID: <C108B0B6-FED7-44DB-9A18-39E3BE93E586@goldelico.com>
-References: <cover.1510822218.git.hns@goldelico.com> <09d975dd62afa1dfa43d94079cc9a44731af4b3b.1510822218.git.hns@goldelico.com> <20171128145727.GY28152@atomide.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171128145727.GY28152@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH v2 01/16] ARM: dts: imx6qdl: SolidRun: remove redundant
+ regulators node
+Date: Tue, 28 Nov 2017 15:01:59 +0000
+Message-ID: <E1eJhOZ-0006N3-WC@rmk-PC.armlinux.org.uk>
+References: <20171128150045.GV31757@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171128150045.GV31757-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+The regulators node is redundant, and serves no useful function.
+Remove it from i.MX6 SolidRun platforms.
 
-> Am 28.11.2017 um 15:57 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * H. Nikolaus Schaller <hns@goldelico.com> [171116 08:53]:
->> Vendor string is "tpo" and not "toppoly".
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi =
-b/arch/arm/boot/dts/omap3-gta04.dtsi
->> index 4504908c23fe..ec27ed67a22a 100644
->> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
->> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
->> @@ -86,7 +86,7 @@
->>=20
->> 		/* lcd panel */
->> 		lcd: td028ttec1@0 {
->> -			compatible =3D "toppoly,td028ttec1";
->> +			compatible =3D "tpo,td028ttec1";
->> 			reg =3D <0>;
->> 			spi-max-frequency =3D <100000>;
->> 			spi-cpol;
->=20
-> Applying into omap-for-v4.15/fixes thanks. The other dts patch seems
-> like it can wait for v4.16 merge window.
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 56 ++++++++++++++---------------
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 56 ++++++++++++++---------------
+ arch/arm/boot/dts/imx6qdl-microsom.dtsi     | 24 ++++++-------
+ 3 files changed, 62 insertions(+), 74 deletions(-)
 
-Hm. Not really. It needs the panel driver to match. So either both or
-none should be applied or it will break the panel from working.
+diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+index 14fff4ee6516..b20508237046 100644
+--- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+@@ -64,38 +64,34 @@
+ 		};
+ 	};
+ 
+-	regulators {
+-		compatible = "simple-bus";
+-
+-		reg_3p3v: 3p3v {
+-			compatible = "regulator-fixed";
+-			regulator-name = "3P3V";
+-			regulator-min-microvolt = <3300000>;
+-			regulator-max-microvolt = <3300000>;
+-			regulator-always-on;
+-		};
++	reg_3p3v: 3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
+ 
+-		reg_usbh1_vbus: usb-h1-vbus {
+-			compatible = "regulator-fixed";
+-			enable-active-high;
+-			gpio = <&gpio1 0 0>;
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_cubox_i_usbh1_vbus>;
+-			regulator-name = "usb_h1_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-		};
++	reg_usbh1_vbus: usb-h1-vbus {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio1 0 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_cubox_i_usbh1_vbus>;
++		regulator-name = "usb_h1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
+ 
+-		reg_usbotg_vbus: usb-otg-vbus {
+-			compatible = "regulator-fixed";
+-			enable-active-high;
+-			gpio = <&gpio3 22 0>;
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_cubox_i_usbotg_vbus>;
+-			regulator-name = "usb_otg_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-		};
++	reg_usbotg_vbus: usb-otg-vbus {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio3 22 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_cubox_i_usbotg_vbus>;
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
+ 	};
+ 
+ 	sound-spdif {
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+index 37c07c0748aa..0a0a7e4b956b 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+@@ -53,38 +53,34 @@
+ 		pinctrl-0 = <&pinctrl_hummingboard_gpio3_5>;
+ 	};
+ 
+-	regulators {
+-		compatible = "simple-bus";
+-
+-		reg_3p3v: 3p3v {
+-			compatible = "regulator-fixed";
+-			regulator-name = "3P3V";
+-			regulator-min-microvolt = <3300000>;
+-			regulator-max-microvolt = <3300000>;
+-			regulator-always-on;
+-		};
++	reg_3p3v: 3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
+ 
+-		reg_usbh1_vbus: usb-h1-vbus {
+-			compatible = "regulator-fixed";
+-			enable-active-high;
+-			gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_hummingboard_usbh1_vbus>;
+-			regulator-name = "usb_h1_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-		};
++	reg_usbh1_vbus: usb-h1-vbus {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_hummingboard_usbh1_vbus>;
++		regulator-name = "usb_h1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
+ 
+-		reg_usbotg_vbus: usb-otg-vbus {
+-			compatible = "regulator-fixed";
+-			enable-active-high;
+-			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_hummingboard_usbotg_vbus>;
+-			regulator-name = "usb_otg_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-		};
++	reg_usbotg_vbus: usb-otg-vbus {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_hummingboard_usbotg_vbus>;
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
+ 	};
+ 
+ 	sound-sgtl5000 {
+diff --git a/arch/arm/boot/dts/imx6qdl-microsom.dtsi b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
+index 6a410160c9ee..f7266ae2534c 100644
+--- a/arch/arm/boot/dts/imx6qdl-microsom.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
+@@ -48,20 +48,16 @@
+ 		enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
+ 	};
+ 
+-	regulators {
+-		compatible = "simple-bus";
+-
+-		reg_brcm: brcm-reg {
+-			compatible = "regulator-fixed";
+-			enable-active-high;
+-			gpio = <&gpio3 19 0>;
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pinctrl_microsom_brcm_reg>;
+-			regulator-name = "brcm_reg";
+-			regulator-min-microvolt = <3300000>;
+-			regulator-max-microvolt = <3300000>;
+-			startup-delay-us = <200000>;
+-		};
++	reg_brcm: brcm-reg {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio3 19 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_microsom_brcm_reg>;
++		regulator-name = "brcm_reg";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <200000>;
+ 	};
+ 
+ 	usdhc1_pwrseq: usdhc1_pwrseq {
+-- 
+2.7.4
 
-I am just 1-2 hours away from submitting a -v3 (rebased and tested
-on top of 4.15-rc1).
-
-BR and thanks,
-Nikolaus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
