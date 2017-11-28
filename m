@@ -1,61 +1,50 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 01/10] genirq: Export irq_set_msi_desc()
-Date: Tue, 28 Nov 2017 10:00:32 +0000
-Message-ID: <be79bf6f-b24a-6292-5eb1-3bcf97890421@arm.com>
-References: <1511538800-8275-1-git-send-email-mmaddireddy@nvidia.com>
- <1511538800-8275-2-git-send-email-mmaddireddy@nvidia.com>
- <alpine.DEB.2.20.1711250050520.2316@nanos>
- <600a7b65-670e-b164-913c-99e18ae593d2@nvidia.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 03/13] ARM: dts: imx6qdl: SolidRun: move microsom
+ includes into .dts
+Date: Tue, 28 Nov 2017 10:45:03 +0000
+Message-ID: <20171128104503.GU31757@n2100.armlinux.org.uk>
+References: <20171127165134.GH31757@n2100.armlinux.org.uk>
+ <E1eJMdo-0002qf-2D@rmk-PC.armlinux.org.uk>
+ <CALHpu36Kjy4SSn1m8ZOYwEr+9u67dobfNHiOX6s75UFGVm3atw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <600a7b65-670e-b164-913c-99e18ae593d2-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CALHpu36Kjy4SSn1m8ZOYwEr+9u67dobfNHiOX6s75UFGVm3atw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Nettleton <jon.nettleton@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25/11/17 19:41, Manikanta Maddireddy wrote:
+On Tue, Nov 28, 2017 at 05:46:07AM +0100, Jon Nettleton wrote:
+> On Mon, Nov 27, 2017 at 5:52 PM, Russell King <rmk+kernel@armlinux.org.uk>
+> wrote:
 > 
+> > Move the microsom includes into the .dts files so different options can
+> > be accomodated at the lowest level.
+> >
+> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 > 
-> On 25-Nov-17 5:25 AM, Thomas Gleixner wrote:
->> On Fri, 24 Nov 2017, Manikanta Maddireddy wrote:
->>
->> Please CC the proper mailing list for irq related changes.
->>
->>> PCI bus support MSI interrupts, allow PCI host driver to set MSI descriptor
->>> data for an irq.
->>
->> This is not really an explanation why this export is needed.
->>
->> Thanks,
->>
->> 	tglx
->>
-> Updated the commit log with why Tegra PCIe driver is using this function in V2.
-> Please review.
+> Since we are going through and adding the som dtsi include to all the
+> device-tree files, would it make sense to rename the microsom.dtsi at this
+> point in time?  Perhaps something like imx6qdl-sr-microsom.dtsi?
 
-Well, to review it, I would like to be on Cc.
+Shawn,
 
-My current position on this is that if you need to export this function,
-then you're using a deprecated API, and you should instead consider
-moving to the generic MSI model, which doesn't need any of this.
+Having discussed with Jon this morning, we've decided that as 
+"imx6qdl-microsom.dtsi" is too generic, we'll to rename that file as
+"imx6qdl-sr-som.dtsi" instead.  New patch series on its way.
 
-I've done that a distant past, but never actually published the patch
-(not tested it):
-
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/kill-msi-controller&id=83b3602fcee7972b9d549ed729b56ec28de16081
-
-But without seeing the patches, I may be barking up the wrong tree...
-
-Thanks,
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
