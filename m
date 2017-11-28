@@ -1,64 +1,127 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC V7 2/2] OPP: Allow "opp-hz" and "opp-microvolt" to contain
- magic values
-Date: Tue, 28 Nov 2017 17:38:52 +0100
-Message-ID: <CAPDyKFryn5=GMs+hiRcxGOC1U=-LL9RQdnY3cWniyE+4pwQDog@mail.gmail.com>
-References: <cover.1509453284.git.viresh.kumar@linaro.org> <23ba51eaa6b52117458165dccc00a95cf8e86e1d.1509453284.git.viresh.kumar@linaro.org>
- <CAL_JsqKr7MsM6iZ_QYO=iCzXNwANEGQGDLFUEwe0Z-p2Z_aMYw@mail.gmail.com>
- <CAKohpokvQD4Z6YY6MRG8c+hnsS=Z52X4XhyTgC5FTgf7VuaNmw@mail.gmail.com>
- <CAL_JsqK-qtAaM_Ou5NtxcWR3F_q=8rMPJUm-VqGtKhbtWe5SAQ@mail.gmail.com>
- <20171101214333.GG30645@codeaurora.org> <20171102045155.GX4240@vireshk-i7>
- <20171102071533.GM30645@codeaurora.org> <20171102090033.GZ4240@vireshk-i7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171102090033.GZ4240@vireshk-i7>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v1] usb: xhci: allow imod-interval to be configurable
+Date: Tue, 28 Nov 2017 12:11:46 -0500
+Message-ID: <1511889106-9239-1-git-send-email-awallis@codeaurora.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2 November 2017 at 10:00, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 02-11-17, 00:15, Stephen Boyd wrote:
->> Sorry I'm not following. We're going to need to have platform
->> specific code that understands platform specific bindings that
->> aren't shoved into the generic OPP bindings.
->
-> At least I am not targeting any platform specific binding right now.
-> The way I see this to work is:
->
-> - We will reuse earlier bindings and allow opp-hz and opp-microvolt to
->   contain special values (this patch).
-> - Platform specific DT entries will put corner numbers in opp-hz (or
->   opp-microvolt) fields.
-> - Some platform specific driver (in OPP or genpd) will be used to
->   convert OPP into a performance state (corner) value. Now that can
->   simply read opp-hz (or opp-microvolt) and return its value.
+The xHCI driver currently has the IMOD set to 160, which
+translates to an IMOD interval of 40,000ns (160 * 250)ns
 
-Since the "operating-points-v2" phandle(s) belongs in the power-domain
-controller device node, which anyway is being parsed by the genpd SoC
-specific driver, I assume it makes sense to start the initialization
-from there. Unless there is something that prevents that, of course.
+Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
+introduced a QUIRK for the MTK platform to adjust this interval to 20,
+which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
+due to the fact that the MTK controller IMOD interval is 8 times
+as much as defined in xHCI spec.
 
-Then whatever library/helper functions we need for parse and create
-the OPP tables, can be provided to the OPP framework and the OPP OF
-library.
+Instead of adding more quirk bits for additional platforms, this patch
+introduces the ability for vendors to set the IMOD_INTERVAL as is
+optimal for their platform. By using device_property_read_u32() on
+"imod-interval", the IMOD INTERVAL can be specified in nano seconds. If
+no interval is specified, the default of 40,000ns (IMOD=160) will be
+used.
 
-> - OPP core will request for a performance state (code is already
->   merged for that).
->
-> And so there is no platform specific binding here. Do you want to do
-> this differently ?
+No bounds checking has been implemented due to the fact that a vendor
+may have violated the spec and would need to specify a value outside of
+the max 8,000 IRQs/second limit specified in the xHCI spec.
 
-This makes sense to me!
+Backwards compatibility is maintained for MTK_HOSTS through the quirk
+bit, however, imod_interval should be pushed into device tree at a
+future point and this quirk should be removed from xhci_plat_probe
 
-Also, the SoC (QCOM) specific genpd driver is free to use the
-terminology "corner values", when it translates opp-hz|microvolt into
-such values.
+Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |  1 +
+ drivers/usb/host/xhci-plat.c                       | 15 +++++++++++++++
+ drivers/usb/host/xhci.c                            |  7 ++-----
+ drivers/usb/host/xhci.h                            |  2 ++
+ 4 files changed, 20 insertions(+), 5 deletions(-)
 
-Kind regards
-Uffe
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index ae6e484..3998459 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -29,6 +29,7 @@ Optional properties:
+   - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
++  - imod-interval: IMOD_INTERVAL in nano-seconds. Default is 40000
+ 
+ Example:
+ 	usb@f0931000 {
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 09f164f..f7730c8 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -23,6 +23,7 @@
+ #include "xhci-plat.h"
+ #include "xhci-mvebu.h"
+ #include "xhci-rcar.h"
++#include "xhci-mtk.h"
+ 
+ static struct hc_driver __read_mostly xhci_plat_hc_driver;
+ 
+@@ -269,6 +270,20 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
+ 		xhci->quirks |= XHCI_BROKEN_PORT_PED;
+ 
++	/* imod interval in nanoseconds */
++	if (device_property_read_u32(sysdev,
++		"imod-interval", &xhci->imod_interval))
++		xhci->imod_interval = 40000;
++	else if (xhci->quirks & XHCI_MTK_HOST)
++		/*
++		 * The increment interval is 8 times as much as that defined in
++		 * the xHCI spec on MTK's controller. This is added to provide
++		 * backwards compatibility, however, this should be pushed into
++		 * the device tree files at some point in the future and
++		 * removed from xhci_plat_probe
++		 */
++		xhci->imod_interval = 5000;
++
+ 	hcd->usb_phy = devm_usb_get_phy_by_phandle(sysdev, "usb-phy", 0);
+ 	if (IS_ERR(hcd->usb_phy)) {
+ 		ret = PTR_ERR(hcd->usb_phy);
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 2424d30..6a09311 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -586,11 +586,8 @@ int xhci_run(struct usb_hcd *hcd)
+ 			"// Set the interrupt modulation register");
+ 	temp = readl(&xhci->ir_set->irq_control);
+ 	temp &= ~ER_IRQ_INTERVAL_MASK;
+-	/*
+-	 * the increment interval is 8 times as much as that defined
+-	 * in xHCI spec on MTK's controller
+-	 */
+-	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
++	temp |= (u16) (xhci->imod_interval / 250);
++
+ 	writel(temp, &xhci->ir_set->irq_control);
+ 
+ 	/* Set the HCD state before we enable the irqs */
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 99a014a..2a4177b 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1717,6 +1717,8 @@ struct xhci_hcd {
+ 	u8		max_interrupters;
+ 	u8		max_ports;
+ 	u8		isoc_threshold;
++	/* imod_interval in ns (I * 250ns) */
++	u32		imod_interval;
+ 	int		event_ring_max;
+ 	/* 4KB min, 128MB max */
+ 	int		page_size;
+-- 
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
