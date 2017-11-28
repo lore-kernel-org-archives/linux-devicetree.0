@@ -1,28 +1,28 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: [PATCH v2 31/35] earlycon: add reg-offset to physical address
- before mapping
-Date: Tue, 28 Nov 2017 15:25:07 +0100
-Message-ID: <20171128142507.GA17797@kroah.com>
-References: <cover.1511785528.git.green.hu@gmail.com>
- <5b5f07ffd75d509a661398d02d6f1336156554ae.1511785528.git.green.hu@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am4372: Correct the interrupts_properties of
+ McASP
+Date: Tue, 28 Nov 2017 06:52:41 -0800
+Message-ID: <20171128145241.GV28152@atomide.com>
+References: <20171101090331.15435-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5b5f07ffd75d509a661398d02d6f1336156554ae.1511785528.git.green.hu@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org
+In-Reply-To: <20171101090331.15435-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 27, 2017 at 08:28:18PM +0800, Greentime Hu wrote:
-> From: Greentime Hu <greentime@andestech.com>
-> 
-> It will get the wrong virtual address because port->mapbase is not added
-> the correct reg-offset yet. We have to update it before earlycon_map()
-> is called
-> ---
->  drivers/tty/serial/earlycon.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [171101 02:04]:
+> Fixes the following wanring:
+> arch/arm/boot/dts/am437x-cm-t43.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /ocp@44000000/mcasp@48038000
+> arch/arm/boot/dts/am437x-cm-t43.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /ocp@44000000/mcasp@4803C000
 
-No signed-off-by line?
+Applying into omap-for-v4.15/fixes thanks.
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
