@@ -1,92 +1,44 @@
-Return-Path: <SRS0=y+tB=CT=codeaurora.org=kvalo@kernel.org>
-Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [v7,1/3] dt-bindings: net: add mt76 wireless device binding
-From: Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20171120193549.80831-2-nbd@nbd.name>
-References: <20171120193549.80831-2-nbd@nbd.name>
-Message-Id: <20171121070837.C5E33607E4@smtp.codeaurora.org>
-Date: Tue, 21 Nov 2017 07:08:37 +0000 (UTC)
-To: Felix Fietkau <nbd@nbd.name>
-Cc: linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+In-Reply-To: <20171121200832.d55khzcufo2owcff@latitude>
+References: <20171120214520.dcaqvyncojwefmgt@rob-hp-laptop>
+	<mhng-dadf76d9-0823-4fc8-9177-1772629573b6@palmer-si-x1c4>
+	<20171121200832.d55khzcufo2owcff@latitude>
+Date: Tue, 28 Nov 2017 13:43:00 -0600
+Message-ID: <CAL_JsqL9XSVCgouCftMfm3FQCPgg6S2775JJ_7HhxBxqDBnB-Q@mail.gmail.com>
+Subject: Re: [patches] Re: [PATCH] dt-bindings: Add a RISC-V SBI firmware node
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc: Palmer Dabbelt <palmer@sifive.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, patches@groups.riscv.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Felix Fietkau <nbd@nbd.name> wrote:
+On Tue, Nov 21, 2017 at 2:08 PM, Jonathan Neusch=C3=A4fer <j.neuschaefer@gm=
+x.net> wrote:
+> On Tue, Nov 21, 2017 at 09:37:02AM -0800, Palmer Dabbelt wrote:
+> [...]
+>> This isn't really a big deal to me, as I'm only interested in RISC-V
+>> systems, but there's been some pushback on the concept of an SBI so it
+>> seemed like a simple way to allow people to build non-SBI (and there for=
+ not
+>> really RISC-V) systems.
+>
+> For those reading along: I suggested the /firmware/sbi node to Palmer,
+> because I'm interested in such "not really RISC-V" systems, (because it
+> makes the firmware's job easier to not implement the SBI =E2=80=94 speaki=
+ng with
+> my coreboot hat, here.)
 
-> Add documentation describing how device tree can be used to configure
-> wireless chips supported by the mt76 driver.
-> 
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> Acked-by: Rob Herring <robh@kernel.org>
+Seems some property to signify "not really RISC-V" would be better than add=
+ing a node for all conformant systems. If this is just one
 
-Fails to compile:
-
-drivers/net/wireless/mediatek/mt76/mac80211.c: In function ‘mt76_led_init’:
-drivers/net/wireless/mediatek/mt76/mac80211.c:111:7: error: implicit declaration of function ‘of_get_child_by_name’ [-Werror=implicit-function-declaration]
-  np = of_get_child_by_name(np, "led");
-       ^
-drivers/net/wireless/mediatek/mt76/mac80211.c:111:5: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
-  np = of_get_child_by_name(np, "led");
-     ^
-drivers/net/wireless/mediatek/mt76/mac80211.c:113:8: error: implicit declaration of function ‘of_property_read_u32’ [-Werror=implicit-function-declaration]
-   if (!of_property_read_u32(np, "led-sources", &led_pin))
-        ^
-drivers/net/wireless/mediatek/mt76/mac80211.c:115:17: error: implicit declaration of function ‘of_property_read_bool’ [-Werror=implicit-function-declaration]
-   dev->led_al = of_property_read_bool(np, "led-active-low");
-                 ^
-cc1: some warnings being treated as errors
-make[5]: *** [drivers/net/wireless/mediatek/mt76/mac80211.o] Error 1
-make[5]: *** Waiting for unfinished jobs....
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c: In function ‘mt76x2_mac_process_rate’:
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:49:20: error: ‘RX_FLAG_SHORTPRE’ undeclared (first use in this function)
-    status->flag |= RX_FLAG_SHORTPRE;
-                    ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:49:20: note: each undeclared identifier is reported only once for each function it appears in
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:58:19: error: ‘RX_FLAG_HT_GF’ undeclared (first use in this function)
-   status->flag |= RX_FLAG_HT_GF;
-                   ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:61:19: error: ‘RX_FLAG_HT’ undeclared (first use in this function)
-   status->flag |= RX_FLAG_HT;
-                   ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:65:19: error: ‘RX_FLAG_VHT’ undeclared (first use in this function)
-   status->flag |= RX_FLAG_VHT;
-                   ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:67:9: error: ‘struct ieee80211_rx_status’ has no member named ‘vht_nss’
-   status->vht_nss = FIELD_GET(MT_RATE_INDEX_VHT_NSS, idx) + 1;
-         ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:75:19: error: ‘RX_FLAG_LDPC’ undeclared (first use in this function)
-   status->flag |= RX_FLAG_LDPC;
-                   ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:78:19: error: ‘RX_FLAG_SHORT_GI’ undeclared (first use in this function)
-   status->flag |= RX_FLAG_SHORT_GI;
-                   ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:81:24: error: ‘RX_FLAG_STBC_SHIFT’ undeclared (first use in this function)
-   status->flag |= 1 << RX_FLAG_STBC_SHIFT;
-                        ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:87:19: error: ‘RX_FLAG_40MHZ’ undeclared (first use in this function)
-   status->flag |= RX_FLAG_40MHZ;
-                   ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:90:9: error: ‘struct ieee80211_rx_status’ has no member named ‘vht_flag’
-   status->vht_flag |= RX_VHT_FLAG_80MHZ;
-         ^
-drivers/net/wireless/mediatek/mt76/mt76x2_mac.c:90:23: error: ‘RX_VHT_FLAG_80MHZ’ undeclared (first use in this function)
-   status->vht_flag |= RX_VHT_FLAG_80MHZ;
-                       ^
-make[5]: *** [drivers/net/wireless/mediatek/mt76/mt76x2_mac.o] Error 1
-make[4]: *** [drivers/net/wireless/mediatek/mt76] Error 2
-make[3]: *** [drivers/net/wireless/mediatek] Error 2
-make[2]: *** [drivers/net/wireless] Error 2
-make[1]: *** [drivers/net] Error 2
-make: *** [drivers] Error 2
-
-3 patches set to Changes Requested.
-
-10067143 [v7,1/3] dt-bindings: net: add mt76 wireless device binding
-10067141 [v7,2/3] mt76: add common code shared between multiple chipsets
-10067145 [v7,3/3] mt76: add driver code for MT76x2e
-
--- 
-https://patchwork.kernel.org/patch/10067143/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>
+>> One option that wouldn't require a device tree node
+>> would be to have Linux boot in machine mode [...] and then provide its
+>> own SBI implementation.
+>
+> I think this can work.
+>
+>
+> Thanks,
+> Jonathan Neusch=C3=A4fer
