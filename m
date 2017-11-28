@@ -1,34 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] media: ov7740: Document device tree bindings
-Date: Tue, 28 Nov 2017 07:58:45 -0600
-Message-ID: <20171128135845.k4fy4ayl3z7fsdvr@rob-hp-laptop>
-References: <20171128052259.4957-1-wenyou.yang@microchip.com>
- <20171128052259.4957-2-wenyou.yang@microchip.com>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH] media: i2c: adv748x: Restore full DT paths in kernel
+ messages
+Date: Tue, 28 Nov 2017 14:02:25 +0000
+Message-ID: <60496d91-446a-435e-41a4-3e579c6fe08b@ideasonboard.com>
+References: <1511874084-5068-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171128052259.4957-2-wenyou.yang@microchip.com>
+In-Reply-To: <1511874084-5068-1-git-send-email-geert+renesas@glider.be>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@microchip.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 01:22:58PM +0800, Wenyou Yang wrote:
-> Add the device tree binding documentation for the ov7740 sensor driver.
-> 
-> Signed-off-by: Wenyou Yang <wenyou.yang@microchip.com>
-> ---
-> 
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3:
->  - Explicitly document the "remote-endpoint" property.
-> 
-> Changes in v2: None
-> 
->  .../devicetree/bindings/media/i2c/ov7740.txt       | 47 ++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
+Hi Geert,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks for the patch.
+
+On 28/11/17 13:01, Geert Uytterhoeven wrote:
+> As of_node_full_name() now returns only the basename, the endpoint
+> information printed became useless:
+> 
+>     adv748x 4-0070: Endpoint endpoint on port 7
+>     adv748x 4-0070: Endpoint endpoint on port 8
+>     adv748x 4-0070: Endpoint endpoint on port 10
+>     adv748x 4-0070: Endpoint endpoint on port 11
+> 
+> Restore the old behavior by using "%pOF" instead:
+> 
+>     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@7/endpoint on port 7
+>     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@8/endpoint on port 8
+>     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@10/endpoint on port 10
+>     adv748x 4-0070: Endpoint /soc/i2c@e66d8000/video-receiver@70/port@11/endpoint on port 11
+> 
+> Fixes: a7e4cfb0a7ca4773 ("of/fdt: only store the device node basename in full_name")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Acked-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> ---
+>  drivers/media/i2c/adv748x/adv748x-core.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+> index 5ee14f2c27478e3a..c1001db6a172e256 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-core.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
+> @@ -646,14 +646,12 @@ static int adv748x_parse_dt(struct adv748x_state *state)
+>  
+>  	for_each_endpoint_of_node(state->dev->of_node, ep_np) {
+>  		of_graph_parse_endpoint(ep_np, &ep);
+> -		adv_info(state, "Endpoint %s on port %d",
+> -				of_node_full_name(ep.local_node),
+> -				ep.port);
+> +		adv_info(state, "Endpoint %pOF on port %d", ep.local_node,
+> +			 ep.port);
+>  
+>  		if (ep.port >= ADV748X_PORT_MAX) {
+> -			adv_err(state, "Invalid endpoint %s on port %d",
+> -				of_node_full_name(ep.local_node),
+> -				ep.port);
+> +			adv_err(state, "Invalid endpoint %pOF on port %d",
+> +				ep.local_node, ep.port);
+>  
+>  			continue;
+>  		}
+> 
