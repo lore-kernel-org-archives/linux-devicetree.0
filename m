@@ -1,31 +1,64 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 00/12] drivers: Boot Constraints core
-Date: Tue, 28 Nov 2017 09:48:18 +0530
-Message-ID: <20171128041818.GE11413@vireshk-i7>
-References: <cover.1509284255.git.viresh.kumar@linaro.org>
+From: Vincent Chen <deanbo422@gmail.com>
+Subject: Re: [PATCH v2 10/35] nds32: Atomic operations
+Date: Tue, 28 Nov 2017 12:24:46 +0800
+Message-ID: <CAJsyPhzMa3BJ=nocYYhsxzfqkd0j_gqtfn+Ctzpg=_HigHM07g@mail.gmail.com>
+References: <cover.1511785528.git.green.hu@gmail.com> <56a24fae3cec68f80c41eebd98fcceb9b137ac64.1511785528.git.green.hu@gmail.com>
+ <20171127135724.yy2jjjuby3xu74mm@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1509284255.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171127135724.yy2jjjuby3xu74mm@lakrids.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Vincent Chen <vincentc@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29-10-17, 19:18, Viresh Kumar wrote:
-> Here is V4 of the boot constraints core based on your feedback from V3.
-> We now have support for three platforms (as you suggested) included in
-> this series: Hisilicon, IMX and Qualcomm.
+2017-11-27 21:57 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
+> Hi,
+>
+> On Mon, Nov 27, 2017 at 08:27:57PM +0800, Greentime Hu wrote:
+>> +static inline void arch_spin_unlock(arch_spinlock_t * lock)
+>> +{
+>> +     asm volatile(
+>> +             "xor    $r15,  $r15, $r15\n"
+>> +             "swi    $r15, [%0]\n"
+>> +             :
+>> +             :"r"(&lock->lock)
+>> +             :"memory");
+>> +}
+>
+> This looks suspicious. There's no clobber for $r15, so isn't this
+> corrupting a GPR behind the back of the compiler?
+>
 
-Hi Greg,
+Thanks.
+$r15 is reserved for assembler.
+For safety, compiler always put $r15 in clobber register list by default.
 
-I was waiting for rc1 to come out before sending a reminder for this
-series and so here is one :)
 
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Shouldn't there be a tmp variable for the register allocation rather
+> than hard-coding $r15?
+>
+>> +static inline void arch_write_unlock(arch_rwlock_t * rw)
+>> +{
+>> +     asm volatile(
+>> +             "xor    $r15, $r15, $r15\n"
+>> +             "swi    $r15, [%0]\n"
+>> +             :
+>> +             :"r"(&rw->lock)
+>> +             :"memory","$r15");
+>> +}
+>
+> This time you have a clobber, but it's still not clear to me why you
+> don't use a tmp variable and leave the register allocation to the
+> compiler.
+>
+
+Thanks.
+When I recheck the code, I found spinlock.h is not needed due that we
+do not support SMP.
+So, We decide to remove spinlock.h in the next version patch.
+
+Vincent
+> Thanks,
+> Mark.
