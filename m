@@ -1,84 +1,92 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: uniphier: add UniPhier pinctrl
- binding
-Date: Tue, 28 Nov 2017 09:27:06 -0600
-Message-ID: <20171128152706.pg3tndrrne3nhduy@rob-hp-laptop>
-References: <1511855386-10421-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1511855386-10421-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-gpio@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: [PATCH 00/13] MIPS: add support for the Microsemi MIPS SoCs
+Date: Tue, 28 Nov 2017 16:26:30 +0100
+Message-ID: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 04:49:45PM +0900, Masahiro Yamada wrote:
-> The driver has been in the tree for a while, but its binding document
-> is missing.  Hence, here it is.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
->  .../pinctrl/socionext,uniphier-pinctrl.txt         | 27 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
-> new file mode 100644
-> index 0000000..8173b12
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
-> @@ -0,0 +1,27 @@
-> +UniPhier SoCs pin controller
-> +
-> +Required properties:
-> +- compatible: should be one of the following:
-> +    "socionext,uniphier-ld4-pinctrl"  - for LD4 SoC
-> +    "socionext,uniphier-pro4-pinctrl" - for Pro4 SoC
-> +    "socionext,uniphier-sld8-pinctrl" - for sLD8 SoC
-> +    "socionext,uniphier-pro5-pinctrl" - for Pro5 SoC
-> +    "socionext,uniphier-pxs2-pinctrl" - for PXs2 SoC
-> +    "socionext,uniphier-ld6b-pinctrl" - for LD6b SoC
-> +    "socionext,uniphier-ld11-pinctrl" - for LD11 SoC
-> +    "socionext,uniphier-ld20-pinctrl" - for LD20 SoC
-> +    "socionext,uniphier-pxs3-pinctrl" - for PXs3 SoC
-> +
-> +Note:
-> +The UniPhier pinctrl should be a subnode of a "syscon" compatible node.
-> +
-> +Example:
-> +	soc-glue@5f800000 {
-> +		compatible = "socionext,uniphier-pro4-soc-glue",
-> +			     "simple-mfd", "syscon";
-> +		reg = <0x5f800000 0x2000>;
-> +
-> +		pinctrl: pinctrl {
-> +			compatible = "socionext,uniphier-pro4-pinctrl";
+Hi,
 
-There's not a contiguous register range that can be put here?
+This patch series adds initial support for the Microsemi MIPS SoCs. It
+is currently focusing on the Microsemi Ocelot (VSC7513, VSC7514).
 
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index aa71ab52f..38b0ddc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2042,6 +2042,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
-> +F:	Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
->  F:	arch/arm/boot/dts/uniphier*
->  F:	arch/arm/include/asm/hardware/cache-uniphier.h
->  F:	arch/arm/mach-uniphier/
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+It adds support for the IRQ controller, pinmux and gpio controller and
+reset control.
+
+This produces a kernel that can boot to the console.
+
+This is a single series for reference but it can also be taken
+separately by each maintainer as each drivers are independant.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org
+
+
+Alexandre Belloni (13):
+  dt-bindings: Add vendor prefix for Microsemi Corporation
+  dt-bindings: interrupt-controller: Add binding for the Microsemi
+    Ocelot interrupt controller
+  irqchip: Add a driver for the Microsemi Ocelot controller
+  dt-bindings: pinctrl: Add bindings for Microsemi Ocelot
+  pinctrl: Add Microsemi Ocelot SoC driver
+  dt-bindings: power: reset: Document ocelot-reset binding
+  power: reset: Add a driver for the Microsemi Ocelot reset
+  dt-bindings: mips: Add bindings for Microsemi SoCs
+  MIPS: mscc: Add initial support for Microsemi MIPS SoCs
+  MIPS: mscc: add ocelot dtsi
+  MIPS: mscc: add ocelot PCB123 device tree
+  MIPS: defconfigs: add a defconfig for Microsemi SoCs
+  MAINTAINERS: Add entry for Microsemi MIPS SoCs
+
+ .../interrupt-controller/mscc,ocelot-icpu-intr.txt |  22 +
+ Documentation/devicetree/bindings/mips/mscc.txt    |   6 +
+ .../bindings/pinctrl/mscc,ocelot-pinctrl.txt       |  39 ++
+ .../bindings/power/reset/ocelot-reset.txt          |  24 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ MAINTAINERS                                        |   7 +
+ arch/mips/Kbuild.platforms                         |   1 +
+ arch/mips/Kconfig                                  |  24 +
+ arch/mips/boot/dts/Makefile                        |   1 +
+ arch/mips/boot/dts/mscc/Makefile                   |   6 +
+ arch/mips/boot/dts/mscc/ocelot.dtsi                | 118 +++++
+ arch/mips/boot/dts/mscc/ocelot_pcb123.dts          |  30 ++
+ arch/mips/configs/mscc_defconfig                   |  84 ++++
+ arch/mips/mscc/Makefile                            |  11 +
+ arch/mips/mscc/Platform                            |  12 +
+ arch/mips/mscc/setup.c                             | 106 +++++
+ drivers/irqchip/Kconfig                            |   5 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-mscc-ocelot.c                  | 109 +++++
+ drivers/pinctrl/Kconfig                            |  10 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-ocelot.c                   | 505 +++++++++++++++++++++
+ drivers/power/reset/Kconfig                        |   7 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/ocelot-reset.c                 |  87 ++++
+ 25 files changed, 1218 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/mscc.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+ create mode 100644 arch/mips/boot/dts/mscc/Makefile
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot.dtsi
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot_pcb123.dts
+ create mode 100644 arch/mips/configs/mscc_defconfig
+ create mode 100644 arch/mips/mscc/Makefile
+ create mode 100644 arch/mips/mscc/Platform
+ create mode 100644 arch/mips/mscc/setup.c
+ create mode 100644 drivers/irqchip/irq-mscc-ocelot.c
+ create mode 100644 drivers/pinctrl/pinctrl-ocelot.c
+ create mode 100644 drivers/power/reset/ocelot-reset.c
+
+-- 
+2.15.0
