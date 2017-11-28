@@ -1,93 +1,77 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v1] usb: xhci: allow imod-interval to be configurable
-Date: Tue, 28 Nov 2017 20:35:00 +0100
-Message-ID: <20171128193500.GA30609@kroah.com>
-References: <1511889106-9239-1-git-send-email-awallis@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] arm: dts: marvell: Add missing #phy-cells to usb-nop-xceiv
+Date: Tue, 28 Nov 2017 13:38:00 -0600
+Message-ID: <CAL_JsqK1rVRnKaYf7PCiy9vTw7VZb6xEiNa80NSe41yQUavvxg@mail.gmail.com>
+References: <20171109222614.5719-1-robh@kernel.org> <20171109222614.5719-3-robh@kernel.org>
+ <CAL_JsqJhq7TqdaS+i8yk8rRJM0hH2hyk8eybXsnR0D8QoncXZg@mail.gmail.com>
+ <20171121200922.GD30040@lunn.ch> <CAK8P3a1x7mnpvfgsnwVJdX4OFwJZn0GpTE9ATfoLuQPB5ev=gg@mail.gmail.com>
+ <87po8az1uc.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1511889106-9239-1-git-send-email-awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <87po8az1uc.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 12:11:46PM -0500, Adam Wallis wrote:
-> The xHCI driver currently has the IMOD set to 160, which
-> translates to an IMOD interval of 40,000ns (160 * 250)ns
-> 
-> Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
-> introduced a QUIRK for the MTK platform to adjust this interval to 20,
-> which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
-> due to the fact that the MTK controller IMOD interval is 8 times
-> as much as defined in xHCI spec.
-> 
-> Instead of adding more quirk bits for additional platforms, this patch
-> introduces the ability for vendors to set the IMOD_INTERVAL as is
-> optimal for their platform. By using device_property_read_u32() on
-> "imod-interval", the IMOD INTERVAL can be specified in nano seconds. If
-> no interval is specified, the default of 40,000ns (IMOD=160) will be
-> used.
-> 
-> No bounds checking has been implemented due to the fact that a vendor
-> may have violated the spec and would need to specify a value outside of
-> the max 8,000 IRQs/second limit specified in the xHCI spec.
-> 
-> Backwards compatibility is maintained for MTK_HOSTS through the quirk
-> bit, however, imod_interval should be pushed into device tree at a
-> future point and this quirk should be removed from xhci_plat_probe
-> 
-> Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/usb-xhci.txt |  1 +
->  drivers/usb/host/xhci-plat.c                       | 15 +++++++++++++++
->  drivers/usb/host/xhci.c                            |  7 ++-----
->  drivers/usb/host/xhci.h                            |  2 ++
->  4 files changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index ae6e484..3998459 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -29,6 +29,7 @@ Optional properties:
->    - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
->    - usb3-lpm-capable: determines if platform is USB3 LPM capable
->    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-> +  - imod-interval: IMOD_INTERVAL in nano-seconds. Default is 40000
->  
->  Example:
->  	usb@f0931000 {
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 09f164f..f7730c8 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -23,6 +23,7 @@
->  #include "xhci-plat.h"
->  #include "xhci-mvebu.h"
->  #include "xhci-rcar.h"
-> +#include "xhci-mtk.h"
->  
->  static struct hc_driver __read_mostly xhci_plat_hc_driver;
->  
-> @@ -269,6 +270,20 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
->  		xhci->quirks |= XHCI_BROKEN_PORT_PED;
->  
-> +	/* imod interval in nanoseconds */
-> +	if (device_property_read_u32(sysdev,
-> +		"imod-interval", &xhci->imod_interval))
-> +		xhci->imod_interval = 40000;
+On Wed, Nov 22, 2017 at 10:59 AM, Gregory CLEMENT
+<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Arnd,
+>
+>  On mar., nov. 21 2017, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>
+>> On Tue, Nov 21, 2017 at 9:09 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+>>> On Tue, Nov 21, 2017 at 12:29:48PM -0600, Rob Herring wrote:
+>>>> On Thu, Nov 9, 2017 at 4:26 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>> > "usb-nop-xceiv" is using the phy binding, but is missing #phy-cells
+>>>> > property. This is probably because the binding was the precursor to the phy
+>>>> > binding.
+>>>> >
+>>>> > Fixes the following warning in Marvell dts files:
+>>>> >
+>>>> > Warning (phys_property): Missing property '#phy-cells' in node ...
+>>>> >
+>>>> > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> > Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+>>>> > Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>>>> > Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>> > Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> > ---
+>>>> > Please apply to Marvell tree.
+>>>>
+>>>> Ping.
+>>>>
+>>>> Arnd, can you apply if you'd like the warnings fixed and Marvell
+>>>> maintainers don't respond.
+>>>
+>>> Hi Rob
+>>>
+>>> Patches submitted a week before the merge window opens are generally
+>>> deferred to the next cycle. I expect that once -rc1 is out, Gregory
+>>> will pick up this patch.
+>>
+>> These are real bugfixes, I want them in 4.15, since we now get a
+>> loud warning for them. I'd rather not shut up that warning because
+>> it's not a false-positive.
+>
+> As pointed by Andrew, I planned to take them once the 4.15-rc1 would be
+> released. It was not obvious for me that it was real fixes. Actually I
+> would have expected to have first the dts fixed in a release and then
+> the warning enabled.
 
-So no matter what value you read, you set it to 40000?  Or am I reading
-this code incorrectly?
+I didn't plan to fix everyone's warnings for them. Unfortunately, the
+combination of linux-next being infrequent in Oct and kernelci.org
+failing to report dtc warnings caused all the warnings started to get
+noticed late, so I fixed the noisier cases. The only way anyone pays
+attention is when dtc is updated and warnings appear. I've emailed out
+warnings in advance before. I've turned off the more subjective ones
+by default. Neither seems to get widely noticed (now in reviews
+instead of saying "don't do X", I say "don't do X and building with
+W=2 will tell you this"). More dtc checks are coming, so I'm open to
+suggestions on the process.
 
-There's a good reason putting function calls inside if() is considered a
-bad coding style :)
-
-thanks,
-
-greg k-h
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
