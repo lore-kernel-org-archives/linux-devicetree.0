@@ -1,67 +1,250 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 2/4] DTS: GTA04: fix panel compatibility string
-Date: Tue, 28 Nov 2017 07:10:39 -0800
-Message-ID: <20171128151039.GZ28152@atomide.com>
-References: <cover.1510822218.git.hns@goldelico.com>
- <09d975dd62afa1dfa43d94079cc9a44731af4b3b.1510822218.git.hns@goldelico.com>
- <20171128145727.GY28152@atomide.com>
- <C108B0B6-FED7-44DB-9A18-39E3BE93E586@goldelico.com>
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH v2 02/16] ARM: dts: imx6qdl: SolidRun: move AR8035 into
+ microsom
+Date: Tue, 28 Nov 2017 15:02:05 +0000
+Message-ID: <E1eJhOf-0006NA-4d@rmk-PC.armlinux.org.uk>
+References: <20171128150045.GV31757@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171128150045.GV31757-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <C108B0B6-FED7-44DB-9A18-39E3BE93E586@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [171128 15:04]:
-> Hi Tony,
-> 
-> > Am 28.11.2017 um 15:57 schrieb Tony Lindgren <tony@atomide.com>:
-> > 
-> > * H. Nikolaus Schaller <hns@goldelico.com> [171116 08:53]:
-> >> Vendor string is "tpo" and not "toppoly".
-> >> 
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >> ---
-> >> arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
-> >> 1 file changed, 1 insertion(+), 1 deletion(-)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-> >> index 4504908c23fe..ec27ed67a22a 100644
-> >> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
-> >> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-> >> @@ -86,7 +86,7 @@
-> >> 
-> >> 		/* lcd panel */
-> >> 		lcd: td028ttec1@0 {
-> >> -			compatible = "toppoly,td028ttec1";
-> >> +			compatible = "tpo,td028ttec1";
-> >> 			reg = <0>;
-> >> 			spi-max-frequency = <100000>;
-> >> 			spi-cpol;
-> > 
-> > Applying into omap-for-v4.15/fixes thanks. The other dts patch seems
-> > like it can wait for v4.16 merge window.
-> 
-> Hm. Not really. It needs the panel driver to match. So either both or
-> none should be applied or it will break the panel from working.
-> 
-> I am just 1-2 hours away from submitting a -v3 (rebased and tested
-> on top of 4.15-rc1).
+As all SolidRun microsoms are fitted with an AR8035, it's pointless
+having the ethernet support as a separate include file.  Move the
+AR8035 support into the main imx6qdl-microsom file.
 
-OK fine dropping both. Please update the description in both dts
-patches to make it clear they are needed as a fix. Preferrably
-with a proper fixes tag.
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-h100.dts               |  1 -
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi         |  1 -
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi    |  1 -
+ arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi | 99 --------------------------
+ arch/arm/boot/dts/imx6qdl-microsom.dtsi        | 53 ++++++++++++++
+ 5 files changed, 53 insertions(+), 102 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
 
-Having "We can remove the "omapdss," prefix" in the description sure
-does not sounds like it's needed as a fix :)
+diff --git a/arch/arm/boot/dts/imx6q-h100.dts b/arch/arm/boot/dts/imx6q-h100.dts
+index a3269f57df2b..bf5dfc9c8127 100644
+--- a/arch/arm/boot/dts/imx6q-h100.dts
++++ b/arch/arm/boot/dts/imx6q-h100.dts
+@@ -43,7 +43,6 @@
+ 
+ #include "imx6q.dtsi"
+ #include "imx6qdl-microsom.dtsi"
+-#include "imx6qdl-microsom-ar8035.dtsi"
+ 
+ / {
+ 	model = "Auvidea H100";
+diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+index b20508237046..57ce2dbb6ad9 100644
+--- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+@@ -39,7 +39,6 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include "imx6qdl-microsom.dtsi"
+-#include "imx6qdl-microsom-ar8035.dtsi"
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/gpio/gpio.h>
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+index 0a0a7e4b956b..afd981e9b5e3 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+@@ -39,7 +39,6 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ #include "imx6qdl-microsom.dtsi"
+-#include "imx6qdl-microsom-ar8035.dtsi"
+ 
+ / {
+ 	chosen {
+diff --git a/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi b/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
+deleted file mode 100644
+index 900e8c781f91..000000000000
+--- a/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
++++ /dev/null
+@@ -1,99 +0,0 @@
+-/*
+- * Copyright (C) 2013,2014 Russell King
+- *
+- * This describes the hookup for an AR8035 to the iMX6 on the SolidRun
+- * MicroSOM.
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+- */
+-&fec {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_microsom_enet_ar8035>;
+-	phy-mode = "rgmii";
+-	phy-reset-duration = <2>;
+-	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+-	status = "okay";
+-};
+-
+-&iomuxc {
+-	enet {
+-		pinctrl_microsom_enet_ar8035: microsom-enet-ar8035 {
+-			fsl,pins = <
+-				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b8b0
+-				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
+-				/* AR8035 reset */
+-				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x130b0
+-				/* AR8035 interrupt */
+-				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18		0x80000000
+-				/* GPIO16 -> AR8035 25MHz */
+-				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0xc0000000
+-				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x80000000
+-				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
+-				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
+-				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
+-				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
+-				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
+-				/* AR8035 CLK_25M --> ENET_REF_CLK (V22) */
+-				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x0a0b1
+-				/* AR8035 pin strapping: IO voltage: pull up */
+-				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
+-				/* AR8035 pin strapping: PHYADDR#0: pull down */
+-				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x13030
+-				/* AR8035 pin strapping: PHYADDR#1: pull down */
+-				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x13030
+-				/* AR8035 pin strapping: MODE#1: pull up */
+-				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
+-				/* AR8035 pin strapping: MODE#3: pull up */
+-				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
+-				/* AR8035 pin strapping: MODE#0: pull down */
+-				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x13030
+-
+-				/*
+-				 * As the RMII pins are also connected to RGMII
+-				 * so that an AR8030 can be placed, set these
+-				 * to high-z with the same pulls as above.
+-				 * Use the GPIO settings to avoid changing the
+-				 * input select registers.
+-				 */
+-				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x03000
+-				MX6QDL_PAD_ENET_RXD0__GPIO1_IO27	0x03000
+-				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x03000
+-			>;
+-		};
+-	};
+-};
+diff --git a/arch/arm/boot/dts/imx6qdl-microsom.dtsi b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
+index f7266ae2534c..c1541f2ecf3a 100644
+--- a/arch/arm/boot/dts/imx6qdl-microsom.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-microsom.dtsi
+@@ -69,6 +69,15 @@
+ 	};
+ };
+ 
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_microsom_enet_ar8035>;
++	phy-mode = "rgmii";
++	phy-reset-duration = <2>;
++	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
+ &iomuxc {
+ 	microsom {
+ 		pinctrl_microsom_brcm_bt: microsom-brcm-bt {
+@@ -100,6 +109,50 @@
+ 			>;
+ 		};
+ 
++		pinctrl_microsom_enet_ar8035: microsom-enet-ar8035 {
++			fsl,pins = <
++				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b8b0
++				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++				/* AR8035 reset */
++				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x130b0
++				/* AR8035 interrupt */
++				MX6QDL_PAD_DI0_PIN2__GPIO4_IO18		0x80000000
++				/* GPIO16 -> AR8035 25MHz */
++				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0xc0000000
++				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x80000000
++				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
++				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
++				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
++				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
++				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
++				/* AR8035 CLK_25M --> ENET_REF_CLK (V22) */
++				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x0a0b1
++				/* AR8035 pin strapping: IO voltage: pull up */
++				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
++				/* AR8035 pin strapping: PHYADDR#0: pull down */
++				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x13030
++				/* AR8035 pin strapping: PHYADDR#1: pull down */
++				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x13030
++				/* AR8035 pin strapping: MODE#1: pull up */
++				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
++				/* AR8035 pin strapping: MODE#3: pull up */
++				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
++				/* AR8035 pin strapping: MODE#0: pull down */
++				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x13030
++
++				/*
++				 * As the RMII pins are also connected to RGMII
++				 * so that an AR8030 can be placed, set these
++				 * to high-z with the same pulls as above.
++				 * Use the GPIO settings to avoid changing the
++				 * input select registers.
++				 */
++				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x03000
++				MX6QDL_PAD_ENET_RXD0__GPIO1_IO27	0x03000
++				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x03000
++			>;
++		};
++
+ 		pinctrl_microsom_uart1: microsom-uart1 {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
+-- 
+2.7.4
 
-Sounds like maybe these two should be just a single patch for
-a proper fix?
-
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
