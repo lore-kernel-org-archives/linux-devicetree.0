@@ -1,71 +1,215 @@
-From: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v5 11/13] IIO: consumer: allow to set buffer sizes
-Date: Tue, 28 Nov 2017 16:05:55 +0100
-Message-ID: <1511881557-28596-12-git-send-email-arnaud.pouliquen@st.com>
-References: <1511881557-28596-1-git-send-email-arnaud.pouliquen@st.com>
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH v2 12/16] ARM: dts: imx6qdl: SolidRun: rename regulators to
+ match schematic
+Date: Tue, 28 Nov 2017 15:02:56 +0000
+Message-ID: <E1eJhPU-0006OK-DD@rmk-PC.armlinux.org.uk>
+References: <20171128150045.GV31757@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511881557-28596-1-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20171128150045.GV31757-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add iio consumer API to set buffer size and watermark according
-to sysfs API.
+Make the regulators match the schematic - name the regulators after
+one of their schematic supply names, and arrange them into their
+heirarchy.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- drivers/iio/buffer/industrialio-buffer-cb.c | 11 +++++++++++
- include/linux/iio/consumer.h                | 11 +++++++++++
- 2 files changed, 22 insertions(+)
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 32 ++++++++++++---------
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 43 +++++++++++++++++++----------
+ 2 files changed, 48 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/iio/buffer/industrialio-buffer-cb.c b/drivers/iio/buffer/industrialio-buffer-cb.c
-index 4847534..ea63c83 100644
---- a/drivers/iio/buffer/industrialio-buffer-cb.c
-+++ b/drivers/iio/buffer/industrialio-buffer-cb.c
-@@ -104,6 +104,17 @@ struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(iio_channel_get_all_cb);
+diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+index 98ec7ce1f2a3..7a3fba776661 100644
+--- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+@@ -62,34 +62,36 @@
+ 		};
+ 	};
  
-+int iio_channel_cb_set_buffer_watermark(struct iio_cb_buffer *cb_buff,
-+					size_t watermark)
-+{
-+	if (!watermark)
-+		return -EINVAL;
-+	cb_buff->buffer.watermark = watermark;
+-	reg_3p3v: 3p3v {
++	v_5v0: regulator-v-5v0 {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "3P3V";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
++		regulator-max-microvolt = <5000000>;
++		regulator-min-microvolt = <5000000>;
++		regulator-name = "v_5v0";
+ 	};
+ 
+-	reg_usbh1_vbus: usb-h1-vbus {
++	v_usb2: regulator-v-usb2 {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		gpio = <&gpio1 0 0>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_cubox_i_usbh1_vbus>;
+-		regulator-name = "usb_h1_vbus";
+-		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
++		regulator-min-microvolt = <5000000>;
++		regulator-name = "v_usb2";
++		vin-supply = <&v_5v0>;
+ 	};
+ 
+-	reg_usbotg_vbus: usb-otg-vbus {
++	v_usb1: regulator-v-usb1 {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		gpio = <&gpio3 22 0>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_cubox_i_usbotg_vbus>;
+-		regulator-name = "usb_otg_vbus";
+-		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
++		regulator-min-microvolt = <5000000>;
++		regulator-name = "v_usb1";
++		vin-supply = <&v_5v0>;
+ 	};
+ 
+ 	sound-spdif {
+@@ -237,21 +239,25 @@
+ &usbh1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cubox_i_usbh1>;
+-	vbus-supply = <&reg_usbh1_vbus>;
++	vbus-supply = <&v_usb2>;
+ 	status = "okay";
+ };
+ 
+ &usbotg {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cubox_i_usbotg>;
+-	vbus-supply = <&reg_usbotg_vbus>;
++	vbus-supply = <&v_usb1>;
+ 	status = "okay";
+ };
+ 
+ &usdhc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cubox_i_usdhc2_aux &pinctrl_cubox_i_usdhc2>;
+-	vmmc-supply = <&reg_3p3v>;
++	vmmc-supply = <&vcc_3v3>;
+ 	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(iio_channel_cb_set_buffer_watermark);
++&vcc_3v3 {
++	vin-supply = <&v_5v0>;
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+index 1b33cd6752f4..66bda5a04582 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+@@ -51,12 +51,21 @@
+ 		pinctrl-0 = <&pinctrl_hummingboard_gpio3_5>;
+ 	};
+ 
+-	reg_3p3v: 3p3v {
++	v_3v2: regulator-v-3v2 {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "3P3V";
+-		regulator-min-microvolt = <3300000>;
++		regulator-always-on;
+ 		regulator-max-microvolt = <3300000>;
++		regulator-min-microvolt = <3300000>;
++		regulator-name = "v_3v2";
++		vin-supply = <&v_5v0>;
++	};
 +
- int iio_channel_start_all_cb(struct iio_cb_buffer *cb_buff)
- {
- 	return iio_update_buffers(cb_buff->indio_dev, &cb_buff->buffer,
-diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-index 2017f35..9887f4f 100644
---- a/include/linux/iio/consumer.h
-+++ b/include/linux/iio/consumer.h
-@@ -134,6 +134,17 @@ struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
- 						       void *private),
- 					     void *private);
- /**
-+ * iio_channel_cb_set_buffer_watermark() - set the buffer watermark.
-+ * @cb_buffer:		The callback buffer from whom we want the channel
-+ *			information.
-+ * @watermark: buffer watermark in bytes.
-+ *
-+ * This function allows to configure the buffer watermark.
-+ */
-+int iio_channel_cb_set_buffer_watermark(struct iio_cb_buffer *cb_buffer,
-+					size_t watermark);
++	v_5v0: regulator-v-5v0 {
++		compatible = "regulator-fixed";
+ 		regulator-always-on;
++		regulator-max-microvolt = <5000000>;
++		regulator-min-microvolt = <5000000>;
++		regulator-name = "v_5v0";
+ 	};
+ 
+ 	v_sd: regulator-v-sd {
+@@ -69,29 +78,31 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-name = "v_sd";
+ 		startup-delay-us = <1000>;
+-		vin-supply = <&reg_3p3v>;
++		vin-supply = <&v_3v2>;
+ 	};
+ 
+-	reg_usbh1_vbus: usb-h1-vbus {
++	v_usb2: regulator-v-usb2 {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_hummingboard_usbh1_vbus>;
+-		regulator-name = "usb_h1_vbus";
+-		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
++		regulator-min-microvolt = <5000000>;
++		regulator-name = "v_usb2";
++		vin-supply = <&v_5v0>;
+ 	};
+ 
+-	reg_usbotg_vbus: usb-otg-vbus {
++	v_usb1: regulator-v-usb1 {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_hummingboard_usbotg_vbus>;
+-		regulator-name = "usb_otg_vbus";
+-		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
++		regulator-min-microvolt = <5000000>;
++		regulator-name = "v_usb1";
++		vin-supply = <&v_5v0>;
+ 	};
+ 
+ 	sound-sgtl5000 {
+@@ -151,8 +162,8 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_hummingboard_sgtl5000>;
+ 		reg = <0x0a>;
+-		VDDA-supply = <&reg_3p3v>;
+-		VDDIO-supply = <&reg_3p3v>;
++		VDDA-supply = <&v_3v2>;
++		VDDIO-supply = <&v_3v2>;
+ 	};
+ };
+ 
+@@ -292,7 +303,7 @@
+ 
+ &usbh1 {
+ 	disable-over-current;
+-	vbus-supply = <&reg_usbh1_vbus>;
++	vbus-supply = <&v_usb2>;
+ 	status = "okay";
+ };
+ 
+@@ -300,7 +311,7 @@
+ 	disable-over-current;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_hummingboard_usbotg_id>;
+-	vbus-supply = <&reg_usbotg_vbus>;
++	vbus-supply = <&v_usb1>;
+ 	status = "okay";
+ };
+ 
+@@ -314,3 +325,7 @@
+ 	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
 +
-+/**
-  * iio_channel_release_all_cb() - release and unregister the callback.
-  * @cb_buffer:		The callback buffer that was allocated.
-  */
++&vcc_3v3 {
++	vin-supply = <&v_3v2>;
++};
 -- 
 2.7.4
 
