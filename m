@@ -1,79 +1,233 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH 0/2] kbuild: move dtb-y and CONFIG_OF_ALL_DTBS to Kbuild core to fix some issues
-Date: Sun,  5 Nov 2017 14:30:51 +0900
-Message-ID: <1509859853-27473-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Marek <michal.lkml-yyZNWGI4GtDR7s880joybQ@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=F6Ff=C2=gmail.com=jon.nettleton@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <E1eJMdo-0002qf-2D@rmk-PC.armlinux.org.uk>
+References: <20171127165134.GH31757@n2100.armlinux.org.uk> <E1eJMdo-0002qf-2D@rmk-PC.armlinux.org.uk>
+From: Jon Nettleton <jon.nettleton@gmail.com>
+Date: Tue, 28 Nov 2017 05:46:07 +0100
+Message-ID: <CALHpu36Kjy4SSn1m8ZOYwEr+9u67dobfNHiOX6s75UFGVm3atw@mail.gmail.com>
+Subject: Re: [PATCH 03/13] ARM: dts: imx6qdl: SolidRun: move microsom includes
+ into .dts
+Content-Type: multipart/alternative; boundary="94eb2c07188cb9b0e6055f03b311"
+To: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+List-ID: <devicetree@vger.kernel.org>
 
+--94eb2c07188cb9b0e6055f03b311
+Content-Type: text/plain; charset="UTF-8"
 
-This series applies on top of my previous cleanup patch:
-https://patchwork.kernel.org/patch/10038167/
+On Mon, Nov 27, 2017 at 5:52 PM, Russell King <rmk+kernel@armlinux.org.uk>
+wrote:
 
-This series must go to the same branch, so I am sending this to DT ML.
+> Move the microsom includes into the .dts files so different options can
+> be accomodated at the lowest level.
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> ---
+>  arch/arm/boot/dts/imx6dl-cubox-i.dts        | 1 +
+>  arch/arm/boot/dts/imx6dl-hummingboard.dts   | 1 +
+>  arch/arm/boot/dts/imx6q-cubox-i.dts         | 1 +
+>  arch/arm/boot/dts/imx6q-hummingboard.dts    | 1 +
+>  arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 1 -
+>  arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 1 -
+>  6 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6dl-cubox-i.dts
+> b/arch/arm/boot/dts/imx6dl-cubox-i.dts
+> index f10a36b8647d..222c269f687a 100644
+> --- a/arch/arm/boot/dts/imx6dl-cubox-i.dts
+> +++ b/arch/arm/boot/dts/imx6dl-cubox-i.dts
+> @@ -41,6 +41,7 @@
+>  /dts-v1/;
+>
+>  #include "imx6dl.dtsi"
+> +#include "imx6qdl-microsom.dtsi"
+>  #include "imx6qdl-cubox-i.dtsi"
+>
+>  / {
+> diff --git a/arch/arm/boot/dts/imx6dl-hummingboard.dts
+> b/arch/arm/boot/dts/imx6dl-hummingboard.dts
+> index 39c2602fa87c..1709810de77e 100644
+> --- a/arch/arm/boot/dts/imx6dl-hummingboard.dts
+> +++ b/arch/arm/boot/dts/imx6dl-hummingboard.dts
+> @@ -42,6 +42,7 @@
+>  /dts-v1/;
+>
+>  #include "imx6dl.dtsi"
+> +#include "imx6qdl-microsom.dtsi"
+>  #include "imx6qdl-hummingboard.dtsi"
+>
+>  / {
+> diff --git a/arch/arm/boot/dts/imx6q-cubox-i.dts
+> b/arch/arm/boot/dts/imx6q-cubox-i.dts
+> index b68aa0e57f20..8f39682c33a9 100644
+> --- a/arch/arm/boot/dts/imx6q-cubox-i.dts
+> +++ b/arch/arm/boot/dts/imx6q-cubox-i.dts
+> @@ -41,6 +41,7 @@
+>  /dts-v1/;
+>
+>  #include "imx6q.dtsi"
+> +#include "imx6qdl-microsom.dtsi"
+>  #include "imx6qdl-cubox-i.dtsi"
+>
+>  / {
+> diff --git a/arch/arm/boot/dts/imx6q-hummingboard.dts
+> b/arch/arm/boot/dts/imx6q-hummingboard.dts
+> index 69a7a0a1cb21..6fc692940e6b 100644
+> --- a/arch/arm/boot/dts/imx6q-hummingboard.dts
+> +++ b/arch/arm/boot/dts/imx6q-hummingboard.dts
+> @@ -42,6 +42,7 @@
+>  /dts-v1/;
+>
+>  #include "imx6q.dtsi"
+> +#include "imx6qdl-microsom.dtsi"
+>  #include "imx6qdl-hummingboard.dtsi"
+>
+>  / {
+> diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> index 57ce2dbb6ad9..98ec7ce1f2a3 100644
+> --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> @@ -38,7 +38,6 @@
+>   *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>   *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+> -#include "imx6qdl-microsom.dtsi"
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> index afd981e9b5e3..84e6392fee1f 100644
+> --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> @@ -38,7 +38,6 @@
+>   *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>   *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+> -#include "imx6qdl-microsom.dtsi"
+>
+>  / {
+>         chosen {
+>
 
+Since we are going through and adding the som dtsi include to all the
+device-tree files, would it make sense to rename the microsom.dtsi at this
+point in time?  Perhaps something like imx6qdl-sr-microsom.dtsi?
 
+-Jon
 
-Masahiro Yamada (2):
-  MIPS: dts: remove bogus bcm96358nb4ser.dtb from dtb-y entry
-  kbuild: handle dtb-y and CONFIG_OF_ALL_DTBS natively in Makefile.lib
+--94eb2c07188cb9b0e6055f03b311
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
- arch/arc/boot/dts/Makefile                       |  7 ++-
- arch/arm/boot/dts/Makefile                       |  5 --
- arch/arm64/boot/dts/Makefile                     | 58 ++++++++++--------------
- arch/arm64/boot/dts/actions/Makefile             |  3 --
- arch/arm64/boot/dts/al/Makefile                  |  3 --
- arch/arm64/boot/dts/allwinner/Makefile           |  3 --
- arch/arm64/boot/dts/altera/Makefile              |  3 --
- arch/arm64/boot/dts/amd/Makefile                 |  3 --
- arch/arm64/boot/dts/amlogic/Makefile             |  3 --
- arch/arm64/boot/dts/apm/Makefile                 |  3 --
- arch/arm64/boot/dts/arm/Makefile                 |  3 --
- arch/arm64/boot/dts/broadcom/Makefile            |  6 +--
- arch/arm64/boot/dts/broadcom/northstar2/Makefile |  3 --
- arch/arm64/boot/dts/broadcom/stingray/Makefile   |  3 --
- arch/arm64/boot/dts/cavium/Makefile              |  3 --
- arch/arm64/boot/dts/exynos/Makefile              |  3 --
- arch/arm64/boot/dts/freescale/Makefile           |  3 --
- arch/arm64/boot/dts/hisilicon/Makefile           |  3 --
- arch/arm64/boot/dts/lg/Makefile                  |  3 --
- arch/arm64/boot/dts/marvell/Makefile             |  3 --
- arch/arm64/boot/dts/mediatek/Makefile            |  3 --
- arch/arm64/boot/dts/nvidia/Makefile              |  2 -
- arch/arm64/boot/dts/qcom/Makefile                |  3 --
- arch/arm64/boot/dts/realtek/Makefile             |  3 --
- arch/arm64/boot/dts/renesas/Makefile             |  2 -
- arch/arm64/boot/dts/rockchip/Makefile            |  3 --
- arch/arm64/boot/dts/socionext/Makefile           |  2 -
- arch/arm64/boot/dts/sprd/Makefile                |  3 --
- arch/arm64/boot/dts/xilinx/Makefile              |  3 --
- arch/arm64/boot/dts/zte/Makefile                 |  3 --
- arch/h8300/boot/dts/Makefile                     |  5 --
- arch/metag/boot/dts/Makefile                     |  5 --
- arch/mips/boot/dts/Makefile                      | 32 ++++++-------
- arch/mips/boot/dts/brcm/Makefile                 |  3 --
- arch/mips/boot/dts/cavium-octeon/Makefile        |  2 -
- arch/mips/boot/dts/img/Makefile                  |  2 -
- arch/mips/boot/dts/ingenic/Makefile              |  2 -
- arch/mips/boot/dts/lantiq/Makefile               |  2 -
- arch/mips/boot/dts/mti/Makefile                  |  2 -
- arch/mips/boot/dts/netlogic/Makefile             |  2 -
- arch/mips/boot/dts/ni/Makefile                   |  2 -
- arch/mips/boot/dts/pic32/Makefile                |  2 -
- arch/mips/boot/dts/qca/Makefile                  |  2 -
- arch/mips/boot/dts/ralink/Makefile               |  2 -
- arch/mips/boot/dts/xilfpga/Makefile              |  2 -
- arch/xtensa/boot/dts/Makefile                    |  7 ++-
- scripts/Makefile.dtbinst                         |  6 +--
- scripts/Makefile.lib                             |  5 ++
- 48 files changed, 53 insertions(+), 183 deletions(-)
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On Mon, Nov 27, 2017 at 5:52 PM, Russell King <span dir=3D"ltr">&lt;<a =
+href=3D"mailto:rmk+kernel@armlinux.org.uk" target=3D"_blank">rmk+kernel@arm=
+linux.org.uk</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" sty=
+le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
+ng-left:1ex">Move the microsom includes into the .dts files so different op=
+tions can<br>
+be accomodated at the lowest level.<br>
+<br>
+Signed-off-by: Russell King &lt;<a href=3D"mailto:rmk%2Bkernel@armlinux.org=
+.uk">rmk+kernel@armlinux.org.uk</a>&gt;<br>
+---<br>
+=C2=A0arch/arm/boot/dts/imx6dl-<wbr>cubox-i.dts=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+| 1 +<br>
+=C2=A0arch/arm/boot/dts/imx6dl-<wbr>hummingboard.dts=C2=A0 =C2=A0| 1 +<br>
+=C2=A0arch/arm/boot/dts/imx6q-cubox-<wbr>i.dts=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0| 1 +<br>
+=C2=A0arch/arm/boot/dts/imx6q-<wbr>hummingboard.dts=C2=A0 =C2=A0 | 1 +<br>
+=C2=A0arch/arm/boot/dts/imx6qdl-<wbr>cubox-i.dtsi=C2=A0 =C2=A0 =C2=A0 | 1 -=
+<br>
+=C2=A0arch/arm/boot/dts/imx6qdl-<wbr>hummingboard.dtsi | 1 -<br>
+=C2=A06 files changed, 4 insertions(+), 2 deletions(-)<br>
+<br>
+diff --git a/arch/arm/boot/dts/imx6dl-<wbr>cubox-i.dts b/arch/arm/boot/dts/=
+imx6dl-<wbr>cubox-i.dts<br>
+index f10a36b8647d..222c269f687a 100644<br>
+--- a/arch/arm/boot/dts/imx6dl-<wbr>cubox-i.dts<br>
++++ b/arch/arm/boot/dts/imx6dl-<wbr>cubox-i.dts<br>
+@@ -41,6 +41,7 @@<br>
+=C2=A0/dts-v1/;<br>
+<br>
+=C2=A0#include &quot;imx6dl.dtsi&quot;<br>
++#include &quot;imx6qdl-microsom.dtsi&quot;<br>
+=C2=A0#include &quot;imx6qdl-cubox-i.dtsi&quot;<br>
+<br>
+=C2=A0/ {<br>
+diff --git a/arch/arm/boot/dts/imx6dl-<wbr>hummingboard.dts b/arch/arm/boot=
+/dts/imx6dl-<wbr>hummingboard.dts<br>
+index 39c2602fa87c..1709810de77e 100644<br>
+--- a/arch/arm/boot/dts/imx6dl-<wbr>hummingboard.dts<br>
++++ b/arch/arm/boot/dts/imx6dl-<wbr>hummingboard.dts<br>
+@@ -42,6 +42,7 @@<br>
+=C2=A0/dts-v1/;<br>
+<br>
+=C2=A0#include &quot;imx6dl.dtsi&quot;<br>
++#include &quot;imx6qdl-microsom.dtsi&quot;<br>
+=C2=A0#include &quot;imx6qdl-hummingboard.dtsi&quot;<br>
+<br>
+=C2=A0/ {<br>
+diff --git a/arch/arm/boot/dts/imx6q-<wbr>cubox-i.dts b/arch/arm/boot/dts/i=
+mx6q-<wbr>cubox-i.dts<br>
+index b68aa0e57f20..8f39682c33a9 100644<br>
+--- a/arch/arm/boot/dts/imx6q-<wbr>cubox-i.dts<br>
++++ b/arch/arm/boot/dts/imx6q-<wbr>cubox-i.dts<br>
+@@ -41,6 +41,7 @@<br>
+=C2=A0/dts-v1/;<br>
+<br>
+=C2=A0#include &quot;imx6q.dtsi&quot;<br>
++#include &quot;imx6qdl-microsom.dtsi&quot;<br>
+=C2=A0#include &quot;imx6qdl-cubox-i.dtsi&quot;<br>
+<br>
+=C2=A0/ {<br>
+diff --git a/arch/arm/boot/dts/imx6q-<wbr>hummingboard.dts b/arch/arm/boot/=
+dts/imx6q-<wbr>hummingboard.dts<br>
+index 69a7a0a1cb21..6fc692940e6b 100644<br>
+--- a/arch/arm/boot/dts/imx6q-<wbr>hummingboard.dts<br>
++++ b/arch/arm/boot/dts/imx6q-<wbr>hummingboard.dts<br>
+@@ -42,6 +42,7 @@<br>
+=C2=A0/dts-v1/;<br>
+<br>
+=C2=A0#include &quot;imx6q.dtsi&quot;<br>
++#include &quot;imx6qdl-microsom.dtsi&quot;<br>
+=C2=A0#include &quot;imx6qdl-hummingboard.dtsi&quot;<br>
+<br>
+=C2=A0/ {<br>
+diff --git a/arch/arm/boot/dts/imx6qdl-<wbr>cubox-i.dtsi b/arch/arm/boot/dt=
+s/imx6qdl-<wbr>cubox-i.dtsi<br>
+index 57ce2dbb6ad9..98ec7ce1f2a3 100644<br>
+--- a/arch/arm/boot/dts/imx6qdl-<wbr>cubox-i.dtsi<br>
++++ b/arch/arm/boot/dts/imx6qdl-<wbr>cubox-i.dtsi<br>
+@@ -38,7 +38,6 @@<br>
+=C2=A0 *=C2=A0 =C2=A0 =C2=A0FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE=
+ OR THE USE OR<br>
+=C2=A0 *=C2=A0 =C2=A0 =C2=A0OTHER DEALINGS IN THE SOFTWARE.<br>
+=C2=A0 */<br>
+-#include &quot;imx6qdl-microsom.dtsi&quot;<br>
+=C2=A0#include &lt;dt-bindings/input/input.h&gt;<br>
+=C2=A0#include &lt;dt-bindings/gpio/gpio.h&gt;<br>
+<br>
+diff --git a/arch/arm/boot/dts/imx6qdl-<wbr>hummingboard.dtsi b/arch/arm/bo=
+ot/dts/imx6qdl-<wbr>hummingboard.dtsi<br>
+index afd981e9b5e3..84e6392fee1f 100644<br>
+--- a/arch/arm/boot/dts/imx6qdl-<wbr>hummingboard.dtsi<br>
++++ b/arch/arm/boot/dts/imx6qdl-<wbr>hummingboard.dtsi<br>
+@@ -38,7 +38,6 @@<br>
+=C2=A0 *=C2=A0 =C2=A0 =C2=A0FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE=
+ OR THE USE OR<br>
+=C2=A0 *=C2=A0 =C2=A0 =C2=A0OTHER DEALINGS IN THE SOFTWARE.<br>
+=C2=A0 */<br>
+-#include &quot;imx6qdl-microsom.dtsi&quot;<br>
+<br>
+=C2=A0/ {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 chosen {<br></blockquote><div><br></div>Since w=
+e are going through and adding the som dtsi include to all the device-tree =
+files, would it make sense to rename the microsom.dtsi at this point in tim=
+e?=C2=A0 Perhaps something like imx6qdl-sr-microsom.dtsi?</div><div class=
+=3D"gmail_quote"><br></div><div class=3D"gmail_quote">-Jon</div></div></div=
+>
 
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--94eb2c07188cb9b0e6055f03b311--
