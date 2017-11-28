@@ -1,82 +1,208 @@
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH v2 03/16] ARM: dts: imx6qdl-microsom: rename to imx6qdl-sr-som
-Date: Tue, 28 Nov 2017 15:02:10 +0000
-Message-ID: <E1eJhOk-0006NH-8m@rmk-PC.armlinux.org.uk>
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH v2 09/16] ARM: dts: imx6qdl-sr-som: add support for TI Wi-Fi
+Date: Tue, 28 Nov 2017 15:02:41 +0000
+Message-ID: <E1eJhPF-0006Ny-1F@rmk-PC.armlinux.org.uk>
 References: <20171128150045.GV31757@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171128150045.GV31757@n2100.armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171128150045.GV31757-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Nettleton <jon@solid-run.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jon and myself feel that "imx6qdl-microsom" is too generic a name for
-SolidRun's microsom - some other manufacturer could have their own
-microsom.  Change the name to the shorter "imx6qdl-sr-som".
+Add support for the TI Wi-Fi WL1837 device on SolidRun's revision
+1.5 microsoms.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6q-h100.dts                                 | 2 +-
- arch/arm/boot/dts/imx6qdl-cubox-i.dtsi                           | 2 +-
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi                      | 2 +-
- arch/arm/boot/dts/{imx6qdl-microsom.dtsi => imx6qdl-sr-som.dtsi} | 0
- 4 files changed, 3 insertions(+), 3 deletions(-)
- rename arch/arm/boot/dts/{imx6qdl-microsom.dtsi => imx6qdl-sr-som.dtsi} (100%)
+ arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi | 170 +++++++++++++++++++++++++++++++
+ 1 file changed, 170 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
 
-diff --git a/arch/arm/boot/dts/imx6q-h100.dts b/arch/arm/boot/dts/imx6q-h100.dts
-index bf5dfc9c8127..815e9437e3f0 100644
---- a/arch/arm/boot/dts/imx6q-h100.dts
-+++ b/arch/arm/boot/dts/imx6q-h100.dts
-@@ -42,7 +42,7 @@
- /dts-v1/;
- 
- #include "imx6q.dtsi"
--#include "imx6qdl-microsom.dtsi"
-+#include "imx6qdl-sr-som.dtsi"
- 
- / {
- 	model = "Auvidea H100";
-diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-index 57ce2dbb6ad9..0bc1734d8bdf 100644
---- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-@@ -38,7 +38,7 @@
-  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
--#include "imx6qdl-microsom.dtsi"
-+#include "imx6qdl-sr-som.dtsi"
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/gpio.h>
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index afd981e9b5e3..246984992ad0 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -38,7 +38,7 @@
-  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
--#include "imx6qdl-microsom.dtsi"
-+#include "imx6qdl-sr-som.dtsi"
- 
- / {
- 	chosen {
-diff --git a/arch/arm/boot/dts/imx6qdl-microsom.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-similarity index 100%
-rename from arch/arm/boot/dts/imx6qdl-microsom.dtsi
-rename to arch/arm/boot/dts/imx6qdl-sr-som.dtsi
+diff --git a/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
+new file mode 100644
+index 000000000000..44a97ba93a95
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-sr-som-ti.dtsi
+@@ -0,0 +1,170 @@
++/*
++ * Copyright (C) 2013,2014 Russell King
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	nvcc_sd1: regulator-nvcc-sd1 {
++		compatible = "regulator-fixed";
++		regulator-always-on;
++		regulator-name = "nvcc_sd1";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc_3v3>;
++	};
++
++	clk_ti_wifi: ti-wifi-clock {
++		/* This is a hack around the kernel - using "fixed clock"
++		 * results in the "pinctrl" properties being ignored, and
++		 * the clock not being output.  Instead, use a gated clock
++		 * and the unrouted WL_XTAL_PU gpio.
++		 */
++		compatible = "gpio-gate-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_microsom_ti_clk>;
++		enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
++	};
++
++	pwrseq_ti_wifi: ti-wifi-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_microsom_ti_wifi_en>;
++		reset-gpios = <&gpio5 26 GPIO_ACTIVE_LOW>;
++		post-power-on-delay-ms = <200>;
++		clocks = <&clk_ti_wifi>;
++		clock-names = "ext_clock";
++	};
++};
++
++&iomuxc {
++	microsom {
++		pinctrl_microsom_ti_bt: microsom-ti-bt {
++			fsl,pins = <
++				/* BT_EN_SOC */
++				MX6QDL_PAD_CSI0_DAT14__GPIO6_IO00	0x40013070
++			>;
++		};
++
++		pinctrl_microsom_ti_clk: microsom-ti-clk {
++			fsl,pins = <
++				/* EXT_32K */
++				MX6QDL_PAD_GPIO_8__XTALOSC_REF_CLK_32K	0x1b0b0
++				/* WL_XTAL_PU (unrouted) */
++				MX6QDL_PAD_DISP0_DAT11__GPIO5_IO05 0x40013070
++			>;
++		};
++
++		pinctrl_microsom_ti_wifi_en: microsom-ti-wifi-en {
++			fsl,pins = <
++				/* WLAN_EN_SOC */
++				MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26	0x40013070
++			>;
++		};
++
++		pinctrl_microsom_ti_wifi_irq: microsom-ti-wifi-irq {
++			fsl,pins = <
++				/* WLAN_IRQ */
++				MX6QDL_PAD_CSI0_DAT18__GPIO6_IO04	0x40013070
++			>;
++		};
++
++		pinctrl_microsom_uart4: microsom-uart4 {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA 0x1b0b1
++				MX6QDL_PAD_CSI0_DAT13__UART4_RX_DATA 0x1b0b1
++				MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B 0x1b0b1
++				MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B 0x1b0b1
++			>;
++		};
++
++		pinctrl_microsom_usdhc1: microsom-usdhc1 {
++			fsl,pins = <
++				MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17059
++				MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10059
++				MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17059
++				MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17059
++				MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17059
++				MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17059
++			>;
++		};
++	};
++};
++
++/* UART4 - Connected to optional TI Wi-Fi/BT/FM */
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_microsom_uart4>;
++	uart-has-rtscts;
++	status = "okay";
++
++	bluetooth {
++		compatible = "ti,wl1837-st";
++		clocks = <&clk_ti_wifi>;
++		clock-names = "ext_clock";
++		enable-gpios = <&gpio6 0 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_microsom_ti_bt>;
++	};
++};
++
++/* USDHC1 - Connected to optional TI Wi-Fi/BT/FM */
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_microsom_usdhc1>;
++	bus-width = <4>;
++	keep-power-in-suspend;
++	mmc-pwrseq = <&pwrseq_ti_wifi>;
++	non-removable;
++	vmmc-supply = <&vcc_3v3>;
++	/* vqmmc-supply = <&nvcc_sd1>; - MMC layer doesn't like it! */
++	status = "okay";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	wlcore@2 {
++		compatible = "ti,wl1837";
++		reg = <2>;
++		interrupts-extended = <&gpio6 4 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_microsom_ti_wifi_irq>;
++	};
++};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
