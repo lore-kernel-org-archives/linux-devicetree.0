@@ -1,8 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH v2 11/16] ARM: dts: imx6qdl-hummingboard: add SD card
- regulator
-Date: Tue, 28 Nov 2017 15:02:51 +0000
-Message-ID: <E1eJhPP-0006OD-9f@rmk-PC.armlinux.org.uk>
+Subject: [PATCH v2 07/16] ARM: dts: imx6qdl-sr-som-brcm: rename sdio clock
+Date: Tue, 28 Nov 2017 15:02:30 +0000
+Message-ID: <E1eJhP4-0006Nk-PT@rmk-PC.armlinux.org.uk>
 References: <20171128150045.GV31757@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -15,58 +14,34 @@ To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the SD card regulator, which allows the SD card power to be switched
-on/off.
+The SDIO clock is really the Broadcom clock.  Rename it as such.
 
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index 84e6392fee1f..1b33cd6752f4 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -59,6 +59,19 @@
- 		regulator-always-on;
+diff --git a/arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi
+index 809d7896775c..b55af61dfeca 100644
+--- a/arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sr-som-brcm.dtsi
+@@ -40,7 +40,7 @@
+  */
+ #include <dt-bindings/gpio/gpio.h>
+ / {
+-	clk_sdio: sdio-clock {
++	clk_brcm: brcm-clock {
+ 		compatible = "gpio-gate-clock";
+ 		#clock-cells = <0>;
+ 		pinctrl-names = "default";
+@@ -64,7 +64,7 @@
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&gpio5 26 GPIO_ACTIVE_LOW>,
+ 			      <&gpio6 0 GPIO_ACTIVE_LOW>;
+-		clocks = <&clk_sdio>;
++		clocks = <&clk_brcm>;
+ 		clock-names = "ext_clock";
  	};
- 
-+	v_sd: regulator-v-sd {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio4 30 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_hummingboard_vmmc>;
-+		regulator-boot-on;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "v_sd";
-+		startup-delay-us = <1000>;
-+		vin-supply = <&reg_3p3v>;
-+	};
-+
- 	reg_usbh1_vbus: usb-h1-vbus {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -241,6 +254,11 @@
- 				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x13059
- 			>;
- 		};
-+		pinctrl_hummingboard_vmmc: hummingboard-vmmc {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT9__GPIO4_IO30 0x1b0b0
-+			>;
-+		};
- 	};
- };
- 
-@@ -292,7 +310,7 @@
- 		&pinctrl_hummingboard_usdhc2_aux
- 		&pinctrl_hummingboard_usdhc2
- 	>;
--	vmmc-supply = <&reg_3p3v>;
-+	vmmc-supply = <&v_sd>;
- 	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
- 	status = "okay";
  };
 -- 
 2.7.4
