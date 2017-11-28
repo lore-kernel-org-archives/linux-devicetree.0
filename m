@@ -1,46 +1,54 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 3/5] PCI: cadence: Add host driver for Cadence PCIe
- controller
-Date: Tue, 28 Nov 2017 14:46:55 -0600
-Message-ID: <20171128204655.GA31255@bhelgaas-glaptop.roam.corp.google.com>
-References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
- <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
- <20171128204114.GE11228@bhelgaas-glaptop.roam.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171128204114.GE11228@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Cc: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of: enable unittests on UML
+Date: Tue, 28 Nov 2017 15:19:34 -0600
+Message-ID: <20171128211934.15283-1-robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Meyer <thomas-VsYtu1Qij5c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 02:41:14PM -0600, Bjorn Helgaas wrote:
-> On Thu, Nov 23, 2017 at 04:01:48PM +0100, Cyrille Pitchen wrote:
-> > diff --git a/drivers/Makefile b/drivers/Makefile
-> > index 1d034b680431..27bdd98784d9 100644
-> > --- a/drivers/Makefile
-> > +++ b/drivers/Makefile
-> > @@ -18,6 +18,7 @@ obj-y				+= pwm/
-> >  
-> >  obj-$(CONFIG_PCI)		+= pci/
-> >  obj-$(CONFIG_PCI_ENDPOINT)	+= pci/endpoint/
-> > +obj-$(CONFIG_PCI_CADENCE)	+= pci/cadence/
-> 
-> I can't remember why we added CONFIG_PCI_ENDPOINT here instead of in
-> drivers/pci/Makefile.  Is there any way to move both CONFIG_PCI_ENDPOINT
-> and CONFIG_PCI_CADENCE into drivers/pci/Makefile so this is better
-> encapsulated?
+The unittests can run on UML, but OF_IRQ and OF_ADDRESS need to be
+enabled. Rework the kconfig dependencies to enable the unittests. The
+unittests cannot build on Sparc, so we need to add an explicit
+dependency for !SPARC.
 
-I now see the note in your cover letter.  If there is a reason for
-this, it should go in the changelog to forestall questions like this.
-But what's in the cover letter isn't quite enough because it doesn't
-answer the question of why drivers/pci/Makefile isn't sufficient to
-control the ordering of pci/dwc and pci/endpoint.
+There's one failure in overlay tests because the base DT is not
+unflattened early.
 
-And sorry, I now see Lorenzo's similar query so he's already jumped on
-this :)
+Cc: Thomas Meyer <thomas-VsYtu1Qij5c@public.gmane.org>
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> >  # PCI dwc controller drivers
-> >  obj-y				+= pci/dwc/
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index ad9a9578f9c4..5020d7ef7494 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -13,7 +13,8 @@ if OF
+ 
+ config OF_UNITTEST
+ 	bool "Device Tree runtime unit tests"
+-	depends on OF_IRQ
++	depends on !SPARC
++	select IRQ_DOMAIN
+ 	select OF_EARLY_FLATTREE
+ 	select OF_RESOLVE
+ 	help
+@@ -61,7 +62,7 @@ config OF_DYNAMIC
+ 
+ config OF_ADDRESS
+ 	def_bool y
+-	depends on !SPARC && HAS_IOMEM
++	depends on !SPARC && (HAS_IOMEM || UML)
+ 	select OF_ADDRESS_PCI if PCI
+ 
+ config OF_ADDRESS_PCI
+-- 
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
