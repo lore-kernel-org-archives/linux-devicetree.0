@@ -1,26 +1,48 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/13] ARM: dts: imx6qdl: SolidRun: remove redundant
- regulators node
-Date: Mon, 27 Nov 2017 21:55:31 -0200
-Message-ID: <CAOMZO5DyEprzvPs+1w3qFOOX9A6z4Xw8rknA8Ah8BUJTxp8=tA@mail.gmail.com>
-References: <20171127165134.GH31757@n2100.armlinux.org.uk> <E1eJMdd-0002qR-Or@rmk-PC.armlinux.org.uk>
- <CAOMZO5B9GW26+3EfutnH4meUec3qq09Q6OBYHTtdvWG+DavJwg@mail.gmail.com> <20171127231406.GQ31757@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Dongjin Kim <tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [REBASED PATCH] ARM: dts: exynos: fix property values of LDO15/17 for ODROID-XU3/4
+Date: Mon, 27 Nov 2017 19:15:01 -0500
+Message-ID: <20171128001501.12740-1-tobetter@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171127231406.GQ31757-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Nettleton <jon.nettleton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Dongjin Kim <tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 27, 2017 at 9:14 PM, Russell King - ARM Linux
-<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+Looking at the schematic, LDO15 and LDO17 are tied as a power source of a
+builtin network chipset. The voltage on LDO15 is corrected to 3.3V and the
+name of LDO17 is corrected to "vdd_ldo17".
 
-> Again, this is not new code, such a change should be a separate patch,
-> maybe even separate from this series.
+Signed-off-by: Dongjin Kim <tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Sounds good.
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index a5b8d0f0877e..81cbb77204a8 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -233,8 +233,8 @@
+ 
+ 			ldo15_reg: LDO15 {
+ 				regulator-name = "vdd_ldo15";
+-				regulator-min-microvolt = <3100000>;
+-				regulator-max-microvolt = <3100000>;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+ 			};
+ 
+@@ -246,7 +246,7 @@
+ 			};
+ 
+ 			ldo17_reg: LDO17 {
+-				regulator-name = "tsp_avdd";
++				regulator-name = "vdd_ldo17";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-always-on;
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
