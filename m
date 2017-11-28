@@ -1,162 +1,93 @@
-From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 1/2] of: overlay: add whitelist
-Date: Tue, 28 Nov 2017 13:26:34 -0600
-Message-ID: <CANk1AXQ756EeKDDWXT5W6T8CJqqoFR7pGNkL5BGPN8gYBneRfw@mail.gmail.com>
-References: <1511816284-12145-1-git-send-email-atull@kernel.org>
- <1511816284-12145-2-git-send-email-atull@kernel.org> <20171128151538.2w6fjcib6my6wt5n@rob-hp-laptop>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v1] usb: xhci: allow imod-interval to be configurable
+Date: Tue, 28 Nov 2017 20:35:00 +0100
+Message-ID: <20171128193500.GA30609@kroah.com>
+References: <1511889106-9239-1-git-send-email-awallis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171128151538.2w6fjcib6my6wt5n@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1511889106-9239-1-git-send-email-awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 9:15 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Nov 27, 2017 at 02:58:03PM -0600, Alan Tull wrote:
->> Add simple whitelist.  When an overlay is submitted, if any target in
->> the overlay is not in the whitelist, the overlay is rejected.  Drivers
->> that support dynamic configuration can register their device node with:
->>
->>   int of_add_whitelist_node(struct device_node *np)
->>
->> and remove themselves with:
->>
->>   void of_remove_whitelist_node(struct device_node *np)
->
-> I think these should be named for what they do, not how it is
-> implemented.
+On Tue, Nov 28, 2017 at 12:11:46PM -0500, Adam Wallis wrote:
+> The xHCI driver currently has the IMOD set to 160, which
+> translates to an IMOD interval of 40,000ns (160 * 250)ns
+> 
+> Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
+> introduced a QUIRK for the MTK platform to adjust this interval to 20,
+> which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
+> due to the fact that the MTK controller IMOD interval is 8 times
+> as much as defined in xHCI spec.
+> 
+> Instead of adding more quirk bits for additional platforms, this patch
+> introduces the ability for vendors to set the IMOD_INTERVAL as is
+> optimal for their platform. By using device_property_read_u32() on
+> "imod-interval", the IMOD INTERVAL can be specified in nano seconds. If
+> no interval is specified, the default of 40,000ns (IMOD=160) will be
+> used.
+> 
+> No bounds checking has been implemented due to the fact that a vendor
+> may have violated the spec and would need to specify a value outside of
+> the max 8,000 IRQs/second limit specified in the xHCI spec.
+> 
+> Backwards compatibility is maintained for MTK_HOSTS through the quirk
+> bit, however, imod_interval should be pushed into device tree at a
+> future point and this quirk should be removed from xhci_plat_probe
+> 
+> Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt |  1 +
+>  drivers/usb/host/xhci-plat.c                       | 15 +++++++++++++++
+>  drivers/usb/host/xhci.c                            |  7 ++-----
+>  drivers/usb/host/xhci.h                            |  2 ++
+>  4 files changed, 20 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> index ae6e484..3998459 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> @@ -29,6 +29,7 @@ Optional properties:
+>    - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
+>    - usb3-lpm-capable: determines if platform is USB3 LPM capable
+>    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+> +  - imod-interval: IMOD_INTERVAL in nano-seconds. Default is 40000
+>  
+>  Example:
+>  	usb@f0931000 {
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index 09f164f..f7730c8 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -23,6 +23,7 @@
+>  #include "xhci-plat.h"
+>  #include "xhci-mvebu.h"
+>  #include "xhci-rcar.h"
+> +#include "xhci-mtk.h"
+>  
+>  static struct hc_driver __read_mostly xhci_plat_hc_driver;
+>  
+> @@ -269,6 +270,20 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>  	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
+>  		xhci->quirks |= XHCI_BROKEN_PORT_PED;
+>  
+> +	/* imod interval in nanoseconds */
+> +	if (device_property_read_u32(sysdev,
+> +		"imod-interval", &xhci->imod_interval))
+> +		xhci->imod_interval = 40000;
 
-Sure, such as of_node_overlay_enable and of_node_overlay_disable?
+So no matter what value you read, you set it to 40000?  Or am I reading
+this code incorrectly?
 
->
->>
->> Signed-off-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->>  drivers/of/overlay.c | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/of.h   | 12 +++++++++
->>  2 files changed, 85 insertions(+)
->>
->> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->> index c150abb..5f952a1 100644
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -21,6 +21,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/err.h>
->>  #include <linux/idr.h>
->> +#include <linux/spinlock.h>
->>
->>  #include "of_private.h"
->>
->> @@ -646,6 +647,74 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
->>       kfree(ovcs);
->>  }
->>
->> +/* lock for adding/removing device nodes to the whitelist */
->> +static spinlock_t whitelist_lock;
->> +
->> +static struct list_head whitelist_list = LIST_HEAD_INIT(whitelist_list);
->> +
->> +struct dt_overlay_whitelist {
->> +     struct device_node *np;
->> +     struct list_head node;
->> +};
->
-> Can't we just add a flags bit in device_node.flags? That would be much
-> simpler.
+There's a good reason putting function calls inside if() is considered a
+bad coding style :)
 
-Yes, much simpler.  Such as:
+thanks,
 
-#define OF_OVERLAY_ENABLED     5 /* allow DT overlay targeting this node */
-
->
->> +
->> +int of_add_whitelist_node(struct device_node *np)
->> +{
->> +     unsigned long flags;
->> +     struct dt_overlay_whitelist *wln;
->> +
->> +     wln = kzalloc(sizeof(*wln), GFP_KERNEL);
->> +     if (!wln)
->> +             return -ENOMEM;
->> +
->> +     wln->np = np;
->> +
->> +     spin_lock_irqsave(&whitelist_lock, flags);
->> +     list_add(&wln->node, &whitelist_list);
->> +     spin_unlock_irqrestore(&whitelist_lock, flags);
->> +
->> +     return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(of_add_whitelist_node);
->> +
->> +void of_remove_whitelist_node(struct device_node *np)
->> +{
->> +     struct dt_overlay_whitelist *wln;
->> +     unsigned long flags;
->> +
->> +     list_for_each_entry(wln, &whitelist_list, node) {
->> +             if (np == wln->np) {
->> +                     spin_lock_irqsave(&whitelist_lock, flags);
->> +                     list_del(&wln->node);
->> +                     spin_unlock_irqrestore(&whitelist_lock, flags);
->> +                     kfree(wln);
->> +                     return;
->> +             }
->> +     }
->> +}
->> +EXPORT_SYMBOL_GPL(of_remove_whitelist_node);
->> +
->> +static int of_check_whitelist(struct overlay_changeset *ovcs)
->> +{
->> +     struct dt_overlay_whitelist *wln;
->> +     struct device_node *target;
->> +     int i;
->> +
->> +     for (i = 0; i < ovcs->count; i++) {
->> +             target = ovcs->fragments[i].target;
->> +             if (!of_node_cmp(target->name, "__symbols__"))
->> +                     continue;
->> +
->> +             list_for_each_entry(wln, &whitelist_list, node)
->> +                     if (target == wln->np)
->> +                             break;
->> +
->> +             if (target != wln->np)
->> +                     return -ENODEV;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->>  /**
->>   * of_overlay_apply() - Create and apply an overlay changeset
->>   * @tree:    Expanded overlay device tree
->> @@ -717,6 +786,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
->>       if (ret)
->>               goto err_free_overlay_changeset;
->>
->> +     ret = of_check_whitelist(ovcs);
->> +     if (ret)
->> +             goto err_free_overlay_changeset;
->
-> This will break you until the next patch and breaks any other users. I
-> think this is now just the unittest as tilcdc overlay is getting
-> removed.
->
-> You have to make this chunk the last patch in the series.
-
-I'd rather squash the two patches.  In either case, the contents of
-second patch are dependent on stuff in char-misc-testing today, so it
-won't be able to apply yet on linux-next or anywhere else.
-
-Thanks
-Alan
-
->
-> Rob
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
