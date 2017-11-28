@@ -1,46 +1,47 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH] irqchip/gic-v3: Support MSIs via aliases and distributor
-Date: Tue, 28 Nov 2017 07:16:29 +0000
-Message-ID: <c77120d6-a3b9-02e6-f578-52e1d13b92d0@linaro.org>
-References: <20171127102408.6631-1-sboyd@codeaurora.org>
+Subject: Re: [PATCH v7 06/13] slimbus: Add messaging APIs to
+	slimbus framework
+Date: Tue, 28 Nov 2017 07:18:22 +0000
+Message-ID: <ae307430-c1ec-0e2f-ea6a-aae9e0f773d2@linaro.org>
+References: <20171115141043.29202-1-srinivas.kandagatla@linaro.org>
+ <20171115141043.29202-7-srinivas.kandagatla@linaro.org>
+ <20171117074834.GM3187@localhost>
+ <d58b8cca-7b28-75be-8081-dad6595f499d@linaro.org>
+ <20171127055606.GR3187@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171127102408.6631-1-sboyd@codeaurora.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171127055606.GR3187@localhost>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, michael.opdenacker@free-electrons.com, poeschel@lemonage.de, andreas.noever@gmail.com, arnd@arndb.de, treding@nvidia.com, devicetree@vger.kernel.org, james.hogan@imgtec.com, pawel.moll@arm.com, linux-arm-msm@vger.kernel.org, sharon.dvir1@mail.huji.ac.il, robh+dt@kernel.org, sdharia@codeaurora.org, alan@linux.intel.com, bp@suse.de, mathieu.poirier@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, broonie@kernel.org, daniel@ffwll.ch, jkosina@suse.cz, joe@perches.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Stephen,
 
-Thanks for the patch.
-On 27/11/17 10:24, Stephen Boyd wrote:
-> Some GIC configurations don't have an accessible ITS, but they
-> want to support MSIs through the distributor's SETSPI registers
-> or through the IMPLEMENTATION DEFINED message-based interrupt
-> request register region. This mode of operation is similar to the
-> v2m support on gic-400, but we don't necessarily know what
-> particular SPIs are supported as MSIs so we need some help from
-> firmware to know what to do.
+On 27/11/17 05:56, Vinod Koul wrote:
+> On Mon, Nov 20, 2017 at 06:47:52AM +0000, Srinivas Kandagatla wrote:
 > 
-> Introduce an "arm,spi-ranges" property for this, similar to the
-> "marvell,spi-ranges" property, that indicates the base and size
-> of each MSI range. This property applies equally to the
-> distributor and alias registers. In either case, we detect this
-> mode of operation by looking for a node with the "msi-controller"
-> property and then probe the v2m frame code on top of it. Assume
-> these nodes will have the "arm,spi-ranges" property in them so
-> that the v2m code works mostly unmodified.
+>>>> + *	-ENOTCONN: If the transmitted message was not ACKed by destination
+>>>> + *	device.
+>>>
+>>> I am preferring ENODATA in SDW for this case, as Slaves didnt respond or
+>>> ACK.
+>> Isn't that a timeout error then.
+>>
+>> ENODATA is for "No data available", reporting ENODATA would be misleading.
 > 
-> Cc: <devicetree@vger.kernel.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Do you get a explict NACK or no response for this
 
-Tested it on DB820c board.
-
-Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+There is no response for the request, currently code waits for it arrive 
+and then timesout on completion.
