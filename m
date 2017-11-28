@@ -1,54 +1,52 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
- LED driver
-Date: Tue, 28 Nov 2017 11:27:11 -0600
-Message-ID: <5c3706e9-2e21-1c4b-18d8-cfe96f05d0aa@ti.com>
-References: <20171115194203.13572-1-dmurphy@ti.com>
- <cb5c5a65-d5a0-86a3-36b4-cf06baae9ec4@gmail.com>
- <0a78c883-f074-cc19-3c0c-fc05607400e9@ti.com> <20171115222323.GA18290@amd>
- <82336eb7-2b89-d37b-d688-4e4302766346@gmail.com>
- <16189eab-5541-9550-c027-1c9d2b5fa6d7@ti.com> <20171117112032.GA13855@amd>
- <000b01d35fc1$57ad0500$07070f00$@gmail.com>
- <17b8e1ce-092a-0449-4733-533162b26499@ti.com> <20171117235811.GA26296@amd>
+From: Otavio Salvador <otavio.salvador@ossystems.com.br>
+Subject: Re: [PATCH v3] ARM: dts: imx6qdl-nitrogen6x: Add SPI NOR partitions
+Date: Tue, 28 Nov 2017 15:37:02 -0200
+Message-ID: <CAP9ODKrG=hsGSs=rfXumnLJwNeRe+njMOsK5Q=bYDm+gXnXUeQ@mail.gmail.com>
+References: <20171127133127.16985-1-otavio@ossystems.com.br> <CAOMZO5Dtf6mjWt1wg_5NDUNAe4XZ3jvxu0KC2CaUo0wE7gjaRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171117235811.GA26296@amd>
-Content-Language: en-US
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jingoo Han <jingoohan1@gmail.com>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 'Lee Jones' <lee.jones@linaro.org>, 'Daniel Thompson' <daniel.thompson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5Dtf6mjWt1wg_5NDUNAe4XZ3jvxu0KC2CaUo0wE7gjaRQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Otavio Salvador <otavio@ossystems.com.br>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Gary Bisson <gary.bisson@boundarydevices.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Pavel
+Hello Fabio,
 
-On 11/17/2017 05:58 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>> Well.. if it can control other LEDs than just backlight, I believe it
->>>> can stay in the LED subsystem.
->>>
->>> I also agree with your opinion.
+On Mon, Nov 27, 2017 at 2:17 PM, Fabio Estevam <festevam@gmail.com> wrote:
+> On Mon, Nov 27, 2017 at 11:31 AM, Otavio Salvador
+> <otavio@ossystems.com.br> wrote:
+>> This adds the partitions definition for the SPI NOR to provide
+>> backward compatibility with the documented[1] layout used with
+>> Boundary Devices BSP.
 >>
->> I will make the necessary changes for v4.
-> 
-> I'm not sure if you need to make any changes. Just add default trigger
-> to the dts and you should be done.
-> 
+>> 1. https://boundarydevices.com/boot-flash-access-linux/
+>>
+>> It exports to Linux:
+>>
+>>  mtd0: bootloader
+>>  mtd1: env
+>>  mtd2: splash
+>>
+>> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+>
+> Has this been tested? I mean, have you tested the locking mechanism is
+> really working in this SPI NOR flash?
 
-Sorry what I meant was changes for the additional v3 comments.
+Yes, we tested it here using Linux 4.14 but didn't notice this SPI NOR
+does not support the lock.
 
-Dan
+> As far as I can see the SPI locking mechanism does not need device
+> tree properties.
 
->> Just a heads up I won't be posting v4 until after the US holiday so you
->> don't think I abandoned everything.
-> 
-> :-)
-> 									Pavel
-> 
-
+Humm it is confusing, at least for me that am not used to the this. In
+any case, I think for now it is better to include the partitions
+without read-only and lock as it is convenient to have access to it
+from Linux so we adhere the same partition layout used in Boundary's
+Linux fork.
 
 -- 
-------------------
-Dan Murphy
+Otavio Salvador                             O.S. Systems
+http://www.ossystems.com.br        http://code.ossystems.com.br
+Mobile: +55 (53) 9981-7854            Mobile: +1 (347) 903-9750
