@@ -1,127 +1,68 @@
-From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v1] usb: xhci: allow imod-interval to be configurable
-Date: Tue, 28 Nov 2017 12:11:46 -0500
-Message-ID: <1511889106-9239-1-git-send-email-awallis@codeaurora.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: Re: [PATCH 01/10] genirq: Export irq_set_msi_desc()
+Date: Tue, 28 Nov 2017 22:49:51 +0530
+Message-ID: <7b877547-873f-dcb9-e110-5a4435736d23@nvidia.com>
+References: <1511538800-8275-1-git-send-email-mmaddireddy@nvidia.com>
+ <1511538800-8275-2-git-send-email-mmaddireddy@nvidia.com>
+ <alpine.DEB.2.20.1711250050520.2316@nanos>
+ <600a7b65-670e-b164-913c-99e18ae593d2@nvidia.com>
+ <be79bf6f-b24a-6292-5eb1-3bcf97890421@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <be79bf6f-b24a-6292-5eb1-3bcf97890421@arm.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rjw@rjwysocki.net, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The xHCI driver currently has the IMOD set to 160, which
-translates to an IMOD interval of 40,000ns (160 * 250)ns
 
-Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
-introduced a QUIRK for the MTK platform to adjust this interval to 20,
-which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
-due to the fact that the MTK controller IMOD interval is 8 times
-as much as defined in xHCI spec.
 
-Instead of adding more quirk bits for additional platforms, this patch
-introduces the ability for vendors to set the IMOD_INTERVAL as is
-optimal for their platform. By using device_property_read_u32() on
-"imod-interval", the IMOD INTERVAL can be specified in nano seconds. If
-no interval is specified, the default of 40,000ns (IMOD=160) will be
-used.
+On 28-Nov-17 3:30 PM, Marc Zyngier wrote:
+> On 25/11/17 19:41, Manikanta Maddireddy wrote:
+>>
+>>
+>> On 25-Nov-17 5:25 AM, Thomas Gleixner wrote:
+>>> On Fri, 24 Nov 2017, Manikanta Maddireddy wrote:
+>>>
+>>> Please CC the proper mailing list for irq related changes.
+>>>
+>>>> PCI bus support MSI interrupts, allow PCI host driver to set MSI descriptor
+>>>> data for an irq.
+>>>
+>>> This is not really an explanation why this export is needed.
+>>>
+>>> Thanks,
+>>>
+>>> 	tglx
+>>>
+>> Updated the commit log with why Tegra PCIe driver is using this function in V2.
+>> Please review.
+> 
+> Well, to review it, I would like to be on Cc.
+> 
+> My current position on this is that if you need to export this function,
+> then you're using a deprecated API, and you should instead consider
+> moving to the generic MSI model, which doesn't need any of this.
+> 
+> I've done that a distant past, but never actually published the patch
+> (not tested it):
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/kill-msi-controller&id=83b3602fcee7972b9d549ed729b56ec28de16081
+> 
+> But without seeing the patches, I may be barking up the wrong tree...
+> 
+> Thanks,
+> 
+> 	M.
+> 
+Hi Mark,
 
-No bounds checking has been implemented due to the fact that a vendor
-may have violated the spec and would need to specify a value outside of
-the max 8,000 IRQs/second limit specified in the xHCI spec.
+I will drop this change from this series and will take up generic MSI work in the next series of changes for pci-tegra driver.
+Even without this change, pci-tegra driver will work fine as a builtin module. So other changes can still be reviewed and
+can be considered as initial step for adding LKM support for pci-tegra.
 
-Backwards compatibility is maintained for MTK_HOSTS through the quirk
-bit, however, imod_interval should be pushed into device tree at a
-future point and this quirk should be removed from xhci_plat_probe
-
-Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb-xhci.txt |  1 +
- drivers/usb/host/xhci-plat.c                       | 15 +++++++++++++++
- drivers/usb/host/xhci.c                            |  7 ++-----
- drivers/usb/host/xhci.h                            |  2 ++
- 4 files changed, 20 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index ae6e484..3998459 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -29,6 +29,7 @@ Optional properties:
-   - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
-   - usb3-lpm-capable: determines if platform is USB3 LPM capable
-   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-+  - imod-interval: IMOD_INTERVAL in nano-seconds. Default is 40000
- 
- Example:
- 	usb@f0931000 {
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 09f164f..f7730c8 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -23,6 +23,7 @@
- #include "xhci-plat.h"
- #include "xhci-mvebu.h"
- #include "xhci-rcar.h"
-+#include "xhci-mtk.h"
- 
- static struct hc_driver __read_mostly xhci_plat_hc_driver;
- 
-@@ -269,6 +270,20 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
- 		xhci->quirks |= XHCI_BROKEN_PORT_PED;
- 
-+	/* imod interval in nanoseconds */
-+	if (device_property_read_u32(sysdev,
-+		"imod-interval", &xhci->imod_interval))
-+		xhci->imod_interval = 40000;
-+	else if (xhci->quirks & XHCI_MTK_HOST)
-+		/*
-+		 * The increment interval is 8 times as much as that defined in
-+		 * the xHCI spec on MTK's controller. This is added to provide
-+		 * backwards compatibility, however, this should be pushed into
-+		 * the device tree files at some point in the future and
-+		 * removed from xhci_plat_probe
-+		 */
-+		xhci->imod_interval = 5000;
-+
- 	hcd->usb_phy = devm_usb_get_phy_by_phandle(sysdev, "usb-phy", 0);
- 	if (IS_ERR(hcd->usb_phy)) {
- 		ret = PTR_ERR(hcd->usb_phy);
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 2424d30..6a09311 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -586,11 +586,8 @@ int xhci_run(struct usb_hcd *hcd)
- 			"// Set the interrupt modulation register");
- 	temp = readl(&xhci->ir_set->irq_control);
- 	temp &= ~ER_IRQ_INTERVAL_MASK;
--	/*
--	 * the increment interval is 8 times as much as that defined
--	 * in xHCI spec on MTK's controller
--	 */
--	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
-+	temp |= (u16) (xhci->imod_interval / 250);
-+
- 	writel(temp, &xhci->ir_set->irq_control);
- 
- 	/* Set the HCD state before we enable the irqs */
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 99a014a..2a4177b 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1717,6 +1717,8 @@ struct xhci_hcd {
- 	u8		max_interrupters;
- 	u8		max_ports;
- 	u8		isoc_threshold;
-+	/* imod_interval in ns (I * 250ns) */
-+	u32		imod_interval;
- 	int		event_ring_max;
- 	/* 4KB min, 128MB max */
- 	int		page_size;
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Manikanta
