@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 09/12] ARM: dts: r8a7791: Remove CMT renesas,channels-mask
-Date: Tue, 28 Nov 2017 14:47:33 +0100
-Message-ID: <1511876856-9495-10-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 05/12] ARM: dts: r8a7794: Update CMT compat strings
+Date: Tue, 28 Nov 2017 14:47:29 +0100
+Message-ID: <1511876856-9495-6-git-send-email-geert+renesas@glider.be>
 References: <1511876856-9495-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1511876856-9495-1-git-send-email-geert+renesas@glider.be>
@@ -12,13 +12,13 @@ List-Id: devicetree@vger.kernel.org
 
 From: Magnus Damm <damm+renesas@opensource.se>
 
-Update the DTS to remove the now deprecated "renesas,channels-mask"
-property.
+Use recently updated R-Car Gen2 CMT0 and CMT1 compat strings.
 
-The channel information is now kept in the device driver and can easily
-be determined based on the compat string.
+With this change in place we can keep device-specific configuration in
+the driver and the driver can be able to support CMT1 specific features.
 
 Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v4:
@@ -26,36 +26,37 @@ v4:
 
 v3:
   - Take over from Magnus,
+  - Update compatible values,
   - Split in per-SoC patches,
 
 v2:
-  - Rebased on top of power-domain changes,
-  - Added Acked-by and Tested-by from Geert.
+  - Added Acked-by and Tested-by from Geert,
+  - Added Acked-by from Laurent.
 ---
- arch/arm/boot/dts/r8a7791.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm/boot/dts/r8a7794.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index a69d6f883b34519f..dfc1c406179fbf3a 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -266,8 +266,6 @@
- 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
- 		resets = <&cpg 124>;
- 
--		renesas,channels-mask = <0x60>;
--
- 		status = "disabled";
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index ef7fb1d2c3a31a6e..52f6d5ec5d210f44 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -181,7 +181,7 @@
  	};
  
-@@ -287,8 +285,6 @@
- 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
- 		resets = <&cpg 329>;
- 
--		renesas,channels-mask = <0xff>;
--
- 		status = "disabled";
+ 	cmt0: timer@ffca0000 {
+-		compatible = "renesas,cmt-48-gen2";
++		compatible = "renesas,r8a7794-cmt0", "renesas,rcar-gen2-cmt0";
+ 		reg = <0 0xffca0000 0 0x1004>;
+ 		interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+@@ -196,7 +196,7 @@
  	};
  
+ 	cmt1: timer@e6130000 {
+-		compatible = "renesas,cmt-48-gen2";
++		compatible = "renesas,r8a7794-cmt1", "renesas,rcar-gen2-cmt1";
+ 		reg = <0 0xe6130000 0 0x1004>;
+ 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 2.7.4
