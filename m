@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH 3/3] arm: dts: mt7623: fix card detection issue on bananapi-r2
-Date: Wed, 29 Nov 2017 18:10:37 +0800
-Message-ID: <88269ed11bdf881087f7b0de331a60d8acfdc977.1511949769.git.sean.wang@mediatek.com>
+Subject: [PATCH 2/3] arm: dts: mt7623: update mmc related nodes with the appropriate fallback
+Date: Wed, 29 Nov 2017 18:10:36 +0800
+Message-ID: <e2ef3ec5c4b6646d3d11aa28b46304c3ff0032ec.1511949769.git.sean.wang@mediatek.com>
 References: <cover.1511949769.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,28 +14,36 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Fix that bananapi-r2 booting from SD-card would fail since incorrect
-polarity is applied to the previous setup with GPIO_ACTIVE_HIGH.
+The current mmc related nodes should be falling back to MT2701
+as the dt-binding defines and which has more appropriate setup
+for MT7623.
 
-Cc: stable@vger.kernel.org # v4.14+
-Fixes: 0eed8d097612 ("arm: dts: mt7623: Add SD-card and EMMC to bananapi-r2")
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/mt7623.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index 688a863..7bf5aa2 100644
---- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-+++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -204,7 +204,7 @@
- 	bus-width = <4>;
- 	max-frequency = <50000000>;
- 	cap-sd-highspeed;
--	cd-gpios = <&pio 261 0>;
-+	cd-gpios = <&pio 261 GPIO_ACTIVE_LOW>;
- 	vmmc-supply = <&mt6323_vmch_reg>;
- 	vqmmc-supply = <&mt6323_vio18_reg>;
- };
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index 0640fb7..343d3b1 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -641,7 +641,7 @@
+ 
+ 	mmc0: mmc@11230000 {
+ 		compatible = "mediatek,mt7623-mmc",
+-			     "mediatek,mt8135-mmc";
++			     "mediatek,mt2701-mmc";
+ 		reg = <0 0x11230000 0 0x1000>;
+ 		interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&pericfg CLK_PERI_MSDC30_0>,
+@@ -652,7 +652,7 @@
+ 
+ 	mmc1: mmc@11240000 {
+ 		compatible = "mediatek,mt7623-mmc",
+-			     "mediatek,mt8135-mmc";
++			     "mediatek,mt2701-mmc";
+ 		reg = <0 0x11240000 0 0x1000>;
+ 		interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&pericfg CLK_PERI_MSDC30_1>,
 -- 
 2.7.4
