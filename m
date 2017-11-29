@@ -1,63 +1,98 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v6 03/17] mfd: madera: Add common support
- for Cirrus Logic Madera codecs
-Date: Wed, 29 Nov 2017 11:36:58 +0000
-Message-ID: <1eff5a38-cff3-449b-bda4-047f50a9f1d4@EX17.ad.cirrus.com>
-References: <20171123171316.10868-1-rf@opensource.wolfsonmicro.com>
- <fe8064a5-8692-46c1-9f53-ab0a429baeeb@EX17.ad.cirrus.com>
- <CACRpkdaxKjPd_k8tuO3R4+5LFT4_37zn6ruDRPd5j9xNAH4+Dw@mail.gmail.com>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v2 25/35] nds32: Build infrastructure
+Date: Wed, 29 Nov 2017 19:39:58 +0800
+Message-ID: <CAEbi=3cc8e__DnFKmTSMm9xQMx7CGu+1v3e55w8UekwnTTkw5Q@mail.gmail.com>
+References: <cover.1511785528.git.green.hu@gmail.com> <5e1be9ebc591c6de79b75f726a5a38b2564eaa92.1511785528.git.green.hu@gmail.com>
+ <CAK8P3a1GuH2tgtC5t834-PNeUVYQxreD7seZH8sjraZFtRUWKw@mail.gmail.com>
+ <CAEbi=3c=hTCcUOPs+Fc10srzTFsB4MnVxgcFydz12-jH0ZXjog@mail.gmail.com>
+ <CAK8P3a0kvt52UTtEmE+tWHZuH_rmgTxP7+CiD9Ddwe2cJLwXTQ@mail.gmail.com>
+ <CAMuHMdViO=+-kGdXFPSW+9PsPbf3sUa5xdaJ_1C-cX2vE1G35Q@mail.gmail.com> <CAK8P3a3yk7ww+LdQdL+wgz2wYrzXLSsj1PTdfK-qx013jdg4SQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CACRpkdaxKjPd_k8tuO3R4+5LFT4_37zn6ruDRPd5j9xNAH4+Dw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, alsa-devel@alsa-project.org, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Nikesh Oswal <Nikesh.Oswal@wolfsonmicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a3yk7ww+LdQdL+wgz2wYrzXLSsj1PTdfK-qx013jdg4SQ@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29/11/17 10:18, Linus Walleij wrote:
-> On Thu, Nov 23, 2017 at 6:13 PM, Richard Fitzgerald
-> <rf@opensource.wolfsonmicro.com> wrote:
-> 
->> +config MFD_MADERA_I2C
->> +       bool "Cirrus Logic Madera codecs with I2C"
->> +       select MFD_MADERA
->> +       select REGMAP_I2C
->> +       depends on I2C
->> +       depends on PINCTRL
->> +       help
->> +         Support for the Cirrus Logic Madera platform audio SoC
->> +         core functionality controlled via I2C.
->> +
->> +config MFD_MADERA_SPI
->> +       bool "Cirrus Logic Madera codecs with SPI"
->> +       select MFD_MADERA
->> +       select REGMAP_SPI
->> +       depends on SPI_MASTER
->> +       depends on PINCTRL
->> +       help
->> +         Support for the Cirrus Logic Madera platform audio SoC
->> +         core functionality controlled via SPI.
-> 
-> Why do the I2C and SPI subdrivers depend on PINCTRL?
-> 
-> They sure don't seem to be using any pinctrl-specific APIs.
-> 
+2017-11-29 17:25 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> On Wed, Nov 29, 2017 at 10:10 AM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> Hi Arnd,
+>>
+>> On Wed, Nov 29, 2017 at 9:58 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>> On Wed, Nov 29, 2017 at 9:39 AM, Greentime Hu <green.hu@gmail.com> wrote:
+>>>> 2017-11-27 22:21 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>>>>> On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
+>>>>>> diff --git a/arch/nds32/Kconfig.cpu b/arch/nds32/Kconfig.cpu
+>>>>>> +config CPU_CACHE_NONALIASING
+>>>>>> +       bool "Non-aliasing cache"
+>>>>>> +       help
+>>>>>> +         If this CPU is using VIPT data cache and its cache way size is larger
+>>>>>> +         than page size, say N. If it is using PIPT data cache, say Y.
+>>>>>> +
+>>>>>> +         If unsure, say Y.
+>>>>>
+>>>>> Can you determine this from the CPU type?
+>>>>
+>>>> There is no cpu register to determine it. It also depeneds on page
+>>>> size and way size however page size is configurable by software.
+>>>> These codes are determined at compile time will be benefit to code
+>>>> size and performance.
+>>>> IMHO, I think it would be better to be determined here.
+>>>
+>>> I meant determining it at compile time from other Kconfig symbols,
+>>> if that's possible. Do the CPU cores each have a fixed way-size?
+>>> If they do, it could be done like
+>>>
+>>> menu "CPU selection"
+>>>
+>>> config CPU_N15
+>>>       bool "AndesCore N15"
+>>>       select CPU_CACHE_NONALIASING
+>>>
+>>> config CPU_N13
+>>>       bool "AndesCore N15"
+>>>       select CPU_CACHE_NONALIASING if PAGE_SIZE_16K
+>>>
+>>> ...
+>>>
+>>> endmenu
+>>>
+>>> and then you can use the same CPU_... symbols to make other decisions
+>>> as well, e.g. CPU specific compiler optimizations.
+>>
+>> Do you want to support multiple CPU types in a single kernel image
+>> (I see no "choice" statement above)?
+>> If yes, you may have a mix of aliasing and non-aliasing caches, so
+>> you may want to invert the logic, and select CPU_CACHE_ALIASING
+>> instead.
+>
+> Right, my mistake.
+>
 
-They require PINCTRL even if they don't call any functions on it because 
-the chip won't work correctly if there isn't a PINCTRL driver to apply 
-the correct pinmux configuration.
+Thanks to Arnd and Geert!
 
-> Yours,
-> Linus Walleij
-> 
+How about this?
+
+choice
+        prompt "CPU type"
+        default CPU_N13
+config CPU_N15
+        bool "AndesCore N15"
+        select CPU_CACHE_NONALIASING
+config CPU_N13
+        bool "AndesCore N13"
+        select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
+config CPU_N10
+        bool "AndesCore N10"
+        select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
+config CPU_D15
+        bool "AndesCore D15"
+        select CPU_CACHE_NONALIASING
+        select HWZOL
+config CPU_D10
+        bool "AndesCore D10"
+        select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
+endchoice
