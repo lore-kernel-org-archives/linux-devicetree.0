@@ -1,27 +1,47 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a77970: use SYSC power domain
- macros
-Date: Wed, 29 Nov 2017 10:56:07 +0100
-Message-ID: <20171129095607.x33pokvib4csba73@verge.net.au>
-References: <20171128202109.031715810@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3] mfd: syscon: Add hardware spinlock support
+Date: Wed, 29 Nov 2017 11:07:23 +0100
+Message-ID: <CAK8P3a2SDgPEfg4PvefSrh0cBneNcbM66ogbuBFxoxqrS82cTQ@mail.gmail.com>
+References: <e6b3e6532abf42e6e13919e65d79908cd5e02137.1511159909.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171128202109.031715810-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e6b3e6532abf42e6e13919e65d79908cd5e02137.1511159909.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 11:15:45PM +0300, Sergei Shtylyov wrote:
-> Now that the commit 833bdb47c826 ("dt-bindings: power: add R8A77970 SYSC
-> power domain definitions") has hit Linus' tree, we can replace the  bare
-> numbers  (we had to use to avoid a cross tree dependency) with these macro
-> definitions...
+On Mon, Nov 20, 2017 at 7:54 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+> Some system control registers need hardware spinlock to synchronize
+> between the multiple subsystems, so we should add hardware spinlock
+> support for syscon.
+>
 
-Thanks, applied.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> @@ -87,6 +88,12 @@ static struct syscon *of_syscon_register(struct device_node *np)
+>         if (ret)
+>                 reg_io_width = 4;
+>
+> +       ret = of_hwspin_lock_get_id(np, 0);
+> +       if (ret > 0) {
+> +               syscon_config.hwlock_id = ret;
+> +               syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
+> +       }
+
+Hi Baolin,
+
+The error handling here seems insufficient, I think we have to treat
+the following cases separately:
+
+- ret>0 (this is fine)
+- no spinlock in DT: of_hwspin_lock_get_id currently returns -EINVAL,
+  we probably want to use a different return code (maybe -ESRCH ?)
+  here so we can tell the difference beween no spinlock, and an
+  invalid spinlock
+- deferred probing: if the spinlock is there but the driver is not
+  yet available, we may need to propagate the -EPROBE_DEFER
+  here
+- other error: this would probably be a fatal condition here, and
+  we should print a warning and clean up.
+
+       Arnd
