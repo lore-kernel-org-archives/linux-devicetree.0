@@ -1,46 +1,74 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/5] PCI: cadence: Add host driver for Cadence PCIe
- controller
-Date: Wed, 29 Nov 2017 09:19:29 +0100
-Message-ID: <20171129091929.0077ffbc@windsurf.home>
-References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
-        <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
-        <20171128204114.GE11228@bhelgaas-glaptop.roam.corp.google.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: renesas: r8a7795: Move nodes which have
+ no reg property out of bus
+Date: Wed, 29 Nov 2017 09:20:30 +0100
+Message-ID: <20171129082029.wzjrxupgfnj7tp4u@verge.net.au>
+References: <20171124105234.25774-1-horms+renesas@verge.net.au>
+ <CAMuHMdW9V6Bkh5uS9qNA7awtygEs=qRd7jigwSHmpV2VM3n9dA@mail.gmail.com>
+ <20171127110430.ulgjrzgy3pdugs2s@verge.net.au>
+ <CAMuHMdUm=PiGVWVg9pyNTR5z2WjLcoG1uecBNBeKsSxbAxBt8w@mail.gmail.com>
+ <20171128085645.ofrk33bfqd736sip@verge.net.au>
+ <CAMuHMdXoDNt7j-hEZmDA2BFFPUAfsi1ukZWowJ3=kTswyYMk5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171128204114.GE11228-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXoDNt7j-hEZmDA2BFFPUAfsi1ukZWowJ3=kTswyYMk5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Tue, 28 Nov 2017 14:41:14 -0600, Bjorn Helgaas wrote:
-
-> > + * struct cdns_pcie_rc_data - hardware specific data  
+On Tue, Nov 28, 2017 at 10:04:00AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
 > 
-> "cdns" is a weird abbreviation for "Cadence", since "Cadence" doesn't
-> contain an "s".
+> On Tue, Nov 28, 2017 at 9:56 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> > On Mon, Nov 27, 2017 at 12:15:39PM +0100, Geert Uytterhoeven wrote:
+> >> On Mon, Nov 27, 2017 at 12:04 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> >> > I just noticed that with this patch applied I now see:
+> >> >
+> >> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a57
+> >> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a53
+> >> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a57
+> >> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a53arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (interrupts_property): Missing interrupt-parent for /timer
+> >> >
+> >> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (interrupts_property): Missing interrupt-parent for /timer
+> >>
+> >> Right, the "interrupt-parent = <&gic>;" inside the /soc node applies to child
+> >> nodes of the /soc node only.
+> >>
+> >> You can find this in two ways:
+> 
+> s/find/fix/
+> 
+> >>
+> >>   1. Add "interrupt-parent = <&gic>;" to the /pmu_a57 and /pmu_a53 nodes.
+> >>   2. Switch those nodes from "interrupt" to "interrupts-extended", e.g. turn
+> >>
+> >>         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+> >>
+> >>      into
+> >>
+> >>         interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+> >>
+> >> The latter is what e.g. arch/arm/boot/dts/armada-375.dtsi does.
+> >
+> > Thanks, I took option 1 as it seems consistent with the rest of the
+> > Renesas DT files. I also added it to the /timer node.
+> 
+> Actually we recently had a discussion about this on IRC, triggered by a
+> similar issue in board files (see e.g, Ethernet PHY interrupts).
+> 
+> Given the following comment:
+> 
+> drivers/of/irq.c:       /* Try the new-style interrupts-extended first */
+> drivers/of/irq.c:       res = of_parse_phandle_with_args(device,
+> "interrupts-extended",
+> 
+> I think it would be better to use interrupts-extended for individual/isolated
+> use outside the /soc node.
 
-cdns is the official Device Tree binding vendor prefix for Cadence:
-
-$ grep Cadence Documentation/devicetree/bindings/vendor-prefixes.txt
-cdns	Cadence Design Systems Inc.
-
-And it is already widely used throughout the kernel for Cadence
-drivers. See drivers/watchdog/cadence_wdt.c, drivers/spi/spi-cadence.c,
-drivers/i2c/busses/i2c-cadence.c, etc.
-
-Best regards,
-
-Thomas Petazzoni
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Sure, will do.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
