@@ -1,47 +1,54 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v2 19/35] nds32: L2 cache support
-Date: Wed, 29 Nov 2017 19:53:37 +0800
-Message-ID: <CAEbi=3fpM0gK4-xRPdZ0HYEAriwgspOQtV1aVx586AObQLVBiw@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <380808fe9139e2c3800ae76dfa6aa5cbbbc4894f.1511785528.git.green.hu@gmail.com>
- <CAK8P3a2P+A55TyC_1bCj=sDjLZmpQoMptbZ59yd191fqdUstSA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2P+A55TyC_1bCj=sDjLZmpQoMptbZ59yd191fqdUstSA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Vincent Chen <vincentc@andestech.com>
+From: kernel@martin.sperl.org
+Subject: Re: [PATCH 1/2] dt-binding: can: mcp2517fd: document device tree bindings
+Date: Wed, 29 Nov 2017 12:55:44 +0100
+Message-ID: <6EBDD798-8632-4F42-A138-369BCD36DF68@martin.sperl.org>
+References: <20171124183509.12810-1-kernel@martin.sperl.org> <20171124183509.12810-2-kernel@martin.sperl.org> <20171126222528.i6quueqdmuj6le6g@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20171126222528.i6quueqdmuj6le6g@rob-hp-laptop>
+Sender: linux-can-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, linux-can@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd:
+Hi Rob!
 
-2017-11-27 22:33 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
->> +
->> +#define L2C_R_REG(offset)               __raw_readl(atl2c_base + offset)
->> +#define L2C_W_REG(offset, value)        __raw_writel(value, atl2c_base + offset)
->
-> __raw_readl() is generally not endian-safe, and might  not have the barriers you
-> require here. Could you use readl/writel here, and only fall back to
-> readl_relaxed()/writel_relaxed() when you absolutely must avoid the barriers?
+Thanks for all the effort - I shall incorporate those changes into V2.
 
-Thanks for your suggestions.
-We will changed it to readl/writel
+> s/Microcip/Microchip/
+> s/_/-/
+> 
+>> +					   0 = Start of Frame output
+>> +					   default: 10
+>> + - microchip,clock_div = <1|2>: internal clock divider - default 1
+>> + - microchip,gpio_opendrain: gpio (int0,1) in open drain mode
+>> +			     instead of default push/pull
+>> + - microchip,int_opendrain: int pin in open drain mode
+>> +			    instead of default push/pull
+> 
+> IIRC, we have a standard property for this.
 
->> diff --git a/arch/nds32/kernel/atl2c.c b/arch/nds32/kernel/atl2c.c
->> new file mode 100644
->> index 0000000..dd87fc9
->> --- /dev/null
->> +++ b/arch/nds32/kernel/atl2c.c
->> +#include <linux/compiler.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_fdt.h>
->> +#include <linux/of_platform.h>
->> +#include <asm/l2_cache.h>
->
-> If this is the only file that includes asm/l2_cache.h, then I'd simply
-> move the entire
-> contents in here, rather than having a separate file in the global namespace.
->
+Would you know what that could be - I did a quick search for
+standard properties, but could not find a definitive list…
 
-arch/nds32/mm/proc.c also includes this file so I will keep it.
+The only thing I found in:
+  Documentation/devicetree/bindings/w1/w1-gpio.txt
+is:
+  linux,open-drain
+
+But there is also:  
+  nvidia,open-drain
+  open_drain
+  open-drain
+  drive-open-drain (pinctrl)
+  st,irq-open-drain
+
+Only the last is specific to the interrupt line and none to the other
+GPIOs of the chip (txcan, GPIO) - and each can get set differently.
+
+So how shall I implement that?
+
+Thanks,
+	Martin
