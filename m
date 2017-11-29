@@ -1,56 +1,70 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] ARM: dts: at91: sama5d2: added dma property for
- ADC device
-Date: Wed, 29 Nov 2017 22:05:07 +0100
-Message-ID: <20171129210507.GQ21126@piout.net>
-References: <1510750608-8697-1-git-send-email-eugen.hristev@microchip.com>
- <1510750608-8697-3-git-send-email-eugen.hristev@microchip.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v6,1/4] pmbus (core): Add fan control support
+Date: Wed, 29 Nov 2017 13:10:57 -0800
+Message-ID: <20171129211056.GA21396@roeck-us.net>
+References: <3b782897affbb8ffe51d6b87d8c48fdcbb84e33e.1511152748.git-series.andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1510750608-8697-3-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <3b782897affbb8ffe51d6b87d8c48fdcbb84e33e.1511152748.git-series.andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: linux-hwmon@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 15/11/2017 at 14:56:46 +0200, Eugen Hristev wrote:
-> Added DMA property for ADC device
+On Mon, Nov 20, 2017 at 03:12:03PM +1030, Andrew Jeffery wrote:
+> Expose fanX_target, pwmX and pwmX_enable hwmon sysfs attributes.
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sama5d2.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+> Fans in a PMBus device are driven by the configuration of two registers,
+> FAN_CONFIG_x_y and FAN_COMMAND_x: FAN_CONFIG_x_y dictates how the fan
+> and the tacho operate (if installed), while FAN_COMMAND_x sets the
+> desired fan rate. The unit of FAN_COMMAND_x is dependent on the
+> operational fan mode, RPM or PWM percent duty, as determined by the
+> corresponding configuration in FAN_CONFIG_x_y.
 > 
-
-This didn't apply cleanly, please check
-https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git/commit/?h=at91-dt&id=0ae80c039ef2407c08842ddde892af0c9128711b
-
-> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> index 38d2216..ca8bf13 100644
-> --- a/arch/arm/boot/dts/sama5d2.dtsi
-> +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> @@ -1430,6 +1430,8 @@
->  				atmel,min-sample-rate-hz = <200000>;
->  				atmel,max-sample-rate-hz = <20000000>;
->  				atmel,startup-time-ms = <4>;
-> +				dmas = <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
-> +				dma-names = "rx";
->  				status = "disabled";
->  			};
->  
-> -- 
-> 2.7.4
+> The mapping of fanX_target, pwmX and pwmX_enable onto FAN_CONFIG_x_y and
+> FAN_COMMAND_x is implemented with the addition of virtual registers to
+> facilitate the necessary side-effects of each access:
 > 
+> 1. PMBUS_VIRT_FAN_TARGET_x
+> 2. PMBUS_VIRT_PWM_x
+> 3. PMBUS_VIRT_PWM_ENABLE_x
+> 
+> Some complexity arises with the fanX_target and pwmX attributes both mapping
+> onto FAN_COMMAND_x: There is no general mapping between PWM percent duty and
+> RPM, so we can't display values in either attribute in terms of the other
+> (which in my mind is the intuitive, if impossible, behaviour). This problem
+> also affects the pwmX_enable attribute which allows userspace to switch between
+> full speed, manual PWM and a number of automatic control modes, possibly
+> including a switch to RPM behaviour (e.g. automatically adjusting PWM duty to
+> reach a RPM target, the behaviour of fanX_target).
+> 
+> The next most intuitive behaviour is for fanX_target and pwmX to simply be
+> independent, to retain their most recently set value even if that value is not
+> active on the hardware (due to switching to the alternative control mode). This
+> property of retaining the value independent of the hardware state has useful
+> results for both userspace and the kernel: Userspace always sees a sensible
+> value in the attribute (the last thing it was set to, as opposed to 0 or
+> receiving an error on read), and the kernel can use the attributes as a value
+> cache. This latter point eases the implementation of pwmX_enable, which can
+> look up the associated pmbus_sensor object, take its cached value and apply it
+> to hardware on changing control mode. This ensures we will not arbitrarily set
+> a PWM value as an RPM value or vice versa, and we can assume that the RPM or
+> PWM value set was sensible at least at some point in the past.
+> 
+> Finally, the DIRECT mode coefficients of some controllers is different between
+> RPM and PWM percent duty control modes, so PSC_PWM is introduced to capture the
+> necessary coefficients. As pmbus core had no PWM support previously PSC_FAN
+> continues to be used to capture the RPM DIRECT coefficients, but in order to
+> avoid falsely applying RPM scaling to PWM values I have introduced the
+> PMBUS_HAVE_PWM12 and PMB_BUS_HAVE_PWM34 feature bits. These feature bits allow
+> drivers to explicitly declare PWM support in order to have the attributes
+> exposed.
+> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Appled (fixed whitespace problem).
+
+Thanks,
+Guenter
