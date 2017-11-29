@@ -1,37 +1,57 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 2/2] usb: mtu3: remove unused micros
-Date: Wed, 29 Nov 2017 16:49:53 +0800
-Message-ID: <a0a8a38a1ec24633d6c201449a04560c83948d62.1511943941.git.chunfeng.yun@mediatek.com>
-References: <120299c8a516acfd5b52cb1528b929b3eae5cd53.1511943941.git.chunfeng.yun@mediatek.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 25/35] nds32: Build infrastructure
+Date: Wed, 29 Nov 2017 09:58:53 +0100
+Message-ID: <CAK8P3a0kvt52UTtEmE+tWHZuH_rmgTxP7+CiD9Ddwe2cJLwXTQ@mail.gmail.com>
+References: <cover.1511785528.git.green.hu@gmail.com> <5e1be9ebc591c6de79b75f726a5a38b2564eaa92.1511785528.git.green.hu@gmail.com>
+ <CAK8P3a1GuH2tgtC5t834-PNeUVYQxreD7seZH8sjraZFtRUWKw@mail.gmail.com> <CAEbi=3c=hTCcUOPs+Fc10srzTFsB4MnVxgcFydz12-jH0ZXjog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <120299c8a516acfd5b52cb1528b929b3eae5cd53.1511943941.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <CAEbi=3c=hTCcUOPs+Fc10srzTFsB4MnVxgcFydz12-jH0ZXjog@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Vincent Chen <vincentc@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove unused micros of UWK_CTL1_IDDIG_*
+On Wed, Nov 29, 2017 at 9:39 AM, Greentime Hu <green.hu@gmail.com> wrote:
+> 2017-11-27 22:21 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>> On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
+>>> diff --git a/arch/nds32/Kconfig.cpu b/arch/nds32/Kconfig.cpu
+>>> +config CPU_CACHE_NONALIASING
+>>> +       bool "Non-aliasing cache"
+>>> +       help
+>>> +         If this CPU is using VIPT data cache and its cache way size is larger
+>>> +         than page size, say N. If it is using PIPT data cache, say Y.
+>>> +
+>>> +         If unsure, say Y.
+>>
+>> Can you determine this from the CPU type?
+>
+> There is no cpu register to determine it. It also depeneds on page
+> size and way size however page size is configurable by software.
+> These codes are determined at compile time will be benefit to code
+> size and performance.
+> IMHO, I think it would be better to be determined here.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/usb/mtu3/mtu3_host.c | 3 ---
- 1 file changed, 3 deletions(-)
+I meant determining it at compile time from other Kconfig symbols,
+if that's possible. Do the CPU cores each have a fixed way-size?
+If they do, it could be done like
 
-diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
-index d237d7e..7e948c0 100644
---- a/drivers/usb/mtu3/mtu3_host.c
-+++ b/drivers/usb/mtu3/mtu3_host.c
-@@ -21,9 +21,6 @@
- #define PERI_WK_CTRL1		0x404
- #define UWK_CTL1_IS_C(x)	(((x) & 0xf) << 26)
- #define UWK_CTL1_IS_E		BIT(25)
--#define UWK_CTL1_IDDIG_C(x)	(((x) & 0xf) << 11)  /* cycle debounce */
--#define UWK_CTL1_IDDIG_E	BIT(10) /* enable debounce */
--#define UWK_CTL1_IDDIG_P	BIT(9)  /* polarity */
- #define UWK_CTL1_IS_P		BIT(6)  /* polarity for ip sleep */
- 
- /*
--- 
-1.9.1
+menu "CPU selection"
+
+config CPU_N15
+      bool "AndesCore N15"
+      select CPU_CACHE_NONALIASING
+
+config CPU_N13
+      bool "AndesCore N15"
+      select CPU_CACHE_NONALIASING if PAGE_SIZE_16K
+
+...
+
+endmenu
+
+and then you can use the same CPU_... symbols to make other decisions
+as well, e.g. CPU specific compiler optimizations.
+
+        Arnd
