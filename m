@@ -1,111 +1,345 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v4 1/8] dt-bindings: Add Cavium Octeon Common Ethernet
- Interface.
-Date: Tue, 28 Nov 2017 18:54:09 -0800
-Message-ID: <05f5a001-fc52-3376-d823-41166ed7b59f@caviumnetworks.com>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-2-david.daney@cavium.com>
- <20171129020153.GN14512@lunn.ch>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm, ls1021a: add support for Moxa UC-8410A open platform
+Date: Wed, 29 Nov 2017 10:59:46 +0800
+Message-ID: <20171129025944.GA9376@dragon>
+References: <20171116145858.25966-1-sz.lin@moxa.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171129020153.GN14512@lunn.ch>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, David Daney <david.daney@cavium.com>
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Carlos Munoz <cmunoz@cavium.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171116145858.25966-1-sz.lin-D4fb9hXD9d4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>
+Cc: Jimmy Chen <jimmy.chen-D4fb9hXD9d4@public.gmane.org>, Harry YJ Jhou <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2017 06:01 PM, Andrew Lunn wrote:
-> On Tue, Nov 28, 2017 at 04:55:33PM -0800, David Daney wrote:
->> From: Carlos Munoz <cmunoz@cavium.com>
->>
->> Add bindings for Common Ethernet Interface (BGX) block.
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
->> Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
->> Signed-off-by: David Daney <david.daney@cavium.com>
->> ---
->>   .../devicetree/bindings/net/cavium-bgx.txt         | 61 ++++++++++++++++++++++
->>   1 file changed, 61 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/cavium-bgx.txt b/Documentation/devicetree/bindings/net/cavium-bgx.txt
->> new file mode 100644
->> index 000000000000..830c5f08dddd
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/cavium-bgx.txt
->> @@ -0,0 +1,61 @@
->> +* Common Ethernet Interface (BGX) block
->> +
->> +Properties:
->> +
->> +- compatible: "cavium,octeon-7890-bgx": Compatibility with all cn7xxx SOCs.
->> +
->> +- reg: The base address of the BGX block.
->> +
->> +- #address-cells: Must be <1>.
->> +
->> +- #size-cells: Must be <0>.  BGX addresses have no size component.
->> +
->> +A BGX block has several children, each representing an Ethernet
->> +interface.
->> +
->> +
->> +* Ethernet Interface (BGX port) connects to PKI/PKO
->> +
->> +Properties:
->> +
->> +- compatible: "cavium,octeon-7890-bgx-port": Compatibility with all
->> +	      cn7xxx SOCs.
->> +
->> +	      "cavium,octeon-7360-xcv": Compatibility with cn73xx SOCs
->> +	      for RGMII.
->> +
->> +- reg: The index of the interface within the BGX block.
->> +
->> +Optional properties:
->> +
->> +- local-mac-address: Mac address for the interface.
->> +
->> +- phy-handle: phandle to the phy node connected to the interface.
->> +
->> +- phy-mode: described in ethernet.txt.
->> +
->> +- fixed-link: described in fixed-link.txt.
->> +
->> +Example:
->> +
->> +	ethernet-mac-nexus@11800e0000000 {
->> +		compatible = "cavium,octeon-7890-bgx";
->> +		reg = <0x00011800 0xe0000000 0x00000000 0x01000000>;
+On Thu, Nov 16, 2017 at 10:58:57PM +0800, SZ Lin wrote:
+> Add support for Moxa UC-8410A open platform
 > 
-> Hi David
+> The UC-8410A computing platform is designed
+> for embedded communication-centric industrial applications
 > 
-> In the probe function we have:
+> The features of UC-8410A are:
+> * QSPI flash
+> * SD slot
+> * 3x LAN
+> * 8x RS-232/422/485 ports, software-selectable
+> * Mini PCIe form factor with PCIe/USB signal
+> * 2x USB host
+> * TPM
+> * Watchdog
+> * RTC
+> * User LEDs
+> * Beeper
 > 
-> +       reg = of_get_property(pdev->dev.of_node, "reg", NULL);
-> +       addr = of_translate_address(pdev->dev.of_node, reg);
-> +       interface = (addr >> 24) & 0xf;
-> +       numa_node = (addr >> 36) & 0x7;
+> Signed-off-by: Jimmy Chen <jimmy.chen-D4fb9hXD9d4@public.gmane.org>
+> Signed-off-by: Harry YJ Jhou <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>
+> Signed-off-by: SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>
+
+We usually prefix arm dts patch with 'ARM: dts: ...'.
+
+> ---
+>  arch/arm/boot/dts/Makefile                  |   1 +
+>  arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 230 ++++++++++++++++++++++++++++
+>  2 files changed, 231 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
 > 
-> Is this documented somewhere?
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index eff87a344566..0165fbcb1d10 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -495,6 +495,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+>  	imx7s-colibri-eval-v3.dtb \
+>  	imx7s-warp.dtb
+>  dtb-$(CONFIG_SOC_LS1021A) += \
+> +	ls1021a-moxa-uc-8410a.dtb \
+>  	ls1021a-qds.dtb \
+>  	ls1021a-twr.dtb
+>  dtb-$(CONFIG_SOC_VF610) += \
+> diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+> new file mode 100644
+> index 000000000000..4896b551505b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+> @@ -0,0 +1,230 @@
+> +/*
+> + * Copyright (C) 2017 Moxa Inc. - https://www.moxa.com/
+> + *
+> + * Author: Harry YJ Jhou (周亞諄) <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>
+> + *         Jimmy Chen (陳永達)    <jimmy.chen-D4fb9hXD9d4@public.gmane.org>
+> + *         SZ Lin (林上智)        <sz.lin-D4fb9hXD9d4@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "ls1021a.dtsi"
+> +
+> +/ {
+> +	model = "Moxa UC-8410A";
+> +
+> +	aliases {
+> +		enet0_rgmii_phy = &rgmii_phy0;
+> +		enet1_rgmii_phy = &rgmii_phy1;
+> +		enet2_rgmii_phy = &rgmii_phy2;
+> +	};
+> +
+> +	sys_mclk: clock-mclk {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <24576000>;
+> +	};
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 
-In the Hardware Reference Manual for the chips.
+Drop this container node and put fixed regulator directly under root.
 
+> +
+> +		reg_3p3v: regulator@0 {
 
-> The numa_node is particularly
-> interesting. MMIO changes depends on what node this is in the cluster?
+Name the fixed regulator like below.
 
-Yes.  Bits 38..36 of MMIO addresses indicate which NUMA node the 
-corresponding hardware device resides on.  Some operations can only be 
-performed by a CPU on the same NUMA node as the device (RX or 
-TX-complete interrupts for example)  Other operations can cross CPU 
-nodes (TX packet submission for example)
+	reg_xxx: regulator-xxx {
+		...
+	};
 
+> +			compatible = "regulator-fixed";
+> +			reg = <0>;
+> +			regulator-name = "3P3V";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-always-on;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
 
+Have a newline between property list and child node.
+
+> +		cel_pwr {
+
+We usually use hyphen instead of underscore in node name.
+
+> +			label = "UC8410A:CEL_PWR";
+> +			gpios = <&gpio3 23 1>;
+
+Can you use the polarity defines in include/dt-bindings/gpio/gpio.h to
+make it more readable?
+
+> +			default-state = "off";
+> +		};
+> +
+> +		cel_reset {
+> +			label = "UC8410A:CEL_RESET";
+> +			gpios = <&gpio3 24 1>;
+> +			default-state = "off";
+> +		};
+> +
+> +		str_led {
+> +			label = "UC8410A:RED:PROG";
+> +			gpios = <&gpio0 16 0>;
+> +			linux,default-trigger = "mmc0";
+> +		};
+> +
+> +		sw_ready {
+> +			label = "UC8410A:GREEN:SWRDY";
+> +			gpios = <&gpio0 18 0>;
+> +			default-state = "on";
+> +		};
+> +
+> +		beeper {
+> +			label = "UC8410A:BEEP";
+> +			gpios = <&gpio0 20 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		prog_led0 {
+> +			label = "UC8410A:GREEN:PROG2";
+> +			gpios = <&gpio3 14 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		prog_led1 {
+> +			label = "UC8410A:GREEN:PROG1";
+> +			gpios = <&gpio3 15 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		prog_led2 {
+> +			label = "UC8410A:GREEN:PROG0";
+> +			gpios = <&gpio3 16 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		wifi_signal0 {
+> +			label = "UC8410A:GREEN:CEL2";
+> +			gpios = <&gpio3 17 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		wifi_signal1 {
+> +			label = "UC8410A:GREEN:CEL1";
+> +			gpios = <&gpio3 18 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		wifi_signal2 {
+> +			label = "UC8410A:GREEN:CEL0";
+> +			gpios = <&gpio3 19 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		cpu_diag_red {
+> +			label = "UC8410A:RED:DIA";
+> +			gpios = <&gpio3 20 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		cpu_diag_green {
+> +			label = "UC8410A:GREEN:DIA";
+> +			gpios = <&gpio3 21 0>;
+> +			default-state = "off";
+> +		};
+> +
+> +		cpu_diag_yellow {
+> +			label = "UC8410A:YELLOW:DIA";
+> +			gpios = <&gpio3 22 0>;
+> +			default-state = "off";
+> +		};
+> +	};
+> +};
+> +
+> +&enet0 {
+> +	phy-handle = <&rgmii_phy0>;
+> +	phy-connection-type = "rgmii-id";
+> +	status = "okay";
+> +};
+> +
+> +&enet1 {
+> +	phy-handle = <&rgmii_phy1>;
+> +	phy-connection-type = "rgmii-id";
+> +	status = "okay";
+> +};
+> +
+> +&enet2 {
+> +	phy-handle = <&rgmii_phy2>;
+> +	phy-connection-type = "rgmii-id";
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	clock-frequency = <100000>;
+
+We usually put 'status' at the end of property list.
+
+> +
+> +	rtc: rtc@68 {
+
+The label is meaningless.
+
+> +		compatible = "dallas,ds1374";
+> +		reg = <0x68>;
+> +	};
+> +
+> +	tpm: tpm@20 {
+
+Ditto
+
+> +		compatible = "infineon,slb9635tt";
+> +		reg = <0x20>;
+> +	};
+> +};
+> +
+> +&lpuart0 {
+> +	status = "okay";
+> +};
+> +
+> +&mdio0 {
+> +	rgmii_phy0: ethernet-phy@0 {
+> +		compatible = "marvell,88e1118";
+> +		reg = <0x0>;
+> +		marvell,reg-init =
+> +			<3 0x11 0 0x4415>, /* Reg 3,17 */
+> +			<3 0x10 0 0x77>; /* Reg 3,16 */
+> +	};
+
+Have a newline between nodes.
+
+> +	rgmii_phy1: ethernet-phy@1 {
+> +		compatible = "marvell,88e1118";
+> +		reg = <0x1>;
+> +		marvell,reg-init =
+> +			<3 0x11 0 0x4415>, /* Reg 3,17 */
+> +			<3 0x10 0 0x77>; /* Reg 3,16 */
+> +	};
+> +	rgmii_phy2: ethernet-phy@2 {
+> +		compatible = "marvell,88e1118";
+> +		reg = <0x2>;
+> +		marvell,reg-init =
+> +			<3 0x11 0 0x4415>, /* Reg 3,17 */
+> +			<3 0x10 0 0x77>; /* Reg 3,16 */
+> +	};
+> +};
+> +
+> +&qspi {
+> +	status = "okay";
+> +	bus-num = <0>;
+> +	fsl,spi-num-chipselects = <2>;
+> +	fsl,spi-flash-chipselects = <0>;
+> +	fsl,qspi-has-second-chip;
+
+Put 'status' here and have a newline.
+
+> +	flash: flash@0 {
+> +		compatible = "spansion,s25fl064l", "spansion,s25fl164k";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		spi-max-frequency = <20000000>;
+> +		reg = <0>;
+> +
+> +		partitions@0 {
+> +			label = "U-Boot";
+> +			reg = <0x0 0x180000>;
+> +		};
+
+Newline here.
+
+> +		partitions@1 {
+> +			label = "U-Boot Env";
+> +			reg = <0x180000 0x680000>;
+> +		};
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +&sata {
+> +	status = "okay";
+> +};
+
+Please sort the labeled node alphabetically.
+
+Shawn
+
+> -- 
+> 2.15.0
 > 
-> 	Andrew
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
