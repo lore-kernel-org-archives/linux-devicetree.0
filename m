@@ -1,177 +1,177 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH V2 8/9] PCI: tegra: Broadcast PME_turn_Off message before
- link goes to L2
-Date: Wed, 29 Nov 2017 14:18:54 +0200
-Message-ID: <dd3cb6a5-76ec-98c2-4132-54678c2d74ce@kapsi.fi>
-References: <1511638333-22951-1-git-send-email-mmaddireddy@nvidia.com>
- <1511638333-22951-9-git-send-email-mmaddireddy@nvidia.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] RFC: net: dsa: Add bindings for Realtek SMI DSAs
+Date: Wed, 29 Nov 2017 13:24:01 +0100
+Message-ID: <CACRpkdbzqnbF49yN-SAqLkhufk=R2C=jpdLo-QWmL0zR_+Vj=w@mail.gmail.com>
+References: <20171105231909.5599-1-linus.walleij@linaro.org>
+ <20171105231909.5599-4-linus.walleij@linaro.org> <20171105234831.GA24822@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1511638333-22951-9-git-send-email-mmaddireddy@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rjw@rjwysocki.net, tglx@linutronix.de
-Cc: vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171105234831.GA24822-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Roman Yeryomin <roman-9zmcapQ0v8Q@public.gmane.org>, Colin Leitner <colin.leitner-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25.11.2017 21:32, Manikanta Maddireddy wrote:
-> Per PCIe r3.0, sec 5.3.3.2.1, PCIe root port shoould broadcast PME_turn_Off
-> message before PCIe link goes to L2. PME_turn_Off broadcast mechanism is
-> implemented in AFI module. Each Tegra PCIe root port has its own
-> PME_turn_Off and PME_TO_Ack bitmap in AFI_PME register, program this
-> register to broadcast PME_turn_Off message.
+On Mon, Nov 6, 2017 at 12:48 AM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+>> This interrupt construction is similar to how we handle
+>> interrupt controllers inside PCI bridges etc.
 >
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V2:
-> * no change in this patch
+> Hi Linus
 >
->  drivers/pci/host/pci-tegra.c | 76 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
+> Your interrupt handling is going in the right direction, but needs
+> further work. The PHY interrupt is a phy property, so should be in the
+> PHY node in device tree.
 >
-> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-> index bbc2807bcd4a..b380958a3deb 100644
-> --- a/drivers/pci/host/pci-tegra.c
-> +++ b/drivers/pci/host/pci-tegra.c
-> @@ -155,6 +155,8 @@
->  #define  AFI_INTR_EN_FPCI_TIMEOUT	(1 << 7)
->  #define  AFI_INTR_EN_PRSNT_SENSE	(1 << 8)
+> The Marvell driver gives an example of this, and
+> vf610-zii-dev-rev-c.dts is an example DT blob you can look at.
 >
-> +#define AFI_PCIE_PME		0xf0
-> +
->  #define AFI_PCIE_CONFIG					0x0f8
->  #define  AFI_PCIE_CONFIG_PCIE_DISABLE(x)		(1 << ((x) + 1))
->  #define  AFI_PCIE_CONFIG_PCIE_DISABLE_ALL		0xe
-> @@ -315,6 +317,7 @@
->  #define PADS_REFCLK_CFG_DRVI_SHIFT		12 /* 15:12 */
+>> +     ports {
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             reg = <0>;
+>> +             port@0 {
+>> +                     reg = <0>;
+>> +                     label = "lan0";
 >
->  #define LINK_RETRAIN_TIMEOUT 100000
-> +#define PME_ACK_TIMEOUT 10000
+> So here, you should have a
 >
->  struct tegra_msi {
->  	struct msi_controller chip;
-> @@ -1503,6 +1506,76 @@ static int tegra_pcie_put_resources(struct tegra_pcie *pcie)
->  	return 0;
->  }
+>                         phy-handle = <&phy0>;
 >
-> +static inline u32 get_pme_turnoff_bitmap(struct tegra_pcie_port *port)
-> +{
-> +	struct device *dev = port->pcie->dev;
-> +	struct device_node *np = dev->of_node;
-> +	int ret = 0;
-> +
-> +	switch (port->index) {
-> +	case 0:
-> +		ret = 0;
-> +	case 1:
-> +		ret = 8;
-> +	case 2:
-> +		if (of_device_is_compatible(np, "nvidia,tegra30-pcie"))
-> +			ret = 16;
-> +		else
-> +			ret = 12;
-> +	}
-> +	return ret;
-> +}
-> +
-> +static inline u32 get_pme_ack_bitmap(struct tegra_pcie_port *port)
-> +{
-> +	struct device *dev = port->pcie->dev;
-> +	struct device_node *np = dev->of_node;
-> +	int ret = 0;
-> +
-> +	switch (port->index) {
-> +	case 0:
-> +		ret = 5;
-> +	case 1:
-> +		ret = 10;
-> +	case 2:
-> +		if (of_device_is_compatible(np, "nvidia,tegra30-pcie"))
-> +			ret = 18;
-> +		else
-> +			ret = 14;
-> +	}
-> +	return ret;
-> +}
+> linking this MAC to the PHY connected to it.
 
- From what I can tell, the port 2 bit is 12/14 on everything after 
-Tegra30 as well, so I don't think this actually works?
+I have the phy-handle in the ethernet controller. This RTL8366RB
+thing is just one big PHY as far as I know. So to give the complete picture
+this is what I have in my tree right now with the RTL8366RB as PHY
+and Gemini ethernet (yeah I'm upstreaming that too...) as the ethernet
+controller:
 
-I think simpler would be to add a SoC data fields 'u8 
-pme_turnoff_bit[3]' and 'u8 pme_ack_bit[3]' and then set that
-to '.pme_turnoff_bit = { 0, 8, 16 }' and so on.
+/* This is a RealTek RTL8366RB switch and PHY using SMI over GPIO */
+switch {
+    compatible = "realtek,rtl8366rb";
+    reg = <0>;
+    /* 22 = MDIO (has input reads), 21 = MDC (clock, output only) */
+    mdc-gpios = <&gpio0 21 GPIO_ACTIVE_HIGH>;
+    mdio-gpios = <&gpio0 22 GPIO_ACTIVE_HIGH>;
+    reset-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+    realtek,disable-leds;
 
-> +
-> +static void tegra_pcie_pme_turnoff(struct tegra_pcie_port *port)
-> +{
-> +	struct tegra_pcie *pcie = port->pcie;
-> +	ktime_t deadline;
-> +	unsigned int data;
-> +
-> +	data = afi_readl(pcie, AFI_PCIE_PME);
-> +	data |= (0x1 << get_pme_turnoff_bitmap(port));
-> +	afi_writel(pcie, data, AFI_PCIE_PME);
-> +
-> +	deadline = ktime_add_us(ktime_get(), PME_ACK_TIMEOUT);
-> +	do {
-> +		data = afi_readl(pcie, AFI_PCIE_PME);
-> +		data &= (0x1 << get_pme_ack_bitmap(port));
-> +		udelay(1);
-> +		if (ktime_after(ktime_get(), deadline))
-> +			break;
-> +	} while (!data);
+    switch_intc: interrupt-controller {
+        /* GPIO 15 provides the interrupt */
+        interrupt-parent = <&gpio0>;
+        interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
+        interrupt-controller;
+        #address-cells = <0>;
+        #interrupt-cells = <1>;
+    };
 
-Since this is a normal MMIO read, we could replace the whole loop with a 
-call to readl_poll_timeout (or readl_relaxed_poll_timeout, or if we 
-really must delay and not sleep, readl_poll_timeout_atomic etc.) from 
-iopoll.h
+    ports {
+        #address-cells = <1>;
+        #size-cells = <0>;
 
-   int err;
-   u32 val;
+        port@0 {
+            reg = <0>;
+            label = "lan0";
+            interrupt-parent = <&switch_intc>;
+            interrupts = <0>;
+        };
+        port@1 {
+            reg = <1>;
+            label = "lan1";
+            interrupt-parent = <&switch_intc>;
+            interrupts = <1>;
+        };
+        port@2 {
+            reg = <2>;
+            label = "lan2";
+            interrupt-parent = <&switch_intc>;
+            interrupts = <2>;
+        };
+        port@3 {
+            reg = <3>;
+            label = "lan3";
+            interrupt-parent = <&switch_intc>;
+            interrupts = <3>;
+        };
+        port@4 {
+            reg = <4>;
+            label = "wan";
+            interrupt-parent = <&switch_intc>;
+            interrupts = <12>;
+        };
+        phy0: port@5 {
+            reg = <5>;
+            label = "cpu";
+            ethernet = <&gmac0>;
+            phy-mode = "rgmii";
+            fixed-link {
+                speed = <1000>;
+                full-duplex;
+            };
+    };
+};
 
-   err = readl_poll_timeout(pcie->afi + AFI_PCIE_PME, val,
-                            val & (0x1 << pcie->soc->pme_ack_bit[port]),
-                            1, PME_ACK_TIMEOUT);
-   if (err)
-     ...
 
-> +
-> +	if (data)
-> +		dev_err(pcie->dev, "PME Ack is not receieved on port: %d\n",
-> +			port->index);
-> +
+ethernet@60000000 {
+    compatible = "cortina,gemini-ethernet";
+    reg = <0x60000000 0x4000>;
+    #address-cells = <1>;
+    #size-cells = <1>;
+    ranges;
 
-Typo here, s/receieved/received/
+    gmac0: port0 {
+        compatible = "cortina,gemini-ethernet-port";
+        reg = <0x60008000 0x2000>, /* Port 0 DMA/TOE */
+        <0x6000a000 0x2000>; /* Port 0 GMAC */
+        interrupt-parent = <&intcon>;
+        interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
+        resets = <&syscon GEMINI_RESET_GMAC0>;
+        clocks = <&syscon GEMINI_CLK_GATE_GMAC0>;
+        clock-names = "PCLK";
+        phy-mode = "rgmii";
+        phy-handle = <&phy0>;
+    };
+};
 
-Cheers,
-Mikko
 
-> +	usleep_range(10000, 11000);
-> +
-> +	data = afi_readl(pcie, AFI_PCIE_PME);
-> +	data &= ~(0x1 << get_pme_turnoff_bitmap(port));
-> +	afi_writel(pcie, data, AFI_PCIE_PME);
-> +}
-> +
->  static int tegra_msi_alloc(struct tegra_msi *chip)
->  {
->  	int msi;
-> @@ -2828,6 +2901,7 @@ static int tegra_pcie_remove(struct platform_device *pdev)
->  {
->  	struct tegra_pcie *pcie = platform_get_drvdata(pdev);
->  	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
-> +	struct tegra_pcie_port *port, *tmp;
+> And then an MDIO bus, listing the PHYs
 >
->  	if (IS_ENABLED(CONFIG_DEBUG_FS))
->  		tegra_pcie_debugfs_exit(pcie);
-> @@ -2835,6 +2909,8 @@ static int tegra_pcie_remove(struct platform_device *pdev)
->  	pci_remove_root_bus(host->bus);
->  	if (IS_ENABLED(CONFIG_PCI_MSI))
->  		tegra_pcie_disable_msi(pcie);
-> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-> +		tegra_pcie_pme_turnoff(port);
->  	tegra_pcie_disable_ports(pcie);
->  	tegra_pcie_free_resources(pcie);
->  	tegra_pcie_disable_controller(pcie);
+>                mdio {
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
 >
+>                         phy0: phy@0 {
+>                                 reg = <0>;
+>                                 interrupt-parent = <&switch_intc>;
+>                                 interrupts = <0>;
+>                         };
+>
+> It is here you list the interrupts. And the PHY subsystem will link
+> the interrupt to the PHY when it enumerate the MDIO bus.
+
+I do get that to work with a lot of standard PHY drivers
+in drivers/net/phy, that assume they have an IRQ line from
+device tree or board files.
+
+However when PHY slave children are spawn from the
+internal DSA MDIO bus interrupts are not assigned from the
+device tree, so that is why I have a separate patch for that.
+
+> You have most of the code already for implementing the MDIO bus. The
+> rest you can probably borrow from the mv88e6xxx driver.
+
+I have a working MDIO bus coming out directly from the SDA core,
+so that part is fine. I also patched in the corresponding PHY driver
+(a Realtek derivative for this DSA only, so just a few lines add
+in the Realtek PHY driver) and it works fine.
+
+I will repost the series as a non-RFC when I have all parts working
+and illustrate with a few examples so you see how I set it up.
+I hope I didn't turn the entire subsystem on its head or something...
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
