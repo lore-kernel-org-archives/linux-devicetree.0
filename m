@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 1/9] dt-bindings: arm: Add entry for Broadcom Brahma-B53
-Date: Wed, 29 Nov 2017 12:18:41 -0800
-Message-ID: <20171129201849.17522-2-f.fainelli@gmail.com>
+Subject: [PATCH 4/9] soc: brcmstb: Correct CPU_CREDIT_REG offset for Brahma-B53 CPUs
+Date: Wed, 29 Nov 2017 12:18:44 -0800
+Message-ID: <20171129201849.17522-5-f.fainelli@gmail.com>
 References: <20171129201849.17522-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171129201849.17522-1-f.fainelli@gmail.com>
@@ -12,25 +12,67 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, M
         ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Broadcom's Brahma-B53 CPU is an ARMv8A processor used on a number of
-DSL, Cable Modem and Set-top-box SoCs.
+On Broadcom Brahma-B53 CPUs, the CPU_CREDIT_REG offset got moved to
+0x0b0 instead of 0x184, correct this such that we correcty
+enable/disable write-pairing for these chips.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/cpus.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/bcm/brcmstb/biuctrl.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index a0009b72e9be..f4a777039f03 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -169,6 +169,7 @@ described below.
- 			    "arm,cortex-r5"
- 			    "arm,cortex-r7"
- 			    "brcm,brahma-b15"
-+			    "brcm,brahma-b53"
- 			    "brcm,vulcan"
- 			    "cavium,thunder"
- 			    "cavium,thunder2"
+diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
+index c3c548fcaa8c..e8322e663831 100644
+--- a/drivers/soc/bcm/brcmstb/biuctrl.c
++++ b/drivers/soc/bcm/brcmstb/biuctrl.c
+@@ -21,12 +21,13 @@
+ #include <linux/syscore_ops.h>
+ #include <linux/soc/brcmstb/brcmstb.h>
+ 
+-#define CPU_CREDIT_REG_OFFSET			0x184
++#define B15_CPU_CREDIT_REG_OFFSET		0x184
++#define B53_CPU_CREDIT_REG_OFFSET		0x0b0
+ #define  CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK	0x70000000
+ 
+ static void __iomem *cpubiuctrl_base;
+ static bool mcp_wr_pairing_en;
+-static unsigned int cpu_credit_reg_offset = CPU_CREDIT_REG_OFFSET;
++static unsigned int cpu_credit_reg_offset;
+ 
+ static int __init mcp_write_pairing_set(void)
+ {
+@@ -53,7 +54,7 @@ static int __init mcp_write_pairing_set(void)
+ 
+ static int __init setup_hifcpubiuctrl_regs(void)
+ {
+-	struct device_node *np;
++	struct device_node *np, *cpu_dn;
+ 	int ret = 0;
+ 
+ 	np = of_find_compatible_node(NULL, NULL, "brcm,brcmstb-cpu-biu-ctrl");
+@@ -70,6 +71,23 @@ static int __init setup_hifcpubiuctrl_regs(void)
+ 	}
+ 
+ 	mcp_wr_pairing_en = of_property_read_bool(np, "brcm,write-pairing");
++
++	cpu_dn = of_get_cpu_node(0, NULL);
++	if (!cpu_dn) {
++		pr_err("failed to obtain CPU device node\n");
++		ret = -ENODEV;
++		goto out;
++	}
++
++	if (of_device_is_compatible(cpu_dn, "brcm,brahma-b15"))
++		cpu_credit_reg_offset = B15_CPU_CREDIT_REG_OFFSET;
++	else if (of_device_is_compatible(cpu_dn, "brcm,brahma-b53"))
++		cpu_credit_reg_offset = B53_CPU_CREDIT_REG_OFFSET;
++	else {
++		pr_err("unsupported CPU\n");
++		ret = -EINVAL;
++	}
++	of_node_put(cpu_dn);
+ out:
+ 	of_node_put(np);
+ 	return ret;
 -- 
 2.9.3
