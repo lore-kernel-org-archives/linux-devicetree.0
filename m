@@ -1,46 +1,52 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 7/6] dt-bindings: tda998x: add the calibration gpio
-Date: Wed, 29 Nov 2017 10:30:20 +0000
-Message-ID: <E1eJzdE-0000PJ-3V@rmk-PC.armlinux.org.uk>
-References: <20171128231712.GB8356@n2100.armlinux.org.uk>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v4] ARM: dts: r8a7794: Add SMP support
+Date: Wed, 29 Nov 2017 11:40:15 +0100
+Message-ID: <20171129104014.e5dwdhgb77cfm6q7@verge.net.au>
+References: <1511876341-8639-1-git-send-email-geert+renesas@glider.be>
+ <20171129082636.zwbwetif6vuxxfww@verge.net.au>
+ <CAMuHMdWE6=3FaCxjuaLAK4HJdP4UoGXiBJkrdWVXYA6ZR+7uuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171128231712.GB8356-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Content-Disposition: inline
+In-Reply-To: <CAMuHMdWE6=3FaCxjuaLAK4HJdP4UoGXiBJkrdWVXYA6ZR+7uuA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the optional calibration gpio for integrated TDA9950 CEC support.
-This GPIO corresponds with the interrupt from the TDA998x, as the
-calibration requires driving the interrupt pin low.
+On Wed, Nov 29, 2017 at 09:30:03AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Wed, Nov 29, 2017 at 9:26 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> > On Tue, Nov 28, 2017 at 02:39:01PM +0100, Geert Uytterhoeven wrote:
+> >> From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> >>
+> >> Add the device tree node for the Advanced Power Management Unit (APMU).
+> >> Use the "enable-method" prop to  point out that the APMU should be used
+> >> for the SMP support.
+> >>
+> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> >> ---
+> >> Dependency 3fd45a136ff61bb5 ("ARM: shmobile: rcar-gen2: Make sure
+> >> CNTVOFF is initialized on CA7/15") is part of v4.15-rc1.
+> >
+> > sorry if this is a bit of a sore topic but I'd like to ask what sort of
+> > testing this patch has seen. Are there any regressions in the area of
+> > CPU hotplug, suspend to RAM and so on...
+> 
+> Last time I tried, CPU hotplug worked fine (on Alt).
+> I cannot test suspend to RAM due to remote access.
+> 
+> Sergei?
 
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
----
-Sorry, this patch got forgotten, tacking it on the end of the series.
+Thanks for your help testing this. Both CPU hotplug and suspend-to-RAM
+seem to work fine on Alt.o
 
- Documentation/devicetree/bindings/display/bridge/tda998x.txt | 3 +++
- 1 file changed, 3 insertions(+)
+I have applied this with:
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/tda998x.txt b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
-index 24cc2466185a..ad6620560d63 100644
---- a/Documentation/devicetree/bindings/display/bridge/tda998x.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
-@@ -27,6 +27,9 @@ Required properties;
- 	in question is used. The implementation allows one or two DAIs. If two
- 	DAIs are defined, they must be of different type.
- 
-+  - calib-gpio: calibration GPIO, which must correspond with the
-+	gpio used for the TDA998x interrupt pin.
-+
- [1] Documentation/sound/alsa/soc/DAI.txt
- [2] include/dt-bindings/display/tda998x.h
- 
--- 
-2.7.4
+Tested-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
