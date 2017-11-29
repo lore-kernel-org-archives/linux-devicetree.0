@@ -1,274 +1,465 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v6,4/4] pmbus (max31785): Add dual tachometer support
-Date: Wed, 29 Nov 2017 13:17:59 -0800
-Message-ID: <20171129211759.GA22504@roeck-us.net>
-References: <49a5c6db7eb5dd1c53d326e0f7314e8f9e258997.1511152748.git-series.andrew@aj.id.au>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v4 0/5] TDA1997x HDMI video receiver
+Date: Wed, 29 Nov 2017 13:19:52 -0800
+Message-ID: <1511990397-27647-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <49a5c6db7eb5dd1c53d326e0f7314e8f9e258997.1511152748.git-series.andrew@aj.id.au>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linux-hwmon@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, joel@jms.id.au, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-media@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 03:12:06PM +1030, Andrew Jeffery wrote:
-> The dual tachometer feature is implemented in hardware with a TACHSEL
-> input to indicate the rotor under measurement, and exposed on the device
-> by extending the READ_FAN_SPEED_1 word with two extra bytes*. The need
-> to read the non-standard four-byte response leads to a cut-down
-> implementation of i2c_smbus_xfer_emulated() included in the driver.
-> Further, to expose the second rotor tachometer value to userspace the
-> values are exposed through virtual pages. We re-route accesses to
-> FAN_CONFIG_1_2 and READ_FAN_SPEED_1 on pages 23-28 (not defined by the
-> hardware) to the same registers on pages 0-5, and with the latter command
-> we extract the value from the second word of the four-byte response.
-> 
-> * The documentation recommends the slower rotor be associated with
-> TACHSEL=0, which corresponds to the first word of the response. The
-> TACHSEL=0 measurement is used by the controller's closed-loop fan
-> management to judge target fan rate.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+This is a v4l2 subdev driver supporting the TDA1997x HDMI video receiver.
 
-Applied.
+I've tested this on a Gateworks GW54xx/GW551x with an IMX6Q which uses the
+TDA19971 with 16bits connected to the IMX6 CSI. For this configuration I've
+tested both 16bit YUV422 and 8bit BT656 parallel video bus modes.
 
-Thanks,
-Guenter
+While the driver should support the TDA1993 I do not have one for testing.
 
-> ---
->  Documentation/hwmon/max31785   |   8 +-
->  drivers/hwmon/pmbus/max31785.c | 147 ++++++++++++++++++++++++++++++++++-
->  2 files changed, 152 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/hwmon/max31785 b/Documentation/hwmon/max31785
-> index 7b0a0a8cdb6b..270c5f865261 100644
-> --- a/Documentation/hwmon/max31785
-> +++ b/Documentation/hwmon/max31785
-> @@ -17,8 +17,9 @@ management with temperature and remote voltage sensing. Various fan control
->  features are provided, including PWM frequency control, temperature hysteresis,
->  dual tachometer measurements, and fan health monitoring.
->  
-> -For dual rotor fan configuration, the MAX31785 exposes the slowest rotor of the
-> -two in the fan[1-4]_input attributes.
-> +For dual-rotor configurations the MAX31785A exposes the second rotor tachometer
-> +readings in attributes fan[5-8]_input. By contrast the MAX31785 only exposes
-> +the slowest rotor measurement, and does so in the fan[1-4]_input attributes.
->  
->  Usage Notes
->  -----------
-> @@ -31,7 +32,8 @@ Sysfs attributes
->  
->  fan[1-4]_alarm		Fan alarm.
->  fan[1-4]_fault		Fan fault.
-> -fan[1-4]_input		Fan RPM.
-> +fan[1-8]_input		Fan RPM. On the MAX31785A, inputs 5-8 correspond to the
-> +			second rotor of fans 1-4
->  fan[1-4]_target		Fan input target
->  
->  in[1-6]_crit		Critical maximum output voltage
-> diff --git a/drivers/hwmon/pmbus/max31785.c b/drivers/hwmon/pmbus/max31785.c
-> index 8706a696c89a..bffab449be39 100644
-> --- a/drivers/hwmon/pmbus/max31785.c
-> +++ b/drivers/hwmon/pmbus/max31785.c
-> @@ -16,9 +16,79 @@
->  
->  enum max31785_regs {
->  	MFR_REVISION		= 0x9b,
-> +	MFR_FAN_CONFIG		= 0xf1,
->  };
->  
-> +#define MAX31785			0x3030
-> +#define MAX31785A			0x3040
-> +
-> +#define MFR_FAN_CONFIG_DUAL_TACH	BIT(12)
-> +
->  #define MAX31785_NR_PAGES		23
-> +#define MAX31785_NR_FAN_PAGES		6
-> +
-> +static int max31785_read_byte_data(struct i2c_client *client, int page,
-> +				   int reg)
-> +{
-> +	if (page < MAX31785_NR_PAGES)
-> +		return -ENODATA;
-> +
-> +	switch (reg) {
-> +	case PMBUS_VOUT_MODE:
-> +		return -ENOTSUPP;
-> +	case PMBUS_FAN_CONFIG_12:
-> +		return pmbus_read_byte_data(client, page - MAX31785_NR_PAGES,
-> +					    reg);
-> +	}
-> +
-> +	return -ENODATA;
-> +}
-> +
-> +static int max31785_write_byte(struct i2c_client *client, int page, u8 value)
-> +{
-> +	if (page < MAX31785_NR_PAGES)
-> +		return -ENODATA;
-> +
-> +	return -ENOTSUPP;
-> +}
-> +
-> +static int max31785_read_long_data(struct i2c_client *client, int page,
-> +				   int reg, u32 *data)
-> +{
-> +	unsigned char cmdbuf[1];
-> +	unsigned char rspbuf[4];
-> +	int rc;
-> +
-> +	struct i2c_msg msg[2] = {
-> +		{
-> +			.addr = client->addr,
-> +			.flags = 0,
-> +			.len = sizeof(cmdbuf),
-> +			.buf = cmdbuf,
-> +		},
-> +		{
-> +			.addr = client->addr,
-> +			.flags = I2C_M_RD,
-> +			.len = sizeof(rspbuf),
-> +			.buf = rspbuf,
-> +		},
-> +	};
-> +
-> +	cmdbuf[0] = reg;
-> +
-> +	rc = pmbus_set_page(client, page);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc = i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	*data = (rspbuf[0] << (0 * 8)) | (rspbuf[1] << (1 * 8)) |
-> +		(rspbuf[2] << (2 * 8)) | (rspbuf[3] << (3 * 8));
-> +
-> +	return rc;
-> +}
->  
->  static int max31785_get_pwm(struct i2c_client *client, int page)
->  {
-> @@ -62,9 +132,30 @@ static int max31785_get_pwm_mode(struct i2c_client *client, int page)
->  static int max31785_read_word_data(struct i2c_client *client, int page,
->  				   int reg)
->  {
-> +	u32 val;
->  	int rv;
->  
->  	switch (reg) {
-> +	case PMBUS_READ_FAN_SPEED_1:
-> +		if (page < MAX31785_NR_PAGES)
-> +			return -ENODATA;
-> +
-> +		rv = max31785_read_long_data(client, page - MAX31785_NR_PAGES,
-> +					     reg, &val);
-> +		if (rv < 0)
-> +			return rv;
-> +
-> +		rv = (val >> 16) & 0xffff;
-> +		break;
-> +	case PMBUS_FAN_COMMAND_1:
-> +		/*
-> +		 * PMBUS_FAN_COMMAND_x is probed to judge whether or not to
-> +		 * expose fan control registers.
-> +		 *
-> +		 * Don't expose fan_target attribute for virtual pages.
-> +		 */
-> +		rv = (page >= MAX31785_NR_PAGES) ? -ENOTSUPP : -ENODATA;
-> +		break;
->  	case PMBUS_VIRT_PWM_1:
->  		rv = max31785_get_pwm(client, page);
->  		break;
-> @@ -157,11 +248,15 @@ static int max31785_write_word_data(struct i2c_client *client, int page,
->  #define MAX31785_VOUT_FUNCS \
->  	(PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT)
->  
-> +#define MAX37185_NUM_FAN_PAGES 6
-> +
->  static const struct pmbus_driver_info max31785_info = {
->  	.pages = MAX31785_NR_PAGES,
->  
->  	.write_word_data = max31785_write_word_data,
-> +	.read_byte_data = max31785_read_byte_data,
->  	.read_word_data = max31785_read_word_data,
-> +	.write_byte = max31785_write_byte,
->  
->  	/* RPM */
->  	.format[PSC_FAN] = direct,
-> @@ -208,13 +303,46 @@ static const struct pmbus_driver_info max31785_info = {
->  	.func[22] = MAX31785_VOUT_FUNCS,
->  };
->  
-> +static int max31785_configure_dual_tach(struct i2c_client *client,
-> +					struct pmbus_driver_info *info)
-> +{
-> +	int ret;
-> +	int i;
-> +
-> +	for (i = 0; i < MAX31785_NR_FAN_PAGES; i++) {
-> +		ret = i2c_smbus_write_byte_data(client, PMBUS_PAGE, i);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		ret = i2c_smbus_read_word_data(client, MFR_FAN_CONFIG);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (ret & MFR_FAN_CONFIG_DUAL_TACH) {
-> +			int virtual = MAX31785_NR_PAGES + i;
-> +
-> +			info->pages = virtual + 1;
-> +			info->func[virtual] |= PMBUS_HAVE_FAN12;
-> +			info->func[virtual] |= PMBUS_PAGE_VIRTUAL;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int max31785_probe(struct i2c_client *client,
->  			  const struct i2c_device_id *id)
->  {
->  	struct device *dev = &client->dev;
->  	struct pmbus_driver_info *info;
-> +	bool dual_tach = false;
->  	s64 ret;
->  
-> +	if (!i2c_check_functionality(client->adapter,
-> +				     I2C_FUNC_SMBUS_BYTE_DATA |
-> +				     I2C_FUNC_SMBUS_WORD_DATA))
-> +		return -ENODEV;
-> +
->  	info = devm_kzalloc(dev, sizeof(struct pmbus_driver_info), GFP_KERNEL);
->  	if (!info)
->  		return -ENOMEM;
-> @@ -225,6 +353,25 @@ static int max31785_probe(struct i2c_client *client,
->  	if (ret < 0)
->  		return ret;
->  
-> +	ret = i2c_smbus_read_word_data(client, MFR_REVISION);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (ret == MAX31785A) {
-> +		dual_tach = true;
-> +	} else if (ret == MAX31785) {
-> +		if (!strcmp("max31785a", id->name))
-> +			dev_warn(dev, "Expected max3175a, found max31785: cannot provide secondary tachometer readings\n");
-> +	} else {
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (dual_tach) {
-> +		ret = max31785_configure_dual_tach(client, info);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
->  	return pmbus_do_probe(client, id, info);
->  }
->  
+Further potential development efforts include:
+ - CEC support
+ - HDCP support
+ - mbus format selection support for bus widths that support multiple formats
+ - TDA19972 support (2 inputs)
+
+Media graphs can be found at http://dev.gateworks.com/docs/linux/media
+
+History:
+v4:
+ - move include/dt-bindings/media/tda1997x.h to bindings patch
+ - clarify port node details in bindings
+ - fix typos
+ - fix default quant range for VGA
+ - fix quant range handling and conv matrix
+ - add additional standards and capabilities to timings_cap
+
+v3:
+ - fix typo in dt bindings
+ - added dt bindings for GW551x
+ - use V4L2_DV_BT_FRAME_WIDTH/HEIGHT macros
+ - fixed missing break
+ - use only hdmi_infoframe_log for infoframe logging
+ - simplify tda1997x_s_stream error handling
+ - add delayed work proc to handle hotplug enable/disable
+ - fix set_edid (disable HPD before writing, enable after)
+ - remove enabling edid by default
+ - initialize timings
+ - take quant range into account in colorspace conversion
+ - remove vendor/product tracking (we provide this in log_status via infoframes)
+ - add v4l_controls
+ - add more detail to log_status
+ - calculate vhref generator timings
+ - timing detection fixes (rounding errors, hswidth errors)
+ - rename configure_input/configure_conv functions
+
+v2:
+ - encorporate feedback into dt bindings
+ - change audio dt bindings
+ - implement dv timings enum/cap
+ - remove deprecated g_mbus_config op
+ - fix dv_query_timings
+ - add EDID get/set handling
+ - remove max-pixel-rate support
+ - add audio codec DAI support
+ - added media-ctl and v4l2-compliance details
+
+v1:
+ - initial RFC
+
+Media device topology:
+# media-ctl -d /dev/media0 -p
+Media controller API version 4.13.0
+
+Media device information
+------------------------
+driver          imx-media
+model           imx-media
+serial          
+bus info        
+hw revision     0x0
+driver version  4.13.0
+
+Device topology
+- entity 1: adv7180 2-0020 (1 pad, 1 link)
+            type V4L2 subdev subtype Unknown flags 20004
+            device node name /dev/v4l-subdev0
+	pad0: Source
+		[fmt:UYVY8_2X8/720x480 field:interlaced colorspace:smpte170m]
+		-> "ipu2_csi1_mux":1 []
+
+- entity 3: tda19971 2-0048 (1 pad, 1 link)
+            type V4L2 subdev subtype Unknown flags 0
+            device node name /dev/v4l-subdev1
+	pad0: Source
+		[fmt:UYVY8_1X16/640x480 field:none colorspace:srgb]
+		[dv.caps:BT.656/1120 min:640x480@13000000 max:1920x1080@165000000 stds:CEA-861,DMT caps:progressive]
+		[dv.detect:BT.656/1120 640x480p59 (800x525) stds:CEA-861,DMT flags:has-cea861-vic]
+		[dv.current:BT.656/1120 1920x1080p60 (2200x1125) stds:CEA-861,DMT flags:can-reduce-fps,CE-video,has-cea861-vic]
+		-> "ipu1_csi0_mux":1 []
+
+- entity 5: ipu1_vdic (3 pads, 3 links)
+            type V4L2 subdev subtype Unknown flags 0
+            device node name /dev/v4l-subdev2
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu1_csi0":1 []
+		<- "ipu1_csi1":1 []
+	pad1: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/60 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prp":0 []
+
+- entity 9: ipu2_vdic (3 pads, 3 links)
+            type V4L2 subdev subtype Unknown flags 0
+            device node name /dev/v4l-subdev3
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu2_csi0":1 []
+		<- "ipu2_csi1":1 []
+	pad1: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/60 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prp":0 []
+
+- entity 13: ipu1_ic_prp (3 pads, 5 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev4
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu1_vdic":2 []
+		<- "ipu1_csi0":1 []
+		<- "ipu1_csi1":1 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prpenc":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prpvf":0 []
+
+- entity 17: ipu1_ic_prpenc (2 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev5
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu1_ic_prp":1 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prpenc capture":0 []
+
+- entity 20: ipu1_ic_prpenc capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video0
+	pad0: Sink
+		<- "ipu1_ic_prpenc":1 []
+
+- entity 26: ipu1_ic_prpvf (2 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev6
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu1_ic_prp":2 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prpvf capture":0 []
+
+- entity 29: ipu1_ic_prpvf capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video1
+	pad0: Sink
+		<- "ipu1_ic_prpvf":1 []
+
+- entity 35: ipu2_ic_prp (3 pads, 5 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev7
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu2_vdic":2 []
+		<- "ipu2_csi0":1 []
+		<- "ipu2_csi1":1 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prpenc":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prpvf":0 []
+
+- entity 39: ipu2_ic_prpenc (2 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev8
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu2_ic_prp":1 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prpenc capture":0 []
+
+- entity 42: ipu2_ic_prpenc capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video2
+	pad0: Sink
+		<- "ipu2_ic_prpenc":1 []
+
+- entity 48: ipu2_ic_prpvf (2 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev9
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu2_ic_prp":2 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prpvf capture":0 []
+
+- entity 51: ipu2_ic_prpvf capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video3
+	pad0: Sink
+		<- "ipu2_ic_prpvf":1 []
+
+- entity 57: ipu1_csi0 (3 pads, 4 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev10
+	pad0: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range
+		 crop.bounds:(0,0)/640x480
+		 crop:(0,0)/640x480
+		 compose.bounds:(0,0)/640x480
+		 compose:(0,0)/640x480]
+		<- "ipu1_csi0_mux":2 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prp":0 []
+		-> "ipu1_vdic":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_csi0 capture":0 []
+
+- entity 61: ipu1_csi0 capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video4
+	pad0: Sink
+		<- "ipu1_csi0":2 []
+
+- entity 67: ipu1_csi1 (3 pads, 3 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev11
+	pad0: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range
+		 crop.bounds:(0,0)/640x480
+		 crop:(0,0)/640x480
+		 compose.bounds:(0,0)/640x480
+		 compose:(0,0)/640x480]
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prp":0 []
+		-> "ipu1_vdic":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_csi1 capture":0 []
+
+- entity 71: ipu1_csi1 capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video5
+	pad0: Sink
+		<- "ipu1_csi1":2 []
+
+- entity 77: ipu2_csi0 (3 pads, 3 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev12
+	pad0: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range
+		 crop.bounds:(0,0)/640x480
+		 crop:(0,0)/640x480
+		 compose.bounds:(0,0)/640x480
+		 compose:(0,0)/640x480]
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prp":0 []
+		-> "ipu2_vdic":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_csi0 capture":0 []
+
+- entity 81: ipu2_csi0 capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video6
+	pad0: Sink
+		<- "ipu2_csi0":2 []
+
+- entity 87: ipu2_csi1 (3 pads, 4 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev13
+	pad0: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range
+		 crop.bounds:(0,0)/640x480
+		 crop:(0,0)/640x480
+		 compose.bounds:(0,0)/640x480
+		 compose:(0,0)/640x480]
+		<- "ipu2_csi1_mux":2 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prp":0 []
+		-> "ipu2_vdic":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_csi1 capture":0 []
+
+- entity 91: ipu2_csi1 capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video7
+	pad0: Sink
+		<- "ipu2_csi1":2 []
+
+- entity 97: ipu1_csi0_mux (3 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev14
+	pad0: Sink
+		[fmt:unknown/0x0]
+	pad1: Sink
+		[fmt:unknown/0x0]
+		<- "tda19971 2-0048":0 []
+	pad2: Source
+		[fmt:unknown/0x0]
+		-> "ipu1_csi0":0 []
+
+- entity 101: ipu2_csi1_mux (3 pads, 2 links)
+              type V4L2 subdev subtype Unknown flags 0
+              device node name /dev/v4l-subdev15
+	pad0: Sink
+		[fmt:unknown/0x0]
+	pad1: Sink
+		[fmt:unknown/0x0]
+		<- "adv7180 2-0020":0 []
+	pad2: Source
+		[fmt:unknown/0x0]
+		-> "ipu2_csi1":0 []
+
+
+v4l2-compliance test results:
+(on /dev/video6 as v4l2-compliance doesn't yet support subdevs)
+Driver Info:
+	Driver name   : imx-media-captu
+	Card type     : imx-media-capture
+	Bus info      : platform:ipu2_csi0
+	Driver version: 4.13.0
+	Capabilities  : 0x84200001
+		Video Capture
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps   : 0x04200001
+		Video Capture
+		Streaming
+		Extended Pix Format
+
+Compliance test for device /dev/video6 (not using libv4l2):
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second video open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+		fail: v4l2-test-input-output.cpp(418): G_INPUT not supported for a capture device
+	test VIDIOC_G/S/ENUMINPUT: FAIL
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+	Control ioctls:
+		test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+		test VIDIOC_QUERYCTRL: OK
+		test VIDIOC_G/S_CTRL: OK
+		fail: v4l2-test-controls.cpp(574): g_ext_ctrls does not support count == 0
+		test VIDIOC_G/S/TRY_EXT_CTRLS: FAIL
+		test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+		test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+		Standard Controls: 0 Private Controls: 0
+
+	Format ioctls:
+		test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+		test VIDIOC_G/S_PARM: OK
+		test VIDIOC_G_FBUF: OK (Not Supported)
+		test VIDIOC_G_FMT: OK
+		test VIDIOC_TRY_FMT: OK
+		test VIDIOC_S_FMT: OK
+		test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+		test Cropping: OK (Not Supported)
+		test Composing: OK (Not Supported)
+		test Scaling: OK (Not Supported)
+
+	Codec ioctls:
+		test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+		test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+		test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+	Buffer ioctls:
+		test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+		test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+
+Total: 42, Succeeded: 40, Failed: 2, Warnings: 0
+
+Tim Harvey (5):
+  MAINTAINERS: add entry for NXP TDA1997x driver
+  media: dt-bindings: Add bindings for TDA1997X
+  media: i2c: Add TDA1997x HDMI receiver driver
+  ARM: dts: imx: Add TDA19971 HDMI Receiver to GW54xx
+  ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x
+
+ .../devicetree/bindings/media/i2c/tda1997x.txt     |  179 +
+ MAINTAINERS                                        |    8 +
+ arch/arm/boot/dts/imx6q-gw54xx.dts                 |  102 +
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi              |   29 +-
+ arch/arm/boot/dts/imx6qdl-gw551x.dtsi              |   85 +
+ drivers/media/i2c/Kconfig                          |    9 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/tda1997x.c                       | 3516 ++++++++++++++++++++
+ include/dt-bindings/media/tda1997x.h               |   78 +
+ include/media/i2c/tda1997x.h                       |   53 +
+ 10 files changed, 4057 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+ create mode 100644 drivers/media/i2c/tda1997x.c
+ create mode 100644 include/dt-bindings/media/tda1997x.h
+ create mode 100644 include/media/i2c/tda1997x.h
+
+-- 
+2.7.4
