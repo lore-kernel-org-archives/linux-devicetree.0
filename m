@@ -1,47 +1,33 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3] mfd: syscon: Add hardware spinlock support
-Date: Wed, 29 Nov 2017 11:07:23 +0100
-Message-ID: <CAK8P3a2SDgPEfg4PvefSrh0cBneNcbM66ogbuBFxoxqrS82cTQ@mail.gmail.com>
-References: <e6b3e6532abf42e6e13919e65d79908cd5e02137.1511159909.git.baolin.wang@linaro.org>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH 0/3] Misc fixes up for MT7623 mmc
+Date: Wed, 29 Nov 2017 18:10:34 +0800
+Message-ID: <cover.1511949769.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e6b3e6532abf42e6e13919e65d79908cd5e02137.1511159909.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 20, 2017 at 7:54 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
-> Some system control registers need hardware spinlock to synchronize
-> between the multiple subsystems, so we should add hardware spinlock
-> support for syscon.
->
+From: Sean Wang <sean.wang@mediatek.com>
 
-> @@ -87,6 +88,12 @@ static struct syscon *of_syscon_register(struct device_node *np)
->         if (ret)
->                 reg_io_width = 4;
->
-> +       ret = of_hwspin_lock_get_id(np, 0);
-> +       if (ret > 0) {
-> +               syscon_config.hwlock_id = ret;
-> +               syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
-> +       }
+Just add some fixes up for the current MT7623 support
 
-Hi Baolin,
+Patch 1) complement the missing dt-bindings definitions
+Patch 2) pick up the proper falling back as patch 1 defines.
+Patch 3) SD-card detection issue caused by the wrong polarity is being fixed up
 
-The error handling here seems insufficient, I think we have to treat
-the following cases separately:
+Sean Wang (3):
+  mmc: dt-bindings: add mmc support to MT7623 SoC
+  arm: dts: mt7623: update mmc related nodes with the appropriate
+    fallback
+  arm: dts: mt7623: fix card detection issue on bananapi-r2
 
-- ret>0 (this is fine)
-- no spinlock in DT: of_hwspin_lock_get_id currently returns -EINVAL,
-  we probably want to use a different return code (maybe -ESRCH ?)
-  here so we can tell the difference beween no spinlock, and an
-  invalid spinlock
-- deferred probing: if the spinlock is there but the driver is not
-  yet available, we may need to propagate the -EPROBE_DEFER
-  here
-- other error: this would probably be a fatal condition here, and
-  we should print a warning and clean up.
+ Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
+ arch/arm/boot/dts/mt7623.dtsi                    | 4 ++--
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts    | 2 +-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-       Arnd
+-- 
+2.7.4
