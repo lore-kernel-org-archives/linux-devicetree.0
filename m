@@ -1,101 +1,141 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 9/9] soc: brcmstb: biuctrl: Move to early_initcall
-Date: Wed, 29 Nov 2017 12:18:49 -0800
-Message-ID: <20171129201849.17522-10-f.fainelli@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 7/9] soc: brcmstb: biuctrl: Fine tune B53 MCP interface settings
+Date: Wed, 29 Nov 2017 12:18:47 -0800
+Message-ID: <20171129201849.17522-8-f.fainelli@gmail.com>
 References: <20171129201849.17522-1-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171129201849.17522-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171129201849.17522-1-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bcm-kernel-feedback-list@broadcom.com
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Being called during early_initcall() is early enough that it occurs
-before SMP initialization, which is all we care about for the Bus
-Interface Unit configuration.
+In order to achieve expected MCP bus throughput on 3 particular chips:
+7268, 7271 and 7278, do the appropriate programming of the MCP
+interface: increase number of MCP write credits, turn on write-back
+throttling when present.
 
-This solves lack of BIU initialization on ARM64 platforms where we do
-not have an anchor where to put the BIU initialization (since there are
-no machine descriptors).
-
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/mach-bcm/brcmstb.c         | 2 --
- drivers/soc/bcm/brcmstb/biuctrl.c   | 6 ++++--
- include/linux/soc/brcmstb/brcmstb.h | 6 ------
- 3 files changed, 4 insertions(+), 10 deletions(-)
+ drivers/soc/bcm/brcmstb/biuctrl.c | 76 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/arch/arm/mach-bcm/brcmstb.c b/arch/arm/mach-bcm/brcmstb.c
-index 07e3a86c6466..5f127d5f1045 100644
---- a/arch/arm/mach-bcm/brcmstb.c
-+++ b/arch/arm/mach-bcm/brcmstb.c
-@@ -14,7 +14,6 @@
- #include <linux/init.h>
- #include <linux/irqchip.h>
- #include <linux/of_platform.h>
--#include <linux/soc/brcmstb/brcmstb.h>
- 
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-@@ -38,7 +37,6 @@ u32 brcmstb_uart_config[3] = {
- static void __init brcmstb_init_irq(void)
- {
- 	irqchip_init();
--	brcmstb_biuctrl_init();
- }
- 
- static const char *const brcmstb_match[] __initconst = {
 diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
-index dd45bbfe64dd..2b23ae7b5e9b 100644
+index d498f9db01ab..dd45bbfe64dd 100644
 --- a/drivers/soc/bcm/brcmstb/biuctrl.c
 +++ b/drivers/soc/bcm/brcmstb/biuctrl.c
-@@ -240,7 +240,7 @@ static struct syscore_ops brcmstb_cpu_credit_syscore_ops = {
- #endif
+@@ -22,6 +22,18 @@
+ #include <linux/soc/brcmstb/brcmstb.h>
  
+ #define  CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK	0x70000000
++#define CPU_CREDIT_REG_MCPx_READ_CRED_MASK	0xf
++#define CPU_CREDIT_REG_MCPx_WRITE_CRED_MASK	0xf
++#define CPU_CREDIT_REG_MCPx_READ_CRED_SHIFT(x)	((x) * 8)
++#define CPU_CREDIT_REG_MCPx_WRITE_CRED_SHIFT(x)	(((x) * 8) + 4)
++
++#define CPU_MCP_FLOW_REG_MCPx_RDBUFF_CRED_SHIFT(x)	((x) * 8)
++#define CPU_MCP_FLOW_REG_MCPx_RDBUFF_CRED_MASK		0xff
++
++#define CPU_WRITEBACK_CTRL_REG_WB_THROTTLE_THRESHOLD_MASK	0xf
++#define CPU_WRITEBACK_CTRL_REG_WB_THROTTLE_TIMEOUT_MASK		0xf
++#define CPU_WRITEBACK_CTRL_REG_WB_THROTTLE_TIMEOUT_SHIFT	4
++#define CPU_WRITEBACK_CTRL_REG_WB_THROTTLE_ENABLE		BIT(8)
  
--void __init brcmstb_biuctrl_init(void)
-+static int __init brcmstb_biuctrl_init(void)
+ static void __iomem *cpubiuctrl_base;
+ static bool mcp_wr_pairing_en;
+@@ -59,6 +71,13 @@ static const int b15_cpubiuctrl_regs[] = {
+ 	[CPU_WRITEBACK_CTRL_REG] = -1,
+ };
+ 
++/* Odd cases, e.g: 7260 */
++static const int b53_cpubiuctrl_no_wb_regs[] = {
++	[CPU_CREDIT_REG] = 0x0b0,
++	[CPU_MCP_FLOW_REG] = 0x0b4,
++	[CPU_WRITEBACK_CTRL_REG] = -1,
++};
++
+ static const int b53_cpubiuctrl_regs[] = {
+ 	[CPU_CREDIT_REG] = 0x0b0,
+ 	[CPU_MCP_FLOW_REG] = 0x0b4,
+@@ -90,6 +109,59 @@ static int __init mcp_write_pairing_set(void)
+ 	return 0;
+ }
+ 
++static const u32 b53_mach_compat[] = {
++	0x7268,
++	0x7271,
++	0x7278,
++};
++
++static void __init mcp_b53_set(void)
++{
++	unsigned int i;
++	u32 reg;
++
++	reg = brcmstb_get_family_id();
++
++	for (i = 0; i < ARRAY_SIZE(b53_mach_compat); i++) {
++		if (BRCM_ID(reg) == b53_mach_compat[i])
++			break;
++	}
++
++	if (i == ARRAY_SIZE(b53_mach_compat))
++		return;
++
++	/* Set all 3 MCP interfaces to 8 credits */
++	reg = cbc_readl(CPU_CREDIT_REG);
++	for (i = 0; i < 3; i++) {
++		reg &= ~(CPU_CREDIT_REG_MCPx_WRITE_CRED_MASK <<
++			 CPU_CREDIT_REG_MCPx_WRITE_CRED_SHIFT(i));
++		reg &= ~(CPU_CREDIT_REG_MCPx_READ_CRED_MASK <<
++			 CPU_CREDIT_REG_MCPx_READ_CRED_SHIFT(i));
++		reg |= 8 << CPU_CREDIT_REG_MCPx_WRITE_CRED_SHIFT(i);
++		reg |= 8 << CPU_CREDIT_REG_MCPx_READ_CRED_SHIFT(i);
++	}
++	cbc_writel(reg, CPU_CREDIT_REG);
++
++	/* Max out the number of in-flight Jwords reads on the MCP interface */
++	reg = cbc_readl(CPU_MCP_FLOW_REG);
++	for (i = 0; i < 3; i++)
++		reg |= CPU_MCP_FLOW_REG_MCPx_RDBUFF_CRED_MASK <<
++			CPU_MCP_FLOW_REG_MCPx_RDBUFF_CRED_SHIFT(i);
++	cbc_writel(reg, CPU_MCP_FLOW_REG);
++
++	/* Enable writeback throttling, set timeout to 128 cycles, 256 cycles
++	 * threshold
++	 */
++	reg = cbc_readl(CPU_WRITEBACK_CTRL_REG);
++	reg |= CPU_WRITEBACK_CTRL_REG_WB_THROTTLE_ENABLE;
++	reg &= ~CPU_WRITEBACK_CTRL_REG_WB_THROTTLE_THRESHOLD_MASK;
++	reg &= ~(CPU_WRITEBACK_CTRL_REG_WB_THROTTLE_TIMEOUT_MASK <<
++		 CPU_WRITEBACK_CTRL_REG_WB_THROTTLE_TIMEOUT_SHIFT);
++	reg |= 8;
++	reg |= 7 << CPU_WRITEBACK_CTRL_REG_WB_THROTTLE_TIMEOUT_SHIFT;
++	cbc_writel(reg, CPU_WRITEBACK_CTRL_REG);
++}
++
+ static int __init setup_hifcpubiuctrl_regs(void)
  {
- 	int ret;
- 
-@@ -249,11 +249,13 @@ void __init brcmstb_biuctrl_init(void)
- 	ret = mcp_write_pairing_set();
- 	if (ret) {
- 		pr_err("MCP: Unable to disable write pairing!\n");
--		return;
-+		return ret;
+ 	struct device_node *np, *cpu_dn;
+@@ -126,6 +198,9 @@ static int __init setup_hifcpubiuctrl_regs(void)
+ 		ret = -EINVAL;
+ 	}
+ 	of_node_put(cpu_dn);
++
++	if (BRCM_ID(brcmstb_get_family_id()) == 0x7260)
++		cpubiuctrl_regs = b53_cpubiuctrl_no_wb_regs;
+ out:
+ 	of_node_put(np);
+ 	return ret;
+@@ -177,6 +252,7 @@ void __init brcmstb_biuctrl_init(void)
+ 		return;
  	}
  
- 	mcp_b53_set();
++	mcp_b53_set();
  #ifdef CONFIG_PM_SLEEP
  	register_syscore_ops(&brcmstb_cpu_credit_syscore_ops);
  #endif
-+	return 0;
- }
-+early_initcall(brcmstb_biuctrl_init);
-diff --git a/include/linux/soc/brcmstb/brcmstb.h b/include/linux/soc/brcmstb/brcmstb.h
-index 12e548938bbb..8e884e0dda0a 100644
---- a/include/linux/soc/brcmstb/brcmstb.h
-+++ b/include/linux/soc/brcmstb/brcmstb.h
-@@ -13,12 +13,6 @@ static inline u32 BRCM_REV(u32 reg)
- }
- 
- /*
-- * Bus Interface Unit control register setup, must happen early during boot,
-- * before SMP is brought up, called by machine entry point.
-- */
--void brcmstb_biuctrl_init(void);
--
--/*
-  * Helper functions for getting family or product id from the
-  * SoC driver.
-  */
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
