@@ -1,40 +1,375 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] ARM: dts: exynos: Add missing interrupt-controller properties to Exynos5410 PMU
-Date: Wed, 29 Nov 2017 19:36:10 +0100
-Message-ID: <20171129183610.26305-1-krzk@kernel.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 02/11] ARM: dts: imx6: Move nodes which have no reg property out of bus
+Date: Wed, 29 Nov 2017 16:46:10 -0200
+Message-ID: <1511981179-12660-2-git-send-email-festevam@gmail.com>
+References: <1511981179-12660-1-git-send-email-festevam@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1511981179-12660-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PMU (system-controller@10040000) is used as interrupt-parent for certain
-nodes thus it should be marked as interrupt-controller to silence
-warnings when building Exynos5410-based DTBs:
+From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-  arch/arm/boot/dts/exynos5410-odroidxu.dtb: Warning (interrupts_property):
-    Missing interrupt-controller or interrupt-map property in /soc/system-controller@10040000
-  arch/arm/boot/dts/exynos5410-odroidxu.dtb: Warning (interrupts_property):
-    Missing #interrupt-cells in interrupt-parent /soc/system-controller@10040000
+Move tempmon, ldb and pmu nodes from soc node to root node.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+The nodes that have been moved do not have any register properties and thus
+shouldn't be placed on the bus.
+
+This fixes the following build warnings with W=1:
+
+arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (simple_bus_reg): Node /soc/aips-bus@2000000/tempmon missing or empty reg/ranges property
+arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (simple_bus_reg): Node /soc/aips-bus@2000000/ldb missing or empty reg/ranges property
+arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (simple_bus_reg): Node /soc/pmu missing or empty reg/ranges property
+
+Based on a patch from Simon Horman for r8a7795.dtsi.
+
+Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm/boot/dts/exynos5410.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx6qdl.dtsi | 136 +++++++++++++++++++++--------------------
+ arch/arm/boot/dts/imx6sl.dtsi  |  28 +++++----
+ arch/arm/boot/dts/imx6sx.dtsi  |  30 ++++-----
+ arch/arm/boot/dts/imx6ul.dtsi  |  32 +++++-----
+ 4 files changed, 117 insertions(+), 109 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index 06713ec86f0d..e234219fe8f1 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -75,6 +75,9 @@
- 			clock-names = "clkout16";
- 			clocks = <&fin_pll>;
- 			#clock-cells = <1>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupt-parent = <&gic>;
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index ac4f9ec..a0f6712 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -80,6 +80,75 @@
+ 		};
+ 	};
+ 
++	tempmon: tempmon {
++		compatible = "fsl,imx6q-tempmon";
++		interrupt-parent = <&gpc>;
++		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
++		fsl,tempmon = <&anatop>;
++		fsl,tempmon-data = <&ocotp>;
++		clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
++	};
++
++	ldb: ldb {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "fsl,imx6q-ldb", "fsl,imx53-ldb";
++		gpr = <&gpr>;
++		status = "disabled";
++
++		lvds-channel@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++			status = "disabled";
++
++			port@0 {
++				reg = <0>;
++
++				lvds0_mux_0: endpoint {
++					remote-endpoint = <&ipu1_di0_lvds0>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				lvds0_mux_1: endpoint {
++					remote-endpoint = <&ipu1_di1_lvds0>;
++				};
++			};
++		};
++
++		lvds-channel@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++			status = "disabled";
++
++			port@0 {
++				reg = <0>;
++
++				lvds1_mux_0: endpoint {
++					remote-endpoint = <&ipu1_di0_lvds1>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				lvds1_mux_1: endpoint {
++					remote-endpoint = <&ipu1_di1_lvds1>;
++				};
++			};
++		};
++	};
++
++	pmu {
++		compatible = "arm,cortex-a9-pmu";
++		interrupt-parent = <&gpc>;
++		interrupts = <0 94 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -224,11 +293,6 @@
+ 			status = "disabled";
  		};
  
- 		clock: clock-controller@10010000 {
+-		pmu {
+-			compatible = "arm,cortex-a9-pmu";
+-			interrupts = <0 94 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+ 		aips-bus@2000000 { /* AIPS1 */
+ 			compatible = "fsl,aips-bus", "simple-bus";
+ 			#address-cells = <1>;
+@@ -729,14 +793,6 @@
+ 				};
+ 			};
+ 
+-			tempmon: tempmon {
+-				compatible = "fsl,imx6q-tempmon";
+-				interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
+-				fsl,tempmon = <&anatop>;
+-				fsl,tempmon-data = <&ocotp>;
+-				clocks = <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-			};
+-
+ 			usbphy1: usbphy@20c9000 {
+ 				compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
+ 				reg = <0x020c9000 0x1000>;
+@@ -841,60 +897,6 @@
+ 				reg = <0x20e0000 0x4000>;
+ 			};
+ 
+-			ldb: ldb {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				compatible = "fsl,imx6q-ldb", "fsl,imx53-ldb";
+-				gpr = <&gpr>;
+-				status = "disabled";
+-
+-				lvds-channel@0 {
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+-					reg = <0>;
+-					status = "disabled";
+-
+-					port@0 {
+-						reg = <0>;
+-
+-						lvds0_mux_0: endpoint {
+-							remote-endpoint = <&ipu1_di0_lvds0>;
+-						};
+-					};
+-
+-					port@1 {
+-						reg = <1>;
+-
+-						lvds0_mux_1: endpoint {
+-							remote-endpoint = <&ipu1_di1_lvds0>;
+-						};
+-					};
+-				};
+-
+-				lvds-channel@1 {
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+-					reg = <1>;
+-					status = "disabled";
+-
+-					port@0 {
+-						reg = <0>;
+-
+-						lvds1_mux_0: endpoint {
+-							remote-endpoint = <&ipu1_di0_lvds1>;
+-						};
+-					};
+-
+-					port@1 {
+-						reg = <1>;
+-
+-						lvds1_mux_1: endpoint {
+-							remote-endpoint = <&ipu1_di1_lvds1>;
+-						};
+-					};
+-				};
+-			};
+-
+ 			dcic1: dcic@20e4000 {
+ 				reg = <0x020e4000 0x4000>;
+ 				interrupts = <0 124 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 3ea1a41..3365182 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -102,6 +102,21 @@
+ 		};
+ 	};
+ 
++	tempmon: tempmon {
++		compatible = "fsl,imx6q-tempmon";
++		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-parent = <&gpc>;
++		fsl,tempmon = <&anatop>;
++		fsl,tempmon-data = <&ocotp>;
++		clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
++	};
++
++	pmu {
++		compatible = "arm,cortex-a9-pmu";
++		interrupt-parent = <&gpc>;
++		interrupts = <0 94 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -125,11 +140,6 @@
+ 			arm,data-latency = <4 2 3>;
+ 		};
+ 
+-		pmu {
+-			compatible = "arm,cortex-a9-pmu";
+-			interrupts = <0 94 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+ 		aips1: aips-bus@2000000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
+ 			#address-cells = <1>;
+@@ -615,14 +625,6 @@
+ 				};
+ 			};
+ 
+-			tempmon: tempmon {
+-				compatible = "fsl,imx6q-tempmon";
+-				interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
+-				fsl,tempmon = <&anatop>;
+-				fsl,tempmon-data = <&ocotp>;
+-				clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
+-			};
+-
+ 			usbphy1: usbphy@20c9000 {
+ 				compatible = "fsl,imx6sl-usbphy", "fsl,imx23-usbphy";
+ 				reg = <0x020c9000 0x1000>;
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 40c6738c..4500380 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -141,6 +141,22 @@
+ 		};
+ 	};
+ 
++	tempmon: tempmon {
++		compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
++		interrupt-parent = <&gpc>;
++		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++		fsl,tempmon = <&anatop>;
++		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++		nvmem-cell-names = "calib", "temp_grade";
++		clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
++	};
++
++	pmu {
++		compatible = "arm,cortex-a9-pmu";
++		interrupt-parent = <&gpc>;
++		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -148,11 +164,6 @@
+ 		interrupt-parent = <&gpc>;
+ 		ranges;
+ 
+-		pmu {
+-			compatible = "arm,cortex-a9-pmu";
+-			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+-		};
+-
+ 		ocram: sram@900000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x00900000 0x20000>;
+@@ -671,15 +682,6 @@
+ 				};
+ 			};
+ 
+-			tempmon: tempmon {
+-				compatible = "fsl,imx6sx-tempmon", "fsl,imx6q-tempmon";
+-				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-				fsl,tempmon = <&anatop>;
+-				nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+-				nvmem-cell-names = "calib", "temp_grade";
+-				clocks = <&clks IMX6SX_CLK_PLL3_USB_OTG>;
+-			};
+-
+ 			usbphy1: usbphy@20c9000 {
+ 				compatible = "fsl,imx6sx-usbphy", "fsl,imx23-usbphy";
+ 				reg = <0x020c9000 0x1000>;
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index e0b4a46..0e931fd 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -136,6 +136,23 @@
+ 		clock-output-names = "ipp_di1";
+ 	};
+ 
++	tempmon: tempmon {
++		compatible = "fsl,imx6ul-tempmon", "fsl,imx6sx-tempmon";
++		interrupt-parent = <&gpc>;
++		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++		fsl,tempmon = <&anatop>;
++		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++		nvmem-cell-names = "calib", "temp_grade";
++		clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
++	};
++
++	pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupt-parent = <&gpc>;
++		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -143,12 +160,6 @@
+ 		interrupt-parent = <&gpc>;
+ 		ranges;
+ 
+-		pmu {
+-			compatible = "arm,cortex-a7-pmu";
+-			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+-			status = "disabled";
+-		};
+-
+ 		ocram: sram@900000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x00900000 0x20000>;
+@@ -599,15 +610,6 @@
+ 				fsl,anatop = <&anatop>;
+ 			};
+ 
+-			tempmon: tempmon {
+-				compatible = "fsl,imx6ul-tempmon", "fsl,imx6sx-tempmon";
+-				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-				fsl,tempmon = <&anatop>;
+-				nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
+-				nvmem-cell-names = "calib", "temp_grade";
+-				clocks = <&clks IMX6UL_CLK_PLL3_USB_OTG>;
+-			};
+-
+ 			snvs: snvs@20cc000 {
+ 				compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+ 				reg = <0x020cc000 0x4000>;
 -- 
-2.11.0
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
