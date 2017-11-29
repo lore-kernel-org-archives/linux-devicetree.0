@@ -1,167 +1,190 @@
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v12 1/2] rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver documentation
-Date: Wed, 29 Nov 2017 20:32:34 +0100
-Message-ID: <20171129193235.25423-2-niklas.soderlund+renesas@ragnatech.se>
-References: <20171129193235.25423-1-niklas.soderlund+renesas@ragnatech.se>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 2/3] clk: meson-axg: add clock controller drivers
+Date: Wed, 29 Nov 2017 11:34:33 -0800
+Message-ID: <20171129193433.GA19419@codeaurora.org>
+References: <20171128125330.363-1-yixun.lan@amlogic.com>
+ <20171128125330.363-3-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171129193235.25423-1-niklas.soderlund+renesas@ragnatech.se>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-renesas-soc@vger.kernel.org, tomoharu.fukawa.eb@renesas.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171128125330.363-3-yixun.lan@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Documentation for Renesas R-Car MIPI CSI-2 receiver. The CSI-2 receivers
-are located between the video sources (CSI-2 transmitters) and the video
-grabbers (VIN) on Gen3 of Renesas R-Car SoC.
+On 11/28, Yixun Lan wrote:
+> diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
+> new file mode 100644
+> index 000000000000..51c5b4062715
+> --- /dev/null
+> +++ b/drivers/clk/meson/axg.c
+> @@ -0,0 +1,948 @@
+> +/*
+> + * AmLogic Meson-AXG Clock Controller Driver
+> + *
+> + * Copyright (c) 2016 Baylibre SAS.
+> + * Author: Michael Turquette <mturquette@baylibre.com>
+> + *
+> + * Copyright (c) 2017 Amlogic, inc.
+> + * Author: Qiufang Dai <qiufang.dai@amlogic.com>
+> + *
+> + * SPDX-License-Identifier: GPL-2.0+
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/init.h>
+> +
+> +#include "clkc.h"
+> +#include "axg.h"
+> +
+> +static DEFINE_SPINLOCK(clk_lock);
 
-Each CSI-2 device is connected to more then one VIN device which
-simultaneously can receive video from the same CSI-2 device. Each VIN
-device can also be connected to more then one CSI-2 device. The routing
-of which link are used are controlled by the VIN devices. There are only
-a few possible routes which are set by hardware limitations, which are
-different for each SoC in the Gen3 family.
+meson_axg_clk_lock?
 
-To work with the limitations of routing possibilities it is necessary
-for the DT bindings to describe which VIN device is connected to which
-CSI-2 device. This is why port 1 needs to to assign reg numbers for each
-VIN device that be connected to it. To setup and to know which links are
-valid for each SoC is the responsibility of the VIN driver since the
-register to configure it belongs to the VIN hardware.
+> +
+> +static const struct pll_rate_table sys_pll_rate_table[] = {
+> +	PLL_RATE(24000000, 56, 1, 2),
+> +	PLL_RATE(48000000, 64, 1, 2),
+> +	PLL_RATE(72000000, 72, 1, 2),
+> +	PLL_RATE(96000000, 64, 1, 2),
+> +	PLL_RATE(120000000, 80, 1, 2),
+> +	PLL_RATE(144000000, 96, 1, 2),
+> +	PLL_RATE(168000000, 56, 1, 1),
+> +	PLL_RATE(192000000, 64, 1, 1),
+> +	PLL_RATE(216000000, 72, 1, 1),
+> +	PLL_RATE(240000000, 80, 1, 1),
+[...]
+> +
+> +static const struct clkc_data axg_clkc_data = {
+> +	.clk_gates = axg_clk_gates,
+> +	.clk_gates_count = ARRAY_SIZE(axg_clk_gates),
+> +	.clk_mplls = axg_clk_mplls,
+> +	.clk_mplls_count = ARRAY_SIZE(axg_clk_mplls),
+> +	.clk_plls = axg_clk_plls,
+> +	.clk_plls_count = ARRAY_SIZE(axg_clk_plls),
+> +	.clk_muxes = axg_clk_muxes,
+> +	.clk_muxes_count = ARRAY_SIZE(axg_clk_muxes),
+> +	.clk_dividers = axg_clk_dividers,
+> +	.clk_dividers_count = ARRAY_SIZE(axg_clk_dividers),
+> +	.hw_onecell_data = &axg_hw_onecell_data,
+> +};
+> +
+> +static const struct of_device_id clkc_match_table[] = {
+> +	{ .compatible = "amlogic,axg-clkc", .data = &axg_clkc_data },
+> +	{},
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../bindings/media/renesas,rcar-csi2.txt           | 105 +++++++++++++++++++++
- MAINTAINERS                                        |   1 +
- 2 files changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+Nitpick: Drop the comma. Nothing comes after this.
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-new file mode 100644
-index 0000000000000000..688afd83bf66f8cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-@@ -0,0 +1,105 @@
-+Renesas R-Car MIPI CSI-2
-+------------------------
-+
-+The rcar-csi2 device provides MIPI CSI-2 capabilities for the Renesas R-Car
-+family of devices. It is to be used in conjunction with the R-Car VIN module,
-+which provides the video capture capabilities.
-+
-+Mandatory properties
-+--------------------
-+ - compatible: Must be one or more of the following
-+   - "renesas,r8a7795-csi2" for the R8A7795 device.
-+   - "renesas,r8a7796-csi2" for the R8A7796 device.
-+
-+ - reg: the register base and size for the device registers
-+ - interrupts: the interrupt for the device
-+ - clocks: Reference to the parent clock
-+
-+The device node shall contain two 'port' child nodes according to the
-+bindings defined in Documentation/devicetree/bindings/media/
-+video-interfaces.txt. Port 0 shall connect the node that is the video
-+source for to the CSI-2. Port 1 shall connect all the R-Car VIN
-+modules, which can make use of the CSI-2 module.
-+
-+- Port 0 - Video source (Mandatory)
-+	- Endpoint 0 - sub-node describing the endpoint that is the video source
-+
-+- Port 1 - VIN instances (Mandatory for all VIN present in the SoC)
-+	- Endpoint 0 - sub-node describing the endpoint that is VIN0
-+	- Endpoint 1 - sub-node describing the endpoint that is VIN1
-+	- Endpoint 2 - sub-node describing the endpoint that is VIN2
-+	- Endpoint 3 - sub-node describing the endpoint that is VIN3
-+	- Endpoint 4 - sub-node describing the endpoint that is VIN4
-+	- Endpoint 5 - sub-node describing the endpoint that is VIN5
-+	- Endpoint 6 - sub-node describing the endpoint that is VIN6
-+	- Endpoint 7 - sub-node describing the endpoint that is VIN7
-+
-+Example:
-+
-+	csi20: csi2@fea80000 {
-+		compatible = "renesas,r8a7796-csi2";
-+		reg = <0 0xfea80000 0 0x10000>;
-+		interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 714>;
-+		power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+		resets = <&cpg 714>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				reg = <0>;
-+
-+				csi20_in: endpoint@0 {
-+					reg = <0>;
-+					clock-lanes = <0>;
-+					data-lanes = <1>;
-+					remote-endpoint = <&adv7482_txb>;
-+				};
-+			};
-+
-+			port@1 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				reg = <1>;
-+
-+				csi20vin0: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vin0csi20>;
-+				};
-+				csi20vin1: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vin1csi20>;
-+				};
-+				csi20vin2: endpoint@2 {
-+					reg = <2>;
-+					remote-endpoint = <&vin2csi20>;
-+				};
-+				csi20vin3: endpoint@3 {
-+					reg = <3>;
-+					remote-endpoint = <&vin3csi20>;
-+				};
-+				csi20vin4: endpoint@4 {
-+					reg = <4>;
-+					remote-endpoint = <&vin4csi20>;
-+				};
-+				csi20vin5: endpoint@5 {
-+					reg = <5>;
-+					remote-endpoint = <&vin5csi20>;
-+				};
-+				csi20vin6: endpoint@6 {
-+					reg = <6>;
-+					remote-endpoint = <&vin6csi20>;
-+				};
-+				csi20vin7: endpoint@7 {
-+					reg = <7>;
-+					remote-endpoint = <&vin7csi20>;
-+				};
-+			};
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa71ab52fd76d160..4737de9f41bff570 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8652,6 +8652,7 @@ L:	linux-media@vger.kernel.org
- L:	linux-renesas-soc@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- S:	Supported
-+F:	Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
- F:	Documentation/devicetree/bindings/media/rcar_vin.txt
- F:	drivers/media/platform/rcar-vin/
- 
+> +};
+> +
+> +static int axg_clkc_probe(struct platform_device *pdev)
+> +{
+> +	const struct clkc_data *clkc_data;
+> +	void __iomem *clk_base;
+> +	int ret, clkid, i;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	clkc_data = of_device_get_match_data(&pdev->dev);
+> +	if (!clkc_data)
+> +		return -EINVAL;
+> +
+> +	/*  Generic clocks and PLLs */
+> +	clk_base = of_iomap(dev->of_node, 0);
+
+Use platform device APIs for ioremapping?
+
+> +	if (!clk_base) {
+> +		pr_err("%s: Unable to map clk base\n", __func__);
+> +		return -ENXIO;
+> +	}
+> +
+> +	/* Populate base address for PLLs */
+> +	for (i = 0; i < clkc_data->clk_plls_count; i++)
+> +		clkc_data->clk_plls[i]->base = clk_base;
+> +
+> +	/* Populate base address for MPLLs */
+> +	for (i = 0; i < clkc_data->clk_mplls_count; i++)
+> +		clkc_data->clk_mplls[i]->base = clk_base;
+> +
+> +	/* Populate base address for gates */
+> +	for (i = 0; i < clkc_data->clk_gates_count; i++)
+> +		clkc_data->clk_gates[i]->reg = clk_base +
+> +			(u64)clkc_data->clk_gates[i]->reg;
+> +
+> +	/* Populate base address for muxes */
+> +	for (i = 0; i < clkc_data->clk_muxes_count; i++)
+> +		clkc_data->clk_muxes[i]->reg = clk_base +
+> +			(u64)clkc_data->clk_muxes[i]->reg;
+> +
+> +	/* Populate base address for dividers */
+> +	for (i = 0; i < clkc_data->clk_dividers_count; i++)
+> +		clkc_data->clk_dividers[i]->reg = clk_base +
+> +			(u64)clkc_data->clk_dividers[i]->reg;
+> +
+> +	/*
+> +	 * register all clks
+> +	 */
+
+Yes, that's obvious..
+
+> +	for (clkid = 0; clkid < clkc_data->hw_onecell_data->num; clkid++) {
+> +		/* array might be sparse */
+> +		if (!clkc_data->hw_onecell_data->hws[clkid])
+> +			continue;
+> +
+> +		ret = devm_clk_hw_register(dev,
+> +					clkc_data->hw_onecell_data->hws[clkid]);
+> +		if (ret)
+> +			goto iounmap;
+> +	}
+> +
+> +	return of_clk_add_hw_provider(dev->of_node, of_clk_hw_onecell_get,
+> +			clkc_data->hw_onecell_data);
+> +
+> +iounmap:
+> +	iounmap(clk_base);
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver axg_driver = {
+> +	.probe		= axg_clkc_probe,
+> +	.driver		= {
+> +		.name	= "axg-clkc",
+> +		.of_match_table = clkc_match_table,
+> +	},
+> +};
+> +
+> +builtin_platform_driver(axg_driver);
+> diff --git a/include/dt-bindings/clock/axg-clkc.h b/include/dt-bindings/clock/axg-clkc.h
+> new file mode 100644
+> index 000000000000..d2c0f49ba0df
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/axg-clkc.h
+> @@ -0,0 +1,72 @@
+> +/*
+> + * Meson-AXG clock tree IDs
+> + *
+> + * Copyright (c) 2017 Amlogic, Inc. All rights reserved.
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+There's a standard way to add these it seems. They should be the
+first line in the file and look like
+
+/* SPDX-License-Identifier: */
+
+for header files and 
+
+// SPDX-License-Identifier: 
+
+for C files.
+
 -- 
-2.15.0
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
