@@ -1,121 +1,256 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 25/35] nds32: Build infrastructure
-Date: Wed, 29 Nov 2017 12:57:35 +0100
-Message-ID: <CAK8P3a2d2_jxXehE3xP_G9Tzp6jP4hFmS4CJkh=6bePLEDcdGw@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <5e1be9ebc591c6de79b75f726a5a38b2564eaa92.1511785528.git.green.hu@gmail.com>
- <CAK8P3a1GuH2tgtC5t834-PNeUVYQxreD7seZH8sjraZFtRUWKw@mail.gmail.com>
- <CAEbi=3c=hTCcUOPs+Fc10srzTFsB4MnVxgcFydz12-jH0ZXjog@mail.gmail.com>
- <CAK8P3a0kvt52UTtEmE+tWHZuH_rmgTxP7+CiD9Ddwe2cJLwXTQ@mail.gmail.com>
- <CAMuHMdViO=+-kGdXFPSW+9PsPbf3sUa5xdaJ_1C-cX2vE1G35Q@mail.gmail.com>
- <CAK8P3a3yk7ww+LdQdL+wgz2wYrzXLSsj1PTdfK-qx013jdg4SQ@mail.gmail.com> <CAEbi=3cc8e__DnFKmTSMm9xQMx7CGu+1v3e55w8UekwnTTkw5Q@mail.gmail.com>
+From: Mikko Perttunen <cyndis@kapsi.fi>
+Subject: Re: [PATCH V2 6/9] PCI: tegra: free resources on probe failure
+Date: Wed, 29 Nov 2017 13:59:39 +0200
+Message-ID: <2c8b33f4-1524-cd0f-05f5-15f87bf59e31@kapsi.fi>
+References: <1511638333-22951-1-git-send-email-mmaddireddy@nvidia.com>
+ <1511638333-22951-7-git-send-email-mmaddireddy@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAEbi=3cc8e__DnFKmTSMm9xQMx7CGu+1v3e55w8UekwnTTkw5Q@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1511638333-22951-7-git-send-email-mmaddireddy@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Manikanta Maddireddy <mmaddireddy@nvidia.com>, thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rjw@rjwysocki.net, tglx@linutronix.de
+Cc: vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 12:39 PM, Greentime Hu <green.hu@gmail.com> wrote:
-> 2017-11-29 17:25 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->> On Wed, Nov 29, 2017 at 10:10 AM, Geert Uytterhoeven
->> <geert@linux-m68k.org> wrote:
->>> Hi Arnd,
->>>
->>> On Wed, Nov 29, 2017 at 9:58 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->>>> On Wed, Nov 29, 2017 at 9:39 AM, Greentime Hu <green.hu@gmail.com> wrote:
->>>>> 2017-11-27 22:21 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->>>>>> On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
->>>>>>> diff --git a/arch/nds32/Kconfig.cpu b/arch/nds32/Kconfig.cpu
->>>>>>> +config CPU_CACHE_NONALIASING
->>>>>>> +       bool "Non-aliasing cache"
->>>>>>> +       help
->>>>>>> +         If this CPU is using VIPT data cache and its cache way size is larger
->>>>>>> +         than page size, say N. If it is using PIPT data cache, say Y.
->>>>>>> +
->>>>>>> +         If unsure, say Y.
->>>>>>
->>>>>> Can you determine this from the CPU type?
->>>>>
->>>>> There is no cpu register to determine it. It also depeneds on page
->>>>> size and way size however page size is configurable by software.
->>>>> These codes are determined at compile time will be benefit to code
->>>>> size and performance.
->>>>> IMHO, I think it would be better to be determined here.
->>>>
->>>> I meant determining it at compile time from other Kconfig symbols,
->>>> if that's possible. Do the CPU cores each have a fixed way-size?
->>>> If they do, it could be done like
->>>>
->>>> menu "CPU selection"
->>>>
->>>> config CPU_N15
->>>>       bool "AndesCore N15"
->>>>       select CPU_CACHE_NONALIASING
->>>>
->>>> config CPU_N13
->>>>       bool "AndesCore N15"
->>>>       select CPU_CACHE_NONALIASING if PAGE_SIZE_16K
->>>>
->>>> ...
->>>>
->>>> endmenu
->>>>
->>>> and then you can use the same CPU_... symbols to make other decisions
->>>> as well, e.g. CPU specific compiler optimizations.
->>>
->>> Do you want to support multiple CPU types in a single kernel image
->>> (I see no "choice" statement above)?
->>> If yes, you may have a mix of aliasing and non-aliasing caches, so
->>> you may want to invert the logic, and select CPU_CACHE_ALIASING
->>> instead.
->>
->> Right, my mistake.
->>
+On 25.11.2017 21:32, Manikanta Maddireddy wrote:
+> tegra_pcie_probe() can fail in multiple instances, this patch takes care
+> of freeing the resources which are allocated before probe fail.
 >
-> Thanks to Arnd and Geert!
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+> V2:
+> * no change in this patch
 >
-> How about this?
+>  drivers/pci/host/pci-tegra.c | 102 ++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 86 insertions(+), 16 deletions(-)
 >
-> choice
->         prompt "CPU type"
->         default CPU_N13
-> config CPU_N15
->         bool "AndesCore N15"
->         select CPU_CACHE_NONALIASING
-> config CPU_N13
->         bool "AndesCore N13"
->         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
-> config CPU_N10
->         bool "AndesCore N10"
->         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
-> config CPU_D15
->         bool "AndesCore D15"
->         select CPU_CACHE_NONALIASING
->         select HWZOL
-> config CPU_D10
->         bool "AndesCore D10"
->         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
-> endchoice
+> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+> index e9b3ff95e259..7f7b8c9c1e84 100644
+> --- a/drivers/pci/host/pci-tegra.c
+> +++ b/drivers/pci/host/pci-tegra.c
+> @@ -701,14 +701,25 @@ static int tegra_pcie_request_resources(struct tegra_pcie *pcie)
+>  	pci_add_resource(windows, &pcie->busn);
+>
+>  	err = devm_request_pci_bus_resources(dev, windows);
+> -	if (err < 0)
+> +	if (err < 0) {
+> +		pci_free_resource_list(windows);
+>  		return err;
+> +	}
+>
+>  	pci_remap_iospace(&pcie->pio, pcie->io.start);
+>
+>  	return 0;
+>  }
+>
+> +static void tegra_pcie_free_resources(struct tegra_pcie *pcie)
+> +{
+> +	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
+> +	struct list_head *windows = &host->windows;
+> +
+> +	pci_unmap_iospace(&pcie->pio);
+> +	pci_free_resource_list(windows);
+> +}
+> +
+>  static int tegra_pcie_map_irq(const struct pci_dev *pdev, u8 slot, u8 pin)
+>  {
+>  	struct pci_host_bridge *host = pci_find_host_bridge(pdev->bus);
+> @@ -1109,29 +1120,40 @@ static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+>  	return 0;
+>  }
+>
+> -static void tegra_pcie_power_off(struct tegra_pcie *pcie)
+> +static void tegra_pcie_disable_controller(struct tegra_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->dev;
+>  	const struct tegra_pcie_soc *soc = pcie->soc;
+>  	int err;
+>
+> -	/* TODO: disable and unprepare clocks? */
+> -
+>  	if (soc->program_uphy) {
+>  		err = tegra_pcie_phy_power_off(pcie);
+>  		if (err < 0)
+>  			dev_err(dev, "failed to power off PHY(s): %d\n", err);
+>  	}
+> +}
+> +
+> +static void tegra_pcie_power_off(struct tegra_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->dev;
+> +	const struct tegra_pcie_soc *soc = pcie->soc;
+> +	int err;
+>
+>  	reset_control_assert(pcie->afi_rst);
+>  	reset_control_assert(pcie->pex_rst);
+>
+> -	if (!dev->pm_domain)
+> -		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
+> +	clk_disable_unprepare(pcie->pll_e);
+> +	if (soc->has_cml_clk)
+> +		clk_disable_unprepare(pcie->cml_clk);
+> +	clk_disable_unprepare(pcie->afi_clk);
+> +	clk_disable_unprepare(pcie->pex_clk);
+>
+>  	err = regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
+>  	if (err < 0)
+>  		dev_warn(dev, "failed to disable regulators: %d\n", err);
+> +
+> +	if (!dev->pm_domain)
+> +		tegra_powergate_power_off(TEGRA_POWERGATE_PCIE);
+>  }
+>
+>  static int tegra_pcie_power_on(struct tegra_pcie *pcie)
+> @@ -1262,6 +1284,15 @@ static int tegra_pcie_phys_get_legacy(struct tegra_pcie *pcie)
+>  	return 0;
+>  }
+>
+> +static void tegra_pcie_phys_put_legacy(struct tegra_pcie *pcie)
+> +{
+> +	int err;
+> +
+> +	err = phy_exit(pcie->phy);
+> +	if (err < 0)
+> +		dev_err(pcie->dev, "failed to teardown PHY: %d\n", err);
+> +}
+> +
+>  static struct phy *devm_of_phy_optional_get_index(struct device *dev,
+>  						  struct device_node *np,
+>  						  const char *consumer,
+> @@ -1315,6 +1346,19 @@ static int tegra_pcie_port_get_phys(struct tegra_pcie_port *port)
+>  	return 0;
+>  }
+>
+> +static void tegra_pcie_port_put_phys(struct tegra_pcie_port *port)
+> +{
+> +	struct device *dev = port->pcie->dev;
+> +	unsigned int i;
+> +	int err;
+> +
+> +	for (i = 0; i < port->lanes; i++) {
+> +		err = phy_exit(port->phys[i]);
+> +		if (err < 0)
+> +			dev_err(dev, "failed to teardown PHY#%u: %d\n", i, err);
+> +	}
+> +}
+> +
+>  static int tegra_pcie_phys_get(struct tegra_pcie *pcie)
+>  {
+>  	const struct tegra_pcie_soc *soc = pcie->soc;
+> @@ -1334,6 +1378,19 @@ static int tegra_pcie_phys_get(struct tegra_pcie *pcie)
+>  	return 0;
+>  }
+>
+> +static void tegra_pcie_phys_put(struct tegra_pcie *pcie)
+> +{
+> +	const struct tegra_pcie_soc *soc = pcie->soc;
+> +	struct device_node *np = pcie->dev->of_node;
+> +	struct tegra_pcie_port *port;
+> +
+> +	if (!soc->has_gen2 || of_find_property(np, "phys", NULL) != NULL)
+> +		tegra_pcie_phys_put_legacy(pcie);
 
-With a 'choice' statement this works, but I would consider that
-suboptimal for another reason: now you cannot build a kernel that
-works on e.g. both N13 and N15.
+I think it would be nicer to just check if legacy_phy is true, since 
+tegra_pcie_phys_get_legacy sets it. That way we don't need to have the 
+complicated check in two places.
 
-This is what we had on ARM a long time ago and on MIPS not so long
-ago, but it's really a burden for testing and distribution once you get
-support for more than a handful of machines supported in the mainline
-kernel: If each CPU core is mutually incompatible with the other ones,
-this means you likely end up having one defconfig per CPU core,
-or even one defconfig per SoC or board.
+Mikko
 
-I would always try to get the largest amount of hardware to work
-in the same kernel concurrently.
-
-One way of of this would be to define the "CPU type" as the minimum
-supported CPU, e.g. selecting D15 would result in a kernel that
-only works on D15, while selecting N15 would work on both N15 and
-D15, and selecting D10 would work on both D10 and D15.
-
-       Arnd
+> +
+> +	list_for_each_entry(port, &pcie->ports, list)
+> +		tegra_pcie_port_put_phys(port);
+> +}
+> +
+>  static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->dev;
+> @@ -1366,7 +1423,7 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+>  	err = tegra_pcie_power_on(pcie);
+>  	if (err) {
+>  		dev_err(dev, "failed to power up: %d\n", err);
+> -		return err;
+> +		goto phys_put;
+>  	}
+>
+>  	pads = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pads");
+> @@ -1424,25 +1481,23 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+>
+>  poweroff:
+>  	tegra_pcie_power_off(pcie);
+> +phys_put:
+> +	if (soc->program_uphy)
+> +		tegra_pcie_phys_put(pcie);
+>  	return err;
+>  }
+>
+>  static int tegra_pcie_put_resources(struct tegra_pcie *pcie)
+>  {
+> -	struct device *dev = pcie->dev;
+>  	const struct tegra_pcie_soc *soc = pcie->soc;
+> -	int err;
+>
+>  	if (pcie->irq > 0)
+>  		free_irq(pcie->irq, pcie);
+>
+>  	tegra_pcie_power_off(pcie);
+>
+> -	if (soc->program_uphy) {
+> -		err = phy_exit(pcie->phy);
+> -		if (err < 0)
+> -			dev_err(dev, "failed to teardown PHY: %d\n", err);
+> -	}
+> +	if (soc->program_uphy)
+> +		tegra_pcie_phys_put(pcie);
+>
+>  	return 0;
+>  }
+> @@ -2371,6 +2426,16 @@ static void tegra_pcie_enable_ports(struct tegra_pcie *pcie)
+>  	}
+>  }
+>
+> +static void tegra_pcie_disable_ports(struct tegra_pcie *pcie)
+> +{
+> +	struct tegra_pcie_port *port, *tmp;
+> +
+> +	reset_control_assert(pcie->pcie_xrst);
+> +
+> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
+> +		tegra_pcie_port_disable(port);
+> +}
+> +
+>  static void tegra_pcie_change_link_speed(struct tegra_pcie *pcie,
+>  					 struct pci_dev *pci_dev)
+>  {
+> @@ -2691,7 +2756,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>
+>  	err = tegra_pcie_request_resources(pcie);
+>  	if (err)
+> -		goto put_resources;
+> +		goto disable_controller;
+>
+>  	/* setup the AFI address translations */
+>  	tegra_pcie_setup_translations(pcie);
+> @@ -2700,7 +2765,7 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>  		err = tegra_pcie_enable_msi(pcie);
+>  		if (err < 0) {
+>  			dev_err(dev, "failed to enable MSI support: %d\n", err);
+> -			goto put_resources;
+> +			goto free_resources;
+>  		}
+>  	}
+>
+> @@ -2741,6 +2806,11 @@ static int tegra_pcie_probe(struct platform_device *pdev)
+>  disable_msi:
+>  	if (IS_ENABLED(CONFIG_PCI_MSI))
+>  		tegra_pcie_disable_msi(pcie);
+> +	tegra_pcie_disable_ports(pcie);
+> +free_resources:
+> +	tegra_pcie_free_resources(pcie);
+> +disable_controller:
+> +	tegra_pcie_disable_controller(pcie);
+>  put_resources:
+>  	tegra_pcie_put_resources(pcie);
+>  	return err;
+>
