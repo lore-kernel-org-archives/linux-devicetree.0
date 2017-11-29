@@ -1,40 +1,41 @@
 From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 1/2][RESEND] arm: dts: Add big-endian for IFC on LS1021A
-Date: Wed, 29 Nov 2017 17:01:31 +0530
-Message-ID: <1511955091-8816-1-git-send-email-prabhakar.kushwaha@nxp.com>
+Subject: [PATCH 2/2][RESEND] arm: dts: ls1021aqds: Add nand node for ifc controller
+Date: Wed, 29 Nov 2017 17:01:49 +0530
+Message-ID: <1511955109-8862-1-git-send-email-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>, Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
+LS1021AQDS support NAND flash on IFC chip-select 2.
 
-For the patch to update struct map_info's swap field based on device
-characteristics defined in device tree, big-endian parameter is added
-for LS1021A.
+So add NAND node in device tree for IFC controller.
 
-Signed-off-by: Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>
 Signed-off-by: Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
 Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/ls1021a-qds.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 9319e1f..babb086 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -145,6 +145,7 @@
- 		ifc: ifc@1530000 {
- 			compatible = "fsl,ifc", "simple-bus";
- 			reg = <0x0 0x1530000 0x0 0x10000>;
-+			big-endian;
- 			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
+index 9408753..2b37d04 100644
+--- a/arch/arm/boot/dts/ls1021a-qds.dts
++++ b/arch/arm/boot/dts/ls1021a-qds.dts
+@@ -239,6 +239,11 @@
+ 		device-width = <1>;
+ 	};
  
++	nand@2,0 {
++		compatible = "fsl,ifc-nand";
++		reg = <0x2 0x0 0x10000>;
++	};
++
+ 	fpga: board-control@3,0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 1.9.1
 
