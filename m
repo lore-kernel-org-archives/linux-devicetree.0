@@ -1,32 +1,55 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [v2,01/12] hwrng: bcm2835 - Obtain base register via resource
-Date: Wed, 29 Nov 2017 09:38:52 -0800
-Message-ID: <ac49deb2-6f81-1daf-596d-16fd6bd6af32@gmail.com>
-References: <20171108004449.32730-2-f.fainelli@gmail.com>
- <20171129063028.GB21594@gondor.apana.org.au>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: Allow a device to indicate when to force
+ a state
+Date: Wed, 29 Nov 2017 09:45:01 -0800
+Message-ID: <20171129174500.GJ28152@atomide.com>
+References: <20171102231551.16220-1-f.fainelli@gmail.com>
+ <20171102231551.16220-2-f.fainelli@gmail.com>
+ <20171129170102.GH28152@atomide.com>
+ <d1695f25-a795-cbda-bee4-47c0b16050f8@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171129063028.GB21594@gondor.apana.org.au>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <d1695f25-a795-cbda-bee4-47c0b16050f8@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.cirrus.com, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2017 10:30 PM, Herbert Xu wrote:
-> On Tue, Nov 07, 2017 at 04:44:38PM -0800, Florian Fainelli wrote:
->> In preparation for consolidating bcm63xx-rng into bcm2835-rng, make sure
->> that we obtain the base register via platform_get_resource() since we
->> need to support the non-DT enabled MIPS-based BCM63xx DSL SoCs.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+* Florian Fainelli <f.fainelli@gmail.com> [171129 17:37]:
+> On 11/29/2017 09:01 AM, Tony Lindgren wrote:
+> > * Florian Fainelli <f.fainelli@gmail.com> [171102 23:18]:
+> >> It may happen that a device needs to force applying a state, e.g:
+> >> because it only defines one state of pin states (default) but loses
+> >> power/register contents when entering low power modes. Add a
+> >> pinctrl_dev::flags bitmask to help describe future quirks and define
+> >> PINCTRL_FLG_FORCE_STATE as such a settable flag.
+> > 
+> > It makes sense to tag the existing state with the context loss
+> > information as otherwise we'll be duplicating the state in the
+> > pinctrl driver potentially for hundreds of pins.
+> > 
+> > Maybe this patch description should clarify that it's the
+> > pinctrl device restoring the pin state, not the pinctrl
+> > consumer devices?
+> > 
+> > So maybe just "a pinctrl device needs to force apply a state"
+> > instead of just device above?
 > 
-> All applied.  Thanks.
+> It's a bit more involved than that, the pinctrl consumer device might
+> want to restore a particular state by calling pinctrl_select_state(),
+> however, because of the (p->state == state)check, the pinctrl provider
+> driver has no chance of making that call do the actual HW programming.
 
-Hu, okay, I actually had a v3 prepared that I was going to post
-addressing some of the comments. Should I send an incremental set of
-changes now?
--- 
-Florian
+Hmm but isn't it the pinctrl provider device losing context here?
+I think the restore of the pin state should somehow happen automatically
+by the pinctrl provider driver without a need for the pinctrl consumer
+drivers to do anything.
+
+Or what's the use case for pinctrl consumer driver wanting to store
+a pin?
+
+Regards,
+
+Tony
