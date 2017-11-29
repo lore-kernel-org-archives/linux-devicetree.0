@@ -1,41 +1,44 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH V2 4/9] PCI: Export pci_find_host_bridge()
-Date: Wed, 29 Nov 2017 09:35:53 -0800
-Message-ID: <20171129173553.GA27742@infradead.org>
-References: <1511638333-22951-1-git-send-email-mmaddireddy@nvidia.com>
- <1511638333-22951-5-git-send-email-mmaddireddy@nvidia.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: Allow a device to indicate when to force
+ a state
+Date: Wed, 29 Nov 2017 09:35:14 -0800
+Message-ID: <d1695f25-a795-cbda-bee4-47c0b16050f8@gmail.com>
+References: <20171102231551.16220-1-f.fainelli@gmail.com>
+ <20171102231551.16220-2-f.fainelli@gmail.com>
+ <20171129170102.GH28152@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1511638333-22951-5-git-send-email-mmaddireddy@nvidia.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171129170102.GH28152@atomide.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.cirrus.com, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 26, 2017 at 01:02:08AM +0530, Manikanta Maddireddy wrote:
-> PCI subsystem pass pci_bus pointer to pci_ops callback functions, Tegra
-> host driver use pci_find_host_bridge() to get pci_host_bridge from pci_bus.
-> Export pci_find_host_bridge() to allow Tegra PCIe driver to be compiled as
-> loadable kernel module.
+On 11/29/2017 09:01 AM, Tony Lindgren wrote:
+> * Florian Fainelli <f.fainelli@gmail.com> [171102 23:18]:
+>> It may happen that a device needs to force applying a state, e.g:
+>> because it only defines one state of pin states (default) but loses
+>> power/register contents when entering low power modes. Add a
+>> pinctrl_dev::flags bitmask to help describe future quirks and define
+>> PINCTRL_FLG_FORCE_STATE as such a settable flag.
 > 
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> ---
-> V2:
-> * commit message update
+> It makes sense to tag the existing state with the context loss
+> information as otherwise we'll be duplicating the state in the
+> pinctrl driver potentially for hundreds of pins.
 > 
->  drivers/pci/host-bridge.c | 1 +
->  1 file changed, 1 insertion(+)
+> Maybe this patch description should clarify that it's the
+> pinctrl device restoring the pin state, not the pinctrl
+> consumer devices?
 > 
-> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-> index add66236215c..e0942fc086ad 100644
-> --- a/drivers/pci/host-bridge.c
-> +++ b/drivers/pci/host-bridge.c
-> @@ -22,6 +22,7 @@ struct pci_host_bridge *pci_find_host_bridge(struct pci_bus *bus)
->  
->  	return to_pci_host_bridge(root_bus->bridge);
->  }
-> +EXPORT_SYMBOL(pci_find_host_bridge);
+> So maybe just "a pinctrl device needs to force apply a state"
+> instead of just device above?
 
-All PCI internals should be exported using EXPORT_SYMBOL_GPL.
+It's a bit more involved than that, the pinctrl consumer device might
+want to restore a particular state by calling pinctrl_select_state(),
+however, because of the (p->state == state)check, the pinctrl provider
+driver has no chance of making that call do the actual HW programming.
+-- 
+Florian
