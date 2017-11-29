@@ -1,57 +1,116 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 0/4] Move DP phy switch to PHY driver
-Date: Tue, 28 Nov 2017 15:32:52 -0800
-Message-ID: <CAD=FV=VdUhfL+_MShYynoXKQW1-KpAOsW=x+hAxGZO78rJEyeQ@mail.gmail.com>
-References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 0/8] Cavium OCTEON-III network driver.
+Date: Tue, 28 Nov 2017 16:55:32 -0800
+Message-ID: <20171129005540.28829-1-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, dri-devel@lists.freedesktop.org, Guenter Roeck <groeck@chromium.org>, Brian Norris <briannorris@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Jianqun Xu <jay.xu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, William wu <wulf@rock-chips.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mark yao <mark.yao@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@chromium.org>, David Wu <david.wu@rock-chips.com>, Enric Balletbo i Serra <enric.ballet>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUaHUsIEZlYiA5LCAyMDE3IGF0IDExOjQ0IFBNLCBDaHJpcyBaaG9uZyA8enl3QHJv
-Y2stY2hpcHMuY29tPiB3cm90ZToKPgo+IFRoZXJlIGFyZSAyIFR5cGUtYyBQSFlzIGluIFJLMzM5
-OSwgYnV0IG9ubHkgb25lIERQIGNvbnRyb2xsZXIuIEhlbmNlCj4gb25seSBvbmUgUEhZIGNhbiBj
-b25uZWN0IHRvIERQIGNvbnRyb2xsZXIgYXQgb25lIHRpbWUsIHRoZSBvdGhlciBzaG91bGQKPiBi
-ZSBkaXNjb25uZWN0ZWQuIFRoZSBHUkZfU09DX0NPTjI2IHJlZ2lzdGVyIGhhcyBhIHN3aXRjaCBi
-aXQgdG8gZG8gaXQsCj4gc2V0IHRoaXMgYml0IG1lYW5zIGVuYWJsZSBQSFkgMSwgY2xlYXIgdGhp
-cyBiaXQgbWVhbnMgZW5hYmxlIFBIWSAwLgo+Cj4gSWYgdGhlIGJvYXJkIGhhcyAyIFR5cGUtQyBw
-b3J0cywgdGhlIERQIGRyaXZlciBnZXQgdGhlIHBoeSBpZCBmcm9tCj4gZGV2bV9vZl9waHlfZ2V0
-X2J5X2luZGV4LCBhbmQgdGhlbiBjb250cm9sIHRoaXMgc3dpdGNoIGFjY29yZGluZyB0bwo+IHRo
-aXMgaWQuIEJ1dCBzb21lIG90aGVycyBib2FyZCBvbmx5IGhhcyBvbmUgVHlwZS1DIHBvcnQsIGl0
-IG1heSBiZSBQSFkgMAo+IG9yIFBIWSAxLiBUaGUgZHRzIG5vZGUgaWQgY2FuIG5vdCB0ZWxsIHVz
-IHRoZSBjb3JyZWN0IFBIWSBpZC4gSGVuY2UgbW92ZQo+IHRoaXMgc3dpdGNoIHRvIFBIWSBkcml2
-ZXIsIHRoZSBQSFkgZHJpdmVyIGNhbiBkaXN0aW5ndWlzaCBiZXR3ZWVuIFBIWSAwCj4gYW5kIFBI
-WSAxLCBhbmQgdGhlbiB3cml0ZSB0aGUgY29ycmVjdCByZWdpc3RlciBiaXQuCj4KPgo+Cj4gQ2hy
-aXMgWmhvbmcgKDQpOgo+ICAgRG9jdW1lbnRhdGlvbjogYmluZGluZ3M6IGFkZCB1cGh5LWRwLXNl
-bCBmb3IgUm9ja2NoaXAgVVNCIFR5cGUtQyBQSFkKPiAgIGFybTY0OiBkdHM6IHJvY2tjaGlwOiBh
-ZGQgcm9ja2NoaXAsdXBoeS1kcC1zZWwgZm9yIFR5cGUtQyBwaHkKPiAgIHBoeTogcm9ja2NoaXAt
-dHlwZWM6IHN1cHBvcnQgRFAgcGh5IHN3aXRjaAo+ICAgZHJtL3JvY2tjaGlwOiBjZG4tZHA6IHJl
-bW92ZSB0aGUgRFAgcGh5IHN3aXRjaAo+Cj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9waHkvcGh5LXJvY2tjaGlwLXR5cGVjLnR4dCB8IDUgKysrKysKPiAgYXJjaC9hcm02NC9i
-b290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRzaSAgICAgICAgICAgICAgICAgICAgIHwgMiArKwo+
-ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuYyAgICAgICAgICAgICAgICAg
-ICAgICAgfCA3IC0tLS0tLS0KPiAgZHJpdmVycy9waHkvcGh5LXJvY2tjaGlwLXR5cGVjLmMgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgOSArKysrKysrKysKPiAgNCBmaWxlcyBjaGFuZ2Vk
-LCAxNiBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoKV2hhdCBldmVyIGhhcHBlbmVkIHRv
-IHRoaXMgc2VyaWVzPyAgSXQgc2VlbWVkIGxpa2UgaXQganVzdCBkcm9wcGVkIG9uCnRoZSBmbG9v
-ci4uLgoKVGhlcmUgd2FzIGEgYml0IG9mIGNvbnRlbnRpb24gb24gcGF0Y2ggIzMKPGh0dHBzOi8v
-cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU2NjA5NS8+IGFib3V0IHRoZSBmYWN0IHRoYXQg
-d2UKd2VyZSBzcGVjaWZ5aW5nIGFkZHJlc3NlcyBpbiB0aGUgZGV2aWNlIHRyZWUgdnMuIGhhcmRj
-b2RpbmcgdGhlbSBpbgp0aGUgZHJpdmVyLiAgQW55IHdheSB3ZSBjYW4ganVzdCBtYWtlIGEgZGVj
-aXNpb24gYW5kIGdvIHdpdGggaXQ/CgoKLURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+We are adding the Cavium OCTEON-III network driver.  But since
+interacting with the input and output queues is done via special CPU
+local memory, we also need to add support to the MIPS/Octeon
+architecture code.  Aren't SoCs nice in this way?
+
+The first six patches add the SoC support needed by the driver, the
+last two add the driver and an entry in MAINTAINERS.
+
+Since these touch several subsystems (mips, staging, netdev), I would
+propose merging via netdev, but defer to the maintainers if they think
+something else would work better.
+
+A separate pull request was recently done by Steven Hill for the
+firmware required by the driver.
+
+Changes from v3:
+
+o Use phy_print_status() instead of open coding the equivalent.
+
+o Print warning on phy mode mismatch.
+
+o Improve dt-bindings and add Acked-by.
+
+Changes from v2:
+
+o Fix PKI (RX path) initialization to work with little endian kernel.
+
+Changes from v1:
+
+o Cleanup and use of standard bindings in the device tree bindings
+  document.
+
+o Added (hopefully) clarifying comments about several OCTEON
+  architectural peculiarities.
+
+o Removed unused testing code from the driver.
+
+o Removed some module parameters that already default to the proper
+  values.
+
+o KConfig cleanup, including testing on x86_64, arm64 and mips.
+
+o Fixed breakage to the driver for previous generation of OCTEON SoCs (in
+  the staging directory still).
+
+o Verified bisectability of the patch set.
+
+Carlos Munoz (5):
+  dt-bindings: Add Cavium Octeon Common Ethernet Interface.
+  MIPS: Octeon: Enable LMTDMA/LMTST operations.
+  MIPS: Octeon: Add a global resource manager.
+  MIPS: Octeon: Add Free Pointer Unit (FPA) support.
+  netdev: octeon-ethernet: Add Cavium Octeon III support.
+
+David Daney (3):
+  MIPS: Octeon: Automatically provision CVMSEG space.
+  staging: octeon: Remove USE_ASYNC_IOBDMA macro.
+  MAINTAINERS: Add entry for
+    drivers/net/ethernet/cavium/octeon/octeon3-*
+
+ .../devicetree/bindings/net/cavium-bgx.txt         |   61 +
+ MAINTAINERS                                        |    6 +
+ arch/mips/cavium-octeon/Kconfig                    |   35 +-
+ arch/mips/cavium-octeon/Makefile                   |    4 +-
+ arch/mips/cavium-octeon/octeon-fpa3.c              |  364 ++++
+ arch/mips/cavium-octeon/resource-mgr.c             |  371 ++++
+ arch/mips/cavium-octeon/setup.c                    |   22 +-
+ .../asm/mach-cavium-octeon/kernel-entry-init.h     |   20 +-
+ arch/mips/include/asm/mipsregs.h                   |    2 +
+ arch/mips/include/asm/octeon/octeon.h              |   47 +-
+ arch/mips/include/asm/processor.h                  |    2 +-
+ arch/mips/kernel/octeon_switch.S                   |    2 -
+ arch/mips/mm/tlbex.c                               |   29 +-
+ drivers/net/ethernet/cavium/Kconfig                |   55 +-
+ drivers/net/ethernet/cavium/octeon/Makefile        |    6 +
+ .../net/ethernet/cavium/octeon/octeon3-bgx-nexus.c |  698 +++++++
+ .../net/ethernet/cavium/octeon/octeon3-bgx-port.c  | 2033 +++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-core.c  | 2068 ++++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pki.c   |  832 ++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pko.c   | 1719 ++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-sso.c   |  309 +++
+ drivers/net/ethernet/cavium/octeon/octeon3.h       |  411 ++++
+ drivers/staging/octeon/ethernet-defines.h          |    6 -
+ drivers/staging/octeon/ethernet-rx.c               |   25 +-
+ drivers/staging/octeon/ethernet-tx.c               |   85 +-
+ 25 files changed, 9069 insertions(+), 143 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
+ create mode 100644 arch/mips/cavium-octeon/octeon-fpa3.c
+ create mode 100644 arch/mips/cavium-octeon/resource-mgr.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-nexus.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-core.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pki.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pko.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-sso.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3.h
+
+-- 
+2.14.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
