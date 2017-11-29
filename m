@@ -1,36 +1,38 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 1/4] ARM: dts: uniphier: use macros in dt-bindings header
-Date: Wed, 29 Nov 2017 22:42:02 +0900
-Message-ID: <CAK7LNAQ_M0iZMmf0DH4rp8SNOZdnaptUcTLeimXBOnNFy9xhRw@mail.gmail.com>
-References: <1510896288-31212-1-git-send-email-yamada.masahiro@socionext.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v4 7/8] netdev: octeon-ethernet: Add Cavium Octeon III
+ support.
+Date: Wed, 29 Nov 2017 14:47:24 +0100
+Message-ID: <20171129134724.GA21166@lunn.ch>
+References: <20171129005540.28829-1-david.daney@cavium.com>
+ <20171129005540.28829-8-david.daney@cavium.com>
+ <CAFqt6zabdQhyjUc4WsjzJ6CxMr70H3V_JdipJVwRi8LuOG54tA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1510896288-31212-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <CAFqt6zabdQhyjUc4WsjzJ6CxMr70H3V_JdipJVwRi8LuOG54tA@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devel@driverdev.osuosl.org, David Daney <david.daney@cavium.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, ralf@linux-mips.org, Carlos Munoz <cmunoz@cavium.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "Steven J. Hill" <steven.hill@cavium.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-2017-11-17 14:24 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> The dt-bindings header was applied to the driver subsystem.  I had to
-> wait for a merge window to use it from DT.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
+On Wed, Nov 29, 2017 at 04:00:01PM +0530, Souptick Joarder wrote:
 
-Series, applied to linux-uniphier.
+Hi Souptick
 
--- 
-Best Regards
-Masahiro Yamada
+Please trim the code when giving reviews. We don't want to have to
+page through 8K lines of code it find a few comments mixed in. Just
+keep the beginning of the function you are commented on to make the
+context clear. Cut the rest.
+
+Thanks
+	Andrew
