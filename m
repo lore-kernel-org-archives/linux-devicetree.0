@@ -1,26 +1,38 @@
 From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [v2,01/12] hwrng: bcm2835 - Obtain base register via resource
-Date: Wed, 29 Nov 2017 17:30:28 +1100
-Message-ID: <20171129063028.GB21594@gondor.apana.org.au>
-References: <20171108004449.32730-2-f.fainelli@gmail.com>
+Subject: Re: [PATCHi v2] dt-bindings: add device tree binding for Arm
+ TrustZone CryptoCell crypto engine
+Date: Wed, 29 Nov 2017 17:37:37 +1100
+Message-ID: <20171129063737.GI21575@gondor.apana.org.au>
+References: <1510812929-3937-1-git-send-email-gilad@benyossef.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20171108004449.32730-2-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Harald Freudenberger <freude@linux.vnet.ibm.com>, Sean Wang <sean.wang@mediatek.com>, Martin Kaiser <martin@kaiser.cx>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.>
+In-Reply-To: <1510812929-3937-1-git-send-email-gilad@benyossef.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Ofir Drang <ofir.drang@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 07, 2017 at 04:44:38PM -0800, Florian Fainelli wrote:
-> In preparation for consolidating bcm63xx-rng into bcm2835-rng, make sure
-> that we obtain the base register via platform_get_resource() since we
-> need to support the non-DT enabled MIPS-based BCM63xx DSL SoCs.
+On Thu, Nov 16, 2017 at 06:15:28AM +0000, Gilad Ben-Yossef wrote:
+> The Arm TrustZone CryptoCell is a hardware security engine. This patch
+> adds DT bindings for its Rich Execution Environment crypto engine.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> A driver supporting this device is already present in the staging tree.
+> 
+> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-All applied.  Thanks.
+Patch applied.  Thanks.
 -- 
 Email: Herbert Xu <herbert@gondor.apana.org.au>
 Home Page: http://gondor.apana.org.au/~herbert/
