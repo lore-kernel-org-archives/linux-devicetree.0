@@ -1,55 +1,56 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: Allow a device to indicate when to force
- a state
-Date: Wed, 29 Nov 2017 09:45:01 -0800
-Message-ID: <20171129174500.GJ28152@atomide.com>
-References: <20171102231551.16220-1-f.fainelli@gmail.com>
- <20171102231551.16220-2-f.fainelli@gmail.com>
- <20171129170102.GH28152@atomide.com>
- <d1695f25-a795-cbda-bee4-47c0b16050f8@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: exynos: Switch to dedicated Odroid-XU3
+ sound card binding
+Date: Wed, 29 Nov 2017 18:55:48 +0100
+Message-ID: <CAJKOXPegJsQPrbDH8mXBhypOBnT9+Nn1T6NF=Cav=PV+9b-2MA@mail.gmail.com>
+References: <20171103165446.15438-1-s.nawrocki@samsung.com>
+ <CGME20171103165539epcas1p48cc87811574dace9dfe91d8e9ec6f7ca@epcas1p4.samsung.com>
+ <20171103165446.15438-2-s.nawrocki@samsung.com>
+ <20171127181213.lxtbbiw75wbz2dbz@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d1695f25-a795-cbda-bee4-47c0b16050f8@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.cirrus.com, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171127181213.lxtbbiw75wbz2dbz@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, kgene@kernel.org, mihailescu2m@gmail.com, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Florian Fainelli <f.fainelli@gmail.com> [171129 17:37]:
-> On 11/29/2017 09:01 AM, Tony Lindgren wrote:
-> > * Florian Fainelli <f.fainelli@gmail.com> [171102 23:18]:
-> >> It may happen that a device needs to force applying a state, e.g:
-> >> because it only defines one state of pin states (default) but loses
-> >> power/register contents when entering low power modes. Add a
-> >> pinctrl_dev::flags bitmask to help describe future quirks and define
-> >> PINCTRL_FLG_FORCE_STATE as such a settable flag.
-> > 
-> > It makes sense to tag the existing state with the context loss
-> > information as otherwise we'll be duplicating the state in the
-> > pinctrl driver potentially for hundreds of pins.
-> > 
-> > Maybe this patch description should clarify that it's the
-> > pinctrl device restoring the pin state, not the pinctrl
-> > consumer devices?
-> > 
-> > So maybe just "a pinctrl device needs to force apply a state"
-> > instead of just device above?
-> 
-> It's a bit more involved than that, the pinctrl consumer device might
-> want to restore a particular state by calling pinctrl_select_state(),
-> however, because of the (p->state == state)check, the pinctrl provider
-> driver has no chance of making that call do the actual HW programming.
+On Mon, Nov 27, 2017 at 7:12 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Fri, Nov 03, 2017 at 05:54:45PM +0100, Sylwester Nawrocki wrote:
+>> The new sound card DT binding is used for Odroid XU3 in order
+>> to properly support the HDMI audio path.
+>> Clocks configuration is changed so the I2S controller is now the bit
+>> and the frame clock master with EPLL as the root clock source.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos4.dtsi                    |  1 +
+>>  arch/arm/boot/dts/exynos5420.dtsi                 |  1 +
+>>  arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 60 ++++++++++++++---------
+>>  3 files changed, 40 insertions(+), 22 deletions(-)
+>>
 
-Hmm but isn't it the pinctrl provider device losing context here?
-I think the restore of the pin state should somehow happen automatically
-by the pinctrl provider driver without a need for the pinctrl consumer
-drivers to do anything.
 
-Or what's the use case for pinctrl consumer driver wanting to store
-a pin?
+Unfortunately this patch causes the audio card to disappear on Odroid
+XU3. "aplay -L" shows nothing and obviously speaker-test fails.
 
-Regards,
+Applied on v4.15-rc1... any dependencies are missing?
 
-Tony
+Full boot-logs are here:
+http://www.krzk.eu/#/builders/1/builds/976
+(test exits on aplay -L).
+
+Should this be dropped?
+
+Best regards,
+Krzysztof
