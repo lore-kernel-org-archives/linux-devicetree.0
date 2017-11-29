@@ -1,116 +1,128 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH] dt-bindings: Remove leading 0x from bindings notation
-Date: Wed, 29 Nov 2017 15:21:27 -0800
-Message-ID: <c7200904-f016-8789-ee5e-fe5a281be215@caviumnetworks.com>
-References: <20171129205515.9009-1-malat@debian.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 3/4] RFC: net: dsa: Add bindings for Realtek SMI DSAs
+Date: Wed, 29 Nov 2017 15:26:08 -0800
+Message-ID: <f9bfa1e1-7f05-1e2b-6663-09d4d3bf6a12@gmail.com>
+References: <20171105231909.5599-1-linus.walleij@linaro.org>
+ <20171105231909.5599-4-linus.walleij@linaro.org>
+ <20171105234831.GA24822@lunn.ch>
+ <CACRpkdbzqnbF49yN-SAqLkhufk=R2C=jpdLo-QWmL0zR_+Vj=w@mail.gmail.com>
+ <20171129155627.GD24881@lunn.ch>
+ <CACRpkdZVXgFMiHpyUqw7ONYDcq6Htn3rTMRaBJkzd6T3WtX36A@mail.gmail.com>
+ <20171129215659.GC1706@lunn.ch>
+ <CACRpkdbUig-wb9_CnyF7DM4JsHCv4iruKx92wNXDdZtbrr2HoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171129205515.9009-1-malat@debian.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbUig-wb9_CnyF7DM4JsHCv4iruKx92wNXDdZtbrr2HoA@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <malat@debian.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>, linux-mips@linux-mips.org
+Sender: netdev-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Andrew Lunn <andrew@lunn.ch>
+Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, netdev@vger.kernel.org, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2017 12:55 PM, Mathieu Malaterre wrote:
-> Improve the binding example by removing all the leading 0x to fix the
-> following dtc warnings:
+On 11/29/2017 03:19 PM, Linus Walleij wrote:
+> On Wed, Nov 29, 2017 at 10:56 PM, Andrew Lunn <andrew@lunn.ch> wrote:
 > 
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+>> I think the problem might be, you are using the DSA provided MDIO bus.
+>> The Marvell switches has a similar setup in terms of interrupts. The
+>> PHY interrupts appear within the switch. So i implemented an interrupt
+>> controller, just the same as you.
+>>
+>> The problem is, the DSA provided MDIO bus is not linked to device
+>> tree. So you cannot have phy nodes in device tree associated to it.
+>>
+>> What i did for the Marvell driver is that driver itself implements an
+>> MDIO bus (two actually in some chips), and the internal or external
+>> PHYs are placed on the switch drivers MDIO bus, rather than the DSA
+>> MDIO bus. The switch driver MDIO bus links to an mdio node in device
+>> tree. I can then have interrupt properties in the phys on this MDIO
+>> bus in device tree.
+>>
+>> What actually might make sense, is to have the DSA MDIO bus look
+>> inside the switches device tree node and see if there is an mdio
+>> node. If so allow dsa_switch_setup() to use of_mdiobus_register()
+>> instead of mdiobus_register().
+> 
+> Aha I think I see where my thinking went wrong.
+> 
+> I have been assuming (thought it was intuitive...) that ports and
+> PHYs are mapped 1:1.
+> 
+> So I assumed the port with reg = <N> is also the PHY with
+> reg = <N>
+> 
+> So naturally I added the PHY interrupt to the port node.
+> 
+> So you are saying that the PHY and the port are two
+> very disparate things in DSA terminology?
 
-How does it fix the warnings?  You are not changing the .dts files that 
-are compiled.
+Yes, because the port is some sort of simplified Ethernet MAC, whereas
+the PHY is the PHY, and it usually exists in the same shape and size
+irrespective of whether it's integrated into a switch, being external,
+or being internal to a proper Ethernet NIC.
 
-This may also cause the binding documentation to differ from the reality 
-of what the actual device trees contain.
+> 
+> I guess all ports except the CPU port actually have
+> a 1:1 mapped PHY though, am I right?
+
+This is the typical case, but is not universally true.
 
 > 
-> Converted using the following command:
+> Or are there in pracice things such that reg is different
+> on the port and the PHY connected to it? Then it makes
+> much sense to put an MDIO bus inside the switch DT
+> node and populate the PHY interrupts from there as you
+> say.
+
+Yes, I have such systems here, Port 0 has its PHY at MDIO address 5 for
+instance.
+
 > 
-> find Documentation/devicetree/bindings -name "*.txt" -exec sed -i -e 's/([^ ])\@0x([0-9a-f])/$1\@$2/g' {} +
-> 
-> This is a follow up to commit 48c926cd3414
-> 
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
-> I've also checked using the original perl command that I did not introduce:
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-> 
->   Documentation/devicetree/bindings/arm/ccn.txt                |  2 +-
->   Documentation/devicetree/bindings/arm/omap/crossbar.txt      |  2 +-
->   .../devicetree/bindings/arm/tegra/nvidia,tegra20-mc.txt      |  2 +-
->   Documentation/devicetree/bindings/clock/axi-clkgen.txt       |  2 +-
->   .../devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt     |  2 +-
->   Documentation/devicetree/bindings/clock/exynos4-clock.txt    |  2 +-
->   Documentation/devicetree/bindings/clock/exynos5250-clock.txt |  2 +-
->   Documentation/devicetree/bindings/clock/exynos5410-clock.txt |  2 +-
->   Documentation/devicetree/bindings/clock/exynos5420-clock.txt |  2 +-
->   Documentation/devicetree/bindings/clock/exynos5440-clock.txt |  2 +-
->   .../devicetree/bindings/clock/ti-keystone-pllctrl.txt        |  2 +-
->   Documentation/devicetree/bindings/clock/zx296702-clk.txt     |  4 ++--
->   Documentation/devicetree/bindings/crypto/fsl-sec4.txt        |  4 ++--
->   .../devicetree/bindings/devfreq/event/rockchip-dfi.txt       |  2 +-
->   Documentation/devicetree/bindings/display/atmel,lcdc.txt     |  4 ++--
->   Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  4 ++--
->   Documentation/devicetree/bindings/dma/zxdma.txt              |  2 +-
->   Documentation/devicetree/bindings/gpio/gpio-altera.txt       |  2 +-
->   Documentation/devicetree/bindings/i2c/i2c-jz4780.txt         |  2 +-
->   Documentation/devicetree/bindings/iio/pressure/hp03.txt      |  2 +-
->   .../devicetree/bindings/input/touchscreen/bu21013.txt        |  2 +-
->   .../devicetree/bindings/interrupt-controller/arm,gic.txt     |  4 ++--
->   .../bindings/interrupt-controller/img,meta-intc.txt          |  2 +-
->   .../bindings/interrupt-controller/img,pdc-intc.txt           |  2 +-
->   .../bindings/interrupt-controller/st,spear3xx-shirq.txt      |  2 +-
->   Documentation/devicetree/bindings/mailbox/altera-mailbox.txt |  6 +++---
->   .../devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt      |  2 +-
->   Documentation/devicetree/bindings/media/exynos5-gsc.txt      |  2 +-
->   Documentation/devicetree/bindings/media/mediatek-vcodec.txt  |  2 +-
->   Documentation/devicetree/bindings/media/rcar_vin.txt         |  2 +-
->   Documentation/devicetree/bindings/media/samsung-fimc.txt     |  2 +-
->   Documentation/devicetree/bindings/media/sh_mobile_ceu.txt    |  2 +-
->   Documentation/devicetree/bindings/media/video-interfaces.txt | 10 +++++-----
->   .../devicetree/bindings/memory-controllers/ti/emif.txt       |  2 +-
->   .../devicetree/bindings/mfd/ti-keystone-devctrl.txt          |  2 +-
->   Documentation/devicetree/bindings/misc/brcm,kona-smc.txt     |  2 +-
->   Documentation/devicetree/bindings/mmc/brcm,kona-sdhci.txt    |  2 +-
->   Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  2 +-
->   Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt      |  4 ++--
->   Documentation/devicetree/bindings/mtd/gpmc-nor.txt           |  6 +++---
->   Documentation/devicetree/bindings/mtd/mtk-nand.txt           |  2 +-
->   Documentation/devicetree/bindings/net/altera_tse.txt         |  4 ++--
->   Documentation/devicetree/bindings/net/mdio.txt               |  2 +-
->   Documentation/devicetree/bindings/net/socfpga-dwmac.txt      |  2 +-
->   Documentation/devicetree/bindings/nios2/nios2.txt            |  2 +-
->   Documentation/devicetree/bindings/pci/altera-pcie.txt        |  2 +-
->   Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  2 +-
->   Documentation/devicetree/bindings/pci/hisilicon-pcie.txt     |  2 +-
->   Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt      |  2 +-
->   .../devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt       |  2 +-
->   Documentation/devicetree/bindings/pinctrl/pinctrl-atlas7.txt |  4 ++--
->   Documentation/devicetree/bindings/pinctrl/pinctrl-sirf.txt   |  2 +-
->   .../devicetree/bindings/pinctrl/rockchip,pinctrl.txt         |  4 ++--
->   Documentation/devicetree/bindings/regulator/regulator.txt    |  2 +-
->   Documentation/devicetree/bindings/serial/efm32-uart.txt      |  2 +-
->   .../devicetree/bindings/serio/allwinner,sun4i-ps2.txt        |  2 +-
->   .../devicetree/bindings/soc/ti/keystone-navigator-qmss.txt   |  2 +-
->   Documentation/devicetree/bindings/sound/adi,axi-i2s.txt      |  2 +-
->   Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt |  2 +-
->   Documentation/devicetree/bindings/sound/ak4613.txt           |  2 +-
->   Documentation/devicetree/bindings/sound/ak4642.txt           |  2 +-
->   Documentation/devicetree/bindings/sound/max98371.txt         |  2 +-
->   Documentation/devicetree/bindings/sound/max9867.txt          |  2 +-
->   Documentation/devicetree/bindings/sound/renesas,fsi.txt      |  2 +-
->   Documentation/devicetree/bindings/sound/rockchip-spdif.txt   |  2 +-
->   Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt |  8 ++++----
->   Documentation/devicetree/bindings/spi/efm32-spi.txt          |  2 +-
->   Documentation/devicetree/bindings/thermal/thermal.txt        | 12 ++++++------
->   Documentation/devicetree/bindings/ufs/ufs-qcom.txt           |  4 ++--
->   Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  2 +-
->   Documentation/devicetree/bindings/usb/ehci-st.txt            |  2 +-
->   Documentation/devicetree/bindings/usb/ohci-st.txt            |  2 +-
->   .../devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt      |  2 +-
->   73 files changed, 99 insertions(+), 99 deletions(-)
-> 
+> I can take a stab at fixing that if that is what we want.
+
+While Andrew's suggestion to use of_mdiobus_register() even for the
+built-in DSA created slave_mii_bus makes sense, I would rather recommend
+you instantiate your own bus (ala mv88e6xxx), such that your DT will
+likely look like:
+
+switch@0 {
+	compatible = "acme,switch";
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	ports {
+
+		port@0 {
+			reg = <0>;
+			phy-handle = <&phy0>;
+		};
+
+		port@1 {
+			reg = <1>;
+			phy-handle = <&phy1>;
+		};
+
+		port@8 {
+			reg = <8>;
+			ethernet = = <&eth0>;
+		};
+	};
+
+	mdio {
+		compatible = "acme,switch-mdio";
+
+		phy@0 {
+			reg = <0>;
+		};
+
+		phy@1 {
+			reg = <1>;
+		};
+	};
+};
+
+That way it's clear which port maps to which PHY, and that the MDIO
+controller is internal within the switch (and so are the PHYs).
+-- 
+Florian
