@@ -1,39 +1,76 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH 1/3] mmc: dt-bindings: add mmc support to MT7623 SoC
-Date: Wed, 29 Nov 2017 18:10:35 +0800
-Message-ID: <3e2c72d18bbe6d7c762fd820195f0fa0b5a45bbf.1511949769.git.sean.wang@mediatek.com>
-References: <cover.1511949769.git.sean.wang@mediatek.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: initial V3MSK board device tree
+Date: Wed, 29 Nov 2017 13:14:21 +0300
+Message-ID: <06d59459-86dc-89b1-a0ed-adbd1481abc6@cogentembedded.com>
+References: <20171124210313.219761525@cogentembedded.com>
+ <20171129095109.d2uan35eui4kzav6@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1511949769.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171129095109.d2uan35eui4kzav6-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+Hello!
 
-Add the devicetree binding for MT7623 SoC using MT2701 as the fallback.
+On 11/29/2017 12:51 PM, Simon Horman wrote:
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
- 1 file changed, 2 insertions(+)
+>> Add the initial device  tree for the V3M Starter Kit board.
+>> The board has 1 debug serial port (SCIF0); include support for it,
+>> so that the serial console can work.
+>>
+>> Based on the original (and large) patch by Vladimir Barinov.
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>
+>> ---
+>>   arch/arm64/boot/dts/renesas/Makefile           |    2 -
+[...]
+>> Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
+>> ===================================================================
+>> --- /dev/null
+>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
+>> @@ -0,0 +1,44 @@
+>> +/*
+>> + * Device Tree Source for the V3M Starter Kit board
+>> + *
+>> + * Copyright (C) 2017 Renesas Electronics Corp.
+>> + * Copyright (C) 2017 Cogent Embedded, Inc.
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public License
+>> + * version 2.  This program is licensed "as is" without any warranty of any
+>> + * kind, whether express or implied.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "r8a77970.dtsi"
+>> +
+>> +/ {
+>> +	model = "Renesas V3M Starter Kit board";
+>> +	compatible = "renesas,v3msk", "renesas,r8a77970";
+>> +
+>> +	aliases {
+>> +		serial0 = &scif0;
+>> +	};
+>> +
+>> +	chosen {
+> 
+> For consistency with other Renesas boards I would like to request the
+> following be added here:
+> 
+> 		bootargs = "ignore_loglevel rw";
 
-diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-index 72d2a73..1732588 100644
---- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-+++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-@@ -12,6 +12,8 @@ Required properties:
- 	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
- 	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
- 	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
-+	"mediatek,mt7623-mmc",
-+	"mediatek,mt2701-mmc": for mmc host ip compatible with mt7623
- - reg: physical base address of the controller and length
- - interrupts: Should contain MSDC interrupt number
- - clocks: Should contain phandle for the clock feeding the MMC controller
--- 
-2.7.4
+    There's currently no consistency as ulcb.dtsi doesn't seem to specify 
+"bootargs" prop at all. Moreover, this prop seems to be ignored by ARM64 
+kernel -- I can only specify "bootargs" in U-Boot....
+
+MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
