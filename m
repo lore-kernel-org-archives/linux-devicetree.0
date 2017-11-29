@@ -1,45 +1,63 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 2/2][RESEND] arm: dts: ls1021aqds: Add nand node for ifc controller
-Date: Wed, 29 Nov 2017 17:01:49 +0530
-Message-ID: <1511955109-8862-1-git-send-email-prabhakar.kushwaha@nxp.com>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v6 03/17] mfd: madera: Add common support
+ for Cirrus Logic Madera codecs
+Date: Wed, 29 Nov 2017 11:36:58 +0000
+Message-ID: <1eff5a38-cff3-449b-bda4-047f50a9f1d4@EX17.ad.cirrus.com>
+References: <20171123171316.10868-1-rf@opensource.wolfsonmicro.com>
+ <fe8064a5-8692-46c1-9f53-ab0a429baeeb@EX17.ad.cirrus.com>
+ <CACRpkdaxKjPd_k8tuO3R4+5LFT4_37zn6ruDRPd5j9xNAH4+Dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CACRpkdaxKjPd_k8tuO3R4+5LFT4_37zn6ruDRPd5j9xNAH4+Dw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, alsa-devel@alsa-project.org, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Nikesh Oswal <Nikesh.Oswal@wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-LS1021AQDS support NAND flash on IFC chip-select 2.
+On 29/11/17 10:18, Linus Walleij wrote:
+> On Thu, Nov 23, 2017 at 6:13 PM, Richard Fitzgerald
+> <rf@opensource.wolfsonmicro.com> wrote:
+> 
+>> +config MFD_MADERA_I2C
+>> +       bool "Cirrus Logic Madera codecs with I2C"
+>> +       select MFD_MADERA
+>> +       select REGMAP_I2C
+>> +       depends on I2C
+>> +       depends on PINCTRL
+>> +       help
+>> +         Support for the Cirrus Logic Madera platform audio SoC
+>> +         core functionality controlled via I2C.
+>> +
+>> +config MFD_MADERA_SPI
+>> +       bool "Cirrus Logic Madera codecs with SPI"
+>> +       select MFD_MADERA
+>> +       select REGMAP_SPI
+>> +       depends on SPI_MASTER
+>> +       depends on PINCTRL
+>> +       help
+>> +         Support for the Cirrus Logic Madera platform audio SoC
+>> +         core functionality controlled via SPI.
+> 
+> Why do the I2C and SPI subdrivers depend on PINCTRL?
+> 
+> They sure don't seem to be using any pinctrl-specific APIs.
+> 
 
-So add NAND node in device tree for IFC controller.
+They require PINCTRL even if they don't call any functions on it because 
+the chip won't work correctly if there isn't a PINCTRL driver to apply 
+the correct pinmux configuration.
 
-Signed-off-by: Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm/boot/dts/ls1021a-qds.dts | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
-index 9408753..2b37d04 100644
---- a/arch/arm/boot/dts/ls1021a-qds.dts
-+++ b/arch/arm/boot/dts/ls1021a-qds.dts
-@@ -239,6 +239,11 @@
- 		device-width = <1>;
- 	};
- 
-+	nand@2,0 {
-+		compatible = "fsl,ifc-nand";
-+		reg = <0x2 0x0 0x10000>;
-+	};
-+
- 	fpga: board-control@3,0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Yours,
+> Linus Walleij
+> 
