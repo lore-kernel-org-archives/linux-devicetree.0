@@ -1,101 +1,127 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 3/5] PCI: cadence: Add host driver for Cadence PCIe
- controller
-Date: Wed, 29 Nov 2017 14:14:30 +0000
-Message-ID: <20171129141430.GA30617@red-moon>
-References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
- <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
- <20171128204114.GE11228@bhelgaas-glaptop.roam.corp.google.com>
+From: Shameer Kolothum <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v10 0/3] iommu/smmu-v3: Workaround for hisilicon 161010801
+	erratum(reserve HW MSI)
+Date: Wed, 29 Nov 2017 14:14:46 +0000
+Message-ID: <20171129141449.120316-1-shameerali.kolothum.thodi@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171128204114.GE11228@bhelgaas-glaptop.roam.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, bhelgaas@google.com, kishon@ti.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Shameer Kolothum <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 02:41:14PM -0600, Bjorn Helgaas wrote:
+On certain HiSilicon platforms (hip06/hip07) the GIC ITS and PCIe RC
+deviates from the standard implementation and this breaks PCIe MSI
+functionality when SMMU is enabled.
 
-[...]
+The HiSilicon erratum 161010801 describes this limitation of certain
+HiSilicon platforms to support the SMMU mappings for MSI transactions.
+On these platforms GICv3 ITS translator is presented with the deviceID
+by extending the MSI payload data to 64 bits to include the deviceID.
+Hence, the PCIe controller on this platforms has to differentiate the MSI
+payload against other DMA payload and has to modify the MSI payload.
+This basically makes it difficult for this platforms to have a SMMU
+translation for MSI.
 
-> > +static int cdns_pcie_parse_request_of_pci_ranges(struct device *dev,
-> > +						 struct list_head *resources,
-> > +						 struct resource **bus_range)
-> > +{
-> > +	int err, res_valid = 0;
-> > +	struct device_node *np = dev->of_node;
-> > +	resource_size_t iobase;
-> > +	struct resource_entry *win, *tmp;
-> > +
-> > +	err = of_pci_get_host_bridge_resources(np, 0, 0xff, resources, &iobase);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	err = devm_request_pci_bus_resources(dev, resources);
-> > +	if (err)
-> > +		return err;
-> > +
-> > +	resource_list_for_each_entry_safe(win, tmp, resources) {
-> > +		struct resource *res = win->res;
-> > +
-> > +		switch (resource_type(res)) {
-> > +		case IORESOURCE_IO:
-> > +			err = pci_remap_iospace(res, iobase);
-> > +			if (err) {
-> > +				dev_warn(dev, "error %d: failed to map resource %pR\n",
-> > +					 err, res);
-> > +				resource_list_destroy_entry(win);
-> > +			}
-> > +			break;
-> > +		case IORESOURCE_MEM:
-> > +			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-> > +			break;
-> > +		case IORESOURCE_BUS:
-> > +			*bus_range = res;
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	if (res_valid)
-> > +		return 0;
-> > +
-> > +	dev_err(dev, "non-prefetchable memory resource required\n");
-> > +	return -EINVAL;
-> > +}
-> 
-> The code above is starting to look awfully familiar.  I wonder if it's
-> time to think about some PCI-internal interface that can encapsulate
-> this.  In this case, there's really nothing Cadence-specific here.
-> There are other callers where there *is* vendor-specific code, but
-> possibly that could be handled by returning pointers to bus number,
-> I/O port, and MMIO resources so the caller could do the
-> vendor-specific stuff?
+This patch implements an ACPI based quirk to reserve the hw msi regions
+in the smmu-v3 driver which means these address regions will not be
+translated and will be excluded from iova allocations.
 
-Yes and that's not the only one, pattern below is duplicated
-(with some minor differences across host bridges that I think
-can be managed through function parameters), it is probably worth
-moving them both into a core code helper.
+To implement this quirk, the following changes are incorporated:
+1. Added a generic helper function to IORT code to retrieve and reserve
+   the associated ITS base address from a device IORT node. The function 
+   has a check for smmu model to determine whether the platform requires
+   the HW MSI reservation or not.
+2. Added smmu node entries and explicitly disabled them in hip06/hip07
+    dts files so that users are warned about the non-DT support for this
+    erratum.
 
-list_splice_init(&resources, &bridge->windows);
-bridge->dev.parent = dev;
-bridge->busnr = bus;
-bridge->ops = &pci_ops;
-bridge->map_irq = of_irq_parse_and_map_pci;
-bridge->swizzle_irq = pci_common_swizzle;
+Changelog:
 
-ret = pci_scan_root_bus_bridge(bridge);
-if (ret < 0) {
-	dev_err(dev, "Scanning root bridge failed");
-	goto err_init;
-}
+v9 --> v10
+Addressed comments:
+-Moved smmu model check to iort helper function to selectively apply
+ the msi reservation which will make the fn call generic from iommu-dma.
+-Removed PCI blacklisting patch, instead added smmu nodes(disabled)
+ with comments to hip06/hip07 dts file. 
 
-bus = bridge->bus;
-pci_bus_size_bridges(bus);
-pci_bus_assign_resources(bus);
+v8 --> v9
+-Thanks to Marc, fixed IORT helper function to reserve the ITS
+ translater region only.
+-Removed the DT support for MSI reservation and blacklisted
+ HiSilicon PCIe controllers on DT based systems when SMMUv3 is
+ enabled.
 
-list_for_each_entry(child, &bus->children, node)
-	pcie_bus_configure_settings(child);
+v7 --> v8
+Addressed comments from Rob and Lorenzo:
+ -Modified to use DT compatible string for errata.
+ -Changed logic to retrieve the msi-parent for DT case.
 
-pci_bus_add_devices(bus);
+v6 --> v7
+Addressed request from Will to add DT support for the erratum:
+ - added bt binding
+ - add of_iommu_msi_get_resv_regions()
+New arm64 silicon errata entry
+Rename iort_iommu_{its->msi}_get_resv_regions
+
+v5 --> v6
+Addressed comments from Robin and Lorenzo:
+-No change to patch#1 .
+-Reverted v5 patch#2 as this might break the platforms where this quirk
+  is not applicable. Provided a generic function in iommu code and added
+  back the quirk implementation in SMMU v3 driver(patch#3)
+
+v4 --> v5
+Addressed comments from Robin and Lorenzo:
+-Added a comment to make it clear that, for now, only straightforward 
+  HW topologies are handled while reserving ITS regions(patch #1).
+
+v3 --> v4
+Rebased on 4.13-rc1.
+Addressed comments from Robin, Will and Lorenzo:
+-As suggested by Robin, moved the ITS msi reservation into 
+  iommu_dma_get_resv_regions().
+-Added its_count != resv region failure case(patch #1).
+
+v2 --> v3
+Addressed comments from Lorenzo and Robin:
+-Removed dev_is_pci() check in smmuV3 driver.
+-Don't treat device not having an ITS mapping as an error in
+  iort helper function.
+
+v1 --> v2
+-patch 2/2: Invoke iort helper fn based on fwnode type(acpi).
+
+RFCv2 -->PATCH
+-Incorporated Lorenzo's review comments.
+
+RFC v1 --> RFC v2
+Based on Robin's review comments,
+-Removed  the generic erratum framework.
+-Using IORT/MADT tables to retrieve the ITS base addr instead  of vendor specific CSRT table.
+
+Shameer Kolothum (3):
+  ACPI/IORT: Add msi address regions reservation helper
+  iommu/dma: Add HW MSI(GICv3 ITS) address regions reservation
+  arm64:dts:hisilicon Disable hisilicon smmu node on hip06/hip07
+
+ arch/arm64/boot/dts/hisilicon/hip06.dtsi |  55 +++++++++++++
+ arch/arm64/boot/dts/hisilicon/hip07.dtsi |  24 ++++++
+ drivers/acpi/arm64/iort.c                | 133 ++++++++++++++++++++++++++++++-
+ drivers/iommu/dma-iommu.c                |   8 +-
+ drivers/irqchip/irq-gic-v3-its.c         |   3 +-
+ include/linux/acpi_iort.h                |   7 +-
+ 6 files changed, 224 insertions(+), 6 deletions(-)
+
+-- 
+1.9.1
