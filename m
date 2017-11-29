@@ -1,7 +1,7 @@
 From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 09/11] ARM: dts: vfxxx: Move nodes which have no reg property out of bus
-Date: Wed, 29 Nov 2017 16:54:42 -0200
-Message-ID: <1511981684-13433-9-git-send-email-festevam@gmail.com>
+Subject: [PATCH v2 07/11] ARM: dts: imx7d: Fix pcie node warnings
+Date: Wed, 29 Nov 2017 16:54:40 -0200
+Message-ID: <1511981684-13433-7-git-send-email-festevam@gmail.com>
 References: <1511981684-13433-1-git-send-email-festevam@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1511981684-13433-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,52 +12,44 @@ List-Id: devicetree@vger.kernel.org
 
 From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-Move iio-hwmon node from soc node to root node.
+Fix the unit address notation and pass bus-range property in order to
+fix the following build warnings with W=1:
 
-iio-hwmon node does not have any register properties and thus
-shouldn't be placed on the bus.
-
-This fixes the following build warnings with W=1:
-
-arch/arm/boot/dts/vf500-colibri-eval-v3.dtb: Warning (simple_bus_reg): Node /soc/iio-hwmon missing or empty reg/ranges property
-
-Based on a patch from Simon Horman for the renesas r8a7795 dtsi.
+arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (pci_bridge): Node /soc/aips-bus@30800000/pcie@0x33800000 missing bus-range for PCI bridge
+arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (unit_address_format): Failed prerequisite 'pci_bridge'
+arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (pci_device_reg): Failed prerequisite 'pci_bridge'
+arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
+arch/arm/boot/dts/imx7d-cl-som-imx7.dtb: Warning (simple_bus_reg): Node /soc/aips-bus@30800000/pcie@0x33800000 simple-bus unit address format error, expected "33800000"
 
 Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 ---
 Changes since v1:
-- None
+- Fix Subject and commit log
 
- arch/arm/boot/dts/vfxxx.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/imx7d.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 5d654b5..c3f09b7 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -84,6 +84,11 @@
- 		mask = <0x1000>;
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 9d92725..200714e 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -132,7 +132,7 @@
+ 		status = "disabled";
  	};
  
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc0 16>, <&adc1 16>;
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -762,10 +767,5 @@
- 				status = "disabled";
- 			};
- 		};
--
--		iio-hwmon {
--			compatible = "iio-hwmon";
--			io-channels = <&adc0 16>, <&adc1 16>;
--		};
- 	};
- };
+-	pcie: pcie@0x33800000 {
++	pcie: pcie@33800000 {
+ 		compatible = "fsl,imx7d-pcie", "snps,dw-pcie";
+ 		reg = <0x33800000 0x4000>,
+ 		      <0x4ff00000 0x80000>;
+@@ -140,6 +140,7 @@
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+ 		device_type = "pci";
++		bus-range = <0x00 0xff>;
+ 		ranges = <0x81000000 0 0          0x4ff80000 0 0x00010000   /* downstream I/O */
+ 			  0x82000000 0 0x40000000 0x40000000 0 0x0ff00000>; /* non-prefetchable memory */
+ 		num-lanes = <1>;
 -- 
 2.7.4
 
