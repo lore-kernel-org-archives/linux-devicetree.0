@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 4/9] soc: brcmstb: Correct CPU_CREDIT_REG offset for Brahma-B53 CPUs
-Date: Wed, 29 Nov 2017 12:18:44 -0800
-Message-ID: <20171129201849.17522-5-f.fainelli@gmail.com>
+Subject: [PATCH 2/9] dt-bindings: arm: brcmstb: Correct BIUCTRL node documentation
+Date: Wed, 29 Nov 2017 12:18:42 -0800
+Message-ID: <20171129201849.17522-3-f.fainelli@gmail.com>
 References: <20171129201849.17522-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171129201849.17522-1-f.fainelli@gmail.com>
@@ -12,67 +12,61 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, M
         ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Broadcom Brahma-B53 CPUs, the CPU_CREDIT_REG offset got moved to
-0x0b0 instead of 0x184, correct this such that we correcty
-enable/disable write-pairing for these chips.
+Correct the Device Tree bindings for the HIF_CPUBIUCTRL node whose
+compatible string is actually brcm,bcm<chip-id>-cpu-biu-ctrl. Also
+document in the binding the fallback property
+("brcm,brcmstb-cpu-biu-ctrl") and update the example accordingly.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/soc/bcm/brcmstb/biuctrl.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt   | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
-index c3c548fcaa8c..e8322e663831 100644
---- a/drivers/soc/bcm/brcmstb/biuctrl.c
-+++ b/drivers/soc/bcm/brcmstb/biuctrl.c
-@@ -21,12 +21,13 @@
- #include <linux/syscore_ops.h>
- #include <linux/soc/brcmstb/brcmstb.h>
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+index 790e6b0b8306..05be8d1f7be6 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+@@ -17,21 +17,23 @@ Further, syscon nodes that map platform-specific registers used for general
+ system control is required:
  
--#define CPU_CREDIT_REG_OFFSET			0x184
-+#define B15_CPU_CREDIT_REG_OFFSET		0x184
-+#define B53_CPU_CREDIT_REG_OFFSET		0x0b0
- #define  CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK	0x70000000
+     - compatible: "brcm,bcm<chip_id>-sun-top-ctrl", "syscon"
+-    - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
++    - compatible: "brcm,bcm<chip_id>-cpu-biu-ctrl",
++		  "brcm,brcmstb-cpu-biu-ctrl",
++		  "syscon"
+     - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
  
- static void __iomem *cpubiuctrl_base;
- static bool mcp_wr_pairing_en;
--static unsigned int cpu_credit_reg_offset = CPU_CREDIT_REG_OFFSET;
-+static unsigned int cpu_credit_reg_offset;
+-hif-cpubiuctrl node
++cpu-biu-ctrl node
+ -------------------
+-SoCs with Broadcom Brahma15 ARM-based CPUs have a specific Bus Interface Unit
+-(BIU) block which controls and interfaces the CPU complex to the different
+-Memory Controller Ports (MCP), one per memory controller (MEMC). This BIU block
+-offers a feature called Write Pairing which consists in collapsing two adjacent
+-cache lines into a single (bursted) write transaction towards the memory
+-controller (MEMC) to maximize write bandwidth.
++SoCs with Broadcom Brahma15 ARM-based and Brahma53 ARM64-based CPUs have a
++specific Bus Interface Unit (BIU) block which controls and interfaces the CPU
++complex to the different Memory Controller Ports (MCP), one per memory
++controller (MEMC). This BIU block offers a feature called Write Pairing which
++consists in collapsing two adjacent cache lines into a single (bursted) write
++transaction towards the memory controller (MEMC) to maximize write bandwidth.
  
- static int __init mcp_write_pairing_set(void)
- {
-@@ -53,7 +54,7 @@ static int __init mcp_write_pairing_set(void)
+ Required properties:
  
- static int __init setup_hifcpubiuctrl_regs(void)
- {
--	struct device_node *np;
-+	struct device_node *np, *cpu_dn;
- 	int ret = 0;
+-    - compatible: must be "brcm,bcm7445-hif-cpubiuctrl", "syscon"
++    - compatible: must be "brcm,bcm7445-cpu-biu-ctrl", "syscon"
  
- 	np = of_find_compatible_node(NULL, NULL, "brcm,brcmstb-cpu-biu-ctrl");
-@@ -70,6 +71,23 @@ static int __init setup_hifcpubiuctrl_regs(void)
- 	}
+ Optional properties:
  
- 	mcp_wr_pairing_en = of_property_read_bool(np, "brcm,write-pairing");
-+
-+	cpu_dn = of_get_cpu_node(0, NULL);
-+	if (!cpu_dn) {
-+		pr_err("failed to obtain CPU device node\n");
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	if (of_device_is_compatible(cpu_dn, "brcm,brahma-b15"))
-+		cpu_credit_reg_offset = B15_CPU_CREDIT_REG_OFFSET;
-+	else if (of_device_is_compatible(cpu_dn, "brcm,brahma-b53"))
-+		cpu_credit_reg_offset = B53_CPU_CREDIT_REG_OFFSET;
-+	else {
-+		pr_err("unsupported CPU\n");
-+		ret = -EINVAL;
-+	}
-+	of_node_put(cpu_dn);
- out:
- 	of_node_put(np);
- 	return ret;
+@@ -52,7 +54,7 @@ example:
+         };
+ 
+         hif_cpubiuctrl: syscon@3e2400 {
+-            compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
++            compatible = "brcm,bcm7445-cpu-biu-ctrl", "brcm,brcmstb-cpu-biu-ctrl", "syscon";
+             reg = <0x3e2400 0x5b4>;
+             brcm,write-pairing;
+         };
 -- 
 2.9.3
