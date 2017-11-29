@@ -1,72 +1,51 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] pinctrl: Allow a device to indicate when to force
- a state
-Date: Wed, 29 Nov 2017 14:06:34 +0100
-Message-ID: <CACRpkdY82RPKNbVPC8XC3BeHa27-gsyu2j+G-pSFgg8AYUJvZw@mail.gmail.com>
-References: <20171102231551.16220-1-f.fainelli@gmail.com> <20171102231551.16220-2-f.fainelli@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 0/2] of: Add whitelist
+Date: Wed, 29 Nov 2017 07:31:27 -0600
+Message-ID: <CAL_JsqL5gYh_++1wDLMYjO7MXKOHpzr315FZ1tuN9o5tOe7TYA@mail.gmail.com>
+References: <1511816284-12145-1-git-send-email-atull@kernel.org> <da4c9b29-eccc-6a67-291a-73a36c1598b5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171102231551.16220-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <da4c9b29-eccc-6a67-291a-73a36c1598b5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ext Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 3, 2017 at 12:15 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> It may happen that a device needs to force applying a state, e.g:
-> because it only defines one state of pin states (default) but loses
-> power/register contents when entering low power modes. Add a
-> pinctrl_dev::flags bitmask to help describe future quirks and define
-> PINCTRL_FLG_FORCE_STATE as such a settable flag.
+On Wed, Nov 29, 2017 at 3:20 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 11/27/17 15:58, Alan Tull wrote:
+>> Here's a proposal for a whitelist to lock down the dynamic device tree.
+>>
+>> For an overlay to be accepted, all of its targets are required to be
+>> on a target node whitelist.
+>>
+>> Currently the only way I have to get on the whitelist is calling a
+>> function to add a node.  That works for fpga regions, but I think
+>> other uses will need a way of having adding specific nodes from the
+>> base device tree, such as by adding a property like 'allow-overlay;'
+>> or 'allow-overlay = "okay";' If that is acceptable, I could use some
+>> advice on where that particular code should go.
+>>
+>> Alan
+>>
+>> Alan Tull (2):
+>>   of: overlay: add whitelist
+>>   fpga: of region: add of-fpga-region to whitelist
+>>
+>>  drivers/fpga/of-fpga-region.c |  9 ++++++
+>>  drivers/of/overlay.c          | 73 +++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of.h            | 12 +++++++
+>>  3 files changed, 94 insertions(+)
+>>
 >
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> The plan was to use connectors to restrict where an overlay could be applied.
+> I would prefer not to have multiple methods for accomplishing the same thing
+> unless there is a compelling reason to do so.
 
-So if I understand correctly, the state is lost across
-suspend/resume, correct?
+Connector nodes need a mechanism to enable themselves, too. I don't
+think connector nodes are going to solve every usecase.
 
-Or are we even talking runtime PM runtime_suspend
-and runtime_resume here?
-
-> @@ -1197,9 +1197,21 @@ int pinctrl_select_state(struct pinctrl *p, struct pinctrl_state *state)
->  {
->         struct pinctrl_setting *setting, *setting2;
->         struct pinctrl_state *old_state = p->state;
-> +       bool force = false;
->         int ret;
->
-> -       if (p->state == state)
-> +       if (p->state) {
-> +               list_for_each_entry(setting, &p->state->settings, node) {
-> +                       if (setting->pctldev->flags & PINCTRL_FLG_FORCE_STATE)
-> +                               force = true;
-> +               }
-> +       }
-> +
-> +       /* Some controllers may want to force this operation when they define
-> +        * only one set of functions and lose power state, e.g: pinctrl-single
-> +        * with its pinctrl-single,low-power-state-loss property.
-> +        */
-> +       if (p->state == state && !force)
->                 return 0;
-
-So the idea is we go and change the state even if we are in the right
-state already, I understand that much.
-
-But how is pinctrl_select_state() being called in the first place under
-these circumstances?
-
-If this comes from the resume() callback in .pm of the device driver,
-would not the same thing be achived if you just set some mock
-"sleep" state in suspend()? It could even have exactly the same settings
-as the "default" state, as long as it is another state, the register
-will be reprogrammed.
-
-See further include/linux/pinctrl/pinctrl-state.h
-
-Yours,
-Linus Walleij
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
