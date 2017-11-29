@@ -1,70 +1,59 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] pinctrl: Allow indicating loss of pin states
- during low-power
-Date: Wed, 29 Nov 2017 09:02:47 -0800
-Message-ID: <20171129170247.GI28152@atomide.com>
-References: <20171102231551.16220-1-f.fainelli@gmail.com>
- <20171102231551.16220-3-f.fainelli@gmail.com>
- <CACRpkdZtFRB_iy1bDPZ0wkK0jf7pkTGtbZG4gQUJVR+eiO+dhA@mail.gmail.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v2 3/8] ASoC: tlv320aic31xx: Fix the reset GPIO
+	OF name
+Date: Wed, 29 Nov 2017 11:13:54 -0600
+Message-ID: <20171129171359.29382-4-afd@ti.com>
+References: <20171129171359.29382-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZtFRB_iy1bDPZ0wkK0jf7pkTGtbZG4gQUJVR+eiO+dhA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171129171359.29382-1-afd@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [171129 13:03]:
-> On Fri, Nov 3, 2017 at 12:15 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
-> > Some platforms (e.g: Broadcom STB: BMIPS_GENERIC/ARCH_BRCMSTB) will lose
-> > their register contents when entering their lower power state. In such a
-> > case, the pinctrl-single driver that is used will not be able to restore
-> > the power states without telling the core about it and having
-> > pinctrl_select_state() check for that.
-> >
-> > This patch adds a new optional boolean property that Device Tree can
-> > define in order to obtain exactly that and having the core pinctrl code
-> > take that into account.
-> >
-> > Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Florian, I'm really sorry for losing track of this patch set, it's
-> important stuff and I see why systems are dependent on something
-> like this.
-> 
-> Tony: can you look at this from a pinctrl-single point of view?
-> This is the intended consumer: pinctrl-single users that lose the
-> hardware state over suspend/resume.
-> 
-> How do you see this working with other pinctrl-single users?
+The correct DT property for specifying a GPIO used for reset
+is "reset-gpios", fix this here.
 
-Hmm well typically a device driver that loses it's context just does
-save and restore of the registers in runtime PM suspend/resume
-as needed. In this case it would mean duplicating the state for
-potentially for hundreds of registers.. So using the existing
-state in the pinctrl subsystem totally makes sense for the pins.
+Fixes: e00447fafbf7 ("ASoC: tlv320aic31xx: Add basic codec driver implementation")
 
-Florian do you have other reasons why this should be done in the
-pinctrl framework instead of the driver? Might be worth describing
-the reasoning in the patch descriptions :)
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+---
+ sound/soc/codecs/tlv320aic31xx.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-So as long as the pinctrl framework state is used to restore the
-state by the pinctrl driver instead of the pinctrl consumer drivers,
-I don't have issues with this patchset. So probably just improving
-the patch messages a bit should do it.
-
-FYI, on omaps, the PRCM hardware saves and restores the pinctrl
-state so this has not been so far an issue.
-
-Regards,
-
-Tony
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+index e2862372c26e..4837f25b0760 100644
+--- a/sound/soc/codecs/tlv320aic31xx.c
++++ b/sound/soc/codecs/tlv320aic31xx.c
+@@ -1279,9 +1279,16 @@ static void aic31xx_pdata_from_of(struct aic31xx_priv *aic31xx)
+ 		aic31xx->pdata.micbias_vg = MICBIAS_2_0V;
+ 	}
+ 
+-	ret = of_get_named_gpio(np, "gpio-reset", 0);
+-	if (ret > 0)
++	ret = of_get_named_gpio(np, "reset-gpios", 0);
++	if (ret > 0) {
+ 		aic31xx->pdata.gpio_reset = ret;
++	} else {
++		ret = of_get_named_gpio(np, "gpio-reset", 0);
++		if (ret > 0) {
++			dev_warn(aic31xx->dev, "Using deprecated property \"gpio-reset\", please update your DT");
++			aic31xx->pdata.gpio_reset = ret;
++		}
++	}
+ }
+ #else /* CONFIG_OF */
+ static void aic31xx_pdata_from_of(struct aic31xx_priv *aic31xx)
+-- 
+2.15.0
