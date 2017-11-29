@@ -1,95 +1,204 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 25/35] nds32: Build infrastructure
-Date: Wed, 29 Nov 2017 21:27:31 +0100
-Message-ID: <CAK8P3a3-CexhRkJB7_8TGShuDQP8w=myhkoB8-7ax3my96PrMw@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <5e1be9ebc591c6de79b75f726a5a38b2564eaa92.1511785528.git.green.hu@gmail.com>
- <CAK8P3a1GuH2tgtC5t834-PNeUVYQxreD7seZH8sjraZFtRUWKw@mail.gmail.com>
- <CAEbi=3c=hTCcUOPs+Fc10srzTFsB4MnVxgcFydz12-jH0ZXjog@mail.gmail.com>
- <CAK8P3a0kvt52UTtEmE+tWHZuH_rmgTxP7+CiD9Ddwe2cJLwXTQ@mail.gmail.com>
- <CAMuHMdViO=+-kGdXFPSW+9PsPbf3sUa5xdaJ_1C-cX2vE1G35Q@mail.gmail.com>
- <CAK8P3a3yk7ww+LdQdL+wgz2wYrzXLSsj1PTdfK-qx013jdg4SQ@mail.gmail.com>
- <CAEbi=3cc8e__DnFKmTSMm9xQMx7CGu+1v3e55w8UekwnTTkw5Q@mail.gmail.com>
- <CAK8P3a2d2_jxXehE3xP_G9Tzp6jP4hFmS4CJkh=6bePLEDcdGw@mail.gmail.com> <CAEbi=3fmXP=n_tS+-TSFhdht2G=VHOzVCVU=SRy4A6Ym_GToUQ@mail.gmail.com>
+From: Patrick Menschel <menschel.p-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-binding: can: mcp2517fd: document device tree
+ bindings
+Date: Wed, 29 Nov 2017 21:35:25 +0100
+Message-ID: <0a7e4416-332a-5c23-bda3-8c7561410314@posteo.de>
+References: <20171124183509.12810-1-kernel@martin.sperl.org>
+ <20171124183509.12810-2-kernel@martin.sperl.org>
+ <20171126222528.i6quueqdmuj6le6g@rob-hp-laptop>
+ <6EBDD798-8632-4F42-A138-369BCD36DF68@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEbi=3fmXP=n_tS+-TSFhdht2G=VHOzVCVU=SRy4A6Ym_GToUQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms060408000007020903080108"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6EBDD798-8632-4F42-A138-369BCD36DF68-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 3:10 PM, Greentime Hu <green.hu@gmail.com> wrote:
-> 2017-11-29 19:57 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->> On Wed, Nov 29, 2017 at 12:39 PM, Greentime Hu <green.hu@gmail.com> wrote:
->>>
->>> How about this?
->>>
->>> choice
->>>         prompt "CPU type"
->>>         default CPU_N13
->>> config CPU_N15
->>>         bool "AndesCore N15"
->>>         select CPU_CACHE_NONALIASING
->>> config CPU_N13
->>>         bool "AndesCore N13"
->>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
->>> config CPU_N10
->>>         bool "AndesCore N10"
->>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
->>> config CPU_D15
->>>         bool "AndesCore D15"
->>>         select CPU_CACHE_NONALIASING
->>>         select HWZOL
->>> config CPU_D10
->>>         bool "AndesCore D10"
->>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
->>> endchoice
->>
->> With a 'choice' statement this works, but I would consider that
->> suboptimal for another reason: now you cannot build a kernel that
->> works on e.g. both N13 and N15.
->>
->> This is what we had on ARM a long time ago and on MIPS not so long
->> ago, but it's really a burden for testing and distribution once you get
->> support for more than a handful of machines supported in the mainline
->> kernel: If each CPU core is mutually incompatible with the other ones,
->> this means you likely end up having one defconfig per CPU core,
->> or even one defconfig per SoC or board.
->>
->> I would always try to get the largest amount of hardware to work
->> in the same kernel concurrently.
->>
->> One way of of this would be to define the "CPU type" as the minimum
->> supported CPU, e.g. selecting D15 would result in a kernel that
->> only works on D15, while selecting N15 would work on both N15 and
->> D15, and selecting D10 would work on both D10 and D15.
->>
+This is a cryptographically signed message in MIME format.
+
+--------------ms060408000007020903080108
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Language: de-DE
+
+Hello Martin,
+
+
+I didn't catch the whole discussion but you may want to check
+
+include/dt-bindings/gpio/gpio.h
+
+> #define GPIO_OPEN_DRAIN (GPIO_SINGLE_ENDED | GPIO_ACTIVE_LOW)
+
+This corresponds to
+
+Documentation/devicetree/bindings/gpio/gpio.txt
+
+> Most controllers are however specifying a generic flag bitfield
+> in the last cell, so for these, use the macros defined in
+> include/dt-bindings/gpio/gpio.h whenever possible:
 >
-> Hi, Arnd:
+> Example of a node using GPIOs:
 >
-> Maybe we should keep the original implementation for this reason.
-> The default value of CPU_CACHE_NONALIASING and ANDES_PAGE_SIZE_8KB is
-> available for all CPU types for now.
-> User can use these configs built kernel to boot on almost all nds32 CPUs.
+> =C2=A0=C2=A0 =C2=A0node {
+> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 =C2=A0enable-gpios =3D <&qe_pio_e 18 GP=
+IO_ACTIVE_HIGH>;
+> =C2=A0=C2=A0 =C2=A0};
 >
-> It might be a little bit weird if we config CPU_N10 but run on a N13 CPU.
-> This might confuse our users.
+> GPIO_ACTIVE_HIGH is 0, so in this example gpio-specifier is "18 0" and
+> encodes
+> GPIO pin number, and GPIO flags as accepted by the "qe_pio_e"
+> gpio-controller.
+>
+> Optional standard bitfield specifiers for the last cell:
+>
+> - Bit 0: 0 means active high, 1 means active low
+> - Bit 1: 1 means single-ended wiring, see:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 https://en=
+=2Ewikipedia.org/wiki/Single-ended_triode
+> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 When used with active-low, this means o=
+pen drain/collector, see:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 https://en=
+=2Ewikipedia.org/wiki/Open_collector
+> =C2=A0=C2=A0 =C2=A0=C2=A0=C2=A0 When used with active-high, this means =
+open source/emitter
 
-I think it really depends on how much flexibility you want to give to users.
-The way I suggested first was to allow selecting an arbitrary combination
-of CPUs, and then let Kconfig derive the correct set of optimization flags
-and other options that work with those. That is probably the easiest for
-the users, but can be tricky to get right for all combinations.
+Regards,
 
-When you put them in a sorted list like I mentioned for simplicity, you
-could reduce the confusion by naming them differently, e.g.
-CONFIG_CPU_N10_OR_NEWER.
+Patrick
 
-Having only the CPU_CACHE_NONALIASING option is fine if you
-never need to make any other decisions based on the CPU core
-type, but then the help text should describe specifically which cases
-are affected (N10/N13/D13 with 4K page size), and you can decide to
-hide the option and make it always-on when using 8K page size.
 
-       Arnd
+
+Am 29.11.2017 um 12:55 schrieb kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org:
+> Hi Rob!
+>
+> Thanks for all the effort - I shall incorporate those changes into V2.
+>
+>> s/Microcip/Microchip/
+>> s/_/-/
+>>
+>>> +					   0 =3D Start of Frame output
+>>> +					   default: 10
+>>> + - microchip,clock_div =3D <1|2>: internal clock divider - default 1=
+
+>>> + - microchip,gpio_opendrain: gpio (int0,1) in open drain mode
+>>> +			     instead of default push/pull
+>>> + - microchip,int_opendrain: int pin in open drain mode
+>>> +			    instead of default push/pull
+>> IIRC, we have a standard property for this.
+> Would you know what that could be - I did a quick search for
+> standard properties, but could not find a definitive list=E2=80=A6
+>
+> The only thing I found in:
+>   Documentation/devicetree/bindings/w1/w1-gpio.txt
+> is:
+>   linux,open-drain
+>
+> But there is also: =20
+>   nvidia,open-drain
+>   open_drain
+>   open-drain
+>   drive-open-drain (pinctrl)
+>   st,irq-open-drain
+>
+> Only the last is specific to the interrupt line and none to the other
+> GPIOs of the chip (txcan, GPIO) - and each can get set differently.
+>
+> So how shall I implement that?
+>
+> Thanks,
+> 	Martin--
+> To unsubscribe from this list: send the line "unsubscribe linux-can" in=
+
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+--------------ms060408000007020903080108
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+CyEwggUzMIIEG6ADAgECAhBp9PwZCVW98tnHAS3kOjLRMA0GCSqGSIb3DQEBCwUAMIGXMQsw
+CQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxm
+b3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBD
+bGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTAeFw0xNzA2MDYwMDAw
+MDBaFw0xODA2MDYyMzU5NTlaMCUxIzAhBgkqhkiG9w0BCQEWFG1lbnNjaGVsLnBAcG9zdGVv
+LmRlMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoNhDbc0RVWdVfJEhvKfjVPmY
+wnjbpn/YIWexSHoH3L65Gzj0+IHWdI56CvKzWniZYI8pjoCnVQU4gEfRWJqev9wijlagbfYe
+0yQQEUFigJEEzC6EoaC5JJfJcNr1qkYB9RSFeSuGnKOb4Z3NGXp0yXjLkY+jzNbRrOelKB6p
+AT5KGaAa6ESkucnPPNrMScHZBHznUxT0u0aGu8goQUw/SZVN3S3KvXIrQfXt2bZiCXCtw5go
+0+N/MI78KSU2uO9hlzEDq0tp30iWWs3zpt/vZjuojufw0ikUxz9tseFzhTIfRp5tYnE08h+z
+Tmc9w9ld8WA12YdK61P2HNHtsGDqZQIDAQABo4IB6jCCAeYwHwYDVR0jBBgwFoAUgq9sjPjF
+/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFJZcg7d5WiG3X5RR8+DRmSaH0kqCMA4GA1UdDwEB
+/wQEAwIFoDAMBgNVHRMBAf8EAjAAMCAGA1UdJQQZMBcGCCsGAQUFBwMEBgsrBgEEAbIxAQMF
+AjARBglghkgBhvhCAQEEBAMCBSAwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAQEwKzApBggr
+BgEFBQcCARYdaHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2g
+S4ZJaHR0cDovL2NybC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRp
+b25hbmRTZWN1cmVFbWFpbENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklo
+dHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFu
+ZFNlY3VyZUVtYWlsQ0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5j
+b20wHwYDVR0RBBgwFoEUbWVuc2NoZWwucEBwb3N0ZW8uZGUwDQYJKoZIhvcNAQELBQADggEB
+ACV8QT6dz5yYb5lItTyb1IrP7Tlc5Ri+eaki13Wlh62z3dYdC0C3GuOrKTVwwDAKpbuUm5g2
+OFDVXkAfZhw8DkCjB2bghH1xoUBXqJ5PhjsWvUgptgefvJ5z80dXPSkKTYgRQj2yDaBUl6mS
+dPIYYTvX9QIL3Ad1nSqZjkwY/Ingw6o3NlUQnAN3EeVQEarZ7X+T/COAQl50bNNY+3+ATEk+
+euma2T4CEiv9dJa5SkLCoLIAf3H5JcmaV9e32wxXKaS1yq8DZ57w1Jn7ZNULOOgVTMDuGdTL
+L9jcJe6fVdgKz5LwPHsSUveUrhAzp9zEWa/v9sjVHRJOXJERO7oNjvgwggXmMIIDzqADAgEC
+AhBqm+E4O/8ra58B1dm4p1JWMA0GCSqGSIb3DQEBDAUAMIGFMQswCQYDVQQGEwJHQjEbMBkG
+A1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFD
+T01PRE8gQ0EgTGltaXRlZDErMCkGA1UEAxMiQ09NT0RPIFJTQSBDZXJ0aWZpY2F0aW9uIEF1
+dGhvcml0eTAeFw0xMzAxMTAwMDAwMDBaFw0yODAxMDkyMzU5NTlaMIGXMQswCQYDVQQGEwJH
+QjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYD
+VQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJTQSBDbGllbnQgQXV0
+aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEP
+ADCCAQoCggEBAL6znlesKHZ1QBbHOAOY08YYdiFQ8yV5C0y1oNF9Olg+nKcxLqf2NHbZhGra
+0D00SOTq9bus3/mxgUsg/Wh/eXQ0pnp8tZ8XZWAnlyKMpjL+qUByRjXCA6RQyDMqVaVUkbIr
+5SU0RDX/kSsKwer3H1pT/HUrBN0X8sKtPTdGX8XAWt/VdMLBrZBlgvnkCos+KQWWCo63OTTq
+Rvaq8aWccm+KOMjTcE6s2mj6RkalweyDI7X+7U5lNo6jzC8RTXtVV4/Vwdax720YpMPJQaDa
+ElmOupyTf1Qib+cpukNJnQmwygjD8m046DQkLnpXNCAGjuJy1F5NATksUsbfJAr7FLUCAwEA
+AaOCATwwggE4MB8GA1UdIwQYMBaAFLuvfgI9+qbxPISOre44mOzZMjLUMB0GA1UdDgQWBBSC
+r2yM+MX+lmF86B89K3FIXsSLwDAOBgNVHQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIB
+ADARBgNVHSAECjAIMAYGBFUdIAAwTAYDVR0fBEUwQzBBoD+gPYY7aHR0cDovL2NybC5jb21v
+ZG9jYS5jb20vQ09NT0RPUlNBQ2VydGlmaWNhdGlvbkF1dGhvcml0eS5jcmwwcQYIKwYBBQUH
+AQEEZTBjMDsGCCsGAQUFBzAChi9odHRwOi8vY3J0LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FB
+ZGRUcnVzdENBLmNydDAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuY29tb2RvY2EuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQB4XLKBKDRPPO5fVs6fl1bsj6JrF/bz9kkIBtTYLzXN30D+03Hj
+6OxCDBEaIeNmsBhrJmuubvyE7HtoSmR809AgcYboW+rcTNZ/8u/Hv+GTrNI/AhqX2/kiQNxm
+gUPt/eJPs92Qclj0HnVyy9TnSvGkSDU7I5Px+TbO+88G4zipA2psZaWeEykgzClZlPz1FjTC
+kk77ZXp5cQYYexE6zeeN4/0OqqoAloFrjAF4o50YJafX8mnahjp3I2Y2mkjhk0xQfhNqbzlL
+WPoT3m7j7U26u7zg6swjOq8hITYc3/np5tM5aVyu6t99p17bTbY7+1RTWBviN9YJzK8HxzOb
+XYWBf/L+VGOYNsQDTxAk0Hbvb1j6KjUhg7fO294F29QIhhmiNOr84JHoy+fNLpfvYc/Q9EtF
+OI5ISYgOxLk3nD/whbUe9rmEQXLp8MB933Ij474gwwCPUpwv9mj2PMnXoc7mbrS22XUSeTwx
+CTP9bcmUdp4jmIoWfhQm7X9w/Zgddg+JZ/YnIHOwsGsaTUgj7fIvxqith7DoJC91WJ8Lce3C
+VJqb1XWeKIJ84F7YLXZN0oa7TktYgDdmQVxYkZo1c5noaDKH9Oq9cbm/vOYRUM1cWcef20Wk
+yk5S/GFyyPJwG0fR1nRas3DqAf4cXxMiEKcff7PNa4M3RGTqH0pWR8p6EjGCBDUwggQxAgEB
+MIGsMIGXMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09N
+T0RPIFJTQSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQafT8
+GQlVvfLZxwEt5Doy0TANBglghkgBZQMEAgEFAKCCAlkwGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMTcxMTI5MjAzNTI1WjAvBgkqhkiG9w0BCQQxIgQgpal+
+XdRWVigk9ZZRiqkp91pddT5lHYR5zdtdxjLhcRcwbAYJKoZIhvcNAQkPMV8wXTALBglghkgB
+ZQMEASowCwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG
+9w0DAgIBQDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBvQYJKwYBBAGCNxAEMYGvMIGsMIGX
+MQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdT
+YWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0EgTGltaXRlZDE9MDsGA1UEAxM0Q09NT0RPIFJT
+QSBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQafT8GQlVvfLZ
+xwEt5Doy0TCBvwYLKoZIhvcNAQkQAgsxga+ggawwgZcxCzAJBgNVBAYTAkdCMRswGQYDVQQI
+ExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9E
+TyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50aWNhdGlv
+biBhbmQgU2VjdXJlIEVtYWlsIENBAhBp9PwZCVW98tnHAS3kOjLRMA0GCSqGSIb3DQEBAQUA
+BIIBABcyoVSC0s8o1Iu+fjjY5dxvjcZ4X1yJvkSZOhwr5Fn+Bk4jEdz/44brBxj85Keob+gw
+XUJNdc0OwoqTY4uzoQ98nzYmCEEH/lMRM6o4ti0a9OuuoZWVHknBB2DeP9R3UpX1qrnTGJg1
+lpIuHMgTC4xho95LynRyvIQBuToSzOpA+ZboYYmORURRLfWZIZirKcyz9jBjHKdsMf52G3mg
+PMicgO9pWx/KmImXXvzlcSz64Fu47JSOGH2pGnhAainKKQUlsA+vsuzhHeMAn/kZ3q/fmJYc
+miXCWcSWHVTDe+qJH6COujTucstZgAsfTkBER88ETS3R39Zf4+KbJzz7SMoAAAAAAAA=
+--------------ms060408000007020903080108--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
