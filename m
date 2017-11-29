@@ -1,43 +1,67 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: h5: NanoPi NEO Plus2
- : add EMAC support
-Date: Wed, 29 Nov 2017 16:30:32 +0100
-Message-ID: <20171129153032.xlckec7uuuwiu3b5@flea.lan>
-References: <20171129141716.98951-1-antony@phenome.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 13/13] ASoC: stm32: add DFSDM DAI support
+Date: Wed, 29 Nov 2017 15:37:48 +0000
+Message-ID: <20171129153748.awllz4aoziaxpk2c@sirena.org.uk>
+References: <1511881557-28596-1-git-send-email-arnaud.pouliquen@st.com>
+ <1511881557-28596-14-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="d7nbtgukvq2o233o"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGFF7PIAKGQEHHLHP2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20171129141716.98951-1-antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0396587120412731283=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1511881557-28596-14-git-send-email-arnaud.pouliquen@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
 
---d7nbtgukvq2o233o
-Content-Type: text/plain; charset="UTF-8"
+--===============0396587120412731283==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ubr6w2kr5kkkan2b"
 Content-Disposition: inline
 
-On Wed, Nov 29, 2017 at 03:17:16PM +0100, Antony Antony wrote:
-> add arm64 H5 dwmac-sun8i support for this board
-> 
-> Signed-off-by: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
 
-Applied, thanks
+--ubr6w2kr5kkkan2b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Maxime
+On Tue, Nov 28, 2017 at 04:05:57PM +0100, Arnaud Pouliquen wrote:
+> Add driver to handle DAI interface for PDM microphones connected
+> to Digital Filter for Sigma Delta Modulators IP.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---d7nbtgukvq2o233o--
+This is basically fine, if someone could send me a pull request and the
+relevant patches when the IIO stuff is sorted out I'll give it a final
+check and apply then.
+
+--ubr6w2kr5kkkan2b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloe1EsACgkQJNaLcl1U
+h9BVlAf9GgCBlhd0NGfdwnmtmo4I9hpicJhKkSm5CoRoPoSVZrjSoO+hSxQim9ea
+mslKawzNOUb5yJkXpmiYIXq2AKDsZqTNTPH5s1MsUeeGvOsVynPjFD9AdQvwFY0u
+kCz3DrTRH9eijZ4/3yUhzNZE6xE810JKKfMh8/GVO8JU/WzWLqfQW/hJNB43JS3w
+47beIOvNyHWeqoYOPqHasndk2Z7vKX3StMJqXBm2aND4V2S/sDbPr5Ibxm+pxKBn
+bK8i6+fP+8nbW00narB67Or4n1NUbE6o0wDFwyDP+Hqk/VLVZiDOGFgMpD+IBWw4
+lF0HSawOKJHYRKjx6uwUc893stEjQQ==
+=9NM4
+-----END PGP SIGNATURE-----
+
+--ubr6w2kr5kkkan2b--
+
+--===============0396587120412731283==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0396587120412731283==--
