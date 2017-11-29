@@ -1,57 +1,54 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 7/8] netdev: octeon-ethernet: Add Cavium Octeon III
- support.
-Date: Wed, 29 Nov 2017 23:16:31 +0100
-Message-ID: <20171129221631.GD1706@lunn.ch>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-8-david.daney@cavium.com>
- <CAFqt6zabdQhyjUc4WsjzJ6CxMr70H3V_JdipJVwRi8LuOG54tA@mail.gmail.com>
- <CAFqt6zZAPxKm663yEHD0Rx2SPye9Nvoax0RMroDQuF8BpZchsA@mail.gmail.com>
- <20171129191138.ntlfw5fb4xacwyun@mwanda>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC 0/2] of: Add whitelist
+Date: Wed, 29 Nov 2017 17:47:55 -0500
+Message-ID: <6a620530-2fac-480f-5c38-6b2b5257c9e9@gmail.com>
+References: <1511816284-12145-1-git-send-email-atull@kernel.org>
+ <da4c9b29-eccc-6a67-291a-73a36c1598b5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20171129191138.ntlfw5fb4xacwyun@mwanda>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org, ralf@linux-mips.org, Carlos Munoz <cmunoz@cavium.com>, Rob Herring <robh+dt@kernel.org>, Souptick Joarder <jrdr.linux@gmail.com>, "Steven J. Hill" <steven.hill@cavium.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>, "David S. Miller" <davem@davemloft.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <da4c9b29-eccc-6a67-291a-73a36c1598b5@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Moritz Fischer <mdf@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 10:11:38PM +0300, Dan Carpenter wrote:
-> On Wed, Nov 29, 2017 at 09:37:15PM +0530, Souptick Joarder wrote:
-> > >> +static int bgx_port_sgmii_set_link_speed(struct bgx_port_priv *priv, struct port_status status)
-> > >> +{
-> > >> +       u64     data;
-> > >> +       u64     prtx;
-> > >> +       u64     miscx;
-> > >> +       int     timeout;
-> > >> +
-> > 
-> > >> +
-> > >> +       switch (status.speed) {
-> > >> +       case 10:
-> > >
-> > > In my opinion, instead of hard coding the value, is it fine to use ENUM ?
-> >    Similar comments applicable in other places where hard coded values are used.
-> > 
+On 11/29/17 04:20, Frank Rowand wrote:
+> On 11/27/17 15:58, Alan Tull wrote:
+>> Here's a proposal for a whitelist to lock down the dynamic device tree.
+>>
+>> For an overlay to be accepted, all of its targets are required to be
+>> on a target node whitelist.
+>>
+>> Currently the only way I have to get on the whitelist is calling a
+>> function to add a node.  That works for fpga regions, but I think
+>> other uses will need a way of having adding specific nodes from the
+>> base device tree, such as by adding a property like 'allow-overlay;'
+>> or 'allow-overlay = "okay";' If that is acceptable, I could use some
+>> advice on where that particular code should go.
+>>
+>> Alan
+>>
+>> Alan Tull (2):
+>>   of: overlay: add whitelist
+>>   fpga: of region: add of-fpga-region to whitelist
+>>
+>>  drivers/fpga/of-fpga-region.c |  9 ++++++
+>>  drivers/of/overlay.c          | 73 +++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of.h            | 12 +++++++
+>>  3 files changed, 94 insertions(+)
+>>
 > 
-> 10 means 10M right?  That's not really a magic number.  It's fine.
+> The plan was to use connectors to restrict where an overlay could be applied.
+> I would prefer not to have multiple methods for accomplishing the same thing
+> unless there is a compelling reason to do so.
 
-There are also :
-uapi/linux/ethtool.h:#define SPEED_10		10
-uapi/linux/ethtool.h:#define SPEED_100		100
-uapi/linux/ethtool.h:#define SPEED_1000		1000
-uapi/linux/ethtool.h:#define SPEED_10000	10000
-uapi/linux/ethtool.h:#define SPEED_100000	100000
+Going back one level in my thinking, I don't think that having a driver mark
+a node as a location where an overlay fragment can be applied is serving a
+useful purpose.  Any driver, including any driver loaded as a module,
+could mark a node as ok.  I don't see how this is providing any meaningful
+restriction on where an overlay fragment can be applied.
 
-	     Andrew
+-Frank
