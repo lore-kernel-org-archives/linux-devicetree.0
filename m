@@ -1,153 +1,72 @@
-From: Souptick Joarder <jrdr.linux@gmail.com>
-Subject: Re: [PATCH v4 7/8] netdev: octeon-ethernet: Add Cavium Octeon III
- support.
-Date: Wed, 29 Nov 2017 21:37:15 +0530
-Message-ID: <CAFqt6zZAPxKm663yEHD0Rx2SPye9Nvoax0RMroDQuF8BpZchsA@mail.gmail.com>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-8-david.daney@cavium.com>
- <CAFqt6zabdQhyjUc4WsjzJ6CxMr70H3V_JdipJVwRi8LuOG54tA@mail.gmail.com>
+From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 0/2] of: Add whitelist
+Date: Wed, 29 Nov 2017 10:11:12 -0600
+Message-ID: <CANk1AXTN=0L3L9O_7njF=hqJG=X88Q3jRvDW3UfBnZeEnUmhxA@mail.gmail.com>
+References: <1511816284-12145-1-git-send-email-atull@kernel.org>
+ <da4c9b29-eccc-6a67-291a-73a36c1598b5@gmail.com> <CAL_JsqL5gYh_++1wDLMYjO7MXKOHpzr315FZ1tuN9o5tOe7TYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAFqt6zabdQhyjUc4WsjzJ6CxMr70H3V_JdipJVwRi8LuOG54tA@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: David Daney <david.daney@cavium.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, ralf@linux-mips.org, Carlos Munoz <cmunoz@cavium.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, "Steven J. Hill" <steven.hill@cavium.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqL5gYh_++1wDLMYjO7MXKOHpzr315FZ1tuN9o5tOe7TYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 4:00 PM, Souptick Joarder <jrdr.linux@gmail.com> wrote:
-> On Wed, Nov 29, 2017 at 6:25 AM, David Daney <david.daney@cavium.com> wrote:
->> From: Carlos Munoz <cmunoz@cavium.com>
+On Wed, Nov 29, 2017 at 7:31 AM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Nov 29, 2017 at 3:20 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 11/27/17 15:58, Alan Tull wrote:
+>>> Here's a proposal for a whitelist to lock down the dynamic device tree.
+>>>
+>>> For an overlay to be accepted, all of its targets are required to be
+>>> on a target node whitelist.
+>>>
+>>> Currently the only way I have to get on the whitelist is calling a
+>>> function to add a node.  That works for fpga regions, but I think
+>>> other uses will need a way of having adding specific nodes from the
+>>> base device tree, such as by adding a property like 'allow-overlay;'
+>>> or 'allow-overlay = "okay";' If that is acceptable, I could use some
+>>> advice on where that particular code should go.
+>>>
+>>> Alan
+>>>
+>>> Alan Tull (2):
+>>>   of: overlay: add whitelist
+>>>   fpga: of region: add of-fpga-region to whitelist
+>>>
+>>>  drivers/fpga/of-fpga-region.c |  9 ++++++
+>>>  drivers/of/overlay.c          | 73 +++++++++++++++++++++++++++++++++++++++++++
+>>>  include/linux/of.h            | 12 +++++++
+>>>  3 files changed, 94 insertions(+)
+>>>
 >>
->> The Cavium OCTEON cn78xx and cn73xx SoCs have network packet I/O
->> hardware that is significantly different from previous generations of
->> the family.
-
->> diff --git a/drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c b/drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
->> new file mode 100644
->> index 000000000000..4dad35fa4270
->> --- /dev/null
->> +++ b/drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
->> @@ -0,0 +1,2033 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/* Copyright (c) 2017 Cavium, Inc.
->> + *
->> + * This file is subject to the terms and conditions of the GNU General Public
->> + * License.  See the file "COPYING" in the main directory of this archive
->> + * for more details.
->> + */
->> +#include <linux/platform_device.h>
->> +#include <linux/netdevice.h>
->> +#include <linux/etherdevice.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_mdio.h>
->> +#include <linux/of_net.h>
->> +#include <linux/module.h>
->> +#include <linux/slab.h>
->> +#include <linux/list.h>
->> +
-
->> +static void bgx_port_sgmii_set_link_down(struct bgx_port_priv *priv)
->> +{
->> +       u64     data;
-
->> +       data = oct_csr_read(BGX_GMP_PCS_MISC_CTL(priv->node, priv->bgx, priv->index));
->> +       data |= BIT(11);
->> +       oct_csr_write(data, BGX_GMP_PCS_MISC_CTL(priv->node, priv->bgx, priv->index));
->> +       data = oct_csr_read(BGX_GMP_PCS_MISC_CTL(priv->node, priv->bgx, priv->index));
+>> The plan was to use connectors to restrict where an overlay could be applied.
+>> I would prefer not to have multiple methods for accomplishing the same thing
+>> unless there is a compelling reason to do so.
 >
-> Any particular reason to read immediately after write ?
-
-
-
->> +static int bgx_port_sgmii_set_link_speed(struct bgx_port_priv *priv, struct port_status status)
->> +{
->> +       u64     data;
->> +       u64     prtx;
->> +       u64     miscx;
->> +       int     timeout;
->> +
-
->> +
->> +       switch (status.speed) {
->> +       case 10:
+> Connector nodes need a mechanism to enable themselves, too. I don't
+> think connector nodes are going to solve every usecase.
 >
-> In my opinion, instead of hard coding the value, is it fine to use ENUM ?
-   Similar comments applicable in other places where hard coded values are used.
+> Rob
 
+The two methods I'm suggesting are intended to handle different cases.
+  There will exist some drivers that by their nature will want every
+instance to be enabled for overlays, such as fpga regions.  The other
+case is where drivers could support overlays but that's not the
+widespread use for them.  So no need to enable every instance of that
+driver for overlays.  In that case the DT property provides some
+granularity, only enabling overlays for specific instances of that
+driver, leaving the rest of the DT locked down.
 
+If we only want one method, I would choose having the DT property only
+and not exporting the functions.  Users would have to add the property
+for every FPGA region but that's not really painful.  This would have
+the benefit of still keeping the DT locked down unless someone
+specifically wanted to enable some regions for overlays for their
+particular use.
 
->> +static int bgx_port_gser_27882(struct bgx_port_priv *priv)
->> +{
->> +       u64     data;
->> +       u64     addr;
->
->> +       int     timeout = 200;
->> +
->> +   //    timeout = 200;
-Better to initialize the timeout value
-
-
->> +static int bgx_port_qlm_rx_equalization(struct bgx_port_priv *priv, int qlm, int lane)
->> +{
->> +       lmode = oct_csr_read(GSER_LANE_MODE(priv->node, qlm));
->> +       lmode &= 0xf;
->> +       addr = GSER_LANE_P_MODE_1(priv->node, qlm, lmode);
->> +       data = oct_csr_read(addr);
->> +       /* Don't complete rx equalization if in VMA manual mode */
->> +       if (data & BIT(14))
->> +               return 0;
->> +
->> +       /* Apply rx equalization for speed > 6250 */
->> +       if (bgx_port_get_qlm_speed(priv, qlm) < 6250)
->> +               return 0;
->> +
->> +       /* Wait until rx data is valid (CDRLOCK) */
->> +       timeout = 500;
->
-> 500 us is the min required value or it can be further reduced ?
-
-
->> +static int bgx_port_init_xaui_link(struct bgx_port_priv *priv)
->> +{
-
->> +
->> +               if (use_ber) {
->> +                       timeout = 10000;
->> +                       do {
->> +                               data =
->> +                               oct_csr_read(BGX_SPU_BR_STATUS1(priv->node, priv->bgx, priv->index));
->> +                               if (data & BIT(0))
->> +                                       break;
->> +                               timeout--;
->> +                               udelay(1);
->> +                       } while (timeout);
->
-> In my opinion, it's better to implement similar kind of loops inside macros.
->
->> +                       if (!timeout) {
->> +                               pr_debug("BGX%d:%d:%d: BLK_LOCK timeout\n",
->> +                                        priv->bgx, priv->index, priv->node);
->> +                               return -1;
->> +                       }
->> +               } else {
->> +                       timeout = 10000;
->> +                       do {
->> +                               data =
->> +                               oct_csr_read(BGX_SPU_BX_STATUS(priv->node, priv->bgx, priv->index));
->> +                               if (data & BIT(12))
->> +                                       break;
->> +                               timeout--;
->> +                               udelay(1);
->> +                       } while (timeout);
-> same here
+Alan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
