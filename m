@@ -1,39 +1,29 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 3/5] PCI: cadence: Add host driver for Cadence PCIe
- controller
-Date: Wed, 29 Nov 2017 09:55:21 -0600
-Message-ID: <20171129155521.GA6469@bhelgaas-glaptop.roam.corp.google.com>
-References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
- <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
- <20171128204114.GE11228@bhelgaas-glaptop.roam.corp.google.com>
- <20171129091929.0077ffbc@windsurf.home>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 3/4] RFC: net: dsa: Add bindings for Realtek SMI DSAs
+Date: Wed, 29 Nov 2017 16:56:27 +0100
+Message-ID: <20171129155627.GD24881@lunn.ch>
+References: <20171105231909.5599-1-linus.walleij@linaro.org>
+ <20171105231909.5599-4-linus.walleij@linaro.org>
+ <20171105234831.GA24822@lunn.ch>
+ <CACRpkdbzqnbF49yN-SAqLkhufk=R2C=jpdLo-QWmL0zR_+Vj=w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171129091929.0077ffbc@windsurf.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CACRpkdbzqnbF49yN-SAqLkhufk=R2C=jpdLo-QWmL0zR_+Vj=w@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 09:19:29AM +0100, Thomas Petazzoni wrote:
-> Hello,
-> 
-> On Tue, 28 Nov 2017 14:41:14 -0600, Bjorn Helgaas wrote:
-> 
-> > > + * struct cdns_pcie_rc_data - hardware specific data  
-> > 
-> > "cdns" is a weird abbreviation for "Cadence", since "Cadence" doesn't
-> > contain an "s".
-> 
-> cdns is the official Device Tree binding vendor prefix for Cadence:
-> 
-> $ grep Cadence Documentation/devicetree/bindings/vendor-prefixes.txt
-> cdns	Cadence Design Systems Inc.
-> 
-> And it is already widely used throughout the kernel for Cadence
-> drivers. See drivers/watchdog/cadence_wdt.c, drivers/spi/spi-cadence.c,
-> drivers/i2c/busses/i2c-cadence.c, etc.
+> I have the phy-handle in the ethernet controller. This RTL8366RB
+> thing is just one big PHY as far as I know.
 
-Hard to argue with that!  Thanks!
+Hi Linus
+
+We don't model switches as PHYs. They are their own device type.  And
+the internal or external PHYs are just normal PHYs in the linux
+model. Meaning their interrupt properties goes in the PHY node in
+device tree, as documented in the phy.txt binding documentation.
+
+       Andrew
