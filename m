@@ -1,40 +1,71 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 10/17] pinctrl: madera: Add DT bindings
- for Cirrus Logic Madera codecs
-Date: Wed, 29 Nov 2017 11:21:16 +0100
-Message-ID: <CACRpkdbU42sQQQnHx9qL4p1Jp0J3vKkFo4BU6ZPoVTkx3kvumw@mail.gmail.com>
-References: <20171123171316.10868-1-rf@opensource.wolfsonmicro.com>
- <20171123171316.10868-11-rf@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171123171316.10868-11-rf@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, alsa-devel@alsa-project.org, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v4 3/6] dt-bindings: display: Add bindings for SGD GKTW70SDAE4SE Panel
+Date: Wed, 29 Nov 2017 11:20:54 +0100
+Message-ID: <1511950857-19292-4-git-send-email-narmstrong@baylibre.com>
+References: <1511950857-19292-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1511950857-19292-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 23, 2017 at 6:13 PM, Richard Fitzgerald
-<rf@opensource.wolfsonmicro.com> wrote:
+The GKTW70SDAE4SE is an LVDS display panel.
+Their bindings are modelled on the the LVDS panel bindings.
 
-> This is the binding description of the pinctrl driver for Cirru Logic
-> Madera codecs. The binding uses the generic pinctrl binding so  the main
-> purpose here is to describe the device-specific names for groups and
-> functions.
->
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/display/panel/sgd,gktw70sdae4se.txt   | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt b/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
+new file mode 100644
+index 0000000..d06644b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
+@@ -0,0 +1,41 @@
++Solomon Goldentek Display GKTW70SDAE4SE LVDS Display Panel
++==========================================================
++
++The GKTW70SDAE4SE is a 7" WVGA TFT-LCD display panel.
++
++These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
++with the following device-specific properties.
++
++Required properties:
++
++- compatible: Shall contain "sgd,gktw70sdae4se" and "panel-lvds", in that order.
++
++Example
++-------
++
++panel {
++	compatible = "sgd,gktw70sdae4se", "panel-lvds";
++
++	width-mm = <153>;
++	height-mm = <86>;
++
++	data-mapping = "jeida-18";
++
++	panel-timing {
++		clock-frequency = <32000000>;
++		hactive = <800>;
++		vactive = <480>;
++		hback-porch = <39>;
++		hfront-porch = <39>;
++		vback-porch = <29>;
++		vfront-porch = <13>;
++		hsync-len = <47>;
++		vsync-len = <2>;
++	};
++
++	port {
++		panel_in: endpoint {
++			remote-endpoint = <&lvds_encoder>;
++		};
++	};
++};
+-- 
+2.7.4
