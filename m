@@ -1,10 +1,12 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH 0/3] Misc fixes up for MT7623 mmc
-Date: Wed, 29 Nov 2017 18:10:34 +0800
-Message-ID: <cover.1511949769.git.sean.wang@mediatek.com>
+Subject: [PATCH 3/3] arm: dts: mt7623: fix card detection issue on bananapi-r2
+Date: Wed, 29 Nov 2017 18:10:37 +0800
+Message-ID: <88269ed11bdf881087f7b0de331a60d8acfdc977.1511949769.git.sean.wang@mediatek.com>
+References: <cover.1511949769.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1511949769.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
@@ -12,22 +14,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Just add some fixes up for the current MT7623 support
+Fix that bananapi-r2 booting from SD-card would fail since incorrect
+polarity is applied to the previous setup with GPIO_ACTIVE_HIGH.
 
-Patch 1) complement the missing dt-bindings definitions
-Patch 2) pick up the proper falling back as patch 1 defines.
-Patch 3) SD-card detection issue caused by the wrong polarity is being fixed up
+Cc: stable@vger.kernel.org # v4.14+
+Fixes: 0eed8d097612 ("arm: dts: mt7623: Add SD-card and EMMC to bananapi-r2")
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sean Wang (3):
-  mmc: dt-bindings: add mmc support to MT7623 SoC
-  arm: dts: mt7623: update mmc related nodes with the appropriate
-    fallback
-  arm: dts: mt7623: fix card detection issue on bananapi-r2
-
- Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
- arch/arm/boot/dts/mt7623.dtsi                    | 4 ++--
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts    | 2 +-
- 3 files changed, 5 insertions(+), 3 deletions(-)
-
+diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+index 688a863..7bf5aa2 100644
+--- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+@@ -204,7 +204,7 @@
+ 	bus-width = <4>;
+ 	max-frequency = <50000000>;
+ 	cap-sd-highspeed;
+-	cd-gpios = <&pio 261 0>;
++	cd-gpios = <&pio 261 GPIO_ACTIVE_LOW>;
+ 	vmmc-supply = <&mt6323_vmch_reg>;
+ 	vqmmc-supply = <&mt6323_vio18_reg>;
+ };
 -- 
 2.7.4
