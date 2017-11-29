@@ -1,54 +1,63 @@
 From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 05/11] ARM: dts: imx6dl: Remove unneeded label and unit address
-Date: Wed, 29 Nov 2017 16:54:38 -0200
-Message-ID: <1511981684-13433-5-git-send-email-festevam@gmail.com>
+Subject: [PATCH v2 09/11] ARM: dts: vfxxx: Move nodes which have no reg property out of bus
+Date: Wed, 29 Nov 2017 16:54:42 -0200
+Message-ID: <1511981684-13433-9-git-send-email-festevam@gmail.com>
 References: <1511981684-13433-1-git-send-email-festevam@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1511981684-13433-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-Remove unneeded label and unit address in order to fix the following
-build warnings with W=1:
+Move iio-hwmon node from soc node to root node.
 
-arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unit_address_vs_reg): Node /soc/aips-bus@2000000/iomuxc-gpr@20e0000/ipu1_csi0_mux@34 has a unit name, but no reg property
-arch/arm/boot/dts/imx6dl-apf6dev.dtb: Warning (unit_address_vs_reg): Node /soc/aips-bus@2000000/iomuxc-gpr@20e0000/ipu1_csi1_mux@34 has a unit name, but no
+iio-hwmon node does not have any register properties and thus
+shouldn't be placed on the bus.
 
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+This fixes the following build warnings with W=1:
+
+arch/arm/boot/dts/vf500-colibri-eval-v3.dtb: Warning (simple_bus_reg): Node /soc/iio-hwmon missing or empty reg/ranges property
+
+Based on a patch from Simon Horman for the renesas r8a7795 dtsi.
+
 Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 ---
 Changes since v1:
 - None
 
- arch/arm/boot/dts/imx6dl.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/vfxxx.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index d987661..c01674f 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -170,7 +170,7 @@
- };
- 
- &gpr {
--	ipu1_csi0_mux: ipu1_csi0_mux@34 {
-+	ipu1_csi0_mux {
- 		compatible = "video-mux";
- 		mux-controls = <&mux 0>;
- 		#address-cells = <1>;
-@@ -224,7 +224,7 @@
- 		};
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 5d654b5..c3f09b7 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -84,6 +84,11 @@
+ 		mask = <0x1000>;
  	};
  
--	ipu1_csi1_mux: ipu1_csi1_mux@34 {
-+	ipu1_csi1_mux {
- 		compatible = "video-mux";
- 		mux-controls = <&mux 1>;
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc0 16>, <&adc1 16>;
++	};
++
+ 	soc {
  		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -762,10 +767,5 @@
+ 				status = "disabled";
+ 			};
+ 		};
+-
+-		iio-hwmon {
+-			compatible = "iio-hwmon";
+-			io-channels = <&adc0 16>, <&adc1 16>;
+-		};
+ 	};
+ };
 -- 
 2.7.4
 
