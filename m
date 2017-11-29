@@ -1,72 +1,168 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 25/35] nds32: Build infrastructure
-Date: Wed, 29 Nov 2017 10:25:54 +0100
-Message-ID: <CAK8P3a3yk7ww+LdQdL+wgz2wYrzXLSsj1PTdfK-qx013jdg4SQ@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <5e1be9ebc591c6de79b75f726a5a38b2564eaa92.1511785528.git.green.hu@gmail.com>
- <CAK8P3a1GuH2tgtC5t834-PNeUVYQxreD7seZH8sjraZFtRUWKw@mail.gmail.com>
- <CAEbi=3c=hTCcUOPs+Fc10srzTFsB4MnVxgcFydz12-jH0ZXjog@mail.gmail.com>
- <CAK8P3a0kvt52UTtEmE+tWHZuH_rmgTxP7+CiD9Ddwe2cJLwXTQ@mail.gmail.com> <CAMuHMdViO=+-kGdXFPSW+9PsPbf3sUa5xdaJ_1C-cX2vE1G35Q@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC 1/2] of: overlay: add whitelist
+Date: Wed, 29 Nov 2017 04:25:59 -0500
+Message-ID: <791d0e87-c3c4-faa6-6a55-9141be2ca0ac@gmail.com>
+References: <1511816284-12145-1-git-send-email-atull@kernel.org>
+ <1511816284-12145-2-git-send-email-atull@kernel.org>
+ <20171128151538.2w6fjcib6my6wt5n@rob-hp-laptop>
+ <CANk1AXQ756EeKDDWXT5W6T8CJqqoFR7pGNkL5BGPN8gYBneRfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdViO=+-kGdXFPSW+9PsPbf3sUa5xdaJ_1C-cX2vE1G35Q@mail.gmail.com>
+In-Reply-To: <CANk1AXQ756EeKDDWXT5W6T8CJqqoFR7pGNkL5BGPN8gYBneRfw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>
+To: Alan Tull <atull@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Moritz Fischer <mdf@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 10:10 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Arnd,
->
-> On Wed, Nov 29, 2017 at 9:58 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Wed, Nov 29, 2017 at 9:39 AM, Greentime Hu <green.hu@gmail.com> wrote:
->>> 2017-11-27 22:21 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->>>> On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
->>>>> diff --git a/arch/nds32/Kconfig.cpu b/arch/nds32/Kconfig.cpu
->>>>> +config CPU_CACHE_NONALIASING
->>>>> +       bool "Non-aliasing cache"
->>>>> +       help
->>>>> +         If this CPU is using VIPT data cache and its cache way size is larger
->>>>> +         than page size, say N. If it is using PIPT data cache, say Y.
->>>>> +
->>>>> +         If unsure, say Y.
->>>>
->>>> Can you determine this from the CPU type?
+On 11/28/17 14:26, Alan Tull wrote:
+> On Tue, Nov 28, 2017 at 9:15 AM, Rob Herring <robh@kernel.org> wrote:
+>> On Mon, Nov 27, 2017 at 02:58:03PM -0600, Alan Tull wrote:
+>>> Add simple whitelist.  When an overlay is submitted, if any target in
+>>> the overlay is not in the whitelist, the overlay is rejected.  Drivers
+>>> that support dynamic configuration can register their device node with:
 >>>
->>> There is no cpu register to determine it. It also depeneds on page
->>> size and way size however page size is configurable by software.
->>> These codes are determined at compile time will be benefit to code
->>> size and performance.
->>> IMHO, I think it would be better to be determined here.
+>>>   int of_add_whitelist_node(struct device_node *np)
+>>>
+>>> and remove themselves with:
+>>>
+>>>   void of_remove_whitelist_node(struct device_node *np)
 >>
->> I meant determining it at compile time from other Kconfig symbols,
->> if that's possible. Do the CPU cores each have a fixed way-size?
->> If they do, it could be done like
->>
->> menu "CPU selection"
->>
->> config CPU_N15
->>       bool "AndesCore N15"
->>       select CPU_CACHE_NONALIASING
->>
->> config CPU_N13
->>       bool "AndesCore N15"
->>       select CPU_CACHE_NONALIASING if PAGE_SIZE_16K
->>
->> ...
->>
->> endmenu
->>
->> and then you can use the same CPU_... symbols to make other decisions
->> as well, e.g. CPU specific compiler optimizations.
->
-> Do you want to support multiple CPU types in a single kernel image
-> (I see no "choice" statement above)?
-> If yes, you may have a mix of aliasing and non-aliasing caches, so
-> you may want to invert the logic, and select CPU_CACHE_ALIASING
-> instead.
+>> I think these should be named for what they do, not how it is
+>> implemented.
+> 
+> Sure, such as of_node_overlay_enable and of_node_overlay_disable?
+of_allow_overlay_on_node(), of_disallow_overlay_on_node()?
 
-Right, my mistake.
 
-         Arnd
+> 
+>>
+>>>
+>>> Signed-off-by: Alan Tull <atull@kernel.org>
+>>> ---
+>>>  drivers/of/overlay.c | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>>  include/linux/of.h   | 12 +++++++++
+>>>  2 files changed, 85 insertions(+)
+>>>
+>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>>> index c150abb..5f952a1 100644
+>>> --- a/drivers/of/overlay.c
+>>> +++ b/drivers/of/overlay.c
+>>> @@ -21,6 +21,7 @@
+>>>  #include <linux/slab.h>
+>>>  #include <linux/err.h>
+>>>  #include <linux/idr.h>
+>>> +#include <linux/spinlock.h>
+>>>
+>>>  #include "of_private.h"
+>>>
+>>> @@ -646,6 +647,74 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
+>>>       kfree(ovcs);
+>>>  }
+>>>
+>>> +/* lock for adding/removing device nodes to the whitelist */
+>>> +static spinlock_t whitelist_lock;
+>>> +
+>>> +static struct list_head whitelist_list = LIST_HEAD_INIT(whitelist_list);
+>>> +
+>>> +struct dt_overlay_whitelist {
+>>> +     struct device_node *np;
+>>> +     struct list_head node;
+>>> +};
+>>
+>> Can't we just add a flags bit in device_node.flags? That would be much
+>> simpler.
+> 
+> Yes, much simpler.  Such as:
+> 
+> #define OF_OVERLAY_ENABLED     5 /* allow DT overlay targeting this node */
+> 
+>>
+>>> +
+>>> +int of_add_whitelist_node(struct device_node *np)
+>>> +{
+>>> +     unsigned long flags;
+>>> +     struct dt_overlay_whitelist *wln;
+>>> +
+>>> +     wln = kzalloc(sizeof(*wln), GFP_KERNEL);
+>>> +     if (!wln)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     wln->np = np;
+>>> +
+>>> +     spin_lock_irqsave(&whitelist_lock, flags);
+>>> +     list_add(&wln->node, &whitelist_list);
+>>> +     spin_unlock_irqrestore(&whitelist_lock, flags);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(of_add_whitelist_node);
+>>> +
+>>> +void of_remove_whitelist_node(struct device_node *np)
+>>> +{
+>>> +     struct dt_overlay_whitelist *wln;
+>>> +     unsigned long flags;
+>>> +
+>>> +     list_for_each_entry(wln, &whitelist_list, node) {
+>>> +             if (np == wln->np) {
+>>> +                     spin_lock_irqsave(&whitelist_lock, flags);
+>>> +                     list_del(&wln->node);
+>>> +                     spin_unlock_irqrestore(&whitelist_lock, flags);
+>>> +                     kfree(wln);
+>>> +                     return;
+>>> +             }
+>>> +     }
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(of_remove_whitelist_node);
+>>> +
+>>> +static int of_check_whitelist(struct overlay_changeset *ovcs)
+>>> +{
+>>> +     struct dt_overlay_whitelist *wln;
+>>> +     struct device_node *target;
+>>> +     int i;
+>>> +
+>>> +     for (i = 0; i < ovcs->count; i++) {
+>>> +             target = ovcs->fragments[i].target;
+>>> +             if (!of_node_cmp(target->name, "__symbols__"))
+>>> +                     continue;
+>>> +
+>>> +             list_for_each_entry(wln, &whitelist_list, node)
+>>> +                     if (target == wln->np)
+>>> +                             break;
+>>> +
+>>> +             if (target != wln->np)
+>>> +                     return -ENODEV;
+>>> +     }
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>>  /**
+>>>   * of_overlay_apply() - Create and apply an overlay changeset
+>>>   * @tree:    Expanded overlay device tree
+>>> @@ -717,6 +786,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+>>>       if (ret)
+>>>               goto err_free_overlay_changeset;
+>>>
+>>> +     ret = of_check_whitelist(ovcs);
+>>> +     if (ret)
+>>> +             goto err_free_overlay_changeset;
+>>
+>> This will break you until the next patch and breaks any other users. I
+>> think this is now just the unittest as tilcdc overlay is getting
+>> removed.
+>>
+>> You have to make this chunk the last patch in the series.
+> 
+> I'd rather squash the two patches.  In either case, the contents of
+> second patch are dependent on stuff in char-misc-testing today, so it
+> won't be able to apply yet on linux-next or anywhere else.
+> 
+> Thanks
+> Alan
+> 
+>>
+>> Rob
+> 
