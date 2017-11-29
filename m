@@ -1,38 +1,94 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 7/8] netdev: octeon-ethernet: Add Cavium Octeon III
- support.
-Date: Wed, 29 Nov 2017 14:47:24 +0100
-Message-ID: <20171129134724.GA21166@lunn.ch>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-8-david.daney@cavium.com>
- <CAFqt6zabdQhyjUc4WsjzJ6CxMr70H3V_JdipJVwRi8LuOG54tA@mail.gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: orange-pi-zero-plus2: enable AP6212a
+ WiFi/BT combo
+Date: Wed, 29 Nov 2017 19:23:56 +0530
+Message-ID: <CAMty3ZAiDvAG-P-c0J7vKaDyRWQ2CQobLA_xycRva5B20W6SOg@mail.gmail.com>
+References: <20171103195855.15283-1-geomatsi@gmail.com> <20171103195855.15283-3-geomatsi@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <CAFqt6zabdQhyjUc4WsjzJ6CxMr70H3V_JdipJVwRi8LuOG54tA@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devel@driverdev.osuosl.org, David Daney <david.daney@cavium.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, ralf@linux-mips.org, Carlos Munoz <cmunoz@cavium.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "Steven J. Hill" <steven.hill@cavium.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171103195855.15283-3-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 04:00:01PM +0530, Souptick Joarder wrote:
+On Sat, Nov 4, 2017 at 1:28 AM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Enable AP6212a WiFi/BT combo chip on orange-pi-zero-plus2 board:
+> - WiFi SDIO interface is connected to MMC1
+> - WiFi REG_ON pin connected to gpio PA9: attach to mmc-pwrseq
+> - WiFi HOST_WAKE pin connected to gpio PL7
+> - BT is connected to UART1
+>
+> Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> index a42fd79a62a3..d415b7b67cce 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> @@ -64,6 +64,13 @@
+>                 regulator-min-microvolt = <3300000>;
+>                 regulator-max-microvolt = <3300000>;
+>         };
+> +
+> +       wifi_pwrseq: wifi_pwrseq {
+> +               compatible = "mmc-pwrseq-simple";
+> +               pinctrl-names = "default";
+> +               reset-gpios = <&pio 0 9 GPIO_ACTIVE_LOW>; /* PA9 */
+> +               post-power-on-delay-ms = <200>;
+> +       };
+>  };
+>
+>  &mmc0 {
+> @@ -75,6 +82,25 @@
+>         status = "okay";
+>  };
+>
+> +&mmc1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mmc1_pins_a>;
+> +       vmmc-supply = <&reg_vcc3v3>;
+> +       vqmmc-supply = <&reg_vcc3v3>;
+> +       mmc-pwrseq = <&wifi_pwrseq>;
+> +       bus-width = <4>;
+> +       non-removable;
+> +       status = "okay";
+> +
+> +       brcmf: wifi@1 {
+> +               reg = <1>;
+> +               compatible = "brcm,bcm4329-fmac";
+> +               interrupt-parent = <&r_pio>;
+> +               interrupts = <0 7 IRQ_TYPE_LEVEL_LOW>;  /* PL7 */
+> +               interrupt-names = "host-wake";
+> +       };
+> +};
 
-Hi Souptick
+Did you observe this issue, I'm using firmware from buildroot and
+couldn't find any *.txt from brcm/ I believe we need ass text file for
+firmware details, did you tried the same from BR?
 
-Please trim the code when giving reviews. We don't want to have to
-page through 8K lines of code it find a few comments mixed in. Just
-keep the beginning of the function you are commented on to make the
-context clear. Cut the rest.
+Log:
+[    1.872235] mmc1: new high speed SDIO card at address 0001
+[    1.880919] brcmfmac: brcmf_fw_map_chip_to_name: using
+brcm/brcmfmac43430-sdio.bin for chip 0x00a9a6(43430) rev 0x000001
+[    1.908802] EXT4-fs (mmcblk0p1): re-mounted. Opts: data=ordered
+[    1.927199] brcmfmac mmc1:0001:1: Direct firmware load for
+brcm/brcmfmac43430-sdio.txt failed with error -2
+[    2.963478] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000):
+clkctl 0x50
+[    3.971888] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000):
+clkctl 0x50
 
-Thanks
-	Andrew
+thanks!
+-- 
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
