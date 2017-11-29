@@ -1,149 +1,95 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 5/9] soc: brcmstb: biuctrl: Prepare for saving/restoring other registers
-Date: Wed, 29 Nov 2017 12:18:45 -0800
-Message-ID: <20171129201849.17522-6-f.fainelli@gmail.com>
-References: <20171129201849.17522-1-f.fainelli@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 25/35] nds32: Build infrastructure
+Date: Wed, 29 Nov 2017 21:27:31 +0100
+Message-ID: <CAK8P3a3-CexhRkJB7_8TGShuDQP8w=myhkoB8-7ax3my96PrMw@mail.gmail.com>
+References: <cover.1511785528.git.green.hu@gmail.com> <5e1be9ebc591c6de79b75f726a5a38b2564eaa92.1511785528.git.green.hu@gmail.com>
+ <CAK8P3a1GuH2tgtC5t834-PNeUVYQxreD7seZH8sjraZFtRUWKw@mail.gmail.com>
+ <CAEbi=3c=hTCcUOPs+Fc10srzTFsB4MnVxgcFydz12-jH0ZXjog@mail.gmail.com>
+ <CAK8P3a0kvt52UTtEmE+tWHZuH_rmgTxP7+CiD9Ddwe2cJLwXTQ@mail.gmail.com>
+ <CAMuHMdViO=+-kGdXFPSW+9PsPbf3sUa5xdaJ_1C-cX2vE1G35Q@mail.gmail.com>
+ <CAK8P3a3yk7ww+LdQdL+wgz2wYrzXLSsj1PTdfK-qx013jdg4SQ@mail.gmail.com>
+ <CAEbi=3cc8e__DnFKmTSMm9xQMx7CGu+1v3e55w8UekwnTTkw5Q@mail.gmail.com>
+ <CAK8P3a2d2_jxXehE3xP_G9Tzp6jP4hFmS4CJkh=6bePLEDcdGw@mail.gmail.com> <CAEbi=3fmXP=n_tS+-TSFhdht2G=VHOzVCVU=SRy4A6Ym_GToUQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171129201849.17522-1-f.fainelli@gmail.com>
+In-Reply-To: <CAEbi=3fmXP=n_tS+-TSFhdht2G=VHOzVCVU=SRy4A6Ym_GToUQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bcm-kernel-feedback-list@broadcom.com
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-In preparation for saving/restoring additional registers required on
-some newer platforms (7268, 7271, 7278), migrate the code to use enums
-and helper functions to access registers.
+On Wed, Nov 29, 2017 at 3:10 PM, Greentime Hu <green.hu@gmail.com> wrote:
+> 2017-11-29 19:57 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>> On Wed, Nov 29, 2017 at 12:39 PM, Greentime Hu <green.hu@gmail.com> wrote:
+>>>
+>>> How about this?
+>>>
+>>> choice
+>>>         prompt "CPU type"
+>>>         default CPU_N13
+>>> config CPU_N15
+>>>         bool "AndesCore N15"
+>>>         select CPU_CACHE_NONALIASING
+>>> config CPU_N13
+>>>         bool "AndesCore N13"
+>>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
+>>> config CPU_N10
+>>>         bool "AndesCore N10"
+>>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
+>>> config CPU_D15
+>>>         bool "AndesCore D15"
+>>>         select CPU_CACHE_NONALIASING
+>>>         select HWZOL
+>>> config CPU_D10
+>>>         bool "AndesCore D10"
+>>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
+>>> endchoice
+>>
+>> With a 'choice' statement this works, but I would consider that
+>> suboptimal for another reason: now you cannot build a kernel that
+>> works on e.g. both N13 and N15.
+>>
+>> This is what we had on ARM a long time ago and on MIPS not so long
+>> ago, but it's really a burden for testing and distribution once you get
+>> support for more than a handful of machines supported in the mainline
+>> kernel: If each CPU core is mutually incompatible with the other ones,
+>> this means you likely end up having one defconfig per CPU core,
+>> or even one defconfig per SoC or board.
+>>
+>> I would always try to get the largest amount of hardware to work
+>> in the same kernel concurrently.
+>>
+>> One way of of this would be to define the "CPU type" as the minimum
+>> supported CPU, e.g. selecting D15 would result in a kernel that
+>> only works on D15, while selecting N15 would work on both N15 and
+>> D15, and selecting D10 would work on both D10 and D15.
+>>
+>
+> Hi, Arnd:
+>
+> Maybe we should keep the original implementation for this reason.
+> The default value of CPU_CACHE_NONALIASING and ANDES_PAGE_SIZE_8KB is
+> available for all CPU types for now.
+> User can use these configs built kernel to boot on almost all nds32 CPUs.
+>
+> It might be a little bit weird if we config CPU_N10 but run on a N13 CPU.
+> This might confuse our users.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/soc/bcm/brcmstb/biuctrl.c | 75 ++++++++++++++++++++++++++++++---------
- 1 file changed, 58 insertions(+), 17 deletions(-)
+I think it really depends on how much flexibility you want to give to users.
+The way I suggested first was to allow selecting an arbitrary combination
+of CPUs, and then let Kconfig derive the correct set of optimization flags
+and other options that work with those. That is probably the easiest for
+the users, but can be tricky to get right for all combinations.
 
-diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
-index e8322e663831..16cbfc2e953a 100644
---- a/drivers/soc/bcm/brcmstb/biuctrl.c
-+++ b/drivers/soc/bcm/brcmstb/biuctrl.c
-@@ -21,13 +21,45 @@
- #include <linux/syscore_ops.h>
- #include <linux/soc/brcmstb/brcmstb.h>
- 
--#define B15_CPU_CREDIT_REG_OFFSET		0x184
--#define B53_CPU_CREDIT_REG_OFFSET		0x0b0
- #define  CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK	0x70000000
- 
- static void __iomem *cpubiuctrl_base;
- static bool mcp_wr_pairing_en;
--static unsigned int cpu_credit_reg_offset;
-+static const int *cpubiuctrl_regs;
-+
-+static inline u32 cbc_readl(int reg)
-+{
-+	int offset = cpubiuctrl_regs[reg];
-+
-+	if (offset == -1)
-+		return (u32)-1;
-+
-+	return readl_relaxed(cpubiuctrl_base + offset);
-+}
-+
-+static inline void cbc_writel(u32 val, int reg)
-+{
-+	int offset = cpubiuctrl_regs[reg];
-+
-+	if (offset == -1)
-+		return;
-+
-+	writel_relaxed(val,  cpubiuctrl_base + offset);
-+}
-+
-+enum cpubiuctrl_regs {
-+	CPU_CREDIT_REG = 0,
-+};
-+
-+static const int b15_cpubiuctrl_regs[] = {
-+	[CPU_CREDIT_REG] = 0x184,
-+};
-+
-+static const int b53_cpubiuctrl_regs[] = {
-+	[CPU_CREDIT_REG] = 0x0b0,
-+};
-+
-+#define NUM_CPU_BIUCTRL_REGS	1
- 
- static int __init mcp_write_pairing_set(void)
- {
-@@ -36,15 +68,15 @@ static int __init mcp_write_pairing_set(void)
- 	if (!cpubiuctrl_base)
- 		return -1;
- 
--	creds = readl_relaxed(cpubiuctrl_base + cpu_credit_reg_offset);
-+	creds = cbc_readl(CPU_CREDIT_REG);
- 	if (mcp_wr_pairing_en) {
- 		pr_info("MCP: Enabling write pairing\n");
--		writel_relaxed(creds | CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
--			     cpubiuctrl_base + cpu_credit_reg_offset);
-+		cbc_writel(creds | CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
-+			   CPU_CREDIT_REG);
- 	} else if (creds & CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK) {
- 		pr_info("MCP: Disabling write pairing\n");
--		writel_relaxed(creds & ~CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
--				cpubiuctrl_base + cpu_credit_reg_offset);
-+		cbc_writel(creds & ~CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
-+			   CPU_CREDIT_REG);
- 	} else {
- 		pr_info("MCP: Write pairing already disabled\n");
- 	}
-@@ -80,9 +112,9 @@ static int __init setup_hifcpubiuctrl_regs(void)
- 	}
- 
- 	if (of_device_is_compatible(cpu_dn, "brcm,brahma-b15"))
--		cpu_credit_reg_offset = B15_CPU_CREDIT_REG_OFFSET;
-+		cpubiuctrl_regs = b15_cpubiuctrl_regs;
- 	else if (of_device_is_compatible(cpu_dn, "brcm,brahma-b53"))
--		cpu_credit_reg_offset = B53_CPU_CREDIT_REG_OFFSET;
-+		cpubiuctrl_regs = b53_cpubiuctrl_regs;
- 	else {
- 		pr_err("unsupported CPU\n");
- 		ret = -EINVAL;
-@@ -94,21 +126,30 @@ static int __init setup_hifcpubiuctrl_regs(void)
- }
- 
- #ifdef CONFIG_PM_SLEEP
--static u32 cpu_credit_reg_dump;  /* for save/restore */
-+static u32 cpubiuctrl_reg_save[NUM_CPU_BIUCTRL_REGS];
- 
- static int brcmstb_cpu_credit_reg_suspend(void)
- {
--	if (cpubiuctrl_base)
--		cpu_credit_reg_dump =
--			readl_relaxed(cpubiuctrl_base + cpu_credit_reg_offset);
-+	unsigned int i;
-+
-+	if (!cpubiuctrl_base)
-+		return 0;
-+
-+	for (i = 0; i < NUM_CPU_BIUCTRL_REGS; i++)
-+		cpubiuctrl_reg_save[i] = cbc_readl(i);
-+
- 	return 0;
- }
- 
- static void brcmstb_cpu_credit_reg_resume(void)
- {
--	if (cpubiuctrl_base)
--		writel_relaxed(cpu_credit_reg_dump,
--				cpubiuctrl_base + cpu_credit_reg_offset);
-+	unsigned int i;
-+
-+	if (!cpubiuctrl_base)
-+		return;
-+
-+	for (i = 0; i < NUM_CPU_BIUCTRL_REGS; i++)
-+		cbc_writel(cpubiuctrl_reg_save[i], i);
- }
- 
- static struct syscore_ops brcmstb_cpu_credit_syscore_ops = {
--- 
-2.9.3
+When you put them in a sorted list like I mentioned for simplicity, you
+could reduce the confusion by naming them differently, e.g.
+CONFIG_CPU_N10_OR_NEWER.
+
+Having only the CPU_CACHE_NONALIASING option is fine if you
+never need to make any other decisions based on the CPU core
+type, but then the help text should describe specifically which cases
+are affected (N10/N13/D13 with 4K page size), and you can decide to
+hide the option and make it always-on when using 8K page size.
+
+       Arnd
