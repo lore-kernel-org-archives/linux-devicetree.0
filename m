@@ -1,33 +1,31 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v2 31/35] earlycon: add reg-offset to physical address
- before mapping
-Date: Wed, 29 Nov 2017 13:40:16 +0800
-Message-ID: <CAEbi=3enx6tyuBmOygo3=gGa0HC+uit+gm3D=Thbyuv2hV=F0g@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <5b5f07ffd75d509a661398d02d6f1336156554ae.1511785528.git.green.hu@gmail.com>
- <20171128142507.GA17797@kroah.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] arm64: dts: ls1012a: Add LS1012A-2G5RDB board support
+Date: Wed, 29 Nov 2017 13:49:16 +0800
+Message-ID: <20171129054914.GF9376@dragon>
+References: <1511257503-12475-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+ <20171129032730.GD9376@dragon>
+ <AM3PR04MB449B294AE2AC9A9A654E9718C3B0@AM3PR04MB449.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20171128142507.GA17797@kroah.com>
-Sender: netdev-owner@vger.kernel.org
-To: Greg KH <greg@kroah.com>
-Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <AM3PR04MB449B294AE2AC9A9A654E9718C3B0-f56W/S9L6NTAlRApo5URHQfhPeD8jYilXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bhaskar Upadhaya <bhaskar.upadhaya-3arQi8VN3Tc@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-11-28 22:25 GMT+08:00 Greg KH <greg@kroah.com>:
-> On Mon, Nov 27, 2017 at 08:28:18PM +0800, Greentime Hu wrote:
->> From: Greentime Hu <greentime@andestech.com>
->>
->> It will get the wrong virtual address because port->mapbase is not added
->> the correct reg-offset yet. We have to update it before earlycon_map()
->> is called
->> ---
->>  drivers/tty/serial/earlycon.c |    3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> No signed-off-by line?
+On Wed, Nov 29, 2017 at 03:55:19AM +0000, Bhaskar Upadhaya wrote:
+> [Bhaskar] OK, Will keep like below
+> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frdm.dtb
+> > +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-2g5rdb.dtb
+> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
+> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
 
-Sorry I forget it.
-Signed-off-by: Greentime Hu <greentime@andestech.com>
+'2' goes before 'f' in alphabet table, right?
 
-I will add it in the next version patch.
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
