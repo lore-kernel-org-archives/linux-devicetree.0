@@ -1,59 +1,28 @@
-From: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
-Subject: [PATCH] arm64: dts: allwinner: h5: NanoPi NEO Plus2 : add EMAC support
-Date: Wed, 29 Nov 2017 15:17:16 +0100
-Message-ID: <20171129141716.98951-1-antony@phenome.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v4 0/8] Cavium OCTEON-III network driver.
+Date: Wed, 29 Nov 2017 09:18:51 -0500 (EST)
+Message-ID: <20171129.091851.1176729909470018179.davem@davemloft.net>
+References: <20171129005540.28829-1-david.daney@cavium.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20171129005540.28829-1-david.daney@cavium.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: david.daney@cavium.com
+Cc: mark.rutland@arm.com, linux-mips@linux-mips.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, ralf@linux-mips.org, robh+dt@kernel.org, andrew@lunn.ch, steven.hill@cavium.com, gregkh@linuxfoundation.org, f.fainelli@gmail.com, james.hogan@mips.com
 List-Id: devicetree@vger.kernel.org
 
-add arm64 H5 dwmac-sun8i support for this board
 
-Signed-off-by: Antony Antony <antony-AVhj06Q78b5AfugRpC6u6w@public.gmane.org>
----
- .../boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts   | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+The net-next tree is closed, please resubmit this when the net-next
+tree opens again.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-index 7c028af..01dace4 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo-plus2.dts
-@@ -53,6 +53,7 @@
- 	compatible = "friendlyarm,nanopi-neo-plus2", "allwinner,sun50i-h5";
- 
- 	aliases {
-+		ethernet0 = &emac;
- 		serial0 = &uart0;
- 	};
- 
-@@ -133,6 +134,22 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_rgmii_pins>;
-+	phy-supply = <&reg_gmac_3v3>;
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+};
-+
-+&external_mdio {
-+	ext_rgmii_phy: ethernet-phy@7 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <7>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you.
