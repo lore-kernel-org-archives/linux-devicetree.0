@@ -1,28 +1,33 @@
-From: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
-Subject: RE: [PATCH v4 00/12] [dt-bindings] [media] Add document file and
- driver for Sony CXD2880 DVB-T2/T tuner + demodulator
-Date: Wed, 29 Nov 2017 08:21:57 +0000
-Message-ID: <02699364973B424C83A42A84B04FDA854287B5@JPYOKXMS113.jp.sony.com>
-References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
-        <67ca63fc-4675-8a97-e43e-6336bbc9fada@sony.com>
-        <3e2f788b-3e4a-eb9b-eb36-2f65ffce669a@sony.com>
- <20171129053830.7900d933@recife.lan>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4] ARM: dts: r8a7794: Add SMP support
+Date: Wed, 29 Nov 2017 09:26:37 +0100
+Message-ID: <20171129082636.zwbwetif6vuxxfww@verge.net.au>
+References: <1511876341-8639-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171129053830.7900d933@recife.lan>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>, Sean Young <sean@mess.org>, Michael Ira Krufky <mkrufky@linuxtv.org>, "Bird, Timothy" <Tim.Bird@sony.com>, "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1511876341-8639-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Mauro
+On Tue, Nov 28, 2017 at 02:39:01PM +0100, Geert Uytterhoeven wrote:
+> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> Add the device tree node for the Advanced Power Management Unit (APMU).
+> Use the "enable-method" prop to  point out that the APMU should be used
+> for the SMP support.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Dependency 3fd45a136ff61bb5 ("ARM: shmobile: rcar-gen2: Make sure
+> CNTVOFF is initialized on CA7/15") is part of v4.15-rc1.
 
-Thanks for your support and reply.
-I understood current status.
+Hi Geert,
 
-We will wait for community's feedback.
-
-Regards and Thanks,
-Takiguchi
+sorry if this is a bit of a sore topic but I'd like to ask what sort of
+testing this patch has seen. Are there any regressions in the area of
+CPU hotplug, suspend to RAM and so on...
