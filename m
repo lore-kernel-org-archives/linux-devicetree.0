@@ -1,97 +1,61 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: overlay: Remove else after goto
-Date: Wed, 29 Nov 2017 04:30:32 -0500
-Message-ID: <6d0dc834-6df6-fa6c-3adc-5506f432fa7d@gmail.com>
-References: <1511857593-18574-1-git-send-email-geert+renesas@glider.be>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77970: add I2C support
+Date: Wed, 29 Nov 2017 10:38:22 +0100
+Message-ID: <20171129093817.bbcdlggh7i2vuril@verge.net.au>
+References: <20171116210757.729290426@cogentembedded.com>
+ <CAMuHMdV1RFyvPSZjEiJvdnu6QfHC9s-oUubvph0atGqx27MjnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511857593-18574-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV1RFyvPSZjEiJvdnu6QfHC9s-oUubvph0atGqx27MjnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/17 03:26, Geert Uytterhoeven wrote:
-> If an "if" branch is terminated by a "goto", there's no need to have an
-> "else" statement and an indented block of code.
+On Wed, Nov 22, 2017 at 02:06:59PM +0100, Geert Uytterhoeven wrote:
+> Hi Sergei,
 > 
-> Remove the "else" statement to simplify the code flow for the casual
-> reviewer.
+> On Thu, Nov 16, 2017 at 10:06 PM, Sergei Shtylyov
+> <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> > Define the generic R8A77970 parts of the I2C[0-4] device node.
+> >
+> > Based on the original (and large) patch by Daisuke Matsushita
+> > <daisuke.matsushita.ns-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>.
+> >
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> ---
->  drivers/of/overlay.c | 25 ++++++++++---------------
->  1 file changed, 10 insertions(+), 15 deletions(-)
+> Thanks for your patch!
 > 
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 8676411bd3e6f29f..53bc9e3f0b985415 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -580,9 +580,9 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
->  				of_node_put(fragment->overlay);
->  				ret = -EINVAL;
->  				goto err_free_fragments;
-> -			} else {
-> -				cnt++;
->  			}
-> +
-> +			cnt++;
->  		}
->  	}
->  
-> @@ -736,14 +736,12 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
->  			devicetree_state_flags |= DTSF_APPLY_FAIL;
->  		}
->  		goto err_free_overlay_changeset;
-> -	} else {
-> -		ret = __of_changeset_apply_notify(&ovcs->cset);
-> -		if (ret)
-> -			pr_err("overlay changeset entry notify error %d\n",
-> -			       ret);
-> -		/* fall through */
->  	}
->  
-> +	ret = __of_changeset_apply_notify(&ovcs->cset);
-> +	if (ret)
-> +		pr_err("overlay changeset entry notify error %d\n", ret);
-> +
-
-The fall through comment was removed.  It is important to document that we
-are intentionally continuing despite the error.
-
-
->  	list_add_tail(&ovcs->ovcs_list, &ovcs_list);
->  	*ovcs_id = ovcs->id;
->  
-> @@ -931,15 +929,12 @@ int of_overlay_remove(int *ovcs_id)
->  		if (ret_apply)
->  			devicetree_state_flags |= DTSF_REVERT_FAIL;
->  		goto out_unlock;
-> -	} else {
-> -		ret = __of_changeset_revert_notify(&ovcs->cset);
-> -		if (ret) {
-> -			pr_err("overlay changeset entry notify error %d\n",
-> -			       ret);
-> -			/* fall through - changeset was reverted */
-> -		}
->  	}
->  
-> +	ret = __of_changeset_revert_notify(&ovcs->cset);
-> +	if (ret)
-> +		pr_err("overlay changeset entry notify error %d\n", ret);
-> +
-
-And same here.
-
-
->  	*ovcs_id = 0;
->  
->  	ret_tmp = overlay_notify(ovcs, OF_OVERLAY_POST_REMOVE);
+> > --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> > +++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
 > 
+> > @@ -483,5 +491,85 @@
+> >                         #address-cells = <1>;
+> >                         #size-cells = <0>;
+> >                 };
+> > +
+> > +               i2c0: i2c@e6500000 {
+> > +                       compatible = "renesas,i2c-r8a77970",
+> > +                                    "renesas,rcar-gen3-i2c";
+> > +                       reg = <0 0xe6500000 0 0x40>;
+> > +                       interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&cpg CPG_MOD 931>;
+> > +                       power-domains = <&sysc 32>;
+> > +                       resets = <&cpg 931>;
+> > +                       dmas = <&dmac1 0x91>, <&dmac1 0x90>;
+> 
+> Can't all five i2c interfaces be used with both dmac1 and dmac2?
+> 
+> With that fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
+Hi Sergei,
+
+I have marked this series as "Changes Requested" in light of Geert's review
+above. 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
