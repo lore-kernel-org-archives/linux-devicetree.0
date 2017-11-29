@@ -1,93 +1,108 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: orange-pi-zero-plus2: enable AP6212a
- WiFi/BT combo
-Date: Wed, 29 Nov 2017 19:23:56 +0530
-Message-ID: <CAMty3ZAiDvAG-P-c0J7vKaDyRWQ2CQobLA_xycRva5B20W6SOg@mail.gmail.com>
-References: <20171103195855.15283-1-geomatsi@gmail.com> <20171103195855.15283-3-geomatsi@gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: renesas: r8a7795: Move nodes which have no
+ reg property out of bus
+Date: Wed, 29 Nov 2017 14:58:55 +0100
+Message-ID: <CAMuHMdVaL6WeOiZhBU2qfXQK7a9NjshUow2GpJJqkwXywiQmaQ@mail.gmail.com>
+References: <20171124105234.25774-1-horms+renesas@verge.net.au>
+ <CAMuHMdW9V6Bkh5uS9qNA7awtygEs=qRd7jigwSHmpV2VM3n9dA@mail.gmail.com>
+ <20171127110430.ulgjrzgy3pdugs2s@verge.net.au> <CAMuHMdUm=PiGVWVg9pyNTR5z2WjLcoG1uecBNBeKsSxbAxBt8w@mail.gmail.com>
+ <20171128085645.ofrk33bfqd736sip@verge.net.au> <CAMuHMdXoDNt7j-hEZmDA2BFFPUAfsi1ukZWowJ3=kTswyYMk5Q@mail.gmail.com>
+ <CAL_JsqKffs+5s92kWFeDivdgk2mVBmHrKuNDCfR9Lb=te5k33A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171103195855.15283-3-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAL_JsqKffs+5s92kWFeDivdgk2mVBmHrKuNDCfR9Lb=te5k33A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 4, 2017 at 1:28 AM, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Enable AP6212a WiFi/BT combo chip on orange-pi-zero-plus2 board:
-> - WiFi SDIO interface is connected to MMC1
-> - WiFi REG_ON pin connected to gpio PA9: attach to mmc-pwrseq
-> - WiFi HOST_WAKE pin connected to gpio PL7
-> - BT is connected to UART1
->
-> Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> index a42fd79a62a3..d415b7b67cce 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> @@ -64,6 +64,13 @@
->                 regulator-min-microvolt = <3300000>;
->                 regulator-max-microvolt = <3300000>;
->         };
-> +
-> +       wifi_pwrseq: wifi_pwrseq {
-> +               compatible = "mmc-pwrseq-simple";
-> +               pinctrl-names = "default";
-> +               reset-gpios = <&pio 0 9 GPIO_ACTIVE_LOW>; /* PA9 */
-> +               post-power-on-delay-ms = <200>;
-> +       };
->  };
->
->  &mmc0 {
-> @@ -75,6 +82,25 @@
->         status = "okay";
->  };
->
-> +&mmc1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&mmc1_pins_a>;
-> +       vmmc-supply = <&reg_vcc3v3>;
-> +       vqmmc-supply = <&reg_vcc3v3>;
-> +       mmc-pwrseq = <&wifi_pwrseq>;
-> +       bus-width = <4>;
-> +       non-removable;
-> +       status = "okay";
-> +
-> +       brcmf: wifi@1 {
-> +               reg = <1>;
-> +               compatible = "brcm,bcm4329-fmac";
-> +               interrupt-parent = <&r_pio>;
-> +               interrupts = <0 7 IRQ_TYPE_LEVEL_LOW>;  /* PL7 */
-> +               interrupt-names = "host-wake";
-> +       };
-> +};
+Hi Rob,
 
-Did you observe this issue, I'm using firmware from buildroot and
-couldn't find any *.txt from brcm/ I believe we need ass text file for
-firmware details, did you tried the same from BR?
+On Wed, Nov 29, 2017 at 2:35 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Nov 28, 2017 at 3:04 AM, Geert Uytterhoeven
+> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>> On Tue, Nov 28, 2017 at 9:56 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+>>> On Mon, Nov 27, 2017 at 12:15:39PM +0100, Geert Uytterhoeven wrote:
+>>>> On Mon, Nov 27, 2017 at 12:04 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+>>>> > I just noticed that with this patch applied I now see:
+>>>> >
+>>>> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a57
+>>>> > arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a53
+>>>> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a57
+>>>> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (interrupts_property): Missing interrupt-parent for /pmu_a53arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (interrupts_property): Missing interrupt-parent for /timer
+>>>> >
+>>>> > arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (interrupts_property): Missing interrupt-parent for /timer
+>>>>
+>>>> Right, the "interrupt-parent = <&gic>;" inside the /soc node applies to child
+>>>> nodes of the /soc node only.
+>>>>
+>>>> You can find this in two ways:
+>>
+>> s/find/fix/
+>>
+>>>>
+>>>>   1. Add "interrupt-parent = <&gic>;" to the /pmu_a57 and /pmu_a53 nodes.
+>>>>   2. Switch those nodes from "interrupt" to "interrupts-extended", e.g. turn
+>>>>
+>>>>         interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+>>>>
+>>>>      into
+>>>>
+>>>>         interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
+>>>>
+>>>> The latter is what e.g. arch/arm/boot/dts/armada-375.dtsi does.
+>>>
+>>> Thanks, I took option 1 as it seems consistent with the rest of the
+>>> Renesas DT files. I also added it to the /timer node.
+>>
+>> Actually we recently had a discussion about this on IRC, triggered by a
+>> similar issue in board files (see e.g, Ethernet PHY interrupts).
+>>
+>> Given the following comment:
+>>
+>> drivers/of/irq.c:       /* Try the new-style interrupts-extended first */
+>> drivers/of/irq.c:       res = of_parse_phandle_with_args(device,
+>> "interrupts-extended",
+>>
+>> I think it would be better to use interrupts-extended for individual/isolated
+>> use outside the /soc node.
+>
+> I disagree. There's no point to use interrupts-extended unless you
+> have 2 or more interrupt parents. Just set interrupt-parent in the
+> root node.
 
-Log:
-[    1.872235] mmc1: new high speed SDIO card at address 0001
-[    1.880919] brcmfmac: brcmf_fw_map_chip_to_name: using
-brcm/brcmfmac43430-sdio.bin for chip 0x00a9a6(43430) rev 0x000001
-[    1.908802] EXT4-fs (mmcblk0p1): re-mounted. Opts: data=ordered
-[    1.927199] brcmfmac mmc1:0001:1: Direct firmware load for
-brcm/brcmfmac43430-sdio.txt failed with error -2
-[    2.963478] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000):
-clkctl 0x50
-[    3.971888] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000):
-clkctl 0x50
+The on-SoC devices (all under the /soc node, except for the weird ones without
+reg properties that are now being moved out) all have "&gic" as their interrupt
+parents.
 
-thanks!
--- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+Off-SoC devices use one of the on-SoC interrupt controllers for external
+interrupts ("&irqc", "&irqpin", "&irqpin0", "&irqpin1"), or one of the on-SoC
+GPIO controllers that can also serve external interrupts ("&gpioN").
+
+For the latter, I think interrupts-extended definitely makes sense.
+
+For the former (incl. the "pmu_aN" nodes discussed here), it is debatable.
+But using interrupts-extended makes it easier to catch mistakes in board files,
+as they will be flagged by dtc ("Missing interrupt-parent").
+With interrupt-parent in the root node, they may go undetected.
+
+If the tools can help us, I prefer to use them.
+
+Do you agree?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
