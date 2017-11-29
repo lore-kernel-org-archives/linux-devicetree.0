@@ -1,127 +1,110 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm64: dts: ls1012a: Add LS1012A-2G5RDB board support
-Date: Wed, 29 Nov 2017 11:27:31 +0800
-Message-ID: <20171129032730.GD9376@dragon>
-References: <1511257503-12475-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: uniphier: add UniPhier pinctrl binding
+Date: Wed, 29 Nov 2017 12:44:22 +0900
+Message-ID: <CAK7LNAQYBe=x8sOBTrz8zE+5JEhOu+3eQKd8fbSAxi9Zuy18jQ@mail.gmail.com>
+References: <1511855386-10421-1-git-send-email-yamada.masahiro@socionext.com> <20171128152706.pg3tndrrne3nhduy@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1511257503-12475-1-git-send-email-Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20171128152706.pg3tndrrne3nhduy@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 21, 2017 at 03:15:03PM +0530, Bhaskar Upadhaya wrote:
-> LS1012A-2G5RDB is similar to LS1012ARDB with below features
-> 2 2.5G SGMII PFE Block, SATA, USB 2.0/3.0, WiFi, DDR, eMMC
-> QuadSPI, UART
-> 
-> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile             |  1 +
->  .../boot/dts/freescale/fsl-ls1012a-2g5rdb.dts      | 66 ++++++++++++++++++++++
->  2 files changed, 67 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-2g5rdb.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 72c4b52..b3a0aec 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -1,6 +1,7 @@
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frdm.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-2g5rdb.dtb
+Hi Rob,
 
-Please maintain the order in alphabet.
 
-Shawn
+2017-11-29 0:27 GMT+09:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Tue, Nov 28, 2017 at 04:49:45PM +0900, Masahiro Yamada wrote:
+>> The driver has been in the tree for a while, but its binding document
+>> is missing.  Hence, here it is.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>> ---
+>>
+>>  .../pinctrl/socionext,uniphier-pinctrl.txt         | 27 ++++++++++++++++++++++
+>>  MAINTAINERS                                        |  1 +
+>>  2 files changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
+>> new file mode 100644
+>> index 0000000..8173b12
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
+>> @@ -0,0 +1,27 @@
+>> +UniPhier SoCs pin controller
+>> +
+>> +Required properties:
+>> +- compatible: should be one of the following:
+>> +    "socionext,uniphier-ld4-pinctrl"  - for LD4 SoC
+>> +    "socionext,uniphier-pro4-pinctrl" - for Pro4 SoC
+>> +    "socionext,uniphier-sld8-pinctrl" - for sLD8 SoC
+>> +    "socionext,uniphier-pro5-pinctrl" - for Pro5 SoC
+>> +    "socionext,uniphier-pxs2-pinctrl" - for PXs2 SoC
+>> +    "socionext,uniphier-ld6b-pinctrl" - for LD6b SoC
+>> +    "socionext,uniphier-ld11-pinctrl" - for LD11 SoC
+>> +    "socionext,uniphier-ld20-pinctrl" - for LD20 SoC
+>> +    "socionext,uniphier-pxs3-pinctrl" - for PXs3 SoC
+>> +
+>> +Note:
+>> +The UniPhier pinctrl should be a subnode of a "syscon" compatible node.
+>> +
+>> +Example:
+>> +     soc-glue@5f800000 {
+>> +             compatible = "socionext,uniphier-pro4-soc-glue",
+>> +                          "simple-mfd", "syscon";
+>> +             reg = <0x5f800000 0x2000>;
+>> +
+>> +             pinctrl: pinctrl {
+>> +                     compatible = "socionext,uniphier-pro4-pinctrl";
+>
+> There's not a contiguous register range that can be put here?
 
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a-2g5rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1012a-2g5rdb.dts
-> new file mode 100644
-> index 0000000..99b1835
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a-2g5rdb.dts
-> @@ -0,0 +1,66 @@
-> +/*
-> + * Device Tree file for NXP LS1012A 2G5RDB Board.
-> + *
-> + * Copyright 2017 NXP
-> + *
-> + * Bhaskar Upadhaya <bhaskar.upadhaya-3arQi8VN3Tc@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPLv2 or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +/dts-v1/;
-> +
-> +#include "fsl-ls1012a.dtsi"
-> +
-> +/ {
-> +	model = "LS1012A 2G5RDB Board";
-> +	compatible = "fsl,ls1012a-rdb", "fsl,ls1012a";
-> +
-> +};
-> +
-> +&duart0 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +};
-> +
-> +&sata {
-> +	status = "okay";
-> +};
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+Right.
+
+I saw SATA PHY registers are inserted among the pinctrl registers.
+
+Hardware engineers often make crazy design.
+
+
+
+
+
+>> +             };
+>> +     };
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index aa71ab52f..38b0ddc 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -2042,6 +2042,7 @@ L:      linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>>  T:   git git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier.git
+>>  S:   Maintained
+>>  F:   Documentation/devicetree/bindings/gpio/gpio-uniphier.txt
+>> +F:   Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.txt
+>>  F:   arch/arm/boot/dts/uniphier*
+>>  F:   arch/arm/include/asm/hardware/cache-uniphier.h
+>>  F:   arch/arm/mach-uniphier/
+>> --
+>> 2.7.4
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
