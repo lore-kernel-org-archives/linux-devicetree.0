@@ -1,27 +1,33 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC V7 0/2] OPP: Allow OPP table to be used for power-domains
-Date: Wed, 29 Nov 2017 09:44:35 +0530
-Message-ID: <20171129041435.GG11413@vireshk-i7>
-References: <cover.1509453284.git.viresh.kumar@linaro.org>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v2 31/35] earlycon: add reg-offset to physical address
+ before mapping
+Date: Wed, 29 Nov 2017 13:40:16 +0800
+Message-ID: <CAEbi=3enx6tyuBmOygo3=gGa0HC+uit+gm3D=Thbyuv2hV=F0g@mail.gmail.com>
+References: <cover.1511785528.git.green.hu@gmail.com> <5b5f07ffd75d509a661398d02d6f1336156554ae.1511785528.git.green.hu@gmail.com>
+ <20171128142507.GA17797@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1509453284.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, robh+dt@kernel.org
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Nishanth Menon <nm@ti.com>, Vincent Guittot <vincent.guittot@linaro.org>, rnayak@codeaurora.org, sudeep.holla@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>, ulf.hansson@linaro.org, Kevin Hilman <khilman@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20171128142507.GA17797@kroah.com>
+Sender: netdev-owner@vger.kernel.org
+To: Greg KH <greg@kroah.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 31-10-17, 18:17, Viresh Kumar wrote:
-> Hi,
-> 
-> Now that the performance state of PM domains are supported by the kernel
-> (merged in linux-next), I am trying once again to define the bindings
-> which we dropped until the code is merged first.
+2017-11-28 22:25 GMT+08:00 Greg KH <greg@kroah.com>:
+> On Mon, Nov 27, 2017 at 08:28:18PM +0800, Greentime Hu wrote:
+>> From: Greentime Hu <greentime@andestech.com>
+>>
+>> It will get the wrong virtual address because port->mapbase is not added
+>> the correct reg-offset yet. We have to update it before earlycon_map()
+>> is called
+>> ---
+>>  drivers/tty/serial/earlycon.c |    3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> No signed-off-by line?
 
-@Rob/Stephen: Can I get Ack from you guys on this series, before I
-apply them? Ulf has already reviewed these.
+Sorry I forget it.
+Signed-off-by: Greentime Hu <greentime@andestech.com>
 
--- 
-viresh
+I will add it in the next version patch.
