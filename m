@@ -1,48 +1,75 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4] RFC: net: dsa: Add bindings for Realtek SMI DSAs
-Date: Wed, 29 Nov 2017 22:28:44 +0100
-Message-ID: <CACRpkdZVXgFMiHpyUqw7ONYDcq6Htn3rTMRaBJkzd6T3WtX36A@mail.gmail.com>
-References: <20171105231909.5599-1-linus.walleij@linaro.org>
- <20171105231909.5599-4-linus.walleij@linaro.org> <20171105234831.GA24822@lunn.ch>
- <CACRpkdbzqnbF49yN-SAqLkhufk=R2C=jpdLo-QWmL0zR_+Vj=w@mail.gmail.com> <20171129155627.GD24881@lunn.ch>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v2 00/19] Add Headphone Detection to
+	TLV320AIC31xx Driver
+Date: Wed, 29 Nov 2017 15:32:41 -0600
+Message-ID: <20171129213300.20021-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20171129155627.GD24881@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 4:56 PM, Andrew Lunn <andrew@lunn.ch> wrote:
->> I have the phy-handle in the ethernet controller. This RTL8366RB
->> thing is just one big PHY as far as I know.
->
-> We don't model switches as PHYs. They are their own device type.  And
-> the internal or external PHYs are just normal PHYs in the linux
-> model. Meaning their interrupt properties goes in the PHY node in
-> device tree, as documented in the phy.txt binding documentation.
+Hello all,
 
-I do model the PHYs on the switch as PHYs.
-They are using the driver in drivers/phy/realtek.c.
+This series has the end goal of adding headphone detection to
+the tlv320aic31xx driver. The first few patches are mostly cleanups.
+Then a couple bug fixes I noticed. Followed by adding interrupt
+handling and finally headphone detection.
 
-The interrupts are assigned to the PHYs not to the Switch.
-Just that the PHYs are on the MDIO bus inside the switch, of
-course.
+This series (or at least patch #8) depend on this DT fix[0].
 
-The switch however provides an irqchip to demux the interrupts.
+Thanks,
+Andrew
 
-I think there is some misunderstanding in what I'm trying to do..
+Changes from v1:
+ - Splitup the cleanup patch a bit more
+ - Move the GPIO1 register fix patch before header cleanup
+   so it can be taken back into stable
+ - Added Acked-by
+ - New patch dealing with regulator notifications
+ - Various small touchups
+ - Rebased on v4.15-rc1 + [0]
 
-I have tried learning the DSA ideas by reading e.g. your paper:
-https://www.netdevconf.org/2.1/papers/distributed-switch-architecture.pdf
+[0] http://www.spinics.net/lists/kernel/msg2660968.html
 
-So I try my best to conform with these ideas.
+Andrew F. Davis (19):
+  ASoC: tlv320aic31xx: File header and copyright cleanup
+  ASoC: tlv320aic31xx: Change aic31xx_power_off return type to void
+  ASoC: tlv320aic31xx: Move ACPI table next to OF table
+  ASoC: tlv320aic31xx: General source formatting cleanup
+  ASoC: tlv320aic31xx: Fix GPIO1 register definition
+  ASoC: tlv320aic31xx: Reformat header file using GENMASK and BIT macros
+  ASoC: tlv320aic31xx: Merge init function into probe
+  ASoC: tlv320aic31xx: Switch GPIO handling to use gpiod_* API
+  ASoC: tlv320aic31xx: Remove platform data
+  ASoC: tlv320aic31xx: Add MICBIAS off setting
+  ASoC: tlv320aic31xx: Check clock and divider before division
+  ASoC: tlv320aic31xx: Add CODEC clock slave support
+  ASoC: tlv320aic31xx: Fix inverted BCLK handling
+  ASoC: tlv320aic31xx: Remove regulator notification handling
+  ASoC: tlv320aic31xx: Reset registers during power up
+  ASoC: tlv320aic31xx: Add short circuit detection support
+  ASoC: tlv320aic31xx: Add overflow detection support
+  ASoC: tlv320aic31xx: Add headphone/headset detection
+  ASoC: tlv320aic31xx: Add button press detection
 
-I however have a hard time testing things since I don't really have a
-system to compare to. What would be useful is to know how
-commands like "ip" and "ifconfig" are used on a typical
-say home router.
+ .../devicetree/bindings/sound/tlv320aic31xx.txt    |   1 +
+ include/dt-bindings/sound/tlv320aic31xx-micbias.h  |   1 +
+ sound/soc/codecs/tlv320aic31xx.c                   | 422 ++++++++++--------
+ sound/soc/codecs/tlv320aic31xx.h                   | 496 ++++++++++-----------
+ 4 files changed, 471 insertions(+), 449 deletions(-)
+ rewrite sound/soc/codecs/tlv320aic31xx.h (83%)
 
-Yours,
-Linus Walleij
+-- 
+2.15.0
