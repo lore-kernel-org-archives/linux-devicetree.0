@@ -1,36 +1,38 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77970: use CPG core clock
- macros
-Date: Wed, 29 Nov 2017 20:00:52 +0300
-Message-ID: <d904863e-e8c9-76ad-9d12-fd36ed68c3b4@cogentembedded.com>
-References: <20171128202105.552196002@cogentembedded.com>
- <20171129095558.wvvcvfctwfmtrkq4@verge.net.au>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: Allow a device to indicate when to force
+ a state
+Date: Wed, 29 Nov 2017 09:01:02 -0800
+Message-ID: <20171129170102.GH28152@atomide.com>
+References: <20171102231551.16220-1-f.fainelli@gmail.com>
+ <20171102231551.16220-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171129095558.wvvcvfctwfmtrkq4-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-MW
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171102231551.16220-2-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, ckeepax@opensource.cirrus.com, ckeepax@opensource.wolfsonmicro.com, swarren@nvidia.com, andy.shevchenko@gmail.com, alcooperx@gmail.com, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2017 12:55 PM, Simon Horman wrote:
+* Florian Fainelli <f.fainelli@gmail.com> [171102 23:18]:
+> It may happen that a device needs to force applying a state, e.g:
+> because it only defines one state of pin states (default) but loses
+> power/register contents when entering low power modes. Add a
+> pinctrl_dev::flags bitmask to help describe future quirks and define
+> PINCTRL_FLG_FORCE_STATE as such a settable flag.
 
->> Now that the commit ecadea00f588 ("dt-bindings: clock: Add R8A77970 CPG
->> core clock definitions") has hit Linus' tree, we  can replace the bare
->> numbers (we had to use to avoid a cross tree dependency) with these macro
->> definitions...
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> 
-> Thanks, applied.
+It makes sense to tag the existing state with the context loss
+information as otherwise we'll be duplicating the state in the
+pinctrl driver potentially for hundreds of pins.
 
-    Not seeing these 2 patches in the today's devel branch tho...
+Maybe this patch description should clarify that it's the
+pinctrl device restoring the pin state, not the pinctrl
+consumer devices?
 
-MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So maybe just "a pinctrl device needs to force apply a state"
+instead of just device above?
+
+Regards,
+
+Tony
