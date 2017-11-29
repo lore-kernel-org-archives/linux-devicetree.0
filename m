@@ -1,31 +1,37 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm64: dts: ls1012a: Add LS1012A-2G5RDB board support
-Date: Wed, 29 Nov 2017 13:49:16 +0800
-Message-ID: <20171129054914.GF9376@dragon>
-References: <1511257503-12475-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <20171129032730.GD9376@dragon>
- <AM3PR04MB449B294AE2AC9A9A654E9718C3B0@AM3PR04MB449.eurprd04.prod.outlook.com>
+From: Yisheng Xie <xieyisheng1@huawei.com>
+Subject: Re: [RFCv2 PATCH 05/36] iommu/process: Bind and unbind process to and
+ from devices
+Date: Wed, 29 Nov 2017 14:08:20 +0800
+Message-ID: <9c364147-12c4-5a8a-9cd9-0642a6b92555@huawei.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+ <20171006133203.22803-6-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AM3PR04MB449B294AE2AC9A9A654E9718C3B0-f56W/S9L6NTAlRApo5URHQfhPeD8jYilXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhaskar Upadhaya <bhaskar.upadhaya-3arQi8VN3Tc@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171006133203.22803-6-jean-philippe.brucker@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc: mark.rutland@arm.com, gabriele.paoloni@huawei.com, catalin.marinas@arm.com, will.deacon@arm.com, okaya@codeaurora.org, yi.l.liu@intel.com, lorenzo.pieralisi@arm.com, ashok.raj@intel.com, tn@semihalf.com, joro@8bytes.org, rfranz@cavium.com, lenb@kernel.org, jacob.jun.pan@linux.intel.com, alex.williamson@redhat.com, robh+dt@kernel.org, thunder.leizhen@huawei.com, bhelgaas@google.com, dwmw2@infradead.org, liubo95@huawei.com, rjw@rjwysocki.net, robdclark@gmail.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, robin.murphy@arm.com, nwatters@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 03:55:19AM +0000, Bhaskar Upadhaya wrote:
-> [Bhaskar] OK, Will keep like below
-> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-frdm.dtb
-> > +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-2g5rdb.dtb
-> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-qds.dtb
-> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1012a-rdb.dtb
 
-'2' goes before 'f' in alphabet table, right?
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 2017/10/6 21:31, Jean-Philippe Brucker wrote:
+> +int iommu_process_bind_device(struct device *dev, struct task_struct *task,
+> +			      int *pasid, int flags)
+> +{
+[..]
+> +			err = iommu_process_attach_locked(context, dev);
+> +			if (err)
+> +				iommu_process_put_locked(process);
+one ref for a context is enough right? so also need call iommu_process_put_locked()
+if attach ok, or will be leak if user call bind twice for the same device and task.
