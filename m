@@ -1,7 +1,7 @@
 From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 09/11] ARM: dts: vfxxx: Move nodes which have no reg property out of bus
-Date: Wed, 29 Nov 2017 16:46:17 -0200
-Message-ID: <1511981179-12660-9-git-send-email-festevam@gmail.com>
+Subject: [PATCH 10/11] ARM: dts: imx6sx: Fix spba-bus unit address
+Date: Wed, 29 Nov 2017 16:46:18 -0200
+Message-ID: <1511981179-12660-10-git-send-email-festevam@gmail.com>
 References: <1511981179-12660-1-git-send-email-festevam@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1511981179-12660-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,49 +12,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-Move iio-hwmon node from soc node to root node.
+The correct unit address for spba-bus is 0x2240000, so change it
+accordingly in order to fix the following build warning with W=1:
 
-iio-hwmon node does not have any register properties and thus
-shouldn't be placed on the bus.
-
-This fixes the following build warnings with W=1:
-
-arch/arm/boot/dts/vf500-colibri-eval-v3.dtb: Warning (simple_bus_reg): Node /soc/iio-hwmon missing or empty reg/ranges property
-
-Based on a patch from Simon Horman for the renesas r8a7795 dtsi.
+arch/arm/boot/dts/imx6sx-sabreauto.dtb: Warning (simple_bus_reg): Node /soc/aips-bus@2200000/spba-bus@2200000 simple-bus unit address format error, expected "2240000"
 
 Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm/boot/dts/vfxxx.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/imx6sx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 5d654b5..c3f09b7 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -84,6 +84,11 @@
- 		mask = <0x1000>;
- 	};
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 07ba518..5a5f796 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -1150,7 +1150,7 @@
+ 			reg = <0x02200000 0x100000>;
+ 			ranges;
  
-+	iio-hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc0 16>, <&adc1 16>;
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -762,10 +767,5 @@
- 				status = "disabled";
- 			};
- 		};
--
--		iio-hwmon {
--			compatible = "iio-hwmon";
--			io-channels = <&adc0 16>, <&adc1 16>;
--		};
- 	};
- };
+-			spba-bus@2200000 {
++			spba-bus@2240000 {
+ 				compatible = "fsl,spba-bus", "simple-bus";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
 -- 
 2.7.4
 
