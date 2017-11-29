@@ -1,116 +1,106 @@
-From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 0/8] Cavium OCTEON-III network driver.
-Date: Tue, 28 Nov 2017 16:55:32 -0800
-Message-ID: <20171129005540.28829-1-david.daney@cavium.com>
+From: David Daney <david.daney@cavium.com>
+Subject: [PATCH v4 1/8] dt-bindings: Add Cavium Octeon Common Ethernet
+ Interface.
+Date: Tue, 28 Nov 2017 16:55:33 -0800
+Message-ID: <20171129005540.28829-2-david.daney@cavium.com>
+References: <20171129005540.28829-1-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20171129005540.28829-1-david.daney@cavium.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, David Daney <david.daney@cavium.com>, linux-kernel@vger.kernel.org, Carlos Munoz <cmunoz@cavium.com>, "Steven J . Hill" <Steven.Hill@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-We are adding the Cavium OCTEON-III network driver.  But since
-interacting with the input and output queues is done via special CPU
-local memory, we also need to add support to the MIPS/Octeon
-architecture code.  Aren't SoCs nice in this way?
+From: Carlos Munoz <cmunoz@cavium.com>
 
-The first six patches add the SoC support needed by the driver, the
-last two add the driver and an entry in MAINTAINERS.
+Add bindings for Common Ethernet Interface (BGX) block.
 
-Since these touch several subsystems (mips, staging, netdev), I would
-propose merging via netdev, but defer to the maintainers if they think
-something else would work better.
-
-A separate pull request was recently done by Steven Hill for the
-firmware required by the driver.
-
-Changes from v3:
-
-o Use phy_print_status() instead of open coding the equivalent.
-
-o Print warning on phy mode mismatch.
-
-o Improve dt-bindings and add Acked-by.
-
-Changes from v2:
-
-o Fix PKI (RX path) initialization to work with little endian kernel.
-
-Changes from v1:
-
-o Cleanup and use of standard bindings in the device tree bindings
-  document.
-
-o Added (hopefully) clarifying comments about several OCTEON
-  architectural peculiarities.
-
-o Removed unused testing code from the driver.
-
-o Removed some module parameters that already default to the proper
-  values.
-
-o KConfig cleanup, including testing on x86_64, arm64 and mips.
-
-o Fixed breakage to the driver for previous generation of OCTEON SoCs (in
-  the staging directory still).
-
-o Verified bisectability of the patch set.
-
-Carlos Munoz (5):
-  dt-bindings: Add Cavium Octeon Common Ethernet Interface.
-  MIPS: Octeon: Enable LMTDMA/LMTST operations.
-  MIPS: Octeon: Add a global resource manager.
-  MIPS: Octeon: Add Free Pointer Unit (FPA) support.
-  netdev: octeon-ethernet: Add Cavium Octeon III support.
-
-David Daney (3):
-  MIPS: Octeon: Automatically provision CVMSEG space.
-  staging: octeon: Remove USE_ASYNC_IOBDMA macro.
-  MAINTAINERS: Add entry for
-    drivers/net/ethernet/cavium/octeon/octeon3-*
-
- .../devicetree/bindings/net/cavium-bgx.txt         |   61 +
- MAINTAINERS                                        |    6 +
- arch/mips/cavium-octeon/Kconfig                    |   35 +-
- arch/mips/cavium-octeon/Makefile                   |    4 +-
- arch/mips/cavium-octeon/octeon-fpa3.c              |  364 ++++
- arch/mips/cavium-octeon/resource-mgr.c             |  371 ++++
- arch/mips/cavium-octeon/setup.c                    |   22 +-
- .../asm/mach-cavium-octeon/kernel-entry-init.h     |   20 +-
- arch/mips/include/asm/mipsregs.h                   |    2 +
- arch/mips/include/asm/octeon/octeon.h              |   47 +-
- arch/mips/include/asm/processor.h                  |    2 +-
- arch/mips/kernel/octeon_switch.S                   |    2 -
- arch/mips/mm/tlbex.c                               |   29 +-
- drivers/net/ethernet/cavium/Kconfig                |   55 +-
- drivers/net/ethernet/cavium/octeon/Makefile        |    6 +
- .../net/ethernet/cavium/octeon/octeon3-bgx-nexus.c |  698 +++++++
- .../net/ethernet/cavium/octeon/octeon3-bgx-port.c  | 2033 +++++++++++++++++++
- drivers/net/ethernet/cavium/octeon/octeon3-core.c  | 2068 ++++++++++++++++++++
- drivers/net/ethernet/cavium/octeon/octeon3-pki.c   |  832 ++++++++
- drivers/net/ethernet/cavium/octeon/octeon3-pko.c   | 1719 ++++++++++++++++
- drivers/net/ethernet/cavium/octeon/octeon3-sso.c   |  309 +++
- drivers/net/ethernet/cavium/octeon/octeon3.h       |  411 ++++
- drivers/staging/octeon/ethernet-defines.h          |    6 -
- drivers/staging/octeon/ethernet-rx.c               |   25 +-
- drivers/staging/octeon/ethernet-tx.c               |   85 +-
- 25 files changed, 9069 insertions(+), 143 deletions(-)
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
+Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+ .../devicetree/bindings/net/cavium-bgx.txt         | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
- create mode 100644 arch/mips/cavium-octeon/octeon-fpa3.c
- create mode 100644 arch/mips/cavium-octeon/resource-mgr.c
- create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-nexus.c
- create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
- create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-core.c
- create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pki.c
- create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pko.c
- create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-sso.c
- create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3.h
 
+diff --git a/Documentation/devicetree/bindings/net/cavium-bgx.txt b/Documentation/devicetree/bindings/net/cavium-bgx.txt
+new file mode 100644
+index 000000000000..830c5f08dddd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/cavium-bgx.txt
+@@ -0,0 +1,61 @@
++* Common Ethernet Interface (BGX) block
++
++Properties:
++
++- compatible: "cavium,octeon-7890-bgx": Compatibility with all cn7xxx SOCs.
++
++- reg: The base address of the BGX block.
++
++- #address-cells: Must be <1>.
++
++- #size-cells: Must be <0>.  BGX addresses have no size component.
++
++A BGX block has several children, each representing an Ethernet
++interface.
++
++
++* Ethernet Interface (BGX port) connects to PKI/PKO
++
++Properties:
++
++- compatible: "cavium,octeon-7890-bgx-port": Compatibility with all
++	      cn7xxx SOCs.
++
++	      "cavium,octeon-7360-xcv": Compatibility with cn73xx SOCs
++	      for RGMII.
++
++- reg: The index of the interface within the BGX block.
++
++Optional properties:
++
++- local-mac-address: Mac address for the interface.
++
++- phy-handle: phandle to the phy node connected to the interface.
++
++- phy-mode: described in ethernet.txt.
++
++- fixed-link: described in fixed-link.txt.
++
++Example:
++
++	ethernet-mac-nexus@11800e0000000 {
++		compatible = "cavium,octeon-7890-bgx";
++		reg = <0x00011800 0xe0000000 0x00000000 0x01000000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet@0 {
++			compatible = "cavium,octeon-7360-xcv";
++			reg = <0>;
++			local-mac-address = [ 00 01 23 45 67 89 ];
++			phy-handle = <&phy3>;
++			phy-mode = "rgmii-rxid"
++		};
++		ethernet@1 {
++			compatible = "cavium,octeon-7890-bgx-port";
++			reg = <1>;
++			local-mac-address = [ 00 01 23 45 67 8a ];
++			phy-handle = <&phy4>;
++			phy-mode = "sgmii"
++		};
++	};
 -- 
 2.14.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
