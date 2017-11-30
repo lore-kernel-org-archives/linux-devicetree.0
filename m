@@ -1,174 +1,100 @@
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: Re: [PATCH V2 8/9] PCI: tegra: Broadcast PME_turn_Off message before
- link goes to L2
-Date: Fri, 1 Dec 2017 00:13:05 +0530
-Message-ID: <78df1d5f-6e5d-46f2-e3a9-2c820b4d3be8@nvidia.com>
-References: <1511638333-22951-1-git-send-email-mmaddireddy@nvidia.com>
- <1511638333-22951-9-git-send-email-mmaddireddy@nvidia.com>
- <20171129165147.GB6469@bhelgaas-glaptop.roam.corp.google.com>
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: Re: [PATCH 0/5] PCI: Add support to the Cadence PCIe controller
+Date: Thu, 30 Nov 2017 19:45:16 +0100
+Message-ID: <a02af401-2eb8-dc34-6f3c-092f04ec2636@free-electrons.com>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <20171128155039.GA17154@red-moon>
+ <8c6c50fc-47a9-7b93-d826-1dba9c4d09c2@ti.com>
+ <20171130181819.GD12096@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171129165147.GB6469@bhelgaas-glaptop.roam.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171130181819.GD12096@red-moon>
 Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Sender: linux-pci-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
+
+Le 30/11/2017 à 19:18, Lorenzo Pieralisi a écrit :
+> On Thu, Nov 30, 2017 at 12:43:20PM +0530, Kishon Vijay Abraham I wrote:
+> 
+> [...]
+> 
+>>>> For linux-next, I applied this series on top of Kishon's patch
+>>>> ("PCI: endpoint: Use EPC's device in dma_alloc_coherent/dma_free_coherent")
+>>>> otherwise dma_alloc_coherent() fails when called by pci_epf_alloc_space().
+>>>>
+>>>> Also, I patched drivers/Makefile rather than drivers/pci/Makefile to make
+>>>> the drivers/pci/cadence/pcie-cadence-ep.o linked after
+>>
+>> The reason to patch drivers/Makefile should be because pcie-cadence-ep has to
+>> be compiled even when CONFIG_PCI is not enabled. CONFIG_PCI enables host
+>> specific features and ENDPOINT shouldn't depend on CONFIG_PCI.
+>>>> drivers/pci/endpoint/*.o objects, otherwise the built-in pci-cadence-ep
+>>>> driver would be probed before the PCI endpoint framework would have been
+>>>> initialized, which results in a kernel crash.
+>>>
+>>> Nice :( - isn't there a way to improve this (ie probe deferral or
+>>> registering the EPF bus earlier) ?
+>>>
+>>>> I guess this is the reason why the "pci/dwc" line was also put in
+>>>> drivers/Makefile, right after the "pci/endpoint" line.
+>>>
+>>> Or probably the other way around - see commit 5e8cb4033807
+>>>
+>>> @Kishon, thoughts ?
+>>
+>> Lorenzo, ordering Makefile is one way to initialize EP core before
+> 
+> Makefile ordering is fragile, I do not like relying on it.
+> 
+>> other drivers. the other way is to have PCI EP core have a different
+>> initcall level..  subsys_initcall??
+> 
+> Yes, registering the bus at eg postcore_initcall() as PCI does should do
+> (if that's the problem this is solving) but still, the code must not
+> crash if the ordering is not correct, we have to fix this regardless.
+> 
+> I would appreciate if Cyrille can debug the cause of the kernel crash
+> so that we can fix it in the longer term.
+> 
+
+I had the crash kernel few weeks ago hence I have to test again to confirm
+but if I remember correctly it was a NULL pointer dereferencing crash:
+
+cdns_pcie_ep_probe()
+|
++--> devm_pci_epc_create()
+     |
+     +--> __devm_pci_ep_create()
+          |
+          +--> __pci_epc_create()
+	       |
+	       +--> pci_ep_cfs_add_epc_group()
+	            |
+		    | /*
+		    |  * Here controllers_group is still NULL because
+		    |  * pci_ep_cfs_init() has not been called yet.
+		    |  */
+		    +--> configfs_register_group(controllers_group, ...)
+		         |
+			 +--> link_group()
+			      /* Dereferencing NULL pointer */
+
+Best regards,
+
+Cyrille
+
+> Thanks,
+> Lorenzo
+> 
 
 
-On 29-Nov-17 10:21 PM, Bjorn Helgaas wrote:
-> On Sun, Nov 26, 2017 at 01:02:12AM +0530, Manikanta Maddireddy wrote:
->> Per PCIe r3.0, sec 5.3.3.2.1, PCIe root port shoould broadcast PME_turn_Off
->> message before PCIe link goes to L2. PME_turn_Off broadcast mechanism is
->> implemented in AFI module. Each Tegra PCIe root port has its own
->> PME_turn_Off and PME_TO_Ack bitmap in AFI_PME register, program this
->> register to broadcast PME_turn_Off message.
-> 
-> s/PME_turn_Off/PME_Turn_Off/ above to match spec.
-> 
-> I thought PME_TO_Ack was also mis-capitalized, but it's not.  Guess
-> that "TO" stands for "Turn Off".
-> 
->> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
->> ---
->> V2:
->> * no change in this patch
->>
->>  drivers/pci/host/pci-tegra.c | 76 ++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 76 insertions(+)
->>
->> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
->> index bbc2807bcd4a..b380958a3deb 100644
->> --- a/drivers/pci/host/pci-tegra.c
->> +++ b/drivers/pci/host/pci-tegra.c
->> @@ -155,6 +155,8 @@
->>  #define  AFI_INTR_EN_FPCI_TIMEOUT	(1 << 7)
->>  #define  AFI_INTR_EN_PRSNT_SENSE	(1 << 8)
->>  
->> +#define AFI_PCIE_PME		0xf0
->> +
->>  #define AFI_PCIE_CONFIG					0x0f8
->>  #define  AFI_PCIE_CONFIG_PCIE_DISABLE(x)		(1 << ((x) + 1))
->>  #define  AFI_PCIE_CONFIG_PCIE_DISABLE_ALL		0xe
->> @@ -315,6 +317,7 @@
->>  #define PADS_REFCLK_CFG_DRVI_SHIFT		12 /* 15:12 */
->>  
->>  #define LINK_RETRAIN_TIMEOUT 100000
->> +#define PME_ACK_TIMEOUT 10000
->>  
->>  struct tegra_msi {
->>  	struct msi_controller chip;
->> @@ -1503,6 +1506,76 @@ static int tegra_pcie_put_resources(struct tegra_pcie *pcie)
->>  	return 0;
->>  }
->>  
->> +static inline u32 get_pme_turnoff_bitmap(struct tegra_pcie_port *port)
->> +{
->> +	struct device *dev = port->pcie->dev;
->> +	struct device_node *np = dev->of_node;
->> +	int ret = 0;
-> 
-> Unnecessary initialization.  In fact, the variable is unnecessary; you
-> can just return the value directly as soon as you know it.
->
-I can get rid of this function with Mikko's suggestion to use soc data
- 
->> +
->> +	switch (port->index) {
->> +	case 0:
->> +		ret = 0;
->> +	case 1:
->> +		ret = 8;
->> +	case 2:
->> +		if (of_device_is_compatible(np, "nvidia,tegra30-pcie"))
->> +			ret = 16;
->> +		else
->> +			ret = 12;
->> +	}
->> +	return ret;
->> +}
->> +
->> +static inline u32 get_pme_ack_bitmap(struct tegra_pcie_port *port)
->> +{
->> +	struct device *dev = port->pcie->dev;
->> +	struct device_node *np = dev->of_node;
->> +	int ret = 0;
-> 
-> Similar.
->
-Similar
- 
->> +
->> +	switch (port->index) {
->> +	case 0:
->> +		ret = 5;
->> +	case 1:
->> +		ret = 10;
->> +	case 2:
->> +		if (of_device_is_compatible(np, "nvidia,tegra30-pcie"))
->> +			ret = 18;
->> +		else
->> +			ret = 14;
->> +	}
->> +	return ret;
->> +}
->> +
->> +static void tegra_pcie_pme_turnoff(struct tegra_pcie_port *port)
->> +{
->> +	struct tegra_pcie *pcie = port->pcie;
->> +	ktime_t deadline;
->> +	unsigned int data;
->> +
->> +	data = afi_readl(pcie, AFI_PCIE_PME);
->> +	data |= (0x1 << get_pme_turnoff_bitmap(port));
->> +	afi_writel(pcie, data, AFI_PCIE_PME);
->> +
->> +	deadline = ktime_add_us(ktime_get(), PME_ACK_TIMEOUT);
->> +	do {
->> +		data = afi_readl(pcie, AFI_PCIE_PME);
->> +		data &= (0x1 << get_pme_ack_bitmap(port));
->> +		udelay(1);
->> +		if (ktime_after(ktime_get(), deadline))
->> +			break;
->> +	} while (!data);
->> +
->> +	if (data)
->> +		dev_err(pcie->dev, "PME Ack is not receieved on port: %d\n",
-> 
-> s/receieved/received/
-> 
->> +			port->index);
->> +
->> +	usleep_range(10000, 11000);
->> +
->> +	data = afi_readl(pcie, AFI_PCIE_PME);
->> +	data &= ~(0x1 << get_pme_turnoff_bitmap(port));
->> +	afi_writel(pcie, data, AFI_PCIE_PME);
->> +}
->> +
->>  static int tegra_msi_alloc(struct tegra_msi *chip)
->>  {
->>  	int msi;
->> @@ -2828,6 +2901,7 @@ static int tegra_pcie_remove(struct platform_device *pdev)
->>  {
->>  	struct tegra_pcie *pcie = platform_get_drvdata(pdev);
->>  	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
->> +	struct tegra_pcie_port *port, *tmp;
->>  
->>  	if (IS_ENABLED(CONFIG_DEBUG_FS))
->>  		tegra_pcie_debugfs_exit(pcie);
->> @@ -2835,6 +2909,8 @@ static int tegra_pcie_remove(struct platform_device *pdev)
->>  	pci_remove_root_bus(host->bus);
->>  	if (IS_ENABLED(CONFIG_PCI_MSI))
->>  		tegra_pcie_disable_msi(pcie);
->> +	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
->> +		tegra_pcie_pme_turnoff(port);
->>  	tegra_pcie_disable_ports(pcie);
->>  	tegra_pcie_free_resources(pcie);
->>  	tegra_pcie_disable_controller(pcie);
->> -- 
->> 2.1.4
->>
+-- 
+Cyrille Pitchen, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
