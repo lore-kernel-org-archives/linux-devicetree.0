@@ -1,88 +1,65 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: overlay: Remove else after goto
-Date: Thu, 30 Nov 2017 09:34:57 -0600
-Message-ID: <CAL_JsqLjAJ0QG5r217bpT4ZLaKSras6taWHjooTsdL3GDp9_hg@mail.gmail.com>
-References: <1511857593-18574-1-git-send-email-geert+renesas@glider.be> <6d0dc834-6df6-fa6c-3adc-5506f432fa7d@gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 4/5] pinctrl: mcp23s08: configure irq polarity using
+ irq data
+Date: Thu, 30 Nov 2017 15:50:53 +0000
+Message-ID: <1ba1c850-dd22-fa98-66ea-fcb8527ec5ad@arm.com>
+References: <1511252491-79952-1-git-send-email-preid@electromag.com.au>
+ <1511252491-79952-5-git-send-email-preid@electromag.com.au>
+ <20171121133434.tuvxtrrbabjk4zeg@earth>
+ <c191a9d6-3ebb-e95b-7342-aa18598ddf2b@electromag.com.au>
+ <20171121152142.zg3r57gl2kenjwgi@earth>
+ <CACRpkdbkG_83-gpGqdMA5y3cpAvSbQ2X_xT07PC3+boxPeWbPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6d0dc834-6df6-fa6c-3adc-5506f432fa7d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbkG_83-gpGqdMA5y3cpAvSbQ2X_xT07PC3+boxPeWbPQ@mail.gmail.com>
+Content-Language: en-GB
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>
+Cc: Phil Reid <preid@electromag.com.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 3:30 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 11/28/17 03:26, Geert Uytterhoeven wrote:
->> If an "if" branch is terminated by a "goto", there's no need to have an
->> "else" statement and an indented block of code.
->>
->> Remove the "else" statement to simplify the code flow for the casual
->> reviewer.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> ---
->>  drivers/of/overlay.c | 25 ++++++++++---------------
->>  1 file changed, 10 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->> index 8676411bd3e6f29f..53bc9e3f0b985415 100644
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -580,9 +580,9 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
->>                               of_node_put(fragment->overlay);
->>                               ret = -EINVAL;
->>                               goto err_free_fragments;
->> -                     } else {
->> -                             cnt++;
->>                       }
->> +
->> +                     cnt++;
->>               }
->>       }
->>
->> @@ -736,14 +736,12 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
->>                       devicetree_state_flags |= DTSF_APPLY_FAIL;
->>               }
->>               goto err_free_overlay_changeset;
->> -     } else {
->> -             ret = __of_changeset_apply_notify(&ovcs->cset);
->> -             if (ret)
->> -                     pr_err("overlay changeset entry notify error %d\n",
->> -                            ret);
->> -             /* fall through */
->>       }
->>
->> +     ret = __of_changeset_apply_notify(&ovcs->cset);
->> +     if (ret)
->> +             pr_err("overlay changeset entry notify error %d\n", ret);
->> +
->
-> The fall through comment was removed.  It is important to document that we
-> are intentionally continuing despite the error.
+On 30/11/17 14:21, Linus Walleij wrote:
+> On Tue, Nov 21, 2017 at 4:21 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> 
+>> IMHO the explicit line-inverter is a bit over-engineered and
+>> implicit line-inverter is enough, but I'm fine with both solutions.
+>> I think the DT binding maintainers should comment on this though,
+>> since it's pretty much a core decision about interrupt specifiers.
+> 
+> I feel the same.
+> 
+> I am very much back and forth on the subject.
+> 
+> Simplicity of use vs modelling the system as it actually works.
+> 
+> Back and forth.
+> 
+> I honestly have just a very vague idea about this.
+> 
+> I don't know if Marc Z as irqchip maintainer has some idea
+> on how to model inverters on irq lines or if he's seen some
+> solutions to it out there.
 
-I've fixed these up like this:
+So far, I've seen two types of solutions:
+- One based on a stacked irqchip driver that implements the inverter on
+the irq_set_type method
+- One based on per-device vendor-specific properties in DT
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 53bc9e3f0b98..cb520169d679 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -741,6 +741,7 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
-        ret = __of_changeset_apply_notify(&ovcs->cset);
-        if (ret)
-                pr_err("overlay changeset entry notify error %d\n", ret);
-+       /* notify failure is not fatal, continue */
+While the first one is clearly a big hammer, it has the advantage of not
+adding new stuff to the DT spec, and accurately describe the signal path
+(see the mediatek stuff for reference).
 
-        list_add_tail(&ovcs->ovcs_list, &ovcs_list);
-        *ovcs_id = ovcs->id;
-@@ -934,6 +935,7 @@ int of_overlay_remove(int *ovcs_id)
-        ret = __of_changeset_revert_notify(&ovcs->cset);
-        if (ret)
-                pr_err("overlay changeset entry notify error %d\n", ret);
-+       /* notify failure is not fatal, continue */
+The second one is just a hack, frankly. It just has the advantage of
+being trivial to implement.
 
-        *ovcs_id = 0;
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm clearly inclined to prefer the first solution. But maybe it is time
+to invent a "generic inverter" driver that could be reusable, just like
+we have a generic irqchip?
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
