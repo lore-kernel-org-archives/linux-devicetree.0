@@ -1,83 +1,63 @@
-From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC v2 2/2] backlight: pwm_bl: compute brightness of LED
- linearly to human eye.
-Date: Thu, 30 Nov 2017 08:57:00 -0800
-Message-ID: <CAD=FV=V+PBUENVgANVrnm44Mp27HbsNNmu6qaqU3txS5VGZGww@mail.gmail.com>
-References: <20171116141151.21171-1-enric.balletbo@collabora.com>
- <20171116141151.21171-3-enric.balletbo@collabora.com> <CAD=FV=WY-2MmjRxGGaJrQjyeWt+k4_k7j12M4LxAnnZxJF7sXw@mail.gmail.com>
- <c6450f50-5c12-dc52-4340-b068c0b38c54@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Subject: Re: [PATCH 1/2] dt-binding: can: mcp2517fd: document device tree bindings
+Date: Thu, 30 Nov 2017 17:58:57 +0100
+Message-ID: <F6036A58-9E98-4A62-950E-3396C9EE636E@martin.sperl.org>
+References: <20171124183509.12810-1-kernel@martin.sperl.org> <20171124183509.12810-2-kernel@martin.sperl.org> <20171126222528.i6quueqdmuj6le6g@rob-hp-laptop> <6EBDD798-8632-4F42-A138-369BCD36DF68@martin.sperl.org> <0a7e4416-332a-5c23-bda3-8c7561410314@posteo.de> <612BB6CD-5330-40B8-A854-FD065E0A3331@martin.sperl.org> <6aea8071-dc21-4ba7-2b2f-5af41b5755a5@posteo.de>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c6450f50-5c12-dc52-4340-b068c0b38c54-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <6aea8071-dc21-4ba7-2b2f-5af41b5755a5-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandru Stan <amstan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Patrick Menschel <menschel.p-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Patrick!
 
-On Thu, Nov 30, 2017 at 3:27 AM, Daniel Thompson
-<daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->
-> On 30/11/17 00:44, Doug Anderson wrote:
->>
->> Hi,
->>
->> On Thu, Nov 16, 2017 at 6:11 AM, Enric Balletbo i Serra
->> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
->>>
->>> When you want to change the brightness using a PWM signal, one thing you
->>> need to consider is how human perceive the brightness. Human perceive the
->>> brightness change non-linearly, we have better sensitivity at low
->>> luminance than high luminance, so to achieve perceived linear dimming,
->>> the
->>> brightness must be matches to the way our eyes behave. The CIE 1931
->>> lightness formula is what actually describes how we perceive light.
->>>
->>> This patch adds support to compute the brightness levels based on a
->>> static
->>> table filled with the numbers provided by the CIE 1931 algorithm, for now
->>> it only supports PWM resolutions up to 65535 (16 bits) with 1024 steps.
->>> Lower PWM resolutions are implemented using the same curve but with less
->>> steps, e.g. For a PWM resolution of 256 (8 bits) we have 37 steps.
->>
->>
->> Your patch assumes that the input to your formula (luminance, I think)
->> scales linearly with PWM duty cycle.  I don't personally know this,
->> but has anyone confirmed it's common in reality, or at least is a
->> close enough approximation of reality?
->
->
-> Isn't this the loop we went round for v1?
->
-> We do know that its not linear, however the graphs from a couple of example
-> devices didn't look too scary and nobody has proposed a better formula.
->
-> At this point the linear interpolation code in patch 1 allows people with
-> especially alinear devices to express suitable brightness curves.
->
-> However we also know that many DT authors choose not to create good
-> brightness tables for their devices... and we'd rather they used allowed the
-> kernel to choose a model than to use no model at all.
+> On 30.11.2017, at 17:44, Patrick Menschel <menschel.p-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org> wrote:
+>> How would you try to present that HW-configuration in the 
+>> device tree instead?
+>> How would it impact the driver design?
+>> 
+> Hi,
+> I'm afraid I don't know what is best practice but you may want to look
+> at the max310x driver which declares it's GPIOs and GPIO based
+> interrupts in the regular driver.
+> 
+> drivers/tty/serial/max310x.c
+> Documentation/devicetree/bindings/serial/maxim,max310x.txt
+> Look for "#ifdef CONFIG_GPIOLIB”.
 
-OK, cool.  I didn't remember anyone actually confirming that they had
-checked that this was the case, but that's probably just my bad memory
-and failures at searching through history.  I don't have any
-objections to the idea if people are convinced it's a good enough
-approximation.  :)
+This is a gpio-controller, for which this is what I would implement.
 
-It would be kinda nice if something could go in the commit message, like:
+The problem comes more from the fact that the mcp2517fd is
+primarily a CAN controller, which has a few GPIO pins.
 
-This method will work in any cases where linearly scaling the PWM duty
-cycle causes a roughly linear scaling of the luminance of the
-backlight.
+So implementing a gpio-controller for those (rarely used) GPIOs
+in the same driver seems a bit of an overkill.
 
-:)
+The mcp2515 chip also supports 5 GPIO pins, but the driver
+does not really make use of them, so they are left out.
 
--Doug
---
+The problem here is more the fact that the mcp2517fd supports
+also push-pull/open-drain on some of those gpios.
+
+And at least openDrain may be required on TXCan if used on a network
+without a transceiver…
+
+> My first try would be a single dt node like the max310x uses in the dt
+> example.
+> Imho it is better to make things useful before making them complicated.
+
+The settings as they are now are the “simple” version.
+implementing a separate GPIO-controller driver just to implement the same
+logic we have now would make it a much bigger driver without lots of extra
+benefits.
+
+So I hope the current proposal is ok...
+
+Martin--
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
