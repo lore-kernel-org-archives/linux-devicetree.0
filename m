@@ -1,84 +1,66 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v4] mfd: syscon: Add hardware spinlock support
-Date: Thu, 30 Nov 2017 10:38:30 +0800
-Message-ID: <2344ec4123c8b0985e54e03a0fa1bfe8d5e68235.1512009343.git.baolin.wang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: broonie@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, baolin.wang@linaro.org
+From: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFCv2 PATCH 09/36] iommu/fault: Allow blocking fault handlers
+Date: Thu, 30 Nov 2017 10:45:36 +0800
+Message-ID: <3156bbca-e588-5c57-6df6-05bf9c25c747@huawei.com>
+References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
+	<20171006133203.22803-10-jean-philippe.brucker@arm.com>
+	<7e1c8ea4-e568-1000-17de-62f8562c7169@huawei.com>
+	<74891e35-17d8-5831-1ebd-18e00ce00d74@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <74891e35-17d8-5831-1ebd-18e00ce00d74-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some system control registers need hardware spinlock to synchronize
-between the multiple subsystems, so we should add hardware spinlock
-support for syscon.
+hi jean,
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes since v3:
- - Add error handling for of_hwspin_lock_get_id()
+On 2017/11/29 23:01, Jean-Philippe Brucker wrote:
+> Hello,
+> 
+> On 29/11/17 06:15, Yisheng Xie wrote:
+>> Hi Jean,
+>>
+>> On 2017/10/6 21:31, Jean-Philippe Brucker wrote:
+>>> -	if (domain->ext_handler) {
+>>> +	if (domain->handler_flags & IOMMU_FAULT_HANDLER_ATOMIC) {
+>>> +		fault->flags |= IOMMU_FAULT_ATOMIC;
+>>
+>> Why remove the condition of domain->ext_handler? should it be much better like:
+>>   if ((domain->handler_flags & IOMMU_FAULT_HANDLER_ATOMIC) && domain->ext_handler)
+>>
+>> If domain->ext_handler is NULL, and (domain->handler_flags & IOMMU_FAULT_HANDLER_ATOMIC)
+>> is true. It will oops, right?
+> 
+> I removed the check because ext_handler shouldn't be NULL if handler_flags
+> has a bit set (as per iommu_set_ext_fault_handler). But you're right that
+> this is fragile, and I overlooked the case where users could call
+> set_ext_fault_handler to clear the fault handler.
+> 
+> (Note that this ext_handler will most likely be replaced by the fault
+> infrastructure that Jacob is working on:
+> https://patchwork.kernel.org/patch/10063385/ to which we should add the
+> atomic/blocking flags)
+> 
 
-Changes since v2:
- - Add acked tag from Rob.
+Get it, thanks for your explanation.
 
-Changes since v1:
- - Remove timeout configuration.
- - Modify the binding file to add hwlocks.
----
- Documentation/devicetree/bindings/mfd/syscon.txt |    1 +
- drivers/mfd/syscon.c                             |   21 +++++++++++++++++++++
- 2 files changed, 22 insertions(+)
+Thanks
+Yisheng Xie
 
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-index 8b92d45..f464cc8 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -16,6 +16,7 @@ Required properties:
- Optional property:
- - reg-io-width: the size (in bytes) of the IO accesses that should be
-   performed on the device.
-+- hwlocks: reference to a phandle of a hardware spinlock provider node.
- 
- Examples:
- gpr: iomuxc-gpr@20e0000 {
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index b93fe4c..caf6a25 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -13,6 +13,7 @@
-  */
- 
- #include <linux/err.h>
-+#include <linux/hwspinlock.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/list.h>
-@@ -87,6 +88,26 @@ static struct syscon *of_syscon_register(struct device_node *np)
- 	if (ret)
- 		reg_io_width = 4;
- 
-+	ret = of_hwspin_lock_get_id(np, 0);
-+	if (ret > 0) {
-+		syscon_config.hwlock_id = ret;
-+		syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
-+	} else {
-+		switch (ret) {
-+		case -ENOENT:
-+			/* ignore missing hwlock, it's optional */
-+			break;
-+		case 0:
-+			ret = -EINVAL;
-+			/* fall-through */
-+		default:
-+			pr_err("Failed to retrieve valid hwlock: %d\n", ret);
-+			/* fall-through */
-+		case -EPROBE_DEFER:
-+			goto err_regmap;
-+		}
-+	}
-+
- 	syscon_config.reg_stride = reg_io_width;
- 	syscon_config.val_bits = reg_io_width * 8;
- 	syscon_config.max_register = resource_size(&res) - reg_io_width;
--- 
-1.7.9.5
+> Thanks,
+> Jean
+> 
+> .
+> 
