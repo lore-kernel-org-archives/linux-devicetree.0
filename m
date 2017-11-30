@@ -1,67 +1,97 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 0/2] of: Add whitelist
-Date: Thu, 30 Nov 2017 07:18:09 -0500
-Message-ID: <157eebaf-89a9-a230-e56b-d98a8e1e26bf@gmail.com>
-References: <1511816284-12145-1-git-send-email-atull@kernel.org>
- <da4c9b29-eccc-6a67-291a-73a36c1598b5@gmail.com>
- <CAL_JsqL5gYh_++1wDLMYjO7MXKOHpzr315FZ1tuN9o5tOe7TYA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/2] ASoC: codecs: Add initial PCM1862/63/64/65
+ universal ADC driver
+Date: Thu, 30 Nov 2017 12:20:35 +0000
+Message-ID: <20171130122035.wgj2jpvzx6md5gnl@sirena.org.uk>
+References: <20171129185015.5304-1-afd@ti.com>
+ <20171129185015.5304-2-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL5gYh_++1wDLMYjO7MXKOHpzr315FZ1tuN9o5tOe7TYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sqvz43tvr3dfqugf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171129185015.5304-2-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/17 08:31, Rob Herring wrote:
-> On Wed, Nov 29, 2017 at 3:20 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 11/27/17 15:58, Alan Tull wrote:
->>> Here's a proposal for a whitelist to lock down the dynamic device tree.
->>>
->>> For an overlay to be accepted, all of its targets are required to be
->>> on a target node whitelist.
->>>
->>> Currently the only way I have to get on the whitelist is calling a
->>> function to add a node.  That works for fpga regions, but I think
->>> other uses will need a way of having adding specific nodes from the
->>> base device tree, such as by adding a property like 'allow-overlay;'
->>> or 'allow-overlay = "okay";' If that is acceptable, I could use some
->>> advice on where that particular code should go.
->>>
->>> Alan
->>>
->>> Alan Tull (2):
->>>   of: overlay: add whitelist
->>>   fpga: of region: add of-fpga-region to whitelist
->>>
->>>  drivers/fpga/of-fpga-region.c |  9 ++++++
->>>  drivers/of/overlay.c          | 73 +++++++++++++++++++++++++++++++++++++++++++
->>>  include/linux/of.h            | 12 +++++++
->>>  3 files changed, 94 insertions(+)
->>>
->>
->> The plan was to use connectors to restrict where an overlay could be applied.
->> I would prefer not to have multiple methods for accomplishing the same thing
->> unless there is a compelling reason to do so.
-> 
-> Connector nodes need a mechanism to enable themselves, too. I don't
-> think connector nodes are going to solve every usecase.
-> 
-> Rob
-> 
 
-The overlay code related to connectors does not exist yet, so my comment
-is going to be theoretical.
+--sqvz43tvr3dfqugf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I would expect the overlay code to check that the target of the overlay
-fragment is a connector node, so there is no need to explicitly "enable"
-applying an overlay to a connector node.
+On Wed, Nov 29, 2017 at 12:50:15PM -0600, Andrew F. Davis wrote:
 
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	case SND_SOC_BIAS_STANDBY:
+> +		pcm186x_power_on(codec);
+> +		break;
+> +	case SND_SOC_BIAS_OFF:
+> +		pcm186x_power_off(codec);
+> +		break;
+> +	}
+
+> +/*
+> + * The PCM186x's page register is located on every page, allowing to program it
+> + * without having to switch pages. Take advantage of this by defining the range
+> + * such to have this register located inside the data window.
+> + */
+
+That sounds like a normal page register?
+
+> +int pcm186x_probe(struct device *dev, enum pcm186x_type type, int irq,
+> +		  struct regmap *regmap)
+> +{
+
+> +	ret = regulator_bulk_disable(ARRAY_SIZE(priv->supplies),
+> +				     priv->supplies);
+> +	if (ret) {
+> +		dev_err(dev, "failed disable supplies: %d\n", ret);
+> +		return ret;
+> +	}
+
+> +static int __maybe_unused pcm186x_resume(struct device *dev)
+> +{
+> +	struct pcm186x_priv *priv = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(priv->supplies),
+> +				    priv->supplies);
+> +	if (ret != 0) {
+> +		dev_err(dev, "failed to enable supplies: %d\n", ret);
+> +		return ret;
+> +	}
+
+> +const struct dev_pm_ops pcm186x_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(pcm186x_suspend, pcm186x_resume, NULL)
+> +};
+> +EXPORT_SYMBOL_GPL(pcm186x_pm_ops);
+
+There's no code in the driver that enables runtime PM so this isn't
+going to do anything.  I'm also not clear that the power management
+handling is in general joined up - we leave the regulators disabled
+at the end of probe, relying on the bias level configuration to reenable
+them but then the runtime PM configuration also tries to enable and
+disable them.  Based on what I think the intention is I'd suggest
+removing the bias level handling and then having probe enable runtime
+PM with the device flagged as active, letting runtime PM do any
+disabling if the device is idle.
+
+I'd also expect to see some system suspend handling.
+
+--sqvz43tvr3dfqugf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlof95IACgkQJNaLcl1U
+h9BVUQf9FtRiBp4vQBIt44dGOnF0uRKfbIdmGWkkLn55DpiwswvuSmkjxvBU7xQH
+V9ipI/EC5ViTbUUDEl7KNSEolfYEJTIP6ZF5mFUjwyq/BLwRZiUWJbHaYpUVH8zd
+GHn5hGgldErT8IGKZ+XAOLg6iuTqIY9w0rYdmckfATLbE5srmKA7g/mpsdGxkk0q
+fsaRVM/4NrdHlLPOpmgeWbfhmpL5SeamXmUWt12mqXPMlvK5t6OJq1Qpzl8K8i9U
+FyxkHoT63nOlahzvh6NZPfDrOwQ5PeCVmOITzwkoBqdaTuWG/3oBzuVElrwDJEJ9
+kX8Exq2dAx6vyDcF81tpgXqDX9/ocQ==
+=IQSt
+-----END PGP SIGNATURE-----
+
+--sqvz43tvr3dfqugf--
