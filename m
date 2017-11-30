@@ -1,36 +1,36 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2] soc: qcom: smp2p: Access APCS as mailbox client
-Date: Wed, 29 Nov 2017 16:00:40 -0800
-Message-ID: <20171130000040.23681-1-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arun Kumar Neelakantam <aneela@codeaurora.org>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] rpmsg: qcom_smd: Access APCS through mailbox framework
+Date: Wed, 29 Nov 2017 16:02:33 -0800
+Message-ID: <20171130000233.23804-1-bjorn.andersson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Attempt to acquire the APCS IPC through the mailbox framework and fall
 back to the old syscon based approach, to allow us to move away from
 using the syscon.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Arun Kumar Neelakantam <aneela-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
 
 Changes since v1:
-- Added dt binding update
-- Specifies knows_txdone on the mailbox client
+- Added dt binding change
 
- .../devicetree/bindings/soc/qcom/qcom,smp2p.txt    |  8 ++++-
- drivers/soc/qcom/Kconfig                           |  1 +
- drivers/soc/qcom/smp2p.c                           | 39 ++++++++++++++++++----
- 3 files changed, 41 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/soc/qcom/qcom,smd.txt      |  8 ++-
+ drivers/rpmsg/Kconfig                              |  1 +
+ drivers/rpmsg/qcom_smd.c                           | 62 +++++++++++++++-------
+ 3 files changed, 51 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt
-index af9ca37221ce..a35af2dafdad 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt
-@@ -17,9 +17,15 @@ processor ID) and a string identifier.
- 	Value type: <prop-encoded-array>
- 	Definition: one entry specifying the smp2p notification interrupt
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+index ea1dc75ec9ea..234ae2256501 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
+@@ -22,9 +22,15 @@ The edge is described by the following properties:
+ 	Definition: should specify the IRQ used by the remote processor to
+ 		    signal this processor about communication related updates
  
 -- qcom,ipc:
 +- mboxes:
@@ -43,120 +43,142 @@ index af9ca37221ce..a35af2dafdad 100644
 +	Usage: required, unless mboxes is specified
 +	Value type: <prop-encoded-array>
  	Definition: three entries specifying the outgoing ipc bit used for
- 		    signaling the remote end of the smp2p edge:
+ 		    signaling the remote processor:
  		    - phandle to a syscon node representing the apcs registers
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index b81374bb6713..40c711583f0d 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -75,6 +75,7 @@ config QCOM_SMEM_STATE
+diff --git a/drivers/rpmsg/Kconfig b/drivers/rpmsg/Kconfig
+index 65a9f6b892f0..9b14090e3603 100644
+--- a/drivers/rpmsg/Kconfig
++++ b/drivers/rpmsg/Kconfig
+@@ -39,6 +39,7 @@ config RPMSG_QCOM_GLINK_SMEM
  
- config QCOM_SMP2P
- 	tristate "Qualcomm Shared Memory Point to Point support"
+ config RPMSG_QCOM_SMD
+ 	tristate "Qualcomm Shared Memory Driver (SMD)"
 +	depends on MAILBOX
  	depends on QCOM_SMEM
- 	select QCOM_SMEM_STATE
+ 	select RPMSG
  	help
-diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-index f51fb2ea7200..669c8baa971b 100644
---- a/drivers/soc/qcom/smp2p.c
-+++ b/drivers/soc/qcom/smp2p.c
-@@ -18,6 +18,7 @@
- #include <linux/of.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
+diff --git a/drivers/rpmsg/qcom_smd.c b/drivers/rpmsg/qcom_smd.c
+index b01774e9fac0..ef2a526ebc8f 100644
+--- a/drivers/rpmsg/qcom_smd.c
++++ b/drivers/rpmsg/qcom_smd.c
+@@ -14,6 +14,7 @@
+ 
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
 +#include <linux/mailbox_client.h>
  #include <linux/mfd/syscon.h>
  #include <linux/module.h>
- #include <linux/platform_device.h>
-@@ -126,6 +127,8 @@ struct smp2p_entry {
-  * @ipc_regmap:	regmap for the outbound ipc
-  * @ipc_offset:	offset within the regmap
-  * @ipc_bit:	bit in regmap@offset to kick to signal remote processor
-+ * @mbox_client: mailbox client handle
-+ * @mbox_chan:	apcs ipc mailbox channel handle
-  * @inbound:	list of inbound entries
-  * @outbound:	list of outbound entries
-  */
-@@ -146,6 +149,9 @@ struct qcom_smp2p {
+ #include <linux/of_irq.h>
+@@ -107,6 +108,8 @@ static const struct {
+  * @ipc_regmap:		regmap handle holding the outgoing ipc register
+  * @ipc_offset:		offset within @ipc_regmap of the register for ipc
+  * @ipc_bit:		bit in the register at @ipc_offset of @ipc_regmap
++ * @mbox_client:	mailbox client handle
++ * @mbox_chan:		apcs ipc mailbox channel handle
+  * @channels:		list of all channels detected on this edge
+  * @channels_lock:	guard for modifications of @channels
+  * @allocated:		array of bitmaps representing already allocated channels
+@@ -129,6 +132,9 @@ struct qcom_smd_edge {
  	int ipc_offset;
  	int ipc_bit;
  
 +	struct mbox_client mbox_client;
 +	struct mbox_chan *mbox_chan;
 +
- 	struct list_head inbound;
- 	struct list_head outbound;
- };
-@@ -154,7 +160,13 @@ static void qcom_smp2p_kick(struct qcom_smp2p *smp2p)
+ 	struct list_head channels;
+ 	spinlock_t channels_lock;
+ 
+@@ -365,7 +371,12 @@ static void qcom_smd_signal_channel(struct qcom_smd_channel *channel)
  {
- 	/* Make sure any updated data is written before the kick */
- 	wmb();
--	regmap_write(smp2p->ipc_regmap, smp2p->ipc_offset, BIT(smp2p->ipc_bit));
-+
-+	if (smp2p->mbox_chan) {
-+		mbox_send_message(smp2p->mbox_chan, NULL);
-+		mbox_client_txdone(smp2p->mbox_chan, 0);
+ 	struct qcom_smd_edge *edge = channel->edge;
+ 
+-	regmap_write(edge->ipc_regmap, edge->ipc_offset, BIT(edge->ipc_bit));
++	if (edge->mbox_chan) {
++		mbox_send_message(edge->mbox_chan, NULL);
++		mbox_client_txdone(edge->mbox_chan, 0);
 +	} else {
-+		regmap_write(smp2p->ipc_regmap, smp2p->ipc_offset, BIT(smp2p->ipc_bit));
++		regmap_write(edge->ipc_regmap, edge->ipc_offset, BIT(edge->ipc_bit));
 +	}
  }
  
- /**
-@@ -453,10 +465,6 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
+ /*
+@@ -1268,27 +1279,37 @@ static int qcom_smd_parse_edge(struct device *dev,
+ 	key = "qcom,remote-pid";
+ 	of_property_read_u32(node, key, &edge->remote_pid);
  
- 	platform_set_drvdata(pdev, smp2p);
+-	syscon_np = of_parse_phandle(node, "qcom,ipc", 0);
+-	if (!syscon_np) {
+-		dev_err(dev, "no qcom,ipc node\n");
+-		return -ENODEV;
+-	}
++	edge->mbox_client.dev = dev;
++	edge->mbox_client.knows_txdone = true;
++	edge->mbox_chan = mbox_request_channel(&edge->mbox_client, 0);
++	if (IS_ERR(edge->mbox_chan)) {
++		if (PTR_ERR(edge->mbox_chan) != -ENODEV)
++			return PTR_ERR(edge->mbox_chan);
  
--	ret = smp2p_parse_ipc(smp2p);
--	if (ret)
--		return ret;
--
- 	key = "qcom,smem";
- 	ret = of_property_read_u32_array(pdev->dev.of_node, key,
- 					 smp2p->smem_items, 2);
-@@ -483,9 +491,23 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
- 		return irq;
+-	edge->ipc_regmap = syscon_node_to_regmap(syscon_np);
+-	if (IS_ERR(edge->ipc_regmap))
+-		return PTR_ERR(edge->ipc_regmap);
++		edge->mbox_chan = NULL;
+ 
+-	key = "qcom,ipc";
+-	ret = of_property_read_u32_index(node, key, 1, &edge->ipc_offset);
+-	if (ret < 0) {
+-		dev_err(dev, "no offset in %s\n", key);
+-		return -EINVAL;
+-	}
++		syscon_np = of_parse_phandle(node, "qcom,ipc", 0);
++		if (!syscon_np) {
++			dev_err(dev, "no qcom,ipc node\n");
++			return -ENODEV;
++		}
+ 
+-	ret = of_property_read_u32_index(node, key, 2, &edge->ipc_bit);
+-	if (ret < 0) {
+-		dev_err(dev, "no bit in %s\n", key);
+-		return -EINVAL;
++		edge->ipc_regmap = syscon_node_to_regmap(syscon_np);
++		if (IS_ERR(edge->ipc_regmap))
++			return PTR_ERR(edge->ipc_regmap);
++
++		key = "qcom,ipc";
++		ret = of_property_read_u32_index(node, key, 1, &edge->ipc_offset);
++		if (ret < 0) {
++			dev_err(dev, "no offset in %s\n", key);
++			return -EINVAL;
++		}
++
++		ret = of_property_read_u32_index(node, key, 2, &edge->ipc_bit);
++		if (ret < 0) {
++			dev_err(dev, "no bit in %s\n", key);
++			return -EINVAL;
++		}
  	}
  
-+	smp2p->mbox_client.dev = &pdev->dev;
-+	smp2p->mbox_client.knows_txdone = true;
-+	smp2p->mbox_chan = mbox_request_channel(&smp2p->mbox_client, 0);
-+	if (IS_ERR(smp2p->mbox_chan)) {
-+		if (PTR_ERR(smp2p->mbox_chan) != -ENODEV)
-+			return PTR_ERR(smp2p->mbox_chan);
-+
-+		smp2p->mbox_chan = NULL;
-+
-+		ret = smp2p_parse_ipc(smp2p);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	ret = qcom_smp2p_alloc_outbound_item(smp2p);
- 	if (ret < 0)
--		return ret;
-+		goto release_mbox;
+ 	ret = of_property_read_string(node, "label", &edge->name);
+@@ -1394,6 +1415,8 @@ struct qcom_smd_edge *qcom_smd_register_edge(struct device *parent,
+ 	return edge;
  
- 	for_each_available_child_of_node(pdev->dev.of_node, node) {
- 		entry = devm_kzalloc(&pdev->dev, sizeof(*entry), GFP_KERNEL);
-@@ -540,6 +562,9 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
- 
- 	smp2p->out->valid_entries = 0;
- 
-+release_mbox:
-+	mbox_free_channel(smp2p->mbox_chan);
-+
- 	return ret;
+ unregister_dev:
++	if (!IS_ERR_OR_NULL(edge->mbox_chan))
++		mbox_free_channel(edge->mbox_chan);
+ 	put_device(&edge->dev);
+ 	return ERR_PTR(ret);
  }
+@@ -1422,6 +1445,7 @@ int qcom_smd_unregister_edge(struct qcom_smd_edge *edge)
+ 	if (ret)
+ 		dev_warn(&edge->dev, "can't remove smd device: %d\n", ret);
  
-@@ -554,6 +579,8 @@ static int qcom_smp2p_remove(struct platform_device *pdev)
- 	list_for_each_entry(entry, &smp2p->outbound, node)
- 		qcom_smem_state_unregister(entry->state);
- 
-+	mbox_free_channel(smp2p->mbox_chan);
-+
- 	smp2p->out->valid_entries = 0;
++	mbox_free_channel(edge->mbox_chan);
+ 	device_unregister(&edge->dev);
  
  	return 0;
 -- 
 2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
