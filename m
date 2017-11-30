@@ -1,51 +1,42 @@
-From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: Re: [PATCH 04/10] ARM: tegra: EXPORT tegra_cpuidle_pcie_irqs_in_use()
-Date: Fri, 1 Dec 2017 00:16:31 +0530
-Message-ID: <cd5f005e-6723-efcd-bc95-ec4df58254fe@nvidia.com>
-References: <1511538800-8275-1-git-send-email-mmaddireddy@nvidia.com>
- <1511538800-8275-5-git-send-email-mmaddireddy@nvidia.com>
- <20171130124149.GB12096@red-moon>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RFC 1/2] dt-bindings: Add vendor prefix for
+ Brava Home
+Date: Fri,  1 Dec 2017 00:12:13 +0530
+Message-ID: <1512067334-12761-1-git-send-email-jagan@amarulasolutions.com>
+Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171130124149.GB12096@red-moon>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCV4FV5N34IRBAVFQHIQKGQE7IYXVTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Janoff <mark-EBCEQKJj5Pll57MIdRCFDg@public.gmane.org>, Stuart Westerman <stu-EBCEQKJj5Pll57MIdRCFDg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Added 'brava' as a vendor prefix for Brava Home, Inc.
+which is consumer electronics and IoT company.
 
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 30-Nov-17 6:11 PM, Lorenzo Pieralisi wrote:
-> On Fri, Nov 24, 2017 at 09:23:14PM +0530, Manikanta Maddireddy wrote:
->> EXPORT tegra_cpuidle_pcie_irqs_in_use() to allow Tegra PCIe driver to be
->> compiled as loadable kernel module.
->>
->> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
->> ---
->>  arch/arm/mach-tegra/cpuidle.c | 1 +
->>  1 file changed, 1 insertion(+)
-> 
-> You should find a way to remove this call and the corresponding
-> drivers->arch dependency, not to export it by spreading it even
-> further.
-> 
-> Lorenzo
-> 
-I will drop this patch from the series and will explore the possibilities of
-removing the arch dependency. I will address it in next series of patches
-
->> diff --git a/arch/arm/mach-tegra/cpuidle.c b/arch/arm/mach-tegra/cpuidle.c
->> index 316563141add..7d7e6d3ce32d 100644
->> --- a/arch/arm/mach-tegra/cpuidle.c
->> +++ b/arch/arm/mach-tegra/cpuidle.c
->> @@ -57,3 +57,4 @@ void tegra_cpuidle_pcie_irqs_in_use(void)
->>  		break;
->>  	}
->>  }
->> +EXPORT_SYMBOL(tegra_cpuidle_pcie_irqs_in_use);
->> -- 
->> 2.1.4
->>
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 9bce76f..6004c3f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -54,6 +54,7 @@ bhf	Beckhoff Automation GmbH & Co. KG
+ boe	BOE Technology Group Co., Ltd.
+ bosch	Bosch Sensortec GmbH
+ boundary	Boundary Devices Inc.
++brava	Brava Home, Inc.
+ brcm	Broadcom Corporation
+ buffalo	Buffalo, Inc.
+ calxeda	Calxeda
+-- 
+2.7.4
