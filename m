@@ -1,34 +1,54 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] arm64: dts: renesas: r8a77970: use CPG core clock
- macros
-Date: Thu, 30 Nov 2017 11:09:11 +0100
-Message-ID: <20171130100911.rdymtxswidey4bol@verge.net.au>
-References: <20171128202105.552196002@cogentembedded.com>
- <20171129095558.wvvcvfctwfmtrkq4@verge.net.au>
- <d904863e-e8c9-76ad-9d12-fd36ed68c3b4@cogentembedded.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V2 5/9] PCI: Export pci_flags
+Date: Thu, 30 Nov 2017 10:24:37 +0000
+Message-ID: <20171130102436.GB10349@red-moon>
+References: <1511638333-22951-1-git-send-email-mmaddireddy@nvidia.com>
+ <1511638333-22951-6-git-send-email-mmaddireddy@nvidia.com>
+ <20171129170133.GC6469@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <d904863e-e8c9-76ad-9d12-fd36ed68c3b4@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20171129170133.GC6469-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 08:00:52PM +0300, Sergei Shtylyov wrote:
-> On 11/29/2017 12:55 PM, Simon Horman wrote:
+On Wed, Nov 29, 2017 at 11:01:33AM -0600, Bjorn Helgaas wrote:
+> [+cc Lorenzo]
 > 
-> > > Now that the commit ecadea00f588 ("dt-bindings: clock: Add R8A77970 CPG
-> > > core clock definitions") has hit Linus' tree, we  can replace the bare
-> > > numbers (we had to use to avoid a cross tree dependency) with these macro
-> > > definitions...
-> > > 
-> > > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> > 
-> > Thanks, applied.
+> On Sun, Nov 26, 2017 at 01:02:09AM +0530, Manikanta Maddireddy wrote:
+> > pci_flags variable is used in inline functions in 'pci.h', Tegra PCIe
+> > driver use one of these functions pci_add_flags() and includes 'pci.h'.
+> > Export pci_flags to allow Tegra PCIe host controller driver to be
+> > compiled as loadable kernel module.
 > 
->    Not seeing these 2 patches in the today's devel branch tho...
+> Here's the usage in tegra_pcie_probe():
+> 
+>   pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
+> 
+> We've probably had this discussion before, but  I don't know why Tegra
+> needs PCI_REASSIGN_ALL_RSRC and PCI_REASSIGN_ALL_BUS.
+> 
+> I would prefer to drop this usage of pci_add_flags() if possible.  It
+> seems to be just an arm/powerpc thing and I'm not convinced it's
+> really necessary.
 
-Strange, I don't see them either.
-I have queued them up (again?).
+It is hard to say if it is really necessary (because it depends
+on firmware configuration - ie pci_scan_bridge()), that's the
+problem.
+
+I suspect it can trigger regressions if we do not set it (since
+it affects what pcibios_assign_all_busses() returns on eg arm/arm64).
+
+There are two things we can do:
+
+1) Set it unconditionally in arch code (in a hook to be defined)
+2) We remove it on a per-host bridge basis and ask for testing
+
+I agree this may have trickled from host bridge to host bridge through
+copy'n'paste and it is not based on any firmware assumtpion but I can't
+say if it is really needed.
+
+Lorenzo
