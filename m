@@ -1,52 +1,46 @@
-From: Colin King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [PATCH][V2] of: overlay: fix memory leak of ovcs on error exit path
-Date: Thu, 30 Nov 2017 12:57:06 +0000
-Message-ID: <20171130125706.13790-1-colin.king@canonical.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 4/4] ARM: dts: alt: Convert to named i2c-gpio bindings
+Date: Thu, 30 Nov 2017 13:57:26 +0100
+Message-ID: <1512046646-15253-5-git-send-email-geert+renesas@glider.be>
+References: <1512046646-15253-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1512046646-15253-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-From: Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Commits 7d29f509d2cfd807 ("dt-bindings: i2c: i2c-gpio: Add support for
+named gpios") and 05c74778858d7d99 ("i2c: gpio: Add support for named
+gpios in DT") introduced named i2c-gpio DT bindings, and deprecated the
+more error-prone unnamed variant.
 
-Currently if the call to of_resolve_phandles fails then then ovcs
-is not kfree'd on the error exit path.  Rather than try and make
-the clean up exit path more convoluted, fix this by just kfree'ing
-ovcs at the point of error detection and exit via the same exit
-path.
+Switch to the new bindings, and add the missing GPIO_OPEN_DRAIN I/O
+flags, which were implicitly assumed before.
 
-Detected by CoverityScan, CID#1462296 ("Resource Leak")
-
-Fixes: bd80e2555c5c ("of: overlay: Fix cleanup order in of_overlay_apply()")
-Signed-off-by: Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/of/overlay.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+v2:
+  - New.
+---
+ arch/arm/boot/dts/r8a7794-alt.dts | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 53bc9e3f0b98..6c8efe7d8cbb 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -708,8 +708,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
- 	of_overlay_mutex_lock();
- 
- 	ret = of_resolve_phandles(tree);
--	if (ret)
-+	if (ret) {
-+		kfree(ovcs);
- 		goto err_overlay_unlock;
-+	}
- 
- 	mutex_lock(&of_mutex);
+diff --git a/arch/arm/boot/dts/r8a7794-alt.dts b/arch/arm/boot/dts/r8a7794-alt.dts
+index bd98790d964e13a7..60c6515c499660eb 100644
+--- a/arch/arm/boot/dts/r8a7794-alt.dts
++++ b/arch/arm/boot/dts/r8a7794-alt.dts
+@@ -143,9 +143,8 @@
+ 		#size-cells = <0>;
+ 		compatible = "i2c-gpio";
+ 		status = "disabled";
+-		gpios = <&gpio4 9 GPIO_ACTIVE_HIGH /* sda */
+-			 &gpio4 8 GPIO_ACTIVE_HIGH /* scl */
+-			>;
++		sda-gpios = <&gpio4 9 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&gpio4 8 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+ 		i2c-gpio,delay-us = <5>;
+ 	};
  
 -- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
