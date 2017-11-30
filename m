@@ -1,90 +1,61 @@
 From: tyler@opensourcefoundries.com
-Subject: [PATCH 3/8] ARM: dts: imx7d-cl-som: add nodes for usbh, and usbotg2
-Date: Thu, 30 Nov 2017 12:14:29 -0800
-Message-ID: <20171130201434.14122-4-tyler@opensourcefoundries.com>
+Subject: [PATCH 8/8] PCIe: imx6: imx7d: add support for phy refclk source
+Date: Thu, 30 Nov 2017 12:14:34 -0800
+Message-ID: <20171130201434.14122-9-tyler@opensourcefoundries.com>
 References: <20171130201434.14122-1-tyler@opensourcefoundries.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171130201434.14122-1-tyler@opensourcefoundries.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org, fabio.estevam@nxp.com, kernel@pengutronix.de
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tyler Baker <tyler@opensourcefoundries.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tyler Baker <tyler@opensourcefoundries.com>, Ilya Ledvich <ilya@compulab.co.il>
 List-Id: devicetree@vger.kernel.org
 
 From: Tyler Baker <tyler@opensourcefoundries.com>
 
-Add device tree nodes for the USB hub, and USB OTG. i2c2 on this
-platform supports low state retention power state so lets use it.
+In the i.MX7D the PCIe PHY can use either externel oscillator or
+internal PLL as a reference clock source.
+Add support for the PHY Reference Clock source including
+device tree property phy-ref-clk.
+External oscillator is used as a default reference clock source.
 
 Signed-off-by: Tyler Baker <tyler@opensourcefoundries.com>
+Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
 ---
- arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 36 +++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+ drivers/pci/dwc/pci-imx6.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-index ae45af1..a9f690b 100644
---- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-@@ -30,6 +30,16 @@
- 		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	reg_usbh_nreset: regulator@4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_host_nreset";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pca9555 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
- };
+diff --git a/drivers/pci/dwc/pci-imx6.c b/drivers/pci/dwc/pci-imx6.c
+index b734835..e935db4 100644
+--- a/drivers/pci/dwc/pci-imx6.c
++++ b/drivers/pci/dwc/pci-imx6.c
+@@ -45,6 +45,7 @@ enum imx6_pcie_variants {
+ struct imx6_pcie {
+ 	struct dw_pcie		*pci;
+ 	int			reset_gpio;
++	u32			phy_refclk;
+ 	bool			gpio_active_high;
+ 	struct clk		*pcie_bus;
+ 	struct clk		*pcie_phy;
+@@ -474,7 +475,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ 	switch (imx6_pcie->variant) {
+ 	case IMX7D:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+-				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
++				   BIT(5), imx6_pcie->phy_refclk ? BIT(5) : 0);
+ 		break;
+ 	case IMX6SX:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+@@ -733,6 +734,11 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 	if (IS_ERR(pci->dbi_base))
+ 		return PTR_ERR(pci->dbi_base);
  
- &cpu0 {
-@@ -199,6 +209,16 @@
- 	status = "okay";
- };
- 
-+&usbotg2 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
++	/* Fetch PHY Reference Clock */
++	if (of_property_read_u32(node, "phy-ref-clk", &imx6_pcie->phy_refclk))
++		imx6_pcie->phy_refclk = 0;
++	pr_info("%s: phy_refclk = %d\n", __func__, imx6_pcie->phy_refclk);
 +
-+&usbh {
-+	vbus-supply = <&reg_usbh_nreset>;
-+	status = "okay";
-+};
-+
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
-@@ -247,13 +267,6 @@
- 		>;
- 	};
- 
--	pinctrl_i2c2: i2c2grp {
--		fsl,pins = <
--			MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
--			MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
--		>;
--	};
--
- 	pinctrl_uart1: uart1grp {
- 		fsl,pins = <
- 			MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
-@@ -284,4 +297,11 @@
- 			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x14 /* OTG PWREN */
- 		>;
- 	};
--};
-\ No newline at end of file
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO07__I2C2_SDA		0x4000000f
-+			MX7D_PAD_LPSR_GPIO1_IO06__I2C2_SCL		0x4000000f
-+		>;
-+	};
-+};
+ 	/* Fetch GPIOs */
+ 	imx6_pcie->reset_gpio = of_get_named_gpio(node, "reset-gpio", 0);
+ 	imx6_pcie->gpio_active_high = of_property_read_bool(node,
 -- 
 2.9.3
