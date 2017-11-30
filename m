@@ -1,77 +1,91 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 2/3] drm/omap: dss: Add support for reporting memory bandwidth limitation
-Date: Thu, 30 Nov 2017 14:12:36 +0200
-Message-ID: <20171130121237.30431-3-peter.ujfalusi@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v3 1/3] dt-bindings: display/ti: Add optional property to set
+ memory bandwidth limit
+Date: Thu, 30 Nov 2017 14:12:35 +0200
+Message-ID: <20171130121237.30431-2-peter.ujfalusi@ti.com>
 References: <20171130121237.30431-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171130121237.30431-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jsarha-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171130121237.30431-1-peter.ujfalusi@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
+Cc: airlied@linux.ie, devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-The get_memory_bandwidth_limit() in dispc_ops can be used to query the
-memory bandwidth limit of dispc by upper layers.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
----
- drivers/gpu/drm/omapdrm/dss/dispc.c   | 13 +++++++++++++
- drivers/gpu/drm/omapdrm/dss/omapdss.h |  2 ++
- 2 files changed, 15 insertions(+)
-
-diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
-index 0f4fdb221498..90f9ad89af0d 100644
---- a/drivers/gpu/drm/omapdrm/dss/dispc.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
-@@ -4325,6 +4325,17 @@ static void dispc_free_irq(void *dev_id)
- 	dispc.user_data = NULL;
- }
- 
-+static u32 dispc_get_memory_bandwidth_limit(void)
-+{
-+	u32 limit = 0;
-+
-+	/* Optional maximum memory bandwidth */
-+	of_property_read_u32(dispc.pdev->dev.of_node, "max-memory-bandwidth",
-+			     &limit);
-+
-+	return limit;
-+}
-+
- /*
-  * Workaround for errata i734 in DSS dispc
-  *  - LCD1 Gamma Correction Is Not Working When GFX Pipe Is Disabled
-@@ -4497,6 +4508,8 @@ static const struct dispc_ops dispc_ops = {
- 	.get_num_ovls = dispc_get_num_ovls,
- 	.get_num_mgrs = dispc_get_num_mgrs,
- 
-+	.get_memory_bandwidth_limit = dispc_get_memory_bandwidth_limit,
-+
- 	.mgr_enable = dispc_mgr_enable,
- 	.mgr_is_enabled = dispc_mgr_is_enabled,
- 	.mgr_get_vsync_irq = dispc_mgr_get_vsync_irq,
-diff --git a/drivers/gpu/drm/omapdrm/dss/omapdss.h b/drivers/gpu/drm/omapdrm/dss/omapdss.h
-index 990422b35784..c2166d2d3f29 100644
---- a/drivers/gpu/drm/omapdrm/dss/omapdss.h
-+++ b/drivers/gpu/drm/omapdrm/dss/omapdss.h
-@@ -695,6 +695,8 @@ struct dispc_ops {
- 	int (*get_num_ovls)(void);
- 	int (*get_num_mgrs)(void);
- 
-+	u32 (*get_memory_bandwidth_limit)(void);
-+
- 	void (*mgr_enable)(enum omap_channel channel, bool enable);
- 	bool (*mgr_is_enabled)(enum omap_channel channel);
- 	u32 (*mgr_get_vsync_irq)(enum omap_channel channel);
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+bWF4LW1lbW9yeS1iYW5kd2lkdGggY2FuIGJlIHVzZWQgdG8gc3BlY2lmeSB0aGUgbWF4aW11bSBi
+YW5kd2lkdGggZGlzcGMKY2FuIHVzZSB3aGVuIHJlYWRpbmcgZGlzcGxheSBkYXRhIGZyb20gbWFp
+biBtZW1vcnkuCgpJbiBzb21lIFNvQyAoYW00Mzd4IGZvciBleGFtcGxlKSB3ZSBoYXZlIG1lbW9y
+eSBiYW5kd2lkdGggbGltaXRhdGlvbgp3aGljaCBjYXVzZXMgdW5kZXJmbG93IGluIHRoZSBkaXNw
+bGF5IHN1YnN5c3RlbS4KClNpZ25lZC1vZmYtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZh
+bHVzaUB0aS5jb20+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0K
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGRyYTctZHNz
+LnR4dCAgfCA1ICsrKysrCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS90aS90aSxvbWFwMi1kc3MudHh0IHwgNCArKysrCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMy1kc3MudHh0IHwgNCArKysrCiBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwNC1kc3MudHh0IHwgNCAr
+KysrCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFw
+NS1kc3MudHh0IHwgNCArKysrCiA1IGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykKCmRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90
+aSxkcmE3LWRzcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS90aS90aSxkcmE3LWRzcy50eHQKaW5kZXggYzMwZjllYzE4OWVkLi45MTI3OWYxMDYwZmUgMTAw
+NjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3Rp
+LGRyYTctZHNzLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS90aS90aSxkcmE3LWRzcy50eHQKQEAgLTQ3LDYgKzQ3LDExIEBAIFJlcXVpcmVkIHByb3Bl
+cnRpZXM6CiAtIGNsb2NrczogaGFuZGxlIHRvIGZjbGsKIC0gY2xvY2stbmFtZXM6ICJmY2siCiAK
+K09wdGlvbmFsIHByb3BlcnRpZXM6CistIG1heC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1v
+cnkgKGZyb20gbWFpbiBtZW1vcnkgdG8gZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAorCQkJaW4gYnl0
+ZXMgcGVyIHNlY29uZAorCisKIEhETUkKIC0tLS0KIApkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDItZHNzLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAyLWRzcy50eHQK
+aW5kZXggYWZjZDVhODZjNmE0Li5lZTg2N2M0ZDExNTIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAyLWRzcy50eHQKKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDItZHNz
+LnR4dApAQCAtMjgsNiArMjgsMTAgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIC0gdGksaHdtb2Rz
+OiAiZHNzX2Rpc3BjIgogLSBpbnRlcnJ1cHRzOiB0aGUgRElTUEMgaW50ZXJydXB0CiAKK09wdGlv
+bmFsIHByb3BlcnRpZXM6CistIG1heC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1vcnkgKGZy
+b20gbWFpbiBtZW1vcnkgdG8gZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAorCQkJaW4gYnl0ZXMgcGVy
+IHNlY29uZAorCiAKIFJGQkkKIC0tLS0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAzLWRzcy50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMy1kc3MudHh0CmluZGV4IGRj
+NjZlMTQ0N2MzMS4uY2QwMjUxNmE0MGI2IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMy1kc3MudHh0CisrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAzLWRzcy50eHQKQEAg
+LTM3LDYgKzM3LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAtIGNsb2NrczogaGFuZGxlIHRv
+IGZjbGsKIC0gY2xvY2stbmFtZXM6ICJmY2siCiAKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIG1h
+eC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1vcnkgKGZyb20gbWFpbiBtZW1vcnkgdG8gZGlz
+cGMpIGJhbmR3aWR0aCBsaW1pdAorCQkJaW4gYnl0ZXMgcGVyIHNlY29uZAorCiAKIFJGQkkKIC0t
+LS0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3RpL3RpLG9tYXA0LWRzcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS90aS90aSxvbWFwNC1kc3MudHh0CmluZGV4IGJjNjI0ZGI4ODg4ZC4uMGY4NWY2YjNh
+NWE4IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS90aS90aSxvbWFwNC1kc3MudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA0LWRzcy50eHQKQEAgLTM2LDYgKzM2LDEwIEBAIFJlcXVp
+cmVkIHByb3BlcnRpZXM6CiAtIGNsb2NrczogaGFuZGxlIHRvIGZjbGsKIC0gY2xvY2stbmFtZXM6
+ICJmY2siCiAKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIG1heC1tZW1vcnktYmFuZHdpZHRoOiBJ
+bnB1dCBtZW1vcnkgKGZyb20gbWFpbiBtZW1vcnkgdG8gZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAor
+CQkJaW4gYnl0ZXMgcGVyIHNlY29uZAorCiAKIFJGQkkKIC0tLS0KZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA1LWRzcy50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwNS1k
+c3MudHh0CmluZGV4IDExOGE0ODZjNDdiYi4uMjA4NjEyMTg2NDlmIDEwMDY0NAotLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwNS1kc3MudHh0
+CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9t
+YXA1LWRzcy50eHQKQEAgLTM2LDYgKzM2LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAtIGNs
+b2NrczogaGFuZGxlIHRvIGZjbGsKIC0gY2xvY2stbmFtZXM6ICJmY2siCiAKK09wdGlvbmFsIHBy
+b3BlcnRpZXM6CistIG1heC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1vcnkgKGZyb20gbWFp
+biBtZW1vcnkgdG8gZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAorCQkJaW4gYnl0ZXMgcGVyIHNlY29u
+ZAorCiAKIFJGQkkKIC0tLS0KLS0gClBldGVyCgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95
+LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6
+IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
