@@ -1,702 +1,138 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] rtc: add mxc driver for i.MX53
-Date: Thu, 30 Nov 2017 10:50:47 +0100
-Message-ID: <20171130095047.4sl7rfa5cc6rtmig@pengutronix.de>
-References: <20171128073927.12035-1-linux-kernel-dev@beckhoff.com>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v2 25/35] nds32: Build infrastructure
+Date: Thu, 30 Nov 2017 18:01:22 +0800
+Message-ID: <CAEbi=3ddtygoDSYjeXSERkq3OUZRuboVSPQvDvAgrA=LgBBe0Q@mail.gmail.com>
+References: <cover.1511785528.git.green.hu@gmail.com> <5e1be9ebc591c6de79b75f726a5a38b2564eaa92.1511785528.git.green.hu@gmail.com>
+ <CAK8P3a1GuH2tgtC5t834-PNeUVYQxreD7seZH8sjraZFtRUWKw@mail.gmail.com>
+ <CAEbi=3c=hTCcUOPs+Fc10srzTFsB4MnVxgcFydz12-jH0ZXjog@mail.gmail.com>
+ <CAK8P3a0kvt52UTtEmE+tWHZuH_rmgTxP7+CiD9Ddwe2cJLwXTQ@mail.gmail.com>
+ <CAMuHMdViO=+-kGdXFPSW+9PsPbf3sUa5xdaJ_1C-cX2vE1G35Q@mail.gmail.com>
+ <CAK8P3a3yk7ww+LdQdL+wgz2wYrzXLSsj1PTdfK-qx013jdg4SQ@mail.gmail.com>
+ <CAEbi=3cc8e__DnFKmTSMm9xQMx7CGu+1v3e55w8UekwnTTkw5Q@mail.gmail.com>
+ <CAK8P3a2d2_jxXehE3xP_G9Tzp6jP4hFmS4CJkh=6bePLEDcdGw@mail.gmail.com>
+ <CAEbi=3fmXP=n_tS+-TSFhdht2G=VHOzVCVU=SRy4A6Ym_GToUQ@mail.gmail.com>
+ <CAK8P3a3-CexhRkJB7_8TGShuDQP8w=myhkoB8-7ax3my96PrMw@mail.gmail.com>
+ <CAEbi=3cTkbt9i7XPXMnY1D6qtbebDW1x8sFVsgqhq-nApAx5mA@mail.gmail.com> <CAK8P3a3-wXAX+bRaDxs8+N5u6d-O6_Uwg7Wzp9m9=tSqQpPrEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171128073927.12035-1-linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a3-wXAX+bRaDxs8+N5u6d-O6_Uwg7Wzp9m9=tSqQpPrEw@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 08:39:27AM +0100, linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org wrote:
-> From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-> 
-> Neither rtc-imxdi nor rtc-mxc are compatible with i.MX53.
-> Add a modernized version of mxc_v2 from here:
-> http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/drivers/rtc/rtc-mxc_v2.c?h=imx_2.6.35_11.09.01
-> 
-> Changes to that version:
-> - updated to v4.15-rc1
-> - removed ioctl()
-> - removed proc()
-> - removed manual(redundant) enable_irq flag
-> 
-> Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-> 
-> ---
-> 
-> Open issues:
-> - driver naming, should it be merged with rtc-mxc.c ?
-> - document DT binding "fsl,imx53-rtc" accordingly
-> - Should unused defines be removed or kept for someone else to be
->   useful?
-> - Is the use of __raw_readl/writel() correct? Should it be replaced with
->   readl/writel()?
-> - suspend/resume() seems different to existing rtc-mxc.c, should I apply
->   the pattern from rtc-mxc.c?
-> - On Shawns tree imx53.dtsi has been reverted already[1][2]. Should I split
->   the imx53.dtsi change into a separate patch based on his tree? Or can
->   we still stop the full revert and just remove the imx25-rtc compatible?
->   I am not in a hurry, so we could just wait until the revert landed in
->   Linus tree. Whatever you think is best.
-> 
-> [1] https://www.spinics.net/lists/arm-kernel/msg617113.html
-> [2] commit ee76f7729babd2700afd6f3874449d8084dd85ea
-> 
-> To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-> Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM)
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Cc: Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> (maintainer:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
-> Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> (maintainer:ARM PORT)
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
-> ---
->  arch/arm/boot/dts/imx53.dtsi |   2 +-
->  drivers/rtc/Makefile         |   1 +
->  drivers/rtc/rtc-mxc_v2.c     | 531 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 533 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/rtc/rtc-mxc_v2.c
-> 
-> diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-> index 589a67c5f796..3d1a55e11ea8 100644
-> --- a/arch/arm/boot/dts/imx53.dtsi
-> +++ b/arch/arm/boot/dts/imx53.dtsi
-> @@ -434,7 +434,7 @@
->  			};
->  
->  			srtc: srtc@53fa4000 {
-> -				compatible = "fsl,imx53-rtc", "fsl,imx25-rtc";
-> +				compatible = "fsl,imx53-rtc";
->  				reg = <0x53fa4000 0x4000>;
->  				interrupts = <24>;
->  				interrupt-parent = <&tzic>;
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index f2f50c11dc38..fb3dc458c185 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -106,6 +106,7 @@ obj-$(CONFIG_RTC_DRV_MT6397)	+= rtc-mt6397.o
->  obj-$(CONFIG_RTC_DRV_MT7622)	+= rtc-mt7622.o
->  obj-$(CONFIG_RTC_DRV_MV)	+= rtc-mv.o
->  obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc.o
-> +obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc_v2.o
->  obj-$(CONFIG_RTC_DRV_NUC900)	+= rtc-nuc900.o
->  obj-$(CONFIG_RTC_DRV_OMAP)	+= rtc-omap.o
->  obj-$(CONFIG_RTC_DRV_OPAL)	+= rtc-opal.o
-> diff --git a/drivers/rtc/rtc-mxc_v2.c b/drivers/rtc/rtc-mxc_v2.c
-> new file mode 100644
-> index 000000000000..5049b521b38e
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-mxc_v2.c
-> @@ -0,0 +1,531 @@
-> +/*
-> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights Reserved.
-> + */
-> +
-> +/*
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +/*
-> + * Implementation based on rtc-ds1553.c
-> + */
-> +
-> +/*!
-> + * @defgroup RTC Real Time Clock (RTC) Driver for i.MX53
-> + */
-> +/*!
-> + * @file rtc-mxc_v2.c
-> + * @brief Real Time Clock interface
-> + *
-> + * This file contains Real Time Clock interface for Linux.
-> + *
-> + * @ingroup RTC
-> + */
-> +
-> +#include <linux/slab.h>
-> +#include <linux/delay.h>
-> +#include <linux/rtc.h>
-> +#include <linux/module.h>
-> +#include <linux/fs.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/io.h>
-> +//#include <linux/mxc_srtc.h>
-> +#define RTC_READ_TIME_47BIT	_IOR('p', 0x20, unsigned long long)
-> +/* blocks until LPSCMR is set, returns difference */
-> +#define RTC_WAIT_TIME_SET	_IOR('p', 0x21, int64_t)
-> +
-> +#define SRTC_LPSCLR_LLPSC_LSH	17	/* start bit for LSB time value */
-> +
-> +#define SRTC_LPPDR_INIT       0x41736166	/* init for glitch detect */
-> +
-> +#define SRTC_LPCR_SWR_LP      (1 << 0)	/* lp software reset */
-> +#define SRTC_LPCR_EN_LP       (1 << 3)	/* lp enable */
-> +#define SRTC_LPCR_WAE         (1 << 4)	/* lp wakeup alarm enable */
-> +#define SRTC_LPCR_SAE         (1 << 5)	/* lp security alarm enable */
-> +#define SRTC_LPCR_SI          (1 << 6)	/* lp security interrupt enable */
-> +#define SRTC_LPCR_ALP         (1 << 7)	/* lp alarm flag */
-> +#define SRTC_LPCR_LTC         (1 << 8)	/* lp lock time counter */
-> +#define SRTC_LPCR_LMC         (1 << 9)	/* lp lock monotonic counter */
-> +#define SRTC_LPCR_SV          (1 << 10)	/* lp security violation */
-> +#define SRTC_LPCR_NSA         (1 << 11)	/* lp non secure access */
-> +#define SRTC_LPCR_NVEIE       (1 << 12)	/* lp non valid state exit int en */
-> +#define SRTC_LPCR_IEIE        (1 << 13)	/* lp init state exit int enable */
-> +#define SRTC_LPCR_NVE         (1 << 14)	/* lp non valid state exit bit */
-> +#define SRTC_LPCR_IE          (1 << 15)	/* lp init state exit bit */
-> +
-> +#define SRTC_LPCR_ALL_INT_EN (SRTC_LPCR_WAE | SRTC_LPCR_SAE | \
-> +			      SRTC_LPCR_SI | SRTC_LPCR_ALP | \
-> +			      SRTC_LPCR_NVEIE | SRTC_LPCR_IEIE)
-> +
-> +#define SRTC_LPSR_TRI         (1 << 0)	/* lp time read invalidate */
-> +#define SRTC_LPSR_PGD         (1 << 1)	/* lp power supply glitc detected */
-> +#define SRTC_LPSR_CTD         (1 << 2)	/* lp clock tampering detected */
-> +#define SRTC_LPSR_ALP         (1 << 3)	/* lp alarm flag */
-> +#define SRTC_LPSR_MR          (1 << 4)	/* lp monotonic counter rollover */
-> +#define SRTC_LPSR_TR          (1 << 5)	/* lp time rollover */
-> +#define SRTC_LPSR_EAD         (1 << 6)	/* lp external alarm detected */
-> +#define SRTC_LPSR_IT0         (1 << 7)	/* lp IIM throttle */
-> +#define SRTC_LPSR_IT1         (1 << 8)
-> +#define SRTC_LPSR_IT2         (1 << 9)
-> +#define SRTC_LPSR_SM0         (1 << 10)	/* lp security mode */
-> +#define SRTC_LPSR_SM1         (1 << 11)
-> +#define SRTC_LPSR_STATE_LP0   (1 << 12)	/* lp state */
-> +#define SRTC_LPSR_STATE_LP1   (1 << 13)
-> +#define SRTC_LPSR_NVES        (1 << 14)	/* lp non-valid state exit status */
-> +#define SRTC_LPSR_IES         (1 << 15)	/* lp init state exit status */
-> +
-> +#define MAX_PIE_NUM     15
-> +#define MAX_PIE_FREQ    32768
-> +#define MIN_PIE_FREQ	1
-> +
-> +#define SRTC_PI0         (1 << 0)
-> +#define SRTC_PI1         (1 << 1)
-> +#define SRTC_PI2         (1 << 2)
-> +#define SRTC_PI3         (1 << 3)
-> +#define SRTC_PI4         (1 << 4)
-> +#define SRTC_PI5         (1 << 5)
-> +#define SRTC_PI6         (1 << 6)
-> +#define SRTC_PI7         (1 << 7)
-> +#define SRTC_PI8         (1 << 8)
-> +#define SRTC_PI9         (1 << 9)
-> +#define SRTC_PI10        (1 << 10)
-> +#define SRTC_PI11        (1 << 11)
-> +#define SRTC_PI12        (1 << 12)
-> +#define SRTC_PI13        (1 << 13)
-> +#define SRTC_PI14        (1 << 14)
-> +#define SRTC_PI15        (1 << 15)
-> +
-> +#define PIT_ALL_ON      (SRTC_PI1 | SRTC_PI2 | SRTC_PI3 | \
-> +			SRTC_PI4 | SRTC_PI5 | SRTC_PI6 | SRTC_PI7 | \
-> +			SRTC_PI8 | SRTC_PI9 | SRTC_PI10 | SRTC_PI11 | \
-> +			SRTC_PI12 | SRTC_PI13 | SRTC_PI14 | SRTC_PI15)
-> +
-> +#define SRTC_SWR_HP      (1 << 0)	/* hp software reset */
-> +#define SRTC_EN_HP       (1 << 3)	/* hp enable */
-> +#define SRTC_TS          (1 << 4)	/* time synchronize hp with lp */
-> +
-> +#define SRTC_IE_AHP      (1 << 16)	/* Alarm HP Interrupt Enable bit */
-> +#define SRTC_IE_WDHP     (1 << 18)	/* Write Done HP Interrupt Enable bit */
-> +#define SRTC_IE_WDLP     (1 << 19)	/* Write Done LP Interrupt Enable bit */
-> +
-> +#define SRTC_ISR_AHP     (1 << 16)	/* interrupt status: alarm hp */
-> +#define SRTC_ISR_WDHP    (1 << 18)	/* interrupt status: write done hp */
-> +#define SRTC_ISR_WDLP    (1 << 19)	/* interrupt status: write done lp */
-> +#define SRTC_ISR_WPHP    (1 << 20)	/* interrupt status: write pending hp */
-> +#define SRTC_ISR_WPLP    (1 << 21)	/* interrupt status: write pending lp */
-> +
-> +#define SRTC_LPSCMR	0x00	/* LP Secure Counter MSB Reg */
-> +#define SRTC_LPSCLR	0x04	/* LP Secure Counter LSB Reg */
-> +#define SRTC_LPSAR	0x08	/* LP Secure Alarm Reg */
-> +#define SRTC_LPSMCR	0x0C	/* LP Secure Monotonic Counter Reg */
-> +#define SRTC_LPCR	0x10	/* LP Control Reg */
-> +#define SRTC_LPSR	0x14	/* LP Status Reg */
-> +#define SRTC_LPPDR	0x18	/* LP Power Supply Glitch Detector Reg */
-> +#define SRTC_LPGR	0x1C	/* LP General Purpose Reg */
-> +#define SRTC_HPCMR	0x20	/* HP Counter MSB Reg */
-> +#define SRTC_HPCLR	0x24	/* HP Counter LSB Reg */
-> +#define SRTC_HPAMR	0x28	/* HP Alarm MSB Reg */
-> +#define SRTC_HPALR	0x2C	/* HP Alarm LSB Reg */
-> +#define SRTC_HPCR	0x30	/* HP Control Reg */
-> +#define SRTC_HPISR	0x34	/* HP Interrupt Status Reg */
-> +#define SRTC_HPIENR	0x38	/* HP Interrupt Enable Reg */
-> +
-> +#define SRTC_SECMODE_MASK	0x3	/* the mask of SRTC security mode */
-> +#define SRTC_SECMODE_LOW	0x0	/* Low Security */
-> +#define SRTC_SECMODE_MED	0x1	/* Medium Security */
-> +#define SRTC_SECMODE_HIGH	0x2	/* High Security */
-> +#define SRTC_SECMODE_RESERVED	0x3	/* Reserved */
-> +
-> +struct rtc_drv_data {
-> +	struct rtc_device *rtc;
-> +	void __iomem *ioaddr;
-> +	int irq;
-> +	struct clk *clk;
-> +};
-> +
-> +static DEFINE_SPINLOCK(rtc_lock);
+2017-11-30 17:30 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> On Thu, Nov 30, 2017 at 6:48 AM, Greentime Hu <green.hu@gmail.com> wrote:
+>> 2017-11-30 4:27 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>>> On Wed, Nov 29, 2017 at 3:10 PM, Greentime Hu <green.hu@gmail.com> wrote:
+>>>> 2017-11-29 19:57 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>
+>>> When you put them in a sorted list like I mentioned for simplicity, you
+>>> could reduce the confusion by naming them differently, e.g.
+>>> CONFIG_CPU_N10_OR_NEWER.
+>>>
+>>> Having only the CPU_CACHE_NONALIASING option is fine if you
+>>> never need to make any other decisions based on the CPU core
+>>> type, but then the help text should describe specifically which cases
+>>> are affected (N10/N13/D13 with 4K page size), and you can decide to
+>>> hide the option and make it always-on when using 8K page size.
+>>>
+>>>        Arnd
+>>
+>>
+>> Hi, Arnd:
+>>
+>> I think I can use this name "CPU_V3" for all nds32 v3 compatible cpu.
+>> It will be implemented like this.
+>
+> I think I'm still a bit confused about the relation between CPU cores
+> and architecture levels. Is it correct to say that there are orthogonal,
+> and that you can have e.g. an N10 core implementing either nds32v2
+> or nds32v3?
+>
 
-The lock should be a member of your driver data struct.
+Yup, we did having N10 cores are implementing either nds32v3 or
+nds32v2, but nds32v2 are not used anymore.
+We can assume every nds32 cores are v3.
 
-> +
-> +/*!
-> + * This function does write synchronization for writes to the lp srtc block.
-> + * To take care of the asynchronous CKIL clock, all writes from the IP domain
-> + * will be synchronized to the CKIL domain.
-> + */
+> There is nothing wrong with that of course, it's just not what I
+> expected from having worked with other architectures.
+>
+> I also see that GCC has no pipeline specific optimizations for
+> specific cores, it just understands the differences between the
+> architecture levels, so at least today there is way to pass e.g.
+> "-march=nds32v2 -mtune=d15" to generate code that would
+> work on both v2 and v3 but be optimized for d15.
 
-Please drop this exclamation mark at the beginning of comments. If
-anything, use kerneldoc style for the function descriptions.
+Thanks. We will work on that.
 
-> +static inline void rtc_write_sync_lp(void __iomem *ioaddr)
-> +{
-> +	unsigned int i, count;
-> +	/* Wait for 3 CKIL cycles */
-> +	for (i = 0; i < 3; i++) {
-> +		count = readl(ioaddr + SRTC_LPSCLR);
-> +		while ((readl(ioaddr + SRTC_LPSCLR)) == count)
-> +			;
+>> config HWZOL
+>>         bool "hardware zero overhead loop support"
+>>         depends on CPU_D10 || CPU_D15
+>>         default n
+>>         help
+>>           A set of Zero-Overhead Loop mechanism is provided to reduce the
+>>           instruction fetch and execution overhead of loop-control instructions.
+>>           It will save 3 registers($LB, $LC, $LE) for context saving if say Y.
+>>           You don't need to save these registers if you can make sure your user
+>>           program doesn't use these registers.
+>>
+>>           If unsure, say N.
+>>
+>> config CPU_CACHE_NONALIASING
+>>         bool "Non-aliasing cache"
+>>         depends on !CPU_N10 && !CPU_D10
+>>         default n
+>>         help
+>>           If this CPU is using VIPT data cache and its cache way size is larger
+>>           than page size, say N. If it is using PIPT data cache, say Y.
+>>
+>>           If unsure, say N.
+>
+> This looks ok, yes, but as Geert said, it would seem more intuitive to
+> write it as
+>
+> config CPU_CACHE_ALIASING
+>          bool "Aliasing VIPT cache"
+>          depends on CPU_N10 || CPU_D10
+>
+>> choice
+>>         prompt "CPU type"
+>>         default CPU_V3
+>> config CPU_N15
+>>         bool "AndesCore N15"
+>>         select CPU_CACHE_NONALIASING
+>> config CPU_N13
+>>         bool "AndesCore N13"
+>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
+>> config CPU_N10
+>>         bool "AndesCore N10"
+>> config CPU_D15
+>>         bool "AndesCore D15"
+>>         select CPU_CACHE_NONALIASING
+>> config CPU_D10
+>>         bool "AndesCore D10"
+>> config CPU_V3
+>>         bool "AndesCore v3 compatible"
+>>         select ANDES_PAGE_SIZE_4KB
+>> endchoice
+>
+> Two points here:
+>
+> - Generally you should not mix 'select' and 'depends on' like this.
+>   Either you make the cache aliasing a user visible option that
+>   uses 'depends on' with a combination of CPU cores, or you
+>   make it a hidden option (with no string after the "bool" keyword)
+>   that always gets selected from the per-cpu options.
+>
+> - There is a  little-known trick with choice statements that allows
+>   you to use 'tristate' instead of 'bool' in the choice. In that case,
+>   you can enable multiple options together as long as all of them
+>   are 'm'.
+>
+>          Arnd
 
-This becomes an infinite loop when the hardware is not working as
-expected. You should avoid that.
 
-> +	}
-> +}
-> +
-> +/*!
-> + * This function updates the RTC alarm registers and then clears all the
-> + * interrupt status bits.
-> + *
-> + * @param  alrm         the new alarm value to be updated in the RTC
-> + *
-> + * @return  0 if successful; non-zero otherwise.
-> + */
-> +static int rtc_update_alarm(struct device *dev, struct rtc_time *alrm)
-> +{
-
-mxc_rtc_update_alarm please like the other device specific functions
-please. Same for rtc_write_sync_lp().
-
-> +	struct rtc_drv_data *pdata = dev_get_drvdata(dev);
-> +	void __iomem *ioaddr = pdata->ioaddr;
-> +	struct rtc_time alarm_tm, now_tm;
-> +	unsigned long now, time;
-> +	int ret;
-> +
-> +	now = __raw_readl(ioaddr + SRTC_LPSCMR);
-> +	rtc_time_to_tm(now, &now_tm);
-> +
-> +	alarm_tm.tm_year = now_tm.tm_year;
-> +	alarm_tm.tm_mon = now_tm.tm_mon;
-> +	alarm_tm.tm_mday = now_tm.tm_mday;
-> +
-> +	alarm_tm.tm_hour = alrm->tm_hour;
-> +	alarm_tm.tm_min = alrm->tm_min;
-> +	alarm_tm.tm_sec = alrm->tm_sec;
-> +
-> +	rtc_tm_to_time(&now_tm, &now);
-> +	rtc_tm_to_time(&alarm_tm, &time);
-> +
-> +	if (time < now) {
-> +		time += 60 * 60 * 24;
-> +		rtc_time_to_tm(time, &alarm_tm);
-> +	}
-> +	ret = rtc_tm_to_time(&alarm_tm, &time);
-> +
-> +	__raw_writel(time, ioaddr + SRTC_LPSAR);
-> +
-> +	/* clear alarm interrupt status bit */
-> +	__raw_writel(SRTC_LPSR_ALP, ioaddr + SRTC_LPSR);
-> +
-> +	return ret;
-> +}
-> +
-> +/*!
-> + * This function is the RTC interrupt service routine.
-> + *
-> + * @param  irq          RTC IRQ number
-> + * @param  dev_id       device ID which is not used
-> + *
-> + * @return IRQ_HANDLED as defined in the include/linux/interrupt.h file.
-> + */
-> +static irqreturn_t mxc_rtc_interrupt(int irq, void *dev_id)
-> +{
-> +	struct platform_device *pdev = dev_id;
-> +	struct rtc_drv_data *pdata = platform_get_drvdata(pdev);
-> +	void __iomem *ioaddr = pdata->ioaddr;
-> +	u32 lp_status, lp_cr;
-> +	u32 events = 0;
-> +
-> +	lp_status = __raw_readl(ioaddr + SRTC_LPSR);
-> +	lp_cr = __raw_readl(ioaddr + SRTC_LPCR);
-> +
-> +	/* update irq data & counter */
-> +	if (lp_status & SRTC_LPSR_ALP) {
-> +		if (lp_cr & SRTC_LPCR_ALP)
-> +			events |= (RTC_AF | RTC_IRQF);
-> +
-> +		/* disable further lp alarm interrupts */
-> +		lp_cr &= ~(SRTC_LPCR_ALP | SRTC_LPCR_WAE);
-> +	}
-> +
-> +	/* Update interrupt enables */
-> +	__raw_writel(lp_cr, ioaddr + SRTC_LPCR);
-> +
-> +	/* clear interrupt status */
-> +	__raw_writel(lp_status, ioaddr + SRTC_LPSR);
-> +
-> +	rtc_write_sync_lp(ioaddr);
-> +	rtc_update_irq(pdata->rtc, 1, events);
-> +	return IRQ_HANDLED;
-> +}
-
-What about locking? You lock the read/modify/write operation of the LPCR
-register below, and so you should do here.
-
-> +
-> +/*!
-> + * This function reads the current RTC time into tm in Gregorian date.
-> + *
-> + * @param  tm           contains the RTC time value upon return
-> + *
-> + * @return  0 if successful; non-zero otherwise.
-> + */
-> +static int mxc_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rtc_drv_data *pdata = dev_get_drvdata(dev);
-> +	time_t now = readl(pdata->ioaddr + SRTC_LPSCMR);
-> +
-> +	rtc_time_to_tm(now, tm);
-> +	return rtc_valid_tm(tm);
-> +}
-> +
-> +/*!
-> + * This function sets the internal RTC time based on tm in Gregorian date.
-> + *
-> + * @param  tm           the time value to be set in the RTC
-> + *
-> + * @return  0 if successful; non-zero otherwise.
-> + */
-> +static int mxc_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct rtc_drv_data *pdata = dev_get_drvdata(dev);
-> +	time64_t time = rtc_tm_to_time64(tm);
-> +
-> +	if (time > UINT_MAX) {
-> +		dev_warn(dev, "time_t has overflow\n");
-> +	}
-
-SIGH. Who builds such a RTC in the 21st century?
-
-Shouldn't this return an error?
-
-> +
-> +	writel(time, pdata->ioaddr + SRTC_LPSCMR);
-> +	rtc_write_sync_lp(pdata->ioaddr);
-> +	return 0;
-> +}
-> +
-> +/*!
-> + * This function reads the current alarm value into the passed in \b alrm
-> + * argument. It updates the \b alrm's pending field value based on the whether
-> + * an alarm interrupt occurs or not.
-> + *
-> + * @param  alrm         contains the RTC alarm value upon return
-> + *
-> + * @return  0 if successful; non-zero otherwise.
-> + */
-> +static int mxc_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rtc_drv_data *pdata = dev_get_drvdata(dev);
-> +	void __iomem *ioaddr = pdata->ioaddr;
-> +
-> +	rtc_time_to_tm(__raw_readl(ioaddr + SRTC_LPSAR), &alrm->time);
-> +	alrm->pending =
-> +	    ((__raw_readl(ioaddr + SRTC_LPSR) & SRTC_LPSR_ALP) != 0) ? 1 : 0;
-
-if/else would be much easier to read here.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int mxc_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
-> +{
-> +	struct rtc_drv_data *pdata = dev_get_drvdata(dev);
-> +	unsigned long lock_flags = 0;
-> +	u32 lp_cr;
-> +
-> +	spin_lock_irqsave(&rtc_lock, lock_flags);
-> +	lp_cr = __raw_readl(pdata->ioaddr + SRTC_LPCR);
-> +
-> +	if (enable)
-> +		lp_cr |= (SRTC_LPCR_ALP | SRTC_LPCR_WAE);
-> +	else
-> +		lp_cr &= ~(SRTC_LPCR_ALP | SRTC_LPCR_WAE);
-> +
-> +	__raw_writel(lp_cr, pdata->ioaddr + SRTC_LPCR);
-> +	spin_unlock_irqrestore(&rtc_lock, lock_flags);
-> +	return 0;
-> +}
-> +
-> +/*!
-> + * This function sets the RTC alarm based on passed in alrm.
-> + *
-> + * @param  alrm         the alarm value to be set in the RTC
-> + *
-> + * @return  0 if successful; non-zero otherwise.
-> + */
-> +static int mxc_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct rtc_drv_data *pdata = dev_get_drvdata(dev);
-> +	void __iomem *ioaddr = pdata->ioaddr;
-> +	int ret;
-> +
-> +	ret = rtc_update_alarm(dev, &alrm->time);
-> +	if (!ret)
-> +		mxc_rtc_alarm_irq_enable(dev, alrm->enabled);
-> +
-> +	rtc_write_sync_lp(ioaddr);
-> +	return ret;
-> +}
-> +
-> +/*!
-> + * The RTC driver structure
-> + */
-> +static const struct rtc_class_ops mxc_rtc_ops = {
-> +	.read_time = mxc_rtc_read_time,
-> +	.set_time = mxc_rtc_set_time,
-> +	.read_alarm = mxc_rtc_read_alarm,
-> +	.set_alarm = mxc_rtc_set_alarm,
-> +	.alarm_irq_enable = mxc_rtc_alarm_irq_enable,
-> +};
-> +
-> +/*! MXC RTC Power management control */
-> +static int mxc_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct timespec tv;
-> +	struct resource *res;
-> +	struct rtc_drv_data *pdata = NULL;
-
-No need to initialize.
-
-> +	void __iomem *ioaddr;
-> +	int ret = 0;
-> +
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -ENODEV;
-> +
-> +	pdata->ioaddr = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(pdata->ioaddr))
-> +		return PTR_ERR(pdata->ioaddr);
-> +
-> +	ioaddr = pdata->ioaddr;
-> +
-> +	pdata->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(pdata->clk)) {
-> +		dev_err(&pdev->dev, "unable to get rtc clock!\n");
-> +		return PTR_ERR(pdata->clk);
-> +	}
-> +	ret = clk_prepare_enable(pdata->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Configure and enable the RTC */
-> +	pdata->irq = platform_get_irq(pdev, 0);
-> +	if (pdata->irq >= 0
-> +	    && devm_request_irq(&pdev->dev, pdata->irq, mxc_rtc_interrupt,
-> +				IRQF_SHARED, pdev->name, pdev) < 0) {
-> +		dev_warn(&pdev->dev, "interrupt not available.\n");
-> +		pdata->irq = -1;
-> +	}
-
-I would just make the interrupt mandatory. I see no valid reason why it
-shouldn't be available and it makes your driver logic simpler when you
-can just assume it's available.
-
-> +
-> +	if (pdata->irq >= 0)
-> +		device_init_wakeup(&pdev->dev, 1);
-> +
-> +	/* initialize glitch detect */
-> +	__raw_writel(SRTC_LPPDR_INIT, ioaddr + SRTC_LPPDR);
-> +	udelay(100);
-> +
-> +	/* clear lp interrupt status */
-> +	__raw_writel(0xFFFFFFFF, ioaddr + SRTC_LPSR);
-> +	udelay(100);
-> +
-> +	/* move out of init state */
-> +	__raw_writel((SRTC_LPCR_IE | SRTC_LPCR_NSA), ioaddr + SRTC_LPCR);
-> +
-> +	udelay(100);
-> +
-> +	while ((__raw_readl(ioaddr + SRTC_LPSR) & SRTC_LPSR_IES) == 0)
-> +		;
-> +
-> +	/* move out of non-valid state */
-> +	__raw_writel((SRTC_LPCR_IE | SRTC_LPCR_NVE | SRTC_LPCR_NSA |
-> +		      SRTC_LPCR_EN_LP), ioaddr + SRTC_LPCR);
-> +
-> +	udelay(100);
-
-Where do all these udelay() come from? Are they really needed?
-
-> +
-> +	while ((__raw_readl(ioaddr + SRTC_LPSR) & SRTC_LPSR_NVES) == 0)
-> +		;
-> +
-> +	__raw_writel(0xFFFFFFFF, ioaddr + SRTC_LPSR);
-> +	udelay(100);
-> +
-> +	platform_set_drvdata(pdev, pdata);
-> +	pdata->rtc =
-> +	    devm_rtc_device_register(&pdev->dev, pdev->name, &mxc_rtc_ops,
-> +				     THIS_MODULE);
-> +	if (IS_ERR(pdata->rtc)) {
-> +		ret = PTR_ERR(pdata->rtc);
-> +		goto exit_put_clk;
-> +	}
-> +
-> +	tv.tv_nsec = 0;
-> +	tv.tv_sec = __raw_readl(ioaddr + SRTC_LPSCMR);
-
-Why this? tv is set but unused.
-
-> +
-> +	/* By default, devices should wakeup if they can */
-> +	/* So srtc is set as "should wakeup" as it can */
-> +	device_init_wakeup(&pdev->dev, 1);
-
-Why is this done twice, one time only when we have a valid irq? This
-looks fishy.
-
-> +
-> +	return ret;
-> +
-> +exit_put_clk:
-> +	clk_disable_unprepare(pdata->clk);
-> +	return ret;
-> +}
-> +
-> +static int __exit mxc_rtc_remove(struct platform_device *pdev)
-> +{
-> +	struct rtc_drv_data *pdata = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(pdata->clk);
-> +	return 0;
-> +}
-> +
-> +/*!
-> + * This function is called to save the system time delta relative to
-> + * the MXC RTC when enterring a low power state. This time delta is
-> + * then used on resume to adjust the system time to account for time
-> + * loss while suspended.
-> + *
-> + * @param   pdev  not used
-
-Not true.
-
-> + * @param   state Power state to enter.
-> + *
-> + * @return  The function always returns 0.
-> + */
-> +static int mxc_rtc_suspend(struct platform_device *pdev, pm_message_t state)
-> +{
-> +	struct rtc_drv_data *pdata = platform_get_drvdata(pdev);
-> +
-> +	if (device_may_wakeup(&pdev->dev))
-> +		enable_irq_wake(pdata->irq);
-> +
-> +	return 0;
-> +}
-> +
-> +/*!
-> + * This function is called to correct the system time based on the
-> + * current MXC RTC time relative to the time delta saved during
-> + * suspend.
-> + *
-> + * @param   pdev  not used
-
-Not true.
-
-> + *
-> + * @return  The function always returns 0.
-> + */
-> +static int mxc_rtc_resume(struct platform_device *pdev)
-> +{
-> +	struct rtc_drv_data *pdata = platform_get_drvdata(pdev);
-> +
-> +	if (device_may_wakeup(&pdev->dev))
-> +		disable_irq_wake(pdata->irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mxc_ids[] = {
-> +	{.compatible = "fsl,imx53-rtc",},
-> +	{}
-> +};
-> +
-> +/*!
-> + * Contains pointers to the power management callback functions.
-
-True, but doesn't contain any useful information.
-
-> + */
-> +static struct platform_driver mxc_rtc_driver = {
-> +	.driver = {
-> +		   .name = "mxc_rtc_v8",
-> +		   .of_match_table = mxc_ids,
-> +		   },
-
-Indentation is broken here.
-
-> +	.probe = mxc_rtc_probe,
-> +	.remove = mxc_rtc_remove,
-> +	.suspend = mxc_rtc_suspend,
-> +	.resume = mxc_rtc_resume,
-> +};
-> +
-> +module_platform_driver(mxc_rtc_driver);
-> +
-> +MODULE_AUTHOR("Freescale Semiconductor, Inc.");
-> +MODULE_DESCRIPTION("Realtime Clock Driver (RTC)");
-> +MODULE_LICENSE("GPL");
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+CPU_CACHE_ALIASING is more intuitive. I will apply it.
