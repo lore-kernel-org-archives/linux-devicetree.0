@@ -1,65 +1,90 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 0/4] Fixes for omapdrm on OpenPandora and GTA04
-Date: Thu, 30 Nov 2017 12:54:07 +0200
-Message-ID: <27b12bc8-2c3a-6caa-c800-158b75f80d3f@ti.com>
-References: <cover.1511884135.git.hns@goldelico.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 27/35] irqchip: Andestech Internal Vector Interrupt Controller driver
+Date: Thu, 30 Nov 2017 10:57:24 +0000
+Message-ID: <86vahs2fvv.fsf@unassigned-hostname.unassigned-domain>
+References: <cover.1511785528.git.green.hu@gmail.com>
+        <e82831165cd9e45a7d03af9c870560a6384e1603.1511785528.git.green.hu@gmail.com>
+        <c7447c93-9905-2840-e2d8-01837b9fdecd@arm.com>
+        <CAEbi=3eXP1cfNDhu9YjZbjPghgxm9xmEtjEBO=KVOnWZyPqVbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1511884135.git.hns@goldelico.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "H. Nikolaus Schaller" <hns@goldelico.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pyra-handheld.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAEbi=3eXP1cfNDhu9YjZbjPghgxm9xmEtjEBO=KVOnWZyPqVbw@mail.gmail.com>
+        (Greentime Hu's message of "Wed, 29 Nov 2017 23:23:34 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Rick Chen <rick@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjgvMTEvMTcgMTc6NDgsIEguIE5pa29sYXVzIFNjaGFsbGVyIHdyb3RlOgo+IENoYW5nZXMg
-VjM6Cj4gKiBzdGF5IGNvbXBhdGlibGUgd2l0aCBvbGQgRFRCIGZpbGVzIHdoaWNoIHN0aWxsIHVz
-ZSAidG9wcG9seSIgKHN1Z2dlc3RlZCBieSBUb21pIFZhbGtlaW5lbikKPiAqIHJlcGxhY2VkIE1P
-RFVMRV9BTElBUyBlbnRyaWVzIGJ5IE1PRFVMRV9ERVZJQ0VfVEFCTEUgKHN1Z2dlc3RlZCBieSBB
-bmRyZXcgRi4gRGF2aXMpCj4gKiByZW1vdmVkIERTSSBWRERTIHBhdGNoIGFzIGl0IGhhcyBhbHJl
-YWR5IGJlZW4gYWNjZXB0ZWQKPiAKPiAyMDE3LTExLTE2IDA5OjUwOjIyOiBDaGFuZ2VzIFYyOgo+
-ICogcmVwbGFjZWQgcGF0Y2ggdG8gZml4IERTSSBWRERTIGZvciBPTUFQMyBieSBlcXVpdmFsZW50
-IHBhdGNoIGZyb20gTGF1cmVudCBQaW5jaGFydAo+ICoga2VlcCBwcmV2aW91cyBjb21wYXRpYmls
-aXR5IG9wdGlvbiBpbiBwYW5lbCBkcml2ZXIgdG8gaGFuZGxlIG9sZGVyIGRldmljZSB0cmVlIGJp
-bmFyaWVzCj4gCj4gMjAxNy0xMS0wOCAyMjowOTozNjoKPiBUaGlzIHBhdGNoIHNldCBmaXhlcyB2
-ZW5kb3IgbmFtZXMgb2YgdGhlIHBhbmVscwo+IGFuZCBmaXhlcyBhIHByb2JsZW0gb24gb21hcGRy
-bSB3aXRoIGVuYWJsaW5nCj4gVkREX0RTSSBmb3IgT01BUDMgd2hpY2ggaXMgbmVlZGVkIGZvciBk
-aXNwbGF5aW5nCj4gdGhlIFJlZCBhbmQgR3JlZW4gY2hhbm5lbCBvbiBPTUFQMzUzMCAoUGFuZG9y
-YSkuCj4gCj4gSC4gTmlrb2xhdXMgU2NoYWxsZXIgKDQpOgo+ICAgb21hcGRybTogcGFuZWw6IGZp
-eCBjb21wYXRpYmxlIHZlbmRvciBzdHJpbmcgZm9yIHRkMDI4dHRlYzEKPiAgIG9tYXBkcm06IHBh
-bmVsOiB0ZDAyOHR0ZWMxOiByZXBsYWNlIE1PRFVMRV9BTElBUyBieQo+ICAgICBNT0RVTEVfREVW
-SUNFX1RBQkxFCj4gICBEVFM6IEdUQTA0OiBmaXggcGFuZWwgY29tcGF0aWJpbGl0eSBzdHJpbmcK
-PiAgIERUUzogUGFuZG9yYTogZml4IHBhbmVsIGNvbXBhdGliaWxpdHkgc3RyaW5nCj4gCj4gIC4u
-Li9wYW5lbC97dG9wcG9seSx0ZDAyOHR0ZWMxLnR4dCA9PiB0cG8sdGQwMjh0dGVjMS50eHR9ICAg
-IHwgIDQgKystLQo+ICBhcmNoL2FybS9ib290L2R0cy9vbWFwMy1ndGEwNC5kdHNpICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAyICstCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLXBhbmRv
-cmEtY29tbW9uLmR0c2kgICAgICAgICAgICAgICAgIHwgIDIgKy0KPiAgZHJpdmVycy9ncHUvZHJt
-L29tYXBkcm0vZGlzcGxheXMvcGFuZWwtdHBvLXRkMDI4dHRlYzEuYyAgICAgfCAxMyArKysrKysr
-KysrKystCj4gIC4uLi9mYmRldi9vbWFwMi9vbWFwZmIvZGlzcGxheXMvcGFuZWwtdHBvLXRkMDI4
-dHRlYzEuYyAgICAgIHwgMTIgKysrKysrKysrKystCj4gIDUgZmlsZXMgY2hhbmdlZCwgMjcgaW5z
-ZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPiAgcmVuYW1lIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3t0b3Bwb2x5LHRkMDI4dHRlYzEudHh0ID0+IHRw
-byx0ZDAyOHR0ZWMxLnR4dH0gKDg0JSkKPiAKClRoYW5rcy4gSSBoYXZlIHBpY2tlZCB1cCBwYXRj
-aGVzIDEgYW5kIDIuCgozIGNhbiBiZSBhcHBsaWVkIHdoZW4gMSAmIDIgYXJlIGluLiBUaGUgY2hh
-bmdlIGluIDQgY291bGQgYmUgYXBwbGllZAppbmRlcGVuZGVudGx5LCBidXQgaXQgY29uZmxpY3Rz
-IHdpdGggMy4KClRvbnksIGhvdyBkbyB5b3Ugd2FudCB0byBoYW5kbGUgMyBhbmQgND8gSSB3aWxs
-IHB1c2ggMSBhbmQgMiB0byB2NC4xNi4gSQpkb24ndCB0aGluayB0aGV5IGFyZSByZWFsIGlzc3Vl
-cywgc28gSSBkb24ndCBzZWUgYSByZWFzb24gdG8gcHVzaCB0aGVtCmFzIGZpeGVzIHRvIHY0LjE1
-LiBJIHRoaW5rIHRoZXkgYXJlIG1vc3RseSBqdXN0IGNsZWFudXBzLCBhbmQgd2UgbWlnaHQKYXMg
-d2VsbCB3YWl0IHVudGlsIHY0LjE3LCBidXQgdGhhdCdzIHF1aXRlIGZhciBhd2F5Li4uCgogVG9t
-aQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAw
-MTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2th
-L0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On Wed, Nov 29 2017 at 11:23:34 pm GMT, Greentime Hu <green.hu@gmail.com> wrote:
+
+Hi Greentime,
+
+>>> +}
+>>> +
+>>> +static void ativic32_mask_ack_irq(struct irq_data *data)
+>>> +{
+>>> +     unsigned long int_mask2 = __nds32__mfsr(NDS32_SR_INT_MASK2);
+>>> + __nds32__mtsr_dsb(int_mask2 & (~(1 << data->hwirq)),
+>>> NDS32_SR_INT_MASK2);
+>>> +     __nds32__mtsr_dsb((1 << data->hwirq), NDS32_SR_INT_PEND2);
+>>
+>> This is effectively MASK+ACK, so you're better off just writing it as
+>> such. And since there is no advantage in your implementation in having
+>> MASK_ACK over MASK+ACK, I suggest you remove this function completely,
+>> and rely on the core code which will call them in sequence.
+>
+> I think mask_ack is still better than mask + ack because we don't need
+> to do two function call.
+> We can save a prologue and a epilogue. It will benefit interrupt latency.
+
+Can you actually measure this? Your CPU would have to be extremely slow
+if you could see the impact of an extra function call on interrupt
+latency. From a maintenance perspective, this isn't very nice (it is
+effectively code duplication).
+
+I suggest you start with the simplest version of the code, and provide
+an optimisation once you can measurably demonstrate that mask_ack is
+better.
+
+[...]
+
+>>> + irq_set_chip_and_handler(virq, &ativic32_chip, handle_edge_irq);
+>>> +     else
+>>> + irq_set_chip_and_handler(virq, &ativic32_chip, handle_level_irq);
+>>
+>> Since you do not express the trigger in DT, you need to tell the core
+>> about it by calling irqd_set_trigger_type() with the right setting.
+>>
+>
+> Since the comments say so, I will add ativic32_set_type() for irq_set_type()
+> in the next version patch.
+>
+> /*
+>  * Must only be called inside irq_chip.irq_set_type() functions.
+>  */
+> static inline void irqd_set_trigger_type(struct irq_data *d, u32 type)
+> {
+>         __irqd_to_state(d) &= ~IRQD_TRIGGER_MASK;
+>         __irqd_to_state(d) |= type & IRQD_TRIGGER_MASK;
+> }
+>
+> It will be like this.
+> static int ativic32_set_type(struct irq_data *data, unsigned int flow_type)
+> {
+>         irqd_set_trigger_type(data, flow_type);
+>         return IRQ_SET_MASK_OK;
+> }
+
+This feels wrong. Your interrupt controller doesn't seem to support the
+trigger being changed, so irq_set_type would be a bit pointless. A
+driver trying to set a level trigger on an edge interrupt would succeed,
+and that is as bad as it gets. All you need is to expose the capability
+of the HW when you register the flow handler instead of adding a rather
+misleading callback.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead, it just smell funny.
