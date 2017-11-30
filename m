@@ -1,48 +1,125 @@
-From: =?utf-8?B?UGF0cmljayBCcsO8bm4=?= <P.Bruenn@beckhoff.com>
-Subject: RE: [PATCH] rtc: add mxc driver for i.MX53
-Date: Thu, 30 Nov 2017 14:24:22 +0000
-Message-ID: <3BB206AB2B1BD448954845CE6FF69A8E01CB531375@NT-Mail07.beckhoff.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH] rtc: add mxc driver for i.MX53
+Date: Thu, 30 Nov 2017 14:27:48 +0000
+Message-ID: <20171130142748.GD10595@n2100.armlinux.org.uk>
 References: <20171128073927.12035-1-linux-kernel-dev@beckhoff.com>
  <20171129221114.GV21126@piout.net>
  <CAOFm3uFb8Jo9detD2CziuYt_DH_ohYD9P=uvqHugKDxpN+xvAQ@mail.gmail.com>
  <3BB206AB2B1BD448954845CE6FF69A8E01CB531330@NT-Mail07.beckhoff.com>
- <CAOFm3uHAXKr7KiFeyvYb77jot8M_4rH-cqt2Ze3AbnOiZ_wiwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOFm3uHAXKr7KiFeyvYb77jot8M_4rH-cqt2Ze3AbnOiZ_wiwg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <3BB206AB2B1BD448954845CE6FF69A8E01CB531330@NT-Mail07.beckhoff.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Ombredanne <pombredanne@nexb.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel-dev <linux-kernel-dev@beckhoff.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Russell King <linux@armlinux.org.uk>, moderated list:ARM/FREESCALE IMX / MXC ARM ARCHIT
+To: Patrick =?iso-8859-1?Q?Br=FCnn?= <P.Bruenn@beckhoff.com>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel-dev <linux-kernel-dev@beckhoff.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, moderated list:ARM/FREESCALE IMX / MXC ARM
 List-Id: devicetree@vger.kernel.org
 
-PkZyb206IFBoaWxpcHBlIE9tYnJlZGFubmUgW21haWx0bzpwb21icmVkYW5uZUBuZXhiLmNvbV0N
-Cj5TZW50OiBEb25uZXJzdGFnLCAzMC4gTm92ZW1iZXIgMjAxNyAxNTowMA0KPk9uIFRodSwgTm92
-IDMwLCAyMDE3IGF0IDI6MzYgUE0sIFBhdHJpY2sgQnLDvG5uIDxQLkJydWVubkBiZWNraG9mZi5j
-b20+DQo+d3JvdGU6DQo+DQo+VGhvbWFzOg0KPkkgdGVuZCB0byBwcmVmZXIgYXMgTGludXMgcG9p
-bnRlZCB0aGUgLy8gc3R5bGUgdGhyb3VnaG91dCB3aGVuIHRoZXJlDQo+aXMgb25seSBhIGxpY2Vu
-c2UgYW5kIGNvcHlyaWdodCBpbnZvbHZlZC4gSGVyZSB0aGlzIHdvdWxkIG1lYW46DQo+DQo+PiAr
-Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4+ICsvLyBDb3B5cmlnaHQgKGMp
-IDIwMDQtMjAxMSBGcmVlc2NhbGUgU2VtaWNvbmR1Y3RvciwgSW5jLiBBbGwgUmlnaHRzDQo+UmVz
-ZXJ2ZWQuDQo+DQo+V2hhdCdzIHlvdSB0YWtlIHNpbmNlIHlvdSB3cm90ZSB0aGUgZG9jIGZvciB0
-aGlzPyBBbmQgaXMgdGhlcmUgc3RpbGwNCj5zb21lIHVwZGF0ZXMgbmVlZGVkIGZvciB0aGlzIHNp
-bmNlIHlvdXIgbGFzdCBwYXRjaCBzZXQ/DQo+DQpXaGlsZSBsb29raW5nIGNsb3NlciBpbnRvIGRp
-ZmZlcmVudCBmaWxlcyBJIHRoaW5rIGl0IHdvdWxkIGJlY29tZSBtdWx0aWxpbmUgYWdhaW46DQor
-Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCisvKg0KKyAqIFJlYWwgVGltZSBD
-bG9jayAoUlRDKSBEcml2ZXIgZm9yIGkuTVg1Mw0KKyAqIENvcHlyaWdodCAoYykgMjAwNC0yMDEx
-IEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yLCBJbmMuDQorICogQ29weXJpZ2h0IChjKSAyMDE3IEJl
-Y2tob2ZmIEF1dG9tYXRpb24gR21iSCAmIENvLiBLRw0KKyAqLw0KDQo+DQo+UGF0cmljazoNCj5T
-aWRlIG5vdGUgYSB0cmFpbGluZyAgIkFsbCBSaWdodHMgUmVzZXJ2ZWQuIiBpbiBhIGNvcHlyaWdo
-dCBzdGF0ZW1lbnQNCj5pcyBuZXZlciBuZWVkZWQsIGV2ZW4gdGhvdWdoIGN1c3RvbWFyaWx5IGNh
-cmdvIGN1bHRlZCBieSBldmVyeW9uZSwNCj5pbmNsdWRpbmcgbWUuDQo+U3RhcnRlZCBpbiAxOTEw
-LCBpdCBiZWNvbWUgZnVsbHkgb2Jzb2xldGUgaW4gMjAwMCB0aGFua3MgdG8gTmljYXJhZ3VhDQo+
-WzFdIHNpZ25pbmcgdGhlIEJlcm5lIGNvbnZlbnRpb24uDQo+DQo+WzFdIGh0dHBzOi8vZW4ud2lr
-aXBlZGlhLm9yZy93aWtpL0FsbF9yaWdodHNfcmVzZXJ2ZWQNCkludGVyZXNzdGluZy4gSSBqdXN0
-IGtlcHQgaXQgYmVjYXVzZSBpdCB3YXMgaW4gdGhlIG9yaWdpbmFsIGZpbGUgZnJvbSBmcmVlc2Nh
-bGUuDQpCdXQgd2l0aCB0aGlzIGJhY2tncm91bmQsIEkgdGhpbmsgaXQncyBmaW5lIHRvIGRyb3Ag
-aXQsIG5vdy4NCg0KVGhhbmtzLA0KUGF0cmljaw0KQmVja2hvZmYgQXV0b21hdGlvbiBHbWJIICYg
-Q28uIEtHIHwgTWFuYWdpbmcgRGlyZWN0b3I6IERpcGwuIFBoeXMuIEhhbnMgQmVja2hvZmYNClJl
-Z2lzdGVyZWQgb2ZmaWNlOiBWZXJsLCBHZXJtYW55IHwgUmVnaXN0ZXIgY291cnQ6IEd1ZXRlcnNs
-b2ggSFJBIDcwNzUNCg0KDQo=
+On Thu, Nov 30, 2017 at 01:36:22PM +0000, Patrick Brünn wrote:
+> >From: Philippe Ombredanne [mailto:pombredanne@nexb.com]
+> >Sent: Donnerstag, 30. November 2017 09:18
+> >>
+> >>> +/*
+> >>> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
+> >Reserved.
+> >>> + */
+> >>> +
+> >>> +/*
+> >>> + * The code contained herein is licensed under the GNU General Public
+> >>> + * License. You may obtain a copy of the GNU General Public License
+> >>> + * Version 2 or later at the following locations:
+> >>> + *
+> >>> + * http://www.opensource.org/licenses/gpl-license.html
+> >>> + * http://www.gnu.org/copyleft/gpl.html
+> >>> + */
+> >
+> >Exactly!
+> >And while you are it , you could replace the boilerplate license text
+> >with the SPDX id.
+> >--
+> 
+> How would a perfect header look like?
+> Looking at :
+> git show b24413180f5600bcb3bb70fbed5cf186b60864bd -- drivers/
+> and:
+> git grep SPDX -- Documentation/
+> 
+> it could be:
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
+> + */
+> or:
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
+> + */
+> 
+> Personally I would prefer:
+> +/*
+> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
+> + */
+> 
+> So, is there any guideline?
+
+There's been lots of discussion about this, but Linus T has set the
+requirements.
+
+>From Thomas' patches adding documentation for this:
+
++1. Placement:
++
++   The SPDX license identifier in kernel files shall be added at the first
++   possible line in a file which can contain a comment.  For the majority
++   or files this is the first line, except for scripts which require the
++   '#!PATH_TO_INTERPRETER' in the first line.  For those scripts the SPDX
++   identifier goes into the second line.
++
++|
++
++2. Style:
++
++   The SPDX license identifier is added in form of a comment.  The comment
++   style depends on the file type:
++
++   ::
++
++      C source:   // SPDX-License-Identifier: <SPDX License Expression>
++      C header:   /* SPDX-License-Identifier: <SPDX License Expression> */
++      ASM:        /* SPDX-License-Identifier: <SPDX License Expression> */
++      scripts:    # SPDX-License-Identifier: <SPDX License Expression>
++      .rst:      .. SPDX-License-Identifier: <SPDX License Expression>
++
++   If a specific tool cannot handle the standard comment style, then the
++   appropriate comment mechanism which the tool accepts shall be used. This
++   is the reason for having the "/\* \*/" style comment in C header
++   files. There was build breakage observed with generated .lds files where
++   'ld' failed to parse the C++ comment. This has been fixed by now, but
++   there are still older assembler tools which cannot handle C++ style
++   comments.
+
+There is additional information in Thomas' patch about the SPDX
+identifiers, how to deal with multi-licensed files, etc.  It's
+well worth reading before throwing a SPDX tag on a file to make
+sure you get the correct tag(s) and expressions.
+
+It's a fixed format.  Tabs and additional spaces that are not in
+the format are bad news.
+
+The idea here is (as detailed by Linus) to be able to grep for
+the SPDX identifiers using standard Unix tools, sort then and
+then eliminate duplicates.  If someone decides to use a tab
+after the SPDX-Identifier: rather than a space, then it messes
+up "uniq"'s ability to get rid of the duplicates.
+
+As I say, the documentation is there to help people get this right,
+so it's well worth reading.  I don't think it's in mainline yet.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
