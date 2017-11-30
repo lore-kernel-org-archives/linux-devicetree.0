@@ -1,33 +1,48 @@
 From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [RFC 1/2] mailbox: ZynqMP IPI mailbox controller
-Date: Thu, 30 Nov 2017 09:15:39 +0100
-Message-ID: <CAOFm3uGaxxRtjnxU9MbbsEbiJejZ5tkafnZGaWc4wZVczYwKcQ@mail.gmail.com>
-References: <1511999947-8274-1-git-send-email-jliang@xilinx.com> <1511999947-8274-2-git-send-email-jliang@xilinx.com>
+Subject: Re: [PATCH] rtc: add mxc driver for i.MX53
+Date: Thu, 30 Nov 2017 09:18:11 +0100
+Message-ID: <CAOFm3uFb8Jo9detD2CziuYt_DH_ohYD9P=uvqHugKDxpN+xvAQ@mail.gmail.com>
+References: <20171128073927.12035-1-linux-kernel-dev@beckhoff.com> <20171129221114.GV21126@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1511999947-8274-2-git-send-email-jliang@xilinx.com>
+In-Reply-To: <20171129221114.GV21126@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wendy Liang <wendy.liang@xilinx.com>
-Cc: jassisinghbrar@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Wendy Liang <jliang@xilinx.com>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: linux-kernel-dev@beckhoff.com, Alessandro Zummo <a.zummo@towertech.it>, Patrick Bruenn <p.bruenn@beckhoff.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 30, 2017 at 12:59 AM, Wendy Liang <wendy.liang@xilinx.com> wrote:
-> diff --git a/drivers/mailbox/zynqmp-ipi-mailbox.c b/drivers/mailbox/zynqmp-ipi-mailbox.c
-> new file mode 100644
-> index 0000000..229f26c
-> --- /dev/null
-> +++ b/drivers/mailbox/zynqmp-ipi-mailbox.c
-> @@ -0,0 +1,633 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
+On Wed, Nov 29, 2017 at 11:11 PM, Alexandre Belloni
+<alexandre.belloni@free-electrons.com> wrote:
+> On 28/11/2017 at 08:39:27 +0100, linux-kernel-dev@beckhoff.com wrote:
+>> From: Patrick Bruenn <p.bruenn@beckhoff.com>
+[]
+>> diff --git a/drivers/rtc/rtc-mxc_v2.c b/drivers/rtc/rtc-mxc_v2.c
+>> new file mode 100644
+>> index 000000000000..5049b521b38e
+>> --- /dev/null
+>> +++ b/drivers/rtc/rtc-mxc_v2.c
+>> @@ -0,0 +1,531 @@
+>
+> I think SPDX identifier will soon be required on new files, please add
+> one.
+>
+>> +/*
+>> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights Reserved.
+>> + */
+>> +
+>> +/*
+>> + * The code contained herein is licensed under the GNU General Public
+>> + * License. You may obtain a copy of the GNU General Public License
+>> + * Version 2 or later at the following locations:
+>> + *
+>> + * http://www.opensource.org/licenses/gpl-license.html
+>> + * http://www.gnu.org/copyleft/gpl.html
+>> + */
 
-FYI, the style Linus wants us to use is this for .c:, as a top line:
-
-// SPDX-License-Identifier: GPL-2.0
-
-
-See the threads for details on this.
-
+Exactly!
+And while you are it , you could replace the boilerplate license text
+with the SPDX id.
 -- 
 Cordially
 Philippe Ombredanne
