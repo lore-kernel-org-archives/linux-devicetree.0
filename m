@@ -1,44 +1,77 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: sunxi: Disable strict mode for H5 driver
-Date: Thu, 30 Nov 2017 16:07:17 +0000
-Message-ID: <3ef7cfa4-cc1a-f24b-0013-f36db82781e5@arm.com>
-References: <20171125120200.23294-1-andre.przywara@arm.com>
- <20171125120200.23294-3-andre.przywara@arm.com>
- <CACRpkdZX5U=JoQFS+X96+F68yVSZbnCZpgNfAnvfJGxZ9moi8A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 1/3] dt-bindings: net: Add DT bindings for Socionext Netsec
+Date: Thu, 30 Nov 2017 21:42:31 +0530
+Message-ID: <1512058351-15851-1-git-send-email-jassisinghbrar@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZX5U=JoQFS+X96+F68yVSZbnCZpgNfAnvfJGxZ9moi8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-On 30/11/17 15:51, Linus Walleij wrote:
-> On Sat, Nov 25, 2017 at 1:02 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> 
->> All of the H5 boards in the kernel reference the MMC0 CD pin twice in
->> their DT, so strict mode will make the MMC driver fail to load.
->> To keep existing DTs working, disable strict mode in the H5 driver.
->>
->> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->> Reported-by: Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Patch applied with Maxime's ACK.
+This patch adds documentation for Device-Tree bindings for the
+Socionext NetSec Controller driver.
 
-Thanks for that (also to Maxime and Chen-Yu) and the smooth handling!
+Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/net/socionext-netsec.txt   | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
 
-Sorry, I just see that I didn't point this out explicitly, but this is
-to fix a regression introduced in 4.15-rc1, so is this on a branch that
-will be pushed for 4.15-rc, still? (Couldn't find anything quickly on
-kernel.org)
+diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+new file mode 100644
+index 0000000..4695969
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+@@ -0,0 +1,43 @@
++* Socionext NetSec Ethernet Controller IP
++
++Required properties:
++- compatible: Should be "socionext,synquacer-netsec"
++- reg: Address and length of the control register area, followed by the
++       address and length of the EEPROM holding the MAC address and
++       microengine firmware
++- interrupts: Should contain ethernet controller interrupt
++- clocks: phandle to the PHY reference clock, and any other clocks to be
++          switched by runtime_pm
++- clock-names: Required only if more than a single clock is listed in 'clocks'.
++               The PHY reference clock must be named 'phy_refclk'
++- phy-mode: See ethernet.txt file in the same directory
++- phy-handle: phandle to select child phy
++
++Optional properties: (See ethernet.txt file in the same directory)
++- local-mac-address
++- mac-address
++- max-speed
++- max-frame-size
++
++Required properties for the child phy:
++- reg: phy address
++
++Example:
++	eth0: netsec@522D0000 {
++		compatible = "socionext,synquacer-netsec";
++		reg = <0 0x522D0000 0x0 0x10000>, <0 0x10000000 0x0 0x10000>;
++		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clk_netsec>;
++		phy-mode = "rgmii";
++		max-speed = <1000>;
++		max-frame-size = <9000>;
++		phy-handle = <&ethphy0>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@1 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <1>;
++		};
++	};
+-- 
+2.7.4
 
-Cheers,
-Andre.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
