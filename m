@@ -1,41 +1,70 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 5/8] ARM: dts: am335x-pepper: Fix the audio CODEC's
- reset pin
-Date: Thu, 30 Nov 2017 09:00:58 -0800
-Message-ID: <20171130170058.GQ28152@atomide.com>
-References: <20171129171359.29382-1-afd@ti.com>
- <20171129171359.29382-6-afd@ti.com>
- <20171130161826.GP28152@atomide.com>
- <20171130163344.kudopvsljywb4hyw@sirena.org.uk>
- <4b535cec-6e33-adc0-a962-f5e65d84d1ad@ti.com>
- <20171130165328.q5nknyvwp36xj4t2@sirena.org.uk>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 2/2] ARM: dts: at91: disable the nxp,se97b SMBUS
+ timeout on the TSE-850
+Date: Thu, 30 Nov 2017 09:16:38 -0800
+Message-ID: <20171130171638.GA17788@roeck-us.net>
+References: <20171127163101.27859-1-peda@axentia.se>
+ <20171127163101.27859-3-peda@axentia.se>
+ <20171129205311.GA20551@roeck-us.net>
+ <20171129205629.GO21126@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171130165328.q5nknyvwp36xj4t2@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "Andrew F. Davis" <afd@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20171129205629.GO21126@piout.net>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Mark Brown <broonie@kernel.org> [171130 16:56]:
-> On Thu, Nov 30, 2017 at 10:37:22AM -0600, Andrew F. Davis wrote:
-> > On 11/30/2017 10:33 AM, Mark Brown wrote:
+On Wed, Nov 29, 2017 at 09:56:29PM +0100, Alexandre Belloni wrote:
+> On 29/11/2017 at 12:53:11 -0800, Guenter Roeck wrote:
+> > On Mon, Nov 27, 2017 at 05:31:01PM +0100, Peter Rosin wrote:
+> > > The I2C adapter driver is sometimes slow, causing the SCL line to
+> > > be stuck low for more than the stipulated SMBUS timeout of 25-35 ms.
+> > > This causes the client device to give up which in turn causes silent
+> > > corruption of data. So, disable the SMBUS timeout in the client device.
+> > > 
+> > > Signed-off-by: Peter Rosin <peda@axentia.se>
+> > 
+> > Acked-by: Guenter Roeck <linux@roeck-us.net>
+> > 
+> > I assume this will be sent upstream through an arm tree.
+> > 
 > 
-> > > It might make sense to pull in the relevant branches from ASoC first
-> > > however IIRC the reset GPIO code currently does nothing useful anyway so
-> > > it won't have any impact on bisection.  Andrew?
+> Yes, I'm applying it right now.
 > 
-> > Yeah, that's right, for safety it would be nice to take these after the
-> > ASoC code, but it shouldn't matter in practice as the reset wasn't used
-> > right anyway.
+Are you going to apply the patch for 4.15, or queue it up for 4.16 ?
+I have been arguing with myself if this is a feature or a bug fix.
+So far I queued the driver change up for 4.16, but I am open to
+applying it to 4.15. Any thoughts ?
+
+Guenter
+
+> > Thanks,
+> > Guenter
+> > 
+> > > ---
+> > >  arch/arm/boot/dts/at91-tse850-3.dts | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/at91-tse850-3.dts b/arch/arm/boot/dts/at91-tse850-3.dts
+> > > index 5f29010cdbd8..9b82cc8843e1 100644
+> > > --- a/arch/arm/boot/dts/at91-tse850-3.dts
+> > > +++ b/arch/arm/boot/dts/at91-tse850-3.dts
+> > > @@ -221,6 +221,7 @@
+> > >  	jc42@18 {
+> > >  		compatible = "nxp,se97b", "jedec,jc-42.4-temp";
+> > >  		reg = <0x18>;
+> > > +		smbus-timeout-disable;
+> > >  	};
+> > >  
+> > >  	dpot: mcp4651-104@28 {
+> > > -- 
+> > > 2.11.0
+> > > 
 > 
-> I'd just go for it.
-
-OK will apply the two omap dts changes for v4.16.
-
-Thanks,
-
-Tony
+> -- 
+> Alexandre Belloni, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
