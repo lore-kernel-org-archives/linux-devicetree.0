@@ -1,91 +1,52 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v3 1/3] dt-bindings: display/ti: Add optional property to set
- memory bandwidth limit
-Date: Thu, 30 Nov 2017 14:12:35 +0200
-Message-ID: <20171130121237.30431-2-peter.ujfalusi@ti.com>
-References: <20171130121237.30431-1-peter.ujfalusi@ti.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: overlay: fix memory leak of ovcs on error exit path
+Date: Thu, 30 Nov 2017 07:14:45 -0500
+Message-ID: <dcb4e2a4-707b-0ccc-e12b-c6fa4ef251b7@gmail.com>
+References: <20171129191750.25254-1-colin.king@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171130121237.30431-1-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
-Cc: airlied@linux.ie, devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171129191750.25254-1-colin.king@canonical.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Colin King <colin.king@canonical.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-bWF4LW1lbW9yeS1iYW5kd2lkdGggY2FuIGJlIHVzZWQgdG8gc3BlY2lmeSB0aGUgbWF4aW11bSBi
-YW5kd2lkdGggZGlzcGMKY2FuIHVzZSB3aGVuIHJlYWRpbmcgZGlzcGxheSBkYXRhIGZyb20gbWFp
-biBtZW1vcnkuCgpJbiBzb21lIFNvQyAoYW00Mzd4IGZvciBleGFtcGxlKSB3ZSBoYXZlIG1lbW9y
-eSBiYW5kd2lkdGggbGltaXRhdGlvbgp3aGljaCBjYXVzZXMgdW5kZXJmbG93IGluIHRoZSBkaXNw
-bGF5IHN1YnN5c3RlbS4KClNpZ25lZC1vZmYtYnk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZh
-bHVzaUB0aS5jb20+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0K
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGRyYTctZHNz
-LnR4dCAgfCA1ICsrKysrCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS90aS90aSxvbWFwMi1kc3MudHh0IHwgNCArKysrCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMy1kc3MudHh0IHwgNCArKysrCiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwNC1kc3MudHh0IHwgNCAr
-KysrCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFw
-NS1kc3MudHh0IHwgNCArKysrCiA1IGZpbGVzIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykKCmRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90
-aSxkcmE3LWRzcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS90aS90aSxkcmE3LWRzcy50eHQKaW5kZXggYzMwZjllYzE4OWVkLi45MTI3OWYxMDYwZmUgMTAw
-NjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3Rp
-LGRyYTctZHNzLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS90aS90aSxkcmE3LWRzcy50eHQKQEAgLTQ3LDYgKzQ3LDExIEBAIFJlcXVpcmVkIHByb3Bl
-cnRpZXM6CiAtIGNsb2NrczogaGFuZGxlIHRvIGZjbGsKIC0gY2xvY2stbmFtZXM6ICJmY2siCiAK
-K09wdGlvbmFsIHByb3BlcnRpZXM6CistIG1heC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1v
-cnkgKGZyb20gbWFpbiBtZW1vcnkgdG8gZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAorCQkJaW4gYnl0
-ZXMgcGVyIHNlY29uZAorCisKIEhETUkKIC0tLS0KIApkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDItZHNzLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAyLWRzcy50eHQK
-aW5kZXggYWZjZDVhODZjNmE0Li5lZTg2N2M0ZDExNTIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAyLWRzcy50eHQKKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDItZHNz
-LnR4dApAQCAtMjgsNiArMjgsMTAgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIC0gdGksaHdtb2Rz
-OiAiZHNzX2Rpc3BjIgogLSBpbnRlcnJ1cHRzOiB0aGUgRElTUEMgaW50ZXJydXB0CiAKK09wdGlv
-bmFsIHByb3BlcnRpZXM6CistIG1heC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1vcnkgKGZy
-b20gbWFpbiBtZW1vcnkgdG8gZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAorCQkJaW4gYnl0ZXMgcGVy
-IHNlY29uZAorCiAKIFJGQkkKIC0tLS0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAzLWRzcy50eHQgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMy1kc3MudHh0CmluZGV4IGRj
-NjZlMTQ0N2MzMS4uY2QwMjUxNmE0MGI2IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMy1kc3MudHh0CisrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAzLWRzcy50eHQKQEAg
-LTM3LDYgKzM3LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAtIGNsb2NrczogaGFuZGxlIHRv
-IGZjbGsKIC0gY2xvY2stbmFtZXM6ICJmY2siCiAKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIG1h
-eC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1vcnkgKGZyb20gbWFpbiBtZW1vcnkgdG8gZGlz
-cGMpIGJhbmR3aWR0aCBsaW1pdAorCQkJaW4gYnl0ZXMgcGVyIHNlY29uZAorCiAKIFJGQkkKIC0t
-LS0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3RpL3RpLG9tYXA0LWRzcy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS90aS90aSxvbWFwNC1kc3MudHh0CmluZGV4IGJjNjI0ZGI4ODg4ZC4uMGY4NWY2YjNh
-NWE4IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS90aS90aSxvbWFwNC1kc3MudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA0LWRzcy50eHQKQEAgLTM2LDYgKzM2LDEwIEBAIFJlcXVp
-cmVkIHByb3BlcnRpZXM6CiAtIGNsb2NrczogaGFuZGxlIHRvIGZjbGsKIC0gY2xvY2stbmFtZXM6
-ICJmY2siCiAKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIG1heC1tZW1vcnktYmFuZHdpZHRoOiBJ
-bnB1dCBtZW1vcnkgKGZyb20gbWFpbiBtZW1vcnkgdG8gZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAor
-CQkJaW4gYnl0ZXMgcGVyIHNlY29uZAorCiAKIFJGQkkKIC0tLS0KZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA1LWRzcy50eHQg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwNS1k
-c3MudHh0CmluZGV4IDExOGE0ODZjNDdiYi4uMjA4NjEyMTg2NDlmIDEwMDY0NAotLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwNS1kc3MudHh0
-CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9t
-YXA1LWRzcy50eHQKQEAgLTM2LDYgKzM2LDEwIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAtIGNs
-b2NrczogaGFuZGxlIHRvIGZjbGsKIC0gY2xvY2stbmFtZXM6ICJmY2siCiAKK09wdGlvbmFsIHBy
-b3BlcnRpZXM6CistIG1heC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1vcnkgKGZyb20gbWFp
-biBtZW1vcnkgdG8gZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAorCQkJaW4gYnl0ZXMgcGVyIHNlY29u
-ZAorCiAKIFJGQkkKIC0tLS0KLS0gClBldGVyCgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95
-LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6
-IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 11/29/17 14:17, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently if the call to of_resolve_phandles fails then then ovcs
+> is not kfree'd on the error exit path.  Rather than try and make
+> the clean up exit path more convoluted, fix this by just kfree'ing
+> ovcs at the point of error detection and exit via the same exit
+> path.
+> 
+> Detected by CoverityScan, CID#1462296 ("Resource Leak")
+> 
+> Fixes: f948d6d8b792 ("of: overlay: avoid race condition between applying multiple overlays")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/of/overlay.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 53bc9e3f0b98..6c8efe7d8cbb 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -708,8 +708,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+>  	of_overlay_mutex_lock();
+>  
+>  	ret = of_resolve_phandles(tree);
+> -	if (ret)
+> +	if (ret) {
+> +		kfree(ovcs);
+>  		goto err_overlay_unlock;
+> +	}
+>  
+>  	mutex_lock(&of_mutex);
+>  
+> 
+
+False coverity warning.  ovcs is freed in free_overlay_changeset().
