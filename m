@@ -1,102 +1,56 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v5] mfd: syscon: Add hardware spinlock support
-Date: Thu, 30 Nov 2017 18:45:35 +0800
-Message-ID: <CAMz4kuKxazQBhSFhzeJ4awO4T1uA9Mm5oWUdzseTMOh8NpQqxQ@mail.gmail.com>
-References: <9bd0bfdaf4e869e6216a0ef032b52cd28b33ab16.1512032962.git.baolin.wang@linaro.org>
- <78c06786-8bfc-3f15-fdb5-061691010509@mentor.com>
+From: Oleksandr Shamray <oleksandrs@mellanox.com>
+Subject: RE: [patch v12 2/4] drivers: jtag: Add Aspeed SoC 24xx and 25xx
+ families JTAG master driver
+Date: Thu, 30 Nov 2017 10:49:27 +0000
+Message-ID: <AM4PR0501MB2194FDF093DD241694BE77BFB1380@AM4PR0501MB2194.eurprd05.prod.outlook.com>
+References: <1510675867-24276-1-git-send-email-oleksandrs@mellanox.com>
+ <1510675867-24276-3-git-send-email-oleksandrs@mellanox.com>
+ <CAGMNF6XRwU5QEJhkg-mVwE5zpPigtcGJtRUupZHtcWRdedcsxg@mail.gmail.com>
+ <CAOFm3uHg8n4A8opaOC3=pNtM1yJU6iy5Ta8XtGOvqT-Euv=X1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <78c06786-8bfc-3f15-fdb5-061691010509@mentor.com>
+In-Reply-To: <CAOFm3uHg8n4A8opaOC3=pNtM1yJU6iy5Ta8XtGOvqT-Euv=X1w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Philippe Ombredanne <pombredanne@nexb.com>, Kun Yi <kunyi@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>, system-sw-low-level <system-sw-low-level@mellanox.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, Vadim Pasternak <vadimp@mellanox.com>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, LKML <linux-kernel@vger.kernel.org>, "openocd-devel-owner@lists.sourceforge.net" <openocd-devel-owner@lists.sourceforge.net>, "mec@shout.net" <mec@shout.net>, Jiri Pirko <jiri@mellanox.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "tklauser@distanz.ch" <tklauser@distanz.ch>, Mauro Carvalho Chehab <mchehab@kernel.org>, Dav
 List-Id: devicetree@vger.kernel.org
 
-On 30 November 2017 at 18:38, Vladimir Zapolskiy
-<vladimir_zapolskiy@mentor.com> wrote:
-> On 11/30/2017 11:10 AM, Baolin Wang wrote:
->> Some system control registers need hardware spinlock to synchronize
->> between the multiple subsystems, so we should add hardware spinlock
->> support for syscon.
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> Acked-by: Rob Herring <robh@kernel.org>
->> ---
->> Changes since v4:
->>  - Add one exapmle to show how to add hwlock.
->>  - Fix the coding style issue.
->>
->> Changes since v3:
->>  - Add error handling for of_hwspin_lock_get_id()
->>
->> Changes since v2:
->>  - Add acked tag from Rob.
->>
->> Changes since v1:
->>  - Remove timeout configuration.
->>  - Modify the binding file to add hwlocks.
->> ---
->>  Documentation/devicetree/bindings/mfd/syscon.txt |    8 ++++++++
->>  drivers/mfd/syscon.c                             |   21 +++++++++++++++++++++
->>  2 files changed, 29 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
->> index 8b92d45..25d9e9c 100644
->> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
->> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
->> @@ -16,9 +16,17 @@ Required properties:
->>  Optional property:
->>  - reg-io-width: the size (in bytes) of the IO accesses that should be
->>    performed on the device.
->> +- hwlocks: reference to a phandle of a hardware spinlock provider node.
->>
->>  Examples:
->>  gpr: iomuxc-gpr@20e0000 {
->>       compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
->>       reg = <0x020e0000 0x38>;
->> +     hwlocks = <&hwlock1 1>;
->> +};
->> +
->> +hwlock1: hwspinlock@40500000 {
->> +     ...
->> +     reg = <0x40500000 0x1000>;
->> +     #hwlock-cells = <1>;
->>  };
->> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
->> index b93fe4c..5b67dbc 100644
->> --- a/drivers/mfd/syscon.c
->> +++ b/drivers/mfd/syscon.c
->> @@ -13,6 +13,7 @@
->>   */
->>
->>  #include <linux/err.h>
->> +#include <linux/hwspinlock.h>
->>  #include <linux/io.h>
->>  #include <linux/module.h>
->>  #include <linux/list.h>
->> @@ -87,6 +88,26 @@ static struct syscon *of_syscon_register(struct device_node *np)
->>       if (ret)
->>               reg_io_width = 4;
->>
->> +     ret = of_hwspin_lock_get_id(np, 0);
->> +     if (ret > 0) {
->> +             syscon_config.hwlock_id = ret;
->> +             syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
->> +     } else {
->> +             switch (ret) {
->> +             case -ENOENT:
->> +                     /* Ignore missing hwlock, it's optional. */
->> +                     break;
->> +             case 0:
->> +                     ret = -EINVAL;
->> +                     /* fall-through */
->
-> It breaks the execution on all kernels without CONFIG_HWSPINLOCK enabled.
-
-Ah, your are correct. Sorry, I missed this case. I will fix this in
-next version. Thanks.
-
--- 
-Baolin.wang
-Best Regards
+VGhuYWtzIGZvciBwb2ludCANCg0KQmVzdCBSZWdhcmRzLA0KT2xla3NhbmRyIFNoYW1yYXkNCg0K
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQaGlsaXBwZSBPbWJyZWRhbm5l
+IFttYWlsdG86cG9tYnJlZGFubmVAbmV4Yi5jb21dDQo+IFNlbnQ6IFRodXJzZGF5LCBOb3ZlbWJl
+ciAzMCwgMjAxNyAxMDoyMSBBTQ0KPiBUbzogS3VuIFlpIDxrdW55aUBnb29nbGUuY29tPg0KPiBD
+YzogT2xla3NhbmRyIFNoYW1yYXkgPG9sZWtzYW5kcnNAbWVsbGFub3guY29tPjsgR3JlZyBLcm9h
+aC1IYXJ0bWFuDQo+IDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IGFybmRAYXJuZGIuZGU7
+IHN5c3RlbS1zdy1sb3ctbGV2ZWwgPHN5c3RlbS0NCj4gc3ctbG93LWxldmVsQG1lbGxhbm94LmNv
+bT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBqaXJpQHJlc251bGxpLnVzOw0KPiBWYWRp
+bSBQYXN0ZXJuYWsgPHZhZGltcEBtZWxsYW5veC5jb20+OyBsaW51eC1hcGlAdmdlci5rZXJuZWwu
+b3JnOw0KPiBPcGVuQk1DIE1haWxsaXN0IDxvcGVuYm1jQGxpc3RzLm96bGFicy5vcmc+OyBMS01M
+IDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZz47IG9wZW5vY2QtZGV2ZWwtb3duZXJA
+bGlzdHMuc291cmNlZm9yZ2UubmV0Ow0KPiBtZWNAc2hvdXQubmV0OyBKaXJpIFBpcmtvIDxqaXJp
+QG1lbGxhbm94LmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsgbGludXgtDQo+IHNlcmlhbEB2Z2Vy
+Lmtlcm5lbC5vcmc7IHRrbGF1c2VyQGRpc3RhbnouY2g7IE1hdXJvIENhcnZhbGhvIENoZWhhYg0K
+PiA8bWNoZWhhYkBrZXJuZWwub3JnPjsgRGF2aWQgUy4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQu
+bmV0PjsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0
+OiBSZTogW3BhdGNoIHYxMiAyLzRdIGRyaXZlcnM6IGp0YWc6IEFkZCBBc3BlZWQgU29DIDI0eHgg
+YW5kIDI1eHgNCj4gZmFtaWxpZXMgSlRBRyBtYXN0ZXIgZHJpdmVyDQo+IA0KPiBPbiBXZWQsIE5v
+diAyOSwgMjAxNyBhdCAxMTo1MSBQTSwgS3VuIFlpIDxrdW55aUBnb29nbGUuY29tPiB3cm90ZToN
+Cj4gPiBPbiBUdWUsIE5vdiAxNCwgMjAxNyBhdCA4OjExIEFNLCBPbGVrc2FuZHIgU2hhbXJheQ0K
+PiA+IDxvbGVrc2FuZHJzQG1lbGxhbm94LmNvbT4gd3JvdGU6DQo+IFtdDQo+ID4+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2p0YWcvanRhZy1hc3BlZWQuYyBiL2RyaXZlcnMvanRhZy9qdGFnLWFzcGVl
+ZC5jDQo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0IGluZGV4IDAwMDAwMDAuLmE2ZTI0MTcNCj4g
+Pj4gLS0tIC9kZXYvbnVsbA0KPiA+PiArKysgYi9kcml2ZXJzL2p0YWcvanRhZy1hc3BlZWQuYw0K
+PiA+PiBAQCAtMCwwICsxLDc4MiBAQA0KPiA+PiArLyoNCj4gPj4gKyAqIGRyaXZlcnMvanRhZy9h
+c3BlZWQtanRhZy5jDQo+ID4+ICsgKg0KPiA+PiArICogQ29weXJpZ2h0IChjKSAyMDE3IE1lbGxh
+bm94IFRlY2hub2xvZ2llcy4gQWxsIHJpZ2h0cyByZXNlcnZlZC4NCj4gPj4gKyAqIENvcHlyaWdo
+dCAoYykgMjAxNyBPbGVrc2FuZHIgU2hhbXJheSA8b2xla3NhbmRyc0BtZWxsYW5veC5jb20+DQo+
+ID4+ICsgKg0KPiA+PiArICogUmVsZWFzZWQgdW5kZXIgdGhlIEdQTHYyIG9ubHkuDQo+ID4+ICsg
+KiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+PiArICovDQo+IA0KPiBJIHRo
+aW5rIHRoZSBTUERYIGlkIHNob3VsZCBiZSBvbiB0aGUgZmlyc3QgbGluZSBhcyByZXF1ZXN0ZWQg
+YnkgTGludXMgYW5kDQo+IGRvY3VtZW50ZWQgYnkgVGhvbWFzICh0Z2x4KSBhbmQgR3JlZyAoZ3Jl
+Zy1raCkuIEFuZCBpdCBzaG91bGQgdXNlIC8vDQo+IGNvbW1lbnRzLCBlLmc6DQo+IA0KPiAvLyBT
+UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiANCj4gU2VlIHRoZSB0aHJlYWRzIGRp
+c2N1c3NpbmcgYWxsIHRoZXNlLg0KPiANCj4gDQo+IC0tDQo+IENvcmRpYWxseQ0KPiBQaGlsaXBw
+ZSBPbWJyZWRhbm5lDQo=
