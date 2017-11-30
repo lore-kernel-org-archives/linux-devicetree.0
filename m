@@ -1,87 +1,84 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH] rtc: add mxc driver for i.MX53
-Date: Thu, 30 Nov 2017 14:42:10 +0100
-Message-ID: <20171130134209.GX21126@piout.net>
-References: <20171128073927.12035-1-linux-kernel-dev@beckhoff.com>
- <20171129221114.GV21126@piout.net>
- <CAOFm3uFb8Jo9detD2CziuYt_DH_ohYD9P=uvqHugKDxpN+xvAQ@mail.gmail.com>
- <3BB206AB2B1BD448954845CE6FF69A8E01CB531330@NT-Mail07.beckhoff.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] of: overlay: fix memory leak of ovcs on error exit path
+Date: Thu, 30 Nov 2017 14:51:26 +0100
+Message-ID: <CAMuHMdWN+UN3odsnme2szwon-_VK556cJLcM7fOZqgpW3AUjUg@mail.gmail.com>
+References: <20171129191750.25254-1-colin.king@canonical.com>
+ <dcb4e2a4-707b-0ccc-e12b-c6fa4ef251b7@gmail.com> <20171130125002.wlnnev5pjih6d5bz@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3BB206AB2B1BD448954845CE6FF69A8E01CB531330@NT-Mail07.beckhoff.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick =?iso-8859-1?Q?Br=FCnn?= <P.Bruenn@beckhoff.com>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel-dev <linux-kernel-dev@beckhoff.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Russell King <linux@armlinux.org.uk>, moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171130125002.wlnnev5pjih6d5bz@mwanda>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Colin King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Dan,
 
-On 30/11/2017 at 13:36:22 +0000, Patrick Brünn wrote:
-> >From: Philippe Ombredanne [mailto:pombredanne@nexb.com]
-> >Sent: Donnerstag, 30. November 2017 09:18
-> >>
-> >>> +/*
-> >>> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
-> >Reserved.
-> >>> + */
-> >>> +
-> >>> +/*
-> >>> + * The code contained herein is licensed under the GNU General Public
-> >>> + * License. You may obtain a copy of the GNU General Public License
-> >>> + * Version 2 or later at the following locations:
-> >>> + *
-> >>> + * http://www.opensource.org/licenses/gpl-license.html
-> >>> + * http://www.gnu.org/copyleft/gpl.html
-> >>> + */
-> >
-> >Exactly!
-> >And while you are it , you could replace the boilerplate license text
-> >with the SPDX id.
-> >--
-> 
-> How would a perfect header look like?
-> Looking at :
-> git show b24413180f5600bcb3bb70fbed5cf186b60864bd -- drivers/
-> and:
-> git grep SPDX -- Documentation/
-> 
-> it could be:
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
-> + */
-> or:
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
-> + */
-> 
-> Personally I would prefer:
-> +/*
-> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> 
-> So, is there any guideline?
-> 
+On Thu, Nov 30, 2017 at 1:50 PM, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
+> On Thu, Nov 30, 2017 at 07:14:45AM -0500, Frank Rowand wrote:
+>> On 11/29/17 14:17, Colin King wrote:
+>> > From: Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+>> >
+>> > Currently if the call to of_resolve_phandles fails then then ovcs
+>> > is not kfree'd on the error exit path.  Rather than try and make
+>> > the clean up exit path more convoluted, fix this by just kfree'ing
+>> > ovcs at the point of error detection and exit via the same exit
+>> > path.
+>> >
+>> > Detected by CoverityScan, CID#1462296 ("Resource Leak")
+>> >
+>> > Fixes: f948d6d8b792 ("of: overlay: avoid race condition between applying multiple overlays")
+>
+> The Fixes tag is wrong.  It should be:
+>
+> Fixes: bd80e2555c5c ("of: overlay: Fix cleanup order in of_overlay_apply()")
 
-I'm quoting LWN here:
+Oops, sorry for that.
 
-"For normal C source files, the string will be a comment using the "//"
-syntax; header files, instead, use traditional (/* */) comments for
-reasons related to tooling."
+>> > Signed-off-by: Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+>> > ---
+>> >  drivers/of/overlay.c | 4 +++-
+>> >  1 file changed, 3 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> > index 53bc9e3f0b98..6c8efe7d8cbb 100644
+>> > --- a/drivers/of/overlay.c
+>> > +++ b/drivers/of/overlay.c
+>> > @@ -708,8 +708,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+>> >     of_overlay_mutex_lock();
+>> >
+>> >     ret = of_resolve_phandles(tree);
+>> > -   if (ret)
+>> > +   if (ret) {
+>> > +           kfree(ovcs);
+>> >             goto err_overlay_unlock;
+>> > +   }
+>> >
+>> >     mutex_lock(&of_mutex);
+>>
+>> False coverity warning.  ovcs is freed in free_overlay_changeset().
+>
+> You're looking at an older version of the code and Colin is looking at
+> linux-next.
 
-> To be clear: I don't want to waste anyone's time on this. But as SPDX
-> was intended for automation, I think it might be good to try having
-> some common pattern here.
-> I don't want to start a discussion, so in case there is no guideline I will
-> just take the /* SPDX */ in firstline version.
+BTW, it's a bit confusing that sometimes ovcs must be freed manually, and
+sometimes this is taken care of by free_overlay_changeset().
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Especially when building on top of that, and adding more error cases in
+between err_free_overlay_changeset and err_overlay_unlock.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
