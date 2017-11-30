@@ -1,100 +1,65 @@
-From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Subject: Re: [PATCH 0/5] PCI: Add support to the Cadence PCIe controller
-Date: Thu, 30 Nov 2017 19:45:16 +0100
-Message-ID: <a02af401-2eb8-dc34-6f3c-092f04ec2636@free-electrons.com>
-References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
- <20171128155039.GA17154@red-moon>
- <8c6c50fc-47a9-7b93-d826-1dba9c4d09c2@ti.com>
- <20171130181819.GD12096@red-moon>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2 2/2] ARM: dts: at91: disable the nxp,se97b SMBUS
+ timeout on the TSE-850
+Date: Thu, 30 Nov 2017 19:46:09 +0100
+Message-ID: <acaea4f3-d273-444a-4df4-e6d1b35c876d@axentia.se>
+References: <20171127163101.27859-1-peda@axentia.se>
+ <20171127163101.27859-3-peda@axentia.se>
+ <20171129205311.GA20551@roeck-us.net> <20171129205629.GO21126@piout.net>
+ <20171130171638.GA17788@roeck-us.net> <20171130172606.GZ21126@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171130181819.GD12096@red-moon>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171130172606.GZ21126@piout.net>
 Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-Le 30/11/2017 à 19:18, Lorenzo Pieralisi a écrit :
-> On Thu, Nov 30, 2017 at 12:43:20PM +0530, Kishon Vijay Abraham I wrote:
-> 
-> [...]
-> 
->>>> For linux-next, I applied this series on top of Kishon's patch
->>>> ("PCI: endpoint: Use EPC's device in dma_alloc_coherent/dma_free_coherent")
->>>> otherwise dma_alloc_coherent() fails when called by pci_epf_alloc_space().
+On 2017-11-30 18:26, Alexandre Belloni wrote:
+> On 30/11/2017 at 09:16:38 -0800, Guenter Roeck wrote:
+>> On Wed, Nov 29, 2017 at 09:56:29PM +0100, Alexandre Belloni wrote:
+>>> On 29/11/2017 at 12:53:11 -0800, Guenter Roeck wrote:
+>>>> On Mon, Nov 27, 2017 at 05:31:01PM +0100, Peter Rosin wrote:
+>>>>> The I2C adapter driver is sometimes slow, causing the SCL line to
+>>>>> be stuck low for more than the stipulated SMBUS timeout of 25-35 ms.
+>>>>> This causes the client device to give up which in turn causes silent
+>>>>> corruption of data. So, disable the SMBUS timeout in the client device.
+>>>>>
+>>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
 >>>>
->>>> Also, I patched drivers/Makefile rather than drivers/pci/Makefile to make
->>>> the drivers/pci/cadence/pcie-cadence-ep.o linked after
+>>>> Acked-by: Guenter Roeck <linux@roeck-us.net>
+>>>>
+>>>> I assume this will be sent upstream through an arm tree.
+>>>>
+>>>
+>>> Yes, I'm applying it right now.
+>>>
+>> Are you going to apply the patch for 4.15, or queue it up for 4.16 ?
+>> I have been arguing with myself if this is a feature or a bug fix.
+>> So far I queued the driver change up for 4.16, but I am open to
+>> applying it to 4.15. Any thoughts ?
 >>
->> The reason to patch drivers/Makefile should be because pcie-cadence-ep has to
->> be compiled even when CONFIG_PCI is not enabled. CONFIG_PCI enables host
->> specific features and ENDPOINT shouldn't depend on CONFIG_PCI.
->>>> drivers/pci/endpoint/*.o objects, otherwise the built-in pci-cadence-ep
->>>> driver would be probed before the PCI endpoint framework would have been
->>>> initialized, which results in a kernel crash.
->>>
->>> Nice :( - isn't there a way to improve this (ie probe deferral or
->>> registering the EPF bus earlier) ?
->>>
->>>> I guess this is the reason why the "pci/dwc" line was also put in
->>>> drivers/Makefile, right after the "pci/endpoint" line.
->>>
->>> Or probably the other way around - see commit 5e8cb4033807
->>>
->>> @Kishon, thoughts ?
->>
->> Lorenzo, ordering Makefile is one way to initialize EP core before
 > 
-> Makefile ordering is fragile, I do not like relying on it.
+> I was wondering that myself. I'm open to have it as a fix in 4.15. Or
+> maybe Peter can send the series to stable if he needs it in 4.14.
 > 
->> other drivers. the other way is to have PCI EP core have a different
->> initcall level..  subsys_initcall??
-> 
-> Yes, registering the bus at eg postcore_initcall() as PCI does should do
-> (if that's the problem this is solving) but still, the code must not
-> crash if the ordering is not correct, we have to fix this regardless.
-> 
-> I would appreciate if Cyrille can debug the cause of the kernel crash
-> so that we can fix it in the longer term.
-> 
+> Peter, what do you think/want?
 
-I had the crash kernel few weeks ago hence I have to test again to confirm
-but if I remember correctly it was a NULL pointer dereferencing crash:
+TL;DR Either way is fine.
 
-cdns_pcie_ep_probe()
-|
-+--> devm_pci_epc_create()
-     |
-     +--> __devm_pci_ep_create()
-          |
-          +--> __pci_epc_create()
-	       |
-	       +--> pci_ep_cfs_add_epc_group()
-	            |
-		    | /*
-		    |  * Here controllers_group is still NULL because
-		    |  * pci_ep_cfs_init() has not been called yet.
-		    |  */
-		    +--> configfs_register_group(controllers_group, ...)
-		         |
-			 +--> link_group()
-			      /* Dereferencing NULL pointer */
+I think it's a bugfix; it fixes real problems where the application
+misbehave due to faulty content when reading from an eeprom. I'm
+expecting to make a new release for the hw in question RSN and these
+are the only local patches. So, it would be nice if they made it to
+4.14.x before my release happens. However, it's not like it's difficult
+to rebase the patches should that backport not happen or take too long.
 
-Best regards,
+The badness started to happen much more frequently due to some timing
+difference affecting the i2c bus driver, but in theory it's a problem
+that has been there from the start. I have just not noticed it before...
 
-Cyrille
-
-> Thanks,
-> Lorenzo
-> 
-
-
--- 
-Cyrille Pitchen, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Cheers,
+Peter
