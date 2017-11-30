@@ -1,52 +1,121 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 1/4] ARM: dts: armadillo800eva: Convert to named i2c-gpio bindings
-Date: Thu, 30 Nov 2017 13:57:23 +0100
-Message-ID: <1512046646-15253-2-git-send-email-geert+renesas@glider.be>
-References: <1512046646-15253-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1512046646-15253-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6sl-evk: Add DRM panel, power-enable and backlight support
+Date: Thu, 30 Nov 2017 11:00:09 -0200
+Message-ID: <1512046809-18434-1-git-send-email-marco.franchi@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Frank <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commits 7d29f509d2cfd807 ("dt-bindings: i2c: i2c-gpio: Add support for
-named gpios") and 05c74778858d7d99 ("i2c: gpio: Add support for named
-gpios in DT") introduced named i2c-gpio DT bindings, and deprecated the
-more error-prone unnamed variant.
+From: Marco Frank <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 
-Switch to the new bindings, and add the missing GPIO_OPEN_DRAIN I/O
-flags, which were implicitly assumed before.
+It is preferred to use the panel compatible string rather than passing 
+the LCD timming in the device tree.
 
-The latter gets rid of the message:
+So pass the "sii,43wvf1g" compatible string, a new driver for the Seiko 
+Panel, which describes the parallel LCD.
 
-    gpio-208 (?): enforced open drain please flag it properly in DT/ACPI DSDT/board file
-    gpio-91 (?): enforced open drain please flag it properly in DT/ACPI DSDT/board file
+This new driver needs two power supply, so pass 'dvdd-supply' and 
+'avdd-supply', which makes the kernel to turn on the LCD on is own.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Also, pass the 'backlight' property as described in 
+Documentation/devicetree/bindings/display/panel/simple-panel.txt
+
+Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 ---
-v2:
-  - Add GPIO_OPEN_DRAIN to the GPIO flags,
-  - Reword.
----
- arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6sl-evk.dts | 49 ++++++++++++++++++++--------------------
+ 1 file changed, 25 insertions(+), 24 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-index 8c85d3ee5f5e7bfd..527c60bafbcface0 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva.dts
-@@ -138,9 +138,8 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		compatible = "i2c-gpio";
--		gpios = <&pfc 208 GPIO_ACTIVE_HIGH /* sda */
--			 &pfc 91 GPIO_ACTIVE_HIGH /* scl */
--			>;
-+		sda-gpios = <&pfc 208 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&pfc 91 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 		i2c-gpio,delay-us = <5>;
+diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+index 0a90eea..d5148f4 100644
+--- a/arch/arm/boot/dts/imx6sl-evk.dts
++++ b/arch/arm/boot/dts/imx6sl-evk.dts
+@@ -20,7 +20,7 @@
+ 		reg = <0x80000000 0x40000000>;
  	};
  
+-	backlight {
++	backlight_display: backlight_display {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm1 0 5000000>;
+ 		brightness-levels = <0 4 8 16 32 64 128 255>;
+@@ -91,6 +91,14 @@
+ 			gpio = <&gpio4 3 0>;
+ 			enable-active-high;
+ 		};
++
++		reg_lcd_5v: regulator@5 {
++			compatible = "regulator-fixed";
++			reg = <5>;
++			regulator-name = "lcd-5v0";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++		};
+ 	};
+ 
+ 	sound {
+@@ -108,6 +116,19 @@
+ 		mux-int-port = <2>;
+ 		mux-ext-port = <3>;
+ 	};
++
++	panel {
++		compatible = "sii,43wvf1g";
++		backlight = <&backlight_display>;
++		dvdd-supply = <&reg_lcd_3v3>;
++		avdd-supply = <&reg_lcd_5v>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&display_out>;
++			};
++		};
++	};
+ };
+ 
+ &audmux {
+@@ -546,31 +567,11 @@
+ &lcdif {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_lcd>;
+-	lcd-supply = <&reg_lcd_3v3>;
+-	display = <&display0>;
+ 	status = "okay";
+ 
+-	display0: display0 {
+-		bits-per-pixel = <32>;
+-		bus-width = <24>;
+-
+-		display-timings {
+-			native-mode = <&timing0>;
+-			timing0: timing0 {
+-				clock-frequency = <33500000>;
+-				hactive = <800>;
+-				vactive = <480>;
+-				hback-porch = <89>;
+-				hfront-porch = <164>;
+-				vback-porch = <23>;
+-				vfront-porch = <10>;
+-				hsync-len = <10>;
+-				vsync-len = <10>;
+-				hsync-active = <0>;
+-				vsync-active = <0>;
+-				de-active = <1>;
+-				pixelclk-active = <0>;
+-			};
++	port {
++		display_out: endpoint {
++			remote-endpoint = <&panel_in>;
+ 		};
+ 	};
+ };
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
