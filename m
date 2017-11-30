@@ -1,90 +1,151 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH RFC 2/2] arm64: allwinner: a64: Add Brava Keller initial support
-Date: Thu, 30 Nov 2017 22:36:55 +0100
-Message-ID: <CAOFm3uEdsj=qxUf3O0S0vDqgXgosvBYG6BGbf6cYn3aNreTPaQ@mail.gmail.com>
-References: <1512067334-12761-1-git-send-email-jagan@amarulasolutions.com> <1512067334-12761-2-git-send-email-jagan@amarulasolutions.com>
+From: James Hogan <james.hogan@mips.com>
+Subject: Re: [PATCH v4 2/8] MIPS: Octeon: Enable LMTDMA/LMTST operations.
+Date: Thu, 30 Nov 2017 21:36:35 +0000
+Message-ID: <20171130213635.GH27409@jhogan-linux.mipstec.com>
+References: <20171129005540.28829-1-david.daney@cavium.com>
+ <20171129005540.28829-3-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1512067334-12761-2-git-send-email-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagannadh.teki@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Mark Janoff <mark@bravahome.com>, Stuart Westerman <stu@bravahome.com>, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
+Content-Type: multipart/mixed; boundary="===============7012386805921380208=="
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20171129005540.28829-3-david.daney@cavium.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: David Daney <david.daney@cavium.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, ralf@linux-mips.org, Carlos Munoz <cmunoz@cavium.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, "Steven J.
+ Hill" <steven.hill@cavium.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Jagan,
+--===============7012386805921380208==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RMedoP2+Pr6Rq0N2"
+Content-Disposition: inline
 
-On Thu, Nov 30, 2017 at 7:42 PM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
-[]
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
-> new file mode 100644
-> index 0000000..f5303a3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
-> @@ -0,0 +1,244 @@
-> +/*
-> + * Copyright (C) 2017 Jagan Teki <jagan@amarulasolutions.com>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
+--RMedoP2+Pr6Rq0N2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rather than this long boilerplate, you might want to use the SPDX ids,
-as started by Greg and documented by Thomas.
-Noe that Linus wants the // comment style for the license line, and
-since there is only two line left here I suggest using it for both
-lines.
-You can check also the recent doc patch posted by Thomas (tglx) and
-comments from Linus and Greg.
+On Tue, Nov 28, 2017 at 04:55:34PM -0800, David Daney wrote:
+> From: Carlos Munoz <cmunoz@cavium.com>
+>=20
+> LMTDMA/LMTST operations move data between cores and I/O devices:
+>=20
+> * LMTST operations can send an address and a variable length
+>   (up to 128 bytes) of data to an I/O device.
+> * LMTDMA operations can send an address and a variable length
+>   (up to 128) of data to the I/O device and then return a
+>   variable length (up to 128 bytes) response from the IOI device.
 
-So I guess you could use this:
+Should that be "I/O"?
 
-> +// Copyright (C) 2017 Jagan Teki <jagan@amarulasolutions.com>
-> +// SPDX-License-Indentifier: (GPL-2.0+ OR MIT)
+>=20
+> Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
+> Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> ---
+>  arch/mips/cavium-octeon/setup.c       |  6 ++++++
+>  arch/mips/include/asm/octeon/octeon.h | 12 ++++++++++--
+>  2 files changed, 16 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/se=
+tup.c
+> index a8034d0dcade..99e6a68bc652 100644
+> --- a/arch/mips/cavium-octeon/setup.c
+> +++ b/arch/mips/cavium-octeon/setup.c
+> @@ -609,6 +609,12 @@ void octeon_user_io_init(void)
+>  #else
+>  	cvmmemctl.s.cvmsegenak =3D 0;
+>  #endif
+> +	if (OCTEON_IS_OCTEON3()) {
+> +		/* Enable LMTDMA */
+> +		cvmmemctl.s.lmtena =3D 1;
+> +		/* Scratch line to use for LMT operation */
+> +		cvmmemctl.s.lmtline =3D 2;
 
-NB: what you call X11 is has the MIT license id in the SPDX license list.
+Out of curiosity, is there significance to the value 2 and associated
+virtual address 0xffffffffffff8100, or is it pretty arbitrary?
 
-So you could replace 32 lines by only two lines :) it'[s neat right?
+> +	}
+>  	/* R/W If set, CVMSEG is available for loads/stores in
+>  	 * supervisor mode. */
+>  	cvmmemctl.s.cvmsegenas =3D 0;
+> diff --git a/arch/mips/include/asm/octeon/octeon.h b/arch/mips/include/as=
+m/octeon/octeon.h
+> index c99c4b6a79f4..92a17d67c1fa 100644
+> --- a/arch/mips/include/asm/octeon/octeon.h
+> +++ b/arch/mips/include/asm/octeon/octeon.h
+> @@ -179,7 +179,15 @@ union octeon_cvmemctl {
+>  		/* RO 1 =3D BIST fail, 0 =3D BIST pass */
+>  		__BITFIELD_FIELD(uint64_t wbfbist:1,
+>  		/* Reserved */
+> -		__BITFIELD_FIELD(uint64_t reserved:17,
+> +		__BITFIELD_FIELD(uint64_t reserved_52_57:6,
+> +		/* When set, LMTDMA/LMTST operations are permitted */
+> +		__BITFIELD_FIELD(uint64_t lmtena:1,
+> +		/* Selects the CVMSEG LM cacheline used by LMTDMA
+> +		 * LMTST and wide atomic store operations.
+> +		 */
+> +		__BITFIELD_FIELD(uint64_t lmtline:6,
+> +		/* Reserved */
+> +		__BITFIELD_FIELD(uint64_t reserved_41_44:4,
+>  		/* OCTEON II - TLB replacement policy: 0 =3D bitmask LRU; 1 =3D NLU.
+>  		 * This field selects between the TLB replacement policies:
+>  		 * bitmask LRU or NLU. Bitmask LRU maintains a mask of
+> @@ -275,7 +283,7 @@ union octeon_cvmemctl {
+>  		/* R/W Size of local memory in cache blocks, 54 (6912
+>  		 * bytes) is max legal value. */
+>  		__BITFIELD_FIELD(uint64_t lmemsz:6,
+> -		;)))))))))))))))))))))))))))))))))
+> +		;))))))))))))))))))))))))))))))))))))
+>  	} s;
+>  };
 
-And this would also help as we have tagged already ~15K files, so it
-would help to use this for new files so the amount of cleanup work
-still left does not increase. Thank you for your kind consideration!
+Regardless, the patch looks good to me.
 
--- 
-Cordially
-Philippe Ombredanne
+Reviewed-by: James Hogan <jhogan@kernel.org>
+
+Cheers
+James
+
+--RMedoP2+Pr6Rq0N2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlogedsACgkQbAtpk944
+dno6TQ//cBKLiMBKY1ej+YMEs/mD2KqI7SzAGM+p4kd4W9vyupZAqoykaKI0jyE2
+/8vcfhs6bbRzZKqKZCzacbiLMGHFuz5XKHhCyA07AfCmjucHjhle9uwJlSNp3Aha
+QYLV3raX9lH4p06zXfaDpjLqa5PCvNakHeOl7M+2M5pcBFFAskopfjeQW6d8/+WS
+8QSSLRqvcTMcpqne0d/6fv5njqH26zkTZ8tFt9hNbLsGAQfmFuLD9Rr2Wv+4hHez
+caYKzlTyCvDc7qqYbGCO5nfptG93lR4dxCEPgO36Yx38uRo5ZfZd2fk0gDAuHnrN
+SkFbHlJMav0VPsK7T8NlrUmDsxCxzU6BmaIc5eV2j0w2jL5XL34PbPpCRpzJucoC
+LxPJJijHy/N7rt9mluU9UwV4y1hgUNWGiXcTGTTSOzxzvJ/rgHpHDgA59TIw5+5L
+SaD0Vo44ugn/SkP3WX8mUuILD7+rgv21tJ0ZcZK4Fdve3FF1zdxwxwdF51tWB8+q
+Yov/c9oFbE3/q2ubItGTDOVseMPV70m1aqzNyC4u7UNjVvgL23E7makXaGp++Yij
+WNTtOsOTULu0tH1IDf6UvVh0WYe9MmDrmqzvHTrBSAOZTGVuUMFTjtyPNLtzPtoa
+6cQzY7dfSZxwtMePx8TrmHqDuGgQIechnbJyaKy6ffVWE2oAp3o=
+=cKI+
+-----END PGP SIGNATURE-----
+
+--RMedoP2+Pr6Rq0N2--
+
+--===============7012386805921380208==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devel mailing list
+devel@linuxdriverproject.org
+http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+
+--===============7012386805921380208==--
