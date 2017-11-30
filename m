@@ -1,40 +1,50 @@
-From: jassisinghbrar@gmail.com
-Subject: [PATCH 3/3] MAINTAINERS: Add entry for Socionext ethernet driver
-Date: Thu, 30 Nov 2017 21:43:36 +0530
-Message-ID: <1512058416-15968-1-git-send-email-jassisinghbrar@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: davem@davemloft.net, arnd.bergmann@linaro.org, ard.biesheuvel@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, Jassi Brar <jaswinder.singh@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 5/8] ARM: dts: am335x-pepper: Fix the audio CODEC's
+ reset pin
+Date: Thu, 30 Nov 2017 08:18:26 -0800
+Message-ID: <20171130161826.GP28152@atomide.com>
+References: <20171129171359.29382-1-afd@ti.com>
+ <20171129171359.29382-6-afd@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171129171359.29382-6-afd@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jassi Brar <jaswinder.singh@linaro.org>
+* Andrew F. Davis <afd@ti.com> [171129 17:16]:
+> The correct DT property for specifying a GPIO used for reset
+> is "reset-gpios", fix this here.
+> 
+> Fixes: 4341881d0562 ("ARM: dts: Add devicetree for Gumstix Pepper board")
 
-Add entry for the Socionext Netsec controller driver and DT bindings.
+So it seems this and patch 8/8 are safe for me to pick separately?
 
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Regards,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa71ab52f..aed9d32 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12617,6 +12617,14 @@ F:	drivers/md/raid*
- F:	include/linux/raid/
- F:	include/uapi/linux/raid/
- 
-+SOCIONEXT (SNI) NETSEC NETWORK DRIVER
-+M:	Jassi Brar <jaswinder.singh@linaro.org>
-+L:	netdev@vger.kernel.org
-+S:	Supported
-+S:	Maintained
-+F:	drivers/net/ethernet/socionext/netsec.c
-+F:	Documentation/devicetree/bindings/net/socionext-netsec.txt
-+
- SONIC NETWORK DRIVER
- M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
- L:	netdev@vger.kernel.org
--- 
-2.7.4
+Tony
+
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> ---
+>  arch/arm/boot/dts/am335x-pepper.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am335x-pepper.dts
+> index 03c7d77023c6..9fb7426070ce 100644
+> --- a/arch/arm/boot/dts/am335x-pepper.dts
+> +++ b/arch/arm/boot/dts/am335x-pepper.dts
+> @@ -139,7 +139,7 @@
+>  &audio_codec {
+>  	status = "okay";
+>  
+> -	gpio-reset = <&gpio1 16 GPIO_ACTIVE_LOW>;
+> +	reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+>  	AVDD-supply = <&ldo3_reg>;
+>  	IOVDD-supply = <&ldo3_reg>;
+>  	DRVDD-supply = <&ldo3_reg>;
+> -- 
+> 2.15.0
+> 
