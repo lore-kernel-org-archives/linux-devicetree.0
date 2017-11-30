@@ -1,156 +1,51 @@
-From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: Remove leading 0x from bindings notation
-Date: Thu, 30 Nov 2017 08:57:11 +0100
-Message-ID: <CA+7wUszQAjcOkaWyEhJ9GnqL0+PQOvsMx3rOaHMOnq_0HnUDeQ@mail.gmail.com>
-References: <20171129205515.9009-1-malat@debian.org> <c7200904-f016-8789-ee5e-fe5a281be215@caviumnetworks.com>
+From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH][v3] dt-bindings: ifc: Update endianness usage
+Date: Thu, 30 Nov 2017 13:36:36 +0530
+Message-ID: <1512029196-7158-1-git-send-email-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c7200904-f016-8789-ee5e-fe5a281be215-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+IFC controller version < 2.0 support IFC register access as
+big endian. These controller version also require IFC NOR signals to
+be connected in reverse order with NOR flash.
 
-On Thu, Nov 30, 2017 at 12:21 AM, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> On 11/29/2017 12:55 PM, Mathieu Malaterre wrote:
->>
->> Improve the binding example by removing all the leading 0x to fix the
->> following dtc warnings:
->>
->> Warning (unit_address_format): Node /XXX unit name should not have leading
->> "0x"
->
->
-> How does it fix the warnings?  You are not changing the .dts files that are
-> compiled.
+IFC >= 2.0 is other way around.
 
-I originally only wanted to fix [...]watchdog/ingenic,jz4740-wdt.txt,
-but when I lookup git log, I eventually found out about the commit I
-refer to in my commit message:
+So updating IFC binding to take care of both using endianness field.
 
-https://github.com/torvalds/linux/commit/48c926cd3414
+Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+---
+Changes for v2: updated subject
+Changes for v3: fixed typo for "big-endian"
 
-and I simply followed suggestion from Rob:
+ Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-https://lkml.org/lkml/2017/11/1/965
+diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
+index 89427b0..824a2ca 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
+@@ -18,8 +18,10 @@ Properties:
+               interrupt (NAND_EVTER_STAT).  If there is only one,
+               that interrupt reports both types of event.
+ 
+-- little-endian : If this property is absent, the big-endian mode will
+-                  be in use as default for registers.
++- little-endian or big-endian : It represents how IFC registers to be accessed.
++			It also represents connection between controller and
++			NOR flash. If this property is absent, the big-endian
++			mode will be in use as default.
+ 
+ - ranges : Each range corresponds to a single chipselect, and covers
+            the entire access window as configured.
+-- 
+1.9.1
 
-> This may also cause the binding documentation to differ from the reality of
-> what the actual device trees contain.
-
-
-Chicken or the egg dilemma, but you understand that linux master tree
-still has the original warning:
-
-$ perl -p -i -e 's/\@0+([0-9a-f])/\@$1/g' `find ./ -type f \( -iname
-\*.dtsi -o -iname \*.dts \)`
-$ git diff | diffstat
-[...]
- 40 files changed, 160 insertions(+), 160 deletions(-)
-
-And those are real W=1 actual warnings. Do you want me to re-submit it
-as patch series instead which fix both the documentation side and the
-dts* files ?
-
-
->
->>
->> Converted using the following command:
->>
->> find Documentation/devicetree/bindings -name "*.txt" -exec sed -i -e
->> 's/([^ ])\@0x([0-9a-f])/$1\@$2/g' {} +
->>
->> This is a follow up to commit 48c926cd3414
->>
->> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
->> ---
->> I've also checked using the original perl command that I did not
->> introduce:
->>
->> Warning (unit_address_format): Node /XXX unit name should not have leading
->> 0s
->>
->>   Documentation/devicetree/bindings/arm/ccn.txt                |  2 +-
->>   Documentation/devicetree/bindings/arm/omap/crossbar.txt      |  2 +-
->>   .../devicetree/bindings/arm/tegra/nvidia,tegra20-mc.txt      |  2 +-
->>   Documentation/devicetree/bindings/clock/axi-clkgen.txt       |  2 +-
->>   .../devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt     |  2 +-
->>   Documentation/devicetree/bindings/clock/exynos4-clock.txt    |  2 +-
->>   Documentation/devicetree/bindings/clock/exynos5250-clock.txt |  2 +-
->>   Documentation/devicetree/bindings/clock/exynos5410-clock.txt |  2 +-
->>   Documentation/devicetree/bindings/clock/exynos5420-clock.txt |  2 +-
->>   Documentation/devicetree/bindings/clock/exynos5440-clock.txt |  2 +-
->>   .../devicetree/bindings/clock/ti-keystone-pllctrl.txt        |  2 +-
->>   Documentation/devicetree/bindings/clock/zx296702-clk.txt     |  4 ++--
->>   Documentation/devicetree/bindings/crypto/fsl-sec4.txt        |  4 ++--
->>   .../devicetree/bindings/devfreq/event/rockchip-dfi.txt       |  2 +-
->>   Documentation/devicetree/bindings/display/atmel,lcdc.txt     |  4 ++--
->>   Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  4 ++--
->>   Documentation/devicetree/bindings/dma/zxdma.txt              |  2 +-
->>   Documentation/devicetree/bindings/gpio/gpio-altera.txt       |  2 +-
->>   Documentation/devicetree/bindings/i2c/i2c-jz4780.txt         |  2 +-
->>   Documentation/devicetree/bindings/iio/pressure/hp03.txt      |  2 +-
->>   .../devicetree/bindings/input/touchscreen/bu21013.txt        |  2 +-
->>   .../devicetree/bindings/interrupt-controller/arm,gic.txt     |  4 ++--
->>   .../bindings/interrupt-controller/img,meta-intc.txt          |  2 +-
->>   .../bindings/interrupt-controller/img,pdc-intc.txt           |  2 +-
->>   .../bindings/interrupt-controller/st,spear3xx-shirq.txt      |  2 +-
->>   Documentation/devicetree/bindings/mailbox/altera-mailbox.txt |  6 +++---
->>   .../devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt      |  2 +-
->>   Documentation/devicetree/bindings/media/exynos5-gsc.txt      |  2 +-
->>   Documentation/devicetree/bindings/media/mediatek-vcodec.txt  |  2 +-
->>   Documentation/devicetree/bindings/media/rcar_vin.txt         |  2 +-
->>   Documentation/devicetree/bindings/media/samsung-fimc.txt     |  2 +-
->>   Documentation/devicetree/bindings/media/sh_mobile_ceu.txt    |  2 +-
->>   Documentation/devicetree/bindings/media/video-interfaces.txt | 10
->> +++++-----
->>   .../devicetree/bindings/memory-controllers/ti/emif.txt       |  2 +-
->>   .../devicetree/bindings/mfd/ti-keystone-devctrl.txt          |  2 +-
->>   Documentation/devicetree/bindings/misc/brcm,kona-smc.txt     |  2 +-
->>   Documentation/devicetree/bindings/mmc/brcm,kona-sdhci.txt    |  2 +-
->>   Documentation/devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  2 +-
->>   Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt      |  4 ++--
->>   Documentation/devicetree/bindings/mtd/gpmc-nor.txt           |  6 +++---
->>   Documentation/devicetree/bindings/mtd/mtk-nand.txt           |  2 +-
->>   Documentation/devicetree/bindings/net/altera_tse.txt         |  4 ++--
->>   Documentation/devicetree/bindings/net/mdio.txt               |  2 +-
->>   Documentation/devicetree/bindings/net/socfpga-dwmac.txt      |  2 +-
->>   Documentation/devicetree/bindings/nios2/nios2.txt            |  2 +-
->>   Documentation/devicetree/bindings/pci/altera-pcie.txt        |  2 +-
->>   Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  2 +-
->>   Documentation/devicetree/bindings/pci/hisilicon-pcie.txt     |  2 +-
->>   Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt      |  2 +-
->>   .../devicetree/bindings/pinctrl/brcm,cygnus-pinmux.txt       |  2 +-
->>   Documentation/devicetree/bindings/pinctrl/pinctrl-atlas7.txt |  4 ++--
->>   Documentation/devicetree/bindings/pinctrl/pinctrl-sirf.txt   |  2 +-
->>   .../devicetree/bindings/pinctrl/rockchip,pinctrl.txt         |  4 ++--
->>   Documentation/devicetree/bindings/regulator/regulator.txt    |  2 +-
->>   Documentation/devicetree/bindings/serial/efm32-uart.txt      |  2 +-
->>   .../devicetree/bindings/serio/allwinner,sun4i-ps2.txt        |  2 +-
->>   .../devicetree/bindings/soc/ti/keystone-navigator-qmss.txt   |  2 +-
->>   Documentation/devicetree/bindings/sound/adi,axi-i2s.txt      |  2 +-
->>   Documentation/devicetree/bindings/sound/adi,axi-spdif-tx.txt |  2 +-
->>   Documentation/devicetree/bindings/sound/ak4613.txt           |  2 +-
->>   Documentation/devicetree/bindings/sound/ak4642.txt           |  2 +-
->>   Documentation/devicetree/bindings/sound/max98371.txt         |  2 +-
->>   Documentation/devicetree/bindings/sound/max9867.txt          |  2 +-
->>   Documentation/devicetree/bindings/sound/renesas,fsi.txt      |  2 +-
->>   Documentation/devicetree/bindings/sound/rockchip-spdif.txt   |  2 +-
->>   Documentation/devicetree/bindings/sound/st,sti-asoc-card.txt |  8
->> ++++----
->>   Documentation/devicetree/bindings/spi/efm32-spi.txt          |  2 +-
->>   Documentation/devicetree/bindings/thermal/thermal.txt        | 12
->> ++++++------
->>   Documentation/devicetree/bindings/ufs/ufs-qcom.txt           |  4 ++--
->>   Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  2 +-
->>   Documentation/devicetree/bindings/usb/ehci-st.txt            |  2 +-
->>   Documentation/devicetree/bindings/usb/ohci-st.txt            |  2 +-
->>   .../devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt      |  2 +-
->>   73 files changed, 99 insertions(+), 99 deletions(-)
->>
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
