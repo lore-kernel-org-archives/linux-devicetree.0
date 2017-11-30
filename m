@@ -1,76 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 5/8] ARM: dts: am335x-pepper: Fix the
- audio CODEC's reset pin
-Date: Thu, 30 Nov 2017 16:53:28 +0000
-Message-ID: <20171130165328.q5nknyvwp36xj4t2@sirena.org.uk>
-References: <20171129171359.29382-1-afd@ti.com>
- <20171129171359.29382-6-afd@ti.com>
- <20171130161826.GP28152@atomide.com>
- <20171130163344.kudopvsljywb4hyw@sirena.org.uk>
- <4b535cec-6e33-adc0-a962-f5e65d84d1ad@ti.com>
+From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC v2 2/2] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Thu, 30 Nov 2017 08:57:00 -0800
+Message-ID: <CAD=FV=V+PBUENVgANVrnm44Mp27HbsNNmu6qaqU3txS5VGZGww@mail.gmail.com>
+References: <20171116141151.21171-1-enric.balletbo@collabora.com>
+ <20171116141151.21171-3-enric.balletbo@collabora.com> <CAD=FV=WY-2MmjRxGGaJrQjyeWt+k4_k7j12M4LxAnnZxJF7sXw@mail.gmail.com>
+ <c6450f50-5c12-dc52-4340-b068c0b38c54@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8371209277230846036=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <4b535cec-6e33-adc0-a962-f5e65d84d1ad@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Sascha Hauer <kernel@pengutronix.de>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c6450f50-5c12-dc52-4340-b068c0b38c54-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <groeck-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandru Stan <amstan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============8371209277230846036==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="axwco4d2d5uo7iar"
-Content-Disposition: inline
+On Thu, Nov 30, 2017 at 3:27 AM, Daniel Thompson
+<daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>
+> On 30/11/17 00:44, Doug Anderson wrote:
+>>
+>> Hi,
+>>
+>> On Thu, Nov 16, 2017 at 6:11 AM, Enric Balletbo i Serra
+>> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>>>
+>>> When you want to change the brightness using a PWM signal, one thing you
+>>> need to consider is how human perceive the brightness. Human perceive the
+>>> brightness change non-linearly, we have better sensitivity at low
+>>> luminance than high luminance, so to achieve perceived linear dimming,
+>>> the
+>>> brightness must be matches to the way our eyes behave. The CIE 1931
+>>> lightness formula is what actually describes how we perceive light.
+>>>
+>>> This patch adds support to compute the brightness levels based on a
+>>> static
+>>> table filled with the numbers provided by the CIE 1931 algorithm, for now
+>>> it only supports PWM resolutions up to 65535 (16 bits) with 1024 steps.
+>>> Lower PWM resolutions are implemented using the same curve but with less
+>>> steps, e.g. For a PWM resolution of 256 (8 bits) we have 37 steps.
+>>
+>>
+>> Your patch assumes that the input to your formula (luminance, I think)
+>> scales linearly with PWM duty cycle.  I don't personally know this,
+>> but has anyone confirmed it's common in reality, or at least is a
+>> close enough approximation of reality?
+>
+>
+> Isn't this the loop we went round for v1?
+>
+> We do know that its not linear, however the graphs from a couple of example
+> devices didn't look too scary and nobody has proposed a better formula.
+>
+> At this point the linear interpolation code in patch 1 allows people with
+> especially alinear devices to express suitable brightness curves.
+>
+> However we also know that many DT authors choose not to create good
+> brightness tables for their devices... and we'd rather they used allowed the
+> kernel to choose a model than to use no model at all.
 
+OK, cool.  I didn't remember anyone actually confirming that they had
+checked that this was the case, but that's probably just my bad memory
+and failures at searching through history.  I don't have any
+objections to the idea if people are convinced it's a good enough
+approximation.  :)
 
---axwco4d2d5uo7iar
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It would be kinda nice if something could go in the commit message, like:
 
-On Thu, Nov 30, 2017 at 10:37:22AM -0600, Andrew F. Davis wrote:
-> On 11/30/2017 10:33 AM, Mark Brown wrote:
+This method will work in any cases where linearly scaling the PWM duty
+cycle causes a roughly linear scaling of the luminance of the
+backlight.
 
-> > It might make sense to pull in the relevant branches from ASoC first
-> > however IIRC the reset GPIO code currently does nothing useful anyway so
-> > it won't have any impact on bisection.  Andrew?
+:)
 
-> Yeah, that's right, for safety it would be nice to take these after the
-> ASoC code, but it shouldn't matter in practice as the reset wasn't used
-> right anyway.
-
-I'd just go for it.
-
---axwco4d2d5uo7iar
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlogN4gACgkQJNaLcl1U
-h9Ac3ggAhUxG+uggFhqU3Uk8D3lP6+peCoqqDskiAS7FkKylAbrh0tKCi3gaa0Hy
-+ldiQzlaD7trWlc6NemZUB7VlEATv+xx7jOpZKBU1xVvlKaFpYDhk+PF0eetBQik
-aShL7ZbYO/Swzh7YxmCTeeA6Xw37XyhHVaUOwtW/kj5lKJpfy2rI8SKBq3wgnTt+
-Q64UsNbvdNhjwBLpCRgyOGrfifTsGGrpM+uXUGshkoegphO2HC3HVW7QNTkwyRDZ
-w8Oy5ap/Va0EPkh/bdbOGPIh09e4/iPxENFvmaUdSQ+FY4fVeYovvQA22VY+U7Z6
-d3YCMLypVl7uWS3YgLKmvdHc3moHtQ==
-=tzF5
------END PGP SIGNATURE-----
-
---axwco4d2d5uo7iar--
-
---===============8371209277230846036==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8371209277230846036==--
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
