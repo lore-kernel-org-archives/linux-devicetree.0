@@ -1,135 +1,56 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 3/3] drm/omap: Filter displays mode based on bandwidth limit
-Date: Thu, 30 Nov 2017 14:12:37 +0200
-Message-ID: <20171130121237.30431-4-peter.ujfalusi@ti.com>
-References: <20171130121237.30431-1-peter.ujfalusi@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v3 0/3] drm/omap: Support for dispc memory bandwidth limit
+Date: Thu, 30 Nov 2017 14:12:34 +0200
+Message-ID: <20171130121237.30431-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171130121237.30431-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jsarha-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
+Cc: airlied@linux.ie, devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-If we have memory bandwidth limit configured, reject the modes which would
-require more bandwidth than the limit if it is used with one full
-resolution plane (most common use case).
-
-This filtering is not providing full protection as it is possible that
-application would pick smaller crtc resolution with high resolution planes
-and down scaling, or can enable more smaller planes where the sum of their
-bandwidth need would be higher than the limit.
-
-This patch only allows us to filter out modes which would need more
-bandwidth if they were used with one full screen plane.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
----
- drivers/gpu/drm/omapdrm/omap_crtc.c | 37 +++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/omapdrm/omap_drv.c  |  5 +++++
- drivers/gpu/drm/omapdrm/omap_drv.h  |  3 +++
- 3 files changed, 45 insertions(+)
-
-diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
-index cc85c16cbc2a..ae2e16ed3874 100644
---- a/drivers/gpu/drm/omapdrm/omap_crtc.c
-+++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
-@@ -23,6 +23,7 @@
- #include <drm/drm_crtc_helper.h>
- #include <drm/drm_mode.h>
- #include <drm/drm_plane_helper.h>
-+#include <linux/math64.h>
- 
- #include "omap_drv.h"
- 
-@@ -400,6 +401,41 @@ static void omap_crtc_atomic_disable(struct drm_crtc *crtc,
- 	drm_crtc_vblank_off(crtc);
- }
- 
-+static enum drm_mode_status omap_crtc_mode_valid(struct drm_crtc *crtc,
-+					const struct drm_display_mode *mode)
-+{
-+	struct omap_drm_private *priv = crtc->dev->dev_private;
-+
-+	/* Check for bandwidth limit */
-+	if (priv->max_bandwidth) {
-+		/*
-+		 * Estimation for the bandwidth need of a given mode with one
-+		 * full screen plane:
-+		 * bandwidth = resolution * 32bpp * (pclk / (vtotal * htotal))
-+		 *					^^ Refresh rate ^^
-+		 *
-+		 * The interlaced mode is taken into account by using the
-+		 * pixelclock in the calculation.
-+		 *
-+		 * The equation is rearranged for 64bit arithmetic.
-+		 */
-+		uint64_t bandwidth = mode->clock * 1000;
-+		unsigned int bpp = 4;
-+
-+		bandwidth = bandwidth * mode->hdisplay * mode->vdisplay * bpp;
-+		bandwidth = div_u64(bandwidth, mode->htotal * mode->vtotal);
-+
-+		/*
-+		 * Reject modes which would need more bandwidth if used with one
-+		 * full resolution plane (most common use case).
-+		 */
-+		if (priv->max_bandwidth < bandwidth)
-+			return MODE_BAD;
-+	}
-+
-+	return MODE_OK;
-+}
-+
- static void omap_crtc_mode_set_nofb(struct drm_crtc *crtc)
- {
- 	struct omap_crtc *omap_crtc = to_omap_crtc(crtc);
-@@ -621,6 +657,7 @@ static const struct drm_crtc_helper_funcs omap_crtc_helper_funcs = {
- 	.atomic_flush = omap_crtc_atomic_flush,
- 	.atomic_enable = omap_crtc_atomic_enable,
- 	.atomic_disable = omap_crtc_atomic_disable,
-+	.mode_valid = omap_crtc_mode_valid,
- };
- 
- /* -----------------------------------------------------------------------------
-diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
-index cdf5b0601eba..ba3d22fae55b 100644
---- a/drivers/gpu/drm/omapdrm/omap_drv.c
-+++ b/drivers/gpu/drm/omapdrm/omap_drv.c
-@@ -593,6 +593,11 @@ static int pdev_probe(struct platform_device *pdev)
- 	ddev->dev_private = priv;
- 	platform_set_drvdata(pdev, ddev);
- 
-+	/* Get memory bandwidth limits */
-+	if (priv->dispc_ops->get_memory_bandwidth_limit)
-+		priv->max_bandwidth =
-+				priv->dispc_ops->get_memory_bandwidth_limit();
-+
- 	omap_gem_init(ddev);
- 
- 	ret = omap_modeset_init(ddev);
-diff --git a/drivers/gpu/drm/omapdrm/omap_drv.h b/drivers/gpu/drm/omapdrm/omap_drv.h
-index 4bd1e9070b31..d404e8c56b61 100644
---- a/drivers/gpu/drm/omapdrm/omap_drv.h
-+++ b/drivers/gpu/drm/omapdrm/omap_drv.h
-@@ -83,6 +83,9 @@ struct omap_drm_private {
- 	spinlock_t wait_lock;		/* protects the wait_list */
- 	struct list_head wait_list;	/* list of omap_irq_wait */
- 	uint32_t irq_mask;		/* enabled irqs in addition to wait_list */
-+
-+	/* memory bandwidth limit if it is needed on the platform */
-+	unsigned int max_bandwidth;
- };
- 
- 
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpDaGFuZ2VzIHNpbmNlIHYyOgotIFJlYmFzZWQgb24gZHJtLW5leHQgKHYyIHdhcyBiYXNl
+ZCBvbiBkcm0tbmV4dCBhbmQgbXkKICAnZHJtL29tYXA6IE1vZHVsZSBwYXJhbWV0ZXIgZm9yIGRp
+c3BsYXkgb3JkZXIgY29uZmlndXJhdGlvbicgc2VyaWVzLCB0aHVzIGl0CiAgd2FzIG5vdCBhcHBs
+eWluZyBjbGVhbmx5LgotIEFkZGVkIEFja2VkLWJ5IGZyb20gUm9iIHRvIHRoZSBkdC1iaW5kaW5n
+IGNoYW5nZXMKCkNoYW5nZXMgc2luY2UgdjE6Ci0gVXNlIHRoZSBjcnRjLT5tb2RlX3ZhbGlkIGFu
+ZCBub3QgY29ubmVjdG9yLT5tb2RlX3ZhbGlkIGFzIHRoZSBsaW1pdCBpcyByZWFsbHkKICBwb3Nl
+ZCBieSB0aGUgJ2NydGMnIChESVNQQykKLSBCYW5kd2lkdGggY2FsY3VsYXRpb24gY2hhbmdlZDog
+ZG8gdGhlIGNhbGN1bGF0aW9uIGluIHBsYWNlICsgZXh0ZW5kZWQgY29tbWVudAotIGxvb2tlZCBm
+b3IgYmV0dGVyIHBsYWNlIHRvIGRvY3VtZW50IHRoZSBtYXgtbWVtb3J5LWJhbmR3aWR0aCwgYnV0
+CiAgY2FuIG5vdCBmaW5kIGFueSBzdWl0YWJsZSBkb2N1bWVudC4gQ3JlYXRpbmcgYSBuZXcgdHh0
+IGZpbGUgZm9yIG9ubHkgb25lCiAgcHJvcGVydHkgZGlkIG5vdCBzZWVtZWQgZmVhc2FibGUuCgpU
+aGlzIHNlcmllcyB3aWxsIGFkZCBzaW1wbGUgbWVtb3J5IGJhbmR3aWR0aCBsaW1pdCBzdXBwb3J0
+IHRvIHJlamVjdCBtb2Rlcwp3aGljaCwgaWYgdXNlZCB3aXRoIG9uZSBwbGFuZSBpbiBmdWxsIHNp
+emUgd291bGQgZmFpbCB0aGUgbGltaXQuCgpSZWdhcmRzLApQZXRlcgotLS0KUGV0ZXIgVWpmYWx1
+c2kgKDMpOgogIGR0LWJpbmRpbmdzOiBkaXNwbGF5L3RpOiBBZGQgb3B0aW9uYWwgcHJvcGVydHkg
+dG8gc2V0IG1lbW9yeSBiYW5kd2lkdGgKICAgIGxpbWl0CiAgZHJtL29tYXA6IGRzczogQWRkIHN1
+cHBvcnQgZm9yIHJlcG9ydGluZyBtZW1vcnkgYmFuZHdpZHRoIGxpbWl0YXRpb24KICBkcm0vb21h
+cDogRmlsdGVyIGRpc3BsYXlzIG1vZGUgYmFzZWQgb24gYmFuZHdpZHRoIGxpbWl0CgogLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQgfCAgNSArKysKIC4u
+Li9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAyLWRzcy50eHQgICAgICAgICAgIHwgIDQgKysr
+CiAuLi4vYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMy1kc3MudHh0ICAgICAgICAgICB8ICA0
+ICsrKwogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDQtZHNzLnR4dCAgICAgICAgICAg
+fCAgNCArKysKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA1LWRzcy50eHQgICAgICAg
+ICAgIHwgIDQgKysrCiBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9kc3MvZGlzcGMuYyAgICAgICAg
+ICAgICAgICB8IDEzICsrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9kc3Mvb21hcGRz
+cy5oICAgICAgICAgICAgICB8ICAyICsrCiBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Ny
+dGMuYyAgICAgICAgICAgICAgICB8IDM3ICsrKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMv
+Z3B1L2RybS9vbWFwZHJtL29tYXBfZHJ2LmMgICAgICAgICAgICAgICAgIHwgIDUgKysrCiBkcml2
+ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Rydi5oICAgICAgICAgICAgICAgICB8ICAzICsrCiAx
+MCBmaWxlcyBjaGFuZ2VkLCA4MSBpbnNlcnRpb25zKCspCgotLSAKUGV0ZXIKClRleGFzIEluc3Ry
+dW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1
+bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5r
+aQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
