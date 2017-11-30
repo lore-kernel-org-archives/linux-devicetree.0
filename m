@@ -1,247 +1,78 @@
-From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: [PATCH v4] arm64: dts: renesas: r8a7795: Move nodes which have no reg property out of bus
-Date: Thu, 30 Nov 2017 11:25:39 +0100
-Message-ID: <20171130102539.19130-1-horms+renesas@verge.net.au>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 01/16] dt-bindings: mtd: gpmc-onenand: Update
+ properties description
+Date: Thu, 30 Nov 2017 11:25:44 +0100
+Message-ID: <20171130112544.5509ca1b@bbrezillon>
+References: <20171115162306.2o2w2yrf7wucroxd@lenoch>
+        <20171115162458.rtompijrsaobdemk@lenoch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171115162458.rtompijrsaobdemk@lenoch>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+To: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move pmu_a5[73], timer and thermal-zones nodes from soc node to root node.
-The nodes that have been moved do not have any register properties and thus
-shouldn't be placed on the bus.
++Rob and the DT ML
 
-This problem is flagged by the compiler as follows:
-$ make
-...
-  DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb
-arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
-  DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb
-arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
-  DTC     arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb
-arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
-  DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb
-arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
-  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb
-arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-es1-salvator-x.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
-  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb
-arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
-  DTC     arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb
-arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a57 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/pmu_a53 missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
-arch/arm64/boot/dts/renesas/r8a7795-es1-h3ulcb-kf.dtb: Warning (simple_bus_reg): Node /soc/thermal-zones missing or empty reg/ranges property
+On Wed, 15 Nov 2017 17:24:58 +0100
+Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org> wrote:
 
-Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
----
-v4
-* Use interrupts-extended rather than interrupt-parent + interrupts
-  in /pmu_* and /timer nodes as seems to be preferred.
-v3
-* Add interrupt-parent property to /pmu_* and /timer nodes as
-  it is no longer inherited from the parent node
-v2
-* Preserve alphabetical order of nodes present in root node.
+> Compatible property is required for OMAP2+ mtd driver. Also
+> add INT pin gpio description and delete unused dma-channel
+> property.
+> 
+> Signed-off-by: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+> Reviewed-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+> Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> ---
+> 
+> Changes in v5:
+> - renamed R/B pin to INT pin
+> 
+> Changes in v4:
+> - new patch
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/mtd/gpmc-onenand.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
+> index b6e8bfd024f4..e9f01a963a0a 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
+> @@ -9,13 +9,14 @@ Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
+>  
+>  Required properties:
+>  
+> + - compatible:		"ti,omap2-onenand"
 
-Based on renesas-devel-20171130-v4.15-rc1
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 138 ++++++++++++++++---------------
- 1 file changed, 71 insertions(+), 67 deletions(-)
+Don't you break backward compat by adding this new requirement?
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 6db4f10376a1..a851c88e1e04 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -184,6 +184,30 @@
- 		clock-frequency = <0>;
- 	};
- 
-+	pmu_a57 {
-+		compatible = "arm,cortex-a57-pmu";
-+		interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-+		                      <&gic GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&a57_0>,
-+				     <&a57_1>,
-+				     <&a57_2>,
-+				     <&a57_3>;
-+	};
-+
-+	pmu_a53 {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts-extended = <&gic GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+				      <&gic GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&a53_0>,
-+				     <&a53_1>,
-+				     <&a53_2>,
-+				     <&a53_3>;
-+	};
-+
- 	soc: soc {
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
-@@ -338,42 +362,6 @@
- 			resets = <&cpg 905>;
- 		};
- 
--		pmu_a57 {
--			compatible = "arm,cortex-a57-pmu";
--			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-affinity = <&a57_0>,
--					     <&a57_1>,
--					     <&a57_2>,
--					     <&a57_3>;
--		};
--
--		pmu_a53 {
--			compatible = "arm,cortex-a53-pmu";
--			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-affinity = <&a53_0>,
--					     <&a53_1>,
--					     <&a53_2>,
--					     <&a53_3>;
--		};
--
--		timer {
--			compatible = "arm,armv8-timer";
--			interrupts = <GIC_PPI 13
--					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
--				     <GIC_PPI 14
--					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
--				     <GIC_PPI 11
--					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
--				     <GIC_PPI 10
--					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
--		};
--
- 		cpg: clock-controller@e6150000 {
- 			compatible = "renesas,r8a7795-cpg-mssr";
- 			reg = <0 0xe6150000 0 0x1000>;
-@@ -2331,47 +2319,63 @@
- 			#thermal-sensor-cells = <1>;
- 			status = "okay";
- 		};
-+	};
- 
--		thermal-zones {
--			sensor_thermal1: sensor-thermal1 {
--				polling-delay-passive = <250>;
--				polling-delay = <1000>;
--				thermal-sensors = <&tsc 0>;
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts-extended = <&gic GIC_PPI 13
-+				       (GIC_CPU_MASK_SIMPLE(8) |
-+				       IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 14
-+				       (GIC_CPU_MASK_SIMPLE(8) |
-+				       IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 11
-+				       (GIC_CPU_MASK_SIMPLE(8) |
-+				       IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 10
-+				       (GIC_CPU_MASK_SIMPLE(8) |
-+				       IRQ_TYPE_LEVEL_LOW)>;
-+	};
- 
--				trips {
--					sensor1_crit: sensor1-crit {
--						temperature = <120000>;
--						hysteresis = <2000>;
--						type = "critical";
--					};
-+	thermal-zones {
-+		sensor_thermal1: sensor-thermal1 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&tsc 0>;
-+
-+			trips {
-+				sensor1_crit: sensor1-crit {
-+					temperature = <120000>;
-+					hysteresis = <2000>;
-+					type = "critical";
- 				};
- 			};
-+		};
- 
--			sensor_thermal2: sensor-thermal2 {
--				polling-delay-passive = <250>;
--				polling-delay = <1000>;
--				thermal-sensors = <&tsc 1>;
-+		sensor_thermal2: sensor-thermal2 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&tsc 1>;
- 
--				trips {
--					sensor2_crit: sensor2-crit {
--						temperature = <120000>;
--						hysteresis = <2000>;
--						type = "critical";
--					};
-+			trips {
-+				sensor2_crit: sensor2-crit {
-+					temperature = <120000>;
-+					hysteresis = <2000>;
-+					type = "critical";
- 				};
- 			};
-+		};
- 
--			sensor_thermal3: sensor-thermal3 {
--				polling-delay-passive = <250>;
--				polling-delay = <1000>;
--				thermal-sensors = <&tsc 2>;
-+		sensor_thermal3: sensor-thermal3 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&tsc 2>;
- 
--				trips {
--					sensor3_crit: sensor3-crit {
--						temperature = <120000>;
--						hysteresis = <2000>;
--						type = "critical";
--					};
-+			trips {
-+				sensor3_crit: sensor3-crit {
-+					temperature = <120000>;
-+					hysteresis = <2000>;
-+					type = "critical";
- 				};
- 			};
- 		};
--- 
-2.11.0
+>   - reg:			The CS line the peripheral is connected to
+> - - gpmc,device-width	Width of the ONENAND device connected to the GPMC
+> + - gpmc,device-width:	Width of the ONENAND device connected to the GPMC
+>  			in bytes. Must be 1 or 2.
+>  
+>  Optional properties:
+>  
+> - - dma-channel:		DMA Channel index
+> + - int-gpios:		GPIO specifier for the INT pin.
+>  
+>  For inline partition table parsing (optional):
+>  
+> @@ -35,6 +36,7 @@ Example for an OMAP3430 board:
+>  		#size-cells = <1>;
+>  
+>  		onenand@0 {
+> +			compatible = "ti,omap2-onenand";
+>  			reg = <0 0 0>; /* CS0, offset 0 */
+>  			gpmc,device-width = <2>;
+>  
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
