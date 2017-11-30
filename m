@@ -1,125 +1,71 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH] rtc: add mxc driver for i.MX53
-Date: Thu, 30 Nov 2017 14:27:48 +0000
-Message-ID: <20171130142748.GD10595@n2100.armlinux.org.uk>
-References: <20171128073927.12035-1-linux-kernel-dev@beckhoff.com>
- <20171129221114.GV21126@piout.net>
- <CAOFm3uFb8Jo9detD2CziuYt_DH_ohYD9P=uvqHugKDxpN+xvAQ@mail.gmail.com>
- <3BB206AB2B1BD448954845CE6FF69A8E01CB531330@NT-Mail07.beckhoff.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 0/2] of: Add whitelist
+Date: Thu, 30 Nov 2017 08:39:58 -0600
+Message-ID: <CABGGisyiG3mV9s+ksgNFVgoOk=dJrFn4PGj6Ny-O7=o9kmpRTw@mail.gmail.com>
+References: <1511816284-12145-1-git-send-email-atull@kernel.org>
+ <da4c9b29-eccc-6a67-291a-73a36c1598b5@gmail.com> <6a620530-2fac-480f-5c38-6b2b5257c9e9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3BB206AB2B1BD448954845CE6FF69A8E01CB531330@NT-Mail07.beckhoff.com>
+In-Reply-To: <6a620530-2fac-480f-5c38-6b2b5257c9e9@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick =?iso-8859-1?Q?Br=FCnn?= <P.Bruenn@beckhoff.com>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel-dev <linux-kernel-dev@beckhoff.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, moderated list:ARM/FREESCALE IMX / MXC ARM
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Moritz Fischer <mdf@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 30, 2017 at 01:36:22PM +0000, Patrick Brünn wrote:
-> >From: Philippe Ombredanne [mailto:pombredanne@nexb.com]
-> >Sent: Donnerstag, 30. November 2017 09:18
-> >>
-> >>> +/*
-> >>> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
-> >Reserved.
-> >>> + */
-> >>> +
-> >>> +/*
-> >>> + * The code contained herein is licensed under the GNU General Public
-> >>> + * License. You may obtain a copy of the GNU General Public License
-> >>> + * Version 2 or later at the following locations:
-> >>> + *
-> >>> + * http://www.opensource.org/licenses/gpl-license.html
-> >>> + * http://www.gnu.org/copyleft/gpl.html
-> >>> + */
-> >
-> >Exactly!
-> >And while you are it , you could replace the boilerplate license text
-> >with the SPDX id.
-> >--
-> 
-> How would a perfect header look like?
-> Looking at :
-> git show b24413180f5600bcb3bb70fbed5cf186b60864bd -- drivers/
-> and:
-> git grep SPDX -- Documentation/
-> 
-> it could be:
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
-> + */
-> or:
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
-> + */
-> 
-> Personally I would prefer:
-> +/*
-> + * Copyright (C) 2004-2011 Freescale Semiconductor, Inc. All Rights
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> 
-> So, is there any guideline?
+On Wed, Nov 29, 2017 at 4:47 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 11/29/17 04:20, Frank Rowand wrote:
+>> On 11/27/17 15:58, Alan Tull wrote:
+>>> Here's a proposal for a whitelist to lock down the dynamic device tree.
+>>>
+>>> For an overlay to be accepted, all of its targets are required to be
+>>> on a target node whitelist.
+>>>
+>>> Currently the only way I have to get on the whitelist is calling a
+>>> function to add a node.  That works for fpga regions, but I think
+>>> other uses will need a way of having adding specific nodes from the
+>>> base device tree, such as by adding a property like 'allow-overlay;'
+>>> or 'allow-overlay = "okay";' If that is acceptable, I could use some
+>>> advice on where that particular code should go.
+>>>
+>>> Alan
+>>>
+>>> Alan Tull (2):
+>>>   of: overlay: add whitelist
+>>>   fpga: of region: add of-fpga-region to whitelist
+>>>
+>>>  drivers/fpga/of-fpga-region.c |  9 ++++++
+>>>  drivers/of/overlay.c          | 73 +++++++++++++++++++++++++++++++++++++++++++
+>>>  include/linux/of.h            | 12 +++++++
+>>>  3 files changed, 94 insertions(+)
+>>>
+>>
+>> The plan was to use connectors to restrict where an overlay could be applied.
+>> I would prefer not to have multiple methods for accomplishing the same thing
+>> unless there is a compelling reason to do so.
+>
+> Going back one level in my thinking, I don't think that having a driver mark
+> a node as a location where an overlay fragment can be applied is serving a
+> useful purpose.  Any driver, including any driver loaded as a module,
+> could mark a node as ok.  I don't see how this is providing any meaningful
+> restriction on where an overlay fragment can be applied.
 
-There's been lots of discussion about this, but Linus T has set the
-requirements.
+It serves to separate the setting of which nodes overlays can be
+applied to and the mechanism to apply them (checking permissions). The
+former can't be centralized and the latter can be. For example,
+something in the kernel enables overlays on a node or nodes, then the
+overlay is applied with configfs interface and no board specific code
+involved.
 
->From Thomas' patches adding documentation for this:
+My concern is not whether any kernel component can enable applying of
+overlays, but userspace. If it is a kernel component, then it is
+explicit. And an OOT kernel module doesn't count because there's no
+ABI guarantee there.
 
-+1. Placement:
-+
-+   The SPDX license identifier in kernel files shall be added at the first
-+   possible line in a file which can contain a comment.  For the majority
-+   or files this is the first line, except for scripts which require the
-+   '#!PATH_TO_INTERPRETER' in the first line.  For those scripts the SPDX
-+   identifier goes into the second line.
-+
-+|
-+
-+2. Style:
-+
-+   The SPDX license identifier is added in form of a comment.  The comment
-+   style depends on the file type:
-+
-+   ::
-+
-+      C source:   // SPDX-License-Identifier: <SPDX License Expression>
-+      C header:   /* SPDX-License-Identifier: <SPDX License Expression> */
-+      ASM:        /* SPDX-License-Identifier: <SPDX License Expression> */
-+      scripts:    # SPDX-License-Identifier: <SPDX License Expression>
-+      .rst:      .. SPDX-License-Identifier: <SPDX License Expression>
-+
-+   If a specific tool cannot handle the standard comment style, then the
-+   appropriate comment mechanism which the tool accepts shall be used. This
-+   is the reason for having the "/\* \*/" style comment in C header
-+   files. There was build breakage observed with generated .lds files where
-+   'ld' failed to parse the C++ comment. This has been fixed by now, but
-+   there are still older assembler tools which cannot handle C++ style
-+   comments.
+I agree that this patch series alone is not all that useful with only
+in kernel users. It is only really interesting when we have a
+userspace interface. However, an implementation with a flag bit is so
+little code, I'm fine taking it now and not having to update all in
+kernel users when adding a userspace interface.
 
-There is additional information in Thomas' patch about the SPDX
-identifiers, how to deal with multi-licensed files, etc.  It's
-well worth reading before throwing a SPDX tag on a file to make
-sure you get the correct tag(s) and expressions.
-
-It's a fixed format.  Tabs and additional spaces that are not in
-the format are bad news.
-
-The idea here is (as detailed by Linus) to be able to grep for
-the SPDX identifiers using standard Unix tools, sort then and
-then eliminate duplicates.  If someone decides to use a tab
-after the SPDX-Identifier: rather than a space, then it messes
-up "uniq"'s ability to get rid of the duplicates.
-
-As I say, the documentation is there to help people get this right,
-so it's well worth reading.  I don't think it's in mainline yet.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+Rob
