@@ -1,66 +1,62 @@
-From: kernel@martin.sperl.org
-Subject: Re: [PATCH 1/2] dt-binding: can: mcp2517fd: document device tree bindings
-Date: Thu, 30 Nov 2017 08:24:45 +0100
-Message-ID: <612BB6CD-5330-40B8-A854-FD065E0A3331@martin.sperl.org>
-References: <20171124183509.12810-1-kernel@martin.sperl.org> <20171124183509.12810-2-kernel@martin.sperl.org> <20171126222528.i6quueqdmuj6le6g@rob-hp-laptop> <6EBDD798-8632-4F42-A138-369BCD36DF68@martin.sperl.org> <0a7e4416-332a-5c23-bda3-8c7561410314@posteo.de>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <0a7e4416-332a-5c23-bda3-8c7561410314@posteo.de>
-Sender: linux-can-owner@vger.kernel.org
-To: Patrick Menschel <menschel.p@posteo.de>
-Cc: linux-can@vger.kernel.org, devicetree@vger.kernel.org
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: exynos: Switch to dedicated Odroid-XU3
+ sound card binding
+Date: Thu, 30 Nov 2017 08:30:11 +0100
+Message-ID: <46152007-e599-23eb-6a07-cc5f3ff32c70@samsung.com>
+References: <20171103165446.15438-1-s.nawrocki@samsung.com>
+        <CGME20171103165539epcas1p48cc87811574dace9dfe91d8e9ec6f7ca@epcas1p4.samsung.com>
+        <20171103165446.15438-2-s.nawrocki@samsung.com>
+        <20171127181213.lxtbbiw75wbz2dbz@kozik-lap>
+        <CAJKOXPegJsQPrbDH8mXBhypOBnT9+Nn1T6NF=Cav=PV+9b-2MA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAJKOXPegJsQPrbDH8mXBhypOBnT9+Nn1T6NF=Cav=PV+9b-2MA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mihailescu2m-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Patrick!
+Hi Krzysztof,
 
-> On 29.11.2017, at 21:35, Patrick Menschel <menschel.p@posteo.de> wrote:
-> 
-> Hello Martin,
-> 
-> 
-> I didn't catch the whole discussion but you may want to check
-> 
-> include/dt-bindings/gpio/gpio.h
-> 
->> #define GPIO_OPEN_DRAIN (GPIO_SINGLE_ENDED | GPIO_ACTIVE_LOW)
-> 
-> This corresponds to
-> 
-> Documentation/devicetree/bindings/gpio/gpio.txt
+On 2017-11-29 18:55, Krzysztof Kozlowski wrote:
+> On Mon, Nov 27, 2017 at 7:12 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Nov 03, 2017 at 05:54:45PM +0100, Sylwester Nawrocki wrote:
+>>> The new sound card DT binding is used for Odroid XU3 in order
+>>> to properly support the HDMI audio path.
+>>> Clocks configuration is changed so the I2S controller is now the bit
+>>> and the frame clock master with EPLL as the root clock source.
+>>>
+>>> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/exynos4.dtsi                    |  1 +
+>>>   arch/arm/boot/dts/exynos5420.dtsi                 |  1 +
+>>>   arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 60 ++++++++++++++---------
+>>>   3 files changed, 40 insertions(+), 22 deletions(-)
+>>>
+>
+> Unfortunately this patch causes the audio card to disappear on Odroid
+> XU3. "aplay -L" shows nothing and obviously speaker-test fails.
+>
+> Applied on v4.15-rc1... any dependencies are missing?
+>
+> Full boot-logs are here:
+> http://www.krzk.eu/#/builders/1/builds/976
+> (test exits on aplay -L).
+>
+> Should this be dropped?
 
-I understand, but the question still is: how to
-present the information in a valid way.
+Please add CONFIG_SND_SOC_ODROID=y to you .config. Probably exynos_defconfig
+and multi_v7_defconfig should be updated too.
 
-To use gpio propperly it would require that the driver
-implements a “sub-driver” pinctrl with all the extra
-(boilerplate) code overhead.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-Also this would mean mixing different types of
-logical drivers into a single source - I doubt that
-would be easy to get accepted...
-
-Here again a summary of all the GPIOs that the mcp2517fd has:
-* TXCAN: dedicated GPIO with single function, 
-         individually conigurable as push/pull or open drain
-* INT: main interrupt line - configurable as push/pull or 
-         individually conigurable as push/pull or open drain
-* GPIO0: general GPIO with in/out option, but 2 special “cases”:
-         tx-irq and TX-disable
-         group configurable as push/pull or open drain
-* GPIO1: general GPIO with in/out potion, but 1 special “cases”:
-         rx-irq
-         group configurable as push/pull or open drain
-* CLKO/SOF: clock output at (1/10th, 1/5th, 1/2, 1 of the 
-            core frequency) or start of frame output
-            possibly group configurable as push/pull or open drain
-	    (not explicitly specified in datasheet)
-
-How would you try to present that HW-configuration in the 
-device tree instead?
-How would it impact the driver design?
-
-Thanks,
-	Martin
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
