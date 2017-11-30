@@ -1,64 +1,86 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH v6 0/2] memory: Introduce ti-emif-sram driver
-Date: Thu, 30 Nov 2017 16:56:06 -0600
-Message-ID: <1512082568-5012-1-git-send-email-d-gerlach@ti.com>
+From: James Hogan <james.hogan@mips.com>
+Subject: Re: [PATCH v4 2/8] MIPS: Octeon: Enable LMTDMA/LMTST operations.
+Date: Thu, 30 Nov 2017 22:56:15 +0000
+Message-ID: <20171130225614.GJ27409@jhogan-linux.mipstec.com>
+References: <20171129005540.28829-1-david.daney@cavium.com>
+ <20171129005540.28829-3-david.daney@cavium.com>
+ <20171130213635.GH27409@jhogan-linux.mipstec.com>
+ <54c83e6b-35e2-be38-e4f1-87eb420938cb@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="9iyR+p8Z2cn535Lj"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54c83e6b-35e2-be38-e4f1-87eb420938cb@caviumnetworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dave Gerlach <d-gerlach@ti.com>, Russell King <linux@armlinux.org.uk>, Keerthy J <j-keerthy@ti.com>, Johan Hovold <johan@kernel.org>
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Carlos Munoz <cmunoz@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a resend of v5 of this series found here [1]. It introduces
-relocatable PM handlers for the emif that are copied to sram and
-run from there during low power mode entry.
+--9iyR+p8Z2cn535Lj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The patches still have the previous ACKs but have a small change to
-accomodate a change made by Tony in commit cd57dc5a2099 ("ARM: dts:
-Add missing hwmod related nodes for am33xx"). If there are objections
-to this let me know ASAP.
+On Thu, Nov 30, 2017 at 01:49:43PM -0800, David Daney wrote:
+> On 11/30/2017 01:36 PM, James Hogan wrote:
+> > On Tue, Nov 28, 2017 at 04:55:34PM -0800, David Daney wrote:
+> >> Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
+> >> Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
+> >> Signed-off-by: David Daney <david.daney@cavium.com>
+> >> ---
+> >>   arch/mips/cavium-octeon/setup.c       |  6 ++++++
+> >>   arch/mips/include/asm/octeon/octeon.h | 12 ++++++++++--
+> >>   2 files changed, 16 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon=
+/setup.c
+> >> index a8034d0dcade..99e6a68bc652 100644
+> >> --- a/arch/mips/cavium-octeon/setup.c
+> >> +++ b/arch/mips/cavium-octeon/setup.c
+> >> @@ -609,6 +609,12 @@ void octeon_user_io_init(void)
+> >>   #else
+> >>   	cvmmemctl.s.cvmsegenak =3D 0;
+> >>   #endif
+> >> +	if (OCTEON_IS_OCTEON3()) {
+> >> +		/* Enable LMTDMA */
+> >> +		cvmmemctl.s.lmtena =3D 1;
+> >> +		/* Scratch line to use for LMT operation */
+> >> +		cvmmemctl.s.lmtline =3D 2;
+> >=20
+> > Out of curiosity, is there significance to the value 2 and associated
+> > virtual address 0xffffffffffff8100, or is it pretty arbitrary?
+>=20
+> Yes, there is significance.
+>=20
+> CPU local memory starts at 0xffffffffffff8000, each line is 0x80 bytes.=
+=20
+> so the 2nd line starts at 0xffffffffffff8100
 
-Now that a hwmod is present for the am335x EMIF, on probe fail the call to
-pm_runtime_put_sync causes the board to hang. In fact, this emif driver should
-never alter the PM state of the hardware at all through normal kernel calls, it
-is the job of the suspend handlers that are added, that is the whole point of
-this driver. Because of this, I have dropped all runtime pm calls, as any
-change to the PM state while the kernel is running is dangerous as we may shut
-of the memory controller. It makes the most sense just to drop runtime PM from
-the driver entirely. Besides that patch is unchanged.
+What I mean is, why is 2 chosen instead of any other value?
 
-This code is required for low-power modes to work on AM335x and AM437x and a
-forthcoming PM series for those platforms will depend on this series. After
-both this and the PM series are reviewed I will send the necessary device tree
-changes for both, but in the meantime all remaining patches for am335x and
-am437x PM can be found here [2].
+Cheers
+James
 
-Regards,
-Dave
+--9iyR+p8Z2cn535Lj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-[1] https://www.spinics.net/lists/arm-kernel/msg611537.html
-[2] https://github.com/dgerlach/linux-pm/tree/upstream/v4.15/amx3-suspend-v6
+-----BEGIN PGP SIGNATURE-----
 
-Dave Gerlach (2):
-  Documentation: dt: Update ti,emif bindings
-  memory: ti-emif-sram: introduce relocatable suspend/resume handlers
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlogjI4ACgkQbAtpk944
+dnpFwRAAvcdOoeuZmttJOSoZsf5ZGMk42m47eyYYXuo36qqZcyfjMbtA/98HbmvX
+zHCrt/9ov5eNEjvxqT/9nrIqD3KoBN4veW6XiTu3gry38WF96yJRoxEMjuLllf8a
+OTiIiP+Ls4Bskl2v1eL1uIVhRxaIC4AVlBQGnT4kD3f3rc+N3yjICHtacBXgxjOx
+3+7LrD4Wu3INKwJp0V/LK4Lqnw3Mks39dYlu2JzJaCVOh018I9wOqSR9AGmhqQ7n
+v+Od/nfHOahLRc7fE71X9Qnh3hY+U4Ohi9A7qb4ylxA7xd9UlJh9SohWtVtjm2vg
+vvf21+dVqk+0XF/sh8paIhxbeFG9GoST0kQSh1huwF0UVHXI8moAG8t7VOMCw4le
+TjvTNPrZqF11W2iUemdXF+Wy8OwK2EL8Ed1c2EZFjyli9cRv56Wlvrg4fi4qe2Bl
+dc7G0Rm3b4oz3ohdBnJ34hc+TMK1EFTWXJ+Bpcif3ywJ7LgkWD0b+BuohItIteZi
+VMJMM5hhYSv01/qWVcyhianytDX7L80ZHwql+H+ctfIRDxQWTUbgAlnqETFWn6Km
+7eOpyEZJpmT1j11yqYleICjmTmL/0ju/AWrEVwEnEG5YeA0hhR67zeFZDmtLOFL5
+AlGQvnuGtgAKe5Di404p2MYjDseJ57ROHg9HK1gRxFL2pp+7gE0=
+=M4rc
+-----END PGP SIGNATURE-----
 
- .../bindings/memory-controllers/ti/emif.txt        |  17 +-
- drivers/memory/Kconfig                             |  10 +
- drivers/memory/Makefile                            |   8 +
- drivers/memory/Makefile.asm-offsets                |   5 +
- drivers/memory/emif-asm-offsets.c                  |  92 ++++++
- drivers/memory/emif.h                              |  17 ++
- drivers/memory/ti-emif-pm.c                        | 325 ++++++++++++++++++++
- drivers/memory/ti-emif-sram-pm.S                   | 334 +++++++++++++++++++++
- include/linux/ti-emif-sram.h                       |  69 +++++
- 9 files changed, 876 insertions(+), 1 deletion(-)
- create mode 100644 drivers/memory/Makefile.asm-offsets
- create mode 100644 drivers/memory/emif-asm-offsets.c
- create mode 100644 drivers/memory/ti-emif-pm.c
- create mode 100644 drivers/memory/ti-emif-sram-pm.S
- create mode 100644 include/linux/ti-emif-sram.h
-
--- 
-2.15.0
+--9iyR+p8Z2cn535Lj--
