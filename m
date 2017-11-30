@@ -1,36 +1,61 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 2/3] net: socionext: Add Synquacer NetSec driver
-Date: Thu, 30 Nov 2017 13:14:48 -0500 (EST)
-Message-ID: <20171130.131448.1297231150498183814.davem@davemloft.net>
-References: <CAKv+Gu9sOzce_r3JKU8B4JDK2Gr5cB5NZdQxUMEmmy6SZ+sOFw@mail.gmail.com>
-        <20171130.125813.1832145274236885737.davem@davemloft.net>
-        <CAKv+Gu9qpLWTjjCZBvyn87HoNNY+U5++2UeHxF8jXYQPDd3U1A@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 0/5] PCI: Add support to the Cadence PCIe controller
+Date: Thu, 30 Nov 2017 18:18:19 +0000
+Message-ID: <20171130181819.GD12096@red-moon>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <20171128155039.GA17154@red-moon>
+ <8c6c50fc-47a9-7b93-d826-1dba9c4d09c2@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKv+Gu9qpLWTjjCZBvyn87HoNNY+U5++2UeHxF8jXYQPDd3U1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8c6c50fc-47a9-7b93-d826-1dba9c4d09c2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, bhelgaas@google.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Thu, 30 Nov 2017 18:08:34 +0000
+On Thu, Nov 30, 2017 at 12:43:20PM +0530, Kishon Vijay Abraham I wrote:
 
-> But the whole point of memremap() is obtaining a virtual mapping
-> that does not require accessors, but can be used like ordinary
-> memory.
+[...]
 
-That's unfortunately not what it's doing.
+> >> For linux-next, I applied this series on top of Kishon's patch
+> >> ("PCI: endpoint: Use EPC's device in dma_alloc_coherent/dma_free_coherent")
+> >> otherwise dma_alloc_coherent() fails when called by pci_epf_alloc_space().
+> >>
+> >> Also, I patched drivers/Makefile rather than drivers/pci/Makefile to make
+> >> the drivers/pci/cadence/pcie-cadence-ep.o linked after
+> 
+> The reason to patch drivers/Makefile should be because pcie-cadence-ep has to
+> be compiled even when CONFIG_PCI is not enabled. CONFIG_PCI enables host
+> specific features and ENDPOINT shouldn't depend on CONFIG_PCI.
+> >> drivers/pci/endpoint/*.o objects, otherwise the built-in pci-cadence-ep
+> >> driver would be probed before the PCI endpoint framework would have been
+> >> initialized, which results in a kernel crash.
+> > 
+> > Nice :( - isn't there a way to improve this (ie probe deferral or
+> > registering the EPF bus earlier) ?
+> > 
+> >> I guess this is the reason why the "pci/dwc" line was also put in
+> >> drivers/Makefile, right after the "pci/endpoint" line.
+> > 
+> > Or probably the other way around - see commit 5e8cb4033807
+> > 
+> > @Kishon, thoughts ?
+> 
+> Lorenzo, ordering Makefile is one way to initialize EP core before
 
-It's relying on the fact that some architectures (I guess x86
-and arm) do happen to give a virutal address from ioremap_wt()
-even though it's return type is annotated __iomem.
+Makefile ordering is fragile, I do not like relying on it.
 
-Thanks in advance for changing your driver to use ioremap() and
-accessors for now.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> other drivers. the other way is to have PCI EP core have a different
+> initcall level..  subsys_initcall??
+
+Yes, registering the bus at eg postcore_initcall() as PCI does should do
+(if that's the problem this is solving) but still, the code must not
+crash if the ordering is not correct, we have to fix this regardless.
+
+I would appreciate if Cyrille can debug the cause of the kernel crash
+so that we can fix it in the longer term.
+
+Thanks,
+Lorenzo
