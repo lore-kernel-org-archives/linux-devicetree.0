@@ -1,94 +1,33 @@
-From: Ladislav Michl <ladis@linux-mips.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: mtd: gpmc-onenand: Update
- properties description
-Date: Thu, 30 Nov 2017 14:09:07 +0100
-Message-ID: <20171130130907.GA16809@lenoch>
-References: <20171115162306.2o2w2yrf7wucroxd@lenoch>
- <20171115162458.rtompijrsaobdemk@lenoch>
- <20171130112544.5509ca1b@bbrezillon>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] documentation: Add compatibles for Amlogic Meson
+ AXG pin controllers
+Date: Thu, 30 Nov 2017 14:27:41 +0100
+Message-ID: <CACRpkdZrsDoUqsZhU0dX=19sDVK_J6uZOFSqxVW2EnNcw-EGzw@mail.gmail.com>
+References: <20171120100851.17366-1-yixun.lan@amlogic.com> <20171120100851.17366-2-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20171130112544.5509ca1b@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Tony Lindgren <tony@atomide.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171120100851.17366-2-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 30, 2017 at 11:25:44AM +0100, Boris Brezillon wrote:
-> +Rob and the DT ML
-> 
-> On Wed, 15 Nov 2017 17:24:58 +0100
-> Ladislav Michl <ladis@linux-mips.org> wrote:
-> 
-> > Compatible property is required for OMAP2+ mtd driver. Also
-> > add INT pin gpio description and delete unused dma-channel
-> > property.
-> > 
-> > Signed-off-by: Ladislav Michl <ladis@linux-mips.org>
-> > Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> > Acked-by: Roger Quadros <rogerq@ti.com>
-> > ---
-> > 
-> > Changes in v5:
-> > - renamed R/B pin to INT pin
-> > 
-> > Changes in v4:
-> > - new patch
-> > 
-> > Changes in v3: None
-> > Changes in v2: None
-> > 
-> >  Documentation/devicetree/bindings/mtd/gpmc-onenand.txt | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
-> > index b6e8bfd024f4..e9f01a963a0a 100644
-> > --- a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
-> > @@ -9,13 +9,14 @@ Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
-> >  
-> >  Required properties:
-> >  
-> > + - compatible:		"ti,omap2-onenand"
-> 
-> Don't you break backward compat by adding this new requirement?
+On Mon, Nov 20, 2017 at 11:08 AM, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> wrote:
 
-I was told it is okay in this case as OneNAND conversion to DT is unfinished.
-There was compat fixup code in earlier versions of patchset and it was dropped
-later. If others see it opposite way I can add it back.
+> From: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+>
+> Add compatibles for Amlogic Meson AXG pin controllers
+>
+> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 
-> >   - reg:			The CS line the peripheral is connected to
-> > - - gpmc,device-width	Width of the ONENAND device connected to the GPMC
-> > + - gpmc,device-width:	Width of the ONENAND device connected to the GPMC
-> >  			in bytes. Must be 1 or 2.
-> >  
-> >  Optional properties:
-> >  
-> > - - dma-channel:		DMA Channel index
-> > + - int-gpios:		GPIO specifier for the INT pin.
-> >  
-> >  For inline partition table parsing (optional):
-> >  
-> > @@ -35,6 +36,7 @@ Example for an OMAP3430 board:
-> >  		#size-cells = <1>;
-> >  
-> >  		onenand@0 {
-> > +			compatible = "ti,omap2-onenand";
-> >  			reg = <0 0 0>; /* CS0, offset 0 */
-> >  			gpmc,device-width = <2>;
-> >  
+Patch applied with Rob's ACK.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
