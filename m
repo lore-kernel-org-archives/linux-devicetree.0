@@ -1,147 +1,225 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v2 25/35] nds32: Build infrastructure
-Date: Thu, 30 Nov 2017 13:48:05 +0800
-Message-ID: <CAEbi=3cTkbt9i7XPXMnY1D6qtbebDW1x8sFVsgqhq-nApAx5mA@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <5e1be9ebc591c6de79b75f726a5a38b2564eaa92.1511785528.git.green.hu@gmail.com>
- <CAK8P3a1GuH2tgtC5t834-PNeUVYQxreD7seZH8sjraZFtRUWKw@mail.gmail.com>
- <CAEbi=3c=hTCcUOPs+Fc10srzTFsB4MnVxgcFydz12-jH0ZXjog@mail.gmail.com>
- <CAK8P3a0kvt52UTtEmE+tWHZuH_rmgTxP7+CiD9Ddwe2cJLwXTQ@mail.gmail.com>
- <CAMuHMdViO=+-kGdXFPSW+9PsPbf3sUa5xdaJ_1C-cX2vE1G35Q@mail.gmail.com>
- <CAK8P3a3yk7ww+LdQdL+wgz2wYrzXLSsj1PTdfK-qx013jdg4SQ@mail.gmail.com>
- <CAEbi=3cc8e__DnFKmTSMm9xQMx7CGu+1v3e55w8UekwnTTkw5Q@mail.gmail.com>
- <CAK8P3a2d2_jxXehE3xP_G9Tzp6jP4hFmS4CJkh=6bePLEDcdGw@mail.gmail.com>
- <CAEbi=3fmXP=n_tS+-TSFhdht2G=VHOzVCVU=SRy4A6Ym_GToUQ@mail.gmail.com> <CAK8P3a3-CexhRkJB7_8TGShuDQP8w=myhkoB8-7ax3my96PrMw@mail.gmail.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH v3 2/3] clk: meson-axg: add clock controller drivers
+Date: Thu, 30 Nov 2017 14:01:18 +0800
+Message-ID: <d2b58c06-93dc-4368-501e-4b8bdc9a4c34@amlogic.com>
+References: <20171128125330.363-1-yixun.lan@amlogic.com>
+ <20171128125330.363-3-yixun.lan@amlogic.com>
+ <20171129193433.GA19419@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3-CexhRkJB7_8TGShuDQP8w=myhkoB8-7ax3my96PrMw@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Vincent Chen <vincentc@andestech.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20171129193433.GA19419@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: yixun.lan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2017-11-30 4:27 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> On Wed, Nov 29, 2017 at 3:10 PM, Greentime Hu <green.hu@gmail.com> wrote:
->> 2017-11-29 19:57 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->>> On Wed, Nov 29, 2017 at 12:39 PM, Greentime Hu <green.hu@gmail.com> wrote:
->>>>
->>>> How about this?
->>>>
->>>> choice
->>>>         prompt "CPU type"
->>>>         default CPU_N13
->>>> config CPU_N15
->>>>         bool "AndesCore N15"
->>>>         select CPU_CACHE_NONALIASING
->>>> config CPU_N13
->>>>         bool "AndesCore N13"
->>>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
->>>> config CPU_N10
->>>>         bool "AndesCore N10"
->>>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
->>>> config CPU_D15
->>>>         bool "AndesCore D15"
->>>>         select CPU_CACHE_NONALIASING
->>>>         select HWZOL
->>>> config CPU_D10
->>>>         bool "AndesCore D10"
->>>>         select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
->>>> endchoice
->>>
->>> With a 'choice' statement this works, but I would consider that
->>> suboptimal for another reason: now you cannot build a kernel that
->>> works on e.g. both N13 and N15.
->>>
->>> This is what we had on ARM a long time ago and on MIPS not so long
->>> ago, but it's really a burden for testing and distribution once you get
->>> support for more than a handful of machines supported in the mainline
->>> kernel: If each CPU core is mutually incompatible with the other ones,
->>> this means you likely end up having one defconfig per CPU core,
->>> or even one defconfig per SoC or board.
->>>
->>> I would always try to get the largest amount of hardware to work
->>> in the same kernel concurrently.
->>>
->>> One way of of this would be to define the "CPU type" as the minimum
->>> supported CPU, e.g. selecting D15 would result in a kernel that
->>> only works on D15, while selecting N15 would work on both N15 and
->>> D15, and selecting D10 would work on both D10 and D15.
->>>
->>
->> Hi, Arnd:
->>
->> Maybe we should keep the original implementation for this reason.
->> The default value of CPU_CACHE_NONALIASING and ANDES_PAGE_SIZE_8KB is
->> available for all CPU types for now.
->> User can use these configs built kernel to boot on almost all nds32 CPUs.
->>
->> It might be a little bit weird if we config CPU_N10 but run on a N13 CPU.
->> This might confuse our users.
->
-> I think it really depends on how much flexibility you want to give to users.
-> The way I suggested first was to allow selecting an arbitrary combination
-> of CPUs, and then let Kconfig derive the correct set of optimization flags
-> and other options that work with those. That is probably the easiest for
-> the users, but can be tricky to get right for all combinations.
->
-> When you put them in a sorted list like I mentioned for simplicity, you
-> could reduce the confusion by naming them differently, e.g.
-> CONFIG_CPU_N10_OR_NEWER.
->
-> Having only the CPU_CACHE_NONALIASING option is fine if you
-> never need to make any other decisions based on the CPU core
-> type, but then the help text should describe specifically which cases
-> are affected (N10/N13/D13 with 4K page size), and you can decide to
-> hide the option and make it always-on when using 8K page size.
->
->        Arnd
+Hi Stephen
+
+On 11/30/17 03:34, Stephen Boyd wrote:
+> On 11/28, Yixun Lan wrote:
+>> diff --git a/drivers/clk/meson/axg.c b/drivers/clk/meson/axg.c
+>> new file mode 100644
+>> index 000000000000..51c5b4062715
+>> --- /dev/null
+>> +++ b/drivers/clk/meson/axg.c
+>> @@ -0,0 +1,948 @@
+>> +/*
+>> + * AmLogic Meson-AXG Clock Controller Driver
+>> + *
+>> + * Copyright (c) 2016 Baylibre SAS.
+>> + * Author: Michael Turquette <mturquette@baylibre.com>
+>> + *
+>> + * Copyright (c) 2017 Amlogic, inc.
+>> + * Author: Qiufang Dai <qiufang.dai@amlogic.com>
+>> + *
+>> + * SPDX-License-Identifier: GPL-2.0+
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/init.h>
+>> +
+>> +#include "clkc.h"
+>> +#include "axg.h"
+>> +
+>> +static DEFINE_SPINLOCK(clk_lock);
+> 
+> meson_axg_clk_lock?
+> 
+em... I'd leave it unchanged
+
+because the spinlock will be used at macro MESON_GATE() [1] which
+defined at drivers/clk/meson/clkc.h, and it assume using the generic
+name 'clk_lock', change name will break the code..
+
+and besides it's already defined as static, so I see no problem here
 
 
-Hi, Arnd:
+[1]
+#define MESON_GATE(_name, _reg, _bit)                                   \
+struct clk_gate _name = {                                               \
+        .reg = (void __iomem *) _reg,                                   \
+        .bit_idx = (_bit),                                              \
+        .lock = &clk_lock,
 
-I think I can use this name "CPU_V3" for all nds32 v3 compatible cpu.
-It will be implemented like this.
+[2]
+drivers/clk/meson/gxbb.c
+drivers/clk/meson/meson8b.c
 
-config HWZOL
-        bool "hardware zero overhead loop support"
-        depends on CPU_D10 || CPU_D15
-        default n
-        help
-          A set of Zero-Overhead Loop mechanism is provided to reduce the
-          instruction fetch and execution overhead of loop-control instructions.
-          It will save 3 registers($LB, $LC, $LE) for context saving if say Y.
-          You don't need to save these registers if you can make sure your user
-          program doesn't use these registers.
+>> +
+>> +static const struct pll_rate_table sys_pll_rate_table[] = {
+>> +	PLL_RATE(24000000, 56, 1, 2),
+>> +	PLL_RATE(48000000, 64, 1, 2),
+>> +	PLL_RATE(72000000, 72, 1, 2),
+>> +	PLL_RATE(96000000, 64, 1, 2),
+>> +	PLL_RATE(120000000, 80, 1, 2),
+>> +	PLL_RATE(144000000, 96, 1, 2),
+>> +	PLL_RATE(168000000, 56, 1, 1),
+>> +	PLL_RATE(192000000, 64, 1, 1),
+>> +	PLL_RATE(216000000, 72, 1, 1),
+>> +	PLL_RATE(240000000, 80, 1, 1),
+> [...]
+>> +
+>> +static const struct clkc_data axg_clkc_data = {
+>> +	.clk_gates = axg_clk_gates,
+>> +	.clk_gates_count = ARRAY_SIZE(axg_clk_gates),
+>> +	.clk_mplls = axg_clk_mplls,
+>> +	.clk_mplls_count = ARRAY_SIZE(axg_clk_mplls),
+>> +	.clk_plls = axg_clk_plls,
+>> +	.clk_plls_count = ARRAY_SIZE(axg_clk_plls),
+>> +	.clk_muxes = axg_clk_muxes,
+>> +	.clk_muxes_count = ARRAY_SIZE(axg_clk_muxes),
+>> +	.clk_dividers = axg_clk_dividers,
+>> +	.clk_dividers_count = ARRAY_SIZE(axg_clk_dividers),
+>> +	.hw_onecell_data = &axg_hw_onecell_data,
+>> +};
+>> +
+>> +static const struct of_device_id clkc_match_table[] = {
+>> +	{ .compatible = "amlogic,axg-clkc", .data = &axg_clkc_data },
+>> +	{},
+> 
+> Nitpick: Drop the comma. Nothing comes after this.
+> 
+sure, can do
 
-          If unsure, say N.
+>> +};
+>> +
+>> +static int axg_clkc_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct clkc_data *clkc_data;
+>> +	void __iomem *clk_base;
+>> +	int ret, clkid, i;
+>> +	struct device *dev = &pdev->dev;
+>> +
+>> +	clkc_data = of_device_get_match_data(&pdev->dev);
+>> +	if (!clkc_data)
+>> +		return -EINVAL;
+>> +
+>> +	/*  Generic clocks and PLLs */
+>> +	clk_base = of_iomap(dev->of_node, 0);
+> 
+> Use platform device APIs for ioremapping?
+> 
+I assume you are referring to 'platform_get_resource +
+devm_ioremap_resource' ?
 
-config CPU_CACHE_NONALIASING
-        bool "Non-aliasing cache"
-        depends on !CPU_N10 && !CPU_D10
-        default n
-        help
-          If this CPU is using VIPT data cache and its cache way size is larger
-          than page size, say N. If it is using PIPT data cache, say Y.
+the idea sounds good to me.
 
-          If unsure, say N.
 
-choice
-        prompt "CPU type"
-        default CPU_V3
-config CPU_N15
-        bool "AndesCore N15"
-        select CPU_CACHE_NONALIASING
-config CPU_N13
-        bool "AndesCore N13"
-        select CPU_CACHE_NONALIASING if ANDES_PAGE_SIZE_8KB
-config CPU_N10
-        bool "AndesCore N10"
-config CPU_D15
-        bool "AndesCore D15"
-        select CPU_CACHE_NONALIASING
-config CPU_D10
-        bool "AndesCore D10"
-config CPU_V3
-        bool "AndesCore v3 compatible"
-        select ANDES_PAGE_SIZE_4KB
-endchoice
+>> +	if (!clk_base) {
+>> +		pr_err("%s: Unable to map clk base\n", __func__);
+>> +		return -ENXIO;
+>> +	}
+>> +
+>> +	/* Populate base address for PLLs */
+>> +	for (i = 0; i < clkc_data->clk_plls_count; i++)
+>> +		clkc_data->clk_plls[i]->base = clk_base;
+>> +
+>> +	/* Populate base address for MPLLs */
+>> +	for (i = 0; i < clkc_data->clk_mplls_count; i++)
+>> +		clkc_data->clk_mplls[i]->base = clk_base;
+>> +
+>> +	/* Populate base address for gates */
+>> +	for (i = 0; i < clkc_data->clk_gates_count; i++)
+>> +		clkc_data->clk_gates[i]->reg = clk_base +
+>> +			(u64)clkc_data->clk_gates[i]->reg;
+>> +
+>> +	/* Populate base address for muxes */
+>> +	for (i = 0; i < clkc_data->clk_muxes_count; i++)
+>> +		clkc_data->clk_muxes[i]->reg = clk_base +
+>> +			(u64)clkc_data->clk_muxes[i]->reg;
+>> +
+>> +	/* Populate base address for dividers */
+>> +	for (i = 0; i < clkc_data->clk_dividers_count; i++)
+>> +		clkc_data->clk_dividers[i]->reg = clk_base +
+>> +			(u64)clkc_data->clk_dividers[i]->reg;
+>> +
+>> +	/*
+>> +	 * register all clks
+>> +	 */
+> 
+> Yes, that's obvious..
+> 
+will drop at next version
+
+>> +	for (clkid = 0; clkid < clkc_data->hw_onecell_data->num; clkid++) {
+>> +		/* array might be sparse */
+>> +		if (!clkc_data->hw_onecell_data->hws[clkid])
+>> +			continue;
+>> +
+>> +		ret = devm_clk_hw_register(dev,
+>> +					clkc_data->hw_onecell_data->hws[clkid]);
+>> +		if (ret)
+>> +			goto iounmap;
+>> +	}
+>> +
+>> +	return of_clk_add_hw_provider(dev->of_node, of_clk_hw_onecell_get,
+>> +			clkc_data->hw_onecell_data);
+>> +
+>> +iounmap:
+>> +	iounmap(clk_base);
+can also drop this once convert to devm_ API
+
+>> +	return ret;
+>> +}
+>> +
+>> +static struct platform_driver axg_driver = {
+>> +	.probe		= axg_clkc_probe,
+>> +	.driver		= {
+>> +		.name	= "axg-clkc",
+>> +		.of_match_table = clkc_match_table,
+>> +	},
+>> +};
+>> +
+>> +builtin_platform_driver(axg_driver);
+>> diff --git a/include/dt-bindings/clock/axg-clkc.h b/include/dt-bindings/clock/axg-clkc.h
+>> new file mode 100644
+>> index 000000000000..d2c0f49ba0df
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/axg-clkc.h
+>> @@ -0,0 +1,72 @@
+>> +/*
+>> + * Meson-AXG clock tree IDs
+>> + *
+>> + * Copyright (c) 2017 Amlogic, Inc. All rights reserved.
+>> + *
+>> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> 
+> There's a standard way to add these it seems. They should be the
+> first line in the file and look like
+> 
+> /* SPDX-License-Identifier: */
+> 
+> for header files and 
+> 
+> // SPDX-License-Identifier: 
+> 
+> for C files.
+> 
+
+thanks for the suggestion, will update at next version
