@@ -1,59 +1,93 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 4/4] DTS: Pandora: fix panel compatibility string
-Date: Thu, 30 Nov 2017 07:24:30 -0800
-Message-ID: <20171130152430.GM28152@atomide.com>
-References: <cover.1511884135.git.hns@goldelico.com>
- <b6001c7b7fb98e7a3ad4c712084fea9dae9e6b27.1511884135.git.hns@goldelico.com>
- <20171128160437.GD28152@atomide.com>
- <ADAFBBA4-6AC4-4EC4-AB0E-98B59718E12E@goldelico.com>
- <20171128161834.GE28152@atomide.com>
- <4EE1E298-6461-48FF-977C-958DD16AD83A@goldelico.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of: overlay: fix memory leak of ovcs on error exit path
+Date: Thu, 30 Nov 2017 09:26:29 -0600
+Message-ID: <CAL_JsqLQsEKr4K=rOa6qeA-uxpKQuTb1LvvMBHpiXenz8Jp6xg@mail.gmail.com>
+References: <20171129191750.25254-1-colin.king@canonical.com>
+ <dcb4e2a4-707b-0ccc-e12b-c6fa4ef251b7@gmail.com> <806a0467-87c8-4100-c7f2-54cfa8732465@canonical.com>
+ <75d7d1c8-8a19-1a4c-0796-7cf69fdebe6d@gmail.com> <788fe2e4-03b2-6f9d-f5dd-5bdf0c48892f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4EE1E298-6461-48FF-977C-958DD16AD83A@goldelico.com>
+In-Reply-To: <788fe2e4-03b2-6f9d-f5dd-5bdf0c48892f@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@op>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Colin Ian King <colin.king@canonical.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel-janitors@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [171128 18:35]:
-> Hi,
-> 
-> > Am 28.11.2017 um 17:18 schrieb Tony Lindgren <tony@atomide.com>:
-> > 
-> > * H. Nikolaus Schaller <hns@goldelico.com> [171128 16:17]:
-> >> Hi Tony,
-> >> 
-> >>> Am 28.11.2017 um 17:04 schrieb Tony Lindgren <tony@atomide.com>:
-> >>> 
-> >>> * H. Nikolaus Schaller <hns@goldelico.com> [171128 15:52]:
-> >>>> We can remove the unnecessary "omapdss," prefix because
-> >>>> the omapdrm driver takes care of it when matching with
-> >>>> the driver table.
-> >>> 
-> >>> So is this needed as a fix or is this another clean-up?
-> >>> 
-> >>> So is this is really needed as a fix?
-> >> 
-> >> Hm. How do you differentiate between "fix" and "cleanup"?
-> >> Maybe it is more a wording than a content issue...
-> >> 
-> >> For me it is a "fix" because it is semantically wrong to have
-> >> a prefix where it is not needed. And "fixing" it changes the
-> >> compiler output by 8 bytes.
-> > 
-> > How about let's call it a "typo fix" then? :)
-> 
-> Well, it is not really a typo.
+On Thu, Nov 30, 2017 at 9:01 AM, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 11/30/17 08:37, Frank Rowand wrote:
+>> Hi Colin, Rob,
+>>
+>> On 11/30/17 07:18, Colin Ian King wrote:
+>>> On 30/11/17 12:14, Frank Rowand wrote:
+>>>> On 11/29/17 14:17, Colin King wrote:
+>>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>>
+>>>>> Currently if the call to of_resolve_phandles fails then then ovcs
+>>>>> is not kfree'd on the error exit path.  Rather than try and make
+>>>>> the clean up exit path more convoluted, fix this by just kfree'ing
+>>>>> ovcs at the point of error detection and exit via the same exit
+>>>>> path.
+>>>>>
+>>>>> Detected by CoverityScan, CID#1462296 ("Resource Leak")
+>>>>>
+>>>>> Fixes: f948d6d8b792 ("of: overlay: avoid race condition between applying multiple overlays")
+>>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>>>> ---
+>>>>>  drivers/of/overlay.c | 4 +++-
+>>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>>>>> index 53bc9e3f0b98..6c8efe7d8cbb 100644
+>>>>> --- a/drivers/of/overlay.c
+>>>>> +++ b/drivers/of/overlay.c
+>>>>> @@ -708,8 +708,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+>>>>>    of_overlay_mutex_lock();
+>>>>>
+>>>>>    ret = of_resolve_phandles(tree);
+>>>>> -  if (ret)
+>>>>> +  if (ret) {
+>>>>> +          kfree(ovcs);
+>>>>>            goto err_overlay_unlock;
+>>>>> +  }
+>>>>>
+>>>>>    mutex_lock(&of_mutex);
+>>>>>
+>>>>>
+>>>>
+>>>> False coverity warning.  ovcs is freed in free_overlay_changeset().
+>>>>
+>>>
+>>> The error exit path is via err_overlay_unlock:
+>>>
+>>> err_overlay_unlock:
+>>>         of_overlay_mutex_unlock();
+>>>
+>>> out:
+>>>         pr_debug("%s() err=%d\n", __func__, ret);
+>>>
+>>>         return ret;
+>>>
+>>> ..so there is no call to free_overlay_changeset there.
+>>>
+>>> Colin
+>>>
+>>
+>> OK, I was looking at 4.15-rc1.  You must be looking at a later version where
+>> "[PATCH 1/2] of: overlay: Fix cleanup order in of_overlay_apply()" has been
+>> applied.  Thanks for providing the extra details about the exit path so I
+>> could see that.
+>>
+>> Rob, I think that the fix for cleanup order was not the best way to fix that
+>> problem.  A better method would have been to move "mutex_lock(&of_mutex);"
+>> up 5 lines, to just before calling of_reserve_phandles().
+>
+> It is getting late (midnight my time), so I really should revisit this all
+> tomorrow.  My last comment ("move ... up 5 lines") is probably wrong.
+>
+> I'll look at this after some sleep.
 
-Well what if the stable people pick it into earlier stable series
-based on the word fix in the subject? That has happened before.
+I'm dropping "of: overlay: Fix cleanup order in of_overlay_apply()",
+so someone please fix this in the original patch.
 
-I suggest you update the dts patches to use wording like
-"update compatible to use new naming" or something similar.
-
-Regards,
-
-Tony
+Rob
