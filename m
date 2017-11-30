@@ -1,65 +1,51 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v2 2/2] ARM: dts: at91: disable the nxp,se97b SMBUS
- timeout on the TSE-850
-Date: Thu, 30 Nov 2017 19:46:09 +0100
-Message-ID: <acaea4f3-d273-444a-4df4-e6d1b35c876d@axentia.se>
-References: <20171127163101.27859-1-peda@axentia.se>
- <20171127163101.27859-3-peda@axentia.se>
- <20171129205311.GA20551@roeck-us.net> <20171129205629.GO21126@piout.net>
- <20171130171638.GA17788@roeck-us.net> <20171130172606.GZ21126@piout.net>
+From: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Subject: Re: [PATCH 04/10] ARM: tegra: EXPORT tegra_cpuidle_pcie_irqs_in_use()
+Date: Fri, 1 Dec 2017 00:16:31 +0530
+Message-ID: <cd5f005e-6723-efcd-bc95-ec4df58254fe@nvidia.com>
+References: <1511538800-8275-1-git-send-email-mmaddireddy@nvidia.com>
+ <1511538800-8275-5-git-send-email-mmaddireddy@nvidia.com>
+ <20171130124149.GB12096@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171130172606.GZ21126@piout.net>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171130124149.GB12096@red-moon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Russell King <linux@armlinux.org.uk>, Jean Delvare <jdelvare@suse.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rjw@rjwysocki.net, tglx@linutronix.de, vidyas@nvidia.com, kthota@nvidia.com, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-11-30 18:26, Alexandre Belloni wrote:
-> On 30/11/2017 at 09:16:38 -0800, Guenter Roeck wrote:
->> On Wed, Nov 29, 2017 at 09:56:29PM +0100, Alexandre Belloni wrote:
->>> On 29/11/2017 at 12:53:11 -0800, Guenter Roeck wrote:
->>>> On Mon, Nov 27, 2017 at 05:31:01PM +0100, Peter Rosin wrote:
->>>>> The I2C adapter driver is sometimes slow, causing the SCL line to
->>>>> be stuck low for more than the stipulated SMBUS timeout of 25-35 ms.
->>>>> This causes the client device to give up which in turn causes silent
->>>>> corruption of data. So, disable the SMBUS timeout in the client device.
->>>>>
->>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
->>>>
->>>> Acked-by: Guenter Roeck <linux@roeck-us.net>
->>>>
->>>> I assume this will be sent upstream through an arm tree.
->>>>
->>>
->>> Yes, I'm applying it right now.
->>>
->> Are you going to apply the patch for 4.15, or queue it up for 4.16 ?
->> I have been arguing with myself if this is a feature or a bug fix.
->> So far I queued the driver change up for 4.16, but I am open to
->> applying it to 4.15. Any thoughts ?
+
+
+On 30-Nov-17 6:11 PM, Lorenzo Pieralisi wrote:
+> On Fri, Nov 24, 2017 at 09:23:14PM +0530, Manikanta Maddireddy wrote:
+>> EXPORT tegra_cpuidle_pcie_irqs_in_use() to allow Tegra PCIe driver to be
+>> compiled as loadable kernel module.
 >>
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>> ---
+>>  arch/arm/mach-tegra/cpuidle.c | 1 +
+>>  1 file changed, 1 insertion(+)
 > 
-> I was wondering that myself. I'm open to have it as a fix in 4.15. Or
-> maybe Peter can send the series to stable if he needs it in 4.14.
+> You should find a way to remove this call and the corresponding
+> drivers->arch dependency, not to export it by spreading it even
+> further.
 > 
-> Peter, what do you think/want?
+> Lorenzo
+> 
+I will drop this patch from the series and will explore the possibilities of
+removing the arch dependency. I will address it in next series of patches
 
-TL;DR Either way is fine.
-
-I think it's a bugfix; it fixes real problems where the application
-misbehave due to faulty content when reading from an eeprom. I'm
-expecting to make a new release for the hw in question RSN and these
-are the only local patches. So, it would be nice if they made it to
-4.14.x before my release happens. However, it's not like it's difficult
-to rebase the patches should that backport not happen or take too long.
-
-The badness started to happen much more frequently due to some timing
-difference affecting the i2c bus driver, but in theory it's a problem
-that has been there from the start. I have just not noticed it before...
-
-Cheers,
-Peter
+>> diff --git a/arch/arm/mach-tegra/cpuidle.c b/arch/arm/mach-tegra/cpuidle.c
+>> index 316563141add..7d7e6d3ce32d 100644
+>> --- a/arch/arm/mach-tegra/cpuidle.c
+>> +++ b/arch/arm/mach-tegra/cpuidle.c
+>> @@ -57,3 +57,4 @@ void tegra_cpuidle_pcie_irqs_in_use(void)
+>>  		break;
+>>  	}
+>>  }
+>> +EXPORT_SYMBOL(tegra_cpuidle_pcie_irqs_in_use);
+>> -- 
+>> 2.1.4
+>>
