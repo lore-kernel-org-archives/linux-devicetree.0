@@ -1,14 +1,14 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: tlv320aic31xx: Change aic31xx_power_off
-	return type to void" to the asoc tree
-Date: Thu, 30 Nov 2017 12:32:58 +0000
-Message-ID: <E1eKO1S-0000US-Eb@debutante>
-References: <20171129213300.20021-3-afd@ti.com>
+Subject: Applied "ASoC: tlv320aic31xx: File header and
+	copyright cleanup" to the asoc tree
+Date: Thu, 30 Nov 2017 12:33:01 +0000
+Message-ID: <E1eKO1V-0000Vn-EA@debutante>
+References: <20171129213300.20021-2-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171129213300.20021-3-afd@ti.com>
+In-Reply-To: <20171129213300.20021-2-afd@ti.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -23,7 +23,7 @@ List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: tlv320aic31xx: Change aic31xx_power_off return type to void
+   ASoC: tlv320aic31xx: File header and copyright cleanup
 
 has been applied to the asoc tree at
 
@@ -48,44 +48,89 @@ to this mail.
 Thanks,
 Mark
 
->From c7734e8e7eddf065c15e865b8de4224b01f03409 Mon Sep 17 00:00:00 2001
+>From b1c52b7e7cc6a57128869008b84d98a4de78fe2d Mon Sep 17 00:00:00 2001
 From: "Andrew F. Davis" <afd@ti.com>
-Date: Wed, 29 Nov 2017 15:32:43 -0600
-Subject: [PATCH] ASoC: tlv320aic31xx: Change aic31xx_power_off return type to
- void
+Date: Wed, 29 Nov 2017 15:32:42 -0600
+Subject: [PATCH] ASoC: tlv320aic31xx: File header and copyright cleanup
 
-The return value is not checked, and even if it was there is nothing
-we could do about it and messages are already printed.
+Fix header copyright tags, while we are here, also switch to SPDX
+and fixup MODULE tags to match.
 
 Signed-off-by: Andrew F. Davis <afd@ti.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/tlv320aic31xx.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ sound/soc/codecs/tlv320aic31xx.c | 26 +++++++++-----------------
+ sound/soc/codecs/tlv320aic31xx.h | 15 ++++-----------
+ 2 files changed, 13 insertions(+), 28 deletions(-)
 
 diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index b98d9b1f216f..0563a49cc5e4 100644
+index 4837f25b0760..b98d9b1f216f 100644
 --- a/sound/soc/codecs/tlv320aic31xx.c
 +++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -1081,16 +1081,13 @@ static int aic31xx_power_on(struct snd_soc_codec *codec)
- 	return 0;
- }
+@@ -1,22 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+- * ALSA SoC TLV320AIC31XX codec driver
++ * ALSA SoC TLV320AIC31xx CODEC Driver
+  *
+- * Copyright (C) 2014 Texas Instruments, Inc.
+- *
+- * Author: Jyri Sarha <jsarha@ti.com>
++ * Copyright (C) 2014-2017 Texas Instruments Incorporated - http://www.ti.com/
++ *	Jyri Sarha <jsarha@ti.com>
+  *
+  * Based on ground work by: Ajit Kulkarni <x0175765@ti.com>
+  *
+- * This package is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * THIS PACKAGE IS PROVIDED AS IS AND WITHOUT ANY EXPRESS OR
+- * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+- * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+- *
+- * The TLV320AIC31xx series of audio codec is a low-power, highly integrated
+- * high performance codec which provides a stereo DAC, a mono ADC,
++ * The TLV320AIC31xx series of audio codecs are low-power, highly integrated
++ * high performance codecs which provides a stereo DAC, a mono ADC,
+  * and mono/stereo Class-D speaker driver.
+  */
  
--static int aic31xx_power_off(struct snd_soc_codec *codec)
-+static void aic31xx_power_off(struct snd_soc_codec *codec)
- {
- 	struct aic31xx_priv *aic31xx = snd_soc_codec_get_drvdata(codec);
--	int ret = 0;
+@@ -1414,6 +1406,6 @@ static struct i2c_driver aic31xx_i2c_driver = {
  
- 	regcache_cache_only(aic31xx->regmap, true);
--	ret = regulator_bulk_disable(ARRAY_SIZE(aic31xx->supplies),
--				     aic31xx->supplies);
--
--	return ret;
-+	regulator_bulk_disable(ARRAY_SIZE(aic31xx->supplies),
-+			       aic31xx->supplies);
- }
+ module_i2c_driver(aic31xx_i2c_driver);
  
- static int aic31xx_set_bias_level(struct snd_soc_codec *codec,
+-MODULE_DESCRIPTION("ASoC TLV320AIC3111 codec driver");
+-MODULE_AUTHOR("Jyri Sarha");
+-MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Jyri Sarha <jsarha@ti.com>");
++MODULE_DESCRIPTION("ASoC TLV320AIC31xx CODEC Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/sound/soc/codecs/tlv320aic31xx.h b/sound/soc/codecs/tlv320aic31xx.h
+index 730fb2058869..a9ea2f99eba0 100644
+--- a/sound/soc/codecs/tlv320aic31xx.h
++++ b/sound/soc/codecs/tlv320aic31xx.h
+@@ -1,17 +1,10 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+- * ALSA SoC TLV320AIC31XX codec driver
+- *
+- * Copyright (C) 2013 Texas Instruments, Inc.
+- *
+- * This package is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * THIS PACKAGE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR
+- * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
+- * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
++ * ALSA SoC TLV320AIC31xx CODEC Driver Definitions
+  *
++ * Copyright (C) 2014-2017 Texas Instruments Incorporated - http://www.ti.com/
+  */
++
+ #ifndef _TLV320AIC31XX_H
+ #define _TLV320AIC31XX_H
+ 
 -- 
 2.15.0
