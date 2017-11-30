@@ -1,238 +1,70 @@
-From: Souptick Joarder <jrdr.linux@gmail.com>
-Subject: Re: [PATCH v4 7/8] netdev: octeon-ethernet: Add Cavium Octeon III support.
-Date: Thu, 30 Nov 2017 12:42:13 +0530
-Message-ID: <CAFqt6za-ccO8zXNL6zgt_ZtPyRFpVEGHKWsnipWCiuQkUgYi_Q@mail.gmail.com>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-8-david.daney@cavium.com> <CAFqt6zabdQhyjUc4WsjzJ6CxMr70H3V_JdipJVwRi8LuOG54tA@mail.gmail.com>
- <CAFqt6zZAPxKm663yEHD0Rx2SPye9Nvoax0RMroDQuF8BpZchsA@mail.gmail.com> <cef2bbe0-cb06-6938-f665-9840eb67172d@caviumnetworks.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/5] PCI: Add support to the Cadence PCIe controller
+Date: Thu, 30 Nov 2017 12:43:20 +0530
+Message-ID: <8c6c50fc-47a9-7b93-d826-1dba9c4d09c2@ti.com>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <20171128155039.GA17154@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <cef2bbe0-cb06-6938-f665-9840eb67172d@caviumnetworks.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Carlos Munoz <cmunoz@cavium.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171128155039.GA17154@red-moon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David, Dan,
+Hi,
 
+On Tuesday 28 November 2017 09:20 PM, Lorenzo Pieralisi wrote:
+> On Thu, Nov 23, 2017 at 04:01:45PM +0100, Cyrille Pitchen wrote:
+>> Hi all,
+>>
+>> this series of patches adds support to the Cadence PCIe controller.
+>> It was tested on a ARM64 platform emulated by a Palladium running both
+>> linux-next (next-20171123) and pci-next kernels.
+>>
+>> The host mode was tested with some PCIe devices connected to the Palladium
+>> through a speed-bridge. Some of those devices were a USB host controller
+>> and a SATA controller. The PCIe host controller was also tested with a
+>> second controller configured in endpoint mode and connected back to back
+>> to the first controller.
+>>
+>> The EndPoint Controller (EPC) driver of this series was tested with the
+>> pci-epf-test.c EndPoint Function (EPF) driver and the pcitest userspace
+>> program.
+>>
+>> For linux-next, I applied this series on top of Kishon's patch
+>> ("PCI: endpoint: Use EPC's device in dma_alloc_coherent/dma_free_coherent")
+>> otherwise dma_alloc_coherent() fails when called by pci_epf_alloc_space().
+>>
+>> Also, I patched drivers/Makefile rather than drivers/pci/Makefile to make
+>> the drivers/pci/cadence/pcie-cadence-ep.o linked after
 
-On Thu, Nov 30, 2017 at 12:50 AM, David Daney <ddaney@caviumnetworks.com> wrote:
-> On 11/29/2017 08:07 AM, Souptick Joarder wrote:
->>
->> On Wed, Nov 29, 2017 at 4:00 PM, Souptick Joarder <jrdr.linux@gmail.com>
->> wrote:
->>>
->>> On Wed, Nov 29, 2017 at 6:25 AM, David Daney <david.daney@cavium.com>
->>> wrote:
->>>>
->>>> From: Carlos Munoz <cmunoz@cavium.com>
->>>>
->>>> The Cavium OCTEON cn78xx and cn73xx SoCs have network packet I/O
->>>> hardware that is significantly different from previous generations of
->>>> the family.
->>
->>
->>>> diff --git a/drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
->>>> b/drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
->>>> new file mode 100644
->>>> index 000000000000..4dad35fa4270
->>>> --- /dev/null
->>>> +++ b/drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
->>>> @@ -0,0 +1,2033 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/* Copyright (c) 2017 Cavium, Inc.
->>>> + *
->>>> + * This file is subject to the terms and conditions of the GNU General
->>>> Public
->>>> + * License.  See the file "COPYING" in the main directory of this
->>>> archive
->>>> + * for more details.
->>>> + */
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/netdevice.h>
->>>> +#include <linux/etherdevice.h>
->>>> +#include <linux/of_platform.h>
->>>> +#include <linux/of_address.h>
->>>> +#include <linux/of_mdio.h>
->>>> +#include <linux/of_net.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/slab.h>
->>>> +#include <linux/list.h>
->>>> +
->>
->>
->>>> +static void bgx_port_sgmii_set_link_down(struct bgx_port_priv *priv)
->>>> +{
->>>> +       u64     data;
->>
->>
->>>> +       data = oct_csr_read(BGX_GMP_PCS_MISC_CTL(priv->node, priv->bgx,
->>>> priv->index));
->>>> +       data |= BIT(11);
->>>> +       oct_csr_write(data, BGX_GMP_PCS_MISC_CTL(priv->node, priv->bgx,
->>>> priv->index));
->>>> +       data = oct_csr_read(BGX_GMP_PCS_MISC_CTL(priv->node, priv->bgx,
->>>> priv->index));
->>>
->>>
->>> Any particular reason to read immediately after write ?
->>
->>
->
-> Yes, to ensure the write is committed to hardware before the next step.
->
->>
->>
->>>> +static int bgx_port_sgmii_set_link_speed(struct bgx_port_priv *priv,
->>>> struct port_status status)
->>>> +{
->>>> +       u64     data;
->>>> +       u64     prtx;
->>>> +       u64     miscx;
->>>> +       int     timeout;
->>>> +
->>
->>
->>>> +
->>>> +       switch (status.speed) {
->>>> +       case 10:
->>>
->>>
->>> In my opinion, instead of hard coding the value, is it fine to use ENUM ?
->>
->>     Similar comments applicable in other places where hard coded values
->> are used.
->>
->
-> There is nothing to be gained by interposing an extra layer of abstraction
-> in this case.  The code is more clear with the raw numbers in this
-> particular case.
+The reason to patch drivers/Makefile should be because pcie-cadence-ep has to
+be compiled even when CONFIG_PCI is not enabled. CONFIG_PCI enables host
+specific features and ENDPOINT shouldn't depend on CONFIG_PCI.
+>> drivers/pci/endpoint/*.o objects, otherwise the built-in pci-cadence-ep
+>> driver would be probed before the PCI endpoint framework would have been
+>> initialized, which results in a kernel crash.
+> 
+> Nice :( - isn't there a way to improve this (ie probe deferral or
+> registering the EPF bus earlier) ?
+> 
+>> I guess this is the reason why the "pci/dwc" line was also put in
+>> drivers/Makefile, right after the "pci/endpoint" line.
+> 
+> Or probably the other way around - see commit 5e8cb4033807
+> 
+> @Kishon, thoughts ?
 
-   As mentioned by Andrew,  macros defined in uapi/linux/ethtool.h may
-be useful here.
-   Otherwise it's fine to me :)
->
->
->>
->>
->>>> +static int bgx_port_gser_27882(struct bgx_port_priv *priv)
->>>> +{
->>>> +       u64     data;
->>>> +       u64     addr;
->>>
->>>
->>>> +       int     timeout = 200;
->>>> +
->>>> +   //    timeout = 200;
->>
->> Better to initialize the timeout value
+Lorenzo, ordering Makefile is one way to initialize EP core before other
+drivers. the other way is to have PCI EP core have a different initcall level..
+subsys_initcall??
 
->
->
-> What are you talking about?  It is properly initialized using valid C code.
-
-      I mean, instead of writing
-
-       int     timeout;
-       timeout = 200;
-
-      write,
-
-       int timeout = 200;
-
-Anyway both are correct and there is nothing wrong in your code.
-Please ignore my comment here.
-
->
->
->>
->>
->>>> +static int bgx_port_qlm_rx_equalization(struct bgx_port_priv *priv, int
->>>> qlm, int lane)
->>>> +{
->>>> +       lmode = oct_csr_read(GSER_LANE_MODE(priv->node, qlm));
->>>> +       lmode &= 0xf;
->>>> +       addr = GSER_LANE_P_MODE_1(priv->node, qlm, lmode);
->>>> +       data = oct_csr_read(addr);
->>>> +       /* Don't complete rx equalization if in VMA manual mode */
->>>> +       if (data & BIT(14))
->>>> +               return 0;
->>>> +
->>>> +       /* Apply rx equalization for speed > 6250 */
->>>> +       if (bgx_port_get_qlm_speed(priv, qlm) < 6250)
->>>> +               return 0;
->>>> +
->>>> +       /* Wait until rx data is valid (CDRLOCK) */
->>>> +       timeout = 500;
->>>
->>>
->>> 500 us is the min required value or it can be further reduced ?
->>
->>
->
->
-> 500 uS works well and is shorter than the 2000 uS from the hardware manual.
->
-> If you would like to verify shorter timeout values, we could consider
-> merging such a patch.  But really, this doesn't matter as it is a very short
-> one-off action when the link is brought up.
-
-   Ok.
->
->>
->>>> +static int bgx_port_init_xaui_link(struct bgx_port_priv *priv)
->>>> +{
->>
->>
->>>> +
->>>> +               if (use_ber) {
->>>> +                       timeout = 10000;
->>>> +                       do {
->>>> +                               data =
->>>> +
->>>> oct_csr_read(BGX_SPU_BR_STATUS1(priv->node, priv->bgx, priv->index));
->>>> +                               if (data & BIT(0))
->>>> +                                       break;
->>>> +                               timeout--;
->>>> +                               udelay(1);
->>>> +                       } while (timeout);
->>>
->>>
->>> In my opinion, it's better to implement similar kind of loops inside
->>> macros.
->
->
-> Ok, duly noted.  I think we are in disagreement with respect to this point.
-
-
-As similar type loops are implemented in many places, so I suggested
-to implement those in macros
-in header file and include it here.
-Anyway if you don't agree with me, I am fine with it :)
-
->
->
->>>
->>>> +                       if (!timeout) {
->>>> +                               pr_debug("BGX%d:%d:%d: BLK_LOCK
->>>> timeout\n",
->>>> +                                        priv->bgx, priv->index,
->>>> priv->node);
->>>> +                               return -1;
->>>> +                       }
->>>> +               } else {
->>>> +                       timeout = 10000;
->>>> +                       do {
->>>> +                               data =
->>>> +
->>>> oct_csr_read(BGX_SPU_BX_STATUS(priv->node, priv->bgx, priv->index));
->>>> +                               if (data & BIT(12))
->>>> +                                       break;
->>>> +                               timeout--;
->>>> +                               udelay(1);
->>>> +                       } while (timeout);
->>>
->>> same here
->
->
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
