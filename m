@@ -1,85 +1,53 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: DRA76-EVM: Set powerhold property for tps65917
-Date: Thu, 30 Nov 2017 09:44:22 +0530
-Message-ID: <84542ce8-6e36-59a6-224c-b51c05d9866e@ti.com>
-References: <1508834648-28715-1-git-send-email-j-keerthy@ti.com>
- <20171025165219.GO4394@atomide.com>
- <30907da7-a80c-4718-dd9a-17cb22669eb5@ti.com>
- <20171026141707.GE21504@atomide.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH][v2] dt-bindings: ifc: Update endianness usage
+Date: Wed, 29 Nov 2017 20:37:19 -0800
+Message-ID: <bbe95e2f-19c1-ba51-a1e2-22eb2f1d1cbc@gmail.com>
+References: <1512013344-4042-1-git-send-email-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171026141707.GE21504-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1512013344-4042-1-git-send-email-prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Thursday 26 October 2017 07:47 PM, Tony Lindgren wrote:
-> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [171025 23:31]:
->>
->>
->> On Wednesday 25 October 2017 10:22 PM, Tony Lindgren wrote:
->>> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [171024 01:46]:
->>>> Set powerhold property for tps65917
->>>>
->>>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
->>>
->>> Is this safe to merge separately before the driver changes?
->>
->> This needs to wait till [1] is merged. I should have mentioned this.
->>
->> I will ping on this as soon as the dependent patch is merged.
+On 11/29/2017 07:42 PM, Prabhakar Kushwaha wrote:
+> IFC controller version < 2.0 support IFC register access as
+> big endian. These controller version also require IFC NOR signals to
+> be connected in reverse order with NOR flash.
 > 
-> OK thanks will untag this patch from my inbox for now then.
-
-Tony,
-
-The dependent driver patch [1] is pulled by Lee Jones.
-So this patch is okay to be applied.
-
-[1] https://patchwork.kernel.org/patch/10023635/
-
-- Keerthy
-
+> IFC >= 2.0 is other way around.
 > 
-> Regards,
+> So updating IFC binding to take care of both using endianness field.
 > 
-> Tony
+> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+> ---
+> Changes for v2: updated subject
 > 
->> [1] https://marc.info/?l=linux-omap&m=150883331614239&w=2
->>
->> Thanks,
->> Keerthy
->>
->>>
->>> Regards,
->>>
->>> Tony
->>>
->>>> ---
->>>>  arch/arm/boot/dts/dra76-evm.dts | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/dra76-evm.dts b/arch/arm/boot/dts/dra76-evm.dts
->>>> index b024a65..f64aab4 100644
->>>> --- a/arch/arm/boot/dts/dra76-evm.dts
->>>> +++ b/arch/arm/boot/dts/dra76-evm.dts
->>>> @@ -148,6 +148,7 @@
->>>>  		compatible = "ti,tps65917";
->>>>  		reg = <0x58>;
->>>>  		ti,system-power-controller;
->>>> +		ti,palmas-override-powerhold;
->>>>  		interrupt-controller;
->>>>  		#interrupt-cells = <2>;
->>>>  
->>>> -- 
->>>> 1.9.1
->>>>
+>  Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
+> index 89427b0..824a2ca 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
+> @@ -18,8 +18,10 @@ Properties:
+>                interrupt (NAND_EVTER_STAT).  If there is only one,
+>                that interrupt reports both types of event.
+>  
+> -- little-endian : If this property is absent, the big-endian mode will
+> -                  be in use as default for registers.
+> +- little-endian or big-endin : It represents how IFC registers  to be accessed.
+
+			^==== big-endian (there is a typo)
+
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
