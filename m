@@ -1,65 +1,31 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 4/5] pinctrl: mcp23s08: configure irq polarity using
- irq data
-Date: Thu, 30 Nov 2017 15:50:53 +0000
-Message-ID: <1ba1c850-dd22-fa98-66ea-fcb8527ec5ad@arm.com>
-References: <1511252491-79952-1-git-send-email-preid@electromag.com.au>
- <1511252491-79952-5-git-send-email-preid@electromag.com.au>
- <20171121133434.tuvxtrrbabjk4zeg@earth>
- <c191a9d6-3ebb-e95b-7342-aa18598ddf2b@electromag.com.au>
- <20171121152142.zg3r57gl2kenjwgi@earth>
- <CACRpkdbkG_83-gpGqdMA5y3cpAvSbQ2X_xT07PC3+boxPeWbPQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] pinctrl: sunxi: Disable strict mode for H5 driver
+Date: Thu, 30 Nov 2017 16:51:23 +0100
+Message-ID: <CACRpkdZX5U=JoQFS+X96+F68yVSZbnCZpgNfAnvfJGxZ9moi8A@mail.gmail.com>
+References: <20171125120200.23294-1-andre.przywara@arm.com> <20171125120200.23294-3-andre.przywara@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbkG_83-gpGqdMA5y3cpAvSbQ2X_xT07PC3+boxPeWbPQ@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Sebastian Reichel <sre@kernel.org>
-Cc: Phil Reid <preid@electromag.com.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171125120200.23294-3-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30/11/17 14:21, Linus Walleij wrote:
-> On Tue, Nov 21, 2017 at 4:21 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> 
->> IMHO the explicit line-inverter is a bit over-engineered and
->> implicit line-inverter is enough, but I'm fine with both solutions.
->> I think the DT binding maintainers should comment on this though,
->> since it's pretty much a core decision about interrupt specifiers.
-> 
-> I feel the same.
-> 
-> I am very much back and forth on the subject.
-> 
-> Simplicity of use vs modelling the system as it actually works.
-> 
-> Back and forth.
-> 
-> I honestly have just a very vague idea about this.
-> 
-> I don't know if Marc Z as irqchip maintainer has some idea
-> on how to model inverters on irq lines or if he's seen some
-> solutions to it out there.
+On Sat, Nov 25, 2017 at 1:02 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
 
-So far, I've seen two types of solutions:
-- One based on a stacked irqchip driver that implements the inverter on
-the irq_set_type method
-- One based on per-device vendor-specific properties in DT
+> All of the H5 boards in the kernel reference the MMC0 CD pin twice in
+> their DT, so strict mode will make the MMC driver fail to load.
+> To keep existing DTs working, disable strict mode in the H5 driver.
+>
+> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+> Reported-by: Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-While the first one is clearly a big hammer, it has the advantage of not
-adding new stuff to the DT spec, and accurately describe the signal path
-(see the mediatek stuff for reference).
+Patch applied with Maxime's ACK.
 
-The second one is just a hack, frankly. It just has the advantage of
-being trivial to implement.
-
-I'm clearly inclined to prefer the first solution. But maybe it is time
-to invent a "generic inverter" driver that could be reusable, just like
-we have a generic irqchip?
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
