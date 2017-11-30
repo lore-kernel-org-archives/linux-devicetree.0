@@ -1,112 +1,98 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] MIPS: Octeon: Enable LMTDMA/LMTST operations.
-Date: Thu, 30 Nov 2017 13:49:43 -0800
-Message-ID: <54c83e6b-35e2-be38-e4f1-87eb420938cb@caviumnetworks.com>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-3-david.daney@cavium.com>
- <20171130213635.GH27409@jhogan-linux.mipstec.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: overlay: Remove else after goto
+Date: Thu, 30 Nov 2017 16:52:04 -0500
+Message-ID: <7ff04c62-a188-2b4d-32c2-58f794923931@gmail.com>
+References: <1511857593-18574-1-git-send-email-geert+renesas@glider.be>
+ <6d0dc834-6df6-fa6c-3adc-5506f432fa7d@gmail.com>
+ <CAL_JsqLjAJ0QG5r217bpT4ZLaKSras6taWHjooTsdL3GDp9_hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171130213635.GH27409-4bYivNCBEGSP4qXr0kR+DFHK5/nzsB32@public.gmane.org>
+In-Reply-To: <CAL_JsqLjAJ0QG5r217bpT4ZLaKSras6taWHjooTsdL3GDp9_hg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/30/2017 01:36 PM, James Hogan wrote:
-> On Tue, Nov 28, 2017 at 04:55:34PM -0800, David Daney wrote:
->> From: Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+On 11/30/17 10:34, Rob Herring wrote:
+> On Wed, Nov 29, 2017 at 3:30 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 11/28/17 03:26, Geert Uytterhoeven wrote:
+>>> If an "if" branch is terminated by a "goto", there's no need to have an
+>>> "else" statement and an indented block of code.
+>>>
+>>> Remove the "else" statement to simplify the code flow for the casual
+>>> reviewer.
+>>>
+>>> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>>> ---
+>>>  drivers/of/overlay.c | 25 ++++++++++---------------
+>>>  1 file changed, 10 insertions(+), 15 deletions(-)
+>>>
+>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>>> index 8676411bd3e6f29f..53bc9e3f0b985415 100644
+>>> --- a/drivers/of/overlay.c
+>>> +++ b/drivers/of/overlay.c
+>>> @@ -580,9 +580,9 @@ static int init_overlay_changeset(struct overlay_changeset *ovcs,
+>>>                               of_node_put(fragment->overlay);
+>>>                               ret = -EINVAL;
+>>>                               goto err_free_fragments;
+>>> -                     } else {
+>>> -                             cnt++;
+>>>                       }
+>>> +
+>>> +                     cnt++;
+>>>               }
+>>>       }
+>>>
+>>> @@ -736,14 +736,12 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+>>>                       devicetree_state_flags |= DTSF_APPLY_FAIL;
+>>>               }
+>>>               goto err_free_overlay_changeset;
+>>> -     } else {
+>>> -             ret = __of_changeset_apply_notify(&ovcs->cset);
+>>> -             if (ret)
+>>> -                     pr_err("overlay changeset entry notify error %d\n",
+>>> -                            ret);
+>>> -             /* fall through */
+>>>       }
+>>>
+>>> +     ret = __of_changeset_apply_notify(&ovcs->cset);
+>>> +     if (ret)
+>>> +             pr_err("overlay changeset entry notify error %d\n", ret);
+>>> +
 >>
->> LMTDMA/LMTST operations move data between cores and I/O devices:
->>
->> * LMTST operations can send an address and a variable length
->>    (up to 128 bytes) of data to an I/O device.
->> * LMTDMA operations can send an address and a variable length
->>    (up to 128) of data to the I/O device and then return a
->>    variable length (up to 128 bytes) response from the IOI device.
+>> The fall through comment was removed.  It is important to document that we
+>> are intentionally continuing despite the error.
 > 
-> Should that be "I/O"?
+> I've fixed these up like this:
 
-Yes, I will fix the changelog.
+Thanks, looks good.
+
+-Frank
 
 
 > 
->>
->> Signed-off-by: Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Steven J. Hill <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->> ---
->>   arch/mips/cavium-octeon/setup.c       |  6 ++++++
->>   arch/mips/include/asm/octeon/octeon.h | 12 ++++++++++--
->>   2 files changed, 16 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
->> index a8034d0dcade..99e6a68bc652 100644
->> --- a/arch/mips/cavium-octeon/setup.c
->> +++ b/arch/mips/cavium-octeon/setup.c
->> @@ -609,6 +609,12 @@ void octeon_user_io_init(void)
->>   #else
->>   	cvmmemctl.s.cvmsegenak = 0;
->>   #endif
->> +	if (OCTEON_IS_OCTEON3()) {
->> +		/* Enable LMTDMA */
->> +		cvmmemctl.s.lmtena = 1;
->> +		/* Scratch line to use for LMT operation */
->> +		cvmmemctl.s.lmtline = 2;
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 53bc9e3f0b98..cb520169d679 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -741,6 +741,7 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+>         ret = __of_changeset_apply_notify(&ovcs->cset);
+>         if (ret)
+>                 pr_err("overlay changeset entry notify error %d\n", ret);
+> +       /* notify failure is not fatal, continue */
 > 
-> Out of curiosity, is there significance to the value 2 and associated
-> virtual address 0xffffffffffff8100, or is it pretty arbitrary?
-
-Yes, there is significance.
-
-CPU local memory starts at 0xffffffffffff8000, each line is 0x80 bytes. 
-so the 2nd line starts at 0xffffffffffff8100
-
-
+>         list_add_tail(&ovcs->ovcs_list, &ovcs_list);
+>         *ovcs_id = ovcs->id;
+> @@ -934,6 +935,7 @@ int of_overlay_remove(int *ovcs_id)
+>         ret = __of_changeset_revert_notify(&ovcs->cset);
+>         if (ret)
+>                 pr_err("overlay changeset entry notify error %d\n", ret);
+> +       /* notify failure is not fatal, continue */
 > 
->> +	}
->>   	/* R/W If set, CVMSEG is available for loads/stores in
->>   	 * supervisor mode. */
->>   	cvmmemctl.s.cvmsegenas = 0;
->> diff --git a/arch/mips/include/asm/octeon/octeon.h b/arch/mips/include/asm/octeon/octeon.h
->> index c99c4b6a79f4..92a17d67c1fa 100644
->> --- a/arch/mips/include/asm/octeon/octeon.h
->> +++ b/arch/mips/include/asm/octeon/octeon.h
->> @@ -179,7 +179,15 @@ union octeon_cvmemctl {
->>   		/* RO 1 = BIST fail, 0 = BIST pass */
->>   		__BITFIELD_FIELD(uint64_t wbfbist:1,
->>   		/* Reserved */
->> -		__BITFIELD_FIELD(uint64_t reserved:17,
->> +		__BITFIELD_FIELD(uint64_t reserved_52_57:6,
->> +		/* When set, LMTDMA/LMTST operations are permitted */
->> +		__BITFIELD_FIELD(uint64_t lmtena:1,
->> +		/* Selects the CVMSEG LM cacheline used by LMTDMA
->> +		 * LMTST and wide atomic store operations.
->> +		 */
->> +		__BITFIELD_FIELD(uint64_t lmtline:6,
->> +		/* Reserved */
->> +		__BITFIELD_FIELD(uint64_t reserved_41_44:4,
->>   		/* OCTEON II - TLB replacement policy: 0 = bitmask LRU; 1 = NLU.
->>   		 * This field selects between the TLB replacement policies:
->>   		 * bitmask LRU or NLU. Bitmask LRU maintains a mask of
->> @@ -275,7 +283,7 @@ union octeon_cvmemctl {
->>   		/* R/W Size of local memory in cache blocks, 54 (6912
->>   		 * bytes) is max legal value. */
->>   		__BITFIELD_FIELD(uint64_t lmemsz:6,
->> -		;)))))))))))))))))))))))))))))))))
->> +		;))))))))))))))))))))))))))))))))))))
->>   	} s;
->>   };
-> 
-> Regardless, the patch looks good to me.
-> 
-> Reviewed-by: James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Cheers
-> James
+>         *ovcs_id = 0;
 > 
 
 --
