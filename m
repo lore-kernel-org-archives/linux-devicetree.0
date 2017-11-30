@@ -1,64 +1,59 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] pinctrl: sunxi: Add DT-based
- generic pinctrl driver
-Date: Thu, 30 Nov 2017 16:20:52 +0100
-Message-ID: <CACRpkdZQPspH79_nS-WgiSg6d2meXUztgocYbxO07vTgP1HehA@mail.gmail.com>
-References: <20171113012523.2328-1-andre.przywara@arm.com> <CACRpkdYFoUmGJYdKz0t9gsrkK=u8-oJjaRBXtNYHaUt9kSa3_g@mail.gmail.com>
- <54ecfdf7-cf4a-3eae-2661-47fa668a6066@arm.com>
-Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 4/4] DTS: Pandora: fix panel compatibility string
+Date: Thu, 30 Nov 2017 07:24:30 -0800
+Message-ID: <20171130152430.GM28152@atomide.com>
+References: <cover.1511884135.git.hns@goldelico.com>
+ <b6001c7b7fb98e7a3ad4c712084fea9dae9e6b27.1511884135.git.hns@goldelico.com>
+ <20171128160437.GD28152@atomide.com>
+ <ADAFBBA4-6AC4-4EC4-AB0E-98B59718E12E@goldelico.com>
+ <20171128161834.GE28152@atomide.com>
+ <4EE1E298-6461-48FF-977C-958DD16AD83A@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBVODQDIQKGQEPTBZYGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <54ecfdf7-cf4a-3eae-2661-47fa668a6066-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4EE1E298-6461-48FF-977C-958DD16AD83A@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@op>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 24, 2017 at 1:05 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 24/11/17 10:28, Linus Walleij wrote:
+* H. Nikolaus Schaller <hns@goldelico.com> [171128 18:35]:
+> Hi,
+> 
+> > Am 28.11.2017 um 17:18 schrieb Tony Lindgren <tony@atomide.com>:
+> > 
+> > * H. Nikolaus Schaller <hns@goldelico.com> [171128 16:17]:
+> >> Hi Tony,
+> >> 
+> >>> Am 28.11.2017 um 17:04 schrieb Tony Lindgren <tony@atomide.com>:
+> >>> 
+> >>> * H. Nikolaus Schaller <hns@goldelico.com> [171128 15:52]:
+> >>>> We can remove the unnecessary "omapdss," prefix because
+> >>>> the omapdrm driver takes care of it when matching with
+> >>>> the driver table.
+> >>> 
+> >>> So is this needed as a fix or is this another clean-up?
+> >>> 
+> >>> So is this is really needed as a fix?
+> >> 
+> >> Hm. How do you differentiate between "fix" and "cleanup"?
+> >> Maybe it is more a wording than a content issue...
+> >> 
+> >> For me it is a "fix" because it is semantically wrong to have
+> >> a prefix where it is not needed. And "fixing" it changes the
+> >> compiler output by 8 bytes.
+> > 
+> > How about let's call it a "typo fix" then? :)
+> 
+> Well, it is not really a typo.
 
->> The DT maintainers have been pretty clear on that they don't like
->> using the the DT as a generic fit-all information dump. They
->> prefer to look up hardware data from per-soc compatible strings.
-(...)
-> I am just a bit worried that with Allwinner recently playing the SKU
-> game we end up with tons of tables for only slightly different SoCs (see
-> the H3 and H5, for instance). And with single image kernels we pile up
-> quite some *data* in each kernel, which is of little interest for
-> everyone else.
+Well what if the stable people pick it into earlier stable series
+based on the word fix in the subject? That has happened before.
 
-So what you are saying is that you want to use the DTS for
-data dumping and what I'm saying is that the DT maintainers
-do not like that stance.
+I suggest you update the dts patches to use wording like
+"update compatible to use new naming" or something similar.
 
-They will have to speak on the issue directly before we continue
-I think.
+Regards,
 
-I have been getting a *LOT* of pushback to putting large amounts
-of data and configuration in the DTS recently, so IIUC that is something
-they simply don't like, probably for good reasons.
-
-C.f:
-https://www.spinics.net/lists/dri-devel/msg150321.html
-
-> Also my understanding is that the actual Allwinner pin controller IP
-> (register map) is very much the same across all SoCs. Mostly the only
-> difference is the mapping between pins and mux functions, which we
-> express in the DT already anyway (in the subnodes). And this is really a
-> poster book example of what DT should be doing: express the specific
-> mappings of a particular implementation. I don't see why this would need
-> to be per-board only, if we can pull this up to the SoC level.
-
-It's not me you need to sell this point.
-
-You need to sell it to the DT maintainers.
-
-Yours,
-Linus Walleij
+Tony
