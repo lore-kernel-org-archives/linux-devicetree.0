@@ -1,53 +1,134 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] ASoC: tlv320aic31xx: Fix typo in DT binding
- documentation
-Date: Thu, 30 Nov 2017 11:43:32 +0000
-Message-ID: <20171130114332.decoq4b5zrth3r6c@sirena.org.uk>
-References: <20171129171359.29382-1-afd@ti.com>
- <20171129171359.29382-2-afd@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 3/3] drm/omap: Filter displays mode based on bandwidth limit
+Date: Thu, 30 Nov 2017 14:12:37 +0200
+Message-ID: <20171130121237.30431-4-peter.ujfalusi@ti.com>
+References: <20171130121237.30431-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hvcqbqcmhfxn7e3r"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171129171359.29382-2-afd-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20171130121237.30431-1-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tomi.valkeinen-l0cyMroinI0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Cc: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jsarha-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+If we have memory bandwidth limit configured, reject the modes which would
+require more bandwidth than the limit if it is used with one full
+resolution plane (most common use case).
 
---hvcqbqcmhfxn7e3r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This filtering is not providing full protection as it is possible that
+application would pick smaller crtc resolution with high resolution planes
+and down scaling, or can enable more smaller planes where the sum of their
+bandwidth need would be higher than the limit.
 
-On Wed, Nov 29, 2017 at 11:13:52AM -0600, Andrew F. Davis wrote:
-> The property used to specify a GPIO intended for reset is "reset-gpios",
-> this binding uses "gpio-reset", as almost all other bindings use the
-> former name this use of the latter was certainly not intended. It is not
-> compatible with newer methods used to fetch GPIO pins and to prevent the
-> spread of this error to other bindings lets fix this here.
+This patch only allows us to filter out modes which would need more
+bandwidth if they were used with one full screen plane.
 
-When you say you're fixing a typo I'm looking for a fix for something
-like two letters being transposed.  This isn't that, it's a completely
-different property name.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+---
+ drivers/gpu/drm/omapdrm/omap_crtc.c | 37 +++++++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/omapdrm/omap_drv.c  |  5 +++++
+ drivers/gpu/drm/omapdrm/omap_drv.h  |  3 +++
+ 3 files changed, 45 insertions(+)
 
---hvcqbqcmhfxn7e3r
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
+index cc85c16cbc2a..ae2e16ed3874 100644
+--- a/drivers/gpu/drm/omapdrm/omap_crtc.c
++++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
+@@ -23,6 +23,7 @@
+ #include <drm/drm_crtc_helper.h>
+ #include <drm/drm_mode.h>
+ #include <drm/drm_plane_helper.h>
++#include <linux/math64.h>
+ 
+ #include "omap_drv.h"
+ 
+@@ -400,6 +401,41 @@ static void omap_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	drm_crtc_vblank_off(crtc);
+ }
+ 
++static enum drm_mode_status omap_crtc_mode_valid(struct drm_crtc *crtc,
++					const struct drm_display_mode *mode)
++{
++	struct omap_drm_private *priv = crtc->dev->dev_private;
++
++	/* Check for bandwidth limit */
++	if (priv->max_bandwidth) {
++		/*
++		 * Estimation for the bandwidth need of a given mode with one
++		 * full screen plane:
++		 * bandwidth = resolution * 32bpp * (pclk / (vtotal * htotal))
++		 *					^^ Refresh rate ^^
++		 *
++		 * The interlaced mode is taken into account by using the
++		 * pixelclock in the calculation.
++		 *
++		 * The equation is rearranged for 64bit arithmetic.
++		 */
++		uint64_t bandwidth = mode->clock * 1000;
++		unsigned int bpp = 4;
++
++		bandwidth = bandwidth * mode->hdisplay * mode->vdisplay * bpp;
++		bandwidth = div_u64(bandwidth, mode->htotal * mode->vtotal);
++
++		/*
++		 * Reject modes which would need more bandwidth if used with one
++		 * full resolution plane (most common use case).
++		 */
++		if (priv->max_bandwidth < bandwidth)
++			return MODE_BAD;
++	}
++
++	return MODE_OK;
++}
++
+ static void omap_crtc_mode_set_nofb(struct drm_crtc *crtc)
+ {
+ 	struct omap_crtc *omap_crtc = to_omap_crtc(crtc);
+@@ -621,6 +657,7 @@ static const struct drm_crtc_helper_funcs omap_crtc_helper_funcs = {
+ 	.atomic_flush = omap_crtc_atomic_flush,
+ 	.atomic_enable = omap_crtc_atomic_enable,
+ 	.atomic_disable = omap_crtc_atomic_disable,
++	.mode_valid = omap_crtc_mode_valid,
+ };
+ 
+ /* -----------------------------------------------------------------------------
+diff --git a/drivers/gpu/drm/omapdrm/omap_drv.c b/drivers/gpu/drm/omapdrm/omap_drv.c
+index cdf5b0601eba..ba3d22fae55b 100644
+--- a/drivers/gpu/drm/omapdrm/omap_drv.c
++++ b/drivers/gpu/drm/omapdrm/omap_drv.c
+@@ -593,6 +593,11 @@ static int pdev_probe(struct platform_device *pdev)
+ 	ddev->dev_private = priv;
+ 	platform_set_drvdata(pdev, ddev);
+ 
++	/* Get memory bandwidth limits */
++	if (priv->dispc_ops->get_memory_bandwidth_limit)
++		priv->max_bandwidth =
++				priv->dispc_ops->get_memory_bandwidth_limit();
++
+ 	omap_gem_init(ddev);
+ 
+ 	ret = omap_modeset_init(ddev);
+diff --git a/drivers/gpu/drm/omapdrm/omap_drv.h b/drivers/gpu/drm/omapdrm/omap_drv.h
+index 4bd1e9070b31..d404e8c56b61 100644
+--- a/drivers/gpu/drm/omapdrm/omap_drv.h
++++ b/drivers/gpu/drm/omapdrm/omap_drv.h
+@@ -83,6 +83,9 @@ struct omap_drm_private {
+ 	spinlock_t wait_lock;		/* protects the wait_list */
+ 	struct list_head wait_list;	/* list of omap_irq_wait */
+ 	uint32_t irq_mask;		/* enabled irqs in addition to wait_list */
++
++	/* memory bandwidth limit if it is needed on the platform */
++	unsigned int max_bandwidth;
+ };
+ 
+ 
+-- 
+Peter
 
------BEGIN PGP SIGNATURE-----
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlof7uQACgkQJNaLcl1U
-h9CvIwf/YadZJ2lET+uHIGa9oIZOifvUb+/z0OS5gg72gDEZ50Xx2+FN7EIMd8YB
-MR+GnteSzxbHS2BZl8OGquD9TaHZuZj4r26NNoQehgwxzC9f53CnciLF7eDjEOEz
-TSHdH3qdXTMcJZUmlu3Xg8SfslRnRF+unb29rcp6yjyi5rGINLgGKZDvwPL/J3zZ
-tB5t9tPiPmxIcPrTFUB0AGKRjIiQWrlNDqEFlfXC2HgyDC/dUYLQjHKir52G2bpJ
-K1kZX/nx12S2310bH1QIk3jgJeRL7mCQi2D2sVgQ7+YTFeVqkTZ2SIe7zsA+b/iA
-wfw7Hp3fjYbaX3Ldr02191xZf8Qvuw==
-=rxS3
------END PGP SIGNATURE-----
-
---hvcqbqcmhfxn7e3r--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
