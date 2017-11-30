@@ -1,93 +1,44 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ASoC: codecs: Add initial PCM1862/63/64/65
- universal ADC driver
-Date: Thu, 30 Nov 2017 09:56:08 -0600
-Message-ID: <d4f015ab-3b17-dab8-33ba-4144b7571554@ti.com>
-References: <20171129185015.5304-1-afd@ti.com>
- <20171129185015.5304-2-afd@ti.com>
- <20171130122035.wgj2jpvzx6md5gnl@sirena.org.uk>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] pinctrl: sunxi: Disable strict mode for H5 driver
+Date: Thu, 30 Nov 2017 16:07:17 +0000
+Message-ID: <3ef7cfa4-cc1a-f24b-0013-f36db82781e5@arm.com>
+References: <20171125120200.23294-1-andre.przywara@arm.com>
+ <20171125120200.23294-3-andre.przywara@arm.com>
+ <CACRpkdZX5U=JoQFS+X96+F68yVSZbnCZpgNfAnvfJGxZ9moi8A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171130122035.wgj2jpvzx6md5gnl-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CACRpkdZX5U=JoQFS+X96+F68yVSZbnCZpgNfAnvfJGxZ9moi8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/30/2017 06:20 AM, Mark Brown wrote:
-> On Wed, Nov 29, 2017 at 12:50:15PM -0600, Andrew F. Davis wrote:
-> 
->> +	case SND_SOC_BIAS_STANDBY:
->> +		pcm186x_power_on(codec);
->> +		break;
->> +	case SND_SOC_BIAS_OFF:
->> +		pcm186x_power_off(codec);
->> +		break;
->> +	}
-> 
->> +/*
->> + * The PCM186x's page register is located on every page, allowing to program it
->> + * without having to switch pages. Take advantage of this by defining the range
->> + * such to have this register located inside the data window.
->> + */
-> 
-> That sounds like a normal page register?
-> 
+Hi,
 
-It is, I believe Andreas commented this for his own reference, I'll drop it.
+On 30/11/17 15:51, Linus Walleij wrote:
+> On Sat, Nov 25, 2017 at 1:02 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
+> 
+>> All of the H5 boards in the kernel reference the MMC0 CD pin twice in
+>> their DT, so strict mode will make the MMC driver fail to load.
+>> To keep existing DTs working, disable strict mode in the H5 driver.
+>>
+>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>> Reported-by: Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Patch applied with Maxime's ACK.
 
->> +int pcm186x_probe(struct device *dev, enum pcm186x_type type, int irq,
->> +		  struct regmap *regmap)
->> +{
-> 
->> +	ret = regulator_bulk_disable(ARRAY_SIZE(priv->supplies),
->> +				     priv->supplies);
->> +	if (ret) {
->> +		dev_err(dev, "failed disable supplies: %d\n", ret);
->> +		return ret;
->> +	}
-> 
->> +static int __maybe_unused pcm186x_resume(struct device *dev)
->> +{
->> +	struct pcm186x_priv *priv = dev_get_drvdata(dev);
->> +	int ret;
->> +
->> +	ret = regulator_bulk_enable(ARRAY_SIZE(priv->supplies),
->> +				    priv->supplies);
->> +	if (ret != 0) {
->> +		dev_err(dev, "failed to enable supplies: %d\n", ret);
->> +		return ret;
->> +	}
-> 
->> +const struct dev_pm_ops pcm186x_pm_ops = {
->> +	SET_RUNTIME_PM_OPS(pcm186x_suspend, pcm186x_resume, NULL)
->> +};
->> +EXPORT_SYMBOL_GPL(pcm186x_pm_ops);
-> 
-> There's no code in the driver that enables runtime PM so this isn't
-> going to do anything.  I'm also not clear that the power management
-> handling is in general joined up - we leave the regulators disabled
-> at the end of probe, relying on the bias level configuration to reenable
-> them but then the runtime PM configuration also tries to enable and
-> disable them.  Based on what I think the intention is I'd suggest
-> removing the bias level handling and then having probe enable runtime
-> PM with the device flagged as active, letting runtime PM do any
-> disabling if the device is idle.
-> 
+Thanks for that (also to Maxime and Chen-Yu) and the smooth handling!
 
-I beleive this was meant to be be SIMPLE_DEV_PM_OPS and not
-SET_RUNTIME_PM_OPS. I'll fix this all up for v3.
+Sorry, I just see that I didn't point this out explicitly, but this is
+to fix a regression introduced in 4.15-rc1, so is this on a branch that
+will be pushed for 4.15-rc, still? (Couldn't find anything quickly on
+kernel.org)
 
-Just thinking, the sound core sets SND_SOC_BIAS_OFF before suspend
-anyway, right? So the results would be similar just having all the PM
-stuff in the bias level handling for consistency, but I'm open to
-whatever is the preferred way.
-
-> I'd also expect to see some system suspend handling.
-> 
+Cheers,
+Andre.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
