@@ -1,71 +1,100 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 0/2] of: Add whitelist
-Date: Thu, 30 Nov 2017 08:39:58 -0600
-Message-ID: <CABGGisyiG3mV9s+ksgNFVgoOk=dJrFn4PGj6Ny-O7=o9kmpRTw@mail.gmail.com>
-References: <1511816284-12145-1-git-send-email-atull@kernel.org>
- <da4c9b29-eccc-6a67-291a-73a36c1598b5@gmail.com> <6a620530-2fac-480f-5c38-6b2b5257c9e9@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: overlay: fix memory leak of ovcs on error exit path
+Date: Thu, 30 Nov 2017 10:01:50 -0500
+Message-ID: <788fe2e4-03b2-6f9d-f5dd-5bdf0c48892f@gmail.com>
+References: <20171129191750.25254-1-colin.king@canonical.com>
+ <dcb4e2a4-707b-0ccc-e12b-c6fa4ef251b7@gmail.com>
+ <806a0467-87c8-4100-c7f2-54cfa8732465@canonical.com>
+ <75d7d1c8-8a19-1a4c-0796-7cf69fdebe6d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6a620530-2fac-480f-5c38-6b2b5257c9e9@gmail.com>
+In-Reply-To: <75d7d1c8-8a19-1a4c-0796-7cf69fdebe6d@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Moritz Fischer <mdf@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org
+To: Colin Ian King <colin.king@canonical.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 4:47 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 11/29/17 04:20, Frank Rowand wrote:
->> On 11/27/17 15:58, Alan Tull wrote:
->>> Here's a proposal for a whitelist to lock down the dynamic device tree.
+On 11/30/17 08:37, Frank Rowand wrote:
+> Hi Colin, Rob,
+> 
+> On 11/30/17 07:18, Colin Ian King wrote:
+>> On 30/11/17 12:14, Frank Rowand wrote:
+>>> On 11/29/17 14:17, Colin King wrote:
+>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>
+>>>> Currently if the call to of_resolve_phandles fails then then ovcs
+>>>> is not kfree'd on the error exit path.  Rather than try and make
+>>>> the clean up exit path more convoluted, fix this by just kfree'ing
+>>>> ovcs at the point of error detection and exit via the same exit
+>>>> path.
+>>>>
+>>>> Detected by CoverityScan, CID#1462296 ("Resource Leak")
+>>>>
+>>>> Fixes: f948d6d8b792 ("of: overlay: avoid race condition between applying multiple overlays")
+>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>>> ---
+>>>>  drivers/of/overlay.c | 4 +++-
+>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>>>> index 53bc9e3f0b98..6c8efe7d8cbb 100644
+>>>> --- a/drivers/of/overlay.c
+>>>> +++ b/drivers/of/overlay.c
+>>>> @@ -708,8 +708,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+>>>>  	of_overlay_mutex_lock();
+>>>>  
+>>>>  	ret = of_resolve_phandles(tree);
+>>>> -	if (ret)
+>>>> +	if (ret) {
+>>>> +		kfree(ovcs);
+>>>>  		goto err_overlay_unlock;
+>>>> +	}
+>>>>  
+>>>>  	mutex_lock(&of_mutex);
+>>>>  
+>>>>
 >>>
->>> For an overlay to be accepted, all of its targets are required to be
->>> on a target node whitelist.
->>>
->>> Currently the only way I have to get on the whitelist is calling a
->>> function to add a node.  That works for fpga regions, but I think
->>> other uses will need a way of having adding specific nodes from the
->>> base device tree, such as by adding a property like 'allow-overlay;'
->>> or 'allow-overlay = "okay";' If that is acceptable, I could use some
->>> advice on where that particular code should go.
->>>
->>> Alan
->>>
->>> Alan Tull (2):
->>>   of: overlay: add whitelist
->>>   fpga: of region: add of-fpga-region to whitelist
->>>
->>>  drivers/fpga/of-fpga-region.c |  9 ++++++
->>>  drivers/of/overlay.c          | 73 +++++++++++++++++++++++++++++++++++++++++++
->>>  include/linux/of.h            | 12 +++++++
->>>  3 files changed, 94 insertions(+)
+>>> False coverity warning.  ovcs is freed in free_overlay_changeset().
 >>>
 >>
->> The plan was to use connectors to restrict where an overlay could be applied.
->> I would prefer not to have multiple methods for accomplishing the same thing
->> unless there is a compelling reason to do so.
->
-> Going back one level in my thinking, I don't think that having a driver mark
-> a node as a location where an overlay fragment can be applied is serving a
-> useful purpose.  Any driver, including any driver loaded as a module,
-> could mark a node as ok.  I don't see how this is providing any meaningful
-> restriction on where an overlay fragment can be applied.
+>> The error exit path is via err_overlay_unlock:
+>>
+>> err_overlay_unlock:
+>>         of_overlay_mutex_unlock();
+>>
+>> out:
+>>         pr_debug("%s() err=%d\n", __func__, ret);
+>>
+>>         return ret;
+>>
+>> ..so there is no call to free_overlay_changeset there.
+>>
+>> Colin
+>>
+> 
+> OK, I was looking at 4.15-rc1.  You must be looking at a later version where
+> "[PATCH 1/2] of: overlay: Fix cleanup order in of_overlay_apply()" has been
+> applied.  Thanks for providing the extra details about the exit path so I
+> could see that.
+> 
+> Rob, I think that the fix for cleanup order was not the best way to fix that
+> problem.  A better method would have been to move "mutex_lock(&of_mutex);"
+> up 5 lines, to just before calling of_reserve_phandles().
 
-It serves to separate the setting of which nodes overlays can be
-applied to and the mechanism to apply them (checking permissions). The
-former can't be centralized and the latter can be. For example,
-something in the kernel enables overlays on a node or nodes, then the
-overlay is applied with configfs interface and no board specific code
-involved.
+It is getting late (midnight my time), so I really should revisit this all
+tomorrow.  My last comment ("move ... up 5 lines") is probably wrong. 
 
-My concern is not whether any kernel component can enable applying of
-overlays, but userspace. If it is a kernel component, then it is
-explicit. And an OOT kernel module doesn't count because there's no
-ABI guarantee there.
+I'll look at this after some sleep.
 
-I agree that this patch series alone is not all that useful with only
-in kernel users. It is only really interesting when we have a
-userspace interface. However, an implementation with a flag bit is so
-little code, I'm fine taking it now and not having to update all in
-kernel users when adding a userspace interface.
 
-Rob
+> The problem
+> found by coverity was caused by the "Fix cleanup order" patch.
+> 
+> I can create that alternate fix if you would like, but I am traveling
+> right now and don't want to submit a patch without boot testing, so
+> there will be a slight delay.
+> 
+> -Frank
