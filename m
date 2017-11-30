@@ -1,107 +1,91 @@
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: Re: [PATCH v8 28/28] rcar-vin: enable support for r8a77970
-Date: Thu, 30 Nov 2017 18:06:16 +0000
-Message-ID: <849882b9-c7d1-0a04-29b1-2a11ffa6faf6@ideasonboard.com>
-References: <20171129194342.26239-1-niklas.soderlund+renesas@ragnatech.se>
- <20171129194342.26239-29-niklas.soderlund+renesas@ragnatech.se>
-Reply-To: kieran.bingham@ideasonboard.com
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 2/3] net: socionext: Add Synquacer NetSec driver
+Date: Thu, 30 Nov 2017 18:08:34 +0000
+Message-ID: <CAKv+Gu9qpLWTjjCZBvyn87HoNNY+U5++2UeHxF8jXYQPDd3U1A@mail.gmail.com>
+References: <CAKv+Gu8wJkNWufXsRYGe0juLWt9GRfRj=tg3M+on2wtwaj+6EA@mail.gmail.com>
+ <20171130.124234.1467691580228393484.davem@davemloft.net> <CAKv+Gu9sOzce_r3JKU8B4JDK2Gr5cB5NZdQxUMEmmy6SZ+sOFw@mail.gmail.com>
+ <20171130.125813.1832145274236885737.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171129194342.26239-29-niklas.soderlund+renesas@ragnatech.se>
-Content-Language: en-GB
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, tomoharu.fukawa.eb@renesas.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20171130.125813.1832145274236885737.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: "Williams, Dan J" <dan.j.williams@intel.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaswinder Singh <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+On 30 November 2017 at 17:58, David Miller <davem@davemloft.net> wrote:
+> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Date: Thu, 30 Nov 2017 17:48:44 +0000
+>
+>> On 30 November 2017 at 17:42, David Miller <davem@davemloft.net> wrote:
+>>> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>>> Date: Thu, 30 Nov 2017 17:37:27 +0000
+>>>
+>>>> Well, the whole point of using memremap() instead of ioremap() is that
+>>>> the region has memory semantics, i.e., we read the MAC address and the
+>>>> DMA engine microcode from it. If memremap() itself is flawed in this
+>>>> regard, I agree we should fix it. But as I understand it, this is
+>>>> really an implementation problem in memremap() [the fact that it falls
+>>>> back to ioremap()] and not a problem in this driver.
+>>>>
+>>>> So what alternative would you propose in this case?
+>>>>
+>>>> BTW, this should be IOREMAP_WC not IOREMAP_WT, because the EEPROM on
+>>>> the platform in question does not tolerate cached mappings (or rather,
+>>>> shareable mappings). ioremap_wt() happens to result in device mappings
+>>>> rather than writethrough cacheable mappings, but this is another
+>>>> problem in itself. Once arm64 fixes ioremap_wt(), this code will no
+>>>> longer work on the SynQuacer SoC.
+>>>
+>>> It doesn't "fall back", it directly uses ioremap_wt() for non-RAM
+>>> mappings.
+>>>
+>>> It you look, most architectures do a "#define iomrep_wt ioremap"
+>>
+>> OK, but that still means the implementation of memremap() is flawed,
+>> not its use in this driver.
+>>
+>> memremap() exists to allow non-DRAM regions to be mapped with memory
+>> semantics, and if we currently implement that incorrectly, we should
+>> fix it. But that still does not mean we should have __iomem
+>> annotations and special accessors in this case, precisely because it
+>> has memory semantics, and so it is a virtual pointer that may be
+>> dereferenced normally.
+>
+> Memory semantics and how to access that memory are two different things.
+>
+> On sparc64 the cacheability etc. can be specified in the load and
+> store instructions.
+>
+> That's why I have all of the ioremap*() routines return a physical
+> address.  The value returned from all of the ioremap*() interfaces is
+> completely opaque.  That's why the return type is __iomem.
+>
+> The iomem accessors on sparc64 use the appropriate access bits in the
+> load and store instructions as needed.
+>
+> So in order for this to work properly, new sets of acessors need to be
+> implemented to let me give you the access semantics you want yet at
+> the same time allowing architectures to have the flexibility of
+> still returning an opaque "pointer".
+>
+> There is no reason for me to make a virtual mapping on sparc64 because
+> it is completely unnecessary overhead since I can give you whatever
+> cacheability/IO/etc. attributes needed in the load and store
+> instructions themselves.
+>
 
-On 29/11/17 19:43, Niklas Söderlund wrote:
-> Add the SoC specific information for Renesas r8a77970.
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+But the whole point of memremap() is obtaining a virtual mapping that
+does not require accessors, but can be used like ordinary memory. The
+fact that Sparc64 can do nifty things using special accessors but
+without a virtual mapping is interesting, but not really relevant
+IMHO.
 
-Not going through the details on this one, as I don't know where to start yet
-other than the cursory chip, width, and height all look correct ... but as this
-has helped me capture video this evening this patch can at least have:
+So I will work with Jassi to reimplement this using ioremap(), given
+that it is not performance critical, and given the fact that your
+criticism appears to be directed to memremap() in general, and not the
+way it is being used here.
 
-Tested-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-> ---
->  .../devicetree/bindings/media/rcar_vin.txt         |  1 +
->  drivers/media/platform/rcar-vin/rcar-core.c        | 40 ++++++++++++++++++++++
->  2 files changed, 41 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> index 314743532bbb4523..6b98f8a3398fa493 100644
-> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> @@ -21,6 +21,7 @@ on Gen3 to a CSI-2 receiver.
->     - "renesas,vin-r8a7794" for the R8A7794 device
->     - "renesas,vin-r8a7795" for the R8A7795 device
->     - "renesas,vin-r8a7796" for the R8A7796 device
-> +   - "renesas,vin-r8a77970" for the R8A77970 device
->     - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
->       device.
->     - "renesas,rcar-gen3-vin" for a generic R-Car Gen3 compatible device.
-> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> index 62eb89b36fbb2ee1..bbdf36b5c3c8178d 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> @@ -1145,6 +1145,42 @@ static const struct rvin_info rcar_info_r8a7796 = {
->  	},
->  };
->  
-> +static const struct rvin_info rcar_info_r8a77970 = {
-> +	.chip = RCAR_GEN3,
-> +	.use_mc = true,
-> +	.max_width = 4096,
-> +	.max_height = 4096,
-> +
-> +	.num_chsels = 5,
-> +	.chsels = {
-> +		{
-> +			{ .csi = RVIN_CSI40, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +		}, {
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 1 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +		}, {
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 2 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +		}, {
-> +			{ .csi = RVIN_CSI40, .chan = 1 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 3 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +		},
-> +	},
-> +};
-> +
->  static const struct of_device_id rvin_of_id_table[] = {
->  	{
->  		.compatible = "renesas,vin-r8a7778",
-> @@ -1182,6 +1218,10 @@ static const struct of_device_id rvin_of_id_table[] = {
->  		.compatible = "renesas,vin-r8a7796",
->  		.data = &rcar_info_r8a7796,
->  	},
-> +	{
-> +		.compatible = "renesas,vin-r8a77970",
-> +		.data = &rcar_info_r8a77970,
-> +	},
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, rvin_of_id_table);
-> 
+Thanks,
+Ard.
