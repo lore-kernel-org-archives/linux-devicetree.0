@@ -1,71 +1,60 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 33/35] clocksource/drivers/atcpit100: Add andestech
- atcpit100 timer
-Date: Fri, 1 Dec 2017 13:30:13 +0100
-Message-ID: <CACRpkdaRq1ZH7EN3RTeLGfUW+xK06fxDDhY6kTQeacdW9MOQYA@mail.gmail.com>
-References: <cover.1511785528.git.green.hu@gmail.com> <672e0b3843953d1ab69bc19baf1a0f217ec1b1fa.1511785528.git.green.hu@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] regulator: sc2731: Add regulator driver to support
+ Spreadtrum SC2731 PMIC
+Date: Fri, 1 Dec 2017 12:49:35 +0000
+Message-ID: <20171201124935.qgqclyoatnnph63p@sirena.org.uk>
+References: <f6d8ff765f4864e5b6ace1f022202d8793a7becf.1512118703.git.erick.chen@spreadtrum.com>
+ <75a6a48f603a25d744ef46287e036975b0203608.1512118703.git.erick.chen@spreadtrum.com>
+ <CAOFm3uFWhOMy=0nibOjDP_vP+m7Dcf1cGOmXXgcrSy6PDfqEWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <672e0b3843953d1ab69bc19baf1a0f217ec1b1fa.1511785528.git.green.hu@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: greentime@andestech.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, deanbo422@gmail.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Rick Chen <rickchen36@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d77pgti6tbi35qod"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOFm3uFWhOMy=0nibOjDP_vP+m7Dcf1cGOmXXgcrSy6PDfqEWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Cc: Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
 
-> From: Rick Chen <rickchen36@gmail.com>
->
-> ATCPIT100 is often used on the Andes architecture,
-> This timer provide 4 PIT channels. Each PIT channel is a
-> multi-function timer, can be configured as 32,16,8 bit timers
-> or PWM as well.
->
-> For system timer it will set channel 1 32-bit timer0 as clock
-> source and count downwards until underflow and restart again.
->
-> It also set channel 0 32-bit timer0 as clock event and count
-> downwards until condition match. It will generate an interrupt
-> for handling periodically.
->
-> Signed-off-by: Rick Chen <rickchen36@gmail.com>
-> Signed-off-by: Greentime Hu <green.hu@gmail.com>
+--d77pgti6tbi35qod
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The driver looks nice overall.
+On Fri, Dec 01, 2017 at 10:13:27AM +0100, Philippe Ombredanne wrote:
+> On Fri, Dec 1, 2017 at 9:58 AM, Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
 
-> +static struct timer_of to = {
-> +       .flags = TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE,
-> +
-> +       .clkevt = {
-> +               .name = "atcpit100_tick",
-> +               .rating = 300,
-> +               .features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
-> +               .set_state_shutdown = atcpit100_clkevt_shutdown,
-> +               .set_state_periodic = atcpit100_clkevt_set_periodic,
-> +               .set_state_oneshot = atcpit100_clkevt_set_oneshot,
-> +               .tick_resume = atcpit100_clkevt_shutdown,
-> +               .set_next_event = atcpit100_clkevt_next_event,
-> +               .cpumask = cpu_all_mask,
-> +       },
-> +
-> +       .of_irq = {
-> +               .handler = atcpit100_timer_interrupt,
-> +               .flags = IRQF_TIMER | IRQF_IRQPOLL,
-> +       },
+> I think that per Linus, and Thomas doc patches for SPDX ids this
+> should be instead either:
 
-I would add:
+> > +// SPDX-License-Identifier: GPL-2.0
+> > + // Copyright (c) 2017 Spreadtrum Communications Inc.
 
-.of_clk = {
-    .name = "PCLK",
-};
+> or at least this with the id on the first and the // comment style
 
-To be explicit on what we use.
+> > +// SPDX-License-Identifier: GPL-2.0
 
-(I hope I understand this OF timer right.)
+Are you saying SPDX requires C++ style comments?  That seems totally
+broken.
 
-Otherwise it looks good!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+--d77pgti6tbi35qod
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Yours,
-Linus Walleij
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlohT98ACgkQJNaLcl1U
+h9Bwowf7ByYSx3vPIYSgOxwwkE2lJNf1NR2EUl9AxOUucJtw5+dtADmfY603T2wX
+2LwdoTMyj6rnEvU9iIrS+27qDmCvJ6RNVCIiANBOmmb3WO15bpzBPUgcmksZ9i3+
+NanzGw5X5Y+n8bxwk+eOph6K+XuPHBln8FQwiBlKvQ6s+4RSmWhzse13jSoULCVN
+BXripFLPQnsFIXtibGfILglRxF+c8h88FQ+UNI2iuXfy0BKpRdnF0ikC3CLVX0gN
+ZEStv3L6m/CExJmpBnG0/2d/ZQsTbmFBCJl9xchnFlJWQxeFJNGcI9xRJR4OnmTv
+oiGuwSnma7HkYLJ8VclSUSL9UkuSgA==
+=3jZ5
+-----END PGP SIGNATURE-----
+
+--d77pgti6tbi35qod--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
