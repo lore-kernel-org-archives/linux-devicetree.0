@@ -1,50 +1,62 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/3] arm: dts: mt7623: fix card detection issue on
- bananapi-r2
-Date: Fri, 1 Dec 2017 12:42:07 +0100
-Message-ID: <74d7da4b-bb5a-f3f9-6c9e-9cf2fca69c5d@gmail.com>
-References: <cover.1511949769.git.sean.wang@mediatek.com>
- <88269ed11bdf881087f7b0de331a60d8acfdc977.1511949769.git.sean.wang@mediatek.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v3 0/3] drm/omap: Support for dispc memory bandwidth limit
+Date: Fri, 1 Dec 2017 13:54:46 +0200
+Message-ID: <758c66dd-6634-47f5-325d-8c0e14a08b40@ti.com>
+References: <20171130121237.30431-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <88269ed11bdf881087f7b0de331a60d8acfdc977.1511949769.git.sean.wang@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20171130121237.30431-1-peter.ujfalusi@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, laurent.pinchart@ideasonboard.com
+Cc: airlied@linux.ie, devicetree@vger.kernel.org, jsarha@ti.com, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/29/2017 11:10 AM, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Fix that bananapi-r2 booting from SD-card would fail since incorrect
-> polarity is applied to the previous setup with GPIO_ACTIVE_HIGH.
-> 
-> Cc: stable@vger.kernel.org # v4.14+
-> Fixes: 0eed8d097612 ("arm: dts: mt7623: Add SD-card and EMMC to bananapi-r2")
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
-
-Tested-by: Matthias Brugger <matthias.bgg@gmail.com>
-
->   arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index 688a863..7bf5aa2 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -204,7 +204,7 @@
->   	bus-width = <4>;
->   	max-frequency = <50000000>;
->   	cap-sd-highspeed;
-> -	cd-gpios = <&pio 261 0>;
-> +	cd-gpios = <&pio 261 GPIO_ACTIVE_LOW>;
->   	vmmc-supply = <&mt6323_vmch_reg>;
->   	vqmmc-supply = <&mt6323_vio18_reg>;
->   };
-> 
+T24gMzAvMTEvMTcgMTQ6MTIsIFBldGVyIFVqZmFsdXNpIHdyb3RlOgo+IEhpLAo+IAo+IENoYW5n
+ZXMgc2luY2UgdjI6Cj4gLSBSZWJhc2VkIG9uIGRybS1uZXh0ICh2MiB3YXMgYmFzZWQgb24gZHJt
+LW5leHQgYW5kIG15Cj4gICAnZHJtL29tYXA6IE1vZHVsZSBwYXJhbWV0ZXIgZm9yIGRpc3BsYXkg
+b3JkZXIgY29uZmlndXJhdGlvbicgc2VyaWVzLCB0aHVzIGl0Cj4gICB3YXMgbm90IGFwcGx5aW5n
+IGNsZWFubHkuCj4gLSBBZGRlZCBBY2tlZC1ieSBmcm9tIFJvYiB0byB0aGUgZHQtYmluZGluZyBj
+aGFuZ2VzCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MToKPiAtIFVzZSB0aGUgY3J0Yy0+bW9kZV92YWxp
+ZCBhbmQgbm90IGNvbm5lY3Rvci0+bW9kZV92YWxpZCBhcyB0aGUgbGltaXQgaXMgcmVhbGx5Cj4g
+ICBwb3NlZCBieSB0aGUgJ2NydGMnIChESVNQQykKPiAtIEJhbmR3aWR0aCBjYWxjdWxhdGlvbiBj
+aGFuZ2VkOiBkbyB0aGUgY2FsY3VsYXRpb24gaW4gcGxhY2UgKyBleHRlbmRlZCBjb21tZW50Cj4g
+LSBsb29rZWQgZm9yIGJldHRlciBwbGFjZSB0byBkb2N1bWVudCB0aGUgbWF4LW1lbW9yeS1iYW5k
+d2lkdGgsIGJ1dAo+ICAgY2FuIG5vdCBmaW5kIGFueSBzdWl0YWJsZSBkb2N1bWVudC4gQ3JlYXRp
+bmcgYSBuZXcgdHh0IGZpbGUgZm9yIG9ubHkgb25lCj4gICBwcm9wZXJ0eSBkaWQgbm90IHNlZW1l
+ZCBmZWFzYWJsZS4KPiAKPiBUaGlzIHNlcmllcyB3aWxsIGFkZCBzaW1wbGUgbWVtb3J5IGJhbmR3
+aWR0aCBsaW1pdCBzdXBwb3J0IHRvIHJlamVjdCBtb2Rlcwo+IHdoaWNoLCBpZiB1c2VkIHdpdGgg
+b25lIHBsYW5lIGluIGZ1bGwgc2l6ZSB3b3VsZCBmYWlsIHRoZSBsaW1pdC4KPiAKPiBSZWdhcmRz
+LAo+IFBldGVyCj4gLS0tCj4gUGV0ZXIgVWpmYWx1c2kgKDMpOgo+ICAgZHQtYmluZGluZ3M6IGRp
+c3BsYXkvdGk6IEFkZCBvcHRpb25hbCBwcm9wZXJ0eSB0byBzZXQgbWVtb3J5IGJhbmR3aWR0aAo+
+ICAgICBsaW1pdAo+ICAgZHJtL29tYXA6IGRzczogQWRkIHN1cHBvcnQgZm9yIHJlcG9ydGluZyBt
+ZW1vcnkgYmFuZHdpZHRoIGxpbWl0YXRpb24KPiAgIGRybS9vbWFwOiBGaWx0ZXIgZGlzcGxheXMg
+bW9kZSBiYXNlZCBvbiBiYW5kd2lkdGggbGltaXQKPiAKPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQgfCAgNSArKysKPiAgLi4uL2JpbmRpbmdzL2Rp
+c3BsYXkvdGkvdGksb21hcDItZHNzLnR4dCAgICAgICAgICAgfCAgNCArKysKPiAgLi4uL2JpbmRp
+bmdzL2Rpc3BsYXkvdGkvdGksb21hcDMtZHNzLnR4dCAgICAgICAgICAgfCAgNCArKysKPiAgLi4u
+L2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDQtZHNzLnR4dCAgICAgICAgICAgfCAgNCArKysK
+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDUtZHNzLnR4dCAgICAgICAgICAgfCAg
+NCArKysKPiAgZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZHNzL2Rpc3BjLmMgICAgICAgICAgICAg
+ICAgfCAxMyArKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vb21hcGRybS9kc3Mvb21hcGRzcy5o
+ICAgICAgICAgICAgICB8ICAyICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL29tYXBfY3J0
+Yy5jICAgICAgICAgICAgICAgIHwgMzcgKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJz
+L2dwdS9kcm0vb21hcGRybS9vbWFwX2Rydi5jICAgICAgICAgICAgICAgICB8ICA1ICsrKwo+ICBk
+cml2ZXJzL2dwdS9kcm0vb21hcGRybS9vbWFwX2Rydi5oICAgICAgICAgICAgICAgICB8ICAzICsr
+Cj4gIDEwIGZpbGVzIGNoYW5nZWQsIDgxIGluc2VydGlvbnMoKykKPiAKClRoYW5rcywgSSBoYXZl
+IGFwcGxpZWQgdGhpcyBzZXJpZXMuCgogVG9taQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxh
+bmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVz
+cyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
