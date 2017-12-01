@@ -1,76 +1,72 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 16/19] ASoC: tlv320aic31xx: Add short
- circuit detection support
-Date: Fri, 1 Dec 2017 09:32:12 -0600
-Message-ID: <4d956cbc-829c-0d81-2980-aa2a79f36660@ti.com>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-17-afd@ti.com>
- <20171201133930.xzfjjj6wzkbtk6c4@sirena.org.uk>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+        <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/2] Input: Add Cypress Gen5 Touchscreen driver
+Date: Fri,  1 Dec 2017 16:39:55 +0100
+Message-ID: <20171201153957.13053-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171201133930.xzfjjj6wzkbtk6c4@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/2017 07:39 AM, Mark Brown wrote:
-> On Wed, Nov 29, 2017 at 03:32:57PM -0600, Andrew F. Davis wrote:
-> 
->> +static irqreturn_t aic31xx_irq(int irq, void *data)
->> +{
->> +	struct aic31xx_priv *aic31xx = (struct aic31xx_priv *)data;
-> 
-> There is no need to cast away from void, doing so can only mask bugs.
-> 
->> +	ret = regmap_read(aic31xx->regmap, AIC31XX_INTRDACFLAG, &value);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to read interrupt mask: %d\n", ret);
->> +		return IRQ_NONE;
->> +	}
->> +
->> +	if (value & AIC31XX_HPLSCDETECT)
->> +		dev_err(dev, "Short circuit on Left output is detected\n");
->> +	if (value & AIC31XX_HPRSCDETECT)
->> +		dev_err(dev, "Short circuit on Right output is detected\n");
->> +
->> +	return IRQ_HANDLED;
-> 
-> This will report the interrupt as handled even if we didn't see an
-> interrupt we understand which will break shared interrupt lines.  At the
-> very least we should log other interrupt sources numerically.
-> 
+Hi everyone,
 
-Okay, I think I can make that work by checking if no bits are set in the
-interrupt regs and returning early if not, IRQ_NONE.
+Here is a V4 series to add the driver of the touchscreen Cypress,
+TrueTouch Generation 5.
+Based on last master branch of "input" kernel's tree, last commit c1b433e04ef9.
 
->> +	if (aic31xx->irq > 0) {
->> +		regmap_update_bits(aic31xx->regmap, AIC31XX_GPIO1,
->> +				   AIC31XX_GPIO1_FUNC_MASK,
->> +				   AIC31XX_GPIO1_INT1 <<
->> +				   AIC31XX_GPIO1_FUNC_SHIFT);
-> 
-> Is the interrupt only available on GPIO1?
-> 
+This touchscreen is similar to Cypress generation 4 but the
+registers are different.
 
-Some devices can route this to GPIO2 IIRC.
+This driver uses regmap as it is possible to use I2C or SPI
+busses. Currently, only the I2C support are available in the driver.
+This touchscreen can handle some multitouch events as buttons using
+some defined zones. That is why the driver handles buttons and
+multitouch events.
 
-I'm not sure how that would be supported, I think we would need to add
-interrupt names to DT so users could specify which gpio they wired their
-IRQ lines to.
+Changes since v3:
+   - Rebased on last input's branch
+   - Changed the CRC table to use crc_itu_t_table instead of
+   crc_ccitt_false_table which is not merged.
+   - Added selection of CRC_ITU_T on KConfig
+Changes since v2:
+   - Removed pinctrl in dt-binding example which is uncessecary.
+   - Added Acked-by and Reviewed-by received.
+Changes since v1:
+   - Updated the driver according to reviews. Most important modifications:
+   removed unnecessary mutex, updated dev_err output, handled return cases
+   in a better way, created a HID_ENUM, removed magic value, used an
+   existing CRC table and used "linux-keycodes" instead of sub-nodes.
+   - Updated the dt-bindings to use linux-keycodes and removed properties'
+   description that comes from touchscreen's binding.
 
-interrupt = <&host 23>;
-interrupt-name = "gpio2";
+Patch 01: Add the basis of the driver for Cypress Gen5 Touchscreen.
+Patch 02: Add the binding documentation for this driver.
 
-or similar?
+If you have any remarks, let me know.
+
+Thank you in advance,
+Mylène
+
+Mylène Josserand (2):
+  Input: Add driver for Cypress Generation 5 touchscreen
+  dt-bindings: input: Add documentation for cyttsp5
+
+ .../bindings/input/touchscreen/cypress,cyttsp5.txt |   39 +
+ drivers/input/touchscreen/Kconfig                  |   16 +
+ drivers/input/touchscreen/Makefile                 |    1 +
+ drivers/input/touchscreen/cyttsp5.c                | 1110 ++++++++++++++++++++
+ 4 files changed, 1166 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cypress,cyttsp5.txt
+ create mode 100644 drivers/input/touchscreen/cyttsp5.c
+
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
