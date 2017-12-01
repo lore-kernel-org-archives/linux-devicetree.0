@@ -1,38 +1,54 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: Add binding for Sitronix ST7735R
- display panels
-Date: Thu, 30 Nov 2017 20:04:14 -0600
-Message-ID: <20171201020414.evx5q5bu2blrvto6@rob-hp-laptop>
-References: <1511924469-11448-1-git-send-email-david@lechnology.com>
- <1511924469-11448-2-git-send-email-david@lechnology.com>
+Subject: Re: [PATCH 1/3] mmc: dt-bindings: add mmc support to MT7623 SoC
+Date: Thu, 30 Nov 2017 20:06:04 -0600
+Message-ID: <20171201020604.etfzccuwomxgcwmg@rob-hp-laptop>
+References: <cover.1511949769.git.sean.wang@mediatek.com>
+ <3e2c72d18bbe6d7c762fd820195f0fa0b5a45bbf.1511949769.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1511924469-11448-2-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, limor@ladyada.net, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+In-Reply-To: <3e2c72d18bbe6d7c762fd820195f0fa0b5a45bbf.1511949769.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBOb3YgMjgsIDIwMTcgYXQgMDk6MDE6MDhQTSAtMDYwMCwgRGF2aWQgTGVjaG5lciB3
-cm90ZToKPiBUaGlzIGFkZHMgYSBuZXcgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgU2l0cm9uaXgg
-U1Q3NzM1UiBkaXNwbGF5IHBhbmVscywKPiBzdWNoIGFzIHRoZSBBZGFmcnVpdCAxLjgiIFRGVC4K
-PiAKPiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4K
-PiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NzM1ci50eHQgICAgICAg
-ICAgfCAzNSArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNl
-cnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc3MzVyLnR4dAoKQWNrZWQtYnk6IFJvYiBIZXJy
-aW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On Wed, Nov 29, 2017 at 06:10:35PM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Add the devicetree binding for MT7623 SoC using MT2701 as the fallback.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> index 72d2a73..1732588 100644
+> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> @@ -12,6 +12,8 @@ Required properties:
+>  	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+>  	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+>  	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+> +	"mediatek,mt7623-mmc",
+> +	"mediatek,mt2701-mmc": for mmc host ip compatible with mt7623
+
+Those should be on 1 line ideally.
+
+BTW, I find "for mmc host ip compatible with mt7623" to be mostly 
+redundant.
+
+Either way,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+
+>  - reg: physical base address of the controller and length
+>  - interrupts: Should contain MSDC interrupt number
+>  - clocks: Should contain phandle for the clock feeding the MMC controller
+> -- 
+> 2.7.4
+> 
