@@ -1,75 +1,56 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 16/19] ASoC: tlv320aic31xx: Add short circuit
- detection support
-Date: Fri, 1 Dec 2017 13:39:30 +0000
-Message-ID: <20171201133930.xzfjjj6wzkbtk6c4@sirena.org.uk>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-17-afd@ti.com>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH 2/2] regulator: sc2731: Add regulator driver to support
+ Spreadtrum SC2731 PMIC
+Date: Fri, 1 Dec 2017 14:39:42 +0100
+Message-ID: <CAOFm3uHsT8PTZL0tQ0E+7Bje9C8ZUcPd13qz9v6jZHzqEoXqKQ@mail.gmail.com>
+References: <f6d8ff765f4864e5b6ace1f022202d8793a7becf.1512118703.git.erick.chen@spreadtrum.com>
+ <75a6a48f603a25d744ef46287e036975b0203608.1512118703.git.erick.chen@spreadtrum.com>
+ <CAOFm3uFWhOMy=0nibOjDP_vP+m7Dcf1cGOmXXgcrSy6PDfqEWQ@mail.gmail.com> <20171201124935.qgqclyoatnnph63p@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mkiku65tfcdxl625"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171129213300.20021-17-afd-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20171201124935.qgqclyoatnnph63p-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Mark,
 
---mkiku65tfcdxl625
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, Dec 1, 2017 at 1:49 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Dec 01, 2017 at 10:13:27AM +0100, Philippe Ombredanne wrote:
+>> On Fri, Dec 1, 2017 at 9:58 AM, Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+>
+>> I think that per Linus, and Thomas doc patches for SPDX ids this
+>> should be instead either:
+>
+>> > +// SPDX-License-Identifier: GPL-2.0
+>> > + // Copyright (c) 2017 Spreadtrum Communications Inc.
+>
+>> or at least this with the id on the first and the // comment style
+>
+>> > +// SPDX-License-Identifier: GPL-2.0
+>
+> Are you saying SPDX requires C++ style comments?  That seems totally
+> broken.
 
-On Wed, Nov 29, 2017 at 03:32:57PM -0600, Andrew F. Davis wrote:
+In can understand your point, but for reference please check Linus
+[1][2][3], Thomas[4] and Greg[5] comments on the topic.
 
-> +static irqreturn_t aic31xx_irq(int irq, void *data)
-> +{
-> +	struct aic31xx_priv *aic31xx = (struct aic31xx_priv *)data;
+I am just a lowly messenger and even though I personally agree with
+Linus points and taste in this area, my weightless voice does not
+matter.
 
-There is no need to cast away from void, doing so can only mask bugs.
+CC: Linus, Greg and Thomas
 
-> +	ret = regmap_read(aic31xx->regmap, AIC31XX_INTRDACFLAG, &value);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to read interrupt mask: %d\n", ret);
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	if (value & AIC31XX_HPLSCDETECT)
-> +		dev_err(dev, "Short circuit on Left output is detected\n");
-> +	if (value & AIC31XX_HPRSCDETECT)
-> +		dev_err(dev, "Short circuit on Right output is detected\n");
-> +
-> +	return IRQ_HANDLED;
-
-This will report the interrupt as handled even if we didn't see an
-interrupt we understand which will break shared interrupt lines.  At the
-very least we should log other interrupt sources numerically.
-
-> +	if (aic31xx->irq > 0) {
-> +		regmap_update_bits(aic31xx->regmap, AIC31XX_GPIO1,
-> +				   AIC31XX_GPIO1_FUNC_MASK,
-> +				   AIC31XX_GPIO1_INT1 <<
-> +				   AIC31XX_GPIO1_FUNC_SHIFT);
-
-Is the interrupt only available on GPIO1?
-
---mkiku65tfcdxl625
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlohW5EACgkQJNaLcl1U
-h9BpyQf+Mwg+vQDCu4H9o5W/ESJMk8yrbgIaM1BV8y0FAMgTPXnLDJnmw7nxYgq3
-8xbE6oBZ6NI7GX1mCw6kUXNkdq7uT+qzJFCkmUqRtMTQZvpIoUy3DR3s9KtIlVMR
-vIGrEZ3/2ix+O2K6aSBbrrTNKqpRva4MQkbzJ82qmcZTWwrFCfmoem7oUxZATAHN
-GqsOHfnCKXSzFpn/z0h+7Ijh0u5lAED/IyLK4EafarYdLnwfL2NspNZtdNiRBGhs
-2YTEbF0ZvKk2PTsOADihRUar+RMBXK65V8ZwZc6o8pTRuNhdcm3k849RJK5uyHxr
-yQYJOaKaNlUtlGfQRXuTeCyiCif5Uw==
-=0WYc
------END PGP SIGNATURE-----
-
---mkiku65tfcdxl625--
+[1] https://lkml.org/lkml/2017/11/2/715
+[2] https://lkml.org/lkml/2017/11/25/125
+[3] https://lkml.org/lkml/2017/11/25/133
+[4] https://lkml.org/lkml/2017/11/2/805
+[5] https://lkml.org/lkml/2017/10/19/165
+-- 
+Cordially
+Philippe Ombredanne
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
