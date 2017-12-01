@@ -1,42 +1,58 @@
 From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 09/12] ARM: dts: imx6qdl-colibri: Remove unneeded reg property
-Date: Fri,  1 Dec 2017 17:24:42 -0200
-Message-ID: <1512156285-18451-9-git-send-email-festevam@gmail.com>
+Subject: [PATCH 12/12] ARM: dts: imx6ul-14x14-evk: Move regulators out of simple-bus
+Date: Fri,  1 Dec 2017 17:24:45 -0200
+Message-ID: <1512156285-18451-12-git-send-email-festevam@gmail.com>
 References: <1512156285-18451-1-git-send-email-festevam@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1512156285-18451-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-As described in
-Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-there is no 'reg' property under stmpe_touchscreen, so remove it
-to fix the following build warning with W=1:
+It is not recommended to place regulator nodes inside simple-bus, so
+move them out in order to fix the following build warnings with W=1:
 
-arch/arm/boot/dts/imx6dl-colibri-eval-v3.dtb: Warning (unit_address_vs_reg): Node /soc/aips-bus@2100000/i2c@21a4000/stmpe811@41/stmpe_touchscreen has a reg or ranges property, but no unit name
+arch/arm/boot/dts/imx6ul-14x14-evk.dtb: Warning (simple_bus_reg): Node /regulators/sd1_regulator missing or empty reg/ranges property
 
-Cc: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-colibri.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/imx6ul-14x14-evk.dts | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-index fc66bbf..e4eb300 100644
---- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-@@ -274,7 +274,6 @@
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dts b/arch/arm/boot/dts/imx6ul-14x14-evk.dts
+index e5d3ef8..18fdb08 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dts
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dts
+@@ -30,19 +30,14 @@
+ 		status = "okay";
+ 	};
  
- 		stmpe_touchscreen {
- 			compatible = "st,stmpe-ts";
--			reg = <0>;
- 			/* 3.25 MHz ADC clock speed */
- 			st,adc-freq = <1>;
- 			/* 8 sample average control */
+-	regulators {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 
+-		reg_sd1_vmmc: sd1_regulator {
+-			compatible = "regulator-fixed";
+-			regulator-name = "VSD_3V3";
+-			regulator-min-microvolt = <3300000>;
+-			regulator-max-microvolt = <3300000>;
+-			gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	reg_sd1_vmmc: regulator-sd1-vmmc {
++		compatible = "regulator-fixed";
++		regulator-name = "VSD_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
+ 	};
+ 
+ 	sound {
 -- 
 2.7.4
 
