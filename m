@@ -1,117 +1,71 @@
-From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 01/10] arm64: dts: rockchip: Enable edp disaplay on kevin
-Date: Fri, 1 Dec 2017 13:28:06 +0100
-Message-ID: <CAFqH_52_Wkm5uY35Y+Ngh8+uVP03nDYaMgNq1rn2EDkNuaiXHg@mail.gmail.com>
-References: <20171019034812.13768-1-jeffy.chen@rock-chips.com> <20171019034812.13768-2-jeffy.chen@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 33/35] clocksource/drivers/atcpit100: Add andestech
+ atcpit100 timer
+Date: Fri, 1 Dec 2017 13:30:13 +0100
+Message-ID: <CACRpkdaRq1ZH7EN3RTeLGfUW+xK06fxDDhY6kTQeacdW9MOQYA@mail.gmail.com>
+References: <cover.1511785528.git.green.hu@gmail.com> <672e0b3843953d1ab69bc19baf1a0f217ec1b1fa.1511785528.git.green.hu@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171019034812.13768-2-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <672e0b3843953d1ab69bc19baf1a0f217ec1b1fa.1511785528.git.green.hu@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: greentime@andestech.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, deanbo422@gmail.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Rick Chen <rickchen36@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
 
-2017-10-19 5:48 GMT+02:00 Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>:
-> Add edp panel and enable related nodes on kevin.
+> From: Rick Chen <rickchen36@gmail.com>
 >
-> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ATCPIT100 is often used on the Andes architecture,
+> This timer provide 4 PIT channels. Each PIT channel is a
+> multi-function timer, can be configured as 32,16,8 bit timers
+> or PWM as well.
 >
-> ---
+> For system timer it will set channel 1 32-bit timer0 as clock
+> source and count downwards until underflow and restart again.
 >
-> Changes in v6: None
-> Changes in v5: None
+> It also set channel 0 32-bit timer0 as clock event and count
+> downwards until condition match. It will generate an interrupt
+> for handling periodically.
 >
->  arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 29 +++++++++++++++++++++++
->  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi      | 16 +++++++++++++
->  2 files changed, 45 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-> index a3d3cea7dc4f..bc67b19f0af5 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-> @@ -93,6 +93,18 @@
->                 pwm-delay-us = <10000>;
->         };
->
-> +       edp_panel: edp-panel {
-> +               compatible = "sharp,lq123p1jx31", "simple-panel";
-> +               backlight = <&backlight>;
-> +               power-supply = <&pp3300_disp>;
-> +
-> +               ports {
-> +                       panel_in_edp: endpoint {
-> +                               remote-endpoint = <&edp_out_panel>;
-> +                       };
-> +               };
-> +       };
-> +
->         thermistor_ppvar_bigcpu: thermistor-ppvar-bigcpu {
->                 compatible = "murata,ncp15wb473";
->                 pullup-uv = <1800000>;
-> @@ -264,6 +276,23 @@ ap_i2c_dig: &i2c2 {
->         };
->  };
->
-> +&edp {
-> +       status = "okay";
-> +
-> +       ports {
-> +               edp_out: port@1 {
-> +                       reg = <1>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       edp_out_panel: endpoint@0 {
-> +                               reg = <0>;
-> +                               remote-endpoint = <&panel_in_edp>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
->  &ppvar_bigcpu_pwm {
->         regulator-min-microvolt = <798674>;
->         regulator-max-microvolt = <1302172>;
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> index 5772c52fbfd3..470105d651c2 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> @@ -927,6 +927,22 @@ ap_i2c_audio: &i2c8 {
->         dr_mode = "host";
->  };
->
-> +&vopb {
-> +       status = "okay";
-> +};
-> +
-> +&vopb_mmu {
-> +       status = "okay";
-> +};
-> +
-> +&vopl {
-> +       status = "okay";
-> +};
-> +
-> +&vopl_mmu {
-> +       status = "okay";
-> +};
-> +
->  #include <arm/cros-ec-keyboard.dtsi>
->  #include <arm/cros-ec-sbs.dtsi>
->
-> --
-> 2.11.0
->
->
+> Signed-off-by: Rick Chen <rickchen36@gmail.com>
+> Signed-off-by: Greentime Hu <green.hu@gmail.com>
 
-I just tested this patch on top of current mainline (4.15-rc1+) and works so,
+The driver looks nice overall.
 
-Tested-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static struct timer_of to = {
+> +       .flags = TIMER_OF_IRQ | TIMER_OF_CLOCK | TIMER_OF_BASE,
+> +
+> +       .clkevt = {
+> +               .name = "atcpit100_tick",
+> +               .rating = 300,
+> +               .features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
+> +               .set_state_shutdown = atcpit100_clkevt_shutdown,
+> +               .set_state_periodic = atcpit100_clkevt_set_periodic,
+> +               .set_state_oneshot = atcpit100_clkevt_set_oneshot,
+> +               .tick_resume = atcpit100_clkevt_shutdown,
+> +               .set_next_event = atcpit100_clkevt_next_event,
+> +               .cpumask = cpu_all_mask,
+> +       },
+> +
+> +       .of_irq = {
+> +               .handler = atcpit100_timer_interrupt,
+> +               .flags = IRQF_TIMER | IRQF_IRQPOLL,
+> +       },
+
+I would add:
+
+.of_clk = {
+    .name = "PCLK",
+};
+
+To be explicit on what we use.
+
+(I hope I understand this OF timer right.)
+
+Otherwise it looks good!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
