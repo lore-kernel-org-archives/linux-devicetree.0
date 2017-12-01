@@ -1,194 +1,121 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v4.14] Add support for bq27521 battery monitor
-Date: Sat, 2 Dec 2017 00:06:49 +0100
-Message-ID: <20171201230649.GA27533@amd>
-References: <20171109210615.GA27638@amd>
- <20171110103937.GA29900@amd>
+From: David Daney <david.daney@cavium.com>
+Subject: [PATCH v5 net-next,mips 0/7] Cavium OCTEON-III network driver.
+Date: Fri,  1 Dec 2017 15:18:00 -0800
+Message-ID: <20171201231807.25266-1-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171110103937.GA29900@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Philippe Ombredanne <pombredanne@nexb.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
+We are adding the Cavium OCTEON-III network driver.  But since
+interacting with the input and output queues is done via special CPU
+local memory, we also need to add support to the MIPS/Octeon
+architecture code.  Aren't SoCs nice in this way?
 
---7JfCtLOvnd9MIVvH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The first five patches add the SoC support needed by the driver, the
+last two add the driver and an entry in MAINTAINERS.
 
-Hi!
+Since these touch several subsystems (mips, netdev), I would
+propose merging via netdev, but defer to the maintainers if they think
+something else would work better.
 
-> This adds basic support for BQ27521 battery monitor, used in Nokia N9
-> and N950. In particular, battery voltage is important to be able to
-> tell when the battery is almost empty. Emptying battery on N950 is
-> pretty painful, as flasher needs to be used to recover phone in such
-> case.
+A separate pull request was recently done by Steven Hill for the
+firmware required by the driver.
 
-Sebastian, ping? This one should not be too controversial.
+Changes from v4:
 
-If you could also apply the "shut down when battery is low", that
-would be nice.
+o Removed cleanup patch for previous generation SoC "staging" driver,
+  as it will be sent as a follow-on.
 
-Thanks,
-								Pavel
+o Fixed kernel doc formatting in all patches.
 
-> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
->=20
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/suppl=
-y/bq27xxx_battery.c
-> index 51f0961..f684288 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -323,6 +323,30 @@ static u8
->  		[BQ27XXX_REG_AP] =3D INVALID_REG_ADDR,
->  		BQ27XXX_DM_REG_ROWS,
->  	},
-> +	bq27521_regs[BQ27XXX_REG_MAX] =3D {
-> +		[BQ27XXX_REG_CTRL] =3D 0x02,
-> +		[BQ27XXX_REG_TEMP] =3D 0x0a,
-> +		[BQ27XXX_REG_INT_TEMP] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_VOLT] =3D 0x0c,
-> +		[BQ27XXX_REG_AI] =3D 0x0e,
-> +		[BQ27XXX_REG_FLAGS] =3D 0x08,
-> +		[BQ27XXX_REG_TTE] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_TTF] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_TTES] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_TTECP] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_NAC] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_FCC] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_CYCT] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_AE] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_SOC] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_DCAP] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_REG_AP] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_DM_CTRL] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_DM_CLASS] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_DM_BLOCK] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_DM_DATA] =3D INVALID_REG_ADDR,
-> +		[BQ27XXX_DM_CKSUM] =3D INVALID_REG_ADDR,
-> +	},
->  	bq27530_regs[BQ27XXX_REG_MAX] =3D {
->  		[BQ27XXX_REG_CTRL] =3D 0x00,
->  		[BQ27XXX_REG_TEMP] =3D 0x06,
-> @@ -557,6 +581,15 @@ static enum power_supply_property bq27520g4_props[] =
-=3D {
->  	POWER_SUPPLY_PROP_MANUFACTURER,
->  };
-> =20
-> +static enum power_supply_property bq27521_props[] =3D {
-> +	POWER_SUPPLY_PROP_STATUS,
-> +	POWER_SUPPLY_PROP_PRESENT,
-> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> +	POWER_SUPPLY_PROP_CURRENT_NOW,
-> +	POWER_SUPPLY_PROP_TEMP,
-> +	POWER_SUPPLY_PROP_TECHNOLOGY,
-> +};
-> +
->  static enum power_supply_property bq27530_props[] =3D {
->  	POWER_SUPPLY_PROP_STATUS,
->  	POWER_SUPPLY_PROP_PRESENT,
-> @@ -671,6 +704,7 @@ static struct bq27xxx_dm_reg bq27500_dm_regs[] =3D {
->  #define bq27520g2_dm_regs 0
->  #define bq27520g3_dm_regs 0
->  #define bq27520g4_dm_regs 0
-> +#define bq27521_dm_regs 0
->  #define bq27530_dm_regs 0
->  #define bq27531_dm_regs 0
->  #define bq27541_dm_regs 0
-> @@ -717,8 +751,8 @@ static struct bq27xxx_dm_reg bq27621_dm_regs[] =3D {
->  #endif
-> =20
->  #define BQ27XXX_O_ZERO	0x00000001
-> -#define BQ27XXX_O_OTDC	0x00000002
-> -#define BQ27XXX_O_UTOT  0x00000004
-> +#define BQ27XXX_O_OTDC	0x00000002 /* has OTC/OTD overtemperature flags */
-> +#define BQ27XXX_O_UTOT  0x00000004 /* has OT overtemperature flag */
->  #define BQ27XXX_O_CFGUP	0x00000008
->  #define BQ27XXX_O_RAM	0x00000010
-> =20
-> @@ -751,6 +785,7 @@ static struct {
->  	[BQ27520G2] =3D BQ27XXX_DATA(bq27520g2, 0         , BQ27XXX_O_OTDC),
->  	[BQ27520G3] =3D BQ27XXX_DATA(bq27520g3, 0         , BQ27XXX_O_OTDC),
->  	[BQ27520G4] =3D BQ27XXX_DATA(bq27520g4, 0         , BQ27XXX_O_OTDC),
-> +	[BQ27521]   =3D BQ27XXX_DATA(bq27521,   0         , 0),
->  	[BQ27530]   =3D BQ27XXX_DATA(bq27530,   0         , BQ27XXX_O_UTOT),
->  	[BQ27531]   =3D BQ27XXX_DATA(bq27531,   0         , BQ27XXX_O_UTOT),
->  	[BQ27541]   =3D BQ27XXX_DATA(bq27541,   0         , BQ27XXX_O_OTDC),
-> diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/s=
-upply/bq27xxx_battery_i2c.c
-> index 0b11ed4..6b25e5f 100644
-> --- a/drivers/power/supply/bq27xxx_battery_i2c.c
-> +++ b/drivers/power/supply/bq27xxx_battery_i2c.c
-> @@ -239,6 +239,7 @@ static const struct i2c_device_id bq27xxx_i2c_id_tabl=
-e[] =3D {
->  	{ "bq27520g2", BQ27520G2 },
->  	{ "bq27520g3", BQ27520G3 },
->  	{ "bq27520g4", BQ27520G4 },
-> +	{ "bq27521", BQ27521 },
->  	{ "bq27530", BQ27530 },
->  	{ "bq27531", BQ27531 },
->  	{ "bq27541", BQ27541 },
-> @@ -269,6 +270,7 @@ static const struct of_device_id bq27xxx_battery_i2c_=
-of_match_table[] =3D {
->  	{ .compatible =3D "ti,bq27520g2" },
->  	{ .compatible =3D "ti,bq27520g3" },
->  	{ .compatible =3D "ti,bq27520g4" },
-> +	{ .compatible =3D "ti,bq27521" },
->  	{ .compatible =3D "ti,bq27530" },
->  	{ .compatible =3D "ti,bq27531" },
->  	{ .compatible =3D "ti,bq27541" },
-> diff --git a/include/linux/mfd/twl.h b/include/linux/mfd/twl.h
-> index 9ad7828..6547d30 100644
-> --- a/include/linux/mfd/twl.h
-> +++ b/include/linux/mfd/twl.h
-> @@ -70,6 +70,7 @@ enum twl4030_module_ids {
->  	TWL4030_MODULE_INT,
-> =20
->  	TWL5031_MODULE_ACCESSORY,
-> +	TWL5031_MODULE_BCC,
->  	TWL5031_MODULE_INTERRUPTS,
-> =20
->  	TWL4030_MODULE_LAST,
-> diff --git a/include/linux/power/bq27xxx_battery.h b/include/linux/power/=
-bq27xxx_battery.h
-> index 43194e0..d8d127a 100644
-> --- a/include/linux/power/bq27xxx_battery.h
-> +++ b/include/linux/power/bq27xxx_battery.h
-> @@ -15,6 +15,7 @@ enum bq27xxx_chip {
->  	BQ27520G2, /* bq27520G2 */
->  	BQ27520G3, /* bq27520G3 */
->  	BQ27520G4, /* bq27520G4 */
-> +	BQ27521, /* bq27521 */=09
->  	BQ27530, /* bq27530, bq27531 */
->  	BQ27531,
->  	BQ27541, /* bq27541, bq27542, bq27546, bq27742 */
->=20
+o Removed redundant licensing text boilerplate.
 
+o Reviewed-by: header added to 2/7.
 
+o Rewrote locking code in 3/7 to eliminate inline asm.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Changes from v3:
 
---7JfCtLOvnd9MIVvH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+o Use phy_print_status() instead of open coding the equivalent.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+o Print warning on phy mode mismatch.
 
-iEYEARECAAYFAloh4IkACgkQMOfwapXb+vLoXwCcDxtFmbolUIRIfnNa0VAt6qHI
-GigAn2aGVmhlCPdjB6Ow1ZC46e+HYLxZ
-=4bKz
------END PGP SIGNATURE-----
+o Improve dt-bindings and add Acked-by.
 
---7JfCtLOvnd9MIVvH--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes from v2:
+
+o Fix PKI (RX path) initialization to work with little endian kernel.
+
+Changes from v1:
+
+o Cleanup and use of standard bindings in the device tree bindings
+  document.
+
+o Added (hopefully) clarifying comments about several OCTEON
+  architectural peculiarities.
+
+o Removed unused testing code from the driver.
+
+o Removed some module parameters that already default to the proper
+  values.
+
+o KConfig cleanup, including testing on x86_64, arm64 and mips.
+
+o Fixed breakage to the driver for previous generation of OCTEON SoCs (in
+  the staging directory still).
+
+o Verified bisectability of the patch set.
+
+Carlos Munoz (5):
+  dt-bindings: Add Cavium Octeon Common Ethernet Interface.
+  MIPS: Octeon: Enable LMTDMA/LMTST operations.
+  MIPS: Octeon: Add a global resource manager.
+  MIPS: Octeon: Add Free Pointer Unit (FPA) support.
+  netdev: octeon-ethernet: Add Cavium Octeon III support.
+
+David Daney (2):
+  MIPS: Octeon: Automatically provision CVMSEG space.
+  MAINTAINERS: Add entry for
+    drivers/net/ethernet/cavium/octeon/octeon3-*
+
+ .../devicetree/bindings/net/cavium-bgx.txt         |   61 +
+ MAINTAINERS                                        |    6 +
+ arch/mips/cavium-octeon/Kconfig                    |   35 +-
+ arch/mips/cavium-octeon/Makefile                   |    2 +
+ arch/mips/cavium-octeon/octeon-fpa3.c              |  363 ++++
+ arch/mips/cavium-octeon/resource-mgr.c             |  351 ++++
+ arch/mips/cavium-octeon/setup.c                    |   22 +-
+ .../asm/mach-cavium-octeon/kernel-entry-init.h     |   20 +-
+ arch/mips/include/asm/mipsregs.h                   |    2 +
+ arch/mips/include/asm/octeon/octeon.h              |   45 +-
+ arch/mips/include/asm/processor.h                  |    2 +-
+ arch/mips/kernel/octeon_switch.S                   |    2 -
+ arch/mips/mm/tlbex.c                               |   29 +-
+ drivers/net/ethernet/cavium/Kconfig                |   55 +-
+ drivers/net/ethernet/cavium/octeon/Makefile        |    6 +
+ .../net/ethernet/cavium/octeon/octeon3-bgx-nexus.c |  701 +++++++
+ .../net/ethernet/cavium/octeon/octeon3-bgx-port.c  | 2015 +++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-core.c  | 2069 ++++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pki.c   |  824 ++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pko.c   | 1688 ++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-sso.c   |  301 +++
+ drivers/net/ethernet/cavium/octeon/octeon3.h       |  418 ++++
+ drivers/staging/octeon/ethernet-defines.h          |    2 +-
+ 23 files changed, 8955 insertions(+), 64 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
+ create mode 100644 arch/mips/cavium-octeon/octeon-fpa3.c
+ create mode 100644 arch/mips/cavium-octeon/resource-mgr.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-nexus.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-core.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pki.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pko.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-sso.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3.h
+
+-- 
+2.14.3
