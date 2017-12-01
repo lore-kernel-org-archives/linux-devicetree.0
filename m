@@ -1,31 +1,29 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 28/28] rcar-vin: enable support for r8a77970
-Date: Thu, 30 Nov 2017 20:18:22 -0600
-Message-ID: <20171201021822.5wixhnt765rhonrg@rob-hp-laptop>
-References: <20171129194342.26239-1-niklas.soderlund+renesas@ragnatech.se>
- <20171129194342.26239-29-niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH 1/9] dt-bindings: arm: Add entry for Broadcom Brahma-B53
+Date: Thu, 30 Nov 2017 20:18:55 -0600
+Message-ID: <20171201021855.ql2pp4mw4fkms3pm@rob-hp-laptop>
+References: <20171129201849.17522-1-f.fainelli@gmail.com>
+ <20171129201849.17522-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171129194342.26239-29-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+In-Reply-To: <20171129201849.17522-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 08:43:42PM +0100, Niklas Söderlund wrote:
-> Add the SoC specific information for Renesas r8a77970.
+On Wed, Nov 29, 2017 at 12:18:41PM -0800, Florian Fainelli wrote:
+> Broadcom's Brahma-B53 CPU is an ARMv8A processor used on a number of
+> DSL, Cable Modem and Set-top-box SoCs.
 > 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/rcar_vin.txt         |  1 +
+>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/media/platform/rcar-vin/rcar-core.c        | 40 ++++++++++++++++++++++
->  2 files changed, 41 insertions(+)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
