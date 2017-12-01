@@ -1,73 +1,95 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] arm64: allwinner: a64-sopine: Use dcdc1
- regulator instead of vcc3v3
-Date: Fri,  1 Dec 2017 14:36:05 +0530
-Message-ID: <1512119165-15290-2-git-send-email-jagan@amarulasolutions.com>
-References: <1512119165-15290-1-git-send-email-jagan@amarulasolutions.com>
-Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: net: Add DT bindings for Socionext Netsec
+Date: Fri, 1 Dec 2017 09:12:57 +0000
+Message-ID: <CAKv+Gu-A4yWTPRcXk8VAbnXYQpw+p4ExmwiVGs4cL7Ye2hwWOw@mail.gmail.com>
+References: <1512058351-15851-1-git-send-email-jassisinghbrar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRBG52QTIQKGQEMIR3T7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1512119165-15290-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1512058351-15851-1-git-send-email-jassisinghbrar@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Since current tree support AXP803 regulators,
-replace fixed regulator vcc3v3 with AXP803 dcdc1 regulator.
+Hi Jassi,
 
-Tested mmc0 on sopine baseboard.
+On 30 November 2017 at 16:12,  <jassisinghbrar@gmail.com> wrote:
+> From: Jassi Brar <jassisinghbrar@gmail.com>
+>
+> This patch adds documentation for Device-Tree bindings for the
+> Socionext NetSec Controller driver.
+>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts |  2 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi          | 11 +----------
- 2 files changed, 2 insertions(+), 11 deletions(-)
+No need to keep my signoff here: if you are posting the patch, your
+signoff should come last. (Authorship is no factor here, only the path
+taken by the patch from the author/copyright holder to the sender of
+the email)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index a053a6a..abe179d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -96,7 +96,7 @@
- &mmc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
--	vmmc-supply = <&reg_vcc3v3>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	vqmmc-supply = <&reg_vcc1v8>;
- 	bus-width = <8>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-index a5da18a..43418bd 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-@@ -45,19 +45,10 @@
- 
- #include "sun50i-a64.dtsi"
- 
--/ {
--	reg_vcc3v3: vcc3v3 {
--		compatible = "regulator-fixed";
--		regulator-name = "vcc3v3";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--	};
--};
--
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
--	vmmc-supply = <&reg_vcc3v3>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	non-removable;
- 	disable-wp;
- 	bus-width = <4>;
--- 
-2.7.4
+> ---
+>  .../devicetree/bindings/net/socionext-netsec.txt   | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+> new file mode 100644
+> index 0000000..4695969
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+> @@ -0,0 +1,43 @@
+> +* Socionext NetSec Ethernet Controller IP
+> +
+> +Required properties:
+> +- compatible: Should be "socionext,synquacer-netsec"
+> +- reg: Address and length of the control register area, followed by the
+> +       address and length of the EEPROM holding the MAC address and
+> +       microengine firmware
+> +- interrupts: Should contain ethernet controller interrupt
+> +- clocks: phandle to the PHY reference clock, and any other clocks to be
+> +          switched by runtime_pm
+> +- clock-names: Required only if more than a single clock is listed in 'clocks'.
+> +               The PHY reference clock must be named 'phy_refclk'
+> +- phy-mode: See ethernet.txt file in the same directory
+> +- phy-handle: phandle to select child phy
+> +
+
+We should add the following property here:
+
+- dma-coherent: Boolean property, must only be present if memory
+accesses performed by the device are cache coherent
+
+(I only added support for this in our platform earlier this week)
+
+> +Optional properties: (See ethernet.txt file in the same directory)
+> +- local-mac-address
+> +- mac-address
+> +- max-speed
+> +- max-frame-size
+> +
+> +Required properties for the child phy:
+> +- reg: phy address
+> +
+> +Example:
+> +       eth0: netsec@522D0000 {
+> +               compatible = "socionext,synquacer-netsec";
+> +               reg = <0 0x522D0000 0x0 0x10000>, <0 0x10000000 0x0 0x10000>;
+> +               interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&clk_netsec>;
+> +               phy-mode = "rgmii";
+> +               max-speed = <1000>;
+> +               max-frame-size = <9000>;
+> +               phy-handle = <&ethphy0>;
+> +
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               ethphy0: ethernet-phy@1 {
+> +                       compatible = "ethernet-phy-ieee802.3-c22";
+> +                       reg = <1>;
+> +               };
+> +       };
+> --
+> 2.7.4
+>
