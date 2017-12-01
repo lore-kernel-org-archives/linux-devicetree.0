@@ -1,257 +1,64 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: tlv320aic31xx: General source
-	formatting cleanup" to the asoc tree
-Date: Fri, 01 Dec 2017 13:43:54 +0000
-Message-ID: <E1eKlbe-0001FG-2D@debutante>
-References: <20171129213300.20021-5-afd@ti.com>
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 06/10] pinctrl: axp209: add programmable ADC
+ muxing value
+Date: Fri,  1 Dec 2017 14:44:47 +0100
+Message-ID: <a4f348914450705f1f784a2148559e19caf9e9fd.1512135804.git-series.quentin.schulz@free-electrons.com>
+References: <cover.3ff63fdf302c6bda02ea7d160ad2aa5afee0899d.1512135804.git-series.quentin.schulz@free-electrons.com>
+Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171129213300.20021-5-afd@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, "Andrew F . Davis" <afd@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBD52QXIQKGQEC6QS36Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.3ff63fdf302c6bda02ea7d160ad2aa5afee0899d.1512135804.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.3ff63fdf302c6bda02ea7d160ad2aa5afee0899d.1512135804.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.3ff63fdf302c6bda02ea7d160ad2aa5afee0899d.1512135804.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+To prepare for patches that will add support for a new PMIC that has a
+different GPIO adc muxing value, add an adc_mux within axp20x_pctl
+structure and use it.
 
-   ASoC: tlv320aic31xx: General source formatting cleanup
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From ca7840fb47208a3521f3b60c1b78a2f0c59b4dc5 Mon Sep 17 00:00:00 2001
-From: "Andrew F. Davis" <afd@ti.com>
-Date: Wed, 29 Nov 2017 15:32:45 -0600
-Subject: [PATCH] ASoC: tlv320aic31xx: General source formatting cleanup
-
-Simple non-functional changes including:
-
- * Fix spelling errors
- * Reformat code for easier reading
- * Remove unneeded code
- * Remove assignments that are always overridden
- * Normalize function return paths
-
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- sound/soc/codecs/tlv320aic31xx.c | 63 ++++++++++++++++++++++------------------
- 1 file changed, 35 insertions(+), 28 deletions(-)
+ drivers/pinctrl/pinctrl-axp209.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
-index d974e8651e30..07c014501e5e 100644
---- a/sound/soc/codecs/tlv320aic31xx.c
-+++ b/sound/soc/codecs/tlv320aic31xx.c
-@@ -136,8 +136,7 @@ static const struct regmap_config aic31xx_i2c_regmap = {
- 	.max_register = 12 * 128,
+diff --git a/drivers/pinctrl/pinctrl-axp209.c b/drivers/pinctrl/pinctrl-axp209.c
+index 3fae81f..504e96c 100644
+--- a/drivers/pinctrl/pinctrl-axp209.c
++++ b/drivers/pinctrl/pinctrl-axp209.c
+@@ -49,6 +49,7 @@ struct axp20x_pctrl_desc {
+ 	/* Stores the pins supporting ADC function. Bit offset is pin number. */
+ 	u8				adc_mask;
+ 	u8				gpio_status_offset;
++	u8				adc_mux;
  };
  
--#define AIC31XX_NUM_SUPPLIES	6
--static const char * const aic31xx_supply_names[AIC31XX_NUM_SUPPLIES] = {
-+static const char * const aic31xx_supply_names[] = {
- 	"HPVDD",
- 	"SPRVDD",
- 	"SPLVDD",
-@@ -146,6 +145,8 @@ static const char * const aic31xx_supply_names[AIC31XX_NUM_SUPPLIES] = {
- 	"DVDD",
+ struct axp20x_pinctrl_function {
+@@ -79,6 +80,7 @@ static const struct axp20x_pctrl_desc axp20x_data = {
+ 	.ldo_mask = BIT(0) | BIT(1),
+ 	.adc_mask = BIT(0) | BIT(1),
+ 	.gpio_status_offset = 4,
++	.adc_mux = AXP20X_MUX_ADC,
  };
  
-+#define AIC31XX_NUM_SUPPLIES ARRAY_SIZE(aic31xx_supply_names)
-+
- struct aic31xx_disable_nb {
- 	struct notifier_block nb;
- 	struct aic31xx_priv *aic31xx;
-@@ -177,7 +178,7 @@ struct aic31xx_rate_divs {
- 	u8 madc;
- };
+ static int axp20x_gpio_get_reg(unsigned offset)
+@@ -333,7 +335,7 @@ static void axp20x_build_funcs_groups(struct platform_device *pdev)
+ 	 * See comment in axp20x_pmx_set_mux.
+ 	 */
+ 	pctl->funcs[AXP20X_FUNC_ADC].name = "adc";
+-	pctl->funcs[AXP20X_FUNC_ADC].muxval = AXP20X_MUX_ADC;
++	pctl->funcs[AXP20X_FUNC_ADC].muxval = pctl->desc->adc_mux;
  
--/* ADC dividers can be disabled by cofiguring them to 0 */
-+/* ADC dividers can be disabled by configuring them to 0 */
- static const struct aic31xx_rate_divs aic31xx_divs[] = {
- 	/* mclk/p    rate  pll: j     d        dosr ndac mdac  aors nadc madc */
- 	/* 8k rate */
-@@ -832,11 +833,17 @@ static int aic31xx_setup_pll(struct snd_soc_codec *codec,
- 
- 	dev_dbg(codec->dev,
- 		"pll %d.%04d/%d dosr %d n %d m %d aosr %d n %d m %d bclk_n %d\n",
--		aic31xx_divs[i].pll_j, aic31xx_divs[i].pll_d,
--		aic31xx->p_div, aic31xx_divs[i].dosr,
--		aic31xx_divs[i].ndac, aic31xx_divs[i].mdac,
--		aic31xx_divs[i].aosr, aic31xx_divs[i].nadc,
--		aic31xx_divs[i].madc, bclk_n);
-+		aic31xx_divs[i].pll_j,
-+		aic31xx_divs[i].pll_d,
-+		aic31xx->p_div,
-+		aic31xx_divs[i].dosr,
-+		aic31xx_divs[i].ndac,
-+		aic31xx_divs[i].mdac,
-+		aic31xx_divs[i].aosr,
-+		aic31xx_divs[i].nadc,
-+		aic31xx_divs[i].madc,
-+		bclk_n
-+	);
- 
- 	return 0;
- }
-@@ -973,8 +980,9 @@ static int aic31xx_set_dai_sysclk(struct snd_soc_dai *codec_dai,
- 	dev_dbg(codec->dev, "## %s: clk_id = %d, freq = %d, dir = %d\n",
- 		__func__, clk_id, freq, dir);
- 
--	for (i = 1; freq/i > 20000000 && i < 8; i++)
--		;
-+	for (i = 1; i < 8; i++)
-+		if (freq / i <= 20000000)
-+			break;
- 	if (freq/i > 20000000) {
- 		dev_err(aic31xx->dev, "%s: Too high mclk frequency %u\n",
- 			__func__, freq);
-@@ -982,9 +990,9 @@ static int aic31xx_set_dai_sysclk(struct snd_soc_dai *codec_dai,
- 	}
- 	aic31xx->p_div = i;
- 
--	for (i = 0; i < ARRAY_SIZE(aic31xx_divs) &&
--		     aic31xx_divs[i].mclk_p != freq/aic31xx->p_div; i++)
--		;
-+	for (i = 0; i < ARRAY_SIZE(aic31xx_divs); i++)
-+		if (aic31xx_divs[i].mclk_p == freq / aic31xx->p_div)
-+			break;
- 	if (i == ARRAY_SIZE(aic31xx_divs)) {
- 		dev_err(aic31xx->dev, "%s: Unsupported frequency %d\n",
- 			__func__, freq);
-@@ -996,6 +1004,7 @@ static int aic31xx_set_dai_sysclk(struct snd_soc_dai *codec_dai,
- 			    clk_id << AIC31XX_PLL_CLKIN_SHIFT);
- 
- 	aic31xx->sysclk = freq;
-+
- 	return 0;
- }
- 
-@@ -1057,7 +1066,7 @@ static void aic31xx_clk_off(struct snd_soc_codec *codec)
- static int aic31xx_power_on(struct snd_soc_codec *codec)
- {
- 	struct aic31xx_priv *aic31xx = snd_soc_codec_get_drvdata(codec);
--	int ret = 0;
-+	int ret;
- 
- 	ret = regulator_bulk_enable(ARRAY_SIZE(aic31xx->supplies),
- 				    aic31xx->supplies);
-@@ -1070,7 +1079,7 @@ static int aic31xx_power_on(struct snd_soc_codec *codec)
- 	}
- 	regcache_cache_only(aic31xx->regmap, false);
- 	ret = regcache_sync(aic31xx->regmap);
--	if (ret != 0) {
-+	if (ret) {
- 		dev_err(codec->dev,
- 			"Failed to restore cache: %d\n", ret);
- 		regcache_cache_only(aic31xx->regmap, true);
-@@ -1078,6 +1087,7 @@ static int aic31xx_power_on(struct snd_soc_codec *codec)
- 				       aic31xx->supplies);
- 		return ret;
- 	}
-+
- 	return 0;
- }
- 
-@@ -1126,14 +1136,11 @@ static int aic31xx_set_bias_level(struct snd_soc_codec *codec,
- 
- static int aic31xx_codec_probe(struct snd_soc_codec *codec)
- {
--	int ret = 0;
- 	struct aic31xx_priv *aic31xx = snd_soc_codec_get_drvdata(codec);
--	int i;
-+	int i, ret;
- 
- 	dev_dbg(aic31xx->dev, "## %s\n", __func__);
- 
--	aic31xx = snd_soc_codec_get_drvdata(codec);
--
- 	aic31xx->codec = codec;
- 
- 	for (i = 0; i < ARRAY_SIZE(aic31xx->supplies); i++) {
-@@ -1158,8 +1165,10 @@ static int aic31xx_codec_probe(struct snd_soc_codec *codec)
- 		return ret;
- 
- 	ret = aic31xx_add_widgets(codec);
-+	if (ret)
-+		return ret;
- 
--	return ret;
-+	return 0;
- }
- 
- static int aic31xx_codec_remove(struct snd_soc_codec *codec)
-@@ -1322,10 +1331,12 @@ static int aic31xx_device_init(struct aic31xx_priv *aic31xx)
- 	ret = devm_regulator_bulk_get(aic31xx->dev,
- 				      ARRAY_SIZE(aic31xx->supplies),
- 				      aic31xx->supplies);
--	if (ret != 0)
-+	if (ret) {
- 		dev_err(aic31xx->dev, "Failed to request supplies: %d\n", ret);
-+		return ret;
-+	}
- 
--	return ret;
-+	return 0;
- }
- 
- static int aic31xx_i2c_probe(struct i2c_client *i2c,
-@@ -1333,18 +1344,15 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
- {
- 	struct aic31xx_priv *aic31xx;
- 	int ret;
--	const struct regmap_config *regmap_config;
- 
- 	dev_dbg(&i2c->dev, "## %s: %s codec_type = %d\n", __func__,
- 		id->name, (int) id->driver_data);
- 
--	regmap_config = &aic31xx_i2c_regmap;
--
- 	aic31xx = devm_kzalloc(&i2c->dev, sizeof(*aic31xx), GFP_KERNEL);
--	if (aic31xx == NULL)
-+	if (!aic31xx)
- 		return -ENOMEM;
- 
--	aic31xx->regmap = devm_regmap_init_i2c(i2c, regmap_config);
-+	aic31xx->regmap = devm_regmap_init_i2c(i2c, &aic31xx_i2c_regmap);
- 	if (IS_ERR(aic31xx->regmap)) {
- 		ret = PTR_ERR(aic31xx->regmap);
- 		dev_err(&i2c->dev, "Failed to allocate register map: %d\n",
-@@ -1400,7 +1408,6 @@ static struct i2c_driver aic31xx_i2c_driver = {
- 	.remove		= aic31xx_i2c_remove,
- 	.id_table	= aic31xx_i2c_id,
- };
--
- module_i2c_driver(aic31xx_i2c_driver);
- 
- MODULE_AUTHOR("Jyri Sarha <jsarha@ti.com>");
+ 	/* Every pin supports GPIO_OUT and GPIO_IN functions */
+ 	for (i = 0; i <= AXP20X_FUNC_GPIO_IN; i++) {
 -- 
-2.15.0
+git-series 0.9.1
