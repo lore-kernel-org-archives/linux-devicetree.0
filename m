@@ -1,109 +1,74 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v4 3/8] MIPS: Octeon: Add a global resource manager.
-Date: Fri, 1 Dec 2017 12:56:32 -0800
-Message-ID: <1c34c7f5-4237-0fca-e871-ee18c262a3f3@caviumnetworks.com>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-4-david.daney@cavium.com>
- <20171130225333.GI27409@jhogan-linux.mipstec.com>
- <CAOFm3uGhRTTrvygBd0dMdzWZQC5kFi8yXuWQsnhDvDLtW2z7aA@mail.gmail.com>
- <99dd185d-6e5d-f474-90aa-ebee63045c42@caviumnetworks.com>
- <CAOFm3uEy52yog4H_Hco0X+OHF5yiHUZYAHaGz4MefKcYQz3LUg@mail.gmail.com>
- <2ac5ec17-cedb-5dd8-6ea7-f065025639a9@caviumnetworks.com>
- <CAOFm3uHSp3ziQ-h1-V9uz07+jiixpgoUB9UZV82fOkrMBk8aZQ@mail.gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 0/4] Move DP phy switch to PHY driver
+Date: Fri, 1 Dec 2017 13:42:46 -0800
+Message-ID: <CAD=FV=Vk0fOfYXc2gGDpvoVuT8m9WGT-eJ4hOM=G5MY_Bzzpwg@mail.gmail.com>
+References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
+ <CAD=FV=VdUhfL+_MShYynoXKQW1-KpAOsW=x+hAxGZO78rJEyeQ@mail.gmail.com> <c6fb4d29-6c6d-7f39-3cdd-3bc42c4519a2@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <CAOFm3uHSp3ziQ-h1-V9uz07+jiixpgoUB9UZV82fOkrMBk8aZQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devel@driverdev.osuosl.org, David Daney <david.daney@cavium.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, ralf@linux-mips.org, Carlos Munoz <cmunoz@cavium.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, "Steven J. Hill" <steven.hill@cavium.com>, netdev@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c6fb4d29-6c6d-7f39-3cdd-3bc42c4519a2-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/2017 12:41 PM, Philippe Ombredanne wrote:
-> David,
-> 
-> On Fri, Dec 1, 2017 at 9:01 PM, David Daney <ddaney@caviumnetworks.com> wrote:
->> On 12/01/2017 11:49 AM, Philippe Ombredanne wrote:
->>>
->>> David, Greg,
->>>
->>> On Fri, Dec 1, 2017 at 6:42 PM, David Daney <ddaney@caviumnetworks.com>
->>> wrote:
->>>>
->>>> On 11/30/2017 11:53 PM, Philippe Ombredanne wrote:
->>>
->>> [...]
->>>>>>>
->>>>>>> --- /dev/null
->>>>>>> +++ b/arch/mips/cavium-octeon/resource-mgr.c
->>>>>>> @@ -0,0 +1,371 @@
->>>>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>>>> +/*
->>>>>>> + * Resource manager for Octeon.
->>>>>>> + *
->>>>>>> + * This file is subject to the terms and conditions of the GNU
->>>>>>> General
->>>>>>> Public
->>>>>>> + * License.  See the file "COPYING" in the main directory of this
->>>>>>> archive
->>>>>>> + * for more details.
->>>>>>> + *
->>>>>>> + * Copyright (C) 2017 Cavium, Inc.
->>>>>>> + */
->>>>>
->>>>>
->>>>>
->>>>> Since you nicely included an SPDX id, you would not need the
->>>>> boilerplate anymore. e.g. these can go alright?
->>>>
->>>>
->>>>
->>>> They may not be strictly speaking necessary, but I don't think they hurt
->>>> anything.  Unless there is a requirement to strip out the license text,
->>>> we
->>>> would stick with it as is.
->>>
->>>
->>> I think the requirement is there and that would be much better for
->>> everyone: keeping both is redundant and does not bring any value, does
->>> it? Instead it kinda removes the benefits of having the SPDX id in the
->>> first place IMHO.
->>>
->>> Furthermore, as there have been already ~12K+ files cleaned up and
->>> still over 60K files to go, it would really nice if new files could
->>> adopt the new style: this way we will not have to revisit and repatch
->>> them in the future.
->>>
->>
->> I am happy to follow any style Greg would suggest.  There doesn't seem to be
->> much documentation about how this should be done yet.
-> 
-> Thomas (tglx) has already submitted a first series of doc patches a
-> few weeks ago. And AFAIK he might be working on posting the updates
-> soon, whenever his real time clock yields a few cycles away from real
-> time coding work ;)
-> 
-> See also these discussions with Linus [1][2][3], Thomas[4] and Greg[5]
-> on this and mostly related topics
-> 
-> [1] https://lkml.org/lkml/2017/11/2/715
-> [2] https://lkml.org/lkml/2017/11/25/125
-> [3] https://lkml.org/lkml/2017/11/25/133
-> [4] https://lkml.org/lkml/2017/11/2/805
-> [5] https://lkml.org/lkml/2017/10/19/165
-> 
+Hi,
 
-OK, you convinced me.
+On Wed, Nov 29, 2017 at 6:27 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Hi Doug
+>
+> Thank you for mentioning this patch.
+>
+> I think the focus of the discussion is: can we put the grf control bit to
+> dts.
+>
+> The RK3399 has 2 Type-C phy, but only one DP controller, this "uphy_dp_sel"
+>
+> can help to switch these 2 phy. So I think this bit can be considered as a
+> part of
+>
+> Type-C phy, these 2 phy have different bits, just similar to other bits
+> (such as "pipe-status").
+>
+> Put them to DTS file might be a accepted practice.
 
-Thanks,
-David
+I guess the first step would be finding the person to make a decision.
+Is that Heiko?  Olof?  Kishon?  Rob?.  As I see it there are a few
+options:
+
+1. Land this series as-is.  This makes the new bit work just like all
+the other ones next to it.  If anyone happens to try to use an old
+device tree on a new kernel they'll break.  Seems rather unlikely
+given that the whole type C PHY is not really fully functional
+upstream, but technically this is a no-no from a device tree
+perspective.
+
+2. Change the series to make this property optional.  If it's not
+there then the code behaves like it always did.  This would address
+the "compatibility" problem but likely wouldn't actually help any real
+people, and it would be extra work.
+
+3. Redo the driver to deprecate all the old offsets / bits and just
+put the table in the driver, keyed off the compatible string and base
+address if the IO memory.
+
+
+I can't make this decision.  It's up to those folks who would be
+landing the patch and I'd be happy with any of them.  What I'm less
+happy with, however, is the indecision preventing forward progress.
+We should pick one of the above things and land it.  My own personal
+bias is #1: just land the series.  No real people will be hurt and
+it's just adding another property that matches the ones next to it.
+
+>From a long term perspective (AKA how I'd write the next driver like
+this) I personally lean towards to "tables in the driver, not in the
+device tree" but quite honestly I'm happy to take whatever direction
+the maintainers give.
+
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
