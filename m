@@ -1,42 +1,59 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] drm/panel: Add DT bindings for Ilitek ILI9322
-Date: Fri, 1 Dec 2017 13:49:15 -0600
-Message-ID: <CAL_Jsq+XPwkuHr_+06J3ZfmP7Jek9+0kLXU39+rAusDoNxJWzw@mail.gmail.com>
-References: <20171201161659.9588-1-linus.walleij@linaro.org>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH v4 3/8] MIPS: Octeon: Add a global resource manager.
+Date: Fri, 1 Dec 2017 20:49:31 +0100
+Message-ID: <CAOFm3uEy52yog4H_Hco0X+OHF5yiHUZYAHaGz4MefKcYQz3LUg@mail.gmail.com>
+References: <20171129005540.28829-1-david.daney@cavium.com>
+ <20171129005540.28829-4-david.daney@cavium.com> <20171130225333.GI27409@jhogan-linux.mipstec.com>
+ <CAOFm3uGhRTTrvygBd0dMdzWZQC5kFi8yXuWQsnhDvDLtW2z7aA@mail.gmail.com> <99dd185d-6e5d-f474-90aa-ebee63045c42@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171201161659.9588-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Stefano Babic <sbabic-ynQEQJNshbs@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <99dd185d-6e5d-f474-90aa-ebee63045c42@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Carlos Munoz <cmunoz@cavium.com>, David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>, "Steven J. Hill" <steven.hill@cavium.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 1, 2017 at 10:16 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This adds device tree bindings for the Ilitek ILI9322
-> 320x240 TFT panel driver.
->
-> Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> Cc: Stefano Babic <sbabic-ynQEQJNshbs@public.gmane.org>
-> Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v1->v2:
-> - Add explicit requirement to specify the system type so the
->   driver can look up the display configuration from the
->   compatible string.
-> - Dropped all display-specific configuration data I could
->   in favor of open coding it all in a per-system config struct
->   in the driver.
-> - Now only regulators and GPIO lines remain as DT resources.
-> ---
->  .../bindings/display/panel/ilitek,ili9322.txt      | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9322.txt
+David, Greg,
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Dec 1, 2017 at 6:42 PM, David Daney <ddaney@caviumnetworks.com> wrote:
+> On 11/30/2017 11:53 PM, Philippe Ombredanne wrote:
+[...]
+>>>> --- /dev/null
+>>>> +++ b/arch/mips/cavium-octeon/resource-mgr.c
+>>>> @@ -0,0 +1,371 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Resource manager for Octeon.
+>>>> + *
+>>>> + * This file is subject to the terms and conditions of the GNU General
+>>>> Public
+>>>> + * License.  See the file "COPYING" in the main directory of this
+>>>> archive
+>>>> + * for more details.
+>>>> + *
+>>>> + * Copyright (C) 2017 Cavium, Inc.
+>>>> + */
+>>
+>>
+>> Since you nicely included an SPDX id, you would not need the
+>> boilerplate anymore. e.g. these can go alright?
+>
+>
+> They may not be strictly speaking necessary, but I don't think they hurt
+> anything.  Unless there is a requirement to strip out the license text, we
+> would stick with it as is.
+
+I think the requirement is there and that would be much better for
+everyone: keeping both is redundant and does not bring any value, does
+it? Instead it kinda removes the benefits of having the SPDX id in the
+first place IMHO.
+
+Furthermore, as there have been already ~12K+ files cleaned up and
+still over 60K files to go, it would really nice if new files could
+adopt the new style: this way we will not have to revisit and repatch
+them in the future.
+
+-- 
+Cordially
+Philippe Ombredanne
