@@ -1,168 +1,330 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: [PATCH v5 5/5] misc serdev: w2sg0004: add debugging code and Kconfig
-Date: Fri,  1 Dec 2017 08:49:38 +0100
-Message-ID: <5816bfb9e7cab68591c133e20696d6188ebe70de.1512114577.git.hns@goldelico.com>
-References: <cover.1512114576.git.hns@goldelico.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1512114576.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-In-Reply-To: <cover.1512114576.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-References: <cover.1512114576.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RFC 2/2] arm64: allwinner: a64: Add Brava
+ Keller initial support
+Date: Fri, 1 Dec 2017 08:54:21 +0100
+Message-ID: <20171201075421.33pgum4jjcvjxuju@flea.lan>
+References: <1512067334-12761-1-git-send-email-jagan@amarulasolutions.com>
+ <1512067334-12761-2-git-send-email-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5yhfpj3mopnykck3"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOEVQTIQKGQEUYGVAVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1512067334-12761-2-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Janoff <mark-EBCEQKJj5Pll57MIdRCFDg@public.gmane.org>, Stuart Westerman <stu-EBCEQKJj5Pll57MIdRCFDg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This allows to set CONFIG_W2SG0004_DEBUG which will
-make the driver report more activities and it will turn on the
-GPS module during boot while the driver assumes that it
-is off. This can be used to debug the correct functioning of
-the hardware. Therefore we add it as an option to the driver
-because we think it is of general use (and a little tricky to
-add by system testers).
 
-Normally it should be off.
+--5yhfpj3mopnykck3
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
----
- drivers/misc/Kconfig    |  8 ++++++++
- drivers/misc/w2sg0004.c | 37 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
+On Fri, Dec 01, 2017 at 12:12:14AM +0530, Jagan Teki wrote:
+> Brava Keller is A64 based IoT device, which support
+> - Allwinner A64 Cortex-A53
+> - AXP803 PMIC
+> - 1GB DDR3 RAM
+> - 8GB eMMC
+> - Mali-400MP2 GPU
+> - AP6330 Wifi/BLE
+> - Camera OV5640
+> - USB Host and OTG
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+> Note: Need to test it on hardware
+>  
+>  arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+>  .../boot/dts/allwinner/sun50i-a64-brava-keller.dts | 244 +++++++++++++++++++++
+>  2 files changed, 245 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+> index f505227..af80ca0 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-brava-keller.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-olinuxino.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
+> new file mode 100644
+> index 0000000..f5303a3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
+> @@ -0,0 +1,244 @@
+> +/*
+> + * Copyright (C) 2017 Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sun50i-a64.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model = "Brava Keller";
+> +	compatible = "brava,brava-keller", "allwinner,sun50i-a64";
+> +
+> +	aliases {
+> +		serial2 = &uart2;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index a3b11016ed2b..ad6e60f0cc8c 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -518,4 +518,12 @@ config W2SG0004
- 	  is opened/closed.
- 	  It also provides a rfkill gps name to control the LNA power.
- 
-+config W2SG0004_DEBUG
-+	bool "W2SG0004 on/off debugging"
-+	depends on W2SG0004
-+	help
-+	  Enable driver debugging mode of W2SG0004 GPS. If you say y here
-+	  this will turn on the module and you can check if it is turned
-+	  off by the driver.
-+
- endmenu
-diff --git a/drivers/misc/w2sg0004.c b/drivers/misc/w2sg0004.c
-index 6bfd12eb8e02..82c708fce510 100644
---- a/drivers/misc/w2sg0004.c
-+++ b/drivers/misc/w2sg0004.c
-@@ -26,6 +26,10 @@
-  *
-  */
- 
-+#ifdef CONFIG_W2SG0004_DEBUG
-+#define DEBUG 1
-+#endif
-+
- #include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
-@@ -256,6 +260,7 @@ static int w2sg_tty_install(struct tty_driver *driver, struct tty_struct *tty)
- 	pr_debug("%s() tty = %p\n", __func__, tty);
- 
- 	data = w2sg_get_by_minor(tty->index);
-+	pr_debug("%s() data = %p\n", __func__, data);
- 
- 	if (!data)
- 		return -ENODEV;
-@@ -342,6 +347,8 @@ static int w2sg_probe(struct serdev_device *serdev)
- 	if (data == NULL)
- 		return -ENOMEM;
- 
-+	pr_debug("w2sg serdev_device_set_drvdata\n");
-+
- 	serdev_device_set_drvdata(serdev, data);
- 
- 	data->on_off_gpio = of_get_named_gpio_flags(serdev->dev.of_node,
-@@ -375,6 +382,8 @@ static int w2sg_probe(struct serdev_device *serdev)
- 
- 	INIT_DELAYED_WORK(&data->work, toggle_work);
- 
-+	pr_debug("w2sg devm_gpio_request\n");
-+
- 	err = devm_gpio_request(&serdev->dev, data->on_off_gpio,
- 				"w2sg0004-on-off");
- 	if (err < 0)
-@@ -388,6 +397,8 @@ static int w2sg_probe(struct serdev_device *serdev)
- 	serdev_device_set_baudrate(data->uart, 9600);
- 	serdev_device_set_flow_control(data->uart, false);
- 
-+	pr_debug("w2sg rfkill_alloc\n");
-+
- 	rf_kill = rfkill_alloc("GPS", &serdev->dev, RFKILL_TYPE_GPS,
- 				&w2sg0004_rfkill_ops, data);
- 	if (rf_kill == NULL) {
-@@ -395,6 +406,8 @@ static int w2sg_probe(struct serdev_device *serdev)
- 		goto err_rfkill;
- 	}
- 
-+	pr_debug("w2sg register rfkill\n");
-+
- 	err = rfkill_register(rf_kill);
- 	if (err) {
- 		dev_err(&serdev->dev, "Cannot register rfkill device\n");
-@@ -403,6 +416,8 @@ static int w2sg_probe(struct serdev_device *serdev)
- 
- 	data->rf_kill = rf_kill;
- 
-+	pr_debug("w2sg alloc_tty_driver\n");
-+
- 	/* allocate the tty driver */
- 	data->tty_drv = alloc_tty_driver(1);
- 	if (!data->tty_drv)
-@@ -428,6 +443,8 @@ static int w2sg_probe(struct serdev_device *serdev)
- 	 */
- 	tty_set_operations(data->tty_drv, &w2sg_serial_ops);
- 
-+	pr_debug("w2sg tty_register_driver\n");
-+
- 	/* register the tty driver */
- 	err = tty_register_driver(data->tty_drv);
- 	if (err) {
-@@ -443,9 +460,27 @@ static int w2sg_probe(struct serdev_device *serdev)
- 	tty_port_init(&data->port);
- 	data->port.ops = &w2sg_port_ops;
- 
-+	pr_debug("w2sg call tty_port_register_device\n");
-+
- 	data->dev = tty_port_register_device(&data->port,
- 			data->tty_drv, minor, &serdev->dev);
- 
-+	pr_debug("w2sg tty_port_register_device -> %p\n", data->dev);
-+	pr_debug("w2sg port.tty = %p\n", data->port.tty);
-+
-+	pr_debug("w2sg probed\n");
-+
-+#ifdef CONFIG_W2SG0004_DEBUG
-+	pr_debug("w2sg DEBUGGING MODE enabled\n");
-+	/* turn on for debugging rx notifications */
-+	pr_debug("w2sg power gpio ON\n");
-+	gpio_set_value_cansleep(data->on_off_gpio, 1);
-+	mdelay(100);
-+	pr_debug("w2sg power gpio OFF\n");
-+	gpio_set_value_cansleep(data->on_off_gpio, 0);
-+	mdelay(300);
-+#endif
-+
- 	/* keep off until user space requests the device */
- 	w2sg_set_power(data, false);
- 
-@@ -455,6 +490,8 @@ static int w2sg_probe(struct serdev_device *serdev)
- 	rfkill_destroy(rf_kill);
- 	serdev_device_close(data->uart);
- out:
-+	pr_debug("w2sg error %d\n", err);
-+
- 	return err;
- }
- 
+Same comment than on U-Boot.
+
+> +	wifi_pwrseq: wifi_pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		pinctrl-names = "default";
+> +		reset-gpios = <&pio 0 2 GPIO_ACTIVE_LOW>; /* WL-PMU-EN: PL2 */
+> +		post-power-on-delay-ms = <200>;
+> +	};
+> +};
+> +
+> +&ehci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ehci1 {
+> +	status = "okay";
+> +};
+> +
+> +&mmc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc1_pins>;
+> +	vmmc-supply = <&reg_dcdc1>;
+> +	vqmmc-supply = <&reg_dldo4>;
+> +	mmc-pwrseq = <&wifi_pwrseq>;
+> +	bus-width = <4>;
+> +	non-removable;
+> +	status = "okay";
+> +
+> +	brcmf: wifi@1 {
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> +		interrupt-parent = <&r_pio>;
+> +		interrupts = <0 7 IRQ_TYPE_LEVEL_LOW>;	/* WL-WAKE-AP: PL3 */
+> +		interrupt-names = "host-wake";
+> +	};
+> +};
+> +
+> +&mmc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc2_pins>;
+> +	vmmc-supply = <&reg_dcdc1>;
+
+You probably have a vqmmc tosetup too.
+
+> +	bus-width = <8>;
+> +	non-removable;
+> +	cap-mmc-hw-reset;
+> +	status = "okay";
+> +};
+> +
+> +&ohci0 {
+> +	status = "okay";
+> +};
+> +
+> +&ohci1 {
+> +	status = "okay";
+> +};
+> +
+> +&r_rsb {
+> +	status = "okay";
+> +
+> +	axp803: pmic@3a3 {
+> +		compatible = "x-powers,axp803";
+> +		reg = <0x3a3>;
+> +		interrupt-parent = <&r_intc>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +};
+> +
+> +#include "axp803.dtsi"
+> +
+> +&reg_aldo1 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1800000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "avdd-csi";
+> +};
+> +
+> +&reg_aldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1800000>;
+> +	regulator-max-microvolt = <1800000>;
+> +	regulator-name = "vcc-pl";
+> +};
+> +
+> +&reg_aldo3 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3000000>;
+> +	regulator-max-microvolt = <3000000>;
+> +	regulator-name = "vcc-pll-avcc";
+> +};
+> +
+> +&reg_dcdc1 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-3v3";
+> +};
+> +
+> +&reg_dcdc2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1040000>;
+> +	regulator-max-microvolt = <1300000>;
+> +	regulator-name = "vdd-cpux";
+> +};
+> +
+> +/* DCDC3 is polyphased with DCDC2 */
+> +
+> +&reg_dcdc5 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1500000>;
+> +	regulator-max-microvolt = <1500000>;
+> +	regulator-name = "vcc-dram";
+> +};
+> +
+> +&reg_dcdc6 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1100000>;
+> +	regulator-max-microvolt = <1100000>;
+> +	regulator-name = "vdd-sys";
+> +};
+> +
+> +&reg_dldo1 {
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-hdmi-dsi-sensor";
+> +};
+> +
+> +&reg_dldo2 {
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-mipi";
+> +};
+> +
+> +&reg_dldo3 {
+> +	regulator-min-microvolt = <2800000>;
+> +	regulator-max-microvolt = <2800000>;
+> +	regulator-name = "vcc-gen";
+> +};
+> +
+> +&reg_dldo4 {
+> +	regulator-min-microvolt = <3300000>;
+> +	regulator-max-microvolt = <3300000>;
+> +	regulator-name = "vcc-wifi-io";
+> +};
+> +
+> +&reg_eldo1 {
+> +	regulator-min-microvolt = <1800000>;
+> +	regulator-max-microvolt = <1800000>;
+> +	regulator-name = "cpvdd";
+> +};
+> +
+> +&reg_fldo1 {
+> +	regulator-min-microvolt = <1200000>;
+> +	regulator-max-microvolt = <1200000>;
+> +	regulator-name = "vcc-1v2-hsic";
+> +};
+> +
+> +/*
+> + * The A64 chip cannot work without this regulator off, although
+> + * it seems to be only driving the AR100 core.
+> + * Maybe we don't still know well about CPUs domain.
+> + */
+> +&reg_fldo2 {
+> +	regulator-always-on;
+> +	regulator-min-microvolt = <1100000>;
+> +	regulator-max-microvolt = <1100000>;
+> +	regulator-name = "vdd-cpus";
+> +};
+> +
+> +&reg_rtc_ldo {
+> +	regulator-name = "vcc-rtc";
+> +};
+> +
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
+> +	status = "okay";
+> +};
+
+I guess this is a BT device, please use the serdev binding here.
+
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&usbphy {
+> +	status = "okay";
+
+And please tie in the regulators here.
+
+> +};
+> -- 
+> 2.7.4
+> 
+
 -- 
-2.12.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--5yhfpj3mopnykck3--
