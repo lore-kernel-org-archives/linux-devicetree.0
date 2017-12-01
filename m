@@ -1,77 +1,49 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: Remove leading 0x from bindings notation
-Date: Thu, 30 Nov 2017 20:40:56 -0600
-Message-ID: <20171201024056.ij4jg3cfwq474db3@rob-hp-laptop>
-References: <20171129205515.9009-1-malat@debian.org>
- <c7200904-f016-8789-ee5e-fe5a281be215@caviumnetworks.com>
- <CA+7wUszQAjcOkaWyEhJ9GnqL0+PQOvsMx3rOaHMOnq_0HnUDeQ@mail.gmail.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V4 1/5] Documentation: DT: qcom_hidma: Bump HW revision for
+ the bugfixed HW
+Date: Thu, 30 Nov 2017 21:52:52 -0500
+Message-ID: <1512096776-22883-2-git-send-email-okaya@codeaurora.org>
+References: <1512096776-22883-1-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CA+7wUszQAjcOkaWyEhJ9GnqL0+PQOvsMx3rOaHMOnq_0HnUDeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1512096776-22883-1-git-send-email-okaya@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-pci@vger.kernel.org, timur@codeaurora.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 30, 2017 at 08:57:11AM +0100, Mathieu Malaterre wrote:
-> Hi David,
-> 
-> On Thu, Nov 30, 2017 at 12:21 AM, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> > On 11/29/2017 12:55 PM, Mathieu Malaterre wrote:
-> >>
-> >> Improve the binding example by removing all the leading 0x to fix the
-> >> following dtc warnings:
-> >>
-> >> Warning (unit_address_format): Node /XXX unit name should not have leading
-> >> "0x"
-> >
-> >
-> > How does it fix the warnings?  You are not changing the .dts files that are
-> > compiled.
+A new version of the HIDMA IP has been released with bug fixes. Bumping the
+hardware version to differentiate from others.
 
-If the examples were compiled, then they would have this warning...
+Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+---
+ Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> I originally only wanted to fix [...]watchdog/ingenic,jz4740-wdt.txt,
-> but when I lookup git log, I eventually found out about the commit I
-> refer to in my commit message:
-> 
-> https://github.com/torvalds/linux/commit/48c926cd3414
-> 
-> and I simply followed suggestion from Rob:
-> 
-> https://lkml.org/lkml/2017/11/1/965
-> 
-> > This may also cause the binding documentation to differ from the reality of
-> > what the actual device trees contain.
-> 
-> 
-> Chicken or the egg dilemma, but you understand that linux master tree
-> still has the original warning:
-> 
-> $ perl -p -i -e 's/\@0+([0-9a-f])/\@$1/g' `find ./ -type f \( -iname
-> \*.dtsi -o -iname \*.dts \)`
-> $ git diff | diffstat
-> [...]
->  40 files changed, 160 insertions(+), 160 deletions(-)
-> 
-> And those are real W=1 actual warnings. Do you want me to re-submit it
-> as patch series instead which fix both the documentation side and the
-> dts* files ?
-
-Some of those I skipped on purpose (they don't really follow standard 
-unit-address), but I does look like some new ones got in. I'm not sure 
-why I skipped PPC and xtensa altogether.
-
-No need to fix everything, everywhere (but more patches always welcome 
-:) ).
-
-I'll apply this. Thanks. 
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+index 55492c2..5d93d6d 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
+@@ -47,8 +47,8 @@ When the OS is not in control of the management interface (i.e. it's a guest),
+ the channel nodes appear on their own, not under a management node.
+ 
+ Required properties:
+-- compatible: must contain "qcom,hidma-1.0" for initial HW or "qcom,hidma-1.1"
+-for MSI capable HW.
++- compatible: must contain "qcom,hidma-1.0" for initial HW or
++  "qcom,hidma-1.1"/"qcom,hidma-1.2" for MSI capable HW.
+ - reg: Addresses for the transfer and event channel
+ - interrupts: Should contain the event interrupt
+ - desc-count: Number of asynchronous requests this channel can handle
+-- 
+1.9.1
