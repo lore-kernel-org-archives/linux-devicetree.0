@@ -1,54 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] mmc: dt-bindings: add mmc support to MT7623 SoC
-Date: Thu, 30 Nov 2017 20:06:04 -0600
-Message-ID: <20171201020604.etfzccuwomxgcwmg@rob-hp-laptop>
-References: <cover.1511949769.git.sean.wang@mediatek.com>
- <3e2c72d18bbe6d7c762fd820195f0fa0b5a45bbf.1511949769.git.sean.wang@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/6] dt-bindings: tda998x: add the calibration gpio
+Date: Thu, 30 Nov 2017 20:08:07 -0600
+Message-ID: <20171201020807.c4vnnewe5kxj4dpr@rob-hp-laptop>
+References: <20171128231712.GB8356@n2100.armlinux.org.uk>
+ <E1eJzdE-0000PJ-3V@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3e2c72d18bbe6d7c762fd820195f0fa0b5a45bbf.1511949769.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <E1eJzdE-0000PJ-3V-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 06:10:35PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Wed, Nov 29, 2017 at 10:30:20AM +0000, Russell King wrote:
+> Add the optional calibration gpio for integrated TDA9950 CEC support.
+> This GPIO corresponds with the interrupt from the TDA998x, as the
+> calibration requires driving the interrupt pin low.
 > 
-> Add the devicetree binding for MT7623 SoC using MT2701 as the fallback.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> Sorry, this patch got forgotten, tacking it on the end of the series.
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index 72d2a73..1732588 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -12,6 +12,8 @@ Required properties:
->  	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
->  	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
->  	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
-> +	"mediatek,mt7623-mmc",
-> +	"mediatek,mt2701-mmc": for mmc host ip compatible with mt7623
+>  Documentation/devicetree/bindings/display/bridge/tda998x.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/tda998x.txt b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+> index 24cc2466185a..ad6620560d63 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+> @@ -27,6 +27,9 @@ Required properties;
+>  	in question is used. The implementation allows one or two DAIs. If two
+>  	DAIs are defined, they must be of different type.
+>  
+> +  - calib-gpio: calibration GPIO, which must correspond with the
+> +	gpio used for the TDA998x interrupt pin.
 
-Those should be on 1 line ideally.
+Should be nxp,calib-gpios
 
-BTW, I find "for mmc host ip compatible with mt7623" to be mostly 
-redundant.
-
-Either way,
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-
->  - reg: physical base address of the controller and length
->  - interrupts: Should contain MSDC interrupt number
->  - clocks: Should contain phandle for the clock feeding the MMC controller
+> +
+>  [1] Documentation/sound/alsa/soc/DAI.txt
+>  [2] include/dt-bindings/display/tda998x.h
+>  
 > -- 
 > 2.7.4
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
