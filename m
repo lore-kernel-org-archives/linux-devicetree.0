@@ -1,86 +1,63 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v4 3/8] MIPS: Octeon: Add a global resource manager.
-Date: Fri, 1 Dec 2017 09:42:47 -0800
-Message-ID: <99dd185d-6e5d-f474-90aa-ebee63045c42@caviumnetworks.com>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-4-david.daney@cavium.com>
- <20171130225333.GI27409@jhogan-linux.mipstec.com>
- <CAOFm3uGhRTTrvygBd0dMdzWZQC5kFi8yXuWQsnhDvDLtW2z7aA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 10/19] ASoC: tlv320aic31xx: Add MICBIAS off setting
+Date: Fri, 1 Dec 2017 17:43:00 +0000
+Message-ID: <20171201174300.hoocutyi6c7jtfx3@sirena.org.uk>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-11-afd@ti.com>
+ <20171201133028.svemo5qedyfqrt7y@sirena.org.uk>
+ <afa96737-d17a-c854-b3a8-30730e06dd99@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAOFm3uGhRTTrvygBd0dMdzWZQC5kFi8yXuWQsnhDvDLtW2z7aA@mail.gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Philippe Ombredanne <pombredanne@nexb.com>, Carlos Munoz <cmunoz@cavium.com>
-Cc: David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, "Steven J. Hill" <steven.hill@cavium.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zvyefnnbzf3kwr2l"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <afa96737-d17a-c854-b3a8-30730e06dd99@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/30/2017 11:53 PM, Philippe Ombredanne wrote:
-> Carlos,
-> 
-> On Thu, Nov 30, 2017 at 11:53 PM, James Hogan <james.hogan@mips.com> wrote:
->> On Tue, Nov 28, 2017 at 04:55:35PM -0800, David Daney wrote:
->>> From: Carlos Munoz <cmunoz@cavium.com>
->>>
->>> Add a global resource manager to manage tagged pointers within
->>> bootmem allocated memory. This is used by various functional
->>> blocks in the Octeon core like the FPA, Ethernet nexus, etc.
->>>
->>> Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
->>> Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
->>> Signed-off-by: David Daney <david.daney@cavium.com>
->>> ---
->>>   arch/mips/cavium-octeon/Makefile       |   3 +-
->>>   arch/mips/cavium-octeon/resource-mgr.c | 371 +++++++++++++++++++++++++++++++++
->>>   arch/mips/include/asm/octeon/octeon.h  |  18 ++
->>>   3 files changed, 391 insertions(+), 1 deletion(-)
->>>   create mode 100644 arch/mips/cavium-octeon/resource-mgr.c
->>>
->>> diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
->>> index 7c02e542959a..0a299ab8719f 100644
->>> --- a/arch/mips/cavium-octeon/Makefile
->>> +++ b/arch/mips/cavium-octeon/Makefile
->>> @@ -9,7 +9,8 @@
->>>   # Copyright (C) 2005-2009 Cavium Networks
->>>   #
->>>
->>> -obj-y := cpu.o setup.o octeon-platform.o octeon-irq.o csrc-octeon.o
->>> +obj-y := cpu.o setup.o octeon-platform.o octeon-irq.o csrc-octeon.o \
->>> +      resource-mgr.o
->>
->> Maybe put that on a separate line like below.
->>
->>>   obj-y += dma-octeon.o
->>>   obj-y += octeon-memcpy.o
->>>   obj-y += executive/
->>> diff --git a/arch/mips/cavium-octeon/resource-mgr.c b/arch/mips/cavium-octeon/resource-mgr.c
->>> new file mode 100644
->>> index 000000000000..ca25fa953402
->>> --- /dev/null
->>> +++ b/arch/mips/cavium-octeon/resource-mgr.c
->>> @@ -0,0 +1,371 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Resource manager for Octeon.
->>> + *
->>> + * This file is subject to the terms and conditions of the GNU General Public
->>> + * License.  See the file "COPYING" in the main directory of this archive
->>> + * for more details.
->>> + *
->>> + * Copyright (C) 2017 Cavium, Inc.
->>> + */
-> 
-> Since you nicely included an SPDX id, you would not need the
-> boilerplate anymore. e.g. these can go alright?
 
-They may not be strictly speaking necessary, but I don't think they hurt 
-anything.  Unless there is a requirement to strip out the license text, 
-we would stick with it as is.
+--zvyefnnbzf3kwr2l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
->>> + * This file is subject to the terms and conditions of the GNU General Public
->>> + * License.  See the file "COPYING" in the main directory of this archive
->>> + * for more details.
-> 
+On Fri, Dec 01, 2017 at 08:56:31AM -0600, Andrew F. Davis wrote:
+
+> Personally I wouldn't have put MicBias voltage in DT to begin with, it
+> is runtime configurable and depends on user runtime inserted microphone,
+> not really a hardware description :/
+
+Usually the system as a whole is specified to have some particular kind
+of microphone attached (or soldered in) and this follows from that.
+There's typically also soldered down analogue components that are
+selected based on the bias voltage so a specific system likely won't
+have the full flexibility.
+
+> The enable/disable is controlled by a DAPM and should be wired to enable
+> whenever we are recording from the related microphone pin. So then
+> without MICBIAS_OFF the user is forced to select from the above voltages
+> whenever recording, which may not be correct if they are using a mic
+> that doesn't need bias.
+
+That'd depend on someone having a board that was able to detect that a
+line input was plugged in or a user control for this.  If the board was
+permenantly set up for line input presumably the bias wouldn't even be
+wired up.
+
+--zvyefnnbzf3kwr2l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlohlKMACgkQJNaLcl1U
+h9BQSAgAg1QaEZmgNMhIy9+/1qv6q++jghnEYt5WehUwUBLMGrVkIFeLLdm9D4ri
+E+4ds/VqVP/u0H00gqGj6QDQ/I49QSpElm8cGlWGMF8rR5/CxTCTbWHnxStQxZ0B
+Q/HPT8wCEOwC2rk58tsLsn2qSwB5MWgo8zIGzVP43z5LB+JmUGunIrzgdKLQ3B1Z
+RXQspBS/pZez2YUJpZPSyFpKgfCdU0ZYixX1DMHX2Dgqu+UQ/SMfJamSSMrBVqga
+SESbjYZ5p4jAcrkxEvYHD116fJRpC3beKqfmjE9f/CvUIYpQwEH37fz/u1RObsUv
+8UYjSP5rzIdBFvnLWLzT42F4hfe9vA==
+=2cYJ
+-----END PGP SIGNATURE-----
+
+--zvyefnnbzf3kwr2l--
