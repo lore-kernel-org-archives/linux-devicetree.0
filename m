@@ -1,41 +1,45 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH 1/3] dt-bindings: ARM: Mediatek: Fix ethsys documentation
-Date: Fri,  1 Dec 2017 13:07:06 +0100
-Message-ID: <20171201120708.30129-1-matthias.bgg@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 35/35] dt-bindings: timer: Add andestech atcpit100
+ timer binding doc
+Date: Fri, 1 Dec 2017 13:19:25 +0100
+Message-ID: <CACRpkdYuo88qeEznKxVojYofV4YTGu6AOgan-2GPYS9qZCVxZA@mail.gmail.com>
+References: <cover.1511785528.git.green.hu@gmail.com> <60f23e7fcff11f16b0bca4753a39d098849eeac3.1511785528.git.green.hu@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: devicetree@vger.kernel.org, sean.wang@mediatek.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, chen.zhong@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <60f23e7fcff11f16b0bca4753a39d098849eeac3.1511785528.git.green.hu@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: greentime@andestech.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, deanbo422@gmail.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Rick Chen <rickchen36@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The ethsys registers a reset controller, so we need to specify a
-reset cell. This patch fixes the documentation.
+On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt | 1 +
- 1 file changed, 1 insertion(+)
+> From: Rick Chen <rickchen36@gmail.com>
+>
+> Add a document to describe Andestech atcpit100 timer and
+> binding information.
+>
+> Signed-off-by: Rick Chen <rickchen36@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Greentime Hu <green.hu@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
-index 7aa3fa167668..6cc7840ff37a 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
-@@ -20,4 +20,5 @@ ethsys: clock-controller@1b000000 {
- 	compatible = "mediatek,mt2701-ethsys", "syscon";
- 	reg = <0 0x1b000000 0 0x1000>;
- 	#clock-cells = <1>;
-+	#reset-cells = <1>;
- };
--- 
-2.12.3
+Thanks for submitting this interesting architecture!
+
+(...)
+
+> +Required properties:
+> +- compatible   : Should be "andestech,atcpit100"
+> +- reg          : Address and length of the register set
+> +- interrupts   : Reference to the timer interrupt
+> +- clocks : a clock to provide the tick rate for "andestech,atcpit100"
+> +- clock-names : should be "PCLK" for the external tick timer.
+
+This text seem wrong. PCLK is the internal timer, right? "PCLK" is
+"peripheral clock" (I hope) and that comes from the bus.
+
+Consider also adding an optional "EXTCLK" already now, since it is
+evident from the driver that this is also supported.
+
+Yours,
+Linus Walleij
