@@ -1,42 +1,51 @@
 From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 08/12] ARM: dts: imx6qdl-apalis: Remove unneeded reg property
-Date: Fri,  1 Dec 2017 17:24:41 -0200
-Message-ID: <1512156285-18451-8-git-send-email-festevam@gmail.com>
+Subject: [PATCH 11/12] ARM: dts: imx6qdl-nitrogen6_max: Remove unneeded unit address
+Date: Fri,  1 Dec 2017 17:24:44 -0200
+Message-ID: <1512156285-18451-11-git-send-email-festevam@gmail.com>
 References: <1512156285-18451-1-git-send-email-festevam@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1512156285-18451-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-As described in
-Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-there is no 'reg' property under stmpe_touchscreen, so remove it
-to fix the following build warning with W=1:
+Remove the unneeded unit address for the i2cmux nodes in order to fix
+the following build warnings with W=1:
 
-arch/arm/boot/dts/imx6q-apalis-eval.dtb: Warning (unit_address_vs_reg): Node /soc/aips-bus@2100000/i2c@21a4000/stmpe811@41/stmpe_touchscreen has a reg or ranges property, but no unit name
+arch/arm/boot/dts/imx6q-nitrogen6_max.dtb: Warning (unit_address_vs_reg): Node /i2cmux@2 has a unit name, but no reg property
+arch/arm/boot/dts/imx6q-nitrogen6_max.dtb: Warning (unit_address_vs_reg): Node /i2cmux@3 has a unit name, but no reg property
 
-Cc: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-apalis.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index e80fdca..4e776e0 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -338,7 +338,6 @@
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+index 3a77f0f..3cdffed 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6_max.dtsi
+@@ -172,7 +172,7 @@
+ 		};
+ 	};
  
- 		stmpe_touchscreen {
- 			compatible = "st,stmpe-ts";
--			reg = <0>;
- 			/* 3.25 MHz ADC clock speed */
- 			st,adc-freq = <1>;
- 			/* 8 sample average control */
+-	i2cmux@2 {
++	i2cmux2 {
+ 		compatible = "i2c-mux-gpio";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_i2c2mux>;
+@@ -196,7 +196,7 @@
+ 		};
+ 	};
+ 
+-	i2cmux@3 {
++	i2cmux3 {
+ 		compatible = "i2c-mux-gpio";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_i2c3mux>;
 -- 
 2.7.4
 
