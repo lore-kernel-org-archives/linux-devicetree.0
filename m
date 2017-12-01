@@ -1,80 +1,105 @@
-From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 0/4] add clk controller driver for Meson-AXG SoC
-Date: Fri, 1 Dec 2017 09:24:48 +0800
-Message-ID: <20171201012452.27086-1-yixun.lan@amlogic.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v4 2/4] clk: meson-axg: add clocks dt-bindings required header
+Date: Fri, 1 Dec 2017 09:24:50 +0800
+Message-ID: <20171201012452.27086-3-yixun.lan@amlogic.com>
+References: <20171201012452.27086-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Qiufang Dai <qiufang.dai-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171201012452.27086-1-yixun.lan@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add driver for the clk controller which found in Meson AXG SoC
+From: Qiufang Dai <qiufang.dai@amlogic.com>
 
-  Note, we deliberately create a seperate source file for the Meson AXG
-series, instead of sharing code with previous GXBB/GXL - the file axg.c
-It would help us maintaining the code more easily.
+Add the required header for the clocks ID dt-bindings
+exported from various subsystem in the Meson-AXG SoC.
 
-Changes since v3 [3]:
- - separate dt-bindings header file
- - adjust license note as standard way
- - replace of_iomap with platform/devm API
- - add Rob's Ack to Patch 1,4
-
-Changes since v2 [2]:
- - drop register offset calculation
- - update dt-bindings for new compatible variant
-
-Changes since v1 [1]:
- - rework register definion, use '(offset << 2)' to better match
-   the description from data sheet
- - drop "#include dt-bindings/clock/gxbb-aoclkc.h" from dts
- - rebase code to v4.15-rc1
-
-[3]
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005487.html
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005488.html
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005489.html
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005490.html
-
-[2]
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005468.html
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005469.html
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005470.html
-
-[1] 
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005239.html
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005240.html
-  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005241.html
-
-
-
-Qiufang Dai (3):
-  clk: meson-axg: add clocks dt-bindings required header
-  clk: meson-axg: add clock controller drivers
-  arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
-
-Yixun Lan (1):
-  dt-bindings: clock: add compatible variant for the Meson-AXG
-
- .../bindings/clock/amlogic,gxbb-clkc.txt           |   7 +-
- arch/arm64/Kconfig.platforms                       |   1 +
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi         |  15 +
- drivers/clk/meson/Kconfig                          |   8 +
- drivers/clk/meson/Makefile                         |   1 +
- drivers/clk/meson/axg.c                            | 944 +++++++++++++++++++++
- drivers/clk/meson/axg.h                            | 126 +++
- include/dt-bindings/clock/axg-clkc.h               |  71 ++
- 8 files changed, 1171 insertions(+), 2 deletions(-)
- create mode 100644 drivers/clk/meson/axg.c
- create mode 100644 drivers/clk/meson/axg.h
+Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ include/dt-bindings/clock/axg-clkc.h | 71 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
  create mode 100644 include/dt-bindings/clock/axg-clkc.h
 
+diff --git a/include/dt-bindings/clock/axg-clkc.h b/include/dt-bindings/clock/axg-clkc.h
+new file mode 100644
+index 000000000000..941ac70e7f30
+--- /dev/null
++++ b/include/dt-bindings/clock/axg-clkc.h
+@@ -0,0 +1,71 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
++/*
++ * Meson-AXG clock tree IDs
++ *
++ * Copyright (c) 2017 Amlogic, Inc. All rights reserved.
++ */
++
++#ifndef __AXG_CLKC_H
++#define __AXG_CLKC_H
++
++#define CLKID_SYS_PLL				0
++#define CLKID_FIXED_PLL				1
++#define CLKID_FCLK_DIV2				2
++#define CLKID_FCLK_DIV3				3
++#define CLKID_FCLK_DIV4				4
++#define CLKID_FCLK_DIV5				5
++#define CLKID_FCLK_DIV7				6
++#define CLKID_GP0_PLL				7
++#define CLKID_CLK81				10
++#define CLKID_MPLL0				11
++#define CLKID_MPLL1				12
++#define CLKID_MPLL2				13
++#define CLKID_MPLL3				14
++#define CLKID_DDR				15
++#define CLKID_AUDIO_LOCKER			16
++#define CLKID_MIPI_DSI_HOST			17
++#define CLKID_ISA				18
++#define CLKID_PL301				19
++#define CLKID_PERIPHS				20
++#define CLKID_SPICC0				21
++#define CLKID_I2C				22
++#define CLKID_RNG0				23
++#define CLKID_UART0				24
++#define CLKID_MIPI_DSI_PHY			25
++#define CLKID_SPICC1				26
++#define CLKID_PCIE_A				27
++#define CLKID_PCIE_B				28
++#define CLKID_HIU_IFACE				29
++#define CLKID_ASSIST_MISC			30
++#define CLKID_SD_EMMC_B				31
++#define CLKID_SD_EMMC_C				32
++#define CLKID_DMA				33
++#define CLKID_SPI				34
++#define CLKID_AUDIO				35
++#define CLKID_ETH				36
++#define CLKID_UART1				37
++#define CLKID_G2D				38
++#define CLKID_USB0				39
++#define CLKID_USB1				40
++#define CLKID_RESET				41
++#define CLKID_USB				42
++#define CLKID_AHB_ARB0				43
++#define CLKID_EFUSE				44
++#define CLKID_BOOT_ROM				45
++#define CLKID_AHB_DATA_BUS			46
++#define CLKID_AHB_CTRL_BUS			47
++#define CLKID_USB1_DDR_BRIDGE			48
++#define CLKID_USB0_DDR_BRIDGE			49
++#define CLKID_MMC_PCLK				50
++#define CLKID_VPU_INTR				51
++#define CLKID_SEC_AHB_AHB3_BRIDGE		52
++#define CLKID_GIC				53
++#define CLKID_AO_MEDIA_CPU			54
++#define CLKID_AO_AHB_SRAM			55
++#define CLKID_AO_AHB_BUS			56
++#define CLKID_AO_IFACE				57
++#define CLKID_AO_I2C				58
++#define CLKID_SD_EMMC_B_CLK0			59
++#define CLKID_SD_EMMC_C_CLK0			60
++
++#endif /* __AXG_CLKC_H */
 -- 
 2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
