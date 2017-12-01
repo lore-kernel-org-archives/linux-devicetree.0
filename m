@@ -1,51 +1,48 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] DRM driver for ILI9225 display panels
-Date: Fri, 1 Dec 2017 14:17:47 +0100
-Message-ID: <b0186865-7f67-0fe3-27aa-d8bbe0ad8e6e@tronnes.org>
-References: <1511122328-31133-1-git-send-email-david@lechnology.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 09/19] ASoC: tlv320aic31xx: Remove platform data
+Date: Fri, 1 Dec 2017 13:26:06 +0000
+Message-ID: <20171201132606.vyw7wthmql5trkwq@sirena.org.uk>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-10-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pbmekllj6q4ry7sm"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511122328-31133-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171129213300.20021-10-afd-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-Den 19.11.2017 21.12, skrev David Lechner:
-> This is a new driver for ILI9225 based display panels.
+--pbmekllj6q4ry7sm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks, applied to drm-misc.
+On Wed, Nov 29, 2017 at 03:32:50PM -0600, Andrew F. Davis wrote:
+> Platform data is not used by anyone (at least in upstream) so
+> drop this data and switch to using fwnode(DT/ACPI) only.
 
-Noralf.
+The advantage being...?  Not all architectures use DT or ACPI so it's
+not clear that this is a step forwards in itself.
 
-> v2 changes:
-> * New patch for ilitek vendor prefix.
-> * Use "ilitek" instead of "generic" in dt-bindings
-> * New patch to export 2 mipi_dbi_* functions
-> * Clean up ILI9225 driver based on feedback
->
-> David Lechner (4):
->    dt-bindings: Add vendor prefix for ilitek
->    dt-bindings: Add binding for Ilitek ILI9225 display panels
->    drm/tinydrm: export mipi_dbi_buf_copy and mipi_dbi_spi_cmd_max_speed
->    drm/tinydrm: add driver for ILI9225 panels
->
->   .../devicetree/bindings/display/ilitek,ili9225.txt |  25 ++
->   .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->   MAINTAINERS                                        |   6 +
->   drivers/gpu/drm/tinydrm/Kconfig                    |  10 +
->   drivers/gpu/drm/tinydrm/Makefile                   |   1 +
->   drivers/gpu/drm/tinydrm/ili9225.c                  | 468 +++++++++++++++++++++
->   drivers/gpu/drm/tinydrm/mipi-dbi.c                 |  24 +-
->   include/drm/tinydrm/mipi-dbi.h                     |   4 +-
->   8 files changed, 534 insertions(+), 5 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9225.txt
->   create mode 100644 drivers/gpu/drm/tinydrm/ili9225.c
->
+--pbmekllj6q4ry7sm
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlohWG0ACgkQJNaLcl1U
+h9B5lAf/VCJZ12gEhT3qQnSRuTmB/blB+tHjP8v0AWZ0ExLDKti6MbxgLZ0/wir2
+7rGZNO3+JtU3zUIlJQlQlrl9rylFMOrWFLyA9a/xdfqMsBSBMEmDG5cDpBhk878I
+iR3nwHFiRcvvaPa0cftZEZVpgQhHi5I6XaVYwMD5BuIKU5SM+vR9X8IuH/NPECW/
+LxZ9II/Og1nSL61b3LrXdMfgsfiZgvQOUM+bwJ5u53EqjT21jkjPDDvHaPVVMino
+DtABa98FW/Li2qEq/15oOoqwU1GH5d29hYr9FtjGIIqAdElC6GRWGT+/Qp7xOufu
+KAefRfsCfLyB5bEOCTdgA2/dEQg+eA==
+=wile
+-----END PGP SIGNATURE-----
+
+--pbmekllj6q4ry7sm--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
