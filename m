@@ -1,68 +1,24 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 3/8] ARM: dts: imx7d-cl-som: add nodes for usbh, and usbotg2
-Date: Fri, 1 Dec 2017 18:13:20 -0200
-Message-ID: <CAOMZO5BX1K_WGiTosbph67=93aZR8Wjo+YKUHd16o8LvnD685Q@mail.gmail.com>
-References: <20171130201434.14122-1-tyler@opensourcefoundries.com> <20171130201434.14122-4-tyler@opensourcefoundries.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: dts: imx7s: add dma support
+Date: Fri, 1 Dec 2017 18:17:38 -0200
+Message-ID: <CAOMZO5BVK=KHJ7ohdCE=LRpo25FrM9d_vGSTm-GFpM6=wyvbuA@mail.gmail.com>
+References: <20171130201434.14122-1-tyler@opensourcefoundries.com> <20171130201434.14122-5-tyler@opensourcefoundries.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171130201434.14122-4-tyler@opensourcefoundries.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tyler@opensourcefoundries.com
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171130201434.14122-5-tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 30, 2017 at 6:14 PM,  <tyler@opensourcefoundries.com> wrote:
-> From: Tyler Baker <tyler@opensourcefoundries.com>
+On Thu, Nov 30, 2017 at 6:14 PM,  <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org> wrote:
+> From: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
 >
-> Add device tree nodes for the USB hub, and USB OTG. i2c2 on this
-> platform supports low state retention power state so lets use it.
->
-> Signed-off-by: Tyler Baker <tyler@opensourcefoundries.com>
-> ---
->  arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 36 +++++++++++++++++++++++++--------
->  1 file changed, 28 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-> index ae45af1..a9f690b 100644
-> --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-> +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-> @@ -30,6 +30,16 @@
->                 gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
->                 enable-active-high;
->         };
-> +
-> +       reg_usbh_nreset: regulator@4 {
+> Enable dma on all SPI and UART interfaces.
 
-You should not use @4. Please make sure that regulators are not used
-inside simple-bus.
-
-> -
->         pinctrl_uart1: uart1grp {
->                 fsl,pins = <
->                         MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX    0x79
-> @@ -284,4 +297,11 @@
->                         MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5     0x14 /* OTG PWREN */
->                 >;
->         };
-> -};
-> \ No newline at end of file
-
-This text here looks strange :-)
-
-> +
-> +       pinctrl_i2c2: i2c2grp {
-> +               fsl,pins = <
-> +                       MX7D_PAD_LPSR_GPIO1_IO07__I2C2_SDA              0x4000000f
-> +                       MX7D_PAD_LPSR_GPIO1_IO06__I2C2_SCL              0x4000000f
-> +               >;
-> +       };
-> +};
-> --
-> 2.9.3
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+You only touched SPI ports, not the UART.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
