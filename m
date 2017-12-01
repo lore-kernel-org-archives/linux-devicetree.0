@@ -1,59 +1,25 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v4 3/8] MIPS: Octeon: Add a global resource manager.
-Date: Fri, 1 Dec 2017 20:49:31 +0100
-Message-ID: <CAOFm3uEy52yog4H_Hco0X+OHF5yiHUZYAHaGz4MefKcYQz3LUg@mail.gmail.com>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-4-david.daney@cavium.com> <20171130225333.GI27409@jhogan-linux.mipstec.com>
- <CAOFm3uGhRTTrvygBd0dMdzWZQC5kFi8yXuWQsnhDvDLtW2z7aA@mail.gmail.com> <99dd185d-6e5d-f474-90aa-ebee63045c42@caviumnetworks.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/4] add support of pinctrl to MT7622 SoC
+Date: Fri, 1 Dec 2017 20:50:31 +0100
+Message-ID: <CACRpkdaL5W5r_4PoYwVK6mcO583Cep5t-ePWqccKx2YDz9=iyA@mail.gmail.com>
+References: <cover.1511840374.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <99dd185d-6e5d-f474-90aa-ebee63045c42@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Carlos Munoz <cmunoz@cavium.com>, David Daney <david.daney@cavium.com>, linux-mips@linux-mips.org, ralf@linux-mips.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>, "Steven J. Hill" <steven.hill@cavium.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cover.1511840374.git.sean.wang@mediatek.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: sean.wang@mediatek.com, Hongzhou Yang <hongzhou.yang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Maoguang Meng <maoguang.meng@mediatek.com>, Biao Huang <biao.huang@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-David, Greg,
+On Tue, Nov 28, 2017 at 4:49 AM,  <sean.wang@mediatek.com> wrote:
 
-On Fri, Dec 1, 2017 at 6:42 PM, David Daney <ddaney@caviumnetworks.com> wrote:
-> On 11/30/2017 11:53 PM, Philippe Ombredanne wrote:
-[...]
->>>> --- /dev/null
->>>> +++ b/arch/mips/cavium-octeon/resource-mgr.c
->>>> @@ -0,0 +1,371 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Resource manager for Octeon.
->>>> + *
->>>> + * This file is subject to the terms and conditions of the GNU General
->>>> Public
->>>> + * License.  See the file "COPYING" in the main directory of this
->>>> archive
->>>> + * for more details.
->>>> + *
->>>> + * Copyright (C) 2017 Cavium, Inc.
->>>> + */
->>
->>
->> Since you nicely included an SPDX id, you would not need the
->> boilerplate anymore. e.g. these can go alright?
+> From: Sean Wang <sean.wang@mediatek.com>
 >
->
-> They may not be strictly speaking necessary, but I don't think they hurt
-> anything.  Unless there is a requirement to strip out the license text, we
-> would stick with it as is.
+> The patchset adds support for pinctrl on MT7622 SoC.
 
-I think the requirement is there and that would be much better for
-everyone: keeping both is redundant and does not bring any value, does
-it? Instead it kinda removes the benefits of having the SPDX id in the
-first place IMHO.
+It would be good if the other Mediatek driver authors,
+Honzhou, Yingjoe, Biao and Maoguang could review this patch set.
 
-Furthermore, as there have been already ~12K+ files cleaned up and
-still over 60K files to go, it would really nice if new files could
-adopt the new style: this way we will not have to revisit and repatch
-them in the future.
-
--- 
-Cordially
-Philippe Ombredanne
+Yours,
+Linus Walleij
