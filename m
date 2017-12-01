@@ -1,53 +1,73 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v4 1/4] dt-bindings: clock: add compatible variant for the
- Meson-AXG
-Date: Fri, 1 Dec 2017 09:24:49 +0800
-Message-ID: <20171201012452.27086-2-yixun.lan@amlogic.com>
-References: <20171201012452.27086-1-yixun.lan@amlogic.com>
+From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM64: dts: meson-axg: enable IR controller
+Date: Fri, 1 Dec 2017 09:36:12 +0800
+Message-ID: <20171201013612.13927-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171201012452.27086-1-yixun.lan@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yixun Lan <yixun.lan@amlogic.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update the documentation to support clock driver for the Amlogic's
-Meson-AXG SoC.
+Enable IR remote controller which find in Amlogic's Meson-AXG SoC.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  6 ++++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 14 ++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-index 924040769186..e2b377ed6f91 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-@@ -5,8 +5,11 @@ controllers within the SoC.
- 
- Required Properties:
- 
--- compatible: should be "amlogic,gxbb-clkc" for GXBB SoC,
--	      or "amlogic,gxl-clkc" for GXL and GXM SoC.
-+- compatible: should be:
-+		"amlogic,gxbb-clkc" for GXBB SoC,
-+		"amlogic,gxl-clkc" for GXL and GXM SoC,
-+		"amlogic,axg-clkc" for AXG SoC.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 0864d1ff2d9b..ca676cafdbb3 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -34,3 +34,9 @@
+ 	pinctrl-0 = <&i2c1_z_pins>;
+ 	pinctrl-names = "default";
+ };
 +
- - reg: physical base address of the clock controller and length of memory
-        mapped region.
++&ir {
++	status = "okay";
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index 9bb85893c1b7..80d5b8c13fac 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -616,6 +616,13 @@
+ 					#gpio-cells = <2>;
+ 					gpio-ranges = <&pinctrl_aobus 0 0 15>;
+ 				};
++
++				remote_input_ao_pins: remote_input_ao {
++					mux {
++						groups = "remote_input_ao";
++						function = "remote_input_ao";
++					};
++				};
+ 			};
  
+ 			i2c_AO: i2c@5000 {
+@@ -664,6 +671,13 @@
+ 				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
++
++			ir: ir@8000 {
++				compatible = "amlogic,meson-gx-ir", "amlogic,meson-gxbb-ir";
++				reg = <0x0 0x8000 0x0 0x20>;
++				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
++				status = "disabled";
++			};
+ 		};
+ 	};
+ };
 -- 
 2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
