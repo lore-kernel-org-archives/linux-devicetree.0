@@ -1,65 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1] usb: xhci: allow imod-interval to be configurable
-Date: Thu, 30 Nov 2017 20:02:58 -0600
-Message-ID: <20171201020258.jbhn3xzsdusflose@rob-hp-laptop>
-References: <1511889106-9239-1-git-send-email-awallis@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: Add binding for Sitronix ST7735R
+ display panels
+Date: Thu, 30 Nov 2017 20:04:14 -0600
+Message-ID: <20171201020414.evx5q5bu2blrvto6@rob-hp-laptop>
+References: <1511924469-11448-1-git-send-email-david@lechnology.com>
+ <1511924469-11448-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1511889106-9239-1-git-send-email-awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <1511924469-11448-2-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, limor@ladyada.net, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 12:11:46PM -0500, Adam Wallis wrote:
-> The xHCI driver currently has the IMOD set to 160, which
-> translates to an IMOD interval of 40,000ns (160 * 250)ns
-> 
-> Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
-> introduced a QUIRK for the MTK platform to adjust this interval to 20,
-> which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
-> due to the fact that the MTK controller IMOD interval is 8 times
-> as much as defined in xHCI spec.
-> 
-> Instead of adding more quirk bits for additional platforms, this patch
-> introduces the ability for vendors to set the IMOD_INTERVAL as is
-> optimal for their platform. By using device_property_read_u32() on
-> "imod-interval", the IMOD INTERVAL can be specified in nano seconds. If
-> no interval is specified, the default of 40,000ns (IMOD=160) will be
-> used.
-> 
-> No bounds checking has been implemented due to the fact that a vendor
-> may have violated the spec and would need to specify a value outside of
-> the max 8,000 IRQs/second limit specified in the xHCI spec.
-> 
-> Backwards compatibility is maintained for MTK_HOSTS through the quirk
-> bit, however, imod_interval should be pushed into device tree at a
-> future point and this quirk should be removed from xhci_plat_probe
-> 
-> Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/usb-xhci.txt |  1 +
->  drivers/usb/host/xhci-plat.c                       | 15 +++++++++++++++
->  drivers/usb/host/xhci.c                            |  7 ++-----
->  drivers/usb/host/xhci.h                            |  2 ++
->  4 files changed, 20 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index ae6e484..3998459 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -29,6 +29,7 @@ Optional properties:
->    - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
->    - usb3-lpm-capable: determines if platform is USB3 LPM capable
->    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-> +  - imod-interval: IMOD_INTERVAL in nano-seconds. Default is 40000
-
-Needs a unit suffix as defined in property-units.txt.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBOb3YgMjgsIDIwMTcgYXQgMDk6MDE6MDhQTSAtMDYwMCwgRGF2aWQgTGVjaG5lciB3
+cm90ZToKPiBUaGlzIGFkZHMgYSBuZXcgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgU2l0cm9uaXgg
+U1Q3NzM1UiBkaXNwbGF5IHBhbmVscywKPiBzdWNoIGFzIHRoZSBBZGFmcnVpdCAxLjgiIFRGVC4K
+PiAKPiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4K
+PiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NzM1ci50eHQgICAgICAg
+ICAgfCAzNSArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNl
+cnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc3MzVyLnR4dAoKQWNrZWQtYnk6IFJvYiBIZXJy
+aW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
