@@ -1,172 +1,72 @@
-From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3] usb: xhci: allow imod-interval to be configurable
-Date: Fri,  1 Dec 2017 10:44:19 -0500
-Message-ID: <1512143059-25674-1-git-send-email-awallis@codeaurora.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 14/19] ASoC: tlv320aic31xx: Remove
+ regulator notification handling
+Date: Fri, 1 Dec 2017 15:55:33 +0000
+Message-ID: <20171201155533.ayjzh4wxokwlbtsy@sirena.org.uk>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-15-afd@ti.com>
+ <20171201133604.6v3ychahwvlaygxi@sirena.org.uk>
+ <216ac36e-772a-0919-67cc-86589d3916fc@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0714516517714184540=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <216ac36e-772a-0919-67cc-86589d3916fc@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The xHCI driver currently has the IMOD set to 160, which
-translates to an IMOD interval of 40,000ns (160 * 250)ns
 
-Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
-introduced a QUIRK for the MTK platform to adjust this interval to 20,
-which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
-due to the fact that the MTK controller IMOD interval is 8 times
-as much as defined in xHCI spec.
+--===============0714516517714184540==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="adpueagi53trpasx"
+Content-Disposition: inline
 
-Instead of adding more quirk bits for additional platforms, this patch
-introduces the ability for vendors to set the IMOD_INTERVAL as is
-optimal for their platform. By using device_property_read_u32() on
-"imod-interval", the IMOD INTERVAL can be specified in nano seconds. If
-no interval is specified, the default of 40,000ns (IMOD=160) will be
-used.
 
-No bounds checking has been implemented due to the fact that a vendor
-may have violated the spec and would need to specify a value outside of
-the max 8,000 IRQs/second limit specified in the xHCI spec.
+--adpueagi53trpasx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
-changes from v2:
-  * Added PCI default value [Mathias]
-  * Removed xhci-mtk.h from xhci-plat.c [Chunfeng Yun]
-  * Removed MTK quirk from xhci-plat and moved logic to xhci-mtk [Chunfeng]
-  * Updated bindings Documentation to use proper units [Rob Herring]
-  * Added imod-interval description and example to MTK binding documentation
-changes from v1:
-  * Removed device_property_read_u32() per suggestion from greg k-h
-  * Used ER_IRQ_INTERVAL_MASK in place of (u16) cast
+On Fri, Dec 01, 2017 at 09:01:19AM -0600, Andrew F. Davis wrote:
 
- Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 2 ++
- Documentation/devicetree/bindings/usb/usb-xhci.txt          | 1 +
- drivers/usb/host/xhci-mtk.c                                 | 9 +++++++++
- drivers/usb/host/xhci-pci.c                                 | 3 +++
- drivers/usb/host/xhci-plat.c                                | 4 ++++
- drivers/usb/host/xhci.c                                     | 7 ++-----
- drivers/usb/host/xhci.h                                     | 2 ++
- 7 files changed, 23 insertions(+), 5 deletions(-)
+> Looking into the call sites, at least in this case the only time this
+> notification will be called, outside the normal enable/disable paths
+> (which do the same thing here: turn on regmap cache only mode and mark
+> it dirty), will be during a force disable scenario.
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-index 3059596..45bbf18 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-@@ -46,6 +46,7 @@ Optional properties:
-  - pinctrl-names : a pinctrl state named "default" must be defined
-  - pinctrl-0 : pin control group
- 	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+ - imod-interval: Default interval is 5000ns
- 
- Example:
- usb30: usb@11270000 {
-@@ -66,6 +67,7 @@ usb30: usb@11270000 {
- 	usb3-lpm-capable;
- 	mediatek,syscon-wakeup = <&pericfg>;
- 	mediatek,wakeup-src = <1>;
-+	imod-interval = <10000>;
- };
- 
- 2nd: dual-role mode with xHCI driver
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index ae6e484..89b68f1 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -29,6 +29,7 @@ Optional properties:
-   - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
-   - usb3-lpm-capable: determines if platform is USB3 LPM capable
-   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-+  - imod-interval: Default interval is 40000ns
- 
- Example:
- 	usb@f0931000 {
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index b62a1d2..278ea3b 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -674,6 +674,15 @@ static int xhci_mtk_probe(struct platform_device *pdev)
- 
- 	xhci = hcd_to_xhci(hcd);
- 	xhci->main_hcd = hcd;
-+
-+	/*
-+	 * imod_interval is the interrupt modulation value in nanoseconds.
-+	 * The increment interval is 8 times as much as that defined in
-+	 * the xHCI spec on MTK's controller.
-+	 */
-+	xhci->imod_interval = 5000;
-+	device_property_read_u32(dev, "imod-interval", &xhci->imod_interval);
-+
- 	xhci->shared_hcd = usb_create_shared_hcd(driver, dev,
- 			dev_name(dev), hcd);
- 	if (!xhci->shared_hcd) {
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 7ef1274..efbe57b 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -234,6 +234,9 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
- 	if (!xhci->sbrn)
- 		pci_read_config_byte(pdev, XHCI_SBRN_OFFSET, &xhci->sbrn);
- 
-+	/* imod_interval is the interrupt modulation value in nanoseconds. */
-+	xhci->imod_interval = 40000;
-+
- 	retval = xhci_gen_setup(hcd, xhci_pci_quirks);
- 	if (retval)
- 		return retval;
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 09f164f..b78be87 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -269,6 +269,10 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
- 		xhci->quirks |= XHCI_BROKEN_PORT_PED;
- 
-+	/* imod_interval is the interrupt modulation value in nanoseconds. */
-+	xhci->imod_interval = 40000;
-+	device_property_read_u32(sysdev, "imod-interval", &xhci->imod_interval);
-+
- 	hcd->usb_phy = devm_usb_get_phy_by_phandle(sysdev, "usb-phy", 0);
- 	if (IS_ERR(hcd->usb_phy)) {
- 		ret = PTR_ERR(hcd->usb_phy);
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 2424d30..0b7755b 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -586,11 +586,8 @@ int xhci_run(struct usb_hcd *hcd)
- 			"// Set the interrupt modulation register");
- 	temp = readl(&xhci->ir_set->irq_control);
- 	temp &= ~ER_IRQ_INTERVAL_MASK;
--	/*
--	 * the increment interval is 8 times as much as that defined
--	 * in xHCI spec on MTK's controller
--	 */
--	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
-+	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
-+
- 	writel(temp, &xhci->ir_set->irq_control);
- 
- 	/* Set the HCD state before we enable the irqs */
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 99a014a..2a4177b 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1717,6 +1717,8 @@ struct xhci_hcd {
- 	u8		max_interrupters;
- 	u8		max_ports;
- 	u8		isoc_threshold;
-+	/* imod_interval in ns (I * 250ns) */
-+	u32		imod_interval;
- 	int		event_ring_max;
- 	/* 4KB min, 128MB max */
- 	int		page_size;
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+If all the disable sites in the driver mark the cache dirty then they
+should be fixed not to.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--adpueagi53trpasx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlohe3UACgkQJNaLcl1U
+h9DyVwf/Txy0JVTNnMSj8TemYe3Rp5XRmDAY8up7HMPbDPYYxfgQIET52AM1gpDl
+sVAoNq3svyGPb1iwP75H2ygdN1JoV/ybfvOHBRZ+99RRo4PZr8oCz8B6i85Gxa1X
+6310wE9rsSypV3OZ50S6Py2H4qLxF1kZI4UkMCemOGcnQsGmKNtTCpmjOIqtcY/E
+mWSbz7VbZ0yBrd1It2pJJ7RSenVm6qixz4OkMASLmJR/ArDqYFAfpa6wH3OWYipA
+16KQxjayJ6sxVWzfrHJCznBpH6SSzezguWIv6fcYbajqYEI2GBO5lkrXpc5tYR9U
+p05syTc7WKSn/DE+bstipL8ibL7yjw==
+=n0Kw
+-----END PGP SIGNATURE-----
+
+--adpueagi53trpasx--
+
+--===============0714516517714184540==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0714516517714184540==--
