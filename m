@@ -1,62 +1,45 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 02/12] ARM: dts: imx51-zii-rdu1: Add the unit addresses in
- sysled
-Date: Fri,  1 Dec 2017 17:24:35 -0200
-Message-ID: <1512156285-18451-2-git-send-email-festevam@gmail.com>
+From: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 01/12] ARM: dts: imx51-ts4800: Fix syscon and
+ touschscreen nodes
+Date: Fri, 1 Dec 2017 14:45:16 -0500
+Message-ID: <20171201194516.ix2oa7waxy5ph55s@workotop.localdomain>
 References: <1512156285-18451-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1512156285-18451-1-git-send-email-festevam@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1512156285-18451-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+Hi,
 
-As described at Documentation/devicetree/bindings/mfd/mc13xxx.txt the
-reg property is mandatory, so add the corresponding unit address in
-order to fix the following build warnings with W=1:
+On Fri, Dec 01, 2017 at 05:24:34PM -0200, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> 
+> The syscon node has an incorrect notation for its unit address and the
+> wdt node has an unneeded unit address.
+> 
+> Fix them so that the following build warnings with W=1 are gone:
+> 
+> arch/arm/boot/dts/imx51-ts4800.dtb: Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+> arch/arm/boot/dts/imx51-ts4800.dtb: Warning (unit_address_vs_reg): Node /soc/aips@80000000/weim@83fda000/fpga@0/syscon@b0010000/wdt@e has a unit name, but no reg property
+> arch/arm/boot/dts/imx51-ts4800.dtb: Warning (unit_address_vs_reg): Node /soc/aips@80000000/weim@83fda000/fpga@0/touchscreen has a reg or ranges property, but no unit name
+> arch/arm/boot/dts/imx51-ts4800.dtb: Warning (simple_bus_reg): Node /soc/aips@80000000/weim@83fda000/fpga@0/syscon@b0010000 simple-bus unit address format error, expected "10000"
+> arch/arm/boot/dts/imx51-ts4800.dtb: Warning (simple_bus_reg): Node /soc/aips@80000000/weim@83fda000/fpga@0/touchscreen simple-bus unit address format error, expected "12000"
+> 
+> Cc: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-arch/arm/boot/dts/imx51-zii-rdu1.dtb: Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
-arch/arm/boot/dts/imx51-zii-rdu1.dtb: Warning (unit_address_vs_reg): Node /soc/aips@70000000/spba@70000000/ecspi@70010000/pmic@0/leds/sysled0 has a reg or ranges property, but no unit name
-arch/arm/boot/dts/imx51-zii-rdu1.dtb: Warning (unit_address_vs_reg): Node /soc/aips@70000000/spba@70000000/ecspi@70010000/pmic@0/leds/sysled1 has a reg or ranges property, but no unit name
+Changes are fine to me, thank you for fixing the warnings. I don't know
+what the rule is and if I should reply with a tag like Reviewed-by or
+anything else, please let me know.
 
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
- arch/arm/boot/dts/imx51-zii-rdu1.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index f9fdb7c..70fdcdd 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -428,13 +428,13 @@
- 			#size-cells = <0>;
- 			led-control = <0x0 0x0 0x3f83f8 0x0>;
- 
--			sysled0 {
-+			sysled0@3 {
- 				reg = <3>;
- 				label = "system:green:status";
- 				linux,default-trigger = "default-on";
- 			};
- 
--			sysled1 {
-+			sysled1@4 {
- 				reg = <4>;
- 				label = "system:green:act";
- 				linux,default-trigger = "heartbeat";
 -- 
-2.7.4
+Damien
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
