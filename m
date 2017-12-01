@@ -1,57 +1,47 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 4/4] DTS: Pandora: fix panel compatibility string
-Date: Fri, 1 Dec 2017 10:13:24 +0200
-Message-ID: <6ca5f2ea-e725-9a9e-ac02-e16beca4a1a0@ti.com>
-References: <cover.1511884135.git.hns@goldelico.com>
- <b6001c7b7fb98e7a3ad4c712084fea9dae9e6b27.1511884135.git.hns@goldelico.com>
- <20171128160437.GD28152@atomide.com>
- <ADAFBBA4-6AC4-4EC4-AB0E-98B59718E12E@goldelico.com>
- <20171128161834.GE28152@atomide.com>
- <4EE1E298-6461-48FF-977C-958DD16AD83A@goldelico.com>
- <20171130152430.GM28152@atomide.com> <20171130220633.imkfyeiqtftnw4j4@earth>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] ARM: dts: renesas: Convert to named i2c-gpio
+ bindings
+Date: Fri, 1 Dec 2017 09:18:55 +0100
+Message-ID: <20171201081850.4tqbnlvxdax7phfs@verge.net.au>
+References: <1512046646-15253-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171130220633.imkfyeiqtftnw4j4@earth>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, "H. Nikolaus Schaller" <hns@goldelico.com>, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Julia Lawall <Julia.Lawall@lip6.fr>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, linux-omap <linux-omap@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1512046646-15253-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDEvMTIvMTcgMDA6MDYsIFNlYmFzdGlhbiBSZWljaGVsIHdyb3RlOgoKPj4+PiBIb3cgYWJv
-dXQgbGV0J3MgY2FsbCBpdCBhICJ0eXBvIGZpeCIgdGhlbj8gOikKPj4+Cj4+PiBXZWxsLCBpdCBp
-cyBub3QgcmVhbGx5IGEgdHlwby4KPj4KPj4gV2VsbCB3aGF0IGlmIHRoZSBzdGFibGUgcGVvcGxl
-IHBpY2sgaXQgaW50byBlYXJsaWVyIHN0YWJsZSBzZXJpZXMKPj4gYmFzZWQgb24gdGhlIHdvcmQg
-Zml4IGluIHRoZSBzdWJqZWN0PyBUaGF0IGhhcyBoYXBwZW5lZCBiZWZvcmUuCj4+Cj4+IEkgc3Vn
-Z2VzdCB5b3UgdXBkYXRlIHRoZSBkdHMgcGF0Y2hlcyB0byB1c2Ugd29yZGluZyBsaWtlCj4+ICJ1
-cGRhdGUgY29tcGF0aWJsZSB0byB1c2UgbmV3IG5hbWluZyIgb3Igc29tZXRoaW5nIHNpbWlsYXIu
-Cj4gCj4gUGF0Y2ggNC80IGlzIGEgRml4IGFuZCBzaG91bGQgYmUgYXBwbGllZCB0byBzdGFibGUg
-dHJlZXMuICJvbWFwZHNzLCIKPiBwcmVmaXggd2FzIG5ldmVyIHN1cHBvc2VkIHRvIGJlIGluIHRo
-ZSBEVFMgZmlsZXMsIGlzIG5vdCBzdXBwb3NlZCB0bwo+IGJlIGluIHRoZXJlIG5vdyBhbmQgd2ls
-bCBicmVhayBzb21lIHRpbWUgaW4gdGhlIGZ1dHVyZS4KPiAKPiBFeHBsYW5hdGlvbjogVGhlIGVh
-cmx5IGluaXQgb2Ygb21hcGRzcyBhZGRzIHRoZSBwcmVmaXggYXQgcnVudGltZSwKPiBzbyB0aGF0
-IHRoZSBiaW5kaW5nIGNhbiB1c2UgZ2VuZXJpYyBwcm9wZXJ0aWVzIGFuZCB0aGUga2VybmVsIGNh
-bgo+IHVzZSBvbWFwZHNzIHNwZWNpZmljIGRyaXZlcnMgdW50aWwgdGhlIGdlbmVyaWMgb25lcyBj
-YW4gYmUgdXNlZAoKVGhpcyBpcyB0cnVlLCBidXQgdGhlIGV4dHJhICJvbWFwZHNzIiBkb2VzIG5v
-dCBjYXVzZSBhbnkgaXNzdWVzIGF0IHRoZQptb21lbnQsIGFuZCB0aGUgdGltZSB3aGVuIGl0IGNh
-dXNlcyBpc3N1ZXMgaXMgc3RpbGwgbWFueSBrZXJuZWwgdmVyc2lvbnMKaW4gdGhlIGZ1dHVyZS4K
-CkJ1dCwgeWVzLCB0aGlua2luZyBhYm91dCB0aGlzLCBJIGFncmVlLCBpdCdzIGJldHRlciB0byBw
-aWNrIHRoaXMgb25lCnNlcGFyYXRlbHkgYXMgYSBmaXggKGFmdGVyIHJlYmFzaW5nIGl0IG9uIHRv
-cCBvZiBjdXJyZW50IG1haW5lbGluZSBzbwp0aGF0IGl0IGRvZXNuJ3QgZGVwZW5kIG9uIHRoZSB0
-b3Bwb2x5IG5hbWUgY2hhbmdlKSwgYW5kIGxlYXZpbmcgdGhlCnRvcHBvbHktPnRwbyBjaGFuZ2Ug
-YXMgYSBjbGVhbnVwLgoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxh
-bmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00
-LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Nov 30, 2017 at 01:57:22PM +0100, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
+> 
+> Commits 7d29f509d2cfd807 ("dt-bindings: i2c: i2c-gpio: Add support for
+> named gpios") and 05c74778858d7d99 ("i2c: gpio: Add support for named
+> gpios in DT") introduced named i2c-gpio DT bindings, and deprecated the
+> more error-prone unnamed variant.
+> 
+> This patch series switches all Renesas boards to the new bindings, and
+> adds the missing GPIO_OPEN_DRAIN I/O flags, which were implicitly
+> assumed before.  The latter gets rid of messages like:
+> 
+>     gpio-208 (?): enforced open drain please flag it properly in DT/ACPI DSDT/board file
+>     gpio-91 (?): enforced open drain please flag it properly in DT/ACPI DSDT/board file
+> 
+> Patch 1 was extracted from series "[PATCH/RFC 0/3] i2c: gpio: Add
+> support for named gpios in DT", hence the v2.  All other patches are
+> new.
+> 
+> Note that after this series is applied, the i2c-gpio buses are no longer
+> detected when booting new DTBs on old (v4.14 and older) kernels, which
+> should not be an issue.  Booting old DTBs on new kernels is not
+> affected.
+> 
+> Thanks for applying!
+
+Thanks, applied.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
