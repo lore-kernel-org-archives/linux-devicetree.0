@@ -1,62 +1,62 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 12/12] ARM: dts: imx6ul-14x14-evk: Move regulators out of simple-bus
-Date: Fri,  1 Dec 2017 17:24:45 -0200
-Message-ID: <1512156285-18451-12-git-send-email-festevam@gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH 02/12] ARM: dts: imx51-zii-rdu1: Add the unit addresses in
+ sysled
+Date: Fri,  1 Dec 2017 17:24:35 -0200
+Message-ID: <1512156285-18451-2-git-send-email-festevam@gmail.com>
 References: <1512156285-18451-1-git-send-email-festevam@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512156285-18451-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1512156285-18451-1-git-send-email-festevam@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+From: Fabio Estevam <fabio.estevam@nxp.com>
 
-It is not recommended to place regulator nodes inside simple-bus, so
-move them out in order to fix the following build warnings with W=1:
+As described at Documentation/devicetree/bindings/mfd/mc13xxx.txt the
+reg property is mandatory, so add the corresponding unit address in
+order to fix the following build warnings with W=1:
 
-arch/arm/boot/dts/imx6ul-14x14-evk.dtb: Warning (simple_bus_reg): Node /regulators/sd1_regulator missing or empty reg/ranges property
+arch/arm/boot/dts/imx51-zii-rdu1.dtb: Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+arch/arm/boot/dts/imx51-zii-rdu1.dtb: Warning (unit_address_vs_reg): Node /soc/aips@70000000/spba@70000000/ecspi@70010000/pmic@0/leds/sysled0 has a reg or ranges property, but no unit name
+arch/arm/boot/dts/imx51-zii-rdu1.dtb: Warning (unit_address_vs_reg): Node /soc/aips@70000000/spba@70000000/ecspi@70010000/pmic@0/leds/sysled1 has a reg or ranges property, but no unit name
 
-Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- arch/arm/boot/dts/imx6ul-14x14-evk.dts | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/imx51-zii-rdu1.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dts b/arch/arm/boot/dts/imx6ul-14x14-evk.dts
-index e5d3ef8..18fdb08 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dts
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dts
-@@ -30,19 +30,14 @@
- 		status = "okay";
- 	};
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index f9fdb7c..70fdcdd 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -428,13 +428,13 @@
+ 			#size-cells = <0>;
+ 			led-control = <0x0 0x0 0x3f83f8 0x0>;
  
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
+-			sysled0 {
++			sysled0@3 {
+ 				reg = <3>;
+ 				label = "system:green:status";
+ 				linux,default-trigger = "default-on";
+ 			};
  
--		reg_sd1_vmmc: sd1_regulator {
--			compatible = "regulator-fixed";
--			regulator-name = "VSD_3V3";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
--			enable-active-high;
--		};
-+	reg_sd1_vmmc: regulator-sd1-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VSD_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
- 	};
- 
- 	sound {
+-			sysled1 {
++			sysled1@4 {
+ 				reg = <4>;
+ 				label = "system:green:act";
+ 				linux,default-trigger = "heartbeat";
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
