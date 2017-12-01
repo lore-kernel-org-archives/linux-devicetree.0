@@ -1,71 +1,75 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: sunxi:
- document new generic binding
-Date: Fri, 1 Dec 2017 10:38:58 +0100
-Message-ID: <CACRpkdZccQ98Qbw9BvAQZESc9X4UcY9DPz4LngzrhAHT78nSxA@mail.gmail.com>
-References: <20171113012523.2328-1-andre.przywara@arm.com> <20171113012523.2328-2-andre.przywara@arm.com>
- <CACRpkdbpfkM4odz425+4qyUCF5vqPWBQ=F5Yk7AtJL5SqXghpg@mail.gmail.com>
- <20171124105240.GB3792@ulmo> <20efcf8f-85a5-3cad-a84b-434ee5cad68e@arm.com>
- <20171124133123.GA15999@ulmo> <0c8051e6-5d8c-32d6-97e4-11c2283da5b4@arm.com>
-Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBNGGQTIQKGQEC63V4QI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <0c8051e6-5d8c-32d6-97e4-11c2283da5b4-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v3 4/4] DTS: Pandora: fix panel compatibility string
+Date: Fri, 1 Dec 2017 10:48:38 +0100
+Message-ID: <0324FA0E-F06A-41F1-84AD-5BC72F6B6BFF@goldelico.com>
+References: <cover.1511884135.git.hns@goldelico.com>
+ <b6001c7b7fb98e7a3ad4c712084fea9dae9e6b27.1511884135.git.hns@goldelico.com>
+ <20171128160437.GD28152@atomide.com>
+ <ADAFBBA4-6AC4-4EC4-AB0E-98B59718E12E@goldelico.com>
+ <20171128161834.GE28152@atomide.com>
+ <4EE1E298-6461-48FF-977C-958DD16AD83A@goldelico.com>
+ <20171130152430.GM28152@atomide.com> <20171130220633.imkfyeiqtftnw4j4@earth>
+ <6ca5f2ea-e725-9a9e-ac02-e16beca4a1a0@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6ca5f2ea-e725-9a9e-ac02-e16beca4a1a0@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Julia Lawall <Julia.Lawall@lip6.fr>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, David Airlie <airlied@linux.ie>, linux-fbdev@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, linux-omap <linux-omap@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 24, 2017 at 6:19 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 24/11/17 13:31, Thierry Reding wrote:
+Hi Tomi,
 
->> Register values don't belong in a device tree.
->
-> I don't think that's true in a general way. This "pinmux" is already an
-> accepted property and used for exactly that purpose in other pinctrl
-> drivers:
-> $ git grep -l '[^,]pinmux = ' arch/arm{,64}/boot/dts
-> Plus the fsl,pinmux-ids property, which seems to serve the same purpose.
+> Am 01.12.2017 um 09:13 schrieb Tomi Valkeinen <tomi.valkeinen@ti.com>:
+> 
+> On 01/12/17 00:06, Sebastian Reichel wrote:
+> 
+>>>>> How about let's call it a "typo fix" then? :)
+>>>> 
+>>>> Well, it is not really a typo.
+>>> 
+>>> Well what if the stable people pick it into earlier stable series
+>>> based on the word fix in the subject? That has happened before.
+>>> 
+>>> I suggest you update the dts patches to use wording like
+>>> "update compatible to use new naming" or something similar.
+>> 
+>> Patch 4/4 is a Fix and should be applied to stable trees. "omapdss,"
+>> prefix was never supposed to be in the DTS files, is not supposed to
+>> be in there now and will break some time in the future.
+>> 
+>> Explanation: The early init of omapdss adds the prefix at runtime,
+>> so that the binding can use generic properties and the kernel can
+>> use omapdss specific drivers until the generic ones can be used
+> 
+> This is true, but the extra "omapdss" does not cause any issues at the
+> moment, and the time when it causes issues is still many kernel versions
+> in the future.
+> 
+> But, yes, thinking about this, I agree, it's better to pick this one
+> separately as a fix (after rebasing it on top of current maineline so
+> that it doesn't depend on the toppoly name change), and leaving the
+> toppoly->tpo change as a cleanup.
 
-There are several examples of register values (and register
-numbers even!) being encoded in the kernel.
+Just a note: there is no toppoly->tpo change for *this* panel and
+Pandora board. Just omapdss removal.
 
-What we need to ask is whether that is good in the general case
-or bad. I don't even think that has a clear answer, it's a grey area.
+The GTA04 needs a toppoly->tpo change but no omapdss, removal.
 
-So we need to avoid "arguments from consistency" which reads
-something like "you allowed this thing A so now you must allow
-this thing B which is similar". It is not a helpful approach to the
-problem.
+So they solve different problems and are independent of each other.
 
-Some drivers encode a bunch of data into the device tree,
-pinctrl-single is the most extreme. This conflict between in-DT
-and in-driver data storage has been there since pinctrl was created
-and was the result of a compromise between OMAPs needs
-and everyone else, especially Tegra.
+GTA04: change vendor string
+Pandora: remove omapdss, prefix
 
-The opinions on this - and it is really opinions, not facts - differ
-between people and over time.
-
-Resolving the conflicts is more about classical diplomacy than
-science unfortunately. I used to think the christian trinity was
-amusing and inconsistent, but nowadays I understand exactly how
-the people who came up with the Nicean creed were reasoning.
-
-What is paramount for me as subsystem maintainer is the fact
-that this driver has an active maintainer. And maintainers
-is what makes things manageable for me. It would be much easier
-for you to have your way if you were submitting an entirely
-new driver. Like this pinmux property, it was submitted by the
-mediatek people because it fits their usecase/hardware especially
-well.
-
-Yours,
-Linus Walleij
+BR and thanks,
+Nikolaus
