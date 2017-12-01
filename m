@@ -1,74 +1,164 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: temperature: add MLX90632 device
- bindings
-Date: Fri, 1 Dec 2017 16:18:56 -0600
-Message-ID: <20171201221856.idwpoi5a2btf2kpj@rob-hp-laptop>
-References: <20171129220805.11358-1-cmo@melexis.com>
+Subject: Re: [RFC 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
+Date: Fri, 1 Dec 2017 16:23:24 -0600
+Message-ID: <20171201222324.afnws7ddew7tyzxc@rob-hp-laptop>
+References: <1511999947-8274-1-git-send-email-jliang@xilinx.com>
+ <1511999947-8274-3-git-send-email-jliang@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171129220805.11358-1-cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1511999947-8274-3-git-send-email-jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wendy Liang <wendy.liang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 11:08:05PM +0100, Crt Mori wrote:
-> Add device tree bindings for MLX90632 IR temperature sensor.
+On Wed, Nov 29, 2017 at 03:59:07PM -0800, Wendy Liang wrote:
+> Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
+> in ZynqMP SoC used for the communication between various processor
+> systems.
 > 
-> Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+>  .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 113 +++++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+> diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
 > new file mode 100644
-> index 000000000000..6073a5ccf9a4
+> index 0000000..a118d00
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
-> @@ -0,0 +1,28 @@
-> +* Melexis MLX90632 contactless Infra Red temperature sensor
+> +++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
+> @@ -0,0 +1,113 @@
+> +Xilinx IPI Mailbox Controller
+> +========================================
 > +
-> +Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
+> +The Xilinx IPI(Inter Processor Interrupt) mailbox controller is to manage
+> +messaging between two Xilinx Zynq UltraScale+ MPSoC IPI agents. Each IPI
+> +agent owns registers used for notification and buffers for message.
 > +
-> +There are various applications for the Infra Red contactless temperature sensor
-> +and MLX90632 is most suitable for consumer applications where measured object
-> +temperature is in range between -20 to 200 degrees Celsius with relative error
-> +of measurement below 1 degree Celsius in object temperature range for
-> +industrial applications. Since it can operate and measure ambient temperature
-> +in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
+> +               +-------------------------------------+
+> +               | Xilinx ZynqMP IPI Controller        |
+> +               +-------------------------------------+
+> +    +--------------------------------------------------+
+> +ATF                    |                     |
+> +                       |                     |
+> +                       |                     |
+> +    +--------------------------+             |
+> +                       |                     |
+> +                       |                     |
+> +    +--------------------------------------------------+
+> +            +------------------------------------------+
+> +            |  +----------------+   +----------------+ |
+> +Hardware    |  |  IPI Agent     |   |  IPI Buffers   | |
+> +            |  |  Registers     |   |                | |
+> +            |  |                |   |                | |
+> +            |  +----------------+   +----------------+ |
+> +            |                                          |
+> +            | Xilinx IPI Agent Block                   |
+> +            +------------------------------------------+
 > +
-> +Be aware that electronics surrounding the sensor can increase ambient
-> +temperature. MLX90632 can be calibrated to reduce the housing effect via
-> +already existing EEPROM parameters.
 > +
-> +Since measured object emissivity effects Infra Red energy emitted, emissivity
-> +should be set before requesting the object temperature.
-> +
+> +Controller Device Node:
+> +===========================
 > +Required properties:
-> +  - compatible: should be "melexis,mlx90632"
-> +  - reg: the I2C address of the sensor (default 0x3a)
+> +--------------------
+> +- compatible:		Shall be: "xlnx,zynqmp-ipi-mailbox"
+> +- reg:			IPI buffers address ranges
+> +- reg-names:		Names of the reg resources. It should have:
+> +			* local_request_region
+> +			  - IPI request msg buffer written by local and read
+> +			    by remote
+> +			* local_response_region
+> +			  - IPI response msg buffer written by local and read
+> +			    by remote
+> +			* remote_request_region
+> +			  - IPI request msg buffer written by remote and read
+> +			    by local
+> +			* remote_response_region
+> +			  - IPI response msg buffer written by remote and read
+> +			    by local
+> +- #mbox-cells:		Shall be 1. It contains:
+> +			* tx(0) or rx(1) channel
+> +- xlnx-ipi-ids:		Xilinx IPI agent IDs of the two peers of the
+> +			Xilinx IPI communication channel.
+
+xlnx,ipi-ids
+
+> +- interrupt-parent:	Phandle for the interrupt controller
+> +- interrupts:		Interrupt information corresponding to the
+> +			interrupt-names property.
+> +
+> +Optional properties:
+> +--------------------
+> +- method:              The method of accessing the IPI agent registers.
+> +                       Permitted values are: "smc" and "hvc". Default is
+> +                       "smc".
+> +
+
+> +Client Device Node:
+> +===========================
+> +Required properties:
+> +--------------------
+> +- mboxes:		Standard property to specify a mailbox
+> +			(See ./mailbox.txt)
+> +- mbox-names:		List of identifier  strings for each mailbox
+> +			channel.
+
+This part is a standard part of the binding and doesn't need to be here.
+
 > +
 > +Example:
-> +
-> +mlx90632@02 {
-
-Should be ...@3a
-
-With that,
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
-> +	compatible = "melexis,mlx90632";
-> +	reg = <0x3a>;
-> +};
+> +===========================
+> +	/* APU<->RPU0 IPI mailbox controller */
+> +	ipi_mailbox_rpu0: mailbox@ff90400 {
+> +		compatible = "xlnx,zynqmp-ipi-mailbox";
+> +		reg = <0x0 0xff990400 0x0 0x20>,
+> +		      <0x0 0xff990420 0x0 0x20>,
+> +		      <0x0 0xff990080 0x0 0x20>,
+> +		      <0x0 0xff9900a0 0x0 0x20>;
+> +		reg-names = "local_request_region", "local_response_region",
+> +			    "remote_request_region", "remote_response_region";
+> +		#mbox-cells = <1>;
+> +		xlnx-ipi-ids = <0 1>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 29 4>;
+> +	};
+> +	/* APU<->RPU1 IPI mailbox controller */
+> +	ipi_mailbox_rpu1: mailbox@ff990440 {
+> +		compatible = "xlnx,zynqmp-ipi-mailbox";
+> +		reg = <0x0 0xff990440 0x0 0x20>,
+> +		      <0x0 0xff990460 0x0 0x20>,
+> +		      <0x0 0xff990280 0x0 0x20>,
+> +		      <0x0 0xff9902a0 0x0 0x20>;
+> +		reg-names = "local_request_region", "local_response_region",
+> +			    "remote_request_region", "remote_response_region";
+> +		#mbox-cells = <1>;
+> +		xlnx-ipi-ids = <0 2>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 29 4>;
+> +	};
+> +	rpu0 {
+> +		...
+> +		mboxes = <&ipi_mailbox_rpu0 0>,
+> +			 <&ipi_mailbox_rpu0 1>;
+> +		mbox-names = "tx", "rx";
+> +	};
+> +	rpu1 {
+> +		...
+> +		mboxes = <&ipi_mailbox_rpu1 0>,
+> +			 <&ipi_mailbox_rpu1 1>;
+> +		mbox-names = "tx", "rx";
+> +	};
 > -- 
-> 2.15.0
+> 2.7.4
 > 
 > --
 > To unsubscribe from this list: send the line "unsubscribe devicetree" in
 > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
