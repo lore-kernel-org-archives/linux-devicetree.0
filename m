@@ -1,85 +1,65 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] ARM: dts: renesas: Convert to named i2c-gpio
- bindings
-Date: Fri, 1 Dec 2017 12:09:08 +0100
-Message-ID: <20171201110908.u7xjrt7xmlqgigvy@ninjato>
-References: <1512046646-15253-1-git-send-email-geert+renesas@glider.be>
- <20171201081850.4tqbnlvxdax7phfs@verge.net.au>
+From: Oleksandr Shamray <oleksandrs@mellanox.com>
+Subject: RE: [patch v12 2/4] drivers: jtag: Add Aspeed SoC 24xx and 25xx
+ families JTAG master driver
+Date: Fri, 1 Dec 2017 11:11:03 +0000
+Message-ID: <AM4PR0501MB21946528385296CCEEBFEB1AB1390@AM4PR0501MB2194.eurprd05.prod.outlook.com>
+References: <1510675867-24276-1-git-send-email-oleksandrs@mellanox.com>
+ <1510675867-24276-3-git-send-email-oleksandrs@mellanox.com>
+ <CAGMNF6XRwU5QEJhkg-mVwE5zpPigtcGJtRUupZHtcWRdedcsxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ck437fd46wd3ogsg"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171201081850.4tqbnlvxdax7phfs-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGMNF6XRwU5QEJhkg-mVwE5zpPigtcGJtRUupZHtcWRdedcsxg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Kun Yi' <kunyi@google.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>, system-sw-low-level <system-sw-low-level@mellanox.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, Vadim Pasternak <vadimp@mellanox.com>, "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "openocd-devel-owner@lists.sourceforge.net" <openocd-devel-owner@lists.sourceforge.net>, "mec@shout.net" <mec@shout.net>, Jiri Pirko <jiri@mellanox.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "tklauser@distanz.ch" <tklauser@distanz.ch>, mchehab@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---ck437fd46wd3ogsg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Dec 01, 2017 at 09:18:55AM +0100, Simon Horman wrote:
-> On Thu, Nov 30, 2017 at 01:57:22PM +0100, Geert Uytterhoeven wrote:
-> > 	Hi Simon, Magnus,
-> >=20
-> > Commits 7d29f509d2cfd807 ("dt-bindings: i2c: i2c-gpio: Add support for
-> > named gpios") and 05c74778858d7d99 ("i2c: gpio: Add support for named
-> > gpios in DT") introduced named i2c-gpio DT bindings, and deprecated the
-> > more error-prone unnamed variant.
-> >=20
-> > This patch series switches all Renesas boards to the new bindings, and
-> > adds the missing GPIO_OPEN_DRAIN I/O flags, which were implicitly
-> > assumed before.  The latter gets rid of messages like:
-> >=20
-> >     gpio-208 (?): enforced open drain please flag it properly in DT/ACP=
-I DSDT/board file
-> >     gpio-91 (?): enforced open drain please flag it properly in DT/ACPI=
- DSDT/board file
-> >=20
-> > Patch 1 was extracted from series "[PATCH/RFC 0/3] i2c: gpio: Add
-> > support for named gpios in DT", hence the v2.  All other patches are
-> > new.
-> >=20
-> > Note that after this series is applied, the i2c-gpio buses are no longer
-> > detected when booting new DTBs on old (v4.14 and older) kernels, which
-> > should not be an issue.  Booting old DTBs on new kernels is not
-> > affected.
-> >=20
-> > Thanks for applying!
->=20
-> Thanks, applied.
-
-Phew, you guys are fast. For the record:
-
-Reviewed-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-
-
---ck437fd46wd3ogsg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlohOFQACgkQFA3kzBSg
-KbbNcg/7BrCh9DHg38ctotuB5mbxfvNcmlIZFwUAMuJa+IrC/xuQq+1499+z7zHa
-VrIdeRdXZdaoiv8/2JybkA8esBASE/G4DN9bvuT+mZvw52OiMRt+pm1P+O1nYF0D
-fBNQkfRRH4/DHP8jIynPHrC2ZX4Xjw8oMgkQY65KmNzQZS/VXPMO1JCCds55TKdv
-PWu7EpWo5yXMQk5JrPJZZQTcqDFEMJFFxvcIzGVOICguowBUziFl5Z1vnuvTpHzM
-jzvspg5qJytE1Rfu635lH0UgFQmkPFcSTrcT7Y96/hGQvDypvrZTkMQ24GExBjl0
-VZpvDVd0nSuYG74ZlgOEt6bLs3d6+0hhWEL2r8o2MJYlIEwwhhpmbnR6RlGvuI0X
-jDpT/8Q/aLtDMF10GX8mBj2EMYWrTl6fMXru6bgJbJsSOzT18H6mRbvrD4FmluS6
-pMCIMLdSdjc0beajJz413UcJ0QTk/jy+fS/D5jZ6ov3UBKarVMQ8aYaGscZ1Tjld
-ZrttrFYr5md9bb4FYRC3npVSD8AM9y0SrHJ/Fg7xFILuwB4n6D5KaAmExBa7uega
-4Mze1N8QkMCwCDi/KjFJQb2YRTy1l10Hx+TcoXYjmdTesuO9Gw7FWzWGDrww9jKY
-4riKhv2GH6vkLOWilJwDD8Gll6NbXlmt+ntPyv8yy49iKwtoBfk=
-=TCRk
------END PGP SIGNATURE-----
-
---ck437fd46wd3ogsg--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBLdW4gWWkgW21haWx0bzprdW55
+aUBnb29nbGUuY29tXQ0KPiBTZW50OiBUaHVyc2RheSwgTm92ZW1iZXIgMzAsIDIwMTcgMTI6NTEg
+QU0NCj4gVG86IE9sZWtzYW5kciBTaGFtcmF5IDxvbGVrc2FuZHJzQG1lbGxhbm94LmNvbT4NCj4g
+Q2M6IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBhcm5kQGFybmRiLmRlOyBzeXN0ZW0tc3ct
+bG93LWxldmVsDQo+IDxzeXN0ZW0tc3ctbG93LWxldmVsQG1lbGxhbm94LmNvbT47IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOw0KPiBqaXJpQHJlc251bGxpLnVzOyBWYWRpbSBQYXN0ZXJuYWsg
+PHZhZGltcEBtZWxsYW5veC5jb20+OyBsaW51eC0NCj4gYXBpQHZnZXIua2VybmVsLm9yZzsgT3Bl
+bkJNQyBNYWlsbGlzdCA8b3BlbmJtY0BsaXN0cy5vemxhYnMub3JnPjsgbGludXgtDQo+IGtlcm5l
+bEB2Z2VyLmtlcm5lbC5vcmc7IG9wZW5vY2QtZGV2ZWwtb3duZXJAbGlzdHMuc291cmNlZm9yZ2Uu
+bmV0Ow0KPiBtZWNAc2hvdXQubmV0OyBKaXJpIFBpcmtvIDxqaXJpQG1lbGxhbm94LmNvbT47IHJv
+YmgrZHRAa2VybmVsLm9yZzsgbGludXgtDQo+IHNlcmlhbEB2Z2VyLmtlcm5lbC5vcmc7IHRrbGF1
+c2VyQGRpc3RhbnouY2g7IG1jaGVoYWJAa2VybmVsLm9yZzsNCj4gZGF2ZW1AZGF2ZW1sb2Z0Lm5l
+dDsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBb
+cGF0Y2ggdjEyIDIvNF0gZHJpdmVyczoganRhZzogQWRkIEFzcGVlZCBTb0MgMjR4eCBhbmQgMjV4
+eA0KPiBmYW1pbGllcyBKVEFHIG1hc3RlciBkcml2ZXINCj4gDQo+IFRoYW5rcyBmb3Igd29ya2lu
+ZyBvbiB0aGUgZHJpdmVyLCBPbGVrc2FuZHIuIEkgZ2F2ZSB0aGlzIGEgdHJ5IG9uIGEgYm9hcmQg
+d2l0aA0KPiBBc3BlZWQgMjUyMC4gT25lIHF1ZXN0aW9uIGJlbG93Og0KPiANCj4gT24gVHVlLCBO
+b3YgMTQsIDIwMTcgYXQgODoxMSBBTSwgT2xla3NhbmRyIFNoYW1yYXkNCj4gPG9sZWtzYW5kcnNA
+bWVsbGFub3guY29tPiB3cm90ZToNCj4gPiBEcml2ZXIgYWRkcyBzdXBwb3J0IG9mIEFzcGVlZCAy
+NTAwLzI0MDAgc2VyaWVzIFNPQyBKVEFHIG1hc3RlciBjb250cm9sbGVyLg0KPiA+DQo+ID4gRHJp
+dmVyIGltcGxlbWVudHMgdGhlIGZvbGxvd2luZyBqdGFnIG9wczoNCj4gPiAtIGZyZXFfZ2V0Ow0K
+PiA+IC0gZnJlcV9zZXQ7DQo+ID4gLSBzdGF0dXNfZ2V0Ow0KPiA+IC0gaWRsZTsNCj4gPiAtIHhm
+ZXI7DQo+ID4NCg0KWy4uXQ0KDQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGp0YWdf
+b3BzIGFzcGVlZF9qdGFnX29wcyA9IHsNCj4gPiArICAgICAgIC5mcmVxX2dldCA9IGFzcGVlZF9q
+dGFnX2ZyZXFfZ2V0LA0KPiA+ICsgICAgICAgLmZyZXFfc2V0ID0gYXNwZWVkX2p0YWdfZnJlcV9z
+ZXQsDQo+ID4gKyAgICAgICAuc3RhdHVzX2dldCA9IGFzcGVlZF9qdGFnX3N0YXR1c19nZXQsDQo+
+ID4gKyAgICAgICAuaWRsZSA9IGFzcGVlZF9qdGFnX2lkbGUsDQo+ID4gKyAgICAgICAueGZlciA9
+IGFzcGVlZF9qdGFnX3hmZXIsDQo+ID4gKyAgICAgICAubW9kZV9zZXQgPSBhc3BlZWRfanRhZ19t
+b2RlX3NldCB9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGludCBhc3BlZWRfanRhZ19wcm9iZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSB7DQo+ID4gKyAgICAgICBzdHJ1Y3QgYXNwZWVkX2p0
+YWcgKmFzcGVlZF9qdGFnOw0KPiA+ICsgICAgICAgc3RydWN0IGp0YWcgKmp0YWc7DQo+ID4gKyAg
+ICAgICBpbnQgZXJyOw0KPiA+ICsNCj4gPiArICAgICAgIGlmICghb2ZfZGV2aWNlX2lzX2NvbXBh
+dGlibGUocGRldi0+ZGV2Lm9mX25vZGUsDQo+ID4gKyAiYXNwZWVkLGFzcGVlZC1qdGFnIikpDQo+
+IA0KPiBTaG91bGQgdGhpcyBiZSAiYXNwZWVkLGFzdDI0MDAtanRhZyIvImFzcGVlZCxhc3QyNTAw
+LWp0YWciIGFzIHNwZWNpZmllZCBpbiB0aGUNCj4gY29tcGF0aWJsZSBzdHJpbmcgYmVsb3c/DQo+
+IA0KDQpZZXMNCg0KDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiA+ICsN
+Cj4gPiArICAgICAgIGp0YWcgPSBqdGFnX2FsbG9jKHNpemVvZigqYXNwZWVkX2p0YWcpLCAmYXNw
+ZWVkX2p0YWdfb3BzKTsNCj4gPiArICAgICAgIGlmICghanRhZykNCj4gPiArICAgICAgICAgICAg
+ICAgcmV0dXJuIC1FTk9ERVY7DQo+ID4gKw0KPiA+ICsgICAgICAgcGxhdGZvcm1fc2V0X2RydmRh
+dGEocGRldiwganRhZyk7DQo+ID4gKyAgICAgICBhc3BlZWRfanRhZyA9IGp0YWdfcHJpdihqdGFn
+KTsNCj4gPiArICAgICAgIGFzcGVlZF9qdGFnLT5kZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ICsNCiAN
+ClsuLl0NCg0KPiA+ICsNCj4gPiArTU9EVUxFX0FVVEhPUigiT2xla3NhbmRyIFNoYW1yYXkgPG9s
+ZWtzYW5kcnNAbWVsbGFub3guY29tPiIpOw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIkFTUEVF
+RCBKVEFHIGRyaXZlciIpOyBNT0RVTEVfTElDRU5TRSgiR1BMDQo+IHYyIik7DQo+ID4gLS0NCj4g
+PiAxLjcuMQ0KPiA+DQo+IC0tDQo+IFJlZ2FyZHMsDQo+IEt1bg0KDQpUaGFua3MuDQoNCkJSDQpP
+bGVrc2FuZHIgU2hhbXJheQ0K
