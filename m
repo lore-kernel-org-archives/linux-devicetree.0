@@ -1,152 +1,45 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP
- driver DT bindings
-Date: Thu, 30 Nov 2017 19:10:14 -0600
-Message-ID: <20171201011014.3wuzt5oyprbstkff@rob-hp-laptop>
-References: <1511878648-8188-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+Subject: Re: [PATCH 01/13] dt-bindings: Add vendor prefix for Microsemi
+ Corporation
+Date: Thu, 30 Nov 2017 19:14:15 -0600
+Message-ID: <20171201011415.2y5qabgofwc5eecd@rob-hp-laptop>
+References: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
+ <20171128152643.20463-2-alexandre.belloni@free-electrons.com>
+ <20171128161014.GG27409@jhogan-linux.mipstec.com>
+ <20171128162245.GH21126@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1511878648-8188-1-git-send-email-l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
+In-Reply-To: <20171128162245.GH21126-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mingkai.hu-3arQi8VN3Tc@public.gmane.org, peter.newton-3arQi8VN3Tc@public.gmane.org, minghuan.lian-3arQi8VN3Tc@public.gmane.org, rajesh.raina-3arQi8VN3Tc@public.gmane.org, rajan.kapoor-3arQi8VN3Tc@public.gmane.org, prabhjot.singh-3arQi8VN3Tc@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 09:17:28AM -0500, Subrahmanya Lingappa wrote:
-> This patch adds the DT bindings for Mobiveil PCIe Host Bridge
-> IP driver and updates the vendor prefixes file.
+On Tue, Nov 28, 2017 at 05:22:45PM +0100, Alexandre Belloni wrote:
+> On 28/11/2017 at 16:10:14 +0000, James Hogan wrote:
+> > On Tue, Nov 28, 2017 at 04:26:31PM +0100, Alexandre Belloni wrote:
+> > > Microsemi Corporation provides semiconductor and system solutions for
+> > > aerospace & defense, communications, data center and industrial markets.
+> > > 
+> > > Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > ---
+> > > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > 
+> > Nit: Usually the Cc list goes before the --- line so that it is included
+> > in the git history (i.e. these people had the opportunity to comment).
+> > 
 > 
-> Signed-off-by: Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
-> Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
-> Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
-> Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-> ---
-> Fixes:
-> - used git mailer, as tabs were converted to spaces by thunderbird before
-> - moved the entry to corrrect alphabetical order in vendor-prefixes.txt
-> - DT binding file was modified to take care of v3 review comments
-> 
->  .../devicetree/bindings/pci/mobiveil-pcie.txt      | 73 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  2 files changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
+> Ok, it depends on the maintainer, some people prefer leaving that out of commit log.
+> I'm fine with adding those back in.
 
-A few typos, otherwise:
+Really? First, I've heard that.
+
+In any case,
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-> new file mode 100644
-> index 0000000..9f3160d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-> @@ -0,0 +1,73 @@
-> +* Mobiveil AXI PCIe Root Port Bridge DT description
-> +
-> +Mobiveil's GPEX 4.0 is PCIe gen4 a root port bridge IP. This configurable IP
-
-...is a PCIe Gen4 root port...
-
-> +has upto 8 outbound and inbound windows for the address translation.
-
-s/upto/up to/
-
-> +
-> +Required properties:
-> +- #address-cells: Address representation for root ports, set to <3>
-> +- #size-cells: Size representation for root ports, set to <2>
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +- compatible: Should contain "mbvl,gpex40-pcie"
-> +- reg: Should contain PCIe registers location and length
-> +	"config_axi_slave": PCIe controller registers
-> +	"csr_axi_slave"	  : Bridge config registers
-> +	"gpio_slave"	  : GPIO registers to control slot power
-> +	"apb_csr"	  : MSI registers
-> +
-> +- device_type: must be "pci"
-> +- apio-wins : number of requested apio outbound windows
-> +		default 2 outbound windows are configured -
-> +		1. Config window
-> +		2. Memory window
-> +- ppio-wins : number of requested ppio inbound windows
-> +		default 1 inbound memory window is configured.
-> +- bus-range: PCI bus numbers covered
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +- interrupt-parent : phandle to the interrupt controller that
-> +		it is attached to, it should be set to gic to point to
-> +		ARM's Generic Interrupt Controller node in system DT.
-> +- interrupts: The interrupt line of the PCIe controller
-> +		last cell of this fild is set to 4 to
-
-s/fild/field/
-
-> +		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
-> +- interrupt-map-mask,
-> +	interrupt-map: standard PCI properties to define the mapping of the
-> +	PCI interface to interrupt numbers.
-> +- ranges: ranges for the PCI memory regions (I/O space region is not
-> +	supported by hardware)
-> +	Please refer to the standard PCI bus binding document for a more
-> +	detailed explanation
-> +
-> +
-> +Example:
-> +++++++++
-> +	pcie0: pcie@a0000000 {
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		compatible = "mbvl,gpex40-pcie";
-> +		reg =	<0xa0000000 0x00001000>,
-> +			<0xb0000000 0x00010000>,
-> +			<0xff000000 0x00200000>,
-> +			<0xb0010000 0x00001000>;
-> +		reg-names =	"config_axi_slave",
-> +				"csr_axi_slave",
-> +				"gpio_slave",
-> +				"apb_csr";
-> +		device_type = "pci";
-> +		apio-wins = <2>;
-> +		ppio-wins = <1>;
-> +		bus-range = <0x00000000 0x000000ff>;
-> +		interrupt-controller;
-> +		interrupt-parent = <&gic>;
-> +		#interrupt-cells = <1>;
-> +		interrupts = < 0 89 4 >;
-> +		interrupt-map-mask = <0 0 0 7>;
-> +		interrupt-map = <0 0 0 1 &pci_express 1>,
-> +				<0 0 0 2 &pci_express 2>,
-> +				<0 0 0 3 &pci_express 3>,
-> +				<0 0 0 4 &pci_express 4>;
-> +		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
-> +
-> +	};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 0994bdd..8263cc7 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -197,6 +197,7 @@ lwn	Liebherr-Werk Nenzing GmbH
->  macnica	Macnica Americas
->  marvell	Marvell Technology Group Ltd.
->  maxim	Maxim Integrated Products
-> +mbvl	Mobiveil Inc.
->  mcube	mCube
->  meas	Measurement Specialties
->  mediatek	MediaTek Inc.
-> -- 
-> 1.8.3.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
