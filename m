@@ -1,80 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 06/13] dt-bindings: power: reset: Document ocelot-reset
- binding
-Date: Thu, 30 Nov 2017 19:54:08 -0600
-Message-ID: <20171201015408.gg5di47m7nic57cz@rob-hp-laptop>
-References: <20171128152643.20463-1-alexandre.belloni@free-electrons.com>
- <20171128152643.20463-7-alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3 1/4] omapdrm: panel: fix compatible vendor string for
+ td028ttec1
+Date: Thu, 30 Nov 2017 19:57:30 -0600
+Message-ID: <20171201015730.nvw6sblxn566dhhb@rob-hp-laptop>
+References: <cover.1511884135.git.hns@goldelico.com>
+ <6ae8f4b7d794c536650cc99025e5b026089cea30.1511884135.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171128152643.20463-7-alexandre.belloni@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+In-Reply-To: <6ae8f4b7d794c536650cc99025e5b026089cea30.1511884135.git.hns@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 04:26:36PM +0100, Alexandre Belloni wrote:
-> Add binding documentation for the Microsemi Ocelot reset block.
+On Tue, Nov 28, 2017 at 04:48:54PM +0100, H. Nikolaus Schaller wrote:
+> The vendor name was "toppoly" but other panels and the vendor list
+> have defined it as "tpo". So let's fix it in driver and bindings.
 > 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> We keep the old definition in parallel to stay compatible with
+> potential older DTB setup.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> To: Sebastian Reichel <sre@kernel.org>
-> Cc: linux-pm@vger.kernel.org
+>  .../display/panel/{toppoly,td028ttec1.txt => tpo,td028ttec1.txt}      | 4 ++--
+>  drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c               | 3 +++
+>  drivers/video/fbdev/omap2/omapfb/displays/panel-tpo-td028ttec1.c      | 3 +++
+>  3 files changed, 8 insertions(+), 2 deletions(-)
+>  rename Documentation/devicetree/bindings/display/panel/{toppoly,td028ttec1.txt => tpo,td028ttec1.txt} (84%)
 > 
->  .../bindings/power/reset/ocelot-reset.txt          | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> new file mode 100644
-> index 000000000000..2d3f2c21fadd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> @@ -0,0 +1,24 @@
-> +Microsemi Ocelot reset driver
+> diff --git a/Documentation/devicetree/bindings/display/panel/toppoly,td028ttec1.txt b/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
+> similarity index 84%
+> rename from Documentation/devicetree/bindings/display/panel/toppoly,td028ttec1.txt
+> rename to Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
+> index 7175dc3740ac..ed34253d9fb1 100644
+> --- a/Documentation/devicetree/bindings/display/panel/toppoly,td028ttec1.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
+> @@ -2,7 +2,7 @@ Toppoly TD028TTEC1 Panel
+>  ========================
+>  
+>  Required properties:
+> -- compatible: "toppoly,td028ttec1"
+> +- compatible: "tpo,td028ttec1"
+>  
+>  Optional properties:
+>  - label: a symbolic name for the panel
+> @@ -14,7 +14,7 @@ Example
+>  -------
+>  
+>  lcd-panel: td028ttec1@0 {
+> -	compatible = "toppoly,td028ttec1";
+> +	compatible = "tpo,td028ttec1";
+>  	reg = <0>;
+>  	spi-max-frequency = <100000>;
+>  	spi-cpol;
+> diff --git a/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c b/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c
+> index 0a38a0e8c925..a0dfa14f4fab 100644
+> --- a/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c
+> +++ b/drivers/gpu/drm/omapdrm/displays/panel-tpo-td028ttec1.c
+> @@ -452,6 +452,8 @@ static int td028ttec1_panel_remove(struct spi_device *spi)
+>  }
+>  
+>  static const struct of_device_id td028ttec1_of_match[] = {
+> +	{ .compatible = "omapdss,tpo,td028ttec1", },
 
-Bindings are not drivers.
-
-> +
-> +The DEVCPU_GCB:CHIP_REGS have a SOFT_RST register that can be used to reset the
-> +SoC MIPS core.
-> +
-> +Required Properties:
-> + - compatible: "mscc,ocelot-chip-reset"
-> + - mscc,cpucontrol: phandle to the CPU system control syscon block
-> +
-> +Example:
-> +		cpu_ctrl: syscon@70000000 {
-> +			compatible = "syscon";
-
-syscon alone is not valid.
-
-> +			reg = <0x70000000 0x2c>;
-> +		};
-> +
-> +		syscon@71070000 {
-> +			compatible = "simple-mfd", "syscon";
-
-SoC specific compatible?
-
-> +			reg = <0x71070000 0x1c>;
-> +
-> +			reset {
-> +				compatible = "mscc,ocelot-chip-reset";
-> +				mscc,cpucontrol = <&cpu_ctrl>;
-
-This looks strange. A syscon pointing to another syscon?
-
-Doesn't look like you even need this node, but hard to know if you don't 
-document the parent node completely (i.e. what are all the functions in 
-this syscon).
-
-> +			};
-> +		};
-> -- 
-> 2.15.0
-> 
+Why the omapdss part?
