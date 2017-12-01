@@ -1,74 +1,77 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 3/6] dt-bindings: display: Add bindings for SGD GKTW70SDAE4SE Panel
-Date: Fri,  1 Dec 2017 10:03:41 +0100
-Message-ID: <1512119024-521-4-git-send-email-narmstrong@baylibre.com>
-References: <1512119024-521-1-git-send-email-narmstrong@baylibre.com>
+From: Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: regulator: Add Spreadtrum SC27xx regulator documentation
+Date: Fri, 1 Dec 2017 16:58:15 +0800
+Message-ID: <f6d8ff765f4864e5b6ace1f022202d8793a7becf.1512118703.git.erick.chen@spreadtrum.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512119024-521-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The GKTW70SDAE4SE is an LVDS display panel.
-Their bindings are modelled on the the LVDS panel bindings.
+This patch adds support for the Spreadtrum SC2731
+voltage regulator device.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 ---
- .../bindings/display/panel/sgd,gktw70sdae4se.txt   | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
+ .../bindings/regulator/sprd,sc2731-regulator.txt   |   45 ++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt b/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
+diff --git a/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt b/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
 new file mode 100644
-index 0000000..d06644b
+index 0000000..619385e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
-@@ -0,0 +1,41 @@
-+Solomon Goldentek Display GKTW70SDAE4SE LVDS Display Panel
-+==========================================================
++++ b/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
+@@ -0,0 +1,45 @@
++Spreadtrum SC2731 Voltage regulators
 +
-+The GKTW70SDAE4SE is a 7" WVGA TFT-LCD display panel.
-+
-+These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
-+with the following device-specific properties.
++The SC2731 integrates low-voltage and low quiescent current DCDC/LDO.
++14 LDO and 3 DCDCs are designed for external use. All DCDCs/LDOs have
++their own bypass (power-down) control signals. External tantalum or MLCC
++ceramic capacitors are recommended to use with these LDOs.
 +
 +Required properties:
++ - compatible: should be "sprd,sc2731-regulator".
++ - reg: address offset of regulator registers.
++ - regulators: List of regulators provided by this controller. It is named
++ according to its regulator type, BUCK_<name> and LDO_<name>. The definition
++ for each of these nodes is defined using the standard binding for regulators
++ at Documentation/devicetree/bindings/regulator/regulator.txt.
 +
-+- compatible: Shall contain "sgd,gktw70sdae4se" and "panel-lvds", in that order.
++The valid names for regulators are::
++BUCK:
++	BUCK_CPU0, BUCK_CPU1, BUCK_RF
++LDO:
++	LDO_CAMA0, LDO_CAMA1, LDO_CAMMOT, LDO_VLDO, LDO_EMMCCORE, LDO_SDCORE, LDO_SDIO,
++	LDO_WIFIPA, LDO_USB33, LDO_CAMD0, LDO_CAMD1, LDO_CON, LDO_CAMIO, LDO_SRAM
 +
-+Example
-+-------
++Example:
++	power-controller@810 {
++		compatible = "sprd,sc2731-regulator";
++		reg = <0x810>;
 +
-+panel {
-+	compatible = "sgd,gktw70sdae4se", "panel-lvds";
++		regulators {
++			vddarm0: BUCK_CPU0 {
++				regulator-name = "vddarm0";
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1996875>;
++				regulator-ramp-delay = <25000>;
++				regulator-always-on;
++			};
 +
-+	width-mm = <153>;
-+	height-mm = <86>;
-+
-+	data-mapping = "jeida-18";
-+
-+	panel-timing {
-+		clock-frequency = <32000000>;
-+		hactive = <800>;
-+		vactive = <480>;
-+		hback-porch = <39>;
-+		hfront-porch = <39>;
-+		vback-porch = <29>;
-+		vfront-porch = <13>;
-+		hsync-len = <47>;
-+		vsync-len = <2>;
-+	};
-+
-+	port {
-+		panel_in: endpoint {
-+			remote-endpoint = <&lvds_encoder>;
++			vddcama0: LDO_CAMA0 {
++				regulator-name = "vddcama0";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <3750000>;
++				regulator-enable-ramp-delay = <100>;
++			};
++			...
 +		};
 +	};
-+};
 -- 
-2.7.4
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
