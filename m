@@ -1,41 +1,54 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add vendor prefix for ilitek
-Date: Fri, 1 Dec 2017 14:53:40 +0100
-Message-ID: <CACRpkdYgVNjqjoYZaVjCXeAAx91WvEO+Bg7o+5+0sBJK+jPGqw@mail.gmail.com>
-References: <1511122328-31133-1-git-send-email-david@lechnology.com> <1511122328-31133-2-git-send-email-david@lechnology.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 2/2] drm/tinydrm: add driver for ILI9225 panels
+Date: Fri, 1 Dec 2017 15:03:30 +0100
+Message-ID: <CACRpkdYRQoTyzTOK=8n7sawDZAWS3sXRDdDdFpxhZKuV+DE5oQ@mail.gmail.com>
+References: <1510113136-6788-1-git-send-email-david@lechnology.com> <1510113136-6788-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511122328-31133-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1510113136-6788-3-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, Stefano Babic <sbabic@denx.de>
+Cc: "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 19, 2017 at 9:12 PM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
+On Wed, Nov 8, 2017 at 4:52 AM, David Lechner <david@lechnology.com> wrote:
 
-> This adds the vendor prefix ilitek for ILI Technology Corporation (ILITEK).
+> This adds a new driver for display panels based on the Ilitek ILI9225
+> controller.
 >
-> This prefix is already used several places and I will be adding more.
+> This was developed for a no-name panel with a red PCB that is commonly
+> marketed for Arduino. See <https://github.com/Nkawu/TFT_22_ILI9225>.
 >
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
+> I really did try very hard to find a make and model for this panel, but
+> there doesn't seem to be one, so the best I can do is offer the picture
+> in the link above for identification.
 >
-> v2 changes:
-> * New patch in v2
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-Curiously I sent a patch like this, it was ACKed and I just
-haven't got around to pushing this one.
-https://lists.freedesktop.org/archives/dri-devel/2017-August/150203.html
+Can you explain why tinydrm is not putting its panel drivers in
+drivers/gpu/drm/panel?
 
-Now I don't have to.
-Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+I guess everybody knows except me, it's usually like that :(
 
-Hm I need to respin my patches.
+I am anyways working on a driver for Ilitek 9322 that I want
+to land in drivers/gpu/drm/panel. Here is the last iteration:
+https://lists.freedesktop.org/archives/dri-devel/2017-August/150205.html
+Yeah I got sidetracked. OK I will get to it now.
+
+There are some similarities with the code I'm seeing here
+but I believe they are essentially different. But it will be hard
+to share code if you put the driver in the tinydrm framework.
+
+I guess you have also seen:
+drivers/video/backlight/ili922x.c
+?
+
+Stefano Babic who wrote the backlight driver is available for
+reviewing, so includ him in follow-ups (added to To: line).
+
+I'm putting you on CC as I'm rewriting it a bit after the DT
+maintainers review, will try to repost ASAP.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
