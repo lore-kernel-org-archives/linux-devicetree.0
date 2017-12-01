@@ -1,56 +1,55 @@
-From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Subject: Re: [PATCH 2/2] regulator: sc2731: Add regulator driver to support
- Spreadtrum SC2731 PMIC
-Date: Fri, 1 Dec 2017 14:39:42 +0100
-Message-ID: <CAOFm3uHsT8PTZL0tQ0E+7Bje9C8ZUcPd13qz9v6jZHzqEoXqKQ@mail.gmail.com>
-References: <f6d8ff765f4864e5b6ace1f022202d8793a7becf.1512118703.git.erick.chen@spreadtrum.com>
- <75a6a48f603a25d744ef46287e036975b0203608.1512118703.git.erick.chen@spreadtrum.com>
- <CAOFm3uFWhOMy=0nibOjDP_vP+m7Dcf1cGOmXXgcrSy6PDfqEWQ@mail.gmail.com> <20171201124935.qgqclyoatnnph63p@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 18/19] ASoC: tlv320aic31xx: Add headphone/headset
+ detection
+Date: Fri, 1 Dec 2017 13:41:27 +0000
+Message-ID: <20171201134127.2msgmjrfj47ypl3w@sirena.org.uk>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-19-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4qvvzcstbefwku4o"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171201124935.qgqclyoatnnph63p-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171129213300.20021-19-afd-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mark,
 
-On Fri, Dec 1, 2017 at 1:49 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Dec 01, 2017 at 10:13:27AM +0100, Philippe Ombredanne wrote:
->> On Fri, Dec 1, 2017 at 9:58 AM, Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
->
->> I think that per Linus, and Thomas doc patches for SPDX ids this
->> should be instead either:
->
->> > +// SPDX-License-Identifier: GPL-2.0
->> > + // Copyright (c) 2017 Spreadtrum Communications Inc.
->
->> or at least this with the id on the first and the // comment style
->
->> > +// SPDX-License-Identifier: GPL-2.0
->
-> Are you saying SPDX requires C++ style comments?  That seems totally
-> broken.
+--4qvvzcstbefwku4o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In can understand your point, but for reference please check Linus
-[1][2][3], Thomas[4] and Greg[5] comments on the topic.
+On Wed, Nov 29, 2017 at 03:32:59PM -0600, Andrew F. Davis wrote:
+> This device can detect the insertion/removal of headphones and headsets.
+> Enable reporting this status by enabling this interrupt and forwarding
+> this to upper-layers if a jack has been defined.
+>=20
+> This jack definition and the resulting operation from a jack detection
+> event must currently be defined by sound card platform code until CODEC
+> outputs to jack mappings can be defined generically.
 
-I am just a lowly messenger and even though I personally agree with
-Linus points and taste in this area, my weightless voice does not
-matter.
+This only does half the job, there's no way for anything to specify a
+jack here.
 
-CC: Linus, Greg and Thomas
+--4qvvzcstbefwku4o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[1] https://lkml.org/lkml/2017/11/2/715
-[2] https://lkml.org/lkml/2017/11/25/125
-[3] https://lkml.org/lkml/2017/11/25/133
-[4] https://lkml.org/lkml/2017/11/2/805
-[5] https://lkml.org/lkml/2017/10/19/165
--- 
-Cordially
-Philippe Ombredanne
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlohXAYACgkQJNaLcl1U
+h9Dklwf/RSM3QE9jlbFVebFEu6XP7NKawKDxgqAr0t2QcuTXF3jY9c0jnqBtORDO
+ACAql/kM+xjQlNpAiBxohoQgO6bOZLpJHqWgDCa1Zx90706NHwkR+Bono14rIuyN
+9QtDH0uW4bn/E8ksVPPb6nG0tmFBOOekwv02jMgGLd/pA9ZakpiFlQPcVMfw0xVr
+bmnU0OmjFPOlaQxHjUs5BzNBn42mLbbhkToBdU+5CFo9NsbGWnVKdHfqls0ZP1FX
+ZPe/YEIrkaekuLIEwVwPorDsEi29ZQp+lMeTM82NM+rzn1oz/52/PB/pRMptSs38
+NOeSz3BM9BRGu4DaJOThZ/imb8sD4Q==
+=A3Px
+-----END PGP SIGNATURE-----
+
+--4qvvzcstbefwku4o--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
