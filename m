@@ -1,207 +1,314 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH v8 01/13] Documentation: Add SLIMbus summary
-Date: Fri, 1 Dec 2017 11:27:58 +0100
-Message-ID: <20171201102758.bcziygl3k46iepc6@latitude>
-References: <20171130174200.6684-1-srinivas.kandagatla@linaro.org>
- <20171130174200.6684-2-srinivas.kandagatla@linaro.org>
+From: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/5] PCI: cadence: Add host driver for Cadence PCIe
+ controller
+Date: Fri, 1 Dec 2017 11:37:49 +0100
+Message-ID: <c6a0d70d-d584-2db8-f862-0c3ddbf6939d@free-electrons.com>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <20171128204114.GE11228@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7555buyfd4hlmmdc"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171130174200.6684-2-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: gregkh@linuxfoundation.org, broonie@kernel.org, alsa-devel@alsa-project.org, sdharia@codeaurora.org, bp@suse.de, poeschel@lemonage.de, treding@nvidia.com, andreas.noever@gmail.com, alan@linux.intel.com, mathieu.poirier@linaro.org, daniel@ffwll.ch, jkosina@suse.cz, sharon.dvir1@mail.huji.ac.il, joe@perches.com, davem@davemloft.net, james.hogan@imgtec.com, michael.opdenacker@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, vinod.koul@intel.com, arnd@arndb.de
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171128204114.GE11228-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
---7555buyfd4hlmmdc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Le 28/11/2017 à 21:41, Bjorn Helgaas a écrit :
+> On Thu, Nov 23, 2017 at 04:01:48PM +0100, Cyrille Pitchen wrote:
+>> This patch adds support to the Cadence PCIe controller in host mode.
+>>
+>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  drivers/Makefile                        |   1 +
+>>  drivers/pci/Kconfig                     |   1 +
+>>  drivers/pci/cadence/Kconfig             |  24 ++
+>>  drivers/pci/cadence/Makefile            |   2 +
+>>  drivers/pci/cadence/pcie-cadence-host.c | 425 ++++++++++++++++++++++++++++++++
+>>  drivers/pci/cadence/pcie-cadence.c      | 110 +++++++++
+>>  drivers/pci/cadence/pcie-cadence.h      | 325 ++++++++++++++++++++++++
+>>  7 files changed, 888 insertions(+)
+>>  create mode 100644 drivers/pci/cadence/Kconfig
+>>  create mode 100644 drivers/pci/cadence/Makefile
+>>  create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
+>>  create mode 100644 drivers/pci/cadence/pcie-cadence.c
+>>  create mode 100644 drivers/pci/cadence/pcie-cadence.h
+> 
+> I prefer a single file per driver.  I assume you're anticipating
+> something like dwc, where the DesignWare core is incorporated into
+> several devices in slightly different ways.  But it doesn't look like
+> that's here yet, and personally, I'd rather split out the required
+> things when they actually become required, not ahead of time.
+>
 
-Hi, some small nits below.
+The source code in pcie-cadence.c is shared between pcie-cadence-host.c
+(Root Complex mode) and pcie-cadence-ep.c (Endpoint mode), the second
+driver of this series.
 
-On Thu, Nov 30, 2017 at 05:41:48PM +0000, srinivas.kandagatla@linaro.org wr=
-ote:
-> From: Sagar Dharia <sdharia@codeaurora.org>
->=20
-> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
-> developed by MIPI (Mobile Industry Processor Interface) alliance.
-> SLIMbus is a 2-wire implementation, which is used to communicate with
-> peripheral components like audio-codec.
->=20
-> The summary of SLIMbus and API is documented in the 'summary' file.
->=20
-> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  Documentation/driver-api/slimbus/index.rst   |  15 ++++
->  Documentation/driver-api/slimbus/summary.rst | 108 +++++++++++++++++++++=
-++++++
->  2 files changed, 123 insertions(+)
->  create mode 100644 Documentation/driver-api/slimbus/index.rst
->  create mode 100644 Documentation/driver-api/slimbus/summary.rst
+Taking other comments into accounts, I will move endpoint only related
+stuff in the pcie-cadence.{c,h} files from this patch to the endpoint
+patch.
 
-It would probably make sense to Cc the documentation maintainers/mailing
-list on this patch (AFAICS, you didn't do that).
+Otherwise your right, I expect this Cadence PCIe core to be embedded inside
+several vendor SoCs but I thought I could handle this as much as possible
+using mainly DT properties and/or the 'struct cdns_pcie_*_data' associated
+to the DT 'compatible' strings. We will have to wait for those SoCs to be
+released to know whether these two solutions are  enough or if we will need
+dedicated files anyway.
+ 
+>> diff --git a/drivers/Makefile b/drivers/Makefile
+>> index 1d034b680431..27bdd98784d9 100644
+>> --- a/drivers/Makefile
+>> +++ b/drivers/Makefile
+>> @@ -18,6 +18,7 @@ obj-y				+= pwm/
+>>  
+>>  obj-$(CONFIG_PCI)		+= pci/
+>>  obj-$(CONFIG_PCI_ENDPOINT)	+= pci/endpoint/
+>> +obj-$(CONFIG_PCI_CADENCE)	+= pci/cadence/
+> 
+> I can't remember why we added CONFIG_PCI_ENDPOINT here instead of in
+> drivers/pci/Makefile.  Is there any way to move both CONFIG_PCI_ENDPOINT
+> and CONFIG_PCI_CADENCE into drivers/pci/Makefile so this is better
+> encapsulated?
+>
 
-When do you plan to add slimbus to Documentation/driver-api/index.rst?
+I will work on the solution I have proposed in another reply since it seems
+to be OK for you :)
 
-> diff --git a/Documentation/driver-api/slimbus/index.rst b/Documentation/d=
-river-api/slimbus/index.rst
-> new file mode 100644
-> index 000000000000..586f979659e6
-> --- /dev/null
-> +++ b/Documentation/driver-api/slimbus/index.rst
-> @@ -0,0 +1,15 @@
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +SLIMbus Documentation
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
-> +   summary
-> +
-> +.. only::  subproject
-> +
-> +   Indices
-> +   =3D=3D=3D=3D=3D=3D=3D
-> +
-> +   * :ref:`genindex`
-> diff --git a/Documentation/driver-api/slimbus/summary.rst b/Documentation=
-/driver-api/slimbus/summary.rst
-> new file mode 100644
-> index 000000000000..ba165611725a
-> --- /dev/null
-> +++ b/Documentation/driver-api/slimbus/summary.rst
-> @@ -0,0 +1,108 @@
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> +Linux kernel SLIMbus support
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> +
-> +Overview
-> +=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +What is SLIMbus?
-> +----------------
-> +SLIMbus (Serial Low Power Interchip Media Bus) is a specification develo=
-ped by
-> +MIPI (Mobile Industry Processor Interface) alliance. The bus uses master=
-/slave
-> +configuration, and is a 2-wire multi-drop implementation (clock, and dat=
-a).
-> +
-> +Currently, SLIMbus is used to interface between application processors o=
-f SoCs
-> +(System-on-Chip) and peripheral components (typically codec).SLIMbus uses
-> +Time-Division-Multiplexing to accommodate multiple data channels, and
-> +a control channel.
-> +
-> +The control channel is used for various control functions such as bus
-> +management, configuration and status updates.These messages can be unica=
-st (e.g.
-                                               ^^ space after period, please
+>>  # PCI dwc controller drivers
+>>  obj-y				+= pci/dwc/
+>> ...
+> 
+>> + * struct cdns_pcie_rc_data - hardware specific data
+> 
+> "cdns" is a weird abbreviation for "Cadence", since "Cadence" doesn't
+> contain an "s".
+> 
+>> ...
+>> +static int cdns_pcie_parse_request_of_pci_ranges(struct device *dev,
+>> +						 struct list_head *resources,
+>> +						 struct resource **bus_range)
+>> +{
+>> +	int err, res_valid = 0;
+>> +	struct device_node *np = dev->of_node;
+>> +	resource_size_t iobase;
+>> +	struct resource_entry *win, *tmp;
+>> +
+>> +	err = of_pci_get_host_bridge_resources(np, 0, 0xff, resources, &iobase);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	err = devm_request_pci_bus_resources(dev, resources);
+>> +	if (err)
+>> +		return err;
+>> +
+>> +	resource_list_for_each_entry_safe(win, tmp, resources) {
+>> +		struct resource *res = win->res;
+>> +
+>> +		switch (resource_type(res)) {
+>> +		case IORESOURCE_IO:
+>> +			err = pci_remap_iospace(res, iobase);
+>> +			if (err) {
+>> +				dev_warn(dev, "error %d: failed to map resource %pR\n",
+>> +					 err, res);
+>> +				resource_list_destroy_entry(win);
+>> +			}
+>> +			break;
+>> +		case IORESOURCE_MEM:
+>> +			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+>> +			break;
+>> +		case IORESOURCE_BUS:
+>> +			*bus_range = res;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	if (res_valid)
+>> +		return 0;
+>> +
+>> +	dev_err(dev, "non-prefetchable memory resource required\n");
+>> +	return -EINVAL;
+>> +}
+> 
+> The code above is starting to look awfully familiar.  I wonder if it's
+> time to think about some PCI-internal interface that can encapsulate
+> this.  In this case, there's really nothing Cadence-specific here.
+> There are other callers where there *is* vendor-specific code, but
+> possibly that could be handled by returning pointers to bus number,
+> I/O port, and MMIO resources so the caller could do the
+> vendor-specific stuff?
+> 
+> Bjorn
+> 
 
-> +reading/writing device specific values), or multicast (e.g. data channel
-> +reconfiguration sequence is a broadcast message announced to all devices)
-> +
-> +A data channel is used for data-transfer between 2 SLIMbus devices. Data
-> +channel uses dedicated ports on the device.
-> +
-[...]
-> +
-> +Device notifications to the driver:
-> +-----------------------------------
-> +Since SLIMbus devices have mechanisms for reporting their presence, the
-> +framework allows drivers to bind when corresponding devices report their
-> +presence on the bus.
-> +However, it is possible that the driver needs to be probed
-> +first so that it can enable corresponding SLIMbus device (e.g. power it =
-up and/or
-> +take it out of reset). To support that behavior, the framework allows dr=
-ivers
-> +to probe first as well  (e.g. using standard DeviceTree compatbility fie=
-ld).
+I am listing:
+- gen_pci_parse_request_of_pci_ranges() [1]
+- cdns_pcie_parse_request_of_pci_ranges() - same as [1]
+- advk_pcie_parse_request_of_pci_ranges()
+- altera_pcie_parse_request_of_pci_ranges()
+- versatile_pci_parse_request_of_pci_ranges()
+- rcar_pcie_parse_request_of_pci_ranges()
 
-Typo: s/compatbility/compatibility/
+Then what about doing something like that:
 
-> +This creates the necessity for the driver to know when the device is fun=
-ctional
-> +(i.e. reported present). device_up callback is used for that reason when=
- the
-> +device reports present and is assigned a logical address by the controll=
-er.
-> +
-> +Similarly, SLIMbus devices 'report absent' when they go down. A 'device_=
-down'
-> +callback notifies the driver when the device reports absent and its logi=
-cal
-> +address assignment is invalidated by the controller.
-> +
-> +Another notification "boot_device" is used to notify the slim_driver when
-> +controller resets the bus. This notification allows the driver to take n=
-ecessary
-> +steps to boot the device so that it's functional after the bus has been =
-reset.
-> +
-> +Clock-pause:
-> +------------
-> +SLIMbus mandates that a reconfiguration sequence (known as clock-pause) =
-be
-> +broadcast to all active devices on the bus before the bus can enter low-=
-power
-> +mode. Controller uses this sequence when it decides to enter low-power m=
-ode so
-> +that corresponding clocks and/or power-rails can be turned off to save p=
-ower.
-> +Clock-pause is exited by waking up framer device (if controller driver i=
-nitiates
-> +exiting low power mode), or by toggling the data line (if a slave device=
- wants
-> +to initiate it).
-> +
-> +Messaging APIs:
-> +---------------
-> +The framework supports APIs to exchange control-information with a SLIMb=
-us
-> +device. APIs can be synchronous or asynchronous.
-> +From controller's perspective, multiple buffers can be queued to/from
-> +hardware for sending/receiving data using slim_ctrl_buf circular buffer.
-> +The header file <linux/slimbus.h> has more documentation about messaging=
- APIs.
+---8<--------------------------------------------------------------------------
+diff --git a/drivers/pci/host/pci-host-common.c b/drivers/pci/host/pci-host-common.c
+index 44a47d4f0b8f..2413c5d83cbd 100644
+--- a/drivers/pci/host/pci-host-common.c
++++ b/drivers/pci/host/pci-host-common.c
+@@ -24,10 +24,19 @@
+ #include <linux/pci-ecam.h>
+ #include <linux/platform_device.h>
+ 
+-static int gen_pci_parse_request_of_pci_ranges(struct device *dev,
+-		       struct list_head *resources, struct resource **bus_range)
++struct pci_host_resource_parser {
++	int	(*get_resource)(void *userdata, struct resource_entry *win,
++				resource_size_t iobase);
++	int	(*finalize)(void *userdata);
++	void	(*abort)(void *userdata);
++};
++
++int pci_host_parse_request_of_pci_ranges(struct device *dev,
++				 struct list_head *resources,
++				 const struct pci_host_resource_parser *parser,
++				 void *userdata)
+ {
+-	int err, res_valid = 0;
++	int err;
+ 	struct device_node *np = dev->of_node;
+ 	resource_size_t iobase;
+ 	struct resource_entry *win, *tmp;
+@@ -40,34 +49,94 @@ static int gen_pci_parse_request_of_pci_ranges(struct device *dev,
+ 	if (err)
+ 		return err;
+ 
+-	resource_list_for_each_entry_safe(win, tmp, resources) {
+-		struct resource *res = win->res;
+-
+-		switch (resource_type(res)) {
+-		case IORESOURCE_IO:
+-			err = pci_remap_iospace(res, iobase);
+-			if (err) {
+-				dev_warn(dev, "error %d: failed to map resource %pR\n",
+-					 err, res);
+-				resource_list_destroy_entry(win);
+-			}
+-			break;
+-		case IORESOURCE_MEM:
+-			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
+-			break;
+-		case IORESOURCE_BUS:
+-			*bus_range = res;
+-			break;
++	if (parser && parser->get_resource) {
++		resource_list_for_each_entry_safe(win, tmp, resources) {
++			err = parser->get_resource(userdata, win, iobase);
++			if (err)
++				goto do_abort;
++		}
++	}
++
++	if (parser && parser->finalize)
++		return parser->finalize(userdata);
++
++	return 0;
++
++ do_abort:
++	if (parser && parser->abort)
++		parser->abort(userdata);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(pci_host_parse_request_of_pci_ranges);
++
++
++struct gen_pci_parser_context {
++	struct device	*dev;
++	struct resource	**bus_range;
++	int		res_valid;
++};
++
++static int gen_pci_resource_parser_get_resource(void *userdata,
++						struct resource_entry *win,
++						resource_size_t iobase)
++{
++	struct gen_pci_parser_context *ctx = userdata;
++	struct device *dev = ctx->dev;
++	struct resource *res = win->res;
++	int err;
++
++	switch (resource_type(res)) {
++	case IORESOURCE_IO:
++		err = pci_remap_iospace(res, iobase);
++		if (err) {
++			dev_warn(dev, "error %d: failed to map resource %pR\n",
++				 err, res);
++			resource_list_destroy_entry(win);
+ 		}
++		break;
++	case IORESOURCE_MEM:
++		ctx->res_valid |= !(res->flags & IORESOURCE_PREFETCH);
++		break;
++	case IORESOURCE_BUS:
++		*ctx->bus_range = res;
++		break;
+ 	}
+ 
+-	if (res_valid)
++	return 0;
++}
++
++static int gen_pci_resource_parser_finalize(void *userdata)
++{
++	struct gen_pci_parser_context *ctx = userdata;
++	struct device *dev = ctx->dev;
++
++	if (ctx->res_valid)
+ 		return 0;
+ 
+ 	dev_err(dev, "non-prefetchable memory resource required\n");
+ 	return -EINVAL;
+ }
+ 
++static const struct pci_host_resource_parser gen_pci_resource_parser = {
++	.get_resource	= gen_pci_resource_parser_get_resource,
++	.finalize	= gen_pci_resource_parser_finalize,
++};
++
++static int gen_pci_parse_request_of_pci_ranges(struct device *dev,
++		       struct list_head *resources, struct resource **bus_range)
++{
++	struct gen_pci_parser_context ctx;
++
++	ctx.dev = dev;
++	ctx.bus_range = bus_range;
++	ctx.res_valid = 0;
++
++	return pci_host_parse_request_of_pci_ranges(dev, resources,
++						    &gen_pci_resource_parser,
++						    &ctx);
++}
++
+ static void gen_pci_unmap_cfg(void *ptr)
+ {
+ 	pci_ecam_free((struct pci_config_window *)ptr);
+---8<--------------------------------------------------------------------------
 
-Once the kerneldoc documentation (i.e. the /** ... */ comments in the
-source) is included somewhere, I think it would make sense to make
-slim_ctrl_buf a clickable link to the struct's documentation.
+Best regards,
 
+Cyrille
 
-Thanks,
-Jonathan Neusch=C3=A4fer
-
---7555buyfd4hlmmdc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAABAgAGBQJaIS6lAAoJEAgwRJqO81/bCmIP/iwOelNOwoOzAGuQ594zSwU4
-nGEAj9COKOYCrsuRDktG3hMgTXQQ4FUCYM5Cy/oOguaaCcssLpPkJrEokNDJ0KRI
-RVpSgyUdhFIq8rUcT3Z6N/ZwcJvwpScw3nlHuerP/Z6cFvwq2ErH85z7ao3TXv9l
-1yGUTA/XoExqycxXCuwRG6bsdiusjQFCw8GyhlqXMrnQm5DaWXwu0Iv1jR86Scvw
-vGq4cRPJj9qsKHdJX4gDyMJwQKSUsjAVMlPBg+Pd4D46zWlB1YcOu7RBWGXZR4On
-uSnoIVn47hgm4/bh50+o9ypcz9RA+WZO2CGfQxAdrzyKz38l77k3hOolCxOZILhd
-yefCg85rNnuGAcjk6Jhh/14gA+2kdtc86PGHRlQv9X8oKlJbcq5NUcLfecNabQc5
-/QJSMRC5t254CBJu8lOXHZc2DCL1IjIUTaZdBE9bLE152jgvSPkwTCyqrlZQQKJV
-/pdfnscZotStDN7vzbbyCtNayfv04MbQzm9+yGeeqt1lmM8a5CrdyXHX3sMNzg6M
-v+hMw8C2YBp0iJ4yoZjED/LM4eFPiEooSz6q8O8mYl2a+lvwo6U2s9O6yq5hJEBj
-omFm1ZkCzEt85O1BduMWn9HACJgH9ZMlEixOnTUn60KWaVepRVCLuM9JSc2YC7DD
-kfUZ0Uw/bEobndkdCvgP
-=YxQl
------END PGP SIGNATURE-----
-
---7555buyfd4hlmmdc--
+-- 
+Cyrille Pitchen, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
