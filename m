@@ -1,102 +1,100 @@
-From: James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] MIPS: Octeon: Enable LMTDMA/LMTST operations.
-Date: Thu, 30 Nov 2017 23:12:01 +0000
-Message-ID: <20171130231200.GJ5027@jhogan-linux.mipstec.com>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-3-david.daney@cavium.com>
- <20171130213635.GH27409@jhogan-linux.mipstec.com>
- <54c83e6b-35e2-be38-e4f1-87eb420938cb@caviumnetworks.com>
- <20171130225614.GJ27409@jhogan-linux.mipstec.com>
- <c90ac3a5-7230-38ff-691a-3d94a25702cd@caviumnetworks.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3FyYKcuUbgqNYeqV"
+From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH net-next v4 0/2] add UniPhier AVE ethernet support
+Date: Fri,  1 Dec 2017 10:03:48 +0900
+Message-ID: <1512090230-27594-1-git-send-email-hayashi.kunihiko@socionext.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c90ac3a5-7230-38ff-691a-3d94a25702cd-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---3FyYKcuUbgqNYeqV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series adds support for Socionext AVE ethernet controller implemented
+on UniPhier SoCs. This driver supports RGMII/RMII modes.
 
-On Thu, Nov 30, 2017 at 03:09:33PM -0800, David Daney wrote:
-> On 11/30/2017 02:56 PM, James Hogan wrote:
-> > On Thu, Nov 30, 2017 at 01:49:43PM -0800, David Daney wrote:
-> >> On 11/30/2017 01:36 PM, James Hogan wrote:
-> >>> On Tue, Nov 28, 2017 at 04:55:34PM -0800, David Daney wrote:
-> >>>> Signed-off-by: Carlos Munoz <cmunoz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >>>> Signed-off-by: Steven J. Hill <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >>>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >>>> ---
-> >>>>    arch/mips/cavium-octeon/setup.c       |  6 ++++++
-> >>>>    arch/mips/include/asm/octeon/octeon.h | 12 ++++++++++--
-> >>>>    2 files changed, 16 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octe=
-on/setup.c
-> >>>> index a8034d0dcade..99e6a68bc652 100644
-> >>>> --- a/arch/mips/cavium-octeon/setup.c
-> >>>> +++ b/arch/mips/cavium-octeon/setup.c
-> >>>> @@ -609,6 +609,12 @@ void octeon_user_io_init(void)
-> >>>>    #else
-> >>>>    	cvmmemctl.s.cvmsegenak =3D 0;
-> >>>>    #endif
-> >>>> +	if (OCTEON_IS_OCTEON3()) {
-> >>>> +		/* Enable LMTDMA */
-> >>>> +		cvmmemctl.s.lmtena =3D 1;
-> >>>> +		/* Scratch line to use for LMT operation */
-> >>>> +		cvmmemctl.s.lmtline =3D 2;
-> >>>
-> >>> Out of curiosity, is there significance to the value 2 and associated
-> >>> virtual address 0xffffffffffff8100, or is it pretty arbitrary?
-> >>
-> >> Yes, there is significance.
-> >>
-> >> CPU local memory starts at 0xffffffffffff8000, each line is 0x80 bytes.
-> >> so the 2nd line starts at 0xffffffffffff8100
-> >=20
-> > What I mean is, why is 2 chosen instead of any other value?
->=20
-> That is explained in the change log of patch 5/8:
->=20
->=20
->      1st 128-bytes: Use by IOBDMA
->      2nd 128-bytes: Reserved by kernel for scratch/TLS emulation.
->      3rd 128-bytes: OCTEON-III LMTLINE
+v3: http://www.spinics.net/lists/netdev/msg462550.html
 
-Ah yes. Perhaps it deserves a brief comment in the code, or even an
-enum.
+The PHY patch included in v1 has already separated in:
+http://www.spinics.net/lists/netdev/msg454595.html
 
-Cheers
-James
+Changes since v3:
+- remove checking dma address and use dma_set_mask() to restirct address
+- replace ave_mdio_busywait() with read_poll_timeout()
+- replace functions to access to registers with readl/writel() directly
+- replace a function to access to macaddr with ave_hw_write_macaddr()
+- change return value of ave_dma_map() to error value
+- move mdiobus_unregister() from ave_remove() to ave_uninit()
+- eliminate else block at the end of ave_dma_map()
+- add mask definitions for packet filter
+- sort bitmap definitions in descending order
+- add error check to some functions
+- rename and sort functions to clear sub-categories
+- fix error value consistency
+- remove unneeded initializers
+- change type of constant arrays
 
---3FyYKcuUbgqNYeqV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes since v2:
+- replace clk_get() with devm_clk_get()
+- replace reset_control_get() with devm_reset_control_get_optional_shared()
+- add error return when the error occurs on the above *_get functions
+- sort soc data and compatible strings
+- remove clearly obvious comments
+- modify dt-bindings document consistent with these modifications
 
------BEGIN PGP SIGNATURE-----
+Changes since v1:
+- add/remove devicetree properties and sub-node
+  - remove "internal-phy-interrupt" and "desc-bits" property
+  - add SoC data structures based on compatible strings
+  - add node operation to apply "mdio" sub-node
+- add support for features
+  - add support for {get,set}_pauseparam and pause frame operations
+  - add support for ndo_get_stats64 instead of ndo_get_stats
+- replace with desiable functions
+  - replace check for valid phy_mode with phy_interface{_mode}_is_rgmii()
+  - replace phy attach message with phy_attached_info()
+  - replace 32bit operation with {upper,lower}_32_bits() on ave_wdesc_addr()
+  - replace nway_reset and get_link with generic functions
+- move operations to proper functions
+  - move phy_start_aneg() to ndo_open,
+    and remove unnecessary PHY interrupt operations
+    See http://www.spinics.net/lists/netdev/msg454590.html
+  - move irq initialization and descriptor memory allocation to ndo_open
+  - move initialization of reset and clock and mdiobus to ndo_init
+- fix skbuffer operations
+  - fix skb alignment operations and add Rx buffer adjustment for descriptor
+    See http://www.spinics.net/lists/netdev/msg456014.html
+  - add error returns when dma_map_single() failed 
+- clean up code structures
+  - clean up wait-loop and wake-queue conditions
+  - add ave_wdesc_addr() and offset definitions
+  - add ave_macaddr_init() to clean up mac-address operation
+  - fix checking whether Tx entry is not enough
+  - fix supported features of phydev
+  - add necessary free/disable operations
+  - add phydev check on ave_{get,set}_wol()
+  - remove netif_carrier functions, phydev initializer, and Tx budget check
+- change obsolate codes
+  - replace ndev->{base_addr,irq} with the members of ave_private
+- rename goto labels and mask definitions, and remove unused codes
 
-iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlogkEAACgkQbAtpk944
-dno/VQ//R327DASVMh5v/eOdFcua6kZsgAaZYRV5Xn0MbQY6VHb/pvVWJBGEcpcS
-1a784u62NaBzdoxR2D+nc+HnnmR1EgZZUl2B94+QKXWF1D+TfiXUreHUsAdrtJ4p
-jN1e+jp0frTjzCxGNDUwiBgWrX45i0B2/J9YKP+dfk4AiGBpIKUXERNcdf/4B9gq
-+0jKxzHfw/DiYvQuXwxT0KSGP83s1J3NYPfphOeUFTAEi53+HjOd76hLdgN+zP2t
-WyhcMd8Wjh59daPG/PYwkaIhcIACiz8a+dhmjW4NxRIIx9siHFf6WVUdWR1mVg1A
-92J5yp0mxP6h40yaZIs1fi61dqOqaUQ6wxOR0kT5VMz31YHG49Ic5/n1Q9O3/cTD
-KrPsBR/Ax24V73pjDzrA8mt7KjomH+gx6E0ASVAWDnYW2dt66pxXRLrrWA4J7YqY
-2EcoatS3U1ZOJFA/BsjgMEnZBdYnD/JxfJAgRiUdoTkXaUDz17xAbZCjzKYsm7df
-4fB73hF/i5+tZc1uyPu+uUEMDpz7sYPzG5QqXCjfdAoHKlMKKVCFV3AaBD9X8DM/
-1oxkkCaAe0R48jXmIhw3o4YFuBdC3kJSn36US6cvg2DF2StPb3eoI2Y/mt9bOwbh
-LnOOB4Y2mcoV64QQJjKAKKBbItZ6nCMjx2nsIEO0pbLqM+LVacM=
-=qtEc
------END PGP SIGNATURE-----
+Kunihiko Hayashi (2):
+  dt-bindings: net: add DT bindings for Socionext UniPhier AVE
+  net: ethernet: socionext: add AVE ethernet driver
 
---3FyYKcuUbgqNYeqV--
+ .../bindings/net/socionext,uniphier-ave4.txt       |   48 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/socionext/Kconfig             |   22 +
+ drivers/net/ethernet/socionext/Makefile            |    5 +
+ drivers/net/ethernet/socionext/sni_ave.c           | 1744 ++++++++++++++++++++
+ 6 files changed, 1821 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+ create mode 100644 drivers/net/ethernet/socionext/Kconfig
+ create mode 100644 drivers/net/ethernet/socionext/Makefile
+ create mode 100644 drivers/net/ethernet/socionext/sni_ave.c
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
