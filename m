@@ -1,370 +1,99 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/5] PCI: cadence: Add host driver for Cadence PCIe
- controller
-Date: Fri, 1 Dec 2017 16:20:26 +0000
-Message-ID: <20171201162026.GA26640@red-moon>
-References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
- <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
- <20171128204114.GE11228@bhelgaas-glaptop.roam.corp.google.com>
- <c6a0d70d-d584-2db8-f862-0c3ddbf6939d@free-electrons.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] arm64: dts: allwinner: a64: bananapi-m64: Add
+ LED device node
+Date: Sat,  2 Dec 2017 00:27:33 +0800
+Message-ID: <20171201162733.23156-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c6a0d70d-d584-2db8-f862-0c3ddbf6939d-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB6MFQ3IQKGQESGE6U5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 01, 2017 at 11:37:49AM +0100, Cyrille Pitchen wrote:
-> Hi Bjorn,
-> 
-> Le 28/11/2017 à 21:41, Bjorn Helgaas a écrit :
-> > On Thu, Nov 23, 2017 at 04:01:48PM +0100, Cyrille Pitchen wrote:
-> >> This patch adds support to the Cadence PCIe controller in host mode.
-> >>
-> >> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> ---
-> >>  drivers/Makefile                        |   1 +
-> >>  drivers/pci/Kconfig                     |   1 +
-> >>  drivers/pci/cadence/Kconfig             |  24 ++
-> >>  drivers/pci/cadence/Makefile            |   2 +
-> >>  drivers/pci/cadence/pcie-cadence-host.c | 425 ++++++++++++++++++++++++++++++++
-> >>  drivers/pci/cadence/pcie-cadence.c      | 110 +++++++++
-> >>  drivers/pci/cadence/pcie-cadence.h      | 325 ++++++++++++++++++++++++
-> >>  7 files changed, 888 insertions(+)
-> >>  create mode 100644 drivers/pci/cadence/Kconfig
-> >>  create mode 100644 drivers/pci/cadence/Makefile
-> >>  create mode 100644 drivers/pci/cadence/pcie-cadence-host.c
-> >>  create mode 100644 drivers/pci/cadence/pcie-cadence.c
-> >>  create mode 100644 drivers/pci/cadence/pcie-cadence.h
-> > 
-> > I prefer a single file per driver.  I assume you're anticipating
-> > something like dwc, where the DesignWare core is incorporated into
-> > several devices in slightly different ways.  But it doesn't look like
-> > that's here yet, and personally, I'd rather split out the required
-> > things when they actually become required, not ahead of time.
-> >
-> 
-> The source code in pcie-cadence.c is shared between pcie-cadence-host.c
-> (Root Complex mode) and pcie-cadence-ep.c (Endpoint mode), the second
-> driver of this series.
-> 
-> Taking other comments into accounts, I will move endpoint only related
-> stuff in the pcie-cadence.{c,h} files from this patch to the endpoint
-> patch.
-> 
-> Otherwise your right, I expect this Cadence PCIe core to be embedded inside
-> several vendor SoCs but I thought I could handle this as much as possible
-> using mainly DT properties and/or the 'struct cdns_pcie_*_data' associated
-> to the DT 'compatible' strings. We will have to wait for those SoCs to be
-> released to know whether these two solutions are  enough or if we will need
-> dedicated files anyway.
->  
-> >> diff --git a/drivers/Makefile b/drivers/Makefile
-> >> index 1d034b680431..27bdd98784d9 100644
-> >> --- a/drivers/Makefile
-> >> +++ b/drivers/Makefile
-> >> @@ -18,6 +18,7 @@ obj-y				+= pwm/
-> >>  
-> >>  obj-$(CONFIG_PCI)		+= pci/
-> >>  obj-$(CONFIG_PCI_ENDPOINT)	+= pci/endpoint/
-> >> +obj-$(CONFIG_PCI_CADENCE)	+= pci/cadence/
-> > 
-> > I can't remember why we added CONFIG_PCI_ENDPOINT here instead of in
-> > drivers/pci/Makefile.  Is there any way to move both CONFIG_PCI_ENDPOINT
-> > and CONFIG_PCI_CADENCE into drivers/pci/Makefile so this is better
-> > encapsulated?
-> >
-> 
-> I will work on the solution I have proposed in another reply since it seems
-> to be OK for you :)
-> 
-> >>  # PCI dwc controller drivers
-> >>  obj-y				+= pci/dwc/
-> >> ...
-> > 
-> >> + * struct cdns_pcie_rc_data - hardware specific data
-> > 
-> > "cdns" is a weird abbreviation for "Cadence", since "Cadence" doesn't
-> > contain an "s".
-> > 
-> >> ...
-> >> +static int cdns_pcie_parse_request_of_pci_ranges(struct device *dev,
-> >> +						 struct list_head *resources,
-> >> +						 struct resource **bus_range)
-> >> +{
-> >> +	int err, res_valid = 0;
-> >> +	struct device_node *np = dev->of_node;
-> >> +	resource_size_t iobase;
-> >> +	struct resource_entry *win, *tmp;
-> >> +
-> >> +	err = of_pci_get_host_bridge_resources(np, 0, 0xff, resources, &iobase);
-> >> +	if (err)
-> >> +		return err;
-> >> +
-> >> +	err = devm_request_pci_bus_resources(dev, resources);
-> >> +	if (err)
-> >> +		return err;
-> >> +
-> >> +	resource_list_for_each_entry_safe(win, tmp, resources) {
-> >> +		struct resource *res = win->res;
-> >> +
-> >> +		switch (resource_type(res)) {
-> >> +		case IORESOURCE_IO:
-> >> +			err = pci_remap_iospace(res, iobase);
-> >> +			if (err) {
-> >> +				dev_warn(dev, "error %d: failed to map resource %pR\n",
-> >> +					 err, res);
-> >> +				resource_list_destroy_entry(win);
-> >> +			}
-> >> +			break;
-> >> +		case IORESOURCE_MEM:
-> >> +			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-> >> +			break;
-> >> +		case IORESOURCE_BUS:
-> >> +			*bus_range = res;
-> >> +			break;
-> >> +		}
-> >> +	}
-> >> +
-> >> +	if (res_valid)
-> >> +		return 0;
-> >> +
-> >> +	dev_err(dev, "non-prefetchable memory resource required\n");
-> >> +	return -EINVAL;
-> >> +}
-> > 
-> > The code above is starting to look awfully familiar.  I wonder if it's
-> > time to think about some PCI-internal interface that can encapsulate
-> > this.  In this case, there's really nothing Cadence-specific here.
-> > There are other callers where there *is* vendor-specific code, but
-> > possibly that could be handled by returning pointers to bus number,
-> > I/O port, and MMIO resources so the caller could do the
-> > vendor-specific stuff?
-> > 
-> > Bjorn
-> > 
-> 
-> I am listing:
-> - gen_pci_parse_request_of_pci_ranges() [1]
-> - cdns_pcie_parse_request_of_pci_ranges() - same as [1]
-> - advk_pcie_parse_request_of_pci_ranges()
-> - altera_pcie_parse_request_of_pci_ranges()
-> - versatile_pci_parse_request_of_pci_ranges()
-> - rcar_pcie_parse_request_of_pci_ranges()
-> 
-> Then what about doing something like that:
-> 
-> ---8<--------------------------------------------------------------------------
-> diff --git a/drivers/pci/host/pci-host-common.c b/drivers/pci/host/pci-host-common.c
-> index 44a47d4f0b8f..2413c5d83cbd 100644
-> --- a/drivers/pci/host/pci-host-common.c
-> +++ b/drivers/pci/host/pci-host-common.c
-> @@ -24,10 +24,19 @@
->  #include <linux/pci-ecam.h>
->  #include <linux/platform_device.h>
->  
-> -static int gen_pci_parse_request_of_pci_ranges(struct device *dev,
-> -		       struct list_head *resources, struct resource **bus_range)
-> +struct pci_host_resource_parser {
-> +	int	(*get_resource)(void *userdata, struct resource_entry *win,
-> +				resource_size_t iobase);
-> +	int	(*finalize)(void *userdata);
-> +	void	(*abort)(void *userdata);
-> +};
-> +
-> +int pci_host_parse_request_of_pci_ranges(struct device *dev,
-> +				 struct list_head *resources,
-> +				 const struct pci_host_resource_parser *parser,
-> +				 void *userdata)
->  {
-> -	int err, res_valid = 0;
-> +	int err;
->  	struct device_node *np = dev->of_node;
->  	resource_size_t iobase;
->  	struct resource_entry *win, *tmp;
-> @@ -40,34 +49,94 @@ static int gen_pci_parse_request_of_pci_ranges(struct device *dev,
->  	if (err)
->  		return err;
->  
-> -	resource_list_for_each_entry_safe(win, tmp, resources) {
-> -		struct resource *res = win->res;
-> -
-> -		switch (resource_type(res)) {
-> -		case IORESOURCE_IO:
-> -			err = pci_remap_iospace(res, iobase);
-> -			if (err) {
-> -				dev_warn(dev, "error %d: failed to map resource %pR\n",
-> -					 err, res);
-> -				resource_list_destroy_entry(win);
-> -			}
-> -			break;
-> -		case IORESOURCE_MEM:
-> -			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-> -			break;
-> -		case IORESOURCE_BUS:
-> -			*bus_range = res;
-> -			break;
-> +	if (parser && parser->get_resource) {
-> +		resource_list_for_each_entry_safe(win, tmp, resources) {
-> +			err = parser->get_resource(userdata, win, iobase);
-> +			if (err)
-> +				goto do_abort;
-> +		}
-> +	}
-> +
-> +	if (parser && parser->finalize)
-> +		return parser->finalize(userdata);
-> +
-> +	return 0;
-> +
-> + do_abort:
-> +	if (parser && parser->abort)
-> +		parser->abort(userdata);
-> +
-> +	return err;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_host_parse_request_of_pci_ranges);
-> +
-> +
-> +struct gen_pci_parser_context {
-> +	struct device	*dev;
-> +	struct resource	**bus_range;
-> +	int		res_valid;
-> +};
-> +
-> +static int gen_pci_resource_parser_get_resource(void *userdata,
-> +						struct resource_entry *win,
-> +						resource_size_t iobase)
-> +{
-> +	struct gen_pci_parser_context *ctx = userdata;
-> +	struct device *dev = ctx->dev;
-> +	struct resource *res = win->res;
-> +	int err;
-> +
-> +	switch (resource_type(res)) {
-> +	case IORESOURCE_IO:
-> +		err = pci_remap_iospace(res, iobase);
-> +		if (err) {
-> +			dev_warn(dev, "error %d: failed to map resource %pR\n",
-> +				 err, res);
-> +			resource_list_destroy_entry(win);
->  		}
-> +		break;
-> +	case IORESOURCE_MEM:
-> +		ctx->res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-> +		break;
-> +	case IORESOURCE_BUS:
-> +		*ctx->bus_range = res;
-> +		break;
->  	}
->  
-> -	if (res_valid)
-> +	return 0;
-> +}
-> +
-> +static int gen_pci_resource_parser_finalize(void *userdata)
-> +{
-> +	struct gen_pci_parser_context *ctx = userdata;
-> +	struct device *dev = ctx->dev;
-> +
-> +	if (ctx->res_valid)
->  		return 0;
->  
->  	dev_err(dev, "non-prefetchable memory resource required\n");
->  	return -EINVAL;
->  }
->  
-> +static const struct pci_host_resource_parser gen_pci_resource_parser = {
-> +	.get_resource	= gen_pci_resource_parser_get_resource,
-> +	.finalize	= gen_pci_resource_parser_finalize,
-> +};
-> +
-> +static int gen_pci_parse_request_of_pci_ranges(struct device *dev,
-> +		       struct list_head *resources, struct resource **bus_range)
-> +{
-> +	struct gen_pci_parser_context ctx;
-> +
-> +	ctx.dev = dev;
-> +	ctx.bus_range = bus_range;
-> +	ctx.res_valid = 0;
-> +
-> +	return pci_host_parse_request_of_pci_ranges(dev, resources,
-> +						    &gen_pci_resource_parser,
-> +						    &ctx);
-> +}
+The Bananapi-M64 has 3 LEDS in red, green, and blue. These are toggled
+via GPIO lines, which drive transistors that control current across the
+LEDS. The red LED is by default on, via an additional pull-up on the
+control line. We consider this means that it is a power indicator.
+So we set the "default-on" property for it.
 
-I think that what you are doing is something along the lines:
+The pingroups the GPIO lines belong to require external regulators be
+enabled to be able to drive the GPIO high. These regulators also have
+other purposes. However the pin controller does not have bindings for
+regulators. Here we just set them to always-on.
 
-acpi_dev_get_resources()
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-and the struct res_proc_context but maybe we can do something
-simpler to start with.
-
-We can go through the resource list twice in every driver, once through
-the generic function that we are creating - that embeds code common
-across bridges - to be clear something like:
-
-static int of_pci_parse_request_pci_resources(struct device *dev,
-					      struct list_head *res)
-{
-	int err, res_valid;
-	resource_size_t iobase;
-	struct device_node *np = dev->of_node;
-	struct resource_entry *win, *tmp;
-
-	err = of_pci_get_host_bridge_resources(np, 0, 0xff, res, &iobase);
-	if (err)
-		return err;
-
-	err = devm_request_pci_bus_resources(dev, res);
-	if (err)
-		goto out_release_res;
-
-	resource_list_for_each_entry_safe(win, tmp, res) {
-		struct resource *res = win->res;
-
-		switch (resource_type(res)) {
-		case IORESOURCE_IO:
-			err = pci_remap_iospace(res, iobase);
-			if (err) {
-				dev_warn(dev, "error %d: failed to map resource %pR\n",
-					 err, res);
-				resource_list_destroy_entry(win);
-			}
-			break;
-		case IORESOURCE_MEM:
-			res_valid |= !(res->flags & IORESOURCE_PREFETCH);
-			break;
-		}
-	}
-
-	if (res_valid)
-		return 0;
-
-	dev_err(dev, "non-prefetchable memory resource required\n");
-	err = -EINVAL;
-
-out_release_res:
-	pci_free_resource_list(res);
-	return err;
-}
-
-and then in a PCI host bridge specific loop that just carries
-out the host bridge specific actions for every resource returned
-in the res list.
-
-Lorenzo
-
-> +
->  static void gen_pci_unmap_cfg(void *ptr)
->  {
->  	pci_ecam_free((struct pci_config_window *)ptr);
-> ---8<--------------------------------------------------------------------------
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index 4a8d3f83a36e..a6975670cd1c 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -60,6 +60,26 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	leds {
++		compatible = "gpio-leds";
++
++		pwr-led {
++			label = "bananapi-m64:red:pwr";
++			gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
++			default-state = "on";
++		};
++
++		green {
++			label = "bananapi-m64:green:user";
++			gpios = <&pio 4 14 GPIO_ACTIVE_HIGH>; /* PE14 */
++		};
++
++		blue {
++			label = "bananapi-m64:blue:user";
++			gpios = <&pio 4 15 GPIO_ACTIVE_HIGH>; /* PE15 */
++		};
++	};
++
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
+@@ -153,6 +173,17 @@
+ 
+ #include "axp803.dtsi"
+ 
++&reg_aldo1 {
++	/*
++	 * This regulator also drives the PE pingroup GPIOs,
++	 * which also controls two LEDs.
++	 */
++	regulator-always-on;
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "afvcc-csi";
++};
++
+ &reg_aldo2 {
+ 	regulator-always-on;
+ 	regulator-min-microvolt = <1800000>;
+@@ -168,6 +199,11 @@
+ };
+ 
+ &reg_dc1sw {
++	/*
++	 * This regulator also indirectly drives the PD pingroup GPIOs,
++	 * which also controls the power LED.
++	 */
++	regulator-always-on;
+ 	regulator-name = "vcc-phy";
+ };
+ 
+-- 
+2.15.0
