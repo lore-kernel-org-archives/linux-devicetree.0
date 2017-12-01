@@ -1,51 +1,53 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 3/3] MAINTAINERS: Add entry for Socionext ethernet driver
-Date: Fri, 1 Dec 2017 09:14:12 +0000
-Message-ID: <CAKv+Gu_Q25irw3-BOO_T17EMV9rFyMRzKphhATqQNX=QtqGh_w@mail.gmail.com>
-References: <1512058416-15968-1-git-send-email-jassisinghbrar@gmail.com>
+From: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3 0/7] Add loadable kernel module and power management support
+Date: Fri, 1 Dec 2017 14:50:00 +0530
+Message-ID: <1512120007-28088-1-git-send-email-mmaddireddy@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1512058416-15968-1-git-send-email-jassisinghbrar@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cyndis-/1wQRMveznE@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+Cc: jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30 November 2017 at 16:13,  <jassisinghbrar@gmail.com> wrote:
-> From: Jassi Brar <jaswinder.singh@linaro.org>
->
-> Add entry for the Socionext Netsec controller driver and DT bindings.
->
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+This series of patches add loadable kernel module and power management
+support to Tegra PCIe host controller driver.
 
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+These patches are tested on Jetson TK1, TX1 and TX2 platforms, following
+are the verification details.
+	- Multiple module insert & remove
+	- PCIe device functionality after module insert
+	- Free clock, resets, regulators, powergate, iomem and interrupt
+	resources after module remove
+	- PCIe device functionality after resume from RAM
 
-(with Joe's comment addressed)
+Tegra PCIe host controller driver is using ioremap_page_range() which is
+not exported. This is switched with devm_ioremap() in the series
+'https://patchwork.ozlabs.org/project/linux-tegra/list/?series=9907'.
 
-> ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index aa71ab52f..aed9d32 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12617,6 +12617,14 @@ F:     drivers/md/raid*
->  F:     include/linux/raid/
->  F:     include/uapi/linux/raid/
->
-> +SOCIONEXT (SNI) NETSEC NETWORK DRIVER
-> +M:     Jassi Brar <jaswinder.singh@linaro.org>
-> +L:     netdev@vger.kernel.org
-> +S:     Supported
-> +S:     Maintained
-> +F:     drivers/net/ethernet/socionext/netsec.c
-> +F:     Documentation/devicetree/bindings/net/socionext-netsec.txt
-> +
->  SONIC NETWORK DRIVER
->  M:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->  L:     netdev@vger.kernel.org
-> --
-> 2.7.4
->
+V2: PM QoS fix is dropped in V2 from this series because the fix is
+incorporated in latest 'commit 0759e80b84e3 ("PM / QoS: Fix device resume
+latency framework")'. Update commit message of few patches in V2.
+
+V3: Patches to export irq_set_msi_desc() and tegra_cpuidle_pcie_irqs_in_use()
+are dropped based on review comments. These symbols will be addressed in
+next series. Remove PCI_REASSIGN_ALL_BUS flag for Tegra PCIe and took care
+of few other review comments.
+
+Manikanta Maddireddy (7):
+  of: Export of_pci_range_to_resource()
+  PCI: Export pci_find_host_bridge()
+  PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for Tegra PCIe
+  PCI: tegra: Free resources on probe failure
+  PCI: tegra: Add loadable kernel module support
+  PCI: tegra: Broadcast PME_Turn_Off message before link goes to L2
+  PCI: tegra: Add power management support
+
+ drivers/of/address.c         |   1 +
+ drivers/pci/host-bridge.c    |   1 +
+ drivers/pci/host/Kconfig     |   2 +-
+ drivers/pci/host/pci-tegra.c | 331 +++++++++++++++++++++++++++++++++----------
+ 4 files changed, 257 insertions(+), 78 deletions(-)
+
+-- 
+2.1.4
