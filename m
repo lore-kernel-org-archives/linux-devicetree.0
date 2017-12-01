@@ -1,63 +1,58 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 10/19] ASoC: tlv320aic31xx: Add MICBIAS off setting
-Date: Fri, 1 Dec 2017 17:43:00 +0000
-Message-ID: <20171201174300.hoocutyi6c7jtfx3@sirena.org.uk>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-11-afd@ti.com>
- <20171201133028.svemo5qedyfqrt7y@sirena.org.uk>
- <afa96737-d17a-c854-b3a8-30730e06dd99@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zvyefnnbzf3kwr2l"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <afa96737-d17a-c854-b3a8-30730e06dd99@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/3] arm64: dts: stratix10: remove phy node for usb
+Date: Fri,  1 Dec 2017 11:43:14 -0600
+Message-ID: <1512150195-31821-2-git-send-email-dinguyen@kernel.org>
+References: <1512150195-31821-1-git-send-email-dinguyen@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512150195-31821-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The PHY entry for the USB nodes is not needed for the Stratix10 platform.
 
---zvyefnnbzf3kwr2l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-On Fri, Dec 01, 2017 at 08:56:31AM -0600, Andrew F. Davis wrote:
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 7c9bdc7..11ce068 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -323,18 +323,10 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usbphy0: usbphy@0 {
+-			#phy-cells = <0>;
+-			compatible = "usb-nop-xceiv";
+-			status = "okay";
+-		};
+-
+ 		usb0: usb@ffb00000 {
+ 			compatible = "snps,dwc2";
+ 			reg = <0xffb00000 0x40000>;
+ 			interrupts = <0 93 4>;
+-			phys = <&usbphy0>;
+-			phy-names = "usb2-phy";
+ 			resets = <&rst USB0_RESET>;
+ 			reset-names = "dwc2";
+ 			status = "disabled";
+@@ -344,8 +336,6 @@
+ 			compatible = "snps,dwc2";
+ 			reg = <0xffb40000 0x40000>;
+ 			interrupts = <0 94 4>;
+-			phys = <&usbphy0>;
+-			phy-names = "usb2-phy";
+ 			resets = <&rst USB1_RESET>;
+ 			reset-names = "dwc2";
+ 			status = "disabled";
+-- 
+2.7.4
 
-> Personally I wouldn't have put MicBias voltage in DT to begin with, it
-> is runtime configurable and depends on user runtime inserted microphone,
-> not really a hardware description :/
-
-Usually the system as a whole is specified to have some particular kind
-of microphone attached (or soldered in) and this follows from that.
-There's typically also soldered down analogue components that are
-selected based on the bias voltage so a specific system likely won't
-have the full flexibility.
-
-> The enable/disable is controlled by a DAPM and should be wired to enable
-> whenever we are recording from the related microphone pin. So then
-> without MICBIAS_OFF the user is forced to select from the above voltages
-> whenever recording, which may not be correct if they are using a mic
-> that doesn't need bias.
-
-That'd depend on someone having a board that was able to detect that a
-line input was plugged in or a user control for this.  If the board was
-permenantly set up for line input presumably the bias wouldn't even be
-wired up.
-
---zvyefnnbzf3kwr2l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlohlKMACgkQJNaLcl1U
-h9BQSAgAg1QaEZmgNMhIy9+/1qv6q++jghnEYt5WehUwUBLMGrVkIFeLLdm9D4ri
-E+4ds/VqVP/u0H00gqGj6QDQ/I49QSpElm8cGlWGMF8rR5/CxTCTbWHnxStQxZ0B
-Q/HPT8wCEOwC2rk58tsLsn2qSwB5MWgo8zIGzVP43z5LB+JmUGunIrzgdKLQ3B1Z
-RXQspBS/pZez2YUJpZPSyFpKgfCdU0ZYixX1DMHX2Dgqu+UQ/SMfJamSSMrBVqga
-SESbjYZ5p4jAcrkxEvYHD116fJRpC3beKqfmjE9f/CvUIYpQwEH37fz/u1RObsUv
-8UYjSP5rzIdBFvnLWLzT42F4hfe9vA==
-=2cYJ
------END PGP SIGNATURE-----
-
---zvyefnnbzf3kwr2l--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
