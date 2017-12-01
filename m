@@ -1,30 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] dt-bindings: arm: Add entry for Broadcom Brahma-B53
-Date: Thu, 30 Nov 2017 20:18:55 -0600
-Message-ID: <20171201021855.ql2pp4mw4fkms3pm@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/9] dt-bindings: arm: brcmstb: Correct BIUCTRL node
+ documentation
+Date: Thu, 30 Nov 2017 20:21:34 -0600
+Message-ID: <20171201022134.ua2a7jc5n44m4qb2@rob-hp-laptop>
 References: <20171129201849.17522-1-f.fainelli@gmail.com>
- <20171129201849.17522-2-f.fainelli@gmail.com>
+ <20171129201849.17522-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171129201849.17522-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171129201849.17522-3-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 12:18:41PM -0800, Florian Fainelli wrote:
-> Broadcom's Brahma-B53 CPU is an ARMv8A processor used on a number of
-> DSL, Cable Modem and Set-top-box SoCs.
+On Wed, Nov 29, 2017 at 12:18:42PM -0800, Florian Fainelli wrote:
+> Correct the Device Tree bindings for the HIF_CPUBIUCTRL node whose
+> compatible string is actually brcm,bcm<chip-id>-cpu-biu-ctrl. Also
+> document in the binding the fallback property
+> ("brcm,brcmstb-cpu-biu-ctrl") and update the example accordingly.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt   | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+> index 790e6b0b8306..05be8d1f7be6 100644
+> --- a/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+> +++ b/Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+> @@ -17,21 +17,23 @@ Further, syscon nodes that map platform-specific registers used for general
+>  system control is required:
+>  
+>      - compatible: "brcm,bcm<chip_id>-sun-top-ctrl", "syscon"
+> -    - compatible: "brcm,bcm<chip_id>-hif-cpubiuctrl", "syscon"
+> +    - compatible: "brcm,bcm<chip_id>-cpu-biu-ctrl",
+> +		  "brcm,brcmstb-cpu-biu-ctrl",
+> +		  "syscon"
+>      - compatible: "brcm,bcm<chip_id>-hif-continuation", "syscon"
+>  
+> -hif-cpubiuctrl node
+> +cpu-biu-ctrl node
+>  -------------------
+> -SoCs with Broadcom Brahma15 ARM-based CPUs have a specific Bus Interface Unit
+> -(BIU) block which controls and interfaces the CPU complex to the different
+> -Memory Controller Ports (MCP), one per memory controller (MEMC). This BIU block
+> -offers a feature called Write Pairing which consists in collapsing two adjacent
+> -cache lines into a single (bursted) write transaction towards the memory
+> -controller (MEMC) to maximize write bandwidth.
+> +SoCs with Broadcom Brahma15 ARM-based and Brahma53 ARM64-based CPUs have a
+> +specific Bus Interface Unit (BIU) block which controls and interfaces the CPU
+> +complex to the different Memory Controller Ports (MCP), one per memory
+> +controller (MEMC). This BIU block offers a feature called Write Pairing which
+> +consists in collapsing two adjacent cache lines into a single (bursted) write
+> +transaction towards the memory controller (MEMC) to maximize write bandwidth.
+>  
+>  Required properties:
+>  
+> -    - compatible: must be "brcm,bcm7445-hif-cpubiuctrl", "syscon"
+> +    - compatible: must be "brcm,bcm7445-cpu-biu-ctrl", "syscon"
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Doesn't this need "brcm,brcmstb-cpu-biu-ctrl" too?
+
+>  
+>  Optional properties:
+>  
+> @@ -52,7 +54,7 @@ example:
+>          };
+>  
+>          hif_cpubiuctrl: syscon@3e2400 {
+> -            compatible = "brcm,bcm7445-hif-cpubiuctrl", "syscon";
+> +            compatible = "brcm,bcm7445-cpu-biu-ctrl", "brcm,brcmstb-cpu-biu-ctrl", "syscon";
+>              reg = <0x3e2400 0x5b4>;
+>              brcm,write-pairing;
+>          };
+> -- 
+> 2.9.3
+> 
