@@ -1,117 +1,73 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] fix the clock setting for SAR ADC
-Date: Sat, 2 Dec 2017 11:38:32 +0000
-Message-ID: <20171202113832.6b3eda46@archlinux>
-References: <20171107140942.29243-1-yixun.lan@amlogic.com>
-        <CAFBinCB=2pb9dZkpSqdVAiumkSCzgaW0oejftjZNP7aYbiQJuw@mail.gmail.com>
-        <20171111003737.000038f0@huawei.com>
-        <15745fd0-1af9-c7c0-8769-063f218a3d28@amlogic.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 03/17] mfd: madera: Add common support for Cirrus Logic
+ Madera codecs
+Date: Sat, 2 Dec 2017 13:10:04 +0100
+Message-ID: <CACRpkdZ4QuOhk1LuGftcFozUKdZ4vFAO3omkQ004k39J=jKL7g@mail.gmail.com>
+References: <20171123171316.10868-1-rf@opensource.wolfsonmicro.com>
+ <fe8064a5-8692-46c1-9f53-ab0a429baeeb@EX17.ad.cirrus.com> <CACRpkdaxKjPd_k8tuO3R4+5LFT4_37zn6ruDRPd5j9xNAH4+Dw@mail.gmail.com>
+ <1eff5a38-cff3-449b-bda4-047f50a9f1d4@EX17.ad.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <15745fd0-1af9-c7c0-8769-063f218a3d28-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1eff5a38-cff3-449b-bda4-047f50a9f1d4-MRjWshV2NDGMZzV0eMwobdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nikesh Oswal <Nikesh.Oswal-UVNVL95qEvAciDkP5Hr2oA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 Nov 2017 21:11:29 +0800
-Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> wrote:
+On Wed, Nov 29, 2017 at 12:36 PM, Richard Fitzgerald
+<rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On 29/11/17 10:18, Linus Walleij wrote:
+>>
+>> On Thu, Nov 23, 2017 at 6:13 PM, Richard Fitzgerald
+>> <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+>>
+>>> +config MFD_MADERA_I2C
+>>> +       bool "Cirrus Logic Madera codecs with I2C"
+>>> +       select MFD_MADERA
+>>> +       select REGMAP_I2C
+>>> +       depends on I2C
+>>> +       depends on PINCTRL
+>>> +       help
+>>> +         Support for the Cirrus Logic Madera platform audio SoC
+>>> +         core functionality controlled via I2C.
+>>> +
+>>> +config MFD_MADERA_SPI
+>>> +       bool "Cirrus Logic Madera codecs with SPI"
+>>> +       select MFD_MADERA
+>>> +       select REGMAP_SPI
+>>> +       depends on SPI_MASTER
+>>> +       depends on PINCTRL
+>>> +       help
+>>> +         Support for the Cirrus Logic Madera platform audio SoC
+>>> +         core functionality controlled via SPI.
+>>
+>>
+>> Why do the I2C and SPI subdrivers depend on PINCTRL?
+>>
+>> They sure don't seem to be using any pinctrl-specific APIs.
+>>
+>
+> They require PINCTRL even if they don't call any functions on it because the
+> chip won't work correctly if there isn't a PINCTRL driver to apply the
+> correct pinmux configuration.
 
-> On 11/11/17 08:37, Jonathan Cameron wrote:
-> > On Tue, 7 Nov 2017 22:36:00 +0100
-> > Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> >   
-> >> Hi Yixun,
-> >>
-> >> On Tue, Nov 7, 2017 at 3:09 PM, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> wrote:  
-> >>> patch [1/4]:
-> >>>   Fix wrong SARADC/SANA clock gate bit in Meson-GXBB/GXL,
-> >>> the published datasheets[4] also has wrong description about this.
-> >>>   This patch should be explicitly merged *before* other patches.
-> >>>
-> >>> patch [2-4/4]:
-> >>>   Drop the "sana" clock from SAR ADC module,    
-> >> I agree with Jerome that patch 2/4 should be applied last.  
-> > 
-> > Let me know when I should take this.
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> >> when I wrote the driver I couldn't get it to work on my GXBB board
-> >> (which unfortunately has died since then) because the clocks were
-> >> disabled (they weren't enabled by the bootloader). people who are
-> >> using an old .dtb would get the same problem again until the clock
-> >> driver is merged
-> >>  
-> >>>   From the hardware perspective, the SAR ADC module doesn't
-> >>> require "sana" clock to wrok. This should apply to all SoC,
-> >>> including meson6,8, GXBB, GXL..    
-> >> thank you for clarifying this!
-> >>  
-> >>> Note: the whole patchset series has been tested at GXL-P212 board,
-> >>> we haven't got any meson6,8 board to test, so I would appreciate
-> >>> if someone (Martin?) could help to confirm it works there.    
-> >> I can test this on a Meson8b and a Meson8m2 board on the weekend -
-> >> I'll let you know about the results
-> >>
-> >>
-> >> Regards
-> >> Martin
-> >> --
-> >> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> >> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html  
-> > 
-> > 
-> > _______________________________________________
-> > linux-amlogic mailing list
-> > linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > http://lists.infradead.org/mailman/listinfo/linux-amlogic
-> > 
-> > .
-> >   
-> 
-> Hi Jonathan Cameron & Kevin Hilman:
-> 
->  since the clk part patch has been applied[1], can we proceed with others?
-> 
-> to Jonathan:
-> I think the iio part(patch [2/4]) should be merged via your iio tree?
-> see [2]
-I've applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.  It also makes sense for me to
-take the dts binding update as it goes with the driver change. 
+Apply the configuration to what? Sorry I don't get it.
 
-Hence I've just left patch 4 for Kevin.  Doesn't matter if this crosses
-with Kevin also taking patch 3 though as it'll get sorted out automatically
-by git later anyway.
+You can't be referring to the internal pin controller of the Madera, since
+that has to come up before its pin controller can even be communicated
+with.
 
-Thanks
+If you mean it is to apply the configuration to the system SoC where
+this coded is connected, this is wrong. There may very well be systems
+which have dedicated pins for the codec, atleast in theory. The fact
+that your reference board needs this is not a universal requirement,
+it should be set up in the machine-specific Kconfig for the reference
+board in that case.
 
-Jonathan
-> 
-> to Kevin:
-> could you take the DTS part? see [3], and the patch [4/4] has a rework
-> version, see [4], to separate dt64 vs dt32 device tree.
-> 
-> 
-> [1]
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005472.html
-> 
-> [2]
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005264.html
-> 
-> [3]
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005265.html
-> 
-> [4]
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005304.html
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005305.html
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005306.html
-> 
-> Yixun
-> 
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
