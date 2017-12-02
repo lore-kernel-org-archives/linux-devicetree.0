@@ -1,70 +1,52 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH V5 7/7] dmaengine: qcom_hidma: Add identity register support
-Date: Fri,  1 Dec 2017 23:27:44 -0500
-Message-ID: <1512188864-773-8-git-send-email-okaya@codeaurora.org>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V5 5/7] ACPI: properties: Implement get_match_data() callback
+Date: Fri,  1 Dec 2017 23:27:42 -0500
+Message-ID: <1512188864-773-6-git-send-email-okaya@codeaurora.org>
 References: <1512188864-773-1-git-send-email-okaya@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512188864-773-1-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512188864-773-1-git-send-email-okaya@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The location for destination event channel register has been relocated from
-offset 0x28 to 0x40. Update the code accordingly.
+Now that we have a get_match_data() callback as part of the firmware node,
+implement the ACPI specific piece for it.
 
-Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- drivers/dma/qcom/hidma.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/acpi/property.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
-index c146c6d..963cc52 100644
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -107,6 +107,7 @@ static void hidma_free(struct hidma_dev *dmadev)
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index e26ea20..49dd50b 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -1271,6 +1271,17 @@ static int acpi_fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+ 	return 0;
+ }
  
- enum hidma_cap {
- 	HIDMA_MSI_CAP = 1,
-+	HIDMA_IDENTITY_CAP,
- };
++static void *acpi_fwnode_get_match_data(const struct fwnode_handle *fwnode,
++					const struct device_driver *drv)
++{
++	struct acpi_device *adev = to_acpi_device_node(fwnode);
++
++	if (!adev)
++		return NULL;
++
++	return acpi_get_match_data(adev, drv->acpi_match_table);
++}
++
+ #define DECLARE_ACPI_FWNODE_OPS(ops) \
+ 	const struct fwnode_operations ops = {				\
+ 		.device_is_available = acpi_fwnode_device_is_available, \
+@@ -1289,6 +1300,7 @@ static int acpi_fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+ 			acpi_fwnode_graph_get_remote_endpoint,		\
+ 		.graph_get_port_parent = acpi_fwnode_get_parent,	\
+ 		.graph_parse_endpoint = acpi_fwnode_graph_parse_endpoint, \
++		.get_match_data = acpi_fwnode_get_match_data,		\
+ 	};								\
+ 	EXPORT_SYMBOL_GPL(ops)
  
- /* process completed descriptors */
-@@ -838,7 +839,10 @@ static int hidma_probe(struct platform_device *pdev)
- 	if (!dmadev->nr_descriptors)
- 		dmadev->nr_descriptors = HIDMA_NR_DEFAULT_DESC;
- 
--	dmadev->chidx = readl(dmadev->dev_trca + 0x28);
-+	if (hidma_test_capability(&pdev->dev, HIDMA_IDENTITY_CAP))
-+		dmadev->chidx = readl(dmadev->dev_trca + 0x40);
-+	else
-+		dmadev->chidx = readl(dmadev->dev_trca + 0x28);
- 
- 	/* Set DMA mask to 64 bits. */
- 	rc = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-@@ -944,7 +948,7 @@ static int hidma_remove(struct platform_device *pdev)
- static const struct acpi_device_id hidma_acpi_ids[] = {
- 	{"QCOM8061"},
- 	{"QCOM8062", HIDMA_MSI_CAP},
--	{"QCOM8063", HIDMA_MSI_CAP},
-+	{"QCOM8063", (HIDMA_MSI_CAP | HIDMA_IDENTITY_CAP)},
- 	{},
- };
- MODULE_DEVICE_TABLE(acpi, hidma_acpi_ids);
-@@ -953,7 +957,8 @@ static int hidma_remove(struct platform_device *pdev)
- static const struct of_device_id hidma_match[] = {
- 	{.compatible = "qcom,hidma-1.0",},
- 	{.compatible = "qcom,hidma-1.1", .data = (void *)(HIDMA_MSI_CAP),},
--	{.compatible = "qcom,hidma-1.2", .data = (void *)(HIDMA_MSI_CAP),},
-+	{.compatible = "qcom,hidma-1.2",
-+	 .data = (void *)(HIDMA_MSI_CAP | HIDMA_IDENTITY_CAP),},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, hidma_match);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
