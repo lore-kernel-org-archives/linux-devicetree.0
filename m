@@ -1,105 +1,165 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4] RFC: net: dsa: Add bindings for Realtek SMI DSAs
-Date: Sat, 2 Dec 2017 13:56:10 +0100
-Message-ID: <CACRpkdYoMVNh8eaTnaDQ59bsh4bC88biLaYSXyhnc4W83PMWzA@mail.gmail.com>
-References: <20171105231909.5599-1-linus.walleij@linaro.org>
- <20171105231909.5599-4-linus.walleij@linaro.org> <20171105234831.GA24822@lunn.ch>
- <CACRpkdbzqnbF49yN-SAqLkhufk=R2C=jpdLo-QWmL0zR_+Vj=w@mail.gmail.com>
- <20171129155627.GD24881@lunn.ch> <CACRpkdZVXgFMiHpyUqw7ONYDcq6Htn3rTMRaBJkzd6T3WtX36A@mail.gmail.com>
- <20171129215659.GC1706@lunn.ch> <CACRpkdbUig-wb9_CnyF7DM4JsHCv4iruKx92wNXDdZtbrr2HoA@mail.gmail.com>
- <f9bfa1e1-7f05-1e2b-6663-09d4d3bf6a12@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 04/13] IIO: inkern: API for manipulating channel
+ attributes
+Date: Sat, 2 Dec 2017 14:46:23 +0000
+Message-ID: <20171202144623.27438bb2@archlinux>
+References: <1512150020-20335-1-git-send-email-arnaud.pouliquen@st.com>
+        <1512150020-20335-5-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <f9bfa1e1-7f05-1e2b-6663-09d4d3bf6a12@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, netdev@vger.kernel.org, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512150020-20335-5-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 30, 2017 at 12:26 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 11/29/2017 03:19 PM, Linus Walleij wrote:
+On Fri, 1 Dec 2017 18:40:11 +0100
+Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org> wrote:
 
->> Or are there in pracice things such that reg is different
->> on the port and the PHY connected to it? Then it makes
->> much sense to put an MDIO bus inside the switch DT
->> node and populate the PHY interrupts from there as you
->> say.
->
-> Yes, I have such systems here, Port 0 has its PHY at MDIO address 5 for
-> instance.
+> Extend the inkern API with functions for reading and writing
+> attribute of iio channels.
+> 
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+> ---
+> V5 to V6 update:
+>  Replace include type.h with iio.h to fix build warning
 
-That explains it.
+Except don't do that.   Consumers should not be able to see the internals
+of iio devices..  Hence instead, move the required enum to types.h please.
 
-> switch@0 {
->         compatible = "acme,switch";
->         #address-cells = <1>;
->         #size-cells = <0>;
->
->         ports {
->
->                 port@0 {
->                         reg = <0>;
->                         phy-handle = <&phy0>;
->                 };
->
->                 port@1 {
->                         reg = <1>;
->                         phy-handle = <&phy1>;
->                 };
->
->                 port@8 {
->                         reg = <8>;
->                         ethernet = = <&eth0>;
->                 };
->         };
->
->         mdio {
->                 compatible = "acme,switch-mdio";
->
->                 phy@0 {
->                         reg = <0>;
->                 };
->
->                 phy@1 {
->                         reg = <1>;
->                 };
->         };
-> };
->
-> That way it's clear which port maps to which PHY, and that the MDIO
-> controller is internal within the switch (and so are the PHYs).
+One other passing comment inline (not one I'm expecting you to do anything
+about!).  Otherwise this is fine with me.
 
-So why not:
+Thanks,
 
-switch@0 {
-        compatible = "acme,switch";
-        #address-cells = <1>;
-        #size-cells = <0>;
+Jonathan
 
-        ports {
+> 
+>  drivers/iio/inkern.c         | 18 +++++++++++++-----
+>  include/linux/iio/consumer.h | 28 +++++++++++++++++++++++++++-
+>  2 files changed, 40 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> index 069defc..f2e7824 100644
+> --- a/drivers/iio/inkern.c
+> +++ b/drivers/iio/inkern.c
+> @@ -664,9 +664,8 @@ int iio_convert_raw_to_processed(struct iio_channel *chan, int raw,
+>  }
+>  EXPORT_SYMBOL_GPL(iio_convert_raw_to_processed);
+>  
+> -static int iio_read_channel_attribute(struct iio_channel *chan,
+> -				      int *val, int *val2,
+> -				      enum iio_chan_info_enum attribute)
+> +int iio_read_channel_attribute(struct iio_channel *chan, int *val, int *val2,
+> +			       enum iio_chan_info_enum attribute)
+>  {
+>  	int ret;
+>  
+> @@ -682,6 +681,8 @@ static int iio_read_channel_attribute(struct iio_channel *chan,
+>  
+>  	return ret;
+>  }
+> +EXPORT_SYMBOL_GPL(iio_read_channel_attribute);
+> +
+>  
+>  int iio_read_channel_offset(struct iio_channel *chan, int *val, int *val2)
+>  {
+> @@ -850,7 +851,8 @@ static int iio_channel_write(struct iio_channel *chan, int val, int val2,
+>  						chan->channel, val, val2, info);
+>  }
+>  
+> -int iio_write_channel_raw(struct iio_channel *chan, int val)
+> +int iio_write_channel_attribute(struct iio_channel *chan, int val, int val2,
+> +				enum iio_chan_info_enum attribute)
+>  {
+>  	int ret;
+>  
+> @@ -860,12 +862,18 @@ int iio_write_channel_raw(struct iio_channel *chan, int val)
+>  		goto err_unlock;
+>  	}
+>  
+> -	ret = iio_channel_write(chan, val, 0, IIO_CHAN_INFO_RAW);
+> +	ret = iio_channel_write(chan, val, val2, attribute);
+>  err_unlock:
+>  	mutex_unlock(&chan->indio_dev->info_exist_lock);
+>  
+>  	return ret;
+>  }
+> +EXPORT_SYMBOL_GPL(iio_write_channel_attribute);
+> +
+> +int iio_write_channel_raw(struct iio_channel *chan, int val)
+> +{
+> +	return iio_write_channel_attribute(chan, val, 0, IIO_CHAN_INFO_RAW);
+> +}
+>  EXPORT_SYMBOL_GPL(iio_write_channel_raw);
+>  
+>  unsigned int iio_get_channel_ext_info_count(struct iio_channel *chan)
+> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+> index 5e347a9..70658b1 100644
+> --- a/include/linux/iio/consumer.h
+> +++ b/include/linux/iio/consumer.h
+> @@ -11,7 +11,7 @@
+>  #define _IIO_INKERN_CONSUMER_H_
+>  
+>  #include <linux/types.h>
+> -#include <linux/iio/types.h>
+> +#include <linux/iio/iio.h>
 
-                port@0 {
-                        reg = <0>;
-                        phy@0 {
-                             reg = <0>;
-                        };
-                };
+Hmm. Not keen on this include as it just exposed the internals
+to IIO consumers which we really don't want to do.
 
-                port@1 {
-                        reg = <1>;
-                        phy@1 {
-                             reg = <1>;
-                        };
-                };
+This is to allow access to the enum iio_chan_info_enum?
+Move it to types.h please.
 
-                port@8 {
-                        reg = <8>;
-                        ethernet = = <&eth0>;
-                };
-        };
+>  
+>  struct iio_dev;
+>  struct iio_chan_spec;
+> @@ -216,6 +216,32 @@ int iio_read_channel_average_raw(struct iio_channel *chan, int *val);
+>  int iio_read_channel_processed(struct iio_channel *chan, int *val);
+>  
+>  /**
+> + * iio_write_channel_attribute() - Write values to the device attribute.
+> + * @chan:	The channel being queried.
+> + * @val:	Value being written.
+> + * @val2:	Value being written.val2 use depends on attribute type.
+> + * @attribute:	info attribute to be read.
+> + *
+> + * Returns an error code or 0.
+> + */
+> +int iio_write_channel_attribute(struct iio_channel *chan, int val,
+> +				int val2, enum iio_chan_info_enum attribute);
+> +
+> +/**
+> + * iio_read_channel_attribute() - Read values from the device attribute.
+> + * @chan:	The channel being queried.
+> + * @val:	Value being written.
+> + * @val2:	Value being written.Val2 use depends on attribute type.
 
-This avoids the cross-referencing of phandles.
+This pretty much highlights that we are still missing a function to allow us
+to query what form write data should be presented in...
 
-Yours,
-Linus Walleii
+Here we have tightly coupled hardware so we know the answer, but in general
+we don't.
+
+Still can be a follow up patch when someone needs it.
+
+> + * @attribute:	info attribute to be written.
+> + *
+> + * Returns an error code if failed. Else returns a description of what is in val
+> + * and val2, such as IIO_VAL_INT_PLUS_MICRO telling us we have a value of val
+> + * + val2/1e6
+> + */
+> +int iio_read_channel_attribute(struct iio_channel *chan, int *val,
+> +			       int *val2, enum iio_chan_info_enum attribute);
+> +
+> +/**
+>   * iio_write_channel_raw() - write to a given channel
+>   * @chan:		The channel being queried.
+>   * @val:		Value being written.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
