@@ -1,122 +1,105 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] pinctrl: Allow indicating loss of pin states
- during low-power
-Date: Sat, 2 Dec 2017 13:48:14 +0100
-Message-ID: <CACRpkdbFHj9pM6R3azVPKgbQ-LMmitEdJHQ5BOEb7Vy=kpNk4A@mail.gmail.com>
-References: <20171102231551.16220-1-f.fainelli@gmail.com> <20171102231551.16220-3-f.fainelli@gmail.com>
- <CACRpkdZtFRB_iy1bDPZ0wkK0jf7pkTGtbZG4gQUJVR+eiO+dhA@mail.gmail.com>
- <20171129170247.GI28152@atomide.com> <96cf5d74-3acf-07b9-9ad8-1011cd99a860@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/4] RFC: net: dsa: Add bindings for Realtek SMI DSAs
+Date: Sat, 2 Dec 2017 13:56:10 +0100
+Message-ID: <CACRpkdYoMVNh8eaTnaDQ59bsh4bC88biLaYSXyhnc4W83PMWzA@mail.gmail.com>
+References: <20171105231909.5599-1-linus.walleij@linaro.org>
+ <20171105231909.5599-4-linus.walleij@linaro.org> <20171105234831.GA24822@lunn.ch>
+ <CACRpkdbzqnbF49yN-SAqLkhufk=R2C=jpdLo-QWmL0zR_+Vj=w@mail.gmail.com>
+ <20171129155627.GD24881@lunn.ch> <CACRpkdZVXgFMiHpyUqw7ONYDcq6Htn3rTMRaBJkzd6T3WtX36A@mail.gmail.com>
+ <20171129215659.GC1706@lunn.ch> <CACRpkdbUig-wb9_CnyF7DM4JsHCv4iruKx92wNXDdZtbrr2HoA@mail.gmail.com>
+ <f9bfa1e1-7f05-1e2b-6663-09d4d3bf6a12@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <96cf5d74-3acf-07b9-9ad8-1011cd99a860-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <f9bfa1e1-7f05-1e2b-6663-09d4d3bf6a12@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, netdev@vger.kernel.org, =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala@gmail.com>, Roman Yeryomin <roman@advem.lv>, Colin Leitner <colin.leitner@googlemail.com>, Gabor Juhos <juhosg@openwrt.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 6:37 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 11/29/2017 09:02 AM, Tony Lindgren wrote:
+On Thu, Nov 30, 2017 at 12:26 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 11/29/2017 03:19 PM, Linus Walleij wrote:
 
->> Hmm well typically a device driver that loses it's context just does
->> save and restore of the registers in runtime PM suspend/resume
->> as needed. In this case it would mean duplicating the state for
->> potentially for hundreds of registers.. So using the existing
->> state in the pinctrl subsystem totally makes sense for the pins.
->>
->> Florian do you have other reasons why this should be done in the
->> pinctrl framework instead of the driver? Might be worth describing
->> the reasoning in the patch descriptions :)
+>> Or are there in pracice things such that reg is different
+>> on the port and the PHY connected to it? Then it makes
+>> much sense to put an MDIO bus inside the switch DT
+>> node and populate the PHY interrupts from there as you
+>> say.
 >
-> The pinctrl provider driver that I am using is pinctrl-single, which has
-> proper suspend/resume callbacks but those are not causing any HW
-> programming to happen because of the (p->state == state) check, hence
-> this patch series.
+> Yes, I have such systems here, Port 0 has its PHY at MDIO address 5 for
+> instance.
 
-So we are talking about these callbacks, correct?
+That explains it.
 
-#ifdef CONFIG_PM
-static int pinctrl_single_suspend(struct platform_device *pdev,
-                                        pm_message_t state)
-{
-        struct pcs_device *pcs;
+> switch@0 {
+>         compatible = "acme,switch";
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>
+>         ports {
+>
+>                 port@0 {
+>                         reg = <0>;
+>                         phy-handle = <&phy0>;
+>                 };
+>
+>                 port@1 {
+>                         reg = <1>;
+>                         phy-handle = <&phy1>;
+>                 };
+>
+>                 port@8 {
+>                         reg = <8>;
+>                         ethernet = = <&eth0>;
+>                 };
+>         };
+>
+>         mdio {
+>                 compatible = "acme,switch-mdio";
+>
+>                 phy@0 {
+>                         reg = <0>;
+>                 };
+>
+>                 phy@1 {
+>                         reg = <1>;
+>                 };
+>         };
+> };
+>
+> That way it's clear which port maps to which PHY, and that the MDIO
+> controller is internal within the switch (and so are the PHYs).
 
-        pcs = platform_get_drvdata(pdev);
-        if (!pcs)
-                return -EINVAL;
+So why not:
 
-        return pinctrl_force_sleep(pcs->pctl);
-}
+switch@0 {
+        compatible = "acme,switch";
+        #address-cells = <1>;
+        #size-cells = <0>;
 
-static int pinctrl_single_resume(struct platform_device *pdev)
-{
-        struct pcs_device *pcs;
+        ports {
 
-        pcs = platform_get_drvdata(pdev);
-        if (!pcs)
-                return -EINVAL;
+                port@0 {
+                        reg = <0>;
+                        phy@0 {
+                             reg = <0>;
+                        };
+                };
 
-        return pinctrl_force_default(pcs->pctl);
-}
-#endif
+                port@1 {
+                        reg = <1>;
+                        phy@1 {
+                             reg = <1>;
+                        };
+                };
 
-Which falls through to this:
+                port@8 {
+                        reg = <8>;
+                        ethernet = = <&eth0>;
+                };
+        };
 
-/**
- * pinctrl_force_sleep() - turn a given controller device into sleep state
- * @pctldev: pin controller device
- */
-int pinctrl_force_sleep(struct pinctrl_dev *pctldev)
-{
-        if (!IS_ERR(pctldev->p) && !IS_ERR(pctldev->hog_sleep))
-                return pinctrl_select_state(pctldev->p, pctldev->hog_sleep);
-        return 0;
-}
-EXPORT_SYMBOL_GPL(pinctrl_force_sleep);
-
-/**
- * pinctrl_force_default() - turn a given controller device into default state
- * @pctldev: pin controller device
- */
-int pinctrl_force_default(struct pinctrl_dev *pctldev)
-{
-        if (!IS_ERR(pctldev->p) && !IS_ERR(pctldev->hog_default))
-                return pinctrl_select_state(pctldev->p, pctldev->hog_default);
-        return 0;
-}
-EXPORT_SYMBOL_GPL(pinctrl_force_default);
-
-So am I right in assuming it is actually the hogs that is your biggest
-problem, and those are the states that get lost over suspend/resume
-that are especially problematic?
-
-I.e. you don't have any problem with any non-hogged pinctrl
-handles, those are handled just fine in the suspend/resume
-paths of the client drivers?
-
-If this is the case, it changes the problem scope slightly.
-
-It is fair that functions named *force* should actually enforce
-programming a state.
-
-So then I would suggest somethin else: break pinctrl_select_state()
-into two:
-
-pinctrl_select_state() that works just like before, checking if
-(p->state == state) but which calls a static function
-pinctrl_select_state_commit() that commits the change unconditonally.
-Then alter pinctrl_force_sleep() and pinctrl_force_sleep() to call
-that function.
-
-This should solve your problem without having to alter the semantics
-of pinctrl_select_state() for everyone.
-
-If you want I can cook a patch to illustrate what I mean so you can
-try it.
+This avoids the cross-referencing of phandles.
 
 Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Linus Walleii
