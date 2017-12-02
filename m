@@ -1,128 +1,212 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH net-next 1/2 v6] net: ethernet: Add DT bindings for the Gemini ethernet
-Date: Sat,  2 Dec 2017 12:06:39 +0100
-Message-ID: <20171202110640.5284-1-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH] pinctrl: gemini: Support drive strength setting
+Date: Sat,  2 Dec 2017 12:23:09 +0100
+Message-ID: <20171202112309.5726-1-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the Gemini ethernet
-controller. It is pretty straight-forward, using standard
-bindings and modelling the two child ports as child devices
-under the parent ethernet controller device.
+The Gemini pin controller can set drive strength for a few
+select groups of pins (not individually). Implement this
+for GMAC0 and 1 (ethernet ports), IDE and PCI.
 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michał Mirosław <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
 Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../bindings/net/cortina,gemini-ethernet.txt       | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+The DT binding part is just using generic bindings, so should be
+pretty uncontroversial.
+---
+ .../bindings/pinctrl/cortina,gemini-pinctrl.txt    |  3 +
+ drivers/pinctrl/pinctrl-gemini.c                   | 81 ++++++++++++++++++++++
+ 2 files changed, 84 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
-new file mode 100644
-index 000000000000..35fa3abd1c73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
-@@ -0,0 +1,92 @@
-+Cortina Systems Gemini Ethernet Controller
-+==========================================
+diff --git a/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
+index d857b67fab72..4346ff2dd8e6 100644
+--- a/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
+@@ -17,6 +17,9 @@ and generic pin config nodes.
+ 
+ Supported configurations:
+ - skew-delay is supported on the Ethernet pins
++- drive-strength with 4, 8, 12 or 16 mA as argument is supported for
++  entire groups on the groups "idegrp", "gmii_gmac0_grp", "gmii_gmac1_grp"
++  and "pcigrp".
+ 
+ Example:
+ 
+diff --git a/drivers/pinctrl/pinctrl-gemini.c b/drivers/pinctrl/pinctrl-gemini.c
+index c11b8f14d841..56db4e77b220 100644
+--- a/drivers/pinctrl/pinctrl-gemini.c
++++ b/drivers/pinctrl/pinctrl-gemini.c
+@@ -67,6 +67,9 @@ struct gemini_pmx {
+  *	elements in .pins so we can iterate over that array
+  * @mask: bits to clear to enable this when doing pin muxing
+  * @value: bits to set to enable this when doing pin muxing
++ * @driving_mask: bitmask for the IO Pad driving register for this
++ *	group, if it supports altering the driving strength of
++ *	its lines.
+  */
+ struct gemini_pin_group {
+ 	const char *name;
+@@ -74,12 +77,14 @@ struct gemini_pin_group {
+ 	const unsigned int num_pins;
+ 	u32 mask;
+ 	u32 value;
++	u32 driving_mask;
+ };
+ 
+ /* Some straight-forward control registers */
+ #define GLOBAL_WORD_ID		0x00
+ #define GLOBAL_STATUS		0x04
+ #define GLOBAL_STATUS_FLPIN	BIT(20)
++#define GLOBAL_IODRIVE		0x10
+ #define GLOBAL_GMAC_CTRL_SKEW	0x1c
+ #define GLOBAL_GMAC0_DATA_SKEW	0x20
+ #define GLOBAL_GMAC1_DATA_SKEW	0x24
+@@ -738,6 +743,7 @@ static const struct gemini_pin_group gemini_3512_pin_groups[] = {
+ 		/* Conflict with all flash usage */
+ 		.value = IDE_PADS_ENABLE | NAND_PADS_DISABLE |
+ 			PFLASH_PADS_DISABLE | SFLASH_PADS_DISABLE,
++		.driving_mask = GENMASK(21, 20),
+ 	},
+ 	{
+ 		.name = "satagrp",
+@@ -753,6 +759,7 @@ static const struct gemini_pin_group gemini_3512_pin_groups[] = {
+ 		.name = "gmii_gmac0_grp",
+ 		.pins = gmii_gmac0_3512_pins,
+ 		.num_pins = ARRAY_SIZE(gmii_gmac0_3512_pins),
++		.driving_mask = GENMASK(17, 16),
+ 	},
+ 	{
+ 		.name = "gmii_gmac1_grp",
+@@ -760,6 +767,7 @@ static const struct gemini_pin_group gemini_3512_pin_groups[] = {
+ 		.num_pins = ARRAY_SIZE(gmii_gmac1_3512_pins),
+ 		/* Bring out RGMII on the GMAC1 pins */
+ 		.value = GEMINI_GMAC_IOSEL_GMAC0_GMAC1_RGMII,
++		.driving_mask = GENMASK(19, 18),
+ 	},
+ 	{
+ 		.name = "pcigrp",
+@@ -767,6 +775,7 @@ static const struct gemini_pin_group gemini_3512_pin_groups[] = {
+ 		.num_pins = ARRAY_SIZE(pci_3512_pins),
+ 		/* Conflict only with GPIO2 */
+ 		.value = PCI_PADS_ENABLE | PCI_CLK_PAD_ENABLE,
++		.driving_mask = GENMASK(23, 22),
+ 	},
+ 	{
+ 		.name = "lpcgrp",
+@@ -1671,6 +1680,7 @@ static const struct gemini_pin_group gemini_3516_pin_groups[] = {
+ 		/* Conflict with all flash usage */
+ 		.value = IDE_PADS_ENABLE | NAND_PADS_DISABLE |
+ 			PFLASH_PADS_DISABLE | SFLASH_PADS_DISABLE,
++		.driving_mask = GENMASK(21, 20),
+ 	},
+ 	{
+ 		.name = "satagrp",
+@@ -1686,6 +1696,7 @@ static const struct gemini_pin_group gemini_3516_pin_groups[] = {
+ 		.name = "gmii_gmac0_grp",
+ 		.pins = gmii_gmac0_3516_pins,
+ 		.num_pins = ARRAY_SIZE(gmii_gmac0_3516_pins),
++		.driving_mask = GENMASK(17, 16),
+ 	},
+ 	{
+ 		.name = "gmii_gmac1_grp",
+@@ -1693,6 +1704,7 @@ static const struct gemini_pin_group gemini_3516_pin_groups[] = {
+ 		.num_pins = ARRAY_SIZE(gmii_gmac1_3516_pins),
+ 		/* Bring out RGMII on the GMAC1 pins */
+ 		.value = GEMINI_GMAC_IOSEL_GMAC0_GMAC1_RGMII,
++		.driving_mask = GENMASK(19, 18),
+ 	},
+ 	{
+ 		.name = "pcigrp",
+@@ -1700,6 +1712,7 @@ static const struct gemini_pin_group gemini_3516_pin_groups[] = {
+ 		.num_pins = ARRAY_SIZE(pci_3516_pins),
+ 		/* Conflict only with GPIO2 */
+ 		.value = PCI_PADS_ENABLE | PCI_CLK_PAD_ENABLE,
++		.driving_mask = GENMASK(23, 22),
+ 	},
+ 	{
+ 		.name = "lpcgrp",
+@@ -2393,9 +2406,77 @@ static int gemini_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	return ret;
+ }
+ 
++static int gemini_pinconf_group_set(struct pinctrl_dev *pctldev,
++				    unsigned selector,
++				    unsigned long *configs,
++				    unsigned num_configs)
++{
++	struct gemini_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
++	const struct gemini_pin_group *grp = NULL;
++	enum pin_config_param param;
++	u32 arg;
++	u32 val;
++	int i;
 +
-+This ethernet controller is found in the Gemini SoC family:
-+StorLink SL3512 and SL3516, also known as Cortina Systems
-+CS3512 and CS3516.
++	if (pmx->is_3512)
++		grp = &gemini_3512_pin_groups[selector];
++	if (pmx->is_3516)
++		grp = &gemini_3516_pin_groups[selector];
 +
-+Required properties:
-+- compatible: must be "cortina,gemini-ethernet"
-+- reg: must contain the global registers and the V-bit and A-bit
-+  memory areas, in total three register sets.
-+- syscon: a phandle to the system controller
-+- #address-cells: must be specified, must be <1>
-+- #size-cells: must be specified, must be <1>
-+- ranges: should be state like this giving a 1:1 address translation
-+  for the subnodes
++	/* First figure out if this group supports configs */
++	if (!grp->driving_mask) {
++		dev_err(pmx->dev, "pin config group \"%s\" does "
++			"not support drive strength setting\n",
++			grp->name);
++		return -EINVAL;
++	}
 +
-+The subnodes represents the two ethernet ports in this device.
-+They are not independent of each other since they share resources
-+in the parent node, and are thus children.
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
 +
-+Required subnodes:
-+- port0: contains the resources for ethernet port 0
-+- port1: contains the resources for ethernet port 1
++		switch (param) {
++		case PIN_CONFIG_DRIVE_STRENGTH:
++			switch (arg) {
++			case 4:
++				val = 0;
++				break;
++			case 8:
++				val = 1;
++				break;
++			case 12:
++				val = 2;
++				break;
++			case 16:
++				val = 3;
++				break;
++			default:
++				dev_err(pmx->dev,
++					"invalid drive strength %d mA\n",
++					arg);
++				return -ENOTSUPP;
++			}
++			val <<= (ffs(grp->driving_mask) - 1);
++			regmap_update_bits(pmx->map, GLOBAL_IODRIVE,
++					   grp->driving_mask,
++					   val);
++			dev_info(pmx->dev,
++				 "set group %s to %d mA drive strength mask %08x val %08x\n",
++				 grp->name, arg, grp->driving_mask, val);
++			break;
++		default:
++			dev_err(pmx->dev, "invalid config param %04x\n", param);
++			return -ENOTSUPP;
++		}
++	}
 +
-+Required subnode properties:
-+- compatible: must be "cortina,gemini-ethernet-port"
-+- reg: must contain two register areas: the DMA/TOE memory and
-+  the GMAC memory area of the port
-+- interrupts: should contain the interrupt line of the port.
-+  this is nominally a level interrupt active high.
-+- resets: this must provide an SoC-integrated reset line for
-+  the port.
-+- clocks: this should contain a handle to the PCLK clock for
-+  clocking the silicon in this port
-+- clock-names: must be "PCLK"
++	return 0;
++}
 +
-+Optional subnode properties:
-+- phy-mode: see ethernet.txt
-+- phy-handle: see ethernet.txt
-+
-+Example:
-+
-+mdio-bus {
-+	(...)
-+	phy0: ethernet-phy@1 {
-+		reg = <1>;
-+		device_type = "ethernet-phy";
-+	};
-+	phy1: ethernet-phy@3 {
-+		reg = <3>;
-+		device_type = "ethernet-phy";
-+	};
-+};
-+
-+
-+ethernet@60000000 {
-+	compatible = "cortina,gemini-ethernet";
-+	reg = <0x60000000 0x4000>, /* Global registers, queue */
-+	      <0x60004000 0x2000>, /* V-bit */
-+	      <0x60006000 0x2000>; /* A-bit */
-+	syscon = <&syscon>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+
-+	gmac0: port0 {
-+		compatible = "cortina,gemini-ethernet-port";
-+		reg = <0x60008000 0x2000>, /* Port 0 DMA/TOE */
-+		      <0x6000a000 0x2000>; /* Port 0 GMAC */
-+		interrupt-parent = <&intcon>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-+		resets = <&syscon GEMINI_RESET_GMAC0>;
-+		clocks = <&syscon GEMINI_CLK_GATE_GMAC0>;
-+		clock-names = "PCLK";
-+		phy-mode = "rgmii";
-+		phy-handle = <&phy0>;
-+	};
-+
-+	gmac1: port1 {
-+		compatible = "cortina,gemini-ethernet-port";
-+		reg = <0x6000c000 0x2000>, /* Port 1 DMA/TOE */
-+		      <0x6000e000 0x2000>; /* Port 1 GMAC */
-+		interrupt-parent = <&intcon>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+		resets = <&syscon GEMINI_RESET_GMAC1>;
-+		clocks = <&syscon GEMINI_CLK_GATE_GMAC1>;
-+		clock-names = "PCLK";
-+		phy-mode = "rgmii";
-+		phy-handle = <&phy1>;
-+	};
-+};
+ static const struct pinconf_ops gemini_pinconf_ops = {
+ 	.pin_config_get = gemini_pinconf_get,
+ 	.pin_config_set = gemini_pinconf_set,
++	.pin_config_group_set = gemini_pinconf_group_set,
+ 	.is_generic = true,
+ };
+ 
 -- 
 2.14.3
 
