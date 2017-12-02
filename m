@@ -1,47 +1,58 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 0/2] Add devicetree for Axentia Nattis
-Date: Sat, 2 Dec 2017 02:05:22 +0100
-Message-ID: <CABxcv=k6K8gRDSRu1r6=mELcOQLcNr6EOQGj0Q0wDXrGa58sqw@mail.gmail.com>
-References: <20171201224425.5477-1-peda@axentia.se>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 06/12] ARM: dts: imx6qdl-aristainetos: Move regulators out
+ of simple-bus
+Date: Sat, 2 Dec 2017 04:47:44 +0100
+Message-ID: <cddb61fa-2662-3ed4-cf0d-71b9c5afd2e0@denx.de>
+References: <1512156285-18451-1-git-send-email-festevam@gmail.com>
+ <1512156285-18451-6-git-send-email-festevam@gmail.com>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171201224425.5477-1-peda@axentia.se>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512156285-18451-6-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Peter,
+Hello fabio,
 
-On Fri, Dec 1, 2017 at 11:44 PM, Peter Rosin <peda@axentia.se> wrote:
-> Hi!
->
-> I'd like to add a devicetree for our Nattis to the kernel. The
-> Nattis is a device for showing departures for public transportation
-> (optionally including a text-to-speech module for the visually
-> impaired).
->
-> I'm a bit unsure if the tfa9879 sound codec binding is needed,
-> but I suppose it belongs in trivial-devices?
->
+Am 01.12.2017 um 20:24 schrieb Fabio Estevam:
+> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> 
+> It is not recommended to place regulator nodes inside simple-bus, so
+> move them out in order to fix the following build warnings with W=1:
+> 
+> arch/arm/boot/dts/imx6dl-aristainetos_4.dtb: Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
 
-There's a DT binding for this device now:
+This is not fixed through this patch.
 
-https://patchwork.ozlabs.org/patch/816157/
+> arch/arm/boot/dts/imx6dl-aristainetos_4.dtb: Warning (unit_address_vs_reg): Node /regulators/regulator@0 has a unit name, but no reg property
+> arch/arm/boot/dts/imx6dl-aristainetos_4.dtb: Warning (unit_address_vs_reg): Node /regulators/regulator@1 has a unit name, but no reg property
+> arch/arm/boot/dts/imx6dl-aristainetos_4.dtb: Warning (unit_address_vs_reg): Node /regulators/regulator@2 has a unit name, but no reg property
+> arch/arm/boot/dts/imx6dl-aristainetos_4.dtb: Warning (unit_address_vs_reg): Node /regulators/regulator@3 has a unit name, but no reg property
+> 
+> Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/imx6qdl-aristainetos.dtsi  | 73 +++++++++++++-------------
+>   arch/arm/boot/dts/imx6qdl-aristainetos2.dtsi | 76 +++++++++++++---------------
+>   2 files changed, 70 insertions(+), 79 deletions(-)
 
-> Cheers,
-> Peter
->
+Beside of the nitpick, Thanks for fixing!
 
-Best regards,
-Javier
+Reviewed-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Tested-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-52   Fax: +49-8142-66989-80   Email: hs-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
