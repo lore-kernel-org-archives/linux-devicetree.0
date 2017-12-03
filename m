@@ -1,42 +1,36 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [RESEND PATCH 2/4] ARM: dts: keystone: Add generic compatible
- string for I2C EEPROM
-Date: Sat, 2 Dec 2017 19:57:57 -0800
-Message-ID: <b98fb17b-289c-4756-cfca-85e633b55354@oracle.com>
-References: <20171124162750.18756-1-javierm@redhat.com>
- <20171124162750.18756-2-javierm@redhat.com>
+From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: configs: keystone_defconfig: Enable few
+ peripheral drivers
+Date: Sat, 2 Dec 2017 20:00:09 -0800
+Message-ID: <fb0c662b-d462-c663-7cf0-443ace3565ba@oracle.com>
+References: <20171123075154.3938-1-vigneshr@ti.com>
+ <20171123075154.3938-7-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171124162750.18756-2-javierm@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171123075154.3938-7-vigneshr-l0cyMroinI0@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Javier Martinez Canillas <javierm@redhat.com>, linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arnd@arndb.de, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, olof@lixom.net, linux-arm-kernel@lists.infradead.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/24/17 8:27 AM, Javier Martinez Canillas wrote:
-> The at24 driver allows to register I2C EEPROM chips using different vendor
-> and devices, but the I2C subsystem does not take the vendor into account
-> when matching using the I2C table since it only has device entries.
+On 11/22/17 11:51 PM, Vignesh R wrote:
+> Enable drivers for QSPI, LEDS, gpio-decoder that are present on 66AK2G EVM
+> and 66AK2G ICE boards.
 > 
-> But when matching using an OF table, both the vendor and device has to be
-> taken into account so the driver defines only a set of compatible strings
-> using the "atmel" vendor as a generic fallback for compatible I2C devices.
-> 
-> So add this generic fallback to the device node compatible string to make
-> the device to match the driver using the OF device ID table.
-> 
-> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 > ---
-> 
-Applied
+Please submit a patch also to enable all these peripherals
+in multi-v7 config. Just enable all remainder
+options enabled in keystone config also in multi-v7.
+
+Am pushing this series to next now.
+
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
