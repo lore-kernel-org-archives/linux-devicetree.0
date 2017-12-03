@@ -1,180 +1,42 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3] usb: xhci: allow imod-interval to be configurable
-Date: Sun, 3 Dec 2017 11:51:03 +0800
-Message-ID: <1512273063.17567.167.camel@mhfsdcap03>
-References: <1512143059-25674-1-git-send-email-awallis@codeaurora.org>
+From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Subject: Re: [RESEND PATCH 2/4] ARM: dts: keystone: Add generic compatible
+ string for I2C EEPROM
+Date: Sat, 2 Dec 2017 19:57:57 -0800
+Message-ID: <b98fb17b-289c-4756-cfca-85e633b55354@oracle.com>
+References: <20171124162750.18756-1-javierm@redhat.com>
+ <20171124162750.18756-2-javierm@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512143059-25674-1-git-send-email-awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171124162750.18756-2-javierm@redhat.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javierm@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arnd@arndb.de, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, olof@lixom.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-12-01 at 10:44 -0500, Adam Wallis wrote:
-> The xHCI driver currently has the IMOD set to 160, which
-> translates to an IMOD interval of 40,000ns (160 * 250)ns
+On 11/24/17 8:27 AM, Javier Martinez Canillas wrote:
+> The at24 driver allows to register I2C EEPROM chips using different vendor
+> and devices, but the I2C subsystem does not take the vendor into account
+> when matching using the I2C table since it only has device entries.
 > 
-> Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
-> introduced a QUIRK for the MTK platform to adjust this interval to 20,
-> which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
-> due to the fact that the MTK controller IMOD interval is 8 times
-> as much as defined in xHCI spec.
+> But when matching using an OF table, both the vendor and device has to be
+> taken into account so the driver defines only a set of compatible strings
+> using the "atmel" vendor as a generic fallback for compatible I2C devices.
 > 
-> Instead of adding more quirk bits for additional platforms, this patch
-> introduces the ability for vendors to set the IMOD_INTERVAL as is
-> optimal for their platform. By using device_property_read_u32() on
-> "imod-interval", the IMOD INTERVAL can be specified in nano seconds. If
-> no interval is specified, the default of 40,000ns (IMOD=160) will be
-> used.
+> So add this generic fallback to the device node compatible string to make
+> the device to match the driver using the OF device ID table.
 > 
-> No bounds checking has been implemented due to the fact that a vendor
-> may have violated the spec and would need to specify a value outside of
-> the max 8,000 IRQs/second limit specified in the xHCI spec.
-> 
-> Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
 > ---
-> changes from v2:
->   * Added PCI default value [Mathias]
->   * Removed xhci-mtk.h from xhci-plat.c [Chunfeng Yun]
->   * Removed MTK quirk from xhci-plat and moved logic to xhci-mtk [Chunfeng]
->   * Updated bindings Documentation to use proper units [Rob Herring]
->   * Added imod-interval description and example to MTK binding documentation
-> changes from v1:
->   * Removed device_property_read_u32() per suggestion from greg k-h
->   * Used ER_IRQ_INTERVAL_MASK in place of (u16) cast
 > 
->  Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 2 ++
->  Documentation/devicetree/bindings/usb/usb-xhci.txt          | 1 +
->  drivers/usb/host/xhci-mtk.c                                 | 9 +++++++++
->  drivers/usb/host/xhci-pci.c                                 | 3 +++
->  drivers/usb/host/xhci-plat.c                                | 4 ++++
->  drivers/usb/host/xhci.c                                     | 7 ++-----
->  drivers/usb/host/xhci.h                                     | 2 ++
->  7 files changed, 23 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> index 3059596..45bbf18 100644
-> --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-> @@ -46,6 +46,7 @@ Optional properties:
->   - pinctrl-names : a pinctrl state named "default" must be defined
->   - pinctrl-0 : pin control group
->  	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> + - imod-interval: Default interval is 5000ns
->  
->  Example:
->  usb30: usb@11270000 {
-> @@ -66,6 +67,7 @@ usb30: usb@11270000 {
->  	usb3-lpm-capable;
->  	mediatek,syscon-wakeup = <&pericfg>;
->  	mediatek,wakeup-src = <1>;
-> +	imod-interval = <10000>;
->  };
->  
->  2nd: dual-role mode with xHCI driver
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index ae6e484..89b68f1 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -29,6 +29,7 @@ Optional properties:
->    - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
->    - usb3-lpm-capable: determines if platform is USB3 LPM capable
->    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-> +  - imod-interval: Default interval is 40000ns
->  
->  Example:
->  	usb@f0931000 {
-> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-> index b62a1d2..278ea3b 100644
-> --- a/drivers/usb/host/xhci-mtk.c
-> +++ b/drivers/usb/host/xhci-mtk.c
-> @@ -674,6 +674,15 @@ static int xhci_mtk_probe(struct platform_device *pdev)
->  
->  	xhci = hcd_to_xhci(hcd);
->  	xhci->main_hcd = hcd;
-> +
-> +	/*
-> +	 * imod_interval is the interrupt modulation value in nanoseconds.
-> +	 * The increment interval is 8 times as much as that defined in
-> +	 * the xHCI spec on MTK's controller.
-> +	 */
-> +	xhci->imod_interval = 5000;
-> +	device_property_read_u32(dev, "imod-interval", &xhci->imod_interval);
-> +
->  	xhci->shared_hcd = usb_create_shared_hcd(driver, dev,
->  			dev_name(dev), hcd);
->  	if (!xhci->shared_hcd) {
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index 7ef1274..efbe57b 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -234,6 +234,9 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
->  	if (!xhci->sbrn)
->  		pci_read_config_byte(pdev, XHCI_SBRN_OFFSET, &xhci->sbrn);
->  
-> +	/* imod_interval is the interrupt modulation value in nanoseconds. */
-> +	xhci->imod_interval = 40000;
-> +
->  	retval = xhci_gen_setup(hcd, xhci_pci_quirks);
->  	if (retval)
->  		return retval;
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 09f164f..b78be87 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -269,6 +269,10 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
->  		xhci->quirks |= XHCI_BROKEN_PORT_PED;
->  
-> +	/* imod_interval is the interrupt modulation value in nanoseconds. */
-> +	xhci->imod_interval = 40000;
-> +	device_property_read_u32(sysdev, "imod-interval", &xhci->imod_interval);
-> +
->  	hcd->usb_phy = devm_usb_get_phy_by_phandle(sysdev, "usb-phy", 0);
->  	if (IS_ERR(hcd->usb_phy)) {
->  		ret = PTR_ERR(hcd->usb_phy);
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index 2424d30..0b7755b 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -586,11 +586,8 @@ int xhci_run(struct usb_hcd *hcd)
->  			"// Set the interrupt modulation register");
->  	temp = readl(&xhci->ir_set->irq_control);
->  	temp &= ~ER_IRQ_INTERVAL_MASK;
-> -	/*
-> -	 * the increment interval is 8 times as much as that defined
-> -	 * in xHCI spec on MTK's controller
-> -	 */
-> -	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
-> +	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
-> +
->  	writel(temp, &xhci->ir_set->irq_control);
->  
->  	/* Set the HCD state before we enable the irqs */
-> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> index 99a014a..2a4177b 100644
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -1717,6 +1717,8 @@ struct xhci_hcd {
->  	u8		max_interrupters;
->  	u8		max_ports;
->  	u8		isoc_threshold;
-> +	/* imod_interval in ns (I * 250ns) */
-> +	u32		imod_interval;
->  	int		event_ring_max;
->  	/* 4KB min, 128MB max */
->  	int		page_size;
-
-Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-Thanks
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied
