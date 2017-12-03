@@ -1,96 +1,41 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: [PATCH v2 3/4] thermal: armada: add support for CP110
-Date: Sun,  3 Dec 2017 13:11:23 +0200
-Message-ID: <d48c916a2502f9c75e9ea4ba41300e2ffbb254d8.1512299484.git.baruch@tkos.co.il>
-References: <f8c589337a4fb78852eadf15058e8f8d132d4dc0.1512299484.git.baruch@tkos.co.il>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: net: Add DT bindings for Socionext Netsec
+Date: Sun, 3 Dec 2017 17:14:02 +0530
+Message-ID: <CABb+yY02wuB-otHwkpFKs349D0L_Cr18zAynEn87=EoQmXPDew@mail.gmail.com>
+References: <1512058351-15851-1-git-send-email-jassisinghbrar@gmail.com> <CAKv+Gu-A4yWTPRcXk8VAbnXYQpw+p4ExmwiVGs4cL7Ye2hwWOw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f8c589337a4fb78852eadf15058e8f8d132d4dc0.1512299484.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+In-Reply-To: <CAKv+Gu-A4yWTPRcXk8VAbnXYQpw+p4ExmwiVGs4cL7Ye2hwWOw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "<netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The CP110 component is integrated in the Armada 8k and 7k lines of processors.
+On Fri, Dec 1, 2017 at 2:42 PM, Ard Biesheuvel
+<ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Jassi,
+>
+> On 30 November 2017 at 16:12,  <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> This patch adds documentation for Device-Tree bindings for the
+>> Socionext NetSec Controller driver.
+>>
+>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> No need to keep my signoff here: if you are posting the patch, your
+> signoff should come last. (Authorship is no factor here, only the path
+> taken by the patch from the author/copyright holder to the sender of
+> the email)
+>
+Thanks for pointing out.
 
-This patch also adds an option of offset to the MSB of the control
-register. The existing DT binding for Armada 38x refers to a single 32 bit
-control register. It turns out that this is actually only the MSB of the
-control area. Changing the binding to fix that would break existing DT files,
-so the Armada 38x binding is left as is.
+This patch is unchanged since I picked from your tree, so it remained
+as such. The other patches do have my sob as second.
 
-The new CP110 binding increases the size of the control area to 64 bits, thus
-moving the MSB to offset 4.
-
-Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
----
-v2: No change
----
- drivers/thermal/armada_thermal.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-index 0eb82097571f..59b75f63945d 100644
---- a/drivers/thermal/armada_thermal.c
-+++ b/drivers/thermal/armada_thermal.c
-@@ -73,6 +73,7 @@ struct armada_thermal_data {
- 	unsigned int temp_shift;
- 	unsigned int temp_mask;
- 	unsigned int is_valid_shift;
-+	unsigned int control_msb_offset;
- };
- 
- static void armadaxp_init_sensor(struct platform_device *pdev,
-@@ -142,12 +143,14 @@ static void armada375_init_sensor(struct platform_device *pdev,
- static void armada380_init_sensor(struct platform_device *pdev,
- 				  struct armada_thermal_priv *priv)
- {
--	unsigned long reg = readl_relaxed(priv->control);
-+	void __iomem *control_msb =
-+		priv->control + priv->data->control_msb_offset;
-+	unsigned long reg = readl_relaxed(control_msb);
- 
- 	/* Reset hardware once */
- 	if (!(reg & A380_HW_RESET)) {
- 		reg |= A380_HW_RESET;
--		writel(reg, priv->control);
-+		writel(reg, control_msb);
- 		mdelay(10);
- 	}
- }
-@@ -266,6 +269,19 @@ static const struct armada_thermal_data armada_ap806_data = {
- 	.signed_sample = true,
- };
- 
-+static const struct armada_thermal_data armada_cp110_data = {
-+	.is_valid = armada_is_valid,
-+	.init_sensor = armada380_init_sensor,
-+	.is_valid_shift = 10,
-+	.temp_shift = 0,
-+	.temp_mask = 0x3ff,
-+	.control_msb_offset = 4,
-+	.coef_b = 1172499100UL,
-+	.coef_m = 2000096UL,
-+	.coef_div = 4201,
-+	.inverted = true,
-+};
-+
- static const struct of_device_id armada_thermal_id_table[] = {
- 	{
- 		.compatible = "marvell,armadaxp-thermal",
-@@ -287,6 +303,10 @@ static const struct of_device_id armada_thermal_id_table[] = {
- 		.compatible = "marvell,armada-ap806-thermal",
- 		.data       = &armada_ap806_data,
- 	},
-+	{
-+		.compatible = "marvell,armada-cp110-thermal",
-+		.data       = &armada_cp110_data,
-+	},
- 	{
- 		/* sentinel */
- 	},
--- 
-2.15.0
-
+Thanks
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
