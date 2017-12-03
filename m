@@ -1,118 +1,37 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v5.1 1/2] ARM64: dts: meson-gx: use stable UART bindings
- with correct gate clock
-Date: Sun, 3 Dec 2017 15:15:34 +0100
-Message-ID: <4e0d1db1-6382-a4b7-d112-3e45e0c1af2d@suse.de>
-References: <1498056132-18508-1-git-send-email-narmstrong@baylibre.com>
- <1498056132-18508-2-git-send-email-narmstrong@baylibre.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v4 1/2] Input: Add driver for Cypress Generation 5
+ touchscreen
+Date: Sun, 3 Dec 2017 22:29:41 +0800
+Message-ID: <201712032240.trhmgx8Y%fengguang.wu@intel.com>
+References: <20171201153957.13053-2-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498056132-18508-2-git-send-email-narmstrong@baylibre.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, Helmut Klein <hgkr.klein@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171201153957.13053-2-mylene.josserand@free-electrons.com>
+Sender: linux-input-owner@vger.kernel.org
+Cc: kbuild-all@01.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Myl�ne,
 
-Am 21.06.2017 um 16:42 schrieb Neil Armstrong:
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-> index 17d3efd..ea53cc2 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-> @@ -682,6 +682,31 @@
->  	clocks = <&clkc CLKID_SPI>;
->  };
->  
-> +&uart_A {
-> +	clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
-> +	clock-names = "xtal", "pclk", "baud";
-> +};
-> +
-> +&uart_AO {
-> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-> +	clock-names = "xtal", "pclk", "baud";
-> +};
-> +
-> +&uart_AO_B {
-> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-> +	clock-names = "xtal", "pclk", "baud";
-> +};
-> +
-> +&uart_B {
-> +	clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-> +	clock-names = "xtal", "core", "baud";
+Thank you for the patch! Perhaps something to improve:
 
-Looking at the meson_uart driver, it only looks for a "pclk" clock,
-never for "core", and the only unnamed clock used should be the first.
+[auto build test WARNING on input/next]
+[also build test WARNING on v4.15-rc1 next-20171201]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-There is no bindings documentation for "core", so I assume this was an
-oversight and should be "pclk" everywhere?
+url:    https://github.com/0day-ci/linux/commits/Myl-ne-Josserand/Input-Add-driver-for-Cypress-Generation-5-touchscreen/20171203-203557
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
 
-> +};
-> +
-> +&uart_C {
-> +	clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
-> +	clock-names = "xtal", "core", "baud";
-> +};
 
-The issue I'm facing is that uart_C on NanoPi K2 is not working in
-4.14.1. To my surprise it appears to be probing okay though.
+coccinelle warnings: (new ones prefixed by >>)
 
-Sadly just overwriting the clock-names property via overlay does not fix
-my issue. Any ideas?
+>> drivers/input/touchscreen/cyttsp5.c:1098:3-8: No need to set .owner here. The core will do it.
 
-> +
->  &vpu {
->  	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
->  };
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> index 8d4f316..9e67444 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> @@ -623,6 +623,31 @@
->  	clocks = <&clkc CLKID_SPI>;
->  };
->  
-> +&uart_A {
-> +	clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
-> +	clock-names = "xtal", "core", "baud";
+Please review and possibly fold the followup patch.
 
-Same issue spotted here and below.
-
-> +};
-> +
-> +&uart_AO {
-> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-> +	clock-names = "xtal", "pclk", "baud";
-> +};
-> +
-> +&uart_AO_B {
-> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-> +	clock-names = "xtal", "pclk", "baud";
-> +};
-> +
-> +&uart_B {
-> +	clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-> +	clock-names = "xtal", "core", "baud";
-> +};
-> +
-> +&uart_C {
-> +	clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
-> +	clock-names = "xtal", "core", "baud";
-> +};
-> +
->  &vpu {
->  	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
->  };
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
