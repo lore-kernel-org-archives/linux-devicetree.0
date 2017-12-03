@@ -1,82 +1,118 @@
-From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 4/6] dt: bindings: lp8860: Update the bindings to the
- standard
-Date: Sun, 3 Dec 2017 14:27:20 +0100
-Message-ID: <a07f883c-4c4c-780d-2dac-f023907a2629@gmail.com>
-References: <20171201165613.10358-1-dmurphy@ti.com>
- <20171201165613.10358-4-dmurphy@ti.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v5.1 1/2] ARM64: dts: meson-gx: use stable UART bindings
+ with correct gate clock
+Date: Sun, 3 Dec 2017 15:15:34 +0100
+Message-ID: <4e0d1db1-6382-a4b7-d112-3e45e0c1af2d@suse.de>
+References: <1498056132-18508-1-git-send-email-narmstrong@baylibre.com>
+ <1498056132-18508-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171201165613.10358-4-dmurphy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498056132-18508-2-git-send-email-narmstrong@baylibre.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, Helmut Klein <hgkr.klein@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Dan,
+Hi,
 
-On 12/01/2017 05:56 PM, Dan Murphy wrote:
-> Update the lp8860 dt binding to the LED standard where
-> the LED should have a child node and also adding a
-> LED trigger entry.
-> 
-> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-> ---
-> 
-> v6 - New patch to fix binding documentation
-> 
->  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-> index aad38dd94d4b..4cf396de6eba 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-> +++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-> @@ -12,17 +12,24 @@ Required properties:
->  	- label - Used for naming LEDs
+Am 21.06.2017 um 16:42 schrieb Neil Armstrong:
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> index 17d3efd..ea53cc2 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -682,6 +682,31 @@
+>  	clocks = <&clkc CLKID_SPI>;
+>  };
 >  
->  Optional properties:
-> -	- enable-gpio - gpio pin to enable/disable the device.
-> -	- supply - "vled" - LED supply
-> +	- enable-gpios : gpio pin to enable/disable the device.
-> +	- vled-supply : LED supply
-> +	- label : see Documentation/devicetree/bindings/leds/common.txt
-> +	- linux,default-trigger : (optional)
-> +	   see Documentation/devicetree/bindings/leds/common.txt
->  
->  Example:
->  
-> -leds: leds@6 {
-> +lp8860@2d {
->  	compatible = "ti,lp8860";
->  	reg = <0x2d>;
-> -	label = "display_cluster";
->  	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->  	vled-supply = <&vbatt>;
+> +&uart_A {
+> +	clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
+> +	clock-names = "xtal", "pclk", "baud";
+> +};
 > +
-> +	backlight: backlight@0 {
-> +		label = "backlight_cluster";
+> +&uart_AO {
+> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +	clock-names = "xtal", "pclk", "baud";
+> +};
+> +
+> +&uart_AO_B {
+> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +	clock-names = "xtal", "pclk", "baud";
+> +};
+> +
+> +&uart_B {
+> +	clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
+> +	clock-names = "xtal", "core", "baud";
 
-You'll need to change this to:
+Looking at the meson_uart driver, it only looks for a "pclk" clock,
+never for "core", and the only unnamed clock used should be the first.
 
-label = "white:backlight_cluster"
+There is no bindings documentation for "core", so I assume this was an
+oversight and should be "pclk" everywhere?
 
-Please always cc your patches with DT bindings to
-devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org and related maintainers.
+> +};
+> +
+> +&uart_C {
+> +	clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
+> +	clock-names = "xtal", "core", "baud";
+> +};
 
-> +		linux,default-trigger = "backlight";
-> +	};
->  }
+The issue I'm facing is that uart_C on NanoPi K2 is not working in
+4.14.1. To my surprise it appears to be probing okay though.
+
+Sadly just overwriting the clock-names property via overlay does not fix
+my issue. Any ideas?
+
+> +
+>  &vpu {
+>  	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
+>  };
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> index 8d4f316..9e67444 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> @@ -623,6 +623,31 @@
+>  	clocks = <&clkc CLKID_SPI>;
+>  };
 >  
->  For more product information please see the link below:
-> 
+> +&uart_A {
+> +	clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
+> +	clock-names = "xtal", "core", "baud";
+
+Same issue spotted here and below.
+
+> +};
+> +
+> +&uart_AO {
+> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +	clock-names = "xtal", "pclk", "baud";
+> +};
+> +
+> +&uart_AO_B {
+> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+> +	clock-names = "xtal", "pclk", "baud";
+> +};
+> +
+> +&uart_B {
+> +	clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
+> +	clock-names = "xtal", "core", "baud";
+> +};
+> +
+> +&uart_C {
+> +	clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
+> +	clock-names = "xtal", "core", "baud";
+> +};
+> +
+>  &vpu {
+>  	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
+>  };
+
+Regards,
+Andreas
 
 -- 
-Best regards,
-Jacek Anaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
