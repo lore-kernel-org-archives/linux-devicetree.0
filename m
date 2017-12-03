@@ -1,42 +1,35 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: net: Add DT bindings for Socionext Netsec
-Date: Sun, 3 Dec 2017 17:14:02 +0530
-Message-ID: <CABb+yY02wuB-otHwkpFKs349D0L_Cr18zAynEn87=EoQmXPDew@mail.gmail.com>
-References: <1512058351-15851-1-git-send-email-jassisinghbrar@gmail.com> <CAKv+Gu-A4yWTPRcXk8VAbnXYQpw+p4ExmwiVGs4cL7Ye2hwWOw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Add missing interrupt-controller
+ properties to Exynos5410 PMU
+Date: Sun, 3 Dec 2017 13:07:27 +0100
+Message-ID: <20171203120727.f32ynwpgploef7eu@kozik-lap>
+References: <20171129183610.26305-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKv+Gu-A4yWTPRcXk8VAbnXYQpw+p4ExmwiVGs4cL7Ye2hwWOw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "<netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171129183610.26305-1-krzk@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 1, 2017 at 2:42 PM, Ard Biesheuvel
-<ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hi Jassi,
->
-> On 30 November 2017 at 16:12,  <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> This patch adds documentation for Device-Tree bindings for the
->> Socionext NetSec Controller driver.
->>
->> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> No need to keep my signoff here: if you are posting the patch, your
-> signoff should come last. (Authorship is no factor here, only the path
-> taken by the patch from the author/copyright holder to the sender of
-> the email)
->
-Thanks for pointing out.
+On Wed, Nov 29, 2017 at 07:36:10PM +0100, Krzysztof Kozlowski wrote:
+> PMU (system-controller@10040000) is used as interrupt-parent for certain
+> nodes thus it should be marked as interrupt-controller to silence
+> warnings when building Exynos5410-based DTBs:
+> 
+>   arch/arm/boot/dts/exynos5410-odroidxu.dtb: Warning (interrupts_property):
+>     Missing interrupt-controller or interrupt-map property in /soc/system-controller@10040000
+>   arch/arm/boot/dts/exynos5410-odroidxu.dtb: Warning (interrupts_property):
+>     Missing #interrupt-cells in interrupt-parent /soc/system-controller@10040000
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos5410.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
 
-This patch is unchanged since I picked from your tree, so it remained
-as such. The other patches do have my sob as second.
+For the record, applied.
 
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
