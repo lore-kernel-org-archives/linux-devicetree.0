@@ -1,33 +1,101 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4] usb: xhci: allow imod-interval to be configurable
-Date: Mon, 4 Dec 2017 09:49:41 -0600
-Message-ID: <674b566f-bc82-8b07-a632-a9705e1db96f@codeaurora.org>
-References: <1512397671-28733-1-git-send-email-awallis@codeaurora.org>
- <9cb2e5fc-1bec-c19c-c04e-fe56e5c1bc16@codeaurora.org>
- <2b252975-bf1f-7468-071e-f4a4aa2430a0@codeaurora.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 0/4] Move DP phy switch to PHY driver
+Date: Mon, 4 Dec 2017 08:08:31 -0800
+Message-ID: <CAD=FV=XVCCbh6P-WweccyKiNy2RJRhqY-6gpf7BVkY4oqdDZbg@mail.gmail.com>
+References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
+ <1941891.vosvJnn3h1@phil>
+ <8042d73f-c1de-da41-9066-2377de1f521c@rock-chips.com>
+ <4091462.xo23GTqF41@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2b252975-bf1f-7468-071e-f4a4aa2430a0-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4091462.xo23GTqF41@diego>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, dri-devel@lists.freedesktop.org, Guenter Roeck <groeck@chromium.org>, Chris Zhong <zyw@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Jianqun Xu <jay.xu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, William wu <wulf@rock-chips.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@chromium.org>, David Wu <david.wu@rock-chips.com>, Enric Balletbo i Serra <enric.balletb>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2017 09:48 AM, Adam Wallis wrote:
-> As noted in the patch description, xhci-plat devices will use a default of
-> 40,000, while MTK devices will use a default of 5,000. This is also documented
-> in the probe for each relevant driver. This is further confirmed in the
-> description for each driver's binding TXT file.
-
-Serves me right for reviewing patches before I've had my morning coffee.
-
--- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpPbiBTdW4sIERlYyAzLCAyMDE3IGF0IDExOjQ2IFBNLCBIZWlrbyBTdMO8Ym5lciA8aGVp
+a29Ac250ZWNoLmRlPiB3cm90ZToKPiBIaSBDaHJpcywKPgo+IEFtIE1vbnRhZywgNC4gRGV6ZW1i
+ZXIgMjAxNywgMTA6NDc6MDggQ0VUIHNjaHJpZWIgQ2hyaXMgWmhvbmc6Cj4+IE9uIDIwMTflubQx
+MuaciDAy5pelIDA1OjU4LCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPj4gPiBBbSBGcmVpdGFnLCAx
+LiBEZXplbWJlciAyMDE3LCAxMzo0Mjo0NiBDRVQgc2NocmllYiBEb3VnIEFuZGVyc29uOgo+PiA+
+PiBIaSwKPj4gPj4KPj4gPj4gT24gV2VkLCBOb3YgMjksIDIwMTcgYXQgNjoyNyBQTSwgQ2hyaXMg
+WmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4+ID4+PiBIaSBEb3VnCj4+ID4+Pgo+
+PiA+Pj4gVGhhbmsgeW91IGZvciBtZW50aW9uaW5nIHRoaXMgcGF0Y2guCj4+ID4+Pgo+PiA+Pj4g
+SSB0aGluayB0aGUgZm9jdXMgb2YgdGhlIGRpc2N1c3Npb24gaXM6IGNhbiB3ZSBwdXQgdGhlIGdy
+ZiBjb250cm9sIGJpdAo+PiA+Pj4gdG8KPj4gPj4+IGR0cy4KPj4gPj4+Cj4+ID4+PiBUaGUgUksz
+Mzk5IGhhcyAyIFR5cGUtQyBwaHksIGJ1dCBvbmx5IG9uZSBEUCBjb250cm9sbGVyLCB0aGlzCj4+
+ID4+PiAidXBoeV9kcF9zZWwiCj4+ID4+Pgo+PiA+Pj4gY2FuIGhlbHAgdG8gc3dpdGNoIHRoZXNl
+IDIgcGh5LiBTbyBJIHRoaW5rIHRoaXMgYml0IGNhbiBiZSBjb25zaWRlcmVkIGFzCj4+ID4+PiBh
+Cj4+ID4+PiBwYXJ0IG9mCj4+ID4+Pgo+PiA+Pj4gVHlwZS1DIHBoeSwgdGhlc2UgMiBwaHkgaGF2
+ZSBkaWZmZXJlbnQgYml0cywganVzdCBzaW1pbGFyIHRvIG90aGVyIGJpdHMKPj4gPj4+IChzdWNo
+IGFzICJwaXBlLXN0YXR1cyIpLgo+PiA+Pj4KPj4gPj4+IFB1dCB0aGVtIHRvIERUUyBmaWxlIG1p
+Z2h0IGJlIGEgYWNjZXB0ZWQgcHJhY3RpY2UuCj4+ID4+Cj4+ID4+IEkgZ3Vlc3MgdGhlIGZpcnN0
+IHN0ZXAgd291bGQgYmUgZmluZGluZyB0aGUgcGVyc29uIHRvIG1ha2UgYSBkZWNpc2lvbi4KPj4g
+Pj4gSXMgdGhhdCBIZWlrbz8gIE9sb2Y/ICBLaXNob24/ICBSb2I/LiAgQXMgSSBzZWUgaXQgdGhl
+cmUgYXJlIGEgZmV3Cj4+ID4+IG9wdGlvbnM6Cj4+ID4+Cj4+ID4+IDEuIExhbmQgdGhpcyBzZXJp
+ZXMgYXMtaXMuICBUaGlzIG1ha2VzIHRoZSBuZXcgYml0IHdvcmsganVzdCBsaWtlIGFsbAo+PiA+
+PiB0aGUgb3RoZXIgb25lcyBuZXh0IHRvIGl0LiAgSWYgYW55b25lIGhhcHBlbnMgdG8gdHJ5IHRv
+IHVzZSBhbiBvbGQKPj4gPj4gZGV2aWNlIHRyZWUgb24gYSBuZXcga2VybmVsIHRoZXknbGwgYnJl
+YWsuICBTZWVtcyByYXRoZXIgdW5saWtlbHkKPj4gPj4gZ2l2ZW4gdGhhdCB0aGUgd2hvbGUgdHlw
+ZSBDIFBIWSBpcyBub3QgcmVhbGx5IGZ1bGx5IGZ1bmN0aW9uYWwKPj4gPj4gdXBzdHJlYW0sIGJ1
+dCB0ZWNobmljYWxseSB0aGlzIGlzIGEgbm8tbm8gZnJvbSBhIGRldmljZSB0cmVlCj4+ID4+IHBl
+cnNwZWN0aXZlLgo+PiA+Pgo+PiA+PiAyLiBDaGFuZ2UgdGhlIHNlcmllcyB0byBtYWtlIHRoaXMg
+cHJvcGVydHkgb3B0aW9uYWwuICBJZiBpdCdzIG5vdAo+PiA+PiB0aGVyZSB0aGVuIHRoZSBjb2Rl
+IGJlaGF2ZXMgbGlrZSBpdCBhbHdheXMgZGlkLiAgVGhpcyB3b3VsZCBhZGRyZXNzCj4+ID4+IHRo
+ZSAiY29tcGF0aWJpbGl0eSIgcHJvYmxlbSBidXQgbGlrZWx5IHdvdWxkbid0IGFjdHVhbGx5IGhl
+bHAgYW55IHJlYWwKPj4gPj4gcGVvcGxlLCBhbmQgaXQgd291bGQgYmUgZXh0cmEgd29yay4KPj4g
+Pj4KPj4gPj4gMy4gUmVkbyB0aGUgZHJpdmVyIHRvIGRlcHJlY2F0ZSBhbGwgdGhlIG9sZCBvZmZz
+ZXRzIC8gYml0cyBhbmQganVzdAo+PiA+PiBwdXQgdGhlIHRhYmxlIGluIHRoZSBkcml2ZXIsIGtl
+eWVkIG9mZiB0aGUgY29tcGF0aWJsZSBzdHJpbmcgYW5kIGJhc2UKPj4gPj4gYWRkcmVzcyBpZiB0
+aGUgSU8gbWVtb3J5Lgo+PiA+Pgo+PiA+Pgo+PiA+PiBJIGNhbid0IG1ha2UgdGhpcyBkZWNpc2lv
+bi4gIEl0J3MgdXAgdG8gdGhvc2UgZm9sa3Mgd2hvIHdvdWxkIGJlCj4+ID4+IGxhbmRpbmcgdGhl
+IHBhdGNoIGFuZCBJJ2QgYmUgaGFwcHkgd2l0aCBhbnkgb2YgdGhlbS4gIFdoYXQgSSdtIGxlc3MK
+Pj4gPj4gaGFwcHkgd2l0aCwgaG93ZXZlciwgaXMgdGhlIGluZGVjaXNpb24gcHJldmVudGluZyBm
+b3J3YXJkIHByb2dyZXNzLgo+PiA+PiBXZSBzaG91bGQgcGljayBvbmUgb2YgdGhlIGFib3ZlIHRo
+aW5ncyBhbmQgbGFuZCBpdC4gIE15IG93biBwZXJzb25hbAo+PiA+PiBiaWFzIGlzICMxOiBqdXN0
+IGxhbmQgdGhlIHNlcmllcy4gIE5vIHJlYWwgcGVvcGxlIHdpbGwgYmUgaHVydCBhbmQKPj4gPj4g
+aXQncyBqdXN0IGFkZGluZyBhbm90aGVyIHByb3BlcnR5IHRoYXQgbWF0Y2hlcyB0aGUgb25lcyBu
+ZXh0IHRvIGl0Lgo+PiA+Cj4+ID4gSSdkIHNlY29uZCB0aGF0ICMxIC4gVGhhdCB3aG9sZSB0eXBl
+LWMgcGh5IHRoaW5neSBuZXZlciBmdWxseSB3b3JrZWQgaW4KPj4gPiB0aGUgcGFzdCAoc29tZSBm
+b3IgdGhlIG5ldmVyIHVzZWQgZHAgb3V0cHV0KSwgc28gcGVyc29uYWxseSBJIGRvbid0IGhhdmUK
+Pj4gPiBpc3N1ZXMgd2l0aCBnb2luZyB0aGF0IHJvdXRlLgo+PiA+Cj4+ID4+ICBGcm9tIGEgbG9u
+ZyB0ZXJtIHBlcnNwZWN0aXZlIChBS0EgaG93IEknZCB3cml0ZSB0aGUgbmV4dCBkcml2ZXIgbGlr
+ZQo+PiA+Pgo+PiA+PiB0aGlzKSBJIHBlcnNvbmFsbHkgbGVhbiB0b3dhcmRzIHRvICJ0YWJsZXMg
+aW4gdGhlIGRyaXZlciwgbm90IGluIHRoZQo+PiA+PiBkZXZpY2UgdHJlZSIgYnV0IHF1aXRlIGhv
+bmVzdGx5IEknbSBoYXBweSB0byB0YWtlIHdoYXRldmVyIGRpcmVjdGlvbgo+PiA+PiB0aGUgbWFp
+bnRhaW5lcnMgZ2l2ZS4KPj4gPgo+PiA+IEl0IGxvb2tzIGxpa2Ugd2UncmUgaW4gYWdyZWVtZW50
+IGhlcmUgOi0pIC4gR1JGIHN0dWZmIHNob3VsZCBub3QgbGVhayBpbnRvCj4+ID4gdGhlIGRldmlj
+ZXRyZWUsIGFzIGl0IGNhdXNlcyBlbmRsZXNzIGhlYWRhY2hlcyBsYXRlci4gQnV0IEkgZ3Vlc3Mg
+d2UnbGwKPj4gPiBuZWVkIHRvIGxpdmUgd2l0aCB0aGUgb25lcyB0aGF0IGhhcHBlbmVkIHNvIGZh
+ci4KPj4KPj4gU28sIHRoZSBmaXJzdCBzdGVwIGlzOiBtb3ZlIGFsbCB0aGUgcHJpdmF0ZSBwcm9w
+ZXJ0eSBvZiB0Y3BoeSB0bwo+PiBkcml2ZXJzL3BoeS9yb2NrY2hpcC9waHktcm9ja2NoaXAtdHlw
+ZWMuYy4KPj4gU2Vjb25kIHN0ZXA6IG5ldyBhIG1lbWJlcjogdXBoeS1kcC1zZWwuCj4+IEluIG15
+IG1pbmQsIHdlIHNob3VsZCBoYXZlIGRpc2N1c3NlZCB0aGVzZSBwcm9wZXJ0aWVzIGJlZm9yZSwg
+YW5kIHRoZW4gSQo+PiBtb3ZlZCB0aGVtIGFsbCBpbnRvIERUUy4KPgo+IEFjdHVhbGx5LCBJIHdh
+cyBhZ3JlZWluZyB3aXRoIERvdWcsIHRoYXQgd2UgcHJvYmFibHkgZG9uJ3QgbmVlZCB0byByZXdv
+cmsgdGhlCj4gdHlwZS1jIHBoeSBkcml2ZXIuIEFzIG1vc3QgcHJvcGVydGllcyBmb3IgaXQgYXJl
+IGluIHRoZSBkZXZpY2V0cmVlIHJpZ2h0IG5vdwo+IHdlJ2xsIG5lZWQgdG8gc3VwcG9ydCB0aGVt
+IGZvciBiYWNrd2FyZHMtY29tcGF0aWJsaXR5IGFueXdheS4KPgo+IEFuZCB5ZXMsIHRoZXJlIHBy
+b2JhYmx5IHdhcyBkaXNjdXNzaW9uIG92ZXIgZHRzIHZzLiBkcml2ZXItdGFibGUgd2hlbiB0aGUK
+PiB0eXBlLWMgZHJpdmVyIHdhcyBpbnRyb2R1Y2VkLCBidXQgSSBlaXRoZXIgbWlzc2VkIGl0IG9y
+IHdhc24ndCBmaXJtIGVub3VnaAo+IGJhY2sgdGhlbiA7LSkgLgo+Cj4gSGVuY2UgdGhlICJ3ZSds
+bCBuZWVkIHRvIGxpdmUgd2l0aCBpdCIgZm9yIHRoZSB0eXBlLWMgcGh5LCBidXQgc2hvdWxkIG5v
+dAo+IGRvIHNpbWlsYXIgdGhpbmdzIGluIGZ1dHVyZSBkcml2ZXJzLgoKU28gSSBndWVzcyBub3cg
+d2UncmUganVzdCB3YWl0aW5nIGZvciBzb21lIGFncmVlbWVudCBmcm9tIEtpc2hvbiB0aGF0Cmhl
+J3Mgd2lsbGluZyB0byBsYW5kIHRoZSBQSFkgY2hhbmdlPyAgSGVpa286IHByZXN1bWFibHkgeW91
+IGNvdWxkCmFwcGx5IHRoZSBEUCBjaGFuZ2UgdG8gZHJtLW1pc2M/ICAuLi5vciBpcyB0aGVyZSBz
+b21lIG90aGVyIHByb2Nlc3MKbmVlZGVkIHRoZXJlPwoKLURvdWcKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
