@@ -1,57 +1,106 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 4/4] arm64: dts: renesas: ulcb: Add EthernetAVB PHY reset
-Date: Mon,  4 Dec 2017 11:34:52 +0100
-Message-ID: <1512383692-14009-5-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 2/4] macb: Kill PHY reset code
+Date: Mon,  4 Dec 2017 11:34:50 +0100
+Message-ID: <1512383692-14009-3-git-send-email-geert+renesas@glider.be>
 References: <1512383692-14009-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512383692-14009-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512383692-14009-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David S . Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Leitner <richard.leitner@skidata.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Describe the GPIO used to reset the Ethernet PHY for EthernetAVB.
-This allows the driver to reset the PHY during probe and after system
-resume.
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-On ULCB, the enable pin of the regulator providing PHY power is always
-pulled high, but the driver may still need to reset the PHY if this
-wasn't done by the bootloader before.
+With the phylib now being aware of the "reset-gpios" PHY node property,
+there should be no need to frob the PHY reset in this driver anymore...
 
-Inspired by patches in the BSP for the individual Salvator-X/XS boards
-by Kazuya Mizuguchi.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-Compile-tested only.
-
 v4:
-  - No changes,
+  - Add Reviewed-by,
 
 v3:
-  - Extract from series "[PATCH 0/4] ravb: Add PHY reset support", and
-    incorporate in this series,
-  - Move reset-gpios from the ethernet to the ethernet-phy node.
----
- arch/arm64/boot/dts/renesas/ulcb.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+  - Resolve rejects due to the file being renamed, refresh the patch,
+  - Add code to reset PHY on probe error,
+  - Edit patch description,
+  - Take over from Sergei,
+  - Add Acked-by,
 
-diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-index 0d85b315ce711c8f..be91016e0b48f196 100644
---- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
-+++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-@@ -154,6 +154,7 @@
- 		reg = <0>;
- 		interrupt-parent = <&gpio2>;
- 		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		reset-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
- 	};
- };
+v2:
+  - No changes.
+---
+ drivers/net/ethernet/cadence/macb.h      |  1 -
+ drivers/net/ethernet/cadence/macb_main.c | 21 ---------------------
+ 2 files changed, 22 deletions(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index 3165c2ba58f97744..c50c5ec49b1dc585 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -1171,7 +1171,6 @@ struct macb {
+ 	unsigned int		dma_burst_length;
  
+ 	phy_interface_t		phy_interface;
+-	struct gpio_desc	*reset_gpio;
+ 
+ 	/* AT91RM9200 transmit */
+ 	struct sk_buff *skb;			/* holds skb until xmit interrupt completes */
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index c5fa87cdc6c401a7..3f0dfb20fdbcf936 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3803,7 +3803,6 @@ static int macb_probe(struct platform_device *pdev)
+ 					      = macb_config->clk_init;
+ 	int (*init)(struct platform_device *) = macb_config->init;
+ 	struct device_node *np = pdev->dev.of_node;
+-	struct device_node *phy_node;
+ 	struct clk *pclk, *hclk = NULL, *tx_clk = NULL, *rx_clk = NULL;
+ 	unsigned int queue_mask, num_queues;
+ 	struct macb_platform_data *pdata;
+@@ -3909,18 +3908,6 @@ static int macb_probe(struct platform_device *pdev)
+ 	else
+ 		macb_get_hwaddr(bp);
+ 
+-	/* Power up the PHY if there is a GPIO reset */
+-	phy_node =  of_get_next_available_child(np, NULL);
+-	if (phy_node) {
+-		int gpio = of_get_named_gpio(phy_node, "reset-gpios", 0);
+-
+-		if (gpio_is_valid(gpio)) {
+-			bp->reset_gpio = gpio_to_desc(gpio);
+-			gpiod_direction_output(bp->reset_gpio, 1);
+-		}
+-	}
+-	of_node_put(phy_node);
+-
+ 	err = of_get_phy_mode(np);
+ 	if (err < 0) {
+ 		pdata = dev_get_platdata(&pdev->dev);
+@@ -3967,10 +3954,6 @@ static int macb_probe(struct platform_device *pdev)
+ 		of_phy_deregister_fixed_link(np);
+ 	mdiobus_free(bp->mii_bus);
+ 
+-	/* Shutdown the PHY if there is a GPIO reset */
+-	if (bp->reset_gpio)
+-		gpiod_set_value(bp->reset_gpio, 0);
+-
+ err_out_free_netdev:
+ 	free_netdev(dev);
+ 
+@@ -4001,10 +3984,6 @@ static int macb_remove(struct platform_device *pdev)
+ 		dev->phydev = NULL;
+ 		mdiobus_free(bp->mii_bus);
+ 
+-		/* Shutdown the PHY if there is a GPIO reset */
+-		if (bp->reset_gpio)
+-			gpiod_set_value(bp->reset_gpio, 0);
+-
+ 		unregister_netdev(dev);
+ 		clk_disable_unprepare(bp->tx_clk);
+ 		clk_disable_unprepare(bp->hclk);
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
