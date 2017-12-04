@@ -1,54 +1,44 @@
-From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 6/6] ARM: configs: keystone_defconfig: Enable few
- peripheral drivers
-Date: Mon, 4 Dec 2017 09:36:25 -0800
-Message-ID: <9e96c65b-17aa-c49f-eef7-a4373241d231@oracle.com>
-References: <20171123075154.3938-1-vigneshr@ti.com>
- <20171123075154.3938-7-vigneshr@ti.com>
- <fb0c662b-d462-c663-7cf0-443ace3565ba@oracle.com>
- <76a88f69-dd0b-8823-ae31-bd39b1abae87@ti.com>
+From: Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V3 0/2] Tegra PCIe end point config space map code refactoring
+Date: Mon, 4 Dec 2017 23:23:48 +0530
+Message-ID: <1512410030-21038-1-git-send-email-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <76a88f69-dd0b-8823-ae31-bd39b1abae87@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vignesh R <vigneshr@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/4/2017 1:00 AM, Vignesh R wrote:
-> Hi,
-> 
-> On Sunday 03 December 2017 09:30 AM, santosh.shilimkar@oracle.com wrote:
->> On 11/22/17 11:51 PM, Vignesh R wrote:
->>> Enable drivers for QSPI, LEDS, gpio-decoder that are present on 66AK2G
->>> EVM
->>> and 66AK2G ICE boards.
->>>
->>> Signed-off-by: Vignesh R <vigneshr@ti.com>
->>> ---
->> Please submit a patch also to enable all these peripherals
->> in multi-v7 config. Just enable all remainder
->> options enabled in keystone config also in multi-v7.
-> 
-> K2 Platforms don't boot out of multi_v7_defconfig by default, because K2
-> platforms require CONFIG_ARM_LPAE(which is disabled in multi-v7).
-> 
-> If the intention is to just have all drivers enabled in
-> keystone_defconfig to be added to multi_v7, I can prepare a patch for
-> that and test with local patch to enable LPAE.
-> 
-Yes. Please send a patch for it.
+PCIe host controller in Tegra SoCs has 1GB of aperture available
+for mapping end points config space, IO and BARs. In that, currently
+256MB is being reserved for mapping end points configuration space
+which leaves less memory space available for mapping end points BARs
+on some of the platforms.
+This patch series attempts to map only 4K space from 1GB aperture to
+access end points configuration space.
 
-Regards,
-Santosh
+Currently, this change can benefit T20 and T186 in saving (i.e. repurposed
+to use for BAR mapping) physical space as well as kernel virtual mapping space,
+it saves only kernel virtual address space in T30, T124, T132 and T210.
+
+NOTE: Since T186 PCIe DT entry is not yet present in main line (it is currently
+merged to 'for-4.15/arm64/dt' branch), nothing gets broken with this change for T186.
+For older platforms (T20, T30, T124, T132, T210), this change works fine without any
+DT modifications
+
+Testing Done on T124, T210 & T186:
+ Enumeration and basic functionality of immediate devices
+ Enumeration of devices behind a PCIe switch
+ Complete 4K configuration space access
+
+Vidya Sagar (2):
+  PCI: tegra: refactor config space mapping code
+  ARM64: tegra: limit PCIe config space mapping to 4K for T186
+
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
+ drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------------------
+ 2 files changed, 44 insertions(+), 89 deletions(-)
+
+-- 
+2.7.4
