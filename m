@@ -1,91 +1,53 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v5.1 1/2] ARM64: dts: meson-gx: use stable UART bindings
- with correct gate clock
-Date: Mon, 4 Dec 2017 01:16:39 +0100
-Message-ID: <61a59a32-a812-cc88-79f9-02c13f1901d7@suse.de>
-References: <1498056132-18508-1-git-send-email-narmstrong@baylibre.com>
- <1498056132-18508-2-git-send-email-narmstrong@baylibre.com>
- <4e0d1db1-6382-a4b7-d112-3e45e0c1af2d@suse.de>
+From: =?UTF-8?B?6Zmz5bu65b+X?= <rickchen36@gmail.com>
+Subject: Re: [PATCH v2 35/35] dt-bindings: timer: Add andestech atcpit100
+ timer binding doc
+Date: Mon, 4 Dec 2017 09:07:20 +0800
+Message-ID: <CAN5B=e+-igkynapqoMhY6TMMNybnPudkL24aYiqJ7nESqxn9Yw@mail.gmail.com>
+References: <cover.1511785528.git.green.hu@gmail.com> <60f23e7fcff11f16b0bca4753a39d098849eeac3.1511785528.git.green.hu@gmail.com>
+ <CACRpkdYuo88qeEznKxVojYofV4YTGu6AOgan-2GPYS9qZCVxZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4e0d1db1-6382-a4b7-d112-3e45e0c1af2d-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Helmut Klein <hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYuo88qeEznKxVojYofV4YTGu6AOgan-2GPYS9qZCVxZA@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Greentime Hu <green.hu@gmail.com>, greentime@andestech.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, deanbo422@gmail.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 03.12.2017 um 15:15 schrieb Andreas Färber:
-> Hi,
-> 
-> Am 21.06.2017 um 16:42 schrieb Neil Armstrong:
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> index 17d3efd..ea53cc2 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> @@ -682,6 +682,31 @@
->>  	clocks = <&clkc CLKID_SPI>;
->>  };
->>  
->> +&uart_A {
->> +	clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
->> +	clock-names = "xtal", "pclk", "baud";
->> +};
->> +
->> +&uart_AO {
->> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
->> +	clock-names = "xtal", "pclk", "baud";
->> +};
->> +
->> +&uart_AO_B {
->> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
->> +	clock-names = "xtal", "pclk", "baud";
->> +};
->> +
->> +&uart_B {
->> +	clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
->> +	clock-names = "xtal", "core", "baud";
-> 
-> Looking at the meson_uart driver, it only looks for a "pclk" clock,
-> never for "core", and the only unnamed clock used should be the first.
-> 
-> There is no bindings documentation for "core", so I assume this was an
-> oversight and should be "pclk" everywhere?
-> 
->> +};
->> +
->> +&uart_C {
->> +	clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
->> +	clock-names = "xtal", "core", "baud";
->> +};
-> 
-> The issue I'm facing is that uart_C on NanoPi K2 is not working in
-> 4.14.1. To my surprise it appears to be probing okay though.
+2017-12-01 20:19 GMT+08:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Mon, Nov 27, 2017 at 1:28 PM, Greentime Hu <green.hu@gmail.com> wrote:
+>
+>> From: Rick Chen <rickchen36@gmail.com>
+>>
+>> Add a document to describe Andestech atcpit100 timer and
+>> binding information.
+>>
+>> Signed-off-by: Rick Chen <rickchen36@gmail.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Greentime Hu <green.hu@gmail.com>
+>
+> Thanks for submitting this interesting architecture!
+>
+> (...)
+>
+>> +Required properties:
+>> +- compatible   : Should be "andestech,atcpit100"
+>> +- reg          : Address and length of the register set
+>> +- interrupts   : Reference to the timer interrupt
+>> +- clocks : a clock to provide the tick rate for "andestech,atcpit100"
+>> +- clock-names : should be "PCLK" for the external tick timer.
+>
+> This text seem wrong. PCLK is the internal timer, right? "PCLK" is
+> "peripheral clock" (I hope) and that comes from the bus.
+>
+> Consider also adding an optional "EXTCLK" already now, since it is
+> evident from the driver that this is also supported.
+>
 
-In 4.14 the serial driver checks for the legacy compatible and if
-present (even alongside the new compatible) always takes the legacy code
-path, using only the first clock, thus not tripping over "core" and not
-enabling the "pclk" if supplied.
+Thank you for reviewing !
+I will modify it in the next patch.
 
-This was changed for v4.15-rc1, so we should start seeing errors for
-missing "pclk" clocks.
+Rick
 
-> Sadly just overwriting the clock-names property via overlay does not fix
-> my issue. Any ideas?
-
-For reference here's my latest overlay, overriding compatible, too:
-https://github.com/afaerber/dt-overlays/blob/master/meson-gxbb-nanopi-k2%2Barpi600%2Bnucleo-lrwan1.dts
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Yours,
+> Linus Walleij
