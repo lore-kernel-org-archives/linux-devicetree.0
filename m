@@ -1,83 +1,85 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RESEND PATCH v5 3/6] dt-bindings: display: Add bindings for SGD
- GKTW70SDAE4SE Panel
-Date: Mon,  4 Dec 2017 10:21:07 +0100
-Message-ID: <1512379270-27436-4-git-send-email-narmstrong@baylibre.com>
-References: <1512379270-27436-1-git-send-email-narmstrong@baylibre.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM64: dts: meson-axg: add PWM DT info for
+ Meson-Axg SoC
+Date: Mon, 04 Dec 2017 10:29:30 +0100
+Message-ID: <1512379770.2574.34.camel@baylibre.com>
+References: <20171204060018.8856-1-yixun.lan@amlogic.com>
+         <20171204060018.8856-4-yixun.lan@amlogic.com>
+         <1512379059.2574.17.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1512379270-27436-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512379059.2574.17.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Jian Hu <jian.hu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The GKTW70SDAE4SE is an LVDS display panel.
-Their bindings are modelled on the the LVDS panel bindings.
+On Mon, 2017-12-04 at 10:17 +0100, Jerome Brunet wrote:
+> On Mon, 2017-12-04 at 14:00 +0800, Yixun Lan wrote:
+> > From: Jian Hu <jian.hu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > Add PWM DT info for the Amlogic's Meson-Axg SoC.
+> > 
+> > Signed-off-by: Jian Hu <jian.hu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 120
+> > +++++++++++++++++++++++++++++
+> >  1 file changed, 120 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> > b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> > index 92f65eec3e18..f7f228701df1 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> > @@ -177,6 +177,24 @@
+> > 
+> 
+> [...]
+> 
+> > 
+> > @@ -435,6 +537,24 @@
+> >  				clock-names = "clk_i2c";
+> >  			};
+> >  
+> > +			pwm_AO_ab: pwm@7000 {
+> > +				compatible = "amlogic,meson-axg-ao-pwm";
+> > +				reg = <0x0 0x07000 0x0 0x20>;
+> > +				#pwm-cells = <3>;
+> > +				clocks = <&xtal>, <&xtal>;
+> > +				clock-names = "clkin0", "clkin1";
+> 
+> like gxbb, "amlogic,meson-axg-ao-pwm" does not have such clock bindings,
+> Later on, if we want to "correctly" get the clock from DT, it will have to
+> gothrough a new compatible, I guess. 
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/display/panel/sgd,gktw70sdae4se.txt   | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
+Please ignore this comment (monday morning...)
+However clock bindings for this should be defined in the board dts, not the soc
+one 
 
-diff --git a/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt b/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
-new file mode 100644
-index 0000000..d06644b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se.txt
-@@ -0,0 +1,41 @@
-+Solomon Goldentek Display GKTW70SDAE4SE LVDS Display Panel
-+==========================================================
-+
-+The GKTW70SDAE4SE is a 7" WVGA TFT-LCD display panel.
-+
-+These DT bindings follow the LVDS panel bindings defined in panel-lvds.txt
-+with the following device-specific properties.
-+
-+Required properties:
-+
-+- compatible: Shall contain "sgd,gktw70sdae4se" and "panel-lvds", in that order.
-+
-+Example
-+-------
-+
-+panel {
-+	compatible = "sgd,gktw70sdae4se", "panel-lvds";
-+
-+	width-mm = <153>;
-+	height-mm = <86>;
-+
-+	data-mapping = "jeida-18";
-+
-+	panel-timing {
-+		clock-frequency = <32000000>;
-+		hactive = <800>;
-+		vactive = <480>;
-+		hback-porch = <39>;
-+		hfront-porch = <39>;
-+		vback-porch = <29>;
-+		vfront-porch = <13>;
-+		hsync-len = <47>;
-+		vsync-len = <2>;
-+	};
-+
-+	port {
-+		panel_in: endpoint {
-+			remote-endpoint = <&lvds_encoder>;
-+		};
-+	};
-+};
--- 
-2.7.4
+> 
+> > +				status = "disabled";
+> > +			};
+> > +
+> > +			pwm_AO_cd: pwm@2000 {
+> > +				compatible = "amlogic,axg-ao-pwm";
+> > +				reg = <0x0 0x02000  0x0 0x20>;
+> > +				#pwm-cells = <3>;
+> > +				clocks = <&xtal>, <&xtal>;
+> > +				clock-names = "clkin0", "clkin1";
+> > +				status = "disabled";
+> > +			};
+> > +
+> >  			uart_AO: serial@3000 {
+> >  				compatible = "amlogic,meson-gx-uart",
+> > "amlogic,meson-ao-uart";
+> >  				reg = <0x0 0x3000 0x0 0x18>;
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
