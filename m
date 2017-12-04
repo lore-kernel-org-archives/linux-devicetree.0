@@ -1,27 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: ARM: Mediatek: Fix ethsys documentation
-Date: Mon, 4 Dec 2017 15:48:41 -0600
-Message-ID: <20171204214841.mkkrms5fya4pnnwz@rob-hp-laptop>
-References: <20171201120708.30129-1-matthias.bgg@gmail.com>
+Subject: Re: [PATCH v10 5/6] dt-bindings: mailbox: qcom: Document the APCS
+ clock binding
+Date: Mon, 4 Dec 2017 15:49:32 -0600
+Message-ID: <20171204214932.u5rbrwzijoknqry3@rob-hp-laptop>
+References: <20171201170224.25053-1-georgi.djakov@linaro.org>
+ <20171201170224.25053-6-georgi.djakov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171201120708.30129-1-matthias.bgg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: mark.rutland@arm.com, linux@armlinux.org.uk, sboyd@codeaurora.org, sean.wang@mediatek.com, chen.zhong@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20171201170224.25053-6-georgi.djakov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 01, 2017 at 01:07:06PM +0100, Matthias Brugger wrote:
-> The ethsys registers a reset controller, so we need to specify a
-> reset cell. This patch fixes the documentation.
+On Fri, Dec 01, 2017 at 07:02:23PM +0200, Georgi Djakov wrote:
+> Update the binding documentation for APCS to mention that the APCS
+> hardware block also expose a clock controller functionality.
 > 
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> The APCS clock controller is a mux and half-integer divider. It has the
+> main CPU PLL as an input and provides the clock for the application CPU.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
->  Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt | 1 +
->  1 file changed, 1 insertion(+)
-
-For all 3,
+>  .../bindings/mailbox/qcom,apcs-kpss-global.txt         | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
