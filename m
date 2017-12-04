@@ -1,76 +1,148 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 4/7] OF: properties: Implement get_match_data()
- callback
-Date: Mon, 4 Dec 2017 16:25:28 -0600
-Message-ID: <20171204222528.wf6xpozisxu5udx5@rob-hp-laptop>
-References: <1512188864-773-1-git-send-email-okaya@codeaurora.org>
- <1512188864-773-5-git-send-email-okaya@codeaurora.org>
- <CAL_JsqJ+fMqrt6Tk8h6v1fSkrBg+GcMxSXK9XCcz3nmYgyguuQ@mail.gmail.com>
- <590f0536-b73d-ee32-a284-32e564af2f57@codeaurora.org>
+Subject: Re: [PATCH net-next 1/2 v6] net: ethernet: Add DT bindings for the
+ Gemini ethernet
+Date: Mon, 4 Dec 2017 16:30:24 -0600
+Message-ID: <20171204223024.gauormnj23evwvh6@rob-hp-laptop>
+References: <20171202110640.5284-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <590f0536-b73d-ee32-a284-32e564af2f57-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20171202110640.5284-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 04, 2017 at 01:05:51PM -0500, Sinan Kaya wrote:
-> On 12/4/2017 11:23 AM, Rob Herring wrote:
-> > On Fri, Dec 1, 2017 at 10:27 PM, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> >> Now that we have a get_match_data() callback as part of the firmware node,
-> >> implement the OF specific piece for it.
-> >>
-> >> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >> ---
-> >>  drivers/of/property.c | 17 +++++++++++++++++
-> >>  1 file changed, 17 insertions(+)
-> >>
-> ..
+On Sat, Dec 02, 2017 at 12:06:39PM +0100, Linus Walleij wrote:
+> This adds the device tree bindings for the Gemini ethernet
+> controller. It is pretty straight-forward, using standard
+> bindings and modelling the two child ports as child devices
+> under the parent ethernet controller device.
 > 
-> >>
-> >> +void *of_fwnode_get_match_data(const struct fwnode_handle *fwnode,
-> >> +                              const struct device_driver *drv)
-> >> +{
-> >> +       const struct device_node *node = to_of_node(fwnode);
-> >> +       const struct of_device_id *match;
-> >> +
-> >> +       if (!node)
-> >> +               return NULL;
-> > 
-> > of_match_node checks this.
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Michał Mirosław <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/net/cortina,gemini-ethernet.txt       | 92 ++++++++++++++++++++++
+>  1 file changed, 92 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
 > 
-> I see a check for the matches argument but not for the node argument.
-> Am I missing something?
+> diff --git a/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+> new file mode 100644
+> index 000000000000..35fa3abd1c73
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+> @@ -0,0 +1,92 @@
+> +Cortina Systems Gemini Ethernet Controller
+> +==========================================
+> +
+> +This ethernet controller is found in the Gemini SoC family:
+> +StorLink SL3512 and SL3516, also known as Cortina Systems
+> +CS3512 and CS3516.
+> +
+> +Required properties:
+> +- compatible: must be "cortina,gemini-ethernet"
+> +- reg: must contain the global registers and the V-bit and A-bit
+> +  memory areas, in total three register sets.
+> +- syscon: a phandle to the system controller
+> +- #address-cells: must be specified, must be <1>
+> +- #size-cells: must be specified, must be <1>
+> +- ranges: should be state like this giving a 1:1 address translation
+> +  for the subnodes
+> +
+> +The subnodes represents the two ethernet ports in this device.
+> +They are not independent of each other since they share resources
+> +in the parent node, and are thus children.
+> +
+> +Required subnodes:
+> +- port0: contains the resources for ethernet port 0
+> +- port1: contains the resources for ethernet port 1
+> +
+> +Required subnode properties:
+> +- compatible: must be "cortina,gemini-ethernet-port"
+> +- reg: must contain two register areas: the DMA/TOE memory and
+> +  the GMAC memory area of the port
+> +- interrupts: should contain the interrupt line of the port.
+> +  this is nominally a level interrupt active high.
+> +- resets: this must provide an SoC-integrated reset line for
+> +  the port.
+> +- clocks: this should contain a handle to the PCLK clock for
+> +  clocking the silicon in this port
+> +- clock-names: must be "PCLK"
+> +
+> +Optional subnode properties:
+> +- phy-mode: see ethernet.txt
+> +- phy-handle: see ethernet.txt
+> +
+> +Example:
+> +
+> +mdio-bus {
+> +	(...)
+> +	phy0: ethernet-phy@1 {
+> +		reg = <1>;
+> +		device_type = "ethernet-phy";
+> +	};
+> +	phy1: ethernet-phy@3 {
+> +		reg = <3>;
+> +		device_type = "ethernet-phy";
+> +	};
+> +};
+> +
+> +
+> +ethernet@60000000 {
+> +	compatible = "cortina,gemini-ethernet";
+> +	reg = <0x60000000 0x4000>, /* Global registers, queue */
+> +	      <0x60004000 0x2000>, /* V-bit */
+> +	      <0x60006000 0x2000>; /* A-bit */
+> +	syscon = <&syscon>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
 
-Ah yes, you are right.
+Would be better to define the actual range used by child nodes.
 
-> 
-> > 
-> >> +
-> >> +       match = of_match_node(drv->of_match_table, node);
-> >> +       if (!match)
-> >> +               return NULL;
-> >> +
-> >> +       return (void *)match->data;
-> > 
-> > Don't need a cast here.
-> 
-> I can fix this.
-> 
-> > 
-> > of_device_get_match_data() already does most of this, but getting a
-> > device ptr from fwnode_handle may not be possible?
-> 
-> I couldn't figure out how to do that. Do you have a suggestion?
-> I have been looking for examples with no luck.
+> +
+> +	gmac0: port0 {
 
-Change the property API to pass struct device instead. That's maybe not 
-worth it.
+Needs a unit-address. Building with W=1 (or W=2) will tell you this.
 
-Rob
+As port is used by the OF graph binding, use ethernet-port@... instead.
+
+> +		compatible = "cortina,gemini-ethernet-port";
+> +		reg = <0x60008000 0x2000>, /* Port 0 DMA/TOE */
+> +		      <0x6000a000 0x2000>; /* Port 0 GMAC */
+> +		interrupt-parent = <&intcon>;
+> +		interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
+> +		resets = <&syscon GEMINI_RESET_GMAC0>;
+> +		clocks = <&syscon GEMINI_CLK_GATE_GMAC0>;
+> +		clock-names = "PCLK";
+> +		phy-mode = "rgmii";
+> +		phy-handle = <&phy0>;
+> +	};
+> +
+> +	gmac1: port1 {
+> +		compatible = "cortina,gemini-ethernet-port";
+> +		reg = <0x6000c000 0x2000>, /* Port 1 DMA/TOE */
+> +		      <0x6000e000 0x2000>; /* Port 1 GMAC */
+> +		interrupt-parent = <&intcon>;
+> +		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
+> +		resets = <&syscon GEMINI_RESET_GMAC1>;
+> +		clocks = <&syscon GEMINI_CLK_GATE_GMAC1>;
+> +		clock-names = "PCLK";
+> +		phy-mode = "rgmii";
+> +		phy-handle = <&phy1>;
+> +	};
+> +};
+> -- 
+> 2.14.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
