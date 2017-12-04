@@ -1,52 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5 1/7] Documentation: DT: qcom_hidma: Bump HW revision
- for the bugfixed HW
-Date: Mon, 4 Dec 2017 16:14:14 -0600
-Message-ID: <20171204221414.f5tphhn7gvlle3li@rob-hp-laptop>
-References: <1512188864-773-1-git-send-email-okaya@codeaurora.org>
- <1512188864-773-2-git-send-email-okaya@codeaurora.org>
+From: Sven Van Asbroeck <thesven73-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] at24: support eeproms that do not auto-rollover reads.
+Date: Mon, 4 Dec 2017 17:24:33 -0500
+Message-ID: <CAGngYiXR83+0phkeAvJYYEm8HvmN-c9d0B9p1BRiPHyUz1ogAA@mail.gmail.com>
+References: <1512401778-20366-1-git-send-email-svendev@arcx.com>
+ <1512401778-20366-2-git-send-email-svendev@arcx.com> <20171204214023.ml2ujacezsop5ilb@kekkonen.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1512188864-773-2-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vinod Koul <vinod.koul@intel.com>, Mark Rutland <mark.rutland@arm.com>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171204214023.ml2ujacezsop5ilb-sGAanXTfQ4777SC2UrCW1FMQynFLKtET@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sven Van Asbroeck <svenv-fuHqz3Nb1YI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 01, 2017 at 11:27:38PM -0500, Sinan Kaya wrote:
-> A new version of the HIDMA IP has been released with bug fixes. Bumping the
-> hardware version to differentiate from others.
-> 
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> index 55492c2..5d93d6d 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-> @@ -47,8 +47,8 @@ When the OS is not in control of the management interface (i.e. it's a guest),
->  the channel nodes appear on their own, not under a management node.
->  
->  Required properties:
-> -- compatible: must contain "qcom,hidma-1.0" for initial HW or "qcom,hidma-1.1"
-> -for MSI capable HW.
-> +- compatible: must contain "qcom,hidma-1.0" for initial HW or
-> +  "qcom,hidma-1.1"/"qcom,hidma-1.2" for MSI capable HW.
+> If this is truly specific to at24, then vendor prefix would be appropriate,
+> plus it'd go to an at24 specific binding file. However if it isn't I'd just
+> remove the above sentence. I guess the latter?
 
-Hopefully 1.2 corresponds to some actual version numbering and not just 
-something you made up. I'd really rather have SoC based compatible 
-strings unless you have dozens of SoCs for each version. I'll probably 
-just say the same thing again when 1.3 or 2.0 gets added...
+Yes, no-read-rollover is truly specific to at24.c, because it applies only
+to i2c multi-address chips. The at25 is spi based so cannot have multiple
+addresses.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+So yes, "at24,no-read-rollover" would perhaps be a better name.
 
->  - reg: Addresses for the transfer and event channel
->  - interrupts: Should contain the event interrupt
->  - desc-count: Number of asynchronous requests this channel can handle
-> -- 
-> 1.9.1
-> 
+Regarding an at24 specific binding file. You're saying I should create
+Documentation/devicetree/bindings/eeprom/at24.txt ? Should I indicate
+that at24.txt "inherits from" eeprom.txt? Note that at25.txt does not
+currently do this.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
