@@ -1,55 +1,39 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V5 4/7] OF: properties: Implement get_match_data() callback
-Date: Mon, 4 Dec 2017 10:23:14 -0600
-Message-ID: <CAL_JsqJ+fMqrt6Tk8h6v1fSkrBg+GcMxSXK9XCcz3nmYgyguuQ@mail.gmail.com>
-References: <1512188864-773-1-git-send-email-okaya@codeaurora.org> <1512188864-773-5-git-send-email-okaya@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1512188864-773-5-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Frank Rowand <frowand.list@gmail.com>, open list <linux-kernel@vger.kernel.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: Fix elm interrupt compiler warning
+Date: Mon,  4 Dec 2017 08:27:17 -0800
+Message-ID: <20171204162718.11222-1-tony@atomide.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 1, 2017 at 10:27 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
-> Now that we have a get_match_data() callback as part of the firmware node,
-> implement the OF specific piece for it.
->
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> ---
->  drivers/of/property.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 264c355..adcde1a 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -981,6 +981,22 @@ static int of_fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
->         return 0;
->  }
->
-> +void *of_fwnode_get_match_data(const struct fwnode_handle *fwnode,
-> +                              const struct device_driver *drv)
-> +{
-> +       const struct device_node *node = to_of_node(fwnode);
-> +       const struct of_device_id *match;
-> +
-> +       if (!node)
-> +               return NULL;
+Looks like the interrupt property is missing the controller and level
+information causing:
 
-of_match_node checks this.
+Warning (interrupts_property): interrupts size is (4), expected multiple
+of 12 in /ocp/elm@48078000
 
-> +
-> +       match = of_match_node(drv->of_match_table, node);
-> +       if (!match)
-> +               return NULL;
-> +
-> +       return (void *)match->data;
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/omap4.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Don't need a cast here.
-
-of_device_get_match_data() already does most of this, but getting a
-device ptr from fwnode_handle may not be possible?
-
-Rob
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -398,7 +398,7 @@
+ 		elm: elm@48078000 {
+ 			compatible = "ti,am3352-elm";
+ 			reg = <0x48078000 0x2000>;
+-			interrupts = <4>;
++			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+ 			ti,hwmods = "elm";
+ 			status = "disabled";
+ 		};
+-- 
+2.15.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
