@@ -1,40 +1,53 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: v3msk: add EtherAVB support
-Date: Mon, 4 Dec 2017 09:21:33 +0100
-Message-ID: <CAMuHMdXavmQd8r+BEmFFmtjprGS3wddY3Dz=WTQ9qRypV8WY0w@mail.gmail.com>
-References: <20171124210317.285946395@cogentembedded.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/4] ARM: dts: renesas: Convert to named i2c-gpio
+ bindings
+Date: Mon, 4 Dec 2017 09:35:15 +0100
+Message-ID: <20171204083515.sdrba5tq5z2qymap@verge.net.au>
+References: <1512046646-15253-1-git-send-email-geert+renesas@glider.be>
+ <20171201081850.4tqbnlvxdax7phfs@verge.net.au>
+ <20171201110908.u7xjrt7xmlqgigvy@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171124210317.285946395-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171201110908.u7xjrt7xmlqgigvy@ninjato>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 24, 2017 at 9:59 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Define the V3M Starter Kit board dependent part of the EtherAVB
-> device node.
->
-> Based on the original (and large) patch by Vladimir Barinov.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+On Fri, Dec 01, 2017 at 12:09:08PM +0100, Wolfram Sang wrote:
+> On Fri, Dec 01, 2017 at 09:18:55AM +0100, Simon Horman wrote:
+> > On Thu, Nov 30, 2017 at 01:57:22PM +0100, Geert Uytterhoeven wrote:
+> > > 	Hi Simon, Magnus,
+> > > 
+> > > Commits 7d29f509d2cfd807 ("dt-bindings: i2c: i2c-gpio: Add support for
+> > > named gpios") and 05c74778858d7d99 ("i2c: gpio: Add support for named
+> > > gpios in DT") introduced named i2c-gpio DT bindings, and deprecated the
+> > > more error-prone unnamed variant.
+> > > 
+> > > This patch series switches all Renesas boards to the new bindings, and
+> > > adds the missing GPIO_OPEN_DRAIN I/O flags, which were implicitly
+> > > assumed before.  The latter gets rid of messages like:
+> > > 
+> > >     gpio-208 (?): enforced open drain please flag it properly in DT/ACPI DSDT/board file
+> > >     gpio-91 (?): enforced open drain please flag it properly in DT/ACPI DSDT/board file
+> > > 
+> > > Patch 1 was extracted from series "[PATCH/RFC 0/3] i2c: gpio: Add
+> > > support for named gpios in DT", hence the v2.  All other patches are
+> > > new.
+> > > 
+> > > Note that after this series is applied, the i2c-gpio buses are no longer
+> > > detected when booting new DTBs on old (v4.14 and older) kernels, which
+> > > should not be an issue.  Booting old DTBs on new kernels is not
+> > > affected.
+> > > 
+> > > Thanks for applying!
+> > 
+> > Thanks, applied.
+> 
+> Phew, you guys are fast. For the record:
+> 
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I'll see about adding your tag.
