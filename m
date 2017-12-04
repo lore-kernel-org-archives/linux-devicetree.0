@@ -1,101 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V7 2/2] dt-bindings: Add qcom spmi_pmic clock divider
- bindings
-Date: Mon, 4 Dec 2017 14:29:59 -0600
-Message-ID: <20171204202959.6gxmy7jdt7gwspuh@rob-hp-laptop>
-References: <1511255465-3984-1-git-send-email-tirupath@codeaurora.org>
- <1511255465-3984-3-git-send-email-tirupath@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH][v3] dt-bindings: ifc: Update endianness usage
+Date: Mon, 4 Dec 2017 14:47:27 -0600
+Message-ID: <20171204204727.fnt4vsw2lg2q2w5x@rob-hp-laptop>
+References: <1512029196-7158-1-git-send-email-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1511255465-3984-3-git-send-email-tirupath@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Tirupathi Reddy <tirupath@codeaurora.org>
-Cc: sboyd@codeaurora.org, mturquette@baylibre.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+In-Reply-To: <1512029196-7158-1-git-send-email-prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 21, 2017 at 02:41:05PM +0530, Tirupathi Reddy wrote:
-> This patch adds device tree bindings for Qualcomm SPMI PMIC
-> clock divider module.
+On Thu, Nov 30, 2017 at 01:36:36PM +0530, Prabhakar Kushwaha wrote:
+> IFC controller version < 2.0 support IFC register access as
+> big endian. These controller version also require IFC NOR signals to
+> be connected in reverse order with NOR flash.
 > 
-> Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
+> IFC >= 2.0 is other way around.
+> 
+> So updating IFC binding to take care of both using endianness field.
+> 
+> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
 > ---
->  .../bindings/clock/qcom,spmi-pmic-div.txt          | 59 ++++++++++++++++++++++
-
-Didn't Stephen say to move this somewhere else?
-
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,spmi-pmic-div.txt
+> Changes for v2: updated subject
+> Changes for v3: fixed typo for "big-endian"
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,spmi-pmic-div.txt b/Documentation/devicetree/bindings/clock/qcom,spmi-pmic-div.txt
-> new file mode 100644
-> index 0000000..2cf2aba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,spmi-pmic-div.txt
-> @@ -0,0 +1,59 @@
-> +Qualcomm Technologies, Inc. SPMI PMIC clock divider (clkdiv)
-> +
-> +clkdiv configures the clock frequency of a set of outputs on the PMIC.
-> +These clocks are typically wired through alternate functions on
-> +gpio pins.
-> +
-> +=======================
-> +Properties
-> +=======================
-> +
-> +- compatible
-> +	Usage:      required
-> +	Value type: <string>
-> +	Definition: must be "qcom,spmi-clkdiv".
-> +
-> +- reg
-> +	Usage:      required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address of CLKDIV peripherals.
-> +
-> +- qcom,num-clkdivs
-> +	Usage:      required
-> +	Value type: <u32>
-> +	Definition: number of CLKDIV peripherals.
-> +
-> +- clocks:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: reference to the xo clock.
-> +
-> +- clock-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "xo".
-> +
-> +- clock-cells:
-
-#clock-cells
-
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: shall contain 1.
-> +
-> +=======
-> +Example
-> +=======
-> +
-> +pm8998_clk_divs: clock-controller@5b00 {
-> +	compatible = "qcom,spmi-clkdiv";
-> +	reg = <0x5b00>;
-> +	#clock-cells = <1>;
-> +	qcom,num-clkdivs = <3>;
-> +	clocks = <&xo_board>;
-> +	clock-names = "xo";
-> +
-> +	assigned-clocks = <&pm8998_clk_divs 1>,
-> +			  <&pm8998_clk_divs 2>,
-> +			  <&pm8998_clk_divs 3>;
-> +	assigned-clock-rates = <9600000>,
-> +			       <9600000>,
-> +			       <9600000>;
-> +};
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>  Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
+> index 89427b0..824a2ca 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ifc.txt
+> @@ -18,8 +18,10 @@ Properties:
+>                interrupt (NAND_EVTER_STAT).  If there is only one,
+>                that interrupt reports both types of event.
+>  
+> -- little-endian : If this property is absent, the big-endian mode will
+> -                  be in use as default for registers.
+> +- little-endian or big-endian : It represents how IFC registers to be accessed.
+> +			It also represents connection between controller and
+> +			NOR flash. If this property is absent, the big-endian
+> +			mode will be in use as default.
+
+My question on the prior version remains. I think if you need to handle 
+more than just register endianness, that should be done with the 
+compatible string.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
