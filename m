@@ -1,87 +1,47 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v13 5/5] dt-bindings: watchdog: Add bindings for RAVE SP watchdog driver
-Date: Mon,  4 Dec 2017 08:11:18 -0800
-Message-ID: <20171204161118.19558-6-andrew.smirnov@gmail.com>
-References: <20171204161118.19558-1-andrew.smirnov@gmail.com>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [PATCH v4.1] phylib: Add device reset GPIO support
+Date: Mon, 4 Dec 2017 17:20:13 +0100
+Message-ID: <b95b046c-ee37-5ec1-01c1-763fb1e307e2@skidata.com>
+References: <1512383692-14009-2-git-send-email-geert+renesas@glider.be>
+ <1512390905-28094-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171204161118.19558-1-andrew.smirnov@gmail.com>
+In-Reply-To: <1512390905-28094-1-git-send-email-geert+renesas@glider.be>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Pavel Machek <pavel@ucw.cz>, Andy Shevchenko <andy.shevchenko@gmail.com>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, "David S . Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add Device Tree bindings for RAVE SP watchdog drvier - an MFD cell of
-parent RAVE SP driver (documented in
-Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
 
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-watchdog@vger.kernel.org
-Cc: cphealy@gmail.com
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- .../bindings/watchdog/zii,rave-sp-wdt.txt          | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+On 12/04/2017 01:35 PM, Geert Uytterhoeven wrote:
+> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> The PHY devices sometimes do have their reset signal (maybe even power
+> supply?) tied to some GPIO and sometimes it also does happen that a boot
+> loader does not leave it deasserted. So far this issue has been attacked
+> from (as I believe) a wrong angle: by teaching the MAC driver to manipulate
+> the GPIO in question; that solution, when applied to the device trees, led
+> to adding the PHY reset GPIO properties to the MAC device node, with one
+> exception: Cadence MACB driver which could handle the "reset-gpios" prop
+> in a PHY device subnode. I believe that the correct approach is to teach
+> the 'phylib' to get the MDIO device reset GPIO from the device tree node
+> corresponding to this device -- which this patch is doing...
+> 
+> Note that I had to modify the AT803x PHY driver as it would stop working
+> otherwise -- it made use of the reset GPIO for its own purposes...
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> [geert: Propagate actual errors from fwnode_get_named_gpiod()]
+> [geert: Avoid destroying initial setup]
+> [geert: Consolidate GPIO descriptor acquiring code]
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
 
-diff --git a/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
-new file mode 100644
-index 000000000000..ab16659e781d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
-@@ -0,0 +1,39 @@
-+Zodiac Inflight Innovations RAVE Supervisory Processor Watchdog Bindings
-+
-+RAVE SP watchdog device is a "MFD cell" device corresponding to
-+watchdog functionality of RAVE Supervisory Processor. It is expected
-+that its Device Tree node is specified as a child of the node
-+corresponding to the parent RAVE SP device (as documented in
-+Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
-+
-+Required properties:
-+- compatible:	Should be "zii,rave-sp-watchdog"
-+
-+Optional properties:
-+
-+- wdt-timeout:	Two byte nvmem cell specified as per
-+		Documentation/devicetree/bindings/nvmem/nvmem.txt
-+
-+Example:
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu1";
-+		current-speed = <38400>;
-+
-+		eeprom {
-+			compatible = "zii,pic-main-eeprom";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			wdt_timeout: wdt-timeout@8E {
-+				reg = <0x8E 2>;
-+			};
-+		};
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
-+			nvmem-cells = <&wdt_timeout>;
-+			nvmem-cell-names = "wdt-timeout";
-+		};
-+	}
-+
--- 
-2.14.3
+Successfully tested this patch on a i.MX6SOLO based board containing a
+LAN8710 PHY:
+
+Tested-by: Richard Leitner <richard.leitner@skidata.com>
