@@ -1,31 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/4] clk: meson-axg: add clocks dt-bindings required
- header
-Date: Mon, 4 Dec 2017 15:37:28 -0600
-Message-ID: <20171204213728.e6hzl5wubfkx6fmt@rob-hp-laptop>
-References: <20171201012452.27086-1-yixun.lan@amlogic.com>
- <20171201012452.27086-3-yixun.lan@amlogic.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] dt-bindings: PCI: dra7xx: Add bindings for unaligned
+ access in host mode
+Date: Mon, 4 Dec 2017 15:40:07 -0600
+Message-ID: <20171204214007.xyjvy2kfacjonjza@rob-hp-laptop>
+References: <20171201061311.16691-1-vigneshr@ti.com>
+ <20171201061311.16691-3-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171201012452.27086-3-yixun.lan@amlogic.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20171201061311.16691-3-vigneshr-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Chris Welch <Chris.Welch-ojoHHoaXhABCkLs28/y7ANBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 01, 2017 at 09:24:50AM +0800, Yixun Lan wrote:
-> From: Qiufang Dai <qiufang.dai@amlogic.com>
+On Fri, Dec 01, 2017 at 11:43:09AM +0530, Vignesh R wrote:
+> Update device tree binding documentation of TI's dra7xx PCI controller
+> for enabling unaligned mem access as applicable not just in EP mode but
+> in host mode as well.
 > 
-> Add the required header for the clocks ID dt-bindings
-> exported from various subsystem in the Meson-AXG SoC.
-> 
-> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 > ---
->  include/dt-bindings/clock/axg-clkc.h | 71 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 include/dt-bindings/clock/axg-clkc.h
+>  Documentation/devicetree/bindings/pci/ti-pci.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>                                                                                
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
