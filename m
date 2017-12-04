@@ -1,51 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] eeprom: at25: Add DT support for EEPROMs with odd
- address bits
-Date: Mon, 4 Dec 2017 15:17:05 -0600
-Message-ID: <20171204211705.543xjzvttbrt65pm@rob-hp-laptop>
-References: <1512048586-17534-1-git-send-email-geert+renesas@glider.be>
- <1512048586-17534-2-git-send-email-geert+renesas@glider.be>
- <CAMuHMdWczQ0KiH7soGLKxX8CQEwxA=kVDc_saYqgytE2U_3WKw@mail.gmail.com>
+From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/5] dt: bindings: lp8860: Update DT label binding
+Date: Mon, 4 Dec 2017 15:20:22 -0600
+Message-ID: <20171204212026.14214-2-dmurphy@ti.com>
+References: <20171204212026.14214-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWczQ0KiH7soGLKxX8CQEwxA=kVDc_saYqgytE2U_3WKw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ivo Sieben <meltedpianoman@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Chris Wright <chrisw@sous-sol.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171204212026.14214-1-dmurphy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 04, 2017 at 10:17:47AM +0100, Geert Uytterhoeven wrote:
-> On Thu, Nov 30, 2017 at 2:29 PM, Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > Certain EEPROMS have a size that is larger than the number of address
-> > bytes would allow, and store the MSB of the address in bit 3 of the
-> > instruction byte.
-> >
-> > This can be described in platform data using EE_INSTR_BIT3_IS_ADDR, or
-> > in DT using the obsolete legacy "at25,addr-mode" property.
-> > But currently there exists no non-deprecated way to describe this in DT.
-> >
-> > Hence extend the existing "address-width" DT property to allow
-> > specifying 9, 17, or 25 address bits, and enable support for that in the
-> > driver.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > EEPROMs using 9 address bits are common (e.g. M95040, 25AA040/25LC040).
-> > Do EEPROMs using 17 or 25 address bits, as mentioned in
-> > include/linux/spi/eeprom.h, really exist?
-> > Or should we just limit it to a single odd value (9 bits)?
-> 
-> At least for the real Atmel parts, only the AT25040 part uses odd (8 +
-> 1 bit) addressing.
+Update the lp8860 label binding to the LED
+standard as documented in
 
-Seems like we should have a specific compatible for it.
+Documentation/devicetree/bindings/leds/common.txt
 
-> AT25M01 uses 3-byte addressing (it needs 17 bits).
+Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ Documentation/devicetree/bindings/leds/leds-lp8860.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Do you need to know it is 17-bit vs. 24-bits? I'm guessing not as the 
-unused bits are probably don't care.
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+index aad38dd94d4b..e3a5e91f965b 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+@@ -9,9 +9,9 @@ Required properties:
+ 	- compatible:
+ 		"ti,lp8860"
+ 	- reg -  I2C slave address
+-	- label - Used for naming LEDs
+ 
+ Optional properties:
++	- label : see Documentation/devicetree/bindings/leds/common.txt
+ 	- enable-gpio - gpio pin to enable/disable the device.
+ 	- supply - "vled" - LED supply
+ 
+@@ -20,9 +20,12 @@ Example:
+ leds: leds@6 {
+ 	compatible = "ti,lp8860";
+ 	reg = <0x2d>;
+-	label = "display_cluster";
+ 	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+ 	vled-supply = <&vbatt>;
++
++	display_cluster: display_cluster@0 {
++		label = "display_cluster";
++	};
+ }
+ 
+ For more product information please see the link below:
+-- 
+2.15.0.124.g7668cbc60
 
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
