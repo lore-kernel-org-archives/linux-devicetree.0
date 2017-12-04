@@ -1,49 +1,58 @@
-From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: mtd: fsl-quadspi: Pass the qspi clock names
-Date: Mon, 4 Dec 2017 13:59:46 +0100
-Message-ID: <e41fd38e-1d41-8bc5-aee6-17473c7a0988@wedev4u.fr>
-References: <1512340584-26894-1-git-send-email-festevam@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: hwrng: Add Samsung Exynos 5250+ True
+ RNG bindings
+Date: Mon, 4 Dec 2017 14:13:49 +0100
+Message-ID: <CAJKOXPej1G6npvNSr9TP8DmWubtZpn6ONeNMN4Ax_RaafMiT7g@mail.gmail.com>
+References: <CGME20171204125414eucas1p1233c2c8ef5b637c3a4565af875515524@eucas1p1.samsung.com>
+ <20171204125351.26805-1-l.stelmach@samsung.com> <20171204125351.26805-2-l.stelmach@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512340584-26894-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20171204125351.26805-2-l.stelmach@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 03/12/2017 à 23:36, Fabio Estevam a écrit :
-> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> 
-> In order to improve the bindings documentation, explicitly pass the name
-> of the clocks: "qspi_en" and "qspi", which are mandatory.
-> 
-> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-
-Acked-by: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-
+On Mon, Dec 4, 2017 at 1:53 PM, Łukasz Stelmach <l.stelmach@samsung.com> wrote:
+> Add binding documentation for the True Random Number Generator
+> found on Samsung Exynos 5250+ SoCs.
+>
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 > ---
->  Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> index c34aa6f..cc3f579 100644
-> --- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> +++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> @@ -12,7 +12,7 @@ Required properties:
->    - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
->    - interrupts : Should contain the interrupt for the device
->    - clocks : The clocks needed by the QuadSPI controller
-> -  - clock-names : the name of the clocks
-> +  - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
->  
->  Optional properties:
->    - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
-> 
+>  .../devicetree/bindings/rng/samsung,exynos5250-trng.txt | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>
+> diff --git a/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+> new file mode 100644
+> index 000000000000..5a613a4ec780
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+> @@ -0,0 +1,17 @@
+> +Exynos True Random Number Generator
+> +
+> +Required properties:
+> +
+> +- compatible  : Should be "samsung,exynos5250-trng".
+> +- reg         : Specifies base physical address and size of the registers map.
+> +- clocks      : Phandle to clock-controller plus clock-specifier pair.
+> +- clock-names : "secss" as a clock name.
+> +
+> +Example:
+> +
+> +       rng@10830600 {
+> +               compatible = "samsung,exynos5250-trng";
+> +               reg = <0x10830600 0x100>;
+> +               clocks = <&clock CLK_SSS>;
+> +               clock-names = "secss";
+> +       };
+> --
+> 2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mine and Rob's tags disappeared and I think you did not introduce any
+major changes here, right?
+
+Best regards,
+Krzysztof
