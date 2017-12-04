@@ -1,53 +1,30 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/4] ARM: dts: renesas: Convert to named i2c-gpio
- bindings
-Date: Mon, 4 Dec 2017 09:35:15 +0100
-Message-ID: <20171204083515.sdrba5tq5z2qymap@verge.net.au>
-References: <1512046646-15253-1-git-send-email-geert+renesas@glider.be>
- <20171201081850.4tqbnlvxdax7phfs@verge.net.au>
- <20171201110908.u7xjrt7xmlqgigvy@ninjato>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 2/6] cpufreq: ARM: sort the Kconfig menu
+Date: Mon, 4 Dec 2017 14:11:24 +0530
+Message-ID: <20171204084124.mchpmw3kta5tddgh@vireshk-mac-ubuntu>
+References: <20171201112508.14121-1-gregory.clement@free-electrons.com>
+ <20171201112508.14121-3-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171201110908.u7xjrt7xmlqgigvy@ninjato>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20171201112508.14121-3-gregory.clement@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Evan Wang <xswang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 01, 2017 at 12:09:08PM +0100, Wolfram Sang wrote:
-> On Fri, Dec 01, 2017 at 09:18:55AM +0100, Simon Horman wrote:
-> > On Thu, Nov 30, 2017 at 01:57:22PM +0100, Geert Uytterhoeven wrote:
-> > > 	Hi Simon, Magnus,
-> > > 
-> > > Commits 7d29f509d2cfd807 ("dt-bindings: i2c: i2c-gpio: Add support for
-> > > named gpios") and 05c74778858d7d99 ("i2c: gpio: Add support for named
-> > > gpios in DT") introduced named i2c-gpio DT bindings, and deprecated the
-> > > more error-prone unnamed variant.
-> > > 
-> > > This patch series switches all Renesas boards to the new bindings, and
-> > > adds the missing GPIO_OPEN_DRAIN I/O flags, which were implicitly
-> > > assumed before.  The latter gets rid of messages like:
-> > > 
-> > >     gpio-208 (?): enforced open drain please flag it properly in DT/ACPI DSDT/board file
-> > >     gpio-91 (?): enforced open drain please flag it properly in DT/ACPI DSDT/board file
-> > > 
-> > > Patch 1 was extracted from series "[PATCH/RFC 0/3] i2c: gpio: Add
-> > > support for named gpios in DT", hence the v2.  All other patches are
-> > > new.
-> > > 
-> > > Note that after this series is applied, the i2c-gpio buses are no longer
-> > > detected when booting new DTBs on old (v4.14 and older) kernels, which
-> > > should not be an issue.  Booting old DTBs on new kernels is not
-> > > affected.
-> > > 
-> > > Thanks for applying!
-> > 
-> > Thanks, applied.
-> 
-> Phew, you guys are fast. For the record:
-> 
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On 01-12-17, 12:25, Gregory CLEMENT wrote:
+> +config ARM_VEXPRESS_SPC_CPUFREQ
+> +        tristate "Versatile Express SPC based CPUfreq driver"
+> +	depends on ARM_BIG_LITTLE_CPUFREQ && ARCH_VEXPRESS_SPC
+> +        help
+> +          This add the CPUfreq driver support for Versatile Express
+> +	  big.LITTLE platforms using SPC for power management.
+> +
+> +config ARM_SCPI_CPUFREQ
 
-Thanks, I'll see about adding your tag.
+The order of above two must be reversed ?
+
+-- 
+viresh
