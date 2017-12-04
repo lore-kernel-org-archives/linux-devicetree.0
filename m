@@ -1,32 +1,76 @@
-From: Sven Van Asbroeck <thesven73-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] at24: support eeproms that do not auto-rollover reads.
-Date: Mon, 4 Dec 2017 17:24:33 -0500
-Message-ID: <CAGngYiXR83+0phkeAvJYYEm8HvmN-c9d0B9p1BRiPHyUz1ogAA@mail.gmail.com>
-References: <1512401778-20366-1-git-send-email-svendev@arcx.com>
- <1512401778-20366-2-git-send-email-svendev@arcx.com> <20171204214023.ml2ujacezsop5ilb@kekkonen.localdomain>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 4/7] OF: properties: Implement get_match_data()
+ callback
+Date: Mon, 4 Dec 2017 16:25:28 -0600
+Message-ID: <20171204222528.wf6xpozisxu5udx5@rob-hp-laptop>
+References: <1512188864-773-1-git-send-email-okaya@codeaurora.org>
+ <1512188864-773-5-git-send-email-okaya@codeaurora.org>
+ <CAL_JsqJ+fMqrt6Tk8h6v1fSkrBg+GcMxSXK9XCcz3nmYgyguuQ@mail.gmail.com>
+ <590f0536-b73d-ee32-a284-32e564af2f57@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171204214023.ml2ujacezsop5ilb-sGAanXTfQ4777SC2UrCW1FMQynFLKtET@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <590f0536-b73d-ee32-a284-32e564af2f57-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sven Van Asbroeck <svenv-fuHqz3Nb1YI@public.gmane.org>
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> If this is truly specific to at24, then vendor prefix would be appropriate,
-> plus it'd go to an at24 specific binding file. However if it isn't I'd just
-> remove the above sentence. I guess the latter?
+On Mon, Dec 04, 2017 at 01:05:51PM -0500, Sinan Kaya wrote:
+> On 12/4/2017 11:23 AM, Rob Herring wrote:
+> > On Fri, Dec 1, 2017 at 10:27 PM, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> >> Now that we have a get_match_data() callback as part of the firmware node,
+> >> implement the OF specific piece for it.
+> >>
+> >> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >> ---
+> >>  drivers/of/property.c | 17 +++++++++++++++++
+> >>  1 file changed, 17 insertions(+)
+> >>
+> ..
+> 
+> >>
+> >> +void *of_fwnode_get_match_data(const struct fwnode_handle *fwnode,
+> >> +                              const struct device_driver *drv)
+> >> +{
+> >> +       const struct device_node *node = to_of_node(fwnode);
+> >> +       const struct of_device_id *match;
+> >> +
+> >> +       if (!node)
+> >> +               return NULL;
+> > 
+> > of_match_node checks this.
+> 
+> I see a check for the matches argument but not for the node argument.
+> Am I missing something?
 
-Yes, no-read-rollover is truly specific to at24.c, because it applies only
-to i2c multi-address chips. The at25 is spi based so cannot have multiple
-addresses.
+Ah yes, you are right.
 
-So yes, "at24,no-read-rollover" would perhaps be a better name.
+> 
+> > 
+> >> +
+> >> +       match = of_match_node(drv->of_match_table, node);
+> >> +       if (!match)
+> >> +               return NULL;
+> >> +
+> >> +       return (void *)match->data;
+> > 
+> > Don't need a cast here.
+> 
+> I can fix this.
+> 
+> > 
+> > of_device_get_match_data() already does most of this, but getting a
+> > device ptr from fwnode_handle may not be possible?
+> 
+> I couldn't figure out how to do that. Do you have a suggestion?
+> I have been looking for examples with no luck.
 
-Regarding an at24 specific binding file. You're saying I should create
-Documentation/devicetree/bindings/eeprom/at24.txt ? Should I indicate
-that at24.txt "inherits from" eeprom.txt? Note that at25.txt does not
-currently do this.
+Change the property API to pass struct device instead. That's maybe not 
+worth it.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
