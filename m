@@ -1,31 +1,101 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: hwrng: Add Samsung Exynos 5250+ True
- RNG bindings
-Date: Mon, 4 Dec 2017 14:27:58 -0600
-Message-ID: <20171204202758.uw4prqbnuvwt6qls@rob-hp-laptop>
-References: <20171204125351.26805-1-l.stelmach@samsung.com>
- <CGME20171204125414eucas1p1233c2c8ef5b637c3a4565af875515524@eucas1p1.samsung.com>
- <20171204125351.26805-2-l.stelmach@samsung.com>
+Subject: Re: [PATCH V7 2/2] dt-bindings: Add qcom spmi_pmic clock divider
+ bindings
+Date: Mon, 4 Dec 2017 14:29:59 -0600
+Message-ID: <20171204202959.6gxmy7jdt7gwspuh@rob-hp-laptop>
+References: <1511255465-3984-1-git-send-email-tirupath@codeaurora.org>
+ <1511255465-3984-3-git-send-email-tirupath@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171204125351.26805-2-l.stelmach@samsung.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+In-Reply-To: <1511255465-3984-3-git-send-email-tirupath@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Tirupathi Reddy <tirupath@codeaurora.org>
+Cc: sboyd@codeaurora.org, mturquette@baylibre.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 04, 2017 at 01:53:49PM +0100, Łukasz Stelmach wrote:
-> Add binding documentation for the True Random Number Generator
-> found on Samsung Exynos 5250+ SoCs.
+On Tue, Nov 21, 2017 at 02:41:05PM +0530, Tirupathi Reddy wrote:
+> This patch adds device tree bindings for Qualcomm SPMI PMIC
+> clock divider module.
 > 
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
 > ---
->  .../devicetree/bindings/rng/samsung,exynos5250-trng.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>  .../bindings/clock/qcom,spmi-pmic-div.txt          | 59 ++++++++++++++++++++++
 
-I acked v1 (and so did Krzysztof). You added them in v2, but 
-dropped here? 
+Didn't Stephen say to move this somewhere else?
+
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,spmi-pmic-div.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,spmi-pmic-div.txt b/Documentation/devicetree/bindings/clock/qcom,spmi-pmic-div.txt
+> new file mode 100644
+> index 0000000..2cf2aba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,spmi-pmic-div.txt
+> @@ -0,0 +1,59 @@
+> +Qualcomm Technologies, Inc. SPMI PMIC clock divider (clkdiv)
+> +
+> +clkdiv configures the clock frequency of a set of outputs on the PMIC.
+> +These clocks are typically wired through alternate functions on
+> +gpio pins.
+> +
+> +=======================
+> +Properties
+> +=======================
+> +
+> +- compatible
+> +	Usage:      required
+> +	Value type: <string>
+> +	Definition: must be "qcom,spmi-clkdiv".
+> +
+> +- reg
+> +	Usage:      required
+> +	Value type: <prop-encoded-array>
+> +	Definition: base address of CLKDIV peripherals.
+> +
+> +- qcom,num-clkdivs
+> +	Usage:      required
+> +	Value type: <u32>
+> +	Definition: number of CLKDIV peripherals.
+> +
+> +- clocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: reference to the xo clock.
+> +
+> +- clock-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "xo".
+> +
+> +- clock-cells:
+
+#clock-cells
+
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: shall contain 1.
+> +
+> +=======
+> +Example
+> +=======
+> +
+> +pm8998_clk_divs: clock-controller@5b00 {
+> +	compatible = "qcom,spmi-clkdiv";
+> +	reg = <0x5b00>;
+> +	#clock-cells = <1>;
+> +	qcom,num-clkdivs = <3>;
+> +	clocks = <&xo_board>;
+> +	clock-names = "xo";
+> +
+> +	assigned-clocks = <&pm8998_clk_divs 1>,
+> +			  <&pm8998_clk_divs 2>,
+> +			  <&pm8998_clk_divs 3>;
+> +	assigned-clock-rates = <9600000>,
+> +			       <9600000>,
+> +			       <9600000>;
+> +};
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
