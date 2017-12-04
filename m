@@ -1,108 +1,61 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v8 28/28] rcar-vin: enable support for r8a77970
-Date: Mon, 4 Dec 2017 10:48:56 +0100
-Message-ID: <25017e02-ee2b-c5fc-7980-55d5d9d6211f@xs4all.nl>
-References: <20171129194342.26239-1-niklas.soderlund+renesas@ragnatech.se>
- <20171129194342.26239-29-niklas.soderlund+renesas@ragnatech.se>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add optional nvmem MAC address bindings
+ to ti,wlink-st
+Date: Mon, 4 Dec 2017 12:54:31 +0300
+Message-ID: <2dfb7130-e229-7429-0f30-11d7df553fdf@cogentembedded.com>
+References: <1512357682-8911-1-git-send-email-david@lechnology.com>
+ <1512357682-8911-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171129194342.26239-29-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+In-Reply-To: <1512357682-8911-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2017 08:43 PM, Niklas Söderlund wrote:
-> Add the SoC specific information for Renesas r8a77970.
+Hello!
+
+On 12/4/2017 6:21 AM, David Lechner wrote:
+
+> This adds optional nvmem consumer properties to the ti,wlink-st device tree
+> bindings to allow specifying the Bluetooth MAC address.
 > 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-
-Reviewed-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-
-Regards,
-
-	Hans
-
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/rcar_vin.txt         |  1 +
->  drivers/media/platform/rcar-vin/rcar-core.c        | 40 ++++++++++++++++++++++
->  2 files changed, 41 insertions(+)
+>   Documentation/devicetree/bindings/net/ti,wilink-st.txt | 4 ++++
+>   1 file changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> index 314743532bbb4523..6b98f8a3398fa493 100644
-> --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-> +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-> @@ -21,6 +21,7 @@ on Gen3 to a CSI-2 receiver.
->     - "renesas,vin-r8a7794" for the R8A7794 device
->     - "renesas,vin-r8a7795" for the R8A7795 device
->     - "renesas,vin-r8a7796" for the R8A7796 device
-> +   - "renesas,vin-r8a77970" for the R8A77970 device
->     - "renesas,rcar-gen2-vin" for a generic R-Car Gen2 or RZ/G1 compatible
->       device.
->     - "renesas,rcar-gen3-vin" for a generic R-Car Gen3 compatible device.
-> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> index 62eb89b36fbb2ee1..bbdf36b5c3c8178d 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> @@ -1145,6 +1145,42 @@ static const struct rvin_info rcar_info_r8a7796 = {
->  	},
->  };
->  
-> +static const struct rvin_info rcar_info_r8a77970 = {
-> +	.chip = RCAR_GEN3,
-> +	.use_mc = true,
-> +	.max_width = 4096,
-> +	.max_height = 4096,
-> +
-> +	.num_chsels = 5,
-> +	.chsels = {
-> +		{
-> +			{ .csi = RVIN_CSI40, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +		}, {
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 1 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +		}, {
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 2 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +		}, {
-> +			{ .csi = RVIN_CSI40, .chan = 1 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +			{ .csi = RVIN_CSI40, .chan = 3 },
-> +			{ .csi = RVIN_NC, .chan = 0 },
-> +		},
-> +	},
-> +};
-> +
->  static const struct of_device_id rvin_of_id_table[] = {
->  	{
->  		.compatible = "renesas,vin-r8a7778",
-> @@ -1182,6 +1218,10 @@ static const struct of_device_id rvin_of_id_table[] = {
->  		.compatible = "renesas,vin-r8a7796",
->  		.data = &rcar_info_r8a7796,
->  	},
-> +	{
-> +		.compatible = "renesas,vin-r8a77970",
-> +		.data = &rcar_info_r8a77970,
-> +	},
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, rvin_of_id_table);
-> 
+> diff --git a/Documentation/devicetree/bindings/net/ti,wilink-st.txt b/Documentation/devicetree/bindings/net/ti,wilink-st.txt
+> index 1649c1f..24eb897 100644
+> --- a/Documentation/devicetree/bindings/net/ti,wilink-st.txt
+> +++ b/Documentation/devicetree/bindings/net/ti,wilink-st.txt
+> @@ -32,6 +32,8 @@ Optional properties:
+>      See ../clocks/clock-bindings.txt for details.
+>    - clock-names : Must include the following entry:
+>      "ext_clock" (External clock provided to the TI combo chip).
+> + - nvmem-cells: phandle to nvmem data cell that contains a MAC address
+> + - nvmem-cell-names: "mac-address" (required when nvmem-cells is specified)
+>   
+>   Example:
+>   
+> @@ -43,5 +45,7 @@ Example:
+>   		enable-gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+>   		clocks = <&clk32k_wl18xx>;
+>   		clock-names = "ext_clock";
+> +		nvmem-cells: <&mac_address>
 
+    s/:/ = /?
+
+> +		nvmem-cell-names "mac-address"
+
+    Where's =?
+
+[...]
+
+MBR, Sergei
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
