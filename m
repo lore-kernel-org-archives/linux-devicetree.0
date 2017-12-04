@@ -1,83 +1,275 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v6 13/13] ASoC: stm32: add DFSDM DAI support
-Date: Mon, 4 Dec 2017 16:58:54 +0000
-Message-ID: <20171204165854.m75tpfauxxwz6bi4@sirena.org.uk>
-References: <1512150020-20335-1-git-send-email-arnaud.pouliquen@st.com>
- <1512150020-20335-14-git-send-email-arnaud.pouliquen@st.com>
- <20171202150952.1b5f3bfd@archlinux>
- <bd2ba77f-2d91-efb7-d89a-3f8cdeb941f7@st.com>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Mon, 4 Dec 2017 09:30:26 -0800
+Message-ID: <CAJ+vNU0NKZizung9+1zsd1RZBrDbBgk+A8mVJ76bQysjCUoaKw@mail.gmail.com>
+References: <1511990397-27647-1-git-send-email-tharvey@gateworks.com>
+ <1511990397-27647-4-git-send-email-tharvey@gateworks.com> <1a1be5d7-caed-6cba-c97a-dbb70e119fa3@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2214363062045733817=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <bd2ba77f-2d91-efb7-d89a-3f8cdeb941f7@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1a1be5d7-caed-6cba-c97a-dbb70e119fa3-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Dec 4, 2017 at 4:50 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
+> Hi Tim,
+>
+> Found a few more small issues. After that's fixed and you have the Ack for the
+> bindings this can be merged I think.
 
---===============2214363062045733817==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rlh6d4dswgtajyfg"
-Content-Disposition: inline
+Hans,
 
+Thanks. Can you weigh in on the bindings? Rob was hoping for some
+discussion on making some generic bus format types for video and I'm
+not familiar with the other video encoders/decoders enough to know if
+there is enough commonality.
 
---rlh6d4dswgtajyfg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>
+> On 11/29/2017 10:19 PM, Tim Harvey wrote:
+<snip>
+>> +
+>> +/* parse an infoframe and do some sanity checks on it */
+>> +static unsigned int
+>> +tda1997x_parse_infoframe(struct tda1997x_state *state, u16 addr)
+>> +{
+>> +     struct v4l2_subdev *sd = &state->sd;
+>> +     union hdmi_infoframe frame;
+>> +     u8 buffer[40];
+>> +     u8 reg;
+>> +     int len, err;
+>> +
+>> +     /* read data */
+>> +     len = io_readn(sd, addr, sizeof(buffer), buffer);
+>> +     err = hdmi_infoframe_unpack(&frame, buffer);
+>> +     if (err) {
+>> +             v4l_err(state->client,
+>> +                     "failed parsing %d byte infoframe: 0x%04x/0x%02x\n",
+>> +                     len, addr, buffer[0]);
+>> +             return err;
+>> +     }
+>> +     hdmi_infoframe_log(KERN_INFO, &state->client->dev, &frame);
+>> +     switch (frame.any.type) {
+>> +     /* Audio InfoFrame: see HDMI spec 8.2.2 */
+>> +     case HDMI_INFOFRAME_TYPE_AUDIO:
+>> +             /* sample rate */
+>> +             switch (frame.audio.sample_frequency) {
+>> +             case HDMI_AUDIO_SAMPLE_FREQUENCY_32000:
+>> +                     state->audio_samplerate = 32000;
+>> +                     break;
+>> +             case HDMI_AUDIO_SAMPLE_FREQUENCY_44100:
+>> +                     state->audio_samplerate = 44100;
+>> +                     break;
+>> +             case HDMI_AUDIO_SAMPLE_FREQUENCY_48000:
+>> +                     state->audio_samplerate = 48000;
+>> +                     break;
+>> +             case HDMI_AUDIO_SAMPLE_FREQUENCY_88200:
+>> +                     state->audio_samplerate = 88200;
+>> +                     break;
+>> +             case HDMI_AUDIO_SAMPLE_FREQUENCY_96000:
+>> +                     state->audio_samplerate = 96000;
+>> +                     break;
+>> +             case HDMI_AUDIO_SAMPLE_FREQUENCY_176400:
+>> +                     state->audio_samplerate = 176400;
+>> +                     break;
+>> +             case HDMI_AUDIO_SAMPLE_FREQUENCY_192000:
+>> +                     state->audio_samplerate = 192000;
+>> +                     break;
+>> +             default:
+>> +             case HDMI_AUDIO_SAMPLE_FREQUENCY_STREAM:
+>> +                     break;
+>> +             }
+>> +
+>> +             /* sample size */
+>> +             switch (frame.audio.sample_size) {
+>> +             case HDMI_AUDIO_SAMPLE_SIZE_16:
+>> +                     state->audio_samplesize = 16;
+>> +                     break;
+>> +             case HDMI_AUDIO_SAMPLE_SIZE_20:
+>> +                     state->audio_samplesize = 20;
+>> +                     break;
+>> +             case HDMI_AUDIO_SAMPLE_SIZE_24:
+>> +                     state->audio_samplesize = 24;
+>> +                     break;
+>> +             case HDMI_AUDIO_SAMPLE_SIZE_STREAM:
+>> +             default:
+>> +                     break;
+>> +             }
+>> +
+>> +             /* Channel Count */
+>> +             state->audio_channels = frame.audio.channels;
+>> +             if (frame.audio.channel_allocation &&
+>> +                 frame.audio.channel_allocation != state->audio_ch_alloc) {
+>> +                     /* use the channel assignment from the infoframe */
+>> +                     state->audio_ch_alloc = frame.audio.channel_allocation;
+>> +                     tda1997x_configure_audout(sd, state->audio_ch_alloc);
+>> +                     /* reset the audio FIFO */
+>> +                     tda1997x_hdmi_info_reset(sd, RESET_AUDIO, false);
+>> +             }
+>> +             break;
+>> +
+>> +     /* Auxiliary Video information (AVI) InfoFrame: see HDMI spec 8.2.1 */
+>> +     case HDMI_INFOFRAME_TYPE_AVI:
+>> +             state->colorspace = frame.avi.colorspace;
+>> +             state->colorimetry = frame.avi.colorimetry;
+>> +             state->content = frame.avi.content_type;
+>> +             /* Quantization Range */
+>> +             switch (state->rgb_quantization_range) {
+>> +             case V4L2_DV_RGB_RANGE_AUTO:
+>> +                     state->range = frame.avi.quantization_range;
+>> +                     break;
+>> +             case V4L2_DV_RGB_RANGE_LIMITED:
+>> +                     state->range = HDMI_QUANTIZATION_RANGE_LIMITED;
+>> +                     break;
+>> +             case V4L2_DV_RGB_RANGE_FULL:
+>> +                     state->range = HDMI_QUANTIZATION_RANGE_FULL;
+>> +                     break;
+>> +             }
+>> +             if (state->range == HDMI_QUANTIZATION_RANGE_DEFAULT) {
+>> +                     if (frame.avi.video_code <= 1)
+>> +                             state->range = HDMI_QUANTIZATION_RANGE_FULL;
+>> +                     else
+>> +                             state->range = HDMI_QUANTIZATION_RANGE_LIMITED;
+>> +             }
+>> +             /*
+>> +              * If colorimetry not specified, conversion depends on res type:
+>> +              *  - SDTV: ITU601 for SD (480/576/240/288 line resolution)
+>> +              *  - HDTV: ITU709 for HD (720/1080 line resolution)
+>> +              *  -   PC: sRGB
+>> +              * see HDMI specification section 6.7
+>> +              */
+>> +             if ((state->colorspace == HDMI_COLORSPACE_YUV422 ||
+>> +                  state->colorspace == HDMI_COLORSPACE_YUV444) &&
+>> +                 (state->colorimetry == HDMI_COLORIMETRY_EXTENDED ||
+>> +                  state->colorimetry == HDMI_COLORIMETRY_NONE)) {
+>> +                     if (is_sd(state->timings.bt.height))
+>> +                             state->colorimetry = HDMI_COLORIMETRY_ITU_601;
+>> +                     else if (is_hd(state->timings.bt.height))
+>> +                             state->colorimetry = HDMI_COLORIMETRY_ITU_709;
+>> +                     else
+>> +                             state->colorimetry = HDMI_COLORIMETRY_NONE;
+>> +             }
+>> +             v4l_dbg(1, debug, state->client,
+>> +                     "colorspace=%d colorimetry=%d range=%d content=%d\n",
+>> +                     state->colorspace, state->colorimetry, state->range,
+>> +                     state->content);
+>> +
+>> +             /* configure upsampler: 0=bypass 1=repeatchroma 2=interpolate */
+>> +             reg = io_read(sd, REG_PIX_REPEAT);
+>> +             reg &= ~PIX_REPEAT_MASK_UP_SEL;
+>> +             if (state->colorspace == HDMI_COLORSPACE_YUV422)
+>> +                     reg |= (PIX_REPEAT_CHROMA << PIX_REPEAT_SHIFT);
+>> +             io_write(sd, REG_PIX_REPEAT, reg);
+>> +
+>> +             /* ConfigurePixelRepeater: repeat n-times each pixel */
+>> +             reg = io_read(sd, REG_PIX_REPEAT);
+>> +             reg &= ~PIX_REPEAT_MASK_REP;
+>> +             reg |= frame.avi.pixel_repeat;
+>> +             io_write(sd, REG_PIX_REPEAT, reg);
+>> +
+>> +             /* configure the receiver with the new colorspace */
+>> +             tda1997x_configure_csc(sd);
+>> +             break;
+>> +     default:
+>> +             break;
+>> +     }
+>> +     return 0;
+>> +}
+>> +
+<snip>
+>> +
+>> +static int tda1997x_fill_format(struct tda1997x_state *state,
+>> +                             struct v4l2_mbus_framefmt *format)
+>> +{
+>> +     const struct v4l2_bt_timings *bt;
+>> +
+>> +     v4l_dbg(1, debug, state->client, "%s\n", __func__);
+>> +
+>> +     if (!state->detected_timings)
+>> +             return -EINVAL;
+>> +     bt = &state->detected_timings->bt;
+>> +     memset(format, 0, sizeof(*format));
+>> +
+>> +     format->width = bt->width;
+>> +     format->height = bt->height;
+>> +     format->field = V4L2_FIELD_NONE;
+>> +     format->colorspace = V4L2_COLORSPACE_SRGB;
+>> +     if (bt->flags & V4L2_DV_FL_IS_CE_VIDEO)
+>> +             format->colorspace = (bt->height <= 576) ?
+>> +                     V4L2_COLORSPACE_SMPTE170M : V4L2_COLORSPACE_REC709;
+>
+> Close. What is missing is a check of the AVI InfoFrame: if it has an explicit
+> colorimetry then use that. E.g. check for HDMI_COLORIMETRY_ITU_601 or ITU_709
+> and set the colorspace accordingly. Otherwise fall back to what you have here.
+>
 
-On Mon, Dec 04, 2017 at 09:58:42AM +0100, Arnaud Pouliquen wrote:
-> On 12/02/2017 04:09 PM, Jonathan Cameron wrote:
+This function currently matches adv7604/adv7842 where they don't look
+at colorimetry (but I do see a TODO in adv748x_hdmi_fill_format to
+look at this) so I don't have an example and may not understand.
 
-> > Mark, given this set is moderately invasive on the IIO side and
-> > should just drop in cleanly on the sound side of things, either
-> > I could take it via IIO or one of us can do an immutable branch
-> > and we take it through both trees.
+Do you mean:
 
-> Don't know if you saw the reply from Mark on V5:
-> "This is basically fine, if someone could send me a pull request and the
-> relevant patches when the IIO stuff is sorted out I'll give it a final
-> check and apply then."
+       format->colorspace = V4L2_COLORSPACE_SRGB;
+       if (bt->flags & V4L2_DV_FL_IS_CE_VIDEO) {
+                if ((state->colorimetry == HDMI_COLORIMETRY_ITU_601) ||
+                    (state->colorimetry == HDMI_COLORIMETRY_ITU_709))
+                        format->colorspace = state->colorspace;
+                else
+                        format->colorspace = is_sd(bt->height) ?
+                                V4L2_COLORSPACE_SMPTE170M :
+V4L2_COLORSPACE_REC709;
+        }
 
-Yup, I figure that a shared branch with the IIO changes in will be the
-easiest thing (Morimoto-san is donig a bunch of subsystem wide ASoC
-cleanups ATM).
+Also during more testing I've found that I'm not capturing interlaced
+properly and know I at least need:
 
---rlh6d4dswgtajyfg
-Content-Type: application/pgp-signature; name="signature.asc"
+-        format->field = V4L2_FIELD_NONE;
++        format->field = (bt->interlaced) ?
++                V4L2_FIELD_ALTERNATE : V4L2_FIELD_NONE;
 
------BEGIN PGP SIGNATURE-----
+I'm still not quite capturing interlaced yet but I think its an issue
+of setting up the media pipeline improperly.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlolfs4ACgkQJNaLcl1U
-h9AI6Qf+Ns7UxHco/nllDt1X0901uEorPHxMn67VgUYAh587jmNIHugMSZh5zTA/
-2OXe/FU0JWus7baKx76e8CqWE23p1qsEviwlR/IGRvjAM8Rd9VF1TUJJE3bjkWFS
-sXJJlK4XNrSzLijRO4+pa43ovu777eigHgfAUlt4+vyOCnb16pc33Mix5uKRsHrE
-W7XKf122/kCvMS1DOp7EOgzpQRonOy+x4h0cnaTheOSS/ayzN80qVImW7e+70bAs
-MmwBK/gMyGdyeGmhgUxonO5tf3gxYGXcM7LzCyG1Sm8wLELLduEo/JCTaEamqvCp
-yewbRgeW50AJjWbkHLmDkompA7FYmg==
-=Bx4K
------END PGP SIGNATURE-----
+> Make a note that we ignore HDMI_COLORIMETRY_EXTENDED as we don't properly
+> support that anyway. For the record: I know that the colorimetry field in the
+> AVI InfoFrame can change dynamically, so this is just a snapshot in time. We
+> don't have good support for dynamic colorimetry changes. Or to be precise: we
+> never got around to implement it.
+>
+>> +
+>> +     return 0;
+>> +}
+>> +
+<snip>
+>> +
+>> +static int tda1997x_s_ctrl(struct v4l2_ctrl *ctrl)
+>> +{
+>> +     struct v4l2_subdev *sd = to_sd(ctrl);
+>> +     struct tda1997x_state *state = to_state(sd);
+>> +
+>> +     switch (ctrl->id) {
+>> +     /* allow overriding the default RGB quantization range */
+>> +     case V4L2_CID_DV_RX_RGB_RANGE:
+>> +             state->range = ctrl->val;
+>
+> This should be assigned to state->rgb_quantization_range!
 
---rlh6d4dswgtajyfg--
+oops... thanks!
 
+>
+>> +             tda1997x_configure_csc(sd);
+>> +             return 0;
+>> +     }
+>> +
+>> +     return -EINVAL;
+>> +};
+>> +
 
---===============2214363062045733817==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks,
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2214363062045733817==--
+Tim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
