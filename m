@@ -1,36 +1,83 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] arm64: dts: exynos: increase bus frequency for MHL chip
-Date: Mon, 4 Dec 2017 17:51:45 +0100
-Message-ID: <20171204165145.4f72dvpazgcxydkf@kozik-lap>
-References: <CGME20171201113426eucas1p247ef5f5113c466409f0a001297aaf9b6@eucas1p2.samsung.com>
- <20171201113351.16361-1-a.hajda@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 13/13] ASoC: stm32: add DFSDM DAI support
+Date: Mon, 4 Dec 2017 16:58:54 +0000
+Message-ID: <20171204165854.m75tpfauxxwz6bi4@sirena.org.uk>
+References: <1512150020-20335-1-git-send-email-arnaud.pouliquen@st.com>
+ <1512150020-20335-14-git-send-email-arnaud.pouliquen@st.com>
+ <20171202150952.1b5f3bfd@archlinux>
+ <bd2ba77f-2d91-efb7-d89a-3f8cdeb941f7@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20171201113351.16361-1-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: multipart/mixed; boundary="===============2214363062045733817=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bd2ba77f-2d91-efb7-d89a-3f8cdeb941f7@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMDEsIDIwMTcgYXQgMTI6MzM6NTFQTSArMDEwMCwgQW5kcnplaiBIYWpkYSB3
-cm90ZToKPiBzaWk4NjIwIHN1cHBvcnRzIDFNSHogY2xvY2ssIGl0IGFsbG93cyBmYXN0ZXIgdHJh
-bnNtaXNzaW9ucyBhbmQgYWNjb3JkaW5nCj4gdG8gZXh0ZW5zaXZlIHRlc3RzIGFsbG93cyB0byBt
-aXRpZ2F0ZSBzb21lIG9ic2N1cmUgYnVncyBpbiBJMkMgY2xpZW50Cj4gbG9naWMgb2YgdGhlIGNo
-aXAuCj4gCj4gU2lnbmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNv
-bT4KPiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTItY29t
-bW9uLmR0c2kgfCAxICsKPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4gCgpUaGFu
-a3MsIGFwcGxpZWQuCgpCZXN0IHJlZ2FyZHMsCktyenlzenRvZgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============2214363062045733817==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rlh6d4dswgtajyfg"
+Content-Disposition: inline
+
+
+--rlh6d4dswgtajyfg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Dec 04, 2017 at 09:58:42AM +0100, Arnaud Pouliquen wrote:
+> On 12/02/2017 04:09 PM, Jonathan Cameron wrote:
+
+> > Mark, given this set is moderately invasive on the IIO side and
+> > should just drop in cleanly on the sound side of things, either
+> > I could take it via IIO or one of us can do an immutable branch
+> > and we take it through both trees.
+
+> Don't know if you saw the reply from Mark on V5:
+> "This is basically fine, if someone could send me a pull request and the
+> relevant patches when the IIO stuff is sorted out I'll give it a final
+> check and apply then."
+
+Yup, I figure that a shared branch with the IIO changes in will be the
+easiest thing (Morimoto-san is donig a bunch of subsystem wide ASoC
+cleanups ATM).
+
+--rlh6d4dswgtajyfg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlolfs4ACgkQJNaLcl1U
+h9AI6Qf+Ns7UxHco/nllDt1X0901uEorPHxMn67VgUYAh587jmNIHugMSZh5zTA/
+2OXe/FU0JWus7baKx76e8CqWE23p1qsEviwlR/IGRvjAM8Rd9VF1TUJJE3bjkWFS
+sXJJlK4XNrSzLijRO4+pa43ovu777eigHgfAUlt4+vyOCnb16pc33Mix5uKRsHrE
+W7XKf122/kCvMS1DOp7EOgzpQRonOy+x4h0cnaTheOSS/ayzN80qVImW7e+70bAs
+MmwBK/gMyGdyeGmhgUxonO5tf3gxYGXcM7LzCyG1Sm8wLELLduEo/JCTaEamqvCp
+yewbRgeW50AJjWbkHLmDkompA7FYmg==
+=Bx4K
+-----END PGP SIGNATURE-----
+
+--rlh6d4dswgtajyfg--
+
+
+--===============2214363062045733817==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2214363062045733817==--
