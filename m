@@ -1,49 +1,89 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4] usb: xhci: allow imod-interval to be configurable
-Date: Mon, 4 Dec 2017 08:58:14 -0600
-Message-ID: <9cb2e5fc-1bec-c19c-c04e-fe56e5c1bc16@codeaurora.org>
-References: <1512397671-28733-1-git-send-email-awallis@codeaurora.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] of: overlay: fix memory leak of ovcs on error exit path
+Date: Mon, 4 Dec 2017 16:15:40 +0100
+Message-ID: <CAMuHMdX7-MyxysA4HQk1m=jL4ESnfnD_wxCPbv2_JrEc-w5LrQ@mail.gmail.com>
+References: <20171129191750.25254-1-colin.king@canonical.com>
+ <dcb4e2a4-707b-0ccc-e12b-c6fa4ef251b7@gmail.com> <20171130125002.wlnnev5pjih6d5bz@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512397671-28733-1-git-send-email-awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171130125002.wlnnev5pjih6d5bz@mwanda>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Colin King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/4/17 8:27 AM, Adam Wallis wrote:
-> If no interval is specified, the default of 40,000ns (IMOD=160) will be
-> used.
+Hi Dan,
 
-...
+On Thu, Nov 30, 2017 at 1:50 PM, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
+> On Thu, Nov 30, 2017 at 07:14:45AM -0500, Frank Rowand wrote:
+>> On 11/29/17 14:17, Colin King wrote:
+>> > From: Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+>> >
+>> > Currently if the call to of_resolve_phandles fails then then ovcs
+>> > is not kfree'd on the error exit path.  Rather than try and make
+>> > the clean up exit path more convoluted, fix this by just kfree'ing
+>> > ovcs at the point of error detection and exit via the same exit
+>> > path.
+>> >
+>> > Detected by CoverityScan, CID#1462296 ("Resource Leak")
+>> >
+>> > Fixes: f948d6d8b792 ("of: overlay: avoid race condition between applying multiple overlays")
+>
+> The Fixes tag is wrong.  It should be:
+>
+> Fixes: bd80e2555c5c ("of: overlay: Fix cleanup order in of_overlay_apply()")
+>
+>> > Signed-off-by: Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+>> > ---
+>> >  drivers/of/overlay.c | 4 +++-
+>> >  1 file changed, 3 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> > index 53bc9e3f0b98..6c8efe7d8cbb 100644
+>> > --- a/drivers/of/overlay.c
+>> > +++ b/drivers/of/overlay.c
+>> > @@ -708,8 +708,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
+>> >     of_overlay_mutex_lock();
+>> >
+>> >     ret = of_resolve_phandles(tree);
+>> > -   if (ret)
+>> > +   if (ret) {
+>> > +           kfree(ovcs);
+>> >             goto err_overlay_unlock;
+>> > +   }
+>> >
+>> >     mutex_lock(&of_mutex);
+>> >
+>> >
+>>
+>> False coverity warning.  ovcs is freed in free_overlay_changeset().
+>
+> You're looking at an older version of the code and Colin is looking at
+> linux-next.
 
-> + - imod-interval-ns: default interrupt moderation interval is 5000ns
+Actually Colin was right: the bug was introduced in commit f948d6d8b792:
+While free_overlay_changeset() is called in the error path, that function
+returns early because of:
 
-...
+        if (!ovcs->cset.entries.next)
+                return;
 
-> +  - imod-interval-ns: default interrupt moderation interval is 5000ns
+So it never gets to freeing the passed pointer.
 
-...
+I'm fixing it for good (let's hope so ;-)
 
-> +	xhci->imod_interval = 5000;
+Gr{oetje,eeting}s,
 
-...
+                        Geert
 
-> +	xhci->imod_interval = 40000;
-
-...
-
-> +	xhci->imod_interval = 40000;
-
-Is the default 5,000 or 40,000?  I can't tell.
-
--- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
