@@ -1,101 +1,189 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 0/4] Move DP phy switch to PHY driver
-Date: Mon, 4 Dec 2017 08:08:31 -0800
-Message-ID: <CAD=FV=XVCCbh6P-WweccyKiNy2RJRhqY-6gpf7BVkY4oqdDZbg@mail.gmail.com>
-References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
- <1941891.vosvJnn3h1@phil>
- <8042d73f-c1de-da41-9066-2377de1f521c@rock-chips.com>
- <4091462.xo23GTqF41@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <4091462.xo23GTqF41@diego>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, dri-devel@lists.freedesktop.org, Guenter Roeck <groeck@chromium.org>, Chris Zhong <zyw@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Jianqun Xu <jay.xu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, William wu <wulf@rock-chips.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@chromium.org>, David Wu <david.wu@rock-chips.com>, Enric Balletbo i Serra <enric.balletb>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v13 0/5] ZII RAVE platform driver
+Date: Mon,  4 Dec 2017 08:11:13 -0800
+Message-ID: <20171204161118.19558-1-andrew.smirnov@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBTdW4sIERlYyAzLCAyMDE3IGF0IDExOjQ2IFBNLCBIZWlrbyBTdMO8Ym5lciA8aGVp
-a29Ac250ZWNoLmRlPiB3cm90ZToKPiBIaSBDaHJpcywKPgo+IEFtIE1vbnRhZywgNC4gRGV6ZW1i
-ZXIgMjAxNywgMTA6NDc6MDggQ0VUIHNjaHJpZWIgQ2hyaXMgWmhvbmc6Cj4+IE9uIDIwMTflubQx
-MuaciDAy5pelIDA1OjU4LCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPj4gPiBBbSBGcmVpdGFnLCAx
-LiBEZXplbWJlciAyMDE3LCAxMzo0Mjo0NiBDRVQgc2NocmllYiBEb3VnIEFuZGVyc29uOgo+PiA+
-PiBIaSwKPj4gPj4KPj4gPj4gT24gV2VkLCBOb3YgMjksIDIwMTcgYXQgNjoyNyBQTSwgQ2hyaXMg
-WmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4+ID4+PiBIaSBEb3VnCj4+ID4+Pgo+
-PiA+Pj4gVGhhbmsgeW91IGZvciBtZW50aW9uaW5nIHRoaXMgcGF0Y2guCj4+ID4+Pgo+PiA+Pj4g
-SSB0aGluayB0aGUgZm9jdXMgb2YgdGhlIGRpc2N1c3Npb24gaXM6IGNhbiB3ZSBwdXQgdGhlIGdy
-ZiBjb250cm9sIGJpdAo+PiA+Pj4gdG8KPj4gPj4+IGR0cy4KPj4gPj4+Cj4+ID4+PiBUaGUgUksz
-Mzk5IGhhcyAyIFR5cGUtQyBwaHksIGJ1dCBvbmx5IG9uZSBEUCBjb250cm9sbGVyLCB0aGlzCj4+
-ID4+PiAidXBoeV9kcF9zZWwiCj4+ID4+Pgo+PiA+Pj4gY2FuIGhlbHAgdG8gc3dpdGNoIHRoZXNl
-IDIgcGh5LiBTbyBJIHRoaW5rIHRoaXMgYml0IGNhbiBiZSBjb25zaWRlcmVkIGFzCj4+ID4+PiBh
-Cj4+ID4+PiBwYXJ0IG9mCj4+ID4+Pgo+PiA+Pj4gVHlwZS1DIHBoeSwgdGhlc2UgMiBwaHkgaGF2
-ZSBkaWZmZXJlbnQgYml0cywganVzdCBzaW1pbGFyIHRvIG90aGVyIGJpdHMKPj4gPj4+IChzdWNo
-IGFzICJwaXBlLXN0YXR1cyIpLgo+PiA+Pj4KPj4gPj4+IFB1dCB0aGVtIHRvIERUUyBmaWxlIG1p
-Z2h0IGJlIGEgYWNjZXB0ZWQgcHJhY3RpY2UuCj4+ID4+Cj4+ID4+IEkgZ3Vlc3MgdGhlIGZpcnN0
-IHN0ZXAgd291bGQgYmUgZmluZGluZyB0aGUgcGVyc29uIHRvIG1ha2UgYSBkZWNpc2lvbi4KPj4g
-Pj4gSXMgdGhhdCBIZWlrbz8gIE9sb2Y/ICBLaXNob24/ICBSb2I/LiAgQXMgSSBzZWUgaXQgdGhl
-cmUgYXJlIGEgZmV3Cj4+ID4+IG9wdGlvbnM6Cj4+ID4+Cj4+ID4+IDEuIExhbmQgdGhpcyBzZXJp
-ZXMgYXMtaXMuICBUaGlzIG1ha2VzIHRoZSBuZXcgYml0IHdvcmsganVzdCBsaWtlIGFsbAo+PiA+
-PiB0aGUgb3RoZXIgb25lcyBuZXh0IHRvIGl0LiAgSWYgYW55b25lIGhhcHBlbnMgdG8gdHJ5IHRv
-IHVzZSBhbiBvbGQKPj4gPj4gZGV2aWNlIHRyZWUgb24gYSBuZXcga2VybmVsIHRoZXknbGwgYnJl
-YWsuICBTZWVtcyByYXRoZXIgdW5saWtlbHkKPj4gPj4gZ2l2ZW4gdGhhdCB0aGUgd2hvbGUgdHlw
-ZSBDIFBIWSBpcyBub3QgcmVhbGx5IGZ1bGx5IGZ1bmN0aW9uYWwKPj4gPj4gdXBzdHJlYW0sIGJ1
-dCB0ZWNobmljYWxseSB0aGlzIGlzIGEgbm8tbm8gZnJvbSBhIGRldmljZSB0cmVlCj4+ID4+IHBl
-cnNwZWN0aXZlLgo+PiA+Pgo+PiA+PiAyLiBDaGFuZ2UgdGhlIHNlcmllcyB0byBtYWtlIHRoaXMg
-cHJvcGVydHkgb3B0aW9uYWwuICBJZiBpdCdzIG5vdAo+PiA+PiB0aGVyZSB0aGVuIHRoZSBjb2Rl
-IGJlaGF2ZXMgbGlrZSBpdCBhbHdheXMgZGlkLiAgVGhpcyB3b3VsZCBhZGRyZXNzCj4+ID4+IHRo
-ZSAiY29tcGF0aWJpbGl0eSIgcHJvYmxlbSBidXQgbGlrZWx5IHdvdWxkbid0IGFjdHVhbGx5IGhl
-bHAgYW55IHJlYWwKPj4gPj4gcGVvcGxlLCBhbmQgaXQgd291bGQgYmUgZXh0cmEgd29yay4KPj4g
-Pj4KPj4gPj4gMy4gUmVkbyB0aGUgZHJpdmVyIHRvIGRlcHJlY2F0ZSBhbGwgdGhlIG9sZCBvZmZz
-ZXRzIC8gYml0cyBhbmQganVzdAo+PiA+PiBwdXQgdGhlIHRhYmxlIGluIHRoZSBkcml2ZXIsIGtl
-eWVkIG9mZiB0aGUgY29tcGF0aWJsZSBzdHJpbmcgYW5kIGJhc2UKPj4gPj4gYWRkcmVzcyBpZiB0
-aGUgSU8gbWVtb3J5Lgo+PiA+Pgo+PiA+Pgo+PiA+PiBJIGNhbid0IG1ha2UgdGhpcyBkZWNpc2lv
-bi4gIEl0J3MgdXAgdG8gdGhvc2UgZm9sa3Mgd2hvIHdvdWxkIGJlCj4+ID4+IGxhbmRpbmcgdGhl
-IHBhdGNoIGFuZCBJJ2QgYmUgaGFwcHkgd2l0aCBhbnkgb2YgdGhlbS4gIFdoYXQgSSdtIGxlc3MK
-Pj4gPj4gaGFwcHkgd2l0aCwgaG93ZXZlciwgaXMgdGhlIGluZGVjaXNpb24gcHJldmVudGluZyBm
-b3J3YXJkIHByb2dyZXNzLgo+PiA+PiBXZSBzaG91bGQgcGljayBvbmUgb2YgdGhlIGFib3ZlIHRo
-aW5ncyBhbmQgbGFuZCBpdC4gIE15IG93biBwZXJzb25hbAo+PiA+PiBiaWFzIGlzICMxOiBqdXN0
-IGxhbmQgdGhlIHNlcmllcy4gIE5vIHJlYWwgcGVvcGxlIHdpbGwgYmUgaHVydCBhbmQKPj4gPj4g
-aXQncyBqdXN0IGFkZGluZyBhbm90aGVyIHByb3BlcnR5IHRoYXQgbWF0Y2hlcyB0aGUgb25lcyBu
-ZXh0IHRvIGl0Lgo+PiA+Cj4+ID4gSSdkIHNlY29uZCB0aGF0ICMxIC4gVGhhdCB3aG9sZSB0eXBl
-LWMgcGh5IHRoaW5neSBuZXZlciBmdWxseSB3b3JrZWQgaW4KPj4gPiB0aGUgcGFzdCAoc29tZSBm
-b3IgdGhlIG5ldmVyIHVzZWQgZHAgb3V0cHV0KSwgc28gcGVyc29uYWxseSBJIGRvbid0IGhhdmUK
-Pj4gPiBpc3N1ZXMgd2l0aCBnb2luZyB0aGF0IHJvdXRlLgo+PiA+Cj4+ID4+ICBGcm9tIGEgbG9u
-ZyB0ZXJtIHBlcnNwZWN0aXZlIChBS0EgaG93IEknZCB3cml0ZSB0aGUgbmV4dCBkcml2ZXIgbGlr
-ZQo+PiA+Pgo+PiA+PiB0aGlzKSBJIHBlcnNvbmFsbHkgbGVhbiB0b3dhcmRzIHRvICJ0YWJsZXMg
-aW4gdGhlIGRyaXZlciwgbm90IGluIHRoZQo+PiA+PiBkZXZpY2UgdHJlZSIgYnV0IHF1aXRlIGhv
-bmVzdGx5IEknbSBoYXBweSB0byB0YWtlIHdoYXRldmVyIGRpcmVjdGlvbgo+PiA+PiB0aGUgbWFp
-bnRhaW5lcnMgZ2l2ZS4KPj4gPgo+PiA+IEl0IGxvb2tzIGxpa2Ugd2UncmUgaW4gYWdyZWVtZW50
-IGhlcmUgOi0pIC4gR1JGIHN0dWZmIHNob3VsZCBub3QgbGVhayBpbnRvCj4+ID4gdGhlIGRldmlj
-ZXRyZWUsIGFzIGl0IGNhdXNlcyBlbmRsZXNzIGhlYWRhY2hlcyBsYXRlci4gQnV0IEkgZ3Vlc3Mg
-d2UnbGwKPj4gPiBuZWVkIHRvIGxpdmUgd2l0aCB0aGUgb25lcyB0aGF0IGhhcHBlbmVkIHNvIGZh
-ci4KPj4KPj4gU28sIHRoZSBmaXJzdCBzdGVwIGlzOiBtb3ZlIGFsbCB0aGUgcHJpdmF0ZSBwcm9w
-ZXJ0eSBvZiB0Y3BoeSB0bwo+PiBkcml2ZXJzL3BoeS9yb2NrY2hpcC9waHktcm9ja2NoaXAtdHlw
-ZWMuYy4KPj4gU2Vjb25kIHN0ZXA6IG5ldyBhIG1lbWJlcjogdXBoeS1kcC1zZWwuCj4+IEluIG15
-IG1pbmQsIHdlIHNob3VsZCBoYXZlIGRpc2N1c3NlZCB0aGVzZSBwcm9wZXJ0aWVzIGJlZm9yZSwg
-YW5kIHRoZW4gSQo+PiBtb3ZlZCB0aGVtIGFsbCBpbnRvIERUUy4KPgo+IEFjdHVhbGx5LCBJIHdh
-cyBhZ3JlZWluZyB3aXRoIERvdWcsIHRoYXQgd2UgcHJvYmFibHkgZG9uJ3QgbmVlZCB0byByZXdv
-cmsgdGhlCj4gdHlwZS1jIHBoeSBkcml2ZXIuIEFzIG1vc3QgcHJvcGVydGllcyBmb3IgaXQgYXJl
-IGluIHRoZSBkZXZpY2V0cmVlIHJpZ2h0IG5vdwo+IHdlJ2xsIG5lZWQgdG8gc3VwcG9ydCB0aGVt
-IGZvciBiYWNrd2FyZHMtY29tcGF0aWJsaXR5IGFueXdheS4KPgo+IEFuZCB5ZXMsIHRoZXJlIHBy
-b2JhYmx5IHdhcyBkaXNjdXNzaW9uIG92ZXIgZHRzIHZzLiBkcml2ZXItdGFibGUgd2hlbiB0aGUK
-PiB0eXBlLWMgZHJpdmVyIHdhcyBpbnRyb2R1Y2VkLCBidXQgSSBlaXRoZXIgbWlzc2VkIGl0IG9y
-IHdhc24ndCBmaXJtIGVub3VnaAo+IGJhY2sgdGhlbiA7LSkgLgo+Cj4gSGVuY2UgdGhlICJ3ZSds
-bCBuZWVkIHRvIGxpdmUgd2l0aCBpdCIgZm9yIHRoZSB0eXBlLWMgcGh5LCBidXQgc2hvdWxkIG5v
-dAo+IGRvIHNpbWlsYXIgdGhpbmdzIGluIGZ1dHVyZSBkcml2ZXJzLgoKU28gSSBndWVzcyBub3cg
-d2UncmUganVzdCB3YWl0aW5nIGZvciBzb21lIGFncmVlbWVudCBmcm9tIEtpc2hvbiB0aGF0Cmhl
-J3Mgd2lsbGluZyB0byBsYW5kIHRoZSBQSFkgY2hhbmdlPyAgSGVpa286IHByZXN1bWFibHkgeW91
-IGNvdWxkCmFwcGx5IHRoZSBEUCBjaGFuZ2UgdG8gZHJtLW1pc2M/ICAuLi5vciBpcyB0aGVyZSBz
-b21lIG90aGVyIHByb2Nlc3MKbmVlZGVkIHRoZXJlPwoKLURvdWcKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Lee:
+
+This patch set has been marinating out there for a while now and
+yours, I belive, is that last signature I need to start pushing it for
+inclusion. I'd really appreciate if you could spare some of your time
+to give it a look. Thanks!
+
+Everyone:
+
+This patch series is v13 of the driver for supervisory processor found
+on RAVE series of devices from ZII. Supervisory processor is a PIC
+microcontroller connected to various electrical subsystems on RAVE
+devices whose firmware implements protocol to command/qery them.
+
+NOTE:
+
+ * This driver dependends on crc_ccitt_false(), added by
+   2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next', the patch
+   was pulled in by Andrew Morton and is currently avaiting users, so
+   this series might have to go in through Andrew's tree
+
+Changes since [v12]:
+
+    - Minor comment inconsistencies fixes in rave-sp.c
+
+Changes since [v11]:
+
+    - Fix incorrect include in rave-sp-wdt.c as uncoverd by kernel
+      test robot
+
+Changes since [v10]:
+
+    - Collected Acked-by from Rob and Reviewed-by from Guenter
+
+    - Incorporated watchdog driver feedback from Gunter and Johan
+
+    - Incorporated Johan's feedback for the rest of the code
+
+Changes since [v9]:
+
+    - Converted watchdog driver to use watchdog_active() instead of
+      watchdog_hw_running() and replaced WARN_ON with a regular error
+      message as per feedback from Guenter
+
+    - Changed rave_sp_wdt_start() to set WDOG_HW_RUNNING only if
+      communicating with hardware was sucessful
+
+    - Collected Reviewd-by from Sebastian (for serdev related patches)
+
+    - Collected Acked-by from Rob (for watchdog DT bindings)
+
+Changes since [v8]:
+
+    - Driver moved from drivers/platform to drivers/mfd
+
+    - Collected Reviewed-by from Guenter (for patches 1, 2 and 3)
+
+    - Incorporated feedback from Guenter into watchdog driver
+
+    - Incorporated feedback from Rob into watchdog DT bindings
+
+    - Removed struct rave_sp_rsp_status, which was a leftover from v5
+      -> v6 code removal.
+
+    - Fixed minor problems reported by checkpatch
+
+Changes since [v7]:
+
+    - Added watchdog driver to the patchset, so it would be easier to
+      understand how parent/children drivers are tied together
+
+    - Added serdev patches to implement devm_serdev_device_open() and make .remove optional
+
+    - "Added" missing serdev_device_close() by converting the driver
+      to use devm_serdev_device_open()
+
+    - Converted the driver to use devm_of_platform_populate()
+
+    - Removed needless dependency on MFD_CORE
+
+    - Removed dependency on SERIAL_DEV_CTRL_TTYPORT
+
+Changes since [v6]:
+
+    - Patch 2/2 has been applied by Lee so it is no longer a part of the series
+
+    - Removed all sysfs and debugfs attribute to reduce the scope of
+      the driver propsed for inclusion. This is not a critical to have
+      feature and can be added/discussed later.
+
+Changes since [v5]:
+
+    - Fixed a build break, introduced by a last minute change in [v5]
+
+    - Moved majority of attributes that were exposed over sysfs to debugfs
+
+    - Document remaining sysfs attributes in Documentation/ABI/testing/sysfs-platform-rave-sp
+
+Changes since [v4]:
+
+    - Replaced usage of DEVICE_ATTR with DEVICE_ATTR_RW
+
+    - Fixed a number of warnings produces by sparse tool
+
+    - Incorporated event more feedback from Andy Shevchenko
+
+    - Collected Reviewed-by from Andy
+
+Changes since [v3]:
+
+    - Re-collected lost Acked-by from Rob
+
+    - Incorporated further feedback from Andy Shevchenko
+
+    - Dropped useless change (stray newline) to drivers/mfd/Makefile
+
+Changes since [v2]:
+
+    - Fixed swapped command codes in rave_sp_common_get_boot_source()
+      and rave_sp_common_set_boot_source() revealed by further testing
+      of the code
+
+    - Incorporated feedback from Andy Shevchenko
+
+Changes since [v1]:
+
+    - Updated wording in DT-bindings as per Rob's request.
+
+    - Collected Rob's Acked-by for patch 2/2
+
+Feedback is greatly appreciated!
+
+Thanks,
+Andrey Smirnov
+
+[v12] lkml.kernel.org/r/20171109160556.17018-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v11] lkml.kernel.org/r/20171106152935.16920-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v10] lkml.kernel.org/r/20171031163656.24552-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v9] lkml.kernel.org/r/20171025190421.18415-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v8] lkml.kernel.org/r/20171018170136.12347-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v7] lkml.kernel.org/r/20171013061321.31252-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v6] lkml.kernel.org/r/20170828163131.24815-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v5] lkml.kernel.org/r/20170728142704.11156-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v4] lkml.kernel.org/r/20170725184450.13171-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v3] lkml.kernel.org/r/20170724150915.4824-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v2] lkml.kernel.org/r/20170718175604.11735-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v1] lkml.kernel.org/r/20170710170449.4544-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+Andrey Smirnov (5):
+  serdev: Make .remove in struct serdev_device_driver optional
+  serdev: Introduce devm_serdev_device_open()
+  mfd: Add driver for RAVE Supervisory Processor
+  watchdog: Add RAVE SP watchdog driver
+  dt-bindings: watchdog: Add bindings for RAVE SP watchdog driver
+
+ .../bindings/watchdog/zii,rave-sp-wdt.txt          |  39 ++
+ Documentation/driver-model/devres.txt              |   3 +
+ drivers/mfd/Kconfig                                |   9 +
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/rave-sp.c                              | 660 +++++++++++++++++++++
+ drivers/tty/serdev/core.c                          |  31 +-
+ drivers/watchdog/Kconfig                           |   7 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/rave-sp-wdt.c                     | 357 +++++++++++
+ include/linux/mfd/rave-sp.h                        |  56 ++
+ include/linux/serdev.h                             |   1 +
+ 11 files changed, 1164 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/zii,rave-sp-wdt.txt
+ create mode 100644 drivers/mfd/rave-sp.c
+ create mode 100644 drivers/watchdog/rave-sp-wdt.c
+ create mode 100644 include/linux/mfd/rave-sp.h
+
+-- 
+2.14.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
