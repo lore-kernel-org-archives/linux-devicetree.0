@@ -1,53 +1,177 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 7/8] ARM: dtsi: axp81x: add battery power supply subnode
-Date: Mon,  4 Dec 2017 15:12:53 +0100
-Message-ID: <2c07b03783932463186237ed8487d664d4743ee8.1512396054.git-series.quentin.schulz@free-electrons.com>
-References: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz@free-electrons.com>
-Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBB35QSXIQKGQEWDBDYXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v4] usb: xhci: allow imod-interval to be configurable
+Date: Mon,  4 Dec 2017 09:27:51 -0500
+Message-ID: <1512397671-28733-1-git-send-email-awallis@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The X-Powers AXP81X PMIC exposes battery supply various data such as
-the battery status (charging, discharging, full, dead), current max
-limit, current current, battery capacity (in percentage), voltage max
-and min limits, current voltage, and battery capacity (in Ah).
+The xHCI driver currently has the IMOD set to 160, which
+translates to an IMOD interval of 40,000ns (160 * 250)ns
 
-This adds the battery power supply subnode for AXP81X PMIC.
+Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
+introduced a QUIRK for the MTK platform to adjust this interval to 20,
+which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
+due to the fact that the MTK controller IMOD interval is 8 times
+as much as defined in xHCI spec.
 
-Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Instead of adding more quirk bits for additional platforms, this patch
+introduces the ability for vendors to set the IMOD_INTERVAL as is
+optimal for their platform. By using device_property_read_u32() on
+"imod-interval-ns", the IMOD INTERVAL can be specified in nano seconds.
+If no interval is specified, the default of 40,000ns (IMOD=160) will be
+used.
+
+No bounds checking has been implemented due to the fact that a vendor
+may have violated the spec and would need to specify a value outside of
+the max 8,000 IRQs/second limit specified in the xHCI spec.
+
+Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- arch/arm/boot/dts/axp81x.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+changes from v3:
+  * Changed imod-interval to imod-interval-ns [Rob Herring/Chunfeng]
+  * Changed "modulation" to "moderation" throughout patch [Mathias]
+changes from v2:
+  * Added PCI default value [Mathias]
+  * Removed xhci-mtk.h from xhci-plat.c [Chunfeng Yun]
+  * Removed MTK quirk from xhci-plat and moved logic to xhci-mtk [Chunfeng]
+  * Updated bindings Documentation to use proper units [Rob Herring]
+  * Added imod-interval description and example to MTK binding documentation
+changes from v1:
+  * Removed device_property_read_u32() per suggestion from greg k-h
+  * Used ER_IRQ_INTERVAL_MASK in place of (u16) cast
 
-diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-index 73b761f..f7401c3 100644
---- a/arch/arm/boot/dts/axp81x.dtsi
-+++ b/arch/arm/boot/dts/axp81x.dtsi
-@@ -48,6 +48,11 @@
- 	interrupt-controller;
- 	#interrupt-cells = <1>;
+ Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 2 ++
+ Documentation/devicetree/bindings/usb/usb-xhci.txt          | 1 +
+ drivers/usb/host/xhci-mtk.c                                 | 9 +++++++++
+ drivers/usb/host/xhci-pci.c                                 | 3 +++
+ drivers/usb/host/xhci-plat.c                                | 5 +++++
+ drivers/usb/host/xhci.c                                     | 7 ++-----
+ drivers/usb/host/xhci.h                                     | 2 ++
+ 7 files changed, 24 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+index 3059596..9ff5602 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+@@ -46,6 +46,7 @@ Optional properties:
+  - pinctrl-names : a pinctrl state named "default" must be defined
+  - pinctrl-0 : pin control group
+ 	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++ - imod-interval-ns: default interrupt moderation interval is 5000ns
  
-+	battery_power_supply: battery-power-supply {
-+		compatible = "x-powers,axp813-battery-power-supply";
-+		status = "disabled";
-+	};
+ Example:
+ usb30: usb@11270000 {
+@@ -66,6 +67,7 @@ usb30: usb@11270000 {
+ 	usb3-lpm-capable;
+ 	mediatek,syscon-wakeup = <&pericfg>;
+ 	mediatek,wakeup-src = <1>;
++	imod-interval-ns = <10000>;
+ };
+ 
+ 2nd: dual-role mode with xHCI driver
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index ae6e484..969908d 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -29,6 +29,7 @@ Optional properties:
+   - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
++  - imod-interval-ns: default interrupt moderation interval is 5000ns
+ 
+ Example:
+ 	usb@f0931000 {
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index b62a1d2..1cb2a8b 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -674,6 +674,15 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 
+ 	xhci = hcd_to_xhci(hcd);
+ 	xhci->main_hcd = hcd;
 +
- 	regulators {
- 		/* Default work frequency for buck regulators */
- 		x-powers,dcdc-freq = <3000>;
++	/*
++	 * imod_interval is the interrupt moderation value in nanoseconds.
++	 * The increment interval is 8 times as much as that defined in
++	 * the xHCI spec on MTK's controller.
++	 */
++	xhci->imod_interval = 5000;
++	device_property_read_u32(dev, "imod-interval-ns", &xhci->imod_interval);
++
+ 	xhci->shared_hcd = usb_create_shared_hcd(driver, dev,
+ 			dev_name(dev), hcd);
+ 	if (!xhci->shared_hcd) {
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 7ef1274..4bcddd4 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -234,6 +234,9 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
+ 	if (!xhci->sbrn)
+ 		pci_read_config_byte(pdev, XHCI_SBRN_OFFSET, &xhci->sbrn);
+ 
++	/* imod_interval is the interrupt moderation value in nanoseconds. */
++	xhci->imod_interval = 40000;
++
+ 	retval = xhci_gen_setup(hcd, xhci_pci_quirks);
+ 	if (retval)
+ 		return retval;
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 09f164f..6f03830 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -269,6 +269,11 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
+ 		xhci->quirks |= XHCI_BROKEN_PORT_PED;
+ 
++	/* imod_interval is the interrupt moderation value in nanoseconds. */
++	xhci->imod_interval = 40000;
++	device_property_read_u32(sysdev, "imod-interval-ns",
++				 &xhci->imod_interval);
++
+ 	hcd->usb_phy = devm_usb_get_phy_by_phandle(sysdev, "usb-phy", 0);
+ 	if (IS_ERR(hcd->usb_phy)) {
+ 		ret = PTR_ERR(hcd->usb_phy);
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 2424d30..0b7755b 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -586,11 +586,8 @@ int xhci_run(struct usb_hcd *hcd)
+ 			"// Set the interrupt modulation register");
+ 	temp = readl(&xhci->ir_set->irq_control);
+ 	temp &= ~ER_IRQ_INTERVAL_MASK;
+-	/*
+-	 * the increment interval is 8 times as much as that defined
+-	 * in xHCI spec on MTK's controller
+-	 */
+-	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
++	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
++
+ 	writel(temp, &xhci->ir_set->irq_control);
+ 
+ 	/* Set the HCD state before we enable the irqs */
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 99a014a..2a4177b 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1717,6 +1717,8 @@ struct xhci_hcd {
+ 	u8		max_interrupters;
+ 	u8		max_ports;
+ 	u8		isoc_threshold;
++	/* imod_interval in ns (I * 250ns) */
++	u32		imod_interval;
+ 	int		event_ring_max;
+ 	/* 4KB min, 128MB max */
+ 	int		page_size;
 -- 
-git-series 0.9.1
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
