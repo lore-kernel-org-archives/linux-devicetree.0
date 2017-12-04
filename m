@@ -1,63 +1,39 @@
-From: Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH 0/2] of: dynamic: restrict overlay by targets
-Date: Mon, 4 Dec 2017 11:20:13 -0800
-Message-ID: <20171204192013.GB17574@tyrael.ni.corp.natinst.com>
-References: <20171204191357.3211-1-atull@kernel.org>
- <20171204191849.GA17574@tyrael.ni.corp.natinst.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of: overlay: Fix cleanup order in of_overlay_apply()
+Date: Mon, 4 Dec 2017 13:35:30 -0600
+Message-ID: <CAL_JsqJqb-01rQ6D65-r3Q1ZdF407b11BrVgnUQZPjyTW8hj8A@mail.gmail.com>
+References: <1512402456-8176-1-git-send-email-geert+renesas@glider.be> <1512402456-8176-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171204191849.GA17574@tyrael.ni.corp.natinst.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <mdf@kernel.org>
-Cc: Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512402456-8176-3-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Colin King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 04, 2017 at 11:18:49AM -0800, Moritz Fischer wrote:
-> On Mon, Dec 04, 2017 at 01:13:55PM -0600, Alan Tull wrote:
-> > Restrict which nodes are valid targets for a DT overlay.
-> > 
-> > Add a flag bit to struct device_node allowing nodes to be marked as
-> > valid target for overlays.
-> > 
-> > A driver that is always intended to handle DT overlays can
-> > enable overlays by calling a function for its DT node.
-> > 
-> > For individual nodes that need to be opened up for a specific use,
-> > adding the property "overlay-allowed" enables overlays targeting
-> > that node.  I'll need to document the DT property, not sure where
-> > specifically.  New file bindings/overlay.txt?
-> > 
-> > This patchset differs from the RFC:
-> > * Added a flag bit and got rid of the whitelist
-> > * Renamed the functions that enable a node
-> > * Added a DT property
-> > 
-> > Alan Tull (2):
-> >   of: overlay: add flag enabling overlays and enable fpga-region
-> >     overlays
-> >   of: dynamic: add overlay-allowed DT property
-> 
-> I think [1/2] and [2/2] are backwards order. If applied like this,
-> it won't work. [1/2] uses stuff that gets added in [2/2]
+On Mon, Dec 4, 2017 at 9:47 AM, Geert Uytterhoeven
+<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+> The special overlay mutex is taken first, hence it should be released
+> last in the error path.
+>
+> Move "mutex_lock(&of_mutex)" up, as suggested by Frank, as
+> free_overlay_changeset() should be called with that mutex held if any
+> non-trivial cleanup is to be done.
 
-Ignore that, my mailclient is being funny.
+Not holding the of_mutex for of_resolve_phandles is just wrong.
+Without it, a node and new phandle could be added via of_attach_node
+making the max phandle wrong.
 
-Moritz
-> 
-> > 
-> >  drivers/fpga/of-fpga-region.c |  4 ++++
-> >  drivers/of/base.c             |  4 ++--
-> >  drivers/of/dynamic.c          |  3 +++
-> >  drivers/of/fdt.c              |  3 +++
-> >  drivers/of/of_private.h       |  2 ++
-> >  drivers/of/overlay.c          | 26 ++++++++++++++++++++++++++
-> >  include/linux/of.h            | 19 +++++++++++++++++++
-> >  7 files changed, 59 insertions(+), 2 deletions(-)
-> > 
-> > -- 
-> > 2.7.4
-> > 
-> 
-> Moritz
+Now, with the 2 mutexes adjacent, what is the point of even having the
+of_overlay_mutex? Seems like we should just drop it.
+
+I also don't think we really need to hold the mutex during post-apply
+notifiers. It also seems like some steps could be moved outside the
+mutex(es) like init_overlay_changeset().
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
