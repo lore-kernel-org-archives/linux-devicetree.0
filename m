@@ -1,198 +1,607 @@
-From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3] usb: xhci: allow imod-interval to be configurable
-Date: Mon, 4 Dec 2017 08:38:00 -0500
-Message-ID: <bd7f7df7-c5b6-e297-d155-7445a97e5e1e@codeaurora.org>
-References: <1512143059-25674-1-git-send-email-awallis@codeaurora.org>
- <1512271374.17567.164.camel@mhfsdcap03>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: at91: add devicetree for the Axentia Nattis with Natte power
+Date: Mon,  4 Dec 2017 14:57:08 +0100
+Message-ID: <20171204135708.8234-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512271374.17567.164.camel@mhfsdcap03>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/2/2017 10:22 PM, Chunfeng Yun wrote:
-> On Fri, 2017-12-01 at 10:44 -0500, Adam Wallis wrote:
->> The xHCI driver currently has the IMOD set to 160, which
->> translates to an IMOD interval of 40,000ns (160 * 250)ns
->>
->> Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
->> introduced a QUIRK for the MTK platform to adjust this interval to 20,
->> which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
->> due to the fact that the MTK controller IMOD interval is 8 times
->> as much as defined in xHCI spec.
->>
->> Instead of adding more quirk bits for additional platforms, this patch
->> introduces the ability for vendors to set the IMOD_INTERVAL as is
->> optimal for their platform. By using device_property_read_u32() on
->> "imod-interval", the IMOD INTERVAL can be specified in nano seconds. If
->> no interval is specified, the default of 40,000ns (IMOD=160) will be
->> used.
->>
->> No bounds checking has been implemented due to the fact that a vendor
->> may have violated the spec and would need to specify a value outside of
->> the max 8,000 IRQs/second limit specified in the xHCI spec.
->>
->> Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->> changes from v2:
->>   * Added PCI default value [Mathias]
->>   * Removed xhci-mtk.h from xhci-plat.c [Chunfeng Yun]
->>   * Removed MTK quirk from xhci-plat and moved logic to xhci-mtk [Chunfeng]
->>   * Updated bindings Documentation to use proper units [Rob Herring]
->>   * Added imod-interval description and example to MTK binding documentation
->> changes from v1:
->>   * Removed device_property_read_u32() per suggestion from greg k-h
->>   * Used ER_IRQ_INTERVAL_MASK in place of (u16) cast
->>
->>  Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 2 ++
->>  Documentation/devicetree/bindings/usb/usb-xhci.txt          | 1 +
->>  drivers/usb/host/xhci-mtk.c                                 | 9 +++++++++
->>  drivers/usb/host/xhci-pci.c                                 | 3 +++
->>  drivers/usb/host/xhci-plat.c                                | 4 ++++
->>  drivers/usb/host/xhci.c                                     | 7 ++-----
->>  drivers/usb/host/xhci.h                                     | 2 ++
->>  7 files changed, 23 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
->> index 3059596..45bbf18 100644
->> --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
->> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
->> @@ -46,6 +46,7 @@ Optional properties:
->>   - pinctrl-names : a pinctrl state named "default" must be defined
->>   - pinctrl-0 : pin control group
->>  	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> + - imod-interval: Default interval is 5000ns
-> I think, as Rob suggested before, recommend to have a unit suffix
-> appended to the property name.
-> s/imod-interval/imod-interval-ns
+The Axentia Nattis is a device designed for presenting departures for
+public transport systems. The Natte helper board provides power and
+features a battery of battery chargers.
 
-Thanks, I definitely misunderstood his comments the first go around. I will make
-the change.
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
 
->>  
->>  Example:
->>  usb30: usb@11270000 {
->> @@ -66,6 +67,7 @@ usb30: usb@11270000 {
->>  	usb3-lpm-capable;
->>  	mediatek,syscon-wakeup = <&pericfg>;
->>  	mediatek,wakeup-src = <1>;
->> +	imod-interval = <10000>;
->>  };
->>  
->>  2nd: dual-role mode with xHCI driver
->> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->> index ae6e484..89b68f1 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->> @@ -29,6 +29,7 @@ Optional properties:
->>    - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
->>    - usb3-lpm-capable: determines if platform is USB3 LPM capable
->>    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
->> +  - imod-interval: Default interval is 40000ns
->>  
->>  Example:
->>  	usb@f0931000 {
->> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
->> index b62a1d2..278ea3b 100644
->> --- a/drivers/usb/host/xhci-mtk.c
->> +++ b/drivers/usb/host/xhci-mtk.c
->> @@ -674,6 +674,15 @@ static int xhci_mtk_probe(struct platform_device *pdev)
->>  
->>  	xhci = hcd_to_xhci(hcd);
->>  	xhci->main_hcd = hcd;
->> +
->> +	/*
->> +	 * imod_interval is the interrupt modulation value in nanoseconds.
->> +	 * The increment interval is 8 times as much as that defined in
->> +	 * the xHCI spec on MTK's controller.
->> +	 */
->> +	xhci->imod_interval = 5000;
->> +	device_property_read_u32(dev, "imod-interval", &xhci->imod_interval);
->> +
->>  	xhci->shared_hcd = usb_create_shared_hcd(driver, dev,
->>  			dev_name(dev), hcd);
->>  	if (!xhci->shared_hcd) {
->> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
->> index 7ef1274..efbe57b 100644
->> --- a/drivers/usb/host/xhci-pci.c
->> +++ b/drivers/usb/host/xhci-pci.c
->> @@ -234,6 +234,9 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
->>  	if (!xhci->sbrn)
->>  		pci_read_config_byte(pdev, XHCI_SBRN_OFFSET, &xhci->sbrn);
->>  
->> +	/* imod_interval is the interrupt modulation value in nanoseconds. */
->> +	xhci->imod_interval = 40000;
->> +
->>  	retval = xhci_gen_setup(hcd, xhci_pci_quirks);
->>  	if (retval)
->>  		return retval;
->> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
->> index 09f164f..b78be87 100644
->> --- a/drivers/usb/host/xhci-plat.c
->> +++ b/drivers/usb/host/xhci-plat.c
->> @@ -269,6 +269,10 @@ static int xhci_plat_probe(struct platform_device *pdev)
->>  	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
->>  		xhci->quirks |= XHCI_BROKEN_PORT_PED;
->>  
->> +	/* imod_interval is the interrupt modulation value in nanoseconds. */
->> +	xhci->imod_interval = 40000;
->> +	device_property_read_u32(sysdev, "imod-interval", &xhci->imod_interval);
->> +
->>  	hcd->usb_phy = devm_usb_get_phy_by_phandle(sysdev, "usb-phy", 0);
->>  	if (IS_ERR(hcd->usb_phy)) {
->>  		ret = PTR_ERR(hcd->usb_phy);
->> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
->> index 2424d30..0b7755b 100644
->> --- a/drivers/usb/host/xhci.c
->> +++ b/drivers/usb/host/xhci.c
->> @@ -586,11 +586,8 @@ int xhci_run(struct usb_hcd *hcd)
->>  			"// Set the interrupt modulation register");
->>  	temp = readl(&xhci->ir_set->irq_control);
->>  	temp &= ~ER_IRQ_INTERVAL_MASK;
->> -	/*
->> -	 * the increment interval is 8 times as much as that defined
->> -	 * in xHCI spec on MTK's controller
->> -	 */
->> -	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
->> +	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
->> +
->>  	writel(temp, &xhci->ir_set->irq_control);
->>  
->>  	/* Set the HCD state before we enable the irqs */
->> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
->> index 99a014a..2a4177b 100644
->> --- a/drivers/usb/host/xhci.h
->> +++ b/drivers/usb/host/xhci.h
->> @@ -1717,6 +1717,8 @@ struct xhci_hcd {
->>  	u8		max_interrupters;
->>  	u8		max_ports;
->>  	u8		isoc_threshold;
->> +	/* imod_interval in ns (I * 250ns) */
->> +	u32		imod_interval;
->>  	int		event_ring_max;
->>  	/* 4KB min, 128MB max */
->>  	int		page_size;
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+This was part of a two-patch series, but the first patch in that
+series was redundant, so I dropped it (there was a dt binding
+recently added for the tfa9879 amplifier that I had not noticed).
 
+Changes since v1:    https://lkml.org/lkml/2017/12/1/844
+- removed chip-ids from before the @-sign instead naming the nodes
+  for the function, e.g sx1502q@20 -> ioexp@20
+- added #sound-dai-cells to the amplifier node
+- switch to SPDX license tags
 
+Cheers,
+Peter
+
+Documentation/devicetree/bindings/arm/axentia.txt |   9 +
+ MAINTAINERS                                       |   2 +
+ arch/arm/boot/dts/Makefile                        |   1 +
+ arch/arm/boot/dts/at91-natte.dtsi                 | 244 ++++++++++++++++++++
+ arch/arm/boot/dts/at91-nattis-2-natte-2.dts       | 258 ++++++++++++++++++++++
+ 5 files changed, 514 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91-natte.dtsi
+ create mode 100644 arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+
+diff --git a/Documentation/devicetree/bindings/arm/axentia.txt b/Documentation/devicetree/bindings/arm/axentia.txt
+index ea3fb96ae465..de58f2463880 100644
+--- a/Documentation/devicetree/bindings/arm/axentia.txt
++++ b/Documentation/devicetree/bindings/arm/axentia.txt
+@@ -10,6 +10,15 @@ compatible = "axentia,linea",
+ and following the rules from atmel-at91.txt for a sama5d31 SoC.
+ 
+ 
++Nattis v2 board with Natte v2 power board
++-----------------------------------------
++
++Required root node properties:
++compatible = "axentia,nattis-2", "axentia,natte-2", "axentia,linea",
++	     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
++and following the rules from above for the axentia,linea CPU module.
++
++
+ TSE-850 v3 board
+ ----------------
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d4fdcb12616c..ec8a33f7cb01 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2500,6 +2500,8 @@ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/arm/axentia.txt
+ F:	arch/arm/boot/dts/at91-linea.dtsi
++F:	arch/arm/boot/dts/at91-natte.dtsi
++F:	arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+ F:	arch/arm/boot/dts/at91-tse850-3.dts
+ 
+ AXENTIA ASOC DRIVERS
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d0381e9caf21..d62ee6f0271d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -47,6 +47,7 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+ 	at91sam9x35ek.dtb
+ dtb-$(CONFIG_SOC_SAM_V7) += \
+ 	at91-kizbox2.dtb \
++	at91-nattis-2-natte-2.dtb \
+ 	at91-sama5d27_som1_ek.dtb \
+ 	at91-sama5d2_xplained.dtb \
+ 	at91-sama5d3_xplained.dtb \
+diff --git a/arch/arm/boot/dts/at91-natte.dtsi b/arch/arm/boot/dts/at91-natte.dtsi
+new file mode 100644
+index 000000000000..49f0a0c46cde
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-natte.dtsi
+@@ -0,0 +1,244 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * at91-natte.dts - Device Tree include file for the Natte board
++ *
++ * Copyright (C) 2017 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
++ */
++
++/ {
++	mux: mux-controller {
++		compatible = "gpio-mux";
++		#mux-control-cells = <0>;
++
++		mux-gpios = <&ioexp 0 GPIO_ACTIVE_HIGH>,
++			    <&ioexp 1 GPIO_ACTIVE_HIGH>,
++			    <&ioexp 2 GPIO_ACTIVE_HIGH>;
++	};
++
++	batntc-mux {
++		compatible = "io-channel-mux";
++		io-channels = <&adc 5>;
++		io-channel-names = "parent";
++		mux-controls = <&mux>;
++
++		channels =
++			"batntc0", "batntc1", "batntc2", "batntc3",
++			"batntc4", "batntc5", "batntc6", "batntc7";
++	};
++
++	batv-mux {
++		compatible = "io-channel-mux";
++		io-channels = <&adc 6>;
++		io-channel-names = "parent";
++		mux-controls = <&mux>;
++
++		channels =
++			"batv0", "batv1", "batv2", "batv3",
++			"batv4", "batv5", "batv6", "batv7";
++	};
++
++	iout-mux {
++		compatible = "io-channel-mux";
++		io-channels = <&adc 7>;
++		io-channel-names = "parent";
++		mux-controls = <&mux>;
++
++		channels =
++			"iout0", "iout1", "iout2", "iout3",
++			"iout4", "iout5", "iout6", "iout7";
++	};
++
++	i2c-mux {
++		compatible = "i2c-mux";
++		mux-locked;
++		i2c-parent = <&i2c0>;
++		mux-controls = <&mux>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c@0 {
++			reg = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			charger@9 {
++				compatible = "ti,bq24735";
++				reg = <0x9>;
++
++				ti,charge-current = <2000>;
++				ti,charge-voltage = <16800>;
++
++				poll-interval = <20000>;
++			};
++		};
++
++		i2c@1 {
++			reg = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			charger@9 {
++				compatible = "ti,bq24735";
++				reg = <0x9>;
++
++				ti,charge-current = <2000>;
++				ti,charge-voltage = <16800>;
++
++				poll-interval = <20000>;
++			};
++		};
++
++		i2c@2 {
++			reg = <2>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			charger@9 {
++				compatible = "ti,bq24735";
++				reg = <0x9>;
++
++				ti,charge-current = <2000>;
++				ti,charge-voltage = <16800>;
++
++				poll-interval = <20000>;
++			};
++		};
++
++		i2c@3 {
++			reg = <3>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			charger@9 {
++				compatible = "ti,bq24735";
++				reg = <0x9>;
++
++				ti,charge-current = <2000>;
++				ti,charge-voltage = <16800>;
++
++				poll-interval = <20000>;
++			};
++		};
++
++		i2c@4 {
++			reg = <4>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			charger@9 {
++				compatible = "ti,bq24735";
++				reg = <0x9>;
++
++				ti,charge-current = <2000>;
++				ti,charge-voltage = <16800>;
++
++				poll-interval = <20000>;
++			};
++		};
++
++		i2c@5 {
++			reg = <5>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			charger@9 {
++				compatible = "ti,bq24735";
++				reg = <0x9>;
++
++				ti,charge-current = <2000>;
++				ti,charge-voltage = <16800>;
++
++				poll-interval = <20000>;
++			};
++		};
++
++		i2c@6 {
++			reg = <6>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			charger@9 {
++				compatible = "ti,bq24735";
++				reg = <0x9>;
++
++				ti,charge-current = <2000>;
++				ti,charge-voltage = <16800>;
++
++				poll-interval = <20000>;
++			};
++		};
++
++		i2c@7 {
++			reg = <7>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			charger@9 {
++				compatible = "ti,bq24735";
++				reg = <0x9>;
++
++				ti,charge-current = <2000>;
++				ti,charge-voltage = <16800>;
++
++				poll-interval = <20000>;
++			};
++		};
++	};
++};
++
++&i2c0 {
++	status = "okay";
++
++	ioexp: ioexp@20 {
++		#gpio-cells = <2>;
++		compatible = "semtech,sx1502q";
++		reg = <0x20>;
++
++		gpio-controller;
++		ngpios = <8>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio3_cfg_pins>;
++
++		gpio3_cfg_pins: gpio3_cfg {
++			pins = "gpio3";
++			bias-pull-up;
++		};
++	};
++
++	adc: adc@48 {
++		compatible = "ti,ads1015";
++		reg = <0x48>;
++		#io-channel-cells = <1>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		channel@4 {
++			reg = <4>;
++			ti,gain = <2>;
++			ti,datarate = <4>;
++		};
++
++		channel@5 {
++			reg = <5>;
++			ti,gain = <2>;
++			ti,datarate = <4>;
++		};
++
++		channel@6 {
++			reg = <6>;
++			ti,gain = <1>;
++			ti,datarate = <4>;
++		};
++
++		channel@7 {
++			reg = <7>;
++			ti,gain = <3>;
++			ti,datarate = <4>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+new file mode 100644
+index 000000000000..3ea1d26e1c68
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+@@ -0,0 +1,258 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * at91-nattis-2-natte-2.dts - Device Tree file for the Linea/Nattis board
++ *
++ * Copyright (C) 2017 Axentia Technologies AB
++ *
++ * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
++ */
++/dts-v1/;
++#include "at91-linea.dtsi"
++#include "sama5d3_lcd.dtsi"
++#include "at91-natte.dtsi"
++
++/ {
++	model = "Axentia Linea-Nattis v2 Natte v2";
++	compatible = "axentia,nattis-2", "axentia,natte-2", "axentia,linea",
++		     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
++
++	ahb {
++		apb {
++			pinctrl@fffff200 {
++				nattis {
++					pinctrl_usba_vbus: usba_vbus {
++						atmel,pins =
++							<AT91_PIOD 28
++							 AT91_PERIPH_GPIO
++							 AT91_PINCTRL_DEGLITCH>;
++					};
++
++					pinctrl_mmc0_cd: mmc0_cd {
++						atmel,pins =
++							<AT91_PIOD 5
++							 AT91_PERIPH_GPIO
++							 AT91_PINCTRL_PULL_UP_DEGLITCH>;
++					};
++
++					pinctrl_lcd_prlud0: lcd_prlud0 {
++						atmel,pins =
++							<AT91_PIOA 21
++							 AT91_PERIPH_GPIO
++							 AT91_PINCTRL_OUTPUT_VAL(0)>;
++					};
++
++					pinctrl_lcd_hipow0: lcd_hipow0 {
++						atmel,pins =
++							<AT91_PIOA 23
++							 AT91_PERIPH_GPIO
++							 AT91_PINCTRL_OUTPUT_VAL(0)>;
++					};
++				};
++			};
++
++			watchdog@fffffe40 {
++				status = "okay";
++			};
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		wakeup {
++			label = "Wakeup";
++			linux,code = <10>;
++			gpio-key,wakeup;
++			gpios = <&pioB 27 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	panel_reg: panel-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "panel-VCC";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	bl_reg: backlight-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "panel-VDD";
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++	};
++
++	panel_bl: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&hlcdc_pwm 0 100000 0>;
++
++		brightness-levels = < 0  1  2  3  4  5  6  7  8  9
++				     10 11 12 13 14 15 16 17 18 19
++				     20 21 22 23 24 25 26 27 28 29
++				     30 31 32 33 34 35 36 37 38 39
++				     40 41 42 43 44 45 46 47 48 49
++				     50 51 52 53 54 55 56 57 58 59
++				     60 61 62 63 64 65 66 67 68 69
++				     70 71 72 73 74 75 76 77 78 79
++				     80 81 82 83 84 85 86 87 88 89
++				     90 91 92 93 94 95 96 97 98 99
++				    100>;
++		default-brightness-level = <40>;
++
++		power-supply = <&bl_reg>;
++		enable-gpios = <&pioA 20 GPIO_ACTIVE_HIGH>;
++	};
++
++	panel: panel {
++		compatible = "sharp,lq150x1lg11";
++		backlight = <&panel_bl>;
++		power-supply = <&panel_reg>;
++
++		port {
++			panel_input: endpoint {
++				remote-endpoint = <&hlcdc_panel_output>;
++			};
++		};
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++
++		simple-audio-card,name = "nattis-tfa9879";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&cpu_dai>;
++		simple-audio-card,frame-master = <&cpu_dai>;
++		simple-audio-card,widgets = "Line", "Line Out Jack";
++		simple-audio-card,routing = "Line Out Jack", "LINEOUT";
++
++		cpu_dai: simple-audio-card,cpu {
++			sound-dai = <&ssc0>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&amp>;
++		};
++	};
++};
++
++&i2c0 {
++	status = "okay";
++
++	clock-frequency = <100000>;
++
++	temp@18 {
++		compatible = "nxp,se97b", "jedec,jc-42.4-temp";
++		reg = <0x18>;
++		smbus-timeout-disable;
++	};
++
++	eeprom@50 {
++		compatible = "nxp,24c02";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++
++	amp: amplifier@6c {
++		 compatible = "nxp,tfa9879";
++		 reg = <0x6c>;
++		 #sound-dai-cells = <0>;
++	};
++};
++
++&ssc0 {
++	status = "okay";
++
++	atmel,clk-from-rk-pin;
++	#sound-dai-cells = <0>;
++};
++
++&hlcdc {
++	status = "okay";
++
++	hlcdc-display-controller {
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_lcd_base
++			     &pinctrl_lcd_rgb565
++			     &pinctrl_lcd_prlud0
++			     &pinctrl_lcd_hipow0>;
++
++		port@0 {
++			hlcdc_panel_output: endpoint {
++				remote-endpoint = <&panel_input>;
++			};
++		};
++	};
++};
++
++&mmc0 {
++	status = "okay";
++
++	pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0
++		     &pinctrl_mmc0_dat1_3
++		     &pinctrl_mmc0_cd>;
++
++	slot@0 {
++		reg = <0>;
++		bus-width = <4>;
++		cd-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&usart0 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usart0>;
++	atmel,use-dma-rx;
++};
++
++&nand {
++	partitions {
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		at91bootstrap@0 {
++			label = "at91bootstrap";
++			reg = <0x0 0x40000>;
++		};
++
++		bootloader@40000 {
++			label = "bootloader";
++			reg = <0x40000 0x80000>;
++		};
++
++		bootloaderenv@c0000 {
++			label = "bootloader env";
++			reg = <0xc0000 0xc0000>;
++		};
++
++		dtb@180000 {
++			label = "device tree";
++			reg = <0x180000 0x80000>;
++		};
++
++		kernel@200000 {
++			label = "kernel";
++			reg = <0x200000 0x600000>;
++		};
++
++		rootfs@800000 {
++			label = "rootfs";
++			reg = <0x800000 0x0f800000>;
++		};
++	};
++};
++
++&dbgu {
++	status = "okay";
++
++	atmel,use-dma-rx;
++};
++
++&usb0 {
++	status = "okay";
++
++	atmel,vbus-gpio = <&pioD 28 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usba_vbus>;
++};
 -- 
-Adam Wallis
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.11.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
