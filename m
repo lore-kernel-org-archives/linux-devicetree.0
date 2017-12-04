@@ -1,96 +1,85 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v6 03/17] mfd: madera: Add common support
- for Cirrus Logic Madera codecs
-Date: Mon, 4 Dec 2017 09:47:00 +0000
-Message-ID: <ce3772d8-3ae7-474f-b9c2-8008bb39fd0b@EX17.ad.cirrus.com>
-References: <20171123171316.10868-1-rf@opensource.wolfsonmicro.com>
- <fe8064a5-8692-46c1-9f53-ab0a429baeeb@EX17.ad.cirrus.com>
- <CACRpkdaxKjPd_k8tuO3R4+5LFT4_37zn6ruDRPd5j9xNAH4+Dw@mail.gmail.com>
- <1eff5a38-cff3-449b-bda4-047f50a9f1d4@EX17.ad.cirrus.com>
- <CACRpkdZ4QuOhk1LuGftcFozUKdZ4vFAO3omkQ004k39J=jKL7g@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] iio: accel: bmc150: Add OF device ID table
+Date: Mon, 4 Dec 2017 10:47:14 +0100
+Message-ID: <f1bdbe44-7660-1610-cd49-93c96c757511@redhat.com>
+References: <20171201111058.13483-1-javierm@redhat.com>
+ <313108f3-2815-b030-4fa6-614efc31a8a9@redhat.com>
+ <20171204092259.00006250@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CACRpkdZ4QuOhk1LuGftcFozUKdZ4vFAO3omkQ004k39J=jKL7g@mail.gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171204092259.00006250-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, alsa-devel@alsa-project.org, Jason Cooper <jason@lakedaemon.net>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches@opensource.wolfsonmicro.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee.jones@linaro.org>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Nikesh Oswal <Nikesh.Oswal@wolfsonmicro.com>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/17 12:10, Linus Walleij wrote:
-> On Wed, Nov 29, 2017 at 12:36 PM, Richard Fitzgerald
-> <rf@opensource.wolfsonmicro.com> wrote:
->> On 29/11/17 10:18, Linus Walleij wrote:
->>>
->>> On Thu, Nov 23, 2017 at 6:13 PM, Richard Fitzgerald
->>> <rf@opensource.wolfsonmicro.com> wrote:
->>>
->>>> +config MFD_MADERA_I2C
->>>> +       bool "Cirrus Logic Madera codecs with I2C"
->>>> +       select MFD_MADERA
->>>> +       select REGMAP_I2C
->>>> +       depends on I2C
->>>> +       depends on PINCTRL
->>>> +       help
->>>> +         Support for the Cirrus Logic Madera platform audio SoC
->>>> +         core functionality controlled via I2C.
->>>> +
->>>> +config MFD_MADERA_SPI
->>>> +       bool "Cirrus Logic Madera codecs with SPI"
->>>> +       select MFD_MADERA
->>>> +       select REGMAP_SPI
->>>> +       depends on SPI_MASTER
->>>> +       depends on PINCTRL
->>>> +       help
->>>> +         Support for the Cirrus Logic Madera platform audio SoC
->>>> +         core functionality controlled via SPI.
->>>
->>>
->>> Why do the I2C and SPI subdrivers depend on PINCTRL?
->>>
->>> They sure don't seem to be using any pinctrl-specific APIs.
->>>
+Hi,
+
+On 04-12-17 10:44, Jonathan Cameron wrote:
+> On Mon, 4 Dec 2017 09:29:38 +0100
+> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> 
+>> Hi,
 >>
->> They require PINCTRL even if they don't call any functions on it because the
->> chip won't work correctly if there isn't a PINCTRL driver to apply the
->> correct pinmux configuration.
+>> On 01-12-17 12:10, Javier Martinez Canillas wrote:
+>>> The driver doesn't have a struct of_device_id table but supported devices
+>>> are registered via Device Trees. This is working on the assumption that a
+>>> I2C device registered via OF will always match a legacy I2C device ID and
+>>> that the MODALIAS reported will always be of the form i2c:<device>.
+>>>
+>>> But this could change in the future so the correct approach is to have an
+>>> OF device ID table if the devices are registered via OF.
+>>>
+>>> The I2C device ID table entries have the .driver_data field set, but they
+>>> are not used in the driver so weren't set in the OF device table entries.
+>>>
+>>> Signed-off-by: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>
+>>>    drivers/iio/accel/bmc150-accel-i2c.c | 12 ++++++++++++
+>>>    1 file changed, 12 insertions(+)
+>>>
+>>> diff --git a/drivers/iio/accel/bmc150-accel-i2c.c b/drivers/iio/accel/bmc150-accel-i2c.c
+>>> index f85014fbaa12..8ffc308d5fd0 100644
+>>> --- a/drivers/iio/accel/bmc150-accel-i2c.c
+>>> +++ b/drivers/iio/accel/bmc150-accel-i2c.c
+>>> @@ -81,9 +81,21 @@ static const struct i2c_device_id bmc150_accel_id[] = {
+>>>    
+>>>    MODULE_DEVICE_TABLE(i2c, bmc150_accel_id);
+>>>    
+>>> +static const struct of_device_id bmc150_accel_of_match[] = {
+>>> +	{ .compatible = "bosch,bmc150_accel" },
+>>> +	{ .compatible = "bosch,bmi055_accel" },
+>>
+>> These look a bit weird, there is no reason to mirror the i2c_device_ids
 > 
-> Apply the configuration to what? Sorry I don't get it.
+> There has been a steady move for a long time to add these IDs with the plan
+> that we would stop automatically matching against the manufacturer free
+> i2c IDs. Mostly on the basis that was a hack that brought a lot
+> of effectively unreviewed device tree bindings. As I understand it the
+> eventual plan is to be able to get rid of that old path entirely...
+> +CC Wolfram to see what his view is on this.
 > 
-> You can't be referring to the internal pin controller of the Madera, since
-
-Yes I am
-
-> that has to come up before its pin controller can even be communicated
-> with.
-
-So?
-
-The MFD driver powers up the chip before registering child drivers.
-
-Also that's not entirely relevant, the pinctrl settings can still be 
-written with the chip off because they will go into the regmap cache and 
-be applied when the chip is next resumed.
-
+>> here and typically for devicetree / of we only list
+>> the chip model without some postfix like _accel.
+>>
 > 
-> If you mean it is to apply the configuration to the system SoC where
-> this coded is connected, this is wrong. There may very well be systems
-> which have dedicated pins for the codec, atleast in theory. The fact
-> that your reference board needs this is not a universal requirement,
-> it should be set up in the machine-specific Kconfig for the reference
-> board in that case.
+> There is a reason for this and we've been round the houses a few times before
+> with the (admittedly horrible) conclusion that we don't really have a better way.
 > 
-> Yours,
-> Linus Walleij
-> 
+> These are multiple chips in one package wired to the same i2c bus
+> there is no sensible way of telling the kernel that we actually
+> have two separate devices with the same part number.  We could just declare
+> that we will only support them under the IDs of the individual chips but,
+> without scraping datasheets it's very difficult to tell which two parts
+> have been combined in a given SKU (some manufacturers document this - some
+> don't and we just have to figure it out).
+
+Ack, Javier pointed this out to me too and you're both right :)
+
+Regards,
+
+Hans
