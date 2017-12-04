@@ -1,106 +1,103 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 2/4] macb: Kill PHY reset code
-Date: Mon,  4 Dec 2017 11:34:50 +0100
-Message-ID: <1512383692-14009-3-git-send-email-geert+renesas@glider.be>
-References: <1512383692-14009-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 0/4] Teach phylib hard-resetting devices
+Date: Mon,  4 Dec 2017 11:34:48 +0100
+Message-ID: <1512383692-14009-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1512383692-14009-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "David S . Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Leitner <richard.leitner@skidata.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+	Hi David, Andrew, Florian, Simon, Magnus,
 
-With the phylib now being aware of the "reset-gpios" PHY node property,
-there should be no need to frob the PHY reset in this driver anymore...
+This patch series adds optional PHY reset support to phylib.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v4:
+The first two patches are destined for David's net-next tree. They add
+core PHY reset code, and update a driver that currently uses its own
+reset code.
+
+The last two patches are destined for Simon's renesas tree.  They add
+properties to describe the EthernetAVB PHY reset topology to the common
+Salvator-X/XS and ULCB DTS files, which solves two issues:
+  1. On Salvator-XS, the enable pin of the regulator providing PHY power
+     is connected to PRESETn, and PSCI powers down the SoC during system
+     suspend.  Hence a PHY reset is needed to restore network
+     functionality after system resume.
+  2. Linux should not rely on the boot loader having reset the PHY, but
+     should reset the PHY during driver probe.
+
+Changes compared to v3:
+  - Remove Florian's Acked-by,
+  - Add missing #include <linux/gpio/consumer.h>,
+  - Re-add the gpiod check, as the dummy gpiod_set_value() for !GPIOLIB
+    does not ignore NULL, and calls WARN_ON(1),
+  - Do not reassert the reset signal if {mdio,phy}_probe() or
+    phy_device_register() succeeded, as that may destroy initial setup,
+  - Do not deassert the reset signal in {mdio,phy}_remove(), as it
+    should already be deasserted,
+  - Bring the PHY back into reset state in phy_device_remove(),
+  - Move/consolidate GPIO descriptor acquiring code from
+    of_mdiobus_register_phy() and of_mdiobus_register_device() to
+    mdiobus_register_device().
+    Note that this changes behavior slightly, in that the reset signal
+    is now also asserted when called from of_mdiobus_register_device().
   - Add Reviewed-by,
 
-v3:
-  - Resolve rejects due to the file being renamed, refresh the patch,
-  - Add code to reset PHY on probe error,
-  - Edit patch description,
+Changes compared to v2, as sent by Sergei Shtylyov:
+  - Fix fwnode_get_named_gpiod() call due to added parameters (which
+    allowed to eliminate the gpiod_direction_output() call),
+  - Rebased, refreshed, reworded,
   - Take over from Sergei,
   - Add Acked-by,
+  - Remove unneeded gpiod check, as gpiod_set_value() handles NULL fine,
+  - Handle fwnode_get_named_gpiod() errors correctly:
+      - -ENOENT is ignored (the GPIO is optional), and turned into NULL,
+	which allowed to remove all later !IS_ERR() checks,
+      - Other errors (incl. -EPROBE_DEFER) are propagated,
+  - Extract DTS patches from series "[PATCH 0/4] ravb: Add PHY reset
+    support" (https://www.spinics.net/lists/netdev/msg457308.html), and
+    incorporate in this series, after moving reset-gpios from the
+    ethernet to the ethernet-phy node.
 
-v2:
-  - No changes.
----
- drivers/net/ethernet/cadence/macb.h      |  1 -
- drivers/net/ethernet/cadence/macb_main.c | 21 ---------------------
- 2 files changed, 22 deletions(-)
+Given (1) the new reset-gpios DT property in the PHY node follows
+established practises, (2) the DT binding change in the first patch has
+been acked by Rob, and (3) the DTS patch does not cause any regressions
+if it is applied before the PHY driver patches, the DTS patches can be
+applied independently.
 
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index 3165c2ba58f97744..c50c5ec49b1dc585 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -1171,7 +1171,6 @@ struct macb {
- 	unsigned int		dma_burst_length;
- 
- 	phy_interface_t		phy_interface;
--	struct gpio_desc	*reset_gpio;
- 
- 	/* AT91RM9200 transmit */
- 	struct sk_buff *skb;			/* holds skb until xmit interrupt completes */
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index c5fa87cdc6c401a7..3f0dfb20fdbcf936 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3803,7 +3803,6 @@ static int macb_probe(struct platform_device *pdev)
- 					      = macb_config->clk_init;
- 	int (*init)(struct platform_device *) = macb_config->init;
- 	struct device_node *np = pdev->dev.of_node;
--	struct device_node *phy_node;
- 	struct clk *pclk, *hclk = NULL, *tx_clk = NULL, *rx_clk = NULL;
- 	unsigned int queue_mask, num_queues;
- 	struct macb_platform_data *pdata;
-@@ -3909,18 +3908,6 @@ static int macb_probe(struct platform_device *pdev)
- 	else
- 		macb_get_hwaddr(bp);
- 
--	/* Power up the PHY if there is a GPIO reset */
--	phy_node =  of_get_next_available_child(np, NULL);
--	if (phy_node) {
--		int gpio = of_get_named_gpio(phy_node, "reset-gpios", 0);
--
--		if (gpio_is_valid(gpio)) {
--			bp->reset_gpio = gpio_to_desc(gpio);
--			gpiod_direction_output(bp->reset_gpio, 1);
--		}
--	}
--	of_node_put(phy_node);
--
- 	err = of_get_phy_mode(np);
- 	if (err < 0) {
- 		pdata = dev_get_platdata(&pdev->dev);
-@@ -3967,10 +3954,6 @@ static int macb_probe(struct platform_device *pdev)
- 		of_phy_deregister_fixed_link(np);
- 	mdiobus_free(bp->mii_bus);
- 
--	/* Shutdown the PHY if there is a GPIO reset */
--	if (bp->reset_gpio)
--		gpiod_set_value(bp->reset_gpio, 0);
--
- err_out_free_netdev:
- 	free_netdev(dev);
- 
-@@ -4001,10 +3984,6 @@ static int macb_remove(struct platform_device *pdev)
- 		dev->phydev = NULL;
- 		mdiobus_free(bp->mii_bus);
- 
--		/* Shutdown the PHY if there is a GPIO reset */
--		if (bp->reset_gpio)
--			gpiod_set_value(bp->reset_gpio, 0);
--
- 		unregister_netdev(dev);
- 		clk_disable_unprepare(bp->tx_clk);
- 		clk_disable_unprepare(bp->hclk);
+Thanks!
+
+Geert Uytterhoeven (2):
+  arm64: dts: renesas: salvator-common: Add EthernetAVB PHY reset
+  arm64: dts: renesas: ulcb: Add EthernetAVB PHY reset
+
+Sergei Shtylyov (2):
+  phylib: Add device reset GPIO support
+  macb: Kill PHY reset code
+
+ Documentation/devicetree/bindings/net/phy.txt    |  2 ++
+ arch/arm64/boot/dts/renesas/salvator-common.dtsi |  1 +
+ arch/arm64/boot/dts/renesas/ulcb.dtsi            |  1 +
+ drivers/net/ethernet/cadence/macb.h              |  1 -
+ drivers/net/ethernet/cadence/macb_main.c         | 21 ----------------
+ drivers/net/phy/at803x.c                         | 18 +++----------
+ drivers/net/phy/mdio_bus.c                       | 21 ++++++++++++++++
+ drivers/net/phy/mdio_device.c                    | 25 ++++++++++++++++--
+ drivers/net/phy/phy_device.c                     | 32 ++++++++++++++++++++++--
+ include/linux/mdio.h                             |  3 +++
+ include/linux/phy.h                              |  5 ++++
+ 11 files changed, 89 insertions(+), 41 deletions(-)
+
 -- 
 2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
