@@ -1,51 +1,70 @@
-From: Erick Chen <erick.chen@spreadtrum.com>
-Subject: Re: [PATCH 2/2] regulator: sc2731: Add regulator driver to support
- Spreadtrum SC2731 PMIC
-Date: Mon, 4 Dec 2017 17:03:14 +0800
-Message-ID: <20171204090313.GA2242@spreadtrum.com>
-References: <f6d8ff765f4864e5b6ace1f022202d8793a7becf.1512118703.git.erick.chen@spreadtrum.com>
- <75a6a48f603a25d744ef46287e036975b0203608.1512118703.git.erick.chen@spreadtrum.com>
- <201712020333.vB23X0mT082692@TPSPAM01.spreadtrum.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 3/3] ARM64: dts: meson-axg: add PWM DT info for
+ Meson-Axg SoC
+Date: Mon, 04 Dec 2017 10:17:39 +0100
+Message-ID: <1512379059.2574.17.camel@baylibre.com>
+References: <20171204060018.8856-1-yixun.lan@amlogic.com>
+         <20171204060018.8856-4-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201712020333.vB23X0mT082692@TPSPAM01.spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, baolin.wang@linaro.org, baolin.wang@spreadtrum.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20171204060018.8856-4-yixun.lan@amlogic.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Fri, Dec 01, 2017 at 01:01:37PM +0000, Mark Brown wrote:
-> On Fri, Dec 01, 2017 at 04:58:16PM +0800, Erick Chen wrote:
+On Mon, 2017-12-04 at 14:00 +0800, Yixun Lan wrote:
+> From: Jian Hu <jian.hu@amlogic.com>
 > 
-> > +static const struct of_device_id sc2731_regulator_of_match[] = {
-> > +	{.compatible = "sprd,sc2731-regulator",},
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, sc2731_regulator_of_match);
+> Add PWM DT info for the Amlogic's Meson-Axg SoC.
 > 
-> This looks like a subdriver for one specific device that can't be reused
-> with anything else as it's specific to an individual device so I'd not
-> expect it to appear as a separate thing in DT - the way Linux splits
-> things up might not map well onto other OSs and may even change in
-> future versions of Linux (look at all the audio drivers with clock
-> controllers in them for example).  I'd expect the MFD to just register
-> the subdevice without needing it to appear in the DT.
->
-
-Make sense, i will remove the of_device_id table in next version.
- 
-> > +subsys_initcall(sc2731_regulator_init);
-> > +module_exit(sc2731_regulator_exit);
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 120
+> +++++++++++++++++++++++++++++
+>  1 file changed, 120 insertions(+)
 > 
-> Why not module_platform_driver()?  Deferred probe should sort out probe
-> order.
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index 92f65eec3e18..f7f228701df1 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -177,6 +177,24 @@
+> 
 
-On some Spreadtrum old platforms, we need to power on the CPU cores ASAP.
-But now this issue had been fixed after some investigation, so we can change
-subsys_initcall() to module_init() level as you suggested.
+[...]
 
-Very appreciated for your helpful comments.
+> 
+> @@ -435,6 +537,24 @@
+>  				clock-names = "clk_i2c";
+>  			};
+>  
+> +			pwm_AO_ab: pwm@7000 {
+> +				compatible = "amlogic,meson-axg-ao-pwm";
+> +				reg = <0x0 0x07000 0x0 0x20>;
+> +				#pwm-cells = <3>;
+> +				clocks = <&xtal>, <&xtal>;
+> +				clock-names = "clkin0", "clkin1";
+
+like gxbb, "amlogic,meson-axg-ao-pwm" does not have such clock bindings,
+Later on, if we want to "correctly" get the clock from DT, it will have to gothrough a new compatible, I guess. 
+
+> +				status = "disabled";
+> +			};
+> +
+> +			pwm_AO_cd: pwm@2000 {
+> +				compatible = "amlogic,axg-ao-pwm";
+> +				reg = <0x0 0x02000  0x0 0x20>;
+> +				#pwm-cells = <3>;
+> +				clocks = <&xtal>, <&xtal>;
+> +				clock-names = "clkin0", "clkin1";
+> +				status = "disabled";
+> +			};
+> +
+>  			uart_AO: serial@3000 {
+>  				compatible = "amlogic,meson-gx-uart",
+> "amlogic,meson-ao-uart";
+>  				reg = <0x0 0x3000 0x0 0x18>;
