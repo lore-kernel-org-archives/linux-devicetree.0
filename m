@@ -1,177 +1,718 @@
-From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v4] usb: xhci: allow imod-interval to be configurable
-Date: Mon,  4 Dec 2017 09:27:51 -0500
-Message-ID: <1512397671-28733-1-git-send-email-awallis@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: Re: [PATCH 5/5] PCI: cadence: add EndPoint Controller driver for
+ Cadence PCIe controller
+Date: Mon, 4 Dec 2017 15:56:42 +0100
+Message-ID: <652aad38-e83c-e8ab-e16b-896358637909@free-electrons.com>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <297fa17e12cf0f2fb223c05eeb18570707ff5bf1.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <20171201122048.GB25010@red-moon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171201122048.GB25010@red-moon>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: bhelgaas@google.com, kishon@ti.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The xHCI driver currently has the IMOD set to 160, which
-translates to an IMOD interval of 40,000ns (160 * 250)ns
+Hi Lorenzo,
 
-Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
-introduced a QUIRK for the MTK platform to adjust this interval to 20,
-which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
-due to the fact that the MTK controller IMOD interval is 8 times
-as much as defined in xHCI spec.
+Le 01/12/2017 à 13:20, Lorenzo Pieralisi a écrit :
+> On Thu, Nov 23, 2017 at 04:01:50PM +0100, Cyrille Pitchen wrote:
+>> This patch adds support to the Cadence PCIe controller in endpoint mode.
+> 
+> Please add a brief description to the log to describe the most salient
+> features.
+> 
+>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+>> ---
+>>  drivers/pci/cadence/Kconfig           |   9 +
+>>  drivers/pci/cadence/Makefile          |   1 +
+>>  drivers/pci/cadence/pcie-cadence-ep.c | 553 ++++++++++++++++++++++++++++++++++
+>>  3 files changed, 563 insertions(+)
+>>  create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
+>>
+>> diff --git a/drivers/pci/cadence/Kconfig b/drivers/pci/cadence/Kconfig
+>> index 120306cae2aa..b2e6af71f39e 100644
+>> --- a/drivers/pci/cadence/Kconfig
+>> +++ b/drivers/pci/cadence/Kconfig
+>> @@ -21,4 +21,13 @@ config PCIE_CADENCE_HOST
+>>  	  mode. This PCIe controller may be embedded into many different vendors
+>>  	  SoCs.
+>>  
+>> +config PCIE_CADENCE_EP
+>> +	bool "Cadence PCIe endpoint controller"
+>> +	depends on PCI_ENDPOINT
+>> +	select PCIE_CADENCE
+>> +	help
+>> +	  Say Y here if you want to support the Cadence PCIe  controller in
+>> +	  endpoint mode. This PCIe controller may be embedded into many
+>> +	  different vendors SoCs.
+>> +
+>>  endif # PCI_CADENCE
+>> diff --git a/drivers/pci/cadence/Makefile b/drivers/pci/cadence/Makefile
+>> index d57d192d2595..61e9c8d6839d 100644
+>> --- a/drivers/pci/cadence/Makefile
+>> +++ b/drivers/pci/cadence/Makefile
+>> @@ -1,2 +1,3 @@
+>>  obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
+>>  obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+>> +obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+>> diff --git a/drivers/pci/cadence/pcie-cadence-ep.c b/drivers/pci/cadence/pcie-cadence-ep.c
+>> new file mode 100644
+>> index 000000000000..a1d761101a9c
+>> --- /dev/null
+>> +++ b/drivers/pci/cadence/pcie-cadence-ep.c
+>> @@ -0,0 +1,553 @@
+>> +/*
+>> + * Cadence PCIe host controller driver.
+> 
+> You should update this comment.
+> 
+>> + *
+>> + * Copyright (c) 2017 Cadence
+>> + *
+>> + * Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +#include <linux/kernel.h>
+>> +#include <linux/of.h>
+>> +#include <linux/pci-epc.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/sizes.h>
+>> +#include <linux/delay.h>
+> 
+> Nit: alphabetical order.
+> 
+>> +#include "pcie-cadence.h"
+>> +
+>> +#define CDNS_PCIE_EP_MIN_APERTURE		128	/* 128 bytes */
+>> +#define CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE		0x1
+>> +#define CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY	0x3
+>> +
+>> +/**
+>> + * struct cdns_pcie_ep_data - hardware specific data
+>> + * @max_regions: maximum nmuber of regions supported by hardware
+> 
+> s/nmuber/number
+> 
+>> + */
+>> +struct cdns_pcie_ep_data {
+>> +	size_t				max_regions;
+>> +};
+>> +
+>> +/**
+>> + * struct cdns_pcie_ep - private data for this PCIe endpoint controller driver
+>> + * @pcie: Cadence PCIe controller
+>> + * @data: pointer to a 'struct cdns_pcie_data'
+>> + */
+>> +struct cdns_pcie_ep {
+>> +	struct cdns_pcie		pcie;
+>> +	const struct cdns_pcie_ep_data	*data;
+>> +	struct pci_epc			*epc;
+>> +	unsigned long			ob_region_map;
+>> +	phys_addr_t			*ob_addr;
+>> +	phys_addr_t			irq_phys_addr;
+>> +	void __iomem			*irq_cpu_addr;
+>> +	u64				irq_pci_addr;
+>> +	u8				irq_pending;
+>> +};
+>> +
+>> +static int cdns_pcie_ep_write_header(struct pci_epc *epc,
+>> +				     struct pci_epf_header *hdr)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u8 fn = 0;
+>> +
+>> +	if (fn == 0) {
+> 
+> I think there is some code to retrieve fn missing here.
+>
 
-Instead of adding more quirk bits for additional platforms, this patch
-introduces the ability for vendors to set the IMOD_INTERVAL as is
-optimal for their platform. By using device_property_read_u32() on
-"imod-interval-ns", the IMOD INTERVAL can be specified in nano seconds.
-If no interval is specified, the default of 40,000ns (IMOD=160) will be
-used.
+I've used some "u8 fn = 0;" when implementing every handler of
+'struct pci_epc_ops' because the current API of the EPC library supports
+only one function for now but I guess this will change soon.
 
-No bounds checking has been implemented due to the fact that a vendor
-may have violated the spec and would need to specify a value outside of
-the max 8,000 IRQs/second limit specified in the xHCI spec.
+So I've implement each handler as if a new 'fn' parameter were added to the
+handler prototype. I guess it would make sense to add such a parameter to
+the pci_epc_*() functions in pci-epc-core.c.
+ 
+>> +		u32 id = CDNS_PCIE_LM_ID_VENDOR(hdr->vendorid) |
+>> +			 CDNS_PCIE_LM_ID_SUBSYS(hdr->subsys_vendor_id);
+>> +		cdns_pcie_writel(pcie, CDNS_PCIE_LM_ID, id);
+>> +	}
+>> +	cdns_pcie_ep_fn_writew(pcie, fn, PCI_DEVICE_ID, hdr->deviceid);
+>> +	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_REVISION_ID, hdr->revid);
+>> +	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_CLASS_PROG, hdr->progif_code);
+>> +	cdns_pcie_ep_fn_writew(pcie, fn, PCI_CLASS_DEVICE,
+>> +			       hdr->subclass_code | hdr->baseclass_code << 8);
+>> +	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_CACHE_LINE_SIZE,
+>> +			       hdr->cache_line_size);
+>> +	cdns_pcie_ep_fn_writew(pcie, fn, PCI_SUBSYSTEM_ID, hdr->subsys_id);
+>> +	cdns_pcie_ep_fn_writeb(pcie, fn, PCI_INTERRUPT_PIN, hdr->interrupt_pin);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cdns_pcie_ep_set_bar(struct pci_epc *epc, enum pci_barno bar,
+>> +				dma_addr_t bar_phys, size_t size, int flags)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 addr0, addr1, reg, cfg, b, aperture, ctrl;
+>> +	u8 fn = 0;
+>> +	u64 sz;
+>> +
+>> +	/* BAR size is 2^(aperture + 7) */
+>> +	sz = max_t(size_t, size, CDNS_PCIE_EP_MIN_APERTURE);
+>> +	sz = 1ULL << fls64(sz - 1);
+>> +	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
+>> +
+>> +	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
+>> +		ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_IO_32BITS;
+>> +	} else {
+>> +		bool is_prefetch = !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
+>> +		bool is_64bits = sz > SZ_2G;
+>> +
+>> +		if (is_64bits && (bar & 1))
+>> +			return -EINVAL;
+>> +
+>> +		switch (is_64bits << 1 | is_prefetch) {
+> 
+> I would not mind implementing this as a nested if-else, I am not a big
+> fan of using bool this way.
+>
 
-Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
-changes from v3:
-  * Changed imod-interval to imod-interval-ns [Rob Herring/Chunfeng]
-  * Changed "modulation" to "moderation" throughout patch [Mathias]
-changes from v2:
-  * Added PCI default value [Mathias]
-  * Removed xhci-mtk.h from xhci-plat.c [Chunfeng Yun]
-  * Removed MTK quirk from xhci-plat and moved logic to xhci-mtk [Chunfeng]
-  * Updated bindings Documentation to use proper units [Rob Herring]
-  * Added imod-interval description and example to MTK binding documentation
-changes from v1:
-  * Removed device_property_read_u32() per suggestion from greg k-h
-  * Used ER_IRQ_INTERVAL_MASK in place of (u16) cast
+It did it this way to cope with the 80 columns rule but I will try to do it
+with nested if-elst statements. The macro names I've chosen are quite long!
 
- Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 2 ++
- Documentation/devicetree/bindings/usb/usb-xhci.txt          | 1 +
- drivers/usb/host/xhci-mtk.c                                 | 9 +++++++++
- drivers/usb/host/xhci-pci.c                                 | 3 +++
- drivers/usb/host/xhci-plat.c                                | 5 +++++
- drivers/usb/host/xhci.c                                     | 7 ++-----
- drivers/usb/host/xhci.h                                     | 2 ++
- 7 files changed, 24 insertions(+), 5 deletions(-)
+>> +		case 0:
+>> +			ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_32BITS;
+>> +			break;
+>> +
+>> +		case 1:
+>> +			ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_32BITS;
+>> +			break;
+>> +
+>> +		case 2:
+>> +			ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_MEM_64BITS;
+>> +			break;
+>> +
+>> +		case 3:
+>> +			ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_PREFETCH_MEM_64BITS;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	addr0 = lower_32_bits(bar_phys);
+>> +	addr1 = upper_32_bits(bar_phys);
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar),
+>> +			 addr0);
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar),
+>> +			 addr1);
+> 
+> Is fn always 0 ?
+>
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-index 3059596..9ff5602 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
-@@ -46,6 +46,7 @@ Optional properties:
-  - pinctrl-names : a pinctrl state named "default" must be defined
-  - pinctrl-0 : pin control group
- 	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+ - imod-interval-ns: default interrupt moderation interval is 5000ns
- 
- Example:
- usb30: usb@11270000 {
-@@ -66,6 +67,7 @@ usb30: usb@11270000 {
- 	usb3-lpm-capable;
- 	mediatek,syscon-wakeup = <&pericfg>;
- 	mediatek,wakeup-src = <1>;
-+	imod-interval-ns = <10000>;
- };
- 
- 2nd: dual-role mode with xHCI driver
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index ae6e484..969908d 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -29,6 +29,7 @@ Optional properties:
-   - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
-   - usb3-lpm-capable: determines if platform is USB3 LPM capable
-   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-+  - imod-interval-ns: default interrupt moderation interval is 5000ns
- 
- Example:
- 	usb@f0931000 {
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index b62a1d2..1cb2a8b 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -674,6 +674,15 @@ static int xhci_mtk_probe(struct platform_device *pdev)
- 
- 	xhci = hcd_to_xhci(hcd);
- 	xhci->main_hcd = hcd;
-+
-+	/*
-+	 * imod_interval is the interrupt moderation value in nanoseconds.
-+	 * The increment interval is 8 times as much as that defined in
-+	 * the xHCI spec on MTK's controller.
-+	 */
-+	xhci->imod_interval = 5000;
-+	device_property_read_u32(dev, "imod-interval-ns", &xhci->imod_interval);
-+
- 	xhci->shared_hcd = usb_create_shared_hcd(driver, dev,
- 			dev_name(dev), hcd);
- 	if (!xhci->shared_hcd) {
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 7ef1274..4bcddd4 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -234,6 +234,9 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
- 	if (!xhci->sbrn)
- 		pci_read_config_byte(pdev, XHCI_SBRN_OFFSET, &xhci->sbrn);
- 
-+	/* imod_interval is the interrupt moderation value in nanoseconds. */
-+	xhci->imod_interval = 40000;
-+
- 	retval = xhci_gen_setup(hcd, xhci_pci_quirks);
- 	if (retval)
- 		return retval;
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 09f164f..6f03830 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -269,6 +269,11 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
- 		xhci->quirks |= XHCI_BROKEN_PORT_PED;
- 
-+	/* imod_interval is the interrupt moderation value in nanoseconds. */
-+	xhci->imod_interval = 40000;
-+	device_property_read_u32(sysdev, "imod-interval-ns",
-+				 &xhci->imod_interval);
-+
- 	hcd->usb_phy = devm_usb_get_phy_by_phandle(sysdev, "usb-phy", 0);
- 	if (IS_ERR(hcd->usb_phy)) {
- 		ret = PTR_ERR(hcd->usb_phy);
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 2424d30..0b7755b 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -586,11 +586,8 @@ int xhci_run(struct usb_hcd *hcd)
- 			"// Set the interrupt modulation register");
- 	temp = readl(&xhci->ir_set->irq_control);
- 	temp &= ~ER_IRQ_INTERVAL_MASK;
--	/*
--	 * the increment interval is 8 times as much as that defined
--	 * in xHCI spec on MTK's controller
--	 */
--	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
-+	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
-+
- 	writel(temp, &xhci->ir_set->irq_control);
- 
- 	/* Set the HCD state before we enable the irqs */
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 99a014a..2a4177b 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1717,6 +1717,8 @@ struct xhci_hcd {
- 	u8		max_interrupters;
- 	u8		max_ports;
- 	u8		isoc_threshold;
-+	/* imod_interval in ns (I * 250ns) */
-+	u32		imod_interval;
- 	int		event_ring_max;
- 	/* 4KB min, 128MB max */
- 	int		page_size;
+If the API of the EPC library is updated, fn could be something else but 0
+later but for now, fn is actually always 0.
+
+>> +	if (bar < BAR_4) {
+>> +		reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG0(fn);
+>> +		b = bar;
+>> +	} else {
+>> +		reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG1(fn);
+>> +		b = bar - BAR_4;
+>> +	}
+>> +
+>> +	cfg = cdns_pcie_readl(pcie, reg);
+>> +	cfg &= ~(CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b) |
+>> +		 CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b));
+>> +	cfg |= (CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_APERTURE(b, aperture) |
+>> +		CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_CTRL(b, ctrl));
+>> +	cdns_pcie_writel(pcie, reg, cfg);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void cdns_pcie_ep_clear_bar(struct pci_epc *epc, enum pci_barno bar)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 reg, cfg, b, ctrl;
+>> +	u8 fn = 0;
+>> +
+>> +	if (bar < BAR_4) {
+>> +		reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG0(fn);
+>> +		b = bar;
+>> +	} else {
+>> +		reg = CDNS_PCIE_LM_EP_FUNC_BAR_CFG1(fn);
+>> +		b = bar - BAR_4;
+>> +	}
+>> +
+>> +	ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
+>> +	cfg = cdns_pcie_readl(pcie, reg);
+>> +	cfg &= ~(CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b) |
+>> +		 CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b));
+>> +	cfg |= CDNS_PCIE_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(ctrl);
+>> +	cdns_pcie_writel(pcie, reg, cfg);
+>> +
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar), 0);
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar), 0);
+>> +}
+>> +
+>> +static int cdns_pcie_ep_map_addr(struct pci_epc *epc, phys_addr_t addr,
+>> +				 u64 pci_addr, size_t size)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 r;
+>> +
+>> +	r = find_first_zero_bit(&ep->ob_region_map, sizeof(ep->ob_region_map));
+> 
+> Second argument must be in bits not bytes.
+> 
+> https://marc.info/?l=linux-pci&m=151179781225513&w=2
+>
+
+OK, thanks!
+
+>> +	if (r >= ep->data->max_regions - 1) {
+>> +		dev_err(&epc->dev, "no free outbound region\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	cdns_pcie_set_outbound_region(pcie, r, false, addr, pci_addr, size);
+>> +
+>> +	set_bit(r, &ep->ob_region_map);
+>> +	ep->ob_addr[r] = addr;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void cdns_pcie_ep_unmap_addr(struct pci_epc *epc, phys_addr_t addr)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 r;
+>> +
+>> +	for (r = 0; r < ep->data->max_regions - 1; r++)
+>> +		if (ep->ob_addr[r] == addr)
+>> +			break;
+>> +
+>> +	if (r >= ep->data->max_regions - 1)
+> 
+> == ?
+>
+
+I will change that.
+
+>> +		return;
+>> +
+>> +	cdns_pcie_reset_outbound_region(pcie, r);
+>> +
+>> +	ep->ob_addr[r] = 0;
+>> +	clear_bit(r, &ep->ob_region_map);
+>> +}
+>> +
+>> +static int cdns_pcie_ep_set_msi(struct pci_epc *epc, u8 mmc)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+>> +	u16 flags;
+>> +	u8 fn = 0;
+>> +
+>> +	/* Validate the ID of the MSI Capability structure. */
+>> +	if (cdns_pcie_ep_fn_readb(pcie, fn, cap) != PCI_CAP_ID_MSI)
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * Set the Multiple Message Capable bitfield into the Message Control
+>> +	 * register.
+>> +	 */
+>> +	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+>> +	flags = (flags & ~PCI_MSI_FLAGS_QMASK) | (mmc << 1);
+>> +	flags |= PCI_MSI_FLAGS_64BIT;
+>> +	flags &= ~PCI_MSI_FLAGS_MASKBIT;
+>> +	cdns_pcie_ep_fn_writew(pcie, fn, cap + PCI_MSI_FLAGS, flags);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cdns_pcie_ep_get_msi(struct pci_epc *epc)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+>> +	u16 flags, mmc, mme;
+>> +	u8 fn = 0;
+>> +
+>> +	/* Validate the ID of the MSI Capability structure. */
+>> +	if (cdns_pcie_ep_fn_readb(pcie, fn, cap) != PCI_CAP_ID_MSI)
+>> +		return -EINVAL;
+>> +
+>> +	/* Validate that the MSI feature is actually enabled. */
+>> +	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+>> +	if (!(flags & PCI_MSI_FLAGS_ENABLE))
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * Get the Multiple Message Enable bitfield from the Message Control
+>> +	 * register.
+>> +	 */
+>> +	mmc = (flags & PCI_MSI_FLAGS_QMASK) >> 1;
+>> +	mme = (flags & PCI_MSI_FLAGS_QSIZE) >> 4;
+>> +	if (mme > mmc)
+>> +		mme = mmc;
+>> +	if (mme > 5)
+>> +		mme = 5;
+> 
+> You should comment on what this 5 means and why it is fine to cap mme.
+> 
+>> +
+>> +	return mme;
+>> +}
+>> +
+>> +static void cdns_pcie_ep_assert_intx(struct cdns_pcie_ep *ep, u8 fn,
+>> +				     u8 intx, bool is_asserted)
+>> +{
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 r = ep->data->max_regions - 1;
+>> +	u32 offset;
+>> +	u16 status;
+>> +	u8 msg_code;
+>> +
+>> +	intx &= 3;
+>> +
+>> +	/* Set the outbound region if needed. */
+>> +	if (unlikely(ep->irq_pci_addr != CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY)) {
+>> +		/* Last region was reserved for IRQ writes. */
+>> +		cdns_pcie_set_outbound_region_for_normal_msg(pcie, r,
+>> +							     ep->irq_phys_addr);
+>> +		ep->irq_pci_addr = CDNS_PCIE_EP_IRQ_PCI_ADDR_LEGACY;
+>> +	}
+>> +
+>> +	if (is_asserted) {
+>> +		ep->irq_pending |= BIT(intx);
+>> +		msg_code = MSG_CODE_ASSERT_INTA + intx;
+>> +	} else {
+>> +		ep->irq_pending &= ~BIT(intx);
+>> +		msg_code = MSG_CODE_DEASSERT_INTA + intx;
+>> +	}
+>> +
+>> +	status = cdns_pcie_ep_fn_readw(pcie, fn, PCI_STATUS);
+>> +	if (((status & PCI_STATUS_INTERRUPT) != 0) ^ (ep->irq_pending != 0)) {
+>> +		status ^= PCI_STATUS_INTERRUPT;
+>> +		cdns_pcie_ep_fn_writew(pcie, fn, PCI_STATUS, status);
+>> +	}
+>> +
+>> +	offset = CDNS_PCIE_NORMAL_MSG_ROUTING(MSG_ROUTING_LOCAL) |
+>> +		 CDNS_PCIE_NORMAL_MSG_CODE(msg_code) |
+>> +		 CDNS_PCIE_MSG_NO_DATA;
+>> +	writel(0, ep->irq_cpu_addr + offset);
+>> +}
+>> +
+>> +static int cdns_pcie_ep_send_legacy_irq(struct cdns_pcie_ep *ep, u8 fn, u8 intx)
+>> +{
+>> +	u16 cmd;
+>> +
+>> +	cmd = cdns_pcie_ep_fn_readw(&ep->pcie, fn, PCI_COMMAND);
+>> +	if (cmd & PCI_COMMAND_INTX_DISABLE)
+>> +		return -EINVAL;
+>> +
+>> +	cdns_pcie_ep_assert_intx(ep, fn, intx, true);
+>> +	mdelay(1);
+> 
+> Add a comment please to explain the mdelay value.
+>
+
+Honestly, I don't know for this value: I've just adapted the source code
+from what was already done by dra7xx_pcie_raise_legacy_irq() from
+drivers/pci/dwc/pci-dra7xx.c.
+
+>> +	cdns_pcie_ep_assert_intx(ep, fn, intx, false);
+>> +	return 0;
+>> +}
+>> +
+>> +static int cdns_pcie_ep_raise_irq(struct pci_epc *epc,
+>> +				  enum pci_epc_irq_type type, u8 interrupt_num)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 cap = CDNS_PCIE_EP_FUNC_MSI_CAP_OFFSET;
+>> +	u16 flags, mmc, mme, data, data_mask;
+>> +	u8 msi_count;
+>> +	u64 pci_addr, pci_addr_mask = 0xff;
+>> +	u8 fn = 0;
+>> +
+>> +	/* Handle legacy IRQ. */
+>> +	if (type == PCI_EPC_IRQ_LEGACY)
+>> +		return cdns_pcie_ep_send_legacy_irq(ep, fn, 0);
+>> +
+>> +	/* Otherwise MSI. */
+>> +	if (type != PCI_EPC_IRQ_MSI)
+>> +		return -EINVAL;
+>> +
+>> +	/* Check whether the MSI feature has been enabled by the PCI host. */
+>> +	flags = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_FLAGS);
+>> +	if (!(flags & PCI_MSI_FLAGS_ENABLE))
+>> +		return -EINVAL;
+>> +
+>> +	/* Get the number of enabled MSIs */
+>> +	mmc = (flags & PCI_MSI_FLAGS_QMASK) >> 1;
+>> +	mme = (flags & PCI_MSI_FLAGS_QSIZE) >> 4;
+>> +	if (mme > mmc)
+>> +		mme = mmc;
+>> +	if (mme > 5)
+>> +		mme = 5;
+> 
+> Same comment as above.
+> 
+>> +	msi_count = 1 << mme;
+>> +	if (!interrupt_num || interrupt_num > msi_count)
+>> +		return -EINVAL;
+>> +
+>> +	/* Compute the data value to be written. */
+>> +	data_mask = msi_count - 1;
+>> +	data = cdns_pcie_ep_fn_readw(pcie, fn, cap + PCI_MSI_DATA_64);
+>> +	data = (data & ~data_mask) | ((interrupt_num - 1) & data_mask);
+>> +
+>> +	/* Get the PCI address where to write the data into. */
+>> +	pci_addr = cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_HI);
+>> +	pci_addr <<= 32;
+>> +	pci_addr |= cdns_pcie_ep_fn_readl(pcie, fn, cap + PCI_MSI_ADDRESS_LO);
+>> +	pci_addr &= GENMASK_ULL(63, 2);
+>> +
+>> +	/* Set the outbound region if needed. */
+>> +	if (unlikely(ep->irq_pci_addr != pci_addr)) {
+>> +		/* Last region was reserved for IRQ writes. */
+>> +		cdns_pcie_set_outbound_region(pcie, ep->data->max_regions - 1,
+>> +					      false,
+>> +					      ep->irq_phys_addr,
+>> +					      pci_addr & ~pci_addr_mask,
+>> +					      pci_addr_mask + 1);
+>> +		ep->irq_pci_addr = pci_addr;
+>> +	}
+>> +	writew(data, ep->irq_cpu_addr + (pci_addr & pci_addr_mask));
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cdns_pcie_ep_start(struct pci_epc *epc)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	struct pci_epf *epf;
+>> +	u32 cfg;
+>> +	u8 fn = 0;
+>> +
+>> +	/* Enable this endpoint function. */
+>> +	cfg = cdns_pcie_readl(pcie, CDNS_PCIE_LM_EP_FUNC_CFG);
+>> +	cfg |= BIT(fn);
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
+>> +
+>> +	/*
+>> +	 * Already linked-up: don't call directly pci_epc_linkup() because we've
+>> +	 * already locked the epc->lock.
+>> +	 */
+>> +	list_for_each_entry(epf, &epc->pci_epf, list)
+>> +		pci_epf_linkup(epf);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void cdns_pcie_ep_stop(struct pci_epc *epc)
+>> +{
+>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>> +	struct cdns_pcie *pcie = &ep->pcie;
+>> +	u32 cfg;
+>> +	u8 fn = 0;
+>> +
+>> +	/* Disable this endpoint function (function 0 can't be disabled). */
+> 
+> I do not understand this comment and how it applies to the code,
+> in other words fn is always 0 here (so it can't be disabled)
+> I do not understand what this code is there for.
+>
+
+fn == 0 for the same reason as for other 'struct pci_epc_ops' handlers.
+I added this comment above because BIT(0) is hard-wired to 1: in other word
+function 0 is the only one that can't be disabled.
+
+So the current code actually does nothing. I've implemented anyway still
+hoping that the API would change so function other than 0 could be used.
+
+>> +	cfg = cdns_pcie_readl(pcie, CDNS_PCIE_LM_EP_FUNC_CFG);
+>> +	cfg &= ~BIT(fn);
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, cfg);
+>> +}
+>> +
+>> +static const struct pci_epc_ops cdns_pcie_epc_ops = {
+>> +	.write_header	= cdns_pcie_ep_write_header,
+>> +	.set_bar	= cdns_pcie_ep_set_bar,
+>> +	.clear_bar	= cdns_pcie_ep_clear_bar,
+>> +	.map_addr	= cdns_pcie_ep_map_addr,
+>> +	.unmap_addr	= cdns_pcie_ep_unmap_addr,
+>> +	.set_msi	= cdns_pcie_ep_set_msi,
+>> +	.get_msi	= cdns_pcie_ep_get_msi,
+>> +	.raise_irq	= cdns_pcie_ep_raise_irq,
+>> +	.start		= cdns_pcie_ep_start,
+>> +	.stop		= cdns_pcie_ep_stop,
+>> +};
+>> +
+>> +static const struct cdns_pcie_ep_data cdns_pcie_ep_data = {
+>> +	.max_regions	= 16,
+>> +};
+> 
+> As I mentioned in patch 3, should this be set-up with DT ?
+>
+
+OK, I'll move it as a DT property.
+
+Best regards,
+
+Cyrille
+
+> Thanks,
+> Lorenzo
+> 
+>> +
+>> +static const struct of_device_id cdns_pcie_ep_of_match[] = {
+>> +	{ .compatible = "cdns,cdns-pcie-ep",
+>> +	  .data = &cdns_pcie_ep_data },
+>> +
+>> +	{ },
+>> +};
+>> +
+>> +static int cdns_pcie_ep_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	const struct of_device_id *of_id;
+>> +	struct cdns_pcie_ep *ep;
+>> +	struct cdns_pcie *pcie;
+>> +	struct pci_epc *epc;
+>> +	struct resource *res;
+>> +	size_t max_regions;
+>> +	int ret;
+>> +
+>> +	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+>> +	if (!ep)
+>> +		return -ENOMEM;
+>> +
+>> +	platform_set_drvdata(pdev, ep);
+>> +
+>> +	pcie = &ep->pcie;
+>> +	pcie->is_rc = false;
+>> +
+>> +	of_id = of_match_node(cdns_pcie_ep_of_match, np);
+>> +	ep->data = (const struct cdns_pcie_ep_data *)of_id->data;
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+>> +	pcie->reg_base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(pcie->reg_base)) {
+>> +		dev_err(dev, "missing \"reg\"\n");
+>> +		return PTR_ERR(pcie->reg_base);
+>> +	}
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mem");
+>> +	if (!res) {
+>> +		dev_err(dev, "missing \"mem\"\n");
+>> +		return -EINVAL;
+>> +	}
+>> +	pcie->mem_res = res;
+>> +
+>> +	max_regions = ep->data->max_regions;
+>> +	ep->ob_addr = devm_kzalloc(dev, max_regions * sizeof(*ep->ob_addr),
+>> +				   GFP_KERNEL);
+>> +	if (!ep->ob_addr)
+>> +		return -ENOMEM;
+>> +
+>> +	pm_runtime_enable(dev);
+>> +	ret = pm_runtime_get_sync(dev);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "pm_runtime_get_sync() failed\n");
+>> +		goto err_get_sync;
+>> +	}
+>> +
+>> +	/* Disable all but function 0 (anyway BIT(0) is hardwired to 1). */
+>> +	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, BIT(0));
+>> +
+>> +	epc = devm_pci_epc_create(dev, &cdns_pcie_epc_ops);
+>> +	if (IS_ERR(epc)) {
+>> +		dev_err(dev, "failed to create epc device\n");
+>> +		ret = PTR_ERR(epc);
+>> +		goto err_init;
+>> +	}
+>> +
+>> +	ep->epc = epc;
+>> +	epc_set_drvdata(epc, ep);
+>> +
+>> +	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
+>> +	if (ret < 0)
+>> +		epc->max_functions = 1;
+>> +
+>> +	ret = pci_epc_mem_init(epc, pcie->mem_res->start,
+>> +			       resource_size(pcie->mem_res));
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "failed to initialize the memory space\n");
+>> +		goto err_init;
+>> +	}
+>> +
+>> +	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
+>> +						  SZ_128K);
+>> +	if (!ep->irq_cpu_addr) {
+>> +		dev_err(dev, "failed to reserve memory space for MSI\n");
+>> +		ret = -ENOMEM;
+>> +		goto free_epc_mem;
+>> +	}
+>> +	ep->irq_pci_addr = CDNS_PCIE_EP_IRQ_PCI_ADDR_NONE;
+>> +
+>> +	return 0;
+>> +
+>> + free_epc_mem:
+>> +	pci_epc_mem_exit(epc);
+>> +
+>> + err_init:
+>> +	pm_runtime_put_sync(dev);
+>> +
+>> + err_get_sync:
+>> +	pm_runtime_disable(dev);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static struct platform_driver cdns_pcie_ep_driver = {
+>> +	.driver = {
+>> +		.name = "cdns-pcie-ep",
+>> +		.of_match_table = cdns_pcie_ep_of_match,
+>> +	},
+>> +	.probe = cdns_pcie_ep_probe,
+>> +};
+>> +builtin_platform_driver(cdns_pcie_ep_driver);
+>> -- 
+>> 2.11.0
+>>
+> 
+
+
 -- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cyrille Pitchen, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
