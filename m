@@ -1,38 +1,51 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: mfd: mc13xxx: Add the unit address to sysled
-Date: Mon, 4 Dec 2017 07:09:49 -0200
-Message-ID: <CAOMZO5BQM=ELmky-gJvHgvZ55_gop32Y4P6YmY9Au5hXqrw+vQ@mail.gmail.com>
-References: <1512165086-25512-1-git-send-email-festevam@gmail.com> <20171204090721.tgffux64kv3hecaq@dell>
+From: Erick Chen <erick.chen@spreadtrum.com>
+Subject: Re: [PATCH 2/2] regulator: sc2731: Add regulator driver to support
+ Spreadtrum SC2731 PMIC
+Date: Mon, 4 Dec 2017 17:03:14 +0800
+Message-ID: <20171204090313.GA2242@spreadtrum.com>
+References: <f6d8ff765f4864e5b6ace1f022202d8793a7becf.1512118703.git.erick.chen@spreadtrum.com>
+ <75a6a48f603a25d744ef46287e036975b0203608.1512118703.git.erick.chen@spreadtrum.com>
+ <201712020333.vB23X0mT082692@TPSPAM01.spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171204090721.tgffux64kv3hecaq@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201712020333.vB23X0mT082692@TPSPAM01.spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, baolin.wang@linaro.org, baolin.wang@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 4, 2017 at 7:07 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, 01 Dec 2017, Fabio Estevam wrote:
->
->> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->>
->> As the 'reg' property is mandatory in the subnodes, improve the
->> example by adding the unit address to the sysled node.
->>
->> This prevents the following build warning with W=1:
->>
->> Node /soc/aips@70000000/spba@70000000/ecspi@70010000/pmic@0/leds/sysled0 has a reg or ranges property, but no unit name
->>
->> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mfd/mc13xxx.txt | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> Why do I have 2 identical patches in my inbox?
+Hi Mark,
 
-There was a typo in the mailing list address in the first one, sorry.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Dec 01, 2017 at 01:01:37PM +0000, Mark Brown wrote:
+> On Fri, Dec 01, 2017 at 04:58:16PM +0800, Erick Chen wrote:
+> 
+> > +static const struct of_device_id sc2731_regulator_of_match[] = {
+> > +	{.compatible = "sprd,sc2731-regulator",},
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, sc2731_regulator_of_match);
+> 
+> This looks like a subdriver for one specific device that can't be reused
+> with anything else as it's specific to an individual device so I'd not
+> expect it to appear as a separate thing in DT - the way Linux splits
+> things up might not map well onto other OSs and may even change in
+> future versions of Linux (look at all the audio drivers with clock
+> controllers in them for example).  I'd expect the MFD to just register
+> the subdevice without needing it to appear in the DT.
+>
+
+Make sense, i will remove the of_device_id table in next version.
+ 
+> > +subsys_initcall(sc2731_regulator_init);
+> > +module_exit(sc2731_regulator_exit);
+> 
+> Why not module_platform_driver()?  Deferred probe should sort out probe
+> order.
+
+On some Spreadtrum old platforms, we need to power on the CPU cores ASAP.
+But now this issue had been fixed after some investigation, so we can change
+subsys_initcall() to module_init() level as you suggested.
+
+Very appreciated for your helpful comments.
