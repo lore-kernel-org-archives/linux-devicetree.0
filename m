@@ -1,112 +1,51 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 0/4] Move DP phy switch to PHY driver
-Date: Mon, 04 Dec 2017 22:53:03 +0100
-Message-ID: <4518665.CiImf8ftzB@diego>
-References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
- <4091462.xo23GTqF41@diego>
- <CAD=FV=XVCCbh6P-WweccyKiNy2RJRhqY-6gpf7BVkY4oqdDZbg@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: mfd: mc13xxx: Add the unit address to sysled
+Date: Mon, 4 Dec 2017 19:57:53 -0200
+Message-ID: <CAOMZO5BWoPB_b_bVq=9vfUK4uRJ9OVPNNytnAq6aztdq4QstBQ@mail.gmail.com>
+References: <1512165086-25512-1-git-send-email-festevam@gmail.com> <20171204215302.3zhepg2sz6ycmmt6@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAD=FV=XVCCbh6P-WweccyKiNy2RJRhqY-6gpf7BVkY4oqdDZbg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, dri-devel@lists.freedesktop.org, Guenter Roeck <groeck@chromium.org>, Chris Zhong <zyw@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Jianqun Xu <jay.xu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, William wu <wulf@rock-chips.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@chromium.org>, David Wu <david.wu@rock-chips.com>, Enric Balletbo i Serra <enric.balletb>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171204215302.3zhepg2sz6ycmmt6@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpBbSBNb250YWcsIDQuIERlemVtYmVyIDIwMTcsIDA4OjA4OjMxIENFVCBzY2hyaWViIERv
-dWcgQW5kZXJzb246Cj4gT24gU3VuLCBEZWMgMywgMjAxNyBhdCAxMTo0NiBQTSwgSGVpa28gU3TD
-vGJuZXIgPGhlaWtvQHNudGVjaC5kZT4gd3JvdGU6Cj4gPiBBbSBNb250YWcsIDQuIERlemVtYmVy
-IDIwMTcsIDEwOjQ3OjA4IENFVCBzY2hyaWViIENocmlzIFpob25nOgo+ID4+IE9uIDIwMTflubQx
-MuaciDAy5pelIDA1OjU4LCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiA+PiA+IEFtIEZyZWl0YWcs
-IDEuIERlemVtYmVyIDIwMTcsIDEzOjQyOjQ2IENFVCBzY2hyaWViIERvdWcgQW5kZXJzb246Cj4g
-Pj4gPj4gT24gV2VkLCBOb3YgMjksIDIwMTcgYXQgNjoyNyBQTSwgQ2hyaXMgWmhvbmcgPHp5d0By
-b2NrLWNoaXBzLmNvbT4gCndyb3RlOgo+ID4+ID4+PiBUaGFuayB5b3UgZm9yIG1lbnRpb25pbmcg
-dGhpcyBwYXRjaC4KPiA+PiA+Pj4gCj4gPj4gPj4+IEkgdGhpbmsgdGhlIGZvY3VzIG9mIHRoZSBk
-aXNjdXNzaW9uIGlzOiBjYW4gd2UgcHV0IHRoZSBncmYgY29udHJvbAo+ID4+ID4+PiBiaXQKPiA+
-PiA+Pj4gdG8KPiA+PiA+Pj4gZHRzLgo+ID4+ID4+PiAKPiA+PiA+Pj4gVGhlIFJLMzM5OSBoYXMg
-MiBUeXBlLUMgcGh5LCBidXQgb25seSBvbmUgRFAgY29udHJvbGxlciwgdGhpcwo+ID4+ID4+PiAi
-dXBoeV9kcF9zZWwiCj4gPj4gPj4+IAo+ID4+ID4+PiBjYW4gaGVscCB0byBzd2l0Y2ggdGhlc2Ug
-MiBwaHkuIFNvIEkgdGhpbmsgdGhpcyBiaXQgY2FuIGJlIGNvbnNpZGVyZWQKPiA+PiA+Pj4gYXMK
-PiA+PiA+Pj4gYQo+ID4+ID4+PiBwYXJ0IG9mCj4gPj4gPj4+IAo+ID4+ID4+PiBUeXBlLUMgcGh5
-LCB0aGVzZSAyIHBoeSBoYXZlIGRpZmZlcmVudCBiaXRzLCBqdXN0IHNpbWlsYXIgdG8gb3RoZXIK
-PiA+PiA+Pj4gYml0cwo+ID4+ID4+PiAoc3VjaCBhcyAicGlwZS1zdGF0dXMiKS4KPiA+PiA+Pj4g
-Cj4gPj4gPj4+IFB1dCB0aGVtIHRvIERUUyBmaWxlIG1pZ2h0IGJlIGEgYWNjZXB0ZWQgcHJhY3Rp
-Y2UuCj4gPj4gPj4gCj4gPj4gPj4gSSBndWVzcyB0aGUgZmlyc3Qgc3RlcCB3b3VsZCBiZSBmaW5k
-aW5nIHRoZSBwZXJzb24gdG8gbWFrZSBhIGRlY2lzaW9uLgo+ID4+ID4+IElzIHRoYXQgSGVpa28/
-ICBPbG9mPyAgS2lzaG9uPyAgUm9iPy4gIEFzIEkgc2VlIGl0IHRoZXJlIGFyZSBhIGZldwo+ID4+
-ID4+IG9wdGlvbnM6Cj4gPj4gPj4gCj4gPj4gPj4gMS4gTGFuZCB0aGlzIHNlcmllcyBhcy1pcy4g
-IFRoaXMgbWFrZXMgdGhlIG5ldyBiaXQgd29yayBqdXN0IGxpa2UgYWxsCj4gPj4gPj4gdGhlIG90
-aGVyIG9uZXMgbmV4dCB0byBpdC4gIElmIGFueW9uZSBoYXBwZW5zIHRvIHRyeSB0byB1c2UgYW4g
-b2xkCj4gPj4gPj4gZGV2aWNlIHRyZWUgb24gYSBuZXcga2VybmVsIHRoZXknbGwgYnJlYWsuICBT
-ZWVtcyByYXRoZXIgdW5saWtlbHkKPiA+PiA+PiBnaXZlbiB0aGF0IHRoZSB3aG9sZSB0eXBlIEMg
-UEhZIGlzIG5vdCByZWFsbHkgZnVsbHkgZnVuY3Rpb25hbAo+ID4+ID4+IHVwc3RyZWFtLCBidXQg
-dGVjaG5pY2FsbHkgdGhpcyBpcyBhIG5vLW5vIGZyb20gYSBkZXZpY2UgdHJlZQo+ID4+ID4+IHBl
-cnNwZWN0aXZlLgo+ID4+ID4+IAo+ID4+ID4+IDIuIENoYW5nZSB0aGUgc2VyaWVzIHRvIG1ha2Ug
-dGhpcyBwcm9wZXJ0eSBvcHRpb25hbC4gIElmIGl0J3Mgbm90Cj4gPj4gPj4gdGhlcmUgdGhlbiB0
-aGUgY29kZSBiZWhhdmVzIGxpa2UgaXQgYWx3YXlzIGRpZC4gIFRoaXMgd291bGQgYWRkcmVzcwo+
-ID4+ID4+IHRoZSAiY29tcGF0aWJpbGl0eSIgcHJvYmxlbSBidXQgbGlrZWx5IHdvdWxkbid0IGFj
-dHVhbGx5IGhlbHAgYW55IHJlYWwKPiA+PiA+PiBwZW9wbGUsIGFuZCBpdCB3b3VsZCBiZSBleHRy
-YSB3b3JrLgo+ID4+ID4+IAo+ID4+ID4+IDMuIFJlZG8gdGhlIGRyaXZlciB0byBkZXByZWNhdGUg
-YWxsIHRoZSBvbGQgb2Zmc2V0cyAvIGJpdHMgYW5kIGp1c3QKPiA+PiA+PiBwdXQgdGhlIHRhYmxl
-IGluIHRoZSBkcml2ZXIsIGtleWVkIG9mZiB0aGUgY29tcGF0aWJsZSBzdHJpbmcgYW5kIGJhc2UK
-PiA+PiA+PiBhZGRyZXNzIGlmIHRoZSBJTyBtZW1vcnkuCj4gPj4gPj4gCj4gPj4gPj4gCj4gPj4g
-Pj4gSSBjYW4ndCBtYWtlIHRoaXMgZGVjaXNpb24uICBJdCdzIHVwIHRvIHRob3NlIGZvbGtzIHdo
-byB3b3VsZCBiZQo+ID4+ID4+IGxhbmRpbmcgdGhlIHBhdGNoIGFuZCBJJ2QgYmUgaGFwcHkgd2l0
-aCBhbnkgb2YgdGhlbS4gIFdoYXQgSSdtIGxlc3MKPiA+PiA+PiBoYXBweSB3aXRoLCBob3dldmVy
-LCBpcyB0aGUgaW5kZWNpc2lvbiBwcmV2ZW50aW5nIGZvcndhcmQgcHJvZ3Jlc3MuCj4gPj4gPj4g
-V2Ugc2hvdWxkIHBpY2sgb25lIG9mIHRoZSBhYm92ZSB0aGluZ3MgYW5kIGxhbmQgaXQuICBNeSBv
-d24gcGVyc29uYWwKPiA+PiA+PiBiaWFzIGlzICMxOiBqdXN0IGxhbmQgdGhlIHNlcmllcy4gIE5v
-IHJlYWwgcGVvcGxlIHdpbGwgYmUgaHVydCBhbmQKPiA+PiA+PiBpdCdzIGp1c3QgYWRkaW5nIGFu
-b3RoZXIgcHJvcGVydHkgdGhhdCBtYXRjaGVzIHRoZSBvbmVzIG5leHQgdG8gaXQuCj4gPj4gPiAK
-PiA+PiA+IEknZCBzZWNvbmQgdGhhdCAjMSAuIFRoYXQgd2hvbGUgdHlwZS1jIHBoeSB0aGluZ3kg
-bmV2ZXIgZnVsbHkgd29ya2VkIGluCj4gPj4gPiB0aGUgcGFzdCAoc29tZSBmb3IgdGhlIG5ldmVy
-IHVzZWQgZHAgb3V0cHV0KSwgc28gcGVyc29uYWxseSBJIGRvbid0Cj4gPj4gPiBoYXZlCj4gPj4g
-PiBpc3N1ZXMgd2l0aCBnb2luZyB0aGF0IHJvdXRlLgo+ID4+ID4gCj4gPj4gPj4gIEZyb20gYSBs
-b25nIHRlcm0gcGVyc3BlY3RpdmUgKEFLQSBob3cgSSdkIHdyaXRlIHRoZSBuZXh0IGRyaXZlciBs
-aWtlCj4gPj4gPj4gCj4gPj4gPj4gdGhpcykgSSBwZXJzb25hbGx5IGxlYW4gdG93YXJkcyB0byAi
-dGFibGVzIGluIHRoZSBkcml2ZXIsIG5vdCBpbiB0aGUKPiA+PiA+PiBkZXZpY2UgdHJlZSIgYnV0
-IHF1aXRlIGhvbmVzdGx5IEknbSBoYXBweSB0byB0YWtlIHdoYXRldmVyIGRpcmVjdGlvbgo+ID4+
-ID4+IHRoZSBtYWludGFpbmVycyBnaXZlLgo+ID4+ID4gCj4gPj4gPiBJdCBsb29rcyBsaWtlIHdl
-J3JlIGluIGFncmVlbWVudCBoZXJlIDotKSAuIEdSRiBzdHVmZiBzaG91bGQgbm90IGxlYWsKPiA+
-PiA+IGludG8KPiA+PiA+IHRoZSBkZXZpY2V0cmVlLCBhcyBpdCBjYXVzZXMgZW5kbGVzcyBoZWFk
-YWNoZXMgbGF0ZXIuIEJ1dCBJIGd1ZXNzIHdlJ2xsCj4gPj4gPiBuZWVkIHRvIGxpdmUgd2l0aCB0
-aGUgb25lcyB0aGF0IGhhcHBlbmVkIHNvIGZhci4KPiA+PiAKPiA+PiBTbywgdGhlIGZpcnN0IHN0
-ZXAgaXM6IG1vdmUgYWxsIHRoZSBwcml2YXRlIHByb3BlcnR5IG9mIHRjcGh5IHRvCj4gPj4gZHJp
-dmVycy9waHkvcm9ja2NoaXAvcGh5LXJvY2tjaGlwLXR5cGVjLmMuCj4gPj4gU2Vjb25kIHN0ZXA6
-IG5ldyBhIG1lbWJlcjogdXBoeS1kcC1zZWwuCj4gPj4gSW4gbXkgbWluZCwgd2Ugc2hvdWxkIGhh
-dmUgZGlzY3Vzc2VkIHRoZXNlIHByb3BlcnRpZXMgYmVmb3JlLCBhbmQgdGhlbiBJCj4gPj4gbW92
-ZWQgdGhlbSBhbGwgaW50byBEVFMuCj4gPiAKPiA+IEFjdHVhbGx5LCBJIHdhcyBhZ3JlZWluZyB3
-aXRoIERvdWcsIHRoYXQgd2UgcHJvYmFibHkgZG9uJ3QgbmVlZCB0byByZXdvcmsKPiA+IHRoZSB0
-eXBlLWMgcGh5IGRyaXZlci4gQXMgbW9zdCBwcm9wZXJ0aWVzIGZvciBpdCBhcmUgaW4gdGhlIGRl
-dmljZXRyZWUKPiA+IHJpZ2h0IG5vdyB3ZSdsbCBuZWVkIHRvIHN1cHBvcnQgdGhlbSBmb3IgYmFj
-a3dhcmRzLWNvbXBhdGlibGl0eSBhbnl3YXkuCj4gPiAKPiA+IEFuZCB5ZXMsIHRoZXJlIHByb2Jh
-Ymx5IHdhcyBkaXNjdXNzaW9uIG92ZXIgZHRzIHZzLiBkcml2ZXItdGFibGUgd2hlbiB0aGUKPiA+
-IHR5cGUtYyBkcml2ZXIgd2FzIGludHJvZHVjZWQsIGJ1dCBJIGVpdGhlciBtaXNzZWQgaXQgb3Ig
-d2Fzbid0IGZpcm0gZW5vdWdoCj4gPiBiYWNrIHRoZW4gOy0pIC4KPiA+IAo+ID4gSGVuY2UgdGhl
-ICJ3ZSdsbCBuZWVkIHRvIGxpdmUgd2l0aCBpdCIgZm9yIHRoZSB0eXBlLWMgcGh5LCBidXQgc2hv
-dWxkIG5vdAo+ID4gZG8gc2ltaWxhciB0aGluZ3MgaW4gZnV0dXJlIGRyaXZlcnMuCj4gCj4gU28g
-SSBndWVzcyBub3cgd2UncmUganVzdCB3YWl0aW5nIGZvciBzb21lIGFncmVlbWVudCBmcm9tIEtp
-c2hvbiB0aGF0Cj4gaGUncyB3aWxsaW5nIHRvIGxhbmQgdGhlIFBIWSBjaGFuZ2U/ICBIZWlrbzog
-cHJlc3VtYWJseSB5b3UgY291bGQKPiBhcHBseSB0aGUgRFAgY2hhbmdlIHRvIGRybS1taXNjPyAg
-Li4ub3IgaXMgdGhlcmUgc29tZSBvdGhlciBwcm9jZXNzCj4gbmVlZGVkIHRoZXJlPwoKSSB3YXMg
-bGFnZ2luZyBiZWhpbmQgYSBiaXQgd2l0aCB0aGUgZHJtLW1pc2MgYWNjb3VudCByZXF1ZXN0IGJ1
-dCBoYXZlCmRvbmUgc28gbm93LiBTbyBvbmNlIEkgZ290IHRoZSBoYW5nIG9mIGhvdyBkcm0tbWlz
-YyB3b3JrcyBhbmQgS2lzaG9uCmhhcyBwaWNrZWQgdGhlIHBoeS1wYXJ0IEkgY2FuIG1vc3QgbGlr
-ZWx5IHB1c2ggdGhlIGRybSBwYXJ0IChvciBTYW5keSwKZGVwZW5kaW5nIG9uIHdobyBpcyBmYXN0
-ZXIpLgoKQXMgZm9yIHByb2Nlc3MsIEkgZG9uJ3QgdGhpbmsgdGhlcmUgaXMgc3BlY2lhbCBjYXJl
-IG5lY2Vzc2FyeS4gV2hlbgp5b3UgZ2V0IHRoZSBpbnRlcm1lZGlhdGUgY2FzZSBvZiBwaHktY2hh
-bmdlIGJ1dCBubyBkcm0tY2hhbmdlCmV2ZXJ5dGhpbmcgd2lsbCBqdXN0IHJldmVydCB0byBob3cg
-aXQgd29ya3Mgbm93IGFueXdheS4KCgpIZWlrbwpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+Hi Rob,
+
+On Mon, Dec 4, 2017 at 7:53 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Dec 01, 2017 at 07:51:26PM -0200, Fabio Estevam wrote:
+>> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+>>
+>> As the 'reg' property is mandatory in the subnodes, improve the
+>> example by adding the unit address to the sysled node.
+>>
+>> This prevents the following build warning with W=1:
+>>
+>> Node /soc/aips@70000000/spba@70000000/ecspi@70010000/pmic@0/leds/sysled0 has a reg or ranges property, but no unit name
+>
+> Even if the doc file could compile, looks like the name was sysled not
+> sysled0.
+
+The sysled0 name I got from arch/arm/boot/dts/imx51-zii-rdu1.dts,
+where I fixed the real warning:
+
+https://www.spinics.net/lists/arm-kernel/msg620322.html
+
+
+>>
+>> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/mc13xxx.txt | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> In any case,
+>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
