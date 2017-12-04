@@ -1,40 +1,98 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: Fix dm814x missing phy-cells property
-Date: Mon,  4 Dec 2017 08:27:18 -0800
-Message-ID: <20171204162718.11222-2-tony@atomide.com>
-References: <20171204162718.11222-1-tony@atomide.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171204162718.11222-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v2 08/19] ASoC: tlv320aic31xx: Switch GPIO
+ handling to use gpiod_* API
+Date: Mon, 4 Dec 2017 10:47:52 -0600
+Message-ID: <537c8d62-de11-15e8-11bc-08e8334d4322@ti.com>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-9-afd@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171129213300.20021-9-afd@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We have phy-cells for usb_phy0, but it's missing for usb_phy1 and we get:
+On 11/29/2017 03:32 PM, Andrew F. Davis wrote:
+> Move to using newer gpiod_* GPIO handling functions. This simplifies
+> the code and eases dropping platform data in the next patch. Also
+> remember GPIO are active low, so set "1" to reset.
+> 
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> ---
 
-Warning (phys_property): Missing property '#phy-cells' in node
-/ocp/l4ls@48000000/control@140000/usb-phy@1b00 or bad phandle
-(referred from /ocp/usb@47400000/usb@47401800:phys[0])
 
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/dm814x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Kbuild bot seems mad a this one, looks like I need to include
+linux/gpio/consumer.h, will fix for v3.
 
-diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
---- a/arch/arm/boot/dts/dm814x.dtsi
-+++ b/arch/arm/boot/dts/dm814x.dtsi
-@@ -386,6 +386,7 @@
- 					reg = <0x1b00 0x100>;
- 					reg-names = "phy";
- 					ti,ctrl_mod = <&usb_ctrl_mod>;
-+					#phy-cells = <0>;
- 				};
- 			};
- 
--- 
-2.15.0
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>  sound/soc/codecs/tlv320aic31xx.c | 23 ++++++++++-------------
+>  1 file changed, 10 insertions(+), 13 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+> index c84febd991a0..ab03a19f6aaa 100644
+> --- a/sound/soc/codecs/tlv320aic31xx.c
+> +++ b/sound/soc/codecs/tlv320aic31xx.c
+> @@ -157,6 +157,7 @@ struct aic31xx_priv {
+>  	u8 i2c_regs_status;
+>  	struct device *dev;
+>  	struct regmap *regmap;
+> +	struct gpio_desc *gpio_reset;
+>  	struct aic31xx_pdata pdata;
+>  	struct regulator_bulk_data supplies[AIC31XX_NUM_SUPPLIES];
+>  	struct aic31xx_disable_nb disable_nb[AIC31XX_NUM_SUPPLIES];
+> @@ -1020,8 +1021,8 @@ static int aic31xx_regulator_event(struct notifier_block *nb,
+>  		 * Put codec to reset and as at least one of the
+>  		 * supplies was disabled.
+>  		 */
+> -		if (gpio_is_valid(aic31xx->pdata.gpio_reset))
+> -			gpio_set_value(aic31xx->pdata.gpio_reset, 0);
+> +		if (aic31xx->gpio_reset)
+> +			gpiod_set_value(aic31xx->gpio_reset, 1);
+>  
+>  		regcache_mark_dirty(aic31xx->regmap);
+>  		dev_dbg(aic31xx->dev, "## %s: DISABLE received\n", __func__);
+> @@ -1073,8 +1074,8 @@ static int aic31xx_power_on(struct snd_soc_codec *codec)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (gpio_is_valid(aic31xx->pdata.gpio_reset)) {
+> -		gpio_set_value(aic31xx->pdata.gpio_reset, 1);
+> +	if (aic31xx->gpio_reset) {
+> +		gpiod_set_value(aic31xx->gpio_reset, 0);
+>  		udelay(100);
+>  	}
+>  	regcache_cache_only(aic31xx->regmap, false);
+> @@ -1334,15 +1335,11 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+>  	else if (aic31xx->dev->of_node)
+>  		aic31xx_pdata_from_of(aic31xx);
+>  
+> -	if (aic31xx->pdata.gpio_reset) {
+> -		ret = devm_gpio_request_one(aic31xx->dev,
+> -					    aic31xx->pdata.gpio_reset,
+> -					    GPIOF_OUT_INIT_HIGH,
+> -					    "aic31xx-reset-pin");
+> -		if (ret < 0) {
+> -			dev_err(aic31xx->dev, "not able to acquire gpio\n");
+> -			return ret;
+> -		}
+> +	aic31xx->gpio_reset = devm_gpiod_get_optional(aic31xx->dev, "reset",
+> +						      GPIOD_OUT_LOW);
+> +	if (IS_ERR(aic31xx->gpio_reset)) {
+> +		dev_err(aic31xx->dev, "not able to acquire gpio\n");
+> +		return PTR_ERR(aic31xx->gpio_reset);
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(aic31xx->supplies); i++)
+> 
