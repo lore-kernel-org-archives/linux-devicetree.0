@@ -1,160 +1,84 @@
-From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] of: overlay: add flag enabling overlays and enable fpga-region overlays
-Date: Mon,  4 Dec 2017 13:13:56 -0600
-Message-ID: <20171204191357.3211-2-atull@kernel.org>
+From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2] of: dynamic: restrict overlay by targets
+Date: Mon, 4 Dec 2017 11:18:49 -0800
+Message-ID: <20171204191849.GA17574@tyrael.ni.corp.natinst.com>
 References: <20171204191357.3211-1-atull@kernel.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <20171204191357.3211-1-atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a flag to struct device_node marking the node as a valid target
-for device tree overlays.  When an overlay is submitted, if any target
-in the overlay is not enabled for overlays, the overlay is rejected.
-Drivers that support dynamic configuration can enable/disable their
-device node with:
 
-  void of_node_overlay_enable(struct device_node *np)
-  void of_node_overlay_disable(struct device_node *np)
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-During each FPGA region's probe, enable its node for overlays.
+On Mon, Dec 04, 2017 at 01:13:55PM -0600, Alan Tull wrote:
+> Restrict which nodes are valid targets for a DT overlay.
+>=20
+> Add a flag bit to struct device_node allowing nodes to be marked as
+> valid target for overlays.
+>=20
+> A driver that is always intended to handle DT overlays can
+> enable overlays by calling a function for its DT node.
+>=20
+> For individual nodes that need to be opened up for a specific use,
+> adding the property "overlay-allowed" enables overlays targeting
+> that node.  I'll need to document the DT property, not sure where
+> specifically.  New file bindings/overlay.txt?
+>=20
+> This patchset differs from the RFC:
+> * Added a flag bit and got rid of the whitelist
+> * Renamed the functions that enable a node
+> * Added a DT property
+>=20
+> Alan Tull (2):
+>   of: overlay: add flag enabling overlays and enable fpga-region
+>     overlays
+>   of: dynamic: add overlay-allowed DT property
 
-Signed-off-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-v1: (changes from the rfc)
-    Add a flag instead of implementing a list
-    rename functions for what they do, not how they're implemented
-    squash with patch that enables fpga-region nodes
-    add a helpful error message
----
- drivers/fpga/of-fpga-region.c |  4 ++++
- drivers/of/overlay.c          | 26 ++++++++++++++++++++++++++
- include/linux/of.h            | 19 +++++++++++++++++++
- 3 files changed, 49 insertions(+)
+I think [1/2] and [2/2] are backwards order. If applied like this,
+it won't work. [1/2] uses stuff that gets added in [2/2]
 
-diff --git a/drivers/fpga/of-fpga-region.c b/drivers/fpga/of-fpga-region.c
-index 119ff75..8633eea 100644
---- a/drivers/fpga/of-fpga-region.c
-+++ b/drivers/fpga/of-fpga-region.c
-@@ -438,6 +438,7 @@ static int of_fpga_region_probe(struct platform_device *pdev)
- 		goto eprobe_mgr_put;
- 
- 	of_platform_populate(np, fpga_region_of_match, NULL, &region->dev);
-+	of_node_overlay_enable(np);
- 
- 	dev_info(dev, "FPGA Region probed\n");
- 
-@@ -451,7 +452,10 @@ static int of_fpga_region_probe(struct platform_device *pdev)
- static int of_fpga_region_remove(struct platform_device *pdev)
- {
- 	struct fpga_region *region = platform_get_drvdata(pdev);
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 
-+	of_node_overlay_disable(np);
- 	fpga_region_unregister(region);
- 	fpga_mgr_put(region->mgr);
- 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 53bc9e3..a9758d6 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -21,6 +21,7 @@
- #include <linux/slab.h>
- #include <linux/err.h>
- #include <linux/idr.h>
-+#include <linux/spinlock.h>
- 
- #include "of_private.h"
- 
-@@ -646,6 +647,27 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
- 	kfree(ovcs);
- }
- 
-+static int of_overlay_check_targets(struct overlay_changeset *ovcs)
-+{
-+	struct device_node *target;
-+	int i;
-+
-+	for (i = 0; i < ovcs->count; i++) {
-+		target = ovcs->fragments[i].target;
-+
-+		if (!of_node_cmp(target->name, "__symbols__"))
-+			continue;
-+
-+		if (!of_node_check_flag(target, OF_OVERLAY_ENABLED)) {
-+			pr_err("Overlays not enabled for target %pOF\n",
-+			       target);
-+			return -EPERM;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * of_overlay_apply() - Create and apply an overlay changeset
-  * @tree:	Expanded overlay device tree
-@@ -717,6 +739,10 @@ int of_overlay_apply(struct device_node *tree, int *ovcs_id)
- 	if (ret)
- 		goto err_free_overlay_changeset;
- 
-+	ret = of_overlay_check_targets(ovcs);
-+	if (ret)
-+		goto err_free_overlay_changeset;
-+
- 	ret = overlay_notify(ovcs, OF_OVERLAY_PRE_APPLY);
- 	if (ret) {
- 		pr_err("overlay changeset pre-apply notify error %d\n", ret);
-diff --git a/include/linux/of.h b/include/linux/of.h
-index d3dea1d..16a2cae 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -147,6 +147,7 @@ extern raw_spinlock_t devtree_lock;
- #define OF_DETACHED	2 /* node has been detached from the device tree */
- #define OF_POPULATED	3 /* device already created for the node */
- #define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
-+#define OF_OVERLAY_ENABLED	5 /* allow DT overlay targeting this node */
- 
- #define OF_BAD_ADDR	((u64)-1)
- 
-@@ -1364,6 +1365,16 @@ int of_overlay_remove_all(void);
- int of_overlay_notifier_register(struct notifier_block *nb);
- int of_overlay_notifier_unregister(struct notifier_block *nb);
- 
-+static inline void of_node_overlay_enable(struct device_node *np)
-+{
-+	of_node_set_flag(np, OF_OVERLAY_ENABLED);
-+}
-+
-+static inline void of_node_overlay_disable(struct device_node *np)
-+{
-+	of_node_clear_flag(np, OF_OVERLAY_ENABLED);
-+}
-+
- #else
- 
- static inline int of_overlay_apply(struct device_node *tree, int *ovcs_id)
-@@ -1391,6 +1402,14 @@ static inline int of_overlay_notifier_unregister(struct notifier_block *nb)
- 	return 0;
- }
- 
-+static inline void of_node_overlay_enable(struct device_node *np)
-+{
-+}
-+
-+static inline void of_node_overlay_disable(struct device_node *np)
-+{
-+}
-+
- #endif
- 
- #endif /* _LINUX_OF_H */
--- 
-2.7.4
+>=20
+>  drivers/fpga/of-fpga-region.c |  4 ++++
+>  drivers/of/base.c             |  4 ++--
+>  drivers/of/dynamic.c          |  3 +++
+>  drivers/of/fdt.c              |  3 +++
+>  drivers/of/of_private.h       |  2 ++
+>  drivers/of/overlay.c          | 26 ++++++++++++++++++++++++++
+>  include/linux/of.h            | 19 +++++++++++++++++++
+>  7 files changed, 59 insertions(+), 2 deletions(-)
+>=20
+> --=20
+> 2.7.4
+>=20
 
+Moritz
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEowQ4eJSlIZpNWnl2UVwKRFcJcNgFAloln5YACgkQUVwKRFcJ
+cNhZFQgApOJSjoRXVPUsxpjoFUDqW/LgAOh7xdE/8RIzQJCqWkGDiqx4YlUZg5H1
+1bapRjr5NKZ9KiyPkgQaTxZB/GNN2D6/AiE/CjbrMUc2+ntKwsfIwwjT8dp8+RVZ
+Y/Qb5OMqG1wX7QKKcU1ibXncD0Y+U5QbGFGkyh9bz+i46ZZh91VLudHj2jr699mp
+aobv18yBZe3qd8+cyH8MxEfWRjEADpc2xP0Ch4OKnusv+BW32LpouQD2mEjLvQ3t
+SnQvCGRz7VTrF/TAI8Vi7Jc5Paj7nK7QHfd0cLBVGubxJq9T3gvbQ9C9qgW+6VfJ
+bWlG+uI1wz11cXisp+eEtVd5vf6bhQ==
+=+3I5
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
