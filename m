@@ -1,86 +1,107 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 10/13] dt-bindings: Add qcom slimbus controller
- bindings
-Date: Mon, 4 Dec 2017 15:28:29 -0600
-Message-ID: <20171204212829.bmcp5dktc5w46rom@rob-hp-laptop>
-References: <20171130174200.6684-1-srinivas.kandagatla@linaro.org>
- <20171130174200.6684-11-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH RFC 2/2] arm64: allwinner: a64: Add Brava
+ Keller initial support
+Date: Mon, 4 Dec 2017 15:35:45 -0600
+Message-ID: <20171204213545.lvi4ay6lu7ohchru@rob-hp-laptop>
+References: <1512067334-12761-1-git-send-email-jagan@amarulasolutions.com>
+ <1512067334-12761-2-git-send-email-jagan@amarulasolutions.com>
+ <CAOFm3uEdsj=qxUf3O0S0vDqgXgosvBYG6BGbf6cYn3aNreTPaQ@mail.gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBM77S3IQKGQE75FJJDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171130174200.6684-11-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+In-Reply-To: <CAOFm3uEdsj=qxUf3O0S0vDqgXgosvBYG6BGbf6cYn3aNreTPaQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Cc: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Janoff <mark-EBCEQKJj5Pll57MIdRCFDg@public.gmane.org>, Stuart Westerman <stu-EBCEQKJj5Pll57MIdRCFDg@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 30, 2017 at 05:41:57PM +0000, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On Thu, Nov 30, 2017 at 10:36:55PM +0100, Philippe Ombredanne wrote:
+> Jagan,
 > 
-> This patch add device tree bindings for Qualcomm slimbus controller.
+> On Thu, Nov 30, 2017 at 7:42 PM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> []
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
+> > new file mode 100644
+> > index 0000000..f5303a3
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
+> > @@ -0,0 +1,244 @@
+> > +/*
+> > + * Copyright (C) 2017 Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > + *
+> > + * This file is dual-licensed: you can use it either under the terms
+> > + * of the GPL or the X11 license, at your option. Note that this dual
+> > + * licensing only applies to this file, and not this project as a
+> > + * whole.
+> > + *
+> > + *  a) This library is free software; you can redistribute it and/or
+> > + *     modify it under the terms of the GNU General Public License as
+> > + *     published by the Free Software Foundation; either version 2 of the
+> > + *     License, or (at your option) any later version.
+> > + *
+> > + *     This library is distributed in the hope that it will be useful,
+> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + *     GNU General Public License for more details.
+> > + *
+> > + * Or, alternatively,
+> > + *
+> > + *  b) Permission is hereby granted, free of charge, to any person
+> > + *     obtaining a copy of this software and associated documentation
+> > + *     files (the "Software"), to deal in the Software without
+> > + *     restriction, including without limitation the rights to use,
+> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> > + *     sell copies of the Software, and to permit persons to whom the
+> > + *     Software is furnished to do so, subject to the following
+> > + *     conditions:
+> > + *
+> > + *     The above copyright notice and this permission notice shall be
+> > + *     included in all copies or substantial portions of the Software.
+> > + *
+> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> > + *     OTHER DEALINGS IN THE SOFTWARE.
+> > + */
 > 
-> Signed-off-by: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+> Rather than this long boilerplate, you might want to use the SPDX ids,
+> as started by Greg and documented by Thomas.
+> Noe that Linus wants the // comment style for the license line, and
+> since there is only two line left here I suggest using it for both
+> lines.
+> You can check also the recent doc patch posted by Thomas (tglx) and
+> comments from Linus and Greg.
 > 
-> diff --git a/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-> new file mode 100644
-> index 000000000000..93a6fdaf09b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-> @@ -0,0 +1,39 @@
-> +Qualcomm SLIMbus controller
-> +This controller is used if applications processor driver controls SLIMbus
-> +master component.
-> +
-> +Required properties:
-> +
-> + - #address-cells - refer to Documentation/devicetree/bindings/slimbus/bus.txt
-> + - #size-cells	- refer to Documentation/devicetree/bindings/slimbus/bus.txt
-> +
-> + - reg : Offset and length of the register region(s) for the device
-> + - reg-names : Register region name(s) referenced in reg above
-> +	 Required register resource entries are:
-> +	 "ctrl": Physical address of controller register blocks
-> + 	 "slew": required for "qcom,apq8064-slim" SOC.
-> + - compatible : should be "qcom,<SOC-NAME>-slim" for SOC specific compatible
-> + 		followed by "qcom,slim" for fallback.
-> + - interrupts : Interrupt number used by this controller
-> + - clocks : Interface and core clocks used by this SLIMbus controller
-> + - clock-names : Required clock-name entries are:
-> +	"iface_clk" : Interface clock for this controller
-> +	"core_clk" : Interrupt for controller core's BAM
+> So I guess you could use this:
+> 
+> > +// Copyright (C) 2017 Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > +// SPDX-License-Indentifier: (GPL-2.0+ OR MIT)
 
-Doesn't match the example. You should drop the '_clk'. With that,
+Other way around. Make SPDX-License-Indentifier the first line.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> NB: what you call X11 is has the MIT license id in the SPDX license list.
 
-> +
-> +Example:
-> +
-> +	slim@28080000 {
-> +		compatible = "qcom,apq8064-slim", "qcom,slim";
-> +		reg = <0x28080000 0x2000>, <0x80207C 4>;
-> +		reg-names = "ctrl", "slew";
-> +		interrupts = <0 33 0>;
-> +		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
-> +		clock-names = "iface", "core";
-> +		#address-cells = <2>;
-> +		#size-cell = <0>;
-> +
-> +		wcd9310: audio-codec@1,0{
-> +			compatible = "slim217,60";
-> +			reg = <1 0>;
-> +		};
-> +	};
-> -- 
-> 2.15.0
+Right. That was a common mistake or abiguity in the dts files. 
+
+> So you could replace 32 lines by only two lines :) it'[s neat right?
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> And this would also help as we have tagged already ~15K files, so it
+> would help to use this for new files so the amount of cleanup work
+> still left does not increase. Thank you for your kind consideration!
+
+I've been nuging folks to do that for a while now. Of course, now we 
+need to go move the ids to the first line at some point.
+
+Rob
