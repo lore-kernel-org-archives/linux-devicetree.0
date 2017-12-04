@@ -1,46 +1,61 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM64: dts: meson-gxm: fix q200 interrupt number
-Date: Mon,  4 Dec 2017 11:05:04 +0100
-Message-ID: <20171204100504.7741-1-jbrunet@baylibre.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add optional nvmem MAC address bindings
+ to ti,wlink-st
+Date: Mon, 4 Dec 2017 13:09:43 +0300
+Message-ID: <f50b5810-31ca-6ce8-ba1e-0484a3dd1d89@cogentembedded.com>
+References: <1512357682-8911-1-git-send-email-david@lechnology.com>
+ <1512357682-8911-2-git-send-email-david@lechnology.com>
+ <2dfb7130-e229-7429-0f30-11d7df553fdf@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2dfb7130-e229-7429-0f30-11d7df553fdf-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Correct the interrupt number assigned to the Realtek PHY in the q200
+On 12/4/2017 12:54 PM, Sergei Shtylyov wrote:
 
-Fixes: b94d22d94ad2 ("ARM64: dts: meson-gx: add external PHY interrupt on some platforms")
-Reported-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
+>> This adds optional nvmem consumer properties to the ti,wlink-st device tree
+>> bindings to allow specifying the Bluetooth MAC address.
+>>
+>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/net/ti,wilink-st.txt | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/ti,wilink-st.txt 
+>> b/Documentation/devicetree/bindings/net/ti,wilink-st.txt
+>> index 1649c1f..24eb897 100644
+>> --- a/Documentation/devicetree/bindings/net/ti,wilink-st.txt
+>> +++ b/Documentation/devicetree/bindings/net/ti,wilink-st.txt
+>> @@ -32,6 +32,8 @@ Optional properties:
+>>      See ../clocks/clock-bindings.txt for details.
+>>    - clock-names : Must include the following entry:
+>>      "ext_clock" (External clock provided to the TI combo chip).
+>> + - nvmem-cells: phandle to nvmem data cell that contains a MAC address
+>> + - nvmem-cell-names: "mac-address" (required when nvmem-cells is specified)
+>>   Example:
+>> @@ -43,5 +45,7 @@ Example:
+>>           enable-gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+>>           clocks = <&clk32k_wl18xx>;
+>>           clock-names = "ext_clock";
+>> +        nvmem-cells: <&mac_address>
+> 
+>     s/:/ = /?
+> 
+>> +        nvmem-cell-names "mac-address"
+> 
+>     Where's =?
 
- This change depends on the related series from Martin [0]
- Thanks for catching it Martin !
+    And ;? :-)
 
-[0]: https://lkml.kernel.org/r/20171202214037.17017-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+[...]
 
- arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts
-index 9847fce443a8..388fac4f2d97 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts
-@@ -111,8 +111,8 @@
- 		reg = <0>;
- 		max-speed = <1000>;
- 		interrupt-parent = <&gpio_intc>;
--		/* MAC_INTR on GPIOH_3 */
--		interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
-+		/* MAC_INTR on GPIOZ_15 */
-+		interrupts = <25 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
--- 
-2.14.3
-
+MBR, Sergei
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
