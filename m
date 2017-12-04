@@ -1,47 +1,55 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: Re: [PATCH v4.1] phylib: Add device reset GPIO support
-Date: Mon, 4 Dec 2017 17:20:13 +0100
-Message-ID: <b95b046c-ee37-5ec1-01c1-763fb1e307e2@skidata.com>
-References: <1512383692-14009-2-git-send-email-geert+renesas@glider.be>
- <1512390905-28094-1-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V5 4/7] OF: properties: Implement get_match_data() callback
+Date: Mon, 4 Dec 2017 10:23:14 -0600
+Message-ID: <CAL_JsqJ+fMqrt6Tk8h6v1fSkrBg+GcMxSXK9XCcz3nmYgyguuQ@mail.gmail.com>
+References: <1512188864-773-1-git-send-email-okaya@codeaurora.org> <1512188864-773-5-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1512390905-28094-1-git-send-email-geert+renesas@glider.be>
-Content-Language: en-US
+In-Reply-To: <1512188864-773-5-git-send-email-okaya@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, "David S . Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Frank Rowand <frowand.list@gmail.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 12/04/2017 01:35 PM, Geert Uytterhoeven wrote:
-> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> The PHY devices sometimes do have their reset signal (maybe even power
-> supply?) tied to some GPIO and sometimes it also does happen that a boot
-> loader does not leave it deasserted. So far this issue has been attacked
-> from (as I believe) a wrong angle: by teaching the MAC driver to manipulate
-> the GPIO in question; that solution, when applied to the device trees, led
-> to adding the PHY reset GPIO properties to the MAC device node, with one
-> exception: Cadence MACB driver which could handle the "reset-gpios" prop
-> in a PHY device subnode. I believe that the correct approach is to teach
-> the 'phylib' to get the MDIO device reset GPIO from the device tree node
-> corresponding to this device -- which this patch is doing...
-> 
-> Note that I had to modify the AT803x PHY driver as it would stop working
-> otherwise -- it made use of the reset GPIO for its own purposes...
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> [geert: Propagate actual errors from fwnode_get_named_gpiod()]
-> [geert: Avoid destroying initial setup]
-> [geert: Consolidate GPIO descriptor acquiring code]
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, Dec 1, 2017 at 10:27 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
+> Now that we have a get_match_data() callback as part of the firmware node,
+> implement the OF specific piece for it.
+>
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 > ---
+>  drivers/of/property.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 264c355..adcde1a 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -981,6 +981,22 @@ static int of_fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+>         return 0;
+>  }
+>
+> +void *of_fwnode_get_match_data(const struct fwnode_handle *fwnode,
+> +                              const struct device_driver *drv)
+> +{
+> +       const struct device_node *node = to_of_node(fwnode);
+> +       const struct of_device_id *match;
+> +
+> +       if (!node)
+> +               return NULL;
 
-Successfully tested this patch on a i.MX6SOLO based board containing a
-LAN8710 PHY:
+of_match_node checks this.
 
-Tested-by: Richard Leitner <richard.leitner@skidata.com>
+> +
+> +       match = of_match_node(drv->of_match_table, node);
+> +       if (!match)
+> +               return NULL;
+> +
+> +       return (void *)match->data;
+
+Don't need a cast here.
+
+of_device_get_match_data() already does most of this, but getting a
+device ptr from fwnode_handle may not be possible?
+
+Rob
