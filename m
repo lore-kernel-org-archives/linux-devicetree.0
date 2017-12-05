@@ -1,107 +1,91 @@
-From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH net-next v3 1/4] phylib: Add device reset delay support
-Date: Tue, 5 Dec 2017 15:56:55 +0100
-Message-ID: <35a63da6-93e1-b2f0-a3cc-ad079b2ffb28@skidata.com>
-References: <20171205132600.13796-1-dev@g0hl1n.net>
- <20171205132600.13796-2-dev@g0hl1n.net>
- <CAMuHMdX70yuEfoDL+Y4TZ-6zjyW9BqvKOU6UxbHTKGNcgfGrow@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 02/15] drm/panel: lvds: Add support for the power-supply property
+Date: Tue,  5 Dec 2017 16:10:14 +0100
+Message-ID: <c8da8d3db18f096546d23a3378f844ea9a5b00d2.1512486553.git-series.maxime.ripard@free-electrons.com>
+References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdX70yuEfoDL+Y4TZ-6zjyW9BqvKOU6UxbHTKGNcgfGrow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, lukma-ynQEQJNshbs@public.gmane.org, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+A significant number of panels need to power up a regulator in order to
+operate properly. Add support for the power-supply property to enable and
+disable such a regulator whenever needed.
 
-On 12/05/2017 02:54 PM, Geert Uytterhoeven wrote:
-> Hi Richard,
-> 
-> On Tue, Dec 5, 2017 at 2:25 PM, Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org> wrote:
->> From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
->>
->> Some PHYs need a minimum time after the reset gpio was asserted and/or
->> deasserted. To ensure we meet these timing requirements add two new
->> optional devicetree parameters for the phy: reset-delay-us and
->> reset-post-delay-us.
-> 
-> Thanks for your patch!
-> 
->> This patch depends on the "phylib: Add device reset GPIO support" patch
->> submitted by Geert Uytterhoeven/Sergei Shtylyov, see:
->>         https://patchwork.kernel.org/patch/10090149/
-> 
-> The above paragraph belongs under the "---" line below, as it is not intended
-> to be preserved in the eternal git history.
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/gpu/drm/panel/panel-lvds.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Ok. Thanks. That makes sense. I'll take it into account for v4.
-
-> 
->> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> 
-> Although I have a few suggestions below:
-
-Thank you for your review and suggestions (they make the code look way
-more neater). I'll adapt v4 accordingly.
-
-> 
->> --- a/drivers/net/phy/mdio_device.c
->> +++ b/drivers/net/phy/mdio_device.c
->> @@ -118,8 +119,16 @@ EXPORT_SYMBOL(mdio_device_remove);
->>
->>  void mdio_device_reset(struct mdio_device *mdiodev, int value)
->>  {
->> -       if (mdiodev->reset)
->> -               gpiod_set_value(mdiodev->reset, value);
->> +       if (!mdiodev->reset)
->> +               return;
->> +
->> +       gpiod_set_value(mdiodev->reset, value);
->> +
->> +       if (value && mdiodev->reset_delay)
->> +               usleep_range(mdiodev->reset_delay, mdiodev->reset_delay + 100);
->> +       else if (!value && mdiodev->reset_post_delay)
->> +               usleep_range(mdiodev->reset_post_delay,
->> +                            mdiodev->reset_post_delay + 100);
-> 
-> I think this can be written simpler using e.g.:
-> 
->         unsigned int delay;
-> 
->         ...
->         delay = value ? mdiodev->reset_delay : mdiodev->reset_post_delay;
->         if (delay)
->                 usleep_range(delay, delay + 100);
-> 
-> Perhaps the range extension should be relative, e.g.
-> "delay + min(delay / 10, 100)"?
-> 
->> --- a/drivers/of/of_mdio.c
->> +++ b/drivers/of/of_mdio.c
->> @@ -77,6 +77,14 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
->>         if (of_property_read_bool(child, "broken-turn-around"))
->>                 mdio->phy_ignore_ta_mask |= 1 << addr;
->>
->> +       if (of_property_read_u32(child, "reset-delay-us",
->> +                                &phy->mdio.reset_delay))
->> +               phy->mdio.reset_delay = 0;
->> +
->> +       if (of_property_read_u32(child, "reset-post-delay-us",
->> +                                &phy->mdio.reset_post_delay))
->> +               phy->mdio.reset_post_delay = 0;
-> 
-> If of_property_read_u32() fails, it doesn't write to its output parameter.
-> As the structure should be zeroed during allocation, you can just write:
-> 
->         of_property_read_u32(child, "reset-delay-us", &phy->mdio.reset_delay);
->         of_property_read_u32(child, "reset-post-delay-us",
->                              &phy->mdio.reset_post_delay);
+diff --git a/drivers/gpu/drm/panel/panel-lvds.c b/drivers/gpu/drm/panel/panel-lvds.c
+index e2d57c01200b..57e38a9e7ab4 100644
+--- a/drivers/gpu/drm/panel/panel-lvds.c
++++ b/drivers/gpu/drm/panel/panel-lvds.c
+@@ -17,6 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
+ 
+ #include <drm/drmP.h>
+@@ -39,6 +40,7 @@ struct panel_lvds {
+ 	bool data_mirror;
+ 
+ 	struct backlight_device *backlight;
++	struct regulator *supply;
+ 
+ 	struct gpio_desc *enable_gpio;
+ 	struct gpio_desc *reset_gpio;
+@@ -69,6 +71,9 @@ static int panel_lvds_unprepare(struct drm_panel *panel)
+ 	if (lvds->enable_gpio)
+ 		gpiod_set_value_cansleep(lvds->enable_gpio, 0);
+ 
++	if (lvds->supply)
++		regulator_disable(lvds->supply);
++
+ 	return 0;
+ }
+ 
+@@ -76,6 +81,17 @@ static int panel_lvds_prepare(struct drm_panel *panel)
+ {
+ 	struct panel_lvds *lvds = to_panel_lvds(panel);
+ 
++	if (lvds->supply) {
++		int err;
++
++		err = regulator_enable(lvds->supply);
++		if (err < 0) {
++			dev_err(lvds->dev, "failed to enable supply: %d\n",
++				err);
++			return err;
++		}
++	}
++
+ 	if (lvds->enable_gpio)
+ 		gpiod_set_value_cansleep(lvds->enable_gpio, 1);
+ 
+@@ -196,6 +212,13 @@ static int panel_lvds_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	lvds->supply = devm_regulator_get_optional(lvds->dev, "power");
++	if (IS_ERR(lvds->supply)) {
++		ret = PTR_ERR(lvds->supply);
++		dev_err(lvds->dev, "failed to request regulator: %d\n", ret);
++		return ret;
++	}
++
+ 	/* Get GPIOs and backlight controller. */
+ 	lvds->enable_gpio = devm_gpiod_get_optional(lvds->dev, "enable",
+ 						     GPIOD_OUT_LOW);
+-- 
+git-series 0.9.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
