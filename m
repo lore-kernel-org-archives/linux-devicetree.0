@@ -1,41 +1,48 @@
-From: Sven Van Asbroeck <svendev@arcx.com>
-Subject: [PATCH v4 0/2] at24: support eeproms that do not auto-rollover reads.
-Date: Tue, 5 Dec 2017 10:23:40 -0500
-Message-ID: <1512487422-6284-1-git-send-email-svendev@arcx.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: svendev@arcx.com, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, brgl@bgdev.pl, nsekhar@ti.com, sakari.ailus@linux.intel.com, david@lechnology.com, javier@dowhile0.org, divagar.mohandass@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v3 0/2] of: overlay: Fix of_overlay_apply() error path
+Date: Tue,  5 Dec 2017 16:27:01 +0100
+Message-ID: <1512487623-30450-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Colin King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-v4:
-	renamed devicetree property:
-		no-read-rollover -> at24,no-read-rollover
-	dt-bindings update now a separate patch
+	Hi Pantelis, Rob, Frank,
 
-v3:
-	rebased against at24 maintainer's devel staging branch:
-	git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git at24/devel
-	clarified some of the comments and wording
+Here's a replacement for commit bd80e2555c5c9d45 ("of: overlay: Fix
+cleanup order in of_overlay_apply()"), which was applied by Rob, and
+dropped later.
 
-v2:
-	kbuild test robot feedback: correct
-		"warning: comparison of distinct pointer types lacks a cast"
-	build warning on some compilers / architectures.
+The first patch fixes the memory leak reported by Colin.
+The second patch is a replacement for the bad dropped commit, and
+depends on the first patch for proper cleanup.
 
-v1:
-	original patch
+All OF unittests pass.
 
-Sven Van Asbroeck (2):
-  at24: support eeproms that do not auto-rollover reads.
-  dt-bindings: add eeprom "at24,no-read-rollover" property
+Thanks!
 
- .../devicetree/bindings/eeprom/eeprom.txt          |  5 +++
- drivers/misc/eeprom/at24.c                         | 37 +++++++++++++++-------
- include/linux/platform_data/at24.h                 |  2 ++
- 3 files changed, 32 insertions(+), 12 deletions(-)
+Geert Uytterhoeven (2):
+  of: overlay: Fix memory leak in of_overlay_apply() error path
+  of: overlay: Fix (un)locking in of_overlay_apply()
+
+ drivers/of/overlay.c | 31 +++++++++++++------------------
+ 1 file changed, 13 insertions(+), 18 deletions(-)
 
 -- 
-1.9.1
+2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
