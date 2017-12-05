@@ -1,52 +1,66 @@
-From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v3 09/12] ARM: dts: rockchip: add rx0 mipi-phy for rk3288
-Date: Wed,  6 Dec 2017 19:19:36 +0800
-Message-ID: <20171206111939.1153-10-jacob-chen@iotwrt.com>
-References: <20171206111939.1153-1-jacob-chen@iotwrt.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171206111939.1153-1-jacob-chen@iotwrt.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rockchip@lists.infradead.org
-Cc: Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, Joao.Pinto@synopsys.com, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, Luis.Oliveira@synopsys.com, robh+dt@kernel.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, allon.huang@rock-chips.com, mchehab@kernel.org, zhengsq@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: tyler@opensourcefoundries.com
+Subject: [PATCH v1 4/6] ARM: dts: imx7s: add node and supplies for vdd1p2
+Date: Tue,  5 Dec 2017 14:27:05 -0800
+Message-ID: <20171205222707.11302-5-tyler@opensourcefoundries.com>
+References: <20171205222707.11302-1-tyler@opensourcefoundries.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171205222707.11302-1-tyler@opensourcefoundries.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, festevam@gmail.com, kernel@pengutronix.de
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, fabio.estevam@nxp.com, Tyler Baker <tyler@opensourcefoundries.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+From: Tyler Baker <tyler@opensourcefoundries.com>
 
-It's a Designware MIPI D-PHY, used by ISP in rk3288.
+Add the regulator nodes and supplies for vdd1p2. This regulator is
+used to power the GPC and USB HSIC PHY.
 
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+Signed-off-by: Tyler Baker <tyler@opensourcefoundries.com>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index ea1dda001043..baeedd2cb351 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -864,6 +864,13 @@
- 			status = "disabled";
- 		};
- 
-+		mipi_phy_rx0: mipi-phy-rx0 {
-+			compatible = "rockchip,rk3288-mipi-dphy";
-+			clocks = <&cru SCLK_MIPIDSI_24M>, <&cru PCLK_MIPI_CSI>;
-+			clock-names = "dphy-ref", "pclk";
-+			status = "disabled";
-+		};
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 7b85659..151ab34 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -522,6 +522,20 @@
+ 					anatop-max-voltage = <1200000>;
+ 					anatop-enable-bit = <0>;
+ 				};
 +
- 		io_domains: io-domains {
- 			compatible = "rockchip,rk3288-io-voltage-domain";
- 			status = "disabled";
++				reg_1p2: regulator-vdd1p2@220 {
++					compatible = "fsl,anatop-regulator";
++					regulator-name = "vdd1p2";
++					regulator-min-microvolt = <1100000>;
++					regulator-max-microvolt = <1300000>;
++					anatop-reg-offset = <0x220>;
++					anatop-vol-bit-shift = <8>;
++					anatop-vol-bit-width = <5>;
++					anatop-min-bit-val = <8>;
++					anatop-min-voltage = <1100000>;
++					anatop-max-voltage = <1300000>;
++					anatop-enable-bit = <0>;
++				};
+ 			};
+ 
+ 			snvs: snvs@30370000 {
+@@ -578,7 +592,7 @@
+ 				#interrupt-cells = <3>;
+ 				interrupt-parent = <&intc>;
+ 				#power-domain-cells = <1>;
+-
++				vcc-supply = <&reg_1p2>;
+ 				pgc {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+@@ -961,6 +975,7 @@
+ 				compatible = "usb-nop-xceiv";
+ 				clocks = <&clks IMX7D_USB_HSIC_ROOT_CLK>;
+ 				clock-names = "main_clk";
++				vcc-supply = <&reg_1p2>;
+ 			};
+ 
+ 			usdhc1: usdhc@30b40000 {
 -- 
-2.15.0
+2.9.3
