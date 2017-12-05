@@ -1,89 +1,79 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/3] eeprom: at25: Add DT support for EEPROMs with odd
- address bits
-Date: Tue, 5 Dec 2017 15:01:39 +0100
-Message-ID: <CAMuHMdWiQnbDva=_JjqKvmXj=mB_80W0fZbYXVZe-ansHi2txA@mail.gmail.com>
-References: <1512048586-17534-1-git-send-email-geert+renesas@glider.be>
- <1512048586-17534-2-git-send-email-geert+renesas@glider.be>
- <CAMuHMdWczQ0KiH7soGLKxX8CQEwxA=kVDc_saYqgytE2U_3WKw@mail.gmail.com>
- <20171204211705.543xjzvttbrt65pm@rob-hp-laptop> <CAMuHMdUDPFhSwkHg2wm7yCNAfdUP8wAR9OXxbcu6SDhtZqe2+A@mail.gmail.com>
- <CAMuHMdWFzUbZ-wcyZmLEXcnFQ+RJBnkrxW+B0ie9cR=1LPtsgw@mail.gmail.com> <CAL_Jsq+-w=bbSN1LvRy7G9Dtc=7-C+CiyQnrtZkMLK23S98P9Q@mail.gmail.com>
+From: <linux-kernel-dev@beckhoff.com>
+Subject: [PATCH v2 0/5] add mxc driver for i.MX53 SRTC
+Date: Tue, 5 Dec 2017 15:06:41 +0100
+Message-ID: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+-w=bbSN1LvRy7G9Dtc=7-C+CiyQnrtZkMLK23S98P9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ivo Sieben <meltedpianoman@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Chris Wright <chrisw@sous-sol.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Patrick Bruenn <p.bruenn@beckhoff.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Philippe Ombredanne <pombredanne@nexb.com>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Patrick Bruenn <p.bruenn@beckhoff.com>
 
-On Tue, Dec 5, 2017 at 2:56 PM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Dec 5, 2017 at 3:09 AM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> On Tue, Dec 5, 2017 at 9:57 AM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>> On Mon, Dec 4, 2017 at 10:17 PM, Rob Herring <robh@kernel.org> wrote:
->>>> On Mon, Dec 04, 2017 at 10:17:47AM +0100, Geert Uytterhoeven wrote:
->>>>> On Thu, Nov 30, 2017 at 2:29 PM, Geert Uytterhoeven
->>>>> <geert+renesas@glider.be> wrote:
->>>>> > Certain EEPROMS have a size that is larger than the number of address
->>>>> > bytes would allow, and store the MSB of the address in bit 3 of the
->>>>> > instruction byte.
->>>>> >
->>>>> > This can be described in platform data using EE_INSTR_BIT3_IS_ADDR, or
->>>>> > in DT using the obsolete legacy "at25,addr-mode" property.
->>>>> > But currently there exists no non-deprecated way to describe this in DT.
->>>>> >
->>>>> > Hence extend the existing "address-width" DT property to allow
->>>>> > specifying 9, 17, or 25 address bits, and enable support for that in the
->>>>> > driver.
->>>>> >
->>>>> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>>> > ---
->>>>> > EEPROMs using 9 address bits are common (e.g. M95040, 25AA040/25LC040).
->>>>> > Do EEPROMs using 17 or 25 address bits, as mentioned in
->>>>> > include/linux/spi/eeprom.h, really exist?
->>>>> > Or should we just limit it to a single odd value (9 bits)?
->>>>>
->>>>> At least for the real Atmel parts, only the AT25040 part uses odd (8 +
->>>>> 1 bit) addressing.
->>>>
->>>> Seems like we should have a specific compatible for it.
->>>
->>> Possibly. But currently all configuration is done through DT properties, not
->>> through matching on compatible values.
->>
->> Adding compatible values for all known/used parts could quickly become a
->> large table.
->> E.g. Atmel/Microchip has 3 variants of 512-byte EEPROMs: AT25040B,
->> 25LC040A, and 25AA040A. The former uses an 8-byte pagesize, while the
->> latter parts use 16-byte pagesizes.
->> Not to mention "compatible" parts from other manufacturers, and all other
->> supported size.
->>
->> Currently all of this is configured through the "pagesize", "size", and
->> "address-width" DT properties, with matching on generic "atmel,at25".
->
-> I wasn't suggesting throwing out all these. Just add a compatible for
-> the one oddball 9-bit part.
->
-> But I'm fine adding address-width=9 too.
+Neither rtc-imxdi, rtc-mxc nor rtc-snvs are compatible with i.MX53.
 
-OK. Then I'll go for the least intrusive solution (address-width=9).
-These EEPROMs are fairly small and simple, and I can imagine them being
-used on small systems too, so driver code/data size matters.
+This is driver enables support for the low power domain SRTC features:
+- 32-bit MSB of non-rollover time counter
+- 32-bit alarm register
 
-Stay tuned for v2.
+Based on:
+http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/drivers/rtc/rtc-mxc_v2.c?h=imx_2.6.35_11.09.01
 
-Thanks!
+v2:
+- have seperate patches for dt-binding, CONFIG option, imx53.dtsi and driver
+- add SPDX-License-Identifier and cleanup copyright notice
+- replace __raw_readl/writel() with readl/writel()
+- fix PM_SLEEP callbacks
+- add CONFIG_RTC_DRV_MXC_V2 to build rtc-mxc_v2.c
+- remove misleading or obvious comments and fix style of the remaining
+- avoid endless loop while waiting for hw
+- implement consistent locking; make spinlock a member of dev struct
+- enable clk only for register accesses
+- remove all udelay() calls since they are obsolete or redundant
+  (we are already waiting for register flags to change)
+- init platform_data before registering irq callback
+- let set_time() fail, when 32 bit rtc counter exceeded
+- make names more consistent
+- cleanup and reorder includes
+- cleanup and remove unused defines
 
-Gr{oetje,eeting}s,
+To: Alessandro Zummo <a.zummo@towertech.it>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+Cc: linux-rtc@vger.kernel.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM)
+Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+Cc: linux-kernel@vger.kernel.org (open list)
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Juergen Borleis <jbe@pengutronix.de>
+Cc: Noel Vellemans <Noel.Vellemans@visionbms.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de> (maintainer:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
+Cc: Russell King <linux@armlinux.org.uk> (maintainer:ARM PORT)
+Cc: linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
 
-                        Geert
+Cc: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: Lothar Waßmann <LW@KARO-electronics.de>
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Patrick Bruenn (5):
+  dt-bindings: rtc: add bindings for i.MX53 SRTC
+  ARM: dts: imx53: add srtc node
+  rtc: mxc_v2: add driver for i.MX53 SRTC
+  ARM: imx_v4_v5_defconfig: enable RTC_DRV_MXC_V2
+  rtc: add mxc driver for i.MX53 SRTC
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ .../devicetree/bindings/rtc/rtc-mxc_v2.txt         |  17 +
+ arch/arm/boot/dts/imx53.dtsi                       |   4 +-
+ arch/arm/configs/imx_v4_v5_defconfig               |   1 +
+ drivers/rtc/Kconfig                                |  10 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-mxc_v2.c                           | 433 +++++++++++++++++++++
+ 6 files changed, 463 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc_v2.txt
+ create mode 100644 drivers/rtc/rtc-mxc_v2.c
+
+-- 
+2.11.0
