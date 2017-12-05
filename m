@@ -1,93 +1,69 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V6 3/7] device property: Introduce a common API to fetch
- device match data
-Date: Tue,  5 Dec 2017 12:04:48 -0500
-Message-ID: <1512493493-6464-4-git-send-email-okaya@codeaurora.org>
-References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 0/2] of: dynamic: restrict overlay by targets
+Date: Tue, 5 Dec 2017 11:07:00 -0600
+Message-ID: <CANk1AXQ4HV9YAO_p1wrY66nnWY1n2WnR0JoCbAKU6RfrWqf9sQ@mail.gmail.com>
+References: <20171204191357.3211-1-atull@kernel.org> <edb604fa-4810-0de9-ce51-c90aa2442cb4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, open list <linux-kernel@vger.kernel.org>, Sinan Kaya <okaya@codeaurora.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-arm-kernel@lists.infradead.org, Len Brown <lenb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <edb604fa-4810-0de9-ce51-c90aa2442cb4@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There is an OF/ACPI function to obtain the driver data. We want to hide
-OF/ACPI details from the device drivers and abstract following the device
-family of functions.
+On Mon, Dec 4, 2017 at 7:14 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> Hi Alan,
+>
+> In the RFC thread "of: Add whitelist", I did not understand the use case and
+> asked you some questions (30 Nov 2017 07:46:36 -0500), that you seem to have
+> overlooked (or my mail server failed to deliver your answer to me).  Can you
+> please answer that question so I can better understand this patch set is
+> needed for.
 
-Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
----
- drivers/base/property.c  | 6 ++++++
- include/linux/fwnode.h   | 4 ++++
- include/linux/property.h | 2 ++
- 3 files changed, 12 insertions(+)
+Hi Frank,
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 7ed99c1..65bf6f2 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -1335,3 +1335,9 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
- 	return fwnode_call_int_op(fwnode, graph_parse_endpoint, endpoint);
- }
- EXPORT_SYMBOL(fwnode_graph_parse_endpoint);
-+
-+void *device_get_match_data(struct device *dev)
-+{
-+	return fwnode_call_ptr_op(dev_fwnode(dev), get_match_data, dev);
-+}
-+EXPORT_SYMBOL_GPL(device_get_match_data);
-diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-index 0c35b6c..ab9aab5 100644
---- a/include/linux/fwnode.h
-+++ b/include/linux/fwnode.h
-@@ -15,6 +15,7 @@
- #include <linux/types.h>
- 
- struct fwnode_operations;
-+struct device;
- 
- struct fwnode_handle {
- 	struct fwnode_handle *secondary;
-@@ -66,6 +67,7 @@ struct fwnode_reference_args {
-  *			       endpoint node.
-  * @graph_get_port_parent: Return the parent node of a port node.
-  * @graph_parse_endpoint: Parse endpoint for port and endpoint id.
-+ * @get_match_data: Return the driver match data.
-  */
- struct fwnode_operations {
- 	void (*get)(struct fwnode_handle *fwnode);
-@@ -101,6 +103,8 @@ struct fwnode_operations {
- 	(*graph_get_port_parent)(struct fwnode_handle *fwnode);
- 	int (*graph_parse_endpoint)(const struct fwnode_handle *fwnode,
- 				    struct fwnode_endpoint *endpoint);
-+	void *(*get_match_data)(const struct fwnode_handle *fwnode,
-+				struct device *dev);
- };
- 
- #define fwnode_has_op(fwnode, op)				\
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 6bebee1..01fa55b 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -275,6 +275,8 @@ int device_add_properties(struct device *dev,
- 
- enum dev_dma_attr device_get_dma_attr(struct device *dev);
- 
-+void *device_get_match_data(struct device *dev);
-+
- int device_get_phy_mode(struct device *dev);
- 
- void *device_get_mac_address(struct device *dev, char *addr, int alen);
--- 
-1.9.1
+Sorry I missed those, I've replied to the original questions now.
+
+Alan
+
+>
+> Thanks,
+>
+> Frank
+>
+>
+> On 12/04/17 14:13, Alan Tull wrote:
+>> Restrict which nodes are valid targets for a DT overlay.
+>>
+>> Add a flag bit to struct device_node allowing nodes to be marked as
+>> valid target for overlays.
+>>
+>> A driver that is always intended to handle DT overlays can
+>> enable overlays by calling a function for its DT node.
+>>
+>> For individual nodes that need to be opened up for a specific use,
+>> adding the property "overlay-allowed" enables overlays targeting
+>> that node.  I'll need to document the DT property, not sure where
+>> specifically.  New file bindings/overlay.txt?
+>>
+>> This patchset differs from the RFC:
+>> * Added a flag bit and got rid of the whitelist
+>> * Renamed the functions that enable a node
+>> * Added a DT property
+>>
+>> Alan Tull (2):
+>>   of: overlay: add flag enabling overlays and enable fpga-region
+>>     overlays
+>>   of: dynamic: add overlay-allowed DT property
+>>
+>>  drivers/fpga/of-fpga-region.c |  4 ++++
+>>  drivers/of/base.c             |  4 ++--
+>>  drivers/of/dynamic.c          |  3 +++
+>>  drivers/of/fdt.c              |  3 +++
+>>  drivers/of/of_private.h       |  2 ++
+>>  drivers/of/overlay.c          | 26 ++++++++++++++++++++++++++
+>>  include/linux/of.h            | 19 +++++++++++++++++++
+>>  7 files changed, 59 insertions(+), 2 deletions(-)
+>>
+>
