@@ -1,104 +1,40 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v3 09/15] drm/sun4i: Add A83T support
-Date: Tue, 05 Dec 2017 16:42:55 +0100
-Message-ID: <1823097.lykhZvJrH4@jernej-laptop>
-References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com> <0f8137abb37de936db82c1251556ee84fb23c7fe.1512486553.git-series.maxime.ripard@free-electrons.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 05/15] drm/sun4i: Fix error path handling
+Date: Tue, 5 Dec 2017 23:42:35 +0800
+Message-ID: <CAGb2v66kMOFyXa1DqBgKaX+74e6jqt2QVjQcvzEJ_r_Ccoj6vw@mail.gmail.com>
+References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
+ <1f2443c41082fc6e086570da38d20744c52fe636.1512486553.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0f8137abb37de936db82c1251556ee84fb23c7fe.1512486553.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1f2443c41082fc6e086570da38d20744c52fe636.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Tue, Dec 5, 2017 at 11:10 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> The commit 4c7f16d14a33 ("drm/sun4i: Fix TCON clock and regmap
+> initialization sequence") moved a bunch of logic around, but forgot to
+> update the gotos after the introduction of the err_free_dotclock label.
+>
+> It means that if we fail later that the one introduced in that commit,
+> we'll just to the old label which isn't free the clock we created. This
+> will result in a breakage as soon as someone tries to do something with
+> that clock, since its resources will have been long reclaimed.
+>
+> Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Fixes: 4c7f16d14a33 ("drm/sun4i: Fix TCON clock and regmap initialization sequence")
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Dne torek, 05. december 2017 ob 16:10:21 CET je Maxime Ripard napisal(a):
-> Add support for the A83T display pipeline.
-> 
-> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> ---
->  drivers/gpu/drm/sun4i/sun4i_drv.c   |  1 +
->  drivers/gpu/drm/sun4i/sun4i_tcon.c  |  5 +++++
->  drivers/gpu/drm/sun4i/sun8i_mixer.c |  9 +++++++++
->  3 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> b/drivers/gpu/drm/sun4i/sun4i_drv.c index 49215d91c853..6f5e721b545e 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> @@ -347,6 +347,7 @@ static const struct of_device_id sun4i_drv_of_table[] =
-> { { .compatible = "allwinner,sun6i-a31s-display-engine" },
->  	{ .compatible = "allwinner,sun7i-a20-display-engine" },
->  	{ .compatible = "allwinner,sun8i-a33-display-engine" },
-> +	{ .compatible = "allwinner,sun8i-a83t-display-engine" },
->  	{ .compatible = "allwinner,sun8i-v3s-display-engine" },
->  	{ }
->  };
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> b/drivers/gpu/drm/sun4i/sun4i_tcon.c index 92f4738101e6..9b757450555f
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> @@ -1132,6 +1132,10 @@ static const struct sun4i_tcon_quirks
-> sun8i_a33_quirks = { .has_lvds_pll		= true,
->  };
-> 
-> +static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
-> +	/* nothing is supported */
-> +};
-> +
->  static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
->  	/* nothing is supported */
->  };
-> @@ -1144,6 +1148,7 @@ const struct of_device_id sun4i_tcon_of_table[] = {
->  	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
-> { .compatible = "allwinner,sun7i-a20-tcon", .data = &sun7i_a20_quirks }, {
-> .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks }, +	{
-> .compatible = "allwinner,sun8i-a83t-tcon-lcd", .data =
-> &sun8i_a83t_lcd_quirks }, { .compatible = "allwinner,sun8i-v3s-tcon", .data
-> = &sun8i_v3s_quirks }, { }
->  };
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> b/drivers/gpu/drm/sun4i/sun8i_mixer.c index ff235e3228ce..6829bec4ba68
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> @@ -477,6 +477,11 @@ static int sun8i_mixer_remove(struct platform_device
-> *pdev) return 0;
->  }
-> 
-> +static const struct sun8i_mixer_cfg sun8i_a83t_mixer_cfg = {
-> +	.vi_num = 1,
-> +	.ui_num = 3,
-> +};
-> +
+Thanks.
 
-I think you should expand that structure with:
-.ccsc = 0,
-.scaler_mask = 0xf,
-.mod_rate = 150000000,
+I think this was reported, or I noticed it after the patch was merged,
+but then I got busy with other stuff.
 
-Best regards,
-Jernej
-
->  static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg = {
->  	.vi_num = 2,
->  	.ui_num = 1,
-> @@ -487,6 +492,10 @@ static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg
-> = {
-> 
->  static const struct of_device_id sun8i_mixer_of_table[] = {
->  	{
-> +		.compatible = "allwinner,sun8i-a83t-de2-mixer-0",
-> +		.data = &sun8i_a83t_mixer_cfg,
-> +	},
-> +	{
->  		.compatible = "allwinner,sun8i-v3s-de2-mixer",
->  		.data = &sun8i_v3s_mixer_cfg,
->  	},
-> --
-> git-series 0.9.1
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
