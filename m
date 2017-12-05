@@ -1,152 +1,188 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V1 3/4] qcom: spmi-wled: Add support for OVP interrupt
- handling
-Date: Mon, 4 Dec 2017 20:45:23 -0800
-Message-ID: <20171205044523.GF28761@minitux>
-References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
- <1510834717-21765-4-git-send-email-kgunda@codeaurora.org>
+From: "Katsuhiro Suzuki" <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH 5/8] ASoC: uniphier: add support for UniPhier AIO driver
+Date: Tue, 5 Dec 2017 13:48:39 +0900
+Message-ID: <002b01d36d84$51d80aa0$f5881fe0$@socionext.com>
+References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com> <20171122114321.29196-6-suzuki.katsuhiro@socionext.com> <20171204183934.rd4vin22ktukwpip@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain;
+        charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1510834717-21765-4-git-send-email-kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20171204183934.rd4vin22ktukwpip-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: ja
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Mark Brown' <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?iso-2022-jp?B?U3V6dWtpLCBLYXRzdWhpcm8vGyRCTmtMWhsoQiAbJEI+IUduGyhC?= <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-2022-jp?B?WWFtYWRhLCBNYXNhaGlyby8bJEI7M0VEGyhCIBskQj8/OTAbKEI=?= <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 16 Nov 04:18 PST 2017, Kiran Gunda wrote:
+Hello,
 
-> WLED peripheral has over voltage protection(OVP) circuitry and the OVP
-> fault is notified through an interrupt. Though this fault condition rising
-> is due to an incorrect hardware configuration is mitigated in the hardware,
-> it still needs to be detected and handled. Add support for it.
+Thanks a lot for your review.
+
+> -----Original Message-----
+> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Tuesday, December 5, 2017 3:40 AM
+> To: Suzuki, Katsuhiro/鈴木 勝博 <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Yamada, Masahiro/山
+> 田 真弘 <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>; Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; Jassi Brar
+> <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: [PATCH 5/8] ASoC: uniphier: add support for UniPhier AIO driver
 > 
-> When WLED module is enabled, keep OVP fault interrupt disabled for 10 ms to
-> account for soft start delay.
+> On Wed, Nov 22, 2017 at 08:43:18PM +0900, Katsuhiro Suzuki wrote:
 > 
-> Signed-off-by: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../bindings/leds/backlight/qcom-spmi-wled.txt     |  7 +-
->  drivers/video/backlight/qcom-spmi-wled.c           | 83 ++++++++++++++++++++++
->  2 files changed, 87 insertions(+), 3 deletions(-)
+> >  sound/soc/uniphier/Makefile      |   4 +
+> >  sound/soc/uniphier/aio-core.c    | 368 +++++++++++++++++++++
+> >  sound/soc/uniphier/aio-dma.c     | 266 +++++++++++++++
+> >  sound/soc/uniphier/aio-regctrl.c | 699 +++++++++++++++++++++++++++++++++++++++
+> >  sound/soc/uniphier/aio-regctrl.h | 495 +++++++++++++++++++++++++++
+> >  sound/soc/uniphier/aio.h         | 261 +++++++++++++++
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
-> index 768608c..d39ee93 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
-> @@ -92,7 +92,7 @@ The PMIC is connected to the host processor via SPMI bus.
->  	Usage:      optional
->  	Value type: <string>
->  	Definition: Interrupt names associated with the interrupts.
-> -		    Must be "sc-irq".
-> +		    Currently supported interrupts are "sc-irq" and "ovp-irq".
->  
+> Please split this up more, it looks like there's at least two or three
+> drivers in here and it winds up being quite large.  There's at least a
+> DMA and a DAI driver.  Looking through this my overall impression is
+> that this is a fairly large and complex audio subsystem with some DSP
+> and routing capacity which is being handled in a board specific fashion
+> rather than generically but it's kind of hard to tell as there's not
+> much description of what's going on so I'm needing to reverse engineer
+> things from the driver.
+> 
+> The code itself looks fairly clean, it's mainly a case of trying to
+> figure out if it's doing what it's supposed to with the limited
+> documentation.
+> 
+> > +int uniphier_aio_hw_params(struct snd_pcm_substream *substream,
+> > +			   struct snd_pcm_hw_params *params,
+> > +			   struct snd_soc_dai *dai)
+> > +{
+> > +	struct uniphier_aio *aio = uniphier_priv(dai);
+> > +	struct uniphier_aio_sub *sub = &aio->sub[substream->stream];
+> > +
+> > +	sub->params = *params;
+> > +	sub->setting = 1;
+> 
+> So we don't validate the params at all?
+> 
+> > +	uniphier_aio_port_reset(sub);
+> > +	uniphier_aio_srcport_reset(sub);
+> 
+> Is there a mux in the SoC here?
+> 
 
-As before, we know this is an IRQ, so omit the -irq from the name.
+Sorry for confusing, It's not mux.
 
-[..]
-> diff --git a/drivers/video/backlight/qcom-spmi-wled.c b/drivers/video/backlight/qcom-spmi-wled.c
-[..]
-> @@ -115,6 +123,28 @@ static int qcom_wled_module_enable(struct qcom_wled *wled, int val)
->  	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
->  			QCOM_WLED_CTRL_MOD_ENABLE, QCOM_WLED_CTRL_MOD_EN_MASK,
->  			val << QCOM_WLED_CTRL_MODULE_EN_SHIFT);
-> +	if (rc < 0)
-> +		return rc;
-> +	/*
-> +	 * Wait for at least 10ms before enabling OVP fault interrupt after
-> +	 * enabling the module so that soft start is completed. Keep the OVP
-> +	 * interrupt disabled when the module is disabled.
-> +	 */
-> +	if (val) {
-> +		usleep_range(QCOM_WLED_SOFT_START_DLY_US,
-> +				QCOM_WLED_SOFT_START_DLY_US + 1000);
+uniphier_srcport_reset() resets HW SRC (sampling rate converter) block.
+Audio data out ports of UniPhier audio system have HW SRC.
 
-This is sleeping in the brightness/enable code path, can you
-schedule_delayed_work() instead to not block this code path
-unnecessarily?
 
-> +
-> +		if (wled->cfg.ovp_irq > 0 && wled->ovp_irq_disabled) {
-> +			enable_irq(wled->cfg.ovp_irq);
-> +			wled->ovp_irq_disabled = false;
-> +		}
-> +	} else {
-> +		if (wled->cfg.ovp_irq > 0 && !wled->ovp_irq_disabled) {
-> +			disable_irq(wled->cfg.ovp_irq);
-> +			wled->ovp_irq_disabled = true;
-> +		}
-> +	}
-> +
->  	return rc;
->  }
->  
-> @@ -264,12 +294,42 @@ static irqreturn_t qcom_wled_sc_irq_handler(int irq, void *_wled)
->  	return IRQ_HANDLED;
->  }
->  
-> +static irqreturn_t qcom_wled_ovp_irq_handler(int irq, void *_wled)
-> +{
-> +	struct qcom_wled *wled = _wled;
-> +	int rc;
-> +	u32 int_sts, fault_sts;
-> +
-> +	rc = regmap_read(wled->regmap,
-> +			wled->ctrl_addr + QCOM_WLED_CTRL_INT_RT_STS, &int_sts);
-> +	if (rc < 0) {
-> +		pr_err("Error in reading WLED_INT_RT_STS rc=%d\n", rc);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	rc = regmap_read(wled->regmap, wled->ctrl_addr +
-> +			QCOM_WLED_CTRL_FAULT_STATUS, &fault_sts);
-> +	if (rc < 0) {
-> +		pr_err("Error in reading WLED_FAULT_STATUS rc=%d\n", rc);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	if (fault_sts &
-> +		(QCOM_WLED_CTRL_OVP_FAULT_BIT | QCOM_WLED_CTRL_ILIM_FAULT_BIT))
-> +		pr_err("WLED OVP fault detected, int_sts=%x fault_sts= %x\n",
-> +			int_sts, fault_sts);
+> > +static const struct of_device_id uniphier_aio_of_match[] = {
+> > +#ifdef CONFIG_SND_SOC_UNIPHIER_LD11
+> > +	{
+> > +		.compatible = "socionext,uniphier-ld11-aio",
+> > +		.data = &uniphier_aio_ld11_spec,
+> > +	},
+> > +	{
+> > +		.compatible = "socionext,uniphier-ld20-aio",
+> > +		.data = &uniphier_aio_ld20_spec,
+> > +	},
+> > +#endif /* CONFIG_SND_SOC_UNIPHIER_LD11 */
+> 
+> Why is there an ifdef here?  There's no other conditional code in here,
+> it seems pointless.
+> 
 
-All this function does is print things to the log. When is this
-information consumed and by whom? dev_dbg() instead?
+This config is used to support or not LD11 SoC.
+aio-ld11.c is not build and 'uniphier_aio_ldxx_spec' is undefined if this config is disabled.
 
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static int qcom_wled_setup(struct qcom_wled *wled)
->  {
->  	int rc, temp, i;
->  	u8 sink_en = 0;
-> +	u32 val;
->  	u8 string_cfg = wled->cfg.string_cfg;
->  	int sc_irq = wled->cfg.sc_irq;
-> +	int ovp_irq = wled->cfg.ovp_irq;
->  
->  	rc = regmap_update_bits(wled->regmap,
->  			wled->ctrl_addr + QCOM_WLED_CTRL_OVP,
-> @@ -367,6 +427,25 @@ static int qcom_wled_setup(struct qcom_wled *wled)
->  		}
->  	}
->  
-> +	if (ovp_irq >= 0) {
+aio-ld11.c defines SoC dependent resources (port, HW ring buffer, DMA ch, etc.)
+and fixed settings.
+I know it's better to move such information into device-tree, but register areas of
+UniPhier's audio system is very strange and interleaved. It's hard to split each nodes...
 
-As with the previous patch.
 
-[..]
-> @@ -539,6 +618,10 @@ static int qcom_wled_configure(struct qcom_wled *wled, struct device *dev)
-[..]
-> +	wled->cfg.ovp_irq = platform_get_irq_byname(wled->pdev, "ovp-irq");
-> +	if (wled->cfg.ovp_irq < 0)
-> +		dev_dbg(&wled->pdev->dev, "ovp irq is not used\n");
-> +
+> > +		for (j = 0; j < ARRAY_SIZE(aio->sub); j++) {
+> > +			struct uniphier_aio_sub *sub = &aio->sub[j];
+> > +
+> > +			if (!sub->running)
+> > +				continue;
+> > +
+> > +			spin_lock(&sub->spin);
+> > +			uniphier_aio_rb_sync(sub);
+> > +			uniphier_aio_rb_clear_int(sub);
+> > +			spin_unlock(&sub->spin);
+> 
+> It's not 100% obvious what this does...  a comment might help.
+> 
+> > +int uniphier_aio_chip_init(struct uniphier_aio_chip *chip)
+> > +{
+> > +	struct regmap *r = chip->regmap;
+> > +
+> > +	regmap_update_bits(r, A2APLLCTR0,
+> > +			   A2APLLCTR0_APLLXPOW_MASK,
+> > +			   A2APLLCTR0_APLLXPOW_PWON);
+> > +
+> > +	regmap_update_bits(r, A2APLLCTR1, A2APLLCTR1_APLL_MASK,
+> > +			   A2APLLCTR1_APLLF2_33MHZ | A2APLLCTR1_APLLA2_33MHZ |
+> > +			   A2APLLCTR1_APLLF1_36MHZ | A2APLLCTR1_APLLA1_36MHZ);
+> > +
+> > +	regmap_update_bits(r, A2EXMCLKSEL0,
+> > +			   A2EXMCLKSEL0_EXMCLK_MASK,
+> > +			   A2EXMCLKSEL0_EXMCLK_OUTPUT);
+> > +
+> > +	regmap_update_bits(r, A2AIOINPUTSEL, A2AIOINPUTSEL_RXSEL_MASK,
+> > +			   A2AIOINPUTSEL_RXSEL_PCMI1_HDMIRX1 |
+> > +			   A2AIOINPUTSEL_RXSEL_PCMI2_SIF |
+> > +			   A2AIOINPUTSEL_RXSEL_PCMI3_EVEA |
+> > +			   A2AIOINPUTSEL_RXSEL_IECI1_HDMIRX1);
+> 
+> This definitely looks like there's some clocking and audio routing
+> within the SoC which should be exposed to userspace, or at the very
+> least machine driver configuration rather than being hard coded.
+> 
+> > +	switch (pc) {
+> > +	case IEC61937_PC_AC3:
+> > +		repet = OPORTMXREPET_STRLENGTH_AC3 |
+> > +			OPORTMXREPET_PMLENGTH_AC3;
+> > +		pause |= OPORTMXPAUDAT_PAUSEPD_AC3;
+> > +		break;
+> > +	case IEC61937_PC_MPA:
+> > +		repet = OPORTMXREPET_STRLENGTH_MPA |
+> > +			OPORTMXREPET_PMLENGTH_MPA;
+> > +		pause |= OPORTMXPAUDAT_PAUSEPD_MPA;
+> > +		break;
+> > +	case IEC61937_PC_MP3:
+> > +		repet = OPORTMXREPET_STRLENGTH_MP3 |
+> > +			OPORTMXREPET_PMLENGTH_MP3;
+> > +		pause |= OPORTMXPAUDAT_PAUSEPD_MP3;
+> > +		break;
+> 
+> This looks awfully like compressed audio support...  should there be
+> integration with the compressed audio API/
+
+Thanks, I'll try it. Is there Documentation in sound/designes/compress-offload.rst?
+And best sample is... Intel's driver?
+
+
+(Summary)
+I think I should fix as follows:
+
+  - Split DMA, DAI patches from large one
+  - Validate parameters in hw_params
+  - Add description about HW SRC (or fix bad name 'srcport')
+  - Add comments about uniphier_aiodma_irq()
+  - Expose clocking and audio routing to userspace, or at the very
+    least machine driver configuration
+  - Support compress-audio API for S/PDIF
+
+and post V2.
+
 
 Regards,
-Bjorn
+--
+Katsuhiro Suzuki
+
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
