@@ -1,37 +1,89 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 10/10] ARM: dtsi: axp81x: set pinmux for
- GPIO0/1 when used as LDOs
-Date: Tue, 5 Dec 2017 17:25:22 +0800
-Message-ID: <CAGb2v64pjQMEzDtTVjuoiVZAWS9X5VWzZN2gTM0r_kb0AJSTNQ@mail.gmail.com>
-References: <cover.3ff63fdf302c6bda02ea7d160ad2aa5afee0899d.1512135804.git-series.quentin.schulz@free-electrons.com>
- <afc22693e34c11231fc85a0dc6af3ffb340ba9b2.1512135804.git-series.quentin.schulz@free-electrons.com>
- <20171201155808.rxgp7pz7nmr6tab7@flea.lan>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: =?utf-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: hwrng: Add Samsung Exynos 5250+
+ True RNG bindings
+Date: Tue, 05 Dec 2017 10:30:17 +0100
+Message-ID: <878tehbjyu.fsf%l.stelmach@samsung.com>
+References: <CAJKOXPej1G6npvNSr9TP8DmWubtZpn6ONeNMN4Ax_RaafMiT7g@mail.gmail.com>
+        <CGME20171205093028eucas1p1fb6d7b8bde6cd5e3a0bfca8ddafe8a31@eucas1p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHOMTHIQKGQE5QMYK3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171201155808.rxgp7pz7nmr6tab7-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-reply-to: <CAJKOXPej1G6npvNSr9TP8DmWubtZpn6ONeNMN4Ax_RaafMiT7g@mail.gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 1, 2017 at 11:58 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Dec 01, 2017 at 02:44:51PM +0100, Quentin Schulz wrote:
->> On AXP813/818, GPIO0 and GPIO1 can be used as LDO as (respectively)
->> ldo_io0 and ldo_io1.
->>
->> Let's add the pinctrl properties to the said regulators.
->>
->> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+It was <2017-12-04 pon 14:13>, when Krzysztof Kozlowski wrote:
+> On Mon, Dec 4, 2017 at 1:53 PM, =C5=81ukasz Stelmach <l.stelmach@samsung.=
+com> wrote:
+>> Add binding documentation for the True Random Number Generator
+>> found on Samsung Exynos 5250+ SoCs.
+>>
+>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+>> ---
+>>  .../devicetree/bindings/rng/samsung,exynos5250-trng.txt | 17 ++++++++++=
++++++++
+>>  1 file changed, 17 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos=
+5250-trng.txt
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>> b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>> new file mode 100644
+>> index 000000000000..5a613a4ec780
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>> @@ -0,0 +1,17 @@
+>> +Exynos True Random Number Generator
+>> +
+>> +Required properties:
+>> +
+>> +- compatible  : Should be "samsung,exynos5250-trng".
+>> +- reg         : Specifies base physical address and size of the registe=
+rs map.
+>> +- clocks      : Phandle to clock-controller plus clock-specifier pair.
+>> +- clock-names : "secss" as a clock name.
+>> +
+>> +Example:
+>> +
+>> +       rng@10830600 {
+>> +               compatible =3D "samsung,exynos5250-trng";
+>> +               reg =3D <0x10830600 0x100>;
+>> +               clocks =3D <&clock CLK_SSS>;
+>> +               clock-names =3D "secss";
+>> +       };
+>> --
+>> 2.11.0
+>
+> Mine and Rob's tags disappeared and I think you did not introduce any
+> major changes here, right?
+
+A very experienced kernel developer adviced me to remove them.
+
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQEcBAEBCAAGBQJaJmcpAAoJELCuHpyYpYAQIMcH/A+XAV8SDe54xvsq+ScOwD+r
+FqyPp/GJFhW8rCv9PrdAwV12YeEv1US/8FpdGnbVhU0jYPNSs3dy7303EN4XO4DI
+oZR6WZf15R9kDbVY0iEsOkwGLYHPRS8FM0D3MSf5WF3daFXo/sX1aZnOCjdKwPn4
+Z5IDNJwTrKSQWJuhKzb7amLz/HxT3fti9obtqgPLCcL86m8k4MQJK0OZcKAqlMKh
+jqangMayS8l1i1AkXdP7M14y4kD/H6MH40aDhZs/qdokPc0rClq8SCt+5eOFEmOC
+vFv24LhjZ29mLRFYoPJRrHzIJcM3eMRlR0rtagcVtDuSSsRezG1t7GaUfjYp63s=
+=Mxhb
+-----END PGP SIGNATURE-----
+--=-=-=--
