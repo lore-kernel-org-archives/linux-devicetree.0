@@ -1,55 +1,78 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: bananapi-m64:
- Add LED device node
-Date: Tue, 5 Dec 2017 11:05:11 +0100
-Message-ID: <20171205100511.ohxcqlrozxfgq6id@flea.lan>
-References: <20171201162733.23156-1-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v8 0/6] stm32 clocksource driver rework
+Date: Tue, 5 Dec 2017 11:12:09 +0100
+Message-ID: <dcff2fd0-58ca-51bb-ea2d-dfd1c5ca0cc3@st.com>
+References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n3of7gmhmumilpfh"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYW6THIQKGQETJLJMWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20171201162733.23156-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, daniel.lezcano@linaro.org, tglx@linutronix.de, ludovic.barre@st.com, julien.thierry@arm.com, sudeep.holla@arm.com, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi
 
---n3of7gmhmumilpfh
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-On Sat, Dec 02, 2017 at 12:27:33AM +0800, Chen-Yu Tsai wrote:
-> The Bananapi-M64 has 3 LEDS in red, green, and blue. These are toggled
-> via GPIO lines, which drive transistors that control current across the
-> LEDS. The red LED is by default on, via an additional pull-up on the
-> control line. We consider this means that it is a power indicator.
-> So we set the "default-on" property for it.
+On 11/14/2017 09:52 AM, Benjamin Gaignard wrote:
+> version 8:
+>   - rebased on timers/core
+>   - change timer_of_exit() name to timer_of_cleanup()
+>   - update stm32 clocksource driver to use this function
 > 
-> The pingroups the GPIO lines belong to require external regulators be
-> enabled to be able to drive the GPIO high. These regulators also have
-> other purposes. However the pin controller does not have bindings for
-> regulators. Here we just set them to always-on.
+> version 7:
+>   - reword "clocksource: stm32: only use 32 bits timers" commit message
+>     to give more details about why 16 bits are problematics.
+> 
+> version 6:
+>   - add dedicated patch min delta change
+>   - rework commit messages, I hope it will be better now
+>   - change new function name from timer_of_deinit to timer_of_exit
+>   - make stm32_clock_event_set_next_event() safer like done in other
+>     drivers
+> 
+> version 6:
+> - add timer_of_deinit function in core
+> - rework failure cases in probe function
+> 
+> version 5:
+> - rebase on top of timer/core branch
+> - rework commit message of the first patch
+> 
+> version 4:
+> - split patch in 3 parts
+>    - convert code to timer_of
+>    - only use 32 bits timers
+>    - add clocksource support
+> 
+> version 3:
+> - fix comments done by Daniel
+> - use timer_of helper functions
+> 
+> version 2:
+> - fix uninitialized variable
+> 
+> Benjamin Gaignard (6):
+>    clocksource: timer_of: rename timer_of_exit to timer_of_cleanup
+>    clocksource: stm32: convert driver to timer_of
+>    clocksource: stm32: increase min delta value
+>    clocksource: stm32: only use 32 bits timers
+>    clocksource: stm32: add clocksource support
+>    arm: dts: stm32: remove useless clocksource nodes
+> 
+>   arch/arm/boot/dts/stm32f429.dtsi  |  32 -----
+>   arch/arm/boot/dts/stm32f746.dtsi  |  32 -----
+>   drivers/clocksource/Kconfig       |   1 +
+>   drivers/clocksource/timer-of.c    |   9 +-
+>   drivers/clocksource/timer-of.h    |   2 +-
+>   drivers/clocksource/timer-stm32.c | 242 ++++++++++++++++++++------------------
+>   6 files changed, 138 insertions(+), 180 deletions(-)
+> 
 
-I guess we should take the opportunity to do just that.
+What is the status of this patch-set ? Is there a chance to have it for 
+v4.16 ?
 
-We have been deferring this for quite some time now, this is a perfect
-occasion to do it once and for all :)
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---n3of7gmhmumilpfh--
+Thanks
+Alex
