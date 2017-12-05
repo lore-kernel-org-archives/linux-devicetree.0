@@ -1,45 +1,69 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 14/15] ARM: dts: sun8i: a711: Reinstate the PMIC compatible
-Date: Tue,  5 Dec 2017 16:10:26 +0100
-Message-ID: <25b482f19587ff195582995c11ee9d07f5bf42d2.1512486553.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 15/15] ARM: dts: sun8i: a711: Enable the LCD
+Date: Tue,  5 Dec 2017 16:10:27 +0100
+Message-ID: <3cd7410e37b1f93350872f5472e37e68da6d082d.1512486553.git-series.maxime.ripard@free-electrons.com>
 References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
+References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
 List-Id: devicetree@vger.kernel.org
 
-When we added the regulator support in commit 90c5d7cdae64 ("ARM: dts:
-sun8i: a711: Add regulator support"), we also dropped the PMIC's
-compatible. Since it's not in the PMIC DTSI, unlike most other PMIC
-DTSI, it obviously wasn't probing anymore.
-
-Re-add it so that everything works again.
-
-Fixes: 90c5d7cdae64 ("ARM: dts: sun8i: a711: Add regulator support")
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 98715538932f..a021ee6da396 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -146,6 +146,7 @@
- 	status = "okay";
- 
- 	axp81x: pmic@3a3 {
-+		compatible = "x-powers,axp813";
- 		reg = <0x3a3>;
- 		interrupt-parent = <&r_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--- 
-git-series 0.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIEE3MTEgaGFzIDEwMjR4NjAwIExWRFMgcGFuZWwsIHdpdGggYSBQV00tYmFzZWQgYmFja2xp
+Z2h0LiBBZGQgaXQgdG8gb3VyCkRULgoKUmV2aWV3ZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bj
+c2llLm9yZz4KU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVl
+LWVsZWN0cm9ucy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcx
+MS5kdHMgfCA2MSArKysrKysrKysrKysrKysrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgNjEg
+aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3Qt
+dGJzLWE3MTEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcxMS5kdHMK
+aW5kZXggYTAyMWVlNmRhMzk2Li41MTFmY2E0OTFmZTggMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL3N1bjhpLWE4M3QtdGJzLWE3MTEuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1
+bjhpLWE4M3QtdGJzLWE3MTEuZHRzCkBAIC00NSw2ICs0NSw3IEBACiAjaW5jbHVkZSAic3VuOGkt
+YTgzdC5kdHNpIgogCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+CisjaW5jbHVk
+ZSA8ZHQtYmluZGluZ3MvcHdtL3B3bS5oPgogCiAvIHsKIAltb2RlbCA9ICJUQlMgQTcxMSBUYWJs
+ZXQiOwpAQCAtNTksNiArNjAsNDQgQEAKIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBu
+OCI7CiAJfTsKIAorCWJhY2tsaWdodDogYmFja2xpZ2h0IHsKKwkJY29tcGF0aWJsZSA9ICJwd20t
+YmFja2xpZ2h0IjsKKwkJcHdtcyA9IDwmcHdtIDAgNTAwMDAgUFdNX1BPTEFSSVRZX0lOVkVSVEVE
+PjsKKwkJZW5hYmxlLWdwaW9zID0gPCZwaW8gMyAyOSBHUElPX0FDVElWRV9ISUdIPjsKKworCQli
+cmlnaHRuZXNzLWxldmVscyA9IDwwIDEgMiA0IDggMTYgMzIgNjQgMTI4IDI1NT47CisJCWRlZmF1
+bHQtYnJpZ2h0bmVzcy1sZXZlbCA9IDw5PjsKKwl9OworCisJcGFuZWwgeworCQljb21wYXRpYmxl
+ID0gInRicyxhNzExLXBhbmVsIiwgInBhbmVsLWx2ZHMiOworCQliYWNrbGlnaHQgPSA8JmJhY2ts
+aWdodD47CisJCXBvd2VyLXN1cHBseSA9IDwmcmVnX3N3PjsKKworCQl3aWR0aC1tbSA9IDwxNTM+
+OworCQloZWlnaHQtbW0gPSA8OTA+OworCQlkYXRhLW1hcHBpbmcgPSAidmVzYS0yNCI7CisKKwkJ
+cGFuZWwtdGltaW5nIHsKKwkJCS8qIDEwMjR4NjAwIEA2MEh6ICovCisJCQljbG9jay1mcmVxdWVu
+Y3kgPSA8NTIwMDAwMDA+OworCQkJaGFjdGl2ZSA9IDwxMDI0PjsKKwkJCXZhY3RpdmUgPSA8NjAw
+PjsKKwkJCWhzeW5jLWxlbiA9IDwyMD47CisJCQloZnJvbnQtcG9yY2ggPSA8MTgwPjsKKwkJCWhi
+YWNrLXBvcmNoID0gPDE2MD47CisJCQl2ZnJvbnQtcG9yY2ggPSA8MTI+OworCQkJdmJhY2stcG9y
+Y2ggPSA8MjM+OworCQkJdnN5bmMtbGVuID0gPDU+OworCQl9OworCisJCXBvcnQgeworCQkJcGFu
+ZWxfaW5wdXQ6IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRjb24wX291dF9s
+Y2Q+OworCQkJfTsKKwkJfTsKKwl9OworCiAJcmVnX3ZiYXQ6IHJlZy12YmF0IHsKIAkJY29tcGF0
+aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwogCQlyZWd1bGF0b3ItbmFtZSA9ICJ2YmF0IjsKQEAg
+LTg5LDYgKzEyOCwxMCBAQAogCX07CiB9OwogCismZGUgeworCXN0YXR1cyA9ICJva2F5IjsKK307
+CisKIC8qCiAgKiBBbiBVU0ItMiBodWIgaXMgY29ubmVjdGVkIGhlcmUsIHdoaWNoIGFsc28gbWVh
+bnMgd2UgZG9uJ3QgbmVlZCB0bwogICogZW5hYmxlIHRoZSBPSENJIGNvbnRyb2xsZXIuCkBAIC0x
+NDIsNiArMTg1LDEyIEBACiAJc3RhdHVzID0gIm9rYXkiOwogfTsKIAorJnB3bSB7CisJcGluY3Ry
+bC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JnB3bV9waW4+OworCXN0YXR1cyA9
+ICJva2F5IjsKK307CisKICZyX3JzYiB7CiAJc3RhdHVzID0gIm9rYXkiOwogCkBAIC0zMjMsNiAr
+MzcyLDE4IEBACiAJcmVndWxhdG9yLW5hbWUgPSAidmNjLWxjZCI7CiB9OwogCismdGNvbjAgewor
+CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZsY2RfbHZkc19waW5z
+PjsKK307CisKKyZ0Y29uMF9vdXQgeworCXRjb24wX291dF9sY2Q6IGVuZHBvaW50QDAgeworCQly
+ZWcgPSA8MD47CisJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW5wdXQ+OworCX07Cit9Owor
+CiAmdWFydDAgewogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZ1
+YXJ0MF9wYl9waW5zPjsKLS0gCmdpdC1zZXJpZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
