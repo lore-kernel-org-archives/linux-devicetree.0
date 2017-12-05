@@ -1,75 +1,74 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 09/10] ARM: dtsi: axp81x: add GPIO DT node
-Date: Tue, 5 Dec 2017 10:39:45 +0100
-Message-ID: <20171205093945.5sudt23fag7q3ric@flea.lan>
-References: <cover.3ff63fdf302c6bda02ea7d160ad2aa5afee0899d.1512135804.git-series.quentin.schulz@free-electrons.com>
- <af90c57ebf97c8f5504a4b5b1dad3638bedadfef.1512135804.git-series.quentin.schulz@free-electrons.com>
- <CAGb2v65mOwNBdit=gKOq0=iv94FNuH__4yvCw4v0NHYiCKccBw@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH] Documentation: binding: Update endianness usage
+Date: Tue, 5 Dec 2017 09:45:33 +0000
+Message-ID: <HE1PR04MB1241ADD02E472BA492AE1C8F973D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+References: <1511954855-8593-1-git-send-email-prabhakar.kushwaha@nxp.com>
+         <1512105209.10062.1.camel@buserror.net>
+         <HE1PR04MB12414AFA5F8081730B89378497390@HE1PR04MB1241.eurprd04.prod.outlook.com>
+         <1512165311.10062.3.camel@buserror.net>
+         <HE1PR04MB1241226CD3B7ABD6D5FA2D91973C0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <1512441957.10062.6.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bjgfhlvxfqyubaaf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3GSTHIQKGQE2PE76JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v65mOwNBdit=gKOq0=iv94FNuH__4yvCw4v0NHYiCKccBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512441957.10062.6.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---bjgfhlvxfqyubaaf
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-On Tue, Dec 05, 2017 at 05:24:47PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Dec 1, 2017 at 9:44 PM, Quentin Schulz
-> <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > This adds DT node for the GPIO/pinctrl part present in AXP813/AXP818.
-> >
-> > Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/axp81x.dtsi | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
-> > index 73b761f..0ef959d 100644
-> > --- a/arch/arm/boot/dts/axp81x.dtsi
-> > +++ b/arch/arm/boot/dts/axp81x.dtsi
-> > @@ -48,6 +48,12 @@
-> >         interrupt-controller;
-> >         #interrupt-cells = <1>;
-> >
-> > +       axp_gpio: axp-gpio {
-> > +               compatible = "x-powers,axp813-gpio";
-> > +               gpio-controller;
-> > +               #gpio-cells = <2>;
-> 
-> What about interrupt-controller for directly referenced interrupts from
-> the GPIO pins?
-
-There's a bit more to it to enable interrupts. You would probably need
-to set up a chained interrupt controller in the GPIO driver, and in
-the DTS with a interrupt-parent and interrupts properties pointing to
-the AXP device itself.
-
-> Otherwise,
-> 
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-Applied 9 and 10, thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---bjgfhlvxfqyubaaf--
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNjb3R0IFdvb2QgW21haWx0
+bzpvc3NAYnVzZXJyb3IubmV0XQ0KPiBTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAwNSwgMjAxNyA4
+OjE2IEFNDQo+IFRvOiBQcmFiaGFrYXIgS3VzaHdhaGEgPHByYWJoYWthci5rdXNod2FoYUBueHAu
+Y29tPjsgbGludXgtDQo+IG10ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZw0KPiBDYzogZGVkZWtpbmQxQGdtYWlsLmNvbTsgY29tcHV0ZXJzZm9ycGVhY2VA
+Z21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIERvY3VtZW50YXRpb246IGJpbmRpbmc6
+IFVwZGF0ZSBlbmRpYW5uZXNzIHVzYWdlDQo+IA0KPiBPbiBNb24sIDIwMTctMTItMDQgYXQgMDQ6
+MzMgKzAwMDAsIFByYWJoYWthciBLdXNod2FoYSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBTY290dCBXb29kIFttYWlsdG86b3NzQGJ1c2Vycm9y
+Lm5ldF0NCj4gPiA+IFNlbnQ6IFNhdHVyZGF5LCBEZWNlbWJlciAwMiwgMjAxNyAzOjI1IEFNDQo+
+ID4gPiBUbzogUHJhYmhha2FyIEt1c2h3YWhhIDxwcmFiaGFrYXIua3VzaHdhaGFAbnhwLmNvbT47
+IGxpbnV4LQ0KPiA+ID4gbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWUtZGlzY3Vz
+c0BsaXN0cy5vemxhYnMub3JnDQo+ID4gPiBDYzogZGVkZWtpbmQxQGdtYWlsLmNvbTsgY29tcHV0
+ZXJzZm9ycGVhY2VAZ21haWwuY29tDQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBEb2N1bWVu
+dGF0aW9uOiBiaW5kaW5nOiBVcGRhdGUgZW5kaWFubmVzcyB1c2FnZQ0KPiA+ID4NCj4gPiA+IE9u
+IEZyaSwgMjAxNy0xMi0wMSBhdCAwODo0MiArMDAwMCwgUHJhYmhha2FyIEt1c2h3YWhhIHdyb3Rl
+Og0KPiA+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+ID4gRnJvbTog
+U2NvdHQgV29vZCBbbWFpbHRvOm9zc0BidXNlcnJvci5uZXRdDQo+ID4gPiA+ID4gU2VudDogRnJp
+ZGF5LCBEZWNlbWJlciAwMSwgMjAxNyAxMDo0MyBBTQ0KPiA+ID4gPiA+IFRvOiBQcmFiaGFrYXIg
+S3VzaHdhaGEgPHByYWJoYWthci5rdXNod2FoYUBueHAuY29tPjsgbGludXgtDQo+ID4gPiA+ID4g
+bXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMu
+b3JnDQo+ID4gPiA+ID4gQ2M6IGRlZGVraW5kMUBnbWFpbC5jb207IGNvbXB1dGVyc2ZvcnBlYWNl
+QGdtYWlsLmNvbQ0KPiA+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIERvY3VtZW50YXRpb246
+IGJpbmRpbmc6IFVwZGF0ZSBlbmRpYW5uZXNzIHVzYWdlDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBJ
+ZiBiaWcgZW5kaWFuIGlzIHRoZSBkZWZhdWx0LCBpcyB0aGlzIGNoYW5nZSByZWFsbHkNCj4gPiA+
+ID4gPiBuZWNlc3Nhcnk/wqDCoFBhcnRpY3VsYXJseQ0KPiA+ID4gPiA+IHNpbmNlIHRoZSBiaWcg
+ZW5kaWFuIGNoaXBzIGFyZSBvbGRlciBhbmQgdGh1cyBoYXZlIGV4aXN0aW5nIGRldmljZQ0KPiA+
+ID4gPiA+IHRyZWVzLg0KPiA+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IEVhcmxpZXIgZW5kaWFu
+bmVzcyBpbmZvcm1hdGlvbiB3YXMgb25seSB1c2VkIGZvciAiaG93IHRvIsKgwqBhY2Nlc3MgSUZD
+LQ0KPiA+ID4gPiBOQU5EDQo+ID4gPiA+IHJlZ2lzdGVyIGFjY2Vzcy4NCj4gPiA+ID4gTm93IHRo
+aXMgaW5mb8KgwqB3aWxsIGFsc28gYmUgdXNlZCBmb3IgZGVmaW5pbmcgc3dhcCByZXF1aXJlbWVu
+dCBvZiBOT1INCj4gPiA+ID4gZmxhc2guDQo+ID4gPg0KPiA+ID4gSXMgdGhpcyBhIGRpZmZlcmVu
+Y2UgYmV0d2VlbiBMUzEwMjFBIGFuZCBQUEMtYmFzZWQgY2hpcHM/DQo+ID4gPg0KPiA+DQo+ID4g
+WWVzLg0KPiA+IENPTkZJR19NVERfQ0ZJX0JFX0JZVEVfU1dBUCBuZWVkcyB0byBiZSBkZWZpbmVk
+IEZvciBMUzEwMjFBLCBMUzEwNDNBLA0KPiA+IExTMTA0NkENCj4gDQo+IE9ubHkgYmVjYXVzZSB5
+b3UncmUgcnVubmluZyBhIGxpdHRsZS1lbmRpYW4ga2VybmVsIG9uIHRob3NlIGNoaXBzLiAgSSBz
+dGlsbA0KPiBkb24ndCBzZWUgd2h5IHRoZSBhYnNlbmNlIG9mIGEgbGl0dGxlLWVuZGlhbiBwcm9w
+ZXJ0eSBpc24ndCBzdWZmaWNpZW50IHRvDQo+IGNvbW11bmljYXRlIHRoYXQgdGhlIGhhcmR3YXJl
+IGlzIGJpZy1lbmRpYW4gZ2l2ZW4gdGhhdCB0aGF0J3MgdGhlIGVzdGFibGlzaGVkDQo+IGRlZmF1
+bHQuDQo+IA0KPiBJIG5vdyBzZWUgeW91ciBwYXRjaCB0byBvZl9mbGFzaF9wcm9iZS4uLiB3aGVy
+ZSBpcyB0aGUgbm9uLUlGQy1zcGVjaWZpYw0KPiBiaW5kaW5nIHRoYXQgc2F5cyB0aGUgKnBhcmVu
+dCogb2YgYSBDRkkgbm9kZSBzaG91bGQgYmUgbG9va2VkIGF0IGZvciB0aGlzPw0KPiBXaGVyZcKg
+aW4gZ2VuZXJhbCBhcmUgZW5kaWFuIHByb3BlcnRpZXMga2VwdCBpbiB0aGUgcGFyZW50IG9mIHRo
+ZSBub2RlIHdpdGgNCj4gInJlZyI/ICBUaGUgcmlnaHQgYW5zd2VyIGlzIHRvIGFkZCBlbmRpYW5u
+ZXNzIHRvIG10ZC1waHlzbWFwLnR4dC4NCj4gDQoNCkZsYXNoZXMgYXJlIGFsd2F5cyBsaXR0bGVy
+IGVuZGlhbi4gDQpJdCBpcyBiZWNhdXNlIG9mIElGQyBjb250cm9sbGVyIGJlaGF2aW9yLCBlbmRp
+YW5uZXNzIGlzIHJlcXVpcmVkLiAgDQpTbyBhcyBwZXIgbXkgdW5kZXJzdGFuZGluZywgdGhpcyBp
+bmZvIHNob3VsZCBnbyBpbiBJRkMgYmluZGluZy4gDQoNClBsZWFzZSBoZWxwIG1lIGlmIEkgYW0g
+bm90IGFibGUgdG8gdW5kZXJzdGFuZCB5b3VyIHZpZXcuDQoNCi0tcHJhYmhha2FyDQoNCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
