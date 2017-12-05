@@ -1,55 +1,106 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V6 4/7] OF: properties: Implement get_match_data() callback
-Date: Tue, 5 Dec 2017 15:21:46 -0600
-Message-ID: <CAL_Jsq+X1MjQGyNjvZOipL3h9TRN8oWeFhPudZrvscXh1y740Q@mail.gmail.com>
-References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org> <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v2 08/19] ASoC: tlv320aic31xx: Switch GPIO
+ handling to use gpiod_* API
+Date: Tue, 5 Dec 2017 15:23:49 -0600
+Message-ID: <17fcc926-9ee8-1229-ea3d-f38347cb9a23@ti.com>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-9-afd@ti.com>
+ <537c8d62-de11-15e8-11bc-08e8334d4322@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Frank Rowand <frowand.list@gmail.com>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <537c8d62-de11-15e8-11bc-08e8334d4322@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 5, 2017 at 11:04 AM, Sinan Kaya <okaya@codeaurora.org> wrote:
-> Now that we have a get_match_data() callback as part of the firmware node,
-> implement the OF specific piece for it.
->
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> ---
->  drivers/of/property.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index 264c355..9964169 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -981,6 +981,12 @@ static int of_fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
->         return 0;
->  }
->
-> +void *of_fwnode_get_match_data(const struct fwnode_handle *fwnode,
+On 12/04/2017 10:47 AM, Andrew F. Davis wrote:
+> On 11/29/2017 03:32 PM, Andrew F. Davis wrote:
+>> Move to using newer gpiod_* GPIO handling functions. This simplifies
+>> the code and eases dropping platform data in the next patch. Also
+>> remember GPIO are active low, so set "1" to reset.
+>>
+>> Signed-off-by: Andrew F. Davis <afd@ti.com>
+>> ---
+> 
+> 
+> Kbuild bot seems mad a this one, looks like I need to include
+> linux/gpio/consumer.h, will fix for v3.
+> 
 
-Should be static. With that, for patches 3 and 4:
+Looks like you already have this in your -next branch, how do you want
+this fix, I can send a delta patch with the added include, a new v3
+version that you can replace the patch in-tree with, or if it's easier
+for you manually fix in-tree?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +                              struct device *dev)
-> +{
-> +       return (void *)of_device_get_match_data(dev);
-> +}
-> +
->  const struct fwnode_operations of_fwnode_ops = {
->         .get = of_fwnode_get,
->         .put = of_fwnode_put,
-> @@ -996,5 +1002,6 @@ static int of_fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
->         .graph_get_remote_endpoint = of_fwnode_graph_get_remote_endpoint,
->         .graph_get_port_parent = of_fwnode_graph_get_port_parent,
->         .graph_parse_endpoint = of_fwnode_graph_parse_endpoint,
-> +       .get_match_data = of_fwnode_get_match_data,
->  };
->  EXPORT_SYMBOL_GPL(of_fwnode_ops);
-> --
-> 1.9.1
->
+> 
+>>  sound/soc/codecs/tlv320aic31xx.c | 23 ++++++++++-------------
+>>  1 file changed, 10 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
+>> index c84febd991a0..ab03a19f6aaa 100644
+>> --- a/sound/soc/codecs/tlv320aic31xx.c
+>> +++ b/sound/soc/codecs/tlv320aic31xx.c
+>> @@ -157,6 +157,7 @@ struct aic31xx_priv {
+>>  	u8 i2c_regs_status;
+>>  	struct device *dev;
+>>  	struct regmap *regmap;
+>> +	struct gpio_desc *gpio_reset;
+>>  	struct aic31xx_pdata pdata;
+>>  	struct regulator_bulk_data supplies[AIC31XX_NUM_SUPPLIES];
+>>  	struct aic31xx_disable_nb disable_nb[AIC31XX_NUM_SUPPLIES];
+>> @@ -1020,8 +1021,8 @@ static int aic31xx_regulator_event(struct notifier_block *nb,
+>>  		 * Put codec to reset and as at least one of the
+>>  		 * supplies was disabled.
+>>  		 */
+>> -		if (gpio_is_valid(aic31xx->pdata.gpio_reset))
+>> -			gpio_set_value(aic31xx->pdata.gpio_reset, 0);
+>> +		if (aic31xx->gpio_reset)
+>> +			gpiod_set_value(aic31xx->gpio_reset, 1);
+>>  
+>>  		regcache_mark_dirty(aic31xx->regmap);
+>>  		dev_dbg(aic31xx->dev, "## %s: DISABLE received\n", __func__);
+>> @@ -1073,8 +1074,8 @@ static int aic31xx_power_on(struct snd_soc_codec *codec)
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> -	if (gpio_is_valid(aic31xx->pdata.gpio_reset)) {
+>> -		gpio_set_value(aic31xx->pdata.gpio_reset, 1);
+>> +	if (aic31xx->gpio_reset) {
+>> +		gpiod_set_value(aic31xx->gpio_reset, 0);
+>>  		udelay(100);
+>>  	}
+>>  	regcache_cache_only(aic31xx->regmap, false);
+>> @@ -1334,15 +1335,11 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
+>>  	else if (aic31xx->dev->of_node)
+>>  		aic31xx_pdata_from_of(aic31xx);
+>>  
+>> -	if (aic31xx->pdata.gpio_reset) {
+>> -		ret = devm_gpio_request_one(aic31xx->dev,
+>> -					    aic31xx->pdata.gpio_reset,
+>> -					    GPIOF_OUT_INIT_HIGH,
+>> -					    "aic31xx-reset-pin");
+>> -		if (ret < 0) {
+>> -			dev_err(aic31xx->dev, "not able to acquire gpio\n");
+>> -			return ret;
+>> -		}
+>> +	aic31xx->gpio_reset = devm_gpiod_get_optional(aic31xx->dev, "reset",
+>> +						      GPIOD_OUT_LOW);
+>> +	if (IS_ERR(aic31xx->gpio_reset)) {
+>> +		dev_err(aic31xx->dev, "not able to acquire gpio\n");
+>> +		return PTR_ERR(aic31xx->gpio_reset);
+>>  	}
+>>  
+>>  	for (i = 0; i < ARRAY_SIZE(aic31xx->supplies); i++)
+>>
