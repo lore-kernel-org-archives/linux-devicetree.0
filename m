@@ -1,93 +1,185 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 00/10] add pinmuxing support for pins in AXP209 and
- AXP813 PMICs
-Date: Tue, 5 Dec 2017 09:55:58 +0100
-Message-ID: <20171205085558.ernawgdgybd4lzxx@flea.lan>
-References: <cover.3ff63fdf302c6bda02ea7d160ad2aa5afee0899d.1512135804.git-series.quentin.schulz@free-electrons.com>
- <CACRpkdaMxaLjsDETm6_56tyGDu6=W0L4SQCAA2mmSR4mkR-jAA@mail.gmail.com>
+From: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4] usb: xhci: allow imod-interval to be configurable
+Date: Tue, 5 Dec 2017 10:48:49 +0200
+Message-ID: <f5ca26d2-9432-2ae3-7501-5b3dcf1e1486@linux.intel.com>
+References: <1512397671-28733-1-git-send-email-awallis@codeaurora.org>
+ <1512440100.17567.172.camel@mhfsdcap03>
+ <99ea0ee4-1fff-73df-d9b5-0f756dfc5635@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xlguvviawpatacuj"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaMxaLjsDETm6_56tyGDu6=W0L4SQCAA2mmSR4mkR-jAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <99ea0ee4-1fff-73df-d9b5-0f756dfc5635-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 05.12.2017 04:54, Adam Wallis wrote:
+> On 12/4/2017 9:15 PM, Chunfeng Yun wrote:
+>> On Mon, 2017-12-04 at 09:27 -0500, Adam Wallis wrote:
+>>> The xHCI driver currently has the IMOD set to 160, which
+>>> translates to an IMOD interval of 40,000ns (160 * 250)ns
+>>>
+>>> Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
+>>> introduced a QUIRK for the MTK platform to adjust this interval to 20,
+>>> which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
+>>> due to the fact that the MTK controller IMOD interval is 8 times
+>>> as much as defined in xHCI spec.
+>>>
+>>> Instead of adding more quirk bits for additional platforms, this patch
+>>> introduces the ability for vendors to set the IMOD_INTERVAL as is
+>>> optimal for their platform. By using device_property_read_u32() on
+>>> "imod-interval-ns", the IMOD INTERVAL can be specified in nano seconds.
+>>> If no interval is specified, the default of 40,000ns (IMOD=160) will be
+>>> used.
+>>>
+>>> No bounds checking has been implemented due to the fact that a vendor
+>>> may have violated the spec and would need to specify a value outside of
+>>> the max 8,000 IRQs/second limit specified in the xHCI spec.
+>>>
+>>> Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> ---
+>>> changes from v3:
+>>>    * Changed imod-interval to imod-interval-ns [Rob Herring/Chunfeng]
+>>>    * Changed "modulation" to "moderation" throughout patch [Mathias]
+>>> changes from v2:
+>>>    * Added PCI default value [Mathias]
+>>>    * Removed xhci-mtk.h from xhci-plat.c [Chunfeng Yun]
+>>>    * Removed MTK quirk from xhci-plat and moved logic to xhci-mtk [Chunfeng]
+>>>    * Updated bindings Documentation to use proper units [Rob Herring]
+>>>    * Added imod-interval description and example to MTK binding documentation
+>>> changes from v1:
+>>>    * Removed device_property_read_u32() per suggestion from greg k-h
+>>>    * Used ER_IRQ_INTERVAL_MASK in place of (u16) cast
+>>>
+>>>   Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 2 ++
+>>>   Documentation/devicetree/bindings/usb/usb-xhci.txt          | 1 +
+>>>   drivers/usb/host/xhci-mtk.c                                 | 9 +++++++++
+>>>   drivers/usb/host/xhci-pci.c                                 | 3 +++
+>>>   drivers/usb/host/xhci-plat.c                                | 5 +++++
+>>>   drivers/usb/host/xhci.c                                     | 7 ++-----
+>>>   drivers/usb/host/xhci.h                                     | 2 ++
+>>>   7 files changed, 24 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+>>> index 3059596..9ff5602 100644
+>>> --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
+>>> @@ -46,6 +46,7 @@ Optional properties:
+>>>    - pinctrl-names : a pinctrl state named "default" must be defined
+>>>    - pinctrl-0 : pin control group
+>>>   	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>>> + - imod-interval-ns: default interrupt moderation interval is 5000ns
+>>>   
+>>>   Example:
+>>>   usb30: usb@11270000 {
+>>> @@ -66,6 +67,7 @@ usb30: usb@11270000 {
+>>>   	usb3-lpm-capable;
+>>>   	mediatek,syscon-wakeup = <&pericfg>;
+>>>   	mediatek,wakeup-src = <1>;
+>>> +	imod-interval-ns = <10000>;
+>>>   };
+>>>   
+>>>   2nd: dual-role mode with xHCI driver
+>>> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+>>> index ae6e484..969908d 100644
+>>> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+>>> @@ -29,6 +29,7 @@ Optional properties:
+>>>     - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
+>>>     - usb3-lpm-capable: determines if platform is USB3 LPM capable
+>>>     - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+>>> +  - imod-interval-ns: default interrupt moderation interval is 5000ns
+>>>   
+>>>   Example:
+>>>   	usb@f0931000 {
+>>> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+>>> index b62a1d2..1cb2a8b 100644
+>>> --- a/drivers/usb/host/xhci-mtk.c
+>>> +++ b/drivers/usb/host/xhci-mtk.c
+>>> @@ -674,6 +674,15 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+>>>   
+>>>   	xhci = hcd_to_xhci(hcd);
+>>>   	xhci->main_hcd = hcd;
+>>> +
+>>> +	/*
+>>> +	 * imod_interval is the interrupt moderation value in nanoseconds.
+>>> +	 * The increment interval is 8 times as much as that defined in
+>>> +	 * the xHCI spec on MTK's controller.
+>>> +	 */
+>>> +	xhci->imod_interval = 5000;
+>>> +	device_property_read_u32(dev, "imod-interval-ns", &xhci->imod_interval);
+>>> +
+>>>   	xhci->shared_hcd = usb_create_shared_hcd(driver, dev,
+>>>   			dev_name(dev), hcd);
+>>>   	if (!xhci->shared_hcd) {
+>>> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+>>> index 7ef1274..4bcddd4 100644
+>>> --- a/drivers/usb/host/xhci-pci.c
+>>> +++ b/drivers/usb/host/xhci-pci.c
+>>> @@ -234,6 +234,9 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
+>>>   	if (!xhci->sbrn)
+>>>   		pci_read_config_byte(pdev, XHCI_SBRN_OFFSET, &xhci->sbrn);
+>>>   
+>>> +	/* imod_interval is the interrupt moderation value in nanoseconds. */
+>>> +	xhci->imod_interval = 40000;
+>>> +
+>>>   	retval = xhci_gen_setup(hcd, xhci_pci_quirks);
+>>>   	if (retval)
+>>>   		return retval;
+>>> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+>>> index 09f164f..6f03830 100644
+>>> --- a/drivers/usb/host/xhci-plat.c
+>>> +++ b/drivers/usb/host/xhci-plat.c
+>>> @@ -269,6 +269,11 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>>>   	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
+>>>   		xhci->quirks |= XHCI_BROKEN_PORT_PED;
+>>>   
+>>> +	/* imod_interval is the interrupt moderation value in nanoseconds. */
+>>> +	xhci->imod_interval = 40000;
+>>> +	device_property_read_u32(sysdev, "imod-interval-ns",
+>>> +				 &xhci->imod_interval);
+>>> +
+>>>   	hcd->usb_phy = devm_usb_get_phy_by_phandle(sysdev, "usb-phy", 0);
+>>>   	if (IS_ERR(hcd->usb_phy)) {
+>>>   		ret = PTR_ERR(hcd->usb_phy);
+>>> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+>>> index 2424d30..0b7755b 100644
+>>> --- a/drivers/usb/host/xhci.c
+>>> +++ b/drivers/usb/host/xhci.c
+>>> @@ -586,11 +586,8 @@ int xhci_run(struct usb_hcd *hcd)
+>>>   			"// Set the interrupt modulation register");
+>> s/modulation/moderation
+> 
+> Mathias said there was no need to change the existing modulation strings - only
+> the ones that I had added.
 
---xlguvviawpatacuj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Baolu is working on a cleanup patch that removes debug messages that became
+useless with debugfs and proper tracing support, including this line.
 
-On Sat, Dec 02, 2017 at 05:00:03PM +0100, Linus Walleij wrote:
-> On Fri, Dec 1, 2017 at 2:44 PM, Quentin Schulz
-> <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->=20
-> > The AXP209 and AXP813 PMICs have several pins (respectively 3 and 2) th=
-at can
-> > be used either as GPIOs or for other purposes (ADC or LDO here).
-> >
-> > We already have a GPIO driver for the GPIO use of those pins on the AXP=
-209.
-> > Let's "upgrade" this driver to support all the functions these pins can=
- have.
-> >
-> > Then we add support to this driver for the AXP813 which is slighlty dif=
-ferent
-> > (basically a different offset in two registers and one less pin).
-> >
-> > I suggest patches 1 to 8 go through Linus's tree and 9 and 10 via Maxim=
-e or
-> > Chen-Yu's tree.
-> >
-> > v4:
->=20
-> Looks overall good. As soon as Maxime is happy with everything I will
-> happily apply 1-8 to the pinctrl tree and then pull it to GPIO as well to
-> avoid clashes.
->=20
-> I think there were some minor comments but it seems almost finished.
+Less conflicts to resolve for me if we don't change this.
 
-You can apply everything with my
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
+>>
+>>>   	temp = readl(&xhci->ir_set->irq_control);
+>>>   	temp &= ~ER_IRQ_INTERVAL_MASK;
+>>> -	/*
+>>> -	 * the increment interval is 8 times as much as that defined
+>>> -	 * in xHCI spec on MTK's controller
+>>> -	 */
+>>> -	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
+>>> +	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
+>>> +
+>> No need a blank line
+> 
+> If this patch goes through another version, I will remove this line
 
-The only comment left is the checkpatch warning, but there's multiple
-occurences of that issue in the driver, so it can definitely be done
-in a separate patch.
+If Rob Acks this version I'll apply it and remove that blank line.
 
-(But please do it Quentin ;))
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---xlguvviawpatacuj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlomXxoACgkQ0rTAlCFN
-r3RvYw/9HAyKPI6MVsZfBMuGtO8Ppdk3YQTl2CaGiI4h3hcCsOw4edTH2HsUJpQm
-iS/ZFOgnpLNY0QY8AgeM08PR2vLuvIIz+YC95mKdm4Wnjp+pIm6Q0+qdXj/i0jY/
-qqeeC7HvphRQdR46khQoLCwpilMJyp1NFRm2zym1FVpHaVX+kdK8e3ibSvDvUxHy
-/kMYsiLOuDKAfjhtfNiR4PFaqSYBT5mAlZ92R2C+Bide5awqO2yWWhYHv30qQTA4
-3fkm3STLnDpry/eF33sJyDT3YU7TmxQvoNkamIuYCCzAXpJbhkPL+AkX57NOXZ5k
-+/XBPa63pREU9f+aDGTPh05gMV3Te2ND3v+3J+9/Imnr4Y0K90B/SydASW8I0F94
-3hIE20qz0njG0x4XMVuyc8pgg59qdRwgHvH/c3gXH2Rikbmq6FOC47V2yzgaCrmJ
-2qt9AxMuUrwB2qVLdD05Yf7iZ+xk2otAiNUg5NzHRffZyqIt3sjNzDEmw5aTIUZR
-F2QJFIsKtqKXfapYqagNXjjHUNTTKm2UtjiI3dDsNAZv8Nt0RdR/P+VqvU+a3J1z
-GuJzEVDt+Us7IohLiUMZIRq16c/BOmlSJCqIvYxOtGkC1LD2h5PeTbZD6qjDvWDA
-fIq+GMUtu4JTJHIXt9IA9KGhJeew8fyletulQix+v+E8XsmKutY=
-=gMWJ
------END PGP SIGNATURE-----
-
---xlguvviawpatacuj--
+-Mathias
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
