@@ -1,108 +1,108 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 00/11] add pinmuxing support for pins in
- AXP209 and AXP813 PMICs
-Date: Tue, 5 Dec 2017 15:51:08 +0100
-Message-ID: <8ff99511-eccb-9d9f-ddc0-35b875cce92d@free-electrons.com>
-References: <20171205144647.17594-1-quentin.schulz@free-electrons.com>
-Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH net-next v3 1/4] phylib: Add device reset delay support
+Date: Tue, 5 Dec 2017 15:56:55 +0100
+Message-ID: <35a63da6-93e1-b2f0-a3cc-ad079b2ffb28@skidata.com>
+References: <20171205132600.13796-1-dev@g0hl1n.net>
+ <20171205132600.13796-2-dev@g0hl1n.net>
+ <CAMuHMdX70yuEfoDL+Y4TZ-6zjyW9BqvKOU6UxbHTKGNcgfGrow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBXPETLIQKGQEW3626WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171205144647.17594-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdX70yuEfoDL+Y4TZ-6zjyW9BqvKOU6UxbHTKGNcgfGrow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, lukma-ynQEQJNshbs@public.gmane.org, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Geert,
 
-Copy pasting of the cover letter done wrong, there are only 9 patches in
-this patch series unlike what's specified in the title of the cover
-letter for this patch series.
+On 12/05/2017 02:54 PM, Geert Uytterhoeven wrote:
+> Hi Richard,
+> 
+> On Tue, Dec 5, 2017 at 2:25 PM, Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org> wrote:
+>> From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Some PHYs need a minimum time after the reset gpio was asserted and/or
+>> deasserted. To ensure we meet these timing requirements add two new
+>> optional devicetree parameters for the phy: reset-delay-us and
+>> reset-post-delay-us.
+> 
+> Thanks for your patch!
+> 
+>> This patch depends on the "phylib: Add device reset GPIO support" patch
+>> submitted by Geert Uytterhoeven/Sergei Shtylyov, see:
+>>         https://patchwork.kernel.org/patch/10090149/
+> 
+> The above paragraph belongs under the "---" line below, as it is not intended
+> to be preserved in the eternal git history.
 
-Sorry for the noise.
+Ok. Thanks. That makes sense. I'll take it into account for v4.
 
-Quentin
+> 
+>> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> 
+> Although I have a few suggestions below:
 
-On 05/12/2017 15:46, Quentin Schulz wrote:
-> The AXP209 and AXP813 PMICs have several pins (respectively 3 and 2) that can
-> be used either as GPIOs or for other purposes (ADC or LDO here).
-> 
-> We already have a GPIO driver for the GPIO use of those pins on the AXP209.
-> Let's "upgrade" this driver to support all the functions these pins can have.
-> 
-> Then we add support to this driver for the AXP813 which is slighlty different
-> (basically a different offset in two registers and one less pin).
-> 
-> I suggest patches 1 to 8 go through Linus's tree and 9 via Lee's.
-> 
-> v5:
->   - add reference to pinctrl dt-bindings in driver's dt-binding,
->   - add statement that this driver employs per-pin muxing pattern,
->   - add a patch on top of the patch series to fix checkpatch warnings,
->   - add a few information to the Kconfig to make checkpatch happy,
-> 
-> v4:
->   - separate dt-binding patch when adding pinctrl feature,
->   - use - instead of _ in DT node name,
->   - remove muxing operation from pinctrl driver when choosing LDO mux in order
->   to not interfere with the regulator framework,
->   - add adc_mux to specify specific mux value for ADC (different between AXP209
->   and AXP813),
->   - misc modifications (header include reordering, unsigned int -> u8,
->   new line removal),
-> 
-> v3:
->   - add defines for GPIO funcs,
->   - use again get_regs function instead of drv_data (which was implemented in
->   v2),
->   - use of_device_id data for device specific data (gpio_status_offset and pins
->   description),
->   - change compatible from axp813-pctl to axp813-gpio,
->   - use axp81x DT label instead of axp813 since AXP813 and AXP818 are similar,
->   - add dtsi include for all boards embedding axp813/axp818,
-> 
-> v2:
->   - add support for AXP813 pins,
->   - split into more patches so it is easier to follow the modifications,
->   - reorder of some patches,
->   - register all pins within the same range instead of a range per pin,
-> 
-> Thanks,
-> Quentin
-> 
-> Quentin Schulz (9):
->   gpio: axp209: switch unsigned variables to unsigned int
->   pinctrl: move gpio-axp209 to pinctrl
->   pinctrl: axp209: add pinctrl features
->   dt-bindings: gpio: gpio-axp209: add pinctrl features
->   pinctrl: axp209: rename everything from gpio to pctl
->   pinctrl: axp209: add programmable gpio_status_offset
->   pinctrl: axp209: add programmable ADC muxing value
->   pinctrl: axp209: add support for AXP813 GPIOs
->   mfd: axp20x: add pinctrl cell for AXP813
-> 
->  .../devicetree/bindings/gpio/gpio-axp209.txt       |  49 ++-
->  drivers/gpio/Kconfig                               |   6 -
->  drivers/gpio/Makefile                              |   1 -
->  drivers/gpio/gpio-axp209.c                         | 188 --------
->  drivers/mfd/axp20x.c                               |   3 +
->  drivers/pinctrl/Kconfig                            |  10 +
->  drivers/pinctrl/Makefile                           |   1 +
->  drivers/pinctrl/pinctrl-axp209.c                   | 476 +++++++++++++++++++++
->  8 files changed, 537 insertions(+), 197 deletions(-)
->  delete mode 100644 drivers/gpio/gpio-axp209.c
->  create mode 100644 drivers/pinctrl/pinctrl-axp209.c
-> 
+Thank you for your review and suggestions (they make the code look way
+more neater). I'll adapt v4 accordingly.
 
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> 
+>> --- a/drivers/net/phy/mdio_device.c
+>> +++ b/drivers/net/phy/mdio_device.c
+>> @@ -118,8 +119,16 @@ EXPORT_SYMBOL(mdio_device_remove);
+>>
+>>  void mdio_device_reset(struct mdio_device *mdiodev, int value)
+>>  {
+>> -       if (mdiodev->reset)
+>> -               gpiod_set_value(mdiodev->reset, value);
+>> +       if (!mdiodev->reset)
+>> +               return;
+>> +
+>> +       gpiod_set_value(mdiodev->reset, value);
+>> +
+>> +       if (value && mdiodev->reset_delay)
+>> +               usleep_range(mdiodev->reset_delay, mdiodev->reset_delay + 100);
+>> +       else if (!value && mdiodev->reset_post_delay)
+>> +               usleep_range(mdiodev->reset_post_delay,
+>> +                            mdiodev->reset_post_delay + 100);
+> 
+> I think this can be written simpler using e.g.:
+> 
+>         unsigned int delay;
+> 
+>         ...
+>         delay = value ? mdiodev->reset_delay : mdiodev->reset_post_delay;
+>         if (delay)
+>                 usleep_range(delay, delay + 100);
+> 
+> Perhaps the range extension should be relative, e.g.
+> "delay + min(delay / 10, 100)"?
+> 
+>> --- a/drivers/of/of_mdio.c
+>> +++ b/drivers/of/of_mdio.c
+>> @@ -77,6 +77,14 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
+>>         if (of_property_read_bool(child, "broken-turn-around"))
+>>                 mdio->phy_ignore_ta_mask |= 1 << addr;
+>>
+>> +       if (of_property_read_u32(child, "reset-delay-us",
+>> +                                &phy->mdio.reset_delay))
+>> +               phy->mdio.reset_delay = 0;
+>> +
+>> +       if (of_property_read_u32(child, "reset-post-delay-us",
+>> +                                &phy->mdio.reset_post_delay))
+>> +               phy->mdio.reset_post_delay = 0;
+> 
+> If of_property_read_u32() fails, it doesn't write to its output parameter.
+> As the structure should be zeroed during allocation, you can just write:
+> 
+>         of_property_read_u32(child, "reset-delay-us", &phy->mdio.reset_delay);
+>         of_property_read_u32(child, "reset-post-delay-us",
+>                              &phy->mdio.reset_post_delay);
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
