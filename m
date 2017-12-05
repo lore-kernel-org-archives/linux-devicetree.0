@@ -1,89 +1,50 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v11 1/6] mailbox: qcom: Convert APCS IPC driver to use regmap
-Date: Tue,  5 Dec 2017 17:46:56 +0200
-Message-ID: <20171205154701.27730-2-georgi.djakov@linaro.org>
-References: <20171205154701.27730-1-georgi.djakov@linaro.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171205154701.27730-1-georgi.djakov@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org
-Cc: mturquette@baylibre.com, robh@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v4 0/2] Add support for TI TAS6424 digital
+	amplifier
+Date: Tue, 5 Dec 2017 09:54:10 -0600
+Message-ID: <20171205155412.20137-1-afd@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This hardware block provides more functionalities that just IPC. Convert
-it to regmap to allow other child platform devices to use the same regmap.
+Hello all,
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+This series adds support for the TAS6424 digital amplifier. A lot has
+changed from the last time this upstreaming was attempted, I've taken
+over this effort for Michael and I don't really have an exact change log
+but hopefully I've addressed all comments from v3.
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index 9924c6d7f05d..ab344bc6fa63 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -18,6 +18,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- #include <linux/mailbox_controller.h>
- 
- #define QCOM_APCS_IPC_BITS	32
-@@ -26,19 +27,25 @@ struct qcom_apcs_ipc {
- 	struct mbox_controller mbox;
- 	struct mbox_chan mbox_chans[QCOM_APCS_IPC_BITS];
- 
--	void __iomem *reg;
-+	struct regmap *regmap;
- 	unsigned long offset;
- };
- 
-+static const struct regmap_config apcs_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = 0x1000,
-+	.fast_io = true,
-+};
-+
- static int qcom_apcs_ipc_send_data(struct mbox_chan *chan, void *data)
- {
- 	struct qcom_apcs_ipc *apcs = container_of(chan->mbox,
- 						  struct qcom_apcs_ipc, mbox);
- 	unsigned long idx = (unsigned long)chan->con_priv;
- 
--	writel(BIT(idx), apcs->reg);
--
--	return 0;
-+	return regmap_write(apcs->regmap, apcs->offset, BIT(idx));
- }
- 
- static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
-@@ -47,7 +54,9 @@ static const struct mbox_chan_ops qcom_apcs_ipc_ops = {
- 
- static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct qcom_apcs_ipc *apcs;
-+	struct regmap *regmap;
- 	struct resource *res;
- 	unsigned long offset;
- 	void __iomem *base;
-@@ -63,9 +72,14 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
-+	regmap = devm_regmap_init_mmio(&pdev->dev, base, &apcs_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
- 	offset = (unsigned long)of_device_get_match_data(&pdev->dev);
- 
--	apcs->reg = base + offset;
-+	apcs->regmap = regmap;
-+	apcs->offset = offset;
- 
- 	/* Initialize channel identifiers */
- 	for (i = 0; i < ARRAY_SIZE(apcs->mbox_chans); i++)
+Thanks,
+Andrew
+
+Andreas Dannenberg (1):
+  ASoC: Add support for TAS6424 digital amplifier
+
+Michael Stecklein (1):
+  dt-bindings: sound: add bindings for TAS6424
+
+ .../devicetree/bindings/sound/ti,tas6424.txt       |  20 +
+ sound/soc/codecs/Kconfig                           |   8 +
+ sound/soc/codecs/Makefile                          |   2 +
+ sound/soc/codecs/tas6424.c                         | 707 +++++++++++++++++++++
+ sound/soc/codecs/tas6424.h                         | 144 +++++
+ 5 files changed, 881 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,tas6424.txt
+ create mode 100644 sound/soc/codecs/tas6424.c
+ create mode 100644 sound/soc/codecs/tas6424.h
+
+-- 
+2.15.0
