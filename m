@@ -1,78 +1,90 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 3/5] staging: Introduce NVIDIA Tegra video decoder
- driver
-Date: Tue, 5 Dec 2017 14:03:37 +0100
-Message-ID: <93c98569-0282-80d9-78ad-c8ab8fd9db92@xs4all.nl>
-References: <cover.1508448293.git.digetx@gmail.com>
- <1a3798f337c0097e67d70226ae3ba665fd9156c2.1508448293.git.digetx@gmail.com>
- <ad2da9f4-8899-7db3-493f-5aa15297c33c@xs4all.nl>
- <3ac6a087-def2-014f-673d-1be9d5094635@gmail.com>
+From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 4/6] dt: bindings: lp8860: Update the bindings to the
+ standard
+Date: Tue, 5 Dec 2017 07:06:22 -0600
+Message-ID: <d68fa3d3-1280-b9ae-bf11-7784a73b1719@ti.com>
+References: <20171201165613.10358-1-dmurphy@ti.com>
+ <20171201165613.10358-4-dmurphy@ti.com>
+ <a07f883c-4c4c-780d-2dac-f023907a2629@gmail.com>
+ <20171204223500.f6ukdorpcmerzwot@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <3ac6a087-def2-014f-673d-1be9d5094635@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171204223500.f6ukdorpcmerzwot@rob-hp-laptop>
 Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Dmitry Osipenko <digetx@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Vladimir Zapolskiy <vz@mleia.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Giulio Benetti <giulio.benetti@micronovasrl.com>, Dan Carpenter <dan.carpenter@oracle.com>, linux-media@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/17 13:17, Dmitry Osipenko wrote:
-> Hi Hans,
+Rob
+
+On 12/04/2017 04:35 PM, Rob Herring wrote:
+> On Sun, Dec 03, 2017 at 02:27:20PM +0100, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 12/01/2017 05:56 PM, Dan Murphy wrote:
+>>> Update the lp8860 dt binding to the LED standard where
+>>> the LED should have a child node and also adding a
+>>> LED trigger entry.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>>
+>>> v6 - New patch to fix binding documentation
+>>>
+>>>  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 15 +++++++++++----
+>>>  1 file changed, 11 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+>>> index aad38dd94d4b..4cf396de6eba 100644
+>>> --- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+>>> +++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+>>> @@ -12,17 +12,24 @@ Required properties:
+>>>  	- label - Used for naming LEDs
+>>>  
+>>>  Optional properties:
+>>> -	- enable-gpio - gpio pin to enable/disable the device.
+>>> -	- supply - "vled" - LED supply
+>>> +	- enable-gpios : gpio pin to enable/disable the device.
+>>> +	- vled-supply : LED supply
+>>> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+>>> +	- linux,default-trigger : (optional)
+>>> +	   see Documentation/devicetree/bindings/leds/common.txt
+>>>  
+>>>  Example:
+>>>  
+>>> -leds: leds@6 {
+>>> +lp8860@2d {
 > 
-> On 04.12.2017 17:04, Hans Verkuil wrote:
->> Hi Dmitry,
->>
->> As you already mention in the TODO, this should become a v4l2 codec driver.
->>
->> Good existing examples are the coda, qcom/venus and mtk-vcodec drivers.
->>
->> One thing that is not clear from this code is if the tegra hardware is a
->> stateful or stateless codec, i.e. does it keep track of the decoder state
->> in the hardware, or does the application have to keep track of the state and
->> provide the state information together with the video data?
->>
->> I ask because at the moment only stateful codecs are supported. Work is ongoing
->> to support stateless codecs, but we don't support that for now.
->>
-> 
-> It is stateless. Is there anything ready to try out? If yes, could you please
-> give a reference to that work?
+> leds@2d
 
-I rebased my two year old 'requests2' branch to the latest mainline version and
-gave it the imaginative name 'requests3':
-
-https://git.linuxtv.org/hverkuil/media_tree.git/log/?h=requests3
-
-(Note: only compile tested!)
-
-This is what ChromeOS has been using (actually they use a slightly older version)
-and the new version that is currently being developed will be similar, so any work
-you do on top of this will carry over to the final version without too much effort.
-
-At least, that's the intention :-)
-
-I've CC-ed Maxime and Giulio as well: they are looking into adding support for
-the stateless allwinner codec based on this code as well. There may well be
-opportunities for you to work together, esp. on the userspace side. Note that
-Rockchip has the same issue, they too have a stateless HW codec.
+Ack
 
 > 
->> Anyway, I'm OK with merging this in staging. Although I think it should go
->> to staging/media since we want to keep track of it.
->>
+>>>  	compatible = "ti,lp8860";
+>>>  	reg = <0x2d>;
+>>> -	label = "display_cluster";
+>>>  	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>>>  	vled-supply = <&vbatt>;
+>>> +
+>>> +	backlight: backlight@0 {
 > 
-> Awesome, I'll move driver to staging/media in V5. Thanks!
+> unit-address requires a 'reg' property. Building your dts files with W=1 
+> will tell you this.
 
-Nice, thanks!
+I will add this.  There is so much noise when enabling this option on the dts
+I missed the warning.
 
-	Hans
+Dan
+
+<snip>
+
+-- 
+------------------
+Dan Murphy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
