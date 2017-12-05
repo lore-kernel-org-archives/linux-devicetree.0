@@ -1,49 +1,64 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v8 0/6] stm32 clocksource driver rework
-Date: Tue, 5 Dec 2017 11:16:20 +0100
-Message-ID: <7f58b43f-62a9-7b5d-c444-b09299b32817@st.com>
-References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
- <dcff2fd0-58ca-51bb-ea2d-dfd1c5ca0cc3@st.com>
- <1f3d581f-e001-5011-829e-bf79e2f639a7@linaro.org>
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-binding: can: mcp2517fd: document device tree
+ bindings
+Date: Tue, 5 Dec 2017 11:26:59 +0100
+Message-ID: <f83be38e-1a44-79cc-4cdb-f26d8c8a5c61@martin.sperl.org>
+References: <20171124183509.12810-1-kernel@martin.sperl.org>
+ <20171124183509.12810-2-kernel@martin.sperl.org>
+ <20171126222528.i6quueqdmuj6le6g@rob-hp-laptop>
+ <6EBDD798-8632-4F42-A138-369BCD36DF68@martin.sperl.org>
+ <0a7e4416-332a-5c23-bda3-8c7561410314@posteo.de>
+ <612BB6CD-5330-40B8-A854-FD065E0A3331@martin.sperl.org>
+ <6aea8071-dc21-4ba7-2b2f-5af41b5755a5@posteo.de>
+ <F6036A58-9E98-4A62-950E-3396C9EE636E@martin.sperl.org>
+ <1ac487f7-17e3-c8a0-0f99-8138fe867373@posteo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1f3d581f-e001-5011-829e-bf79e2f639a7@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1ac487f7-17e3-c8a0-0f99-8138fe867373-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, tglx@linutronix.de, ludovic.barre@st.com, julien.thierry@arm.com, sudeep.holla@arm.com, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Patrick Menschel <menschel.p-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxMi8wNS8yMDE3IDExOjE1IEFNLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToKPiBPbiAwNS8x
-Mi8yMDE3IDExOjEyLCBBbGV4YW5kcmUgVG9yZ3VlIHdyb3RlOgo+IFsgLi4uIF0KPiAKPj4+IEJl
-bmphbWluIEdhaWduYXJkICg2KToKPj4+ICDCoMKgIGNsb2Nrc291cmNlOiB0aW1lcl9vZjogcmVu
-YW1lIHRpbWVyX29mX2V4aXQgdG8gdGltZXJfb2ZfY2xlYW51cAo+Pj4gIMKgwqAgY2xvY2tzb3Vy
-Y2U6IHN0bTMyOiBjb252ZXJ0IGRyaXZlciB0byB0aW1lcl9vZgo+Pj4gIMKgwqAgY2xvY2tzb3Vy
-Y2U6IHN0bTMyOiBpbmNyZWFzZSBtaW4gZGVsdGEgdmFsdWUKPj4+ICDCoMKgIGNsb2Nrc291cmNl
-OiBzdG0zMjogb25seSB1c2UgMzIgYml0cyB0aW1lcnMKPj4+ICDCoMKgIGNsb2Nrc291cmNlOiBz
-dG0zMjogYWRkIGNsb2Nrc291cmNlIHN1cHBvcnQKPj4+ICDCoMKgIGFybTogZHRzOiBzdG0zMjog
-cmVtb3ZlIHVzZWxlc3MgY2xvY2tzb3VyY2Ugbm9kZXMKPj4+Cj4+PiAgwqAgYXJjaC9hcm0vYm9v
-dC9kdHMvc3RtMzJmNDI5LmR0c2nCoCB8wqAgMzIgLS0tLS0KPj4+ICDCoCBhcmNoL2FybS9ib290
-L2R0cy9zdG0zMmY3NDYuZHRzacKgIHzCoCAzMiAtLS0tLQo+Pj4gIMKgIGRyaXZlcnMvY2xvY2tz
-b3VyY2UvS2NvbmZpZ8KgwqDCoMKgwqDCoCB8wqDCoCAxICsKPj4+ICDCoCBkcml2ZXJzL2Nsb2Nr
-c291cmNlL3RpbWVyLW9mLmPCoMKgwqAgfMKgwqAgOSArLQo+Pj4gIMKgIGRyaXZlcnMvY2xvY2tz
-b3VyY2UvdGltZXItb2YuaMKgwqDCoCB8wqDCoCAyICstCj4+PiAgwqAgZHJpdmVycy9jbG9ja3Nv
-dXJjZS90aW1lci1zdG0zMi5jIHwgMjQyCj4+PiArKysrKysrKysrKysrKysrKysrKy0tLS0tLS0t
-LS0tLS0tLS0tLQo+Pj4gIMKgIDYgZmlsZXMgY2hhbmdlZCwgMTM4IGluc2VydGlvbnMoKyksIDE4
-MCBkZWxldGlvbnMoLSkKPj4+Cj4+Cj4+IFdoYXQgaXMgdGhlIHN0YXR1cyBvZiB0aGlzIHBhdGNo
-LXNldCA/IElzIHRoZXJlIGEgY2hhbmNlIHRvIGhhdmUgaXQgZm9yCj4+IHY0LjE2ID8KPiAKPiBJ
-IHdpbGwgdGFrZSBjYXJlIG9mIHJldmlld2luZyB0aGVtIHRoaXMgd2Vlay4gSXQgaXMgaW4gbXkg
-dG9kbyBsaXN0Lgo+IAo+IApUaGFua3MgRGFuaWVsCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Patrick!
+
+
+I had a quick look starting to implement gpiolib,
+
+but I believe I would need to implement pin-ctrl on top to
+
+make the Alternate functions work propperly.
+
+I wonder if this effort is really worth it.
+
+Martin
+
+On 11/30/2017 06:49 PM, Patrick Menschel wrote:
+> Am 30.11.2017 um 17:58 schriebkernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org:
+>>> drivers/tty/serial/max310x.c
+>>> Documentation/devicetree/bindings/serial/maxim,max310x.txt
+>>> Look for "#ifdef CONFIG_GPIOLIB”.
+>> This is a gpio-controller, for which this is what I would implement.
+>>
+> Hi,
+>
+> you are mistaken about that, max310x chips are spi to uart bridges with
+> strong ties to rs485 which is very similar to CAN except for the missing
+> arbitration in hardware. Max14830 has GPIOs with clocking support, so
+> this chip's driver also fused the main function with secondary gpio
+> functions.
+> https://datasheets.maximintegrated.com/en/ds/MAX14830.pdf
+>
+> Anyway I'm curious what is best practice for this sort of configuration.
+>
+> Regards,
+> Patrick
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
