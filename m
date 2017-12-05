@@ -1,479 +1,1225 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v8 2/2] leds: lm3692x: Introduce LM3692x dual string driver
-Date: Tue, 5 Dec 2017 14:46:30 -0600
-Message-ID: <20171205204630.12267-2-dmurphy@ti.com>
-References: <20171205204630.12267-1-dmurphy@ti.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: [PATCH v3 2/2] ASoC: codecs: Add initial
+	PCM1862/63/64/65 universal ADC driver
+Date: Tue, 5 Dec 2017 14:52:56 -0600
+Message-ID: <20171205205256.14592-2-afd@ti.com>
+References: <20171205205256.14592-1-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171205204630.12267-1-dmurphy@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171205205256.14592-1-afd@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Introducing the LM3692x Dual-String white LED driver.
+From: Andreas Dannenberg <dannenberg@ti.com>
 
-Data sheet is located
-http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
+This is an initial version of the PCM186x codec driver supporting both
+2-channel and 4-channel device variants. Not all device features are
+supported yet such as master/slave mode PLL configuration for which the
+codec driver currently relies on the PCM186x built-in clock
+auto-detection feature or the connection of digital microphones.
+However here is what's here and what should work:
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+- Support for SPI and I2C low-level interfaces
+- Regmap support and basic register definitions
+- Input Mixer and Mux selection
+- I2C, LJ, and TDM DAI format support
+
+Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+Signed-off-by: Michael Stecklein <m-stecklein@ti.com>
+Signed-off-by: Andrew F. Davis <afd@ti.com>
 ---
 
-v8 - No changes
+Changes from v2:
+ - Moved PM to set_bias_level
 
-v7 - Reverted back to creating the LED label within the driver -
-https://patchwork.kernel.org/patch/10087473/
-v6 - Use new LED API to compose LED label as opposed to creating it. -
-https://patchwork.kernel.org/patch/10085565/
-v5 - Added OF dependency in Kconfig, added extra fault flag read to ensure that
-if a fault exists and it is not a artifact, fixed LED class label to be derived
-from either the DT child "label" node or create a label based on 
-parent_node_name:led color:trigger, removed ifdef for CONFIG_OF and removed
-of_match_ptr - https://patchwork.kernel.org/patch/10081073/
-v4 - Converted to devm led class register, changed MODULE_LICENSE to GPL v2, 
-set the led name based on child node name or label entry, removed fault and
-returned read_buf for fault checking, added mutex_destroy to remove function,
-and removed LED_FULL - https://patchwork.kernel.org/patch/10060109/
-v3 - Add missing Makefile and Kconfig from v1 and v2 - https://patchwork.kernel.org/patch/10060075/
-v2 - Added data sheet link, fixed linuxdoc format, returned on failure in init
-routine, return on fault_check failure, updated brightness calculation and
-fixed capitalization issue - https://patchwork.kernel.org/patch/10056675/
+Changes from v1:
+ - Remove extra debug statements
+ - Fix volume control names
+ - Power up supplies before device reset
 
- drivers/leds/Kconfig        |   7 +
- drivers/leds/Makefile       |   1 +
- drivers/leds/leds-lm3692x.c | 393 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 401 insertions(+)
- create mode 100644 drivers/leds/leds-lm3692x.c
+ sound/soc/codecs/Kconfig       |  17 +
+ sound/soc/codecs/Makefile      |   6 +
+ sound/soc/codecs/pcm186x-i2c.c |  69 ++++
+ sound/soc/codecs/pcm186x-spi.c |  69 ++++
+ sound/soc/codecs/pcm186x.c     | 719 +++++++++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/pcm186x.h     | 220 +++++++++++++
+ 6 files changed, 1100 insertions(+)
+ create mode 100644 sound/soc/codecs/pcm186x-i2c.c
+ create mode 100644 sound/soc/codecs/pcm186x-spi.c
+ create mode 100644 sound/soc/codecs/pcm186x.c
+ create mode 100644 sound/soc/codecs/pcm186x.h
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 318a28fd58fe..1d215b39cefd 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -137,6 +137,13 @@ config LEDS_LM3642
- 	  converter plus 1.5A constant current driver for a high-current
- 	  white LED.
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index a42ddbc93f3d..dda8c01170b3 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -109,6 +109,8 @@ config SND_SOC_ALL_CODECS
+ 	select SND_SOC_PCM1681 if I2C
+ 	select SND_SOC_PCM179X_I2C if I2C
+ 	select SND_SOC_PCM179X_SPI if SPI_MASTER
++	select SND_SOC_PCM186X_I2C if I2C
++	select SND_SOC_PCM186X_SPI if SPI_MASTER
+ 	select SND_SOC_PCM3008
+ 	select SND_SOC_PCM3168A_I2C if I2C
+ 	select SND_SOC_PCM3168A_SPI if SPI_MASTER
+@@ -661,6 +663,21 @@ config SND_SOC_PCM179X_SPI
+ 	  Enable support for Texas Instruments PCM179x CODEC.
+ 	  Select this if your PCM179x is connected via an SPI bus.
  
-+config LEDS_LM3692X
-+	tristate "LED support for LM3692x Chips"
-+	depends on LEDS_CLASS && I2C && OF
++config SND_SOC_PCM186X
++	tristate
++
++config SND_SOC_PCM186X_I2C
++	tristate "Texas Instruments PCM186x CODECs - I2C"
++	depends on I2C
++	select SND_SOC_PCM186X
 +	select REGMAP_I2C
-+	help
-+	  This option enables support for the TI LM3692x family
-+	  of white LED string drivers used for backlighting.
++
++config SND_SOC_PCM186X_SPI
++	tristate "Texas Instruments PCM186x CODECs - SPI"
++	depends on SPI_MASTER
++	select SND_SOC_PCM186X
++	select REGMAP_SPI
++
+ config SND_SOC_PCM3008
+        tristate
  
- config LEDS_LOCOMO
- 	tristate "LED Support for Locomo device"
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index a2a6b5a4f86d..987884a5b9a5 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -74,6 +74,7 @@ obj-$(CONFIG_LEDS_PM8058)		+= leds-pm8058.o
- obj-$(CONFIG_LEDS_MLXCPLD)		+= leds-mlxcpld.o
- obj-$(CONFIG_LEDS_NIC78BX)		+= leds-nic78bx.o
- obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
-+obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
-diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index 0001069ce2a7..146e48a60098 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -105,6 +105,9 @@ snd-soc-pcm1681-objs := pcm1681.o
+ snd-soc-pcm179x-codec-objs := pcm179x.o
+ snd-soc-pcm179x-i2c-objs := pcm179x-i2c.o
+ snd-soc-pcm179x-spi-objs := pcm179x-spi.o
++snd-soc-pcm186x-objs := pcm186x.o
++snd-soc-pcm186x-i2c-objs := pcm186x-i2c.o
++snd-soc-pcm186x-spi-objs := pcm186x-spi.o
+ snd-soc-pcm3008-objs := pcm3008.o
+ snd-soc-pcm3168a-objs := pcm3168a.o
+ snd-soc-pcm3168a-i2c-objs := pcm3168a-i2c.o
+@@ -345,6 +348,9 @@ obj-$(CONFIG_SND_SOC_PCM1681)	+= snd-soc-pcm1681.o
+ obj-$(CONFIG_SND_SOC_PCM179X)	+= snd-soc-pcm179x-codec.o
+ obj-$(CONFIG_SND_SOC_PCM179X_I2C)	+= snd-soc-pcm179x-i2c.o
+ obj-$(CONFIG_SND_SOC_PCM179X_SPI)	+= snd-soc-pcm179x-spi.o
++obj-$(CONFIG_SND_SOC_PCM186X)	+= snd-soc-pcm186x.o
++obj-$(CONFIG_SND_SOC_PCM186X_I2C)	+= snd-soc-pcm186x-i2c.o
++obj-$(CONFIG_SND_SOC_PCM186X_SPI)	+= snd-soc-pcm186x-spi.o
+ obj-$(CONFIG_SND_SOC_PCM3008)	+= snd-soc-pcm3008.o
+ obj-$(CONFIG_SND_SOC_PCM3168A)	+= snd-soc-pcm3168a.o
+ obj-$(CONFIG_SND_SOC_PCM3168A_I2C)	+= snd-soc-pcm3168a-i2c.o
+diff --git a/sound/soc/codecs/pcm186x-i2c.c b/sound/soc/codecs/pcm186x-i2c.c
 new file mode 100644
-index 000000000000..e18f12009612
+index 000000000000..543621232d60
 --- /dev/null
-+++ b/drivers/leds/leds-lm3692x.c
-@@ -0,0 +1,393 @@
++++ b/sound/soc/codecs/pcm186x-i2c.c
+@@ -0,0 +1,69 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * TI lm3692x LED Driver
++ * Texas Instruments PCM186x Universal Audio ADC - I2C
 + *
-+ * Copyright (C) 2017 Texas Instruments
-+ *
-+ * Author: Dan Murphy <dmurphy@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * Data sheet is located
-+ * http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
++ * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com
++ *	Andreas Dannenberg <dannenberg@ti.com>
++ *	Andrew F. Davis <afd@ti.com>
 + */
 +
-+#include <linux/i2c.h>
 +#include <linux/init.h>
-+#include <linux/leds.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
 +#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/slab.h>
-+#include <uapi/linux/uleds.h>
++#include <linux/i2c.h>
 +
-+#define LM3692X_REV		0x0
-+#define LM3692X_RESET		0x1
-+#define LM3692X_EN		0x10
-+#define LM3692X_BRT_CTRL	0x11
-+#define LM3692X_PWM_CTRL	0x12
-+#define LM3692X_BOOST_CTRL	0x13
-+#define LM3692X_AUTO_FREQ_HI	0x15
-+#define LM3692X_AUTO_FREQ_LO	0x16
-+#define LM3692X_BL_ADJ_THRESH	0x17
-+#define LM3692X_BRT_LSB		0x18
-+#define LM3692X_BRT_MSB		0x19
-+#define LM3692X_FAULT_CTRL	0x1e
-+#define LM3692X_FAULT_FLAGS	0x1f
++#include "pcm186x.h"
 +
-+#define LM3692X_SW_RESET	BIT(0)
-+#define LM3692X_DEVICE_EN	BIT(0)
-+#define LM3692X_LED1_EN		BIT(1)
-+#define LM3692X_LED2_EN		BIT(2)
++static const struct of_device_id pcm186x_of_match[] = {
++	{ .compatible = "ti,pcm1862", .data = (void *)PCM1862 },
++	{ .compatible = "ti,pcm1863", .data = (void *)PCM1863 },
++	{ .compatible = "ti,pcm1864", .data = (void *)PCM1864 },
++	{ .compatible = "ti,pcm1865", .data = (void *)PCM1865 },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pcm186x_of_match);
 +
-+/* Brightness Control Bits */
-+#define LM3692X_BL_ADJ_POL	BIT(0)
-+#define LM3692X_RAMP_RATE_125us	0x00
-+#define LM3692X_RAMP_RATE_250us	BIT(1)
-+#define LM3692X_RAMP_RATE_500us BIT(2)
-+#define LM3692X_RAMP_RATE_1ms	(BIT(1) | BIT(2))
-+#define LM3692X_RAMP_RATE_2ms	BIT(3)
-+#define LM3692X_RAMP_RATE_4ms	(BIT(3) | BIT(1))
-+#define LM3692X_RAMP_RATE_8ms	(BIT(2) | BIT(3))
-+#define LM3692X_RAMP_RATE_16ms	(BIT(1) | BIT(2) | BIT(3))
-+#define LM3692X_RAMP_EN		BIT(4)
-+#define LM3692X_BRHT_MODE_REG	0x00
-+#define LM3692X_BRHT_MODE_PWM	BIT(5)
-+#define LM3692X_BRHT_MODE_MULTI_RAMP BIT(6)
-+#define LM3692X_BRHT_MODE_RAMP_MULTI (BIT(5) | BIT(6))
-+#define LM3692X_MAP_MODE_EXP	BIT(7)
-+
-+/* PWM Register Bits */
-+#define LM3692X_PWM_FILTER_100	BIT(0)
-+#define LM3692X_PWM_FILTER_150	BIT(1)
-+#define LM3692X_PWM_FILTER_200	(BIT(0) | BIT(1))
-+#define LM3692X_PWM_HYSTER_1LSB BIT(2)
-+#define LM3692X_PWM_HYSTER_2LSB	BIT(3)
-+#define LM3692X_PWM_HYSTER_3LSB (BIT(3) | BIT(2))
-+#define LM3692X_PWM_HYSTER_4LSB BIT(4)
-+#define LM3692X_PWM_HYSTER_5LSB (BIT(4) | BIT(2))
-+#define LM3692X_PWM_HYSTER_6LSB (BIT(4) | BIT(3))
-+#define LM3692X_PWM_POLARITY	BIT(5)
-+#define LM3692X_PWM_SAMP_4MHZ	BIT(6)
-+#define LM3692X_PWM_SAMP_24MHZ	BIT(7)
-+
-+/* Boost Control Bits */
-+#define LM3692X_OCP_PROT_1A	BIT(0)
-+#define LM3692X_OCP_PROT_1_25A	BIT(1)
-+#define LM3692X_OCP_PROT_1_5A	(BIT(0) | BIT(1))
-+#define LM3692X_OVP_21V		BIT(2)
-+#define LM3692X_OVP_25V		BIT(3)
-+#define LM3692X_OVP_29V		(BIT(2) | BIT(3))
-+#define LM3692X_MIN_IND_22UH	BIT(4)
-+#define LM3692X_BOOST_SW_1MHZ	BIT(5)
-+#define LM3692X_BOOST_SW_NO_SHIFT	BIT(6)
-+
-+/* Fault Control Bits */
-+#define LM3692X_FAULT_CTRL_OVP BIT(0)
-+#define LM3692X_FAULT_CTRL_OCP BIT(1)
-+#define LM3692X_FAULT_CTRL_TSD BIT(2)
-+#define LM3692X_FAULT_CTRL_OPEN BIT(3)
-+
-+/* Fault Flag Bits */
-+#define LM3692X_FAULT_FLAG_OVP BIT(0)
-+#define LM3692X_FAULT_FLAG_OCP BIT(1)
-+#define LM3692X_FAULT_FLAG_TSD BIT(2)
-+#define LM3692X_FAULT_FLAG_SHRT BIT(3)
-+#define LM3692X_FAULT_FLAG_OPEN BIT(4)
-+
-+/**
-+ * struct lm3692x_led -
-+ * @lock - Lock for reading/writing the device
-+ * @client - Pointer to the I2C client
-+ * @led_dev - LED class device pointer
-+ * @regmap - Devices register map
-+ * @enable_gpio - VDDIO/EN gpio to enable communication interface
-+ * @regulator - LED supply regulator pointer
-+ * @label - LED label
-+ */
-+struct lm3692x_led {
-+	struct mutex lock;
-+	struct i2c_client *client;
-+	struct led_classdev led_dev;
++static int pcm186x_i2c_probe(struct i2c_client *i2c,
++			     const struct i2c_device_id *id)
++{
++	const enum pcm186x_type type = (enum pcm186x_type)id->driver_data;
++	int irq = i2c->irq;
 +	struct regmap *regmap;
-+	struct gpio_desc *enable_gpio;
-+	struct regulator *regulator;
-+	char label[LED_MAX_NAME_SIZE];
++
++	regmap = devm_regmap_init_i2c(i2c, &pcm186x_regmap);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	return pcm186x_probe(&i2c->dev, type, irq, regmap);
++}
++
++static int pcm186x_i2c_remove(struct i2c_client *i2c)
++{
++	pcm186x_remove(&i2c->dev);
++
++	return 0;
++}
++
++static const struct i2c_device_id pcm186x_i2c_id[] = {
++	{ "pcm1862", PCM1862 },
++	{ "pcm1863", PCM1863 },
++	{ "pcm1864", PCM1864 },
++	{ "pcm1865", PCM1865 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, pcm186x_i2c_id);
++
++static struct i2c_driver pcm186x_i2c_driver = {
++	.probe		= pcm186x_i2c_probe,
++	.remove		= pcm186x_i2c_remove,
++	.id_table	= pcm186x_i2c_id,
++	.driver		= {
++		.name	= "pcm186x",
++		.of_match_table = pcm186x_of_match,
++	},
++};
++module_i2c_driver(pcm186x_i2c_driver);
++
++MODULE_AUTHOR("Andreas Dannenberg <dannenberg@ti.com>");
++MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
++MODULE_DESCRIPTION("PCM186x Universal Audio ADC I2C Interface Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/sound/soc/codecs/pcm186x-spi.c b/sound/soc/codecs/pcm186x-spi.c
+new file mode 100644
+index 000000000000..2366f8e4d4d4
+--- /dev/null
++++ b/sound/soc/codecs/pcm186x-spi.c
+@@ -0,0 +1,69 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Texas Instruments PCM186x Universal Audio ADC - SPI
++ *
++ * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com
++ *	Andreas Dannenberg <dannenberg@ti.com>
++ *	Andrew F. Davis <afd@ti.com>
++ */
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/spi/spi.h>
++
++#include "pcm186x.h"
++
++static const struct of_device_id pcm186x_of_match[] = {
++	{ .compatible = "ti,pcm1862", .data = (void *)PCM1862 },
++	{ .compatible = "ti,pcm1863", .data = (void *)PCM1863 },
++	{ .compatible = "ti,pcm1864", .data = (void *)PCM1864 },
++	{ .compatible = "ti,pcm1865", .data = (void *)PCM1865 },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pcm186x_of_match);
++
++static int pcm186x_spi_probe(struct spi_device *spi)
++{
++	const enum pcm186x_type type =
++			 (enum pcm186x_type)spi_get_device_id(spi)->driver_data;
++	int irq = spi->irq;
++	struct regmap *regmap;
++
++	regmap = devm_regmap_init_spi(spi, &pcm186x_regmap);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	return pcm186x_probe(&spi->dev, type, irq, regmap);
++}
++
++static int pcm186x_spi_remove(struct spi_device *spi)
++{
++	pcm186x_remove(&spi->dev);
++
++	return 0;
++}
++
++static const struct spi_device_id pcm186x_spi_id[] = {
++	{ "pcm1862", PCM1862 },
++	{ "pcm1863", PCM1863 },
++	{ "pcm1864", PCM1864 },
++	{ "pcm1865", PCM1865 },
++	{ }
++};
++MODULE_DEVICE_TABLE(spi, pcm186x_spi_id);
++
++static struct spi_driver pcm186x_spi_driver = {
++	.probe		= pcm186x_spi_probe,
++	.remove		= pcm186x_spi_remove,
++	.id_table	= pcm186x_spi_id,
++	.driver		= {
++		.name	= "pcm186x",
++		.of_match_table = pcm186x_of_match,
++	},
++};
++module_spi_driver(pcm186x_spi_driver);
++
++MODULE_AUTHOR("Andreas Dannenberg <dannenberg@ti.com>");
++MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
++MODULE_DESCRIPTION("PCM186x Universal Audio ADC SPI Interface Driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/sound/soc/codecs/pcm186x.c b/sound/soc/codecs/pcm186x.c
+new file mode 100644
+index 000000000000..f7aa56e20169
+--- /dev/null
++++ b/sound/soc/codecs/pcm186x.c
+@@ -0,0 +1,719 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Texas Instruments PCM186x Universal Audio ADC
++ *
++ * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com
++ *	Andreas Dannenberg <dannenberg@ti.com>
++ *	Andrew F. Davis <afd@ti.com>
++ */
++
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/init.h>
++#include <linux/delay.h>
++#include <linux/pm.h>
++#include <linux/pm_runtime.h>
++#include <linux/regulator/consumer.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <sound/core.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++#include <sound/jack.h>
++#include <sound/initval.h>
++#include <sound/tlv.h>
++
++#include "pcm186x.h"
++
++static const char * const pcm186x_supply_names[] = {
++	"avdd",		/* Analog power supply. Connect to 3.3-V supply. */
++	"dvdd",		/* Digital power supply. Connect to 3.3-V supply. */
++	"iovdd",	/* I/O power supply. Connect to 3.3-V or 1.8-V. */
++};
++#define PCM186x_NUM_SUPPLIES ARRAY_SIZE(pcm186x_supply_names)
++
++struct pcm186x_priv {
++	struct regmap *regmap;
++	struct regulator_bulk_data supplies[PCM186x_NUM_SUPPLIES];
++	unsigned int sysclk;
++	unsigned int tdm_offset;
++	bool is_tdm_mode;
++	bool is_master_mode;
 +};
 +
-+static const struct reg_default lm3692x_reg_defs[] = {
-+	{LM3692X_EN, 0xf},
-+	{LM3692X_BRT_CTRL, 0x61},
-+	{LM3692X_PWM_CTRL, 0x73},
-+	{LM3692X_BOOST_CTRL, 0x6f},
-+	{LM3692X_AUTO_FREQ_HI, 0x0},
-+	{LM3692X_AUTO_FREQ_LO, 0x0},
-+	{LM3692X_BL_ADJ_THRESH, 0x0},
-+	{LM3692X_BRT_LSB, 0x7},
-+	{LM3692X_BRT_MSB, 0xff},
-+	{LM3692X_FAULT_CTRL, 0x7},
++static const DECLARE_TLV_DB_SCALE(pcm186x_pga_tlv, -1200, 4000, 50);
++
++static const struct snd_kcontrol_new pcm1863_snd_controls[] = {
++	SOC_DOUBLE_R_S_TLV("ADC Capture Volume", PCM186X_PGA_VAL_CH1_L,
++			   PCM186X_PGA_VAL_CH1_R, 0, -24, 80, 7, 0,
++			   pcm186x_pga_tlv),
 +};
 +
-+static const struct regmap_config lm3692x_regmap_config = {
++static const struct snd_kcontrol_new pcm1865_snd_controls[] = {
++	SOC_DOUBLE_R_S_TLV("ADC1 Capture Volume", PCM186X_PGA_VAL_CH1_L,
++			   PCM186X_PGA_VAL_CH1_R, 0, -24, 80, 7, 0,
++			   pcm186x_pga_tlv),
++	SOC_DOUBLE_R_S_TLV("ADC2 Capture Volume", PCM186X_PGA_VAL_CH2_L,
++			   PCM186X_PGA_VAL_CH2_R, 0, -24, 80, 7, 0,
++			   pcm186x_pga_tlv),
++};
++
++const unsigned int pcm186x_adc_input_channel_sel_value[] = {
++	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
++	0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
++	0x10, 0x20, 0x30
++};
++
++static const char * const pcm186x_adcl_input_channel_sel_text[] = {
++	"No Select",
++	"VINL1[SE]",					/* Default for ADC1L */
++	"VINL2[SE]",					/* Default for ADC2L */
++	"VINL2[SE] + VINL1[SE]",
++	"VINL3[SE]",
++	"VINL3[SE] + VINL1[SE]",
++	"VINL3[SE] + VINL2[SE]",
++	"VINL3[SE] + VINL2[SE] + VINL1[SE]",
++	"VINL4[SE]",
++	"VINL4[SE] + VINL1[SE]",
++	"VINL4[SE] + VINL2[SE]",
++	"VINL4[SE] + VINL2[SE] + VINL1[SE]",
++	"VINL4[SE] + VINL3[SE]",
++	"VINL4[SE] + VINL3[SE] + VINL1[SE]",
++	"VINL4[SE] + VINL3[SE] + VINL2[SE]",
++	"VINL4[SE] + VINL3[SE] + VINL2[SE] + VINL1[SE]",
++	"{VIN1P, VIN1M}[DIFF]",
++	"{VIN4P, VIN4M}[DIFF]",
++	"{VIN1P, VIN1M}[DIFF] + {VIN4P, VIN4M}[DIFF]"
++};
++
++static const char * const pcm186x_adcr_input_channel_sel_text[] = {
++	"No Select",
++	"VINR1[SE]",					/* Default for ADC1R */
++	"VINR2[SE]",					/* Default for ADC2R */
++	"VINR2[SE] + VINR1[SE]",
++	"VINR3[SE]",
++	"VINR3[SE] + VINR1[SE]",
++	"VINR3[SE] + VINR2[SE]",
++	"VINR3[SE] + VINR2[SE] + VINR1[SE]",
++	"VINR4[SE]",
++	"VINR4[SE] + VINR1[SE]",
++	"VINR4[SE] + VINR2[SE]",
++	"VINR4[SE] + VINR2[SE] + VINR1[SE]",
++	"VINR4[SE] + VINR3[SE]",
++	"VINR4[SE] + VINR3[SE] + VINR1[SE]",
++	"VINR4[SE] + VINR3[SE] + VINR2[SE]",
++	"VINR4[SE] + VINR3[SE] + VINR2[SE] + VINR1[SE]",
++	"{VIN2P, VIN2M}[DIFF]",
++	"{VIN3P, VIN3M}[DIFF]",
++	"{VIN2P, VIN2M}[DIFF] + {VIN3P, VIN3M}[DIFF]"
++};
++
++static const struct soc_enum pcm186x_adc_input_channel_sel[] = {
++	SOC_VALUE_ENUM_SINGLE(PCM186X_ADC1_INPUT_SEL_L, 0,
++			      PCM186X_ADC_INPUT_SEL_MASK,
++			      ARRAY_SIZE(pcm186x_adcl_input_channel_sel_text),
++			      pcm186x_adcl_input_channel_sel_text,
++			      pcm186x_adc_input_channel_sel_value),
++	SOC_VALUE_ENUM_SINGLE(PCM186X_ADC1_INPUT_SEL_R, 0,
++			      PCM186X_ADC_INPUT_SEL_MASK,
++			      ARRAY_SIZE(pcm186x_adcr_input_channel_sel_text),
++			      pcm186x_adcr_input_channel_sel_text,
++			      pcm186x_adc_input_channel_sel_value),
++	SOC_VALUE_ENUM_SINGLE(PCM186X_ADC2_INPUT_SEL_L, 0,
++			      PCM186X_ADC_INPUT_SEL_MASK,
++			      ARRAY_SIZE(pcm186x_adcl_input_channel_sel_text),
++			      pcm186x_adcl_input_channel_sel_text,
++			      pcm186x_adc_input_channel_sel_value),
++	SOC_VALUE_ENUM_SINGLE(PCM186X_ADC2_INPUT_SEL_R, 0,
++			      PCM186X_ADC_INPUT_SEL_MASK,
++			      ARRAY_SIZE(pcm186x_adcr_input_channel_sel_text),
++			      pcm186x_adcr_input_channel_sel_text,
++			      pcm186x_adc_input_channel_sel_value),
++};
++
++static const struct snd_kcontrol_new pcm186x_adc_mux_controls[] = {
++	SOC_DAPM_ENUM("ADC1 Left Input", pcm186x_adc_input_channel_sel[0]),
++	SOC_DAPM_ENUM("ADC1 Right Input", pcm186x_adc_input_channel_sel[1]),
++	SOC_DAPM_ENUM("ADC2 Left Input", pcm186x_adc_input_channel_sel[2]),
++	SOC_DAPM_ENUM("ADC2 Right Input", pcm186x_adc_input_channel_sel[3]),
++};
++
++static const struct snd_soc_dapm_widget pcm1863_dapm_widgets[] = {
++	SND_SOC_DAPM_INPUT("VINL1"),
++	SND_SOC_DAPM_INPUT("VINR1"),
++	SND_SOC_DAPM_INPUT("VINL2"),
++	SND_SOC_DAPM_INPUT("VINR2"),
++	SND_SOC_DAPM_INPUT("VINL3"),
++	SND_SOC_DAPM_INPUT("VINR3"),
++	SND_SOC_DAPM_INPUT("VINL4"),
++	SND_SOC_DAPM_INPUT("VINR4"),
++
++	SND_SOC_DAPM_MUX("ADC Left Capture Source", SND_SOC_NOPM, 0, 0,
++			 &pcm186x_adc_mux_controls[0]),
++	SND_SOC_DAPM_MUX("ADC Right Capture Source", SND_SOC_NOPM, 0, 0,
++			 &pcm186x_adc_mux_controls[1]),
++
++	/*
++	 * Put the codec into SLEEP mode when not in use, allowing the
++	 * Energysense mechanism to operate.
++	 */
++	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", PCM186X_POWER_CTRL, 1,  0),
++};
++
++static const struct snd_soc_dapm_widget pcm1865_dapm_widgets[] = {
++	SND_SOC_DAPM_INPUT("VINL1"),
++	SND_SOC_DAPM_INPUT("VINR1"),
++	SND_SOC_DAPM_INPUT("VINL2"),
++	SND_SOC_DAPM_INPUT("VINR2"),
++	SND_SOC_DAPM_INPUT("VINL3"),
++	SND_SOC_DAPM_INPUT("VINR3"),
++	SND_SOC_DAPM_INPUT("VINL4"),
++	SND_SOC_DAPM_INPUT("VINR4"),
++
++	SND_SOC_DAPM_MUX("ADC1 Left Capture Source", SND_SOC_NOPM, 0, 0,
++			 &pcm186x_adc_mux_controls[0]),
++	SND_SOC_DAPM_MUX("ADC1 Right Capture Source", SND_SOC_NOPM, 0, 0,
++			 &pcm186x_adc_mux_controls[1]),
++	SND_SOC_DAPM_MUX("ADC2 Left Capture Source", SND_SOC_NOPM, 0, 0,
++			 &pcm186x_adc_mux_controls[2]),
++	SND_SOC_DAPM_MUX("ADC2 Right Capture Source", SND_SOC_NOPM, 0, 0,
++			 &pcm186x_adc_mux_controls[3]),
++
++	/*
++	 * Put the codec into SLEEP mode when not in use, allowing the
++	 * Energysense mechanism to operate.
++	 */
++	SND_SOC_DAPM_ADC("ADC1", "HiFi Capture 1", PCM186X_POWER_CTRL, 1,  0),
++	SND_SOC_DAPM_ADC("ADC2", "HiFi Capture 2", PCM186X_POWER_CTRL, 1,  0),
++};
++
++static const struct snd_soc_dapm_route pcm1863_dapm_routes[] = {
++	{ "ADC Left Capture Source", NULL, "VINL1" },
++	{ "ADC Left Capture Source", NULL, "VINR1" },
++	{ "ADC Left Capture Source", NULL, "VINL2" },
++	{ "ADC Left Capture Source", NULL, "VINR2" },
++	{ "ADC Left Capture Source", NULL, "VINL3" },
++	{ "ADC Left Capture Source", NULL, "VINR3" },
++	{ "ADC Left Capture Source", NULL, "VINL4" },
++	{ "ADC Left Capture Source", NULL, "VINR4" },
++
++	{ "ADC", NULL, "ADC Left Capture Source" },
++
++	{ "ADC Right Capture Source", NULL, "VINL1" },
++	{ "ADC Right Capture Source", NULL, "VINR1" },
++	{ "ADC Right Capture Source", NULL, "VINL2" },
++	{ "ADC Right Capture Source", NULL, "VINR2" },
++	{ "ADC Right Capture Source", NULL, "VINL3" },
++	{ "ADC Right Capture Source", NULL, "VINR3" },
++	{ "ADC Right Capture Source", NULL, "VINL4" },
++	{ "ADC Right Capture Source", NULL, "VINR4" },
++
++	{ "ADC", NULL, "ADC Right Capture Source" },
++};
++
++static const struct snd_soc_dapm_route pcm1865_dapm_routes[] = {
++	{ "ADC1 Left Capture Source", NULL, "VINL1" },
++	{ "ADC1 Left Capture Source", NULL, "VINR1" },
++	{ "ADC1 Left Capture Source", NULL, "VINL2" },
++	{ "ADC1 Left Capture Source", NULL, "VINR2" },
++	{ "ADC1 Left Capture Source", NULL, "VINL3" },
++	{ "ADC1 Left Capture Source", NULL, "VINR3" },
++	{ "ADC1 Left Capture Source", NULL, "VINL4" },
++	{ "ADC1 Left Capture Source", NULL, "VINR4" },
++
++	{ "ADC1", NULL, "ADC1 Left Capture Source" },
++
++	{ "ADC1 Right Capture Source", NULL, "VINL1" },
++	{ "ADC1 Right Capture Source", NULL, "VINR1" },
++	{ "ADC1 Right Capture Source", NULL, "VINL2" },
++	{ "ADC1 Right Capture Source", NULL, "VINR2" },
++	{ "ADC1 Right Capture Source", NULL, "VINL3" },
++	{ "ADC1 Right Capture Source", NULL, "VINR3" },
++	{ "ADC1 Right Capture Source", NULL, "VINL4" },
++	{ "ADC1 Right Capture Source", NULL, "VINR4" },
++
++	{ "ADC1", NULL, "ADC1 Right Capture Source" },
++
++	{ "ADC2 Left Capture Source", NULL, "VINL1" },
++	{ "ADC2 Left Capture Source", NULL, "VINR1" },
++	{ "ADC2 Left Capture Source", NULL, "VINL2" },
++	{ "ADC2 Left Capture Source", NULL, "VINR2" },
++	{ "ADC2 Left Capture Source", NULL, "VINL3" },
++	{ "ADC2 Left Capture Source", NULL, "VINR3" },
++	{ "ADC2 Left Capture Source", NULL, "VINL4" },
++	{ "ADC2 Left Capture Source", NULL, "VINR4" },
++
++	{ "ADC2", NULL, "ADC2 Left Capture Source" },
++
++	{ "ADC2 Right Capture Source", NULL, "VINL1" },
++	{ "ADC2 Right Capture Source", NULL, "VINR1" },
++	{ "ADC2 Right Capture Source", NULL, "VINL2" },
++	{ "ADC2 Right Capture Source", NULL, "VINR2" },
++	{ "ADC2 Right Capture Source", NULL, "VINL3" },
++	{ "ADC2 Right Capture Source", NULL, "VINR3" },
++	{ "ADC2 Right Capture Source", NULL, "VINL4" },
++	{ "ADC2 Right Capture Source", NULL, "VINR4" },
++
++	{ "ADC2", NULL, "ADC2 Right Capture Source" },
++};
++
++static int pcm186x_hw_params(struct snd_pcm_substream *substream,
++			     struct snd_pcm_hw_params *params,
++			     struct snd_soc_dai *dai)
++{
++	struct snd_soc_codec *codec = dai->codec;
++
++	struct pcm186x_priv *priv = snd_soc_codec_get_drvdata(codec);
++	unsigned int rate = params_rate(params);
++	unsigned int format = params_format(params);
++	unsigned int width = params_width(params);
++	unsigned int channels = params_channels(params);
++	unsigned int div_lrck;
++	unsigned int div_bck;
++	u8 tdm_tx_sel = 0;
++	u8 pcm_cfg = 0;
++
++	dev_dbg(codec->dev, "%s() rate=%u format=0x%x width=%u channels=%u\n",
++		__func__, rate, format, width, channels);
++
++	switch (width) {
++	case 16:
++		pcm_cfg = PCM186X_PCM_CFG_RX_WLEN_16 <<
++			  PCM186X_PCM_CFG_RX_WLEN_SHIFT |
++			  PCM186X_PCM_CFG_TX_WLEN_16 <<
++			  PCM186X_PCM_CFG_TX_WLEN_SHIFT;
++		break;
++	case 20:
++		pcm_cfg = PCM186X_PCM_CFG_RX_WLEN_20 <<
++			  PCM186X_PCM_CFG_RX_WLEN_SHIFT |
++			  PCM186X_PCM_CFG_TX_WLEN_20 <<
++			  PCM186X_PCM_CFG_TX_WLEN_SHIFT;
++		break;
++	case 24:
++		pcm_cfg = PCM186X_PCM_CFG_RX_WLEN_24 <<
++			  PCM186X_PCM_CFG_RX_WLEN_SHIFT |
++			  PCM186X_PCM_CFG_TX_WLEN_24 <<
++			  PCM186X_PCM_CFG_TX_WLEN_SHIFT;
++		break;
++	case 32:
++		pcm_cfg = PCM186X_PCM_CFG_RX_WLEN_32 <<
++			  PCM186X_PCM_CFG_RX_WLEN_SHIFT |
++			  PCM186X_PCM_CFG_TX_WLEN_32 <<
++			  PCM186X_PCM_CFG_TX_WLEN_SHIFT;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	snd_soc_update_bits(codec, PCM186X_PCM_CFG,
++			    PCM186X_PCM_CFG_RX_WLEN_MASK |
++			    PCM186X_PCM_CFG_TX_WLEN_MASK,
++			    pcm_cfg);
++
++	div_lrck = width * channels;
++
++	if (priv->is_tdm_mode) {
++		/* Select TDM transmission data */
++		switch (channels) {
++		case 2:
++			tdm_tx_sel = PCM186X_TDM_TX_SEL_2CH;
++			break;
++		case 4:
++			tdm_tx_sel = PCM186X_TDM_TX_SEL_4CH;
++			break;
++		case 6:
++			tdm_tx_sel = PCM186X_TDM_TX_SEL_6CH;
++			break;
++		default:
++			return -EINVAL;
++		}
++
++		snd_soc_update_bits(codec, PCM186X_TDM_TX_SEL,
++				    PCM186X_TDM_TX_SEL_MASK, tdm_tx_sel);
++
++		/* In DSP/TDM mode, the LRCLK divider must be 256 */
++		div_lrck = 256;
++
++		/* Configure 1/256 duty cycle for LRCK */
++		snd_soc_update_bits(codec, PCM186X_PCM_CFG,
++				    PCM186X_PCM_CFG_TDM_LRCK_MODE,
++				    PCM186X_PCM_CFG_TDM_LRCK_MODE);
++	}
++
++	/* Only configure clock dividers in master mode. */
++	if (priv->is_master_mode) {
++		div_bck = priv->sysclk / (div_lrck * rate);
++
++		dev_dbg(codec->dev,
++			"%s() master_clk=%u div_bck=%u div_lrck=%u\n",
++			__func__, priv->sysclk, div_bck, div_lrck);
++
++		snd_soc_write(codec, PCM186X_BCK_DIV, div_bck - 1);
++		snd_soc_write(codec, PCM186X_LRK_DIV, div_lrck - 1);
++	}
++
++	return 0;
++}
++
++static int pcm186x_set_fmt(struct snd_soc_dai *dai, unsigned int format)
++{
++	struct snd_soc_codec *codec = dai->codec;
++	struct pcm186x_priv *priv = snd_soc_codec_get_drvdata(codec);
++	u8 clk_ctrl = 0;
++	u8 pcm_cfg = 0;
++
++	dev_dbg(codec->dev, "%s() format=0x%x\n", __func__, format);
++
++	/* set master/slave audio interface */
++	switch (format & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBM_CFM:
++		if (!priv->sysclk) {
++			dev_err(codec->dev, "operating in master mode requires sysclock to be configured\n");
++			return -EINVAL;
++		}
++		clk_ctrl |= PCM186X_CLK_CTRL_MST_MODE;
++		priv->is_master_mode = true;
++		break;
++	case SND_SOC_DAIFMT_CBS_CFS:
++		priv->is_master_mode = false;
++		break;
++	default:
++		dev_err(codec->dev, "Invalid DAI master/slave interface\n");
++		return -EINVAL;
++	}
++
++	/* set interface polarity */
++	switch (format & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		break;
++	default:
++		dev_err(codec->dev, "Inverted DAI clocks not supported\n");
++		return -EINVAL;
++	}
++
++	/* set interface format */
++	switch (format & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_I2S:
++		pcm_cfg = PCM186X_PCM_CFG_FMT_I2S;
++		break;
++	case SND_SOC_DAIFMT_LEFT_J:
++		pcm_cfg = PCM186X_PCM_CFG_FMT_LEFTJ;
++		break;
++	case SND_SOC_DAIFMT_DSP_A:
++		priv->tdm_offset += 1;
++		/* Fall through... DSP_A uses the same basic config as DSP_B
++		 * except we need to shift the TDM output by one BCK cycle
++		 */
++	case SND_SOC_DAIFMT_DSP_B:
++		priv->is_tdm_mode = true;
++		pcm_cfg = PCM186X_PCM_CFG_FMT_TDM;
++		break;
++	default:
++		dev_err(codec->dev, "Invalid DAI format\n");
++		return -EINVAL;
++	}
++
++	snd_soc_update_bits(codec, PCM186X_CLK_CTRL,
++			    PCM186X_CLK_CTRL_MST_MODE, clk_ctrl);
++
++	snd_soc_write(codec, PCM186X_TDM_TX_OFFSET, priv->tdm_offset);
++
++	snd_soc_update_bits(codec, PCM186X_PCM_CFG,
++			    PCM186X_PCM_CFG_FMT_MASK, pcm_cfg);
++
++	return 0;
++}
++
++static int pcm186x_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
++				unsigned int rx_mask, int slots, int slot_width)
++{
++	struct snd_soc_codec *codec = dai->codec;
++	struct pcm186x_priv *priv = snd_soc_codec_get_drvdata(codec);
++	unsigned int first_slot, last_slot, tdm_offset;
++
++	dev_dbg(codec->dev,
++		"%s() tx_mask=0x%x rx_mask=0x%x slots=%d slot_width=%d\n",
++		__func__, tx_mask, rx_mask, slots, slot_width);
++
++	if (!tx_mask) {
++		dev_err(codec->dev, "tdm tx mask must not be 0\n");
++		return -EINVAL;
++	}
++
++	first_slot = __ffs(tx_mask);
++	last_slot = __fls(tx_mask);
++
++	if (last_slot - first_slot != hweight32(tx_mask) - 1) {
++		dev_err(codec->dev, "tdm tx mask must be contiguous\n");
++		return -EINVAL;
++	}
++
++	tdm_offset = first_slot * slot_width;
++
++	if (tdm_offset > 255) {
++		dev_err(codec->dev, "tdm tx slot selection out of bounds\n");
++		return -EINVAL;
++	}
++
++	priv->tdm_offset = tdm_offset;
++
++	return 0;
++}
++
++static int pcm186x_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
++				  unsigned int freq, int dir)
++{
++	struct snd_soc_codec *codec = dai->codec;
++	struct pcm186x_priv *priv = snd_soc_codec_get_drvdata(codec);
++
++	dev_dbg(codec->dev, "%s() clk_id=%d freq=%u dir=%d\n",
++		__func__, clk_id, freq, dir);
++
++	priv->sysclk = freq;
++
++	return 0;
++}
++
++const struct snd_soc_dai_ops pcm186x_dai_ops = {
++	.set_sysclk = pcm186x_set_dai_sysclk,
++	.set_tdm_slot = pcm186x_set_tdm_slot,
++	.set_fmt = pcm186x_set_fmt,
++	.hw_params = pcm186x_hw_params,
++};
++
++static struct snd_soc_dai_driver pcm1863_dai = {
++	.name = "pcm1863-aif",
++	.capture = {
++		 .stream_name = "Capture",
++		 .channels_min = 1,
++		 .channels_max = 2,
++		 .rates = PCM186X_RATES,
++		 .formats = PCM186X_FORMATS,
++	 },
++	.ops = &pcm186x_dai_ops,
++};
++
++static struct snd_soc_dai_driver pcm1865_dai = {
++	.name = "pcm1865-aif",
++	.capture = {
++		 .stream_name = "Capture",
++		 .channels_min = 1,
++		 .channels_max = 4,
++		 .rates = PCM186X_RATES,
++		 .formats = PCM186X_FORMATS,
++	 },
++	.ops = &pcm186x_dai_ops,
++};
++
++static int pcm186x_power_on(struct snd_soc_codec *codec)
++{
++	struct pcm186x_priv *priv = snd_soc_codec_get_drvdata(codec);
++	int ret = 0;
++
++	ret = regulator_bulk_enable(ARRAY_SIZE(priv->supplies),
++				    priv->supplies);
++	if (ret)
++		return ret;
++
++	regcache_cache_only(priv->regmap, false);
++	ret = regcache_sync(priv->regmap);
++	if (ret) {
++		dev_err(codec->dev, "Failed to restore cache\n");
++		regcache_cache_only(priv->regmap, true);
++		regulator_bulk_disable(ARRAY_SIZE(priv->supplies),
++				       priv->supplies);
++		return ret;
++	}
++
++	snd_soc_update_bits(codec, PCM186X_POWER_CTRL,
++			    PCM186X_PWR_CTRL_PWRDN, 0);
++
++	return 0;
++}
++
++static int pcm186x_power_off(struct snd_soc_codec *codec)
++{
++	struct pcm186x_priv *priv = snd_soc_codec_get_drvdata(codec);
++	int ret;
++
++	snd_soc_update_bits(codec, PCM186X_POWER_CTRL,
++			    PCM186X_PWR_CTRL_PWRDN, PCM186X_PWR_CTRL_PWRDN);
++
++	regcache_cache_only(priv->regmap, true);
++
++	ret = regulator_bulk_disable(ARRAY_SIZE(priv->supplies),
++				     priv->supplies);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int pcm186x_set_bias_level(struct snd_soc_codec *codec,
++				  enum snd_soc_bias_level level)
++{
++	dev_dbg(codec->dev, "## %s: %d -> %d\n", __func__,
++		snd_soc_codec_get_bias_level(codec), level);
++
++	switch (level) {
++	case SND_SOC_BIAS_ON:
++		break;
++	case SND_SOC_BIAS_PREPARE:
++		break;
++	case SND_SOC_BIAS_STANDBY:
++		if (snd_soc_codec_get_bias_level(codec) == SND_SOC_BIAS_OFF)
++			pcm186x_power_on(codec);
++		break;
++	case SND_SOC_BIAS_OFF:
++		pcm186x_power_off(codec);
++		break;
++	}
++
++	return 0;
++}
++
++static struct snd_soc_codec_driver soc_codec_dev_pcm1863 = {
++	.set_bias_level = pcm186x_set_bias_level,
++
++	.component_driver = {
++		.controls = pcm1863_snd_controls,
++		.num_controls = ARRAY_SIZE(pcm1863_snd_controls),
++		.dapm_widgets = pcm1863_dapm_widgets,
++		.num_dapm_widgets = ARRAY_SIZE(pcm1863_dapm_widgets),
++		.dapm_routes = pcm1863_dapm_routes,
++		.num_dapm_routes = ARRAY_SIZE(pcm1863_dapm_routes),
++	},
++};
++
++static struct snd_soc_codec_driver soc_codec_dev_pcm1865 = {
++	.set_bias_level = pcm186x_set_bias_level,
++	.suspend_bias_off = true,
++
++	.component_driver = {
++		.controls = pcm1865_snd_controls,
++		.num_controls = ARRAY_SIZE(pcm1865_snd_controls),
++		.dapm_widgets = pcm1865_dapm_widgets,
++		.num_dapm_widgets = ARRAY_SIZE(pcm1865_dapm_widgets),
++		.dapm_routes = pcm1865_dapm_routes,
++		.num_dapm_routes = ARRAY_SIZE(pcm1865_dapm_routes),
++	},
++};
++
++static bool pcm186x_volatile(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case PCM186X_PAGE:
++	case PCM186X_DEVICE_STATUS:
++	case PCM186X_FSAMPLE_STATUS:
++	case PCM186X_DIV_STATUS:
++	case PCM186X_CLK_STATUS:
++	case PCM186X_SUPPLY_STATUS:
++	case PCM186X_MMAP_STAT_CTRL:
++	case PCM186X_MMAP_ADDRESS:
++		return true;
++	}
++
++	return false;
++}
++
++static const struct regmap_range_cfg pcm186x_range = {
++	.name = "Pages",
++	.range_max = PCM186X_MAX_REGISTER,
++	.selector_reg = PCM186X_PAGE,
++	.selector_mask = 0xff,
++	.window_len = PCM186X_PAGE_LEN,
++};
++
++const struct regmap_config pcm186x_regmap = {
 +	.reg_bits = 8,
 +	.val_bits = 8,
 +
-+	.max_register = LM3692X_FAULT_FLAGS,
-+	.reg_defaults = lm3692x_reg_defs,
-+	.num_reg_defaults = ARRAY_SIZE(lm3692x_reg_defs),
++	.volatile_reg = pcm186x_volatile,
++
++	.ranges = &pcm186x_range,
++	.num_ranges = 1,
++
++	.max_register = PCM186X_MAX_REGISTER,
++
 +	.cache_type = REGCACHE_RBTREE,
 +};
++EXPORT_SYMBOL_GPL(pcm186x_regmap);
 +
-+static int lm3692x_fault_check(struct lm3692x_led *led)
++int pcm186x_probe(struct device *dev, enum pcm186x_type type, int irq,
++		  struct regmap *regmap)
 +{
-+	int ret;
-+	unsigned int read_buf;
++	struct pcm186x_priv *priv;
++	int i, ret;
 +
-+	ret = regmap_read(led->regmap, LM3692X_FAULT_FLAGS, &read_buf);
-+	if (ret)
-+		return ret;
-+
-+	if (read_buf)
-+		dev_err(&led->client->dev, "Detected a fault 0x%X\n", read_buf);
-+
-+	/* The first read may clear the fault.  Check again to see if the fault
-+	 * still exits and return that value.
-+	 */
-+	regmap_read(led->regmap, LM3692X_FAULT_FLAGS, &read_buf);
-+	if (read_buf)
-+		dev_err(&led->client->dev, "Second read of fault flags 0x%X\n",
-+			read_buf);
-+
-+	return read_buf;
-+}
-+
-+static int lm3692x_brightness_set(struct led_classdev *led_cdev,
-+				enum led_brightness brt_val)
-+{
-+	struct lm3692x_led *led =
-+			container_of(led_cdev, struct lm3692x_led, led_dev);
-+	int ret;
-+	int led_brightness_lsb = (brt_val >> 5);
-+
-+	mutex_lock(&led->lock);
-+
-+	ret = lm3692x_fault_check(led);
-+	if (ret) {
-+		dev_err(&led->client->dev, "Cannot read/clear faults\n");
-+		goto out;
-+	}
-+
-+	ret = regmap_write(led->regmap, LM3692X_BRT_MSB, brt_val);
-+	if (ret) {
-+		dev_err(&led->client->dev, "Cannot write MSB\n");
-+		goto out;
-+	}
-+
-+	ret = regmap_write(led->regmap, LM3692X_BRT_LSB, led_brightness_lsb);
-+	if (ret) {
-+		dev_err(&led->client->dev, "Cannot write LSB\n");
-+		goto out;
-+	}
-+out:
-+	mutex_unlock(&led->lock);
-+	return ret;
-+}
-+
-+static int lm3692x_init(struct lm3692x_led *led)
-+{
-+	int ret;
-+
-+	if (led->regulator) {
-+		ret = regulator_enable(led->regulator);
-+		if (ret) {
-+			dev_err(&led->client->dev,
-+				"Failed to enable regulator\n");
-+			return ret;
-+		}
-+	}
-+
-+	if (led->enable_gpio)
-+		gpiod_direction_output(led->enable_gpio, 1);
-+
-+	ret = lm3692x_fault_check(led);
-+	if (ret) {
-+		dev_err(&led->client->dev, "Cannot read/clear faults\n");
-+		goto out;
-+	}
-+
-+	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, 0x00);
-+	if (ret)
-+		goto out;
-+
-+	/*
-+	 * For glitch free operation, the following data should
-+	 * only be written while device enable bit is 0
-+	 * per Section 7.5.14 of the data sheet
-+	 */
-+	ret = regmap_write(led->regmap, LM3692X_PWM_CTRL,
-+		LM3692X_PWM_FILTER_100 | LM3692X_PWM_SAMP_24MHZ);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
-+			LM3692X_BRHT_MODE_RAMP_MULTI |
-+			LM3692X_BL_ADJ_POL |
-+			LM3692X_RAMP_RATE_250us);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(led->regmap, LM3692X_AUTO_FREQ_HI, 0x00);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(led->regmap, LM3692X_AUTO_FREQ_LO, 0x00);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(led->regmap, LM3692X_BL_ADJ_THRESH, 0x00);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
-+			LM3692X_BL_ADJ_POL | LM3692X_PWM_HYSTER_4LSB);
-+	if (ret)
-+		goto out;
-+
-+	return ret;
-+out:
-+	dev_err(&led->client->dev, "Fail writing initialization values\n");
-+
-+	if (led->enable_gpio)
-+		gpiod_direction_output(led->enable_gpio, 0);
-+
-+	if (led->regulator) {
-+		ret = regulator_disable(led->regulator);
-+		if (ret)
-+			dev_err(&led->client->dev,
-+				"Failed to disable regulator\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static int lm3692x_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	int ret;
-+	struct lm3692x_led *led;
-+	struct device_node *np = client->dev.of_node;
-+	struct device_node *child_node;
-+	const char *name;
-+
-+	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
-+	if (!led)
++	priv = devm_kzalloc(dev, sizeof(struct pcm186x_priv), GFP_KERNEL);
++	if (!priv)
 +		return -ENOMEM;
 +
-+	for_each_available_child_of_node(np, child_node) {
-+		led->led_dev.default_trigger = of_get_property(child_node,
-+						    "linux,default-trigger",
-+						    NULL);
++	dev_set_drvdata(dev, priv);
++	priv->regmap = regmap;
 +
-+		ret = of_property_read_string(child_node, "label", &name);
-+		if (!ret)
-+		    snprintf(led->label, sizeof(led->label), "%s:%s",
-+					np->name, name);
-+		else
-+		    snprintf(led->label, sizeof(led->label),
-+			     "%s::backlight_cluster", np->name);
-+	};
++	for (i = 0; i < ARRAY_SIZE(priv->supplies); i++)
++		priv->supplies[i].supply = pcm186x_supply_names[i];
 +
-+	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
-+						   "enable", GPIOD_OUT_LOW);
-+	if (IS_ERR(led->enable_gpio)) {
-+		ret = PTR_ERR(led->enable_gpio);
-+		dev_err(&client->dev, "Failed to get enable gpio: %d\n", ret);
-+		return ret;
-+	}
-+
-+	led->regulator = devm_regulator_get(&client->dev, "vled");
-+	if (IS_ERR(led->regulator))
-+		led->regulator = NULL;
-+
-+	led->client = client;
-+	led->led_dev.name = led->label;
-+	led->led_dev.brightness_set_blocking = lm3692x_brightness_set;
-+
-+	mutex_init(&led->lock);
-+
-+	i2c_set_clientdata(client, led);
-+
-+	led->regmap = devm_regmap_init_i2c(client, &lm3692x_regmap_config);
-+	if (IS_ERR(led->regmap)) {
-+		ret = PTR_ERR(led->regmap);
-+		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	ret = lm3692x_init(led);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_led_classdev_register(&client->dev, &led->led_dev);
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(priv->supplies),
++				      priv->supplies);
 +	if (ret) {
-+		dev_err(&client->dev, "led register err: %d\n", ret);
++		dev_err(dev, "failed to request supplies: %d\n", ret);
++		return ret;
++	}
++
++	ret = regulator_bulk_enable(ARRAY_SIZE(priv->supplies),
++				    priv->supplies);
++	if (ret) {
++		dev_err(dev, "failed enable supplies: %d\n", ret);
++		return ret;
++	}
++
++	/* Reset device registers for a consistent power-on like state */
++	ret = regmap_write(regmap, PCM186X_PAGE, PCM186X_RESET);
++	if (ret) {
++		dev_err(dev, "failed to write device: %d\n", ret);
++		return ret;
++	}
++
++	ret = regulator_bulk_disable(ARRAY_SIZE(priv->supplies),
++				     priv->supplies);
++	if (ret) {
++		dev_err(dev, "failed disable supplies: %d\n", ret);
++		return ret;
++	}
++
++	switch (type) {
++	case PCM1865:
++	case PCM1864:
++		ret = snd_soc_register_codec(dev, &soc_codec_dev_pcm1865,
++					     &pcm1865_dai, 1);
++		break;
++	case PCM1863:
++	case PCM1862:
++	default:
++		ret = snd_soc_register_codec(dev, &soc_codec_dev_pcm1863,
++					     &pcm1863_dai, 1);
++	}
++	if (ret) {
++		dev_err(dev, "failed to register CODEC: %d\n", ret);
 +		return ret;
 +	}
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(pcm186x_probe);
 +
-+static int lm3692x_remove(struct i2c_client *client)
++int pcm186x_remove(struct device *dev)
 +{
-+	struct lm3692x_led *led = i2c_get_clientdata(client);
-+	int ret;
-+
-+	if (led->enable_gpio)
-+		gpiod_direction_output(led->enable_gpio, 0);
-+
-+	if (led->regulator) {
-+		ret = regulator_disable(led->regulator);
-+		if (ret)
-+			dev_err(&led->client->dev,
-+				"Failed to disable regulator\n");
-+	}
-+
-+	mutex_destroy(&led->lock);
++	snd_soc_unregister_codec(dev);
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(pcm186x_remove);
 +
-+static const struct i2c_device_id lm3692x_id[] = {
-+	{ "lm36922", 0 },
-+	{ "lm36923", 1 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, lm3692x_id);
-+
-+static const struct of_device_id of_lm3692x_leds_match[] = {
-+	{ .compatible = "ti,lm36922", },
-+	{ .compatible = "ti,lm36923", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_lm3692x_leds_match);
-+
-+static struct i2c_driver lm3692x_driver = {
-+	.driver = {
-+		.name	= "lm3692x",
-+		.of_match_table = of_lm3692x_leds_match,
-+	},
-+	.probe		= lm3692x_probe,
-+	.remove		= lm3692x_remove,
-+	.id_table	= lm3692x_id,
-+};
-+module_i2c_driver(lm3692x_driver);
-+
-+MODULE_DESCRIPTION("Texas Instruments LM3692X LED driver");
-+MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
++MODULE_AUTHOR("Andreas Dannenberg <dannenberg@ti.com>");
++MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
++MODULE_DESCRIPTION("PCM186x Universal Audio ADC driver");
 +MODULE_LICENSE("GPL v2");
+diff --git a/sound/soc/codecs/pcm186x.h b/sound/soc/codecs/pcm186x.h
+new file mode 100644
+index 000000000000..b630111bb3c4
+--- /dev/null
++++ b/sound/soc/codecs/pcm186x.h
+@@ -0,0 +1,220 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Texas Instruments PCM186x Universal Audio ADC
++ *
++ * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com
++ *	Andreas Dannenberg <dannenberg@ti.com>
++ *	Andrew F. Davis <afd@ti.com>
++ */
++
++#ifndef _PCM186X_H_
++#define _PCM186X_H_
++
++#include <linux/pm.h>
++#include <linux/regmap.h>
++
++enum pcm186x_type {
++	PCM1862,
++	PCM1863,
++	PCM1864,
++	PCM1865,
++};
++
++#define PCM186X_RATES	SNDRV_PCM_RATE_8000_192000
++#define PCM186X_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
++			 SNDRV_PCM_FMTBIT_S20_3LE |\
++			 SNDRV_PCM_FMTBIT_S24_LE | \
++			 SNDRV_PCM_FMTBIT_S32_LE)
++
++#define PCM186X_PAGE_LEN		0x0100
++#define PCM186X_PAGE_BASE(n)		(PCM186X_PAGE_LEN * n)
++
++/* The page selection register address is the same on all pages */
++#define PCM186X_PAGE			0
++
++/* Register Definitions - Page 0 */
++#define PCM186X_PGA_VAL_CH1_L		(PCM186X_PAGE_BASE(0) +   1)
++#define PCM186X_PGA_VAL_CH1_R		(PCM186X_PAGE_BASE(0) +   2)
++#define PCM186X_PGA_VAL_CH2_L		(PCM186X_PAGE_BASE(0) +   3)
++#define PCM186X_PGA_VAL_CH2_R		(PCM186X_PAGE_BASE(0) +   4)
++#define PCM186X_PGA_CTRL		(PCM186X_PAGE_BASE(0) +   5)
++#define PCM186X_ADC1_INPUT_SEL_L	(PCM186X_PAGE_BASE(0) +   6)
++#define PCM186X_ADC1_INPUT_SEL_R	(PCM186X_PAGE_BASE(0) +   7)
++#define PCM186X_ADC2_INPUT_SEL_L	(PCM186X_PAGE_BASE(0) +   8)
++#define PCM186X_ADC2_INPUT_SEL_R	(PCM186X_PAGE_BASE(0) +   9)
++#define PCM186X_AUXADC_INPUT_SEL	(PCM186X_PAGE_BASE(0) +  10)
++#define PCM186X_PCM_CFG			(PCM186X_PAGE_BASE(0) +  11)
++#define PCM186X_TDM_TX_SEL		(PCM186X_PAGE_BASE(0) +  12)
++#define PCM186X_TDM_TX_OFFSET		(PCM186X_PAGE_BASE(0) +  13)
++#define PCM186X_TDM_RX_OFFSET		(PCM186X_PAGE_BASE(0) +  14)
++#define PCM186X_DPGA_VAL_CH1_L		(PCM186X_PAGE_BASE(0) +  15)
++#define PCM186X_GPIO1_0_CTRL		(PCM186X_PAGE_BASE(0) +  16)
++#define PCM186X_GPIO3_2_CTRL		(PCM186X_PAGE_BASE(0) +  17)
++#define PCM186X_GPIO1_0_DIR_CTRL	(PCM186X_PAGE_BASE(0) +  18)
++#define PCM186X_GPIO3_2_DIR_CTRL	(PCM186X_PAGE_BASE(0) +  19)
++#define PCM186X_GPIO_IN_OUT		(PCM186X_PAGE_BASE(0) +  20)
++#define PCM186X_GPIO_PULL_CTRL		(PCM186X_PAGE_BASE(0) +  21)
++#define PCM186X_DPGA_VAL_CH1_R		(PCM186X_PAGE_BASE(0) +  22)
++#define PCM186X_DPGA_VAL_CH2_L		(PCM186X_PAGE_BASE(0) +  23)
++#define PCM186X_DPGA_VAL_CH2_R		(PCM186X_PAGE_BASE(0) +  24)
++#define PCM186X_DPGA_GAIN_CTRL		(PCM186X_PAGE_BASE(0) +  25)
++#define PCM186X_DPGA_MIC_CTRL		(PCM186X_PAGE_BASE(0) +  26)
++#define PCM186X_DIN_RESAMP_CTRL		(PCM186X_PAGE_BASE(0) +  27)
++#define PCM186X_CLK_CTRL		(PCM186X_PAGE_BASE(0) +  32)
++#define PCM186X_DSP1_CLK_DIV		(PCM186X_PAGE_BASE(0) +  33)
++#define PCM186X_DSP2_CLK_DIV		(PCM186X_PAGE_BASE(0) +  34)
++#define PCM186X_ADC_CLK_DIV		(PCM186X_PAGE_BASE(0) +  35)
++#define PCM186X_PLL_SCK_DIV		(PCM186X_PAGE_BASE(0) +  37)
++#define PCM186X_BCK_DIV			(PCM186X_PAGE_BASE(0) +  38)
++#define PCM186X_LRK_DIV			(PCM186X_PAGE_BASE(0) +  39)
++#define PCM186X_PLL_CTRL		(PCM186X_PAGE_BASE(0) +  40)
++#define PCM186X_PLL_P_DIV		(PCM186X_PAGE_BASE(0) +  41)
++#define PCM186X_PLL_R_DIV		(PCM186X_PAGE_BASE(0) +  42)
++#define PCM186X_PLL_J_DIV		(PCM186X_PAGE_BASE(0) +  43)
++#define PCM186X_PLL_D_DIV_LSB		(PCM186X_PAGE_BASE(0) +  44)
++#define PCM186X_PLL_D_DIV_MSB		(PCM186X_PAGE_BASE(0) +  45)
++#define PCM186X_SIGDET_MODE		(PCM186X_PAGE_BASE(0) +  48)
++#define PCM186X_SIGDET_MASK		(PCM186X_PAGE_BASE(0) +  49)
++#define PCM186X_SIGDET_STAT		(PCM186X_PAGE_BASE(0) +  50)
++#define PCM186X_SIGDET_LOSS_TIME	(PCM186X_PAGE_BASE(0) +  52)
++#define PCM186X_SIGDET_SCAN_TIME	(PCM186X_PAGE_BASE(0) +  53)
++#define PCM186X_SIGDET_INT_INTVL	(PCM186X_PAGE_BASE(0) +  54)
++#define PCM186X_SIGDET_DC_REF_CH1_L	(PCM186X_PAGE_BASE(0) +  64)
++#define PCM186X_SIGDET_DC_DIFF_CH1_L	(PCM186X_PAGE_BASE(0) +  65)
++#define PCM186X_SIGDET_DC_LEV_CH1_L	(PCM186X_PAGE_BASE(0) +  66)
++#define PCM186X_SIGDET_DC_REF_CH1_R	(PCM186X_PAGE_BASE(0) +  67)
++#define PCM186X_SIGDET_DC_DIFF_CH1_R	(PCM186X_PAGE_BASE(0) +  68)
++#define PCM186X_SIGDET_DC_LEV_CH1_R	(PCM186X_PAGE_BASE(0) +  69)
++#define PCM186X_SIGDET_DC_REF_CH2_L	(PCM186X_PAGE_BASE(0) +  70)
++#define PCM186X_SIGDET_DC_DIFF_CH2_L	(PCM186X_PAGE_BASE(0) +  71)
++#define PCM186X_SIGDET_DC_LEV_CH2_L	(PCM186X_PAGE_BASE(0) +  72)
++#define PCM186X_SIGDET_DC_REF_CH2_R	(PCM186X_PAGE_BASE(0) +  73)
++#define PCM186X_SIGDET_DC_DIFF_CH2_R	(PCM186X_PAGE_BASE(0) +  74)
++#define PCM186X_SIGDET_DC_LEV_CH2_R	(PCM186X_PAGE_BASE(0) +  75)
++#define PCM186X_SIGDET_DC_REF_CH3_L	(PCM186X_PAGE_BASE(0) +  76)
++#define PCM186X_SIGDET_DC_DIFF_CH3_L	(PCM186X_PAGE_BASE(0) +  77)
++#define PCM186X_SIGDET_DC_LEV_CH3_L	(PCM186X_PAGE_BASE(0) +  78)
++#define PCM186X_SIGDET_DC_REF_CH3_R	(PCM186X_PAGE_BASE(0) +  79)
++#define PCM186X_SIGDET_DC_DIFF_CH3_R	(PCM186X_PAGE_BASE(0) +  80)
++#define PCM186X_SIGDET_DC_LEV_CH3_R	(PCM186X_PAGE_BASE(0) +  81)
++#define PCM186X_SIGDET_DC_REF_CH4_L	(PCM186X_PAGE_BASE(0) +  82)
++#define PCM186X_SIGDET_DC_DIFF_CH4_L	(PCM186X_PAGE_BASE(0) +  83)
++#define PCM186X_SIGDET_DC_LEV_CH4_L	(PCM186X_PAGE_BASE(0) +  84)
++#define PCM186X_SIGDET_DC_REF_CH4_R	(PCM186X_PAGE_BASE(0) +  85)
++#define PCM186X_SIGDET_DC_DIFF_CH4_R	(PCM186X_PAGE_BASE(0) +  86)
++#define PCM186X_SIGDET_DC_LEV_CH4_R	(PCM186X_PAGE_BASE(0) +  87)
++#define PCM186X_AUXADC_DATA_CTRL	(PCM186X_PAGE_BASE(0) +  88)
++#define PCM186X_AUXADC_DATA_LSB		(PCM186X_PAGE_BASE(0) +  89)
++#define PCM186X_AUXADC_DATA_MSB		(PCM186X_PAGE_BASE(0) +  90)
++#define PCM186X_INT_ENABLE		(PCM186X_PAGE_BASE(0) +  96)
++#define PCM186X_INT_FLAG		(PCM186X_PAGE_BASE(0) +  97)
++#define PCM186X_INT_POL_WIDTH		(PCM186X_PAGE_BASE(0) +  98)
++#define PCM186X_POWER_CTRL		(PCM186X_PAGE_BASE(0) + 112)
++#define PCM186X_FILTER_MUTE_CTRL	(PCM186X_PAGE_BASE(0) + 113)
++#define PCM186X_DEVICE_STATUS		(PCM186X_PAGE_BASE(0) + 114)
++#define PCM186X_FSAMPLE_STATUS		(PCM186X_PAGE_BASE(0) + 115)
++#define PCM186X_DIV_STATUS		(PCM186X_PAGE_BASE(0) + 116)
++#define PCM186X_CLK_STATUS		(PCM186X_PAGE_BASE(0) + 117)
++#define PCM186X_SUPPLY_STATUS		(PCM186X_PAGE_BASE(0) + 120)
++
++/* Register Definitions - Page 1 */
++#define PCM186X_MMAP_STAT_CTRL		(PCM186X_PAGE_BASE(1) +   1)
++#define PCM186X_MMAP_ADDRESS		(PCM186X_PAGE_BASE(1) +   2)
++#define PCM186X_MEM_WDATA0		(PCM186X_PAGE_BASE(1) +   4)
++#define PCM186X_MEM_WDATA1		(PCM186X_PAGE_BASE(1) +   5)
++#define PCM186X_MEM_WDATA2		(PCM186X_PAGE_BASE(1) +   6)
++#define PCM186X_MEM_WDATA3		(PCM186X_PAGE_BASE(1) +   7)
++#define PCM186X_MEM_RDATA0		(PCM186X_PAGE_BASE(1) +   8)
++#define PCM186X_MEM_RDATA1		(PCM186X_PAGE_BASE(1) +   9)
++#define PCM186X_MEM_RDATA2		(PCM186X_PAGE_BASE(1) +  10)
++#define PCM186X_MEM_RDATA3		(PCM186X_PAGE_BASE(1) +  11)
++
++/* Register Definitions - Page 3 */
++#define PCM186X_OSC_PWR_DOWN_CTRL	(PCM186X_PAGE_BASE(3) +  18)
++#define PCM186X_MIC_BIAS_CTRL		(PCM186X_PAGE_BASE(3) +  21)
++
++/* Register Definitions - Page 253 */
++#define PCM186X_CURR_TRIM_CTRL		(PCM186X_PAGE_BASE(253) +  20)
++
++#define PCM186X_MAX_REGISTER		PCM186X_CURR_TRIM_CTRL
++
++/* PCM186X_PAGE */
++#define PCM186X_RESET			0xff
++
++/* PCM186X_ADCX_INPUT_SEL_X */
++#define PCM186X_ADC_INPUT_SEL_POL	BIT(7)
++#define PCM186X_ADC_INPUT_SEL_MASK	GENMASK(5, 0)
++
++/* PCM186X_PCM_CFG */
++#define PCM186X_PCM_CFG_RX_WLEN_MASK	GENMASK(7, 6)
++#define PCM186X_PCM_CFG_RX_WLEN_SHIFT	6
++#define PCM186X_PCM_CFG_RX_WLEN_32	0x00
++#define PCM186X_PCM_CFG_RX_WLEN_24	0x01
++#define PCM186X_PCM_CFG_RX_WLEN_20	0x02
++#define PCM186X_PCM_CFG_RX_WLEN_16	0x03
++#define PCM186X_PCM_CFG_TDM_LRCK_MODE	BIT(4)
++#define PCM186X_PCM_CFG_TX_WLEN_MASK	GENMASK(3, 2)
++#define PCM186X_PCM_CFG_TX_WLEN_SHIFT	2
++#define PCM186X_PCM_CFG_TX_WLEN_32	0x00
++#define PCM186X_PCM_CFG_TX_WLEN_24	0x01
++#define PCM186X_PCM_CFG_TX_WLEN_20	0x02
++#define PCM186X_PCM_CFG_TX_WLEN_16	0x03
++#define PCM186X_PCM_CFG_FMT_MASK	GENMASK(1, 0)
++#define PCM186X_PCM_CFG_FMT_SHIFT	0
++#define PCM186X_PCM_CFG_FMT_I2S		0x00
++#define PCM186X_PCM_CFG_FMT_LEFTJ	0x01
++#define PCM186X_PCM_CFG_FMT_RIGHTJ	0x02
++#define PCM186X_PCM_CFG_FMT_TDM		0x03
++
++/* PCM186X_TDM_TX_SEL */
++#define PCM186X_TDM_TX_SEL_2CH		0x00
++#define PCM186X_TDM_TX_SEL_4CH		0x01
++#define PCM186X_TDM_TX_SEL_6CH		0x02
++#define PCM186X_TDM_TX_SEL_MASK		0x03
++
++/* PCM186X_CLK_CTRL */
++#define PCM186X_CLK_CTRL_SCK_XI_SEL1	BIT(7)
++#define PCM186X_CLK_CTRL_SCK_XI_SEL0	BIT(6)
++#define PCM186X_CLK_CTRL_SCK_SRC_PLL	BIT(5)
++#define PCM186X_CLK_CTRL_MST_MODE	BIT(4)
++#define PCM186X_CLK_CTRL_ADC_SRC_PLL	BIT(3)
++#define PCM186X_CLK_CTRL_DSP2_SRC_PLL	BIT(2)
++#define PCM186X_CLK_CTRL_DSP1_SRC_PLL	BIT(1)
++#define PCM186X_CLK_CTRL_CLKDET_EN	BIT(0)
++
++/* PCM186X_PLL_CTRL */
++#define PCM186X_PLL_CTRL_LOCK		BIT(4)
++#define PCM186X_PLL_CTRL_REF_SEL	BIT(1)
++#define PCM186X_PLL_CTRL_EN		BIT(0)
++
++/* PCM186X_POWER_CTRL */
++#define PCM186X_PWR_CTRL_PWRDN		BIT(2)
++#define PCM186X_PWR_CTRL_SLEEP		BIT(1)
++#define PCM186X_PWR_CTRL_STBY		BIT(0)
++
++/* PCM186X_CLK_STATUS */
++#define PCM186X_CLK_STATUS_LRCKHLT	BIT(6)
++#define PCM186X_CLK_STATUS_BCKHLT	BIT(5)
++#define PCM186X_CLK_STATUS_SCKHLT	BIT(4)
++#define PCM186X_CLK_STATUS_LRCKERR	BIT(2)
++#define PCM186X_CLK_STATUS_BCKERR	BIT(1)
++#define PCM186X_CLK_STATUS_SCKERR	BIT(0)
++
++/* PCM186X_SUPPLY_STATUS */
++#define PCM186X_SUPPLY_STATUS_DVDD	BIT(2)
++#define PCM186X_SUPPLY_STATUS_AVDD	BIT(1)
++#define PCM186X_SUPPLY_STATUS_LDO	BIT(0)
++
++/* PCM186X_MMAP_STAT_CTRL */
++#define PCM186X_MMAP_STAT_DONE		BIT(4)
++#define PCM186X_MMAP_STAT_BUSY		BIT(2)
++#define PCM186X_MMAP_STAT_R_REQ		BIT(1)
++#define PCM186X_MMAP_STAT_W_REQ		BIT(0)
++
++extern const struct regmap_config pcm186x_regmap;
++
++int pcm186x_probe(struct device *dev, enum pcm186x_type type, int irq,
++		  struct regmap *regmap);
++int pcm186x_remove(struct device *dev);
++
++#endif /* _PCM186X_H_ */
 -- 
-2.15.0.124.g7668cbc60
+2.15.0
