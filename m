@@ -1,86 +1,67 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun8i: h3: Add dts file for
- Libre Computer Board ALL-H3-CC H3 ver.
-Date: Tue, 5 Dec 2017 11:03:50 +0100
-Message-ID: <20171205100350.2v3cxcwb7lde3ykw@flea.lan>
-References: <20171205060615.14349-1-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: hwrng: Add Samsung Exynos 5250+ True
+ RNG bindings
+Date: Tue, 5 Dec 2017 11:04:27 +0100
+Message-ID: <CAJKOXPdjrBX50f5mLG5k0eUPvRLeYwUZn-JEnLkjFqN-SF0D+g@mail.gmail.com>
+References: <CGME20171205093028eucas1p1fb6d7b8bde6cd5e3a0bfca8ddafe8a31@eucas1p1.samsung.com>
+ <CAJKOXPej1G6npvNSr9TP8DmWubtZpn6ONeNMN4Ax_RaafMiT7g@mail.gmail.com> <878tehbjyu.fsf%l.stelmach@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pieb5dgr5mc4nf4n"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHG6THIQKGQEMXWT65I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20171205060615.14349-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <878tehbjyu.fsf%l.stelmach@samsung.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 5, 2017 at 10:30 AM, Łukasz Stelmach <l.stelmach@samsung.com> wrote:
+> It was <2017-12-04 pon 14:13>, when Krzysztof Kozlowski wrote:
+>> On Mon, Dec 4, 2017 at 1:53 PM, Łukasz Stelmach <l.stelmach@samsung.com> wrote:
+>>> Add binding documentation for the True Random Number Generator
+>>> found on Samsung Exynos 5250+ SoCs.
+>>>
+>>> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+>>> ---
+>>>  .../devicetree/bindings/rng/samsung,exynos5250-trng.txt | 17 +++++++++++++++++
+>>>  1 file changed, 17 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>>> b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>>> new file mode 100644
+>>> index 000000000000..5a613a4ec780
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+>>> @@ -0,0 +1,17 @@
+>>> +Exynos True Random Number Generator
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible  : Should be "samsung,exynos5250-trng".
+>>> +- reg         : Specifies base physical address and size of the registers map.
+>>> +- clocks      : Phandle to clock-controller plus clock-specifier pair.
+>>> +- clock-names : "secss" as a clock name.
+>>> +
+>>> +Example:
+>>> +
+>>> +       rng@10830600 {
+>>> +               compatible = "samsung,exynos5250-trng";
+>>> +               reg = <0x10830600 0x100>;
+>>> +               clocks = <&clock CLK_SSS>;
+>>> +               clock-names = "secss";
+>>> +       };
+>>> --
+>>> 2.11.0
+>>
+>> Mine and Rob's tags disappeared and I think you did not introduce any
+>> major changes here, right?
+>
+> A very experienced kernel developer adviced me to remove them.
 
---pieb5dgr5mc4nf4n
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+In that case:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-On Tue, Dec 05, 2017 at 02:06:15PM +0800, Chen-Yu Tsai wrote:
-> The Libre Computer Board ALL-H3-CC from Libre Technology is a Raspberry
-> Pi B+ form factor single board computer based on the Allwinner H3 SoC.
-> The board has 1GB DDR3 SDRAM, provided by 4 2Gb chips. The mounting holes
-> and connectors are in the exact same position as on the Raspberry Pi B+.
-> 
-> Raspberry Pi B+ like peripherals supported on this board include:
-> 
->   - Power input through micro-USB connector (without USB OTG)
->   - Native 100 Mbps ethernet using the internal PHY, as opposed to
->     USB-based on the RPi
->   - 4x USB 2.0 host ports, directly connected to the SoC, as opposed to
->     being connected through a USB 2.0 hub on the RPi
->   - TV and audio output on a 3.5mm TRRS jack
->   - HDMI output
->   - Micro-SD card slot
->   - Standard RPi B+ GPIO header, with the standard peripherals routed to
->     the same pins.
-> 
->     * 5V, 3.3V power, and ground
->     * I2C0 on the H3 is routed to I2C1 pins on the RPi header
->     * I2C1 on the H3 is routed to I2C0 pins on the RPi header
->     * UART1 on the H3 is routed to UART0 pins on the RPi header
->     * SPI0 on the H3 is routed to SPI0 pins on the RPi header,
->       with GPIO pin PA17 replacing the missing Chip Select 1
->     * I2S1 on the H3 is routed to PCM pins on the RPi header
-> 
->   - Additional peripherals from the H3 are available on different pins.
->     These include I2S0, JTAG, PWM1, SPDIF, SPI1, and UART3
-> 
-> In addition, there are a number of new features:
-> 
->   - Console UART header
->   - Consumer IR receiver
->   - Camera interface (not compatible with RPi)
->   - Onboard microphone
->   - eMMC expansion module port
->   - Heatsink mounting holes
->   - Power button
-> 
-> The power button requires corresponding software for the embedded
-> coprocessor to properly function.
-> 
-> This patch adds a dts file for this board that enables all "onboard"
-> peripherals currently supported. This means no display or camera
-> support.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-Applied, thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---pieb5dgr5mc4nf4n--
+BR,
+Krzysztof
