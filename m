@@ -1,202 +1,317 @@
-From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4] usb: xhci: allow imod-interval to be configurable
-Date: Mon, 4 Dec 2017 21:54:06 -0500
-Message-ID: <99ea0ee4-1fff-73df-d9b5-0f756dfc5635@codeaurora.org>
-References: <1512397671-28733-1-git-send-email-awallis@codeaurora.org>
- <1512440100.17567.172.camel@mhfsdcap03>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] mailbox: Add support for Hi3660 mailbox
+Date: Tue, 5 Dec 2017 08:58:05 +0530
+Message-ID: <CABb+yY1+uMhZ8nXxsuv4LFGqOkdH6AX-U_AeNJ0+j1+iA6=yhQ@mail.gmail.com>
+References: <1510910672-1409-1-git-send-email-xuyiping@hisilicon.com> <1510910672-1409-3-git-send-email-xuyiping@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512440100.17567.172.camel@mhfsdcap03>
-Content-Language: en-US
+In-Reply-To: <1510910672-1409-3-git-send-email-xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuezhiliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/4/2017 9:15 PM, Chunfeng Yun wrote:
-> On Mon, 2017-12-04 at 09:27 -0500, Adam Wallis wrote:
->> The xHCI driver currently has the IMOD set to 160, which
->> translates to an IMOD interval of 40,000ns (160 * 250)ns
->>
->> Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
->> introduced a QUIRK for the MTK platform to adjust this interval to 20,
->> which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
->> due to the fact that the MTK controller IMOD interval is 8 times
->> as much as defined in xHCI spec.
->>
->> Instead of adding more quirk bits for additional platforms, this patch
->> introduces the ability for vendors to set the IMOD_INTERVAL as is
->> optimal for their platform. By using device_property_read_u32() on
->> "imod-interval-ns", the IMOD INTERVAL can be specified in nano seconds.
->> If no interval is specified, the default of 40,000ns (IMOD=160) will be
->> used.
->>
->> No bounds checking has been implemented due to the fact that a vendor
->> may have violated the spec and would need to specify a value outside of
->> the max 8,000 IRQs/second limit specified in the xHCI spec.
->>
->> Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->> changes from v3:
->>   * Changed imod-interval to imod-interval-ns [Rob Herring/Chunfeng]
->>   * Changed "modulation" to "moderation" throughout patch [Mathias]
->> changes from v2:
->>   * Added PCI default value [Mathias]
->>   * Removed xhci-mtk.h from xhci-plat.c [Chunfeng Yun]
->>   * Removed MTK quirk from xhci-plat and moved logic to xhci-mtk [Chunfeng]
->>   * Updated bindings Documentation to use proper units [Rob Herring]
->>   * Added imod-interval description and example to MTK binding documentation
->> changes from v1:
->>   * Removed device_property_read_u32() per suggestion from greg k-h
->>   * Used ER_IRQ_INTERVAL_MASK in place of (u16) cast
->>
->>  Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 2 ++
->>  Documentation/devicetree/bindings/usb/usb-xhci.txt          | 1 +
->>  drivers/usb/host/xhci-mtk.c                                 | 9 +++++++++
->>  drivers/usb/host/xhci-pci.c                                 | 3 +++
->>  drivers/usb/host/xhci-plat.c                                | 5 +++++
->>  drivers/usb/host/xhci.c                                     | 7 ++-----
->>  drivers/usb/host/xhci.h                                     | 2 ++
->>  7 files changed, 24 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
->> index 3059596..9ff5602 100644
->> --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
->> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
->> @@ -46,6 +46,7 @@ Optional properties:
->>   - pinctrl-names : a pinctrl state named "default" must be defined
->>   - pinctrl-0 : pin control group
->>  	See: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> + - imod-interval-ns: default interrupt moderation interval is 5000ns
->>  
->>  Example:
->>  usb30: usb@11270000 {
->> @@ -66,6 +67,7 @@ usb30: usb@11270000 {
->>  	usb3-lpm-capable;
->>  	mediatek,syscon-wakeup = <&pericfg>;
->>  	mediatek,wakeup-src = <1>;
->> +	imod-interval-ns = <10000>;
->>  };
->>  
->>  2nd: dual-role mode with xHCI driver
->> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->> index ae6e484..969908d 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
->> @@ -29,6 +29,7 @@ Optional properties:
->>    - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
->>    - usb3-lpm-capable: determines if platform is USB3 LPM capable
->>    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
->> +  - imod-interval-ns: default interrupt moderation interval is 5000ns
->>  
->>  Example:
->>  	usb@f0931000 {
->> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
->> index b62a1d2..1cb2a8b 100644
->> --- a/drivers/usb/host/xhci-mtk.c
->> +++ b/drivers/usb/host/xhci-mtk.c
->> @@ -674,6 +674,15 @@ static int xhci_mtk_probe(struct platform_device *pdev)
->>  
->>  	xhci = hcd_to_xhci(hcd);
->>  	xhci->main_hcd = hcd;
->> +
->> +	/*
->> +	 * imod_interval is the interrupt moderation value in nanoseconds.
->> +	 * The increment interval is 8 times as much as that defined in
->> +	 * the xHCI spec on MTK's controller.
->> +	 */
->> +	xhci->imod_interval = 5000;
->> +	device_property_read_u32(dev, "imod-interval-ns", &xhci->imod_interval);
->> +
->>  	xhci->shared_hcd = usb_create_shared_hcd(driver, dev,
->>  			dev_name(dev), hcd);
->>  	if (!xhci->shared_hcd) {
->> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
->> index 7ef1274..4bcddd4 100644
->> --- a/drivers/usb/host/xhci-pci.c
->> +++ b/drivers/usb/host/xhci-pci.c
->> @@ -234,6 +234,9 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
->>  	if (!xhci->sbrn)
->>  		pci_read_config_byte(pdev, XHCI_SBRN_OFFSET, &xhci->sbrn);
->>  
->> +	/* imod_interval is the interrupt moderation value in nanoseconds. */
->> +	xhci->imod_interval = 40000;
->> +
->>  	retval = xhci_gen_setup(hcd, xhci_pci_quirks);
->>  	if (retval)
->>  		return retval;
->> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
->> index 09f164f..6f03830 100644
->> --- a/drivers/usb/host/xhci-plat.c
->> +++ b/drivers/usb/host/xhci-plat.c
->> @@ -269,6 +269,11 @@ static int xhci_plat_probe(struct platform_device *pdev)
->>  	if (device_property_read_bool(&pdev->dev, "quirk-broken-port-ped"))
->>  		xhci->quirks |= XHCI_BROKEN_PORT_PED;
->>  
->> +	/* imod_interval is the interrupt moderation value in nanoseconds. */
->> +	xhci->imod_interval = 40000;
->> +	device_property_read_u32(sysdev, "imod-interval-ns",
->> +				 &xhci->imod_interval);
->> +
->>  	hcd->usb_phy = devm_usb_get_phy_by_phandle(sysdev, "usb-phy", 0);
->>  	if (IS_ERR(hcd->usb_phy)) {
->>  		ret = PTR_ERR(hcd->usb_phy);
->> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
->> index 2424d30..0b7755b 100644
->> --- a/drivers/usb/host/xhci.c
->> +++ b/drivers/usb/host/xhci.c
->> @@ -586,11 +586,8 @@ int xhci_run(struct usb_hcd *hcd)
->>  			"// Set the interrupt modulation register");
-> s/modulation/moderation
+On Fri, Nov 17, 2017 at 2:54 PM, Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
+> From: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>
+> Hi3660 mailbox controller is used to send message within multiple
+> processors, MCU, HIFI, etc.  It supports 32 mailbox channels and every
+> channel can only be used for single transferring direction.  Once the
+> channel is enabled, it needs to specify the destination interrupt and
+> acknowledge interrupt, these two interrupt vectors are used to create
+> the connection between the mailbox and interrupt controllers.
+>
+> The data transferring supports two modes, one is named as "automatic
+> acknowledge" mode so after send message the kernel doesn't need to wait
+> for acknowledge from remote and directly return; there have another mode
+> is to rely on handling interrupt for acknowledge.
+>
+> This commit is for initial version driver, which only supports
+> "automatic acknowledge" mode to support CPU clock, which is the only
+> one consumer to use mailbox and has been verified.  Later may enhance
+> this driver for interrupt mode (e.g. for supporting HIFI).
+>
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Ruyi Wang <wangruyi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/mailbox/Kconfig          |   8 +
+>  drivers/mailbox/Makefile         |   2 +
+>  drivers/mailbox/hi3660-mailbox.c | 322 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 332 insertions(+)
+>  create mode 100644 drivers/mailbox/hi3660-mailbox.c
+>
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index c5731e5..4b5d6e9 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -108,6 +108,14 @@ config TI_MESSAGE_MANAGER
+>           multiple processors within the SoC. Select this driver if your
+>           platform has support for the hardware block.
+>
+> +config HI3660_MBOX
+> +       tristate "Hi3660 Mailbox"
+> +       depends on ARCH_HISI && OF
+> +       help
+> +         An implementation of the hi3660 mailbox. It is used to send message
+> +         between application processors and other processors/MCU/DSP. Select
+> +         Y here if you want to use Hi3660 mailbox controller.
+> +
+>  config HI6220_MBOX
+>         tristate "Hi6220 Mailbox"
+>         depends on ARCH_HISI
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index d54e412..7d1bd51 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -26,6 +26,8 @@ obj-$(CONFIG_TI_MESSAGE_MANAGER) += ti-msgmgr.o
+>
+>  obj-$(CONFIG_XGENE_SLIMPRO_MBOX) += mailbox-xgene-slimpro.o
+>
+> +obj-$(CONFIG_HI3660_MBOX)      += hi3660-mailbox.o
+> +
+>  obj-$(CONFIG_HI6220_MBOX)      += hi6220-mailbox.o
+>
+>  obj-$(CONFIG_BCM_PDC_MBOX)     += bcm-pdc-mailbox.o
+> diff --git a/drivers/mailbox/hi3660-mailbox.c b/drivers/mailbox/hi3660-mailbox.c
+> new file mode 100644
+> index 0000000..ba80834
+> --- /dev/null
+> +++ b/drivers/mailbox/hi3660-mailbox.c
+> @@ -0,0 +1,322 @@
+> +/*
+> + * Hisilicon's Hi3660 mailbox controller driver
+> + *
+> + * Copyright (c) 2017 Hisilicon Limited.
+> + * Copyright (c) 2017 Linaro Limited.
+> + *
+> + * Author: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation, version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+>
+We now use SPDX licence
 
-Mathias said there was no need to change the existing modulation strings - only
-the ones that I had added.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include "mailbox.h"
+> +
+> +#define MBOX_CHAN_MAX                  32
+> +
+> +#define MBOX_RX                                (0x0)
+> +#define MBOX_TX                                (0x1)
+> +
+> +#define MBOX_BASE(mbox, ch)            ((mbox)->base + ((ch) * 0x40))
+> +#define MBOX_SRC_REG                   (0x00)
+> +#define MBOX_DST_REG                   (0x04)
+> +#define MBOX_DCLR_REG                  (0x08)
+> +#define MBOX_DSTAT_REG                 (0x0c)
+> +#define MBOX_MODE_REG                  (0x10)
+> +#define MBOX_IMASK_REG                 (0x14)
+> +#define MBOX_ICLR_REG                  (0x18)
+> +#define MBOX_SEND_REG                  (0x1c)
+> +#define MBOX_DATA_REG                  (0x20)
+> +
+> +#define MBOX_IPC_LOCK_REG              (0xa00)
+> +#define MBOX_IPC_UNLOCK                        (0x1acce551)
+> +
+> +#define MBOX_AUTOMATIC_ACK             (1)
+> +
+Please, no brackets around numbers.
 
-> 
->>  	temp = readl(&xhci->ir_set->irq_control);
->>  	temp &= ~ER_IRQ_INTERVAL_MASK;
->> -	/*
->> -	 * the increment interval is 8 times as much as that defined
->> -	 * in xHCI spec on MTK's controller
->> -	 */
->> -	temp |= (u32) ((xhci->quirks & XHCI_MTK_HOST) ? 20 : 160);
->> +	temp |= (xhci->imod_interval / 250) & ER_IRQ_INTERVAL_MASK;
->> +
-> No need a blank line
+> +#define MBOX_STATE_IDLE                        BIT(4)
+> +#define MBOX_STATE_ACK                 BIT(7)
+> +
+> +#define MBOX_MSG_LEN                   8
+> +
+> +/**
+> + * Hi3660 mailbox channel device data
+> + *
+> + * A channel can be used for TX or RX, it can trigger remote
+> + * processor interrupt to notify remote processor and can receive
+> + * interrupt if has incoming message.
+> + *
+> + * @dst_irq:   Interrupt vector for remote processor
+> + * @ack_irq:   Interrupt vector for local processor
+> + */
+> +struct hi3660_mbox_dev {
+>
+Better than dev, maybe hi3660_chan_info ?
 
-If this patch goes through another version, I will remove this line
+> +       unsigned int dst_irq;
+> +       unsigned int ack_irq;
+> +};
+> +
+> +/**
+> + * Hi3660 mailbox controller data
+> + *
+> + * Mailbox controller includes 32 channels and can allocate
+> + * channel for message transferring.
+> + *
+> + * @dev:       Device to which it is attached
+> + * @base:      Base address of the register mapping region
+> + * @chan:      Representation of channels in mailbox controller
+> + * @mdev:      Representation of channel device data
+> + * @controller:        Representation of a communication channel controller
+> + */
+> +struct hi3660_mbox {
+> +       struct device *dev;
+> +       void __iomem *base;
+> +       struct mbox_chan chan[MBOX_CHAN_MAX];
+> +       struct hi3660_mbox_dev mdev[MBOX_CHAN_MAX];
+>
+Maybe mchan, instead of mdev.
 
-> 
->>  	writel(temp, &xhci->ir_set->irq_control);
->>  
->>  	/* Set the HCD state before we enable the irqs */
->> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
->> index 99a014a..2a4177b 100644
->> --- a/drivers/usb/host/xhci.h
->> +++ b/drivers/usb/host/xhci.h
->> @@ -1717,6 +1717,8 @@ struct xhci_hcd {
->>  	u8		max_interrupters;
->>  	u8		max_ports;
->>  	u8		isoc_threshold;
->> +	/* imod_interval in ns (I * 250ns) */
->> +	u32		imod_interval;
->>  	int		event_ring_max;
->>  	/* 4KB min, 128MB max */
->>  	int		page_size;
-> 
-> Thanks
-> 
-> 
+> +       struct mbox_controller controller;
+> +};
+> +
+> +static inline struct hi3660_mbox *to_hi3660_mbox(struct mbox_controller *mbox)
+> +{
+> +       return container_of(mbox, struct hi3660_mbox, controller);
+> +}
+> +
+> +static int hi3660_mbox_check_state(struct mbox_chan *chan)
+> +{
+> +       unsigned long ch = (unsigned long)chan->con_priv;
+> +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> +       struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
+> +       void __iomem *base = MBOX_BASE(mbox, ch);
+> +       unsigned long val;
+> +       unsigned int state, ret;
+> +
+> +       /* Mailbox is idle so directly bail out */
+> +       state = readl_relaxed(base + MBOX_MODE_REG);
+> +       if (state & MBOX_STATE_IDLE)
+> +               return 0;
+> +
+> +       /* Wait for acknowledge from remote */
+> +       ret = readx_poll_timeout_atomic(readl_relaxed, base + MBOX_MODE_REG,
+> +                       val, (val & MBOX_STATE_ACK), 1000, 300000);
+> +       if (ret) {
+> +               dev_err(mbox->dev, "%s: timeout for receiving ack\n", __func__);
+> +               return ret;
+> +       }
+> +
+> +       /* Ensure channel is released */
+> +       writel_relaxed(0xffffffff, base + MBOX_IMASK_REG);
+> +       writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SRC_REG);
+> +
+> +       return 0;
+> +}
+> +
+> +static int hi3660_mbox_unlock(struct mbox_chan *chan)
+> +{
+> +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> +       unsigned int val, retry = 3;
+> +
+> +       do {
+> +               writel_relaxed(MBOX_IPC_UNLOCK, mbox->base + MBOX_IPC_LOCK_REG);
+> +
+> +               val = readl_relaxed(mbox->base + MBOX_IPC_LOCK_REG);
+> +               if (!val)
+> +                       break;
+> +
+> +               udelay(10);
+> +       } while (retry--);
+> +
+> +       return (!val) ? 0 : -ETIMEDOUT;
+> +}
+> +
+> +static int hi3660_mbox_acquire_channel(struct mbox_chan *chan)
+> +{
+> +       unsigned long ch = (unsigned long)chan->con_priv;
+> +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> +       struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
+> +       void __iomem *base = MBOX_BASE(mbox, ch);
+> +       unsigned int val, retry;
+> +
+> +       for (retry = 10; retry; retry--) {
+> +               /* Check if channel has been acquired */
+> +               if (readl_relaxed(base + MBOX_MODE_REG) & MBOX_STATE_IDLE) {
+> +                       writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SRC_REG);
+> +                       val = readl_relaxed(base + MBOX_SRC_REG);
+> +                       if (val & BIT(mdev->ack_irq))
+> +                               break;
+> +               }
+> +       }
+> +
+> +       return retry ? 0 : -ETIMEDOUT;
+> +}
+> +
+> +static int hi3660_mbox_send(struct mbox_chan *chan, u32 *msg)
+> +{
+> +       unsigned long ch = (unsigned long)chan->con_priv;
+> +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> +       struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
+> +       void __iomem *base = MBOX_BASE(mbox, ch);
+> +       unsigned int i;
+> +
+> +       /* Clear mask for destination interrupt */
+> +       writel_relaxed(~BIT(mdev->dst_irq), base + MBOX_IMASK_REG);
+> +
+> +       /* Config destination for interrupt vector */
+> +       writel_relaxed(BIT(mdev->dst_irq), base + MBOX_DST_REG);
+> +
+> +       /* Automatic acknowledge mode */
+> +       writel_relaxed(MBOX_AUTOMATIC_ACK, base + MBOX_MODE_REG);
+> +
+> +       /* Fill message data */
+> +       for (i = 0; i < MBOX_MSG_LEN; i++)
+> +               writel_relaxed(msg[i], base + MBOX_DATA_REG + i * 4);
+> +
+> +       /* Trigger data transferring */
+> +       writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SEND_REG);
+> +       return 0;
+> +}
+> +
+> +static int hi3660_mbox_send_data(struct mbox_chan *chan, void *msg)
+> +{
+> +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> +       int err;
+> +
+> +       err = hi3660_mbox_check_state(chan);
+> +       if (err) {
+> +               dev_err(mbox->dev, "checking state failed\n");
+> +               return err;
+> +       }
+> +
+> +       err = hi3660_mbox_unlock(chan);
+> +       if (err) {
+> +               dev_err(mbox->dev, "unlocking mailbox failed\n");
+> +               return err;
+> +       }
+> +
+> +       err = hi3660_mbox_acquire_channel(chan);
+> +       if (err) {
+> +               dev_err(mbox->dev, "acquiring channel failed\n");
+> +               return err;
+> +       }
+> +
+Please remember .send_data() is called with irqs disabled spinlock
+All these polling functions hurt. Please move the above three checks
+in last_tx_done()
 
-
--- 
-Adam Wallis
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Thanks
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
