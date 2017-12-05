@@ -1,80 +1,123 @@
 From: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
-Subject: Re: [PATCH 8/8] PCIe: imx6: imx7d: add support for phy refclk source
-Date: Tue, 5 Dec 2017 12:58:32 -0800
-Message-ID: <CAH=dhFSE6rAzpg30X0RhxWKnmLObqsj5FEPaCtXwYtoMuVWfwQ@mail.gmail.com>
+Subject: Re: [PATCH 1/8] ARM: dts: imx7d-sbc-iot: add initial iot gateway dts
+Date: Tue, 5 Dec 2017 12:58:44 -0800
+Message-ID: <CAH=dhFTsaQMgxSdbLEjTpmE9Q8ugYUFpt1P8eK782e9dyw7bWQ@mail.gmail.com>
 References: <20171130201434.14122-1-tyler@opensourcefoundries.com>
- <20171130201434.14122-9-tyler@opensourcefoundries.com> <CAOMZO5Cxavb+iXdxH=JiWzP4VVo-ue0PU-LjBE6kD1VBPgW_0g@mail.gmail.com>
+ <20171130201434.14122-2-tyler@opensourcefoundries.com> <CAOMZO5DAEMCnEoD_k8d787wk392zYMoKkiMM-TOcRco9UJL2Lw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5Cxavb+iXdxH=JiWzP4VVo-ue0PU-LjBE6kD1VBPgW_0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAOMZO5DAEMCnEoD_k8d787wk392zYMoKkiMM-TOcRco9UJL2Lw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 1, 2017 at 12:21 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Fri, Dec 1, 2017 at 12:10 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > On Thu, Nov 30, 2017 at 6:14 PM,  <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org> wrote:
->> From: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
->>
->> In the i.MX7D the PCIe PHY can use either externel oscillator or
->> internal PLL as a reference clock source.
->> Add support for the PHY Reference Clock source including
->> device tree property phy-ref-clk.
->> External oscillator is used as a default reference clock source.
->>
->> Signed-off-by: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
->> Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 >
-> Please submit this one to the PCI list and PCI maintainers.
+>> +&ecspi3 {
+>> +       fsl,spi-num-chipselects = <1>;
+>
+> Please remove this property. It is no longer used.
 
-Ack. Will do.
+Ack.
 
 >
-> As you are adding a new property you should update
-> Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt.
+>
+>> +       dvicape@39 {
+>> +               compatible = "sil164_simple";
+>
+> This compatible string does not exist.
 
-I'll add this when I resubmit to the PCI list.
+I'm going to drop this, and address the display hardware it in a later series.
 
 >
->> ---
->>  drivers/pci/dwc/pci-imx6.c | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git adrivers/pci/dwc/pci-imx6.c b/drivers/pci/dwc/pci-imx6.c
->> index b734835..e935db4 100644
->> --- a/drivers/pci/dwc/pci-imx6.c
->> +++ b/drivers/pci/dwc/pci-imx6.c
->> @@ -45,6 +45,7 @@ enum imx6_pcie_variants {
->>  struct imx6_pcie {
->>         struct dw_pcie          *pci;
->>         int                     reset_gpio;
->> +       u32                     phy_refclk;
 >
-> Could this be bool instead?
 >
->>         bool                    gpio_active_high;
->>         struct clk              *pcie_bus;
->>         struct clk              *pcie_phy;
->> @@ -474,7 +475,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
->>         switch (imx6_pcie->variant) {
->>         case IMX7D:
->>                 regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->> -                                  IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
->> +                                  BIT(5), imx6_pcie->phy_refclk ? BIT(5) : 0);
->>                 break;
->>         case IMX6SX:
->>                 regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->> @@ -733,6 +734,11 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->>         if (IS_ERR(pci->dbi_base))
->>                 return PTR_ERR(pci->dbi_base);
->>
->> +       /* Fetch PHY Reference Clock */
->> +       if (of_property_read_u32(node, "phy-ref-clk", &imx6_pcie->phy_refclk))
+>> +&lcdif {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_lcdif_dat
+>> +                    &pinctrl_lcdif_ctrl>;
+>> +       display = <&display0>;
+>> +       status = "okay";
+>> +
+>> +       display0: display {
+>> +               bits-per-pixel = <24>;
+>> +               bus-width = <24>;
+>> +
+>> +               display-timings {
+>> +                       native-mode = <&timing0>;
+>> +                       timing0: dvi {
+>> +                               /* 1024x768p60 */
+>> +                               clock-frequency = <65000000>;
+>> +                               hactive = <1024>;
+>> +                               hfront-porch = <40>;
+>> +                               hback-porch = <220>;
+>> +                               hsync-len = <60>;
+>> +                               vactive = <768>;
+>> +                               vfront-porch = <7>;
+>> +                               vback-porch = <21>;
+>> +                               vsync-len = <10>;
+>> +
+>> +                               hsync-active = <0>;
+>> +                               vsync-active = <0>;
+>> +                               de-active = <1>;
+>> +                               pixelclk-active = <0>;
 >
-> You could use of_property_read_bool instead.
+> Which panel is this? Could you use a simple panel driver compatible
+> string instead?
 
-Thanks for the review, I'll switch to to use a bool instead.
+I'll switch to a simple panel driver and do some more testing. Will
+submit a follow up series to address the LCD panel and dvi cape.
+
+>
+>
+>> +                       };
+>> +               };
+>> +       };
+>> +};
+>> +
+>> +&uart2 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_uart2>;
+>> +       assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
+>> +       assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
+>> +       fsl,uart-has-rtscts;
+>
+> Please use 'uart-has-rtscts' instead.
+
+Ack.
+
+>
+>> +       status = "okay";
+>> +};
+>> +
+>> +&uart5 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_uart5>;
+>> +       assigned-clocks = <&clks IMX7D_UART5_ROOT_SRC>;
+>> +       assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+>> +       fsl,uart-has-rtscts;
+>
+> Ditto.
+
+Ack.
+
+>
+>> +       status = "okay";
+>> +};
+>> +
+>> +&uart7 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_uart7>;
+>> +       assigned-clocks = <&clks IMX7D_UART7_ROOT_SRC>;
+>> +       assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+>> +       fsl,uart-has-rtscts;
+>
+> Ditto
+
+Ack.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
