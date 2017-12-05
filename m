@@ -1,45 +1,129 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] staging: Introduce NVIDIA Tegra video decoder
- driver
-Date: Tue, 5 Dec 2017 15:17:58 +0300
-Message-ID: <3ac6a087-def2-014f-673d-1be9d5094635@gmail.com>
-References: <cover.1508448293.git.digetx@gmail.com>
- <1a3798f337c0097e67d70226ae3ba665fd9156c2.1508448293.git.digetx@gmail.com>
- <ad2da9f4-8899-7db3-493f-5aa15297c33c@xs4all.nl>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 5/8] ASoC: uniphier: add support for
+	UniPhier AIO driver
+Date: Tue, 5 Dec 2017 12:14:40 +0000
+Message-ID: <20171205121440.GC11658@finisterre>
+References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com>
+ <20171122114321.29196-6-suzuki.katsuhiro@socionext.com>
+ <20171204183934.rd4vin22ktukwpip@sirena.org.uk>
+ <002b01d36d84$51d80aa0$f5881fe0$@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ad2da9f4-8899-7db3-493f-5aa15297c33c-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============7212106249773398634=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <002b01d36d84$51d80aa0$f5881fe0$@socionext.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
 
-On 04.12.2017 17:04, Hans Verkuil wrote:
-> Hi Dmitry,
-> 
-> As you already mention in the TODO, this should become a v4l2 codec driver.
-> 
-> Good existing examples are the coda, qcom/venus and mtk-vcodec drivers.
-> 
-> One thing that is not clear from this code is if the tegra hardware is a
-> stateful or stateless codec, i.e. does it keep track of the decoder state
-> in the hardware, or does the application have to keep track of the state and
-> provide the state information together with the video data?
-> 
-> I ask because at the moment only stateful codecs are supported. Work is ongoing
-> to support stateless codecs, but we don't support that for now.
-> 
+--===============7212106249773398634==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="9Ek0hoCL9XbhcSqy"
+Content-Disposition: inline
 
-It is stateless. Is there anything ready to try out? If yes, could you please
-give a reference to that work?
 
-> Anyway, I'm OK with merging this in staging. Although I think it should go
-> to staging/media since we want to keep track of it.
-> 
+--9Ek0hoCL9XbhcSqy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Awesome, I'll move driver to staging/media in V5. Thanks!
+On Tue, Dec 05, 2017 at 01:48:39PM +0900, Katsuhiro Suzuki wrote:
+
+Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
+
+> > Is there a mux in the SoC here?
+
+> Sorry for confusing, It's not mux.
+
+> uniphier_srcport_reset() resets HW SRC (sampling rate converter) block.
+> Audio data out ports of UniPhier audio system have HW SRC.
+
+Is the SRC just a single block sitting between the DMA and the external
+audio port or is there more going on?  Some of the other code made me
+think the hardware was more flexible than this (all the writing to
+registers with names like RXSEL for example).
+
+> > > +#endif /* CONFIG_SND_SOC_UNIPHIER_LD11 */
+
+> > Why is there an ifdef here?  There's no other conditional code in here,
+> > it seems pointless.
+
+> This config is used to support or not LD11 SoC.
+> aio-ld11.c is not build and 'uniphier_aio_ldxx_spec' is undefined if this=
+ config is disabled.
+>=20
+> aio-ld11.c defines SoC dependent resources (port, HW ring buffer, DMA ch,=
+ etc.)
+> and fixed settings.
+> I know it's better to move such information into device-tree, but registe=
+r areas of
+> UniPhier's audio system is very strange and interleaved. It's hard to spl=
+it each nodes...
+
+I'd expect this code to be structured more like a library - have a
+driver that handles the specific IPs then have it call into a shared
+block of code that does the generic bits.  Though in this case the
+device specific bit looks like a couple of tiny data tables so I'm not
+sure it's worth making it conditional or separate at all.
+
+> > This looks awfully like compressed audio support...  should there be
+> > integration with the compressed audio API/
+
+> Thanks, I'll try it. Is there Documentation in sound/designes/compress-of=
+fload.rst?
+> And best sample is... Intel's driver?
+
+Yes.
+
+> (Summary)
+> I think I should fix as follows:
+
+>   - Split DMA, DAI patches from large one
+>   - Validate parameters in hw_params
+>   - Add description about HW SRC (or fix bad name 'srcport')
+>   - Add comments about uniphier_aiodma_irq()
+>   - Expose clocking and audio routing to userspace, or at the very
+>     least machine driver configuration
+>   - Support compress-audio API for S/PDIF
+
+> and post V2.
+
+At least.  I do think we need to get to the bottom of how flexible the
+hardware is first though.
+
+--9Ek0hoCL9XbhcSqy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlomjbAACgkQJNaLcl1U
+h9BFiAf+IRA7T3TCrKUXbnaZCZQS/tTyylp04bjSR6BzEl9m4O0kDG2WM4ZQS1RE
+hjoD9fQlTMicA5hBMLarR1ojjpIzbVGjxeRIkcMzsVOpIZVBN9t36pc0WFeem5Ff
+IdKFIusosePgfTnW3PeamVdyJ1xK/s+C2wBAA7AaWLwRQef+VHZdJ2XKOyei438d
+D0VTLpoZvh7O/TpvWnCEIpv3rU3j2Qso3MtV7fRFazg2yanRt7kQm7nvmgx8/wT4
+HJk/w9zpk5/mJwu5o3D/HeoyLYcpxDM5bocxYHrLmJVRqZFvf84HlYXP9eB1u/4y
+vxCaVjPYtA6bCSEDq3DLXi9Ok595Ag==
+=gUoc
+-----END PGP SIGNATURE-----
+
+--9Ek0hoCL9XbhcSqy--
+
+--===============7212106249773398634==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7212106249773398634==--
