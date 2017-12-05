@@ -1,66 +1,81 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/2] of: overlay: Fix memory leak in of_overlay_apply()
- error path
-Date: Tue, 5 Dec 2017 14:58:42 +0100
-Message-ID: <CAMuHMdX__gY+TG2Pe-8FZSGCG1m8yLYYszrFHDPVHK5JJsnxqA@mail.gmail.com>
-References: <1512402456-8176-1-git-send-email-geert+renesas@glider.be>
- <1512402456-8176-2-git-send-email-geert+renesas@glider.be>
- <b6392405-390d-d7dc-91b2-1338fd605e65@gmail.com> <CAMuHMdUzuJuKYQ6xtOAb3ctzPqakKZCtPQr9JVQP78VvK6qq3g@mail.gmail.com>
- <87ecaacc-1969-c4ef-9c1d-f4279144e93b@gmail.com>
+Subject: Re: [PATCH 1/3] eeprom: at25: Add DT support for EEPROMs with odd
+ address bits
+Date: Tue, 5 Dec 2017 15:01:39 +0100
+Message-ID: <CAMuHMdWiQnbDva=_JjqKvmXj=mB_80W0fZbYXVZe-ansHi2txA@mail.gmail.com>
+References: <1512048586-17534-1-git-send-email-geert+renesas@glider.be>
+ <1512048586-17534-2-git-send-email-geert+renesas@glider.be>
+ <CAMuHMdWczQ0KiH7soGLKxX8CQEwxA=kVDc_saYqgytE2U_3WKw@mail.gmail.com>
+ <20171204211705.543xjzvttbrt65pm@rob-hp-laptop> <CAMuHMdUDPFhSwkHg2wm7yCNAfdUP8wAR9OXxbcu6SDhtZqe2+A@mail.gmail.com>
+ <CAMuHMdWFzUbZ-wcyZmLEXcnFQ+RJBnkrxW+B0ie9cR=1LPtsgw@mail.gmail.com> <CAL_Jsq+-w=bbSN1LvRy7G9Dtc=7-C+CiyQnrtZkMLK23S98P9Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87ecaacc-1969-c4ef-9c1d-f4279144e93b@gmail.com>
+In-Reply-To: <CAL_Jsq+-w=bbSN1LvRy7G9Dtc=7-C+CiyQnrtZkMLK23S98P9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Colin King <colin.king@canonical.com>, Dan Carpenter <dan.carpenter@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Ivo Sieben <meltedpianoman@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Chris Wright <chrisw@sous-sol.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+Hi Rob,
 
-On Tue, Dec 5, 2017 at 2:45 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 12/05/17 03:01, Geert Uytterhoeven wrote:
->> On Tue, Dec 5, 2017 at 3:07 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->>> Also, the previous version of the patch, and the discussion around the resulting
->>> bug make me think that I should not have moved 'kfree(ovcs)' into
->>> free_overlay_changeset(), because that kfree is then not very visible in the
->>> error path of of_overlay_apply().  Could you remove 'kfree(ovcs)' from
->>> free_overlay_changeset(), and instead call it immediately after each call
->>> to free_overlay_changeset()?
+On Tue, Dec 5, 2017 at 2:56 PM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Dec 5, 2017 at 3:09 AM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>> On Tue, Dec 5, 2017 at 9:57 AM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>> On Mon, Dec 4, 2017 at 10:17 PM, Rob Herring <robh@kernel.org> wrote:
+>>>> On Mon, Dec 04, 2017 at 10:17:47AM +0100, Geert Uytterhoeven wrote:
+>>>>> On Thu, Nov 30, 2017 at 2:29 PM, Geert Uytterhoeven
+>>>>> <geert+renesas@glider.be> wrote:
+>>>>> > Certain EEPROMS have a size that is larger than the number of address
+>>>>> > bytes would allow, and store the MSB of the address in bit 3 of the
+>>>>> > instruction byte.
+>>>>> >
+>>>>> > This can be described in platform data using EE_INSTR_BIT3_IS_ADDR, or
+>>>>> > in DT using the obsolete legacy "at25,addr-mode" property.
+>>>>> > But currently there exists no non-deprecated way to describe this in DT.
+>>>>> >
+>>>>> > Hence extend the existing "address-width" DT property to allow
+>>>>> > specifying 9, 17, or 25 address bits, and enable support for that in the
+>>>>> > driver.
+>>>>> >
+>>>>> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>> > ---
+>>>>> > EEPROMs using 9 address bits are common (e.g. M95040, 25AA040/25LC040).
+>>>>> > Do EEPROMs using 17 or 25 address bits, as mentioned in
+>>>>> > include/linux/spi/eeprom.h, really exist?
+>>>>> > Or should we just limit it to a single odd value (9 bits)?
+>>>>>
+>>>>> At least for the real Atmel parts, only the AT25040 part uses odd (8 +
+>>>>> 1 bit) addressing.
+>>>>
+>>>> Seems like we should have a specific compatible for it.
+>>>
+>>> Possibly. But currently all configuration is done through DT properties, not
+>>> through matching on compatible values.
 >>
->> Actually I like that free_overlay_changeset() takes care of the deallocation,
->> especially in light of the kojectification op top from bbb-overlays, which
->> means you cannot just call kfree(ovcs) anymore (I know this won't go upstream
->> anytime soon, but I need overlay configfs for my development and testing).
+>> Adding compatible values for all known/used parts could quickly become a
+>> large table.
+>> E.g. Atmel/Microchip has 3 variants of 512-byte EEPROMs: AT25040B,
+>> 25LC040A, and 25AA040A. The former uses an 8-byte pagesize, while the
+>> latter parts use 16-byte pagesizes.
+>> Not to mention "compatible" parts from other manufacturers, and all other
+>> supported size.
+>>
+>> Currently all of this is configured through the "pagesize", "size", and
+>> "address-width" DT properties, with matching on generic "atmel,at25".
 >
-> OK, knowing that kobjectification is being considered I am willing to leave the
-> kfree(ovcs) where it is for now.
+> I wasn't suggesting throwing out all these. Just add a compatible for
+> the one oddball 9-bit part.
 >
->> Perhaps the allocation of ovcs should be moved into free_overlay_changeset(),
->
->                                           I think this ^^^^^^^^^^^^^^^^^^^^^^^
-> is a typo, and you meant init_overlay_changeset().
+> But I'm fine adding address-width=9 too.
 
-Yes it is.
+OK. Then I'll go for the least intrusive solution (address-width=9).
+These EEPROMs are fairly small and simple, and I can imagine them being
+used on small systems too, so driver code/data size matters.
 
->> and the latter being renamed to alloc_overlay_changeset()?
->> That way allocation and freeing become symmetrical.
->> It would move the allocation under the mutexes, though.
->
-> I considered moving the kzalloc() into init_overlay_changeset() when I
-> created it, but decided not to because the type of the first argument of
-> init_overlay_changeset() would change from
->    struct overlay_changeset *
-> to
->    struct overlay_changeset **,
-> and usage of ovcs would become _slightly_ more ugly and complex in
-> init_overlay_changeset().
+Stay tuned for v2.
 
-I would let alloc_overlay_changeset() return struct overlay_changeset *
-instead.
-
-If you care about why it failed, it can return ERR_PTR(error) instead of
-NULL ;-)
+Thanks!
 
 Gr{oetje,eeting}s,
 
