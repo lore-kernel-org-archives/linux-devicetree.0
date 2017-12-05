@@ -1,80 +1,81 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v3 1/2] ASoC: codecs: Add PCM186x binding documentation
-Date: Tue, 5 Dec 2017 14:52:55 -0600
-Message-ID: <20171205205256.14592-1-afd@ti.com>
+From: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+Subject: Re: [PATCH 8/8] PCIe: imx6: imx7d: add support for phy refclk source
+Date: Tue, 5 Dec 2017 12:58:32 -0800
+Message-ID: <CAH=dhFSE6rAzpg30X0RhxWKnmLObqsj5FEPaCtXwYtoMuVWfwQ@mail.gmail.com>
+References: <20171130201434.14122-1-tyler@opensourcefoundries.com>
+ <20171130201434.14122-9-tyler@opensourcefoundries.com> <CAOMZO5Cxavb+iXdxH=JiWzP4VVo-ue0PU-LjBE6kD1VBPgW_0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5Cxavb+iXdxH=JiWzP4VVo-ue0PU-LjBE6kD1VBPgW_0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the dt-binding documentation for the TI PCM186x 2ch and 4ch Audio
-ADCs With Universal Front End.
+On Fri, Dec 1, 2017 at 12:21 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Nov 30, 2017 at 6:14 PM,  <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org> wrote:
+>> From: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+>>
+>> In the i.MX7D the PCIe PHY can use either externel oscillator or
+>> internal PLL as a reference clock source.
+>> Add support for the PHY Reference Clock source including
+>> device tree property phy-ref-clk.
+>> External oscillator is used as a default reference clock source.
+>>
+>> Signed-off-by: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+>> Signed-off-by: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+>
+> Please submit this one to the PCI list and PCI maintainers.
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+Ack. Will do.
 
-Changes from v2:
- - None
+>
+> As you are adding a new property you should update
+> Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt.
 
-Changes from v1:
- - pcm186x@4a -> audio-codec@4a
- - Added Acked-by
+I'll add this when I resubmit to the PCI list.
 
- .../devicetree/bindings/sound/pcm186x.txt          | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/pcm186x.txt
+>
+>> ---
+>>  drivers/pci/dwc/pci-imx6.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git adrivers/pci/dwc/pci-imx6.c b/drivers/pci/dwc/pci-imx6.c
+>> index b734835..e935db4 100644
+>> --- a/drivers/pci/dwc/pci-imx6.c
+>> +++ b/drivers/pci/dwc/pci-imx6.c
+>> @@ -45,6 +45,7 @@ enum imx6_pcie_variants {
+>>  struct imx6_pcie {
+>>         struct dw_pcie          *pci;
+>>         int                     reset_gpio;
+>> +       u32                     phy_refclk;
+>
+> Could this be bool instead?
+>
+>>         bool                    gpio_active_high;
+>>         struct clk              *pcie_bus;
+>>         struct clk              *pcie_phy;
+>> @@ -474,7 +475,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+>>         switch (imx6_pcie->variant) {
+>>         case IMX7D:
+>>                 regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>> -                                  IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
+>> +                                  BIT(5), imx6_pcie->phy_refclk ? BIT(5) : 0);
+>>                 break;
+>>         case IMX6SX:
+>>                 regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>> @@ -733,6 +734,11 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>>         if (IS_ERR(pci->dbi_base))
+>>                 return PTR_ERR(pci->dbi_base);
+>>
+>> +       /* Fetch PHY Reference Clock */
+>> +       if (of_property_read_u32(node, "phy-ref-clk", &imx6_pcie->phy_refclk))
+>
+> You could use of_property_read_bool instead.
 
-diff --git a/Documentation/devicetree/bindings/sound/pcm186x.txt b/Documentation/devicetree/bindings/sound/pcm186x.txt
-new file mode 100644
-index 000000000000..1087f4855980
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/pcm186x.txt
-@@ -0,0 +1,42 @@
-+Texas Instruments PCM186x Universal Audio ADC
-+
-+These devices support both I2C and SPI (configured with pin strapping
-+on the board).
-+
-+Required properties:
-+
-+ - compatible : "ti,pcm1862",
-+                "ti,pcm1863",
-+                "ti,pcm1864",
-+                "ti,pcm1865"
-+
-+ - reg : The I2C address of the device for I2C, the chip select
-+         number for SPI.
-+
-+ - avdd-supply: Analog core power supply (3.3v)
-+ - dvdd-supply: Digital core power supply
-+ - iovdd-supply: Digital IO power supply
-+        See regulator/regulator.txt for more information
-+
-+CODEC input pins:
-+ * VINL1
-+ * VINR1
-+ * VINL2
-+ * VINR2
-+ * VINL3
-+ * VINR3
-+ * VINL4
-+ * VINR4
-+
-+The pins can be used in referring sound node's audio-routing property.
-+
-+Example:
-+
-+	pcm186x: audio-codec@4a {
-+		compatible = "ti,pcm1865";
-+		reg = <0x4a>;
-+
-+		avdd-supply = <&reg_3v3_analog>;
-+		dvdd-supply = <&reg_3v3>;
-+		iovdd-supply = <&reg_1v8>;
-+	};
--- 
-2.15.0
+Thanks for the review, I'll switch to to use a bool instead.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
