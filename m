@@ -1,62 +1,325 @@
 From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock controller
-Date: Tue,  5 Dec 2017 17:46:57 +0200
-Message-ID: <20171205154701.27730-3-georgi.djakov@linaro.org>
+Subject: [PATCH v11 4/6] clk: qcom: Add regmap mux-div clocks support
+Date: Tue,  5 Dec 2017 17:46:59 +0200
+Message-ID: <20171205154701.27730-5-georgi.djakov@linaro.org>
 References: <20171205154701.27730-1-georgi.djakov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171205154701.27730-1-georgi.djakov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org
 Cc: mturquette@baylibre.com, robh@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-There is a clock controller functionality provided by the APCS hardware
-block of msm8916 devices. The device-tree would represent an APCS node
-with both mailbox and clock provider properties.
-Create a platform child device for the clock controller functionality so
-the driver can probe and use APCS as parent.
+Add support for hardware that can switch both parent clock and divider
+at the same time. This avoids generating intermediate frequencies from
+either the old parent clock and new divider or new parent clock and
+old divider combinations.
 
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/clk/qcom/Makefile             |   1 +
+ drivers/clk/qcom/clk-regmap-mux-div.c | 229 ++++++++++++++++++++++++++++++++++
+ drivers/clk/qcom/clk-regmap-mux-div.h |  46 +++++++
+ 3 files changed, 276 insertions(+)
+ create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.c
+ create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.h
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index ab344bc6fa63..57bde0dfd12f 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -29,6 +29,7 @@ struct qcom_apcs_ipc {
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index e767c60c24ec..7c51d877f967 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -10,6 +10,7 @@ clk-qcom-y += clk-rcg2.o
+ clk-qcom-y += clk-branch.o
+ clk-qcom-y += clk-regmap-divider.o
+ clk-qcom-y += clk-regmap-mux.o
++clk-qcom-y += clk-regmap-mux-div.o
+ clk-qcom-y += reset.o
+ clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
  
- 	struct regmap *regmap;
- 	unsigned long offset;
-+	struct platform_device *clk;
- };
- 
- static const struct regmap_config apcs_regmap_config = {
-@@ -96,6 +97,14 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
-+		apcs->clk = platform_device_register_data(&pdev->dev,
-+							  "qcom-apcs-msm8916-clk",
-+							  -1, NULL, 0);
-+		if (IS_ERR(apcs->clk))
-+			dev_err(&pdev->dev, "failed to register APCS clk\n");
+diff --git a/drivers/clk/qcom/clk-regmap-mux-div.c b/drivers/clk/qcom/clk-regmap-mux-div.c
+new file mode 100644
+index 000000000000..c5d6fff29598
+--- /dev/null
++++ b/drivers/clk/qcom/clk-regmap-mux-div.c
+@@ -0,0 +1,229 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2017, Linaro Limited
++ * Author: Georgi Djakov <georgi.djakov@linaro.org>
++ */
++
++#include <linux/bitops.h>
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/regmap.h>
++
++#include "clk-regmap-mux-div.h"
++
++#define CMD_RCGR			0x0
++#define CMD_RCGR_UPDATE			BIT(0)
++#define CMD_RCGR_DIRTY_CFG		BIT(4)
++#define CMD_RCGR_ROOT_OFF		BIT(31)
++#define CFG_RCGR			0x4
++
++#define to_clk_regmap_mux_div(_hw) \
++	container_of(to_clk_regmap(_hw), struct clk_regmap_mux_div, clkr)
++
++int __mux_div_set_src_div(struct clk_regmap_mux_div *md, u32 src, u32 div)
++{
++	int ret, count;
++	u32 val, mask;
++	const char *name = clk_hw_get_name(&md->clkr.hw);
++
++	val = (div << md->hid_shift) | (src << md->src_shift);
++	mask = ((BIT(md->hid_width) - 1) << md->hid_shift) |
++	       ((BIT(md->src_width) - 1) << md->src_shift);
++
++	ret = regmap_update_bits(md->clkr.regmap, CFG_RCGR + md->reg_offset,
++				 mask, val);
++	if (ret)
++		return ret;
++
++	ret = regmap_update_bits(md->clkr.regmap, CMD_RCGR + md->reg_offset,
++				 CMD_RCGR_UPDATE, CMD_RCGR_UPDATE);
++	if (ret)
++		return ret;
++
++	// Wait for update to take effect
++	for (count = 500; count > 0; count--) {
++		ret = regmap_read(md->clkr.regmap, CMD_RCGR + md->reg_offset,
++				  &val);
++		if (ret)
++			return ret;
++		if (!(val & CMD_RCGR_UPDATE))
++			return 0;
++		udelay(1);
 +	}
 +
- 	platform_set_drvdata(pdev, apcs);
- 
- 	return 0;
-@@ -104,8 +113,10 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- static int qcom_apcs_ipc_remove(struct platform_device *pdev)
- {
- 	struct qcom_apcs_ipc *apcs = platform_get_drvdata(pdev);
-+	struct platform_device *clk = apcs->clk;
- 
- 	mbox_controller_unregister(&apcs->mbox);
-+	platform_device_unregister(clk);
- 
- 	return 0;
- }
++	pr_err("%s: RCG did not update its configuration", name);
++	return -EBUSY;
++}
++
++static void __mux_div_get_src_div(struct clk_regmap_mux_div *md, u32 *src,
++				  u32 *div)
++{
++	u32 val, d, s;
++	const char *name = clk_hw_get_name(&md->clkr.hw);
++
++	regmap_read(md->clkr.regmap, CMD_RCGR + md->reg_offset, &val);
++
++	if (val & CMD_RCGR_DIRTY_CFG) {
++		pr_err("%s: RCG configuration is pending\n", name);
++		return;
++	}
++
++	regmap_read(md->clkr.regmap, CFG_RCGR + md->reg_offset, &val);
++	s = (val >> md->src_shift);
++	s &= BIT(md->src_width) - 1;
++	*src = s;
++
++	d = (val >> md->hid_shift);
++	d &= BIT(md->hid_width) - 1;
++	*div = d;
++}
++
++static inline bool is_better_rate(unsigned long req, unsigned long best,
++				  unsigned long new)
++{
++	return (req <= new && new < best) || (best < req && best < new);
++}
++
++static int mux_div_determine_rate(struct clk_hw *hw,
++				  struct clk_rate_request *req)
++{
++	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
++	unsigned int i, div, max_div;
++	unsigned long actual_rate, best_rate = 0;
++	unsigned long req_rate = req->rate;
++
++	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
++		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
++		unsigned long parent_rate = clk_hw_get_rate(parent);
++
++		max_div = BIT(md->hid_width) - 1;
++		for (div = 1; div < max_div; div++) {
++			parent_rate = mult_frac(req_rate, div, 2);
++			parent_rate = clk_hw_round_rate(parent, parent_rate);
++			actual_rate = mult_frac(parent_rate, 2, div);
++
++			if (is_better_rate(req_rate, best_rate, actual_rate)) {
++				best_rate = actual_rate;
++				req->rate = best_rate;
++				req->best_parent_rate = parent_rate;
++				req->best_parent_hw = parent;
++			}
++
++			if (actual_rate < req_rate || best_rate <= req_rate)
++				break;
++		}
++	}
++
++	if (!best_rate)
++		return -EINVAL;
++
++	return 0;
++}
++
++static int __mux_div_set_rate_and_parent(struct clk_hw *hw, unsigned long rate,
++					 unsigned long prate, u32 src)
++{
++	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
++	int ret;
++	u32 div, max_div, best_src = 0, best_div = 0;
++	unsigned int i;
++	unsigned long actual_rate, best_rate = 0;
++
++	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
++		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
++		unsigned long parent_rate = clk_hw_get_rate(parent);
++
++		max_div = BIT(md->hid_width) - 1;
++		for (div = 1; div < max_div; div++) {
++			parent_rate = mult_frac(rate, div, 2);
++			parent_rate = clk_hw_round_rate(parent, parent_rate);
++			actual_rate = mult_frac(parent_rate, 2, div);
++
++			if (is_better_rate(rate, best_rate, actual_rate)) {
++				best_rate = actual_rate;
++				best_src = md->parent_map[i].cfg;
++				best_div = div - 1;
++			}
++
++			if (actual_rate < rate || best_rate <= rate)
++				break;
++		}
++	}
++
++	ret = __mux_div_set_src_div(md, best_src, best_div);
++	if (!ret) {
++		md->div = best_div;
++		md->src = best_src;
++	}
++
++	return ret;
++}
++
++static u8 mux_div_get_parent(struct clk_hw *hw)
++{
++	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
++	const char *name = clk_hw_get_name(hw);
++	u32 i, div, src = 0;
++
++	__mux_div_get_src_div(md, &src, &div);
++
++	for (i = 0; i < clk_hw_get_num_parents(hw); i++)
++		if (src == md->parent_map[i].cfg)
++			return i;
++
++	pr_err("%s: Can't find parent with src %d\n", name, src);
++	return 0;
++}
++
++static int mux_div_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
++
++	return __mux_div_set_src_div(md, md->parent_map[index].cfg, md->div);
++}
++
++static int mux_div_set_rate(struct clk_hw *hw,
++			    unsigned long rate, unsigned long prate)
++{
++	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
++
++	return __mux_div_set_rate_and_parent(hw, rate, prate, md->src);
++}
++
++static int mux_div_set_rate_and_parent(struct clk_hw *hw,  unsigned long rate,
++				       unsigned long prate, u8 index)
++{
++	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
++
++	return __mux_div_set_rate_and_parent(hw, rate, prate,
++					     md->parent_map[index].cfg);
++}
++
++static unsigned long mux_div_recalc_rate(struct clk_hw *hw, unsigned long prate)
++{
++	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
++	u32 div, src;
++	int i, num_parents = clk_hw_get_num_parents(hw);
++	const char *name = clk_hw_get_name(hw);
++
++	__mux_div_get_src_div(md, &src, &div);
++	for (i = 0; i < num_parents; i++)
++		if (src == md->parent_map[i].cfg) {
++			struct clk_hw *p = clk_hw_get_parent_by_index(hw, i);
++			unsigned long parent_rate = clk_hw_get_rate(p);
++
++			return mult_frac(parent_rate, 2, div + 1);
++		}
++
++	pr_err("%s: Can't find parent %d\n", name, src);
++	return 0;
++}
++
++const struct clk_ops clk_regmap_mux_div_ops = {
++	.get_parent = mux_div_get_parent,
++	.set_parent = mux_div_set_parent,
++	.set_rate = mux_div_set_rate,
++	.set_rate_and_parent = mux_div_set_rate_and_parent,
++	.determine_rate = mux_div_determine_rate,
++	.recalc_rate = mux_div_recalc_rate,
++};
+diff --git a/drivers/clk/qcom/clk-regmap-mux-div.h b/drivers/clk/qcom/clk-regmap-mux-div.h
+new file mode 100644
+index 000000000000..a35da978d6c9
+--- /dev/null
++++ b/drivers/clk/qcom/clk-regmap-mux-div.h
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2017, Linaro Limited
++ * Author: Georgi Djakov <georgi.djakov@linaro.org>
++ */
++
++#ifndef __QCOM_CLK_REGMAP_MUX_DIV_H__
++#define __QCOM_CLK_REGMAP_MUX_DIV_H__
++
++#include <linux/clk-provider.h>
++#include "clk-rcg.h"
++#include "clk-regmap.h"
++
++/**
++ * struct mux_div_clk - combined mux/divider clock
++ * @reg_offset: offset of the mux/divider register
++ * @hid_width:	number of bits in half integer divider
++ * @hid_shift:	lowest bit of hid value field
++ * @src_width:	number of bits in source select
++ * @src_shift:	lowest bit of source select field
++ * @div:	the divider raw configuration value
++ * @src:	the mux index which will be used if the clock is enabled
++ * @parent_map:	pointer to parent_map struct
++ * @clkr:	handle between common and hardware-specific interfaces
++ * @pclk:	the input PLL clock
++ * @clk_nb:	clock notifier for rate changes of the input PLL
++ */
++
++struct clk_regmap_mux_div {
++	u32				reg_offset;
++	u32				hid_width;
++	u32				hid_shift;
++	u32				src_width;
++	u32				src_shift;
++	u32				div;
++	u32				src;
++	const struct parent_map		*parent_map;
++	struct clk_regmap		clkr;
++	struct clk			*pclk;
++	struct notifier_block		clk_nb;
++};
++
++extern const struct clk_ops clk_regmap_mux_div_ops;
++int __mux_div_set_src_div(struct clk_regmap_mux_div *md, u32 src, u32 div);
++
++#endif
