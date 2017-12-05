@@ -1,338 +1,498 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] mailbox: Add support for Hi3660 mailbox
-Date: Tue, 5 Dec 2017 13:13:40 +0800
-Message-ID: <20171205051340.GD20321@leoy-linaro>
-References: <1510910672-1409-1-git-send-email-xuyiping@hisilicon.com>
- <1510910672-1409-3-git-send-email-xuyiping@hisilicon.com>
- <CABb+yY1+uMhZ8nXxsuv4LFGqOkdH6AX-U_AeNJ0+j1+iA6=yhQ@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V1 4/4] qcom: spmi-wled: Add auto-calibration logic
+ support
+Date: Mon, 4 Dec 2017 21:40:04 -0800
+Message-ID: <20171205054004.GG28761@minitux>
+References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
+ <1510834717-21765-5-git-send-email-kgunda@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABb+yY1+uMhZ8nXxsuv4LFGqOkdH6AX-U_AeNJ0+j1+iA6=yhQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuezhiliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1510834717-21765-5-git-send-email-kgunda@codeaurora.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Kiran Gunda <kgunda@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 05, 2017 at 08:58:05AM +0530, Jassi Brar wrote:
-> On Fri, Nov 17, 2017 at 2:54 PM, Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
-> > From: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> >
-> > Hi3660 mailbox controller is used to send message within multiple
-> > processors, MCU, HIFI, etc.  It supports 32 mailbox channels and every
-> > channel can only be used for single transferring direction.  Once the
-> > channel is enabled, it needs to specify the destination interrupt and
-> > acknowledge interrupt, these two interrupt vectors are used to create
-> > the connection between the mailbox and interrupt controllers.
-> >
-> > The data transferring supports two modes, one is named as "automatic
-> > acknowledge" mode so after send message the kernel doesn't need to wait
-> > for acknowledge from remote and directly return; there have another mode
-> > is to rely on handling interrupt for acknowledge.
-> >
-> > This commit is for initial version driver, which only supports
-> > "automatic acknowledge" mode to support CPU clock, which is the only
-> > one consumer to use mailbox and has been verified.  Later may enhance
-> > this driver for interrupt mode (e.g. for supporting HIFI).
-> >
-> > Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Ruyi Wang <wangruyi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  drivers/mailbox/Kconfig          |   8 +
-> >  drivers/mailbox/Makefile         |   2 +
-> >  drivers/mailbox/hi3660-mailbox.c | 322 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 332 insertions(+)
-> >  create mode 100644 drivers/mailbox/hi3660-mailbox.c
-> >
-> > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> > index c5731e5..4b5d6e9 100644
-> > --- a/drivers/mailbox/Kconfig
-> > +++ b/drivers/mailbox/Kconfig
-> > @@ -108,6 +108,14 @@ config TI_MESSAGE_MANAGER
-> >           multiple processors within the SoC. Select this driver if your
-> >           platform has support for the hardware block.
-> >
-> > +config HI3660_MBOX
-> > +       tristate "Hi3660 Mailbox"
-> > +       depends on ARCH_HISI && OF
-> > +       help
-> > +         An implementation of the hi3660 mailbox. It is used to send message
-> > +         between application processors and other processors/MCU/DSP. Select
-> > +         Y here if you want to use Hi3660 mailbox controller.
-> > +
-> >  config HI6220_MBOX
-> >         tristate "Hi6220 Mailbox"
-> >         depends on ARCH_HISI
-> > diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> > index d54e412..7d1bd51 100644
-> > --- a/drivers/mailbox/Makefile
-> > +++ b/drivers/mailbox/Makefile
-> > @@ -26,6 +26,8 @@ obj-$(CONFIG_TI_MESSAGE_MANAGER) += ti-msgmgr.o
-> >
-> >  obj-$(CONFIG_XGENE_SLIMPRO_MBOX) += mailbox-xgene-slimpro.o
-> >
-> > +obj-$(CONFIG_HI3660_MBOX)      += hi3660-mailbox.o
-> > +
-> >  obj-$(CONFIG_HI6220_MBOX)      += hi6220-mailbox.o
-> >
-> >  obj-$(CONFIG_BCM_PDC_MBOX)     += bcm-pdc-mailbox.o
-> > diff --git a/drivers/mailbox/hi3660-mailbox.c b/drivers/mailbox/hi3660-mailbox.c
-> > new file mode 100644
-> > index 0000000..ba80834
-> > --- /dev/null
-> > +++ b/drivers/mailbox/hi3660-mailbox.c
-> > @@ -0,0 +1,322 @@
-> > +/*
-> > + * Hisilicon's Hi3660 mailbox controller driver
-> > + *
-> > + * Copyright (c) 2017 Hisilicon Limited.
-> > + * Copyright (c) 2017 Linaro Limited.
-> > + *
-> > + * Author: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > + *
-> > + * This program is free software: you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation, version 2 of the License.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> >
-> We now use SPDX licence
+On Thu 16 Nov 04:18 PST 2017, Kiran Gunda wrote:
 
-Thanks for quick response, Jassi.
-
-Will change to SPDX licence fashion.
-
-> > + */
-> > +
-> > +#include <linux/bitops.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/device.h>
-> > +#include <linux/err.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/iopoll.h>
-> > +#include <linux/mailbox_controller.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#include "mailbox.h"
-> > +
-> > +#define MBOX_CHAN_MAX                  32
-> > +
-> > +#define MBOX_RX                                (0x0)
-> > +#define MBOX_TX                                (0x1)
-> > +
-> > +#define MBOX_BASE(mbox, ch)            ((mbox)->base + ((ch) * 0x40))
-> > +#define MBOX_SRC_REG                   (0x00)
-> > +#define MBOX_DST_REG                   (0x04)
-> > +#define MBOX_DCLR_REG                  (0x08)
-> > +#define MBOX_DSTAT_REG                 (0x0c)
-> > +#define MBOX_MODE_REG                  (0x10)
-> > +#define MBOX_IMASK_REG                 (0x14)
-> > +#define MBOX_ICLR_REG                  (0x18)
-> > +#define MBOX_SEND_REG                  (0x1c)
-> > +#define MBOX_DATA_REG                  (0x20)
-> > +
-> > +#define MBOX_IPC_LOCK_REG              (0xa00)
-> > +#define MBOX_IPC_UNLOCK                        (0x1acce551)
-> > +
-> > +#define MBOX_AUTOMATIC_ACK             (1)
-> > +
-> Please, no brackets around numbers.
-
-Sure, will remove brackets.
-
-> > +#define MBOX_STATE_IDLE                        BIT(4)
-> > +#define MBOX_STATE_ACK                 BIT(7)
-> > +
-> > +#define MBOX_MSG_LEN                   8
-> > +
-> > +/**
-> > + * Hi3660 mailbox channel device data
-> > + *
-> > + * A channel can be used for TX or RX, it can trigger remote
-> > + * processor interrupt to notify remote processor and can receive
-> > + * interrupt if has incoming message.
-> > + *
-> > + * @dst_irq:   Interrupt vector for remote processor
-> > + * @ack_irq:   Interrupt vector for local processor
-> > + */
-> > +struct hi3660_mbox_dev {
-> >
-> Better than dev, maybe hi3660_chan_info ?
+> The auto-calibration algorithm checks if the current WLED sink
+> configuration is valid. It tries enabling every sink and checks
+> if the OVP fault is observed. Based on this information it
+> detects and enables the valid sink configuration. Auto calibration
+> will be triggered when the OVP fault interrupts are seen frequently
+> thereby it tries to fix the sink configuration.
 > 
-> > +       unsigned int dst_irq;
-> > +       unsigned int ack_irq;
-> > +};
-> > +
-> > +/**
-> > + * Hi3660 mailbox controller data
-> > + *
-> > + * Mailbox controller includes 32 channels and can allocate
-> > + * channel for message transferring.
-> > + *
-> > + * @dev:       Device to which it is attached
-> > + * @base:      Base address of the register mapping region
-> > + * @chan:      Representation of channels in mailbox controller
-> > + * @mdev:      Representation of channel device data
-> > + * @controller:        Representation of a communication channel controller
-> > + */
-> > +struct hi3660_mbox {
-> > +       struct device *dev;
-> > +       void __iomem *base;
-> > +       struct mbox_chan chan[MBOX_CHAN_MAX];
-> > +       struct hi3660_mbox_dev mdev[MBOX_CHAN_MAX];
-> >
-> Maybe mchan, instead of mdev.
 
-Will refactor structure name.
+So it's not auto "calibration" it's auto "detection" of strings?
 
-> > +       struct mbox_controller controller;
-> > +};
-> > +
-> > +static inline struct hi3660_mbox *to_hi3660_mbox(struct mbox_controller *mbox)
-> > +{
-> > +       return container_of(mbox, struct hi3660_mbox, controller);
-> > +}
-> > +
-> > +static int hi3660_mbox_check_state(struct mbox_chan *chan)
-> > +{
-> > +       unsigned long ch = (unsigned long)chan->con_priv;
-> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
-> > +       struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
-> > +       void __iomem *base = MBOX_BASE(mbox, ch);
-> > +       unsigned long val;
-> > +       unsigned int state, ret;
-> > +
-> > +       /* Mailbox is idle so directly bail out */
-> > +       state = readl_relaxed(base + MBOX_MODE_REG);
-> > +       if (state & MBOX_STATE_IDLE)
-> > +               return 0;
-> > +
-> > +       /* Wait for acknowledge from remote */
-> > +       ret = readx_poll_timeout_atomic(readl_relaxed, base + MBOX_MODE_REG,
-> > +                       val, (val & MBOX_STATE_ACK), 1000, 300000);
-> > +       if (ret) {
-> > +               dev_err(mbox->dev, "%s: timeout for receiving ack\n", __func__);
-> > +               return ret;
-> > +       }
-> > +
-> > +       /* Ensure channel is released */
-> > +       writel_relaxed(0xffffffff, base + MBOX_IMASK_REG);
-> > +       writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SRC_REG);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int hi3660_mbox_unlock(struct mbox_chan *chan)
-> > +{
-> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
-> > +       unsigned int val, retry = 3;
-> > +
-> > +       do {
-> > +               writel_relaxed(MBOX_IPC_UNLOCK, mbox->base + MBOX_IPC_LOCK_REG);
-> > +
-> > +               val = readl_relaxed(mbox->base + MBOX_IPC_LOCK_REG);
-> > +               if (!val)
-> > +                       break;
-> > +
-> > +               udelay(10);
-> > +       } while (retry--);
-> > +
-> > +       return (!val) ? 0 : -ETIMEDOUT;
-> > +}
-> > +
-> > +static int hi3660_mbox_acquire_channel(struct mbox_chan *chan)
-> > +{
-> > +       unsigned long ch = (unsigned long)chan->con_priv;
-> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
-> > +       struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
-> > +       void __iomem *base = MBOX_BASE(mbox, ch);
-> > +       unsigned int val, retry;
-> > +
-> > +       for (retry = 10; retry; retry--) {
-> > +               /* Check if channel has been acquired */
-> > +               if (readl_relaxed(base + MBOX_MODE_REG) & MBOX_STATE_IDLE) {
-> > +                       writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SRC_REG);
-> > +                       val = readl_relaxed(base + MBOX_SRC_REG);
-> > +                       if (val & BIT(mdev->ack_irq))
-> > +                               break;
-> > +               }
-> > +       }
-> > +
-> > +       return retry ? 0 : -ETIMEDOUT;
-> > +}
-> > +
-> > +static int hi3660_mbox_send(struct mbox_chan *chan, u32 *msg)
-> > +{
-> > +       unsigned long ch = (unsigned long)chan->con_priv;
-> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
-> > +       struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
-> > +       void __iomem *base = MBOX_BASE(mbox, ch);
-> > +       unsigned int i;
-> > +
-> > +       /* Clear mask for destination interrupt */
-> > +       writel_relaxed(~BIT(mdev->dst_irq), base + MBOX_IMASK_REG);
-> > +
-> > +       /* Config destination for interrupt vector */
-> > +       writel_relaxed(BIT(mdev->dst_irq), base + MBOX_DST_REG);
-> > +
-> > +       /* Automatic acknowledge mode */
-> > +       writel_relaxed(MBOX_AUTOMATIC_ACK, base + MBOX_MODE_REG);
-> > +
-> > +       /* Fill message data */
-> > +       for (i = 0; i < MBOX_MSG_LEN; i++)
-> > +               writel_relaxed(msg[i], base + MBOX_DATA_REG + i * 4);
-> > +
-> > +       /* Trigger data transferring */
-> > +       writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SEND_REG);
-> > +       return 0;
-> > +}
-> > +
-> > +static int hi3660_mbox_send_data(struct mbox_chan *chan, void *msg)
-> > +{
-> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
-> > +       int err;
-> > +
-> > +       err = hi3660_mbox_check_state(chan);
-> > +       if (err) {
-> > +               dev_err(mbox->dev, "checking state failed\n");
-> > +               return err;
-> > +       }
-> > +
-> > +       err = hi3660_mbox_unlock(chan);
-> > +       if (err) {
-> > +               dev_err(mbox->dev, "unlocking mailbox failed\n");
-> > +               return err;
-> > +       }
-> > +
-> > +       err = hi3660_mbox_acquire_channel(chan);
-> > +       if (err) {
-> > +               dev_err(mbox->dev, "acquiring channel failed\n");
-> > +               return err;
-> > +       }
-> > +
-> Please remember .send_data() is called with irqs disabled spinlock
-> All these polling functions hurt. Please move the above three checks
-> in last_tx_done()
+When is this feature needed?
 
-I have tried to move these three checks in last_tx_done(), since these
-three functions tightly couple with mailbox state machine, so I failed
-to move them to last_tx_done().
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> ---
+>  .../bindings/leds/backlight/qcom-spmi-wled.txt     |   5 +
+>  drivers/video/backlight/qcom-spmi-wled.c           | 304 ++++++++++++++++++++-
+>  2 files changed, 306 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
+> index d39ee93..f06c0cd 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
+> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
+> @@ -94,6 +94,11 @@ The PMIC is connected to the host processor via SPMI bus.
+>  	Definition: Interrupt names associated with the interrupts.
+>  		    Currently supported interrupts are "sc-irq" and "ovp-irq".
+>  
+> +- qcom,auto-calibration
 
-Anyway, I will try to move them to last_tx_done() for next version
-patch.
+qcom,auto-string-detect?
 
-Thanks,
-Leo Yan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	Usage:      optional
+> +	Value type: <bool>
+> +	Definition: Enables auto-calibration of the WLED sink configuration.
+> +
+>  Example:
+>  
+>  qcom-wled@d800 {
+> diff --git a/drivers/video/backlight/qcom-spmi-wled.c b/drivers/video/backlight/qcom-spmi-wled.c
+> index 8b2a77a..aee5c56 100644
+> --- a/drivers/video/backlight/qcom-spmi-wled.c
+> +++ b/drivers/video/backlight/qcom-spmi-wled.c
+> @@ -38,11 +38,14 @@
+>  #define  QCOM_WLED_CTRL_SC_FAULT_BIT		BIT(2)
+>  
+>  #define QCOM_WLED_CTRL_INT_RT_STS		0x10
+> +#define  QCOM_WLED_CTRL_OVP_FLT_RT_STS_BIT	BIT(1)
+
+The use of BIT() makes this a mask and not a bit number, so if you just
+drop that you can afford to spell out the "FAULT" like the data sheet
+does. Perhaps even making it QCOM_WLED_CTRL_OVP_FAULT_STATUS ?
+
+>  
+>  #define QCOM_WLED_CTRL_MOD_ENABLE		0x46
+>  #define  QCOM_WLED_CTRL_MOD_EN_MASK		BIT(7)
+>  #define  QCOM_WLED_CTRL_MODULE_EN_SHIFT		7
+>  
+> +#define QCOM_WLED_CTRL_FDBK_OP			0x48
+
+This is called WLED_CTRL_FEEDBACK_CONTROL, why the need to make it
+unreadable?
+
+> +
+>  #define QCOM_WLED_CTRL_SWITCH_FREQ		0x4c
+>  #define  QCOM_WLED_CTRL_SWITCH_FREQ_MASK	GENMASK(3, 0)
+>  
+> @@ -99,6 +102,7 @@ struct qcom_wled_config {
+>  	int ovp_irq;
+>  	bool en_cabc;
+>  	bool ext_pfet_sc_pro_en;
+> +	bool auto_calib_enabled;
+>  };
+>  
+>  struct qcom_wled {
+> @@ -108,18 +112,25 @@ struct qcom_wled {
+>  	struct mutex lock;
+>  	struct qcom_wled_config cfg;
+>  	ktime_t last_sc_event_time;
+> +	ktime_t start_ovp_fault_time;
+>  	u16 sink_addr;
+>  	u16 ctrl_addr;
+> +	u16 auto_calibration_ovp_count;
+>  	u32 brightness;
+>  	u32 sc_count;
+>  	bool prev_state;
+>  	bool ovp_irq_disabled;
+> +	bool auto_calib_done;
+> +	bool force_mod_disable;
+>  };
+>  
+>  static int qcom_wled_module_enable(struct qcom_wled *wled, int val)
+>  {
+>  	int rc;
+>  
+> +	if (wled->force_mod_disable)
+> +		return 0;
+> +
+>  	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
+>  			QCOM_WLED_CTRL_MOD_ENABLE, QCOM_WLED_CTRL_MOD_EN_MASK,
+>  			val << QCOM_WLED_CTRL_MODULE_EN_SHIFT);
+> @@ -187,12 +198,10 @@ static int qcom_wled_set_brightness(struct qcom_wled *wled, u16 brightness)
+>  	v[1] = (brightness >> 8) & 0xf;
+>  
+>  	for (i = 0; (string_cfg >> i) != 0; i++) {
+> -		if (string_cfg & BIT(i)) {
+
+Why was this check here in the first place, if it's now fine to
+configure the brightness of all strings?
+
+Also, a single-string config of 0b0001 will only set brightness on the
+first string, while 0b1000 will set brightness on all strings.
+
+>  			rc = regmap_bulk_write(wled->regmap, wled->sink_addr +
+>  					QCOM_WLED_SINK_BRIGHT_LSB_REG(i), v, 2);
+>  			if (rc < 0)
+>  				return rc;
+> -		}
+>  	}
+>  
+>  	return 0;
+> @@ -294,6 +303,262 @@ static irqreturn_t qcom_wled_sc_irq_handler(int irq, void *_wled)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +#define AUTO_CALIB_BRIGHTNESS		200
+> +static int qcom_wled_auto_calibrate(struct qcom_wled *wled)
+> +{
+> +	int rc = 0, i;
+> +	u32 sink_config = 0, int_sts;
+> +	u8 reg = 0, sink_test = 0, sink_valid = 0;
+> +	u8 string_cfg = wled->cfg.string_cfg;
+> +
+> +	/* read configured sink configuration */
+> +	rc = regmap_read(wled->regmap, wled->sink_addr +
+> +			QCOM_WLED_SINK_CURR_SINK_EN, &sink_config);
+> +	if (rc < 0) {
+> +		pr_err("Failed to read SINK configuration rc=%d\n", rc);
+> +		goto failed_calib;
+> +	}
+> +
+> +	/* disable the module before starting calibration */
+> +	rc = regmap_update_bits(wled->regmap,
+> +			wled->ctrl_addr + QCOM_WLED_CTRL_MOD_ENABLE,
+> +			QCOM_WLED_CTRL_MOD_EN_MASK, 0);
+> +	if (rc < 0) {
+> +		pr_err("Failed to disable WLED module rc=%d\n",	rc);
+> +		goto failed_calib;
+> +	}
+
+Any error handling beyond this point seems to leave the backlight off
+(indefinitely?), this does seem like potentially bad user experience...
+
+In particular I wonder about the case when this would happen at some
+random time, minutes, hours, days, months after the device was booted.
+
+> +
+> +	/* set low brightness across all sinks */
+> +	rc = qcom_wled_set_brightness(wled, AUTO_CALIB_BRIGHTNESS);
+> +	if (rc < 0) {
+> +		pr_err("Failed to set brightness for calibration rc=%d\n", rc);
+> +		goto failed_calib;
+> +	}
+> +
+> +	if (wled->cfg.en_cabc) {
+> +		for (i = 0; (string_cfg >> i) != 0; i++) {
+> +			reg = 0;
+> +			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
+> +					QCOM_WLED_SINK_CABC_REG(i),
+> +					QCOM_WLED_SINK_CABC_MASK, reg);
+
+Just replace "reg" with 0.
+
+> +			if (rc < 0)
+> +				goto failed_calib;
+> +		}
+> +	}
+> +
+> +	/* disable all sinks */
+> +	rc = regmap_write(wled->regmap,
+> +			wled->sink_addr + QCOM_WLED_SINK_CURR_SINK_EN, 0);
+> +	if (rc < 0) {
+> +		pr_err("Failed to disable all sinks rc=%d\n", rc);
+> +		goto failed_calib;
+> +	}
+> +
+> +	/* iterate through the strings one by one */
+> +	for (i = 0; (string_cfg >> i) != 0; i++) {
+> +		sink_test = 1 << (QCOM_WLED_SINK_CURR_SINK_SHFT + i);
+
+BIT(QCOM_WLED_SINK_CURR_SINK_SHFT + i);
+
+> +
+> +		/* Enable feedback control */
+> +		rc = regmap_write(wled->regmap, wled->ctrl_addr +
+> +				QCOM_WLED_CTRL_FDBK_OP, i + 1);
+> +		if (rc < 0) {
+> +			pr_err("Failed to enable feedback for SINK %d rc = %d\n",
+> +				i + 1, rc);
+> +			goto failed_calib;
+> +		}
+> +
+> +		/* enable the sink */
+> +		rc = regmap_write(wled->regmap, wled->sink_addr +
+> +				QCOM_WLED_SINK_CURR_SINK_EN, sink_test);
+> +		if (rc < 0) {
+> +			pr_err("Failed to configure SINK %d rc=%d\n",
+> +						i + 1, rc);
+> +			goto failed_calib;
+> +		}
+> +
+> +		/* Enable the module */
+> +		rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
+> +				QCOM_WLED_CTRL_MOD_ENABLE,
+> +				QCOM_WLED_CTRL_MOD_EN_MASK,
+> +				QCOM_WLED_CTRL_MOD_EN_MASK);
+
+I like the use of regmap_update_bits(..., MASK, MASK) it's clean, but
+makes me wonder why it's done differently in qcom_wled_module_enable().
+
+> +		if (rc < 0) {
+> +			pr_err("Failed to enable WLED module rc=%d\n", rc);
+> +			goto failed_calib;
+> +		}
+> +
+> +		usleep_range(QCOM_WLED_SOFT_START_DLY_US,
+> +				QCOM_WLED_SOFT_START_DLY_US + 1000);
+> +
+> +		rc = regmap_read(wled->regmap, wled->ctrl_addr +
+> +				QCOM_WLED_CTRL_INT_RT_STS, &int_sts);
+> +		if (rc < 0) {
+> +			pr_err("Error in reading WLED_INT_RT_STS rc=%d\n", rc);
+> +			goto failed_calib;
+> +		}
+> +
+> +		if (int_sts & QCOM_WLED_CTRL_OVP_FAULT_BIT)
+> +			pr_debug("WLED OVP fault detected with SINK %d\n",
+> +						i + 1);
+> +		else
+> +			sink_valid |= sink_test;
+> +
+> +		/* Disable the module */
+> +		rc = regmap_update_bits(wled->regmap,
+> +				wled->ctrl_addr + QCOM_WLED_CTRL_MOD_ENABLE,
+> +				QCOM_WLED_CTRL_MOD_EN_MASK, 0);
+> +		if (rc < 0) {
+> +			pr_err("Failed to disable WLED module rc=%d\n", rc);
+> +			goto failed_calib;
+> +		}
+> +	}
+> +
+> +	if (sink_valid == sink_config) {
+> +		pr_debug("WLED auto-calibration complete, default sink-config=%x OK!\n",
+> +						sink_config);
+> +	} else {
+> +		pr_warn("Invalid WLED default sink config=%x changing it to=%x\n",
+> +						sink_config, sink_valid);
+> +		sink_config = sink_valid;
+> +	}
+> +
+> +	if (!sink_config) {
+> +		pr_warn("No valid WLED sinks found\n");
+> +		wled->force_mod_disable = true;
+> +		goto failed_calib;
+> +	}
+> +
+> +	/* write the new sink configuration */
+> +	rc = regmap_write(wled->regmap,
+> +			wled->sink_addr + QCOM_WLED_SINK_CURR_SINK_EN,
+> +			sink_config);
+> +	if (rc < 0) {
+> +		pr_err("Failed to reconfigure the default sink rc=%d\n", rc);
+> +		goto failed_calib;
+> +	}
+> +
+> +	/* MODULATOR_EN setting for valid sinks */
+
+"Enable valid sinks"
+
+> +	for (i = 0; (string_cfg >> i) != 0; i++) {
+> +		if (wled->cfg.en_cabc) {
+> +			reg = QCOM_WLED_SINK_CABC_EN;
+
+"reg" is a bad name of a variable holding the "value" to be written to a
+register.
+
+> +			rc = regmap_update_bits(wled->regmap, wled->sink_addr +
+> +					QCOM_WLED_SINK_CABC_REG(i),
+> +					QCOM_WLED_SINK_CABC_MASK, reg);
+
+Again, just inline the value in the function call.
+
+> +			if (rc < 0)
+> +				goto failed_calib;
+> +		}
+> +
+> +		if (sink_config & (1 << (QCOM_WLED_SINK_CURR_SINK_SHFT + i)))
+
+BIT(QCOM_WLED_SINK_CURR_SINK_SHFT + i)
+
+> +			reg = QCOM_WLED_SINK_REG_STR_MOD_EN;
+> +		else
+> +			reg = 0x0; /* disable modulator_en for unused sink */
+> +
+> +		rc = regmap_write(wled->regmap, wled->sink_addr +
+> +				QCOM_WLED_SINK_MOD_EN_REG(i), reg);
+> +		if (rc < 0) {
+> +			pr_err("Failed to configure MODULATOR_EN rc=%d\n", rc);
+> +			goto failed_calib;
+> +		}
+> +	}
+> +
+> +	/* restore the feedback setting */
+> +	rc = regmap_write(wled->regmap,
+> +			wled->ctrl_addr + QCOM_WLED_CTRL_FDBK_OP, 0);
+> +	if (rc < 0) {
+> +		pr_err("Failed to restore feedback setting rc=%d\n", rc);
+> +		goto failed_calib;
+> +	}
+> +
+> +	/* restore  brightness */
+> +	rc = qcom_wled_set_brightness(wled, wled->brightness);
+> +	if (rc < 0) {
+> +		pr_err("Failed to set brightness after calibration rc=%d\n",
+> +			rc);
+> +		goto failed_calib;
+> +	}
+> +
+> +	rc = regmap_update_bits(wled->regmap,
+> +			wled->ctrl_addr + QCOM_WLED_CTRL_MOD_ENABLE,
+> +			QCOM_WLED_CTRL_MOD_EN_MASK,
+> +			QCOM_WLED_CTRL_MOD_EN_MASK);
+> +	if (rc < 0) {
+> +		pr_err("Failed to enable WLED module rc=%d\n", rc);
+> +		goto failed_calib;
+> +	}
+> +
+> +	/* delay for WLED soft-start */
+
+What comes after this that you want to delay?
+
+This delay is used to make the OVP IRQ not fire immediately, but as
+we've now successfully executed the string auto detection run we're
+never going to do anything in the OVP handler.
+
+> +	usleep_range(QCOM_WLED_SOFT_START_DLY_US,
+> +			QCOM_WLED_SOFT_START_DLY_US + 1000);
+> +
+> +failed_calib:
+> +	return rc;
+> +}
+> +
+> +#define WLED_AUTO_CAL_OVP_COUNT		5
+> +#define WLED_AUTO_CAL_CNT_DLY_US	1000000	/* 1 second */
+> +static bool qcom_wled_auto_cal_required(struct qcom_wled *wled)
+> +{
+> +	s64 elapsed_time_us;
+> +
+> +	/*
+> +	 * Check if the OVP fault was an occasional one
+> +	 * or if its firing continuously, the latter qualifies
+> +	 * for an auto-calibration check.
+> +	 */
+> +	if (!wled->auto_calibration_ovp_count) {
+> +		wled->start_ovp_fault_time = ktime_get();
+> +		wled->auto_calibration_ovp_count++;
+> +	} else {
+> +		elapsed_time_us = ktime_us_delta(ktime_get(),
+> +				wled->start_ovp_fault_time);
+> +		if (elapsed_time_us > WLED_AUTO_CAL_CNT_DLY_US)
+> +			wled->auto_calibration_ovp_count = 0;
+> +		else
+> +			wled->auto_calibration_ovp_count++;
+> +
+> +		if (wled->auto_calibration_ovp_count >=
+> +				WLED_AUTO_CAL_OVP_COUNT) {
+> +			wled->auto_calibration_ovp_count = 0;
+> +			return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static int qcom_wled_auto_calibrate_at_init(struct qcom_wled *wled)
+
+I presume this function is expected to detect if there is a invalid
+configuration at boot and try to figure out which strings are actually
+wired.
+
+> +{
+> +	int rc;
+> +	u32 fault_status = 0, rt_status = 0;
+> +
+> +	if (!wled->cfg.auto_calib_enabled)
+> +		return 0;
+> +
+> +	rc = regmap_read(wled->regmap,
+> +			wled->ctrl_addr + QCOM_WLED_CTRL_INT_RT_STS,
+> +			&rt_status);
+> +	if (rc < 0)
+> +		pr_err("Failed to read RT status rc=%d\n", rc);
+> +
+> +	rc = regmap_read(wled->regmap,
+> +			wled->ctrl_addr + QCOM_WLED_CTRL_FAULT_STATUS,
+> +			&fault_status);
+> +	if (rc < 0)
+> +		pr_err("Failed to read fault status rc=%d\n", rc);
+> +
+> +	if ((rt_status & QCOM_WLED_CTRL_OVP_FLT_RT_STS_BIT) ||
+> +			(fault_status & QCOM_WLED_CTRL_OVP_FAULT_BIT)) {
+
+You should be able to drop the extra () around these.
+
+> +		mutex_lock(&wled->lock);
+> +		rc = qcom_wled_auto_calibrate(wled);
+> +		if (rc < 0)
+> +			pr_err("Failed auto-calibration rc=%d\n", rc);
+
+qcom_wled_auto_calibrate() did already print, no need to repeat this.
+
+> +		else
+> +			wled->auto_calib_done = true;
+> +		mutex_unlock(&wled->lock);
+> +	}
+> +
+> +	return rc;
+> +}
+> +
+>  static irqreturn_t qcom_wled_ovp_irq_handler(int irq, void *_wled)
+>  {
+>  	struct qcom_wled *wled = _wled;
+> @@ -319,6 +584,33 @@ static irqreturn_t qcom_wled_ovp_irq_handler(int irq, void *_wled)
+>  		pr_err("WLED OVP fault detected, int_sts=%x fault_sts= %x\n",
+>  			int_sts, fault_sts);
+>  
+> +	if (fault_sts & QCOM_WLED_CTRL_OVP_FAULT_BIT) {
+> +		if (wled->cfg.auto_calib_enabled && !wled->auto_calib_done) {
+> +			if (qcom_wled_auto_cal_required(wled)) {
+
+So this will be invoked only once, iff we didn't boot with a faulty
+configuration in which case the qcom_wled_auto_calibrate_at_init() has
+already done this step and set auto_calib_done.
+
+
+Which also would mean that all logic in this handler, beyond the
+printouts, are only ever going to be executed zero or one times.
+
+Why don't you just do auto-detection during probe (iff the flag is set
+in DT) and you can remove all this extra logic?
+
+> +				mutex_lock(&wled->lock);
+> +				if (wled->cfg.ovp_irq > 0 &&
+> +						!wled->ovp_irq_disabled) {
+> +					disable_irq_nosync(wled->cfg.ovp_irq);
+> +					wled->ovp_irq_disabled = true;
+> +				}
+> +
+> +				rc = qcom_wled_auto_calibrate(wled);
+> +				if (rc < 0)
+> +					pr_err("Failed auto-calibration rc=%d\n",
+> +						rc);
+
+qcom_wled_auto_calibrate() did already print.
+
+> +				else
+> +					wled->auto_calib_done = true;
+> +
+> +				if (wled->cfg.ovp_irq > 0 &&
+> +						wled->ovp_irq_disabled) {
+> +					enable_irq(wled->cfg.ovp_irq);
+> +					wled->ovp_irq_disabled = false;
+> +				}
+> +				mutex_unlock(&wled->lock);
+> +			}
+> +		}
+> +	}
+> +
+
+Regards,
+Bjorn
