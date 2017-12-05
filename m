@@ -1,67 +1,55 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: hwrng: Add Samsung Exynos 5250+ True
- RNG bindings
-Date: Tue, 5 Dec 2017 11:04:27 +0100
-Message-ID: <CAJKOXPdjrBX50f5mLG5k0eUPvRLeYwUZn-JEnLkjFqN-SF0D+g@mail.gmail.com>
-References: <CGME20171205093028eucas1p1fb6d7b8bde6cd5e3a0bfca8ddafe8a31@eucas1p1.samsung.com>
- <CAJKOXPej1G6npvNSr9TP8DmWubtZpn6ONeNMN4Ax_RaafMiT7g@mail.gmail.com> <878tehbjyu.fsf%l.stelmach@samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: bananapi-m64:
+ Add LED device node
+Date: Tue, 5 Dec 2017 11:05:11 +0100
+Message-ID: <20171205100511.ohxcqlrozxfgq6id@flea.lan>
+References: <20171201162733.23156-1-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <878tehbjyu.fsf%l.stelmach@samsung.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="n3of7gmhmumilpfh"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYW6THIQKGQETJLJMWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20171201162733.23156-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 5, 2017 at 10:30 AM, Łukasz Stelmach <l.stelmach@samsung.com> wrote:
-> It was <2017-12-04 pon 14:13>, when Krzysztof Kozlowski wrote:
->> On Mon, Dec 4, 2017 at 1:53 PM, Łukasz Stelmach <l.stelmach@samsung.com> wrote:
->>> Add binding documentation for the True Random Number Generator
->>> found on Samsung Exynos 5250+ SoCs.
->>>
->>> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
->>> ---
->>>  .../devicetree/bindings/rng/samsung,exynos5250-trng.txt | 17 +++++++++++++++++
->>>  1 file changed, 17 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
->>> b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
->>> new file mode 100644
->>> index 000000000000..5a613a4ec780
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
->>> @@ -0,0 +1,17 @@
->>> +Exynos True Random Number Generator
->>> +
->>> +Required properties:
->>> +
->>> +- compatible  : Should be "samsung,exynos5250-trng".
->>> +- reg         : Specifies base physical address and size of the registers map.
->>> +- clocks      : Phandle to clock-controller plus clock-specifier pair.
->>> +- clock-names : "secss" as a clock name.
->>> +
->>> +Example:
->>> +
->>> +       rng@10830600 {
->>> +               compatible = "samsung,exynos5250-trng";
->>> +               reg = <0x10830600 0x100>;
->>> +               clocks = <&clock CLK_SSS>;
->>> +               clock-names = "secss";
->>> +       };
->>> --
->>> 2.11.0
->>
->> Mine and Rob's tags disappeared and I think you did not introduce any
->> major changes here, right?
->
-> A very experienced kernel developer adviced me to remove them.
 
-In that case:
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+--n3of7gmhmumilpfh
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-BR,
-Krzysztof
+Hi,
+
+On Sat, Dec 02, 2017 at 12:27:33AM +0800, Chen-Yu Tsai wrote:
+> The Bananapi-M64 has 3 LEDS in red, green, and blue. These are toggled
+> via GPIO lines, which drive transistors that control current across the
+> LEDS. The red LED is by default on, via an additional pull-up on the
+> control line. We consider this means that it is a power indicator.
+> So we set the "default-on" property for it.
+> 
+> The pingroups the GPIO lines belong to require external regulators be
+> enabled to be able to drive the GPIO high. These regulators also have
+> other purposes. However the pin controller does not have bindings for
+> regulators. Here we just set them to always-on.
+
+I guess we should take the opportunity to do just that.
+
+We have been deferring this for quite some time now, this is a perfect
+occasion to do it once and for all :)
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--n3of7gmhmumilpfh--
