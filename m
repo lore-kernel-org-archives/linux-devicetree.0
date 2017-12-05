@@ -1,72 +1,38 @@
-From: Krzysztof Adamski <k@japko.eu>
-Subject: [PATCH v2] ARM: dts: sun8i: h3: enable USB OTG for NanoPi Neo board
-Date: Tue, 5 Dec 2017 23:03:58 +0100
-Message-ID: <20171205220358.GA28161@t440.localdomain>
-References: <20171205090706.et5a7dizkhn6auje@flea.lan>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH V6 0/7] dmaengine: qcom_hidma: add support for bugfixed HW
+Date: Tue, 5 Dec 2017 23:05:52 +0100
+Message-ID: <CAJZ5v0gq-Xv1V90GEcfxdnrADQn2Gern=LBnsbSzmrU9M0+FEQ@mail.gmail.com>
+References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171205090706.et5a7dizkhn6auje-ZC1Zs529Oq4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Similarly to Orange Pi Zero, NanoPi Neo board has an USB OTG port with
-an ID pin but with unpowered VBUS. This patch enables this port in
-forced peripheral mode.
+On Tue, Dec 5, 2017 at 6:04 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
+> Introduce new ACPI and OF device ids for thw HW along with the helper
+> functions.
+>
+> Changes from v5:
+> * use struct device as a calling parameter to get_match_data() callback
+> so that we can reuse the existing OF API.
+> * revert the change on acpi_get_match_data() to V4.
+>
+> Sinan Kaya (7):
+>   Documentation: DT: qcom_hidma: Bump HW revision for the bugfixed HW
+>   ACPI / bus: Introduce acpi_get_match_data() function
+>   device property: Introduce a common API to fetch device match data
+>   OF: properties: Implement get_match_data() callback
+>   ACPI: properties: Implement get_match_data() callback
+>   dmaengine: qcom_hidma: Add support for the new revision
+>   dmaengine: qcom_hidma: Add identity register support
 
-ohci/ehci nodes are still enabled since the host mode may work if
-external power source is used. In that case, the mode can be switched
-for example via sysfs. The same strategy is used for Orange Pi Zero
-board DTS.
+Sakari, can you please have a look at this series?
 
-Signed-off-by: Krzysztof Adamski <k@japko.eu>
----
+I'm particularly interested in your opinion on patches [2-3/7] and [5/7].
 
-Changes since version 1:
-- nodes sorted alphabetically
-- added explanation why enabling ohci/ehci still makes sense
-
- arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-index 78f6c24952dd..9f33f6fae595 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-@@ -47,9 +47,26 @@
- 	compatible = "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &emac {
- 	phy-handle = <&int_mii_phy>;
- 	phy-mode = "mii";
- 	allwinner,leds-active-low;
- 	status = "okay";
- };
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	status = "okay";
-+	dr_mode = "peripheral";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-+};
--- 
-2.13.6
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Rafael
