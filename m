@@ -1,55 +1,101 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 0/3] pwm: meson-axg: add pwm controller driver
-Date: Tue, 5 Dec 2017 09:52:27 +0100
-Message-ID: <20171205085227.GD7386@ulmo>
-References: <20171204060018.8856-1-yixun.lan@amlogic.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 02/10] pinctrl: axp209: add pinctrl features
+Date: Tue, 5 Dec 2017 09:53:40 +0100
+Message-ID: <20171205085340.z2mb4uujencw7bct@flea.lan>
+References: <cover.3ff63fdf302c6bda02ea7d160ad2aa5afee0899d.1512135804.git-series.quentin.schulz@free-electrons.com>
+ <71c9da94df2a5938cb8c092e40f8e36eec0b01c3.1512135804.git-series.quentin.schulz@free-electrons.com>
+ <20171201155702.irfox7vf3kfjvpjx@flea.lan>
+ <2207ddcb-21fc-e3e1-1a1c-11e11690a02e@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3Pql8miugIZX0722"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="i4sblixkcnkossi4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFN5THIQKGQEIN7MPCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171204060018.8856-1-yixun.lan@amlogic.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <2207ddcb-21fc-e3e1-1a1c-11e11690a02e-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---3Pql8miugIZX0722
-Content-Type: text/plain; charset=us-ascii
+--i4sblixkcnkossi4
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 04, 2017 at 02:00:15PM +0800, Yixun Lan wrote:
-> This patch series try to add PWM controller driver for the=20
-> Amlogic's Meson-AXG SoC. Update the Clock sources, pin DT.
->=20
-> Jian Hu (3):
->   dt-bindings: pwm: update bindings for the Meson-AXG
->   pwm: meson: add clock source configuratin for Meson-AXG
+Hi,
 
-Applied both of these, thanks.
+On Mon, Dec 04, 2017 at 09:07:52AM +0100, Quentin Schulz wrote:
+> >> +static int axp20x_pmx_set_mux(struct pinctrl_dev *pctldev,
+> >> +			      unsigned int function, unsigned int group)
+> >> +{
+> >> +	struct axp20x_gpio *gpio = pinctrl_dev_get_drvdata(pctldev);
+> >> +	unsigned int mask;
+> >> +
+> >> +	/* Every pin supports GPIO_OUT and GPIO_IN functions */
+> >> +	if (function <= AXP20X_FUNC_GPIO_IN)
+> >> +		return axp20x_pmx_set(pctldev, group,
+> >> +				      gpio->funcs[function].muxval);
+> >> +
+> >> +	if (function == AXP20X_FUNC_LDO)
+> >> +		mask = gpio->desc->ldo_mask;
+> >> +	else
+> >> +		mask = gpio->desc->adc_mask;
+> > 
+> > What is the point of this test...
+> > 
+> >> +	if (!(BIT(group) & mask))
+> >> +		return -EINVAL;
+> >> +
+> >> +	/*
+> >> +	 * We let the regulator framework handle the LDO muxing as muxing bits
+> >> +	 * are basically also regulators on/off bits. It's better not to enforce
+> >> +	 * any state of the regulator when selecting LDO mux so that we don't
+> >> +	 * interfere with the regulator driver.
+> >> +	 */
+> >> +	if (function == AXP20X_FUNC_LDO)
+> >> +		return 0;
+> > 
+> > ... if you know that you're not going to do anything with one of the
+> > outcomes. It would be better to just move that part above, instead of
+> > doing the same test twice.
+> > 
+> 
+> Return value is different. In one case, it is an error to request "ldo"
+> for a pin that does not support it. In the other case, the ldo request
+> is valid but nothing's done on driver side.
+> 
+> Both cases are handled differently by the core:
+> http://elixir.free-electrons.com/linux/latest/source/drivers/pinctrl/pinmux.c#L439
+> 
+> I think that's the behavior we're expecting from this driver.
 
-Thierry
+Ah, right.
 
---3Pql8miugIZX0722
-Content-Type: application/pgp-signature; name="signature.asc"
+> Or maybe you're asking to do:
+> 
+> +	if (function == AXP20X_FUNC_LDO) {
+> +		if (!(BIT(group) & gpio->desc->ldo_mask))
+> +			return -EINVAL;
+> +		return 0;
+> +	} else if (!(BIT(group) & gpio->desc->adc_mask)) {
+> +		return -EINVAL;
+> +	}
+> 
+> ?
 
------BEGIN PGP SIGNATURE-----
+No, it's definitely better the way you did it.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlomXkoACgkQ3SOs138+
-s6E4RA/+KgrZ7PHAoM3+IL/ITWyTALfIf7ZThNvrNL/DtDMA0WOf0dx2plv2976D
-CqJOChs0fbsNVxeDS8K7k5xNCuRY15f+tUc0utn944z+0GEuRgcHgK1uTQMTcRHJ
-O4oDJSk9kC0RCZRq9T/YwbNHgCQv/miLRO+V36FfTZHk7sT+4DOFek6xlo6Qh14v
-BI2m8nVF5i2ORRiU/eAqIKHtjtvlQYSLmraBb3zahBNdbBDB/nvXUoLnOLSuVu2O
-FyrFnDotGK4U7ONALhxPO2GREIMhZMS5cjSXrmu+pbxFGVvHtfG8kPeQVQbQaCGs
-xjQ28Sjd49LGpILmKqSOghRLvd6iJL4DrmimVkDh7vNHqepRjRbEiBh+XGOIjjFh
-C+OnSbsdwiMZS+YdFMzHlo2ADQxABGObILFFCuu3Ok3ovDtX6dhH0BihmKbJHEGL
-c3JAwnYuXsI3PT/nLJjTwNQJ7jZlh7pE+f1weinwKzFWd7uz8eui19/Vy/21R/a2
-zuI715IjvuwhB0rXA4fwOKfIIcXURvNwU6Pdz5C+7pD4R92Fab3Mm1JORSCGbPgT
-2fkLJ8w+EjjN/J5y/8h+O8aE6NU1W045HX5Wy9RhUEdiRsVoJ+K3+vHPE/kxsrV9
-LmXInaUb5qXGHvodkzwDLTlPSTIpxQylHiUq8XiKxtGCbbAgEDQ=
-=ZjWS
------END PGP SIGNATURE-----
+Maxime
 
---3Pql8miugIZX0722--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--i4sblixkcnkossi4--
