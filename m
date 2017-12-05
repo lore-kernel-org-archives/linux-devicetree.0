@@ -1,266 +1,66 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v3 2/3] clk: hisilicon: Add support for Hi3660 stub clocks
-Date: Tue, 5 Dec 2017 10:33:09 +0800
-Message-ID: <20171205023309.GC20321@leoy-linaro>
-References: <1510910852-2175-1-git-send-email-xuyiping@hisilicon.com>
- <1510910852-2175-3-git-send-email-xuyiping@hisilicon.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH] Documentation: binding: Update endianness usage
+Date: Mon, 04 Dec 2017 20:45:57 -0600
+Message-ID: <1512441957.10062.6.camel@buserror.net>
+References: <1511954855-8593-1-git-send-email-prabhakar.kushwaha@nxp.com>
+ <1512105209.10062.1.camel@buserror.net>
+ <HE1PR04MB12414AFA5F8081730B89378497390@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <1512165311.10062.3.camel@buserror.net>
+ <HE1PR04MB1241226CD3B7ABD6D5FA2D91973C0@HE1PR04MB1241.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1510910852-2175-3-git-send-email-xuyiping@hisilicon.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Xu YiPing <xuyiping@hisilicon.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, xuejiancheng@hisilicon.com, wenpan@hisilicon.com, zhangfei.gao@linaro.org, guodong.xu@linaro.org, zhongkaihua@huawei.com, chenjun14@huawei.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, suzhuangluan@hisilicon.com, xuezhiliang@hisilicon.com, kevin.wangtao@hisilicon.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <HE1PR04MB1241226CD3B7ABD6D5FA2D91973C0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, devicetree@vger.kernel.org
+Cc: "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 17, 2017 at 05:27:31PM +0800, Xu YiPing wrote:
-> From: Kaihua Zhong <zhongkaihua@huawei.com>
-> 
-> Hi3660 has four stub clocks, which are big and LITTLE cluster clocks,
-> GPU clock and DDR clock.  These clocks ask MCU for frequency scaling
-> by sending message through mailbox.
-> 
-> This commit adds support for stub clocks, it requests the dedicated
-> mailbox channel at initialization; then later uses this channel to send
-> message to MCU to execute frequency scaling. The four stub clocks share
-> the same mailbox channel, but every stub clock has its own command id so
-> MCU can distinguish the requirement coming for which clock.
-> 
-> A shared memory is used to present effective frequency value, so the
-> clock driver uses I/O mapping for the memory and reads back rate value.
-
-Hi Michael, Stephen,
-
-Could you help review this patch?
-
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: Kai Zhao <zhaokai1@hisilicon.com>
-> Signed-off-by: Tao Wang <kevin.wangtao@hisilicon.com>
-> Signed-off-by: Ruyi Wang <wangruyi@huawei.com>
-> Signed-off-by: Kaihua Zhong <zhongkaihua@huawei.com>
-> ---
->  drivers/clk/hisilicon/Kconfig           |   6 ++
->  drivers/clk/hisilicon/Makefile          |   1 +
->  drivers/clk/hisilicon/clk-hi3660-stub.c | 186 ++++++++++++++++++++++++++++++++
->  3 files changed, 193 insertions(+)
->  create mode 100644 drivers/clk/hisilicon/clk-hi3660-stub.c
-> 
-> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisilicon/Kconfig
-> index 7098bfd..1bd4355 100644
-> --- a/drivers/clk/hisilicon/Kconfig
-> +++ b/drivers/clk/hisilicon/Kconfig
-> @@ -49,3 +49,9 @@ config STUB_CLK_HI6220
->  	default ARCH_HISI
->  	help
->  	  Build the Hisilicon Hi6220 stub clock driver.
-> +
-> +config STUB_CLK_HI3660
-> +	bool "Hi3660 Stub Clock Driver"
-> +	depends on COMMON_CLK_HI3660 && MAILBOX
-> +	help
-> +	  Build the Hisilicon Hi3660 stub clock driver.
-> diff --git a/drivers/clk/hisilicon/Makefile b/drivers/clk/hisilicon/Makefile
-> index 1e4c3dd..0a5b499 100644
-> --- a/drivers/clk/hisilicon/Makefile
-> +++ b/drivers/clk/hisilicon/Makefile
-> @@ -14,3 +14,4 @@ obj-$(CONFIG_COMMON_CLK_HI3798CV200)	+= crg-hi3798cv200.o
->  obj-$(CONFIG_COMMON_CLK_HI6220)	+= clk-hi6220.o
->  obj-$(CONFIG_RESET_HISI)	+= reset.o
->  obj-$(CONFIG_STUB_CLK_HI6220)	+= clk-hi6220-stub.o
-> +obj-$(CONFIG_STUB_CLK_HI3660)	+= clk-hi3660-stub.o
-> diff --git a/drivers/clk/hisilicon/clk-hi3660-stub.c b/drivers/clk/hisilicon/clk-hi3660-stub.c
-> new file mode 100644
-> index 0000000..607efa4
-> --- /dev/null
-> +++ b/drivers/clk/hisilicon/clk-hi3660-stub.c
-> @@ -0,0 +1,186 @@
-> +/*
-> + * Hisilicon clock driver
-> + *
-> + * Copyright (c) 2013-2017 Hisilicon Limited.
-> + * Copyright (c) 2017 Linaro Limited.
-> + *
-> + * Author: Kai Zhao <zhaokai1@hisilicon.com>
-> + *	    Tao Wang <kevin.wangtao@hisilicon.com>
-> + *	    Leo Yan <leo.yan@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <dt-bindings/clock/hi3660-clock.h>
-> +
-> +#define HI3660_STUB_CLOCK_DATA		(0x70)
-> +#define MHZ				(1000 * 1000)
-> +
-> +#define DEFINE_CLK_STUB(_id, _cmd, _name)			\
-> +	{							\
-> +		.id = (_id),					\
-> +		.cmd = (_cmd),					\
-> +		.hw.init = &(struct clk_init_data) {		\
-> +			.name = #_name,				\
-> +			.ops = &hi3660_stub_clk_ops,		\
-> +			.num_parents = 0,			\
-> +			.flags = CLK_GET_RATE_NOCACHE,		\
-> +		},						\
-> +	},
-> +
-> +#define to_stub_clk(_hw) container_of(_hw, struct hi3660_stub_clk, hw)
-> +
-> +struct hi3660_stub_clk_chan {
-> +	struct mbox_client cl;
-> +	struct mbox_chan *mbox;
-> +};
-> +
-> +struct hi3660_stub_clk {
-> +	unsigned int id;
-> +	struct clk_hw hw;
-> +	unsigned int cmd;
-> +	unsigned int msg[8];
-> +	unsigned int rate;
-> +};
-> +
-> +static void __iomem *freq_reg;
-> +static struct hi3660_stub_clk_chan stub_clk_chan;
-> +
-> +static unsigned long hi3660_stub_clk_recalc_rate(struct clk_hw *hw,
-> +						 unsigned long parent_rate)
-> +{
-> +	struct hi3660_stub_clk *stub_clk = to_stub_clk(hw);
-> +
-> +	/*
-> +	 * LPM3 writes back the CPU frequency in shared SRAM so read
-> +	 * back the frequency.
-> +	 */
-> +	stub_clk->rate = readl(freq_reg + (stub_clk->id << 2)) * MHZ;
-> +	return stub_clk->rate;
-> +}
-> +
-> +static long hi3660_stub_clk_round_rate(struct clk_hw *hw, unsigned long rate,
-> +				       unsigned long *prate)
-> +{
-> +	/*
-> +	 * LPM3 handles rate rounding so just return whatever
-> +	 * rate is requested.
-> +	 */
-> +	return rate;
-> +}
-> +
-> +static int hi3660_stub_clk_set_rate(struct clk_hw *hw, unsigned long rate,
-> +				    unsigned long parent_rate)
-> +{
-> +	struct hi3660_stub_clk *stub_clk = to_stub_clk(hw);
-> +
-> +	stub_clk->msg[0] = stub_clk->cmd;
-> +	stub_clk->msg[1] = rate / MHZ;
-> +
-> +	dev_dbg(stub_clk_chan.cl.dev, "set rate msg[0]=0x%x msg[1]=0x%x\n",
-> +		stub_clk->msg[0], stub_clk->msg[1]);
-> +
-> +	mbox_send_message(stub_clk_chan.mbox, stub_clk->msg);
-> +	mbox_client_txdone(stub_clk_chan.mbox, 0);
-> +
-> +	stub_clk->rate = rate;
-> +	return 0;
-> +}
-> +
-> +static const struct clk_ops hi3660_stub_clk_ops = {
-> +	.recalc_rate    = hi3660_stub_clk_recalc_rate,
-> +	.round_rate     = hi3660_stub_clk_round_rate,
-> +	.set_rate       = hi3660_stub_clk_set_rate,
-> +};
-> +
-> +static struct hi3660_stub_clk hi3660_stub_clks[HI3660_CLK_STUB_NUM] = {
-> +	DEFINE_CLK_STUB(HI3660_CLK_STUB_CLUSTER0, 0x0001030A, "cpu-cluster.0")
-> +	DEFINE_CLK_STUB(HI3660_CLK_STUB_CLUSTER1, 0x0002030A, "cpu-cluster.1")
-> +	DEFINE_CLK_STUB(HI3660_CLK_STUB_GPU, 0x0003030A, "clk-g3d")
-> +	DEFINE_CLK_STUB(HI3660_CLK_STUB_DDR, 0x00040309, "clk-ddrc")
-> +};
-> +
-> +static struct clk_hw *hi3660_stub_clk_hw_get(struct of_phandle_args *clkspec,
-> +					     void *data)
-> +{
-> +	unsigned int idx = clkspec->args[0];
-> +
-> +	if (idx > HI3660_CLK_STUB_NUM) {
-> +		pr_err("%s: invalid index %u\n", __func__, idx);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	return &hi3660_stub_clks[idx].hw;
-> +}
-> +
-> +static int hi3660_stub_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	/* Use mailbox client without blocking */
-> +	stub_clk_chan.cl.dev = dev;
-> +	stub_clk_chan.cl.tx_done = NULL;
-> +	stub_clk_chan.cl.tx_block = false;
-> +	stub_clk_chan.cl.knows_txdone = false;
-> +
-> +	/* Allocate mailbox channel */
-> +	stub_clk_chan.mbox = mbox_request_channel(&stub_clk_chan.cl, 0);
-> +	if (IS_ERR(stub_clk_chan.mbox))
-> +		return PTR_ERR(stub_clk_chan.mbox);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	freq_reg = devm_ioremap(dev, res->start, resource_size(res));
-> +	if (IS_ERR(freq_reg))
-> +		return -ENOMEM;
-> +
-> +	freq_reg += HI3660_STUB_CLOCK_DATA;
-> +
-> +	for (i = 0; i < HI3660_CLK_STUB_NUM; i++) {
-> +		ret = devm_clk_hw_register(&pdev->dev, &hi3660_stub_clks[i].hw);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = of_clk_add_hw_provider(pdev->dev.of_node, hi3660_stub_clk_hw_get,
-> +				     hi3660_stub_clks);
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id hi3660_stub_clk_of_match[] = {
-> +	{ .compatible = "hisilicon,hi3660-stub-clk", },
-> +	{}
-> +};
-> +
-> +static struct platform_driver hi3660_stub_clk_driver = {
-> +	.probe	= hi3660_stub_clk_probe,
-> +	.driver = {
-> +		.name = "hi3660-stub-clk",
-> +		.of_match_table = hi3660_stub_clk_of_match,
-> +	},
-> +};
-> +
-> +static int __init hi3660_stub_clk_init(void)
-> +{
-> +	return platform_driver_register(&hi3660_stub_clk_driver);
-> +}
-> +subsys_initcall(hi3660_stub_clk_init);
-> -- 
-> 1.9.1
-> 
+T24gTW9uLCAyMDE3LTEyLTA0IGF0IDA0OjMzICswMDAwLCBQcmFiaGFrYXIgS3VzaHdhaGEgd3Jv
+dGU6Cj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gRnJvbTogU2NvdHQgV29vZCBb
+bWFpbHRvOm9zc0BidXNlcnJvci5uZXRdCj4gPiBTZW50OiBTYXR1cmRheSwgRGVjZW1iZXIgMDIs
+IDIwMTcgMzoyNSBBTQo+ID4gVG86IFByYWJoYWthciBLdXNod2FoYSA8cHJhYmhha2FyLmt1c2h3
+YWhhQG54cC5jb20+OyBsaW51eC0KPiA+IG10ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0
+cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwo+ID4gQ2M6IGRlZGVraW5kMUBnbWFpbC5jb207
+IGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gRG9j
+dW1lbnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNhZ2UKPiA+IAo+ID4gT24g
+RnJpLCAyMDE3LTEyLTAxIGF0IDA4OjQyICswMDAwLCBQcmFiaGFrYXIgS3VzaHdhaGEgd3JvdGU6
+Cj4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiA+ID4gPiBGcm9tOiBTY290dCBX
+b29kIFttYWlsdG86b3NzQGJ1c2Vycm9yLm5ldF0KPiA+ID4gPiBTZW50OiBGcmlkYXksIERlY2Vt
+YmVyIDAxLCAyMDE3IDEwOjQzIEFNCj4gPiA+ID4gVG86IFByYWJoYWthciBLdXNod2FoYSA8cHJh
+Ymhha2FyLmt1c2h3YWhhQG54cC5jb20+OyBsaW51eC0KPiA+ID4gPiBtdGRAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsgZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKPiA+ID4gPiBDYzog
+ZGVkZWtpbmQxQGdtYWlsLmNvbTsgY29tcHV0ZXJzZm9ycGVhY2VAZ21haWwuY29tCj4gPiA+ID4g
+U3ViamVjdDogUmU6IFtQQVRDSF0gRG9jdW1lbnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlh
+bm5lc3MgdXNhZ2UKPiA+ID4gPiAKPiA+ID4gPiBJZiBiaWcgZW5kaWFuIGlzIHRoZSBkZWZhdWx0
+LCBpcyB0aGlzIGNoYW5nZSByZWFsbHkKPiA+ID4gPiBuZWNlc3Nhcnk/wqDCoFBhcnRpY3VsYXJs
+eQo+ID4gPiA+IHNpbmNlIHRoZSBiaWcgZW5kaWFuIGNoaXBzIGFyZSBvbGRlciBhbmQgdGh1cyBo
+YXZlIGV4aXN0aW5nIGRldmljZQo+ID4gPiA+IHRyZWVzLgo+ID4gPiA+IAo+ID4gPiAKPiA+ID4g
+RWFybGllciBlbmRpYW5uZXNzIGluZm9ybWF0aW9uIHdhcyBvbmx5IHVzZWQgZm9yICJob3cgdG8i
+wqDCoGFjY2VzcyBJRkMtCj4gPiA+IE5BTkQKPiA+ID4gcmVnaXN0ZXIgYWNjZXNzLgo+ID4gPiBO
+b3cgdGhpcyBpbmZvwqDCoHdpbGwgYWxzbyBiZSB1c2VkIGZvciBkZWZpbmluZyBzd2FwIHJlcXVp
+cmVtZW50IG9mIE5PUgo+ID4gPiBmbGFzaC4KPiA+IAo+ID4gSXMgdGhpcyBhIGRpZmZlcmVuY2Ug
+YmV0d2VlbiBMUzEwMjFBIGFuZCBQUEMtYmFzZWQgY2hpcHM/Cj4gPiAKPiAKPiBZZXMuwqAKPiBD
+T05GSUdfTVREX0NGSV9CRV9CWVRFX1NXQVAgbmVlZHMgdG8gYmUgZGVmaW5lZCBGb3IgTFMxMDIx
+QSwgTFMxMDQzQSwKPiBMUzEwNDZBwqDCoAoKT25seSBiZWNhdXNlIHlvdSdyZSBydW5uaW5nIGEg
+bGl0dGxlLWVuZGlhbiBrZXJuZWwgb24gdGhvc2UgY2hpcHMuICBJIHN0aWxsCmRvbid0IHNlZSB3
+aHkgdGhlIGFic2VuY2Ugb2YgYSBsaXR0bGUtZW5kaWFuIHByb3BlcnR5IGlzbid0IHN1ZmZpY2ll
+bnQgdG8KY29tbXVuaWNhdGUgdGhhdCB0aGUgaGFyZHdhcmUgaXMgYmlnLWVuZGlhbiBnaXZlbiB0
+aGF0IHRoYXQncyB0aGUgZXN0YWJsaXNoZWQKZGVmYXVsdC4KCkkgbm93IHNlZSB5b3VyIHBhdGNo
+IHRvIG9mX2ZsYXNoX3Byb2JlLi4uIHdoZXJlIGlzIHRoZSBub24tSUZDLXNwZWNpZmljCmJpbmRp
+bmcgdGhhdCBzYXlzIHRoZSAqcGFyZW50KiBvZiBhIENGSSBub2RlIHNob3VsZCBiZSBsb29rZWQg
+YXQgZm9yIHRoaXM/IApXaGVyZcKgaW4gZ2VuZXJhbCBhcmUgZW5kaWFuIHByb3BlcnRpZXMga2Vw
+dCBpbiB0aGUgcGFyZW50IG9mIHRoZSBub2RlIHdpdGgKInJlZyI/ICBUaGUgcmlnaHQgYW5zd2Vy
+IGlzIHRvIGFkZCBlbmRpYW5uZXNzIHRvIG10ZC1waHlzbWFwLnR4dC4KCi1TY290dAoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBN
+VEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
