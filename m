@@ -1,103 +1,100 @@
-Return-Path: <SRS0=kKXI=DL=macbookpro.malat.net=mathieu@kernel.org>
-From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH 07/25] arm: keystone: dts: Remove leading 0x and 0s from bindings notation
-Date: Fri, 15 Dec 2017 12:15:57 +0100
-Message-Id: <20171215111620.20379-7-malat@debian.org>
-In-Reply-To: <20171215111620.20379-1-malat@debian.org>
-References: <20171214165350.27850-1-malat@debian.org>
- <20171215111620.20379-1-malat@debian.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Jesper Nilsson <jesper.nilsson@axis.com>, Lars Persson <lars.persson@axis.com>, Niklas Cassel <niklas.cassel@axis.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Jon Mason <jonmason@broadcom.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Barry Song <baohua@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Dinh Nguyen <dinguyen@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jun Nie <jun.nie@linaro.org>, Baoyou Xie <baoyou.xie@linaro.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-samsung-soc@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org
+Return-Path: <SRS0=Y7r8=DB=microchip.com=Wenyou.Yang@kernel.org>
+Subject: Re: [PATCH v6 1/2] media: ov7740: Document device tree bindings
+References: <20171204065858.3138-1-wenyou.yang@microchip.com>
+ <20171204065858.3138-2-wenyou.yang@microchip.com>
+ <20171204202443.jiizsqu6yfpsugj4@rob-hp-laptop>
+From: "Yang, Wenyou" <Wenyou.Yang@Microchip.com>
+Message-ID: <7e79c7ec-aa84-763a-3b3b-058be7aa2bd3@Microchip.com>
+Date: Tue, 5 Dec 2017 08:48:23 +0800
+MIME-Version: 1.0
+In-Reply-To: <20171204202443.jiizsqu6yfpsugj4@rob-hp-laptop>
+Content-Type: multipart/alternative;
+	boundary="------------176658047853A42153854FC3"
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Improve the DTS files by removing all the leading "0x" and zeros to fix the
-following dtc warnings:
+--------------176658047853A42153854FC3
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+Hi Rob,
 
-and
+On 2017/12/5 4:24, Rob Herring wrote:
+> On Mon, Dec 04, 2017 at 02:58:57PM +0800, Wenyou Yang wrote:
+>> Add the device tree binding documentation for the ov7740 sensor driver.
+>>
+>> Signed-off-by: Wenyou Yang <wenyou.yang@microchip.com>
+>> ---
+>>
+>> Changes in v6: None
+>> Changes in v5: None
+>> Changes in v4: None
+>> Changes in v3:
+>>   - Explicitly document the "remote-endpoint" property.
+>>
+>> Changes in v2: None
+>>
+>>   .../devicetree/bindings/media/i2c/ov7740.txt       | 47 ++++++++++++++++++++++
+>>   1 file changed, 47 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
+> Please add acks when posting new versions.
 
-Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+Sorry, I forgot it.
 
-Converted using the following command:
+Will add it in next version.
 
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
 
-For simplicity, two sed expressions were used to solve each warnings separately.
+Best Regards,
+Wenyou Yang
 
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before the
-the opening curly brace:
+--------------176658047853A42153854FC3
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-https://elinux.org/Device_Tree_Linux#Linux_conventions
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <p>Hi Rob,<br>
+    </p>
+    On 2017/12/5 4:24, Rob Herring wrote:<br>
+    <blockquote type="cite"
+      cite="mid:20171204202443.jiizsqu6yfpsugj4@rob-hp-laptop">
+      <pre wrap="">On Mon, Dec 04, 2017 at 02:58:57PM +0800, Wenyou Yang wrote:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">Add the device tree binding documentation for the ov7740 sensor driver.
 
-This will solve as a side effect warning:
-
-Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-
-Reported-by: David Daney <ddaney@caviumnetworks.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: Wenyou Yang <a class="moz-txt-link-rfc2396E" href="mailto:wenyou.yang@microchip.com">&lt;wenyou.yang@microchip.com&gt;</a>
 ---
- arch/arm/boot/dts/keystone-k2e-netcp.dtsi  | 2 +-
- arch/arm/boot/dts/keystone-k2hk-netcp.dtsi | 2 +-
- arch/arm/boot/dts/keystone-k2l-netcp.dtsi  | 2 +-
- arch/arm/boot/dts/keystone.dtsi            | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-index ba828cb59587..940b64935bde 100644
---- a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
-@@ -98,7 +98,7 @@ qmss: qmss@2a40000 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges;
--		pdsp0@0x2a10000 {
-+		pdsp0@2a10000 {
- 			reg = <0x2a10000 0x1000    /*iram */
- 			       0x2a0f000 0x100     /*reg*/
- 			       0x2a0c000 0x3c8	   /*intd */
-diff --git a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-index a5ac845464bf..ed7287a274a0 100644
---- a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
-@@ -115,7 +115,7 @@ qmss: qmss@2a40000 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges;
--		pdsp0@0x2a10000 {
-+		pdsp0@2a10000 {
- 			reg = <0x2a10000 0x1000    /*iram */
- 			       0x2a0f000 0x100     /*reg*/
- 			       0x2a0c000 0x3c8	   /*intd */
-diff --git a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
-index 66f615a74118..b6af5f78e498 100644
---- a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
-@@ -97,7 +97,7 @@ qmss: qmss@2a40000 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges;
--		pdsp0@0x2a10000 {
-+		pdsp0@2a10000 {
- 			reg = <0x2a10000 0x1000    /*iram */
- 			       0x2a0f000 0x100     /*reg*/
- 			       0x2a0c000 0x3c8	   /*intd */
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 06e10544f9b1..f8ecbe504182 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -271,7 +271,7 @@
- 			ti,davinci-gpio-unbanked = <32>;
- 		};
- 
--		aemif: aemif@21000A00 {
-+		aemif: aemif@21000a00 {
- 			compatible = "ti,keystone-aemif", "ti,davinci-aemif";
- 			#address-cells = <2>;
- 			#size-cells = <1>;
--- 
-2.11.0
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3:
+ - Explicitly document the "remote-endpoint" property.
+
+Changes in v2: None
+
+ .../devicetree/bindings/media/i2c/ov7740.txt       | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
+</pre>
+      </blockquote>
+      <pre wrap="">
+Please add acks when posting new versions.</pre>
+    </blockquote>
+    <p class="MsoPlainText"><span style="color:black">Sorry, I forgot
+        it.</span></p>
+    <p class="MsoPlainText"><span style="color:black">Will add it in
+        next version.</span></p>
+    <br>
+    Best Regards,<br>
+    Wenyou Yang<br>
+  </body>
+</html>
+
+--------------176658047853A42153854FC3--
