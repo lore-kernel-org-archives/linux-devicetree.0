@@ -1,94 +1,58 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
-Date: Wed, 6 Dec 2017 11:30:19 +0100
-Message-ID: <CAMuHMdUuF4kwUiUYCbSew3W0Pa2CfRdCijefbOO1ZYAbnyG3KA@mail.gmail.com>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
- <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
- <20170915074551.GF3924@verge.net.au> <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A@mail.gmail.com>
- <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <20170915110609.GL3924@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org
+Subject: [PATCH v1 5/6] ARM: dts: imx7d-sbc-iot: enable PCIe peripheral
+Date: Tue,  5 Dec 2017 14:27:06 -0800
+Message-ID: <20171205222707.11302-6-tyler@opensourcefoundries.com>
+References: <20171205222707.11302-1-tyler@opensourcefoundries.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170915110609.GL3924-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+In-Reply-To: <20171205222707.11302-1-tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+From: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
 
-On Fri, Sep 15, 2017 at 1:06 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Fri, Sep 15, 2017 at 08:57:53AM +0000, Fabrizio Castro wrote:
->> > -----Original Message-----
->> > From: linux-renesas-soc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-renesas-soc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Geert
->> > Uytterhoeven
->> > Sent: 15 September 2017 09:05
->> > To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>; Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> > Cc: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>;
->> > Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linux-Renesas
->> > <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> > Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
->> >
->> > Hi Simon, Fabrizio,
->> >
->> > On Fri, Sep 15, 2017 at 9:45 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
->> > > On Wed, Sep 13, 2017 at 06:05:34PM +0100, Chris Paterson wrote:
->> > >> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> > >>
->> > >> Add DT node for the Advanced Power Management Unit (APMU), add the
->> > >> second CPU core, and use "renesas,apmu" as "enable-method".
->> > >>
->> > >> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> > >> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->> > >> ---
->> > >> This patch is based on renesas-devel-20170913-v4.13.
->> > >
->> > > Hi,
->> > >
->> > > with reference to "[PATCH v3 0/3] ARM: renesas: Enable SMP on R-Car E2"
->> > > is the CNTVOFF initialised in the boot loader of boards (in upstream)
->> > > for this SoC? If not I expect you will have trouble with the arch timer
->> > > on secondary CPU cores.
->>
->> I can confirm that this patch relies on:
->> * "ARM: Add definition for monitor mode", and
->> * "ARM: shmobile: rcar-gen2: Make sure CNTVOFF is initialized on CA7/15 "
->> as the bootloader doesn't initialize CNTVOFF.
->>
->> >
->> > Exactly my question.
->> >
->> > Fabrizio: Given your feedback on "[PATCH v3 0/3] ARM: renesas: Enable SMP on
->> > R-Car E2", I think SMP enablement on RZ/G1E has to be postponed until "ARM:
->> > shmobile: rcar-gen2: Make sure CNTVOFF is initialized on CA7/15" has been
->> > accepted upstream.
->>
->> You are right, somehow we missed the comment made by Simon on Monday:
->>
->> " I would like to deffer the third and last patch until v4.16 to avoid
->> an awkward branch dependency on the above - the branches are different
->> even though the tree is the same. Please resubmit this patch once the
->> above dependencies are present in an rc release, which at this stage
->> I expect to be v4.15-rc1."
->>
->> Apologies for this, we will send this patch later on, once both patches have been
->> accepted upstream.
->
-> No problem, I will mark this one as deferred.
+Add a PCIe device tree node to enable PCIe support.
 
-As the dependency is in v4.15-rc1, it can be applied now.
+Signed-off-by: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+---
+ arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Gr{oetje,eeting}s,
+diff --git a/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
+index 67aa4b7..7f45fa2 100644
+--- a/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
++++ b/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
+@@ -79,6 +79,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_pcie: pciegrp {
++		fsl,pins = <
++			MX7D_PAD_EPDC_BDR1__GPIO2_IO29		0x34 /* PCIe RST */
++		>;
++	};
++
+ 	pinctrl_uart2: uart2grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_LCD_ENABLE__UART2_DCE_TX	0x79 /* P7-12 */
+@@ -119,6 +125,13 @@
+ 	};
+ };
+ 
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie>;
++	reset-gpio = <&gpio2 29 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
+ &uart2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart2>;
+-- 
+2.9.3
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
