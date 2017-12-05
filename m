@@ -1,76 +1,61 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/3] eeprom: at25: Add DT support for EEPROMs with odd
- address bits
-Date: Tue, 5 Dec 2017 10:09:11 +0100
-Message-ID: <CAMuHMdWFzUbZ-wcyZmLEXcnFQ+RJBnkrxW+B0ie9cR=1LPtsgw@mail.gmail.com>
-References: <1512048586-17534-1-git-send-email-geert+renesas@glider.be>
- <1512048586-17534-2-git-send-email-geert+renesas@glider.be>
- <CAMuHMdWczQ0KiH7soGLKxX8CQEwxA=kVDc_saYqgytE2U_3WKw@mail.gmail.com>
- <20171204211705.543xjzvttbrt65pm@rob-hp-laptop> <CAMuHMdUDPFhSwkHg2wm7yCNAfdUP8wAR9OXxbcu6SDhtZqe2+A@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: orange-pi-zero-plus2: fix sdcard detect
+Date: Tue, 5 Dec 2017 10:15:08 +0100
+Message-ID: <20171205091508.cx2bqfuuclgyce7l@flea.lan>
+References: <20171103195855.15283-1-geomatsi@gmail.com>
+ <20171103195855.15283-2-geomatsi@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="a62wr66jvdseqznt"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUDPFhSwkHg2wm7yCNAfdUP8wAR9OXxbcu6SDhtZqe2+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171103195855.15283-2-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ivo Sieben <meltedpianoman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chris Wright <chrisw-69jw2NvuJkxg9hUCZPvPmw@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Tue, Dec 5, 2017 at 9:57 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> On Mon, Dec 4, 2017 at 10:17 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, Dec 04, 2017 at 10:17:47AM +0100, Geert Uytterhoeven wrote:
->>> On Thu, Nov 30, 2017 at 2:29 PM, Geert Uytterhoeven
->>> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
->>> > Certain EEPROMS have a size that is larger than the number of address
->>> > bytes would allow, and store the MSB of the address in bit 3 of the
->>> > instruction byte.
->>> >
->>> > This can be described in platform data using EE_INSTR_BIT3_IS_ADDR, or
->>> > in DT using the obsolete legacy "at25,addr-mode" property.
->>> > But currently there exists no non-deprecated way to describe this in DT.
->>> >
->>> > Hence extend the existing "address-width" DT property to allow
->>> > specifying 9, 17, or 25 address bits, and enable support for that in the
->>> > driver.
->>> >
->>> > Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->>> > ---
->>> > EEPROMs using 9 address bits are common (e.g. M95040, 25AA040/25LC040).
->>> > Do EEPROMs using 17 or 25 address bits, as mentioned in
->>> > include/linux/spi/eeprom.h, really exist?
->>> > Or should we just limit it to a single odd value (9 bits)?
->>>
->>> At least for the real Atmel parts, only the AT25040 part uses odd (8 +
->>> 1 bit) addressing.
->>
->> Seems like we should have a specific compatible for it.
->
-> Possibly. But currently all configuration is done through DT properties, not
-> through matching on compatible values.
+--a62wr66jvdseqznt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Adding compatible values for all known/used parts could quickly become a
-large table.
-E.g. Atmel/Microchip has 3 variants of 512-byte EEPROMs: AT25040B,
-25LC040A, and 25AA040A. The former uses an 8-byte pagesize, while the
-latter parts use 16-byte pagesizes.
-Not to mention "compatible" parts from other manufacturers, and all other
-supported size.
+On Fri, Nov 03, 2017 at 10:58:54PM +0300, Sergey Matyukevich wrote:
+> The sdcard detect pin on orange-pi-zero-plus2 is pulled up.
+> Fix cd-gpio description to enable sdcard detect.
+>=20
+> Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Currently all of this is configured through the "pagesize", "size", and
-"address-width" DT properties, with matching on generic "atmel,at25".
+Applied, thanks!
+Maxime
 
-Gr{oetje,eeting}s,
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-                        Geert
+--a62wr66jvdseqznt
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+-----BEGIN PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlomY5gACgkQ0rTAlCFN
+r3S2Eg//e73c06F9NWk5gKnZiEaCxsoYmziQjO3zjvFOI9hMBY6G7QPcijCUe7Lq
+U1xY2HcF0E3Yfnyvwc+2II0mOpUoZMW8eGbLwRoyjz6CycPmdKxLz4DeE/aGUIuT
+XtBmfoVYpaeinN4pW+Pc8mJ8TXenmzuzWT7QCqg94PVopTT9jOsQFk9l/H5+25KI
+RQL3J5GnGR2H1xOfGq8AWv6ZoeVs3syxVeGJp3f4jSQ1lP+JnL8zEnaoezO3lpVU
+aHQr/jlQFP0pvBgHEzQB6UGr+sscpd7dRUSI9GymaFpZMEhWvjd2XVD06kTOdEQh
+ofcxakWejAztTLiw/XZi4N/Hc9U0fROoZSLkuCmkUp8IX+NTgX5XQBtZpZAQ0V+x
+xmilEWJqu+4VkApJ12bnep9ufELxXIj2HGY0VMUZ3vCL+X8YgTapyNK3BWzxvKq0
+REf5o7Q7pT9CdrvqMtljF7QyiA/V6xBn5hh+1MxINxpAe+F4NHEpnqMfSBnkRlrY
+oCCtLw297uQaX6OHNpoPnqIdjb6QbkFv52Ez0NRFJNsFz+P6dmn8OWiRIkpziHpx
+E9jWvS3H/L4+S4+Jpfj4VpHH1h2iOdlLw0sniMZEmrlibZUssSpU/MIXLp0Z03Sl
+PdLpV555c9qeGLbBFV6LGx3xi9W4ZtsSuvjXUGkzMVM5VXI5SrU=
+=f3k4
+-----END PGP SIGNATURE-----
+
+--a62wr66jvdseqznt--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
