@@ -1,111 +1,104 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] of: overlay: Fix memory leak in of_overlay_apply()
- error path
-Date: Tue, 5 Dec 2017 08:46:16 -0500
-Message-ID: <64cf7e5d-176e-cae0-fd12-93825f2f14a2@gmail.com>
-References: <1512402456-8176-1-git-send-email-geert+renesas@glider.be>
- <1512402456-8176-2-git-send-email-geert+renesas@glider.be>
- <b6392405-390d-d7dc-91b2-1338fd605e65@gmail.com>
- <CAMuHMdUzuJuKYQ6xtOAb3ctzPqakKZCtPQr9JVQP78VvK6qq3g@mail.gmail.com>
- <CAMuHMdV20VAw4Dz6z9quDhm3=ZRotB+Y302i8gTnG0B8shFwOA@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH net-next v3 1/4] phylib: Add device reset delay support
+Date: Tue, 5 Dec 2017 14:54:05 +0100
+Message-ID: <CAMuHMdX70yuEfoDL+Y4TZ-6zjyW9BqvKOU6UxbHTKGNcgfGrow@mail.gmail.com>
+References: <20171205132600.13796-1-dev@g0hl1n.net> <20171205132600.13796-2-dev@g0hl1n.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdV20VAw4Dz6z9quDhm3=ZRotB+Y302i8gTnG0B8shFwOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171205132600.13796-2-dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Colin King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, lukma-ynQEQJNshbs@public.gmane.org, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/17 05:49, Geert Uytterhoeven wrote:
-> Hi Frank,
-> 
-> On Tue, Dec 5, 2017 at 9:01 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Tue, Dec 5, 2017 at 3:07 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On 12/04/17 10:47, Geert Uytterhoeven wrote:
->>>> If of_resolve_phandles() fails, free_overlay_changeset() is called in
->>>> the error path.  However, that function returns early if the list hasn't
->>>> been initialized yet, before freeing the object.
->>>>
->>>> Explicitly calling kfree() instead would solve that issue. However, that
->>>> complicates matter, by having to consider which of two different methods
->>>> to use to dispose of the same object.
->>>>
->>>> Hence make free_overlay_changeset() consider initialization state of the
->>>> different parts of the object, making it always safe to call (once!) to
->>>> dispose of a (partially) initialized overlay_changeset:
->>>>   - Only destroy the changeset if the list was initialized,
->>>>   - Ignore uninitialized IDs (zero).
->>>>
->>>> Reported-by: Colin King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
->>>> Fixes: f948d6d8b792bb90 ("of: overlay: avoid race condition between applying multiple overlays")
->>>> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->>>> ---
->>>>  drivers/of/overlay.c | 7 +++----
->>>>  1 file changed, 3 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->>>> index 3b7a3980ff50d6bf..312cd658bec0083b 100644
->>>> --- a/drivers/of/overlay.c
->>>> +++ b/drivers/of/overlay.c
->>>> @@ -630,11 +630,10 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
->>>>  {
->>>>       int i;
->>>>
->>>> -     if (!ovcs->cset.entries.next)
->>>> -             return;
->>>> -     of_changeset_destroy(&ovcs->cset);
->>>> +     if (ovcs->cset.entries.next)
->>>> +             of_changeset_destroy(&ovcs->cset);
->>>>
->>>
->>> OK
->>>
->>>> -     if (ovcs->id)
->>>> +     if (ovcs->id > 0)
->>>
->>> Instead of this change, could you please make a change in init_overlay_changeset()?
->>>
->>> Current init_overlay_changeset():
->>>
->>>         ovcs->id = idr_alloc(&ovcs_idr, ovcs, 1, 0, GFP_KERNEL);
->>>         if (ovcs->id <= 0)
->>>                 return ovcs->id;
->>>
->>> My proposed version:
->>>
->>>         ret = idr_alloc(&ovcs_idr, ovcs, 1, 0, GFP_KERNEL);
->>>         if (ret <= 0)
->>>                 return ret;
->>>         ovcs->id = ret;
->>
->> Sure.
-> 
-> Actually we should use a temporary variable id here, just like for cnt
-> and fragments, and store into ovcs->id if everything succeeds.
+Hi Richard,
 
-OK.  That would make the flow in init_overlay_changeset() more consistent.
-And of course the idr_remove() after err_free_idr: would use that temporary
-variable id.
+On Tue, Dec 5, 2017 at 2:25 PM, Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org> wrote:
+> From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+>
+> Some PHYs need a minimum time after the reset gpio was asserted and/or
+> deasserted. To ensure we meet these timing requirements add two new
+> optional devicetree parameters for the phy: reset-delay-us and
+> reset-post-delay-us.
 
+Thanks for your patch!
 
-> Else both init_overlay_changeset() and free_overlay_changeset() will
-> free the ID if something goes wrong. It seems IDR can handle that, but
-> better safe than sorry.> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+> This patch depends on the "phylib: Add device reset GPIO support" patch
+> submitted by Geert Uytterhoeven/Sergei Shtylyov, see:
+>         https://patchwork.kernel.org/patch/10090149/
 
+The above paragraph belongs under the "---" line below, as it is not intended
+to be preserved in the eternal git history.
+
+> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Although I have a few suggestions below:
+
+> --- a/drivers/net/phy/mdio_device.c
+> +++ b/drivers/net/phy/mdio_device.c
+> @@ -118,8 +119,16 @@ EXPORT_SYMBOL(mdio_device_remove);
+>
+>  void mdio_device_reset(struct mdio_device *mdiodev, int value)
+>  {
+> -       if (mdiodev->reset)
+> -               gpiod_set_value(mdiodev->reset, value);
+> +       if (!mdiodev->reset)
+> +               return;
+> +
+> +       gpiod_set_value(mdiodev->reset, value);
+> +
+> +       if (value && mdiodev->reset_delay)
+> +               usleep_range(mdiodev->reset_delay, mdiodev->reset_delay + 100);
+> +       else if (!value && mdiodev->reset_post_delay)
+> +               usleep_range(mdiodev->reset_post_delay,
+> +                            mdiodev->reset_post_delay + 100);
+
+I think this can be written simpler using e.g.:
+
+        unsigned int delay;
+
+        ...
+        delay = value ? mdiodev->reset_delay : mdiodev->reset_post_delay;
+        if (delay)
+                usleep_range(delay, delay + 100);
+
+Perhaps the range extension should be relative, e.g.
+"delay + min(delay / 10, 100)"?
+
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -77,6 +77,14 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
+>         if (of_property_read_bool(child, "broken-turn-around"))
+>                 mdio->phy_ignore_ta_mask |= 1 << addr;
+>
+> +       if (of_property_read_u32(child, "reset-delay-us",
+> +                                &phy->mdio.reset_delay))
+> +               phy->mdio.reset_delay = 0;
+> +
+> +       if (of_property_read_u32(child, "reset-post-delay-us",
+> +                                &phy->mdio.reset_post_delay))
+> +               phy->mdio.reset_post_delay = 0;
+
+If of_property_read_u32() fails, it doesn't write to its output parameter.
+As the structure should be zeroed during allocation, you can just write:
+
+        of_property_read_u32(child, "reset-delay-us", &phy->mdio.reset_delay);
+        of_property_read_u32(child, "reset-post-delay-us",
+                             &phy->mdio.reset_post_delay);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
