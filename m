@@ -1,69 +1,122 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 15/15] ARM: dts: sun8i: a711: Enable the LCD
-Date: Tue,  5 Dec 2017 16:10:27 +0100
-Message-ID: <3cd7410e37b1f93350872f5472e37e68da6d082d.1512486553.git-series.maxime.ripard@free-electrons.com>
-References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
+From: Sven Van Asbroeck <svendev@arcx.com>
+Subject: [PATCH v4 1/2] at24: support eeproms that do not auto-rollover reads.
+Date: Tue, 5 Dec 2017 10:23:41 -0500
+Message-ID: <1512487422-6284-2-git-send-email-svendev@arcx.com>
+References: <1512487422-6284-1-git-send-email-svendev@arcx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
-References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512487422-6284-1-git-send-email-svendev@arcx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: svendev@arcx.com, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, brgl@bgdev.pl, nsekhar@ti.com, sakari.ailus@linux.intel.com, david@lechnology.com, javier@dowhile0.org, divagar.mohandass@intel.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEE3MTEgaGFzIDEwMjR4NjAwIExWRFMgcGFuZWwsIHdpdGggYSBQV00tYmFzZWQgYmFja2xp
-Z2h0LiBBZGQgaXQgdG8gb3VyCkRULgoKUmV2aWV3ZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bj
-c2llLm9yZz4KU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVl
-LWVsZWN0cm9ucy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcx
-MS5kdHMgfCA2MSArKysrKysrKysrKysrKysrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgNjEg
-aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3Qt
-dGJzLWE3MTEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcxMS5kdHMK
-aW5kZXggYTAyMWVlNmRhMzk2Li41MTFmY2E0OTFmZTggMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N1bjhpLWE4M3QtdGJzLWE3MTEuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1
-bjhpLWE4M3QtdGJzLWE3MTEuZHRzCkBAIC00NSw2ICs0NSw3IEBACiAjaW5jbHVkZSAic3VuOGkt
-YTgzdC5kdHNpIgogCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+CisjaW5jbHVk
-ZSA8ZHQtYmluZGluZ3MvcHdtL3B3bS5oPgogCiAvIHsKIAltb2RlbCA9ICJUQlMgQTcxMSBUYWJs
-ZXQiOwpAQCAtNTksNiArNjAsNDQgQEAKIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBu
-OCI7CiAJfTsKIAorCWJhY2tsaWdodDogYmFja2xpZ2h0IHsKKwkJY29tcGF0aWJsZSA9ICJwd20t
-YmFja2xpZ2h0IjsKKwkJcHdtcyA9IDwmcHdtIDAgNTAwMDAgUFdNX1BPTEFSSVRZX0lOVkVSVEVE
-PjsKKwkJZW5hYmxlLWdwaW9zID0gPCZwaW8gMyAyOSBHUElPX0FDVElWRV9ISUdIPjsKKworCQli
-cmlnaHRuZXNzLWxldmVscyA9IDwwIDEgMiA0IDggMTYgMzIgNjQgMTI4IDI1NT47CisJCWRlZmF1
-bHQtYnJpZ2h0bmVzcy1sZXZlbCA9IDw5PjsKKwl9OworCisJcGFuZWwgeworCQljb21wYXRpYmxl
-ID0gInRicyxhNzExLXBhbmVsIiwgInBhbmVsLWx2ZHMiOworCQliYWNrbGlnaHQgPSA8JmJhY2ts
-aWdodD47CisJCXBvd2VyLXN1cHBseSA9IDwmcmVnX3N3PjsKKworCQl3aWR0aC1tbSA9IDwxNTM+
-OworCQloZWlnaHQtbW0gPSA8OTA+OworCQlkYXRhLW1hcHBpbmcgPSAidmVzYS0yNCI7CisKKwkJ
-cGFuZWwtdGltaW5nIHsKKwkJCS8qIDEwMjR4NjAwIEA2MEh6ICovCisJCQljbG9jay1mcmVxdWVu
-Y3kgPSA8NTIwMDAwMDA+OworCQkJaGFjdGl2ZSA9IDwxMDI0PjsKKwkJCXZhY3RpdmUgPSA8NjAw
-PjsKKwkJCWhzeW5jLWxlbiA9IDwyMD47CisJCQloZnJvbnQtcG9yY2ggPSA8MTgwPjsKKwkJCWhi
-YWNrLXBvcmNoID0gPDE2MD47CisJCQl2ZnJvbnQtcG9yY2ggPSA8MTI+OworCQkJdmJhY2stcG9y
-Y2ggPSA8MjM+OworCQkJdnN5bmMtbGVuID0gPDU+OworCQl9OworCisJCXBvcnQgeworCQkJcGFu
-ZWxfaW5wdXQ6IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRjb24wX291dF9s
-Y2Q+OworCQkJfTsKKwkJfTsKKwl9OworCiAJcmVnX3ZiYXQ6IHJlZy12YmF0IHsKIAkJY29tcGF0
-aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwogCQlyZWd1bGF0b3ItbmFtZSA9ICJ2YmF0IjsKQEAg
-LTg5LDYgKzEyOCwxMCBAQAogCX07CiB9OwogCismZGUgeworCXN0YXR1cyA9ICJva2F5IjsKK307
-CisKIC8qCiAgKiBBbiBVU0ItMiBodWIgaXMgY29ubmVjdGVkIGhlcmUsIHdoaWNoIGFsc28gbWVh
-bnMgd2UgZG9uJ3QgbmVlZCB0bwogICogZW5hYmxlIHRoZSBPSENJIGNvbnRyb2xsZXIuCkBAIC0x
-NDIsNiArMTg1LDEyIEBACiAJc3RhdHVzID0gIm9rYXkiOwogfTsKIAorJnB3bSB7CisJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JnB3bV9waW4+OworCXN0YXR1cyA9
-ICJva2F5IjsKK307CisKICZyX3JzYiB7CiAJc3RhdHVzID0gIm9rYXkiOwogCkBAIC0zMjMsNiAr
-MzcyLDE4IEBACiAJcmVndWxhdG9yLW5hbWUgPSAidmNjLWxjZCI7CiB9OwogCismdGNvbjAgewor
-CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZsY2RfbHZkc19waW5z
-PjsKK307CisKKyZ0Y29uMF9vdXQgeworCXRjb24wX291dF9sY2Q6IGVuZHBvaW50QDAgeworCQly
-ZWcgPSA8MD47CisJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW5wdXQ+OworCX07Cit9Owor
-CiAmdWFydDAgewogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZ1
-YXJ0MF9wYl9waW5zPjsKLS0gCmdpdC1zZXJpZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Some multi-address eeproms in the at24 family may not automatically
+roll-over reads to the next slave address. On those eeproms, reads
+that straddle slave boundaries will not work correctly.
+
+Solution:
+Mark such eeproms with a flag that prevents reads straddling
+slave boundaries. Add the AT24_FLAG_NO_RDROL flag to the eeprom
+entry in the device_id table, or add 'at24,no-read-rollover' to the
+eeprom devicetree entry.
+
+Note that I have not personally enountered an at24 chip that
+does not support read rollovers. They may or may not exist.
+However, my hardware requires this functionality because of
+a quirk.
+
+It's up to the Linux community to decide if this patch is useful/
+general enough to warrant merging.
+
+Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
+---
+ drivers/misc/eeprom/at24.c         | 37 +++++++++++++++++++++++++------------
+ include/linux/platform_data/at24.h |  2 ++
+ 2 files changed, 27 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index 625b001..8c93ed0 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -251,15 +251,6 @@ struct at24_data {
+  * Slave address and byte offset derive from the offset. Always
+  * set the byte address; on a multi-master board, another master
+  * may have changed the chip's "current" address pointer.
+- *
+- * REVISIT some multi-address chips don't rollover page reads to
+- * the next slave address, so we may need to truncate the count.
+- * Those chips might need another quirk flag.
+- *
+- * If the real hardware used four adjacent 24c02 chips and that
+- * were misconfigured as one 24c08, that would be a similar effect:
+- * one "eeprom" file not four, but larger reads would fail when
+- * they crossed certain pages.
+  */
+ static struct at24_client *at24_translate_offset(struct at24_data *at24,
+ 						 unsigned int *offset)
+@@ -277,6 +268,28 @@ static struct at24_client *at24_translate_offset(struct at24_data *at24,
+ 	return &at24->client[i];
+ }
+ 
++static size_t at24_adjust_read_count(struct at24_data *at24,
++				      unsigned int offset, size_t count)
++{
++	unsigned int bits;
++	size_t remainder;
++	/*
++	 * In case of multi-address chips that don't rollover reads to
++	 * the next slave address: truncate the count to the slave boundary,
++	 * so that the read never straddles slaves.
++	 */
++	if (at24->chip.flags & AT24_FLAG_NO_RDROL) {
++		bits = (at24->chip.flags & AT24_FLAG_ADDR16) ? 16 : 8;
++		remainder = BIT(bits) - offset;
++		if (count > remainder)
++			count = remainder;
++	}
++	if (count > io_limit)
++		count = io_limit;
++
++	return count;
++}
++
+ static ssize_t at24_regmap_read(struct at24_data *at24, char *buf,
+ 				unsigned int offset, size_t count)
+ {
+@@ -289,9 +302,7 @@ static ssize_t at24_regmap_read(struct at24_data *at24, char *buf,
+ 	at24_client = at24_translate_offset(at24, &offset);
+ 	regmap = at24_client->regmap;
+ 	client = at24_client->client;
+-
+-	if (count > io_limit)
+-		count = io_limit;
++	count = at24_adjust_read_count(at24, offset, count);
+ 
+ 	/* adjust offset for mac and serial read ops */
+ 	offset += at24->offset_adj;
+@@ -457,6 +468,8 @@ static void at24_get_pdata(struct device *dev, struct at24_platform_data *chip)
+ 
+ 	if (device_property_present(dev, "read-only"))
+ 		chip->flags |= AT24_FLAG_READONLY;
++	if (device_property_present(dev, "at24,no-read-rollover"))
++		chip->flags |= AT24_FLAG_NO_RDROL;
+ 
+ 	err = device_property_read_u32(dev, "size", &val);
+ 	if (!err)
+diff --git a/include/linux/platform_data/at24.h b/include/linux/platform_data/at24.h
+index 271a4e2..841bb28 100644
+--- a/include/linux/platform_data/at24.h
++++ b/include/linux/platform_data/at24.h
+@@ -50,6 +50,8 @@ struct at24_platform_data {
+ #define AT24_FLAG_TAKE8ADDR	BIT(4)	/* take always 8 addresses (24c00) */
+ #define AT24_FLAG_SERIAL	BIT(3)	/* factory-programmed serial number */
+ #define AT24_FLAG_MAC		BIT(2)	/* factory-programmed mac address */
++#define AT24_FLAG_NO_RDROL  BIT(1)	/* does not auto-rollover reads to */
++					/* the next slave address */
+ 
+ 	void		(*setup)(struct nvmem_device *nvmem, void *context);
+ 	void		*context;
+-- 
+1.9.1
