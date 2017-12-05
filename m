@@ -1,106 +1,85 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 08/19] ASoC: tlv320aic31xx: Switch GPIO
- handling to use gpiod_* API
-Date: Tue, 5 Dec 2017 15:23:49 -0600
-Message-ID: <17fcc926-9ee8-1229-ea3d-f38347cb9a23@ti.com>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-9-afd@ti.com>
- <537c8d62-de11-15e8-11bc-08e8334d4322@ti.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH V6 2/7] ACPI / bus: Introduce acpi_get_match_data() function
+Date: Tue, 5 Dec 2017 23:04:20 +0100
+Message-ID: <CAJZ5v0iJ_47z25GrQryQFVyXiXitYNHy8mQtTCf2rtdyhnn2eQ@mail.gmail.com>
+References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org> <1512493493-6464-3-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <537c8d62-de11-15e8-11bc-08e8334d4322@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1512493493-6464-3-git-send-email-okaya@codeaurora.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2017 10:47 AM, Andrew F. Davis wrote:
-> On 11/29/2017 03:32 PM, Andrew F. Davis wrote:
->> Move to using newer gpiod_* GPIO handling functions. This simplifies
->> the code and eases dropping platform data in the next patch. Also
->> remember GPIO are active low, so set "1" to reset.
->>
->> Signed-off-by: Andrew F. Davis <afd@ti.com>
->> ---
-> 
-> 
-> Kbuild bot seems mad a this one, looks like I need to include
-> linux/gpio/consumer.h, will fix for v3.
-> 
+On Tue, Dec 5, 2017 at 6:04 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
+> OF has of_device_get_match_data() function to extract driver specific data
+> structure. Add a similar function for ACPI.
+>
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Looks like you already have this in your -next branch, how do you want
-this fix, I can send a delta patch with the added include, a new v3
-version that you can replace the patch in-tree with, or if it's easier
-for you manually fix in-tree?
+Not sure yet, sorry.
 
-> 
->>  sound/soc/codecs/tlv320aic31xx.c | 23 ++++++++++-------------
->>  1 file changed, 10 insertions(+), 13 deletions(-)
->>
->> diff --git a/sound/soc/codecs/tlv320aic31xx.c b/sound/soc/codecs/tlv320aic31xx.c
->> index c84febd991a0..ab03a19f6aaa 100644
->> --- a/sound/soc/codecs/tlv320aic31xx.c
->> +++ b/sound/soc/codecs/tlv320aic31xx.c
->> @@ -157,6 +157,7 @@ struct aic31xx_priv {
->>  	u8 i2c_regs_status;
->>  	struct device *dev;
->>  	struct regmap *regmap;
->> +	struct gpio_desc *gpio_reset;
->>  	struct aic31xx_pdata pdata;
->>  	struct regulator_bulk_data supplies[AIC31XX_NUM_SUPPLIES];
->>  	struct aic31xx_disable_nb disable_nb[AIC31XX_NUM_SUPPLIES];
->> @@ -1020,8 +1021,8 @@ static int aic31xx_regulator_event(struct notifier_block *nb,
->>  		 * Put codec to reset and as at least one of the
->>  		 * supplies was disabled.
->>  		 */
->> -		if (gpio_is_valid(aic31xx->pdata.gpio_reset))
->> -			gpio_set_value(aic31xx->pdata.gpio_reset, 0);
->> +		if (aic31xx->gpio_reset)
->> +			gpiod_set_value(aic31xx->gpio_reset, 1);
->>  
->>  		regcache_mark_dirty(aic31xx->regmap);
->>  		dev_dbg(aic31xx->dev, "## %s: DISABLE received\n", __func__);
->> @@ -1073,8 +1074,8 @@ static int aic31xx_power_on(struct snd_soc_codec *codec)
->>  	if (ret)
->>  		return ret;
->>  
->> -	if (gpio_is_valid(aic31xx->pdata.gpio_reset)) {
->> -		gpio_set_value(aic31xx->pdata.gpio_reset, 1);
->> +	if (aic31xx->gpio_reset) {
->> +		gpiod_set_value(aic31xx->gpio_reset, 0);
->>  		udelay(100);
->>  	}
->>  	regcache_cache_only(aic31xx->regmap, false);
->> @@ -1334,15 +1335,11 @@ static int aic31xx_i2c_probe(struct i2c_client *i2c,
->>  	else if (aic31xx->dev->of_node)
->>  		aic31xx_pdata_from_of(aic31xx);
->>  
->> -	if (aic31xx->pdata.gpio_reset) {
->> -		ret = devm_gpio_request_one(aic31xx->dev,
->> -					    aic31xx->pdata.gpio_reset,
->> -					    GPIOF_OUT_INIT_HIGH,
->> -					    "aic31xx-reset-pin");
->> -		if (ret < 0) {
->> -			dev_err(aic31xx->dev, "not able to acquire gpio\n");
->> -			return ret;
->> -		}
->> +	aic31xx->gpio_reset = devm_gpiod_get_optional(aic31xx->dev, "reset",
->> +						      GPIOD_OUT_LOW);
->> +	if (IS_ERR(aic31xx->gpio_reset)) {
->> +		dev_err(aic31xx->dev, "not able to acquire gpio\n");
->> +		return PTR_ERR(aic31xx->gpio_reset);
->>  	}
->>  
->>  	for (i = 0; i < ARRAY_SIZE(aic31xx->supplies); i++)
->>
+> ---
+>  drivers/acpi/bus.c   | 12 ++++++++++++
+>  include/linux/acpi.h |  6 ++++++
+>  2 files changed, 18 insertions(+)
+>
+> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+> index 4d0979e..b271eb1 100644
+> --- a/drivers/acpi/bus.c
+> +++ b/drivers/acpi/bus.c
+> @@ -785,6 +785,18 @@ const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_match_device);
+>
+> +void *acpi_get_match_data(const struct device *dev)
+> +{
+> +       const struct acpi_device_id *match;
+> +
+> +       match = acpi_match_device(dev->driver->acpi_match_table, dev);
+
+Shouldn't this check dev->driver against NULL before dereferencing it?
+
+> +       if (!match)
+> +               return NULL;
+> +
+> +       return (void *)match->driver_data;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_get_match_data);
+> +
+>  int acpi_match_device_ids(struct acpi_device *device,
+>                           const struct acpi_device_id *ids)
+>  {
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 502af53..a927260 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -584,6 +584,7 @@ extern int acpi_nvs_for_each_region(int (*func)(__u64, __u64, void *),
+>  const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
+>                                                const struct device *dev);
+>
+> +void *acpi_get_match_data(const struct device *dev);
+>  extern bool acpi_driver_match_device(struct device *dev,
+>                                      const struct device_driver *drv);
+>  int acpi_device_uevent_modalias(struct device *, struct kobj_uevent_env *);
+> @@ -755,6 +756,11 @@ static inline const struct acpi_device_id *acpi_match_device(
+>         return NULL;
+>  }
+>
+> +static inline void *acpi_get_match_data(const struct device *dev)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline bool acpi_driver_match_device(struct device *dev,
+>                                             const struct device_driver *drv)
+>  {
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
