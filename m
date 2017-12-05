@@ -1,104 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: Add Spreadtrum SC2731 regulator documentation" to the regulator tree
-Date: Tue,  5 Dec 2017 12:48:53 +0000 (GMT)
-Message-ID: <20171205124853.7C09444006B@finisterre.ee.mobilebroadband>
-References: <d1e3a79db9b9a0b6c3116e06b34942b92b629ccc.1512455819.git.erick.chen@spreadtrum.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d1e3a79db9b9a0b6c3116e06b34942b92b629ccc.1512455819.git.erick.chen@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, baolin.wang@linaro.org, baolin.wang@spreadtrum.com, erick.chen@spreadtrum.comlinux-kernel@vger.kernel.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: bananapi-m64:
+ Add LED device node
+Date: Tue, 5 Dec 2017 21:00:37 +0800
+Message-ID: <CAGb2v64HrvHZ-o7dRb2shUBUnwziV9ZVFVEA25+nyBrN+LffpA@mail.gmail.com>
+References: <20171201162733.23156-1-wens@csie.org> <20171205100511.ohxcqlrozxfgq6id@flea.lan>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBEFRTLIQKGQEHSI7PQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171205100511.ohxcqlrozxfgq6id-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Tue, Dec 5, 2017 at 6:05 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Sat, Dec 02, 2017 at 12:27:33AM +0800, Chen-Yu Tsai wrote:
+>> The Bananapi-M64 has 3 LEDS in red, green, and blue. These are toggled
+>> via GPIO lines, which drive transistors that control current across the
+>> LEDS. The red LED is by default on, via an additional pull-up on the
+>> control line. We consider this means that it is a power indicator.
+>> So we set the "default-on" property for it.
+>>
+>> The pingroups the GPIO lines belong to require external regulators be
+>> enabled to be able to drive the GPIO high. These regulators also have
+>> other purposes. However the pin controller does not have bindings for
+>> regulators. Here we just set them to always-on.
+>
+> I guess we should take the opportunity to do just that.
+>
+> We have been deferring this for quite some time now, this is a perfect
+> occasion to do it once and for all :)
 
-   regulator: Add Spreadtrum SC2731 regulator documentation
+True. But right now I don't see an elegant solution. What is the purpose
+of having the regulator tied to pinctrl / GPIO? You can't have the pinctrl
+driver asking for the regulator at probe time, as it might not be available
+or even have a cyclic dependency (because the PMIC is I2C driven, which
+needs an I2C controller, which needs the pinctrl). If you defer fetching
+the regulator to a later point, you might end up with an inconsistent state.
+Again with the I2C driven regulator example, what happens if the regulator
+core decides to turn the regulator off before the pinctrl side has a chance
+to take a reference and enable it?
 
-has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 5149b685b122d3bee78bd3403997f9ddb1223f4a Mon Sep 17 00:00:00 2001
-From: Erick Chen <erick.chen@spreadtrum.com>
-Date: Tue, 5 Dec 2017 14:35:45 +0800
-Subject: [PATCH] regulator: Add Spreadtrum SC2731 regulator documentation
-
-This patch adds support for the Spreadtrum SC2731
-voltage regulator device.
-
-Signed-off-by: Erick Chen <erick.chen@spreadtrum.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/regulator/sprd,sc2731-regulator.txt   | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
-
-diff --git a/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt b/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
-new file mode 100644
-index 000000000000..63dc07877cd6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
-@@ -0,0 +1,43 @@
-+Spreadtrum SC2731 Voltage regulators
-+
-+The SC2731 integrates low-voltage and low quiescent current DCDC/LDO.
-+14 LDO and 3 DCDCs are designed for external use. All DCDCs/LDOs have
-+their own bypass (power-down) control signals. External tantalum or MLCC
-+ceramic capacitors are recommended to use with these LDOs.
-+
-+Required properties:
-+ - compatible: should be "sprd,sc27xx-regulator".
-+
-+List of regulators provided by this controller. It is named according to
-+its regulator type, BUCK_<name> and LDO_<name>. The definition for each
-+of these nodes is defined using the standard binding for regulators at
-+Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+The valid names for regulators are:
-+BUCK:
-+	BUCK_CPU0, BUCK_CPU1, BUCK_RF
-+LDO:
-+	LDO_CAMA0, LDO_CAMA1, LDO_CAMMOT, LDO_VLDO, LDO_EMMCCORE, LDO_SDCORE,
-+	LDO_SDIO, LDO_WIFIPA, LDO_USB33, LDO_CAMD0, LDO_CAMD1, LDO_CON,
-+	LDO_CAMIO, LDO_SRAM
-+
-+Example:
-+	regulators {
-+		compatible = "sprd,sc27xx-regulator";
-+
-+		vddarm0: BUCK_CPU0 {
-+			regulator-name = "vddarm0";
-+			regulator-min-microvolt = <400000>;
-+			regulator-max-microvolt = <1996875>;
-+			regulator-ramp-delay = <25000>;
-+			regulator-always-on;
-+		};
-+
-+		vddcama0: LDO_CAMA0 {
-+			regulator-name = "vddcama0";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <3750000>;
-+			regulator-enable-ramp-delay = <100>;
-+		};
-+		...
-+	};
--- 
-2.15.0
+Regards
+ChenYu
