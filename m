@@ -1,7 +1,7 @@
 From: <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 3/5] rtc: mxc_v2: add driver for i.MX53 SRTC
-Date: Tue, 5 Dec 2017 15:06:44 +0100
-Message-ID: <20171205140646.30367-4-linux-kernel-dev@beckhoff.com>
+Subject: [PATCH v2 4/5] ARM: imx_v4_v5_defconfig: enable RTC_DRV_MXC_V2
+Date: Tue, 5 Dec 2017 15:06:45 +0100
+Message-ID: <20171205140646.30367-5-linux-kernel-dev@beckhoff.com>
 References: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -15,15 +15,17 @@ List-Id: devicetree@vger.kernel.org
 
 From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
 
-Add RTC_DRV_MXC_V2 config option
+Enable SRTC driver for i.MX53 in default config
 
 Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
 
 ---
 
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> (maintainer:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
 
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
 Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM)
@@ -32,38 +34,27 @@ Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
 Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 Cc: Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> (maintainer:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
 Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> (maintainer:ARM PORT)
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
 
 Cc: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
 Cc: Lothar Waßmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 ---
- drivers/rtc/Kconfig | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/configs/imx_v4_v5_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index b59a31b079a5..440edebf5c71 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1689,6 +1689,16 @@ config RTC_DRV_MXC
- 	   This driver can also be built as a module, if so, the module
- 	   will be called "rtc-mxc".
- 
-+config RTC_DRV_MXC_V2
-+	tristate "Freescale MXC Real Time Clock for i.MX53"
-+	depends on ARCH_MXC
-+	help
-+	   If you say yes here you get support for the Freescale MXC
-+	   SRTC module in i.MX53 processor.
-+
-+	   This driver can also be built as a module, if so, the module
-+	   will be called "rtc-mxc_v2".
-+
- config RTC_DRV_SNVS
- 	tristate "Freescale SNVS RTC support"
- 	select REGMAP_MMIO
+diff --git a/arch/arm/configs/imx_v4_v5_defconfig b/arch/arm/configs/imx_v4_v5_defconfig
+index ca0f13cafe38..b48efd5ff8a7 100644
+--- a/arch/arm/configs/imx_v4_v5_defconfig
++++ b/arch/arm/configs/imx_v4_v5_defconfig
+@@ -167,6 +167,7 @@ CONFIG_RTC_DRV_PCF8563=y
+ CONFIG_RTC_DRV_IMXDI=y
+ CONFIG_RTC_DRV_MC13XXX=y
+ CONFIG_RTC_DRV_MXC=y
++CONFIG_RTC_DRV_MXC_V2=y
+ CONFIG_DMADEVICES=y
+ CONFIG_IMX_DMA=y
+ CONFIG_IMX_SDMA=y
 -- 
 2.11.0
 --
