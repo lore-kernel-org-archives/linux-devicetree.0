@@ -1,45 +1,95 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v12 1/2] rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver
- documentation
-Date: Tue, 5 Dec 2017 15:39:33 +0200
-Message-ID: <20171205133933.rixqtzraauypwb4w@valkosipuli.retiisi.org.uk>
-References: <20171129193235.25423-1-niklas.soderlund+renesas@ragnatech.se>
- <20171129193235.25423-2-niklas.soderlund+renesas@ragnatech.se>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v7 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
+ LED driver
+Date: Tue, 5 Dec 2017 07:43:49 -0600
+Message-ID: <c3b98113-9976-c264-fa8b-f48a44f01335@ti.com>
+References: <20171204184107.682-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171129193235.25423-2-niklas.soderlund+renesas@ragnatech.se>
-Sender: linux-media-owner@vger.kernel.org
-To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-renesas-soc@vger.kernel.org, tomoharu.fukawa.eb@renesas.com, Kieran Bingham <kieran.bingham@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20171204184107.682-1-dmurphy@ti.com>
+Content-Language: en-US
+Sender: linux-leds-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 29, 2017 at 08:32:34PM +0100, Niklas Söderlund wrote:
-> Documentation for Renesas R-Car MIPI CSI-2 receiver. The CSI-2 receivers
-> are located between the video sources (CSI-2 transmitters) and the video
-> grabbers (VIN) on Gen3 of Renesas R-Car SoC.
+On 12/04/2017 12:41 PM, Dan Murphy wrote:
+> This adds the devicetree bindings for the LM3692x
+> I2C LED string driver.
 > 
-> Each CSI-2 device is connected to more then one VIN device which
-> simultaneously can receive video from the same CSI-2 device. Each VIN
-> device can also be connected to more then one CSI-2 device. The routing
-> of which link are used are controlled by the VIN devices. There are only
-> a few possible routes which are set by hardware limitations, which are
-> different for each SoC in the Gen3 family.
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
 > 
-> To work with the limitations of routing possibilities it is necessary
-> for the DT bindings to describe which VIN device is connected to which
-> CSI-2 device. This is why port 1 needs to to assign reg numbers for each
-> VIN device that be connected to it. To setup and to know which links are
-> valid for each SoC is the responsibility of the VIN driver since the
-> register to configure it belongs to the VIN hardware.
+> v7 - No changes - https://patchwork.kernel.org/patch/10087475/
+> v6 - No changes -https://patchwork.kernel.org/patch/10085567/
+> v5 - No Changes - https://patchwork.kernel.org/patch/10081071/
+> v4 - Fix example node, added trigger entry, removed ambiguous x for compatible and
+> added common.txt pointer for label - https://patchwork.kernel.org/patch/10060107
+> v3 - No changes
+> v2 - No changes - https://patchwork.kernel.org/patch/10056677/
 > 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> Acked-by: Rob Herring <robh@kernel.org>
+>  .../devicetree/bindings/leds/leds-lm3692x.txt      | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> new file mode 100644
+> index 000000000000..c259cde2226f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> @@ -0,0 +1,39 @@
+> +* Texas Instruments - LM3692x Highly Efficient White LED Driver
+> +
+> +The LM3692x is an ultra-compact, highly efficient,
+> +white-LED driver designed for LCD display backlighting.
+> +
+> +The main difference between the LM36922 and LM36923 is the number of
+> +LED strings it supports.  The LM36922 supports two strings while the LM36923
+> +supports three strings.
+> +
+> +Required properties:
+> +	- compatible:
+> +		"ti,lm36922"
+> +		"ti,lm36923"
+> +	- reg :  I2C slave address
+> +
+> +Optional properties:
+> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+> +	- enable-gpios : gpio pin to enable/disable the device.
+> +	- vled-supply : LED supply
+> +	- linux,default-trigger : (optional)
+> +	   see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +
+> +lm3692x@36 {
+> +	compatible = "ti,lm3692x";
+> +	reg = <0x36>;
+> +
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+address-cells and size-cells are missing.
+
+> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> +	vled-supply = <&vbatt>;
+> +
+> +	backlight: backlight@0 {
+
+Child needs to have reg property.
+
+> +		label = "backlight_cluster";
+> +		linux,default-trigger = "backlight";
+> +	};
+> +}
+> +
+> +For more product information please see the link below:
+> +http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
+> 
+
+Dan
 
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+------------------
+Dan Murphy
