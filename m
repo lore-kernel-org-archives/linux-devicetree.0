@@ -1,106 +1,80 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: bananapi-m64: Add LED device node
-Date: Tue, 5 Dec 2017 14:19:06 +0800
-Message-ID: <CAGb2v67LwV6Qn0DRMbDyou=VQ_AGYW70R7=DcUNaBFxG81OpkQ@mail.gmail.com>
-References: <20171201162733.23156-1-wens@csie.org> <CAMty3ZC2-sVbCgzKV3nZQfG4CtNXJdntuPhjyr_Wbn1xXJc=Dw@mail.gmail.com>
+From: Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: regulator: Add Spreadtrum SC2731 regulator documentation
+Date: Tue, 5 Dec 2017 14:35:45 +0800
+Message-ID: <d1e3a79db9b9a0b6c3116e06b34942b92b629ccc.1512455819.git.erick.chen@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMty3ZC2-sVbCgzKV3nZQfG4CtNXJdntuPhjyr_Wbn1xXJc=Dw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 5, 2017 at 2:15 PM, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
-> On Fri, Dec 1, 2017 at 9:57 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->> The Bananapi-M64 has 3 LEDS in red, green, and blue. These are toggled
->> via GPIO lines, which drive transistors that control current across the
->> LEDS. The red LED is by default on, via an additional pull-up on the
->> control line. We consider this means that it is a power indicator.
->> So we set the "default-on" property for it.
->>
->> The pingroups the GPIO lines belong to require external regulators be
->> enabled to be able to drive the GPIO high. These regulators also have
->> other purposes. However the pin controller does not have bindings for
->> regulators. Here we just set them to always-on.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 36 ++++++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
->> index 4a8d3f83a36e..a6975670cd1c 100644
->> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
->> @@ -60,6 +60,26 @@
->>                 stdout-path = "serial0:115200n8";
->>         };
->>
->> +       leds {
->> +               compatible = "gpio-leds";
->> +
->> +               pwr-led {
->> +                       label = "bananapi-m64:red:pwr";
->> +                       gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
->> +                       default-state = "on";
->> +               };
->> +
->> +               green {
->> +                       label = "bananapi-m64:green:user";
->> +                       gpios = <&pio 4 14 GPIO_ACTIVE_HIGH>; /* PE14 */
->> +               };
->> +
->> +               blue {
->> +                       label = "bananapi-m64:blue:user";
->> +                       gpios = <&pio 4 15 GPIO_ACTIVE_HIGH>; /* PE15 */
->> +               };
->> +       };
->> +
->>         wifi_pwrseq: wifi_pwrseq {
->>                 compatible = "mmc-pwrseq-simple";
->>                 reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
->> @@ -153,6 +173,17 @@
->>
->>  #include "axp803.dtsi"
->>
->> +&reg_aldo1 {
->> +       /*
->> +        * This regulator also drives the PE pingroup GPIOs,
->> +        * which also controls two LEDs.
->> +        */
->> +       regulator-always-on;
->> +       regulator-min-microvolt = <2800000>;
->> +       regulator-max-microvolt = <2800000>;
->
-> why 2.8v?
+This patch adds support for the Spreadtrum SC2731
+voltage regulator device.
 
-That is what is written on the schematics. Plus it seems camera
-modules are meant to use 2.8v.
+Signed-off-by: Erick Chen <erick.chen-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+---
+Changes since v1:
+- Remove reg property.
+- Remove regulators sub-node.
+---
+ .../bindings/regulator/sprd,sc2731-regulator.txt   |   43 ++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
 
->
->> +       regulator-name = "afvcc-csi";
->> +};
->> +
->>  &reg_aldo2 {
->>         regulator-always-on;
->>         regulator-min-microvolt = <1800000>;
->> @@ -168,6 +199,11 @@
->>  };
->>
->>  &reg_dc1sw {
->> +       /*
->> +        * This regulator also indirectly drives the PD pingroup GPIOs,
->> +        * which also controls the power LED.
->> +        */
->> +       regulator-always-on;
->
-> This make rgmii phy always on, does this make emac power-drop?
+diff --git a/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt b/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
+new file mode 100644
+index 0000000..63dc078
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/sprd,sc2731-regulator.txt
+@@ -0,0 +1,43 @@
++Spreadtrum SC2731 Voltage regulators
++
++The SC2731 integrates low-voltage and low quiescent current DCDC/LDO.
++14 LDO and 3 DCDCs are designed for external use. All DCDCs/LDOs have
++their own bypass (power-down) control signals. External tantalum or MLCC
++ceramic capacitors are recommended to use with these LDOs.
++
++Required properties:
++ - compatible: should be "sprd,sc27xx-regulator".
++
++List of regulators provided by this controller. It is named according to
++its regulator type, BUCK_<name> and LDO_<name>. The definition for each
++of these nodes is defined using the standard binding for regulators at
++Documentation/devicetree/bindings/regulator/regulator.txt.
++
++The valid names for regulators are:
++BUCK:
++	BUCK_CPU0, BUCK_CPU1, BUCK_RF
++LDO:
++	LDO_CAMA0, LDO_CAMA1, LDO_CAMMOT, LDO_VLDO, LDO_EMMCCORE, LDO_SDCORE,
++	LDO_SDIO, LDO_WIFIPA, LDO_USB33, LDO_CAMD0, LDO_CAMD1, LDO_CON,
++	LDO_CAMIO, LDO_SRAM
++
++Example:
++	regulators {
++		compatible = "sprd,sc27xx-regulator";
++
++		vddarm0: BUCK_CPU0 {
++			regulator-name = "vddarm0";
++			regulator-min-microvolt = <400000>;
++			regulator-max-microvolt = <1996875>;
++			regulator-ramp-delay = <25000>;
++			regulator-always-on;
++		};
++
++		vddcama0: LDO_CAMA0 {
++			regulator-name = "vddcama0";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <3750000>;
++			regulator-enable-ramp-delay = <100>;
++		};
++		...
++	};
+-- 
+1.7.9.5
 
-emac power-drop? Please elaborate.
-
-ChenYu
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
