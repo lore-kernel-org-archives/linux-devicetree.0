@@ -1,89 +1,81 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 4/9] dt-bindings: gpio: gpio-axp209: add
- pinctrl features
-Date: Tue,  5 Dec 2017 15:46:42 +0100
-Message-ID: <20171205144647.17594-5-quentin.schulz@free-electrons.com>
-References: <20171205144647.17594-1-quentin.schulz@free-electrons.com>
-Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBQ7DTLIQKGQEG2FPU5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171205144647.17594-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: [PATCH v5 00/11] add pinmuxing support for pins in AXP209 and AXP813 PMICs
+Date: Tue,  5 Dec 2017 15:46:38 +0100
+Message-ID: <20171205144647.17594-1-quentin.schulz@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, linux-sunxi@googlegroups.com, Quentin Schulz <quentin.schulz@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The X-Powers AXP209 has 3 GPIOs. GPIO0/1 can each act either as a GPIO,
-an ADC or a LDO regulator. GPIO2 can only act as a GPIO.
+The AXP209 and AXP813 PMICs have several pins (respectively 3 and 2) that can
+be used either as GPIOs or for other purposes (ADC or LDO here).
 
-This adds the pinctrl features to the driver so GPIO0/1 can be used as
-ADC or LDO regulator.
+We already have a GPIO driver for the GPIO use of those pins on the AXP209.
+Let's "upgrade" this driver to support all the functions these pins can have.
 
-Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio-axp209.txt       | 36 +++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
+Then we add support to this driver for the AXP813 which is slighlty different
+(basically a different offset in two registers and one less pin).
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt b/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-index a6611304dd3c..0d77597c3f92 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-@@ -1,8 +1,13 @@
--AXP209 GPIO controller
-+AXP209 GPIO & pinctrl controller
- 
- This driver follows the usual GPIO bindings found in
- Documentation/devicetree/bindings/gpio/gpio.txt
- 
-+This driver follows the usual pinctrl bindings found in
-+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+This driver employs the per-pin muxing pattern.
-+
- Required properties:
- - compatible: Should be "x-powers,axp209-gpio"
- - #gpio-cells: Should be two. The first cell is the pin number and the
-@@ -28,3 +33,32 @@ axp209: pmic@34 {
- 		#gpio-cells = <2>;
- 	};
- };
-+
-+The GPIOs can be muxed to other functions and therefore, must be a subnode of
-+axp_gpio.
-+
-+Example:
-+
-+&axp_gpio {
-+	gpio0_adc: gpio0-adc {
-+		pins = "GPIO0";
-+		function = "adc";
-+	};
-+};
-+
-+&example_node {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gpio0_adc>;
-+};
-+
-+GPIOs and their functions
-+-------------------------
-+
-+Each GPIO is independent from the other (i.e. GPIO0 in gpio_in function does
-+not force GPIO1 and GPIO2 to be in gpio_in function as well).
-+
-+GPIO	|	Functions
-+------------------------
-+GPIO0	|	gpio_in, gpio_out, ldo, adc
-+GPIO1	|	gpio_in, gpio_out, ldo, adc
-+GPIO2	|	gpio_in, gpio_out
+I suggest patches 1 to 8 go through Linus's tree and 9 via Lee's.
+
+v5:
+  - add reference to pinctrl dt-bindings in driver's dt-binding,
+  - add statement that this driver employs per-pin muxing pattern,
+  - add a patch on top of the patch series to fix checkpatch warnings,
+  - add a few information to the Kconfig to make checkpatch happy,
+
+v4:
+  - separate dt-binding patch when adding pinctrl feature,
+  - use - instead of _ in DT node name,
+  - remove muxing operation from pinctrl driver when choosing LDO mux in order
+  to not interfere with the regulator framework,
+  - add adc_mux to specify specific mux value for ADC (different between AXP209
+  and AXP813),
+  - misc modifications (header include reordering, unsigned int -> u8,
+  new line removal),
+
+v3:
+  - add defines for GPIO funcs,
+  - use again get_regs function instead of drv_data (which was implemented in
+  v2),
+  - use of_device_id data for device specific data (gpio_status_offset and pins
+  description),
+  - change compatible from axp813-pctl to axp813-gpio,
+  - use axp81x DT label instead of axp813 since AXP813 and AXP818 are similar,
+  - add dtsi include for all boards embedding axp813/axp818,
+
+v2:
+  - add support for AXP813 pins,
+  - split into more patches so it is easier to follow the modifications,
+  - reorder of some patches,
+  - register all pins within the same range instead of a range per pin,
+
+Thanks,
+Quentin
+
+Quentin Schulz (9):
+  gpio: axp209: switch unsigned variables to unsigned int
+  pinctrl: move gpio-axp209 to pinctrl
+  pinctrl: axp209: add pinctrl features
+  dt-bindings: gpio: gpio-axp209: add pinctrl features
+  pinctrl: axp209: rename everything from gpio to pctl
+  pinctrl: axp209: add programmable gpio_status_offset
+  pinctrl: axp209: add programmable ADC muxing value
+  pinctrl: axp209: add support for AXP813 GPIOs
+  mfd: axp20x: add pinctrl cell for AXP813
+
+ .../devicetree/bindings/gpio/gpio-axp209.txt       |  49 ++-
+ drivers/gpio/Kconfig                               |   6 -
+ drivers/gpio/Makefile                              |   1 -
+ drivers/gpio/gpio-axp209.c                         | 188 --------
+ drivers/mfd/axp20x.c                               |   3 +
+ drivers/pinctrl/Kconfig                            |  10 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-axp209.c                   | 476 +++++++++++++++++++++
+ 8 files changed, 537 insertions(+), 197 deletions(-)
+ delete mode 100644 drivers/gpio/gpio-axp209.c
+ create mode 100644 drivers/pinctrl/pinctrl-axp209.c
+
 -- 
 2.14.1
