@@ -1,188 +1,337 @@
-From: "Katsuhiro Suzuki" <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 5/8] ASoC: uniphier: add support for UniPhier AIO driver
-Date: Tue, 5 Dec 2017 13:48:39 +0900
-Message-ID: <002b01d36d84$51d80aa0$f5881fe0$@socionext.com>
-References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com> <20171122114321.29196-6-suzuki.katsuhiro@socionext.com> <20171204183934.rd4vin22ktukwpip@sirena.org.uk>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] mailbox: Add support for Hi3660 mailbox
+Date: Tue, 5 Dec 2017 13:13:40 +0800
+Message-ID: <20171205051340.GD20321@leoy-linaro>
+References: <1510910672-1409-1-git-send-email-xuyiping@hisilicon.com>
+ <1510910672-1409-3-git-send-email-xuyiping@hisilicon.com>
+ <CABb+yY1+uMhZ8nXxsuv4LFGqOkdH6AX-U_AeNJ0+j1+iA6=yhQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171204183934.rd4vin22ktukwpip-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: ja
+Content-Disposition: inline
+In-Reply-To: <CABb+yY1+uMhZ8nXxsuv4LFGqOkdH6AX-U_AeNJ0+j1+iA6=yhQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Mark Brown' <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?iso-2022-jp?B?U3V6dWtpLCBLYXRzdWhpcm8vGyRCTmtMWhsoQiAbJEI+IUduGyhC?= <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-2022-jp?B?WWFtYWRhLCBNYXNhaGlyby8bJEI7M0VEGyhCIBskQj8/OTAbKEI=?= <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuezhiliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, Dec 05, 2017 at 08:58:05AM +0530, Jassi Brar wrote:
+> On Fri, Nov 17, 2017 at 2:54 PM, Xu YiPing <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
+> > From: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> >
+> > Hi3660 mailbox controller is used to send message within multiple
+> > processors, MCU, HIFI, etc.  It supports 32 mailbox channels and every
+> > channel can only be used for single transferring direction.  Once the
+> > channel is enabled, it needs to specify the destination interrupt and
+> > acknowledge interrupt, these two interrupt vectors are used to create
+> > the connection between the mailbox and interrupt controllers.
+> >
+> > The data transferring supports two modes, one is named as "automatic
+> > acknowledge" mode so after send message the kernel doesn't need to wait
+> > for acknowledge from remote and directly return; there have another mode
+> > is to rely on handling interrupt for acknowledge.
+> >
+> > This commit is for initial version driver, which only supports
+> > "automatic acknowledge" mode to support CPU clock, which is the only
+> > one consumer to use mailbox and has been verified.  Later may enhance
+> > this driver for interrupt mode (e.g. for supporting HIFI).
+> >
+> > Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Ruyi Wang <wangruyi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/mailbox/Kconfig          |   8 +
+> >  drivers/mailbox/Makefile         |   2 +
+> >  drivers/mailbox/hi3660-mailbox.c | 322 +++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 332 insertions(+)
+> >  create mode 100644 drivers/mailbox/hi3660-mailbox.c
+> >
+> > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> > index c5731e5..4b5d6e9 100644
+> > --- a/drivers/mailbox/Kconfig
+> > +++ b/drivers/mailbox/Kconfig
+> > @@ -108,6 +108,14 @@ config TI_MESSAGE_MANAGER
+> >           multiple processors within the SoC. Select this driver if your
+> >           platform has support for the hardware block.
+> >
+> > +config HI3660_MBOX
+> > +       tristate "Hi3660 Mailbox"
+> > +       depends on ARCH_HISI && OF
+> > +       help
+> > +         An implementation of the hi3660 mailbox. It is used to send message
+> > +         between application processors and other processors/MCU/DSP. Select
+> > +         Y here if you want to use Hi3660 mailbox controller.
+> > +
+> >  config HI6220_MBOX
+> >         tristate "Hi6220 Mailbox"
+> >         depends on ARCH_HISI
+> > diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> > index d54e412..7d1bd51 100644
+> > --- a/drivers/mailbox/Makefile
+> > +++ b/drivers/mailbox/Makefile
+> > @@ -26,6 +26,8 @@ obj-$(CONFIG_TI_MESSAGE_MANAGER) += ti-msgmgr.o
+> >
+> >  obj-$(CONFIG_XGENE_SLIMPRO_MBOX) += mailbox-xgene-slimpro.o
+> >
+> > +obj-$(CONFIG_HI3660_MBOX)      += hi3660-mailbox.o
+> > +
+> >  obj-$(CONFIG_HI6220_MBOX)      += hi6220-mailbox.o
+> >
+> >  obj-$(CONFIG_BCM_PDC_MBOX)     += bcm-pdc-mailbox.o
+> > diff --git a/drivers/mailbox/hi3660-mailbox.c b/drivers/mailbox/hi3660-mailbox.c
+> > new file mode 100644
+> > index 0000000..ba80834
+> > --- /dev/null
+> > +++ b/drivers/mailbox/hi3660-mailbox.c
+> > @@ -0,0 +1,322 @@
+> > +/*
+> > + * Hisilicon's Hi3660 mailbox controller driver
+> > + *
+> > + * Copyright (c) 2017 Hisilicon Limited.
+> > + * Copyright (c) 2017 Linaro Limited.
+> > + *
+> > + * Author: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > + *
+> > + * This program is free software: you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation, version 2 of the License.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + *
+> >
+> We now use SPDX licence
 
-Thanks a lot for your review.
+Thanks for quick response, Jassi.
 
-> -----Original Message-----
-> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Tuesday, December 5, 2017 3:40 AM
-> To: Suzuki, Katsuhiro/鈴木 勝博 <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Yamada, Masahiro/山
-> 田 真弘 <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>; Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; Jassi Brar
-> <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [PATCH 5/8] ASoC: uniphier: add support for UniPhier AIO driver
+Will change to SPDX licence fashion.
+
+> > + */
+> > +
+> > +#include <linux/bitops.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/mailbox_controller.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/slab.h>
+> > +
+> > +#include "mailbox.h"
+> > +
+> > +#define MBOX_CHAN_MAX                  32
+> > +
+> > +#define MBOX_RX                                (0x0)
+> > +#define MBOX_TX                                (0x1)
+> > +
+> > +#define MBOX_BASE(mbox, ch)            ((mbox)->base + ((ch) * 0x40))
+> > +#define MBOX_SRC_REG                   (0x00)
+> > +#define MBOX_DST_REG                   (0x04)
+> > +#define MBOX_DCLR_REG                  (0x08)
+> > +#define MBOX_DSTAT_REG                 (0x0c)
+> > +#define MBOX_MODE_REG                  (0x10)
+> > +#define MBOX_IMASK_REG                 (0x14)
+> > +#define MBOX_ICLR_REG                  (0x18)
+> > +#define MBOX_SEND_REG                  (0x1c)
+> > +#define MBOX_DATA_REG                  (0x20)
+> > +
+> > +#define MBOX_IPC_LOCK_REG              (0xa00)
+> > +#define MBOX_IPC_UNLOCK                        (0x1acce551)
+> > +
+> > +#define MBOX_AUTOMATIC_ACK             (1)
+> > +
+> Please, no brackets around numbers.
+
+Sure, will remove brackets.
+
+> > +#define MBOX_STATE_IDLE                        BIT(4)
+> > +#define MBOX_STATE_ACK                 BIT(7)
+> > +
+> > +#define MBOX_MSG_LEN                   8
+> > +
+> > +/**
+> > + * Hi3660 mailbox channel device data
+> > + *
+> > + * A channel can be used for TX or RX, it can trigger remote
+> > + * processor interrupt to notify remote processor and can receive
+> > + * interrupt if has incoming message.
+> > + *
+> > + * @dst_irq:   Interrupt vector for remote processor
+> > + * @ack_irq:   Interrupt vector for local processor
+> > + */
+> > +struct hi3660_mbox_dev {
+> >
+> Better than dev, maybe hi3660_chan_info ?
 > 
-> On Wed, Nov 22, 2017 at 08:43:18PM +0900, Katsuhiro Suzuki wrote:
-> 
-> >  sound/soc/uniphier/Makefile      |   4 +
-> >  sound/soc/uniphier/aio-core.c    | 368 +++++++++++++++++++++
-> >  sound/soc/uniphier/aio-dma.c     | 266 +++++++++++++++
-> >  sound/soc/uniphier/aio-regctrl.c | 699 +++++++++++++++++++++++++++++++++++++++
-> >  sound/soc/uniphier/aio-regctrl.h | 495 +++++++++++++++++++++++++++
-> >  sound/soc/uniphier/aio.h         | 261 +++++++++++++++
-> 
-> Please split this up more, it looks like there's at least two or three
-> drivers in here and it winds up being quite large.  There's at least a
-> DMA and a DAI driver.  Looking through this my overall impression is
-> that this is a fairly large and complex audio subsystem with some DSP
-> and routing capacity which is being handled in a board specific fashion
-> rather than generically but it's kind of hard to tell as there's not
-> much description of what's going on so I'm needing to reverse engineer
-> things from the driver.
-> 
-> The code itself looks fairly clean, it's mainly a case of trying to
-> figure out if it's doing what it's supposed to with the limited
-> documentation.
-> 
-> > +int uniphier_aio_hw_params(struct snd_pcm_substream *substream,
-> > +			   struct snd_pcm_hw_params *params,
-> > +			   struct snd_soc_dai *dai)
+> > +       unsigned int dst_irq;
+> > +       unsigned int ack_irq;
+> > +};
+> > +
+> > +/**
+> > + * Hi3660 mailbox controller data
+> > + *
+> > + * Mailbox controller includes 32 channels and can allocate
+> > + * channel for message transferring.
+> > + *
+> > + * @dev:       Device to which it is attached
+> > + * @base:      Base address of the register mapping region
+> > + * @chan:      Representation of channels in mailbox controller
+> > + * @mdev:      Representation of channel device data
+> > + * @controller:        Representation of a communication channel controller
+> > + */
+> > +struct hi3660_mbox {
+> > +       struct device *dev;
+> > +       void __iomem *base;
+> > +       struct mbox_chan chan[MBOX_CHAN_MAX];
+> > +       struct hi3660_mbox_dev mdev[MBOX_CHAN_MAX];
+> >
+> Maybe mchan, instead of mdev.
+
+Will refactor structure name.
+
+> > +       struct mbox_controller controller;
+> > +};
+> > +
+> > +static inline struct hi3660_mbox *to_hi3660_mbox(struct mbox_controller *mbox)
 > > +{
-> > +	struct uniphier_aio *aio = uniphier_priv(dai);
-> > +	struct uniphier_aio_sub *sub = &aio->sub[substream->stream];
+> > +       return container_of(mbox, struct hi3660_mbox, controller);
+> > +}
 > > +
-> > +	sub->params = *params;
-> > +	sub->setting = 1;
-> 
-> So we don't validate the params at all?
-> 
-> > +	uniphier_aio_port_reset(sub);
-> > +	uniphier_aio_srcport_reset(sub);
-> 
-> Is there a mux in the SoC here?
-> 
-
-Sorry for confusing, It's not mux.
-
-uniphier_srcport_reset() resets HW SRC (sampling rate converter) block.
-Audio data out ports of UniPhier audio system have HW SRC.
-
-
-> > +static const struct of_device_id uniphier_aio_of_match[] = {
-> > +#ifdef CONFIG_SND_SOC_UNIPHIER_LD11
-> > +	{
-> > +		.compatible = "socionext,uniphier-ld11-aio",
-> > +		.data = &uniphier_aio_ld11_spec,
-> > +	},
-> > +	{
-> > +		.compatible = "socionext,uniphier-ld20-aio",
-> > +		.data = &uniphier_aio_ld20_spec,
-> > +	},
-> > +#endif /* CONFIG_SND_SOC_UNIPHIER_LD11 */
-> 
-> Why is there an ifdef here?  There's no other conditional code in here,
-> it seems pointless.
-> 
-
-This config is used to support or not LD11 SoC.
-aio-ld11.c is not build and 'uniphier_aio_ldxx_spec' is undefined if this config is disabled.
-
-aio-ld11.c defines SoC dependent resources (port, HW ring buffer, DMA ch, etc.)
-and fixed settings.
-I know it's better to move such information into device-tree, but register areas of
-UniPhier's audio system is very strange and interleaved. It's hard to split each nodes...
-
-
-> > +		for (j = 0; j < ARRAY_SIZE(aio->sub); j++) {
-> > +			struct uniphier_aio_sub *sub = &aio->sub[j];
-> > +
-> > +			if (!sub->running)
-> > +				continue;
-> > +
-> > +			spin_lock(&sub->spin);
-> > +			uniphier_aio_rb_sync(sub);
-> > +			uniphier_aio_rb_clear_int(sub);
-> > +			spin_unlock(&sub->spin);
-> 
-> It's not 100% obvious what this does...  a comment might help.
-> 
-> > +int uniphier_aio_chip_init(struct uniphier_aio_chip *chip)
+> > +static int hi3660_mbox_check_state(struct mbox_chan *chan)
 > > +{
-> > +	struct regmap *r = chip->regmap;
+> > +       unsigned long ch = (unsigned long)chan->con_priv;
+> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> > +       struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
+> > +       void __iomem *base = MBOX_BASE(mbox, ch);
+> > +       unsigned long val;
+> > +       unsigned int state, ret;
 > > +
-> > +	regmap_update_bits(r, A2APLLCTR0,
-> > +			   A2APLLCTR0_APLLXPOW_MASK,
-> > +			   A2APLLCTR0_APLLXPOW_PWON);
+> > +       /* Mailbox is idle so directly bail out */
+> > +       state = readl_relaxed(base + MBOX_MODE_REG);
+> > +       if (state & MBOX_STATE_IDLE)
+> > +               return 0;
 > > +
-> > +	regmap_update_bits(r, A2APLLCTR1, A2APLLCTR1_APLL_MASK,
-> > +			   A2APLLCTR1_APLLF2_33MHZ | A2APLLCTR1_APLLA2_33MHZ |
-> > +			   A2APLLCTR1_APLLF1_36MHZ | A2APLLCTR1_APLLA1_36MHZ);
+> > +       /* Wait for acknowledge from remote */
+> > +       ret = readx_poll_timeout_atomic(readl_relaxed, base + MBOX_MODE_REG,
+> > +                       val, (val & MBOX_STATE_ACK), 1000, 300000);
+> > +       if (ret) {
+> > +               dev_err(mbox->dev, "%s: timeout for receiving ack\n", __func__);
+> > +               return ret;
+> > +       }
 > > +
-> > +	regmap_update_bits(r, A2EXMCLKSEL0,
-> > +			   A2EXMCLKSEL0_EXMCLK_MASK,
-> > +			   A2EXMCLKSEL0_EXMCLK_OUTPUT);
+> > +       /* Ensure channel is released */
+> > +       writel_relaxed(0xffffffff, base + MBOX_IMASK_REG);
+> > +       writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SRC_REG);
 > > +
-> > +	regmap_update_bits(r, A2AIOINPUTSEL, A2AIOINPUTSEL_RXSEL_MASK,
-> > +			   A2AIOINPUTSEL_RXSEL_PCMI1_HDMIRX1 |
-> > +			   A2AIOINPUTSEL_RXSEL_PCMI2_SIF |
-> > +			   A2AIOINPUTSEL_RXSEL_PCMI3_EVEA |
-> > +			   A2AIOINPUTSEL_RXSEL_IECI1_HDMIRX1);
-> 
-> This definitely looks like there's some clocking and audio routing
-> within the SoC which should be exposed to userspace, or at the very
-> least machine driver configuration rather than being hard coded.
-> 
-> > +	switch (pc) {
-> > +	case IEC61937_PC_AC3:
-> > +		repet = OPORTMXREPET_STRLENGTH_AC3 |
-> > +			OPORTMXREPET_PMLENGTH_AC3;
-> > +		pause |= OPORTMXPAUDAT_PAUSEPD_AC3;
-> > +		break;
-> > +	case IEC61937_PC_MPA:
-> > +		repet = OPORTMXREPET_STRLENGTH_MPA |
-> > +			OPORTMXREPET_PMLENGTH_MPA;
-> > +		pause |= OPORTMXPAUDAT_PAUSEPD_MPA;
-> > +		break;
-> > +	case IEC61937_PC_MP3:
-> > +		repet = OPORTMXREPET_STRLENGTH_MP3 |
-> > +			OPORTMXREPET_PMLENGTH_MP3;
-> > +		pause |= OPORTMXPAUDAT_PAUSEPD_MP3;
-> > +		break;
-> 
-> This looks awfully like compressed audio support...  should there be
-> integration with the compressed audio API/
+> > +       return 0;
+> > +}
+> > +
+> > +static int hi3660_mbox_unlock(struct mbox_chan *chan)
+> > +{
+> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> > +       unsigned int val, retry = 3;
+> > +
+> > +       do {
+> > +               writel_relaxed(MBOX_IPC_UNLOCK, mbox->base + MBOX_IPC_LOCK_REG);
+> > +
+> > +               val = readl_relaxed(mbox->base + MBOX_IPC_LOCK_REG);
+> > +               if (!val)
+> > +                       break;
+> > +
+> > +               udelay(10);
+> > +       } while (retry--);
+> > +
+> > +       return (!val) ? 0 : -ETIMEDOUT;
+> > +}
+> > +
+> > +static int hi3660_mbox_acquire_channel(struct mbox_chan *chan)
+> > +{
+> > +       unsigned long ch = (unsigned long)chan->con_priv;
+> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> > +       struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
+> > +       void __iomem *base = MBOX_BASE(mbox, ch);
+> > +       unsigned int val, retry;
+> > +
+> > +       for (retry = 10; retry; retry--) {
+> > +               /* Check if channel has been acquired */
+> > +               if (readl_relaxed(base + MBOX_MODE_REG) & MBOX_STATE_IDLE) {
+> > +                       writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SRC_REG);
+> > +                       val = readl_relaxed(base + MBOX_SRC_REG);
+> > +                       if (val & BIT(mdev->ack_irq))
+> > +                               break;
+> > +               }
+> > +       }
+> > +
+> > +       return retry ? 0 : -ETIMEDOUT;
+> > +}
+> > +
+> > +static int hi3660_mbox_send(struct mbox_chan *chan, u32 *msg)
+> > +{
+> > +       unsigned long ch = (unsigned long)chan->con_priv;
+> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> > +       struct hi3660_mbox_dev *mdev = &mbox->mdev[ch];
+> > +       void __iomem *base = MBOX_BASE(mbox, ch);
+> > +       unsigned int i;
+> > +
+> > +       /* Clear mask for destination interrupt */
+> > +       writel_relaxed(~BIT(mdev->dst_irq), base + MBOX_IMASK_REG);
+> > +
+> > +       /* Config destination for interrupt vector */
+> > +       writel_relaxed(BIT(mdev->dst_irq), base + MBOX_DST_REG);
+> > +
+> > +       /* Automatic acknowledge mode */
+> > +       writel_relaxed(MBOX_AUTOMATIC_ACK, base + MBOX_MODE_REG);
+> > +
+> > +       /* Fill message data */
+> > +       for (i = 0; i < MBOX_MSG_LEN; i++)
+> > +               writel_relaxed(msg[i], base + MBOX_DATA_REG + i * 4);
+> > +
+> > +       /* Trigger data transferring */
+> > +       writel_relaxed(BIT(mdev->ack_irq), base + MBOX_SEND_REG);
+> > +       return 0;
+> > +}
+> > +
+> > +static int hi3660_mbox_send_data(struct mbox_chan *chan, void *msg)
+> > +{
+> > +       struct hi3660_mbox *mbox = to_hi3660_mbox(chan->mbox);
+> > +       int err;
+> > +
+> > +       err = hi3660_mbox_check_state(chan);
+> > +       if (err) {
+> > +               dev_err(mbox->dev, "checking state failed\n");
+> > +               return err;
+> > +       }
+> > +
+> > +       err = hi3660_mbox_unlock(chan);
+> > +       if (err) {
+> > +               dev_err(mbox->dev, "unlocking mailbox failed\n");
+> > +               return err;
+> > +       }
+> > +
+> > +       err = hi3660_mbox_acquire_channel(chan);
+> > +       if (err) {
+> > +               dev_err(mbox->dev, "acquiring channel failed\n");
+> > +               return err;
+> > +       }
+> > +
+> Please remember .send_data() is called with irqs disabled spinlock
+> All these polling functions hurt. Please move the above three checks
+> in last_tx_done()
 
-Thanks, I'll try it. Is there Documentation in sound/designes/compress-offload.rst?
-And best sample is... Intel's driver?
+I have tried to move these three checks in last_tx_done(), since these
+three functions tightly couple with mailbox state machine, so I failed
+to move them to last_tx_done().
 
+Anyway, I will try to move them to last_tx_done() for next version
+patch.
 
-(Summary)
-I think I should fix as follows:
-
-  - Split DMA, DAI patches from large one
-  - Validate parameters in hw_params
-  - Add description about HW SRC (or fix bad name 'srcport')
-  - Add comments about uniphier_aiodma_irq()
-  - Expose clocking and audio routing to userspace, or at the very
-    least machine driver configuration
-  - Support compress-audio API for S/PDIF
-
-and post V2.
-
-
-Regards,
---
-Katsuhiro Suzuki
-
-
-
-
+Thanks,
+Leo Yan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
