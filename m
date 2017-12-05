@@ -1,89 +1,75 @@
-From: =?utf-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: hwrng: Add Samsung Exynos 5250+
- True RNG bindings
-Date: Tue, 05 Dec 2017 10:30:17 +0100
-Message-ID: <878tehbjyu.fsf%l.stelmach@samsung.com>
-References: <CAJKOXPej1G6npvNSr9TP8DmWubtZpn6ONeNMN4Ax_RaafMiT7g@mail.gmail.com>
-        <CGME20171205093028eucas1p1fb6d7b8bde6cd5e3a0bfca8ddafe8a31@eucas1p1.samsung.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 09/10] ARM: dtsi: axp81x: add GPIO DT node
+Date: Tue, 5 Dec 2017 10:39:45 +0100
+Message-ID: <20171205093945.5sudt23fag7q3ric@flea.lan>
+References: <cover.3ff63fdf302c6bda02ea7d160ad2aa5afee0899d.1512135804.git-series.quentin.schulz@free-electrons.com>
+ <af90c57ebf97c8f5504a4b5b1dad3638bedadfef.1512135804.git-series.quentin.schulz@free-electrons.com>
+ <CAGb2v65mOwNBdit=gKOq0=iv94FNuH__4yvCw4v0NHYiCKccBw@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-reply-to: <CAJKOXPej1G6npvNSr9TP8DmWubtZpn6ONeNMN4Ax_RaafMiT7g@mail.gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bjgfhlvxfqyubaaf"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3GSTHIQKGQE2PE76JI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65mOwNBdit=gKOq0=iv94FNuH__4yvCw4v0NHYiCKccBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
 
-It was <2017-12-04 pon 14:13>, when Krzysztof Kozlowski wrote:
-> On Mon, Dec 4, 2017 at 1:53 PM, =C5=81ukasz Stelmach <l.stelmach@samsung.=
-com> wrote:
->> Add binding documentation for the True Random Number Generator
->> found on Samsung Exynos 5250+ SoCs.
->>
->> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
->> ---
->>  .../devicetree/bindings/rng/samsung,exynos5250-trng.txt | 17 ++++++++++=
-+++++++
->>  1 file changed, 17 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos=
-5250-trng.txt
->>
->> diff --git
->> a/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
->> b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
->> new file mode 100644
->> index 000000000000..5a613a4ec780
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
->> @@ -0,0 +1,17 @@
->> +Exynos True Random Number Generator
->> +
->> +Required properties:
->> +
->> +- compatible  : Should be "samsung,exynos5250-trng".
->> +- reg         : Specifies base physical address and size of the registe=
-rs map.
->> +- clocks      : Phandle to clock-controller plus clock-specifier pair.
->> +- clock-names : "secss" as a clock name.
->> +
->> +Example:
->> +
->> +       rng@10830600 {
->> +               compatible =3D "samsung,exynos5250-trng";
->> +               reg =3D <0x10830600 0x100>;
->> +               clocks =3D <&clock CLK_SSS>;
->> +               clock-names =3D "secss";
->> +       };
->> --
->> 2.11.0
->
-> Mine and Rob's tags disappeared and I think you did not introduce any
-> major changes here, right?
+--bjgfhlvxfqyubaaf
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-A very experienced kernel developer adviced me to remove them.
+Hi,
 
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
+On Tue, Dec 05, 2017 at 05:24:47PM +0800, Chen-Yu Tsai wrote:
+> On Fri, Dec 1, 2017 at 9:44 PM, Quentin Schulz
+> <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > This adds DT node for the GPIO/pinctrl part present in AXP813/AXP818.
+> >
+> > Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/axp81x.dtsi | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/axp81x.dtsi b/arch/arm/boot/dts/axp81x.dtsi
+> > index 73b761f..0ef959d 100644
+> > --- a/arch/arm/boot/dts/axp81x.dtsi
+> > +++ b/arch/arm/boot/dts/axp81x.dtsi
+> > @@ -48,6 +48,12 @@
+> >         interrupt-controller;
+> >         #interrupt-cells = <1>;
+> >
+> > +       axp_gpio: axp-gpio {
+> > +               compatible = "x-powers,axp813-gpio";
+> > +               gpio-controller;
+> > +               #gpio-cells = <2>;
+> 
+> What about interrupt-controller for directly referenced interrupts from
+> the GPIO pins?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+There's a bit more to it to enable interrupts. You would probably need
+to set up a chained interrupt controller in the GPIO driver, and in
+the DTS with a interrupt-parent and interrupts properties pointing to
+the AXP device itself.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> Otherwise,
+> 
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-iQEcBAEBCAAGBQJaJmcpAAoJELCuHpyYpYAQIMcH/A+XAV8SDe54xvsq+ScOwD+r
-FqyPp/GJFhW8rCv9PrdAwV12YeEv1US/8FpdGnbVhU0jYPNSs3dy7303EN4XO4DI
-oZR6WZf15R9kDbVY0iEsOkwGLYHPRS8FM0D3MSf5WF3daFXo/sX1aZnOCjdKwPn4
-Z5IDNJwTrKSQWJuhKzb7amLz/HxT3fti9obtqgPLCcL86m8k4MQJK0OZcKAqlMKh
-jqangMayS8l1i1AkXdP7M14y4kD/H6MH40aDhZs/qdokPc0rClq8SCt+5eOFEmOC
-vFv24LhjZ29mLRFYoPJRrHzIJcM3eMRlR0rtagcVtDuSSsRezG1t7GaUfjYp63s=
-=Mxhb
------END PGP SIGNATURE-----
---=-=-=--
+Applied 9 and 10, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--bjgfhlvxfqyubaaf--
