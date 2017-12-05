@@ -1,87 +1,41 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH 1/8] iio: adc: axp20x_adc: put ADC rate
- setting in a per-variant function
-Date: Tue, 5 Dec 2017 11:35:49 +0800
-Message-ID: <CAGb2v64er1xMXCFDfNKqGjGN-TysQyjK+vfHdx0t+kaCchQfCg@mail.gmail.com>
-References: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz@free-electrons.com>
- <e97d7332790facf3d10a58feabbfe7b2c0b90db7.1512396054.git-series.quentin.schulz@free-electrons.com>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC 1/2] dt-bindings: Add vendor prefix for
+ Brava Home
+Date: Tue, 5 Dec 2017 09:59:16 +0530
+Message-ID: <CAD6G_RRw5GjjVmN0WCRTwH6WcNMmyoHcp7TcQBtecZYfxk5ymg@mail.gmail.com>
+References: <1512067334-12761-1-git-send-email-jagan@amarulasolutions.com> <20171204213605.vg3rpz7rscbomduv@rob-hp-laptop>
+Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <e97d7332790facf3d10a58feabbfe7b2c0b90db7.1512396054.git-series.quentin.schulz@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-iio@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>, linux-sunxi <linux-sunxi@googlegroups.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Return-path: <linux-sunxi+bncBCV4FV5N34IRBHOBTDIQKGQEADJLS3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171204213605.vg3rpz7rscbomduv@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Janoff <mark-EBCEQKJj5Pll57MIdRCFDg@public.gmane.org>, Stuart Westerman <stu-EBCEQKJj5Pll57MIdRCFDg@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 4, 2017 at 10:12 PM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> To prepare for a new comer that set a different register with different
-> values, move rate setting in a function that is specific to each AXP
-> variant.
+On Tue, Dec 5, 2017 at 3:06 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Dec 01, 2017 at 12:12:13AM +0530, Jagan Teki wrote:
+>> Added 'brava' as a vendor prefix for Brava Home, Inc.
+>> which is consumer electronics and IoT company.
+>>
+>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  1 file changed, 1 insertion(+)
 >
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> ---
->  drivers/iio/adc/axp20x_adc.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
-> index a30a972..7274f4f 100644
-> --- a/drivers/iio/adc/axp20x_adc.c
-> +++ b/drivers/iio/adc/axp20x_adc.c
-> @@ -470,14 +470,18 @@ static const struct iio_info axp22x_adc_iio_info = {
->         .read_raw = axp22x_read_raw,
->  };
->
-> -static int axp20x_adc_rate(int rate)
-> +static int axp20x_adc_rate(struct axp20x_adc_iio *info, int rate)
->  {
-> -       return AXP20X_ADC_RATE_HZ(rate);
-> +       return regmap_update_bits(info->regmap, AXP20X_ADC_RATE,
-> +                                 AXP20X_ADC_RATE_MASK,
-> +                                 AXP20X_ADC_RATE_HZ(rate));
->  }
->
-> -static int axp22x_adc_rate(int rate)
-> +static int axp22x_adc_rate(struct axp20x_adc_iio *info, int rate)
->  {
-> -       return AXP22X_ADC_RATE_HZ(rate);
-> +       return regmap_update_bits(info->regmap, AXP20X_ADC_RATE,
-> +                                 AXP20X_ADC_RATE_MASK,
-> +                                 AXP22X_ADC_RATE_HZ(rate));
->  }
->
->  struct axp_data {
-> @@ -485,7 +489,7 @@ struct axp_data {
->         int                             num_channels;
->         struct iio_chan_spec const      *channels;
->         unsigned long                   adc_en1_mask;
-> -       int                             (*adc_rate)(int rate);
-> +       int                             (*adc_rate)(struct axp20x_adc_iio *info, int rate);
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Could you also change the name of the callback, to say, adc_set_rate?
-This would make it much clearer what the callback does. Previously
-it was just a conversion helper.
+Thanks, please ignore these RFC's as of now.
 
-ChenYu
-
->         bool                            adc_en2;
->         struct iio_map                  *maps;
->  };
-> @@ -554,8 +558,7 @@ static int axp20x_probe(struct platform_device *pdev)
->                                    AXP20X_ADC_EN2_MASK, AXP20X_ADC_EN2_MASK);
->
->         /* Configure ADCs rate */
-> -       regmap_update_bits(info->regmap, AXP20X_ADC_RATE, AXP20X_ADC_RATE_MASK,
-> -                          info->data->adc_rate(100));
-> +       info->data->adc_rate(info, 100);
->
->         ret = iio_map_array_register(indio_dev, info->data->maps);
->         if (ret < 0) {
-> --
-> git-series 0.9.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> For more options, visit https://groups.google.com/d/optout.
+-- 
+Jagan Teki
+Free Software Engineer | www.openedev.com
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
