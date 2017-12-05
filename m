@@ -1,62 +1,54 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v3 1/1] at24: support eeproms that do not auto-rollover reads.
-Date: Tue, 5 Dec 2017 09:14:22 +0100
-Message-ID: <CAMRc=MdeEcJ=hH42725S3u3ncVeNdyk-VBs2TvV1D8_kTR3nOw@mail.gmail.com>
-References: <1512401778-20366-1-git-send-email-svendev@arcx.com>
- <1512401778-20366-2-git-send-email-svendev@arcx.com> <20171204214023.ml2ujacezsop5ilb@kekkonen.localdomain>
- <CAGngYiXR83+0phkeAvJYYEm8HvmN-c9d0B9p1BRiPHyUz1ogAA@mail.gmail.com> <20171205074451.gpsidrxlwyfo2fu7@paasikivi.fi.intel.com>
+From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: [PATCH resend] arm: dts: ls1021a: Add label to USB controllers
+Date: Tue, 5 Dec 2017 09:16:33 +0100
+Message-ID: <1512461794-12309-1-git-send-email-rasmus.villemoes@prevas.dk>
+References: <1510663184-19537-1-git-send-email-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20171205074451.gpsidrxlwyfo2fu7@paasikivi.fi.intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Sven Van Asbroeck <thesven73@gmail.com>, Sven Van Asbroeck <svendev@arcx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, nsekhar@ti.com, David Lechner <david@lechnology.com>, javier@dowhile0.org, divagar.mohandass@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>, Sven Van Asbroeck <svenv@arcx.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1510663184-19537-1-git-send-email-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-12-05 8:44 GMT+01:00 Sakari Ailus <sakari.ailus@linux.intel.com>:
-> On Mon, Dec 04, 2017 at 05:24:33PM -0500, Sven Van Asbroeck wrote:
->> > If this is truly specific to at24, then vendor prefix would be appropriate,
->> > plus it'd go to an at24 specific binding file. However if it isn't I'd just
->> > remove the above sentence. I guess the latter?
->>
->> Yes, no-read-rollover is truly specific to at24.c, because it applies only
->> to i2c multi-address chips. The at25 is spi based so cannot have multiple
->> addresses.
->>
->> So yes, "at24,no-read-rollover" would perhaps be a better name.
->>
->> Regarding an at24 specific binding file. You're saying I should create
->> Documentation/devicetree/bindings/eeprom/at24.txt ? Should I indicate
->> that at24.txt "inherits from" eeprom.txt? Note that at25.txt does not
->> currently do this.
->
-> Hmm. I actually missed we didn't have one to begin with. at25.txt exists
-> and it documents a number of properties specific to at25, so if at24 will
-> have an at24-specific property, then I think it should go to a separate
-> file.
+From: Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>
 
-The eeprom.txt file in the bindings directory actually describes the
-bindings for at24. There's a patch[1] from Wolfram waiting for Rob's
-ack that renames it to at24.txt. I hope that clears any confusion.
+Add usb2 and usb3 labels to USB2 and USB3 controller device tree nodes,
+for easier modification in board dts files.
 
-@Sven: please split the patch into two: one for bindings and one for code.
+Signed-off-by: Esben Haabendal <eha-/iRVSOupHO4@public.gmane.org>
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-As for the name: I would change it to at24,no-read-rollover and remove
-the fragment saying it's only supported in at24 - as I said: this file
-only concerns at24 and will be renamed.
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 3ff2b8a9f01a..02a266faec9b 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -675,7 +675,7 @@
+ 			};
+ 		};
+ 
+-		usb@8600000 {
++		usb2: usb@8600000 {
+ 			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
+ 			reg = <0x0 0x8600000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
+@@ -683,7 +683,7 @@
+ 			phy_type = "ulpi";
+ 		};
+ 
+-		usb3@3100000 {
++		usb3: usb3@3100000 {
+ 			compatible = "snps,dwc3";
+ 			reg = <0x0 0x3100000 0x0 0x10000>;
+ 			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.7.4
 
->
-> Aren't there really other chips which need this? It'd be (a little bit)
-> easier to just remove the sentence. :-)
->
-> --
-> Regards,
->
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
-
-Thanks,
-Bartosz
-
-[1] http://patchwork.ozlabs.org/patch/842500/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
