@@ -1,74 +1,86 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH] Documentation: binding: Update endianness usage
-Date: Tue, 5 Dec 2017 09:45:33 +0000
-Message-ID: <HE1PR04MB1241ADD02E472BA492AE1C8F973D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
-References: <1511954855-8593-1-git-send-email-prabhakar.kushwaha@nxp.com>
-         <1512105209.10062.1.camel@buserror.net>
-         <HE1PR04MB12414AFA5F8081730B89378497390@HE1PR04MB1241.eurprd04.prod.outlook.com>
-         <1512165311.10062.3.camel@buserror.net>
-         <HE1PR04MB1241226CD3B7ABD6D5FA2D91973C0@HE1PR04MB1241.eurprd04.prod.outlook.com>
- <1512441957.10062.6.camel@buserror.net>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i: h3: Add dts file for
+ Libre Computer Board ALL-H3-CC H3 ver.
+Date: Tue, 5 Dec 2017 11:03:50 +0100
+Message-ID: <20171205100350.2v3cxcwb7lde3ykw@flea.lan>
+References: <20171205060615.14349-1-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512441957.10062.6.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pieb5dgr5mc4nf4n"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHG6THIQKGQEMXWT65I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20171205060615.14349-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNjb3R0IFdvb2QgW21haWx0
-bzpvc3NAYnVzZXJyb3IubmV0XQ0KPiBTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAwNSwgMjAxNyA4
-OjE2IEFNDQo+IFRvOiBQcmFiaGFrYXIgS3VzaHdhaGEgPHByYWJoYWthci5rdXNod2FoYUBueHAu
-Y29tPjsgbGludXgtDQo+IG10ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZw0KPiBDYzogZGVkZWtpbmQxQGdtYWlsLmNvbTsgY29tcHV0ZXJzZm9ycGVhY2VA
-Z21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIERvY3VtZW50YXRpb246IGJpbmRpbmc6
-IFVwZGF0ZSBlbmRpYW5uZXNzIHVzYWdlDQo+IA0KPiBPbiBNb24sIDIwMTctMTItMDQgYXQgMDQ6
-MzMgKzAwMDAsIFByYWJoYWthciBLdXNod2FoYSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBTY290dCBXb29kIFttYWlsdG86b3NzQGJ1c2Vycm9y
-Lm5ldF0NCj4gPiA+IFNlbnQ6IFNhdHVyZGF5LCBEZWNlbWJlciAwMiwgMjAxNyAzOjI1IEFNDQo+
-ID4gPiBUbzogUHJhYmhha2FyIEt1c2h3YWhhIDxwcmFiaGFrYXIua3VzaHdhaGFAbnhwLmNvbT47
-IGxpbnV4LQ0KPiA+ID4gbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWUtZGlzY3Vz
-c0BsaXN0cy5vemxhYnMub3JnDQo+ID4gPiBDYzogZGVkZWtpbmQxQGdtYWlsLmNvbTsgY29tcHV0
-ZXJzZm9ycGVhY2VAZ21haWwuY29tDQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIXSBEb2N1bWVu
-dGF0aW9uOiBiaW5kaW5nOiBVcGRhdGUgZW5kaWFubmVzcyB1c2FnZQ0KPiA+ID4NCj4gPiA+IE9u
-IEZyaSwgMjAxNy0xMi0wMSBhdCAwODo0MiArMDAwMCwgUHJhYmhha2FyIEt1c2h3YWhhIHdyb3Rl
-Og0KPiA+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+ID4gRnJvbTog
-U2NvdHQgV29vZCBbbWFpbHRvOm9zc0BidXNlcnJvci5uZXRdDQo+ID4gPiA+ID4gU2VudDogRnJp
-ZGF5LCBEZWNlbWJlciAwMSwgMjAxNyAxMDo0MyBBTQ0KPiA+ID4gPiA+IFRvOiBQcmFiaGFrYXIg
-S3VzaHdhaGEgPHByYWJoYWthci5rdXNod2FoYUBueHAuY29tPjsgbGludXgtDQo+ID4gPiA+ID4g
-bXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMu
-b3JnDQo+ID4gPiA+ID4gQ2M6IGRlZGVraW5kMUBnbWFpbC5jb207IGNvbXB1dGVyc2ZvcnBlYWNl
-QGdtYWlsLmNvbQ0KPiA+ID4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIERvY3VtZW50YXRpb246
-IGJpbmRpbmc6IFVwZGF0ZSBlbmRpYW5uZXNzIHVzYWdlDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBJ
-ZiBiaWcgZW5kaWFuIGlzIHRoZSBkZWZhdWx0LCBpcyB0aGlzIGNoYW5nZSByZWFsbHkNCj4gPiA+
-ID4gPiBuZWNlc3Nhcnk/wqDCoFBhcnRpY3VsYXJseQ0KPiA+ID4gPiA+IHNpbmNlIHRoZSBiaWcg
-ZW5kaWFuIGNoaXBzIGFyZSBvbGRlciBhbmQgdGh1cyBoYXZlIGV4aXN0aW5nIGRldmljZQ0KPiA+
-ID4gPiA+IHRyZWVzLg0KPiA+ID4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IEVhcmxpZXIgZW5kaWFu
-bmVzcyBpbmZvcm1hdGlvbiB3YXMgb25seSB1c2VkIGZvciAiaG93IHRvIsKgwqBhY2Nlc3MgSUZD
-LQ0KPiA+ID4gPiBOQU5EDQo+ID4gPiA+IHJlZ2lzdGVyIGFjY2Vzcy4NCj4gPiA+ID4gTm93IHRo
-aXMgaW5mb8KgwqB3aWxsIGFsc28gYmUgdXNlZCBmb3IgZGVmaW5pbmcgc3dhcCByZXF1aXJlbWVu
-dCBvZiBOT1INCj4gPiA+ID4gZmxhc2guDQo+ID4gPg0KPiA+ID4gSXMgdGhpcyBhIGRpZmZlcmVu
-Y2UgYmV0d2VlbiBMUzEwMjFBIGFuZCBQUEMtYmFzZWQgY2hpcHM/DQo+ID4gPg0KPiA+DQo+ID4g
-WWVzLg0KPiA+IENPTkZJR19NVERfQ0ZJX0JFX0JZVEVfU1dBUCBuZWVkcyB0byBiZSBkZWZpbmVk
-IEZvciBMUzEwMjFBLCBMUzEwNDNBLA0KPiA+IExTMTA0NkENCj4gDQo+IE9ubHkgYmVjYXVzZSB5
-b3UncmUgcnVubmluZyBhIGxpdHRsZS1lbmRpYW4ga2VybmVsIG9uIHRob3NlIGNoaXBzLiAgSSBz
-dGlsbA0KPiBkb24ndCBzZWUgd2h5IHRoZSBhYnNlbmNlIG9mIGEgbGl0dGxlLWVuZGlhbiBwcm9w
-ZXJ0eSBpc24ndCBzdWZmaWNpZW50IHRvDQo+IGNvbW11bmljYXRlIHRoYXQgdGhlIGhhcmR3YXJl
-IGlzIGJpZy1lbmRpYW4gZ2l2ZW4gdGhhdCB0aGF0J3MgdGhlIGVzdGFibGlzaGVkDQo+IGRlZmF1
-bHQuDQo+IA0KPiBJIG5vdyBzZWUgeW91ciBwYXRjaCB0byBvZl9mbGFzaF9wcm9iZS4uLiB3aGVy
-ZSBpcyB0aGUgbm9uLUlGQy1zcGVjaWZpYw0KPiBiaW5kaW5nIHRoYXQgc2F5cyB0aGUgKnBhcmVu
-dCogb2YgYSBDRkkgbm9kZSBzaG91bGQgYmUgbG9va2VkIGF0IGZvciB0aGlzPw0KPiBXaGVyZcKg
-aW4gZ2VuZXJhbCBhcmUgZW5kaWFuIHByb3BlcnRpZXMga2VwdCBpbiB0aGUgcGFyZW50IG9mIHRo
-ZSBub2RlIHdpdGgNCj4gInJlZyI/ICBUaGUgcmlnaHQgYW5zd2VyIGlzIHRvIGFkZCBlbmRpYW5u
-ZXNzIHRvIG10ZC1waHlzbWFwLnR4dC4NCj4gDQoNCkZsYXNoZXMgYXJlIGFsd2F5cyBsaXR0bGVy
-IGVuZGlhbi4gDQpJdCBpcyBiZWNhdXNlIG9mIElGQyBjb250cm9sbGVyIGJlaGF2aW9yLCBlbmRp
-YW5uZXNzIGlzIHJlcXVpcmVkLiAgDQpTbyBhcyBwZXIgbXkgdW5kZXJzdGFuZGluZywgdGhpcyBp
-bmZvIHNob3VsZCBnbyBpbiBJRkMgYmluZGluZy4gDQoNClBsZWFzZSBoZWxwIG1lIGlmIEkgYW0g
-bm90IGFibGUgdG8gdW5kZXJzdGFuZCB5b3VyIHZpZXcuDQoNCi0tcHJhYmhha2FyDQoNCg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--pieb5dgr5mc4nf4n
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Tue, Dec 05, 2017 at 02:06:15PM +0800, Chen-Yu Tsai wrote:
+> The Libre Computer Board ALL-H3-CC from Libre Technology is a Raspberry
+> Pi B+ form factor single board computer based on the Allwinner H3 SoC.
+> The board has 1GB DDR3 SDRAM, provided by 4 2Gb chips. The mounting holes
+> and connectors are in the exact same position as on the Raspberry Pi B+.
+> 
+> Raspberry Pi B+ like peripherals supported on this board include:
+> 
+>   - Power input through micro-USB connector (without USB OTG)
+>   - Native 100 Mbps ethernet using the internal PHY, as opposed to
+>     USB-based on the RPi
+>   - 4x USB 2.0 host ports, directly connected to the SoC, as opposed to
+>     being connected through a USB 2.0 hub on the RPi
+>   - TV and audio output on a 3.5mm TRRS jack
+>   - HDMI output
+>   - Micro-SD card slot
+>   - Standard RPi B+ GPIO header, with the standard peripherals routed to
+>     the same pins.
+> 
+>     * 5V, 3.3V power, and ground
+>     * I2C0 on the H3 is routed to I2C1 pins on the RPi header
+>     * I2C1 on the H3 is routed to I2C0 pins on the RPi header
+>     * UART1 on the H3 is routed to UART0 pins on the RPi header
+>     * SPI0 on the H3 is routed to SPI0 pins on the RPi header,
+>       with GPIO pin PA17 replacing the missing Chip Select 1
+>     * I2S1 on the H3 is routed to PCM pins on the RPi header
+> 
+>   - Additional peripherals from the H3 are available on different pins.
+>     These include I2S0, JTAG, PWM1, SPDIF, SPI1, and UART3
+> 
+> In addition, there are a number of new features:
+> 
+>   - Console UART header
+>   - Consumer IR receiver
+>   - Camera interface (not compatible with RPi)
+>   - Onboard microphone
+>   - eMMC expansion module port
+>   - Heatsink mounting holes
+>   - Power button
+> 
+> The power button requires corresponding software for the embedded
+> coprocessor to properly function.
+> 
+> This patch adds a dts file for this board that enables all "onboard"
+> peripherals currently supported. This means no display or camera
+> support.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+Applied, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--pieb5dgr5mc4nf4n--
