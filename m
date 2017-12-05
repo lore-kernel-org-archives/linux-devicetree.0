@@ -1,58 +1,52 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 3/4] RFC: net: dsa: Add bindings for Realtek SMI DSAs
-Date: Mon, 4 Dec 2017 23:50:14 +0100
-Message-ID: <20171204225014.GC12805@lunn.ch>
-References: <20171105231909.5599-1-linus.walleij@linaro.org>
- <20171105231909.5599-4-linus.walleij@linaro.org>
- <20171105234831.GA24822@lunn.ch>
- <CACRpkdbzqnbF49yN-SAqLkhufk=R2C=jpdLo-QWmL0zR_+Vj=w@mail.gmail.com>
- <20171129155627.GD24881@lunn.ch>
- <CACRpkdZVXgFMiHpyUqw7ONYDcq6Htn3rTMRaBJkzd6T3WtX36A@mail.gmail.com>
- <20171129215659.GC1706@lunn.ch>
- <CACRpkdbUig-wb9_CnyF7DM4JsHCv4iruKx92wNXDdZtbrr2HoA@mail.gmail.com>
- <f9bfa1e1-7f05-1e2b-6663-09d4d3bf6a12@gmail.com>
- <CACRpkdYoMVNh8eaTnaDQ59bsh4bC88biLaYSXyhnc4W83PMWzA@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 4/8] ASoC: uniphier: add support for UniPhier EVEA codec
+Date: Tue, 5 Dec 2017 09:58:54 +0900
+Message-ID: <CAK7LNAR=-vHN5k6irpaDcAUYcH2kjCXLJpf10RMuq=GZB3huog@mail.gmail.com>
+References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com>
+ <20171122114321.29196-5-suzuki.katsuhiro@socionext.com> <20171204182027.2k5uw5og65h6ac7w@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYoMVNh8eaTnaDQ59bsh4bC88biLaYSXyhnc4W83PMWzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antti =?iso-8859-1?Q?Sepp=E4l=E4?= <a.seppala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Roman Yeryomin <roman-9zmcapQ0v8Q@public.gmane.org>, Colin Leitner <colin.leitner-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171204182027.2k5uw5og65h6ac7w@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>, alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-> So why not:
-> 
-> switch@0 {
->         compatible = "acme,switch";
->         #address-cells = <1>;
->         #size-cells = <0>;
-> 
->         ports {
-> 
->                 port@0 {
->                         reg = <0>;
->                         phy@0 {
->                              reg = <0>;
->                         };
->                 };
++CC Greg-KH
++CC Thomas Gleixner
 
-Hi Linus
+2017-12-05 3:20 GMT+09:00 Mark Brown <broonie@kernel.org>:
+> On Wed, Nov 22, 2017 at 08:43:17PM +0900, Katsuhiro Suzuki wrote:
+>
+>> +++ b/sound/soc/uniphier/evea.c
+>> @@ -0,0 +1,567 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Socionext UniPhier EVEA ADC/DAC codec driver.
+>> + *
+>> + * Copyright (c) 2016-2017 Socionext Inc.
+>
+> Make the entire comment a C++ comment, don't mix and match like this -
+> it's ugly.  Otherwise this looks good so I'll apply it, please send a
+> followup patch fixing this (and I guess the same thing will apply to
+> other files).
 
-So you are suggesting put the PHY node inside the MAC node.
 
-This is sometimes done, but does not describe the hardware. The PHYs
-are on an MDIO bus, so device tree should show the MDIO bus and the
-PHYs on it.
+Indeed ugly,
+but I think this is intentional to make the SPDX line stand out.
 
-DSA does have an MDIO bus, so putting the PHYs in the MAC is just
-confusing. Although that is not Florians preferred solution, he would
-like the DSA driver to export its own MDIO bus and list the PHYs on
-it.
 
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Linus suggested this as far as I understood from the following:
+https://patchwork.kernel.org/patch/10016201/
+
+
+If you use C++ comment style for the entire block,
+it will not stand out.
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
