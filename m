@@ -1,52 +1,62 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 4/8] ASoC: uniphier: add support for UniPhier EVEA codec
-Date: Tue, 5 Dec 2017 09:58:54 +0900
-Message-ID: <CAK7LNAR=-vHN5k6irpaDcAUYcH2kjCXLJpf10RMuq=GZB3huog@mail.gmail.com>
-References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com>
- <20171122114321.29196-5-suzuki.katsuhiro@socionext.com> <20171204182027.2k5uw5og65h6ac7w@sirena.org.uk>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 0/2] of: dynamic: restrict overlay by targets
+Date: Mon, 4 Dec 2017 20:14:52 -0500
+Message-ID: <edb604fa-4810-0de9-ce51-c90aa2442cb4@gmail.com>
+References: <20171204191357.3211-1-atull@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171204182027.2k5uw5og65h6ac7w@sirena.org.uk>
+In-Reply-To: <20171204191357.3211-1-atull@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>, alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-+CC Greg-KH
-+CC Thomas Gleixner
+Hi Alan,
 
-2017-12-05 3:20 GMT+09:00 Mark Brown <broonie@kernel.org>:
-> On Wed, Nov 22, 2017 at 08:43:17PM +0900, Katsuhiro Suzuki wrote:
->
->> +++ b/sound/soc/uniphier/evea.c
->> @@ -0,0 +1,567 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Socionext UniPhier EVEA ADC/DAC codec driver.
->> + *
->> + * Copyright (c) 2016-2017 Socionext Inc.
->
-> Make the entire comment a C++ comment, don't mix and match like this -
-> it's ugly.  Otherwise this looks good so I'll apply it, please send a
-> followup patch fixing this (and I guess the same thing will apply to
-> other files).
+In the RFC thread "of: Add whitelist", I did not understand the use case and
+asked you some questions (30 Nov 2017 07:46:36 -0500), that you seem to have
+overlooked (or my mail server failed to deliver your answer to me).  Can you
+please answer that question so I can better understand this patch set is
+needed for.
+
+Thanks,
+
+Frank
 
 
-Indeed ugly,
-but I think this is intentional to make the SPDX line stand out.
-
-
-Linus suggested this as far as I understood from the following:
-https://patchwork.kernel.org/patch/10016201/
-
-
-If you use C++ comment style for the entire block,
-it will not stand out.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+On 12/04/17 14:13, Alan Tull wrote:
+> Restrict which nodes are valid targets for a DT overlay.
+> 
+> Add a flag bit to struct device_node allowing nodes to be marked as
+> valid target for overlays.
+> 
+> A driver that is always intended to handle DT overlays can
+> enable overlays by calling a function for its DT node.
+> 
+> For individual nodes that need to be opened up for a specific use,
+> adding the property "overlay-allowed" enables overlays targeting
+> that node.  I'll need to document the DT property, not sure where
+> specifically.  New file bindings/overlay.txt?
+> 
+> This patchset differs from the RFC:
+> * Added a flag bit and got rid of the whitelist
+> * Renamed the functions that enable a node
+> * Added a DT property
+> 
+> Alan Tull (2):
+>   of: overlay: add flag enabling overlays and enable fpga-region
+>     overlays
+>   of: dynamic: add overlay-allowed DT property
+> 
+>  drivers/fpga/of-fpga-region.c |  4 ++++
+>  drivers/of/base.c             |  4 ++--
+>  drivers/of/dynamic.c          |  3 +++
+>  drivers/of/fdt.c              |  3 +++
+>  drivers/of/of_private.h       |  2 ++
+>  drivers/of/overlay.c          | 26 ++++++++++++++++++++++++++
+>  include/linux/of.h            | 19 +++++++++++++++++++
+>  7 files changed, 59 insertions(+), 2 deletions(-)
+> 
