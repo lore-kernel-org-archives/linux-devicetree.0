@@ -1,52 +1,61 @@
-From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] dt: bindings: as3645a: Fix the example node
-Date: Tue, 5 Dec 2017 14:03:31 -0600
-Message-ID: <dfc49b89-b9d3-147f-68e0-a009823f9092@ti.com>
-References: <20171205133637.30022-1-dmurphy@ti.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 2/7] PCI: Export pci_find_host_bridge()
+Date: Tue, 5 Dec 2017 14:04:02 -0600
+Message-ID: <20171205200402.GF23510@bhelgaas-glaptop.roam.corp.google.com>
+References: <1512120007-28088-1-git-send-email-mmaddireddy@nvidia.com>
+ <1512120007-28088-3-git-send-email-mmaddireddy@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171205133637.30022-1-dmurphy-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1512120007-28088-3-git-send-email-mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: cyndis-/1wQRMveznE@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+Sakari driver maintainer
+On Fri, Dec 01, 2017 at 02:50:02PM +0530, Manikanta Maddireddy wrote:
+> PCI subsystem pass pci_bus pointer to pci_ops callback functions, Tegra
 
-On 12/05/2017 07:36 AM, Dan Murphy wrote:
-> Fix the address-cells and size-cells example node
-> to reflect to the correct representation.
-> 
-> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+s/PCI subsystem pass/The PCI subsystem passes a/
+s/, Tegra/.  The Tegra/
+
+> host driver use pci_find_host_bridge() to get pci_host_bridge from pci_bus.
+
+s/use/uses/
+
+> Export pci_find_host_bridge() to allow Tegra PCIe driver to be compiled as
+> loadable kernel module.
+
+s/allow Tegra/allow the Tegra/
+s/loadable/a loadable/
+
+But why do you need pci_find_host_bridge() at all?  Most drivers use
+the pci_bus.sysdata pointer for this purpose, e.g., see db271747a04d
+("PCI: mediatek: Use bus->sysdata to get host private data")
+
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/leds/ams,as3645a.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> V2:
+> * commit message update
+> V3:
+> * EXPORT_SYMBOL is changed to EXPORT_SYMBOL_GPL
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> index fdc40e354a64..8a49ccfec29b 100644
-> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> @@ -59,8 +59,8 @@ Example
->  =======
+>  drivers/pci/host-bridge.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+> index add66236215c..b8c0fcde9bd7 100644
+> --- a/drivers/pci/host-bridge.c
+> +++ b/drivers/pci/host-bridge.c
+> @@ -22,6 +22,7 @@ struct pci_host_bridge *pci_find_host_bridge(struct pci_bus *bus)
 >  
->  	as3645a@30 {
-> -		#address-cells: 1
-> -		#size-cells: 0
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
->  		reg = <0x30>;
->  		compatible = "ams,as3645a";
->  		flash@0 {
+>  	return to_pci_host_bridge(root_bus->bridge);
+>  }
+> +EXPORT_SYMBOL_GPL(pci_find_host_bridge);
+>  
+>  struct device *pci_get_host_bridge_device(struct pci_dev *dev)
+>  {
+> -- 
+> 2.1.4
 > 
-
-
--- 
-------------------
-Dan Murphy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
