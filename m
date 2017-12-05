@@ -1,79 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/8] ASoC: uniphier: add support for
-	UniPhier EVEA codec
-Date: Tue, 5 Dec 2017 11:59:15 +0000
-Message-ID: <20171205115915.GB11658@finisterre>
-References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com>
- <20171122114321.29196-5-suzuki.katsuhiro@socionext.com>
- <20171204182027.2k5uw5og65h6ac7w@sirena.org.uk>
- <CAK7LNAR=-vHN5k6irpaDcAUYcH2kjCXLJpf10RMuq=GZB3huog@mail.gmail.com>
+From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] staging: Introduce NVIDIA Tegra video decoder
+ driver
+Date: Tue, 5 Dec 2017 15:17:58 +0300
+Message-ID: <3ac6a087-def2-014f-673d-1be9d5094635@gmail.com>
+References: <cover.1508448293.git.digetx@gmail.com>
+ <1a3798f337c0097e67d70226ae3ba665fd9156c2.1508448293.git.digetx@gmail.com>
+ <ad2da9f4-8899-7db3-493f-5aa15297c33c@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8683592337963725759=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAK7LNAR=-vHN5k6irpaDcAUYcH2kjCXLJpf10RMuq=GZB3huog@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ad2da9f4-8899-7db3-493f-5aa15297c33c-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-Language: en-US
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Hans,
 
---===============8683592337963725759==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lEGEL1/lMxI0MVQ2"
-Content-Disposition: inline
+On 04.12.2017 17:04, Hans Verkuil wrote:
+> Hi Dmitry,
+> 
+> As you already mention in the TODO, this should become a v4l2 codec driver.
+> 
+> Good existing examples are the coda, qcom/venus and mtk-vcodec drivers.
+> 
+> One thing that is not clear from this code is if the tegra hardware is a
+> stateful or stateless codec, i.e. does it keep track of the decoder state
+> in the hardware, or does the application have to keep track of the state and
+> provide the state information together with the video data?
+> 
+> I ask because at the moment only stateful codecs are supported. Work is ongoing
+> to support stateless codecs, but we don't support that for now.
+> 
 
+It is stateless. Is there anything ready to try out? If yes, could you please
+give a reference to that work?
 
---lEGEL1/lMxI0MVQ2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Anyway, I'm OK with merging this in staging. Although I think it should go
+> to staging/media since we want to keep track of it.
+> 
 
-On Tue, Dec 05, 2017 at 09:58:54AM +0900, Masahiro Yamada wrote:
-
-> Indeed ugly,
-> but I think this is intentional to make the SPDX line stand out.
-
->=20
-> Linus suggested this as far as I understood from the following:
-> https://patchwork.kernel.org/patch/10016201/
-
-> If you use C++ comment style for the entire block,
-> it will not stand out.
-
-It's the first line of the file to make it stand out, if you google
-around you can find some other conversation about how C++ comments are
-a good idea in general and this might encourage them.
-
---lEGEL1/lMxI0MVQ2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlomihAACgkQJNaLcl1U
-h9C3NQf/ZoLjydjXpiCZxv4eVvZkj8DoVueUDFclZMb0P+Xhh/jUvBPTEnr4s/vf
-1VoDLyF3b4tlLKS4ctWGyEpjn2wGOMS6tyu2187xtf4CXBo0eFXzDwh5xBbUAOLp
-Y+R+R0vdCxcogJUlgtd2ktPYr3+Bp0YjEIdQP1IbTErntuQUz6qaqF95sYFyxS8H
-Y9plzNRzdWjg1Wbk6NkKBDhVaxKih1dpFmA9IX2PEIF8q9jDYEIhrsFU6tr3zH75
-Tp/tyuwKYG4NJ9+8QMiQPIUGbHyIz1iDv3oJ2UlAHbSkg6j9Et7flpHPmbLbdicX
-8kbPLjisDlNFiBgQdfKaqKl23zlMqQ==
-=RgyB
------END PGP SIGNATURE-----
-
---lEGEL1/lMxI0MVQ2--
-
---===============8683592337963725759==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8683592337963725759==--
+Awesome, I'll move driver to staging/media in V5. Thanks!
