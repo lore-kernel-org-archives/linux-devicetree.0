@@ -1,84 +1,48 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH 1/2] ARM: dts: keystone-k2g: Add UART 1 and 2 instances
-Date: Tue, 5 Dec 2017 12:18:11 +0530
-Message-ID: <20171205064812.15758-2-vigneshr@ti.com>
-References: <20171205064812.15758-1-vigneshr@ti.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v3 1/1] at24: support eeproms that do not auto-rollover
+ reads.
+Date: Tue, 5 Dec 2017 09:44:51 +0200
+Message-ID: <20171205074451.gpsidrxlwyfo2fu7@paasikivi.fi.intel.com>
+References: <1512401778-20366-1-git-send-email-svendev@arcx.com>
+ <1512401778-20366-2-git-send-email-svendev@arcx.com>
+ <20171204214023.ml2ujacezsop5ilb@kekkonen.localdomain>
+ <CAGngYiXR83+0phkeAvJYYEm8HvmN-c9d0B9p1BRiPHyUz1ogAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171205064812.15758-1-vigneshr@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, Vignesh R <vigneshr@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Franklin S Cooper Jr <fcooper@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGngYiXR83+0phkeAvJYYEm8HvmN-c9d0B9p1BRiPHyUz1ogAA@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Sven Van Asbroeck <thesven73@gmail.com>
+Cc: Sven Van Asbroeck <svendev@arcx.com>, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, Bartosz Golaszewski <brgl@bgdev.pl>, nsekhar@ti.com, david@lechnology.com, javier@dowhile0.org, divagar.mohandass@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>, Sven Van Asbroeck <svenv@arcx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Franklin S Cooper Jr <fcooper@ti.com>
+On Mon, Dec 04, 2017 at 05:24:33PM -0500, Sven Van Asbroeck wrote:
+> > If this is truly specific to at24, then vendor prefix would be appropriate,
+> > plus it'd go to an at24 specific binding file. However if it isn't I'd just
+> > remove the above sentence. I guess the latter?
+> 
+> Yes, no-read-rollover is truly specific to at24.c, because it applies only
+> to i2c multi-address chips. The at25 is spi based so cannot have multiple
+> addresses.
+> 
+> So yes, "at24,no-read-rollover" would perhaps be a better name.
+> 
+> Regarding an at24 specific binding file. You're saying I should create
+> Documentation/devicetree/bindings/eeprom/at24.txt ? Should I indicate
+> that at24.txt "inherits from" eeprom.txt? Note that at25.txt does not
+> currently do this.
 
-Add DT nodes for two other UART instances of 66AK2G SoC.
+Hmm. I actually missed we didn't have one to begin with. at25.txt exists
+and it documents a number of properties specific to at25, so if at24 will
+have an at24-specific property, then I think it should go to a separate
+file.
 
-Also add power domain and clock domain nodes to UART 0
+Aren't there really other chips which need this? It'd be (a little bit)
+easier to just remove the sentence. :-)
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
- arch/arm/boot/dts/keystone-k2g.dtsi | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index ef82c0a6e607..3c48a9f5c882 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -28,6 +28,8 @@
- 
- 	aliases {
- 		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
- 		i2c0 = &i2c0;
- 		i2c1 = &i2c1;
- 		i2c2 = &i2c2;
-@@ -114,7 +116,32 @@
- 			reg-io-width = <4>;
- 			reg = <0x02530c00 0x100>;
- 			interrupts = <GIC_SPI 164 IRQ_TYPE_EDGE_RISING>;
--			clock-frequency = <200000000>;
-+			clocks = <&k2g_clks 0x2c 0>;
-+			power-domains = <&k2g_pds 0x2c>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@02531000 {
-+			compatible = "ti,da830-uart", "ns16550a";
-+			current-speed = <115200>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			reg = <0x02531000 0x100>;
-+			interrupts = <GIC_SPI 165 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&k2g_clks 0x2d 0>;
-+			power-domains = <&k2g_pds 0x2d>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@02531400 {
-+			compatible = "ti,da830-uart", "ns16550a";
-+			current-speed = <115200>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			reg = <0x02531400 0x100>;
-+			interrupts = <GIC_SPI 166 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&k2g_clks 0x2e 0>;
-+			power-domains = <&k2g_pds 0x2e>;
- 			status = "disabled";
- 		};
- 
 -- 
-2.15.0
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
