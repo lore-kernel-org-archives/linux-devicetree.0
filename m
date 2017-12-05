@@ -1,37 +1,78 @@
-From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: mtd: fsl-quadspi: Pass the qspi clock names
-Date: Tue, 5 Dec 2017 21:11:02 +0100
-Message-ID: <dfff2b1c-d0de-c21a-9a4c-e83ac68a106e@wedev4u.fr>
-References: <1512340584-26894-1-git-send-email-festevam@gmail.com>
- <20171204223624.gd3iiha3qyr7nwxg@rob-hp-laptop>
+From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 1/6] dt: bindings: lp8860: Update bindings for lp8860
+Date: Tue, 5 Dec 2017 14:43:22 -0600
+Message-ID: <20171205204327.12111-2-dmurphy@ti.com>
+References: <20171205204327.12111-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171204223624.gd3iiha3qyr7nwxg@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <20171205204327.12111-1-dmurphy-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 04/12/2017 à 23:36, Rob Herring a écrit :
-> On Sun, Dec 03, 2017 at 08:36:24PM -0200, Fabio Estevam wrote:
->> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->>
->> In order to improve the bindings documentation, explicitly pass the name
->> of the clocks: "qspi_en" and "qspi", which are mandatory.
->>
->> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mtd/fsl-quadspi.txt | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-Applied to the spi-nor/next branch of l2-mtd
+Update the lp8860 bindings to fix various issues
+found.  Add address-cells and size-cells, rename
+enable-gpio to enable-gpios, update the node name
+to the device name and indent the node example.
 
-Thanks!
+Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+---
+
+v2 - New patch
+
+ .../devicetree/bindings/leds/leds-lp8860.txt       | 28 ++++++++++++----------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+index aad38dd94d4b..1b2fab05ec6a 100644
+--- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
++++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+@@ -6,24 +6,28 @@ current sinks that can be controlled by a PWM input
+ signal, a SPI/I2C master, or both.
+ 
+ Required properties:
+-	- compatible:
++	- compatible :
+ 		"ti,lp8860"
+-	- reg -  I2C slave address
+-	- label - Used for naming LEDs
++	- reg : I2C slave address
++	- label : Used for naming LEDs
++	- #address-cells : 1
++	- #size-cells : 0
+ 
+ Optional properties:
+-	- enable-gpio - gpio pin to enable/disable the device.
+-	- supply - "vled" - LED supply
++	- enable-gpios : gpio pin to enable/disable the device.
++	- supply : "vled" - LED supply
+ 
+ Example:
+ 
+-leds: leds@6 {
+-	compatible = "ti,lp8860";
+-	reg = <0x2d>;
+-	label = "display_cluster";
+-	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+-	vled-supply = <&vbatt>;
+-}
++	lp8860@2d {
++		compatible = "ti,lp8860";
++		#address-cells: 1
++		#size-cells: 0
++		reg = <0x2d>;
++		label = "display_cluster";
++		enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++		vled-supply = <&vbatt>;
++	}
+ 
+ For more product information please see the link below:
+ http://www.ti.com/product/lp8860-q1
+-- 
+2.15.0.124.g7668cbc60
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
