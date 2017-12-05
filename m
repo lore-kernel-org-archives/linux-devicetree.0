@@ -1,73 +1,662 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v3 07/15] drm/sun4i: Create minimal multipliers and dividers
-Date: Tue,  5 Dec 2017 16:10:19 +0100
-Message-ID: <42424895bd242dceeeeacf3f83e1c24aa03fb60f.1512486553.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 08/15] drm/sun4i: Add LVDS support
+Date: Tue,  5 Dec 2017 16:10:20 +0100
+Message-ID: <b900e5963180c94ca02bde178b6674622a127787.1512486553.git-series.maxime.ripard@free-electrons.com>
 References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
-References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHZhcmlvdXMgb3V0cHV0cyB0aGUgVENPTiBjYW4gcHJvdmlkZSBoYXZlIGRpZmZlcmVudCBj
-b25zdHJhaW50cyBvbiB0aGUKZG90Y2xvY2sgZGl2aWRlci4gTGV0J3MgbWFrZSB0aGVtIGNvbmZp
-Z3VyYWJsZSBieSB0aGUgdmFyaW91cyBtb2RlX3NldApmdW5jdGlvbnMuCgpSZXZpZXdlZC1ieTog
-Q2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgpTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJk
-IDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0v
-c3VuNGkvc3VuNGlfZG90Y2xvY2suYyB8IDEwICsrKysrKystLS0KIGRyaXZlcnMvZ3B1L2RybS9z
-dW40aS9zdW40aV90Y29uLmMgICAgIHwgIDIgKysKIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40
-aV90Y29uLmggICAgIHwgIDIgKysKIDMgZmlsZXMgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKSwg
-MyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlf
-ZG90Y2xvY2suYyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kb3RjbG9jay5jCmluZGV4
-IGQ0MDExNTY0OTBmMy4uMDIzZjM5YmRhNjMzIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-c3VuNGkvc3VuNGlfZG90Y2xvY2suYworKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlf
-ZG90Y2xvY2suYwpAQCAtMTcsOCArMTcsOSBAQAogI2luY2x1ZGUgInN1bjRpX2RvdGNsb2NrLmgi
-CiAKIHN0cnVjdCBzdW40aV9kY2xrIHsKLQlzdHJ1Y3QgY2xrX2h3CWh3OwotCXN0cnVjdCByZWdt
-YXAJKnJlZ21hcDsKKwlzdHJ1Y3QgY2xrX2h3CQlodzsKKwlzdHJ1Y3QgcmVnbWFwCQkqcmVnbWFw
-OworCXN0cnVjdCBzdW40aV90Y29uCSp0Y29uOwogfTsKIAogc3RhdGljIGlubGluZSBzdHJ1Y3Qg
-c3VuNGlfZGNsayAqaHdfdG9fZGNsayhzdHJ1Y3QgY2xrX2h3ICpodykKQEAgLTczLDExICs3NCwx
-MyBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBzdW40aV9kY2xrX3JlY2FsY19yYXRlKHN0cnVjdCBj
-bGtfaHcgKmh3LAogc3RhdGljIGxvbmcgc3VuNGlfZGNsa19yb3VuZF9yYXRlKHN0cnVjdCBjbGtf
-aHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCiAJCQkJICB1bnNpZ25lZCBsb25nICpwYXJlbnRf
-cmF0ZSkKIHsKKwlzdHJ1Y3Qgc3VuNGlfZGNsayAqZGNsayA9IGh3X3RvX2RjbGsoaHcpOworCXN0
-cnVjdCBzdW40aV90Y29uICp0Y29uID0gZGNsay0+dGNvbjsKIAl1bnNpZ25lZCBsb25nIGJlc3Rf
-cGFyZW50ID0gMDsKIAl1OCBiZXN0X2RpdiA9IDE7CiAJaW50IGk7CiAKLQlmb3IgKGkgPSA2OyBp
-IDw9IDEyNzsgaSsrKSB7CisJZm9yIChpID0gdGNvbi0+ZGNsa19taW5fZGl2OyBpIDw9IHRjb24t
-PmRjbGtfbWF4X2RpdjsgaSsrKSB7CiAJCXVuc2lnbmVkIGxvbmcgaWRlYWwgPSByYXRlICogaTsK
-IAkJdW5zaWduZWQgbG9uZyByb3VuZGVkOwogCkBAIC0xNjcsNiArMTcwLDcgQEAgaW50IHN1bjRp
-X2RjbGtfY3JlYXRlKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHN1bjRpX3Rjb24gKnRjb24p
-CiAJZGNsayA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqZGNsayksIEdGUF9LRVJORUwpOwog
-CWlmICghZGNsaykKIAkJcmV0dXJuIC1FTk9NRU07CisJZGNsay0+dGNvbiA9IHRjb247CiAKIAlp
-bml0Lm5hbWUgPSBjbGtfbmFtZTsKIAlpbml0Lm9wcyA9ICZzdW40aV9kY2xrX29wczsKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMgYi9kcml2ZXJzL2dwdS9k
-cm0vc3VuNGkvc3VuNGlfdGNvbi5jCmluZGV4IGVhMDU2YTNkMjEzMS4uNDZlMjhjYTFmNjc2IDEw
-MDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKQEAgLTE3Nyw2ICsxNzcsOCBAQCBzdGF0aWMg
-dm9pZCBzdW40aV90Y29uMF9tb2RlX3NldF9yZ2Ioc3RydWN0IHN1bjRpX3Rjb24gKnRjb24sCiAJ
-dTggY2xrX2RlbGF5OwogCXUzMiB2YWwgPSAwOwogCisJdGNvbi0+ZGNsa19taW5fZGl2ID0gNjsK
-Kwl0Y29uLT5kY2xrX21heF9kaXYgPSAxMjc7CiAJc3VuNGlfdGNvbjBfbW9kZV9zZXRfY29tbW9u
-KHRjb24sIG1vZGUpOwogCiAJLyogQWRqdXN0IGNsb2NrIGRlbGF5ICovCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5oIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRp
-L3N1bjRpX3Rjb24uaAppbmRleCA4MzkyNjZhMzg1MDUuLmJkM2FkNzY4NDg3MCAxMDA2NDQKLS0t
-IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uaAorKysgYi9kcml2ZXJzL2dwdS9k
-cm0vc3VuNGkvc3VuNGlfdGNvbi5oCkBAIC0xNjksNiArMTY5LDggQEAgc3RydWN0IHN1bjRpX3Rj
-b24gewogCiAJLyogUGl4ZWwgY2xvY2sgKi8KIAlzdHJ1Y3QgY2xrCQkJKmRjbGs7CisJdTgJCQkJ
-ZGNsa19tYXhfZGl2OworCXU4CQkJCWRjbGtfbWluX2RpdjsKIAogCS8qIFJlc2V0IGNvbnRyb2wg
-Ki8KIAlzdHJ1Y3QgcmVzZXRfY29udHJvbAkJKmxjZF9yc3Q7Ci0tIApnaXQtc2VyaWVzIDAuOS4x
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The TCON supports the LVDS interface to output to a panel or a bridge.
+Let's add support for it.
+
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/Makefile     |   1 +-
+ drivers/gpu/drm/sun4i/sun4i_lvds.c | 183 +++++++++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun4i_lvds.h |  18 ++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 238 +++++++++++++++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h |  29 ++++-
+ 5 files changed, 467 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_lvds.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun4i_lvds.h
+
+diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
+index 82a6ac57fbe3..2b37a6abbb1d 100644
+--- a/drivers/gpu/drm/sun4i/Makefile
++++ b/drivers/gpu/drm/sun4i/Makefile
+@@ -15,6 +15,7 @@ sun8i-mixer-y			+= sun8i_mixer.o sun8i_ui_layer.o \
+ 
+ sun4i-tcon-y			+= sun4i_crtc.o
+ sun4i-tcon-y			+= sun4i_dotclock.o
++sun4i-tcon-y			+= sun4i_lvds.o
+ sun4i-tcon-y			+= sun4i_tcon.o
+ sun4i-tcon-y			+= sun4i_rgb.o
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun4i_lvds.c b/drivers/gpu/drm/sun4i/sun4i_lvds.c
+new file mode 100644
+index 000000000000..635a3f505ecb
+--- /dev/null
++++ b/drivers/gpu/drm/sun4i/sun4i_lvds.c
+@@ -0,0 +1,183 @@
++/*
++ * Copyright (C) 2015 NextThing Co
++ * Copyright (C) 2015-2017 Free Electrons
++ *
++ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#include <linux/clk.h>
++
++#include <drm/drmP.h>
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_of.h>
++#include <drm/drm_panel.h>
++
++#include "sun4i_crtc.h"
++#include "sun4i_tcon.h"
++#include "sun4i_lvds.h"
++
++struct sun4i_lvds {
++	struct drm_connector	connector;
++	struct drm_encoder	encoder;
++
++	struct sun4i_tcon	*tcon;
++};
++
++static inline struct sun4i_lvds *
++drm_connector_to_sun4i_lvds(struct drm_connector *connector)
++{
++	return container_of(connector, struct sun4i_lvds,
++			    connector);
++}
++
++static inline struct sun4i_lvds *
++drm_encoder_to_sun4i_lvds(struct drm_encoder *encoder)
++{
++	return container_of(encoder, struct sun4i_lvds,
++			    encoder);
++}
++
++static int sun4i_lvds_get_modes(struct drm_connector *connector)
++{
++	struct sun4i_lvds *lvds =
++		drm_connector_to_sun4i_lvds(connector);
++	struct sun4i_tcon *tcon = lvds->tcon;
++
++	return drm_panel_get_modes(tcon->panel);
++}
++
++static struct drm_connector_helper_funcs sun4i_lvds_con_helper_funcs = {
++	.get_modes	= sun4i_lvds_get_modes,
++};
++
++static void
++sun4i_lvds_connector_destroy(struct drm_connector *connector)
++{
++	struct sun4i_lvds *lvds = drm_connector_to_sun4i_lvds(connector);
++	struct sun4i_tcon *tcon = lvds->tcon;
++
++	drm_panel_detach(tcon->panel);
++	drm_connector_cleanup(connector);
++}
++
++static const struct drm_connector_funcs sun4i_lvds_con_funcs = {
++	.fill_modes		= drm_helper_probe_single_connector_modes,
++	.destroy		= sun4i_lvds_connector_destroy,
++	.reset			= drm_atomic_helper_connector_reset,
++	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
++	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
++};
++
++static void sun4i_lvds_encoder_enable(struct drm_encoder *encoder)
++{
++	struct sun4i_lvds *lvds = drm_encoder_to_sun4i_lvds(encoder);
++	struct sun4i_tcon *tcon = lvds->tcon;
++
++	DRM_DEBUG_DRIVER("Enabling LVDS output\n");
++
++	if (!IS_ERR(tcon->panel)) {
++		drm_panel_prepare(tcon->panel);
++		drm_panel_enable(tcon->panel);
++	}
++}
++
++static void sun4i_lvds_encoder_disable(struct drm_encoder *encoder)
++{
++	struct sun4i_lvds *lvds = drm_encoder_to_sun4i_lvds(encoder);
++	struct sun4i_tcon *tcon = lvds->tcon;
++
++	DRM_DEBUG_DRIVER("Disabling LVDS output\n");
++
++	if (!IS_ERR(tcon->panel)) {
++		drm_panel_disable(tcon->panel);
++		drm_panel_unprepare(tcon->panel);
++	}
++}
++
++static const struct drm_encoder_helper_funcs sun4i_lvds_enc_helper_funcs = {
++	.disable	= sun4i_lvds_encoder_disable,
++	.enable		= sun4i_lvds_encoder_enable,
++};
++
++static const struct drm_encoder_funcs sun4i_lvds_enc_funcs = {
++	.destroy	= drm_encoder_cleanup,
++};
++
++int sun4i_lvds_init(struct drm_device *drm, struct sun4i_tcon *tcon)
++{
++	struct drm_encoder *encoder;
++	struct drm_bridge *bridge;
++	struct sun4i_lvds *lvds;
++	int ret;
++
++	lvds = devm_kzalloc(drm->dev, sizeof(*lvds), GFP_KERNEL);
++	if (!lvds)
++		return -ENOMEM;
++	lvds->tcon = tcon;
++	encoder = &lvds->encoder;
++
++	ret = drm_of_find_panel_or_bridge(tcon->dev->of_node, 1, 0,
++					  &tcon->panel, &bridge);
++	if (ret) {
++		dev_info(drm->dev, "No panel or bridge found... LVDS output disabled\n");
++		return 0;
++	}
++
++	drm_encoder_helper_add(&lvds->encoder,
++			       &sun4i_lvds_enc_helper_funcs);
++	ret = drm_encoder_init(drm,
++			       &lvds->encoder,
++			       &sun4i_lvds_enc_funcs,
++			       DRM_MODE_ENCODER_LVDS,
++			       NULL);
++	if (ret) {
++		dev_err(drm->dev, "Couldn't initialise the lvds encoder\n");
++		goto err_out;
++	}
++
++	/* The LVDS encoder can only work with the TCON channel 0 */
++	lvds->encoder.possible_crtcs = BIT(drm_crtc_index(&tcon->crtc->crtc));
++
++	if (tcon->panel) {
++		drm_connector_helper_add(&lvds->connector,
++					 &sun4i_lvds_con_helper_funcs);
++		ret = drm_connector_init(drm, &lvds->connector,
++					 &sun4i_lvds_con_funcs,
++					 DRM_MODE_CONNECTOR_LVDS);
++		if (ret) {
++			dev_err(drm->dev, "Couldn't initialise the lvds connector\n");
++			goto err_cleanup_connector;
++		}
++
++		drm_mode_connector_attach_encoder(&lvds->connector,
++						  &lvds->encoder);
++
++		ret = drm_panel_attach(tcon->panel, &lvds->connector);
++		if (ret) {
++			dev_err(drm->dev, "Couldn't attach our panel\n");
++			goto err_cleanup_connector;
++		}
++	}
++
++	if (bridge) {
++		ret = drm_bridge_attach(encoder, bridge, NULL);
++		if (ret) {
++			dev_err(drm->dev, "Couldn't attach our bridge\n");
++			goto err_cleanup_connector;
++		}
++	}
++
++	return 0;
++
++err_cleanup_connector:
++	drm_encoder_cleanup(&lvds->encoder);
++err_out:
++	return ret;
++}
++EXPORT_SYMBOL(sun4i_lvds_init);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_lvds.h b/drivers/gpu/drm/sun4i/sun4i_lvds.h
+new file mode 100644
+index 000000000000..1b8fad4b82c3
+--- /dev/null
++++ b/drivers/gpu/drm/sun4i/sun4i_lvds.h
+@@ -0,0 +1,18 @@
++/*
++ * Copyright (C) 2015 NextThing Co
++ * Copyright (C) 2015-2017 Free Electrons
++ *
++ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++#ifndef _SUN4I_LVDS_H_
++#define _SUN4I_LVDS_H_
++
++int sun4i_lvds_init(struct drm_device *drm, struct sun4i_tcon *tcon);
++
++#endif /* _SUN4I_LVDS_H_ */
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 46e28ca1f676..92f4738101e6 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -31,10 +31,52 @@
+ #include "sun4i_crtc.h"
+ #include "sun4i_dotclock.h"
+ #include "sun4i_drv.h"
++#include "sun4i_lvds.h"
+ #include "sun4i_rgb.h"
+ #include "sun4i_tcon.h"
+ #include "sunxi_engine.h"
+ 
++static struct drm_connector *sun4i_tcon_get_connector(const struct drm_encoder *encoder)
++{
++	struct drm_connector *connector;
++	struct drm_connector_list_iter iter;
++
++	drm_connector_list_iter_begin(encoder->dev, &iter);
++	drm_for_each_connector_iter(connector, &iter)
++		if (connector->encoder == encoder) {
++			drm_connector_list_iter_end(&iter);
++			return connector;
++		}
++	drm_connector_list_iter_end(&iter);
++
++	return NULL;
++}
++
++static int sun4i_tcon_get_pixel_depth(const struct drm_encoder *encoder)
++{
++	struct drm_connector *connector;
++	struct drm_display_info *info;
++
++	connector = sun4i_tcon_get_connector(encoder);
++	if (!connector)
++		return -EINVAL;
++
++	info = &connector->display_info;
++	if (info->num_bus_formats != 1)
++		return -EINVAL;
++
++	switch (info->bus_formats[0]) {
++	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
++		return 18;
++
++	case MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA:
++	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
++		return 24;
++	}
++
++	return -EINVAL;
++}
++
+ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
+ 					  bool enabled)
+ {
+@@ -65,13 +107,58 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
+ 		clk_disable_unprepare(clk);
+ }
+ 
++static void sun4i_tcon_lvds_set_status(struct sun4i_tcon *tcon,
++				       const struct drm_encoder *encoder,
++				       bool enabled)
++{
++	if (enabled) {
++		u8 val;
++
++		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
++				   SUN4I_TCON0_LVDS_IF_EN,
++				   SUN4I_TCON0_LVDS_IF_EN);
++
++		regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++			     SUN4I_TCON0_LVDS_ANA0_C(2) |
++			     SUN4I_TCON0_LVDS_ANA0_V(3) |
++			     SUN4I_TCON0_LVDS_ANA0_PD(2) |
++			     SUN4I_TCON0_LVDS_ANA0_EN_LDO);
++		udelay(2);
++
++		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++				   SUN4I_TCON0_LVDS_ANA0_EN_MB,
++				   SUN4I_TCON0_LVDS_ANA0_EN_MB);
++		udelay(2);
++
++		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++				   SUN4I_TCON0_LVDS_ANA0_EN_DRVC,
++				   SUN4I_TCON0_LVDS_ANA0_EN_DRVC);
++
++		if (sun4i_tcon_get_pixel_depth(encoder) == 18)
++			val = 7;
++		else
++			val = 0xf;
++
++		regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++				  SUN4I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
++				  SUN4I_TCON0_LVDS_ANA0_EN_DRVD(val));
++	} else {
++		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
++				   SUN4I_TCON0_LVDS_IF_EN, 0);
++	}
++}
++
+ void sun4i_tcon_set_status(struct sun4i_tcon *tcon,
+ 			   const struct drm_encoder *encoder,
+ 			   bool enabled)
+ {
++	bool is_lvds = false;
+ 	int channel;
+ 
+ 	switch (encoder->encoder_type) {
++	case DRM_MODE_ENCODER_LVDS:
++		is_lvds = true;
++		/* Fallthrough */
+ 	case DRM_MODE_ENCODER_NONE:
+ 		channel = 0;
+ 		break;
+@@ -84,10 +171,16 @@ void sun4i_tcon_set_status(struct sun4i_tcon *tcon,
+ 		return;
+ 	}
+ 
++	if (is_lvds && !enabled)
++		sun4i_tcon_lvds_set_status(tcon, encoder, false);
++
+ 	regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
+ 			   SUN4I_TCON_GCTL_TCON_ENABLE,
+ 			   enabled ? SUN4I_TCON_GCTL_TCON_ENABLE : 0);
+ 
++	if (is_lvds && enabled)
++		sun4i_tcon_lvds_set_status(tcon, encoder, true);
++
+ 	sun4i_tcon_channel_set_status(tcon, channel, enabled);
+ }
+ 
+@@ -170,6 +263,78 @@ static void sun4i_tcon0_mode_set_common(struct sun4i_tcon *tcon,
+ 		     SUN4I_TCON0_BASIC0_Y(mode->crtc_vdisplay));
+ }
+ 
++static void sun4i_tcon0_mode_set_lvds(struct sun4i_tcon *tcon,
++				      const struct drm_encoder *encoder,
++				      const struct drm_display_mode *mode)
++{
++	unsigned int bp;
++	u8 clk_delay;
++	u32 reg, val = 0;
++
++	tcon->dclk_min_div = 7;
++	tcon->dclk_max_div = 7;
++	sun4i_tcon0_mode_set_common(tcon, mode);
++
++	/* Adjust clock delay */
++	clk_delay = sun4i_tcon_get_clk_delay(mode, 0);
++	regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
++			   SUN4I_TCON0_CTL_CLK_DELAY_MASK,
++			   SUN4I_TCON0_CTL_CLK_DELAY(clk_delay));
++
++	/*
++	 * This is called a backporch in the register documentation,
++	 * but it really is the back porch + hsync
++	 */
++	bp = mode->crtc_htotal - mode->crtc_hsync_start;
++	DRM_DEBUG_DRIVER("Setting horizontal total %d, backporch %d\n",
++			 mode->crtc_htotal, bp);
++
++	/* Set horizontal display timings */
++	regmap_write(tcon->regs, SUN4I_TCON0_BASIC1_REG,
++		     SUN4I_TCON0_BASIC1_H_TOTAL(mode->htotal) |
++		     SUN4I_TCON0_BASIC1_H_BACKPORCH(bp));
++
++	/*
++	 * This is called a backporch in the register documentation,
++	 * but it really is the back porch + hsync
++	 */
++	bp = mode->crtc_vtotal - mode->crtc_vsync_start;
++	DRM_DEBUG_DRIVER("Setting vertical total %d, backporch %d\n",
++			 mode->crtc_vtotal, bp);
++
++	/* Set vertical display timings */
++	regmap_write(tcon->regs, SUN4I_TCON0_BASIC2_REG,
++		     SUN4I_TCON0_BASIC2_V_TOTAL(mode->crtc_vtotal * 2) |
++		     SUN4I_TCON0_BASIC2_V_BACKPORCH(bp));
++
++	reg = SUN4I_TCON0_LVDS_IF_CLK_SEL_TCON0 |
++		SUN4I_TCON0_LVDS_IF_DATA_POL_NORMAL |
++		SUN4I_TCON0_LVDS_IF_CLK_POL_NORMAL;
++	if (sun4i_tcon_get_pixel_depth(encoder) == 24)
++		reg |= SUN4I_TCON0_LVDS_IF_BITWIDTH_24BITS;
++	else
++		reg |= SUN4I_TCON0_LVDS_IF_BITWIDTH_18BITS;
++
++	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_IF_REG, reg);
++
++	/* Setup the polarity of the various signals */
++	if (!(mode->flags & DRM_MODE_FLAG_PHSYNC))
++		val |= SUN4I_TCON0_IO_POL_HSYNC_POSITIVE;
++
++	if (!(mode->flags & DRM_MODE_FLAG_PVSYNC))
++		val |= SUN4I_TCON0_IO_POL_VSYNC_POSITIVE;
++
++	regmap_write(tcon->regs, SUN4I_TCON0_IO_POL_REG, val);
++
++	/* Map output pins to channel 0 */
++	regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
++			   SUN4I_TCON_GCTL_IOMAP_MASK,
++			   SUN4I_TCON_GCTL_IOMAP_TCON0);
++
++	/* Enable the output on the pins */
++	regmap_write(tcon->regs, SUN4I_TCON0_IO_TRI_REG, 0xe0000000);
++}
++
+ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
+ 				     const struct drm_display_mode *mode)
+ {
+@@ -336,6 +501,9 @@ void sun4i_tcon_mode_set(struct sun4i_tcon *tcon,
+ 			 const struct drm_display_mode *mode)
+ {
+ 	switch (encoder->encoder_type) {
++	case DRM_MODE_ENCODER_LVDS:
++		sun4i_tcon0_mode_set_lvds(tcon, encoder, mode);
++		break;
+ 	case DRM_MODE_ENCODER_NONE:
+ 		sun4i_tcon0_mode_set_rgb(tcon, mode);
+ 		sun4i_tcon_set_mux(tcon, 0, encoder);
+@@ -667,7 +835,9 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 	struct drm_device *drm = data;
+ 	struct sun4i_drv *drv = drm->dev_private;
+ 	struct sunxi_engine *engine;
++	struct device_node *remote;
+ 	struct sun4i_tcon *tcon;
++	bool has_lvds_rst, has_lvds_pll, can_lvds;
+ 	int ret;
+ 
+ 	engine = sun4i_tcon_find_engine(drv, dev->of_node);
+@@ -698,6 +868,54 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 		return ret;
+ 	}
+ 
++	/*
++	 * This can only be made optional since we've had DT nodes
++	 * without the LVDS reset properties.
++	 *
++	 * If the property is missing, just disable LVDS, and print a
++	 * warning.
++	 */
++	tcon->lvds_rst = devm_reset_control_get_optional(dev, "lvds");
++	if (IS_ERR(tcon->lvds_rst)) {
++		dev_err(dev, "Couldn't get our reset line\n");
++		return PTR_ERR(tcon->lvds_rst);
++	} else if (tcon->lvds_rst) {
++		has_lvds_rst = true;
++		reset_control_reset(tcon->lvds_rst);
++	} else {
++		has_lvds_rst = false;
++	}
++
++	/*
++	 * This can only be made optional since we've had DT nodes
++	 * without the LVDS reset properties.
++	 *
++	 * If the property is missing, just disable LVDS, and print a
++	 * warning.
++	 */
++	if (tcon->quirks->has_lvds_pll) {
++		tcon->lvds_pll = devm_clk_get(dev, "pll-lvds");
++		if (IS_ERR(tcon->lvds_pll)) {
++			if (PTR_ERR(tcon->lvds_pll) == -ENOENT) {
++				has_lvds_pll = false;
++			} else {
++				dev_err(dev, "Couldn't get the LVDS PLL\n");
++				return PTR_ERR(tcon->lvds_rst);
++			}
++		} else {
++			has_lvds_pll = true;
++		}
++	}
++
++	if (!has_lvds_rst || (tcon->quirks->has_lvds_pll && !has_lvds_pll)) {
++		dev_warn(dev,
++			 "Missing LVDS properties, Please upgrade your DT\n");
++		dev_warn(dev, "LVDS output disabled\n");
++		can_lvds = false;
++	} else {
++		can_lvds = true;
++	}
++
+ 	ret = sun4i_tcon_init_clocks(dev, tcon);
+ 	if (ret) {
+ 		dev_err(dev, "Couldn't init our TCON clocks\n");
+@@ -729,7 +947,21 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 		goto err_free_dotclock;
+ 	}
+ 
+-	ret = sun4i_rgb_init(drm, tcon);
++	/*
++	 * If we have an LVDS panel connected to the TCON, we should
++	 * just probe the LVDS connector. Otherwise, just probe RGB as
++	 * we used to.
++	 */
++	remote = of_graph_get_remote_node(dev->of_node, 1, 0);
++	if (of_device_is_compatible(remote, "panel-lvds"))
++		if (can_lvds)
++			ret = sun4i_lvds_init(drm, tcon);
++		else
++			ret = -EINVAL;
++	else
++		ret = sun4i_rgb_init(drm, tcon);
++	of_node_put(remote);
++
+ 	if (ret < 0)
+ 		goto err_free_dotclock;
+ 
+@@ -879,12 +1111,14 @@ static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
+ 
+ static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
+ 	.has_channel_1		= true,
++	.has_lvds_pll		= true,
+ 	.needs_de_be_mux	= true,
+ 	.set_mux		= sun6i_tcon_set_mux,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
+ 	.has_channel_1		= true,
++	.has_lvds_pll		= true,
+ 	.needs_de_be_mux	= true,
+ };
+ 
+@@ -895,7 +1129,7 @@ static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
+-	/* nothing is supported */
++	.has_lvds_pll		= true,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index bd3ad7684870..6e801a6325a1 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -70,7 +70,21 @@
+ #define SUN4I_TCON0_TTL2_REG			0x78
+ #define SUN4I_TCON0_TTL3_REG			0x7c
+ #define SUN4I_TCON0_TTL4_REG			0x80
++
+ #define SUN4I_TCON0_LVDS_IF_REG			0x84
++#define SUN4I_TCON0_LVDS_IF_EN				BIT(31)
++#define SUN4I_TCON0_LVDS_IF_BITWIDTH_MASK		BIT(26)
++#define SUN4I_TCON0_LVDS_IF_BITWIDTH_18BITS		(1 << 26)
++#define SUN4I_TCON0_LVDS_IF_BITWIDTH_24BITS		(0 << 26)
++#define SUN4I_TCON0_LVDS_IF_CLK_SEL_MASK		BIT(20)
++#define SUN4I_TCON0_LVDS_IF_CLK_SEL_TCON0		(1 << 20)
++#define SUN4I_TCON0_LVDS_IF_CLK_POL_MASK		BIT(4)
++#define SUN4I_TCON0_LVDS_IF_CLK_POL_NORMAL		(1 << 4)
++#define SUN4I_TCON0_LVDS_IF_CLK_POL_INV			(0 << 4)
++#define SUN4I_TCON0_LVDS_IF_DATA_POL_MASK		GENMASK(3, 0)
++#define SUN4I_TCON0_LVDS_IF_DATA_POL_NORMAL		(0xf)
++#define SUN4I_TCON0_LVDS_IF_DATA_POL_INV		(0)
++
+ #define SUN4I_TCON0_IO_POL_REG			0x88
+ #define SUN4I_TCON0_IO_POL_DCLK_PHASE(phase)		((phase & 3) << 28)
+ #define SUN4I_TCON0_IO_POL_HSYNC_POSITIVE		BIT(25)
+@@ -131,6 +145,16 @@
+ #define SUN4I_TCON_CEU_RANGE_G_REG		0x144
+ #define SUN4I_TCON_CEU_RANGE_B_REG		0x148
+ #define SUN4I_TCON_MUX_CTRL_REG			0x200
++
++#define SUN4I_TCON0_LVDS_ANA0_REG		0x220
++#define SUN4I_TCON0_LVDS_ANA0_EN_MB			BIT(31)
++#define SUN4I_TCON0_LVDS_ANA0_EN_LDO			BIT(30)
++#define SUN4I_TCON0_LVDS_ANA0_EN_DRVC			BIT(24)
++#define SUN4I_TCON0_LVDS_ANA0_EN_DRVD(x)		(((x) & 0xf) << 20)
++#define SUN4I_TCON0_LVDS_ANA0_C(x)			(((x) & 3) << 17)
++#define SUN4I_TCON0_LVDS_ANA0_V(x)			(((x) & 3) << 8)
++#define SUN4I_TCON0_LVDS_ANA0_PD(x)			(((x) & 3) << 4)
++
+ #define SUN4I_TCON1_FILL_CTL_REG		0x300
+ #define SUN4I_TCON1_FILL_BEG0_REG		0x304
+ #define SUN4I_TCON1_FILL_END0_REG		0x308
+@@ -149,6 +173,7 @@ struct sun4i_tcon;
+ 
+ struct sun4i_tcon_quirks {
+ 	bool	has_channel_1;	/* a33 does not have channel 1 */
++	bool	has_lvds_pll;	/* Can we mux the LVDS clock to a PLL? */
+ 	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
+ 
+ 	/* callback to handle tcon muxing options */
+@@ -167,6 +192,9 @@ struct sun4i_tcon {
+ 	struct clk			*sclk0;
+ 	struct clk			*sclk1;
+ 
++	/* Possible mux for the LVDS clock */
++	struct clk			*lvds_pll;
++
+ 	/* Pixel clock */
+ 	struct clk			*dclk;
+ 	u8				dclk_max_div;
+@@ -174,6 +202,7 @@ struct sun4i_tcon {
+ 
+ 	/* Reset control */
+ 	struct reset_control		*lcd_rst;
++	struct reset_control		*lvds_rst;
+ 
+ 	struct drm_panel		*panel;
+ 
+-- 
+git-series 0.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
