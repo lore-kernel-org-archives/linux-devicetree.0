@@ -1,86 +1,210 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 01/13] Documentation: Add SLIMbus summary
-Date: Tue, 5 Dec 2017 22:01:50 +0000
-Message-ID: <96cbc048-e76a-ad36-bba2-e717bc8bc05b@linaro.org>
-References: <20171130174200.6684-1-srinivas.kandagatla@linaro.org>
- <20171130174200.6684-2-srinivas.kandagatla@linaro.org>
- <20171201102758.bcziygl3k46iepc6@latitude>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171201102758.bcziygl3k46iepc6@latitude>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bp-l3A5Bk7waGM@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, jkosina-AlSwsSmVLrQ@public.gmane.org, sharon.dvir1-MQgwKvJRKlGYZoqfULhbRA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+From: tyler@opensourcefoundries.com
+Subject: [PATCH v1 1/6] ARM: dts: imx7d-sbc-iot: add initial iot gateway dts
+Date: Tue,  5 Dec 2017 14:27:02 -0800
+Message-ID: <20171205222707.11302-2-tyler@opensourcefoundries.com>
+References: <20171205222707.11302-1-tyler@opensourcefoundries.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171205222707.11302-1-tyler@opensourcefoundries.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, festevam@gmail.com, kernel@pengutronix.de
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, fabio.estevam@nxp.com, Tyler Baker <tyler@opensourcefoundries.com>, Ilya Ledvich <ilya@compulab.co.il>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review comments.
+From: Tyler Baker <tyler@opensourcefoundries.com>
 
-On 01/12/17 10:27, Jonathan Neuschäfer wrote:
-> Hi, some small nits below.
-> 
-> On Thu, Nov 30, 2017 at 05:41:48PM +0000, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
->> From: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>
->> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
->> developed by MIPI (Mobile Industry Processor Interface) alliance.
->> SLIMbus is a 2-wire implementation, which is used to communicate with
->> peripheral components like audio-codec.
->>
->> The summary of SLIMbus and API is documented in the 'summary' file.
->>
->> Signed-off-by: Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   Documentation/driver-api/slimbus/index.rst   |  15 ++++
->>   Documentation/driver-api/slimbus/summary.rst | 108 +++++++++++++++++++++++++++
->>   2 files changed, 123 insertions(+)
->>   create mode 100644 Documentation/driver-api/slimbus/index.rst
->>   create mode 100644 Documentation/driver-api/slimbus/summary.rst
-> 
-> It would probably make sense to Cc the documentation maintainers/mailing
-> list on this patch (AFAICS, you didn't do that).
-> 
-Yep, I will include them while sending next version.
+The Compulab IoT Gateway is based on an NXP i.MX7D, dual core
+Cortex-A7 clocking at 1GHz. It supports up to 2GB of DDR3,
+and 32GB of eMMC flash. Onboard, there are two gigabit
+ethernet controllers, 4 x USB2, RS485, and CAN.
 
-> When do you plan to add slimbus to Documentation/driver-api/index.rst?
+This platform is based on the imx7d-cl-som-imx7 module but
+includes a baseboard with additional peripherals
+which is what this device tree is meant to describe.
 
-that's good point, I will fix this in next version.
-> 
+This work has been derrived from the Compulab Linux sources
+based on v4.1.
 
->> +framework allows drivers to bind when corresponding devices report their
->> +presence on the bus.
->> +However, it is possible that the driver needs to be probed
->> +first so that it can enable corresponding SLIMbus device (e.g. power it up and/or
->> +take it out of reset). To support that behavior, the framework allows drivers
->> +to probe first as well  (e.g. using standard DeviceTree compatbility field).
-> 
-> Typo: s/compatbility/compatibility/
-Yep, Will fix in next version.
+Signed-off-by: Tyler Baker <tyler@opensourcefoundries.com>
+Signed-off-by: Ilya Ledvich <ilya@compulab.co.il>
+---
+ arch/arm/boot/dts/Makefile               |   1 +
+ arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts | 156 +++++++++++++++++++++++++++++++
+ 2 files changed, 157 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
 
-> 
->> +---------------
->> +The framework supports APIs to exchange control-information with a SLIMbus
->> +device. APIs can be synchronous or asynchronous.
->> +From controller's perspective, multiple buffers can be queued to/from
->> +hardware for sending/receiving data using slim_ctrl_buf circular buffer.
->> +The header file <linux/slimbus.h> has more documentation about messaging APIs.
-> 
-> Once the kerneldoc documentation (i.e. the /** ... */ comments in the
-> source) is included somewhere, I think it would make sense to make
-> slim_ctrl_buf a clickable link to the struct's documentation.
-Sure, I will explore this side of it before i send next version.
-
-thanks,
-srini
-> 
-> 
-> Thanks,
-> Jonathan Neuschäfer
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d0381e9..0334137 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -515,6 +515,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
+ 	imx7d-nitrogen7.dtb \
+ 	imx7d-pico.dtb \
+ 	imx7d-sbc-imx7.dtb \
++	imx7d-sbc-iot-imx7.dtb \
+ 	imx7d-sdb.dtb \
+ 	imx7d-sdb-sht11.dtb \
+ 	imx7s-colibri-eval-v3.dtb \
+diff --git a/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
+new file mode 100644
+index 0000000..67aa4b7
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
+@@ -0,0 +1,156 @@
++/*
++ * Support for CompuLab SBC-IOT-iMX7 Single Board Computer
++ *
++ * Copyright (C) 2017 CompuLab Ltd. - http://www.compulab.co.il/
++ * Author: Ilya Ledvich <ilya@compulab.co.il>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "imx7d-cl-som-imx7.dts"
++
++/ {
++	model = "CompuLab SBC-IOT-iMX7";
++	compatible = "compulab,sbc-iot-imx7", "compulab,cl-som-imx7", "fsl,imx7d";
++};
++
++&ecspi3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3 &pinctrl_ecspi3_cs>;
++	cs-gpios = <&gpio4 11 0>;
++	status = "okay";
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++};
++
++&i2c4 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c4>;
++	status = "okay";
++
++	eeprom_iot@54 {
++		compatible = "atmel,24c08";
++		reg = <0x54>;
++		pagesize = <16>;
++	};
++};
++
++&iomuxc {
++	pinctrl_xpen: xpengrp {
++		fsl,pins = <
++			MX7D_PAD_LCD_DATA13__GPIO3_IO18		0x34 /* P7-4 - gpio82 */
++			MX7D_PAD_LCD_DATA12__GPIO3_IO17		0x34 /* P7-5 - gpio81 */
++		>;
++	};
++
++	pinctrl_ecspi3: ecspi3grp {
++		fsl,pins = <
++			MX7D_PAD_I2C1_SDA__ECSPI3_MOSI		0xf /* P7-8 */
++			MX7D_PAD_I2C1_SCL__ECSPI3_MISO		0xf /* P7-7 */
++			MX7D_PAD_I2C2_SCL__ECSPI3_SCLK		0xf /* P7-6 */
++		>;
++	};
++
++	pinctrl_ecspi3_cs: ecspi3_cs_grp {
++		fsl,pins = <
++			MX7D_PAD_I2C2_SDA__GPIO4_IO11		0x34 /* P7-9 */
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO09__I2C3_SDA		0x4000000f /* P7-3 */
++			MX7D_PAD_GPIO1_IO08__I2C3_SCL		0x4000000f /* P7-2 */
++		>;
++	};
++
++	pinctrl_i2c4: i2c4grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO11__I2C4_SDA		0x4000000f
++			MX7D_PAD_GPIO1_IO10__I2C4_SCL		0x4000000f
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX7D_PAD_LCD_ENABLE__UART2_DCE_TX	0x79 /* P7-12 */
++			MX7D_PAD_LCD_CLK__UART2_DCE_RX		0x79 /* P7-13 */
++			MX7D_PAD_LCD_VSYNC__UART2_DCE_CTS	0x79 /* P7-11 */
++			MX7D_PAD_LCD_HSYNC__UART2_DCE_RTS	0x79 /* P7-10 */
++		>;
++	};
++
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX7D_PAD_I2C4_SDA__UART5_DCE_TX		0x79 /* RS232-TX */
++			MX7D_PAD_I2C4_SCL__UART5_DCE_RX		0x79 /* RS232-RX */
++			MX7D_PAD_I2C3_SDA__UART5_DCE_RTS	0x79 /* RS232-RTS */
++			MX7D_PAD_I2C3_SCL__UART5_DCE_CTS	0x79 /* RS232-CTS */
++		>;
++	};
++
++	pinctrl_uart7: uart7grp {
++		fsl,pins = <
++			MX7D_PAD_ECSPI2_MOSI__UART7_DCE_TX	0x79 /* R485-TX */
++			MX7D_PAD_ECSPI2_SCLK__UART7_DCE_RX	0x79 /* R485-RX */
++			MX7D_PAD_ECSPI2_SS0__UART7_DCE_CTS	0x79 /* R485-CTS */
++			MX7D_PAD_ECSPI2_MISO__UART7_DCE_RTS	0x79 /* R485-TTS */
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
++			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
++			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
++			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
++			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
++			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
++			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x59 /* CD */
++		>;
++	};
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	assigned-clocks = <&clks IMX7D_UART5_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&uart7 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart7>;
++	assigned-clocks = <&clks IMX7D_UART7_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
++	wp-gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
++	enable-sdio-wakeup;
++	status = "okay";
++};
+-- 
+2.9.3
