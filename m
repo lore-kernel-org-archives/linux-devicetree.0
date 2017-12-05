@@ -1,218 +1,306 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v10 3/6] clk: qcom: Add A53 PLL support
-Date: Mon, 4 Dec 2017 22:03:32 -0800
-Message-ID: <20171205060332.GK28761@minitux>
-References: <20171201170224.25053-1-georgi.djakov@linaro.org>
- <20171201170224.25053-4-georgi.djakov@linaro.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: sun8i: h3: Add dts file for Libre
+ Computer Board ALL-H3-CC H3 ver.
+Date: Tue,  5 Dec 2017 14:06:15 +0800
+Message-ID: <20171205060615.14349-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171201170224.25053-4-georgi.djakov@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, robh@kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBXPOTDIQKGQEO5NBGUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 01 Dec 09:02 PST 2017, Georgi Djakov wrote:
+The Libre Computer Board ALL-H3-CC from Libre Technology is a Raspberry
+Pi B+ form factor single board computer based on the Allwinner H3 SoC.
+The board has 1GB DDR3 SDRAM, provided by 4 2Gb chips. The mounting holes
+and connectors are in the exact same position as on the Raspberry Pi B+.
 
-> The CPUs on Qualcomm MSM8916-based platforms are clocked by two PLLs,
-> a primary (A53) CPU PLL and a secondary fixed-rate GPLL0. These sources
-> are connected to a mux and half-integer divider, which is feeding the
-> CPU cores.
-> 
-> This patch adds support for the primary CPU PLL which generates the
-> higher range of frequencies above 1GHz.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+Raspberry Pi B+ like peripherals supported on this board include:
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+  - Power input through micro-USB connector (without USB OTG)
+  - Native 100 Mbps ethernet using the internal PHY, as opposed to
+    USB-based on the RPi
+  - 4x USB 2.0 host ports, directly connected to the SoC, as opposed to
+    being connected through a USB 2.0 hub on the RPi
+  - TV and audio output on a 3.5mm TRRS jack
+  - HDMI output
+  - Micro-SD card slot
+  - Standard RPi B+ GPIO header, with the standard peripherals routed to
+    the same pins.
 
-Regards,
-Bjorn
+    * 5V, 3.3V power, and ground
+    * I2C0 on the H3 is routed to I2C1 pins on the RPi header
+    * I2C1 on the H3 is routed to I2C0 pins on the RPi header
+    * UART1 on the H3 is routed to UART0 pins on the RPi header
+    * SPI0 on the H3 is routed to SPI0 pins on the RPi header,
+      with GPIO pin PA17 replacing the missing Chip Select 1
+    * I2S1 on the H3 is routed to PCM pins on the RPi header
 
-> ---
->  .../devicetree/bindings/clock/qcom,a53pll.txt      |  22 +++++
->  drivers/clk/qcom/Kconfig                           |  10 ++
->  drivers/clk/qcom/Makefile                          |   1 +
->  drivers/clk/qcom/a53-pll.c                         | 109 +++++++++++++++++++++
->  4 files changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
->  create mode 100644 drivers/clk/qcom/a53-pll.c
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-> new file mode 100644
-> index 000000000000..e3fa8118eaee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-> @@ -0,0 +1,22 @@
-> +Qualcomm MSM8916 A53 PLL Binding
-> +--------------------------------
-> +The A53 PLL on MSM8916 platforms is the main CPU PLL used used for frequencies
-> +above 1GHz.
-> +
-> +Required properties :
-> +- compatible : Shall contain only one of the following:
-> +
-> +		"qcom,msm8916-a53pll"
-> +
-> +- reg : shall contain base register location and length
-> +
-> +- #clock-cells : must be set to <0>
-> +
-> +Example:
-> +
-> +	a53pll: clock@b016000 {
-> +		compatible = "qcom,msm8916-a53pll";
-> +		reg = <0xb016000 0x40>;
-> +		#clock-cells = <0>;
-> +	};
-> +
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 9f6c278deead..81ac7b9378fe 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -12,6 +12,16 @@ config COMMON_CLK_QCOM
->  	select REGMAP_MMIO
->  	select RESET_CONTROLLER
->  
-> +config QCOM_A53PLL
-> +	bool "MSM8916 A53 PLL"
-> +	depends on COMMON_CLK_QCOM
-> +	default ARCH_QCOM
-> +	help
-> +	  Support for the A53 PLL on MSM8916 devices. It provides
-> +	  the CPU with frequencies above 1GHz.
-> +	  Say Y if you want to support higher CPU frequencies on MSM8916
-> +	  devices.
-> +
->  config QCOM_CLK_RPM
->  	tristate "RPM based Clock Controller"
->  	depends on COMMON_CLK_QCOM && MFD_QCOM_RPM
-> diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-> index 26410d31446b..e767c60c24ec 100644
-> --- a/drivers/clk/qcom/Makefile
-> +++ b/drivers/clk/qcom/Makefile
-> @@ -32,5 +32,6 @@ obj-$(CONFIG_MSM_LCC_8960) += lcc-msm8960.o
->  obj-$(CONFIG_MSM_MMCC_8960) += mmcc-msm8960.o
->  obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
->  obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
-> +obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
->  obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
->  obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
-> diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
-> new file mode 100644
-> index 000000000000..b2bb8e9437f1
-> --- /dev/null
-> +++ b/drivers/clk/qcom/a53-pll.c
-> @@ -0,0 +1,109 @@
-> +/*
-> + * Copyright (c) 2017, Linaro Limited
-> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/kernel.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "clk-pll.h"
-> +#include "clk-regmap.h"
-> +
-> +static const struct pll_freq_tbl a53pll_freq[] = {
-> +	{  998400000, 52, 0x0, 0x1, 0 },
-> +	{ 1094400000, 57, 0x0, 0x1, 0 },
-> +	{ 1152000000, 62, 0x0, 0x1, 0 },
-> +	{ 1209600000, 63, 0x0, 0x1, 0 },
-> +	{ 1248000000, 65, 0x0, 0x1, 0 },
-> +	{ 1363200000, 71, 0x0, 0x1, 0 },
-> +	{ 1401600000, 73, 0x0, 0x1, 0 },
-> +};
-> +
-> +static const struct regmap_config a53pll_regmap_config = {
-> +	.reg_bits		= 32,
-> +	.reg_stride		= 4,
-> +	.val_bits		= 32,
-> +	.max_register		= 0x40,
-> +	.fast_io		= true,
-> +};
-> +
-> +static int qcom_a53pll_remove(struct platform_device *pdev)
-> +{
-> +	of_clk_del_provider(pdev->dev.of_node);
-> +	return 0;
-> +}
-> +
-> +static int qcom_a53pll_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct regmap *regmap;
-> +	struct resource *res;
-> +	struct clk_pll *pll;
-> +	void __iomem *base;
-> +	struct clk_init_data init = { };
-> +	int ret;
-> +
-> +	pll = devm_kzalloc(dev, sizeof(*pll), GFP_KERNEL);
-> +	if (!pll)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	regmap = devm_regmap_init_mmio(dev, base, &a53pll_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	pll->l_reg = 0x04;
-> +	pll->m_reg = 0x08;
-> +	pll->n_reg = 0x0c;
-> +	pll->config_reg = 0x14;
-> +	pll->mode_reg = 0x00;
-> +	pll->status_reg = 0x1c;
-> +	pll->status_bit = 16;
-> +	pll->freq_tbl = a53pll_freq;
-> +
-> +	init.name = "a53pll";
-> +	init.parent_names = (const char *[]){ "xo" };
-> +	init.num_parents = 1;
-> +	init.ops = &clk_pll_sr2_ops;
-> +	init.flags = CLK_IS_CRITICAL;
-> +	pll->clkr.hw.init = &init;
-> +
-> +	ret = devm_clk_register_regmap(dev, &pll->clkr);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register regmap clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = of_clk_add_hw_provider(dev->of_node, of_clk_hw_simple_get,
-> +				     &pll->clkr.hw);
-> +	if (ret) {
-> +		dev_err(dev, "failed to add clock provider: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id qcom_a53pll_match_table[] = {
-> +	{ .compatible = "qcom,msm8916-a53pll" },
-> +	{ }
-> +};
-> +
-> +static struct platform_driver qcom_a53pll_driver = {
-> +	.probe = qcom_a53pll_probe,
-> +	.remove = qcom_a53pll_remove,
-> +	.driver = {
-> +		.name = "qcom-a53pll",
-> +		.of_match_table = qcom_a53pll_match_table,
-> +	},
-> +};
-> +
-> +builtin_platform_driver(qcom_a53pll_driver);
+  - Additional peripherals from the H3 are available on different pins.
+    These include I2S0, JTAG, PWM1, SPDIF, SPI1, and UART3
+
+In addition, there are a number of new features:
+
+  - Console UART header
+  - Consumer IR receiver
+  - Camera interface (not compatible with RPi)
+  - Onboard microphone
+  - eMMC expansion module port
+  - Heatsink mounting holes
+  - Power button
+
+The power button requires corresponding software for the embedded
+coprocessor to properly function.
+
+This patch adds a dts file for this board that enables all "onboard"
+peripherals currently supported. This means no display or camera
+support.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+
+Changes since v1:
+
+  - Changed board compatible string
+  - Added LED color to LED labels
+  - Changed button label and key event to power button
+  - Added description of power button to commit message
+
+There are two other variants [1] of this board, with different SoCs and
+DRAM configuration. But the board remains the same, thanks to the SoCs
+being pin compatible.
+
+The EMAC/EPHY LED polarity driver issue has been fixed in v4.15-rc2. But
+there was discussion to move this property under the PHY node instead.
+
+[1] https://www.kickstarter.com/projects/librecomputer/libre-computer-board-tritium-sbc-linux-android-7-n
+---
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 196 +++++++++++++++++++++
+ 2 files changed, 197 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 3c139c63098f..aa68f719692f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -953,6 +953,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-h2-plus-orangepi-zero.dtb \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
+ 	sun8i-h3-beelink-x2.dtb \
++	sun8i-h3-libretech-all-h3-cc.dtb \
+ 	sun8i-h3-nanopi-m1.dtb	\
+ 	sun8i-h3-nanopi-m1-plus.dtb \
+ 	sun8i-h3-nanopi-neo.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+new file mode 100644
+index 000000000000..d406571a0dd6
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+@@ -0,0 +1,196 @@
++/*
++ * Copyright (C) 2017 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "Libre Computer Board ALL-H3-CC H3";
++	compatible = "libretech,all-h3-cc-h3", "allwinner,sun8i-h3";
++
++	aliases {
++		ethernet0 = &emac;
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		pwr_led {
++			label = "librecomputer:green:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
++			default-state = "on";
++		};
++
++		status_led {
++			label = "librecomputer:blue:status";
++			gpios = <&pio 0 7 GPIO_ACTIVE_HIGH>; /* PA7 */
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++
++		power {
++			label = "power";
++			linux,code = <KEY_POWER>;
++			gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
++		};
++	};
++
++	reg_vcc1v2: vcc1v2 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc1v2";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&r_pio 0 8 GPIO_ACTIVE_HIGH>; /* PL8 */
++		enable-active-high;
++	};
++
++	reg_vcc3v3: vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&reg_vcc5v0>;
++	};
++
++	/* This represents the board's 5V input */
++	reg_vcc5v0: vcc5v0 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
++	reg_vcc_dram: vcc-dram {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-dram";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&r_pio 0 9 GPIO_ACTIVE_HIGH>; /* PL9 */
++		enable-active-high;
++	};
++
++	reg_vcc_io: vcc-io {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-io";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&reg_vcc3v3>;
++		gpio = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL5 */
++	};
++
++	reg_vdd_cpux: vdd-cpux {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd-cpux";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		vin-supply = <&reg_vcc5v0>;
++		gpio = <&r_pio 0 8 GPIO_ACTIVE_HIGH>; /* PL8 */
++		enable-active-high;
++	};
++};
++
++&codec {
++	allwinner,audio-routing =
++		"Line Out", "LINEOUT",
++		"MIC1", "Mic",
++		"Mic",  "MBIAS";
++	status = "okay";
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&ehci2 {
++	status = "okay";
++};
++
++&ehci3 {
++	status = "okay";
++};
++
++&emac {
++	phy-handle = <&int_mii_phy>;
++	phy-mode = "mii";
++	allwinner,leds-active-low;
++	status = "okay";
++};
++
++&ir {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>;
++	vmmc-supply = <&reg_vcc_io>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&ohci2 {
++	status = "okay";
++};
++
++&ohci3 {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbphy {
++	/* VBUS on USB ports are always on */
++	usb0_vbus-supply = <&reg_vcc5v0>;
++	usb1_vbus-supply = <&reg_vcc5v0>;
++	usb2_vbus-supply = <&reg_vcc5v0>;
++	usb3_vbus-supply = <&reg_vcc5v0>;
++	status = "okay";
++};
+-- 
+2.15.0
