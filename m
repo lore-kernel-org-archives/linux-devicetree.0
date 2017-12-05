@@ -1,150 +1,104 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v10 6/6] clk: qcom: Add APCS clock controller support
-Date: Tue, 5 Dec 2017 17:33:13 +0200
-Message-ID: <a1647efc-9abf-297d-f222-9b45976df7fa@linaro.org>
-References: <20171201170224.25053-1-georgi.djakov@linaro.org>
- <20171201170224.25053-7-georgi.djakov@linaro.org>
- <20171205060129.GI28761@minitux>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 09/15] drm/sun4i: Add A83T support
+Date: Tue, 05 Dec 2017 16:42:55 +0100
+Message-ID: <1823097.lykhZvJrH4@jernej-laptop>
+References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com> <0f8137abb37de936db82c1251556ee84fb23c7fe.1512486553.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171205060129.GI28761@minitux>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, robh@kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0f8137abb37de936db82c1251556ee84fb23c7fe.1512486553.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/2017 08:01 AM, Bjorn Andersson wrote:
-> On Fri 01 Dec 09:02 PST 2017, Georgi Djakov wrote:
-> [..]
->> diff --git a/drivers/clk/qcom/apcs-msm8916.c b/drivers/clk/qcom/apcs-msm8916.c
->> new file mode 100644
->> index 000000000000..f71039ff2347
->> --- /dev/null
->> +++ b/drivers/clk/qcom/apcs-msm8916.c
->> @@ -0,0 +1,149 @@
->> +/*
->> + * Qualcomm APCS clock controller driver
->> + *
->> + * Copyright (c) 2017, Linaro Limited
->> + * Author: Georgi Djakov <georgi.djakov@linaro.org>
->> + *
->> + * SPDX-License-Identifier: GPL-2.0
-> 
-> The SPDX-License-Identifier should be on the first line in the file,
-> commented by //
-> 
->> + */
->> +
-> [..]
->> +static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = pdev->dev.parent;
-> 
-> Call this "parent" instead.
-> 
->> +	struct device_node *np = dev->of_node;
->> +	struct clk_regmap_mux_div *a53cc;
->> +	struct regmap *regmap;
->> +	struct clk_init_data init = { };
->> +	int ret;
->> +
->> +	regmap = dev_get_regmap(dev, NULL);
->> +	if (IS_ERR(regmap)) {
->> +		ret = PTR_ERR(regmap);
->> +		dev_err(dev, "failed to get regmap: %d\n", ret);
-> 
-> dev_* prints should be on &pdev->dev and not on parent device.
-> 
->> +		return ret;
->> +	}
->> +
->> +	a53cc = devm_kzalloc(dev, sizeof(*a53cc), GFP_KERNEL);
-> 
-> Perform this allocation on behalf of this device (i.e. &pdev->dev and
-> not parent)
-> 
->> +	if (!a53cc)
->> +		return -ENOMEM;
->> +
->> +	init.name = "a53mux";
->> +	init.parent_names = gpll0_a53cc;
->> +	init.num_parents = ARRAY_SIZE(gpll0_a53cc);
->> +	init.ops = &clk_regmap_mux_div_ops;
->> +	init.flags = CLK_SET_RATE_PARENT;
->> +
->> +	a53cc->clkr.hw.init = &init;
->> +	a53cc->clkr.regmap = regmap;
->> +	a53cc->reg_offset = 0x50;
->> +	a53cc->hid_width = 5;
->> +	a53cc->hid_shift = 0;
->> +	a53cc->src_width = 3;
->> +	a53cc->src_shift = 8;
->> +	a53cc->parent_map = gpll0_a53cc_map;
->> +
->> +	a53cc->pclk = devm_clk_get(dev, NULL);
->> +	if (IS_ERR(a53cc->pclk)) {
->> +		ret = PTR_ERR(a53cc->pclk);
->> +		dev_err(dev, "failed to get clk: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	a53cc->clk_nb.notifier_call = a53cc_notifier_cb;
->> +	ret = clk_notifier_register(a53cc->pclk, &a53cc->clk_nb);
->> +	if (ret) {
->> +		dev_err(dev, "failed to register clock notifier: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = devm_clk_register_regmap(dev, &a53cc->clkr);
-> 
-> This you can do on the &pdev->dev, it won't find a regmap on this node
-> and will try the parent.
-> 
->> +	if (ret) {
->> +		dev_err(dev, "failed to register regmap clock: %d\n", ret);
->> +		goto err;
->> +	}
->> +
->> +	ret = of_clk_add_hw_provider(np, of_clk_hw_simple_get,
-> 
-> Be explicit here and do parent->of_node.
-> 
->> +				     &a53cc->clkr.hw);
->> +	if (ret) {
->> +		dev_err(dev, "failed to add clock provider: %d\n", ret);
->> +		goto err;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, a53cc);
->> +
->> +	return 0;
->> +
->> +err:
->> +	clk_notifier_unregister(a53cc->pclk, &a53cc->clk_nb);
->> +	return ret;
->> +}
->> +
->> +static int qcom_apcs_msm8916_clk_remove(struct platform_device *pdev)
->> +{
->> +	struct clk_regmap_mux_div *a53cc = platform_get_drvdata(pdev);
->> +
->> +	clk_notifier_unregister(a53cc->pclk, &a53cc->clk_nb);
->> +	of_clk_del_provider(pdev->dev.of_node);
-> 
-> You registered the provider on pdev->dev->parent.of_node.
-> 
->> +
->> +	return 0;
->> +}
->> +
+Hi Maxime,
 
-Hi Bjorn,
+Dne torek, 05. december 2017 ob 16:10:21 CET je Maxime Ripard napisal(a):
+> Add support for the A83T display pipeline.
+> 
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_drv.c   |  1 +
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c  |  5 +++++
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c |  9 +++++++++
+>  3 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c
+> b/drivers/gpu/drm/sun4i/sun4i_drv.c index 49215d91c853..6f5e721b545e 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+> @@ -347,6 +347,7 @@ static const struct of_device_id sun4i_drv_of_table[] =
+> { { .compatible = "allwinner,sun6i-a31s-display-engine" },
+>  	{ .compatible = "allwinner,sun7i-a20-display-engine" },
+>  	{ .compatible = "allwinner,sun8i-a33-display-engine" },
+> +	{ .compatible = "allwinner,sun8i-a83t-display-engine" },
+>  	{ .compatible = "allwinner,sun8i-v3s-display-engine" },
+>  	{ }
+>  };
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> b/drivers/gpu/drm/sun4i/sun4i_tcon.c index 92f4738101e6..9b757450555f
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -1132,6 +1132,10 @@ static const struct sun4i_tcon_quirks
+> sun8i_a33_quirks = { .has_lvds_pll		= true,
+>  };
+> 
+> +static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
+> +	/* nothing is supported */
+> +};
+> +
+>  static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
+>  	/* nothing is supported */
+>  };
+> @@ -1144,6 +1148,7 @@ const struct of_device_id sun4i_tcon_of_table[] = {
+>  	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
+> { .compatible = "allwinner,sun7i-a20-tcon", .data = &sun7i_a20_quirks }, {
+> .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks }, +	{
+> .compatible = "allwinner,sun8i-a83t-tcon-lcd", .data =
+> &sun8i_a83t_lcd_quirks }, { .compatible = "allwinner,sun8i-v3s-tcon", .data
+> = &sun8i_v3s_quirks }, { }
+>  };
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> b/drivers/gpu/drm/sun4i/sun8i_mixer.c index ff235e3228ce..6829bec4ba68
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> @@ -477,6 +477,11 @@ static int sun8i_mixer_remove(struct platform_device
+> *pdev) return 0;
+>  }
+> 
+> +static const struct sun8i_mixer_cfg sun8i_a83t_mixer_cfg = {
+> +	.vi_num = 1,
+> +	.ui_num = 3,
+> +};
+> +
 
-Thanks for reviewing! I agree with your comments and will send a new
-version shortly.
+I think you should expand that structure with:
+.ccsc = 0,
+.scaler_mask = 0xf,
+.mod_rate = 150000000,
 
-BR,
-Georgi
+Best regards,
+Jernej
+
+>  static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg = {
+>  	.vi_num = 2,
+>  	.ui_num = 1,
+> @@ -487,6 +492,10 @@ static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg
+> = {
+> 
+>  static const struct of_device_id sun8i_mixer_of_table[] = {
+>  	{
+> +		.compatible = "allwinner,sun8i-a83t-de2-mixer-0",
+> +		.data = &sun8i_a83t_mixer_cfg,
+> +	},
+> +	{
+>  		.compatible = "allwinner,sun8i-v3s-de2-mixer",
+>  		.data = &sun8i_v3s_mixer_cfg,
+>  	},
+> --
+> git-series 0.9.1
