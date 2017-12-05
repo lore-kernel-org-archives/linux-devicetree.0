@@ -1,39 +1,38 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Convert to CCU index macros for HDMI
- controller
-Date: Tue, 5 Dec 2017 09:27:21 +0100
-Message-ID: <20171205082721.imghrej2lt5tured@flea.lan>
-References: <20171204084401.2646-1-wens@csie.org>
+Subject: Re: [PATCH v2 2/2] arm64: allwinner: a64-sopine: Fix to use dcdc1
+ regulator instead of vcc3v3
+Date: Tue, 5 Dec 2017 09:33:16 +0100
+Message-ID: <20171205083316.p4hpqkpzulov6aok@flea.lan>
+References: <1512363187-8353-1-git-send-email-jagan@amarulasolutions.com>
+ <1512363187-8353-2-git-send-email-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qd5jz6tch3fexrvv"
+        protocol="application/pgp-signature"; boundary="sdz33nqxkrell6tx"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171204084401.2646-1-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1512363187-8353-2-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---qd5jz6tch3fexrvv
+--sdz33nqxkrell6tx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Mon, Dec 04, 2017 at 04:44:01PM +0800, Chen-Yu Tsai wrote:
-> When the HDMI controller device node was added, the needed PLL clock
-> macros were not exported. A separate patch addresses that, but it is
-> merged through a different tree.
+On Mon, Dec 04, 2017 at 10:23:07AM +0530, Jagan Teki wrote:
+> Since current tree support AXP803 regulators,
+> replace fixed regulator vcc3v3 with AXP803 dcdc1 regulator where ever
+> it need to replace.
 >=20
-> Now that both patches are in mainline proper, we can convert the raw
-> numbers to proper macros.
+> Tested mmc0 on sopine baseboard.
 >=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Applied, thanks!
+Queued as a fix, thanks
+
 Maxime
 
 --=20
@@ -41,27 +40,27 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---qd5jz6tch3fexrvv
+--sdz33nqxkrell6tx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlomWGUACgkQ0rTAlCFN
-r3Q3NA/9E6WoJZTs2KXNJgkhitMthWF+FpRHSN1e2P6DNTqxEy8eSwlLscNc9Eho
-DCSsQ1v8pne/fUV19qb6/cVsr5F1OvAShoteHI8YKYCI11fCLBe7yAZkDFJCj61o
-ZKRC14WG2XuzPrO09CoDOQw4VsVlJf5dK1Omfw0OiuVE5ephHGDWv/DSZ+2Rj0Um
-SOpcgv1tzzBR3z6w/2gk0h9Fos8pkKyxARm9qhPj1VDITqldcasD/ucvfjPaO9JN
-Hq9CExJU0p6E18v+Jo+SnQkDDy9V8b0lmcLNrCUlh3tBU3dhYUgu2HI7/hGFUmiY
-HRYuEeEFWas2xh3IaJP5KbLY37fvpYH38dRuIMxUqbasRu94EU/eoxIDV65mSirV
-uNdKOg3+I4C3OVDXp2U1hwkTiqWnaem1M9Z+zykpIrV7H1x9oMWnQ7BVSkDjKi2F
-+WS/SPUZ/Ei7rTfB848xeR77km4kYM/DM9EeW6wcLNTS2A9EUel2THWacBaA0G3F
-ShcIKkO1usbrcf5M1CzgC9ZAnII34I5D6WNaAiJqYHN4dA6leP+3r9Q1O83rL9sL
-QXeMAsSm3SXWZr5lfXDQVOgC43bGUd6JKMnwNjhRmoPy5b52iz55uk6kZxyIPEdf
-FmZm+OeqLpQlZX+2637HGQwTsH6YqWo2wKN5sPikqLtNYEo6QoE=
-=HExg
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlomWckACgkQ0rTAlCFN
+r3RzIQ/9FtqWbjiVm9He/Of37b7zIn8ZxXKVlNSWDw6bTQy8Fe0XkDum6dxYmjBO
+wF30jdxbogyLaWe2Gx+hgiuZP9r5TLhep0HVqnffP2AJcfQ/+vV0Q1lm0MS1bKVE
+kxRlK82xRf3T6PzXJ8OdXb2VZVrSvhGDvVpxexokrH4TyQ0gP8h3B1jZyAo9WtpW
+khILV4ci0hH3JR3ZJDqVi5Chi3Kw8CLRAwSXznUiQ/tE4Apn6uO+gY7enjjQZbvp
+Ii3LBwk9YtVQZ6jGa0O4kHLldkE0Wjej+v7pk+bTh8k2egbJwcrFl/MF5s9IshJU
+IGZ0RIPsOqX4KZUiybquhrRzbqhRDe4racEPSZG6KJLTkdPe2Lza7Dn/bCOg3YUn
+Jll5Q4Rw6hT4cnXt7RKTxwlNIqSLmeuJIyEPD+yiYp5TH4FCkA3gz2AEYwrWfsyV
+doJ3bmVCDVaTCfLJWOqHEfsjkwKM96rKYUWXyUhV1UTu1kU0nfAIOhvVveaDJ6Mj
+yNvyxz8QiIz+8/aHnJCcNPSQ6tw9rZqtTQYyWE+aUn2Ry0yflgNxuv+vXHA8gW1j
+LQBhkdW0aQt+lsVjqEY7HoiDaxT0eUSwpn1tCFXt7XF8tw8j4/Q7sQP740IDhCd+
+riDjeQonDqatjJFYSMdcsDIon1wk3tpj2mFHPED+jUz1VKiV3ng=
+=NuJ+
 -----END PGP SIGNATURE-----
 
---qd5jz6tch3fexrvv--
+--sdz33nqxkrell6tx--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
