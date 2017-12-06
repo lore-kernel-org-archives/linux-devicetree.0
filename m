@@ -1,62 +1,38 @@
-From: Wenyou Yang <wenyou.yang@microchip.com>
-Subject: [PATCH v7 0/2] media: ov7740: Add a V4L2 sensor-level driver
-Date: Wed, 6 Dec 2017 10:23:41 +0800
-Message-ID: <20171206022343.31104-1-wenyou.yang@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Wenyou Yang <wenyou.yang@microchip.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RESEND PATCH 1/4] dt-bindings: display: amlogic,meson-vpu: Add optional power domain property
+Date: Wed,  6 Dec 2017 12:54:25 +0100
+Message-ID: <1512561268-29806-2-git-send-email-narmstrong@baylibre.com>
+References: <1512561268-29806-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512561268-29806-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: airlied@linux.ie
+Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a Video4Linux2 sensor-level driver for the OmniVision OV7740
-VGA camera image sensor.
+The Video Processing Unit power domain was setup by the Vendor U-Boot,
+add support for an optional Power Domain phandle to setup it from the kernel.
 
-Changes in v7:
- - Add Acked-by tag.
- - Fix the wrong handle of default register configuration.
- - Add the missed assignment of ov7740->frmsize.
+Acked-by: Rob Herring <robh@kernel.org> 
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Changes in v6:
- - Remove unnecessary #include <linux/init>.
- - Remove unnecessary comments and extra newline.
- - Add const for some structures.
- - Add the check of the return value from regmap_write().
- - Simplify the calling of __v4l2_ctrl_handler_setup().
- - Add the default format initialization function.
- - Integrate the set_power() and enable/disable the clock into
-   one function.
-
-Changes in v5:
- - Squash the driver and MAINTAINERS entry patches to one.
- - Precede the driver patch with the bindings patch.
-
-Changes in v4:
- - Assign 'val' a initial value to avoid warning: 'val' may be
-   used uninitialized.
- - Rename REG_REG15 to avoid warning: "REG_REG15" redefined.
-
-Changes in v3:
- - Explicitly document the "remote-endpoint" property.
- - Put the MAINTAINERS change to a separate patch.
-
-Changes in v2:
- - Split off the bindings into a separate patch.
- - Add a new entry to the MAINTAINERS file.
-
-Wenyou Yang (2):
-  media: ov7740: Document device tree bindings
-  media: i2c: Add the ov7740 image sensor driver
-
- .../devicetree/bindings/media/i2c/ov7740.txt       |   47 +
- MAINTAINERS                                        |    8 +
- drivers/media/i2c/Kconfig                          |    8 +
- drivers/media/i2c/Makefile                         |    1 +
- drivers/media/i2c/ov7740.c                         | 1234 ++++++++++++++++++++
- 5 files changed, 1298 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
- create mode 100644 drivers/media/i2c/ov7740.c
-
+diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
+index 00f74ba..057b813 100644
+--- a/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
++++ b/Documentation/devicetree/bindings/display/amlogic,meson-vpu.txt
+@@ -64,6 +64,10 @@ Required properties:
+ - reg-names: should contain the names of the previous memory regions
+ - interrupts: should contain the VENC Vsync interrupt number
+ 
++Optional properties:
++- power-domains: Optional phandle to associated power domain as described in
++	the file ../power/power_domain.txt
++
+ Required nodes:
+ 
+ The connections to the VPU output video ports are modeled using the OF graph
 -- 
-2.15.0
+2.7.4
