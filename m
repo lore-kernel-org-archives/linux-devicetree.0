@@ -1,72 +1,90 @@
-From: Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH net-next v3 4/4] net: fec: add
- phy_reset_after_clk_enable() support
-Date: Wed, 6 Dec 2017 08:41:03 +0000
-Message-ID: <HE1PR0401MB2265094A8760DE458ED57A2FFF320@HE1PR0401MB2265.eurprd04.prod.outlook.com>
-References: <20171205132600.13796-1-dev@g0hl1n.net>
- <20171205132600.13796-5-dev@g0hl1n.net>
- <DB6PR0401MB2264B5060F745CEB5405FFBCFF320@DB6PR0401MB2264.eurprd04.prod.outlook.com>
- <1e7b3e7f-251d-4101-1441-702e891f2ca9@skidata.com>
+From: Wenyou Yang <wenyou.yang@microchip.com>
+Subject: [PATCH v7 1/2] media: ov7740: Document device tree bindings
+Date: Wed, 6 Dec 2017 10:23:42 +0800
+Message-ID: <20171206022343.31104-2-wenyou.yang@microchip.com>
+References: <20171206022343.31104-1-wenyou.yang@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1e7b3e7f-251d-4101-1441-702e891f2ca9-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org" <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org" <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, "david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "lukma-ynQEQJNshbs@public.gmane.org" <lukma-ynQEQJNshbs@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171206022343.31104-1-wenyou.yang@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Wenyou Yang <wenyou.yang@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmljaGFyZCBMZWl0bmVyIDxyaWNoYXJkLmxlaXRuZXJAc2tpZGF0YS5jb20+IFNlbnQ6
-IFdlZG5lc2RheSwgRGVjZW1iZXIgMDYsIDIwMTcgNDoxMiBQTQ0KPlRvOiBBbmR5IER1YW4gPGZ1
-Z2FuZy5kdWFuQG54cC5jb20+OyBSaWNoYXJkIExlaXRuZXIgPGRldkBnMGhsMW4ubmV0PjsNCj5y
-b2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBhbmRyZXdAbHVubi5jaDsN
-Cj5mLmZhaW5lbGxpQGdtYWlsLmNvbTsgZnJvd2FuZC5saXN0QGdtYWlsLmNvbQ0KPkNjOiBkYXZl
-bUBkYXZlbWxvZnQubmV0OyBnZWVydCtyZW5lc2FzQGdsaWRlci5iZTsNCj5zZXJnZWkuc2h0eWx5
-b3ZAY29nZW50ZW1iZWRkZWQuY29tOyBiYXJ1Y2hAdGtvcy5jby5pbDsgZGF2aWQud3VAcm9jay0N
-Cj5jaGlwcy5jb207IGx1a21hQGRlbnguZGU7IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7DQo+ZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj5T
-dWJqZWN0OiBSZTogW1BBVENIIG5ldC1uZXh0IHYzIDQvNF0gbmV0OiBmZWM6IGFkZA0KPnBoeV9y
-ZXNldF9hZnRlcl9jbGtfZW5hYmxlKCkgc3VwcG9ydA0KPg0KPkhpIEFuZHksDQo+DQo+T24gMTIv
-MDYvMjAxNyAwMjo1MCBBTSwgQW5keSBEdWFuIHdyb3RlOg0KPj4gRnJvbTogUmljaGFyZCBMZWl0
-bmVyIDxkZXZAZzBobDFuLm5ldD4gU2VudDogVHVlc2RheSwgRGVjZW1iZXIgMDUsDQo+PiAyMDE3
-IDk6MjYgUE0NCj4+PiBTb21lIFBIWXMgKGZvciBleGFtcGxlIHRoZSBTTVNDIExBTjg3MTAvTEFO
-ODcyMCkgZG9lc24ndCBhbGxvdw0KPj4+IHR1cm5pbmcgdGhlIHJlZmNsayBvbiBhbmQgb2ZmIGFn
-YWluIGR1cmluZyBvcGVyYXRpb24gKGFjY29yZGluZyB0byB0aGVpcg0KPmRhdGFzaGVldCkuDQo+
-Pj4gTm9uZXRoZWxlc3MgZXhhY3RseSB0aGlzIGJlaGF2aW91ciB3YXMgaW50cm9kdWNlZCBmb3Ig
-cG93ZXIgc2F2aW5nDQo+Pj4gcmVhc29ucyBieSBjb21taXQgZThmY2ZjZDU2ODRhICgibmV0OiBm
-ZWM6IG9wdGltaXplIHRoZSBjbG9jaw0KPj4+IG1hbmFnZW1lbnQgdG8gc2F2ZSBwb3dlciIpLg0K
-Pj4+IFRoZXJlZm9yZSBhZGQgc3VwcG9ydCBmb3IgdGhlIHBoeV9yZXNldF9hZnRlcl9jbGtfZW5h
-YmxlIGZ1bmN0aW9uDQo+Pj4gZnJvbSBwaHlsaWIgdG8gbWl0aWdhdGUgdGhpcyBpc3N1ZS4NCj4N
-Cj4uLi4NCj4NCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxl
-L2ZlY19tYWluLmMNCj4+PiBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9mZWNfbWFp
-bi5jDQo+Pj4gaW5kZXggNjEwNTczODU1MjEzLi44YzNkMGZiN2RiMjAgMTAwNjQ0DQo+Pj4gLS0t
-IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2ZlY19tYWluLmMNCj4+PiArKysgYi9k
-cml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZmVjX21haW4uYw0KPj4+IEBAIC0xODYyLDYg
-KzE4NjIsOCBAQCBzdGF0aWMgaW50IGZlY19lbmV0X2Nsa19lbmFibGUoc3RydWN0DQo+Pj4gbmV0
-X2RldmljZSAqbmRldiwgYm9vbCBlbmFibGUpDQo+Pj4gCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFi
-bGUoZmVwLT5jbGtfcmVmKTsNCj4+PiAJCWlmIChyZXQpDQo+Pj4gCQkJZ290byBmYWlsZWRfY2xr
-X3JlZjsNCj4+PiArDQo+Pj4gKwkJcGh5X3Jlc2V0X2FmdGVyX2Nsa19lbmFibGUobmRldi0+cGh5
-ZGV2KTsNCj4+PiAJfSBlbHNlIHsNCj4+PiAJCWNsa19kaXNhYmxlX3VucHJlcGFyZShmZXAtPmNs
-a19haGIpOw0KPj4+IAkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGZlcC0+Y2xrX2VuZXRfb3V0KTsN
-Cj4+PiBAQCAtMjg2MCw2ICsyODYyLDExIEBAIGZlY19lbmV0X29wZW4oc3RydWN0IG5ldF9kZXZp
-Y2UgKm5kZXYpDQo+Pj4gCWlmIChyZXQpDQo+Pj4gCQlnb3RvIGVycl9lbmV0X21paV9wcm9iZTsN
-Cj4+Pg0KPj4+ICsJLyogcmVzZXQgcGh5IGlmIG5lZWRlZCBoZXJlLCBkdWUgdG8gdGhlIGZhY3Qg
-dGhpcyBpcyB0aGUgZmlyc3QgdGltZSB3ZQ0KPj4+ICsJICogaGF2ZSB0aGUgbmV0X2RldmljZSB0
-byBwaHlfZHJpdmVyIGxpbmsNCj4+PiArCSAqLw0KPj4+ICsJcGh5X3Jlc2V0X2FmdGVyX2Nsa19l
-bmFibGUobmRldi0+cGh5ZGV2KTsNCj4+PiArDQo+Pg0KPj4gVGhlIHBhdGNoIHNlcmllcyBsb29r
-IGJldHRlci4NCj4+IEJ1dCB3aHkgZG9lcyBpdCBuZWVkIHRvIHJlc2V0IHBoeSBoZXJlIHNpbmNl
-IHBoeSBhbHJlYWR5IGlzIGhhcmQgcmVzZXQgYWZ0ZXINCj5jbG9jayBlbmFibGUuDQo+DQo+VGhl
-IHByb2JsZW0gaGVyZSBpcyB0aGF0IGluIGZlY19lbmV0X29wZW4oKSB0aGUgZmVjX2VuZXRfY2xr
-X2VuYWJsZSgpIGNhbGwgaXMNCj5kb25lIGJlZm9yZSB0aGUgcGh5IGlzIHByb2JlZC4gVGhlcmVm
-b3JlIChhcyBtZW50aW9uZWQgaW4gdGhlDQo+Y29tbWVudCkgdGhlcmUncyBubyBsaW5rIGZyb20g
-dGhlIG5ldF9kZXZpY2UgKG5kZXYpIHRvIHRoZSBwaHlfZHJpdmVyDQo+KHdoaWNoIGhvbGRzIHRo
-ZSBmbGFncykuDQo+DQo+QW55IHN1Z2dlc3Rpb25zIGZvciBhIGJldHRlciBzb2x1dGlvbiBhcmUg
-aGlnaGx5IGFwcHJlY2lhdGVkIGhlcmUhIFRoYW5rcyENCj4NCj5yZWdhcmRzO1JpY2hhcmQuTA0K
-DQpPa2F5LCBJIHNlZS4NCg0KRm9yIHRoZSBwYXRjaDogQWNrZWQtYnk6IEZ1Z2FuZyBEdWFuIDxm
-dWdhbmcuZHVhbkBueHAuY29tPg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Add the device tree binding documentation for the ov7740 sensor driver.
+
+Signed-off-by: Wenyou Yang <wenyou.yang@microchip.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+
+Changes in v7:
+ - Add Acked-by tag.
+
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3:
+ - Explicitly document the "remote-endpoint" property.
+
+Changes in v2: None
+
+ .../devicetree/bindings/media/i2c/ov7740.txt       | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov7740.txt b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
+new file mode 100644
+index 000000000000..af781c3a5f0e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov7740.txt
+@@ -0,0 +1,47 @@
++* Omnivision OV7740 CMOS image sensor
++
++The Omnivision OV7740 image sensor supports multiple output image
++size, such as VGA, and QVGA, CIF and any size smaller. It also
++supports the RAW RGB and YUV output formats.
++
++The common video interfaces bindings (see video-interfaces.txt) should
++be used to specify link to the image data receiver. The OV7740 device
++node should contain one 'port' child node with an 'endpoint' subnode.
++
++Required Properties:
++- compatible:	"ovti,ov7740".
++- reg:		I2C slave address of the sensor.
++- clocks:	Reference to the xvclk input clock.
++- clock-names:	"xvclk".
++
++Optional Properties:
++- reset-gpios: Rreference to the GPIO connected to the reset_b pin,
++  if any. Active low with pull-ip resistor.
++- powerdown-gpios: Reference to the GPIO connected to the pwdn pin,
++  if any. Active high with pull-down resistor.
++
++Endpoint node mandatory properties:
++- remote-endpoint: A phandle to the bus receiver's endpoint node.
++
++Example:
++
++	i2c1: i2c@fc028000 {
++		ov7740: camera@21 {
++			compatible = "ovti,ov7740";
++			reg = <0x21>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_sensor_power &pinctrl_sensor_reset>;
++			clocks = <&isc>;
++			clock-names = "xvclk";
++			assigned-clocks = <&isc>;
++			assigned-clock-rates = <24000000>;
++			reset-gpios = <&pioA 43 GPIO_ACTIVE_LOW>;
++			powerdown-gpios = <&pioA 44 GPIO_ACTIVE_HIGH>;
++
++			port {
++				ov7740_0: endpoint {
++					remote-endpoint = <&isc_0>;
++				};
++			};
++		};
++	};
+-- 
+2.15.0
