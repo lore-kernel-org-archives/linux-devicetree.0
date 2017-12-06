@@ -1,74 +1,160 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/1] at24: support eeproms that do not auto-rollover
- reads.
-Date: Wed, 6 Dec 2017 15:29:04 -0600
-Message-ID: <20171206212904.v5qvhw2ymttk6zxe@rob-hp-laptop>
-References: <1512401778-20366-1-git-send-email-svendev@arcx.com>
- <1512401778-20366-2-git-send-email-svendev@arcx.com>
- <20171204214023.ml2ujacezsop5ilb@kekkonen.localdomain>
- <CAGngYiXR83+0phkeAvJYYEm8HvmN-c9d0B9p1BRiPHyUz1ogAA@mail.gmail.com>
- <20171205074451.gpsidrxlwyfo2fu7@paasikivi.fi.intel.com>
- <CAMRc=MdeEcJ=hH42725S3u3ncVeNdyk-VBs2TvV1D8_kTR3nOw@mail.gmail.com>
+Subject: Re: [RFC 1/2] dt-bindings: mipi-dsi: Add info about peripherals with
+ non-DSI control bus
+Date: Wed, 6 Dec 2017 15:39:36 -0600
+Message-ID: <20171206213936.devr3d4fyhtbld4w@rob-hp-laptop>
+References: <20171205103356.9917-1-architt@codeaurora.org>
+ <20171205103356.9917-2-architt@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MdeEcJ=hH42725S3u3ncVeNdyk-VBs2TvV1D8_kTR3nOw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Sven Van Asbroeck <thesven73@gmail.com>, Sven Van Asbroeck <svendev@arcx.com>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, nsekhar@ti.com, David Lechner <david@lechnology.com>, javier@dowhile0.org, divagar.mohandass@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>, Sven Van Asbroeck <svenv@arcx.com>
+In-Reply-To: <20171205103356.9917-2-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: tomi.valkeinen@ti.com, eric@anholt.net, philippe.cornu@st.com, laurent.pinchart@ideasonboard.com, thierry.reding@gmail.com, nickey.yang@rock-chips.com, dri-devel@lists.freedesktop.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, seanpaul@chromium.org, briannorris@chromium.org, maxime.ripard@free-electrons.com, boris.brezillon@free-electrons.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 05, 2017 at 09:14:22AM +0100, Bartosz Golaszewski wrote:
-> 2017-12-05 8:44 GMT+01:00 Sakari Ailus <sakari.ailus@linux.intel.com>:
-> > On Mon, Dec 04, 2017 at 05:24:33PM -0500, Sven Van Asbroeck wrote:
-> >> > If this is truly specific to at24, then vendor prefix would be appropriate,
-> >> > plus it'd go to an at24 specific binding file. However if it isn't I'd just
-> >> > remove the above sentence. I guess the latter?
-> >>
-> >> Yes, no-read-rollover is truly specific to at24.c, because it applies only
-> >> to i2c multi-address chips. The at25 is spi based so cannot have multiple
-> >> addresses.
-> >>
-> >> So yes, "at24,no-read-rollover" would perhaps be a better name.
-> >>
-> >> Regarding an at24 specific binding file. You're saying I should create
-> >> Documentation/devicetree/bindings/eeprom/at24.txt ? Should I indicate
-> >> that at24.txt "inherits from" eeprom.txt? Note that at25.txt does not
-> >> currently do this.
-> >
-> > Hmm. I actually missed we didn't have one to begin with. at25.txt exists
-> > and it documents a number of properties specific to at25, so if at24 will
-> > have an at24-specific property, then I think it should go to a separate
-> > file.
+On Tue, Dec 05, 2017 at 04:03:55PM +0530, Archit Taneja wrote:
+> Add a section that describes dt-bindings for peripherals that support
+> MIPI DSI, but have a different bus as the primary control bus. Add an
+> example for such peripherals.
 > 
-> The eeprom.txt file in the bindings directory actually describes the
-> bindings for at24. There's a patch[1] from Wolfram waiting for Rob's
-> ack that renames it to at24.txt. I hope that clears any confusion.
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> ---
+>  .../devicetree/bindings/display/mipi-dsi-bus.txt   | 75 ++++++++++++++++++++--
+>  1 file changed, 68 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt b/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> index 973c27273772..77a7cec15f5b 100644
+> --- a/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> +++ b/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> @@ -16,7 +16,7 @@ The following assumes that only a single peripheral is connected to a DSI
+>  host. Experience shows that this is true for the large majority of setups.
+>  
+>  DSI host
+> ---------
+> +========
+>  
+>  In addition to the standard properties and those defined by the parent bus of
+>  a DSI host, the following properties apply to a node representing a DSI host.
+> @@ -30,11 +30,15 @@ Required properties:
+>    different value here. See below.
+>  
+>  DSI peripheral
+> ---------------
+> +==============
+>  
+> -Peripherals are represented as child nodes of the DSI host's node. Properties
+> -described here apply to all DSI peripherals, but individual bindings may want
+> -to define additional, device-specific properties.
+> +Peripherals with DSI as control bus
+> +------------------------------------
+> +
+> +Peripherals with the DSI bus as the primary control path are represented as
+> +child nodes of the DSI host's node. Properties described here apply to all DSI
+> +peripherals, but individual bindings may want to define additional,
+> +device-specific properties.
 
-It's going to wait forever until it is sent to the DT list so 
-patchwork picks it up and is in my queue.
+Are there any panels with no control bus? I've never seen one, but it 
+should be possible if LVDS panels can power on without commands. 
 
-> @Sven: please split the patch into two: one for bindings and one for code.
-> 
-> As for the name: I would change it to at24,no-read-rollover and remove
+>  Required properties:
+>  - reg: The virtual channel number of a DSI peripheral. Must be in the range
+> @@ -49,9 +53,25 @@ case two alternative representations can be chosen:
+>    property is the number of the first virtual channel and the second cell is
+>    the number of consecutive virtual channels.
+>  
+> -Example
+> --------
+> +Peripherals with a different control bus
+> +----------------------------------------
+> +
+> +There are peripherals that have I2C/SPI (or some other non-DSI bus) as the
+> +primary control bus, but are also connected to a DSI bus (mostly for the data
+> +path). Connections between such peripherals and a DSI host can be represented
+> +using the graph bindings [1], [2].
+> +
+> +[1] Documentation/devicetree/bindings/graph.txt
+> +[2] Documentation/devicetree/bindings/media/video-interfaces.txt
+>  
+> +Examples
+> +========
+> +- (1), (2) and (3) are examples of a DSI host and peripheral on the DSI bus
+> +  with different virtual channel configurations.
+> +- (4) is an example of a peripheral on a I2C control bus connected with to
+> +  a DSI host using of-graph bindings.
+> +
+> +1)
+>  	dsi-host {
+>  		...
+>  
+> @@ -67,6 +87,7 @@ Example
+>  		...
+>  	};
+>  
+> +2)
+>  	dsi-host {
+>  		...
+>  
+> @@ -82,6 +103,7 @@ Example
+>  		...
+>  	};
+>  
+> +3)
+>  	dsi-host {
+>  		...
+>  
+> @@ -96,3 +118,42 @@ Example
+>  
+>  		...
+>  	};
+> +
+> +4)
+> +	i2c-host {
+> +		...
+> +
+> +		dsi-bridge@35 {
+> +			compatible = "...";
+> +			reg = <0x35>;
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				...
+> +
+> +				port@0 {
 
-at24 is not a vendor.
+Drop unit-address and #*-cells.
 
-> the fragment saying it's only supported in at24 - as I said: this file
-> only concerns at24 and will be renamed.
+> +					bridge_mipi_in: endpoint {
+> +						remote-endpoint = <&host_mipi_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	dsi-host {
+> +		...
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			...
+> +
+> +			port@0 {
+
+Drop unit-address and #*-cells.
+
+> +				host_mipi_out: endpoint {
+> +					remote-endpoint = <&bridge_mipi_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
 > 
-> >
-> > Aren't there really other chips which need this? It'd be (a little bit)
-> > easier to just remove the sentence. :-)
-> >
-> > --
-> > Regards,
-> >
-> > Sakari Ailus
-> > sakari.ailus@linux.intel.com
-> 
-> Thanks,
-> Bartosz
-> 
-> [1] http://patchwork.ozlabs.org/patch/842500/
