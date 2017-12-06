@@ -1,108 +1,115 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 8/9] ARM: dts: imx7-colibri: add MCP2515 CAN controller
-Date: Wed,  6 Dec 2017 16:30:04 +0100
-Message-ID: <20171206153005.6144-8-stefan@agner.ch>
-References: <20171206153005.6144-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171206153005.6144-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/3] ARM: dts: imx6sx-sdb: Convert from fbdev to drm bindings
+Date: Wed,  6 Dec 2017 13:15:17 -0200
+Message-ID: <1512573319-6624-1-git-send-email-marcofrk@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Colibri Evaluation Carrier Board provides a MCP2515 CAN
-controller connected via SPI. Note that the i.MX 7 provides
-an internal CAN controller which is much better suited for CAN
-operations. Using the MCP2515 with a Colibri iMX7 module is
-mainly useful to test the SPI interface.
+It is preferred to use the panel compatible string rather than passing
+the LCD timing in the device tree.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+So pass the "sii,43wvf1g" compatible string, which describes the parallel
+LCD.
+
+Also pass the 'backlight' property as described in
+Documentation/devicetree/bindings/display/panel/simple-panel.txt
+
+Signed-off-by: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 25 +++++++++++++++++++++++++
- arch/arm/boot/dts/imx7-colibri.dtsi         | 14 +++++++++++++-
- 2 files changed, 38 insertions(+), 1 deletion(-)
+Changes since v2:
+-none
+ arch/arm/boot/dts/imx6sx-sdb.dtsi | 48 +++++++++++++++++++--------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-index 87c23b769a08..3d6c282dd258 100644
---- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-@@ -45,6 +45,13 @@
- 		stdout-path = "serial0:115200n8";
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+index d57a41c..d35aa85 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -24,7 +24,7 @@
+ 		reg = <0x80000000 0x40000000>;
  	};
  
-+	/* fixed crystal dedicated to mpc258x */
-+	clk16m: clk16m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <16000000>;
+-	backlight {
++	backlight_display: backlight-display {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm3 0 5000000>;
+ 		brightness-levels = <0 4 8 16 32 64 128 255>;
+@@ -129,6 +129,13 @@
+ 		enable-active-high;
+ 	};
+ 
++	reg_lcd_5v: regulator-lcd-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
 +	};
 +
- 	panel: panel {
- 		compatible = "edt,et057090dhu";
- 		backlight = <&bl>;
-@@ -99,6 +106,24 @@
- 	status = "okay";
- };
- 
-+&ecspi3 {
-+	status = "okay";
+ 	sound {
+ 		compatible = "fsl,imx6sx-sdb-wm8962", "fsl,imx-audio-wm8962";
+ 		model = "wm8962-audio";
+@@ -144,6 +151,19 @@
+ 		mux-int-port = <2>;
+ 		mux-ext-port = <6>;
+ 	};
 +
-+	mcp258x0: mcp258x@0 {
-+		compatible = "microchip,mcp2515";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_can_int>;
-+		reg = <0>;
-+		clocks = <&clk16m>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+		spi-max-frequency = <10000000>;
-+		vdd-supply = <&reg_3v3>;
-+		xceiver-supply = <&reg_5v0>;
-+		status = "okay";
++	panel {
++		compatible = "sii,43wvf1g";
++		backlight = <&backlight_display>;
++		dvdd-supply = <&reg_lcd_3v3>;
++		avdd-supply = <&reg_lcd_5v>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&display_out>;
++			};
++		};
 +	};
-+};
-+
- &fec1 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 689ff6822634..e1c6da0a65e4 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -92,6 +92,13 @@
- 	cpu-supply = <&reg_DCDC2>;
  };
  
-+&ecspi3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi3 &pinctrl_ecspi3_cs>;
-+	num-cs = <1>;
-+	cs-gpios = <&gpio4 11 GPIO_ACTIVE_HIGH>;
-+};
-+
- &fec1 {
+ &audmux {
+@@ -221,31 +241,11 @@
+ &lcdif1 {
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet1>;
-@@ -313,7 +320,6 @@
- 		fsl,pins = <
- 			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x74 /* SODIMM 55 */
- 			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x74 /* SODIMM 63 */
--			MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0X14 /* SODIMM 73 */
- 			MX7D_PAD_SAI1_RX_SYNC__GPIO6_IO16	0x14 /* SODIMM 77 */
- 			MX7D_PAD_EPDC_DATA09__GPIO2_IO9		0x14 /* SODIMM 89 */
- 			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x74 /* SODIMM 91 */
-@@ -400,6 +406,12 @@
- 		>;
- 	};
+ 	pinctrl-0 = <&pinctrl_lcd>;
+-	lcd-supply = <&reg_lcd_3v3>;
+-	display = <&display0>;
+ 	status = "okay";
  
-+	pinctrl_can_int: can-int-grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0X14 /* SODIMM 73 */
-+		>;
-+	};
-+
- 	pinctrl_enet1: enet1grp {
- 		fsl,pins = <
- 			MX7D_PAD_ENET1_CRS__GPIO7_IO14			0x14
+-	display0: display0 {
+-		bits-per-pixel = <16>;
+-		bus-width = <24>;
+-
+-		display-timings {
+-			native-mode = <&timing0>;
+-			timing0: timing0 {
+-				clock-frequency = <33500000>;
+-				hactive = <800>;
+-				vactive = <480>;
+-				hback-porch = <89>;
+-				hfront-porch = <164>;
+-				vback-porch = <23>;
+-				vfront-porch = <10>;
+-				hsync-len = <10>;
+-				vsync-len = <10>;
+-				hsync-active = <0>;
+-				vsync-active = <0>;
+-				de-active = <1>;
+-				pixelclk-active = <0>;
+-			};
++	port {
++		display_out: endpoint {
++			remote-endpoint = <&panel_in>;
+ 		};
+ 	};
+ };
 -- 
-2.15.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
