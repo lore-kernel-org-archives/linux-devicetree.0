@@ -1,69 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: sound: add bindings
-	for TAS6424
-Date: Wed, 6 Dec 2017 12:24:44 +0000
-Message-ID: <20171206122444.GA1827@finisterre>
-References: <20171205155412.20137-1-afd@ti.com>
- <20171205155412.20137-2-afd@ti.com>
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH v2 7/7] dt-bindings: tda998x: add the calibration gpio
+Date: Wed, 06 Dec 2017 12:35:54 +0000
+Message-ID: <E1eMYva-0004WA-Hf@rmk-PC.armlinux.org.uk>
+References: <20171206123452.GA13127@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7155689443677412707=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171205155412.20137-2-afd@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171206123452.GA13127-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add the optional calibration gpio for integrated TDA9950 CEC support.
+This GPIO corresponds with the interrupt from the TDA998x, as the
+calibration requires driving the interrupt pin low.
 
---===============7155689443677412707==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
-Content-Disposition: inline
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/bridge/tda998x.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/display/bridge/tda998x.txt b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+index 24cc2466185a..1a4eaca40d94 100644
+--- a/Documentation/devicetree/bindings/display/bridge/tda998x.txt
++++ b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+@@ -27,6 +27,9 @@ Required properties;
+ 	in question is used. The implementation allows one or two DAIs. If two
+ 	DAIs are defined, they must be of different type.
+ 
++  - nxp,calib-gpios: calibration GPIO, which must correspond with the
++	gpio used for the TDA998x interrupt pin.
++
+ [1] Documentation/sound/alsa/soc/DAI.txt
+ [2] include/dt-bindings/display/tda998x.h
+ 
+-- 
+2.7.4
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Dec 05, 2017 at 09:54:11AM -0600, Andrew F. Davis wrote:
-> From: Michael Stecklein <m-stecklein@ti.com>
->=20
-> Add the bindings for the TAS6424 digital amplifier.
-
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
-
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlon4YgACgkQJNaLcl1U
-h9D0UQf/RLshIW4dj6UF6wlNGmq16uXcvysIUIKZtSWS6U/3E/0I9AzkUx9KklKo
-5Ga4kur2w1PIoc6yEyhjenX+cTs+sxZjxYnfmG54D9by6ggs0Efo71xIUvQb8b3e
-Q+3rrv/dKjCqpeDc7uAXnVf48u5BvR2PP+h4pLpZM5UElsUwIsQiMtMwsHMEQS0C
-ww7cYG9O28pRw7oE2HrWzAFtplGqXLuRrPcVuEZGyXkONJ6NuQ4zUXSQqFO5drBq
-l3/U3iB2Gi7bANEpcKYkHt0uzg4tRr0X5qgZxQ821l+mSGExBUQctiNf22HRF2Hq
-P3GREUh8Ja0dVc0RXzyV2E0qRredAA==
-=kISf
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
-
---===============7155689443677412707==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7155689443677412707==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
