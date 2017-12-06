@@ -1,61 +1,102 @@
 From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v3 10/12] arm64: dts: rockchip: add isp0 node for rk3399
-Date: Wed,  6 Dec 2017 19:19:37 +0800
-Message-ID: <20171206111939.1153-11-jacob-chen@iotwrt.com>
+Subject: [PATCH v3 07/12] dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+Date: Wed,  6 Dec 2017 19:19:34 +0800
+Message-ID: <20171206111939.1153-8-jacob-chen@iotwrt.com>
 References: <20171206111939.1153-1-jacob-chen@iotwrt.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171206111939.1153-1-jacob-chen@iotwrt.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rockchip@lists.infradead.org
-Cc: Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, Joao.Pinto@synopsys.com, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, Luis.Oliveira@synopsys.com, robh+dt@kernel.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, allon.huang@rock-chips.com, mchehab@kernel.org, zhengsq@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, allon.huang@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, Joao.Pinto@synopsys.com, Luis.Oliveira@synopsys.com, Jose.Abreu@synopsys.com, Jacob Chen <jacob2.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Shunqian Zheng <zhengsq@rock-chips.com>
+From: Jacob Chen <jacob2.chen@rock-chips.com>
 
-rk3399 have two ISP, but we havn't test isp1, so just add isp0 at present.
+Add DT bindings documentation for Rockchip MIPI D-PHY RX
 
-Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
 Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../bindings/media/rockchip-mipi-dphy.txt          | 71 ++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index d340b58ab184..66a912fab5dd 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1588,6 +1588,21 @@
- 		status = "disabled";
- 	};
- 
-+	isp0: isp0@ff910000 {
-+		compatible = "rockchip,rk3399-cif-isp";
-+		reg = <0x0 0xff910000 0x0 0x4000>;
-+		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru SCLK_ISP0>,
-+			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
-+			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
-+		clock-names = "clk_isp",
-+			      "aclk_isp", "aclk_isp_wrap",
-+			      "hclk_isp", "hclk_isp_wrap";
-+		power-domains = <&power RK3399_PD_ISP0>;
-+		iommus = <&isp0_mmu>;
-+		status = "disabled";
-+	};
+diff --git a/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+new file mode 100644
+index 000000000000..cef9450db051
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+@@ -0,0 +1,71 @@
++Rockchip SoC MIPI RX D-PHY
++-------------------------------------------------------------
 +
- 	isp0_mmu: iommu@ff914000 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
++Required properties:
++
++- compatible: value should be one of the following
++    "rockchip,rk3288-mipi-dphy";
++    "rockchip,rk3399-mipi-dphy";
++- rockchip,grf: GRF regs.
++- bus-width : maximum number of data lanes supported (SoC specific);
++- clocks : list of clock specifiers, corresponding to entries in
++		    clock-names property;
++- clock-names: required clock name.
++
++The device node should contain two 'port' child node, according to the bindings
++defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
++The first port should be connected to sensor nodes, and the second port should be
++connected to isp node. The following are properties specific to those nodes.
++
++endpoint node
++-------------
++
++- data-lanes : (required) an array specifying active physical MIPI-CSI2
++		data input lanes and their mapping to logical lanes; the
++		array's content is unused, only its length is meaningful;
++
++Device node example
++-------------------
++
++    mipi_dphy_rx0: mipi-dphy-rx0 {
++        compatible = "rockchip,rk3399-mipi-dphy";
++        clocks = <&cru SCLK_MIPIDPHY_REF>,
++            <&cru SCLK_DPHY_RX0_CFG>,
++            <&cru PCLK_VIO_GRF>;
++        clock-names = "dphy-ref", "dphy-cfg", "grf";
++        power-domains = <&power RK3399_PD_VIO>;
++        bus-width = <4>;
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                reg = <0>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                mipi_in_wcam: endpoint@0 {
++                    reg = <0>;
++                    remote-endpoint = <&wcam_out>;
++                    data-lanes = <1 2>;
++                };
++                mipi_in_ucam: endpoint@1 {
++                    reg = <1>;
++                    remote-endpoint = <&ucam_out>;
++                    data-lanes = <1>;
++                };
++            };
++
++            port@1 {
++                reg = <1>;
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                dphy_rx0_out: endpoint@0 {
++                    reg = <0>;
++                    remote-endpoint = <&isp0_mipi_in>;
++                };
++            };
++        };
++    };
+\ No newline at end of file
 -- 
 2.15.0
