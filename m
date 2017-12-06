@@ -1,30 +1,74 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v4 0/4] add clk controller driver for Meson-AXG SoC
-Date: Wed, 06 Dec 2017 11:13:59 -0800
-Message-ID: <7hmv2vsm88.fsf@baylibre.com>
-References: <20171201012452.27086-1-yixun.lan@amlogic.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v2 09/19] ASoC: tlv320aic31xx: Remove
+	platform data
+Date: Wed, 6 Dec 2017 13:15:44 -0600
+Message-ID: <611f3eed-b82a-c997-4bf9-e3a4f1b7e94e@ti.com>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-10-afd@ti.com>
+ <20171201132606.vyw7wthmql5trkwq@sirena.org.uk>
+ <4fee76ef-e518-69b6-3bcc-f65b0a31cacc@ti.com>
+ <20171206124540.GC1827@finisterre>
+ <10f1b19b-4a0a-e336-b757-933d46b5c8e9@ti.com>
+ <20171206173059.qw4tt7nizmyo6xbl@sirena.org.uk>
+ <b6f581be-6d3a-6fc3-036f-9efc1bfc2429@ti.com>
+ <20171206181534.7t23ljja6fgle4ar@sirena.org.uk>
+ <86e13e26-e8d5-35ed-6bd0-d91d9323d5e6@ti.com>
+ <20171206191112.ip47bylnvyfc2irt@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171201012452.27086-1-yixun.lan@amlogic.com> (Yixun Lan's
-        message of "Fri, 1 Dec 2017 09:24:48 +0800")
-Sender: linux-clk-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171206191112.ip47bylnvyfc2irt@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Yixun Lan <yixun.lan@amlogic.com> writes:
+On 12/06/2017 01:11 PM, Mark Brown wrote:
+> On Wed, Dec 06, 2017 at 12:40:45PM -0600, Andrew F. Davis wrote:
+> 
+>> For some userspace feature sure, but this is kernel code, there is no
+>> guarantee for a sable API, in fact some would probably argue even
+>> further that there is a guarantee that stuff *will* change and this is a
+>> good thing as it kinda serves to punish for those you don't try to upstream.
+> 
+>> So the helpfulness bar should be zero for changes that break out-of-tree
+>> stuff.
+> 
+> There is no need to actively get in people's way or put up barriers to
+> people who do in future decide to upstream things, that doesn't help
+> anyone.
+> 
+>> Even more so this patch isn't a zero gain, the cleaner, better looking,
+>> and easier to maintain code *is* the benefit in itself. Plus we gain the
+>> ability to set mic-gain voltage with ACPI, something you couldn't do
+>> before this patch.
+> 
+> If this patch adds ACPI support then the patch description was clearly
+> not great (I don't think I read the patch itself since the description
+> just said that it was removing platform data without giving a reason,
+> that's the main review comment here). 
+> 
 
-> Add driver for the clk controller which found in Meson AXG SoC
->
->   Note, we deliberately create a seperate source file for the Meson AXG
-> series, instead of sharing code with previous GXBB/GXL - the file axg.c
-> It would help us maintaining the code more easily.
+I may not be clear that the ACPI part is new, but the message does say
+"and switch to using fwnode(DT/ACPI)"
 
-In addition to the DT node-name fixup (c.f. reply on v3 series), I think
-this series should also include a patch that switches the UART over to
-the new clock provider (it's currently using the xtal fixed clock.)
+> If you want to use the device property stuff that's fine but there's no
+> need to remove platform data to do that, it's a smaller change.  I find
+> it hard to see the platform data as a particularly big blight on the
+> code here, looking at the driver it's just going to remove the "pdata."
+> from a few variable accesses which isn't exactly transformational.
+> 
 
-This will also provide a simple way to validate/test the series.
-
-Kevin
+If keeping platform data is that important to you then I will split the
+patch into fwnode addition and pdata removal, you can just not take the
+pdata removal if you don't want it.
