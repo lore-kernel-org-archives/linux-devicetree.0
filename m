@@ -1,77 +1,52 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V6 2/7] ACPI / bus: Introduce acpi_get_match_data()
- function
-Date: Wed, 6 Dec 2017 11:41:33 -0500
-Message-ID: <218a717f-7fac-41a1-86e2-19f4d99a7f52@codeaurora.org>
-References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
- <1512493493-6464-3-git-send-email-okaya@codeaurora.org>
- <CAJZ5v0iJ_47z25GrQryQFVyXiXitYNHy8mQtTCf2rtdyhnn2eQ@mail.gmail.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v2 16/19] ASoC: tlv320aic31xx: Add short
+ circuit detection support
+Date: Wed, 6 Dec 2017 11:15:12 -0600
+Message-ID: <73ee66e9-81c3-2bfe-8808-2c3e90f5bcba@ti.com>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-17-afd@ti.com>
+ <20171201133930.xzfjjj6wzkbtk6c4@sirena.org.uk>
+ <4d956cbc-829c-0d81-2980-aa2a79f36660@ti.com>
+ <20171201155725.lrl35nig53fnwkac@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0iJ_47z25GrQryQFVyXiXitYNHy8mQtTCf2rtdyhnn2eQ@mail.gmail.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171201155725.lrl35nig53fnwkac@sirena.org.uk>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, open list <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/5/2017 5:04 PM, Rafael J. Wysocki wrote:
-> On Tue, Dec 5, 2017 at 6:04 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
->> OF has of_device_get_match_data() function to extract driver specific data
->> structure. Add a similar function for ACPI.
->>
->> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
->> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 12/01/2017 09:57 AM, Mark Brown wrote:
+> On Fri, Dec 01, 2017 at 09:32:12AM -0600, Andrew F. Davis wrote:
+>> On 12/01/2017 07:39 AM, Mark Brown wrote:
 > 
-> Not sure yet, sorry.
-
-OK. no problem.
-
+>>> Is the interrupt only available on GPIO1?
 > 
->> ---
->>  drivers/acpi/bus.c   | 12 ++++++++++++
->>  include/linux/acpi.h |  6 ++++++
->>  2 files changed, 18 insertions(+)
->>
->> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
->> index 4d0979e..b271eb1 100644
->> --- a/drivers/acpi/bus.c
->> +++ b/drivers/acpi/bus.c
->> @@ -785,6 +785,18 @@ const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
->>  }
->>  EXPORT_SYMBOL_GPL(acpi_match_device);
->>
->> +void *acpi_get_match_data(const struct device *dev)
->> +{
->> +       const struct acpi_device_id *match;
->> +
->> +       match = acpi_match_device(dev->driver->acpi_match_table, dev);
+>> Some devices can route this to GPIO2 IIRC.
 > 
-> Shouldn't this check dev->driver against NULL before dereferencing it?
+>> I'm not sure how that would be supported, I think we would need to add
+>> interrupt names to DT so users could specify which gpio they wired their
+>> IRQ lines to.
+> 
+>> interrupt = <&host 23>;
+>> interrupt-name = "gpio2";
+> 
+>> or similar?
+> 
+> You could also use pinctrl an require the user to mux the interrupt in
+> whatever fashion makes sense for their device.
+> 
 
-I'm adding these checks. I realized that acpi_match_device() is not validating
-the ids either.
-
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -789,6 +789,12 @@ void *acpi_get_match_data(const struct device *dev)
- {
-        const struct acpi_device_id *match;
-
-+       if (!dev->driver)
-+               return NULL;
-+
-+       if (!dev->driver->acpi_match_table)
-+               return NULL;
-+
-
-I'll hold onto posting this until I hear back from Sakari.
-
-Sinan
-
--- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+If done at that layer then no change is needed in the driver right? We
+just request and use the IRQ passed to us from i2c data.
