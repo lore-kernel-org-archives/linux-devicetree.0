@@ -1,153 +1,120 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 2/2] dt-bindings: mipi-dsi: Add dual-channel DSI related
- info
-Date: Wed, 6 Dec 2017 15:42:51 -0600
-Message-ID: <20171206214251.3ztdydrbpkvqyx5j@rob-hp-laptop>
-References: <20171205103356.9917-1-architt@codeaurora.org>
- <20171205103356.9917-3-architt@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] [linux][master][v1] devicetree: misc: Add binding for
+ logicoreIP xlnx,vcu
+Date: Wed, 6 Dec 2017 15:49:09 -0600
+Message-ID: <20171206214909.jr2x6cdzs2577aee@rob-hp-laptop>
+References: <1512472023-3957-1-git-send-email-dshah@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171205103356.9917-3-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, philippe.cornu-qxv4g6HH51o@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nickey.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <1512472023-3957-1-git-send-email-dshah@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dhaval Shah <dhaval.shah@xilinx.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, hyunk@xilinx.com, Dhaval Shah <dshah@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 05, 2017 at 04:03:56PM +0530, Archit Taneja wrote:
-> Add binding info for peripherals that support dual-channel DSI. Add
-> corresponding optional bindings for DSI host controllers that may
-> be configured in this mode.
+On Tue, Dec 05, 2017 at 03:07:03AM -0800, Dhaval Shah wrote:
+> From: Dhaval Shah <dhaval.shah@xilinx.com>
 > 
-> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Added the txt file which contain the xlnx,vcu DT node
+> properties information. This also provides the information
+> of it's child node as well.
+> 
+> Signed-off-by: Dhaval Shah <dshah@xilinx.com>
 > ---
->  .../devicetree/bindings/display/mipi-dsi-bus.txt   | 77 ++++++++++++++++++++++
->  1 file changed, 77 insertions(+)
+>  .../devicetree/bindings/misc/xlnx,vcu.txt          | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,vcu.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt b/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-> index 77a7cec15f5b..f556aaafdf22 100644
-> --- a/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-> +++ b/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
-> @@ -29,6 +29,12 @@ Required properties:
->  - #size-cells: Should be 0. There are cases where it makes sense to use a
->    different value here. See below.
->  
-> +Optional properties:
-> +- clock-master: A DSI host controller may be used in conjunction with another DSI
-> +  host to drive the same peripheral. Hardware supporting such a configuration
-> +  generally requires the data on both the busses to be driven by the same clock.
-> +  The DSI host instance controlling this clock should contain this property.
+> diff --git a/Documentation/devicetree/bindings/misc/xlnx,vcu.txt b/Documentation/devicetree/bindings/misc/xlnx,vcu.txt
+> new file mode 100644
+> index 0000000..e722ff3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/xlnx,vcu.txt
+> @@ -0,0 +1,59 @@
+> +Xilinx VCU init Driver
 
-Be explicit this is a boolean.
+Bindings don't describe drivers. Describe the h/w.
 
+> +-----------------------------
 > +
->  DSI peripheral
->  ==============
->  
-> @@ -61,6 +67,17 @@ primary control bus, but are also connected to a DSI bus (mostly for the data
->  path). Connections between such peripherals and a DSI host can be represented
->  using the graph bindings [1], [2].
->  
-> +Peripherals that support dual channel DSI
-> +-----------------------------------------
+> +General concept
+> +---------------
 > +
-> +Peripherals with higher bandwidth requirements can be connected to 2 DSI
-> +busses. Each DSI bus/channel drives some portion of the pixel data (generally
-> +left/right half of each line of the display, or even/odd lines of the display).
-> +The graph bindings should be used to represent the multiple DSI busses that are
-> +connected to this peripheral. Each DSI host's output endpoint can be linked to
-> +an input endpoint of the DSI peripheral.
+> +Xilinx VCU init driver is developed to handle the LogiCore related
+> +new implementation. In this directory, The DT node of the Xilinx
+> +VCU init driver represents as a top level node.
 > +
-> +
->  [1] Documentation/devicetree/bindings/graph.txt
->  [2] Documentation/devicetree/bindings/media/video-interfaces.txt
->  
-> @@ -70,6 +87,8 @@ Examples
->    with different virtual channel configurations.
->  - (4) is an example of a peripheral on a I2C control bus connected with to
->    a DSI host using of-graph bindings.
-> +- (5) is an example of 2 DSI hosts driving a dual-channel DSI peripheral,
-> +  which uses I2C as its primary control bus.
->  
->  1)
->  	dsi-host {
-> @@ -157,3 +176,61 @@ Examples
->  			};
->  		};
->  	};
-> +
-> +5)
-> +	i2c-host {
-> +		dsi-bridge@35 {
-> +			compatible = "...";
-> +			reg = <0x35>;
-> +
-> +			ports {
-> +				...
-> +
-> +				port@0 {
+> +Required properties:
+> +- compatible: Must be "xlnx,vcu".
 
-Need reg property and #{address,size}-cells.
+Needs to be more specific.
 
-> +					dsi0_in: endpoint {
-> +						remote-endpoint = <&dsi0_out>;
-> +					};
-> +				};
+> +- reg, reg-names: There are two sets of registers need to provide.
+> +	1. vcu slcr
+> +	2. Logicore
+> +	reg-names should contain name for the each register sequence.
+> +- clocks: phandle for aclk and pll_ref clocksource
+> +- clock-names: The identification string, "aclk", is always required for
+> +   the axi clock. "pll_ref" is required for pll.
+> +- ranges
+> +- VCU Init driver node define the following child nodes:
+> +	* Allegro encoder driver node
+
+encoder of what?
+
+> +		- compatible: Must be "al,al5e"
+> +		- reg: There is a one set of register.
+
+
+> +		- interrupts: interrupt number to the cpu.
+> +		- interrupt-parent: the phandle for the interrupt controller
+> +		  that services interrupts for this device.
+> +	* Allegro decoder driver node
+> +		- compatible: Must be "al,al5d"
+> +		- reg: There is a one set of register.
+> +		- interrupts: interrupt number to the cpu.
+> +		- interrupt-parent: the phandle for the interrupt controller
+> +		  that services interrupts for this device.
+> +Example:
 > +
-> +				port@1 {
-> +					dsi1_in: endpoint {
-> +						remote-endpoint = <&dsi1_out>;
-> +					};
-> +				};
-> +			};
+> +	xlnx_vcu: vcu@a0040000 {
+> +		compatible = "xlnx,vcu";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+
+There's no reason the child nodes need 64 bits of address or size. Use 
+ranges.
+
+> +		reg = <0x0 0xa0040000 0x0 0x1000>,
+> +			 <0x0 0xa0041000 0x0 0x1000>;
+> +		reg-names = "vcu_slcr", "logicore";
+> +		clocks = <&si570_1>, <&clkc 71>;
+> +		clock-names = "pll_ref", "aclk";
+> +		ranges;
+> +		encoder: al5e@a0000000 {
+> +			compatible = "al,al5e";
+> +			reg = <0x0 0xa0000000 0x0 0x10000>;
+> +			interrupts = <0 89 4>;
+> +			interrupt-parent = <&gic>;
 > +		};
-> +	};
 > +
-> +	dsi0-host {
-> +		...
-> +
-> +		/*
-> +		 * this DSI instance drives the clock for both the host
-> +		 * controllers
-> +		 */
-> +		clock-master;
-> +
-> +		ports {
-> +			...
-> +
-> +			port@0 {
+> +		decoder: al5d@a0020000 {
+> +			compatible = "al,al5d";
+> +			reg = <0x0 0xa0020000 0x0 0x10000>;
+> +			interrupts = <0 89 4>;
 
-Drop unit-address.
+A shared interrupt? Are these really separate blocks? Seems like this 
+could all be a single node.
 
-> +				dsi0_out: endpoint {
-> +					remote-endpoint = <&dsi0_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	dsi1-host {
-> +		...
-> +
-> +		ports {
-> +			...
-> +
-> +			port@0 {
-
-Drop unit-address.
-
-> +				dsi1_out: endpoint {
-> +					remote-endpoint = <&dsi1_in>;
-> +				};
-> +			};
+> +			interrupt-parent = <&gic>;
 > +		};
 > +	};
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
+> 2.7.4
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
