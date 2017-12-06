@@ -1,55 +1,92 @@
-From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 2/3] dt-bindings: iio: temperature: add MLX90632 device bindings
-Date: Wed,  6 Dec 2017 10:55:43 +0100
-Message-ID: <20171206095543.8223-1-cmo@melexis.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 06/12] dt-bindings: Document the Rockchip ISP1 bindings
+Date: Wed,  6 Dec 2017 19:19:33 +0800
+Message-ID: <20171206111939.1153-7-jacob-chen@iotwrt.com>
+References: <20171206111939.1153-1-jacob-chen@iotwrt.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171206111939.1153-1-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, allon.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for MLX90632 IR temperature sensor.
+From: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Add DT bindings documentation for Rockchip ISP1
+
+Signed-off-by: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+ .../devicetree/bindings/media/rockchip-isp1.txt    | 57 ++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+diff --git a/Documentation/devicetree/bindings/media/rockchip-isp1.txt b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
 new file mode 100644
-index 000000000000..0b05812001f8
+index 000000000000..0971ed94ed69
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
-@@ -0,0 +1,28 @@
-+* Melexis MLX90632 contactless Infra Red temperature sensor
++++ b/Documentation/devicetree/bindings/media/rockchip-isp1.txt
+@@ -0,0 +1,57 @@
++Rockchip SoC Image Signal Processing unit v1
++----------------------------------------------
 +
-+Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
-+
-+There are various applications for the Infra Red contactless temperature sensor
-+and MLX90632 is most suitable for consumer applications where measured object
-+temperature is in range between -20 to 200 degrees Celsius with relative error
-+of measurement below 1 degree Celsius in object temperature range for
-+industrial applications. Since it can operate and measure ambient temperature
-+in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
-+
-+Be aware that electronics surrounding the sensor can increase ambient
-+temperature. MLX90632 can be calibrated to reduce the housing effect via
-+already existing EEPROM parameters.
-+
-+Since measured object emissivity effects Infra Red energy emitted, emissivity
-+should be set before requesting the object temperature.
++Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
++which contains image processing, scaling, and compression funcitons.
 +
 +Required properties:
-+  - compatible: should be "melexis,mlx90632"
-+  - reg: the I2C address of the sensor (default 0x3a)
++  - compatible: value should be one of the following
++      "rockchip,rk3288-cif-isp";
++      "rockchip,rk3399-cif-isp";
++  - reg : offset and length of the register set for the device.
++  - interrupts: should contain ISP interrupt.
++  - clocks: phandle to the required clocks.
++  - clock-names: required clock name.
++  - iommus: required a iommu node.
 +
-+Example:
++The device node should contain one 'port' child node with child 'endpoint'
++nodes, according to the bindings defined in Documentation/devicetree/bindings/
++media/video-interfaces.txt.
 +
-+mlx90632@3a {
-+	compatible = "melexis,mlx90632";
-+	reg = <0x3a>;
-+};
++For sensor with a parallel video bus, it could be linked directly to the isp.
++For sensor with a MIPI CSI-2 video bus, it should be linked through the
++MIPI-DPHY, which is defined in rockchip-mipi-dphy.txt.
++
++Device node example
++-------------------
++
++	isp0: isp0@ff910000 {
++		compatible = "rockchip,rk3399-cif-isp";
++		reg = <0x0 0xff910000 0x0 0x4000>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru SCLK_ISP0>,
++			 <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
++			 <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
++		clock-names = "clk_isp",
++			      "aclk_isp", "aclk_isp_wrap",
++			      "hclk_isp", "hclk_isp_wrap";
++		power-domains = <&power RK3399_PD_ISP0>;
++		iommus = <&isp0_mmu>;
++	
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* mipi */
++			isp0_mipi_in: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&dphy_rx0_out>;
++			};
++
++			/* parallel */
++			isp0_parallel_in: endpoint@1 {
++				reg = <1>;
++				remote-endpoint = <&ov5640_out>;
++			};
++		};
++	};
 -- 
 2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
