@@ -1,89 +1,109 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 16/19] ASoC: tlv320aic31xx: Add short
- circuit detection support
-Date: Wed, 6 Dec 2017 14:22:39 -0600
-Message-ID: <fd362117-ae71-a6a2-eb43-70c2457c0a5d@ti.com>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-17-afd@ti.com>
- <20171201133930.xzfjjj6wzkbtk6c4@sirena.org.uk>
- <4d956cbc-829c-0d81-2980-aa2a79f36660@ti.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH RFC 2/2] arm64: allwinner: a64: Add Brava Keller initial support
+Date: Wed, 6 Dec 2017 21:39:51 +0100
+Message-ID: <CAOFm3uExmg6mDAn-r_VHGJvuH_e1sComxYDbi+ksvjhJY2h8dg@mail.gmail.com>
+References: <1512067334-12761-1-git-send-email-jagan@amarulasolutions.com>
+ <1512067334-12761-2-git-send-email-jagan@amarulasolutions.com>
+ <CAOFm3uEdsj=qxUf3O0S0vDqgXgosvBYG6BGbf6cYn3aNreTPaQ@mail.gmail.com> <20171204213545.lvi4ay6lu7ohchru@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <4d956cbc-829c-0d81-2980-aa2a79f36660@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171204213545.lvi4ay6lu7ohchru@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jagan Teki <jagannadh.teki@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Mark Janoff <mark@bravahome.com>, Stuart Westerman <stu@bravahome.com>, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/01/2017 09:32 AM, Andrew F. Davis wrote:
-> On 12/01/2017 07:39 AM, Mark Brown wrote:
->> On Wed, Nov 29, 2017 at 03:32:57PM -0600, Andrew F. Davis wrote:
+On Mon, Dec 4, 2017 at 10:35 PM, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Nov 30, 2017 at 10:36:55PM +0100, Philippe Ombredanne wrote:
+>> Jagan,
 >>
->>> +static irqreturn_t aic31xx_irq(int irq, void *data)
->>> +{
->>> +	struct aic31xx_priv *aic31xx = (struct aic31xx_priv *)data;
+>> On Thu, Nov 30, 2017 at 7:42 PM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
+>> []
+>> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
+>> > new file mode 100644
+>> > index 0000000..f5303a3
+>> > --- /dev/null
+>> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
+>> > @@ -0,0 +1,244 @@
+>> > +/*
+>> > + * Copyright (C) 2017 Jagan Teki <jagan@amarulasolutions.com>
+>> > + *
+>> > + * This file is dual-licensed: you can use it either under the terms
+>> > + * of the GPL or the X11 license, at your option. Note that this dual
+>> > + * licensing only applies to this file, and not this project as a
+>> > + * whole.
+>> > + *
+>> > + *  a) This library is free software; you can redistribute it and/or
+>> > + *     modify it under the terms of the GNU General Public License as
+>> > + *     published by the Free Software Foundation; either version 2 of the
+>> > + *     License, or (at your option) any later version.
+>> > + *
+>> > + *     This library is distributed in the hope that it will be useful,
+>> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> > + *     GNU General Public License for more details.
+>> > + *
+>> > + * Or, alternatively,
+>> > + *
+>> > + *  b) Permission is hereby granted, free of charge, to any person
+>> > + *     obtaining a copy of this software and associated documentation
+>> > + *     files (the "Software"), to deal in the Software without
+>> > + *     restriction, including without limitation the rights to use,
+>> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> > + *     sell copies of the Software, and to permit persons to whom the
+>> > + *     Software is furnished to do so, subject to the following
+>> > + *     conditions:
+>> > + *
+>> > + *     The above copyright notice and this permission notice shall be
+>> > + *     included in all copies or substantial portions of the Software.
+>> > + *
+>> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> > + *     OTHER DEALINGS IN THE SOFTWARE.
+>> > + */
 >>
->> There is no need to cast away from void, doing so can only mask bugs.
+>> Rather than this long boilerplate, you might want to use the SPDX ids,
+>> as started by Greg and documented by Thomas.
+>> Noe that Linus wants the // comment style for the license line, and
+>> since there is only two line left here I suggest using it for both
+>> lines.
+>> You can check also the recent doc patch posted by Thomas (tglx) and
+>> comments from Linus and Greg.
 >>
->>> +	ret = regmap_read(aic31xx->regmap, AIC31XX_INTRDACFLAG, &value);
->>> +	if (ret) {
->>> +		dev_err(dev, "Failed to read interrupt mask: %d\n", ret);
->>> +		return IRQ_NONE;
->>> +	}
->>> +
->>> +	if (value & AIC31XX_HPLSCDETECT)
->>> +		dev_err(dev, "Short circuit on Left output is detected\n");
->>> +	if (value & AIC31XX_HPRSCDETECT)
->>> +		dev_err(dev, "Short circuit on Right output is detected\n");
->>> +
->>> +	return IRQ_HANDLED;
+>> So I guess you could use this:
 >>
->> This will report the interrupt as handled even if we didn't see an
->> interrupt we understand which will break shared interrupt lines.  At the
->> very least we should log other interrupt sources numerically.
->>
-> 
-> Okay, I think I can make that work by checking if no bits are set in the
-> interrupt regs and returning early if not, IRQ_NONE.
-> 
+>> > +// Copyright (C) 2017 Jagan Teki <jagan@amarulasolutions.com>
+>> > +// SPDX-License-Indentifier: (GPL-2.0+ OR MIT)
+>
+> Other way around. Make SPDX-License-Indentifier the first line.
 
-This turned out to be more difficult than I expected, plus if I do
-handle an interrupt it doesn't mean the other device did not right? So
-this wouldn't fix shared lines as far as I can tell, but I don't
-register it as shared so this should be fine.
+My bad. 100% right!
 
-As for your other suggestion of "log other interrupt sources
-numerically", could you explain this or point to an example of what you
-mean?
+>> NB: what you call X11 is has the MIT license id in the SPDX license list.
+>
+> Right. That was a common mistake or abiguity in the dts files.
+>
+>> So you could replace 32 lines by only two lines :) it'[s neat right?
+>>
+>> And this would also help as we have tagged already ~15K files, so it
+>> would help to use this for new files so the amount of cleanup work
+>> still left does not increase. Thank you for your kind consideration!
+>
+> I've been nuging folks to do that for a while now. Of course, now we
+> need to go move the ids to the first line at some point.
 
->>> +	if (aic31xx->irq > 0) {
->>> +		regmap_update_bits(aic31xx->regmap, AIC31XX_GPIO1,
->>> +				   AIC31XX_GPIO1_FUNC_MASK,
->>> +				   AIC31XX_GPIO1_INT1 <<
->>> +				   AIC31XX_GPIO1_FUNC_SHIFT);
->>
->> Is the interrupt only available on GPIO1?
->>
-> 
-> Some devices can route this to GPIO2 IIRC.
-> 
-> I'm not sure how that would be supported, I think we would need to add
-> interrupt names to DT so users could specify which gpio they wired their
-> IRQ lines to.
-> 
-> interrupt = <&host 23>;
-> interrupt-name = "gpio2";
-> 
-> or similar?
-> 
+That's great: if you need some help there I have a tool that can help
+detect license and eventually inject a proper SPDX id [1]
+
+btw Thomas (tglx) posted a new patch set with the updated documentation.
+
+[1] https://github.com/nexB/scancode-toolkit/tree/833-espedexify
+-- 
+Cordially
+Philippe Ombredanne
