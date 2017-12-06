@@ -1,51 +1,39 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: imx6sl-evk: Rearrange the regulators node
-Date: Wed, 6 Dec 2017 09:20:04 -0200
-Message-ID: <CAOMZO5DcOeGG6KaHptMD0fO1K9RE9jHXBirUdRXG-SHd1ZFfmw@mail.gmail.com>
-References: <1512528784-29288-1-git-send-email-marcofrk@gmail.com> <1512528784-29288-2-git-send-email-marcofrk@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512528784-29288-2-git-send-email-marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RESEND PATCH 2/4] dt-bindings: display: amlogic,meson-dw-hdmi: Add optional HDMI 5V regulator
+Date: Wed,  6 Dec 2017 12:54:26 +0100
+Message-ID: <1512561268-29806-3-git-send-email-narmstrong@baylibre.com>
+References: <1512561268-29806-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512561268-29806-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: airlied@linux.ie
+Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marco,
+On reference boards and derivatives, the HDMI Logic is powered by an external
+5V regulator.
+This regulator was set by the Vendor U-Boot, add optional support for it.
 
-You missed to pass the v2 notation for this patch in the Subject.
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Wed, Dec 6, 2017 at 12:53 AM, Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> +       reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "usb_otg1_vbus";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +               gpio = <&gpio4 0 0>;
-
-gpio = <&gpio4 0 GPIO_ACTIVE_HIGH>;
-
-would easier to read.
-
-> +       reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "usb_otg2_vbus";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +               gpio = <&gpio4 2 0>;
-
-Ditto.
-
-> -               };
-> +       reg_lcd_3v3: regulator-lcd-3v3 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "lcd-3v3";
-> +               gpio = <&gpio4 3 0>;
-
-Ditto.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+index 7f040ed..bf4a180 100644
+--- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
++++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+@@ -48,6 +48,10 @@ Required properties:
+   Documentation/devicetree/bindings/reset/reset.txt,
+   the reset-names should be "hdmitx_apb", "hdmitx", "hdmitx_phy"
+ 
++Optional properties:
++- hdmi-supply: Optional phandle to an external 5V regulator to power the HDMI
++  logic, as described in the file ../regulator/regulator.txt
++
+ Required nodes:
+ 
+ The connections to the HDMI ports are modeled using the OF graph
+-- 
+2.7.4
