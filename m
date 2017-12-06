@@ -1,82 +1,68 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 09/19] ASoC: tlv320aic31xx: Remove platform data
-Date: Wed, 6 Dec 2017 19:11:12 +0000
-Message-ID: <20171206191112.ip47bylnvyfc2irt@sirena.org.uk>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-10-afd@ti.com>
- <20171201132606.vyw7wthmql5trkwq@sirena.org.uk>
- <4fee76ef-e518-69b6-3bcc-f65b0a31cacc@ti.com>
- <20171206124540.GC1827@finisterre>
- <10f1b19b-4a0a-e336-b757-933d46b5c8e9@ti.com>
- <20171206173059.qw4tt7nizmyo6xbl@sirena.org.uk>
- <b6f581be-6d3a-6fc3-036f-9efc1bfc2429@ti.com>
- <20171206181534.7t23ljja6fgle4ar@sirena.org.uk>
- <86e13e26-e8d5-35ed-6bd0-d91d9323d5e6@ti.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v3 3/3] arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
+Date: Wed, 06 Dec 2017 11:11:59 -0800
+Message-ID: <7htvx3smbk.fsf@baylibre.com>
+References: <20171128125330.363-1-yixun.lan@amlogic.com>
+        <20171128125330.363-4-yixun.lan@amlogic.com>
+        <20171129193536.GB19419@codeaurora.org>
+        <8353c264-3253-0268-91fc-8d42fbe82611@amlogic.com>
+        <20171201163437.GE19419@codeaurora.org>
+        <1512147583.12869.10.camel@baylibre.com>
+        <20171206010055.GE4283@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yt5swpqm4kzhqwy4"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <86e13e26-e8d5-35ed-6bd0-d91d9323d5e6-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20171206010055.GE4283@codeaurora.org> (Stephen Boyd's message of
+        "Tue, 5 Dec 2017 17:00:55 -0800")
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Stephen Boyd <sboyd@codeaurora.org> writes:
 
---yt5swpqm4kzhqwy4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 12/01, Jerome Brunet wrote:
+>> On Fri, 2017-12-01 at 08:34 -0800, Stephen Boyd wrote:
+>> > On 11/30, Yixun Lan wrote:
+>> > > Hi Stephen
+>> > > 
+>> > > On 11/30/17 03:35, Stephen Boyd wrote:
+>> > > > 
+>> > > > Maybe just call the node "bus@ff63c000"?
+>> > > > 
+>> > > 
+>> > > isn't this just a name? what's the benefits to change?
+>> > > personally, I tend to keep it this way, because it's better map to the
+>> > > data sheet
+>> > > 
+>> > > we also has 'aobus', 'cbus' scattered there..
+>> > 
+>> > Per the ePAPR node names are supposed to be generic, like disk,
+>> > cpu, display-controller, gpu, etc. I've never heard of a hiubus,
+>> > so probably it's some vendor specific thing? We have the phandle
+>> > anyway so it's not like we're losing much information here.
+>> 
+>> Stephen, there is a lot of busses on platform. We can't just call them all
+>> 'bus'.
+>> I don't get the problem with this name.
+>> We are re-using the name from the datasheet here, no fancy invention. It seems
+>> to be quite common. 
+>> 
+>
+> Ok. I'm not the maintainer of the DTS so no worries from me. I'm
+> just pointing out that the ePAPR says that node names should be
+> generic, and 'hiubus' doesn't sound generic to me. If it matches
+> some datasheet then I suppose that's good, but probably that sort
+> of distinction should have gone into the compatible string
+> instead of the node name.
 
-On Wed, Dec 06, 2017 at 12:40:45PM -0600, Andrew F. Davis wrote:
+Stephen is right, the node-name should be generic (e.g. "bus") but the
+label can (should) be more SoC-specific, so it should look like:
 
-> For some userspace feature sure, but this is kernel code, there is no
-> guarantee for a sable API, in fact some would probably argue even
-> further that there is a guarantee that stuff *will* change and this is a
-> good thing as it kinda serves to punish for those you don't try to upstre=
-am.
+		hiubus: bus@ff63c000 {
 
-> So the helpfulness bar should be zero for changes that break out-of-tree
-> stuff.
+Note that we weren't strict about this for all the rest of the amlogic
+SoCs (mostly because I didn't notice ) but we should start doing it
+correctly now.  I'll also clean up the existing DTs.
 
-There is no need to actively get in people's way or put up barriers to
-people who do in future decide to upstream things, that doesn't help
-anyone.
-
-> Even more so this patch isn't a zero gain, the cleaner, better looking,
-> and easier to maintain code *is* the benefit in itself. Plus we gain the
-> ability to set mic-gain voltage with ACPI, something you couldn't do
-> before this patch.
-
-If this patch adds ACPI support then the patch description was clearly
-not great (I don't think I read the patch itself since the description
-just said that it was removing platform data without giving a reason,
-that's the main review comment here).=20
-
-If you want to use the device property stuff that's fine but there's no
-need to remove platform data to do that, it's a smaller change.  I find
-it hard to see the platform data as a particularly big blight on the
-code here, looking at the driver it's just going to remove the "pdata."
-=66rom a few variable accesses which isn't exactly transformational.
-
---yt5swpqm4kzhqwy4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlooQNAACgkQJNaLcl1U
-h9CgUQf+OfU8ycYyHa+CYnGn6Htt1oye9dJUuOyY3jFAhDXOy4x9KtZq32YdXHQl
-hv+Sdm0VIlh++nSEqarNFnPW/OklMjCtjxHUzAO1TbrkCWk1NZUO83iSeDQ8bUk4
-giKnACOSoB5RWExsRwo+8LEezAWaxp/6m5thiM94iNJmY1Du3p0xHpYZyBPnn/WV
-74b0dxwBwzPU8VVbkGFNq6j36zaf5c8pewwzLqb2rPjTlzfBSNIukc0DowIp0i/k
-8gYAOSXvM9xLzAz3NoOiGihBtNlhDbpNK0PX7Inhfm9LDQzsET57k/5/T8Gh2y82
-9aGaIzEB/lgnT7v07QRQE7kj6FlrIA==
-=ACWY
------END PGP SIGNATURE-----
-
---yt5swpqm4kzhqwy4--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
