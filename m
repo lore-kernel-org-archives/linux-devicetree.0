@@ -1,59 +1,65 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] rtc: add mxc driver for i.MX53 SRTC
-Date: Wed, 6 Dec 2017 15:40:35 +0100
-Message-ID: <20171206144035.5brxvavkx2u2tk23@pengutronix.de>
-References: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
- <20171205140646.30367-6-linux-kernel-dev@beckhoff.com>
- <20171206083618.eea63zqmpgaaazwl@pengutronix.de>
- <3BB206AB2B1BD448954845CE6FF69A8E01CB531D9C@NT-Mail07.beckhoff.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] video: hd44780: Add hd44780 lcd display driver
+Date: Wed, 6 Dec 2017 16:04:10 +0100
+Message-ID: <CAMuHMdUn-wx7YC=QWazb4e-vJGts8iXbkC64NYiEjha-kQPKLg@mail.gmail.com>
+References: <20171206135255.6990-1-poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3BB206AB2B1BD448954845CE6FF69A8E01CB531D9C-vUij6NSodOcSOXk/eDA+lhuDmiLEvxRJ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrick =?iso-8859-15?Q?Br=FCnn?= <P.Bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-Cc: linux-kernel-dev <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171206135255.6990-1-poeschel@lemonage.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, =?UTF-8?Q?Manuel_Sch=C3=B6lling?= <manuel.schoelling@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Stafford Horne <shorne@gmail.com>, Christophe Leroy <christophe.leroy@c-s.fr>, Randy Dunlap <rdunlap@infradead.org>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, DRI Development <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 06, 2017 at 10:17:06AM +0000, Patrick Brünn wrote:
-> >From: Sascha Hauer [mailto:s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org]
-> >Sent: Mittwoch, 6. Dezember 2017 09:36
-> >On Tue, Dec 05, 2017 at 03:06:46PM +0100, linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org
-> >wrote:
-> >> +static int mxc_rtc_wait_for_flag(void *__iomem ioaddr, int flag)
-> >> +{
-> >> +    unsigned int timeout = REG_READ_TIMEOUT;
-> >> +
-> >> +    while (!(readl(ioaddr) & flag)) {
-> >> +            if (!--timeout) {
-> >> +                    pr_err("Wait timeout for 0x%x@%p!\n", flag, ioaddr);
-> >
-> >Please use dev_* functions for printing. In this case the message should
-> >probably be printed from the caller.
-> Do you have a link at hand about dev_* vs. pr_*? I just choose pr_err here,
-> because I would have to change the functions signature to get a device.
-> However, I will drop the message and move it to the caller.
+Hi Lars,
 
-No, I don't have a link. However, a message printed with pr_err comes
-with absolutely no context, so without grepping the source you do not
-get a clue which device has a problem. You could add more context
-using some prefix either to each message or by using
+On Wed, Dec 6, 2017 at 2:52 PM, Lars Poeschel <poeschel@lemonage.de> wrote:
+> This adds a console driver for hd44780 based character lcd displays and
+> clones. The driver currently supports 20x4 character displays with
+> character ROMs A00 and A02.
+> The hardware wirings to the display have to be supplied to the kernel in
+> the devicetree. The binding doc has the necessary information.
+> There are also tons of these cheap displays sold with a serial
+> interface. Many of them use a simple pcf8574 gpio expanders. An example
+> for using that kind of display is also in the binding doc.
+>
+> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 
-#define pr_fmt(fmt) "mydriver: " fmt
+Thanks for your patch!
 
-but then you still not know which instance the message throws. Using
-dev_* just does the right thing without much thinking.
+> ---
+>  .../bindings/video/console/hd44780con.txt          |  42 ++
+>  drivers/video/console/Kconfig                      |  13 +
+>  drivers/video/console/Makefile                     |   1 +
+>  drivers/video/console/hd44780con.c                 | 676 +++++++++++++++++++++
 
-Sascha
+I'm wondering if you could implement this on top of the existing charlcd
+framework:
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+    drivers/auxdisplay/charlcd.c
+    include/misc/charlcd.h
+
+which can use the existing hd44780 backend:
+
+    Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+    drivers/auxdisplay/hd44780.c
+
+That way it can be used on other character LCDs, like the one supported by
+drivers/auxdisplay/panel.c.
+
+Thanks!
+
+P.S. I did something similar a long time ago, cfr.
+     https://github.com/geertu/hd44780/blob/master/lcdcon.c
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
