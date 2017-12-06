@@ -1,53 +1,43 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 6/9] ARM: dts: imx7-colibri: specify usdhc1 supplies
-Date: Wed,  6 Dec 2017 16:30:02 +0100
-Message-ID: <20171206153005.6144-6-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 4/9] ARM: dts: imx7-colibri: use NAND_CE1 as GPIO
+Date: Wed,  6 Dec 2017 16:30:00 +0100
+Message-ID: <20171206153005.6144-4-stefan@agner.ch>
 References: <20171206153005.6144-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171206153005.6144-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171206153005.6144-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-The usdhc1 controller instance is used to provide the default
-SD/MMC capabilities of the Colibri standard. The IO pins are
-supplied to the SoC on the module whereas the SD-card is powered
-by the Carrier Board supply.
+All Colibri iMX7 SKUs use either single-die NAND or eMMC, hence
+NAND_CE1 is not used on the module and can be used as a GPIO by
+carrier boards.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 1 +
- arch/arm/boot/dts/imx7-colibri.dtsi         | 1 +
- 2 files changed, 2 insertions(+)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-index 5ecb3a858c5a..87c23b769a08 100644
---- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
-@@ -158,5 +158,6 @@
- &usdhc1 {
- 	keep-power-in-suspend;
- 	wakeup-source;
-+	vmmc-supply = <&reg_3v3>;
- 	status = "okay";
- };
 diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 6498c1136ef1..d623ef0f6e3e 100644
+index e4e32aa786f4..f61041af026a 100644
 --- a/arch/arm/boot/dts/imx7-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -299,6 +299,7 @@
- 	no-1-8-v;
- 	cd-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
- 	disable-wp;
-+	vqmmc-supply = <&reg_LDO2>;
- };
- 
- &iomuxc {
+@@ -329,6 +329,7 @@
+ 			MX7D_PAD_EPDC_SDCE2__GPIO2_IO22		0x14 /* SODIMM 127 */
+ 			MX7D_PAD_UART3_RTS_B__GPIO4_IO6		0x14 /* SODIMM 131 */
+ 			MX7D_PAD_EPDC_GDRL__GPIO2_IO26		0x14 /* SODIMM 133 */
++			MX7D_PAD_SAI1_RX_DATA__GPIO6_IO12	0x14 /* SODIMM 169 */
+ 			MX7D_PAD_SAI1_RX_BCLK__GPIO6_IO17	0x14 /* SODIMM 24 */
+ 			MX7D_PAD_SD2_DATA2__GPIO5_IO16		0x14 /* SODIMM 100 */
+ 			MX7D_PAD_SD2_DATA3__GPIO5_IO17		0x14 /* SODIMM 102 */
+@@ -439,7 +440,6 @@
+ 			MX7D_PAD_SD3_CLK__NAND_CLE		0x71
+ 			MX7D_PAD_SD3_CMD__NAND_ALE		0x71
+ 			MX7D_PAD_SAI1_TX_BCLK__NAND_CE0_B	0x71
+-			MX7D_PAD_SAI1_RX_DATA__NAND_CE1_B	0x71
+ 			MX7D_PAD_SAI1_TX_DATA__NAND_READY_B	0x74
+ 			MX7D_PAD_SD3_STROBE__NAND_RE_B		0x71
+ 			MX7D_PAD_SD3_RESET_B__NAND_WE_B		0x71
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
