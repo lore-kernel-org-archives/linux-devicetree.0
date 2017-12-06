@@ -1,357 +1,69 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 5/6] cpufreq: Add DVFS support for Armada 37xx
-Date: Wed, 06 Dec 2017 13:24:05 +0100
-Message-ID: <87k1y0t57e.fsf@free-electrons.com>
-References: <20171201112508.14121-1-gregory.clement@free-electrons.com>
-        <20171201112508.14121-6-gregory.clement@free-electrons.com>
-        <20171205055414.yghqdxg2but34n4i@vireshk-mac-ubuntu>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: sound: add bindings
+	for TAS6424
+Date: Wed, 6 Dec 2017 12:24:44 +0000
+Message-ID: <20171206122444.GA1827@finisterre>
+References: <20171205155412.20137-1-afd@ti.com>
+ <20171205155412.20137-2-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171205055414.yghqdxg2but34n4i@vireshk-mac-ubuntu> (Viresh
-        Kumar's message of "Tue, 5 Dec 2017 11:24:14 +0530")
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Evan Wang <xswang@marvell.com>
+Content-Type: multipart/mixed; boundary="===============7155689443677412707=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171205155412.20137-2-afd@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
- 
- On mar., déc. 05 2017, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 
-> On 01-12-17, 12:25, Gregory CLEMENT wrote:
->> This patch adds DVFS support for the Armada 37xx SoCs
->> 
->> There are up to four CPU frequency loads for Armada 37xx controlled by
->> the hardware.
->> 
->> This driver associates the CPU load level to a frequency, then the
->> hardware will switch while selecting a load level.
->> 
->> The hardware also can associate a voltage for each level (AVS support)
->> but it is not yet supported
->> 
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> ---
->>  drivers/cpufreq/Kconfig.arm           |   7 +
->>  drivers/cpufreq/Makefile              |   1 +
->>  drivers/cpufreq/armada-37xx-cpufreq.c | 241 ++++++++++++++++++++++++++++++++++
->>  3 files changed, 249 insertions(+)
->>  create mode 100644 drivers/cpufreq/armada-37xx-cpufreq.c
->> 
->> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
->> index 17625115c67f..3018ff0d068f 100644
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -19,6 +19,13 @@ config ACPI_CPPC_CPUFREQ
->>  
->>  	  If in doubt, say N.
->>  
->> +config ARM_ARMADA_37XX_CPUFREQ
->> +	tristate "Armada 37xx CPUFreq support"
->> +	depends on ARCH_MVEBU
->> +	help
->> +	  This adds the CPUFreq driver support for Marvell Armada 37xx SoCs.
->> +	  The Armada 37xx PMU supports 4 frequency and VDD levels.
->> +
->>  # big LITTLE core layer and glue drivers
->>  config ARM_BIG_LITTLE_CPUFREQ
->>  	tristate "Generic ARM big LITTLE CPUfreq driver"
->> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
->> index d762e76887e7..e07715ce8844 100644
->> --- a/drivers/cpufreq/Makefile
->> +++ b/drivers/cpufreq/Makefile
->> @@ -52,6 +52,7 @@ obj-$(CONFIG_ARM_BIG_LITTLE_CPUFREQ)	+= arm_big_little.o
->>  # LITTLE drivers, so that it is probed last.
->>  obj-$(CONFIG_ARM_DT_BL_CPUFREQ)		+= arm_big_little_dt.o
->>  
->> +obj-$(CONFIG_ARM_ARMADA_37XX_CPUFREQ)	+= armada-37xx-cpufreq.o
->>  obj-$(CONFIG_ARM_BRCMSTB_AVS_CPUFREQ)	+= brcmstb-avs-cpufreq.o
->>  obj-$(CONFIG_ACPI_CPPC_CPUFREQ)		+= cppc_cpufreq.o
->>  obj-$(CONFIG_ARCH_DAVINCI)		+= davinci-cpufreq.o
->> diff --git a/drivers/cpufreq/armada-37xx-cpufreq.c b/drivers/cpufreq/armada-37xx-cpufreq.c
->> new file mode 100644
->> index 000000000000..40c9a744cc6e
->> --- /dev/null
->> +++ b/drivers/cpufreq/armada-37xx-cpufreq.c
->> @@ -0,0 +1,241 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * CPU frequency scaling support for Armada 37xx platform.
->> + *
->> + * Copyright (C) 2017 Marvell
->> + *
->> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/cpu.h>
->> +#include <linux/cpufreq.h>
->> +#include <linux/err.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/module.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_opp.h>
->> +#include <linux/regmap.h>
->> +#include <linux/slab.h>
->> +
->> +/* Power management in North Bridge register set */
->> +#define ARMADA_37XX_NB_L0L1	0x18
->> +#define ARMADA_37XX_NB_L2L3	0x1C
->> +#define		ARMADA_37XX_NB_TBG_DIV_OFF	13
->> +#define		ARMADA_37XX_NB_TBG_DIV_MASK	0x7
->> +#define		ARMADA_37XX_NB_CLK_SEL_OFF	11
->> +#define		ARMADA_37XX_NB_CLK_SEL_MASK	0x1
->> +#define		ARMADA_37XX_NB_CLK_SEL_TBG      0x1
->> +#define		ARMADA_37XX_NB_TBG_SEL_OFF	9
->> +#define		ARMADA_37XX_NB_TBG_SEL_MASK	0x3
->> +#define		ARMADA_37XX_NB_VDD_SEL_OFF	6
->> +#define		ARMADA_37XX_NB_VDD_SEL_MASK	0x3
->> +#define		ARMADA_37XX_NB_CONFIG_SHIFT	16
->
-> Looks like you have added tabs after #define as well? Perhaps a space
-> is good enough there.
-
-OK
-
->
->> +#define ARMADA_37XX_NB_DYN_MOD	0x24
->> +#define		ARMADA_37XX_NB_CLK_SEL_EN	BIT(26)
->> +#define		ARMADA_37XX_NB_TBG_EN		BIT(28)
->> +#define		ARMADA_37XX_NB_DIV_EN		BIT(29)
->> +#define		ARMADA_37XX_NB_VDD_EN		BIT(30)
->> +#define		ARMADA_37XX_NB_DFS_EN		BIT(31)
->> +#define ARMADA_37XX_NB_CPU_LOAD	0x30
->> +#define		ARMADA_37XX_NB_CPU_LOAD_MASK	0x3
->> +#define		ARMADA_37XX_DVFS_LOAD_0		0
->> +#define		ARMADA_37XX_DVFS_LOAD_1		1
->> +#define		ARMADA_37XX_DVFS_LOAD_2		2
->> +#define		ARMADA_37XX_DVFS_LOAD_3		3
->> +
->> +/*
->> + * On Armada 37xx the Power management manages 4 level of CPU load,
->> + * each level can be associated with a CPU clock source, a CPU
->> + * divider, a VDD level, etc...
->> + */
->> +#define LOAD_LEVEL_NR	4
->> +
->> +struct armada_37xx_dvfs {
->> +	u32 cpu_freq_max;
->> +	u8 divider[LOAD_LEVEL_NR];
->> +};
->> +
->> +static struct armada_37xx_dvfs armada_37xx_dvfs[] = {
->> +	{.cpu_freq_max = 1200*1000*1000, .divider = {1, 2, 4, 6} },
->> +	{.cpu_freq_max = 1000*1000*1000, .divider = {1, 2, 4, 5} },
->> +	{.cpu_freq_max = 800*1000*1000,  .divider = {1, 2, 3, 4} },
->> +	{.cpu_freq_max = 600*1000*1000,  .divider = {2, 4, 5, 6} },
->> +};
->> +
->> +static struct armada_37xx_dvfs *armada_37xx_cpu_freq_info_get(u32 freq)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < ARRAY_SIZE(armada_37xx_dvfs); i++) {
->> +		if (freq == armada_37xx_dvfs[i].cpu_freq_max)
->> +			return &armada_37xx_dvfs[i];
->> +	}
->> +
->> +	pr_err("Unsupported CPU frequency %d MHz\n", freq/1000000);
->> +	return NULL;
->> +}
->> +
->> +/*
->> + * Setup the four level managed by the hardware. Once the four level
->> + * will be configured then the DVFS will be enabled.
->> + */
->> +static void __init armada37xx_cpufreq_dvfs_setup(struct regmap *base,
->> +						 struct clk *clk, u8 *divider)
->> +{
->> +	int load_level;
->> +	struct clk *parent;
->> +
->> +	for (load_level = 0; load_level < LOAD_LEVEL_NR; load_level++) {
->> +		unsigned int reg, mask,  val, offset = 0;
->> +
->> +		if (load_level <= ARMADA_37XX_DVFS_LOAD_1)
->> +			reg = ARMADA_37XX_NB_L0L1;
->> +		else
->> +			reg = ARMADA_37XX_NB_L2L3;
->> +
->> +		if (load_level ==  ARMADA_37XX_DVFS_LOAD_0 ||
->> +		    load_level ==  ARMADA_37XX_DVFS_LOAD_2)
->> +			offset += ARMADA_37XX_NB_CONFIG_SHIFT;
->> +
->> +		/* Set cpu clock source, for all the level we use TBG */
->> +		val = ARMADA_37XX_NB_CLK_SEL_TBG << ARMADA_37XX_NB_CLK_SEL_OFF;
->> +		mask = (ARMADA_37XX_NB_CLK_SEL_MASK
->> +			<< ARMADA_37XX_NB_CLK_SEL_OFF);
->> +
->> +		/*
->> +		 * Set cpu divider based on the pre-computed array in
->> +		 * order to have balanced step.
->> +		 */
->> +		val |= divider[load_level] << ARMADA_37XX_NB_TBG_DIV_OFF;
->> +		mask |= (ARMADA_37XX_NB_TBG_DIV_MASK
->> +			<< ARMADA_37XX_NB_TBG_DIV_OFF);
->> +
->> +		/* Set VDD divider which is actually the load level. */
->> +		val |= load_level << ARMADA_37XX_NB_VDD_SEL_OFF;
->> +		mask |= (ARMADA_37XX_NB_VDD_SEL_MASK
->> +			<< ARMADA_37XX_NB_VDD_SEL_OFF);
->> +
->> +		val <<= offset;
->> +		mask <<= offset;
->> +
->> +		regmap_update_bits(base, reg, mask, val);
->> +	}
->> +
->> +	/*
->> +	 * Set cpu clock source, for all the level we keep the same
->> +	 * clock source that the one already configured. For this one
->> +	 * we need to use the clock framework
->> +	 */
->> +	parent = clk_get_parent(clk);
->> +	clk_set_parent(clk, parent);
->> +}
->> +
->> +static void __init armada37xx_cpufreq_disable_dvfs(struct regmap *base)
->> +{
->> +	unsigned int reg = ARMADA_37XX_NB_DYN_MOD,
->> +		mask = ARMADA_37XX_NB_DFS_EN;
->> +
->> +	regmap_update_bits(base, reg, mask, 0);
->> +}
->> +
->> +static void __init armada37xx_cpufreq_enable_dvfs(struct regmap *base)
->> +{
->> +	unsigned int val, reg = ARMADA_37XX_NB_CPU_LOAD,
->> +		mask = ARMADA_37XX_NB_CPU_LOAD_MASK;
->> +
->> +	/* Start with the highest load (0) */
->> +	val = ARMADA_37XX_DVFS_LOAD_0;
->> +	regmap_update_bits(base, reg, mask, val);
->> +
->> +	/* Now enable DVFS for the CPUs */
->> +	reg = ARMADA_37XX_NB_DYN_MOD;
->> +	mask =	ARMADA_37XX_NB_CLK_SEL_EN | ARMADA_37XX_NB_TBG_EN |
->> +		ARMADA_37XX_NB_DIV_EN | ARMADA_37XX_NB_VDD_EN |
->> +		ARMADA_37XX_NB_DFS_EN;
->> +
->> +	regmap_update_bits(base, reg, mask, mask);
->> +}
->> +
->> +static int __init armada37xx_cpufreq_driver_init(void)
->> +{
->> +	struct armada_37xx_dvfs *dvfs;
->> +	struct platform_device *pdev;
->> +	unsigned int cur_frequency;
->> +	struct regmap *nb_pm_base;
->> +	struct device *cpu_dev;
->> +	int load_level, ret;
->> +	struct clk *clk;
->> +
->> +	nb_pm_base =
->> +		syscon_regmap_lookup_by_compatible("marvell,armada-3700-nb-pm");
->> +
->> +	if (IS_ERR(nb_pm_base))
->> +		return -ENODEV;
->> +
->> +	/* Before doing any configuration on the DVFS first, disable it */
->> +	armada37xx_cpufreq_disable_dvfs(nb_pm_base);
->> +
->> +	/*
->> +	 * On CPU 0 register the operating points supported (which are
->> +	 * the nominal CPU frequency and full integer divisions of
->> +	 * it).
->> +	 */
->> +	cpu_dev = get_cpu_device(0);
->> +	if (!cpu_dev) {
->> +		dev_err(cpu_dev, "Cannot get CPU\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	clk = clk_get(cpu_dev, 0);
->> +	if (IS_ERR(clk)) {
->> +		dev_err(cpu_dev, "Cannot get clock for CPU0\n");
->> +		return PTR_ERR(clk);
->> +	}
->> +
->> +	/* Get nominal (current) CPU frequency */
->> +	cur_frequency = clk_get_rate(clk);
->> +	if (!cur_frequency) {
->> +		dev_err(cpu_dev, "Failed to get clock rate for CPU\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	dvfs = armada_37xx_cpu_freq_info_get(cur_frequency);
->> +	if (!dvfs)
->> +		return -EINVAL;
->> +
->> +	armada37xx_cpufreq_dvfs_setup(nb_pm_base, clk, dvfs->divider);
->> +
->> +	/*
->> +	 * In case of a failure of dev_pm_opp_add(), we don't bother
->> +	 * with cleaning up the registered OPP (there's no function to
->> +	 * do so),
->
-> What do you mean by the comment within ()? We do have
-> dev_pm_opp_remove() helper.
-
-Actually it was a copy and paste from an other driver, I didn't check it
-this was still true.
-So the original comment was added in July 2014 and the
-dev_pm_opp_remove() helpers was added few months later
-in Nov 2014.
-
-I will fix it and also in the other driver mvebu-cpufreq.c.
-
-Thanks,
-
-Gregory
+--===============7155689443677412707==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+Content-Disposition: inline
 
 
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->> and simply cancel the registration of the cpufreq
->> +	 * device.
->> +	 */
->> +	for (load_level = ARMADA_37XX_DVFS_LOAD_0; load_level < LOAD_LEVEL_NR;
->> +	     load_level++) {
->> +		unsigned long freq = dvfs->divider[load_level];
->> +
->> +		ret = dev_pm_opp_add(cpu_dev, freq, 0);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->> +	/* Now that everything is setup, enable the DVFS at hardware level */
->> +	armada37xx_cpufreq_enable_dvfs(nb_pm_base);
->> +
->> +	pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
->> +
->> +	return PTR_ERR_OR_ZERO(pdev);
->> +}
->> +/* late_initcall, to guarantee the driver is loaded after A37xx clock driver */
->> +late_initcall(armada37xx_cpufreq_driver_init);
->> +
->> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@free-electrons.com>");
->> +MODULE_DESCRIPTION("Armada 37xx cpufreq driver");
->> +MODULE_LICENSE("GPL");
->> -- 
->> 2.15.0
->
-> -- 
-> viresh
+On Tue, Dec 05, 2017 at 09:54:11AM -0600, Andrew F. Davis wrote:
+> From: Michael Stecklein <m-stecklein@ti.com>
+>=20
+> Add the bindings for the TAS6424 digital amplifier.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlon4YgACgkQJNaLcl1U
+h9D0UQf/RLshIW4dj6UF6wlNGmq16uXcvysIUIKZtSWS6U/3E/0I9AzkUx9KklKo
+5Ga4kur2w1PIoc6yEyhjenX+cTs+sxZjxYnfmG54D9by6ggs0Efo71xIUvQb8b3e
+Q+3rrv/dKjCqpeDc7uAXnVf48u5BvR2PP+h4pLpZM5UElsUwIsQiMtMwsHMEQS0C
+ww7cYG9O28pRw7oE2HrWzAFtplGqXLuRrPcVuEZGyXkONJ6NuQ4zUXSQqFO5drBq
+l3/U3iB2Gi7bANEpcKYkHt0uzg4tRr0X5qgZxQ821l+mSGExBUQctiNf22HRF2Hq
+P3GREUh8Ja0dVc0RXzyV2E0qRredAA==
+=kISf
+-----END PGP SIGNATURE-----
+
+--2fHTh5uZTiUOsy+g--
+
+--===============7155689443677412707==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7155689443677412707==--
