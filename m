@@ -1,42 +1,114 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
-Date: Wed, 6 Dec 2017 11:21:37 +0000
-Message-ID: <TY1PR06MB089533C44E4B42D647C2CC25C0320@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
- <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
- <20170915074551.GF3924@verge.net.au>
- <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A@mail.gmail.com>
- <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <20170915110609.GL3924@verge.net.au>
- <CAMuHMdUuF4kwUiUYCbSew3W0Pa2CfRdCijefbOO1ZYAbnyG3KA@mail.gmail.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH 2/3] arm64: dts: rockchip: add usb3-phy phandle for dwc3.
+Date: Wed,  6 Dec 2017 12:10:07 +0100
+Message-ID: <20171206111008.3079-2-enric.balletbo@collabora.com>
+References: <20171206111008.3079-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUuF4kwUiUYCbSew3W0Pa2CfRdCijefbOO1ZYAbnyG3KA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171206111008.3079-1-enric.balletbo@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@google.com, linux-rockchip@lists.infradead.org, groeck@chromium.org, briannorris@google.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR2VlcnQsIFNpbW9uLA0KDQo+DQo+IEFzIHRoZSBkZXBlbmRlbmN5IGlzIGluIHY0LjE1
-LXJjMSwgaXQgY2FuIGJlIGFwcGxpZWQgbm93Lg0KPg0KDQp3ZSB0aG91Z2h0IGV4YWN0bHkgdGhl
-IHNhbWUgdGhpbmcsIHRoZXJlZm9yZSB3ZSByZWJhc2VkIGFuZCB3ZSByZS1yYW4gb3VyIHRlc3Rz
-LCB0byBkaXNjb3ZlciB0aGF0IHNvbWV0aGluZyBicm9rZSBpbiBiZXR3ZWVuIHZlcnNpb25zLg0K
-SSdsbCBiZSBpbiB0b3VjaCBvbmNlIEkgaGF2ZSBtb3JlIGluZm9ybWF0aW9uLCBidXQgaXQncyBh
-IG5vIGdvIGZvciBub3cuDQoNClRoYW5rcywNCkZhYg0KDQoNCltodHRwczovL3d3dzIucmVuZXNh
-cy5ldS9tZWRpYS9lbWFpbC91bmljZWZfMjAxNy5qcGddDQoNClRoaXMgQ2hyaXN0bWFzLCBpbnN0
-ZWFkIG9mIHNlbmRpbmcgb3V0IGNhcmRzLCBSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBoYXZl
-IGRlY2lkZWQgdG8gc3VwcG9ydCBVbmljZWYgd2l0aCBhIGRvbmF0aW9uLiBGb3IgZnVydGhlciBk
-ZXRhaWxzIGNsaWNrIGhlcmU8aHR0cHM6Ly93d3cudW5pY2VmLm9yZy8+IHRvIGZpbmQgb3V0IGFi
-b3V0IHRoZSB2YWx1YWJsZSB3b3JrIHRoZXkgZG8sIGhlbHBpbmcgY2hpbGRyZW4gYWxsIG92ZXIg
-dGhlIHdvcmxkLg0KV2Ugd291bGQgbGlrZSB0byB0YWtlIHRoaXMgb3Bwb3J0dW5pdHkgdG8gd2lz
-aCB5b3UgYSBNZXJyeSBDaHJpc3RtYXMgYW5kIGEgcHJvc3Blcm91cyBOZXcgWWVhci4NCg0KDQoN
-ClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQg
-Um9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJl
-ZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch adds the usb3-phy for both of the two dwc3 controllers on
+rk3399.
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 17e5e1a..c18ff88 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -397,9 +397,11 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
+-			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
++			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_RKSOC_AXI_PERF>,
++			 <&cru ACLK_USB3>, <&cru ACLK_USB3_GRF>;
+ 		clock-names = "ref_clk", "suspend_clk",
+-			      "bus_clk", "grf_clk";
++			      "bus_clk", "aclk_usb3_rksoc_axi_perf",
++			      "aclk_usb3", "grf_clk";
+ 		status = "disabled";
+ 
+ 		usbdrd_dwc3_0: dwc3 {
+@@ -407,14 +409,15 @@
+ 			reg = <0x0 0xfe800000 0x0 0x100000>;
+ 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			dr_mode = "otg";
+-			phys = <&u2phy0_otg>;
+-			phy-names = "usb2-phy";
++			phys = <&u2phy0_otg>, <&tcphy0_usb3>;
++			phy-names = "usb2-phy", "usb3-phy";
+ 			phy_type = "utmi_wide";
+ 			snps,dis_enblslpm_quirk;
+ 			snps,dis-u2-freeclk-exists-quirk;
+ 			snps,dis_u2_susphy_quirk;
+ 			snps,dis-del-phy-power-chg-quirk;
+ 			snps,dis-tx-ipgap-linecheck-quirk;
++			power-domains = <&power RK3399_PD_USB3>;
+ 			status = "disabled";
+ 		};
+ 	};
+@@ -425,9 +428,11 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 		clocks = <&cru SCLK_USB3OTG1_REF>, <&cru SCLK_USB3OTG1_SUSPEND>,
+-			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_GRF>;
++			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_RKSOC_AXI_PERF>,
++			 <&cru ACLK_USB3>, <&cru ACLK_USB3_GRF>;
+ 		clock-names = "ref_clk", "suspend_clk",
+-			      "bus_clk", "grf_clk";
++			      "bus_clk", "aclk_usb3_rksoc_axi_perf",
++			      "aclk_usb3", "grf_clk";
+ 		status = "disabled";
+ 
+ 		usbdrd_dwc3_1: dwc3 {
+@@ -435,14 +440,15 @@
+ 			reg = <0x0 0xfe900000 0x0 0x100000>;
+ 			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			dr_mode = "otg";
+-			phys = <&u2phy1_otg>;
+-			phy-names = "usb2-phy";
++			phys = <&u2phy1_otg>, <&tcphy1_usb3>;
++			phy-names = "usb2-phy", "usb3-phy";
+ 			phy_type = "utmi_wide";
+ 			snps,dis_enblslpm_quirk;
+ 			snps,dis-u2-freeclk-exists-quirk;
+ 			snps,dis_u2_susphy_quirk;
+ 			snps,dis-del-phy-power-chg-quirk;
+ 			snps,dis-tx-ipgap-linecheck-quirk;
++			power-domains = <&power RK3399_PD_USB3>;
+ 			status = "disabled";
+ 		};
+ 	};
+@@ -991,6 +997,12 @@
+ 				clocks = <&cru HCLK_SDIO>;
+ 				pm_qos = <&qos_sdioaudio>;
+ 			};
++			pd_usb3@RK3399_PD_USB3 {
++				reg = <RK3399_PD_USB3>;
++				clocks = <&cru ACLK_USB3>;
++				pm_qos = <&qos_usb_otg0>,
++					 <&qos_usb_otg1>;
++			};
+ 			pd_vio@RK3399_PD_VIO {
+ 				reg = <RK3399_PD_VIO>;
+ 				#address-cells = <1>;
+-- 
+2.9.3
