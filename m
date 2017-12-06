@@ -1,67 +1,80 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] arm64: allwinner: a64: bananapi-m64: add usb otg
-Date: Wed,  6 Dec 2017 23:21:04 +0530
-Message-ID: <1512582664-24936-1-git-send-email-jagan@amarulasolutions.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 18/19] ASoC: tlv320aic31xx: Add
+ headphone/headset detection
+Date: Wed, 6 Dec 2017 17:52:23 +0000
+Message-ID: <20171206175223.2f6ki2w2ryaguhuy@sirena.org.uk>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-19-afd@ti.com>
+ <20171201134127.2msgmjrfj47ypl3w@sirena.org.uk>
+ <b2d9ffa9-3923-cb86-f0ad-cf4f37e56334@ti.com>
+ <20171206173215.bitae546h2ibedhz@sirena.org.uk>
+ <8e52d973-2335-e3c5-5e57-15621819cf45@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7948135014560896327=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <8e52d973-2335-e3c5-5e57-15621819cf45@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-usb otg on bananapi-m64 has configured with USB-ID with PH9
-and USB-DRVVBUS attached with dcdc1 regulatort.
 
-Add support for it.
+--===============7948135014560896327==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5bkb6c2vmnla7nal"
+Content-Disposition: inline
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 4a8d3f8..0c74d62 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -66,6 +66,10 @@
- 	};
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
-@@ -136,6 +140,10 @@
- 	status = "okay";
- };
- 
-+&ohci0 {
-+	status = "okay";
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
-@@ -259,6 +267,13 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &usbphy {
-+	usb0_id_det-gpios = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
-+	usb0_vbus-supply = <&reg_dcdc1>;
- 	status = "okay";
- };
--- 
-2.7.4
+--5bkb6c2vmnla7nal
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Dec 06, 2017 at 11:47:14AM -0600, Andrew F. Davis wrote:
+> On 12/06/2017 11:32 AM, Mark Brown wrote:
+
+> >> missing a generic way to report jack information up to the machine layer
+> >> driver.
+
+> > snd_soc_codec_set_jack()
+
+> Hmm, this looks close to what I was thinking (I was wanting to go the
+> other direction and have the codec report what jacks it supports, this
+> could allow for more than one jack), I'll see if I can make it work.
+
+Almost always the CODEC requires some extra connections in order to
+enable jack detection features, these are going to be board specific so
+they come from the machine driver.
+
+--5bkb6c2vmnla7nal
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlooLlYACgkQJNaLcl1U
+h9DmZQf/cB+ZYSTwBE/qbDozUDWCs9h0CyvqvPdc90spap371JSWZP9owyNT72eX
+EsxXJahTHLW9WPZu12pSVIQ8oMUldfYfIvL5DI+Jz+sWFFrTzgauNy1/eyNGlamn
+dPwnRZCF6VO7IVTbNNqkmgrTn6zaV73WApMw0RUwRLJooL8WLy8NjPQtncqfZdUy
+VbY+mFggOUHLUKJIjLtsuTJJkjEcmLASOteb1wvTVEnM9O+hytuOk/+IG9OZH3Ff
+TtbZK/HFct4gArvYg2aOV+357pPkWpduL/tRAa2OZIKEOZTRc1L+jn0PT5+TfHw9
+2smtXuQD0U0s+woTU3LKAjYcJJoZ6w==
+=i7mZ
+-----END PGP SIGNATURE-----
+
+--5bkb6c2vmnla7nal--
+
+--===============7948135014560896327==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7948135014560896327==--
