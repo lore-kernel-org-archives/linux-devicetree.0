@@ -1,60 +1,52 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 09/19] ASoC: tlv320aic31xx: Remove
-	platform data
-Date: Wed, 6 Dec 2017 12:40:45 -0600
-Message-ID: <86e13e26-e8d5-35ed-6bd0-d91d9323d5e6@ti.com>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-10-afd@ti.com>
- <20171201132606.vyw7wthmql5trkwq@sirena.org.uk>
- <4fee76ef-e518-69b6-3bcc-f65b0a31cacc@ti.com>
- <20171206124540.GC1827@finisterre>
- <10f1b19b-4a0a-e336-b757-933d46b5c8e9@ti.com>
- <20171206173059.qw4tt7nizmyo6xbl@sirena.org.uk>
- <b6f581be-6d3a-6fc3-036f-9efc1bfc2429@ti.com>
- <20171206181534.7t23ljja6fgle4ar@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND v6 0/6] provide power off support for iMX6 with
+ external PMIC
+Date: Wed, 6 Dec 2017 18:48:44 +0000
+Message-ID: <20171206184844.uqbu6rmj4bponpuw@sirena.org.uk>
+References: <20171206072402.11694-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171206181534.7t23ljja6fgle4ar@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bflb73223e5ltvme"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171206072402.11694-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2017 12:15 PM, Mark Brown wrote:
-> On Wed, Dec 06, 2017 at 11:48:43AM -0600, Andrew F. Davis wrote:
-> 
->> That would be unreasonable I agree, but it's also completely
->> hypothetical, as again, there are no in-tree users and most platforms
->> are DT/ACPI, so the odds of anyone needing it are next to nothing.
-> 
-> You're removing support for something someone might want to use for no
-> clear gain.  The bar for doing that needs to be higher than just random
-> cleanup, it needs to actively bring some benefit that justifies the
-> cost.  If something is sitting there not getting in the way and is
-> potentially going to be helpful for something in the future then there
-> needs to be a positive reason to take it away.
-> 
 
-For some userspace feature sure, but this is kernel code, there is no
-guarantee for a sable API, in fact some would probably argue even
-further that there is a guarantee that stuff *will* change and this is a
-good thing as it kinda serves to punish for those you don't try to upstream.
+--bflb73223e5ltvme
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So the helpfulness bar should be zero for changes that break out-of-tree
-stuff.
+On Wed, Dec 06, 2017 at 08:23:56AM +0100, Oleksij Rempel wrote:
+> 2017.12.06:
+> Adding Linus. Probably there is no maintainer for this patch set.
+> No changes are made, tested on v4.15-rc1.
 
-Even more so this patch isn't a zero gain, the cleaner, better looking,
-and easier to maintain code *is* the benefit in itself. Plus we gain the
-ability to set mic-gain voltage with ACPI, something you couldn't do
-before this patch.
+Have any of the i.MX maintainers said anything about this?  I was about
+to reply to this asking if they were ever going to review it as it keeps
+on getting resent but I'm not seeing any interest from any of them but
+the main immediate audience is i.MX systems.
+
+--bflb73223e5ltvme
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlooO4sACgkQJNaLcl1U
+h9DX7gf+Mzf3Tjd0tuGSeUwabYHn9prp5N0boLioQUdB9C2zwDZkIHegThYRDBoX
+u+F0oxdZH1KdUZSzaVxXFFqD9pOzih/hmoRjOqv7YFkxKgOTqVoyjjWjHn69JeM8
+lOxKpoFlLxU36L2mUHxRA+/1OCyZdtSrOc76UqPJVe9fU0IpDVTiEWllWzv+6VQW
+97VQHq0OCn9TKGEb0S/nK8WAL1oVphtqA/+tMh/B6TuIfXdKJEihsXrlJ/W2PjtV
+FWBoBX4mIkIlSRCgFeq98mQfYJao28ywAM+/dHdzpCXELwJxtSKqMVsKhrkaakmC
+8bPAs6AsJUVv0Rb2blSd7dOrtoLRUQ==
+=m19z
+-----END PGP SIGNATURE-----
+
+--bflb73223e5ltvme--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
