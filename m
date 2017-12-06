@@ -1,104 +1,61 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add extcon nodes and enable
- tcphy.
-Date: Wed, 6 Dec 2017 09:29:20 -0800
-Message-ID: <20171206172919.GA87458@google.com>
-References: <20171206111008.3079-1-enric.balletbo@collabora.com>
- <20171206111008.3079-3-enric.balletbo@collabora.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 09/19] ASoC: tlv320aic31xx: Remove platform data
+Date: Wed, 6 Dec 2017 17:30:59 +0000
+Message-ID: <20171206173059.qw4tt7nizmyo6xbl@sirena.org.uk>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-10-afd@ti.com>
+ <20171201132606.vyw7wthmql5trkwq@sirena.org.uk>
+ <4fee76ef-e518-69b6-3bcc-f65b0a31cacc@ti.com>
+ <20171206124540.GC1827@finisterre>
+ <10f1b19b-4a0a-e336-b757-933d46b5c8e9@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="o7ev3g3plen6snoe"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171206111008.3079-3-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <10f1b19b-4a0a-e336-b757-933d46b5c8e9-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+ Alex, Jeffy, Frank Wang
 
-Hi,
+--o7ev3g3plen6snoe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Dec 06, 2017 at 12:10:08PM +0100, Enric Balletbo i Serra wrote:
-> Enable tcphy and create the cros-ec's extcon node for the USB Type-C port.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> index 470105d..03f1950 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> @@ -855,6 +855,20 @@ ap_i2c_audio: &i2c8 {
->  			compatible = "google,cros-ec-pwm";
->  			#pwm-cells = <1>;
->  		};
-> +
-> +		usbc_extcon0: extcon@0 {
-> +			compatible = "google,extcon-usbc-cros-ec";
-> +			google,usb-port-id = <0>;
-> +
-> +			#extcon-cells = <0>;
-> +		};
-> +
-> +		usbc_extcon1: extcon@1 {
-> +			compatible = "google,extcon-usbc-cros-ec";
-> +			google,usb-port-id = <1>;
-> +
-> +			#extcon-cells = <0>;
-> +		};
->  	};
->  };
->  
-> @@ -865,6 +879,16 @@ ap_i2c_audio: &i2c8 {
->  	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
->  };
->  
-> +&tcphy0 {
-> +	status = "okay";
-> +	extcon = <&usbc_extcon0>;
-> +};
-> +
-> +&tcphy1 {
-> +	status = "okay";
-> +	extcon = <&usbc_extcon1>;
-> +};
-> +
->  &u2phy0 {
->  	status = "okay";
->  };
-> @@ -911,6 +935,7 @@ ap_i2c_audio: &i2c8 {
->  
->  &usbdrd3_0 {
->  	status = "okay";
-> +	extcon = <&usbc_extcon0>;
->  };
->  
->  &usbdrd_dwc3_0 {
-> @@ -920,6 +945,7 @@ ap_i2c_audio: &i2c8 {
->  
->  &usbdrd3_1 {
->  	status = "okay";
-> +	extcon = <&usbc_extcon1>;
->  };
->  
->  &usbdrd_dwc3_1 {
+On Wed, Dec 06, 2017 at 10:19:28AM -0600, Andrew F. Davis wrote:
+> On 12/06/2017 06:45 AM, Mark Brown wrote:
 
-Seems OK.
+> > Then if you want to upstream the driver you'll have to add the platform
+> > data support again.  Like I say not all architectures have anything
+> > other than board files.
 
-Also, IIUC, I think if we ever want to support dual-role/OTG, we need an
-extcon reference in the USB2/OTG PHY that serves these ports too. i.e.,
-u2phy0 and u2phy1? Notably, the PHY driver supports the extcon
-properties, but it's not documented in
-Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt yet (we
-should probably get that fixed).
+> Then they can try, but they will rightfully get nack'd and told to stop
+> using board files and use DT/ACPI. Most upstream architectures don't use
+> board files anymore anyway, so I doubt this will ever happen.
 
-So, anyway, maybe the above isn't a blocker for this patch. Just noticed
-it while reading. Assuming the driver stuff falls into place:
+No.  To repeat, not all architectures use DT or ACPI.  Expecting someone
+to impelement DT or ACPI support for an entire architecture and try to
+bring the ecosystem for that architecture along in order to add machine
+support is obviously totally unreasonable.
 
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+--o7ev3g3plen6snoe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlooKVIACgkQJNaLcl1U
+h9DHHgf/dcFEwPjSXOiuiAmEK1h6J/o49iNbWu9oqixhlyJSvovutr4Oe7+Q7CWd
+Wib+Pvk5fL7OzKn/TOBuIPPdqv0vRg/flTx9wKNRtXYeM0v5vFMGfy+r4cf6ABfv
+PXpHeDktWrD5wX//TQpHWWFr8041jtZRIWi7oFSP5m3pEUO55vnn4J/v8sEsOmLh
+XCWthc9tZntlFVsffXwDs2NwkfyYLUcrbXB6faPDaJI5IAfeUvkGuf6hxUiEfvf0
+iEqEzf5ANOK1Oaoujo/Ek4B8cadM7iHj2u7cpTjh3KrVFuw651gzJjUNvLh8gH1g
+LOm+sly/6DwcL3ljCbem/eL/03JPNQ==
+=uq3M
+-----END PGP SIGNATURE-----
+
+--o7ev3g3plen6snoe--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
