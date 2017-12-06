@@ -1,251 +1,81 @@
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v5 16/16] arm64: sdei: Add trampoline code for remapping the kernel
-Date: Wed,  6 Dec 2017 19:01:42 +0000
-Message-ID: <20171206190142.9246-17-james.morse@arm.com>
-References: <20171206190142.9246-1-james.morse@arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 09/19] ASoC: tlv320aic31xx: Remove platform data
+Date: Wed, 6 Dec 2017 19:11:12 +0000
+Message-ID: <20171206191112.ip47bylnvyfc2irt@sirena.org.uk>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-10-afd@ti.com>
+ <20171201132606.vyw7wthmql5trkwq@sirena.org.uk>
+ <4fee76ef-e518-69b6-3bcc-f65b0a31cacc@ti.com>
+ <20171206124540.GC1827@finisterre>
+ <10f1b19b-4a0a-e336-b757-933d46b5c8e9@ti.com>
+ <20171206173059.qw4tt7nizmyo6xbl@sirena.org.uk>
+ <b6f581be-6d3a-6fc3-036f-9efc1bfc2429@ti.com>
+ <20171206181534.7t23ljja6fgle4ar@sirena.org.uk>
+ <86e13e26-e8d5-35ed-6bd0-d91d9323d5e6@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yt5swpqm4kzhqwy4"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171206190142.9246-1-james.morse-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <86e13e26-e8d5-35ed-6bd0-d91d9323d5e6-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Heyi Guo <guoheyi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When CONFIG_UNMAP_KERNEL_AT_EL0 is set the SDEI entry point and the rest
-of the kernel may be unmapped when we take an event. If this may be the
-case, use an entry trampoline that can switch to the kernel page tables.
 
-We can't use the provided PSTATE to determine whether to switch page
-tables as we may have interrupted the kernel's entry trampoline, (or a
-normal-priority event that interrupted the kernel's entry trampoline).
-Instead test for a user ASID in ttbr1_el1.
+--yt5swpqm4kzhqwy4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Save a value in regs->addr_limit to indicate whether we need to restore
-the original ASID when returning from this event. This value is only used
-by do_page_fault(), which we don't call with the SDEI regs.
+On Wed, Dec 06, 2017 at 12:40:45PM -0600, Andrew F. Davis wrote:
 
-Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm64/include/asm/mmu.h  |  3 +-
- arch/arm64/include/asm/sdei.h |  6 +++
- arch/arm64/kernel/entry.S     | 98 ++++++++++++++++++++++++++++++++++++++-----
- arch/arm64/kernel/sdei.c      | 20 ++++++++-
- 4 files changed, 113 insertions(+), 14 deletions(-)
+> For some userspace feature sure, but this is kernel code, there is no
+> guarantee for a sable API, in fact some would probably argue even
+> further that there is a guarantee that stuff *will* change and this is a
+> good thing as it kinda serves to punish for those you don't try to upstre=
+am.
 
-diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-index 6f7bdb89817f..20130a948845 100644
---- a/arch/arm64/include/asm/mmu.h
-+++ b/arch/arm64/include/asm/mmu.h
-@@ -17,7 +17,8 @@
- #define __ASM_MMU_H
- 
- #define MMCF_AARCH32	0x1	/* mm context flag for AArch32 executables */
--#define USER_ASID_FLAG	(UL(1) << 48)
-+#define USER_ASID_BIT	48
-+#define USER_ASID_FLAG	(UL(1) << USER_ASID_BIT)
- #define TTBR_ASID_MASK	(UL(0xffff) << 48)
- 
- #ifndef __ASSEMBLY__
-diff --git a/arch/arm64/include/asm/sdei.h b/arch/arm64/include/asm/sdei.h
-index d58a31ab525a..e073e6886685 100644
---- a/arch/arm64/include/asm/sdei.h
-+++ b/arch/arm64/include/asm/sdei.h
-@@ -23,6 +23,12 @@ extern unsigned long sdei_exit_mode;
- asmlinkage void __sdei_asm_handler(unsigned long event_num, unsigned long arg,
- 				   unsigned long pc, unsigned long pstate);
- 
-+/* and its CONFIG_UNMAP_KERNEL_AT_EL0 trampoline */
-+asmlinkage void __sdei_asm_entry_trampoline(unsigned long event_num,
-+						   unsigned long arg,
-+						   unsigned long pc,
-+						   unsigned long pstate);
-+
- /*
-  * The above entry point does the minimum to call C code. This function does
-  * anything else, before calling the driver.
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 38eb02ce320e..2396752adc76 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -1148,6 +1148,78 @@ NOKPROBE(ret_from_fork)
- #include <asm/sdei.h>
- #include <uapi/linux/arm_sdei.h>
- 
-+.macro sdei_handler_exit exit_mode
-+	/* On success, this call never returns... */
-+	cmp	\exit_mode, #SDEI_EXIT_SMC
-+	b.ne	99f
-+	smc	#0
-+	b	.
-+99:	hvc	#0
-+	b	.
-+.endm
-+
-+#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
-+/*
-+ * The regular SDEI entry point may have been unmapped along with the rest of
-+ * the kernel. This trampoline restores the kernel mapping to make the x1 memory
-+ * argument accessible.
-+ *
-+ * This clobbers x4, __sdei_handler() will restore this from firmware's
-+ * copy.
-+ */
-+.ltorg
-+.pushsection ".entry.tramp.text", "ax"
-+ENTRY(__sdei_asm_entry_trampoline)
-+	mrs	x4, ttbr1_el1
-+	tbz	x4, #USER_ASID_BIT, 1f
-+
-+	tramp_map_kernel tmp=x4
-+	isb
-+	mov	x4, xzr
-+
-+	/*
-+	 * Use reg->interrupted_regs.addr_limit to remember whether to unmap
-+	 * the kernel on exit.
-+	 */
-+1:	str	x4, [x1, #(SDEI_EVENT_INTREGS + S_ORIG_ADDR_LIMIT)]
-+
-+#ifdef CONFIG_RANDOMIZE_BASE
-+	adr	x4, tramp_vectors + PAGE_SIZE
-+	add	x4, x4, #:lo12:__sdei_asm_trampoline_next_handler
-+	ldr	x4, [x4]
-+#else
-+	ldr	x4, =__sdei_asm_handler
-+#endif
-+	br	x4
-+ENDPROC(__sdei_asm_entry_trampoline)
-+NOKPROBE(__sdei_asm_entry_trampoline)
-+
-+/*
-+ * Make the exit call and restore the original ttbr1_el1
-+ *
-+ * x0 & x1: setup for the exit API call
-+ * x2: exit_mode
-+ * x4: struct sdei_registered_event argument from registration time.
-+ */
-+ENTRY(__sdei_asm_exit_trampoline)
-+	ldr	x4, [x4, #(SDEI_EVENT_INTREGS + S_ORIG_ADDR_LIMIT)]
-+	cbnz	x4, 1f
-+
-+	tramp_unmap_kernel	tmp=x4
-+
-+1:	sdei_handler_exit exit_mode=x2
-+ENDPROC(__sdei_asm_exit_trampoline)
-+NOKPROBE(__sdei_asm_exit_trampoline)
-+	.ltorg
-+.popsection		// .entry.tramp.text
-+#ifdef CONFIG_RANDOMIZE_BASE
-+.pushsection ".rodata", "a"
-+__sdei_asm_trampoline_next_handler:
-+	.quad	__sdei_asm_handler
-+.popsection		// .rodata
-+#endif /* CONFIG_RANDOMIZE_BASE */
-+#endif /* CONFIG_UNMAP_KERNEL_AT_EL0 */
-+
- /*
-  * Software Delegated Exception entry point.
-  *
-@@ -1155,6 +1227,7 @@ NOKPROBE(ret_from_fork)
-  * x1: struct sdei_registered_event argument from registration time.
-  * x2: interrupted PC
-  * x3: interrupted PSTATE
-+ * x4: maybe clobbered by the trampoline
-  *
-  * Firmware has preserved x0->x17 for us, we must save/restore the rest to
-  * follow SMC-CC. We save (or retrieve) all the registers as the handler may
-@@ -1220,10 +1293,11 @@ ENTRY(__sdei_asm_handler)
- 
- 	msr	sp_el0, x28
- 	/* restore regs >x17 that we clobbered */
--	ldp     x28, x29, [x19, #SDEI_EVENT_INTREGS + 16 * 14]
--	ldp     lr, x4, [x19, #SDEI_EVENT_INTREGS + S_LR]
--	mov	sp, x4
--	ldp     x18, x19, [x19, #SDEI_EVENT_INTREGS + 16 * 9]
-+	mov	x4, x19         // keep x4 for __sdei_asm_exit_trampoline
-+	ldp	x28, x29, [x4, #SDEI_EVENT_INTREGS + 16 * 14]
-+	ldp	x18, x19, [x4, #SDEI_EVENT_INTREGS + 16 * 9]
-+	ldp	lr, x1, [x4, #SDEI_EVENT_INTREGS + S_LR]
-+	mov	sp, x1
- 
- 	mov	x1, x0			// address to complete_and_resume
- 	/* x0 = (x0 <= 1) ? EVENT_COMPLETE:EVENT_COMPLETE_AND_RESUME */
-@@ -1232,14 +1306,16 @@ ENTRY(__sdei_asm_handler)
- 	mov_q	x3, SDEI_1_0_FN_SDEI_EVENT_COMPLETE_AND_RESUME
- 	csel	x0, x2, x3, ls
- 
--	/* On success, this call never returns... */
- 	ldr_l	x2, sdei_exit_mode
--	cmp	x2, #SDEI_EXIT_SMC
--	b.ne	1f
--	smc	#0
--	b	.
--1:	hvc	#0
--	b	.
-+
-+alternative_if_not ARM64_UNMAP_KERNEL_AT_EL0
-+	sdei_handler_exit exit_mode=x2
-+alternative_else_nop_endif
-+
-+#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
-+	tramp_alias	dst=x5, sym=__sdei_asm_exit_trampoline
-+	br	x5
-+#endif
- ENDPROC(__sdei_asm_handler)
- NOKPROBE(__sdei_asm_handler)
- #endif /* CONFIG_ARM_SDE_INTERFACE */
-diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
-index f9dffacaa5d6..6b8d90d5ceae 100644
---- a/arch/arm64/kernel/sdei.c
-+++ b/arch/arm64/kernel/sdei.c
-@@ -10,7 +10,9 @@
- 
- #include <asm/alternative.h>
- #include <asm/kprobes.h>
-+#include <asm/mmu.h>
- #include <asm/ptrace.h>
-+#include <asm/sections.h>
- #include <asm/sysreg.h>
- #include <asm/vmap_stack.h>
- 
-@@ -124,7 +126,18 @@ unsigned long sdei_arch_get_entry_point(int conduit)
- 	}
- 
- 	sdei_exit_mode = (conduit == CONDUIT_HVC) ? SDEI_EXIT_HVC : SDEI_EXIT_SMC;
--	return (unsigned long)__sdei_asm_handler;
-+
-+#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
-+	if (arm64_kernel_unmapped_at_el0()) {
-+		unsigned long offset;
-+
-+		offset = (unsigned long)__sdei_asm_entry_trampoline -
-+			 (unsigned long)__entry_tramp_text_start;
-+		return TRAMP_VALIAS + offset;
-+	} else
-+#endif /* CONFIG_UNMAP_KERNEL_AT_EL0 */
-+		return (unsigned long)__sdei_asm_handler;
-+
- }
- 
- /*
-@@ -138,11 +151,14 @@ static __kprobes unsigned long _sdei_handler(struct pt_regs *regs,
- {
- 	u32 mode;
- 	int i, err = 0;
--	const int clobbered_registers = 4;
-+	int clobbered_registers = 4;
- 	u64 elr = read_sysreg(elr_el1);
- 	u32 kernel_mode = read_sysreg(CurrentEL) | 1;	/* +SPSel */
- 	unsigned long vbar = read_sysreg(vbar_el1);
- 
-+	if (arm64_kernel_unmapped_at_el0())
-+		clobbered_registers++;
-+
- 	/* Retrieve the missing registers values */
- 	for (i = 0; i < clobbered_registers; i++) {
- 		/* from within the handler, this call always succeeds */
--- 
-2.15.0
+> So the helpfulness bar should be zero for changes that break out-of-tree
+> stuff.
 
+There is no need to actively get in people's way or put up barriers to
+people who do in future decide to upstream things, that doesn't help
+anyone.
+
+> Even more so this patch isn't a zero gain, the cleaner, better looking,
+> and easier to maintain code *is* the benefit in itself. Plus we gain the
+> ability to set mic-gain voltage with ACPI, something you couldn't do
+> before this patch.
+
+If this patch adds ACPI support then the patch description was clearly
+not great (I don't think I read the patch itself since the description
+just said that it was removing platform data without giving a reason,
+that's the main review comment here).=20
+
+If you want to use the device property stuff that's fine but there's no
+need to remove platform data to do that, it's a smaller change.  I find
+it hard to see the platform data as a particularly big blight on the
+code here, looking at the driver it's just going to remove the "pdata."
+=66rom a few variable accesses which isn't exactly transformational.
+
+--yt5swpqm4kzhqwy4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlooQNAACgkQJNaLcl1U
+h9CgUQf+OfU8ycYyHa+CYnGn6Htt1oye9dJUuOyY3jFAhDXOy4x9KtZq32YdXHQl
+hv+Sdm0VIlh++nSEqarNFnPW/OklMjCtjxHUzAO1TbrkCWk1NZUO83iSeDQ8bUk4
+giKnACOSoB5RWExsRwo+8LEezAWaxp/6m5thiM94iNJmY1Du3p0xHpYZyBPnn/WV
+74b0dxwBwzPU8VVbkGFNq6j36zaf5c8pewwzLqb2rPjTlzfBSNIukc0DowIp0i/k
+8gYAOSXvM9xLzAz3NoOiGihBtNlhDbpNK0PX7Inhfm9LDQzsET57k/5/T8Gh2y82
+9aGaIzEB/lgnT7v07QRQE7kj6FlrIA==
+=ACWY
+-----END PGP SIGNATURE-----
+
+--yt5swpqm4kzhqwy4--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
