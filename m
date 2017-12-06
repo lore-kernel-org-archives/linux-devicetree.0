@@ -1,14 +1,14 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: tas6424: add bindings for TAS6424" to
-	the asoc tree
-Date: Wed,  6 Dec 2017 12:58:14 +0000 (GMT)
-Message-ID: <20171206125814.9224B44006B@finisterre.ee.mobilebroadband>
-References: <20171205155412.20137-2-afd@ti.com>
+Subject: Applied "ASoC: pcm186x: Add PCM186x binding
+	documentation" to the asoc tree
+Date: Wed,  6 Dec 2017 13:07:53 +0000 (GMT)
+Message-ID: <20171206130753.2BC1544006B@finisterre.ee.mobilebroadband>
+References: <20171129185015.5304-1-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171205155412.20137-2-afd@ti.com>
+In-Reply-To: <20171129185015.5304-1-afd@ti.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -18,13 +18,12 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: Michael Stecklein <m-stecklein@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Andrew F . Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: tas6424: add bindings for TAS6424
+   ASoC: pcm186x: Add PCM186x binding documentation
 
 has been applied to the asoc tree at
 
@@ -49,46 +48,69 @@ to this mail.
 Thanks,
 Mark
 
->From 2e662342962863bb6044ad581d7cc03795da4e9d Mon Sep 17 00:00:00 2001
-From: Michael Stecklein <m-stecklein@ti.com>
-Date: Tue, 5 Dec 2017 09:54:11 -0600
-Subject: [PATCH] ASoC: tas6424: add bindings for TAS6424
+>From eb2a8168b9fd69f66199d9d7e86d23fecfab4e33 Mon Sep 17 00:00:00 2001
+From: "Andrew F. Davis" <afd@ti.com>
+Date: Tue, 5 Dec 2017 14:52:55 -0600
+Subject: [PATCH] ASoC: pcm186x: Add PCM186x binding documentation
 
-Add the bindings for the TAS6424 digital amplifier.
+Add the dt-binding documentation for the TI PCM186x 2ch and 4ch Audio
+ADCs With Universal Front End.
 
-Signed-off-by: Michael Stecklein <m-stecklein@ti.com>
 Signed-off-by: Andrew F. Davis <afd@ti.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/sound/ti,tas6424.txt         | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/ti,tas6424.txt
+ .../devicetree/bindings/sound/pcm186x.txt          | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/pcm186x.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/ti,tas6424.txt b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
+diff --git a/Documentation/devicetree/bindings/sound/pcm186x.txt b/Documentation/devicetree/bindings/sound/pcm186x.txt
 new file mode 100644
-index 000000000000..1c4ada0eef4e
+index 000000000000..1087f4855980
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
-@@ -0,0 +1,20 @@
-+Texas Instruments TAS6424 Quad-Channel Audio amplifier
++++ b/Documentation/devicetree/bindings/sound/pcm186x.txt
+@@ -0,0 +1,42 @@
++Texas Instruments PCM186x Universal Audio ADC
 +
-+The TAS6424 serial control bus communicates through I2C protocols.
++These devices support both I2C and SPI (configured with pin strapping
++on the board).
 +
 +Required properties:
-+	- compatible: "ti,tas6424" - TAS6424
-+	- reg: I2C slave address
-+	- sound-dai-cells: must be equal to 0
++
++ - compatible : "ti,pcm1862",
++                "ti,pcm1863",
++                "ti,pcm1864",
++                "ti,pcm1865"
++
++ - reg : The I2C address of the device for I2C, the chip select
++         number for SPI.
++
++ - avdd-supply: Analog core power supply (3.3v)
++ - dvdd-supply: Digital core power supply
++ - iovdd-supply: Digital IO power supply
++        See regulator/regulator.txt for more information
++
++CODEC input pins:
++ * VINL1
++ * VINR1
++ * VINL2
++ * VINR2
++ * VINL3
++ * VINR3
++ * VINL4
++ * VINR4
++
++The pins can be used in referring sound node's audio-routing property.
 +
 +Example:
 +
-+tas6424: tas6424@6a {
-+	compatible = "ti,tas6424";
-+	reg = <0x6a>;
++	pcm186x: audio-codec@4a {
++		compatible = "ti,pcm1865";
++		reg = <0x4a>;
 +
-+	#sound-dai-cells = <0>;
-+};
-+
-+For more product information please see the link below:
-+http://www.ti.com/product/TAS6424-Q1
++		avdd-supply = <&reg_3v3_analog>;
++		dvdd-supply = <&reg_3v3>;
++		iovdd-supply = <&reg_1v8>;
++	};
 -- 
 2.15.0
