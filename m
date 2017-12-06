@@ -1,120 +1,93 @@
-From: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: imx6sl-evk: Convert from fbdev to drm bindings
-Date: Wed,  6 Dec 2017 00:53:04 -0200
-Message-ID: <1512528784-29288-3-git-send-email-marcofrk@gmail.com>
-References: <1512528784-29288-1-git-send-email-marcofrk@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512528784-29288-1-git-send-email-marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH 2/3] arm64: dts: rockchip: add usb3-phy phandle for dwc3.
+Date: Wed, 6 Dec 2017 12:27:34 +0100
+Message-ID: <1c672b68-5f7f-e8ec-e5a9-901d4b53e2ad@collabora.com>
+References: <20171206111008.3079-1-enric.balletbo@collabora.com>
+ <20171206111008.3079-2-enric.balletbo@collabora.com>
+ <1756641.7q7fHBPi13@diego>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1756641.7q7fHBPi13@diego>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dianders@google.com, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, groeck@chromium.org, briannorris@google.com, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-It is preferred to use the panel compatible string rather than passing 
-the LCD timing in the device tree.
-
-So pass the "sii,43wvf1g" compatible string which describes the parallel 
-LCD.
-
-Also, pass the 'backlight' property as described in 
-Documentation/devicetree/bindings/display/panel/simple-panel.txt
-
-Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
----
-Changes since v1:
--change subject
--change message log
--includes into a set of patches
--fix regulator name and properties
- arch/arm/boot/dts/imx6sl-evk.dts | 48 ++++++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
-index 645a460..a395de4 100644
---- a/arch/arm/boot/dts/imx6sl-evk.dts
-+++ b/arch/arm/boot/dts/imx6sl-evk.dts
-@@ -20,7 +20,7 @@
- 		reg = <0x80000000 0x40000000>;
- 	};
- 
--	backlight {
-+	backlight_display: backlight_display {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm1 0 5000000>;
- 		brightness-levels = <0 4 8 16 32 64 128 255>;
-@@ -82,6 +82,13 @@
- 		enable-active-high;
- 	};
- 
-+	reg_lcd_5v: regulator-lcd-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lcd-5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
- 	sound {
- 		compatible = "fsl,imx6sl-evk-wm8962", "fsl,imx-audio-wm8962";
- 		model = "wm8962-audio";
-@@ -97,6 +104,19 @@
- 		mux-int-port = <2>;
- 		mux-ext-port = <3>;
- 	};
-+
-+	panel {
-+		compatible = "sii,43wvf1g";
-+		backlight = <&backlight_display>;
-+		dvdd-supply = <&reg_lcd_3v3>;
-+		avdd-supply = <&reg_lcd_5v>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&display_out>;
-+			};
-+		};
-+	};
- };
- 
- &audmux {
-@@ -535,31 +555,11 @@
- &lcdif {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_lcd>;
--	lcd-supply = <&reg_lcd_3v3>;
--	display = <&display0>;
- 	status = "okay";
- 
--	display0: display0 {
--		bits-per-pixel = <32>;
--		bus-width = <24>;
--
--		display-timings {
--			native-mode = <&timing0>;
--			timing0: timing0 {
--				clock-frequency = <33500000>;
--				hactive = <800>;
--				vactive = <480>;
--				hback-porch = <89>;
--				hfront-porch = <164>;
--				vback-porch = <23>;
--				vfront-porch = <10>;
--				hsync-len = <10>;
--				vsync-len = <10>;
--				hsync-active = <0>;
--				vsync-active = <0>;
--				de-active = <1>;
--				pixelclk-active = <0>;
--			};
-+	port {
-+		display_out: endpoint {
-+			remote-endpoint = <&panel_in>;
- 		};
- 	};
- };
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSGVpa28sCgpPbiAwNi8xMi8xNyAxMjoyMCwgSGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4gQW0g
+TWl0dHdvY2gsIDYuIERlemVtYmVyIDIwMTcsIDEyOjEwOjA3IENFVCBzY2hyaWViIEVucmljIEJh
+bGxldGJvIGkgU2VycmE6Cj4+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgdXNiMy1waHkgZm9yIGJvdGgg
+b2YgdGhlIHR3byBkd2MzIGNvbnRyb2xsZXJzIG9uCj4+IHJrMzM5OS4KPiAKPiBUaGlzIHBhdGNo
+IGFkZHMgcXVpdGUgYSBiaXQgbW9yZSB0aGFuIHRoZSBwaHkgcGhhbmRsZXMgdGhvdWdoLgo+IAo+
+IFRoZSBwb3dlcmRvbWFpbiBhZGRpdGlvbiBzaG91bGQgZGVmaW5pdGx5IGJlIGEgc2VwYXJhdGUg
+cGF0Y2gKPiBhbmQgdGhlIHVzYjMtZ3JmIGNsb2NrIGFzIHdlbGwuCj4gCgpPaywgSSdsbCBzcGxp
+dCB0aGVzZSBwYXJ0cyBhbmQgc2VuZCBpbiBhIHNlcGFyYXRlIHBhdGNoIGluIHYyLiBUaGFua3Mg
+Zm9yIHRoZQpmZWVkYmFjay4KCkVucmljCgo+IAo+IEhlaWtvCj4gCj4gCj4+IFNpZ25lZC1vZmYt
+Ynk6IEVucmljIEJhbGxldGJvIGkgU2VycmEgPGVucmljLmJhbGxldGJvQGNvbGxhYm9yYS5jb20+
+Cj4+IC0tLQo+PiAgYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRzaSB8IDI4
+ICsrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNl
+cnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9i
+b290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRzaQo+PiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9j
+a2NoaXAvcmszMzk5LmR0c2kgaW5kZXggMTdlNWUxYS4uYzE4ZmY4OCAxMDA2NDQKPj4gLS0tIGEv
+YXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRzaQo+PiArKysgYi9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpCj4+IEBAIC0zOTcsOSArMzk3LDExIEBA
+Cj4+ICAJCSNzaXplLWNlbGxzID0gPDI+Owo+PiAgCQlyYW5nZXM7Cj4+ICAJCWNsb2NrcyA9IDwm
+Y3J1IFNDTEtfVVNCM09URzBfUkVGPiwgPCZjcnUgU0NMS19VU0IzT1RHMF9TVVNQRU5EPiwKPj4g
+LQkJCSA8JmNydSBBQ0xLX1VTQjNPVEcwPiwgPCZjcnUgQUNMS19VU0IzX0dSRj47Cj4+ICsJCQkg
+PCZjcnUgQUNMS19VU0IzT1RHMD4sIDwmY3J1IEFDTEtfVVNCM19SS1NPQ19BWElfUEVSRj4sCj4+
+ICsJCQkgPCZjcnUgQUNMS19VU0IzPiwgPCZjcnUgQUNMS19VU0IzX0dSRj47Cj4+ICAJCWNsb2Nr
+LW5hbWVzID0gInJlZl9jbGsiLCAic3VzcGVuZF9jbGsiLAo+PiAtCQkJICAgICAgImJ1c19jbGsi
+LCAiZ3JmX2NsayI7Cj4+ICsJCQkgICAgICAiYnVzX2NsayIsICJhY2xrX3VzYjNfcmtzb2NfYXhp
+X3BlcmYiLAo+PiArCQkJICAgICAgImFjbGtfdXNiMyIsICJncmZfY2xrIjsKPj4gIAkJc3RhdHVz
+ID0gImRpc2FibGVkIjsKPj4KPj4gIAkJdXNiZHJkX2R3YzNfMDogZHdjMyB7Cj4+IEBAIC00MDcs
+MTQgKzQwOSwxNSBAQAo+PiAgCQkJcmVnID0gPDB4MCAweGZlODAwMDAwIDB4MCAweDEwMDAwMD47
+Cj4+ICAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTA1IElSUV9UWVBFX0xFVkVMX0hJR0ggMD47
+Cj4+ICAJCQlkcl9tb2RlID0gIm90ZyI7Cj4+IC0JCQlwaHlzID0gPCZ1MnBoeTBfb3RnPjsKPj4g
+LQkJCXBoeS1uYW1lcyA9ICJ1c2IyLXBoeSI7Cj4+ICsJCQlwaHlzID0gPCZ1MnBoeTBfb3RnPiwg
+PCZ0Y3BoeTBfdXNiMz47Cj4+ICsJCQlwaHktbmFtZXMgPSAidXNiMi1waHkiLCAidXNiMy1waHki
+Owo+PiAgCQkJcGh5X3R5cGUgPSAidXRtaV93aWRlIjsKPj4gIAkJCXNucHMsZGlzX2VuYmxzbHBt
+X3F1aXJrOwo+PiAgCQkJc25wcyxkaXMtdTItZnJlZWNsay1leGlzdHMtcXVpcms7Cj4+ICAJCQlz
+bnBzLGRpc191Ml9zdXNwaHlfcXVpcms7Cj4+ICAJCQlzbnBzLGRpcy1kZWwtcGh5LXBvd2VyLWNo
+Zy1xdWlyazsKPj4gIAkJCXNucHMsZGlzLXR4LWlwZ2FwLWxpbmVjaGVjay1xdWlyazsKPj4gKwkJ
+CXBvd2VyLWRvbWFpbnMgPSA8JnBvd2VyIFJLMzM5OV9QRF9VU0IzPjsKPj4gIAkJCXN0YXR1cyA9
+ICJkaXNhYmxlZCI7Cj4+ICAJCX07Cj4+ICAJfTsKPj4gQEAgLTQyNSw5ICs0MjgsMTEgQEAKPj4g
+IAkJI3NpemUtY2VsbHMgPSA8Mj47Cj4+ICAJCXJhbmdlczsKPj4gIAkJY2xvY2tzID0gPCZjcnUg
+U0NMS19VU0IzT1RHMV9SRUY+LCA8JmNydSBTQ0xLX1VTQjNPVEcxX1NVU1BFTkQ+LAo+PiAtCQkJ
+IDwmY3J1IEFDTEtfVVNCM09URzE+LCA8JmNydSBBQ0xLX1VTQjNfR1JGPjsKPj4gKwkJCSA8JmNy
+dSBBQ0xLX1VTQjNPVEcxPiwgPCZjcnUgQUNMS19VU0IzX1JLU09DX0FYSV9QRVJGPiwKPj4gKwkJ
+CSA8JmNydSBBQ0xLX1VTQjM+LCA8JmNydSBBQ0xLX1VTQjNfR1JGPjsKPj4gIAkJY2xvY2stbmFt
+ZXMgPSAicmVmX2NsayIsICJzdXNwZW5kX2NsayIsCj4+IC0JCQkgICAgICAiYnVzX2NsayIsICJn
+cmZfY2xrIjsKPj4gKwkJCSAgICAgICJidXNfY2xrIiwgImFjbGtfdXNiM19ya3NvY19heGlfcGVy
+ZiIsCj4+ICsJCQkgICAgICAiYWNsa191c2IzIiwgImdyZl9jbGsiOwo+PiAgCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOwo+Pgo+PiAgCQl1c2JkcmRfZHdjM18xOiBkd2MzIHsKPj4gQEAgLTQzNSwxNCAr
+NDQwLDE1IEBACj4+ICAJCQlyZWcgPSA8MHgwIDB4ZmU5MDAwMDAgMHgwIDB4MTAwMDAwPjsKPj4g
+IAkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxMTAgSVJRX1RZUEVfTEVWRUxfSElHSCAwPjsKPj4g
+IAkJCWRyX21vZGUgPSAib3RnIjsKPj4gLQkJCXBoeXMgPSA8JnUycGh5MV9vdGc+Owo+PiAtCQkJ
+cGh5LW5hbWVzID0gInVzYjItcGh5IjsKPj4gKwkJCXBoeXMgPSA8JnUycGh5MV9vdGc+LCA8JnRj
+cGh5MV91c2IzPjsKPj4gKwkJCXBoeS1uYW1lcyA9ICJ1c2IyLXBoeSIsICJ1c2IzLXBoeSI7Cj4+
+ICAJCQlwaHlfdHlwZSA9ICJ1dG1pX3dpZGUiOwo+PiAgCQkJc25wcyxkaXNfZW5ibHNscG1fcXVp
+cms7Cj4+ICAJCQlzbnBzLGRpcy11Mi1mcmVlY2xrLWV4aXN0cy1xdWlyazsKPj4gIAkJCXNucHMs
+ZGlzX3UyX3N1c3BoeV9xdWlyazsKPj4gIAkJCXNucHMsZGlzLWRlbC1waHktcG93ZXItY2hnLXF1
+aXJrOwo+PiAgCQkJc25wcyxkaXMtdHgtaXBnYXAtbGluZWNoZWNrLXF1aXJrOwo+PiArCQkJcG93
+ZXItZG9tYWlucyA9IDwmcG93ZXIgUkszMzk5X1BEX1VTQjM+Owo+PiAgCQkJc3RhdHVzID0gImRp
+c2FibGVkIjsKPj4gIAkJfTsKPj4gIAl9Owo+PiBAQCAtOTkxLDYgKzk5NywxMiBAQAo+PiAgCQkJ
+CWNsb2NrcyA9IDwmY3J1IEhDTEtfU0RJTz47Cj4+ICAJCQkJcG1fcW9zID0gPCZxb3Nfc2Rpb2F1
+ZGlvPjsKPj4gIAkJCX07Cj4+ICsJCQlwZF91c2IzQFJLMzM5OV9QRF9VU0IzIHsKPj4gKwkJCQly
+ZWcgPSA8UkszMzk5X1BEX1VTQjM+Owo+PiArCQkJCWNsb2NrcyA9IDwmY3J1IEFDTEtfVVNCMz47
+Cj4+ICsJCQkJcG1fcW9zID0gPCZxb3NfdXNiX290ZzA+LAo+PiArCQkJCQkgPCZxb3NfdXNiX290
+ZzE+Owo+PiArCQkJfTsKPj4gIAkJCXBkX3Zpb0BSSzMzOTlfUERfVklPIHsKPj4gIAkJCQlyZWcg
+PSA8UkszMzk5X1BEX1ZJTz47Cj4+ICAJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gCj4gCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
+a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
+bmVsCg==
