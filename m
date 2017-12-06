@@ -1,45 +1,119 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v2 0/4] arm64: defconfig: enable additional led triggers
-Date: Wed, 6 Dec 2017 14:27:26 +0530
-Message-ID: <CAHLCerN4sYpU7PJG7JLhAy644s3jz9KD_myKWfOoOkEResPu-Q@mail.gmail.com>
-References: <cover.1509951550.git.amit.kucheria@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1509951550.git.amit.kucheria@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, lakml <linux-arm-kernel@lists.infradead.org>, Wei Xu <xuwei5@hisilicon.com>, manivannan.sadhasivam@linaro.org, devicetree@vger.kernel.org, timur@codeaurora.org
+From: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/3] ARM: dts: imx6sx-sdb: Convert from fbdev to drm bindings
+Date: Wed,  6 Dec 2017 00:53:02 -0200
+Message-ID: <1512528784-29288-1-git-send-email-marcofrk@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(Adding Arnd)
+It is preferred to use the panel compatible string rather than passing
+the LCD timing in the device tree.
 
-Now that the merge window rush has abated, can you please apply this
-trivial series?
+So pass the "sii,43wvf1g" compatible string, which describes the parallel 
+LCD.
 
-On Mon, Nov 6, 2017 at 12:38 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> This patchset enables the kernel panic and disk-activity trigger for LEDs
-> and then enables the panic trigger for three 96Boards - DB410c, Hikey and
-> Hikey960.
->
-> DB410c and Hikey panic behaviour has been tested by triggering a panic
-> through /proc/sysrq-trigger, while Hikey960 is only compile-tested.
->
->
-> Amit Kucheria (4):
->   arm64: defconfig: enable new trigger modes for leds
->   arm64: dts: qcom: apq8016-sbc: Allow USR4 LED to notify kernel panic
->   arm64: dts: hisilicon: hi6220-hikey: Allow USR1 LED to notify kernel
->     panic
->   arm64: dts: hisilicon: hi3660-hikey960: Allow USR4 LED to notify
->     kernel panic
->
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 1 +
->  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    | 1 +
->  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi         | 1 +
->  arch/arm64/configs/defconfig                      | 2 ++
->  4 files changed, 5 insertions(+)
->
-> --
-> 2.7.4
->
+Also pass the 'backlight' property as described in
+Documentation/devicetree/bindings/display/panel/simple-panel.txt
+
+Signed-off-by: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes since v1:
+-change subject
+-change message log
+-includes into a set of patches
+-rebase to linux-next
+-fix regulator name and properties
+ arch/arm/boot/dts/imx6sx-sdb.dtsi | 48 +++++++++++++++++++--------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+index d57a41c..d35aa85 100644
+--- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
+@@ -24,7 +24,7 @@
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ 
+-	backlight {
++	backlight_display: backlight-display {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm3 0 5000000>;
+ 		brightness-levels = <0 4 8 16 32 64 128 255>;
+@@ -129,6 +129,13 @@
+ 		enable-active-high;
+ 	};
+ 
++	reg_lcd_5v: regulator-lcd-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
+ 	sound {
+ 		compatible = "fsl,imx6sx-sdb-wm8962", "fsl,imx-audio-wm8962";
+ 		model = "wm8962-audio";
+@@ -144,6 +151,19 @@
+ 		mux-int-port = <2>;
+ 		mux-ext-port = <6>;
+ 	};
++
++	panel {
++		compatible = "sii,43wvf1g";
++		backlight = <&backlight_display>;
++		dvdd-supply = <&reg_lcd_3v3>;
++		avdd-supply = <&reg_lcd_5v>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&display_out>;
++			};
++		};
++	};
+ };
+ 
+ &audmux {
+@@ -221,31 +241,11 @@
+ &lcdif1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_lcd>;
+-	lcd-supply = <&reg_lcd_3v3>;
+-	display = <&display0>;
+ 	status = "okay";
+ 
+-	display0: display0 {
+-		bits-per-pixel = <16>;
+-		bus-width = <24>;
+-
+-		display-timings {
+-			native-mode = <&timing0>;
+-			timing0: timing0 {
+-				clock-frequency = <33500000>;
+-				hactive = <800>;
+-				vactive = <480>;
+-				hback-porch = <89>;
+-				hfront-porch = <164>;
+-				vback-porch = <23>;
+-				vfront-porch = <10>;
+-				hsync-len = <10>;
+-				vsync-len = <10>;
+-				hsync-active = <0>;
+-				vsync-active = <0>;
+-				de-active = <1>;
+-				pixelclk-active = <0>;
+-			};
++	port {
++		display_out: endpoint {
++			remote-endpoint = <&panel_in>;
+ 		};
+ 	};
+ };
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
