@@ -1,40 +1,161 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v6 1/6] ARM: imx6q: provide documentation for new fsl,pmic-stby-poweroff property
-Date: Wed,  6 Dec 2017 08:23:57 +0100
-Message-ID: <20171206072402.11694-2-o.rempel@pengutronix.de>
-References: <20171206072402.11694-1-o.rempel@pengutronix.de>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171206072402.11694-1-o.rempel@pengutronix.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>
+From: =?iso-8859-1?Q?Patrick_Br=FCnn?= <P.Bruenn@beckhoff.com>
+Subject: RE: [PATCH v2 5/5] rtc: add mxc driver for i.MX53 SRTC
+Date: Wed, 6 Dec 2017 10:17:06 +0000
+Message-ID: <3BB206AB2B1BD448954845CE6FF69A8E01CB531D9C@NT-Mail07.beckhoff.com>
+References: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
+ <20171205140646.30367-6-linux-kernel-dev@beckhoff.com>
+ <20171206083618.eea63zqmpgaaazwl@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171206083618.eea63zqmpgaaazwl@pengutronix.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel-dev <linux-kernel-dev@beckhoff.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Juergen Borleis <jbe@pengutronix.de>, open list <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Rob Herring <robh+dt@kernel.org>, Philippe Ombredanne <pombredanne@nexb.com>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, =?is
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Acked-by: Rob Herring <robh@kernel.org>
+>From: Sascha Hauer [mailto:s.hauer@pengutronix.de]
+>Sent: Mittwoch, 6. Dezember 2017 09:36
+>On Tue, Dec 05, 2017 at 03:06:46PM +0100, linux-kernel-dev@beckhoff.com
+>wrote:
+>> +static int mxc_rtc_write_alarm_locked(struct mxc_rtc_data *const pdata,
+>> +                                  struct rtc_time *alarm_tm)
+>> +{
+>> +    void __iomem *const ioaddr = pdata->ioaddr;
+>> +    unsigned long time;
+>> +
+>> +    rtc_tm_to_time(alarm_tm, &time);
+>> +
+>> +    if (time > U32_MAX) {
+>> +            pr_err("Hopefully I am out of service by then :-(\n");
+>> +            return -EINVAL;
+>> +    }
+>
+>This will never happen as on your target hardware unsigned long is a
+>32bit type. Not sure what is best to do here. Maybe you should test
+>the return value of rtc_tm_to_time. ATM it returns 0 unconditionally,
+>but rtc_tm_to_time could detect when the input time doesn't fit into
+>its return type and return an error in this case.
+>Also I just realized that it's unsigned and only overflows in the year
+>2106. I'm most likely dead then so I don't care that much ;)
+>
+please see my response to Alexandre's follow up
+
+>> +/* This function is the RTC interrupt service routine. */
+>> +static irqreturn_t mxc_rtc_interrupt(int irq, void *dev_id)
+>> +{
+>> +    struct platform_device *pdev = dev_id;
+>> +    struct mxc_rtc_data *pdata = platform_get_drvdata(pdev);
+>> +    void __iomem *ioaddr = pdata->ioaddr;
+>> +    unsigned long flags;
+>> +    u32 events = 0;
+>> +    u32 lp_status;
+>> +    u32 lp_cr;
+>> +
+>> +    spin_lock_irqsave(&pdata->lock, flags);
+>> +    if (clk_prepare_enable(pdata->clk)) {
+>> +            spin_unlock_irqrestore(&pdata->lock, flags);
+>> +            return IRQ_NONE;
+>> +    }
+>
+>You are not allowed to do a clk_prepare under a spinlock. That was the
+>original reason to split enabling a clk into clk_prepare and clk_enable.
+>Everything that can block is done in clk_prepare and only non blocking
+>things are done in clk_enable.
+>If you want to enable/disable the clock on demand you can clk_prepare()
+>in probe and clk_enable when you actually need it.
+>
+Thanks for clarification. To be honest when I read Lothar's suggestion it was
+the first time I thought about the idea of keeping the clk disabled most of
+the time. I am not very experienced with this. But a rtctest loop run for
+hours so I assume it would be okay to keep the clk disabled until hw access.
+If there is no objection from somebody who knows the i.MX53 SRTC HW
+better, I will stick to the clock on demand model and make sure I avoid
+blocking.
+>> +
+>> +static int mxc_rtc_read_time(struct device *dev, struct rtc_time *tm)
+>> +{
+>> +    struct mxc_rtc_data *pdata = dev_get_drvdata(dev);
+>> +    time_t now;
+>> +    int ret = mxc_rtc_lock(pdata);
+>> +
+>> +    if (ret)
+>> +            return ret;
+>> +
+>> +    now = readl(pdata->ioaddr + SRTC_LPSCMR);
+>> +    rtc_time_to_tm(now, tm);
+>> +    ret = rtc_valid_tm(tm);
+>> +    mxc_rtc_unlock(pdata);
+>
+>I don't think this needs to be locked.
+I will change this to only enable the clock for the readl()
+
+>> +static int mxc_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+>> +{
+>> +    struct mxc_rtc_data *pdata = dev_get_drvdata(dev);
+>> +    int ret = mxc_rtc_lock(pdata);
+>> +
+>> +    if (ret)
+>> +            return ret;
+>> +
+>> +    ret = mxc_rtc_write_alarm_locked(pdata, &alrm->time);
+>
+>Is it worth it to make this a separate function?
+Maybe not, I think it is an artifact from a refactoring. I will reconsider this
+for the next version.
+>
+>> +    if (!ret) {
+>> +            mxc_rtc_alarm_irq_enable_locked(pdata, alrm->enabled);
+>> +            mxc_rtc_sync_lp_locked(pdata->ioaddr);
+>> +    }
+>> +    mxc_rtc_unlock(pdata);
+>> +    return ret;
+>> +}
+>> +
+>> +static const struct rtc_class_ops mxc_rtc_ops = {
+>> +    .read_time = mxc_rtc_read_time,
+>> +    .set_time = mxc_rtc_set_time,
+>> +    .read_alarm = mxc_rtc_read_alarm,
+>> +    .set_alarm = mxc_rtc_set_alarm,
+>> +    .alarm_irq_enable = mxc_rtc_alarm_irq_enable,
+>> +};
+>> +
+>> +static int mxc_rtc_wait_for_flag(void *__iomem ioaddr, int flag)
+>> +{
+>> +    unsigned int timeout = REG_READ_TIMEOUT;
+>> +
+>> +    while (!(readl(ioaddr) & flag)) {
+>> +            if (!--timeout) {
+>> +                    pr_err("Wait timeout for 0x%x@%p!\n", flag, ioaddr);
+>
+>Please use dev_* functions for printing. In this case the message should
+>probably be printed from the caller.
+Do you have a link at hand about dev_* vs. pr_*? I just choose pr_err here,
+because I would have to change the functions signature to get a device.
+However, I will drop the message and move it to the caller.
+
+>> +    /* clear lp interrupt status */
+>> +    writel(0xFFFFFFFF, ioaddr + SRTC_LPSR);
+>> +
+>> +    /* move out of init state */
+>> +    writel((SRTC_LPCR_IE | SRTC_LPCR_NSA), ioaddr + SRTC_LPCR);
+>> +    xc_rtc_wait_for_flag(ioaddr + SRTC_LPSR, SRTC_LPSR_IES);
+>
+>If this can fail, shouldn't you test for an error?
+very probably
+>> +
+>> +    /* move out of non-valid state */
+>> +    writel((SRTC_LPCR_IE | SRTC_LPCR_NVE | SRTC_LPCR_NSA |
+>> +            SRTC_LPCR_EN_LP), ioaddr + SRTC_LPCR);
+>> +    mxc_rtc_wait_for_flag(ioaddr + SRTC_LPSR, SRTC_LPSR_NVES);
+>
+>dito
+sure
+
+Thanks,
+Patrick
 ---
- Documentation/devicetree/bindings/clock/imx6q-clock.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-index aa0a4d423ef5..9fed9dfe4a23 100644
---- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-@@ -6,6 +6,14 @@ Required properties:
- - interrupts: Should contain CCM interrupt
- - #clock-cells: Should be <1>
- 
-+Optional properties:
-+- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
-+  on power off.
-+  Use this property if the SoC should be powered off by external power
-+  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
-+  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
-+  be using "syscon-poweroff" driver instead.
-+
- The clock consumer should specify the desired clock by having the clock
- ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
- for the full list of i.MX6 Quad and DualLite clock IDs.
--- 
-2.11.0
-
+Beckhoff Automation GmbH & Co. KG | Managing Director: Dipl. Phys. Hans Beckhoff
+Registered office: Verl, Germany | Register court: Guetersloh HRA 7075
