@@ -1,40 +1,125 @@
-From: Yisheng Xie <xieyisheng1@huawei.com>
-Subject: Re: [RFCv2 PATCH 26/36] iommu/arm-smmu-v3: Add support for Hardware
- Translation Table Update
-Date: Wed, 6 Dec 2017 14:51:59 +0800
-Message-ID: <d2ec2e61-f758-0394-41d2-555ae65feb0d@huawei.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
- <20171006133203.22803-27-jean-philippe.brucker@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171006133203.22803-27-jean-philippe.brucker@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org
-Cc: joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, robin.murphy@arm.com, bhelgaas@google.com, alex.williamson@redhat.com, tn@semihalf.com, liubo95@huawei.com, thunder.leizhen@huawei.com, gabriele.paoloni@huawei.com, nwatters@codeaurora.org, okaya@codeaurora.org, rfranz@cavium.com, dwmw2@infradead.org, jacob.jun.pan@linux.intel.com, yi.l.liu@intel.com, ashok.raj@intel.com, robdclark@gmail.com
+From: Marco Franchi <marcofrk@gmail.com>
+Subject: [PATCH 2/3] ARM: dts: imx6sl-evk: Rearrange the regulators node
+Date: Wed,  6 Dec 2017 00:53:03 -0200
+Message-ID: <1512528784-29288-2-git-send-email-marcofrk@gmail.com>
+References: <1512528784-29288-1-git-send-email-marcofrk@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512528784-29288-1-git-send-email-marcofrk@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, marcofrk@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean,
+It is not recommended to place regulators inside "simple-bus", so move 
+them out.
 
-On 2017/10/6 21:31, Jean-Philippe Brucker wrote:
-> If the SMMU supports it and the kernel was built with HTTU support, enable
-> +	if (IS_ENABLED(CONFIG_ARM64_HW_AFDBM) && (reg & (IDR0_HA | IDR0_HD))) {
-> +		smmu->features |= ARM_SMMU_FEAT_HA;
-> +		if (reg & IDR0_HD)
-> +			smmu->features |= ARM_SMMU_FEAT_HD;
-> +	}
+The motivation for doing this is to make it easier to adding new 
+regulators.
 
-What is relationship of armv8.1 HW_AFDBM and SMMUv3 HTTU? I mean why we need
-IS_ENABLED(CONFIG_ARM64_HW_AFDBM) ?
+Signed-off-by: Marco Franchi <marcofrk@gmail.com>
+---
+ arch/arm/boot/dts/imx6sl-evk.dts | 85 +++++++++++++++++-----------------------
+ 1 file changed, 37 insertions(+), 48 deletions(-)
 
-If CONFIG_ARM64_HW_AFDBM=y but the process do not support ARMv8.1, should it also
-enable related feature for SMMUv3?
-
-Thanks
-Yisheng Xie
-> +
->  	/*
->  	 * If the CPU is using VHE, but the SMMU doesn't support it, the SMMU
->  	 * will create TLB entries for NH-EL1 world and will miss the
-> 
+diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+index 60600b4..645a460 100644
+--- a/arch/arm/boot/dts/imx6sl-evk.dts
++++ b/arch/arm/boot/dts/imx6sl-evk.dts
+@@ -39,58 +39,47 @@
+ 		};
+ 	};
+ 
+-	regulators {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		reg_usb_otg1_vbus: regulator@0 {
+-			compatible = "regulator-fixed";
+-			reg = <0>;
+-			regulator-name = "usb_otg1_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-			gpio = <&gpio4 0 0>;
+-			enable-active-high;
+-			vin-supply = <&swbst_reg>;
+-		};
++	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio4 0 0>;
++		enable-active-high;
++		vin-supply = <&swbst_reg>;
++	};
+ 
+-		reg_usb_otg2_vbus: regulator@1 {
+-			compatible = "regulator-fixed";
+-			reg = <1>;
+-			regulator-name = "usb_otg2_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-			gpio = <&gpio4 2 0>;
+-			enable-active-high;
+-			vin-supply = <&swbst_reg>;
+-		};
++	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg2_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio4 2 0>;
++		enable-active-high;
++		vin-supply = <&swbst_reg>;
++	};
+ 
+-		reg_aud3v: regulator@2 {
+-			compatible = "regulator-fixed";
+-			reg = <2>;
+-			regulator-name = "wm8962-supply-3v15";
+-			regulator-min-microvolt = <3150000>;
+-			regulator-max-microvolt = <3150000>;
+-			regulator-boot-on;
+-		};
++	reg_aud3v: regulator-aud3v {
++		compatible = "regulator-fixed";
++		regulator-name = "wm8962-supply-3v15";
++		regulator-min-microvolt = <3150000>;
++		regulator-max-microvolt = <3150000>;
++		regulator-boot-on;
++	};
+ 
+-		reg_aud4v: regulator@3 {
+-			compatible = "regulator-fixed";
+-			reg = <3>;
+-			regulator-name = "wm8962-supply-4v2";
+-			regulator-min-microvolt = <4325000>;
+-			regulator-max-microvolt = <4325000>;
+-			regulator-boot-on;
+-		};
++	reg_aud4v: regulator-aud4v {
++		compatible = "regulator-fixed";
++		regulator-name = "wm8962-supply-4v2";
++		regulator-min-microvolt = <4325000>;
++		regulator-max-microvolt = <4325000>;
++		regulator-boot-on;
++	};
+ 
+-		reg_lcd_3v3: regulator@4 {
+-			compatible = "regulator-fixed";
+-			reg = <4>;
+-			regulator-name = "lcd-3v3";
+-			gpio = <&gpio4 3 0>;
+-			enable-active-high;
+-		};
++	reg_lcd_3v3: regulator-lcd-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-3v3";
++		gpio = <&gpio4 3 0>;
++		enable-active-high;
+ 	};
+ 
+ 	sound {
+-- 
+2.7.4
