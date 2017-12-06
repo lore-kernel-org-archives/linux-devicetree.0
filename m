@@ -1,86 +1,53 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] of: dynamic: restrict overlay by targets
-Date: Wed, 6 Dec 2017 06:58:23 -0500
-Message-ID: <bd2e3192-fb06-53c3-15da-59b6a2fba2e4@gmail.com>
-References: <20171204191357.3211-1-atull@kernel.org>
- <edb604fa-4810-0de9-ce51-c90aa2442cb4@gmail.com>
- <CANk1AXQ4HV9YAO_p1wrY66nnWY1n2WnR0JoCbAKU6RfrWqf9sQ@mail.gmail.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
+Date: Wed, 6 Dec 2017 11:59:48 +0000
+Message-ID: <TY1PR06MB0895C5C14B9BD6CDE867832CC0320@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
+ <20170915074551.GF3924@verge.net.au>
+ <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A@mail.gmail.com>
+ <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+ <20170915110609.GL3924@verge.net.au>
+ <CAMuHMdUuF4kwUiUYCbSew3W0Pa2CfRdCijefbOO1ZYAbnyG3KA@mail.gmail.com>
+ <TY1PR06MB089533C44E4B42D647C2CC25C0320@TY1PR06MB0895.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANk1AXQ4HV9YAO_p1wrY66nnWY1n2WnR0JoCbAKU6RfrWqf9sQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <TY1PR06MB089533C44E4B42D647C2CC25C0320@TY1PR06MB0895.apcprd06.prod.outlook.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>
+Cc: Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/17 12:07, Alan Tull wrote:
-> On Mon, Dec 4, 2017 at 7:14 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Alan,
->>
->> In the RFC thread "of: Add whitelist", I did not understand the use case and
->> asked you some questions (30 Nov 2017 07:46:36 -0500), that you seem to have
->> overlooked (or my mail server failed to deliver your answer to me).  Can you
->> please answer that question so I can better understand this patch set is
->> needed for.
-> 
-> Hi Frank,
-> 
-> Sorry I missed those, I've replied to the original questions now.
-
-Thanks!  I have now replied to several comments in that thread, hoping to keep
-the conversation in one thread instead of split across two threads.
-
--Frank
-
-> 
-> Alan
-> 
->>
->> Thanks,
->>
->> Frank
->>
->>
->> On 12/04/17 14:13, Alan Tull wrote:
->>> Restrict which nodes are valid targets for a DT overlay.
->>>
->>> Add a flag bit to struct device_node allowing nodes to be marked as
->>> valid target for overlays.
->>>
->>> A driver that is always intended to handle DT overlays can
->>> enable overlays by calling a function for its DT node.
->>>
->>> For individual nodes that need to be opened up for a specific use,
->>> adding the property "overlay-allowed" enables overlays targeting
->>> that node.  I'll need to document the DT property, not sure where
->>> specifically.  New file bindings/overlay.txt?
->>>
->>> This patchset differs from the RFC:
->>> * Added a flag bit and got rid of the whitelist
->>> * Renamed the functions that enable a node
->>> * Added a DT property
->>>
->>> Alan Tull (2):
->>>   of: overlay: add flag enabling overlays and enable fpga-region
->>>     overlays
->>>   of: dynamic: add overlay-allowed DT property
->>>
->>>  drivers/fpga/of-fpga-region.c |  4 ++++
->>>  drivers/of/base.c             |  4 ++--
->>>  drivers/of/dynamic.c          |  3 +++
->>>  drivers/of/fdt.c              |  3 +++
->>>  drivers/of/of_private.h       |  2 ++
->>>  drivers/of/overlay.c          | 26 ++++++++++++++++++++++++++
->>>  include/linux/of.h            | 19 +++++++++++++++++++
->>>  7 files changed, 59 insertions(+), 2 deletions(-)
->>>
->>
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gR2VlcnQsIFNpbW9uLA0KDQp0aGUgcHJvYmxlbXMgSSBhbSBzZWVpbmcgYXJlIG5vdCBy
+ZWxhdGVkIHRvIEFQTVUvU01QLCBJJ2xsIHNlbmQgYSB2MiBzaG9ydGx5Lg0KDQpUaGFua3MsDQpG
+YWINCg0KPg0KPiBIZWxsbyBHZWVydCwgU2ltb24sDQo+DQo+ID4NCj4gPiBBcyB0aGUgZGVwZW5k
+ZW5jeSBpcyBpbiB2NC4xNS1yYzEsIGl0IGNhbiBiZSBhcHBsaWVkIG5vdy4NCj4gPg0KPg0KPiB3
+ZSB0aG91Z2h0IGV4YWN0bHkgdGhlIHNhbWUgdGhpbmcsIHRoZXJlZm9yZSB3ZSByZWJhc2VkIGFu
+ZCB3ZSByZS1yYW4gb3VyIHRlc3RzLCB0byBkaXNjb3ZlciB0aGF0IHNvbWV0aGluZyBicm9rZSBp
+biBiZXR3ZWVuDQo+IHZlcnNpb25zLg0KPiBJJ2xsIGJlIGluIHRvdWNoIG9uY2UgSSBoYXZlIG1v
+cmUgaW5mb3JtYXRpb24sIGJ1dCBpdCdzIGEgbm8gZ28gZm9yIG5vdy4NCj4NCj4gVGhhbmtzLA0K
+PiBGYWINCj4NCj4NCj4gW2h0dHBzOi8vd3d3Mi5yZW5lc2FzLmV1L21lZGlhL2VtYWlsL3VuaWNl
+Zl8yMDE3LmpwZ10NCj4NCj4gVGhpcyBDaHJpc3RtYXMsIGluc3RlYWQgb2Ygc2VuZGluZyBvdXQg
+Y2FyZHMsIFJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIGhhdmUgZGVjaWRlZCB0byBzdXBwb3J0
+IFVuaWNlZiB3aXRoIGEgZG9uYXRpb24uIEZvciBmdXJ0aGVyDQo+IGRldGFpbHMgY2xpY2sgaGVy
+ZTxodHRwczovL3d3dy51bmljZWYub3JnLz4gdG8gZmluZCBvdXQgYWJvdXQgdGhlIHZhbHVhYmxl
+IHdvcmsgdGhleSBkbywgaGVscGluZyBjaGlsZHJlbiBhbGwgb3ZlciB0aGUgd29ybGQuDQo+IFdl
+IHdvdWxkIGxpa2UgdG8gdGFrZSB0aGlzIG9wcG9ydHVuaXR5IHRvIHdpc2ggeW91IGEgTWVycnkg
+Q2hyaXN0bWFzIGFuZCBhIHByb3NwZXJvdXMgTmV3IFllYXIuDQo+DQo+DQo+DQo+IFJlbmVzYXMg
+RWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91
+cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmds
+YW5kICYNCj4gV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQoNCg0KW2h0dHBz
+Oi8vd3d3Mi5yZW5lc2FzLmV1L21lZGlhL2VtYWlsL3VuaWNlZl8yMDE3LmpwZ10NCg0KVGhpcyBD
+aHJpc3RtYXMsIGluc3RlYWQgb2Ygc2VuZGluZyBvdXQgY2FyZHMsIFJlbmVzYXMgRWxlY3Ryb25p
+Y3MgRXVyb3BlIGhhdmUgZGVjaWRlZCB0byBzdXBwb3J0IFVuaWNlZiB3aXRoIGEgZG9uYXRpb24u
+IEZvciBmdXJ0aGVyIGRldGFpbHMgY2xpY2sgaGVyZTxodHRwczovL3d3dy51bmljZWYub3JnLz4g
+dG8gZmluZCBvdXQgYWJvdXQgdGhlIHZhbHVhYmxlIHdvcmsgdGhleSBkbywgaGVscGluZyBjaGls
+ZHJlbiBhbGwgb3ZlciB0aGUgd29ybGQuDQpXZSB3b3VsZCBsaWtlIHRvIHRha2UgdGhpcyBvcHBv
+cnR1bml0eSB0byB3aXNoIHlvdSBhIE1lcnJ5IENocmlzdG1hcyBhbmQgYSBwcm9zcGVyb3VzIE5l
+dyBZZWFyLg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFk
+b3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1Rkgs
+IFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAw
+NDU4NjcwOS4NCg==
