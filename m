@@ -1,109 +1,29 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH RFC 2/2] arm64: allwinner: a64: Add Brava Keller initial support
-Date: Wed, 6 Dec 2017 21:39:51 +0100
-Message-ID: <CAOFm3uExmg6mDAn-r_VHGJvuH_e1sComxYDbi+ksvjhJY2h8dg@mail.gmail.com>
-References: <1512067334-12761-1-git-send-email-jagan@amarulasolutions.com>
- <1512067334-12761-2-git-send-email-jagan@amarulasolutions.com>
- <CAOFm3uEdsj=qxUf3O0S0vDqgXgosvBYG6BGbf6cYn3aNreTPaQ@mail.gmail.com> <20171204213545.lvi4ay6lu7ohchru@rob-hp-laptop>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 7/7] dt-bindings: tda998x: add the calibration gpio
+Date: Wed, 6 Dec 2017 14:41:31 -0600
+Message-ID: <CAL_JsqL6o_vAKJJQHZxCCUO3PptFAaOHdDWY3xL-U3BtCHQRnw@mail.gmail.com>
+References: <20171206123452.GA13127@n2100.armlinux.org.uk> <E1eMYva-0004WA-Hf@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171204213545.lvi4ay6lu7ohchru@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jagan Teki <jagannadh.teki@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Mark Janoff <mark@bravahome.com>, Stuart Westerman <stu@bravahome.com>, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1eMYva-0004WA-Hf-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 4, 2017 at 10:35 PM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Nov 30, 2017 at 10:36:55PM +0100, Philippe Ombredanne wrote:
->> Jagan,
->>
->> On Thu, Nov 30, 2017 at 7:42 PM, Jagan Teki <jagannadh.teki@gmail.com> wrote:
->> []
->> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
->> > new file mode 100644
->> > index 0000000..f5303a3
->> > --- /dev/null
->> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-brava-keller.dts
->> > @@ -0,0 +1,244 @@
->> > +/*
->> > + * Copyright (C) 2017 Jagan Teki <jagan@amarulasolutions.com>
->> > + *
->> > + * This file is dual-licensed: you can use it either under the terms
->> > + * of the GPL or the X11 license, at your option. Note that this dual
->> > + * licensing only applies to this file, and not this project as a
->> > + * whole.
->> > + *
->> > + *  a) This library is free software; you can redistribute it and/or
->> > + *     modify it under the terms of the GNU General Public License as
->> > + *     published by the Free Software Foundation; either version 2 of the
->> > + *     License, or (at your option) any later version.
->> > + *
->> > + *     This library is distributed in the hope that it will be useful,
->> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> > + *     GNU General Public License for more details.
->> > + *
->> > + * Or, alternatively,
->> > + *
->> > + *  b) Permission is hereby granted, free of charge, to any person
->> > + *     obtaining a copy of this software and associated documentation
->> > + *     files (the "Software"), to deal in the Software without
->> > + *     restriction, including without limitation the rights to use,
->> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> > + *     sell copies of the Software, and to permit persons to whom the
->> > + *     Software is furnished to do so, subject to the following
->> > + *     conditions:
->> > + *
->> > + *     The above copyright notice and this permission notice shall be
->> > + *     included in all copies or substantial portions of the Software.
->> > + *
->> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> > + *     OTHER DEALINGS IN THE SOFTWARE.
->> > + */
->>
->> Rather than this long boilerplate, you might want to use the SPDX ids,
->> as started by Greg and documented by Thomas.
->> Noe that Linus wants the // comment style for the license line, and
->> since there is only two line left here I suggest using it for both
->> lines.
->> You can check also the recent doc patch posted by Thomas (tglx) and
->> comments from Linus and Greg.
->>
->> So I guess you could use this:
->>
->> > +// Copyright (C) 2017 Jagan Teki <jagan@amarulasolutions.com>
->> > +// SPDX-License-Indentifier: (GPL-2.0+ OR MIT)
+On Wed, Dec 6, 2017 at 6:35 AM, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> Add the optional calibration gpio for integrated TDA9950 CEC support.
+> This GPIO corresponds with the interrupt from the TDA998x, as the
+> calibration requires driving the interrupt pin low.
 >
-> Other way around. Make SPDX-License-Indentifier the first line.
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/bridge/tda998x.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-My bad. 100% right!
-
->> NB: what you call X11 is has the MIT license id in the SPDX license list.
->
-> Right. That was a common mistake or abiguity in the dts files.
->
->> So you could replace 32 lines by only two lines :) it'[s neat right?
->>
->> And this would also help as we have tagged already ~15K files, so it
->> would help to use this for new files so the amount of cleanup work
->> still left does not increase. Thank you for your kind consideration!
->
-> I've been nuging folks to do that for a while now. Of course, now we
-> need to go move the ids to the first line at some point.
-
-That's great: if you need some help there I have a tool that can help
-detect license and eventually inject a proper SPDX id [1]
-
-btw Thomas (tglx) posted a new patch set with the updated documentation.
-
-[1] https://github.com/nexB/scancode-toolkit/tree/833-espedexify
--- 
-Cordially
-Philippe Ombredanne
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
