@@ -1,59 +1,84 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFCv2 PATCH 26/36] iommu/arm-smmu-v3: Add support for Hardware
-	Translation Table Update
-Date: Wed, 6 Dec 2017 11:06:59 +0000
-Message-ID: <8bdba799-49ec-edc9-dbcf-9277424dea57@arm.com>
-References: <20171006133203.22803-1-jean-philippe.brucker@arm.com>
-	<20171006133203.22803-27-jean-philippe.brucker@arm.com>
-	<d2ec2e61-f758-0394-41d2-555ae65feb0d@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <d2ec2e61-f758-0394-41d2-555ae65feb0d-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yisheng Xie <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH 3/3] arm64: dts: rockchip: add extcon nodes and enable tcphy.
+Date: Wed,  6 Dec 2017 12:10:08 +0100
+Message-ID: <20171206111008.3079-3-enric.balletbo@collabora.com>
+References: <20171206111008.3079-1-enric.balletbo@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171206111008.3079-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/17 06:51, Yisheng Xie wrote:
-> Hi Jean,
-> 
-> On 2017/10/6 21:31, Jean-Philippe Brucker wrote:
->> If the SMMU supports it and the kernel was built with HTTU support, enable
->> +	if (IS_ENABLED(CONFIG_ARM64_HW_AFDBM) && (reg & (IDR0_HA | IDR0_HD))) {
->> +		smmu->features |= ARM_SMMU_FEAT_HA;
->> +		if (reg & IDR0_HD)
->> +			smmu->features |= ARM_SMMU_FEAT_HD;
->> +	}
-> 
-> What is relationship of armv8.1 HW_AFDBM and SMMUv3 HTTU? I mean why we need
-> IS_ENABLED(CONFIG_ARM64_HW_AFDBM) ?
+Enable tcphy and create the cros-ec's extcon node for the USB Type-C port.
 
-I think the reason we needed this was that, without CONFIG_ARM64_HW_AFDBM,
-the CPU wouldn't update the pte atomically and pte_dirty() wouldn't check
-the DBM bit 51 (only the SW dirty bit 55).
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Since af29678fe785 ("arm64: Remove the !CONFIG_ARM64_HW_AFDBM alternative
-code paths") removed lots of #ifdefs, I'll see if we can remove the above
-IS_ENABLED as well.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+index 470105d..03f1950 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+@@ -855,6 +855,20 @@ ap_i2c_audio: &i2c8 {
+ 			compatible = "google,cros-ec-pwm";
+ 			#pwm-cells = <1>;
+ 		};
++
++		usbc_extcon0: extcon@0 {
++			compatible = "google,extcon-usbc-cros-ec";
++			google,usb-port-id = <0>;
++
++			#extcon-cells = <0>;
++		};
++
++		usbc_extcon1: extcon@1 {
++			compatible = "google,extcon-usbc-cros-ec";
++			google,usb-port-id = <1>;
++
++			#extcon-cells = <0>;
++		};
+ 	};
+ };
+ 
+@@ -865,6 +879,16 @@ ap_i2c_audio: &i2c8 {
+ 	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
+ };
+ 
++&tcphy0 {
++	status = "okay";
++	extcon = <&usbc_extcon0>;
++};
++
++&tcphy1 {
++	status = "okay";
++	extcon = <&usbc_extcon1>;
++};
++
+ &u2phy0 {
+ 	status = "okay";
+ };
+@@ -911,6 +935,7 @@ ap_i2c_audio: &i2c8 {
+ 
+ &usbdrd3_0 {
+ 	status = "okay";
++	extcon = <&usbc_extcon0>;
+ };
+ 
+ &usbdrd_dwc3_0 {
+@@ -920,6 +945,7 @@ ap_i2c_audio: &i2c8 {
+ 
+ &usbdrd3_1 {
+ 	status = "okay";
++	extcon = <&usbc_extcon1>;
+ };
+ 
+ &usbdrd_dwc3_1 {
+-- 
+2.9.3
 
-> If CONFIG_ARM64_HW_AFDBM=y but the process do not support ARMv8.1, should it also
-> enable related feature for SMMUv3?
-
-Yes I think we can enable HTTU in the SMMU even if the CPU doesn't support
-it (though HTTU is only useful when sharing process address spaces). The
-mm code checks for both HW and SW bits even when the CPU doesn't support
-ARMv8.1
-
-Thanks,
-Jean
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
