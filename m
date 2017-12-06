@@ -1,39 +1,55 @@
-From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Subject: [PATCH] dt-bindings: at24/eeprom: add an undocumented compatible string
-Date: Wed,  6 Dec 2017 11:12:19 +0100
-Message-ID: <20171206101219.14011-1-brgl@bgdev.pl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 2/3] dt-bindings: iio: temperature: add MLX90632 device bindings
+Date: Wed,  6 Dec 2017 10:55:43 +0100
+Message-ID: <20171206095543.8223-1-cmo@melexis.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The "atmel,sdp" compatible is reported by checkpatch as undocumented.
+Add device tree bindings for MLX90632 IR temperature sensor.
 
-Add it to the device tree bindings document for at24.
-
-Signed-off-by: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/eeprom/eeprom.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
 
-diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-index 27f2bc15298a..5b5ceee6ce02 100644
---- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
-+++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-@@ -8,6 +8,8 @@ Required properties:
- 	"atmel,24c08", "atmel,24c16", "atmel,24c32", "atmel,24c64",
- 	"atmel,24c128", "atmel,24c256", "atmel,24c512", "atmel,24c1024"
- 
-+	"atmel,spd"
+diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+new file mode 100644
+index 000000000000..0b05812001f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+@@ -0,0 +1,28 @@
++* Melexis MLX90632 contactless Infra Red temperature sensor
 +
- 	"catalyst,24c32"
- 
- 	"microchip,24c128"
++Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
++
++There are various applications for the Infra Red contactless temperature sensor
++and MLX90632 is most suitable for consumer applications where measured object
++temperature is in range between -20 to 200 degrees Celsius with relative error
++of measurement below 1 degree Celsius in object temperature range for
++industrial applications. Since it can operate and measure ambient temperature
++in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
++
++Be aware that electronics surrounding the sensor can increase ambient
++temperature. MLX90632 can be calibrated to reduce the housing effect via
++already existing EEPROM parameters.
++
++Since measured object emissivity effects Infra Red energy emitted, emissivity
++should be set before requesting the object temperature.
++
++Required properties:
++  - compatible: should be "melexis,mlx90632"
++  - reg: the I2C address of the sensor (default 0x3a)
++
++Example:
++
++mlx90632@3a {
++	compatible = "melexis,mlx90632";
++	reg = <0x3a>;
++};
 -- 
-2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.15.0
