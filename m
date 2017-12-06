@@ -1,34 +1,67 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/8] dt-bindings: power: supply: axp20x: add
- AXP813 battery DT binding
-Date: Wed, 6 Dec 2017 15:16:59 -0600
-Message-ID: <20171206211659.epe65eetp6gr4b7f@rob-hp-laptop>
-References: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz@free-electrons.com>
- <bf3682e87c75532884881d7b08840c61678cbce1.1512396054.git-series.quentin.schulz@free-electrons.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH v4] usb: xhci: allow imod-interval to be configurable
+Date: Wed, 6 Dec 2017 15:21:02 -0600
+Message-ID: <20171206212102.w7joyecp25v6nw5v@rob-hp-laptop>
+References: <1512397671-28733-1-git-send-email-awallis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBTF4UHIQKGQEPEEBCTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <bf3682e87c75532884881d7b08840c61678cbce1.1512396054.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+In-Reply-To: <1512397671-28733-1-git-send-email-awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 04, 2017 at 03:12:50PM +0100, Quentin Schulz wrote:
-> The AXP813 can have a battery as power supply, so let's add it to the
-> list of compatibles.
+On Mon, Dec 04, 2017 at 09:27:51AM -0500, Adam Wallis wrote:
+> The xHCI driver currently has the IMOD set to 160, which
+> translates to an IMOD interval of 40,000ns (160 * 250)ns
 > 
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Commit 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
+> introduced a QUIRK for the MTK platform to adjust this interval to 20,
+> which translates to an IMOD interval of 5,000ns (20 * 250)ns. This is
+> due to the fact that the MTK controller IMOD interval is 8 times
+> as much as defined in xHCI spec.
+> 
+> Instead of adding more quirk bits for additional platforms, this patch
+> introduces the ability for vendors to set the IMOD_INTERVAL as is
+> optimal for their platform. By using device_property_read_u32() on
+> "imod-interval-ns", the IMOD INTERVAL can be specified in nano seconds.
+> If no interval is specified, the default of 40,000ns (IMOD=160) will be
+> used.
+> 
+> No bounds checking has been implemented due to the fact that a vendor
+> may have violated the spec and would need to specify a value outside of
+> the max 8,000 IRQs/second limit specified in the xHCI spec.
+> 
+> Tested-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/power/supply/axp20x_battery.txt | 8 +++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> changes from v3:
+>   * Changed imod-interval to imod-interval-ns [Rob Herring/Chunfeng]
+>   * Changed "modulation" to "moderation" throughout patch [Mathias]
+> changes from v2:
+>   * Added PCI default value [Mathias]
+>   * Removed xhci-mtk.h from xhci-plat.c [Chunfeng Yun]
+>   * Removed MTK quirk from xhci-plat and moved logic to xhci-mtk [Chunfeng]
+>   * Updated bindings Documentation to use proper units [Rob Herring]
+>   * Added imod-interval description and example to MTK binding documentation
+> changes from v1:
+>   * Removed device_property_read_u32() per suggestion from greg k-h
+>   * Used ER_IRQ_INTERVAL_MASK in place of (u16) cast
+> 
+>  Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt | 2 ++
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt          | 1 +
+>  drivers/usb/host/xhci-mtk.c                                 | 9 +++++++++
+>  drivers/usb/host/xhci-pci.c                                 | 3 +++
+>  drivers/usb/host/xhci-plat.c                                | 5 +++++
+>  drivers/usb/host/xhci.c                                     | 7 ++-----
+>  drivers/usb/host/xhci.h                                     | 2 ++
+>  7 files changed, 24 insertions(+), 5 deletions(-)
 
 Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
