@@ -1,58 +1,27 @@
-From: tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org
-Subject: [PATCH v1 5/6] ARM: dts: imx7d-sbc-iot: enable PCIe peripheral
-Date: Tue,  5 Dec 2017 14:27:06 -0800
-Message-ID: <20171205222707.11302-6-tyler@opensourcefoundries.com>
-References: <20171205222707.11302-1-tyler@opensourcefoundries.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: colibri/apalis: use correct compatible for RTC
+Date: Wed, 6 Dec 2017 09:41:43 -0200
+Message-ID: <CAOMZO5CmKgKv2-qk0of9UKsn5QjtoYuY3SQ6xhueg7VmwNmieg@mail.gmail.com>
+References: <20171206102929.4755-1-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171205222707.11302-1-tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+In-Reply-To: <20171206102929.4755-1-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+On Wed, Dec 6, 2017 at 8:29 AM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
+> All Toradex Carrier Boards use a st,m41t0 compatible RTC. Compared
+> to a st,m41t00 this RTC has also an oscillator fail bit which allows
+> to detect when the RTC lost track of time.
+>
+> Cc: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-Add a PCIe device tree node to enable PCIe support.
-
-Signed-off-by: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
----
- arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts b/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
-index 67aa4b7..7f45fa2 100644
---- a/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
-+++ b/arch/arm/boot/dts/imx7d-sbc-iot-imx7.dts
-@@ -79,6 +79,12 @@
- 		>;
- 	};
- 
-+	pinctrl_pcie: pciegrp {
-+		fsl,pins = <
-+			MX7D_PAD_EPDC_BDR1__GPIO2_IO29		0x34 /* PCIe RST */
-+		>;
-+	};
-+
- 	pinctrl_uart2: uart2grp {
- 		fsl,pins = <
- 			MX7D_PAD_LCD_ENABLE__UART2_DCE_TX	0x79 /* P7-12 */
-@@ -119,6 +125,13 @@
- 	};
- };
- 
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio2 29 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
- &uart2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart2>;
--- 
-2.9.3
-
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
