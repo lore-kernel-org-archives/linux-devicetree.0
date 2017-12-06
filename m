@@ -1,143 +1,77 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v3 09/15] drm/sun4i: Add A83T support
-Date: Wed, 06 Dec 2017 17:37:47 +0100
-Message-ID: <1729482.Mgh5nx8BIs@jernej-laptop>
-References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com> <0f8137abb37de936db82c1251556ee84fb23c7fe.1512486553.git-series.maxime.ripard@free-electrons.com> <1823097.lykhZvJrH4@jernej-laptop>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V6 2/7] ACPI / bus: Introduce acpi_get_match_data()
+ function
+Date: Wed, 6 Dec 2017 11:41:33 -0500
+Message-ID: <218a717f-7fac-41a1-86e2-19f4d99a7f52@codeaurora.org>
+References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
+ <1512493493-6464-3-git-send-email-okaya@codeaurora.org>
+ <CAJZ5v0iJ_47z25GrQryQFVyXiXitYNHy8mQtTCf2rtdyhnn2eQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1823097.lykhZvJrH4@jernej-laptop>
+In-Reply-To: <CAJZ5v0iJ_47z25GrQryQFVyXiXitYNHy8mQtTCf2rtdyhnn2eQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Dne torek, 05. december 2017 ob 16:42:55 CET je Jernej Škrabec napisal(a):
-> Hi Maxime,
+On 12/5/2017 5:04 PM, Rafael J. Wysocki wrote:
+> On Tue, Dec 5, 2017 at 6:04 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
+>> OF has of_device_get_match_data() function to extract driver specific data
+>> structure. Add a similar function for ACPI.
+>>
+>> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Dne torek, 05. december 2017 ob 16:10:21 CET je Maxime Ripard napisal(a):
-> > Add support for the A83T display pipeline.
-> > 
-> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > ---
-> > 
-> >  drivers/gpu/drm/sun4i/sun4i_drv.c   |  1 +
-> >  drivers/gpu/drm/sun4i/sun4i_tcon.c  |  5 +++++
-> >  drivers/gpu/drm/sun4i/sun8i_mixer.c |  9 +++++++++
-> >  3 files changed, 15 insertions(+)
-> > 
-> > diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> > b/drivers/gpu/drm/sun4i/sun4i_drv.c index 49215d91c853..6f5e721b545e
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-> > +++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-> > @@ -347,6 +347,7 @@ static const struct of_device_id sun4i_drv_of_table[]
-> > =
-> > { { .compatible = "allwinner,sun6i-a31s-display-engine" },
-> > 
-> >  	{ .compatible = "allwinner,sun7i-a20-display-engine" },
-> >  	{ .compatible = "allwinner,sun8i-a33-display-engine" },
-> > 
-> > +	{ .compatible = "allwinner,sun8i-a83t-display-engine" },
-> > 
-> >  	{ .compatible = "allwinner,sun8i-v3s-display-engine" },
-> >  	{ }
-> >  
-> >  };
-> > 
-> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > b/drivers/gpu/drm/sun4i/sun4i_tcon.c index 92f4738101e6..9b757450555f
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > @@ -1132,6 +1132,10 @@ static const struct sun4i_tcon_quirks
-> > sun8i_a33_quirks = { .has_lvds_pll		= true,
-> > 
-> >  };
-> > 
-> > +static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
-> > +	/* nothing is supported */
-> > +};
-> > +
-> > 
-> >  static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
-> >  
-> >  	/* nothing is supported */
-> >  
-> >  };
-> > 
-> > @@ -1144,6 +1148,7 @@ const struct of_device_id sun4i_tcon_of_table[] = {
-> > 
-> >  	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = 
-&sun6i_a31s_quirks
-> >  	},
-> > 
-> > { .compatible = "allwinner,sun7i-a20-tcon", .data = &sun7i_a20_quirks }, {
-> > .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks }, +	
-{
-> > .compatible = "allwinner,sun8i-a83t-tcon-lcd", .data =
-> > &sun8i_a83t_lcd_quirks }, { .compatible = "allwinner,sun8i-v3s-tcon",
-> > .data
-> > = &sun8i_v3s_quirks }, { }
-> > 
-> >  };
-> > 
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > b/drivers/gpu/drm/sun4i/sun8i_mixer.c index ff235e3228ce..6829bec4ba68
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> > @@ -477,6 +477,11 @@ static int sun8i_mixer_remove(struct platform_device
-> > *pdev) return 0;
-> > 
-> >  }
-> > 
-> > +static const struct sun8i_mixer_cfg sun8i_a83t_mixer_cfg = {
-> > +	.vi_num = 1,
-> > +	.ui_num = 3,
-> > +};
-> > +
-> 
-> I think you should expand that structure with:
-> .ccsc = 0,
-> .scaler_mask = 0xf,
-> .mod_rate = 150000000,
+> Not sure yet, sorry.
 
-I guess you could set higher clock if CLK_SET_RATE_PARENT flag is set to de_clk 
-in A83T CCU driver. BSP sets it to 500 MHz, which is a bit high...
-
-Best regards,
-Jernej
+OK. no problem.
 
 > 
-> Best regards,
-> Jernej
+>> ---
+>>  drivers/acpi/bus.c   | 12 ++++++++++++
+>>  include/linux/acpi.h |  6 ++++++
+>>  2 files changed, 18 insertions(+)
+>>
+>> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+>> index 4d0979e..b271eb1 100644
+>> --- a/drivers/acpi/bus.c
+>> +++ b/drivers/acpi/bus.c
+>> @@ -785,6 +785,18 @@ const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
+>>  }
+>>  EXPORT_SYMBOL_GPL(acpi_match_device);
+>>
+>> +void *acpi_get_match_data(const struct device *dev)
+>> +{
+>> +       const struct acpi_device_id *match;
+>> +
+>> +       match = acpi_match_device(dev->driver->acpi_match_table, dev);
 > 
-> >  static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg = {
-> >  
-> >  	.vi_num = 2,
-> >  	.ui_num = 1,
-> > 
-> > @@ -487,6 +492,10 @@ static const struct sun8i_mixer_cfg
-> > sun8i_v3s_mixer_cfg = {
-> > 
-> >  static const struct of_device_id sun8i_mixer_of_table[] = {
-> >  
-> >  	{
-> > 
-> > +		.compatible = "allwinner,sun8i-a83t-de2-mixer-0",
-> > +		.data = &sun8i_a83t_mixer_cfg,
-> > +	},
-> > +	{
-> > 
-> >  		.compatible = "allwinner,sun8i-v3s-de2-mixer",
-> >  		.data = &sun8i_v3s_mixer_cfg,
-> >  	
-> >  	},
-> > 
-> > --
-> > git-series 0.9.1
+> Shouldn't this check dev->driver against NULL before dereferencing it?
+
+I'm adding these checks. I realized that acpi_match_device() is not validating
+the ids either.
+
+--- a/drivers/acpi/bus.c
++++ b/drivers/acpi/bus.c
+@@ -789,6 +789,12 @@ void *acpi_get_match_data(const struct device *dev)
+ {
+        const struct acpi_device_id *match;
+
++       if (!dev->driver)
++               return NULL;
++
++       if (!dev->driver->acpi_match_table)
++               return NULL;
++
+
+I'll hold onto posting this until I hear back from Sakari.
+
+Sinan
+
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
