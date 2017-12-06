@@ -1,85 +1,52 @@
-From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 02/12] media: doc: add document for rkisp1 meta buffer format
-Date: Wed,  6 Dec 2017 19:19:29 +0800
-Message-ID: <20171206111939.1153-3-jacob-chen@iotwrt.com>
+From: Jacob Chen <jacob-chen@iotwrt.com>
+Subject: [PATCH v3 09/12] ARM: dts: rockchip: add rx0 mipi-phy for rk3288
+Date: Wed,  6 Dec 2017 19:19:36 +0800
+Message-ID: <20171206111939.1153-10-jacob-chen@iotwrt.com>
 References: <20171206111939.1153-1-jacob-chen@iotwrt.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171206111939.1153-1-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, allon.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171206111939.1153-1-jacob-chen@iotwrt.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rockchip@lists.infradead.org
+Cc: Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, Joao.Pinto@synopsys.com, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, Luis.Oliveira@synopsys.com, robh+dt@kernel.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, allon.huang@rock-chips.com, mchehab@kernel.org, zhengsq@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
----
- Documentation/media/uapi/v4l/meta-formats.rst          |  2 ++
- .../media/uapi/v4l/pixfmt-meta-rkisp1-params.rst       | 17 +++++++++++++++++
- .../media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst         | 18 ++++++++++++++++++
- 3 files changed, 37 insertions(+)
- create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
- create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+From: Jacob Chen <jacob2.chen@rock-chips.com>
 
-diff --git a/Documentation/media/uapi/v4l/meta-formats.rst b/Documentation/media/uapi/v4l/meta-formats.rst
-index 01e24e3df571..1b8281423aa2 100644
---- a/Documentation/media/uapi/v4l/meta-formats.rst
-+++ b/Documentation/media/uapi/v4l/meta-formats.rst
-@@ -14,3 +14,5 @@ These formats are used for the :ref:`metadata` interface only.
+It's a Designware MIPI D-PHY, used by ISP in rk3288.
+
+Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index ea1dda001043..baeedd2cb351 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -864,6 +864,13 @@
+ 			status = "disabled";
+ 		};
  
-     pixfmt-meta-vsp1-hgo
-     pixfmt-meta-vsp1-hgt
-+    pixfmt-meta-rkisp1-params
-+    pixfmt-meta-rkisp1-stat
-diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-new file mode 100644
-index 000000000000..ed344d463b52
---- /dev/null
-+++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-@@ -0,0 +1,17 @@
-+.. -*- coding: utf-8; mode: rst -*-
++		mipi_phy_rx0: mipi-phy-rx0 {
++			compatible = "rockchip,rk3288-mipi-dphy";
++			clocks = <&cru SCLK_MIPIDSI_24M>, <&cru PCLK_MIPI_CSI>;
++			clock-names = "dphy-ref", "pclk";
++			status = "disabled";
++		};
 +
-+.. _v4l2-meta-fmt-rkisp1-params:
-+
-+*******************************
-+V4L2_META_FMT_RK_ISP1_PARAMS
-+*******************************
-+
-+Rockchip ISP1 Parameters Data
-+
-+Description
-+===========
-+
-+This format describes input parameters for the Rockchip ISP1.
-+
-+The data use c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
-+the ``linux/rkisp1-config.h`` header file, See it for details.
-diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-new file mode 100644
-index 000000000000..5ecc4031295f
---- /dev/null
-+++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-@@ -0,0 +1,18 @@
-+.. -*- coding: utf-8; mode: rst -*-
-+
-+.. _v4l2-meta-fmt-rkisp1-stat:
-+
-+*******************************
-+V4L2_META_FMT_RK_ISP1_STAT_3A
-+*******************************
-+
-+Rockchip ISP1 Statistics Data
-+
-+Description
-+===========
-+
-+This format describes image color statistics information generated by the Rockchip
-+ISP1.
-+
-+The data use c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
-+the ``linux/cifisp_stat.h`` header file, See it for details.
+ 		io_domains: io-domains {
+ 			compatible = "rockchip,rk3288-io-voltage-domain";
+ 			status = "disabled";
 -- 
 2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
