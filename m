@@ -1,70 +1,41 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] rtc: add mxc driver for i.MX53 SRTC
-Date: Wed, 6 Dec 2017 12:05:03 +0100
-Message-ID: <20171206110503.GO21780@piout.net>
-References: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
- <20171205140646.30367-6-linux-kernel-dev@beckhoff.com>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
+Date: Wed, 6 Dec 2017 11:21:37 +0000
+Message-ID: <TY1PR06MB089533C44E4B42D647C2CC25C0320@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
+ <20170915074551.GF3924@verge.net.au>
+ <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A@mail.gmail.com>
+ <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+ <20170915110609.GL3924@verge.net.au>
+ <CAMuHMdUuF4kwUiUYCbSew3W0Pa2CfRdCijefbOO1ZYAbnyG3KA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171205140646.30367-6-linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAMuHMdUuF4kwUiUYCbSew3W0Pa2CfRdCijefbOO1ZYAbnyG3KA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Lothar
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/2017 at 15:06:46 +0100, linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org wrote:
-> +/* This function is the RTC interrupt service routine. */
-> +static irqreturn_t mxc_rtc_interrupt(int irq, void *dev_id)
-> +{
-> +	struct platform_device *pdev = dev_id;
-> +	struct mxc_rtc_data *pdata = platform_get_drvdata(pdev);
-> +	void __iomem *ioaddr = pdata->ioaddr;
-> +	unsigned long flags;
-> +	u32 events = 0;
-> +	u32 lp_status;
-> +	u32 lp_cr;
-> +
-> +	spin_lock_irqsave(&pdata->lock, flags);
-> +	if (clk_prepare_enable(pdata->clk)) {
-> +		spin_unlock_irqrestore(&pdata->lock, flags);
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	lp_status = readl(ioaddr + SRTC_LPSR);
-> +	lp_cr = readl(ioaddr + SRTC_LPCR);
-> +
-> +	/* update irq data & counter */
-> +	if (lp_status & SRTC_LPSR_ALP) {
-> +		if (lp_cr & SRTC_LPCR_ALP)
-> +			events = (RTC_AF | RTC_IRQF);
-
-I would just call rtc_update_irq here...
-
-> +
-> +		/* disable further lp alarm interrupts */
-> +		lp_cr &= ~(SRTC_LPCR_ALP | SRTC_LPCR_WAE);
-> +	}
-> +
-> +	/* Update interrupt enables */
-> +	writel(lp_cr, ioaddr + SRTC_LPCR);
-> +
-> +	/* clear interrupt status */
-> +	writel(lp_status, ioaddr + SRTC_LPSR);
-> +
-> +	mxc_rtc_sync_lp_locked(ioaddr);
-> +	rtc_update_irq(pdata->rtc, 1, events);
-
-... because calling it here with events == 0 will result in a lot of
-work for nothing (the core will walk through the timers and set the
-alarm again).
-
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+SGVsbG8gR2VlcnQsIFNpbW9uLA0KDQo+DQo+IEFzIHRoZSBkZXBlbmRlbmN5IGlzIGluIHY0LjE1
+LXJjMSwgaXQgY2FuIGJlIGFwcGxpZWQgbm93Lg0KPg0KDQp3ZSB0aG91Z2h0IGV4YWN0bHkgdGhl
+IHNhbWUgdGhpbmcsIHRoZXJlZm9yZSB3ZSByZWJhc2VkIGFuZCB3ZSByZS1yYW4gb3VyIHRlc3Rz
+LCB0byBkaXNjb3ZlciB0aGF0IHNvbWV0aGluZyBicm9rZSBpbiBiZXR3ZWVuIHZlcnNpb25zLg0K
+SSdsbCBiZSBpbiB0b3VjaCBvbmNlIEkgaGF2ZSBtb3JlIGluZm9ybWF0aW9uLCBidXQgaXQncyBh
+IG5vIGdvIGZvciBub3cuDQoNClRoYW5rcywNCkZhYg0KDQoNCltodHRwczovL3d3dzIucmVuZXNh
+cy5ldS9tZWRpYS9lbWFpbC91bmljZWZfMjAxNy5qcGddDQoNClRoaXMgQ2hyaXN0bWFzLCBpbnN0
+ZWFkIG9mIHNlbmRpbmcgb3V0IGNhcmRzLCBSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBoYXZl
+IGRlY2lkZWQgdG8gc3VwcG9ydCBVbmljZWYgd2l0aCBhIGRvbmF0aW9uLiBGb3IgZnVydGhlciBk
+ZXRhaWxzIGNsaWNrIGhlcmU8aHR0cHM6Ly93d3cudW5pY2VmLm9yZy8+IHRvIGZpbmQgb3V0IGFi
+b3V0IHRoZSB2YWx1YWJsZSB3b3JrIHRoZXkgZG8sIGhlbHBpbmcgY2hpbGRyZW4gYWxsIG92ZXIg
+dGhlIHdvcmxkLg0KV2Ugd291bGQgbGlrZSB0byB0YWtlIHRoaXMgb3Bwb3J0dW5pdHkgdG8gd2lz
+aCB5b3UgYSBNZXJyeSBDaHJpc3RtYXMgYW5kIGEgcHJvc3Blcm91cyBOZXcgWWVhci4NCg0KDQoN
+ClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQg
+Um9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJl
+ZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
