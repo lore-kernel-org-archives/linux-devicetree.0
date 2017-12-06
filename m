@@ -1,97 +1,77 @@
-From: Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH net-next v3 4/4] net: fec: add
- phy_reset_after_clk_enable() support
-Date: Wed, 6 Dec 2017 01:50:14 +0000
-Message-ID: <DB6PR0401MB2264B5060F745CEB5405FFBCFF320@DB6PR0401MB2264.eurprd04.prod.outlook.com>
-References: <20171205132600.13796-1-dev@g0hl1n.net>
- <20171205132600.13796-5-dev@g0hl1n.net>
+From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Subject: RE: [PATCH] Documentation: binding: Update endianness usage
+Date: Wed, 6 Dec 2017 10:58:51 +0000
+Message-ID: <HE1PR04MB124174461F845000614CDAA197320@HE1PR04MB1241.eurprd04.prod.outlook.com>
+References: <1511954855-8593-1-git-send-email-prabhakar.kushwaha@nxp.com>
+ <1512105209.10062.1.camel@buserror.net>
+ <HE1PR04MB12414AFA5F8081730B89378497390@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <1512165311.10062.3.camel@buserror.net>
+ <HE1PR04MB1241226CD3B7ABD6D5FA2D91973C0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <1512441957.10062.6.camel@buserror.net>
+ <HE1PR04MB1241ADD02E472BA492AE1C8F973D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
+ <1512504459.10062.9.camel@buserror.net>
+ <HE1PR04MB1241F1A70CDBA5A94D4D2CE597320@HE1PR04MB1241.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171205132600.13796-5-dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <HE1PR04MB1241F1A70CDBA5A94D4D2CE597320@HE1PR04MB1241.eurprd04.prod.outlook.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org" <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org" <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org" <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, "david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "lukma-ynQEQJNshbs@public.gmane.org" <lukma-ynQEQJNshbs@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org" <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Scott Wood <oss@buserror.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org> Sent: Tuesday, December 05, 2017 9:2=
-6 PM
->Some PHYs (for example the SMSC LAN8710/LAN8720) doesn't allow turning
->the refclk on and off again during operation (according to their datasheet=
-).
->Nonetheless exactly this behaviour was introduced for power saving reasons
->by commit e8fcfcd5684a ("net: fec: optimize the clock management to save
->power").
->Therefore add support for the phy_reset_after_clk_enable function from
->phylib to mitigate this issue.
->
->Generally speaking this issue is only relevant if the ref clk for the PHY =
-is
->generated by the SoC and therefore the PHY is configured to "REF_CLK In
->Mode". In our specific case (PCB) this problem does occur at about every 1=
-0th
->to 50th POR of an LAN8710 connected to an i.MX6SOLO SoC. The typical
->symptom of this problem is a "swinging" ethernet link.
->Similar issues were reported by users of the NXP forum:
->	https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F
->%2Fcommunity.nxp.com%2Fthread%2F389902&data=3D02%7C01%7Cfugang.du
->an%40nxp.com%7C7f9fee272fc44662c2a108d53be3d1ee%7C686ea1d3bc2b4c6
->fa92cd99c5c301635%7C0%7C0%7C636480772022331090&sdata=3D7RdUsoWVWu
->o1nM5zKwLt7%2F6U3dxgDJtBDGlQCUWC6IM%3D&reserved=3D0
->	https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F
->%2Fcommunity.nxp.com%2Fmessage%2F309354&data=3D02%7C01%7Cfugang.d
->uan%40nxp.com%7C7f9fee272fc44662c2a108d53be3d1ee%7C686ea1d3bc2b4
->c6fa92cd99c5c301635%7C0%7C0%7C636480772022331090&sdata=3DD56KilGWD3
->kLABxc0yOI%2B44Y%2FhLfrGtdAvupCEyvI%2BI%3D&reserved=3D0
->With this patch applied the issue didn't occur for at least a few hundret =
-PORs
->of our board.
->
->Fixes: e8fcfcd5684a ("net: fec: optimize the clock management to save
->power")
->Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
->---
-> drivers/net/ethernet/freescale/fec_main.c | 7 +++++++
-> 1 file changed, 7 insertions(+)
->
->diff --git a/drivers/net/ethernet/freescale/fec_main.c
->b/drivers/net/ethernet/freescale/fec_main.c
->index 610573855213..8c3d0fb7db20 100644
->--- a/drivers/net/ethernet/freescale/fec_main.c
->+++ b/drivers/net/ethernet/freescale/fec_main.c
->@@ -1862,6 +1862,8 @@ static int fec_enet_clk_enable(struct net_device
->*ndev, bool enable)
-> 		ret =3D clk_prepare_enable(fep->clk_ref);
-> 		if (ret)
-> 			goto failed_clk_ref;
->+
->+		phy_reset_after_clk_enable(ndev->phydev);
-> 	} else {
-> 		clk_disable_unprepare(fep->clk_ahb);
-> 		clk_disable_unprepare(fep->clk_enet_out);
->@@ -2860,6 +2862,11 @@ fec_enet_open(struct net_device *ndev)
-> 	if (ret)
-> 		goto err_enet_mii_probe;
->
->+	/* reset phy if needed here, due to the fact this is the first time we
->+	 * have the net_device to phy_driver link
->+	 */
->+	phy_reset_after_clk_enable(ndev->phydev);
->+
-
-The patch series look better.
-But why does it need to reset phy here since phy already is hard reset afte=
-r clock enable.
-
-
-> 	if (fep->quirks & FEC_QUIRK_ERR006687)
-> 		imx6q_cpuidle_fec_irqs_used();
->
->--
->2.11.0
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUHJhYmhha2FyIEt1c2h3
+YWhhDQo+IFNlbnQ6IFdlZG5lc2RheSwgRGVjZW1iZXIgMDYsIDIwMTcgNDowNSBQTQ0KPiBUbzog
+J1Njb3R0IFdvb2QnIDxvc3NAYnVzZXJyb3IubmV0PjsgbGludXgtbXRkQGxpc3RzLmluZnJhZGVh
+ZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkZWRla2luZDFAZ21h
+aWwuY29tOyBjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20NCj4gU3ViamVjdDogUkU6IFtQQVRD
+SF0gRG9jdW1lbnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNhZ2UNCj4gDQo+
+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogU2NvdHQgV29vZCBb
+bWFpbHRvOm9zc0BidXNlcnJvci5uZXRdDQo+ID4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAw
+NiwgMjAxNyAxOjM4IEFNDQo+ID4gVG86IFByYWJoYWthciBLdXNod2FoYSA8cHJhYmhha2FyLmt1
+c2h3YWhhQG54cC5jb20+OyBsaW51eC0NCj4gPiBtdGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2
+aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBDYzogZGVkZWtpbmQxQGdtYWlsLmNvbTsgY29t
+cHV0ZXJzZm9ycGVhY2VAZ21haWwuY29tDQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gRG9jdW1l
+bnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNhZ2UNCj4gPg0KPiA+IE9uIFR1
+ZSwgMjAxNy0xMi0wNSBhdCAwOTo0NSArMDAwMCwgUHJhYmhha2FyIEt1c2h3YWhhIHdyb3RlOg0K
+PiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBTY290dCBX
+b29kIFttYWlsdG86b3NzQGJ1c2Vycm9yLm5ldF0NCj4gPiA+ID4gU2VudDogVHVlc2RheSwgRGVj
+ZW1iZXIgMDUsIDIwMTcgODoxNiBBTQ0KPiA+ID4gPiBUbzogUHJhYmhha2FyIEt1c2h3YWhhIDxw
+cmFiaGFrYXIua3VzaHdhaGFAbnhwLmNvbT47IGxpbnV4LQ0KPiA+ID4gPiBtdGRAbGlzdHMuaW5m
+cmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+ID4gQ2M6IGRlZGVr
+aW5kMUBnbWFpbC5jb207IGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbQ0KPiA+ID4gPiBTdWJq
+ZWN0OiBSZTogW1BBVENIXSBEb2N1bWVudGF0aW9uOiBiaW5kaW5nOiBVcGRhdGUgZW5kaWFubmVz
+cyB1c2FnZQ0KPiA+ID4gPg0KPiA+ID4gPiBJIG5vdyBzZWUgeW91ciBwYXRjaCB0byBvZl9mbGFz
+aF9wcm9iZS4uLiB3aGVyZSBpcyB0aGUgbm9uLUlGQy1zcGVjaWZpYw0KPiA+ID4gPiBiaW5kaW5n
+IHRoYXQgc2F5cyB0aGUgKnBhcmVudCogb2YgYSBDRkkgbm9kZSBzaG91bGQgYmUgbG9va2VkIGF0
+IGZvciB0aGlzPw0KPiA+ID4gPiBXaGVyZcKgaW4gZ2VuZXJhbCBhcmUgZW5kaWFuIHByb3BlcnRp
+ZXMga2VwdCBpbiB0aGUgcGFyZW50IG9mIHRoZSBub2RlIHdpdGgNCj4gPiA+ID4gInJlZyI/wqDC
+oFRoZSByaWdodCBhbnN3ZXIgaXMgdG8gYWRkIGVuZGlhbm5lc3MgdG8gbXRkLXBoeXNtYXAudHh0
+Lg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IEZsYXNoZXMgYXJlIGFsd2F5cyBsaXR0bGVyIGVuZGlh
+bi4NCj4gPg0KPiA+IFdlIHdvdWxkbid0IGJlIGhhdmluZyB0aGlzIGRpc2N1c3Npb24gaWYgdGhh
+dCB3ZXJlIHRydWUuLi4gIFRoaXMgaXMgYWJvdXQgaG93DQo+ID4gaXQgcHJlc2VudHMgdG8gdGhl
+IENQVSwgbm90IGFib3V0IGhvdyB0aGUgYWN0dWFsIHBpbnMgb24gdGhlIGNoaXAgYXJlDQo+ID4g
+bnVtYmVyZWQuDQo+ID4NCj4gDQo+IEdvdCB5b3VyIHBvaW50IDopDQo+IA0KPiA+ID4gSXQgaXMg
+YmVjYXVzZSBvZiBJRkMgY29udHJvbGxlciBiZWhhdmlvciwgZW5kaWFubmVzcyBpcyByZXF1aXJl
+ZC4NCj4gPiA+IFNvIGFzIHBlciBteSB1bmRlcnN0YW5kaW5nLCB0aGlzIGluZm8gc2hvdWxkIGdv
+IGluIElGQyBiaW5kaW5nLg0KPiA+DQo+ID4gSWYgdGhlIGluZm8gc2hvdWxkIGdvIGluIHRoZSBJ
+RkMgYmluZGluZyB3aHkgaXMgdGhlIGNvZGUgaW4gYSBub24tSUZDLXNwZWNpZmljDQo+ID4gcGxh
+Y2U/DQo+ID4NCj4gDQo+IE5vdyBJIHVuZGVyc3RhbmQgeW91ciBwb2ludC4NCj4gU28gSSBzaG91
+bGQgYmUgbW92aW5nIGVuZGlhbm5lc3MgcHJvcGVydHkgZGV0YWlsIGluIG10ZC1waHlzbWFwLnR4
+dC4NCj4gDQo+IElzIG15IHVuZGVyc3RhbmRpbmcgY29ycmVjdD8NCj4gDQoNCkEgc2Vjb25kIHRo
+b3VnaHQsICANCklGQyBiaW5kaW5nIHdhcyB1cGRhdGVkIGJlY2F1c2UgdGhlcmUgaXMgbm8gSUZD
+LU5PUiBkcml2ZXIuIEl0IHVzZXMgZ2VuZXJpYyBGbGFzaCBmcmFtZXdvcmsuICANCiANCkkgYW0g
+anVzdCB0cnlpbmcgdG8gZ2V0IG1vcmUgdW5kZXJzdGFuZGluZy4gIA0KDQotLXByYWJoYWthcg0K
+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+TGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
