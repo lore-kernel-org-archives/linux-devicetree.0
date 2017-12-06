@@ -1,65 +1,95 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] video: hd44780: Add hd44780 lcd display driver
-Date: Wed, 6 Dec 2017 16:04:10 +0100
-Message-ID: <CAMuHMdUn-wx7YC=QWazb4e-vJGts8iXbkC64NYiEjha-kQPKLg@mail.gmail.com>
-References: <20171206135255.6990-1-poeschel@lemonage.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171206135255.6990-1-poeschel@lemonage.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, =?UTF-8?Q?Manuel_Sch=C3=B6lling?= <manuel.schoelling@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Stafford Horne <shorne@gmail.com>, Christophe Leroy <christophe.leroy@c-s.fr>, Randy Dunlap <rdunlap@infradead.org>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, DRI Development <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH 1/9] ARM: dts: imx7-colibri: move and rename USB Host power regulator
+Date: Wed,  6 Dec 2017 16:29:57 +0100
+Message-ID: <20171206153005.6144-1-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars,
+The Colibri default which enables USB Host power is not necessarily
+tied to the OTG2 controller, some carrier board use the pin to
+control USB power for both controllers. Hence name the pinctrl
+group more generic.
 
-On Wed, Dec 6, 2017 at 2:52 PM, Lars Poeschel <poeschel@lemonage.de> wrote:
-> This adds a console driver for hd44780 based character lcd displays and
-> clones. The driver currently supports 20x4 character displays with
-> character ROMs A00 and A02.
-> The hardware wirings to the display have to be supplied to the kernel in
-> the devicetree. The binding doc has the necessary information.
-> There are also tons of these cheap displays sold with a serial
-> interface. Many of them use a simple pcf8574 gpio expanders. An example
-> for using that kind of display is also in the binding doc.
->
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+Also move the regulator to the generic eval-v3 device tree since
+the regulator is always on the carrier board. In the Colibri iMX7S
+case the regulator is just not used.  This allows to reuse the
+regulator in a upcoming SKU Colibri iMX7D 1GB with eMMC.
 
-Thanks for your patch!
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi | 11 +++++++++++
+ arch/arm/boot/dts/imx7-colibri.dtsi         |  2 +-
+ arch/arm/boot/dts/imx7d-colibri-eval-v3.dts | 13 +------------
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-> ---
->  .../bindings/video/console/hd44780con.txt          |  42 ++
->  drivers/video/console/Kconfig                      |  13 +
->  drivers/video/console/Makefile                     |   1 +
->  drivers/video/console/hd44780con.c                 | 676 +++++++++++++++++++++
-
-I'm wondering if you could implement this on top of the existing charlcd
-framework:
-
-    drivers/auxdisplay/charlcd.c
-    include/misc/charlcd.h
-
-which can use the existing hd44780 backend:
-
-    Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
-    drivers/auxdisplay/hd44780.c
-
-That way it can be used on other character LCDs, like the one supported by
-drivers/auxdisplay/panel.c.
-
-Thanks!
-
-P.S. I did something similar a long time ago, cfr.
-     https://github.com/geertu/hd44780/blob/master/lcdcon.c
-
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+index 18bebd6d8d47..5ecb3a858c5a 100644
+--- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+@@ -70,6 +70,17 @@
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+ 	};
++
++	reg_usbh_vbus: regulator-usbh-vbus {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbh_reg>;
++		regulator-name = "VCC_USB[1-4]";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
++		vin-supply = <&reg_5v0>;
++	};
+ };
+ 
+ &bl {
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index bb5bf94f1a32..60ea7557d8c9 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -559,7 +559,7 @@
+ 		>;
+ 	};
+ 
+-	pinctrl_usbotg2_reg: gpio-usbotg2-vbus {
++	pinctrl_usbh_reg: gpio-usbh-vbus {
+ 		fsl,pins = <
+ 			MX7D_PAD_UART3_CTS_B__GPIO4_IO7	0x14 /* SODIMM 129 USBH PEN */
+ 		>;
+diff --git a/arch/arm/boot/dts/imx7d-colibri-eval-v3.dts b/arch/arm/boot/dts/imx7d-colibri-eval-v3.dts
+index a608a14d8c85..136e11ab4893 100644
+--- a/arch/arm/boot/dts/imx7d-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx7d-colibri-eval-v3.dts
+@@ -48,20 +48,9 @@
+ 	model = "Toradex Colibri iMX7D on Colibri Evaluation Board V3";
+ 	compatible = "toradex,colibri-imx7d-eval-v3", "toradex,colibri-imx7d",
+ 		     "fsl,imx7d";
+-
+-	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
+-		compatible = "regulator-fixed";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_usbotg2_reg>;
+-		regulator-name = "VCC_USB[1-4]";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		gpio = <&gpio4 7 GPIO_ACTIVE_LOW>;
+-		vin-supply = <&reg_5v0>;
+-	};
+ };
+ 
+ &usbotg2 {
+-	vbus-supply = <&reg_usb_otg2_vbus>;
++	vbus-supply = <&reg_usbh_vbus>;
+ 	status = "okay";
+ };
+-- 
+2.15.1
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
