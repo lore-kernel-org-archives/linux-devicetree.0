@@ -1,41 +1,42 @@
 From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/2] add Meson8/Meson8b serial core clock handling
-Date: Wed, 06 Dec 2017 11:36:16 -0800
-Message-ID: <7hindjsl73.fsf@baylibre.com>
-References: <20171028123430.7796-1-martin.blumenstingl@googlemail.com>
-        <1509445230.13838.26.camel@baylibre.com>
+Subject: Re: [PATCH v5 0/2] meson: saradc: drop the sana clock
+Date: Wed, 06 Dec 2017 11:52:44 -0800
+Message-ID: <7h609jskfn.fsf@baylibre.com>
+References: <20171116090115.29915-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1509445230.13838.26.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's message
-        of "Tue, 31 Oct 2017 11:20:30 +0100")
+In-Reply-To: <20171116090115.29915-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> (Yixun Lan's
+        message of "Thu, 16 Nov 2017 17:01:13 +0800")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> writes:
 
-> On Sat, 2017-10-28 at 14:34 +0200, Martin Blumenstingl wrote:
->> This patchset adds the tty/serial core clock handling to the UARTs
->> on Meson8 and Meson8b.
->> 
->> Basically this is the Meson8 and Meson8b version of a patchset from
->> Helmut Klein and Neil Armstrong, who implemented this for Meson GX
->> (see [0]). Back then I asked Neil to drop Meson8b from his patchset
->> because I was working on the Meson8 clock controller at that time.
->> 
->> This also removes the last users that rely on the "amlogic,meson-uart"
->> binding. Removing that binding from the meson_uart driver is not part
->> of this series though.
->> 
->> 
->> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-June/004173.html
->> 
+> This is a rework for the patch [v4 4/4] of previous series,
+> which mean this will make the patch [1] obsolete.
 >
-> Acked-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Changes since v4:
+>  * separate DTS for ARM(32bit) vs ARM64
+>  * add ACK from Martin
 
-Applied to v4.16/dt with Jerome's ack.
+Thanks for splitting it up.
+
+> [1] [PATCH v4 4/4] ARM64: dts: meson: drop "sana" clock from SAR ADC
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005266.html
+>
+> Xingyu Chen (2):
+>   ARM64: dts: meson: drop "sana" clock from SAR ADC
+
+Applied to v4.16/dt64
+
+>   ARM: dts: meson: drop "sana" clock from SAR ADC
+
+Applied to v4.16/dt
+
+Thanks,
 
 Kevin
 --
