@@ -1,66 +1,104 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] ARM64: dts: meson-axg: add ethernet mac controller
-Date: Wed, 06 Dec 2017 12:07:13 -0800
-Message-ID: <7hy3mfr572.fsf@baylibre.com>
-References: <20171113080155.2463-1-yixun.lan@amlogic.com>
+Subject: Re: [RESEND PATCH v3 2/2] ARM64: dts: meson-axg: add pinctrl DT info for Meson-AXG SoC
+Date: Wed, 06 Dec 2017 12:18:32 -0800
+Message-ID: <7htvx3r4o7.fsf@baylibre.com>
+References: <20171120102354.5354-1-yixun.lan@amlogic.com>
+        <20171120102354.5354-3-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171113080155.2463-1-yixun.lan@amlogic.com> (Yixun Lan's
-        message of "Mon, 13 Nov 2017 16:01:55 +0800")
+In-Reply-To: <20171120102354.5354-3-yixun.lan@amlogic.com> (Yixun Lan's
+        message of "Mon, 20 Nov 2017 18:23:54 +0800")
 Sender: linux-kernel-owner@vger.kernel.org
 To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Xingyu Chen <xingyu.chen@amlogic.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Yixun Lan <yixun.lan@amlogic.com> writes:
 
-> Add DT info for the stmmac ethernet MAC which found in
-> the Amlogic's Meson-AXG SoC, also describe the ethernet
-> pinctrl & clock information here.
+> From: Xingyu Chen <xingyu.chen@amlogic.com>
 >
-> This is tested in the S400 dev board which use a RTL8211F PHY,
-> and the pins connect to the 'eth_rgmii_y_pins' group.
+> Add new pinctrl DT info for the Amlogic's Meson-AXG SoC.
 >
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
 > Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-
-This doesn't apply cleanly to mainline.  Are there some dependencies
-here that I'm not aware of?
-
-Also...
-
 > ---
->  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  7 ++++
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 53 ++++++++++++++++++++++++++
->  2 files changed, 60 insertions(+)
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 44 ++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> index 9eb6aaee155d..7b39a9fe2b0f 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> @@ -21,3 +21,10 @@
->  	status = "okay";
->  };
->  
-> +&ethmac {
-> +	status = "okay";
-> +	phy-mode = "rgmii";
-> +
-> +	pinctrl-0 = <&eth_rgmii_y_pins>;
-> +	pinctrl-names = "default";
-> +};
 > diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index 65945c6c8b65..57faaa9d8013 100644
+> index 5fc33b76b91c..e0fb860e12c5 100644
 > --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
 > +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -157,6 +157,19 @@
->  			#address-cells = <0>;
->  		};
->  
-> +		ethmac: ethernet@ff3f0000 {
-> +			compatible = "amlogic,meson-axg-dwmac", "amlogic,meson-gxbb-dwmac", "snps,dwmac";
+> @@ -9,6 +9,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/axg-clkc.h>
+>  #include <dt-bindings/clock/axg-aoclkc.h>
 
-The new "meson-axg-dwmac" is not documented in the binding.  Can you add
-that?
+This doesn't apply because this aoclkc.h header does not exist in
+mainline.
 
 Kevin
+
+> +#include <dt-bindings/gpio/meson-axg-gpio.h>
+>  
+>  / {
+>  	compatible = "amlogic,meson-axg";
+> @@ -173,6 +174,32 @@
+>  			#mbox-cells = <1>;
+>  		};
+>  
+> +		periphs: periphs@ff634000 {
+> +			compatible = "simple-bus";
+> +			reg = <0x0 0xff634000 0x0 0x2000>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges = <0x0 0x0 0x0 0xff634000 0x0 0x2000>;
+> +
+> +			pinctrl_periphs: pinctrl@480 {
+> +				compatible = "amlogic,meson-axg-periphs-pinctrl";
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				ranges;
+> +
+> +				gpio: bank@480 {
+> +					reg = <0x0 0x00480 0x0 0x40>,
+> +						<0x0 0x004e8 0x0 0x14>,
+> +						<0x0 0x00520 0x0 0x14>,
+> +						<0x0 0x00430 0x0 0x3c>;
+> +					reg-names = "mux", "pull", "pull-enable", "gpio";
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					gpio-ranges = <&pinctrl_periphs 0 0 86>;
+> +				};
+> +			};
+> +		};
+> +
+>  		sram: sram@fffc0000 {
+>  			compatible = "amlogic,meson-axg-sram", "mmio-sram";
+>  			reg = <0x0 0xfffc0000 0x0 0x20000>;
+> @@ -209,6 +236,23 @@
+>  				};
+>  			};
+>  
+> +			pinctrl_aobus: pinctrl@14 {
+> +				compatible = "amlogic,meson-axg-aobus-pinctrl";
+> +				#address-cells = <2>;
+> +				#size-cells = <2>;
+> +				ranges;
+> +
+> +				gpio_ao: bank@14 {
+> +					reg = <0x0 0x00014 0x0 0x8>,
+> +						<0x0 0x0002c 0x0 0x4>,
+> +						<0x0 0x00024 0x0 0x8>;
+> +					reg-names = "mux", "pull", "gpio";
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +					gpio-ranges = <&pinctrl_aobus 0 0 15>;
+> +				};
+> +			};
+> +
+>  			uart_AO: serial@3000 {
+>  				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
+>  				reg = <0x0 0x3000 0x0 0x18>;
