@@ -1,74 +1,83 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v2 09/19] ASoC: tlv320aic31xx: Remove
-	platform data
-Date: Wed, 6 Dec 2017 13:15:44 -0600
-Message-ID: <611f3eed-b82a-c997-4bf9-e3a4f1b7e94e@ti.com>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-10-afd@ti.com>
- <20171201132606.vyw7wthmql5trkwq@sirena.org.uk>
- <4fee76ef-e518-69b6-3bcc-f65b0a31cacc@ti.com>
- <20171206124540.GC1827@finisterre>
- <10f1b19b-4a0a-e336-b757-933d46b5c8e9@ti.com>
- <20171206173059.qw4tt7nizmyo6xbl@sirena.org.uk>
- <b6f581be-6d3a-6fc3-036f-9efc1bfc2429@ti.com>
- <20171206181534.7t23ljja6fgle4ar@sirena.org.uk>
- <86e13e26-e8d5-35ed-6bd0-d91d9323d5e6@ti.com>
- <20171206191112.ip47bylnvyfc2irt@sirena.org.uk>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARM64: dts: amlogic: use generic bus node names
+Date: Wed,  6 Dec 2017 11:30:05 -0800
+Message-ID: <20171206193005.24171-1-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171206191112.ip47bylnvyfc2irt@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2017 01:11 PM, Mark Brown wrote:
-> On Wed, Dec 06, 2017 at 12:40:45PM -0600, Andrew F. Davis wrote:
-> 
->> For some userspace feature sure, but this is kernel code, there is no
->> guarantee for a sable API, in fact some would probably argue even
->> further that there is a guarantee that stuff *will* change and this is a
->> good thing as it kinda serves to punish for those you don't try to upstream.
-> 
->> So the helpfulness bar should be zero for changes that break out-of-tree
->> stuff.
-> 
-> There is no need to actively get in people's way or put up barriers to
-> people who do in future decide to upstream things, that doesn't help
-> anyone.
-> 
->> Even more so this patch isn't a zero gain, the cleaner, better looking,
->> and easier to maintain code *is* the benefit in itself. Plus we gain the
->> ability to set mic-gain voltage with ACPI, something you couldn't do
->> before this patch.
-> 
-> If this patch adds ACPI support then the patch description was clearly
-> not great (I don't think I read the patch itself since the description
-> just said that it was removing platform data without giving a reason,
-> that's the main review comment here). 
-> 
+The DT spec recommends that node-names have generic names like "bus".
+Fix that in the Amlogic DTs, while leaving the label names to have more
+SoC-specific names that match with the HW documentation.
 
-I may not be clear that the ACPI part is new, but the message does say
-"and switch to using fwnode(DT/ACPI)"
+Suggested-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-> If you want to use the device property stuff that's fine but there's no
-> need to remove platform data to do that, it's a smaller change.  I find
-> it hard to see the platform data as a particularly big blight on the
-> code here, looking at the driver it's just going to remove the "pdata."
-> from a few variable accesses which isn't exactly transformational.
-> 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index b932a784b02a..e7213eb53958 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -113,7 +113,7 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
+-		cbus: cbus@ffd00000 {
++		cbus: bus@ffd00000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xffd00000 0x0 0x25000>;
+ 			#address-cells = <2>;
+@@ -175,7 +175,7 @@
+ 			};
+ 		};
+ 
+-		aobus: aobus@ff800000 {
++		aobus: bus@ff800000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xff800000 0x0 0x100000>;
+ 			#address-cells = <2>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 7cdbf58a062f..6cb3c2a52baf 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -211,7 +211,7 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
+-		cbus: cbus@c1100000 {
++		cbus: bus@c1100000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xc1100000 0x0 0x100000>;
+ 			#address-cells = <2>;
+@@ -366,7 +366,7 @@
+ 			};
+ 		};
+ 
+-		aobus: aobus@c8100000 {
++		aobus: bus@c8100000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xc8100000 0x0 0x100000>;
+ 			#address-cells = <2>;
+@@ -453,7 +453,7 @@
+ 			};
+ 		};
+ 
+-		hiubus: hiubus@c883c000 {
++		hiubus: bus@c883c000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xc883c000 0x0 0x2000>;
+ 			#address-cells = <2>;
+-- 
+2.11.0
 
-If keeping platform data is that important to you then I will split the
-patch into fwnode addition and pdata removal, you can just not take the
-pdata removal if you don't want it.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
