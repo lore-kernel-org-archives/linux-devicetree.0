@@ -1,45 +1,66 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] meson: saradc: drop the sana clock
-Date: Wed, 06 Dec 2017 11:52:44 -0800
-Message-ID: <7h609jskfn.fsf@baylibre.com>
-References: <20171116090115.29915-1-yixun.lan@amlogic.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] ARM64: dts: meson-axg: add ethernet mac controller
+Date: Wed, 06 Dec 2017 12:07:13 -0800
+Message-ID: <7hy3mfr572.fsf@baylibre.com>
+References: <20171113080155.2463-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171116090115.29915-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> (Yixun Lan's
-        message of "Thu, 16 Nov 2017 17:01:13 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171113080155.2463-1-yixun.lan@amlogic.com> (Yixun Lan's
+        message of "Mon, 13 Nov 2017 16:01:55 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> writes:
+Yixun Lan <yixun.lan@amlogic.com> writes:
 
-> This is a rework for the patch [v4 4/4] of previous series,
-> which mean this will make the patch [1] obsolete.
+> Add DT info for the stmmac ethernet MAC which found in
+> the Amlogic's Meson-AXG SoC, also describe the ethernet
+> pinctrl & clock information here.
 >
-> Changes since v4:
->  * separate DTS for ARM(32bit) vs ARM64
->  * add ACK from Martin
-
-Thanks for splitting it up.
-
-> [1] [PATCH v4 4/4] ARM64: dts: meson: drop "sana" clock from SAR ADC
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005266.html
+> This is tested in the S400 dev board which use a RTL8211F PHY,
+> and the pins connect to the 'eth_rgmii_y_pins' group.
 >
-> Xingyu Chen (2):
->   ARM64: dts: meson: drop "sana" clock from SAR ADC
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 
-Applied to v4.16/dt64
+This doesn't apply cleanly to mainline.  Are there some dependencies
+here that I'm not aware of?
 
->   ARM: dts: meson: drop "sana" clock from SAR ADC
+Also...
 
-Applied to v4.16/dt
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  7 ++++
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 53 ++++++++++++++++++++++++++
+>  2 files changed, 60 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> index 9eb6aaee155d..7b39a9fe2b0f 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> @@ -21,3 +21,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&ethmac {
+> +	status = "okay";
+> +	phy-mode = "rgmii";
+> +
+> +	pinctrl-0 = <&eth_rgmii_y_pins>;
+> +	pinctrl-names = "default";
+> +};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index 65945c6c8b65..57faaa9d8013 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -157,6 +157,19 @@
+>  			#address-cells = <0>;
+>  		};
+>  
+> +		ethmac: ethernet@ff3f0000 {
+> +			compatible = "amlogic,meson-axg-dwmac", "amlogic,meson-gxbb-dwmac", "snps,dwmac";
 
-Thanks,
+The new "meson-axg-dwmac" is not documented in the binding.  Can you add
+that?
 
 Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
