@@ -1,77 +1,352 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: RE: [PATCH] Documentation: binding: Update endianness usage
-Date: Wed, 6 Dec 2017 10:58:51 +0000
-Message-ID: <HE1PR04MB124174461F845000614CDAA197320@HE1PR04MB1241.eurprd04.prod.outlook.com>
-References: <1511954855-8593-1-git-send-email-prabhakar.kushwaha@nxp.com>
- <1512105209.10062.1.camel@buserror.net>
- <HE1PR04MB12414AFA5F8081730B89378497390@HE1PR04MB1241.eurprd04.prod.outlook.com>
- <1512165311.10062.3.camel@buserror.net>
- <HE1PR04MB1241226CD3B7ABD6D5FA2D91973C0@HE1PR04MB1241.eurprd04.prod.outlook.com>
- <1512441957.10062.6.camel@buserror.net>
- <HE1PR04MB1241ADD02E472BA492AE1C8F973D0@HE1PR04MB1241.eurprd04.prod.outlook.com>
- <1512504459.10062.9.camel@buserror.net>
- <HE1PR04MB1241F1A70CDBA5A94D4D2CE597320@HE1PR04MB1241.eurprd04.prod.outlook.com>
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [PATCH v2 2/3] hwrng: exynos - add Samsung Exynos True RNG driver
+Date: Wed, 6 Dec 2017 08:40:02 +0530
+Message-ID: <CANc+2y4JsnSqPUoj4N6j06Mo7oo4S7VyDGGV2TdaQ+f1a_tKyw@mail.gmail.com>
+References: <CGME20171127095809eucas1p27b7d5c44c564bb553342f5fab40d0bac@eucas1p2.samsung.com>
+ <20171127095804.7128-1-l.stelmach@samsung.com> <20171127095804.7128-3-l.stelmach@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <HE1PR04MB1241F1A70CDBA5A94D4D2CE597320@HE1PR04MB1241.eurprd04.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Scott Wood <oss@buserror.net>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dedekind1@gmail.com" <dedekind1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171127095804.7128-3-l.stelmach@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Cc: "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUHJhYmhha2FyIEt1c2h3
-YWhhDQo+IFNlbnQ6IFdlZG5lc2RheSwgRGVjZW1iZXIgMDYsIDIwMTcgNDowNSBQTQ0KPiBUbzog
-J1Njb3R0IFdvb2QnIDxvc3NAYnVzZXJyb3IubmV0PjsgbGludXgtbXRkQGxpc3RzLmluZnJhZGVh
-ZC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IENjOiBkZWRla2luZDFAZ21h
-aWwuY29tOyBjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb20NCj4gU3ViamVjdDogUkU6IFtQQVRD
-SF0gRG9jdW1lbnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNhZ2UNCj4gDQo+
-IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogU2NvdHQgV29vZCBb
-bWFpbHRvOm9zc0BidXNlcnJvci5uZXRdDQo+ID4gU2VudDogV2VkbmVzZGF5LCBEZWNlbWJlciAw
-NiwgMjAxNyAxOjM4IEFNDQo+ID4gVG86IFByYWJoYWthciBLdXNod2FoYSA8cHJhYmhha2FyLmt1
-c2h3YWhhQG54cC5jb20+OyBsaW51eC0NCj4gPiBtdGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBDYzogZGVkZWtpbmQxQGdtYWlsLmNvbTsgY29t
-cHV0ZXJzZm9ycGVhY2VAZ21haWwuY29tDQo+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gRG9jdW1l
-bnRhdGlvbjogYmluZGluZzogVXBkYXRlIGVuZGlhbm5lc3MgdXNhZ2UNCj4gPg0KPiA+IE9uIFR1
-ZSwgMjAxNy0xMi0wNSBhdCAwOTo0NSArMDAwMCwgUHJhYmhha2FyIEt1c2h3YWhhIHdyb3RlOg0K
-PiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiBGcm9tOiBTY290dCBX
-b29kIFttYWlsdG86b3NzQGJ1c2Vycm9yLm5ldF0NCj4gPiA+ID4gU2VudDogVHVlc2RheSwgRGVj
-ZW1iZXIgMDUsIDIwMTcgODoxNiBBTQ0KPiA+ID4gPiBUbzogUHJhYmhha2FyIEt1c2h3YWhhIDxw
-cmFiaGFrYXIua3VzaHdhaGFAbnhwLmNvbT47IGxpbnV4LQ0KPiA+ID4gPiBtdGRAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+ID4gQ2M6IGRlZGVr
-aW5kMUBnbWFpbC5jb207IGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbQ0KPiA+ID4gPiBTdWJq
-ZWN0OiBSZTogW1BBVENIXSBEb2N1bWVudGF0aW9uOiBiaW5kaW5nOiBVcGRhdGUgZW5kaWFubmVz
-cyB1c2FnZQ0KPiA+ID4gPg0KPiA+ID4gPiBJIG5vdyBzZWUgeW91ciBwYXRjaCB0byBvZl9mbGFz
-aF9wcm9iZS4uLiB3aGVyZSBpcyB0aGUgbm9uLUlGQy1zcGVjaWZpYw0KPiA+ID4gPiBiaW5kaW5n
-IHRoYXQgc2F5cyB0aGUgKnBhcmVudCogb2YgYSBDRkkgbm9kZSBzaG91bGQgYmUgbG9va2VkIGF0
-IGZvciB0aGlzPw0KPiA+ID4gPiBXaGVyZcKgaW4gZ2VuZXJhbCBhcmUgZW5kaWFuIHByb3BlcnRp
-ZXMga2VwdCBpbiB0aGUgcGFyZW50IG9mIHRoZSBub2RlIHdpdGgNCj4gPiA+ID4gInJlZyI/wqDC
-oFRoZSByaWdodCBhbnN3ZXIgaXMgdG8gYWRkIGVuZGlhbm5lc3MgdG8gbXRkLXBoeXNtYXAudHh0
-Lg0KPiA+ID4gPg0KPiA+ID4NCj4gPiA+IEZsYXNoZXMgYXJlIGFsd2F5cyBsaXR0bGVyIGVuZGlh
-bi4NCj4gPg0KPiA+IFdlIHdvdWxkbid0IGJlIGhhdmluZyB0aGlzIGRpc2N1c3Npb24gaWYgdGhh
-dCB3ZXJlIHRydWUuLi4gIFRoaXMgaXMgYWJvdXQgaG93DQo+ID4gaXQgcHJlc2VudHMgdG8gdGhl
-IENQVSwgbm90IGFib3V0IGhvdyB0aGUgYWN0dWFsIHBpbnMgb24gdGhlIGNoaXAgYXJlDQo+ID4g
-bnVtYmVyZWQuDQo+ID4NCj4gDQo+IEdvdCB5b3VyIHBvaW50IDopDQo+IA0KPiA+ID4gSXQgaXMg
-YmVjYXVzZSBvZiBJRkMgY29udHJvbGxlciBiZWhhdmlvciwgZW5kaWFubmVzcyBpcyByZXF1aXJl
-ZC4NCj4gPiA+IFNvIGFzIHBlciBteSB1bmRlcnN0YW5kaW5nLCB0aGlzIGluZm8gc2hvdWxkIGdv
-IGluIElGQyBiaW5kaW5nLg0KPiA+DQo+ID4gSWYgdGhlIGluZm8gc2hvdWxkIGdvIGluIHRoZSBJ
-RkMgYmluZGluZyB3aHkgaXMgdGhlIGNvZGUgaW4gYSBub24tSUZDLXNwZWNpZmljDQo+ID4gcGxh
-Y2U/DQo+ID4NCj4gDQo+IE5vdyBJIHVuZGVyc3RhbmQgeW91ciBwb2ludC4NCj4gU28gSSBzaG91
-bGQgYmUgbW92aW5nIGVuZGlhbm5lc3MgcHJvcGVydHkgZGV0YWlsIGluIG10ZC1waHlzbWFwLnR4
-dC4NCj4gDQo+IElzIG15IHVuZGVyc3RhbmRpbmcgY29ycmVjdD8NCj4gDQoNCkEgc2Vjb25kIHRo
-b3VnaHQsICANCklGQyBiaW5kaW5nIHdhcyB1cGRhdGVkIGJlY2F1c2UgdGhlcmUgaXMgbm8gSUZD
-LU5PUiBkcml2ZXIuIEl0IHVzZXMgZ2VuZXJpYyBGbGFzaCBmcmFtZXdvcmsuICANCiANCkkgYW0g
-anVzdCB0cnlpbmcgdG8gZ2V0IG1vcmUgdW5kZXJzdGFuZGluZy4gIA0KDQotLXByYWJoYWthcg0K
-DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-TGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+Hi Lukasz,
+
+On 27 November 2017 at 15:28, =C5=81ukasz Stelmach <l.stelmach@samsung.com>=
+ wrote:
+> Add support for True Random Number Generator found in Samsung Exynos
+> 5250+ SoCs.
+>
+> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+> ---
+>  MAINTAINERS                          |   7 +
+>  drivers/char/hw_random/Kconfig       |  12 ++
+>  drivers/char/hw_random/Makefile      |   1 +
+>  drivers/char/hw_random/exynos-trng.c | 245 +++++++++++++++++++++++++++++=
+++++++
+>  4 files changed, 265 insertions(+)
+>  create mode 100644 drivers/char/hw_random/exynos-trng.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2811a211632c..992074cca612 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11780,6 +11780,13 @@ S:     Maintained
+>  F:     drivers/crypto/exynos-rng.c
+>  F:     Documentation/devicetree/bindings/rng/samsung,exynos-rng4.txt
+>
+> +SAMSUNG EXYNOS TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
+> +M:     =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+> +L:     linux-samsung-soc@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/char/hw_random/exynos-trng.c
+> +F:     Documentation/devicetree/bindings/rng/samsung,exynos5250-trng.txt
+> +
+>  SAMSUNG FRAMEBUFFER DRIVER
+>  M:     Jingoo Han <jingoohan1@gmail.com>
+>  L:     linux-fbdev@vger.kernel.org
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kcon=
+fig
+> index 95a031e9eced..292e6b36d493 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -449,6 +449,18 @@ config HW_RANDOM_S390
+>
+>           If unsure, say Y.
+>
+> +config HW_RANDOM_EXYNOS
+> +       tristate "Samsung Exynos True Random Number Generator support"
+> +       depends on ARCH_EXYNOS || COMPILE_TEST
+> +       default HW_RANDOM
+> +       ---help---
+> +         This driver provides support for the True Random Number
+> +         Generator available in Exynos SoCs.
+> +
+> +         To compile this driver as a module, choose M here: the module
+> +         will be called exynos-trng.
+> +
+> +         If unsure, say Y.
+>  endif # HW_RANDOM
+>
+>  config UML_RANDOM
+> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Mak=
+efile
+> index f3728d008fff..5595df97da7a 100644
+> --- a/drivers/char/hw_random/Makefile
+> +++ b/drivers/char/hw_random/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_HW_RANDOM_GEODE) +=3D geode-rng.o
+>  obj-$(CONFIG_HW_RANDOM_N2RNG) +=3D n2-rng.o
+>  n2-rng-y :=3D n2-drv.o n2-asm.o
+>  obj-$(CONFIG_HW_RANDOM_VIA) +=3D via-rng.o
+> +obj-$(CONFIG_HW_RANDOM_EXYNOS) +=3D exynos-trng.o
+>  obj-$(CONFIG_HW_RANDOM_IXP4XX) +=3D ixp4xx-rng.o
+>  obj-$(CONFIG_HW_RANDOM_OMAP) +=3D omap-rng.o
+>  obj-$(CONFIG_HW_RANDOM_OMAP3_ROM) +=3D omap3-rom-rng.o
+> diff --git a/drivers/char/hw_random/exynos-trng.c b/drivers/char/hw_rando=
+m/exynos-trng.c
+> new file mode 100644
+> index 000000000000..91b2ddb249fa
+> --- /dev/null
+> +++ b/drivers/char/hw_random/exynos-trng.c
+> @@ -0,0 +1,245 @@
+> +/*
+> + * RNG driver for Exynos TRNGs
+> + *
+> + * Author: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+> + *
+> + * Copyright 2017 (c) Samsung Electronics Software, Inc.
+> + *
+> + * Based on the Exynos PRNG driver drivers/crypto/exynos-rng by
+> + * Krzysztof Koz=C5=82owski <krzk@kernel.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation;
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/crypto.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/hw_random.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#define EXYNOS_TRNG_CLKDIV         (0x0)
+> +#define EXYNOS_TRNG_CTRL           (0x20)
+> +#define EXYNOS_TRNG_POST_CTRL      (0x30)
+> +#define EXYNOS_TRNG_ONLINE_CTRL    (0x40)
+> +#define EXYNOS_TRNG_ONLINE_STAT    (0x44)
+> +#define EXYNOS_TRNG_ONLINE_MAXCHI2 (0x48)
+> +#define EXYNOS_TRNG_FIFO_CTRL      (0x50)
+> +#define EXYNOS_TRNG_FIFO_0         (0x80)
+> +#define EXYNOS_TRNG_FIFO_1         (0x84)
+> +#define EXYNOS_TRNG_FIFO_2         (0x88)
+> +#define EXYNOS_TRNG_FIFO_3         (0x8c)
+> +#define EXYNOS_TRNG_FIFO_4         (0x90)
+> +#define EXYNOS_TRNG_FIFO_5         (0x94)
+> +#define EXYNOS_TRNG_FIFO_6         (0x98)
+> +#define EXYNOS_TRNG_FIFO_7         (0x9c)
+> +#define EXYNOS_TRNG_FIFO_LEN       (8)
+> +#define EXYNOS_TRNG_CLOCK_RATE     (500000)
+> +
+> +#define TRNG_CTRL_RGNEN            BIT(31)
+> +
+> +struct exynos_trng_dev {
+> +       struct device    *dev;
+> +       void __iomem     *mem;
+> +       struct clk       *clk;
+> +       struct hwrng rng;
+> +};
+> +
+> +static int exynos_trng_do_read(struct hwrng *rng, void *data, size_t max=
+,
+> +                              bool wait)
+> +{
+> +       struct exynos_trng_dev *trng;
+> +       u32 val;
+> +
+> +       max =3D min_t(size_t, max, (EXYNOS_TRNG_FIFO_LEN * 4));
+> +
+> +       trng =3D (struct exynos_trng_dev *)rng->priv;
+> +
+> +       __raw_writel(max * 8, trng->mem + EXYNOS_TRNG_FIFO_CTRL);
+> +       val =3D readl_poll_timeout(trng->mem + EXYNOS_TRNG_FIFO_CTRL, val=
+,
+> +                                val =3D=3D 0, 200, 1000000);
+> +       if (val < 0)
+> +               return val;
+> +
+> +       memcpy_fromio(data, trng->mem + EXYNOS_TRNG_FIFO_0, max);
+> +
+> +       return max;
+> +}
+> +
+> +static int exynos_trng_init(struct hwrng *rng)
+> +{
+> +       struct exynos_trng_dev *trng =3D (struct exynos_trng_dev *)rng->p=
+riv;
+> +       unsigned long sss_rate;
+> +       u32 val;
+> +
+> +       sss_rate =3D clk_get_rate(trng->clk);
+> +
+> +       /*
+> +        * For most TRNG circuits the clock frequency of under 500 kHz
+> +        * is safe.
+> +        */
+> +       val =3D sss_rate / (EXYNOS_TRNG_CLOCK_RATE * 2);
+> +       if (val > 0x7fff) {
+> +               dev_err(trng->dev, "clock divider too large: %d", val);
+> +               return -ERANGE;
+> +       }
+> +       val =3D val << 1;
+> +       __raw_writel(val, trng->mem + EXYNOS_TRNG_CLKDIV);
+> +
+> +       /* Enable the generator. */
+> +       val =3D TRNG_CTRL_RGNEN;
+> +       __raw_writel(val, trng->mem + EXYNOS_TRNG_CTRL);
+> +
+> +       /*
+> +        * Disable post-processing. /dev/hwrng is supposed to deliver
+> +        * unprocessed data.
+> +        */
+> +       __raw_writel(0, trng->mem + EXYNOS_TRNG_POST_CTRL);
+> +
+> +       return 0;
+> +}
+> +
+> +static int exynos_trng_probe(struct platform_device *pdev)
+> +{
+> +       struct exynos_trng_dev *trng;
+> +       struct resource *res;
+> +       int ret =3D -ENOMEM;
+> +
+> +       trng =3D devm_kzalloc(&pdev->dev, sizeof(*trng), GFP_KERNEL);
+> +       if (!trng)
+> +               return ret;
+> +
+> +       trng->rng.name =3D devm_kstrdup(&pdev->dev, dev_name(&pdev->dev),
+> +                                     GFP_KERNEL);
+> +       if (!trng->rng.name)
+> +               return ret;
+> +
+> +       trng->rng.init =3D exynos_trng_init;
+> +       trng->rng.read =3D exynos_trng_do_read;
+> +       trng->rng.priv =3D (unsigned long) trng;
+> +
+> +       platform_set_drvdata(pdev, trng);
+> +       trng->dev =3D &pdev->dev;
+> +
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       trng->mem =3D devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(trng->mem)) {
+> +               ret =3D PTR_ERR(trng->mem);
+> +               dev_err(&pdev->dev, "Could not map IO resources.\n");
+> +               goto err_ioremap;
+> +       }
+> +
+> +       pm_runtime_enable(&pdev->dev);
+> +       ret =3D pm_runtime_get_sync(&pdev->dev);
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "Could not get runtime PM.\n");
+> +               goto err_pm_get;
+> +       }
+> +
+> +       trng->clk =3D devm_clk_get(&pdev->dev, "secss");
+> +       if (IS_ERR(trng->clk)) {
+> +               ret =3D PTR_ERR(trng->clk);
+> +               dev_err(&pdev->dev, "Could not get clock.\n");
+> +               goto err_clock;
+> +       }
+> +
+> +       ret =3D clk_prepare_enable(trng->clk);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Could not enable the clk.\n");
+> +               goto err_clock;
+> +       }
+> +
+> +       ret =3D hwrng_register(&trng->rng);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Could not register hwrng device.\n")=
+;
+> +               goto err_register;
+> +       }
+> +
+> +       dev_info(&pdev->dev, "Exynos True Random Number Generator.\n");
+> +
+> +       return 0;
+> +
+> +err_register:
+> +       clk_disable_unprepare(trng->clk);
+> +
+> +err_clock:
+> +       pm_runtime_put_sync(&pdev->dev);
+> +
+> +err_pm_get:
+> +       pm_runtime_disable(&pdev->dev);
+> +
+> +err_ioremap:
+> +       return ret;
+> +}
+> +
+> +static int exynos_trng_remove(struct platform_device *pdev)
+> +{
+> +       struct exynos_trng_dev *trng =3D  platform_get_drvdata(pdev);
+> +
+> +       hwrng_unregister(&trng->rng);
+> +       clk_disable_unprepare(trng->clk);
+> +
+> +       pm_runtime_put_sync(&pdev->dev);
+> +       pm_runtime_disable(&pdev->dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused exynos_trng_suspend(struct device *dev)
+> +{
+> +       pm_runtime_put_sync(dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused exynos_trng_resume(struct device *dev)
+> +{
+> +       int ret;
+> +
+> +       ret =3D pm_runtime_get_sync(dev);
+> +       if (ret < 0) {
+> +               dev_err(dev, "Could not get runtime PM.\n");
+> +               pm_runtime_put_noidle(dev);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(exynos_trng_pm_ops, exynos_trng_suspend,
+> +                        exynos_trng_resume);
+> +
+> +static const struct of_device_id exynos_trng_dt_match[] =3D {
+> +       {
+> +               .compatible =3D "samsung,exynos5250-trng",
+> +       },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, exynos_rng_dt_match);
+> +
+> +static struct platform_driver exynos_trng_driver =3D {
+> +       .driver =3D {
+> +               .name =3D "exynos-trng",
+> +               .pm =3D &exynos_trng_pm_ops,
+> +               .of_match_table =3D exynos_trng_dt_match,
+> +       },
+> +       .probe =3D exynos_trng_probe,
+> +       .remove =3D exynos_trng_remove,
+> +};
+> +
+> +module_platform_driver(exynos_trng_driver);
+> +MODULE_AUTHOR("=C5=81ukasz Stelmach");
+> +MODULE_DESCRIPTION("H/W TRNG driver for Exynos chips");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.11.0
+>
+
+Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+
+Regards,
+PrasannaKumar
