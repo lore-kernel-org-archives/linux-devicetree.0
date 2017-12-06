@@ -1,7 +1,7 @@
 From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 08/12] ARM: dts: rockchip: add isp node for rk3288
-Date: Wed,  6 Dec 2017 19:19:35 +0800
-Message-ID: <20171206111939.1153-9-jacob-chen@iotwrt.com>
+Subject: [PATCH v3 12/12] MAINTAINERS: add entry for Rockchip ISP1 driver
+Date: Wed,  6 Dec 2017 19:19:39 +0800
+Message-ID: <20171206111939.1153-13-jacob-chen@iotwrt.com>
 References: <20171206111939.1153-1-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,40 +23,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-rk3288 have a Embedded 13M ISP
+Add MAINTAINERS entry for the rockchip isp1 driver.
+This driver is maintained by rockchip officially and it
+will be used for rockchip SoC on all linux-kernel based OS.
 
 Signed-off-by: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index a3c015628421..ea1dda001043 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -962,6 +962,23 @@
- 		status = "disabled";
- 	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b05bc2c5e85c..614196ed7265 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11665,6 +11665,16 @@ F:	drivers/hid/hid-roccat*
+ F:	include/linux/hid-roccat*
+ F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
  
-+	isp: isp@ff910000 {
-+		compatible = "rockchip,rk3288-cif-isp";
-+		reg = <0x0 0xff910000 0x0 0x4000>;
-+		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_ISP>, <&cru ACLK_ISP>,
-+			 <&cru HCLK_ISP>, <&cru PCLK_ISP_IN>,
-+			 <&cru SCLK_ISP_JPE>;
-+		clock-names = "clk_isp", "aclk_isp",
-+			      "hclk_isp", "pclk_isp_in",
-+			      "sclk_isp_jpe";
-+		assigned-clocks = <&cru SCLK_ISP>, <&cru SCLK_ISP_JPE>;
-+		assigned-clock-rates = <400000000>, <400000000>;
-+		power-domains = <&power RK3288_PD_VIO>;
-+		iommus = <&isp_mmu>;
-+		status = "disabled";
-+	};
++ROCKCHIP ISP V1 DRIVER
++M:	Jacob chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
++M:	Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
++M:	Yichong Zhong <zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
++L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++S:	Maintained
++F:	drivers/media/platform/rockchip/isp1/
++F:	Documentation/devicetree/bindings/media/rockchip-isp1.txt
++F:	Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
 +
- 	isp_mmu: iommu@ff914000 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff914000 0x0 0x100>, <0x0 0xff915000 0x0 0x100>;
+ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+ M:	Jacob chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+ L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 -- 
 2.15.0
