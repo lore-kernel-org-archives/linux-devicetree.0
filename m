@@ -1,104 +1,89 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [RESEND PATCH v3 2/2] ARM64: dts: meson-axg: add pinctrl DT info for Meson-AXG SoC
-Date: Wed, 06 Dec 2017 12:18:32 -0800
-Message-ID: <7htvx3r4o7.fsf@baylibre.com>
-References: <20171120102354.5354-1-yixun.lan@amlogic.com>
-        <20171120102354.5354-3-yixun.lan@amlogic.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v2 16/19] ASoC: tlv320aic31xx: Add short
+ circuit detection support
+Date: Wed, 6 Dec 2017 14:22:39 -0600
+Message-ID: <fd362117-ae71-a6a2-eb43-70c2457c0a5d@ti.com>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-17-afd@ti.com>
+ <20171201133930.xzfjjj6wzkbtk6c4@sirena.org.uk>
+ <4d956cbc-829c-0d81-2980-aa2a79f36660@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171120102354.5354-3-yixun.lan@amlogic.com> (Yixun Lan's
-        message of "Mon, 20 Nov 2017 18:23:54 +0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Xingyu Chen <xingyu.chen@amlogic.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <4d956cbc-829c-0d81-2980-aa2a79f36660@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Yixun Lan <yixun.lan@amlogic.com> writes:
+On 12/01/2017 09:32 AM, Andrew F. Davis wrote:
+> On 12/01/2017 07:39 AM, Mark Brown wrote:
+>> On Wed, Nov 29, 2017 at 03:32:57PM -0600, Andrew F. Davis wrote:
+>>
+>>> +static irqreturn_t aic31xx_irq(int irq, void *data)
+>>> +{
+>>> +	struct aic31xx_priv *aic31xx = (struct aic31xx_priv *)data;
+>>
+>> There is no need to cast away from void, doing so can only mask bugs.
+>>
+>>> +	ret = regmap_read(aic31xx->regmap, AIC31XX_INTRDACFLAG, &value);
+>>> +	if (ret) {
+>>> +		dev_err(dev, "Failed to read interrupt mask: %d\n", ret);
+>>> +		return IRQ_NONE;
+>>> +	}
+>>> +
+>>> +	if (value & AIC31XX_HPLSCDETECT)
+>>> +		dev_err(dev, "Short circuit on Left output is detected\n");
+>>> +	if (value & AIC31XX_HPRSCDETECT)
+>>> +		dev_err(dev, "Short circuit on Right output is detected\n");
+>>> +
+>>> +	return IRQ_HANDLED;
+>>
+>> This will report the interrupt as handled even if we didn't see an
+>> interrupt we understand which will break shared interrupt lines.  At the
+>> very least we should log other interrupt sources numerically.
+>>
+> 
+> Okay, I think I can make that work by checking if no bits are set in the
+> interrupt regs and returning early if not, IRQ_NONE.
+> 
 
-> From: Xingyu Chen <xingyu.chen@amlogic.com>
->
-> Add new pinctrl DT info for the Amlogic's Meson-AXG SoC.
->
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 44 ++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index 5fc33b76b91c..e0fb860e12c5 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -9,6 +9,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/clock/axg-clkc.h>
->  #include <dt-bindings/clock/axg-aoclkc.h>
+This turned out to be more difficult than I expected, plus if I do
+handle an interrupt it doesn't mean the other device did not right? So
+this wouldn't fix shared lines as far as I can tell, but I don't
+register it as shared so this should be fine.
 
-This doesn't apply because this aoclkc.h header does not exist in
-mainline.
+As for your other suggestion of "log other interrupt sources
+numerically", could you explain this or point to an example of what you
+mean?
 
-Kevin
-
-> +#include <dt-bindings/gpio/meson-axg-gpio.h>
->  
->  / {
->  	compatible = "amlogic,meson-axg";
-> @@ -173,6 +174,32 @@
->  			#mbox-cells = <1>;
->  		};
->  
-> +		periphs: periphs@ff634000 {
-> +			compatible = "simple-bus";
-> +			reg = <0x0 0xff634000 0x0 0x2000>;
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges = <0x0 0x0 0x0 0xff634000 0x0 0x2000>;
-> +
-> +			pinctrl_periphs: pinctrl@480 {
-> +				compatible = "amlogic,meson-axg-periphs-pinctrl";
-> +				#address-cells = <2>;
-> +				#size-cells = <2>;
-> +				ranges;
-> +
-> +				gpio: bank@480 {
-> +					reg = <0x0 0x00480 0x0 0x40>,
-> +						<0x0 0x004e8 0x0 0x14>,
-> +						<0x0 0x00520 0x0 0x14>,
-> +						<0x0 0x00430 0x0 0x3c>;
-> +					reg-names = "mux", "pull", "pull-enable", "gpio";
-> +					gpio-controller;
-> +					#gpio-cells = <2>;
-> +					gpio-ranges = <&pinctrl_periphs 0 0 86>;
-> +				};
-> +			};
-> +		};
-> +
->  		sram: sram@fffc0000 {
->  			compatible = "amlogic,meson-axg-sram", "mmio-sram";
->  			reg = <0x0 0xfffc0000 0x0 0x20000>;
-> @@ -209,6 +236,23 @@
->  				};
->  			};
->  
-> +			pinctrl_aobus: pinctrl@14 {
-> +				compatible = "amlogic,meson-axg-aobus-pinctrl";
-> +				#address-cells = <2>;
-> +				#size-cells = <2>;
-> +				ranges;
-> +
-> +				gpio_ao: bank@14 {
-> +					reg = <0x0 0x00014 0x0 0x8>,
-> +						<0x0 0x0002c 0x0 0x4>,
-> +						<0x0 0x00024 0x0 0x8>;
-> +					reg-names = "mux", "pull", "gpio";
-> +					gpio-controller;
-> +					#gpio-cells = <2>;
-> +					gpio-ranges = <&pinctrl_aobus 0 0 15>;
-> +				};
-> +			};
-> +
->  			uart_AO: serial@3000 {
->  				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
->  				reg = <0x0 0x3000 0x0 0x18>;
+>>> +	if (aic31xx->irq > 0) {
+>>> +		regmap_update_bits(aic31xx->regmap, AIC31XX_GPIO1,
+>>> +				   AIC31XX_GPIO1_FUNC_MASK,
+>>> +				   AIC31XX_GPIO1_INT1 <<
+>>> +				   AIC31XX_GPIO1_FUNC_SHIFT);
+>>
+>> Is the interrupt only available on GPIO1?
+>>
+> 
+> Some devices can route this to GPIO2 IIRC.
+> 
+> I'm not sure how that would be supported, I think we would need to add
+> interrupt names to DT so users could specify which gpio they wired their
+> IRQ lines to.
+> 
+> interrupt = <&host 23>;
+> interrupt-name = "gpio2";
+> 
+> or similar?
+> 
