@@ -1,102 +1,117 @@
-From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v3 07/12] dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
-Date: Wed,  6 Dec 2017 19:19:34 +0800
-Message-ID: <20171206111939.1153-8-jacob-chen@iotwrt.com>
-References: <20171206111939.1153-1-jacob-chen@iotwrt.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171206111939.1153-1-jacob-chen@iotwrt.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, allon.huang@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, Joao.Pinto@synopsys.com, Luis.Oliveira@synopsys.com, Jose.Abreu@synopsys.com, Jacob Chen <jacob2.chen@rock-chips.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH] ARM: dts: colibri/apalis: use correct compatible for RTC
+Date: Wed,  6 Dec 2017 11:29:29 +0100
+Message-ID: <20171206102929.4755-1-stefan@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>, Sanchayan Maity <maitysanchayan@gmail.com>, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+All Toradex Carrier Boards use a st,m41t0 compatible RTC. Compared
+to a st,m41t00 this RTC has also an oscillator fail bit which allows
+to detect when the RTC lost track of time.
 
-Add DT bindings documentation for Rockchip MIPI D-PHY RX
-
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+Cc: Sanchayan Maity <maitysanchayan@gmail.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- .../bindings/media/rockchip-mipi-dphy.txt          | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+ arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts  | 2 +-
+ arch/arm/boot/dts/imx6q-apalis-eval.dts       | 2 +-
+ arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts | 2 +-
+ arch/arm/boot/dts/imx6q-apalis-ixora.dts      | 2 +-
+ arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi   | 2 +-
+ arch/arm/boot/dts/vf-colibri-eval-v3.dtsi     | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-new file mode 100644
-index 000000000000..cef9450db051
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
-@@ -0,0 +1,71 @@
-+Rockchip SoC MIPI RX D-PHY
-+-------------------------------------------------------------
-+
-+Required properties:
-+
-+- compatible: value should be one of the following
-+    "rockchip,rk3288-mipi-dphy";
-+    "rockchip,rk3399-mipi-dphy";
-+- rockchip,grf: GRF regs.
-+- bus-width : maximum number of data lanes supported (SoC specific);
-+- clocks : list of clock specifiers, corresponding to entries in
-+		    clock-names property;
-+- clock-names: required clock name.
-+
-+The device node should contain two 'port' child node, according to the bindings
-+defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
-+The first port should be connected to sensor nodes, and the second port should be
-+connected to isp node. The following are properties specific to those nodes.
-+
-+endpoint node
-+-------------
-+
-+- data-lanes : (required) an array specifying active physical MIPI-CSI2
-+		data input lanes and their mapping to logical lanes; the
-+		array's content is unused, only its length is meaningful;
-+
-+Device node example
-+-------------------
-+
-+    mipi_dphy_rx0: mipi-dphy-rx0 {
-+        compatible = "rockchip,rk3399-mipi-dphy";
-+        clocks = <&cru SCLK_MIPIDPHY_REF>,
-+            <&cru SCLK_DPHY_RX0_CFG>,
-+            <&cru PCLK_VIO_GRF>;
-+        clock-names = "dphy-ref", "dphy-cfg", "grf";
-+        power-domains = <&power RK3399_PD_VIO>;
-+        bus-width = <4>;
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            port@0 {
-+                reg = <0>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                mipi_in_wcam: endpoint@0 {
-+                    reg = <0>;
-+                    remote-endpoint = <&wcam_out>;
-+                    data-lanes = <1 2>;
-+                };
-+                mipi_in_ucam: endpoint@1 {
-+                    reg = <1>;
-+                    remote-endpoint = <&ucam_out>;
-+                    data-lanes = <1>;
-+                };
-+            };
-+
-+            port@1 {
-+                reg = <1>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                dphy_rx0_out: endpoint@0 {
-+                    reg = <0>;
-+                    remote-endpoint = <&isp0_mipi_in>;
-+                };
-+            };
-+        };
-+    };
-\ No newline at end of file
+diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+index 5705ebee0595..dcf9206f3e0d 100644
+--- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
+@@ -163,7 +163,7 @@
+ 
+ 	/* M41T0M6 real time clock on carrier board */
+ 	rtc_i2c: rtc@68 {
+-		compatible = "st,m41t00";
++		compatible = "st,m41t0";
+ 		reg = <0x68>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6q-apalis-eval.dts b/arch/arm/boot/dts/imx6q-apalis-eval.dts
+index 8b56656e53da..aa0e631f3c0a 100644
+--- a/arch/arm/boot/dts/imx6q-apalis-eval.dts
++++ b/arch/arm/boot/dts/imx6q-apalis-eval.dts
+@@ -158,7 +158,7 @@
+ 
+ 	/* M41T0M6 real time clock on carrier board */
+ 	rtc_i2c: rtc@68 {
+-		compatible = "st,m41t00";
++		compatible = "st,m41t0";
+ 		reg = <0x68>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+index 27dc0fc686a9..e8dccf552122 100644
+--- a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
++++ b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+@@ -170,7 +170,7 @@
+ 
+ 	/* M41T0M6 real time clock on carrier board */
+ 	rtc_i2c: rtc@68 {
+-		compatible = "st,m41t00";
++		compatible = "st,m41t0";
+ 		reg = <0x68>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+index 40b2c67fe7af..6831dfd24cc1 100644
+--- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
++++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
+@@ -174,7 +174,7 @@
+ 
+ 	/* M41T0M6 real time clock on carrier board */
+ 	rtc_i2c: rtc@68 {
+-		compatible = "st,m41t00";
++		compatible = "st,m41t0";
+ 		reg = <0x68>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+index 3d6c282dd258..3cf9b077d4f3 100644
+--- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+@@ -133,7 +133,7 @@
+ 
+ 	/* M41T0M6 real time clock on carrier board */
+ 	rtc: m41t0m6@68 {
+-		compatible = "st,m41t00";
++		compatible = "st,m41t0";
+ 		reg = <0x68>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+index 091b738041a0..d8b2972527eb 100644
+--- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+@@ -140,7 +140,7 @@
+ 
+ 	/* M41T0M6 real time clock on carrier board */
+ 	rtc: m41t0m6@68 {
+-		compatible = "st,m41t00";
++		compatible = "st,m41t0";
+ 		reg = <0x68>;
+ 	};
+ };
 -- 
-2.15.0
+2.15.1
