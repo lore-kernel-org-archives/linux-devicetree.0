@@ -1,50 +1,119 @@
-From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: introduce the sama5d2 ptc ek board
-Date: Wed, 6 Dec 2017 08:01:32 +0100
-Message-ID: <20171206070132.GE2451@rfolt0960.corp.atmel.com>
-References: <20171205142312.21506-1-ludovic.desroches@microchip.com>
- <20171205170141.qleqh6rou2ow54je@tarshish.tkos.co.il>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 3/3] ARM: dts: imx6sl-evk: Convert from fbdev to drm bindings
+Date: Wed,  6 Dec 2017 00:53:04 -0200
+Message-ID: <1512528784-29288-3-git-send-email-marcofrk@gmail.com>
+References: <1512528784-29288-1-git-send-email-marcofrk@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171205170141.qleqh6rou2ow54je-Gk1+JqxT0KghR1HGirfZ1z4kX+cae0hd@public.gmane.org>
+In-Reply-To: <1512528784-29288-1-git-send-email-marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 05, 2017 at 07:01:41PM +0200, Baruch Siach wrote:
-> Hi Ludovic,
-> 
-> On Tue, Dec 05, 2017 at 03:23:12PM +0100, Ludovic Desroches wrote:
-> > Add the official SAMA5D2 Peripheral Touch Controller Evaluation
-> > Kit board.
-> > 
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> > ---
-> 
-> [...]
-> 
-> > +	memory {
-> > +		reg = <0x20000000 0x80000>;
-> > +	};
-> 
-> The size value is clearly wrong; you surely don't run on 512KB RAM. You most 
-> likely rely on the bootloader to fix the size value. Since sama5d2.dtsi has a 
-> memory node already with the same address, you can just drop it from here.
-> 
+It is preferred to use the panel compatible string rather than passing 
+the LCD timing in the device tree.
 
-Thanks, fixed in v2.
+So pass the "sii,43wvf1g" compatible string which describes the parallel 
+LCD.
 
-Ludovic
+Also, pass the 'backlight' property as described in 
+Documentation/devicetree/bindings/display/panel/simple-panel.txt
 
-> baruch
-> 
-> -- 
->      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-> =}------------------------------------------------ooO--U--Ooo------------{=
->    - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
+Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+---
+Changes since v1:
+-change subject
+-change message log
+-includes into a set of patches
+-fix regulator name and properties
+ arch/arm/boot/dts/imx6sl-evk.dts | 48 ++++++++++++++++++++--------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6sl-evk.dts b/arch/arm/boot/dts/imx6sl-evk.dts
+index 645a460..a395de4 100644
+--- a/arch/arm/boot/dts/imx6sl-evk.dts
++++ b/arch/arm/boot/dts/imx6sl-evk.dts
+@@ -20,7 +20,7 @@
+ 		reg = <0x80000000 0x40000000>;
+ 	};
+ 
+-	backlight {
++	backlight_display: backlight_display {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm1 0 5000000>;
+ 		brightness-levels = <0 4 8 16 32 64 128 255>;
+@@ -82,6 +82,13 @@
+ 		enable-active-high;
+ 	};
+ 
++	reg_lcd_5v: regulator-lcd-5v {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-5v0";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++	};
++
+ 	sound {
+ 		compatible = "fsl,imx6sl-evk-wm8962", "fsl,imx-audio-wm8962";
+ 		model = "wm8962-audio";
+@@ -97,6 +104,19 @@
+ 		mux-int-port = <2>;
+ 		mux-ext-port = <3>;
+ 	};
++
++	panel {
++		compatible = "sii,43wvf1g";
++		backlight = <&backlight_display>;
++		dvdd-supply = <&reg_lcd_3v3>;
++		avdd-supply = <&reg_lcd_5v>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&display_out>;
++			};
++		};
++	};
+ };
+ 
+ &audmux {
+@@ -535,31 +555,11 @@
+ &lcdif {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_lcd>;
+-	lcd-supply = <&reg_lcd_3v3>;
+-	display = <&display0>;
+ 	status = "okay";
+ 
+-	display0: display0 {
+-		bits-per-pixel = <32>;
+-		bus-width = <24>;
+-
+-		display-timings {
+-			native-mode = <&timing0>;
+-			timing0: timing0 {
+-				clock-frequency = <33500000>;
+-				hactive = <800>;
+-				vactive = <480>;
+-				hback-porch = <89>;
+-				hfront-porch = <164>;
+-				vback-porch = <23>;
+-				vfront-porch = <10>;
+-				hsync-len = <10>;
+-				vsync-len = <10>;
+-				hsync-active = <0>;
+-				vsync-active = <0>;
+-				de-active = <1>;
+-				pixelclk-active = <0>;
+-			};
++	port {
++		display_out: endpoint {
++			remote-endpoint = <&panel_in>;
+ 		};
+ 	};
+ };
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
