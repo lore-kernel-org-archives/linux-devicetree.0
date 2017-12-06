@@ -1,41 +1,45 @@
-From: Appana Durga Kedareswara Rao <appanad@xilinx.com>
-Subject: RE: [PATCH v6 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame
- stores scenario in vdma
-Date: Wed, 6 Dec 2017 04:11:12 +0000
-Message-ID: <CY1PR02MB1692CA130CB5721CE6AC9425DC320@CY1PR02MB1692.namprd02.prod.outlook.com>
-References: <1484372155-19423-1-git-send-email-appanad@xilinx.com>
- <1484372155-19423-3-git-send-email-appanad@xilinx.com>
- <296cffff-3847-4217-bd94-ac72fe044f73@topic.nl>
- <CY1PR02MB169299C7AA719D4CE56F328DDC3B0@CY1PR02MB1692.namprd02.prod.outlook.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v2 0/4] arm64: defconfig: enable additional led triggers
+Date: Wed, 6 Dec 2017 14:27:26 +0530
+Message-ID: <CAHLCerN4sYpU7PJG7JLhAy644s3jz9KD_myKWfOoOkEResPu-Q@mail.gmail.com>
+References: <cover.1509951550.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CY1PR02MB169299C7AA719D4CE56F328DDC3B0@CY1PR02MB1692.namprd02.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <cover.1509951550.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, Mike Looijmans <mike.looijmans@topic.nl>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "Michal Simek (michal.simek@xilinx.com)" <michal.simek@xilinx.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "Jose.Abreu@synopsys.com" <Jose.Abreu@synopsys.com>, "luis@debethencourt.com" <luis@debethencourt.com>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, lakml <linux-arm-kernel@lists.infradead.org>, Wei Xu <xuwei5@hisilicon.com>, manivannan.sadhasivam@linaro.org, devicetree@vger.kernel.org, timur@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlrZSBMb29pam1hbnMsDQoNCglUaGFua3MgZm9yIHRoZSByZXZpZXcuLi4NCglTb3JyeSBm
-b3IgdGhlIGxvbmcgZGVsYXkgaW4gdGhlIHJlcGx5Li4uDQpQbGVhc2UgZmluZCBjb21tZW50cyBp
-bmxpbmUuLi4gDQoNCjxTbmlwPg0KPk9uIDE0LTAxLTE3IDA2OjM1LCBLZWRhcmVzd2FyYSByYW8g
-QXBwYW5hIHdyb3RlOg0KPj7CoMKgV2hlbiBWRE1BIGlzIGNvbmZpZ3VyZWQgZm9yIG1vcmUgdGhh
-biBvbmUgZnJhbWUgaW4gdGhlIGgvdy4NCj4+wqDCoEZvciBleGFtcGxlIGgvdyBpcyBjb25maWd1
-cmVkIGZvciBuIG51bWJlciBvZiBmcmFtZXMsIHVzZXINCj4+wqDCoFN1Ym1pdHMgbiBudW1iZXIg
-b2YgZnJhbWVzIGFuZCB0cmlnZ2VyZWQgdGhlIERNQSB1c2luZyBpc3N1ZV9wZW5kaW5nIEFQSS4N
-Cj4+DQo+PsKgwqBJbiB0aGUgY3VycmVudCBkcml2ZXIgZmxvdyB3ZSBhcmUgc3VibWl0dGluZyBv
-bmUgZnJhbWUgYXQgYSB0aW1lLA0KPj7CoMKgQnV0IHdlIHNob3VsZCBzdWJtaXQgYWxsIHRoZSBu
-IG51bWJlciBvZiBmcmFtZXMgYXQgb25lIHRpbWUNCj4+wqDCoEFzIHRoZSBoL3cgaXMgY29uZmln
-dXJlZCBmb3IgbiBudW1iZXIgb2YgZnJhbWVzLg0KPg0KPlRoZSBoYXJkd2FyZSBjYW4gYWx3YXlz
-IGhhbmRsZSBhIHNpbmdsZSBmcmFtZSBzdWJtaXNzaW9uLCBieSB1c2luZyB0aGUgInBhcmsiDQo+
-Yml0LiBUaGlzIHdvdWxkIG1ha2UgYSBnb29kICJjeWNsaWMiIGltcGxlbWVudGF0aW9uIHRvbyAo
-dXNpbmcgdmRtYSBhcw0KPmZyYW1lYnVmZmVyKS4NCj4NCj5JdCBjb3VsZCBhbHNvIGhhbmRsZSBh
-bGwgY2FzZXMgZm9yICJrIiBmcmFtZXMgd2hlcmUgbiVrPT0wIChuIGlzIGEgbXVsdGlwbGUgb2YN
-Cj5rKSBieSBzaW1wbHkgcmVwbGljYXRpbmcgdGhlIGZyYW1lIHBvaW50ZXJzLg0KDQpBZ3JlZSB3
-aXRoIHlvdXIgY29tbWVudHMgd2lsbCBmaXggaXQgaW4gdGhlIG5leHQgdmVyc2lvbi4NClNvbWVo
-b3cgZGlkbid0IGdldCBlbm91Z2ggdGltZSB0byBzZW5kIG5leHQgdmVyc2lvbiBvZiB0aGUgcGF0
-Y2ggc2VyaWVzLg0KV2lsbCBtb2RpZnkgdGhlIGRyaXZlciBhcyBwZXIgeW91ciBjb21tZW50cyBh
-bmQgd2lsbCBwb3N0IG5leHQgdmVyc2lvbiBvZiB0aGUgcGF0Y2ggc2VyaWVzIGF0IHRoZSBlYXJs
-aWVzdC4uLiANCg0KUmVnYXJkcywNCktlZGFyLg0KDQo=
+(Adding Arnd)
+
+Now that the merge window rush has abated, can you please apply this
+trivial series?
+
+On Mon, Nov 6, 2017 at 12:38 PM, Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> This patchset enables the kernel panic and disk-activity trigger for LEDs
+> and then enables the panic trigger for three 96Boards - DB410c, Hikey and
+> Hikey960.
+>
+> DB410c and Hikey panic behaviour has been tested by triggering a panic
+> through /proc/sysrq-trigger, while Hikey960 is only compile-tested.
+>
+>
+> Amit Kucheria (4):
+>   arm64: defconfig: enable new trigger modes for leds
+>   arm64: dts: qcom: apq8016-sbc: Allow USR4 LED to notify kernel panic
+>   arm64: dts: hisilicon: hi6220-hikey: Allow USR1 LED to notify kernel
+>     panic
+>   arm64: dts: hisilicon: hi3660-hikey960: Allow USR4 LED to notify
+>     kernel panic
+>
+>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 1 +
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    | 1 +
+>  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi         | 1 +
+>  arch/arm64/configs/defconfig                      | 2 ++
+>  4 files changed, 5 insertions(+)
+>
+> --
+> 2.7.4
+>
