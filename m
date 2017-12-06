@@ -1,57 +1,62 @@
-From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v3 11/12] arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-Date: Wed,  6 Dec 2017 19:19:38 +0800
-Message-ID: <20171206111939.1153-12-jacob-chen@iotwrt.com>
-References: <20171206111939.1153-1-jacob-chen@iotwrt.com>
+From: Wenyou Yang <wenyou.yang@microchip.com>
+Subject: [PATCH v7 0/2] media: ov7740: Add a V4L2 sensor-level driver
+Date: Wed, 6 Dec 2017 10:23:41 +0800
+Message-ID: <20171206022343.31104-1-wenyou.yang@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171206111939.1153-1-jacob-chen@iotwrt.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rockchip@lists.infradead.org
-Cc: Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, Joao.Pinto@synopsys.com, heiko@sntech.de, Jacob Chen <jacob2.chen@rock-chips.com>, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, Luis.Oliveira@synopsys.com, robh+dt@kernel.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, allon.huang@rock-chips.com, mchehab@kernel.org, zhengsq@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Wenyou Yang <wenyou.yang@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Shunqian Zheng <zhengsq@rock-chips.com>
+Add a Video4Linux2 sensor-level driver for the OmniVision OV7740
+VGA camera image sensor.
 
-It's a Designware MIPI D-PHY, used for ISP0 in rk3399.
+Changes in v7:
+ - Add Acked-by tag.
+ - Fix the wrong handle of default register configuration.
+ - Add the missed assignment of ov7740->frmsize.
 
-Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Changes in v6:
+ - Remove unnecessary #include <linux/init>.
+ - Remove unnecessary comments and extra newline.
+ - Add const for some structures.
+ - Add the check of the return value from regmap_write().
+ - Simplify the calling of __v4l2_ctrl_handler_setup().
+ - Add the default format initialization function.
+ - Integrate the set_power() and enable/disable the clock into
+   one function.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 66a912fab5dd..a65b110afaf3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1292,6 +1292,17 @@
- 			status = "disabled";
- 		};
- 
-+		mipi_dphy_rx0: mipi-dphy-rx0 {
-+			compatible = "rockchip,rk3399-mipi-dphy";
-+			clocks = <&cru SCLK_MIPIDPHY_REF>,
-+				<&cru SCLK_DPHY_RX0_CFG>,
-+				<&cru PCLK_VIO_GRF>;
-+			clock-names = "dphy-ref", "dphy-cfg", "grf";
-+			power-domains = <&power RK3399_PD_VIO>;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
- 		u2phy0: usb2-phy@e450 {
- 			compatible = "rockchip,rk3399-usb2phy";
- 			reg = <0xe450 0x10>;
+Changes in v5:
+ - Squash the driver and MAINTAINERS entry patches to one.
+ - Precede the driver patch with the bindings patch.
+
+Changes in v4:
+ - Assign 'val' a initial value to avoid warning: 'val' may be
+   used uninitialized.
+ - Rename REG_REG15 to avoid warning: "REG_REG15" redefined.
+
+Changes in v3:
+ - Explicitly document the "remote-endpoint" property.
+ - Put the MAINTAINERS change to a separate patch.
+
+Changes in v2:
+ - Split off the bindings into a separate patch.
+ - Add a new entry to the MAINTAINERS file.
+
+Wenyou Yang (2):
+  media: ov7740: Document device tree bindings
+  media: i2c: Add the ov7740 image sensor driver
+
+ .../devicetree/bindings/media/i2c/ov7740.txt       |   47 +
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/ov7740.c                         | 1234 ++++++++++++++++++++
+ 5 files changed, 1298 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
+ create mode 100644 drivers/media/i2c/ov7740.c
+
 -- 
 2.15.0
