@@ -1,106 +1,82 @@
-From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v3 00/12]  Rockchip ISP1 Driver
-Date: Wed,  6 Dec 2017 19:19:27 +0800
-Message-ID: <20171206111939.1153-1-jacob-chen@iotwrt.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mchehab@kernel.org, linux-media@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, tfiga@chromium.org, zhengsq@rock-chips.com, laurent.pinchart@ideasonboard.com, zyc@rock-chips.com, eddie.cai.linux@gmail.com, jeffy.chen@rock-chips.com, allon.huang@rock-chips.com, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, Joao.Pinto@synopsys.com, Luis.Oliveira@synopsys.com, Jose.Abreu@synopsys.com, Jacob Chen <jacob-chen@iotwrt.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/6] dt-bindings: marvell: Add documentation for the North Bridge PM on Armada 37xx
+Date: Wed, 06 Dec 2017 12:51:07 +0100
+Message-ID: <87zi6wt6qc.fsf@free-electrons.com>
+References: <20171201112508.14121-1-gregory.clement@free-electrons.com>
+        <20171201112508.14121-2-gregory.clement@free-electrons.com>
+        <20171204214706.4sbjgxme3ftmf3l3@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171204214706.4sbjgxme3ftmf3l3@rob-hp-laptop> (Rob Herring's
+        message of "Mon, 4 Dec 2017 15:47:06 -0600")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Evan Wang <xswang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-changes in V3:
-  - add some comments
-  - fix wrong use of v4l2_async_subdev_notifier_register
-  - optimize two paths capture at a time
-  - remove compose
-  - re-struct headers
-  - add a tmp wiki page: http://opensource.rock-chips.com/wiki_Rockchip-isp1
+Hi Rob,
+ 
+ On lun., déc. 04 2017, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-changes in V2:
-  mipi-phy:
-    - use async probing
-    - make it be a child device of the GRF
+> On Fri, Dec 01, 2017 at 12:25:03PM +0100, Gregory CLEMENT wrote:
+>> Extend the documentation of the Armada 37xx SoC with the the North
+>> Bridge Power Management component.
+>> 
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/arm/marvell/armada-37xx.txt   | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+>> index 51336e5fc761..7ad9830d9177 100644
+>> --- a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+>> +++ b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+>> @@ -14,3 +14,22 @@ following property before the previous one:
+>>  Example:
+>>  
+>>  compatible = "marvell,armada-3720-db", "marvell,armada3720", "marvell,armada3710";
+>> +
+>> +
+>> +Power management
+>> +----------------
+>> +
+>> +For power management (particularly DVFS and AVS), the North Bridge
+>> +Power Management component is needed:
+>> +
+>> +Required properties:
+>> +- compatible     : should contain "marvell,armada-3700-nb-pm", "syscon";
+>> +- reg            : the register start and length for the North Bridge
+>> +		    Power Management
+>> +
+>> +Example:
+>> +
+>> +nb_pm: nb_pm@14000 {
+>
+> Don't use underscore in node or property names. "syscon" is a better 
+> choice here.
 
-  isp:
-    - add dummy buffer
-    - change the way to get bus configuration, which make it possible to
-            add parallel sensor support in the future(without mipi-phy driver).
+OK I will change this.
 
-This patch series add a ISP(Camera) v4l2 driver for rockchip rk3288/rk3399 SoC.
+Thanks,
 
-Kernel Branch:
-https://github.com/wzyy2/linux/tree/rkisp1/drivers/media/platform/rockchip/isp1
+Gregory
 
-Wiki Pages:
-http://opensource.rock-chips.com/wiki_Rockchip-isp1
-
-Jacob Chen (8):
-  media: doc: add document for rkisp1 meta buffer format
-  media: rkisp1: add rockchip isp1 driver
-  media: rkisp1: add Rockchip MIPI Synopsys DPHY driver
-  dt-bindings: Document the Rockchip ISP1 bindings
-  dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
-  ARM: dts: rockchip: add isp node for rk3288
-  ARM: dts: rockchip: add rx0 mipi-phy for rk3288
-  MAINTAINERS: add entry for Rockchip ISP1 driver
-
-Jeffy Chen (1):
-  media: rkisp1: Add user space ABI definitions
-
-Shunqian Zheng (3):
-  media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
-  arm64: dts: rockchip: add isp0 node for rk3399
-  arm64: dts: rockchip: add rx0 mipi-phy for rk3399
-
- .../devicetree/bindings/media/rockchip-isp1.txt    |   57 +
- .../bindings/media/rockchip-mipi-dphy.txt          |   71 +
- Documentation/media/uapi/v4l/meta-formats.rst      |    2 +
- .../media/uapi/v4l/pixfmt-meta-rkisp1-params.rst   |   17 +
- .../media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst     |   18 +
- MAINTAINERS                                        |   10 +
- arch/arm/boot/dts/rk3288.dtsi                      |   24 +
- arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   26 +
- drivers/media/platform/Kconfig                     |   10 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/rockchip/isp1/Makefile      |    8 +
- drivers/media/platform/rockchip/isp1/capture.c     | 1684 ++++++++++++++++++++
- drivers/media/platform/rockchip/isp1/capture.h     |  194 +++
- drivers/media/platform/rockchip/isp1/common.h      |  137 ++
- drivers/media/platform/rockchip/isp1/dev.c         |  655 ++++++++
- drivers/media/platform/rockchip/isp1/dev.h         |  120 ++
- drivers/media/platform/rockchip/isp1/isp_params.c  | 1543 ++++++++++++++++++
- drivers/media/platform/rockchip/isp1/isp_params.h  |   76 +
- drivers/media/platform/rockchip/isp1/isp_stats.c   |  521 ++++++
- drivers/media/platform/rockchip/isp1/isp_stats.h   |   85 +
- .../media/platform/rockchip/isp1/mipi_dphy_sy.c    |  787 +++++++++
- drivers/media/platform/rockchip/isp1/regs.c        |  264 +++
- drivers/media/platform/rockchip/isp1/regs.h        | 1582 ++++++++++++++++++
- drivers/media/platform/rockchip/isp1/rkisp1.c      | 1201 ++++++++++++++
- drivers/media/platform/rockchip/isp1/rkisp1.h      |  131 ++
- drivers/media/v4l2-core/v4l2-ioctl.c               |    2 +
- include/uapi/linux/rkisp1-config.h                 |  785 +++++++++
- include/uapi/linux/videodev2.h                     |    4 +
- 28 files changed, 10015 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-isp1.txt
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
- create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
- create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
- create mode 100644 drivers/media/platform/rockchip/isp1/Makefile
- create mode 100644 drivers/media/platform/rockchip/isp1/capture.c
- create mode 100644 drivers/media/platform/rockchip/isp1/capture.h
- create mode 100644 drivers/media/platform/rockchip/isp1/common.h
- create mode 100644 drivers/media/platform/rockchip/isp1/dev.c
- create mode 100644 drivers/media/platform/rockchip/isp1/dev.h
- create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.c
- create mode 100644 drivers/media/platform/rockchip/isp1/isp_params.h
- create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.c
- create mode 100644 drivers/media/platform/rockchip/isp1/isp_stats.h
- create mode 100644 drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
- create mode 100644 drivers/media/platform/rockchip/isp1/regs.c
- create mode 100644 drivers/media/platform/rockchip/isp1/regs.h
- create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
- create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
- create mode 100644 include/uapi/linux/rkisp1-config.h
+>
+>> +	compatible = "marvell,armada-3700-nb-pm", "syscon";
+>> +	reg = <0x14000 0x60>;
+>> +}
+>> -- 
+>> 2.15.0
+>> 
 
 -- 
-2.15.0
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
