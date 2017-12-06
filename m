@@ -1,55 +1,59 @@
-From: Adam Wallis <awallis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4] usb: xhci: allow imod-interval to be configurable
-Date: Tue, 5 Dec 2017 18:50:01 -0500
-Message-ID: <7df62698-d27f-a7fc-f61e-60586c16f14b@codeaurora.org>
-References: <1512397671-28733-1-git-send-email-awallis@codeaurora.org>
- <1512440100.17567.172.camel@mhfsdcap03>
- <99ea0ee4-1fff-73df-d9b5-0f756dfc5635@codeaurora.org>
- <f5ca26d2-9432-2ae3-7501-5b3dcf1e1486@linux.intel.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 3/3] arm64: dts: meson-axg: add clock DT info for
+ Meson AXG SoC
+Date: Tue, 5 Dec 2017 17:00:55 -0800
+Message-ID: <20171206010055.GE4283@codeaurora.org>
+References: <20171128125330.363-1-yixun.lan@amlogic.com>
+ <20171128125330.363-4-yixun.lan@amlogic.com>
+ <20171129193536.GB19419@codeaurora.org>
+ <8353c264-3253-0268-91fc-8d42fbe82611@amlogic.com>
+ <20171201163437.GE19419@codeaurora.org>
+ <1512147583.12869.10.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f5ca26d2-9432-2ae3-7501-5b3dcf1e1486-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1512147583.12869.10.camel@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Rob,
-
-On 12/5/2017 3:48 AM, Mathias Nyman wrote:
-> On 05.12.2017 04:54, Adam Wallis wrote:
->> On 12/4/2017 9:15 PM, Chunfeng Yun wrote:
->>> On Mon, 2017-12-04 at 09:27 -0500, Adam Wallis wrote:
->>>> The xHCI driver currently has the IMOD set to 160, which
-[..]
+On 12/01, Jerome Brunet wrote:
+> On Fri, 2017-12-01 at 08:34 -0800, Stephen Boyd wrote:
+> > On 11/30, Yixun Lan wrote:
+> > > Hi Stephen
+> > > 
+> > > On 11/30/17 03:35, Stephen Boyd wrote:
+> > > > 
+> > > > Maybe just call the node "bus@ff63c000"?
+> > > > 
+> > > 
+> > > isn't this just a name? what's the benefits to change?
+> > > personally, I tend to keep it this way, because it's better map to the
+> > > data sheet
+> > > 
+> > > we also has 'aobus', 'cbus' scattered there..
+> > 
+> > Per the ePAPR node names are supposed to be generic, like disk,
+> > cpu, display-controller, gpu, etc. I've never heard of a hiubus,
+> > so probably it's some vendor specific thing? We have the phandle
+> > anyway so it's not like we're losing much information here.
 > 
-> If Rob Acks this version I'll apply it and remove that blank line.
+> Stephen, there is a lot of busses on platform. We can't just call them all
+> 'bus'.
+> I don't get the problem with this name.
+> We are re-using the name from the datasheet here, no fancy invention. It seems
+> to be quite common. 
 > 
-> -Mathias
-> 
 
-Let me know if you have any other issues with this patch, otherwise with your
-ACK, we are done.
-
-Thanks
-
-Adam
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+Ok. I'm not the maintainer of the DTS so no worries from me. I'm
+just pointing out that the ePAPR says that node names should be
+generic, and 'hiubus' doesn't sound generic to me. If it matches
+some datasheet then I suppose that's good, but probably that sort
+of distinction should have gone into the compatible string
+instead of the node name.
 
 -- 
-Adam Wallis
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
