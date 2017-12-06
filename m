@@ -1,35 +1,29 @@
-From: Vasyl Gomonovych <gomonovych@gmail.com>
-Subject: [PATCH] of: irq: Fix function description comment
-Date: Wed,  6 Dec 2017 23:43:34 +0100
-Message-ID: <1512600215-12580-1-git-send-email-gomonovych@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, gomonovych@gmail.com
-Cc: linux-kernel@vger.kernel.org
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Wed, 6 Dec 2017 15:11:30 -0800
+Message-ID: <20171206231130.GA6235@infradead.org>
+References: <20171206072402.11694-1-o.rempel@pengutronix.de>
+ <20171206072402.11694-4-o.rempel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20171206072402.11694-4-o.rempel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Andrew Morton <akpm@linux-foundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, Linus Torvalds <torvalds@linux-foundation.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Make small cleanup in function description for
-of_irq_parse_raw
+>  void (*pm_power_off_prepare)(void);
+> +EXPORT_SYMBOL(pm_power_off_prepare);
 
-Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
----
- drivers/of/irq.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index ec00ae7..7dcea86 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -83,9 +83,8 @@ struct device_node *of_irq_find_parent(struct device_node *child)
- 
- /**
-  * of_irq_parse_raw - Low level interrupt tree parsing
-- * @parent:	the device interrupt parent
-  * @addr:	address specifier (start of "reg" property of the device) in be32 format
-- * @out_irq:	structure of_irq updated by this function
-+ * @out_irq:	structure of_phandle_args updated by this function
-  *
-  * Returns 0 on success and a negative number on error
-  *
--- 
-1.9.1
+EXPORT_SYMBOL_GPL for something this deeply internal, please.
