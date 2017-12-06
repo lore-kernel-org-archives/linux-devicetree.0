@@ -1,75 +1,59 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2] ARM: dts: r8a7745: Add APMU node and second CPU core
-Date: Wed,  6 Dec 2017 12:05:29 +0000
-Message-ID: <1512561929-16540-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Paterson <chris.paterson2@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 3/6] cpufreq: sort the drivers in ARM part
+Date: Wed, 06 Dec 2017 13:09:17 +0100
+Message-ID: <87o9nct5w2.fsf@free-electrons.com>
+References: <20171201112508.14121-1-gregory.clement@free-electrons.com>
+        <20171201112508.14121-4-gregory.clement@free-electrons.com>
+        <20171204091850.iamq5uslv3hv6bez@vireshk-mac-ubuntu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171204091850.iamq5uslv3hv6bez@vireshk-mac-ubuntu> (Viresh
+        Kumar's message of "Mon, 4 Dec 2017 14:48:50 +0530")
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Evan Wang <xswang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-
-Add DT node for the Advanced Power Management Unit (APMU), add the
-second CPU core, and use "renesas,apmu" as "enable-method".
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
-Dear All,
-
-I am reposting this patch now that its dependecy ("ARM: shmobile: rcar-gen2:
-Make sure CNTVOFF is initialized on CA7/15") is part of v4.15-rc1, similarly
-to patch "ARM: dts: r8a7794: Add SMP support".
-
-v2:
-- rebased against renesas-devel-20171205-v4.15-rc2
-
-Thanks
-
- arch/arm/boot/dts/r8a7745.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index de13e15..0fa7861 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -38,6 +38,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "renesas,apmu";
+Hi Viresh,
  
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-@@ -49,6 +50,15 @@
- 			next-level-cache = <&L2_CA7>;
- 		};
- 
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <1>;
-+			clock-frequency = <1000000000>;
-+			power-domains = <&sysc R8A7745_PD_CA7_CPU1>;
-+			next-level-cache = <&L2_CA7>;
-+		};
-+
- 		L2_CA7: cache-controller-0 {
- 			compatible = "cache";
- 			cache-unified;
-@@ -65,6 +75,12 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		apmu@e6151000 {
-+			compatible = "renesas,r8a7745-apmu", "renesas,apmu";
-+			reg = <0 0xe6151000 0 0x188>;
-+			cpus = <&cpu0 &cpu1>;
-+		};
-+
- 		gic: interrupt-controller@f1001000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
+ On lun., déc. 04 2017, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+
+> On 01-12-17, 12:25, Gregory CLEMENT wrote:
+>> Keep the driver files alphabetically sorted.
+>> 
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> ---
+>>  drivers/cpufreq/Makefile | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> index 812f9e0d01a3..d762e76887e7 100644
+>> --- a/drivers/cpufreq/Makefile
+>> +++ b/drivers/cpufreq/Makefile
+>> @@ -53,22 +53,24 @@ obj-$(CONFIG_ARM_BIG_LITTLE_CPUFREQ)	+= arm_big_little.o
+>>  obj-$(CONFIG_ARM_DT_BL_CPUFREQ)		+= arm_big_little_dt.o
+>>  
+>>  obj-$(CONFIG_ARM_BRCMSTB_AVS_CPUFREQ)	+= brcmstb-avs-cpufreq.o
+>> +obj-$(CONFIG_ACPI_CPPC_CPUFREQ)		+= cppc_cpufreq.o
+>
+> Shouldn't we add them in ascending order of the whole config name and not just
+> CPPC_CPUFREQ ?
+
+Here it is the object name that are sorted not the CONFIG_ name. So
+cppc_cpufreq comes after brcmstb-avs-cpufreq.
+
+Thanks,
+
+Gregory
+
+>
+> -- 
+> viresh
+
 -- 
-2.7.4
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
