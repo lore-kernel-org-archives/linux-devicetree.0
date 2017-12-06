@@ -1,84 +1,95 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RFC 0/2] of: Add whitelist
-Date: Wed, 6 Dec 2017 06:47:20 -0500
-Message-ID: <cd4e2601-56e7-ecf9-bbf1-ed6b03eedd84@gmail.com>
-References: <1511816284-12145-1-git-send-email-atull@kernel.org>
- <da4c9b29-eccc-6a67-291a-73a36c1598b5@gmail.com>
- <CAL_JsqL5gYh_++1wDLMYjO7MXKOHpzr315FZ1tuN9o5tOe7TYA@mail.gmail.com>
- <157eebaf-89a9-a230-e56b-d98a8e1e26bf@gmail.com>
- <CANk1AXSAdRT8WWg+xqCWGNYwO=4ke-74ETs+HNObcswEBmKz4g@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
+Date: Wed, 6 Dec 2017 11:30:19 +0100
+Message-ID: <CAMuHMdUuF4kwUiUYCbSew3W0Pa2CfRdCijefbOO1ZYAbnyG3KA@mail.gmail.com>
+References: <1505322341-9480-1-git-send-email-chris.paterson2@renesas.com>
+ <1505322341-9480-2-git-send-email-chris.paterson2@renesas.com>
+ <20170915074551.GF3924@verge.net.au> <CAMuHMdWrMiHQz_Tadh3R00n+zeSnGOW-o=skbK-R-yD6Z-x2+A@mail.gmail.com>
+ <TY1PR06MB0895763DA6DE79A64B9981ECC06C0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+ <20170915110609.GL3924@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANk1AXSAdRT8WWg+xqCWGNYwO=4ke-74ETs+HNObcswEBmKz4g@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Moritz Fischer <mdf@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170915110609.GL3924-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/17 11:55, Alan Tull wrote:
-> On Thu, Nov 30, 2017 at 6:18 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->> On 11/29/17 08:31, Rob Herring wrote:
->>> On Wed, Nov 29, 2017 at 3:20 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->>>> On 11/27/17 15:58, Alan Tull wrote:
->>>>> Here's a proposal for a whitelist to lock down the dynamic device tree.
->>>>>
->>>>> For an overlay to be accepted, all of its targets are required to be
->>>>> on a target node whitelist.
->>>>>
->>>>> Currently the only way I have to get on the whitelist is calling a
->>>>> function to add a node.  That works for fpga regions, but I think
->>>>> other uses will need a way of having adding specific nodes from the
->>>>> base device tree, such as by adding a property like 'allow-overlay;'
->>>>> or 'allow-overlay = "okay";' If that is acceptable, I could use some
->>>>> advice on where that particular code should go.
->>>>>
->>>>> Alan
->>>>>
->>>>> Alan Tull (2):
->>>>>   of: overlay: add whitelist
->>>>>   fpga: of region: add of-fpga-region to whitelist
->>>>>
->>>>>  drivers/fpga/of-fpga-region.c |  9 ++++++
->>>>>  drivers/of/overlay.c          | 73 +++++++++++++++++++++++++++++++++++++++++++
->>>>>  include/linux/of.h            | 12 +++++++
->>>>>  3 files changed, 94 insertions(+)
->>>>>
->>>>
->>>> The plan was to use connectors to restrict where an overlay could be applied.
->>>> I would prefer not to have multiple methods for accomplishing the same thing
->>>> unless there is a compelling reason to do so.
->>>
->>> Connector nodes need a mechanism to enable themselves, too. I don't
->>> think connector nodes are going to solve every usecase.
->>>
->>> Rob
->>>
->>
->> The overlay code related to connectors does not exist yet, so my comment
->> is going to be theoretical.
->>
->> I would expect the overlay code to check that the target of the overlay
->> fragment is a connector node, so there is no need to explicitly "enable"
->> applying an overlay to a connector node.
-> 
-> This will depend on how connectors are implemented.  My proposal in v1
-> is that device nodes can have a flag bit.  If its not set, then an
-> overlay that contains fragments that target that node can't be
-> applied.  There's probably other ways a connector node could be marked
-> as different from other nodes, but a flag bit seems simple.  The
-> advantage to this scheme is that it gives me something I can use while
-> connectors don't exist yet and it will still will be useful later for
-> the implementation of connectors (giving connector drivers a way of
-> marking their device nodes as valid targets).
+Hi Simon,
 
-I think it is premature to add this code to the kernel when we don't
-have an agreed upon architecture for what we are trying to achieve.
-
-
-> 
+On Fri, Sep 15, 2017 at 1:06 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> On Fri, Sep 15, 2017 at 08:57:53AM +0000, Fabrizio Castro wrote:
+>> > -----Original Message-----
+>> > From: linux-renesas-soc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-renesas-soc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Geert
+>> > Uytterhoeven
+>> > Sent: 15 September 2017 09:05
+>> > To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>; Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+>> > Cc: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>;
+>> > Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linux-Renesas
+>> > <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>> > Subject: Re: [PATCH 1/8] ARM: dts: r8a7745: Add APMU node and second CPU core
+>> >
+>> > Hi Simon, Fabrizio,
+>> >
+>> > On Fri, Sep 15, 2017 at 9:45 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+>> > > On Wed, Sep 13, 2017 at 06:05:34PM +0100, Chris Paterson wrote:
+>> > >> From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+>> > >>
+>> > >> Add DT node for the Advanced Power Management Unit (APMU), add the
+>> > >> second CPU core, and use "renesas,apmu" as "enable-method".
+>> > >>
+>> > >> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+>> > >> Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>> > >> ---
+>> > >> This patch is based on renesas-devel-20170913-v4.13.
+>> > >
+>> > > Hi,
+>> > >
+>> > > with reference to "[PATCH v3 0/3] ARM: renesas: Enable SMP on R-Car E2"
+>> > > is the CNTVOFF initialised in the boot loader of boards (in upstream)
+>> > > for this SoC? If not I expect you will have trouble with the arch timer
+>> > > on secondary CPU cores.
 >>
->> -Frank
-> 
+>> I can confirm that this patch relies on:
+>> * "ARM: Add definition for monitor mode", and
+>> * "ARM: shmobile: rcar-gen2: Make sure CNTVOFF is initialized on CA7/15 "
+>> as the bootloader doesn't initialize CNTVOFF.
+>>
+>> >
+>> > Exactly my question.
+>> >
+>> > Fabrizio: Given your feedback on "[PATCH v3 0/3] ARM: renesas: Enable SMP on
+>> > R-Car E2", I think SMP enablement on RZ/G1E has to be postponed until "ARM:
+>> > shmobile: rcar-gen2: Make sure CNTVOFF is initialized on CA7/15" has been
+>> > accepted upstream.
+>>
+>> You are right, somehow we missed the comment made by Simon on Monday:
+>>
+>> " I would like to deffer the third and last patch until v4.16 to avoid
+>> an awkward branch dependency on the above - the branches are different
+>> even though the tree is the same. Please resubmit this patch once the
+>> above dependencies are present in an rc release, which at this stage
+>> I expect to be v4.15-rc1."
+>>
+>> Apologies for this, we will send this patch later on, once both patches have been
+>> accepted upstream.
+>
+> No problem, I will mark this one as deferred.
+
+As the dependency is in v4.15-rc1, it can be applied now.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
