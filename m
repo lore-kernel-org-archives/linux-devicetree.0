@@ -1,80 +1,31 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 18/19] ASoC: tlv320aic31xx: Add
- headphone/headset detection
-Date: Wed, 6 Dec 2017 17:52:23 +0000
-Message-ID: <20171206175223.2f6ki2w2ryaguhuy@sirena.org.uk>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-19-afd@ti.com>
- <20171201134127.2msgmjrfj47ypl3w@sirena.org.uk>
- <b2d9ffa9-3923-cb86-f0ad-cf4f37e56334@ti.com>
- <20171206173215.bitae546h2ibedhz@sirena.org.uk>
- <8e52d973-2335-e3c5-5e57-15621819cf45@ti.com>
+From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/2] 66AK2G: Add DT entry for UART1 and UART2
+Date: Wed, 6 Dec 2017 09:54:40 -0800
+Message-ID: <f43733da-2587-8c00-4682-9a85f762f2c9@oracle.com>
+References: <20171205064812.15758-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7948135014560896327=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <8e52d973-2335-e3c5-5e57-15621819cf45@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171205064812.15758-1-vigneshr-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============7948135014560896327==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5bkb6c2vmnla7nal"
-Content-Disposition: inline
-
-
---5bkb6c2vmnla7nal
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Dec 06, 2017 at 11:47:14AM -0600, Andrew F. Davis wrote:
-> On 12/06/2017 11:32 AM, Mark Brown wrote:
-
-> >> missing a generic way to report jack information up to the machine layer
-> >> driver.
-
-> > snd_soc_codec_set_jack()
-
-> Hmm, this looks close to what I was thinking (I was wanting to go the
-> other direction and have the codec report what jacks it supports, this
-> could allow for more than one jack), I'll see if I can make it work.
-
-Almost always the CODEC requires some extra connections in order to
-enable jack detection features, these are going to be board specific so
-they come from the machine driver.
-
---5bkb6c2vmnla7nal
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlooLlYACgkQJNaLcl1U
-h9DmZQf/cB+ZYSTwBE/qbDozUDWCs9h0CyvqvPdc90spap371JSWZP9owyNT72eX
-EsxXJahTHLW9WPZu12pSVIQ8oMUldfYfIvL5DI+Jz+sWFFrTzgauNy1/eyNGlamn
-dPwnRZCF6VO7IVTbNNqkmgrTn6zaV73WApMw0RUwRLJooL8WLy8NjPQtncqfZdUy
-VbY+mFggOUHLUKJIjLtsuTJJkjEcmLASOteb1wvTVEnM9O+hytuOk/+IG9OZH3Ff
-TtbZK/HFct4gArvYg2aOV+357pPkWpduL/tRAa2OZIKEOZTRc1L+jn0PT5+TfHw9
-2smtXuQD0U0s+woTU3LKAjYcJJoZ6w==
-=i7mZ
------END PGP SIGNATURE-----
-
---5bkb6c2vmnla7nal--
-
---===============7948135014560896327==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7948135014560896327==--
+On 12/4/17 10:48 PM, Vignesh R wrote:
+> This series adds DT entry for the remaining two UART instances on 66AK2G
+> SoC.
+> 
+> Based on linux-next.
+> 
+> Franklin S Cooper Jr (2):
+>    ARM: dts: keystone-k2g: Add UART 1 and 2 instances
+>    ARM: dts: keystone-k2g-evm: Enable UART 2
+> 
+Applied !!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
