@@ -1,66 +1,35 @@
-From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] dt: bindings: as3645a: Fix the example node
-Date: Wed, 6 Dec 2017 16:32:36 -0600
-Message-ID: <2c2b1fc0-6156-2897-b597-6911fee64556@ti.com>
-References: <20171205133637.30022-1-dmurphy@ti.com>
- <20171206215204.7qyjjd2oue7n7l37@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171206215204.7qyjjd2oue7n7l37@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vasyl Gomonovych <gomonovych@gmail.com>
+Subject: [PATCH] of: irq: Fix function description comment
+Date: Wed,  6 Dec 2017 23:43:34 +0100
+Message-ID: <1512600215-12580-1-git-send-email-gomonovych@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, frowand.list@gmail.com, gomonovych@gmail.com
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Rob
+Make small cleanup in function description for
+of_irq_parse_raw
 
-On 12/06/2017 03:52 PM, Rob Herring wrote:
-> On Tue, Dec 05, 2017 at 07:36:37AM -0600, Dan Murphy wrote:
->> Fix the address-cells and size-cells example node
->> to reflect to the correct representation.
->>
->> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/leds/ams,as3645a.txt | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
->> index fdc40e354a64..8a49ccfec29b 100644
->> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
->> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
->> @@ -59,8 +59,8 @@ Example
->>  =======
->>  
->>  	as3645a@30 {
->> -		#address-cells: 1
->> -		#size-cells: 0
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->>  		reg = <0x30>;
->>  		compatible = "ams,as3645a";
-> 
-> Convention is also we put compatible first.
-> 
+Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
+---
+ drivers/of/irq.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-OK I will move that too for v2.
-
-Can that be in the same patch or do you want a separate patch?
-
-Dan
-
->>  		flash@0 {
->> -- 
->> 2.15.0.124.g7668cbc60
->>
-
-
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index ec00ae7..7dcea86 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -83,9 +83,8 @@ struct device_node *of_irq_find_parent(struct device_node *child)
+ 
+ /**
+  * of_irq_parse_raw - Low level interrupt tree parsing
+- * @parent:	the device interrupt parent
+  * @addr:	address specifier (start of "reg" property of the device) in be32 format
+- * @out_irq:	structure of_irq updated by this function
++ * @out_irq:	structure of_phandle_args updated by this function
+  *
+  * Returns 0 on success and a negative number on error
+  *
 -- 
-------------------
-Dan Murphy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
