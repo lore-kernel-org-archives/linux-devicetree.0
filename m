@@ -1,35 +1,30 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] regulator: axp20x: add drivevbus support for
- axp803
-Date: Thu, 7 Dec 2017 17:46:42 -0600
-Message-ID: <20171207234642.ucqmtxpufvhu4cgr@rob-hp-laptop>
-References: <1512673460-7865-1-git-send-email-jagan@amarulasolutions.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] dt-bindings: add eeprom "no-read-rollover" property
+Date: Thu, 7 Dec 2017 17:51:41 -0600
+Message-ID: <CAL_JsqLUoS2zCbG-L9raKLFBMdqbyHkGU5oyjT3UTq+Rx0gY9Q@mail.gmail.com>
+References: <1512674779-10349-1-git-send-email-svendev@arcx.com> <1512674779-10349-3-git-send-email-svendev@arcx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1512673460-7865-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1512674779-10349-3-git-send-email-svendev-fuHqz3Nb1YI@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 08, 2017 at 12:34:18AM +0530, Jagan Teki wrote:
-> Like axp221, axp223, axp813 the axp803 is also supporting external
-> regulator to drive the  OTG VBus through N_VBUSEN PMIC pin.
-> 
-> Add support for it.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+On Thu, Dec 7, 2017 at 1:26 PM, Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org> wrote:
+> Adds an optional property for at24 eeproms.
+> This parameterless property indicates that the multi-address eeprom
+> does not automatically roll over reads to the next slave address.
+>
+> Signed-off-by: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>
 > ---
-> Changes for v2:
-> - New patch
-> 
->  Documentation/devicetree/bindings/mfd/axp20x.txt | 2 +-
->  drivers/regulator/axp20x-regulator.c             | 2 ++
->  2 files changed, 3 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I acked v5. Please add acks/reviewed-bys when posting new versions.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
