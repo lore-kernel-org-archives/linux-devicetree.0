@@ -1,63 +1,36 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v8 1/3] arm: npcm: add basic support for Nuvoton BMCs
-Date: Thu, 7 Dec 2017 22:19:33 +0100
-Message-ID: <CAOFm3uG=i3gOnKEMEPNii070+pB7Aqt2GmxgB5G0DCfGzhCkZQ@mail.gmail.com>
-References: <20171117190747.21642-1-brendanhiggins@google.com>
- <20171117190747.21642-2-brendanhiggins@google.com> <CAFd5g45+dNuayw=s08iwAj2wrUYNXnGd5SbA+OVvsL_J6APHGA@mail.gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 2/3] bluetooth: hci_ll: add constant for vendor-specific
+ command
+Date: Thu, 7 Dec 2017 15:29:02 -0600
+Message-ID: <55fff19a-c30f-88f0-afb2-6c0b9bad25a7@lechnology.com>
+References: <1512357682-8911-1-git-send-email-david@lechnology.com>
+ <1512357682-8911-3-git-send-email-david@lechnology.com>
+ <5C65FB74-D7FD-4653-993A-5A68AD844A41@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g45+dNuayw=s08iwAj2wrUYNXnGd5SbA+OVvsL_J6APHGA@mail.gmail.com>
+In-Reply-To: <5C65FB74-D7FD-4653-993A-5A68AD844A41@holtmann.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Tomer Maimon <tmaimon77@gmail.com>, Avi Fishman <avifishman70@gmail.com>, Rick Altherr <raltherr@google.com>, Florian Fainelli <f.fainelli@gmail.com>, julien.thierry@arm.com, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Brendan,
-
-On Thu, Dec 7, 2017 at 9:37 PM, Brendan Higgins
-<brendanhiggins@google.com> wrote:
-> Any update on this?
->
-> On Fri, Nov 17, 2017 at 11:07 AM, Brendan Higgins
-> <brendanhiggins@google.com> wrote:
->> Adds basic support for the Nuvoton NPCM750 BMC.
+On 12/04/2017 12:23 AM, Marcel Holtmann wrote:
+> Hi David,
+> 
+>> This adds a #define for the vendor-specific HCI command to set the
+>> baudrate instead of using the bare 0xff36 multiple times.
 >>
->> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->> Reviewed-by: Tomer Maimon <tmaimon77@gmail.com>
->> Reviewed-by: Avi Fishman <avifishman70@gmail.com>
->> Tested-by: Tomer Maimon <tmaimon77@gmail.com>
->> Tested-by: Avi Fishman <avifishman70@gmail.com>
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>> ---
+>> drivers/bluetooth/hci_ll.c | 10 ++++++++--
+>> 1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> patch has been applied to bluetooth-next tree.
+> 
 
-<snip>
-
->> --- /dev/null
->> +++ b/arch/arm/mach-npcm/npcm7xx.c
->> @@ -0,0 +1,25 @@
->> +/*
->> + * Copyright (c) 2017 Nuvoton Technology corporation.
->> + * Copyright 2017 Google, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
-
-Have you considered using the new SPDX ids here instead of the
-traditional license boilerplate?
-
-This could come out this way:
-
-// SPDX-License-Identifier: GPL-2.0
-// Copyright (c) 2017 Nuvoton Technology corporation.
-// Copyright 2017 Google, Inc.
-
-It is shorter and simpler, with a better code/comments ratio.
-And if you wonder about why using C++ style comment, please check
-Linus posts on the topic, as well as Thomas doc patches.
-
-Thank you for your kind consideration!
-
--- 
-Cordially
-Philippe Ombredanne
+I am new to the bluetooth tree, so just to be sure... does this mean I 
+should not include this patch in v2 of this series since this patch has 
+been applied?
