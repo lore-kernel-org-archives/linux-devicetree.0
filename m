@@ -1,55 +1,39 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v4 4/4] arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
-Date: Wed, 06 Dec 2017 16:50:02 -0800
-Message-ID: <7ho9nbmked.fsf@baylibre.com>
-References: <20171201012452.27086-1-yixun.lan@amlogic.com>
-        <20171201012452.27086-5-yixun.lan@amlogic.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] add Meson8/Meson8b serial core clock handling
+Date: Wed, 06 Dec 2017 17:05:52 -0800
+Message-ID: <7hvahjl53j.fsf@baylibre.com>
+References: <20171117225857.9571-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171201012452.27086-5-yixun.lan@amlogic.com> (Yixun Lan's
-        message of "Fri, 1 Dec 2017 09:24:52 +0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171117225857.9571-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+        (Martin Blumenstingl's message of "Fri, 17 Nov 2017 23:58:55 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Yixun Lan <yixun.lan@amlogic.com> writes:
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-> From: Qiufang Dai <qiufang.dai@amlogic.com>
+> This patchset adds the tty/serial core clock handling to the UARTs
+> on Meson8 and Meson8b.
 >
-> Try to add Hiubus DT info, and also enable clock DT info
-> for the Amlogic's Meson-AXG SoC.
+> Basically this is the Meson8 and Meson8b version of a patchset from
+> Helmut Klein and Neil Armstrong, who implemented this for Meson GX
+> (see [0]). Back then I asked Neil to drop Meson8b from his patchset
+> because I was working on the Meson8 clock controller at that time.
 >
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index b932a784b02a..36a2e98338a8 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -7,6 +7,7 @@
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/axg-clkc.h>
+> This also removes the last users that rely on the "amlogic,meson-uart"
+> binding. Removing that binding from the meson_uart driver is not part
+> of this series though.
 
-This #include will cause an unnessary dependency from the amlogic tree
-to the clock tree even though this patch is not currently using any of
-the #defines from that header.  It will simplify the dependencies if you
-drop this #include from this patch.
+I mistakenly replied to the v1 of this series.  It's this version (v2)
+that I applied to v4.16/dt.
 
-In my comment on the cover letter, I suggested adding a patch that also
-switches the UART over to the new clock provider.  That is the patch
-that should add this #include, since it will actually need #defines from
-the header.
-
-Doing it in that order means that we could merge this patch
-independently of the clock driver, and then merge the UART switch-over
-patch only after the driver (and headers) are merged.
+Sorry for the confusion, and thanks for the patches!
 
 Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
