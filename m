@@ -1,53 +1,125 @@
-From: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] dt-bindings: Add an enable method to RISC-V
-Date: Thu,  7 Dec 2017 15:05:23 -0800
-Message-ID: <20171207230523.29798-1-palmer@sifive.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 1/6] dt: bindings: lp8860: Update bindings for lp8860
+Date: Thu, 7 Dec 2017 17:07:56 -0600
+Message-ID: <c981cd96-e508-4b7a-ebfc-fe99eb1f46fc@ti.com>
+References: <20171205204327.12111-1-dmurphy@ti.com>
+ <20171205204327.12111-2-dmurphy@ti.com>
+ <20171207224229.wd6nc4ukiksebxw4@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20171207224229.wd6nc4ukiksebxw4@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RISC-V doesn't currently specify a mechanism for enabling or disabling
-CPUs.  Instead, we assume that all CPUs are enabled on boot, and if
-someone wants to save power we instead put a CPU to sleep via a WFI
-loop.  Future systems may have an explicit mechanism for putting a CPU
-to sleep, so we're standardizing the device tree entry for when that
-happens.
+Rob
 
-We're not defining a spin-table based interface to the firmware, as the
-plan is to handle this entirely within the kernel instead.
+Thanks
 
-CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/riscv/cpus.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 12/07/2017 04:42 PM, Rob Herring wrote:
+> gOn Tue, Dec 05, 2017 at 02:43:22PM -0600, Dan Murphy wrote:
+>> Update the lp8860 bindings to fix various issues
+>> found.  Add address-cells and size-cells, rename
+>> enable-gpio to enable-gpios, update the node name
+>> to the device name and indent the node example.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>
+>> v2 - New patch
+>>
+>>  .../devicetree/bindings/leds/leds-lp8860.txt       | 28 ++++++++++++----------
+>>  1 file changed, 16 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+>> index aad38dd94d4b..1b2fab05ec6a 100644
+>> --- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+>> +++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+>> @@ -6,24 +6,28 @@ current sinks that can be controlled by a PWM input
+>>  signal, a SPI/I2C master, or both.
+>>  
+>>  Required properties:
+>> -	- compatible:
+>> +	- compatible :
+>>  		"ti,lp8860"
+>> -	- reg -  I2C slave address
+>> -	- label - Used for naming LEDs
+>> +	- reg : I2C slave address
+>> +	- label : Used for naming LEDs
+>> +	- #address-cells : 1
+>> +	- #size-cells : 0
+>>  
+>>  Optional properties:
+>> -	- enable-gpio - gpio pin to enable/disable the device.
+>> -	- supply - "vled" - LED supply
+>> +	- enable-gpios : gpio pin to enable/disable the device.
+> 
+> Needs to state active high or low.
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
-index adf7b7af5dc3..68f88eacc594 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.txt
-+++ b/Documentation/devicetree/bindings/riscv/cpus.txt
-@@ -82,6 +82,15 @@ described below.
-                 Value type: <string>
-                 Definition: Contains the RISC-V ISA string of this hart.  These
-                             ISA strings are defined by the RISC-V ISA manual.
-+        - cpu-enable-method:
-+                Usage: optional
-+                Value type: <stringlist>
-+                Definition: When absent, default is either "always-disabled"
-+                            "always-enabled", depending on the current state
-+                            of the CPU.
-+                            Must be one of:
-+                                * "always-disabled": This CPU cannot be enabled.
-+                                * "always-enabled": This CPU cannot be disabled.
- 
- Example: SiFive Freedom U540G Development Kit
- ---------------------------------------------
+Ack
+
+> 
+>> +	- supply : "vled" - LED supply
+> 
+> "vled-supply : ..."
+> 
+
+Ack
+
+>>  
+>>  Example:
+>>  
+>> -leds: leds@6 {
+>> -	compatible = "ti,lp8860";
+>> -	reg = <0x2d>;
+>> -	label = "display_cluster";
+>> -	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>> -	vled-supply = <&vbatt>;
+>> -}
+>> +	lp8860@2d {
+> 
+> leds@2d
+> 
+> There's not really any point in adding the indentation.
+
+OK I was just following convention of other child node LED bindings
+
+I can remove the indents.
+
+> 
+>> +		compatible = "ti,lp8860";
+> 
+>> +		#address-cells: 1
+>> +		#size-cells: 0
+> 
+> s/:/=/
+> 
+> Though, these aren't necessary without any child nodes. Is there more 
+> than 1 LED channel/driver?
+> 
+
+Yes this device can be used to drive at least 4 different LED strings as well
+I will be adding this feature once I get this driver and binding cleaned up.
+
+Dan
+
+>> +		reg = <0x2d>;
+>> +		label = "display_cluster";
+>> +		enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>> +		vled-supply = <&vbatt>;
+>> +	}
+>>  
+>>  For more product information please see the link below:
+>>  http://www.ti.com/product/lp8860-q1
+>> -- 
+>> 2.15.0.124.g7668cbc60
+>>
+
+
 -- 
-2.13.6
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------
+Dan Murphy
