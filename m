@@ -1,69 +1,48 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v4 15/15] ARM: dts: sun8i: a711: Enable the LCD
-Date: Thu,  7 Dec 2017 16:59:00 +0100
-Message-ID: <190e169fb62cbc75ac786ecaa3c63cdcb1b5b209.1512662253.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 03/15] dt-bindings: display: sun4i-drm: Add LVDS properties
+Date: Thu,  7 Dec 2017 16:58:48 +0100
+Message-ID: <8b7042f5e85cc868ea802deba79a0c53ffbe6564.1512662253.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 In-Reply-To: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, devicetree@vger.kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEE3MTEgaGFzIDEwMjR4NjAwIExWRFMgcGFuZWwsIHdpdGggYSBQV00tYmFzZWQgYmFja2xp
-Z2h0LiBBZGQgaXQgdG8gb3VyCkRULgoKUmV2aWV3ZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bj
-c2llLm9yZz4KU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVl
-LWVsZWN0cm9ucy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcx
-MS5kdHMgfCA2MSArKysrKysrKysrKysrKysrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgNjEg
-aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3Qt
-dGJzLWE3MTEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcxMS5kdHMK
-aW5kZXggYTAyMWVlNmRhMzk2Li41MTFmY2E0OTFmZTggMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N1bjhpLWE4M3QtdGJzLWE3MTEuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1
-bjhpLWE4M3QtdGJzLWE3MTEuZHRzCkBAIC00NSw2ICs0NSw3IEBACiAjaW5jbHVkZSAic3VuOGkt
-YTgzdC5kdHNpIgogCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+CisjaW5jbHVk
-ZSA8ZHQtYmluZGluZ3MvcHdtL3B3bS5oPgogCiAvIHsKIAltb2RlbCA9ICJUQlMgQTcxMSBUYWJs
-ZXQiOwpAQCAtNTksNiArNjAsNDQgQEAKIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBu
-OCI7CiAJfTsKIAorCWJhY2tsaWdodDogYmFja2xpZ2h0IHsKKwkJY29tcGF0aWJsZSA9ICJwd20t
-YmFja2xpZ2h0IjsKKwkJcHdtcyA9IDwmcHdtIDAgNTAwMDAgUFdNX1BPTEFSSVRZX0lOVkVSVEVE
-PjsKKwkJZW5hYmxlLWdwaW9zID0gPCZwaW8gMyAyOSBHUElPX0FDVElWRV9ISUdIPjsKKworCQli
-cmlnaHRuZXNzLWxldmVscyA9IDwwIDEgMiA0IDggMTYgMzIgNjQgMTI4IDI1NT47CisJCWRlZmF1
-bHQtYnJpZ2h0bmVzcy1sZXZlbCA9IDw5PjsKKwl9OworCisJcGFuZWwgeworCQljb21wYXRpYmxl
-ID0gInRicyxhNzExLXBhbmVsIiwgInBhbmVsLWx2ZHMiOworCQliYWNrbGlnaHQgPSA8JmJhY2ts
-aWdodD47CisJCXBvd2VyLXN1cHBseSA9IDwmcmVnX3N3PjsKKworCQl3aWR0aC1tbSA9IDwxNTM+
-OworCQloZWlnaHQtbW0gPSA8OTA+OworCQlkYXRhLW1hcHBpbmcgPSAidmVzYS0yNCI7CisKKwkJ
-cGFuZWwtdGltaW5nIHsKKwkJCS8qIDEwMjR4NjAwIEA2MEh6ICovCisJCQljbG9jay1mcmVxdWVu
-Y3kgPSA8NTIwMDAwMDA+OworCQkJaGFjdGl2ZSA9IDwxMDI0PjsKKwkJCXZhY3RpdmUgPSA8NjAw
-PjsKKwkJCWhzeW5jLWxlbiA9IDwyMD47CisJCQloZnJvbnQtcG9yY2ggPSA8MTgwPjsKKwkJCWhi
-YWNrLXBvcmNoID0gPDE2MD47CisJCQl2ZnJvbnQtcG9yY2ggPSA8MTI+OworCQkJdmJhY2stcG9y
-Y2ggPSA8MjM+OworCQkJdnN5bmMtbGVuID0gPDU+OworCQl9OworCisJCXBvcnQgeworCQkJcGFu
-ZWxfaW5wdXQ6IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRjb24wX291dF9s
-Y2Q+OworCQkJfTsKKwkJfTsKKwl9OworCiAJcmVnX3ZiYXQ6IHJlZy12YmF0IHsKIAkJY29tcGF0
-aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwogCQlyZWd1bGF0b3ItbmFtZSA9ICJ2YmF0IjsKQEAg
-LTg5LDYgKzEyOCwxMCBAQAogCX07CiB9OwogCismZGUgeworCXN0YXR1cyA9ICJva2F5IjsKK307
-CisKIC8qCiAgKiBBbiBVU0ItMiBodWIgaXMgY29ubmVjdGVkIGhlcmUsIHdoaWNoIGFsc28gbWVh
-bnMgd2UgZG9uJ3QgbmVlZCB0bwogICogZW5hYmxlIHRoZSBPSENJIGNvbnRyb2xsZXIuCkBAIC0x
-NDIsNiArMTg1LDEyIEBACiAJc3RhdHVzID0gIm9rYXkiOwogfTsKIAorJnB3bSB7CisJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JnB3bV9waW4+OworCXN0YXR1cyA9
-ICJva2F5IjsKK307CisKICZyX3JzYiB7CiAJc3RhdHVzID0gIm9rYXkiOwogCkBAIC0zMjMsNiAr
-MzcyLDE4IEBACiAJcmVndWxhdG9yLW5hbWUgPSAidmNjLWxjZCI7CiB9OwogCismdGNvbjAgewor
-CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZsY2RfbHZkc19waW5z
-PjsKK307CisKKyZ0Y29uMF9vdXQgeworCXRjb24wX291dF9sY2Q6IGVuZHBvaW50QDAgeworCQly
-ZWcgPSA8MD47CisJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW5wdXQ+OworCX07Cit9Owor
-CiAmdWFydDAgewogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZ1
-YXJ0MF9wYl9waW5zPjsKLS0gCmdpdC1zZXJpZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Some clocks and resets supposed to drive the LVDS logic in the display
+engine have been overlooked when the driver was first introduced.
+
+Add those additional resources to the binding, and we'll deal with the ABI
+stability in the code.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt |  9 +++++++-
+ 1 file changed, 9 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 50cc72ee1168..1e21cfaac9e2 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -121,6 +121,15 @@ Required properties:
+ On SoCs other than the A33 and V3s, there is one more clock required:
+    - 'tcon-ch1': The clock driving the TCON channel 1
+ 
++On SoCs that support LVDS (all SoCs but the A13, H3, H5 and V3s), you
++need one more reset line:
++   - 'lvds': The reset line driving the LVDS logic
++
++And on the SoCs newer than the A31 (sun6i and sun8i families), you
++need one more clock line:
++   - 'lvds-alt': An alternative clock source, separate from the TCON channel 0
++                 clock, that can be used to drive the LVDS clock
++
+ DRC
+ ---
+ 
+-- 
+git-series 0.9.1
