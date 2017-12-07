@@ -1,55 +1,125 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V6 4/7] OF: properties: Implement get_match_data()
- callback
-Date: Thu, 7 Dec 2017 12:50:50 -0500
-Message-ID: <661cbe4d-ea33-3e84-b5f2-ab6517cbb135@codeaurora.org>
-References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
- <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
- <20171207141029.575c0a03@karo-electronics.de>
- <def8e351-bc2d-7adc-fdc5-362b365302a8@codeaurora.org>
- <20171207162036.6a71a4f5@karo-electronics.de>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 0/7] Add CPU Frequency scaling support on Armada 37xx
+Date: Thu, 07 Dec 2017 18:58:28 +0100
+Message-ID: <87r2s6s9mj.fsf@free-electrons.com>
+References: <20171207135616.23670-1-gregory.clement@free-electrons.com>
+        <88999738.5axjmjKUcc@aspire.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171207162036.6a71a4f5@karo-electronics.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <LW@KARO-electronics.de>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, timur@codeaurora.org, open list <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <88999738.5axjmjKUcc@aspire.rjw.lan> (Rafael J. Wysocki's message
+        of "Thu, 07 Dec 2017 18:14:22 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Evan Wang <xswang@marvell.com>, Andre Heider <a.heider@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/7/2017 10:20 AM, Lothar Waßmann wrote:
-> Hi,
-> 
-> On Thu, 7 Dec 2017 09:45:31 -0500 Sinan Kaya wrote:
->> On 12/7/2017 8:10 AM, Lothar Waßmann wrote:
->>>> +void *of_fwnode_get_match_data(const struct fwnode_handle *fwnode,
->>>> +			       struct device *dev)
->>> Shouldn't this be 'const void *of_fwnode_get_match_data
->>
->> OF keeps the driver data as a (const void*) internally. ACPI keeps the
->> driver data as kernel_ulong_t in struct acpi_device_id.
->>
->> I tried to find the middle ground here by converting output to void*
->> but not keeping const.
->>
-> It should be no problem to cast a (const void *) to an unsigned long
-> data type (without const qualifier).
-> 
+Hi Rafael,
+ 
+ On jeu., déc. 07 2017, "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote:
 
-It is the other way around. If I change this API to return a a (const void*),
-the device_get_match_data() function need to return a (const void *).
+> On Thursday, December 7, 2017 2:56:09 PM CET Gregory CLEMENT wrote:
+>> Hi,
+>> 
+>> This is the second version of a series adding the CPU Frequency
+>> support on Armada 37xx using DVFS. It is based on the initial work of
+>> Evan Wang and Victor Gu.
+>> 
+>> The main change since the first version was a bug fixed in the
+>> "cpufreq: Add DVFS support for Armada 37xx" patch which was preventing
+>> to register the opp. An other noticeable change is the 4th patch which
+>> is new adding the use of dev_pm_opp_remove and removing an comment
+>> became wrong. The other changes are described in the change log.
+>> 
+>> DVFS control is done by a set of registers from the North Bridge Power
+>> Management block. The binding for this block is documented in patch 1.
+>> 
+>> While adding a new cpufreq driver I found that the Kconfig and
+>> Makefile were no more in order, so it is fixed by patch 2 and 3.
+>> 
+>> The 5th patch is just about updating the MAINTAINERS file with the new
+>> driver.
+>> 
+>> The next patch is the real purpose of the series. The main goal of
+>> this driver is to setup the CPU load level in the hardware to
+>> associate them to CPU frequencies and register a standard cpufreq
+>> driver. Note that the hardware also capable of doing AVS (Adaptive
+>> Voltage Scaling), by associating a voltage on each level beside the
+>> CPU frequency. However, this support is not yet ready, so it is not
+>> part of this series.
+>> 
+>> Finally, the last patch is for arm-soc the arm-soc subsystem through
+>> mvebu and update the device tree to support the CPU frequency scaling.
+>> 
+>> An update on the CPU clock driver is needed in order to take into
+>> account the DVFS setting. It's the purpose of an other series already
+>> sent, but is no dependencies between the series (for building or at
+>> runtime).
+>> 
+>> Thanks,
+>> 
+>> Gregory
+>> 
+>> Changelog:
+>> 
+>> v1 -> v2:
+>> 
+>>  - using syscon instead of nb_pm for the binding of the North bridge
+>>    power management unit: reported by Rob Herring
+>> 
+>>  - fix sorting inside the big LITTLE section for the Kconfig: reported
+>>    by Viresh Kumar
+>> 
+>>  - fix the bogus freq calculation in armada37xx_cpufreq_driver_init,
+>>    bug reported by Andre Heider
+>> 
+>>  - use dev_pm_opp_remove() on the previous opp if dev_pm_opp_add()
+>>    failed, reported by Viresh Kumar
+>> 
+>>  - add the Tested-by flag from Andre Heider on "cpufreq: Add DVFS
+>>    support for Armada 37xx" patch
+>> 
+>> Gregory CLEMENT (7):
+>>   dt-bindings: marvell: Add documentation for the North Bridge PM on
+>>     Armada 37xx
+>>   cpufreq: ARM: sort the Kconfig menu
+>>   cpufreq: sort the drivers in ARM part
+>>   cpufreq: mvebu: Use dev_pm_opp_remove()
+>>   MAINTAINERS: add new entries for Armada 37xx cpufreq driver
+>>   cpufreq: Add DVFS support for Armada 37xx
+>>   arm64: dts: marvell: armada-37xx: add nodes allowing cpufreq support
+>> 
+>>  .../bindings/arm/marvell/armada-37xx.txt           |  19 ++
+>>  MAINTAINERS                                        |   1 +
+>>  arch/arm64/boot/dts/marvell/armada-372x.dtsi       |   1 +
+>>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi       |   7 +
+>>  drivers/cpufreq/Kconfig.arm                        |  89 ++++----
+>>  drivers/cpufreq/Makefile                           |   9 +-
+>>  drivers/cpufreq/armada-37xx-cpufreq.c              | 241 +++++++++++++++++++++
+>>  drivers/cpufreq/mvebu-cpufreq.c                    |  11 +-
+>>  8 files changed, 327 insertions(+), 51 deletions(-)
+>>  create mode 100644 drivers/cpufreq/armada-37xx-cpufreq.c
+>
+> I'd like you to split patches [2-3/7] off this series as they aren't
+> exactly related to the other changes in it.
 
-While implementing the ACPI piece, I have to convert an unsigned long to
-(const void *) in ACPI code so that the APIs are compatible.
+Actually the patch 6 depend on patch 2 and 3. To be more precise they
+modify the same area inside the files drivers/cpufreq/Kconfig.arm and
+drivers/cpufreq/Makefile.
 
-> 
-> Lothar Waßmann
-> 
+So if I move them in an other series then there could be some merge
+conflicts.
 
+Gregory
+
+>
+> Thanks,
+> Rafael
+>
 
 -- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
