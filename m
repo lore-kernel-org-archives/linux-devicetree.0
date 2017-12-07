@@ -1,63 +1,39 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun8i-h3: Remove allwinner,leds-active-low for non internal PHY
-Date: Thu,  7 Dec 2017 19:21:02 +0100
-Message-ID: <20171207182102.16127-1-clabbe.montjoie@gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] at24: support eeproms that do not auto-rollover
+ reads.
+Date: Thu, 7 Dec 2017 20:02:30 +0100
+Message-ID: <20171207190230.ttq5xthgsuuy4swn@pengutronix.de>
+References: <1512657378-5221-1-git-send-email-svendev@arcx.com>
+ <1512657378-5221-2-git-send-email-svendev@arcx.com>
+ <CAMRc=MdhJRD+G18Xh5vfmaHHdJ+g9EnDTxUHVxhzDzVt-D0KMg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdhJRD+G18Xh5vfmaHHdJ+g9EnDTxUHVxhzDzVt-D0KMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Cc: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-allwinner,leds-active-low have effect only on boards which us the internal PHY.
-So this patch remove it from all boards which do not use the internal PHY.
+Hello,
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 1 -
- arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts   | 2 --
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts    | 1 -
- 3 files changed, 4 deletions(-)
+On Thu, Dec 07, 2017 at 05:26:50PM +0100, Bartosz Golaszewski wrote:
+> > +       if (at24->chip.flags & AT24_FLAG_NO_RDROL) {
+> > +               bits = (at24->chip.flags & AT24_FLAG_ADDR16) ? 16 : 8;
+> 
+> There's no need for braces around the ternary operator's condition.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-index f2292deaa590..f1c3f1cc4d97 100644
---- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-@@ -119,7 +119,6 @@
- 	phy-handle = <&ext_rgmii_phy>;
- 	phy-mode = "rgmii";
- 
--	allwinner,leds-active-low;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-index 0a8b79cf5954..b9ffa4d9c873 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-@@ -83,8 +83,6 @@
- 	phy-handle = <&ext_rgmii_phy>;
- 	phy-mode = "rgmii";
- 
--	allwinner,leds-active-low;
--
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-index cbc499b04de4..b403e5d787cb 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -85,7 +85,6 @@
- 	phy-handle = <&ext_rgmii_phy>;
- 	phy-mode = "rgmii";
- 
--	allwinner,leds-active-low;
- 	status = "okay";
- };
- 
+Even if not required, I'd keep them for clearity.
+
+Best regards
+Uwe
+
 -- 
-2.13.6
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
