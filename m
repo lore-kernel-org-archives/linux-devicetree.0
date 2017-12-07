@@ -1,68 +1,168 @@
-From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH net-next v4 1/4] phylib: Add device reset delay support
-Date: Thu, 7 Dec 2017 16:01:11 +0100
-Message-ID: <5f174dfc-e373-1069-cf22-f25a569030d0@skidata.com>
-References: <20171207144358.3351-1-dev@g0hl1n.net>
- <20171207144358.3351-2-dev@g0hl1n.net>
- <CAMuHMdVgWif=1K-S2j1Y39B9yDNvV12sUm7nrFLOP-=ndSYtVA@mail.gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [RFC 1/2] dt-bindings: mipi-dsi: Add info about peripherals with
+ non-DSI control bus
+Date: Thu, 7 Dec 2017 20:42:25 +0530
+Message-ID: <92a34c90-2d7e-6f22-7ff3-ef70953f4044@codeaurora.org>
+References: <20171205103356.9917-1-architt@codeaurora.org>
+ <20171205103356.9917-2-architt@codeaurora.org>
+ <20171206213936.devr3d4fyhtbld4w@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVgWif=1K-S2j1Y39B9yDNvV12sUm7nrFLOP-=ndSYtVA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171206213936.devr3d4fyhtbld4w@rob-hp-laptop>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, lukma-ynQEQJNshbs@public.gmane.org, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: tomi.valkeinen@ti.com, eric@anholt.net, philippe.cornu@st.com, laurent.pinchart@ideasonboard.com, thierry.reding@gmail.com, nickey.yang@rock-chips.com, dri-devel@lists.freedesktop.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, seanpaul@chromium.org, briannorris@chromium.org, maxime.ripard@free-electrons.com, boris.brezillon@free-electrons.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-On 12/07/2017 03:52 PM, Geert Uytterhoeven wrote:
-> Hi Richard,
-> 
-> On Thu, Dec 7, 2017 at 3:43 PM, Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org> wrote:
->> --- a/drivers/net/phy/mdio_device.c
->> +++ b/drivers/net/phy/mdio_device.c
->> @@ -24,6 +24,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/string.h>
->>  #include <linux/unistd.h>
->> +#include <linux/delay.h>
+
+On 12/07/2017 03:09 AM, Rob Herring wrote:
+> On Tue, Dec 05, 2017 at 04:03:55PM +0530, Archit Taneja wrote:
+>> Add a section that describes dt-bindings for peripherals that support
+>> MIPI DSI, but have a different bus as the primary control bus. Add an
+>> example for such peripherals.
 >>
->>  void mdio_device_free(struct mdio_device *mdiodev)
->>  {
->> @@ -118,8 +119,16 @@ EXPORT_SYMBOL(mdio_device_remove);
+>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/display/mipi-dsi-bus.txt   | 75 ++++++++++++++++++++--
+>>   1 file changed, 68 insertions(+), 7 deletions(-)
 >>
->>  void mdio_device_reset(struct mdio_device *mdiodev, int value)
->>  {
->> -       if (mdiodev->reset)
->> -               gpiod_set_value(mdiodev->reset, value);
->> +       unsigned int d;
+>> diff --git a/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt b/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+>> index 973c27273772..77a7cec15f5b 100644
+>> --- a/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+>> +++ b/Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+>> @@ -16,7 +16,7 @@ The following assumes that only a single peripheral is connected to a DSI
+>>   host. Experience shows that this is true for the large majority of setups.
+>>   
+>>   DSI host
+>> ---------
+>> +========
+>>   
+>>   In addition to the standard properties and those defined by the parent bus of
+>>   a DSI host, the following properties apply to a node representing a DSI host.
+>> @@ -30,11 +30,15 @@ Required properties:
+>>     different value here. See below.
+>>   
+>>   DSI peripheral
+>> ---------------
+>> +==============
+>>   
+>> -Peripherals are represented as child nodes of the DSI host's node. Properties
+>> -described here apply to all DSI peripherals, but individual bindings may want
+>> -to define additional, device-specific properties.
+>> +Peripherals with DSI as control bus
+>> +------------------------------------
 >> +
->> +       if (!mdiodev->reset)
->> +               return;
->> +
->> +       gpiod_set_value(mdiodev->reset, value);
->> +
->> +       d = value ? mdiodev->reset_delay : mdiodev->reset_post_delay;
->> +       if (d)
->> +               usleep_range(d, d + min_t(unsigned int, d / 10, 100));
+>> +Peripherals with the DSI bus as the primary control path are represented as
+>> +child nodes of the DSI host's node. Properties described here apply to all DSI
+>> +peripherals, but individual bindings may want to define additional,
+>> +device-specific properties.
 > 
-> Oops, I meant "max_t", not "min_t", else the upper limit can be "d + 0",
-> which is not what we want.
+> Are there any panels with no control bus? I've never seen one, but it
+> should be possible if LVDS panels can power on without commands.
 
-You're right...
+DSI panels generally require sending at least a couple of DCS commands to be
+exit sleep mode and get powered on. I guess I can rewrite the above paragraph
+to include peripherals which have no control bus at all.
 
-> Sorry, my fault.
 
-I just copied it over from you suggestion without thinking about it...
-So it's definitely my fault too ;-)
+> 
+>>   Required properties:
+>>   - reg: The virtual channel number of a DSI peripheral. Must be in the range
+>> @@ -49,9 +53,25 @@ case two alternative representations can be chosen:
+>>     property is the number of the first virtual channel and the second cell is
+>>     the number of consecutive virtual channels.
+>>   
+>> -Example
+>> --------
+>> +Peripherals with a different control bus
+>> +----------------------------------------
+>> +
+>> +There are peripherals that have I2C/SPI (or some other non-DSI bus) as the
+>> +primary control bus, but are also connected to a DSI bus (mostly for the data
+>> +path). Connections between such peripherals and a DSI host can be represented
+>> +using the graph bindings [1], [2].
+>> +
+>> +[1] Documentation/devicetree/bindings/graph.txt
+>> +[2] Documentation/devicetree/bindings/media/video-interfaces.txt
+>>   
+>> +Examples
+>> +========
+>> +- (1), (2) and (3) are examples of a DSI host and peripheral on the DSI bus
+>> +  with different virtual channel configurations.
+>> +- (4) is an example of a peripheral on a I2C control bus connected with to
+>> +  a DSI host using of-graph bindings.
+>> +
+>> +1)
+>>   	dsi-host {
+>>   		...
+>>   
+>> @@ -67,6 +87,7 @@ Example
+>>   		...
+>>   	};
+>>   
+>> +2)
+>>   	dsi-host {
+>>   		...
+>>   
+>> @@ -82,6 +103,7 @@ Example
+>>   		...
+>>   	};
+>>   
+>> +3)
+>>   	dsi-host {
+>>   		...
+>>   
+>> @@ -96,3 +118,42 @@ Example
+>>   
+>>   		...
+>>   	};
+>> +
+>> +4)
+>> +	i2c-host {
+>> +		...
+>> +
+>> +		dsi-bridge@35 {
+>> +			compatible = "...";
+>> +			reg = <0x35>;
+>> +
+>> +			ports {
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +
+>> +				...
+>> +
+>> +				port@0 {
+> 
+> Drop unit-address and #*-cells.
+> 
+>> +					bridge_mipi_in: endpoint {
+>> +						remote-endpoint = <&host_mipi_out>;
+>> +					};
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	dsi-host {
+>> +		...
+>> +
+>> +		ports {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			...
+>> +
+>> +			port@0 {
+> 
+> Drop unit-address and #*-cells.
 
-I'll wait for some more comments and send a new version next week.
+Thanks, I'll fix these and the similar comments in the second patch.
 
-regards;Richard.L
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Archit
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
