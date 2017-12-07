@@ -1,60 +1,41 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: allwinner: a64: orangepi-zero-plus2:
- add usb otg
-Date: Thu, 7 Dec 2017 14:34:09 +0100
-Message-ID: <20171207133409.cpp7wxx4yflkgavp@flea.lan>
-References: <1512644748-14491-1-git-send-email-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [PATCH V6 4/7] OF: properties: Implement get_match_data() callback
+Date: Thu, 7 Dec 2017 14:10:29 +0100
+Message-ID: <20171207141029.575c0a03@karo-electronics.de>
+References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
+ <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cgqjnyc3phbbrm7n"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBU4GUXIQKGQEW5IVMQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1512644748-14491-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, timur@codeaurora.org, open list <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---cgqjnyc3phbbrm7n
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-On Thu, Dec 07, 2017 at 04:35:48PM +0530, Jagan Teki wrote:
-> Add usb otg support for orangepi-zero-plus2 board:
-> - Add usb_otg node with dr_mode as 'otg'
-> - USB0-IDDET connected to PA21
-> - VBUS connected through DCIN which always on
-> 
-> Tested mass storage function.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-
-Did you test the OTG or peripheral modes?
-
-> Note: Anyone please check vbus connection [1]
-> Since it is connected through DCIN of vcc-5v, I've added vcc-5v0
-> regulator for the same and attached to usb0_vbus-supply but it is
-> disabling during kernel boot.
-> [    1.887854] vcc5v0: disabling
-
-VBUS is the power line that is provided on the USB connector. In
-peripheral, that power is provided by the host, therefore it needs to
-be shutdown on the peripheral end. This is the expected behaviour.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---cgqjnyc3phbbrm7n--
+SGksCgpPbiBUdWUsICA1IERlYyAyMDE3IDEyOjA0OjQ5IC0wNTAwIFNpbmFuIEtheWEgd3JvdGU6
+Cj4gTm93IHRoYXQgd2UgaGF2ZSBhIGdldF9tYXRjaF9kYXRhKCkgY2FsbGJhY2sgYXMgcGFydCBv
+ZiB0aGUgZmlybXdhcmUgbm9kZSwKPiBpbXBsZW1lbnQgdGhlIE9GIHNwZWNpZmljIHBpZWNlIGZv
+ciBpdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTaW5hbiBLYXlhIDxva2F5YUBjb2RlYXVyb3JhLm9y
+Zz4KPiAtLS0KPiAgZHJpdmVycy9vZi9wcm9wZXJ0eS5jIHwgNyArKysrKysrCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9wcm9w
+ZXJ0eS5jIGIvZHJpdmVycy9vZi9wcm9wZXJ0eS5jCj4gaW5kZXggMjY0YzM1NS4uOTk2NDE2OSAx
+MDA2NDQKPiAtLS0gYS9kcml2ZXJzL29mL3Byb3BlcnR5LmMKPiArKysgYi9kcml2ZXJzL29mL3By
+b3BlcnR5LmMKPiBAQCAtOTgxLDYgKzk4MSwxMiBAQCBzdGF0aWMgaW50IG9mX2Z3bm9kZV9ncmFw
+aF9wYXJzZV9lbmRwb2ludChjb25zdCBzdHJ1Y3QgZndub2RlX2hhbmRsZSAqZndub2RlLAo+ICAJ
+cmV0dXJuIDA7Cj4gIH0KPiAgCj4gK3ZvaWQgKm9mX2Z3bm9kZV9nZXRfbWF0Y2hfZGF0YShjb25z
+dCBzdHJ1Y3QgZndub2RlX2hhbmRsZSAqZndub2RlLAo+ICsJCQkgICAgICAgc3RydWN0IGRldmlj
+ZSAqZGV2KQpTaG91bGRuJ3QgdGhpcyBiZSAnY29uc3Qgdm9pZCAqb2ZfZndub2RlX2dldF9tYXRj
+aF9kYXRhJwoKCgpMb3RoYXIgV2HDn21hbm4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
