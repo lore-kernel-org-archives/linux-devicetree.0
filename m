@@ -1,242 +1,106 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 08/15] drm/sun4i: Add LVDS support
-Date: Thu, 7 Dec 2017 13:25:21 +0100
-Message-ID: <20171207122521.frv5zgaay3sgol6f@flea.lan>
-References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
- <b900e5963180c94ca02bde178b6674622a127787.1512486553.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v65Voua-AjHDnCLgDOKqUeSG-yD4wuSO5-BJ230FCp4OuQ@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH V6 3/7] device property: Introduce a common API to fetch
+ device match data
+Date: Thu, 7 Dec 2017 14:29:49 +0200
+Message-ID: <20171207122948.yyl6adb6lnb56gok@valkosipuli.retiisi.org.uk>
+References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
+ <1512493493-6464-4-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1970307876=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGb2v65Voua-AjHDnCLgDOKqUeSG-yD4wuSO5-BJ230FCp4OuQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jernej Skrabec <jernej.skrabec@siol.net>, Priit Laes <plaes@plaes.org>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1512493493-6464-4-git-send-email-okaya@codeaurora.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sinan,
 
---===============1970307876==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pdfzor5trmdcpiok"
-Content-Disposition: inline
+Thanks for the update.
 
+Just one small comment below.
 
---pdfzor5trmdcpiok
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Dec 05, 2017 at 12:04:48PM -0500, Sinan Kaya wrote:
+> There is an OF/ACPI function to obtain the driver data. We want to hide
+> OF/ACPI details from the device drivers and abstract following the device
+> family of functions.
+> 
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> ---
+>  drivers/base/property.c  | 6 ++++++
+>  include/linux/fwnode.h   | 4 ++++
+>  include/linux/property.h | 2 ++
+>  3 files changed, 12 insertions(+)
+> 
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index 7ed99c1..65bf6f2 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -1335,3 +1335,9 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+>  	return fwnode_call_int_op(fwnode, graph_parse_endpoint, endpoint);
+>  }
+>  EXPORT_SYMBOL(fwnode_graph_parse_endpoint);
+> +
+> +void *device_get_match_data(struct device *dev)
+> +{
+> +	return fwnode_call_ptr_op(dev_fwnode(dev), get_match_data, dev);
+> +}
+> +EXPORT_SYMBOL_GPL(device_get_match_data);
+> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> index 0c35b6c..ab9aab5 100644
+> --- a/include/linux/fwnode.h
+> +++ b/include/linux/fwnode.h
+> @@ -15,6 +15,7 @@
+>  #include <linux/types.h>
+>  
+>  struct fwnode_operations;
+> +struct device;
+>  
+>  struct fwnode_handle {
+>  	struct fwnode_handle *secondary;
+> @@ -66,6 +67,7 @@ struct fwnode_reference_args {
+>   *			       endpoint node.
+>   * @graph_get_port_parent: Return the parent node of a port node.
+>   * @graph_parse_endpoint: Parse endpoint for port and endpoint id.
+> + * @get_match_data: Return the driver match data.
 
-Hi,
+Could you arrange the new get_match_data op closer to the other ops that
+don't deal with the graphs? Such as device_is_available. As the ops are
+dealing generally with fwnodes, I might call this device_get_match_data to
+explicitly mention it's for devices.
 
-On Thu, Dec 07, 2017 at 02:05:47PM +0800, Chen-Yu Tsai wrote:
-> > +static void sun4i_tcon_lvds_set_status(struct sun4i_tcon *tcon,
-> > +                                      const struct drm_encoder *encode=
-r,
-> > +                                      bool enabled)
-> > +{
-> > +       if (enabled) {
-> > +               u8 val;
-> > +
-> > +               regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
-> > +                                  SUN4I_TCON0_LVDS_IF_EN,
-> > +                                  SUN4I_TCON0_LVDS_IF_EN);
-> > +
-> > +               regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-> > +                            SUN4I_TCON0_LVDS_ANA0_C(2) |
-> > +                            SUN4I_TCON0_LVDS_ANA0_V(3) |
-> > +                            SUN4I_TCON0_LVDS_ANA0_PD(2) |
-> > +                            SUN4I_TCON0_LVDS_ANA0_EN_LDO);
-> > +               udelay(2);
-> > +
-> > +               regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_RE=
-G,
-> > +                                  SUN4I_TCON0_LVDS_ANA0_EN_MB,
-> > +                                  SUN4I_TCON0_LVDS_ANA0_EN_MB);
-> > +               udelay(2);
-> > +
-> > +               regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_RE=
-G,
-> > +                                  SUN4I_TCON0_LVDS_ANA0_EN_DRVC,
-> > +                                  SUN4I_TCON0_LVDS_ANA0_EN_DRVC);
-> > +
-> > +               if (sun4i_tcon_get_pixel_depth(encoder) =3D=3D 18)
-> > +                       val =3D 7;
-> > +               else
-> > +                       val =3D 0xf;
-> > +
-> > +               regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-> > +                                 SUN4I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
-> > +                                 SUN4I_TCON0_LVDS_ANA0_EN_DRVD(val));
->=20
-> I suggest changing the prefix of the macros of the analog bits to
-> SUN6I_TCON0_*. The register definitions and sequence do not apply
-> to the A10/A20. Furthermore you should add a comment saying this
-> doesn't apply to the A10/A20. In the future we might want to move
-> this part into a separate function, referenced by a function pointer
-> from the quirks structure.
+>   */
+>  struct fwnode_operations {
+>  	void (*get)(struct fwnode_handle *fwnode);
+> @@ -101,6 +103,8 @@ struct fwnode_operations {
+>  	(*graph_get_port_parent)(struct fwnode_handle *fwnode);
+>  	int (*graph_parse_endpoint)(const struct fwnode_handle *fwnode,
+>  				    struct fwnode_endpoint *endpoint);
+> +	void *(*get_match_data)(const struct fwnode_handle *fwnode,
+> +				struct device *dev);
 
-I'll change the bit field names and add a comment like you suggested.
+Same comment about the order here.
 
-> > +       } else {
-> > +               regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
-> > +                                  SUN4I_TCON0_LVDS_IF_EN, 0);
-> > +       }
-> > +}
-> > +
-> >  void sun4i_tcon_set_status(struct sun4i_tcon *tcon,
-> >                            const struct drm_encoder *encoder,
-> >                            bool enabled)
-> >  {
-> > +       bool is_lvds =3D false;
-> >         int channel;
-> >
-> >         switch (encoder->encoder_type) {
-> > +       case DRM_MODE_ENCODER_LVDS:
-> > +               is_lvds =3D true;
-> > +               /* Fallthrough */
-> >         case DRM_MODE_ENCODER_NONE:
-> >                 channel =3D 0;
-> >                 break;
-> > @@ -84,10 +171,16 @@ void sun4i_tcon_set_status(struct sun4i_tcon *tcon,
-> >                 return;
-> >         }
-> >
-> > +       if (is_lvds && !enabled)
-> > +               sun4i_tcon_lvds_set_status(tcon, encoder, false);
-> > +
-> >         regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
-> >                            SUN4I_TCON_GCTL_TCON_ENABLE,
-> >                            enabled ? SUN4I_TCON_GCTL_TCON_ENABLE : 0);
-> >
-> > +       if (is_lvds && enabled)
-> > +               sun4i_tcon_lvds_set_status(tcon, encoder, true);
-> > +
-> >         sun4i_tcon_channel_set_status(tcon, channel, enabled);
-> >  }
-> >
-> > @@ -170,6 +263,78 @@ static void sun4i_tcon0_mode_set_common(struct sun=
-4i_tcon *tcon,
-> >                      SUN4I_TCON0_BASIC0_Y(mode->crtc_vdisplay));
-> >  }
-> >
-> > +static void sun4i_tcon0_mode_set_lvds(struct sun4i_tcon *tcon,
-> > +                                     const struct drm_encoder *encoder,
-> > +                                     const struct drm_display_mode *mo=
-de)
-> > +{
-> > +       unsigned int bp;
-> > +       u8 clk_delay;
-> > +       u32 reg, val =3D 0;
-> > +
-> > +       tcon->dclk_min_div =3D 7;
-> > +       tcon->dclk_max_div =3D 7;
-> > +       sun4i_tcon0_mode_set_common(tcon, mode);
-> > +
-> > +       /* Adjust clock delay */
-> > +       clk_delay =3D sun4i_tcon_get_clk_delay(mode, 0);
-> > +       regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
-> > +                          SUN4I_TCON0_CTL_CLK_DELAY_MASK,
-> > +                          SUN4I_TCON0_CTL_CLK_DELAY(clk_delay));
-> > +
-> > +       /*
-> > +        * This is called a backporch in the register documentation,
-> > +        * but it really is the back porch + hsync
-> > +        */
-> > +       bp =3D mode->crtc_htotal - mode->crtc_hsync_start;
-> > +       DRM_DEBUG_DRIVER("Setting horizontal total %d, backporch %d\n",
-> > +                        mode->crtc_htotal, bp);
-> > +
-> > +       /* Set horizontal display timings */
-> > +       regmap_write(tcon->regs, SUN4I_TCON0_BASIC1_REG,
-> > +                    SUN4I_TCON0_BASIC1_H_TOTAL(mode->htotal) |
-> > +                    SUN4I_TCON0_BASIC1_H_BACKPORCH(bp));
-> > +
-> > +       /*
-> > +        * This is called a backporch in the register documentation,
-> > +        * but it really is the back porch + hsync
-> > +        */
-> > +       bp =3D mode->crtc_vtotal - mode->crtc_vsync_start;
-> > +       DRM_DEBUG_DRIVER("Setting vertical total %d, backporch %d\n",
-> > +                        mode->crtc_vtotal, bp);
-> > +
-> > +       /* Set vertical display timings */
-> > +       regmap_write(tcon->regs, SUN4I_TCON0_BASIC2_REG,
-> > +                    SUN4I_TCON0_BASIC2_V_TOTAL(mode->crtc_vtotal * 2) |
-> > +                    SUN4I_TCON0_BASIC2_V_BACKPORCH(bp));
->=20
-> Can we move the above to a common function?
+>  };
+>  
+>  #define fwnode_has_op(fwnode, op)				\
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 6bebee1..01fa55b 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -275,6 +275,8 @@ int device_add_properties(struct device *dev,
+>  
+>  enum dev_dma_attr device_get_dma_attr(struct device *dev);
+>  
+> +void *device_get_match_data(struct device *dev);
+> +
+>  int device_get_phy_mode(struct device *dev);
+>  
+>  void *device_get_mac_address(struct device *dev, char *addr, int alen);
 
-Until we have DSI support figured out I'd rather not do too much of
-consolidation. We know already a few things are going to change there
-(like the clk_delay), but it's not clear yet how much.
+-- 
+Kind regards,
 
-> > +       /* Map output pins to channel 0 */
-> > +       regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
-> > +                          SUN4I_TCON_GCTL_IOMAP_MASK,
-> > +                          SUN4I_TCON_GCTL_IOMAP_TCON0);
-> > +
-> > +       /* Enable the output on the pins */
-> > +       regmap_write(tcon->regs, SUN4I_TCON0_IO_TRI_REG, 0xe0000000);
->=20
-> Is this still needed? You are no longer using the TCON LCD pins
-> with LVDS.
-
-We do. It's a separate function of the pins, but it's the same pins.
-
-> >  static const struct sun4i_tcon_quirks sun6i_a31s_quirks =3D {
-> >         .has_channel_1          =3D true,
-> > +       .has_lvds_pll           =3D true,
->=20
-> The A31s does not have MIPI.
-
-I'll change that.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---pdfzor5trmdcpiok
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlopMy0ACgkQ0rTAlCFN
-r3R94BAAl4KtCU9xrhOljgjUWRmE4pcSM1TDY5QiNF60Mh46xSYhMnft+Lic7Gjf
-3iO746q5rGr2xV5P2Xc8bfrWN5C8zKq+Yrd/gn48+yjPiKJij0MSSJJ1U401sXAq
-QMfl+3sd56XCTOjlh7RbrwT3fBfiZeVGBh6FcktcUAQsTgCyMt7yy5MSQ0qzD48K
-39s4ajH/VOA07kh940P+Y7l2VqlpMREkxfcmHDSMFnArKjK6c2xyTzN2P2PlpCUd
-TmVxggiZw2MXYEp0XAIqu9ZZMKow5y1Sh0aDwaiW7m10NtuSQ2CejbhtTGmiTb3k
-9SRZ4QI0N6bv0wPdfVuapxWFWolOCPKL9OsA5OFSg/4B/VQjp6qOucpNsP7ko5DN
-NgUSNBlYpxUVj1h9CMc59g4JPObfFxG0cOh+rUQR4jLhpgjcsWP1JN9NtlUMjxOa
-EGiG/a7aukmpfQTM7qGC+dByo1MtIhCkoYr29eARsTrJuuCIRRM66iptLfW1G3uc
-iN+IPo+4qdat0ccPa1gYcfk4qWx1iEp9lN2f9//sV+ik3tIcwD/UiLvZd5K3NqTg
-IHaVX930v77oEzG9R4ChsjsCJs5dTpl3eis4316P0HbmWDmA0hTqjL2EgbCTB0iF
-jtgElPIONadFzP/w1KXIqHe3qX8G4hpVbuLcQLWwLayzTEvTJgg=
-=w2MB
------END PGP SIGNATURE-----
-
---pdfzor5trmdcpiok--
-
---===============1970307876==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1970307876==--
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
