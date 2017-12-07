@@ -1,33 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/4] clk: meson-axg: add clocks dt-bindings required
- header
-Date: Thu, 7 Dec 2017 16:10:14 -0600
-Message-ID: <20171207221014.6qwcb43w5hms4ma5@rob-hp-laptop>
-References: <20171207095300.15384-1-yixun.lan@amlogic.com>
- <20171207095300.15384-3-yixun.lan@amlogic.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v2 2/2] dt-bindings: mailbox: Add Xilinx IPI Mailbox
+Date: Thu, 7 Dec 2017 16:14:17 -0600
+Message-ID: <20171207221417.yfejyl37kecv7mxc@rob-hp-laptop>
+References: <1512368735-27147-1-git-send-email-jliang@xilinx.com>
+ <1512368735-27147-3-git-send-email-jliang@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171207095300.15384-3-yixun.lan@amlogic.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1512368735-27147-3-git-send-email-jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wendy Liang <wendy.liang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 07, 2017 at 05:52:58PM +0800, Yixun Lan wrote:
-> From: Qiufang Dai <qiufang.dai@amlogic.com>
+On Sun, Dec 03, 2017 at 10:25:35PM -0800, Wendy Liang wrote:
+> Xilinx ZynqMP IPI(Inter Processor Interrupt) is a hardware block
+> in ZynqMP SoC used for the communication between various processor
+> systems.
 > 
-> Add the required header for the clocks ID dt-bindings
-> exported from various subsystem in the Meson-AXG SoC.
-> 
-> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> Signed-off-by: Wendy Liang <jliang-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  include/dt-bindings/clock/axg-clkc.h | 71 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 include/dt-bindings/clock/axg-clkc.h
+>  .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt   | 104 +++++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.txt
 
-Please add acks when posting new versions.
-
-Rob
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
