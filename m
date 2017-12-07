@@ -1,64 +1,48 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] at24: support eeproms that do not auto-rollover
- reads.
-Date: Thu, 7 Dec 2017 22:57:50 +0100
-Message-ID: <20171207215750.jzx6mqftx4poeep7@pengutronix.de>
-References: <1512657378-5221-1-git-send-email-svendev@arcx.com>
- <1512657378-5221-2-git-send-email-svendev@arcx.com>
- <CAMRc=MdhJRD+G18Xh5vfmaHHdJ+g9EnDTxUHVxhzDzVt-D0KMg@mail.gmail.com>
- <20171207190230.ttq5xthgsuuy4swn@pengutronix.de>
- <CAMRc=MeEnDYjDTpE=XKuP3LricsnEnh0RHKMzxEPUcOS6E0tPQ@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH V6 3/7] device property: Introduce a common API to fetch
+ device match data
+Date: Fri, 8 Dec 2017 00:06:42 +0200
+Message-ID: <20171207220642.qqiwf4vvk2gf42uf@valkosipuli.retiisi.org.uk>
+References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
+ <1512493493-6464-4-git-send-email-okaya@codeaurora.org>
+ <20171207124044.utyrn2mzzyml42b2@valkosipuli.retiisi.org.uk>
+ <c2b38889-888a-3518-bf59-c2377f64a8ce@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MeEnDYjDTpE=XKuP3LricsnEnh0RHKMzxEPUcOS6E0tPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Cc: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c2b38889-888a-3518-bf59-c2377f64a8ce@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 07, 2017 at 10:33:51PM +0100, Bartosz Golaszewski wrote:
-> 2017-12-07 20:02 GMT+01:00 Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
-> > Hello,
-> >
-> > On Thu, Dec 07, 2017 at 05:26:50PM +0100, Bartosz Golaszewski wrote:
-> >> > +       if (at24->chip.flags & AT24_FLAG_NO_RDROL) {
-> >> > +               bits = (at24->chip.flags & AT24_FLAG_ADDR16) ? 16 : 8;
-> >>
-> >> There's no need for braces around the ternary operator's condition.
-> >
-> > Even if not required, I'd keep them for clearity.
-> >
+On Thu, Dec 07, 2017 at 03:17:52PM -0500, Sinan Kaya wrote:
+> On 12/7/2017 7:40 AM, Sakari Ailus wrote:
+> > On Tue, Dec 05, 2017 at 12:04:48PM -0500, Sinan Kaya wrote:
+> >> @@ -101,6 +103,8 @@ struct fwnode_operations {
+> >>  	(*graph_get_port_parent)(struct fwnode_handle *fwnode);
+> >>  	int (*graph_parse_endpoint)(const struct fwnode_handle *fwnode,
+> >>  				    struct fwnode_endpoint *endpoint);
+> >> +	void *(*get_match_data)(const struct fwnode_handle *fwnode,
+> >> +				struct device *dev);
+> > 
+> > You can make dev const, too.
+> > 
 > 
-> I don't want to start bikeshedding, so I'll take it as it is, but I
-> prefer to avoid braces wherever it's not necessary.
+> done, I couldn't change device_get_match_data() parameter const due to
+> dev_fwnode() function.
+> 
+>                  from /local/mnt/workspace/projects/caf/kernel/drivers/base/property.c:13:
+> 
+> /local/mnt/workspace/projects/caf/kernel/drivers/base/property.c:1341:39: warning: passing argument 1 of 'dev_fwnode' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+>   return fwnode_call_ptr_op(dev_fwnode(dev), device_get_match_data,
 
-For me the reasoning is: Most people (me included) don't know off-hand
-if the semantic of
+Right. Makes sense.
 
-	a & b ? c : d
-
-is
-	(a & b) ? c : d
-
-or
-
-	a & (b ? c : d)
-
-In some situations (e.g. a & b == c) gcc even warns when you don't add
-syntactically needless parentheses. The case under discussion isn't such
-an example though.
-
-Best regards
-Uwe
+I guess it's not perhaps worth it introducing dev_fwnode_const just for
+this. devices are seldom if ever const anyway.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
