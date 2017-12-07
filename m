@@ -1,82 +1,59 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] arm64: allwinner: a64: orangepi-zero-plus2: add
- usb otg
-Date: Thu,  7 Dec 2017 16:35:48 +0530
-Message-ID: <1512644748-14491-1-git-send-email-jagan@amarulasolutions.com>
-Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] arm64: Add initial Actions Semi S700 and
+ CubieBoard7 support
+Date: Thu, 7 Dec 2017 12:30:07 +0100
+Message-ID: <2742e6af-2195-1f47-92eb-524107e426bd@suse.de>
+References: <20171113233427.5386-1-afaerber@suse.de>
+ <e43387f9-60a6-129b-d0e9-dff6d0df301a@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRBR6DUTIQKGQE63XVTKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e43387f9-60a6-129b-d0e9-dff6d0df301a-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeff Chen <jeff.chen-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Ahha Lee <lee-om/0PrzuAKC1Z/+hSey0Gg@public.gmane.org>
+Cc: Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5qKF5Yip?= <harrymei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, support-om/0PrzuAKC1Z/+hSey0Gg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add usb otg support for orangepi-zero-plus2 board:
-- Add usb_otg node with dr_mode as 'otg'
-- USB0-IDDET connected to PA21
-- VBUS connected through DCIN which always on
+Am 07.12.2017 um 10:20 schrieb Daniel Lezcano:
+> On 14/11/2017 00:34, Andreas Färber wrote:
+>> Hello,
+>>
+>> This series prepares the Actions Semi S700 SoC and Cubietech CubieBoard7.
+>> It boots equally far as the S900 based Bubblegum-96 these patches are based on,
+>> i.e. into an initrd with serial and all four cores up.
+>>
+>> v2 modifies the clocksource driver patches and adds SPS patches.
+>>
+>> Not having succeeded to replace the bootloader on eMMC or to try
+>> booting from SD, the only working way I've found to boot mainline kernels
+>> appears to be booting into Android, then issuing "reboot bootloader". U-Boot
+>> is lacking the saveenv command, so it wasn't possible to change the bootdelay
+>> to facilitate this.
+> 
+> Is it possible this change fixes your issue ?
+> 
+> http://git.denx.de/?p=u-boot.git;a=commit;h=c9e87ba66540cf72c164674a71af43853d087ba8
 
-Tested mass storage function.
+Actions is not yet supported in mainline U-Boot, and S500 boards did not
+have a problem there. The saveenv command is simply not enabled in this
+config deployed by Cubietech. Since I have not succeeded in getting a
+self-built U-Boot booted from SD, I cannot test individual commits on
+top either.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Note: Anyone please check vbus connection [1]
-Since it is connected through DCIN of vcc-5v, I've added vcc-5v0
-regulator for the same and attached to usb0_vbus-supply but it is
-disabling during kernel boot.
-[    1.887854] vcc5v0: disabling
+Maybe Cubietech or Actions can comment?
 
-[1] http://linux-sunxi.org/File:ORANGE_PI-ZERO-PLUS2_V1_0.pdf
+Regards,
+Andreas
 
- .../dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+>> Cf. https://en.opensuse.org/HCL:CubieBoard7
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-index d349399..7f298ee 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-@@ -73,6 +73,10 @@
- 	};
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>;
-@@ -111,6 +115,10 @@
- 	status = "okay";
- };
- 
-+&ohci0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-@@ -122,3 +130,13 @@
- 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
- 	status = "okay";
- };
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 0 21 GPIO_ACTIVE_HIGH>; /* PA21 */
-+	status = "okay";
-+};
 -- 
-2.7.4
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
