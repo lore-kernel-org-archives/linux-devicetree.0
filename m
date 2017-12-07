@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v4 03/15] dt-bindings: display: sun4i-drm: Add LVDS properties
-Date: Thu,  7 Dec 2017 16:58:48 +0100
-Message-ID: <8b7042f5e85cc868ea802deba79a0c53ffbe6564.1512662253.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 09/15] drm/sun4i: Add A83T support
+Date: Thu,  7 Dec 2017 16:58:54 +0100
+Message-ID: <e508e91fa0683d30c3e98d37795a1f003c8c3e0c.1512662253.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
@@ -12,37 +12,79 @@ To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Ch
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, devicetree@vger.kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Some clocks and resets supposed to drive the LVDS logic in the display
-engine have been overlooked when the driver was first introduced.
+Add support for the A83T display pipeline.
 
-Add those additional resources to the binding, and we'll deal with the ABI
-stability in the code.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt |  9 +++++++-
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_drv.c   |  1 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.c  |  5 +++++
+ drivers/gpu/drm/sun4i/sun8i_mixer.c | 11 +++++++++++
+ 3 files changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index 50cc72ee1168..1e21cfaac9e2 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -121,6 +121,15 @@ Required properties:
- On SoCs other than the A33 and V3s, there is one more clock required:
-    - 'tcon-ch1': The clock driving the TCON channel 1
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 49215d91c853..6f5e721b545e 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -347,6 +347,7 @@ static const struct of_device_id sun4i_drv_of_table[] = {
+ 	{ .compatible = "allwinner,sun6i-a31s-display-engine" },
+ 	{ .compatible = "allwinner,sun7i-a20-display-engine" },
+ 	{ .compatible = "allwinner,sun8i-a33-display-engine" },
++	{ .compatible = "allwinner,sun8i-a83t-display-engine" },
+ 	{ .compatible = "allwinner,sun8i-v3s-display-engine" },
+ 	{ }
+ };
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 777c7348d0cf..a0f651d2a495 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -1136,6 +1136,10 @@ static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
+ 	.has_lvds_pll		= true,
+ };
  
-+On SoCs that support LVDS (all SoCs but the A13, H3, H5 and V3s), you
-+need one more reset line:
-+   - 'lvds': The reset line driving the LVDS logic
++static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
++	/* nothing is supported */
++};
 +
-+And on the SoCs newer than the A31 (sun6i and sun8i families), you
-+need one more clock line:
-+   - 'lvds-alt': An alternative clock source, separate from the TCON channel 0
-+                 clock, that can be used to drive the LVDS clock
-+
- DRC
- ---
+ static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
+ 	/* nothing is supported */
+ };
+@@ -1148,6 +1152,7 @@ const struct of_device_id sun4i_tcon_of_table[] = {
+ 	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
+ 	{ .compatible = "allwinner,sun7i-a20-tcon", .data = &sun7i_a20_quirks },
+ 	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
++	{ .compatible = "allwinner,sun8i-a83t-tcon-lcd", .data = &sun8i_a83t_lcd_quirks },
+ 	{ .compatible = "allwinner,sun8i-v3s-tcon", .data = &sun8i_v3s_quirks },
+ 	{ }
+ };
+diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+index ff235e3228ce..1c963b5af522 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
++++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+@@ -477,6 +477,13 @@ static int sun8i_mixer_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
++static const struct sun8i_mixer_cfg sun8i_a83t_mixer0_cfg = {
++	.ccsc		= 0,
++	.scaler_mask	= 0xf,
++	.ui_num		= 3,
++	.vi_num		= 1,
++};
++
+ static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg = {
+ 	.vi_num = 2,
+ 	.ui_num = 1,
+@@ -487,6 +494,10 @@ static const struct sun8i_mixer_cfg sun8i_v3s_mixer_cfg = {
+ 
+ static const struct of_device_id sun8i_mixer_of_table[] = {
+ 	{
++		.compatible = "allwinner,sun8i-a83t-de2-mixer-0",
++		.data = &sun8i_a83t_mixer0_cfg,
++	},
++	{
+ 		.compatible = "allwinner,sun8i-v3s-de2-mixer",
+ 		.data = &sun8i_v3s_mixer_cfg,
+ 	},
 -- 
 git-series 0.9.1
