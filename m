@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V7 08/12] dt-bindings: Add Spreadtrum clock binding documentation
-Date: Thu, 7 Dec 2017 20:57:11 +0800
-Message-ID: <20171207125715.16160-9-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V7 05/12] clk: sprd: add divider clock support
+Date: Thu, 7 Dec 2017 20:57:08 +0800
+Message-ID: <20171207125715.16160-6-chunyan.zhang@spreadtrum.com>
 References: <20171207125715.16160-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,84 +12,203 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Introduce a new binding with its documentation for Spreadtrum clock
-sub-framework.
+This is a feature that can also be found in sprd composite clocks,
+provide a bunch of helpers that can be reused later on.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/clock/sprd.txt | 63 ++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/sprd.txt
+ drivers/clk/sprd/Makefile |  1 +
+ drivers/clk/sprd/div.c    | 90 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sprd/div.h    | 75 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 166 insertions(+)
+ create mode 100644 drivers/clk/sprd/div.c
+ create mode 100644 drivers/clk/sprd/div.h
 
-diff --git a/Documentation/devicetree/bindings/clock/sprd.txt b/Documentation/devicetree/bindings/clock/sprd.txt
+diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
+index cee36b5..80e6039 100644
+--- a/drivers/clk/sprd/Makefile
++++ b/drivers/clk/sprd/Makefile
+@@ -3,3 +3,4 @@ obj-$(CONFIG_SPRD_COMMON_CLK)	+= clk-sprd.o
+ clk-sprd-y	+= common.o
+ clk-sprd-y	+= gate.o
+ clk-sprd-y	+= mux.o
++clk-sprd-y	+= div.o
+diff --git a/drivers/clk/sprd/div.c b/drivers/clk/sprd/div.c
 new file mode 100644
-index 0000000..e9d179e
+index 0000000..887a863
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/sprd.txt
-@@ -0,0 +1,63 @@
-+Spreadtrum Clock Binding
-+------------------------
++++ b/drivers/clk/sprd/div.c
+@@ -0,0 +1,90 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Spreadtrum divider clock driver
++//
++// Copyright (C) 2017 Spreadtrum, Inc.
++// Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 +
-+Required properties:
-+- compatible: should contain the following compatible strings:
-+	- "sprd,sc9860-pmu-gate"
-+	- "sprd,sc9860-pll"
-+	- "sprd,sc9860-ap-clk"
-+	- "sprd,sc9860-aon-prediv"
-+	- "sprd,sc9860-apahb-gate"
-+	- "sprd,sc9860-aon-gate"
-+	- "sprd,sc9860-aonsecure-clk"
-+	- "sprd,sc9860-agcp-gate"
-+	- "sprd,sc9860-gpu-clk"
-+	- "sprd,sc9860-vsp-clk"
-+	- "sprd,sc9860-vsp-gate"
-+	- "sprd,sc9860-cam-clk"
-+	- "sprd,sc9860-cam-gate"
-+	- "sprd,sc9860-disp-clk"
-+	- "sprd,sc9860-disp-gate"
-+	- "sprd,sc9860-apapb-gate"
++#include <linux/clk-provider.h>
 +
-+- #clock-cells: must be 1
++#include "div.h"
 +
-+- clocks : Should be the input parent clock(s) phandle for the clock, this
-+	   property here just simply shows which clock group the clocks'
-+	   parents are in, since each clk node would represent many clocks
-+	   which are defined in the driver.  The detailed dependency
-+	   relationship (i.e. how many parents and which are the parents)
-+	   are implemented in driver code.
++long sprd_div_helper_round_rate(struct sprd_clk_common *common,
++				const struct sprd_div_internal *div,
++				unsigned long rate,
++				unsigned long *parent_rate)
++{
++	return divider_round_rate(&common->hw, rate, parent_rate,
++				  NULL, div->width, 0);
++}
++EXPORT_SYMBOL_GPL(sprd_div_helper_round_rate);
 +
-+Optional properties:
++static long sprd_div_round_rate(struct clk_hw *hw, unsigned long rate,
++				unsigned long *parent_rate)
++{
++	struct sprd_div *cd = hw_to_sprd_div(hw);
 +
-+- reg:	Contain the registers base address and length. It must be configured
-+	only if no 'sprd,syscon' under the node.
++	return sprd_div_helper_round_rate(&cd->common, &cd->div,
++					  rate, parent_rate);
++}
 +
-+- sprd,syscon: phandle to the syscon which is in the same address area with
-+	       the clock, and so we can get regmap for the clocks from the
-+	       syscon device.
++unsigned long sprd_div_helper_recalc_rate(struct sprd_clk_common *common,
++					  const struct sprd_div_internal *div,
++					  unsigned long parent_rate)
++{
++	unsigned long val;
++	unsigned int reg;
 +
-+Example:
++	regmap_read(common->regmap, common->reg, &reg);
++	val = reg >> div->shift;
++	val &= (1 << div->width) - 1;
 +
-+	pmu_gate: pmu-gate {
-+		compatible = "sprd,sc9860-pmu-gate";
-+		sprd,syscon = <&pmu_regs>;
-+		clocks = <&ext_26m>;
-+		#clock-cells = <1>;
-+	};
++	return divider_recalc_rate(&common->hw, parent_rate, val, NULL, 0);
++}
++EXPORT_SYMBOL_GPL(sprd_div_helper_recalc_rate);
 +
-+	pll: pll {
-+		compatible = "sprd,sc9860-pll";
-+		sprd,syscon = <&ana_regs>;
-+		clocks = <&pmu_gate 0>;
-+		#clock-cells = <1>;
-+	};
++static unsigned long sprd_div_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	struct sprd_div *cd = hw_to_sprd_div(hw);
 +
-+	ap_clk: clock-controller@20000000 {
-+		compatible = "sprd,sc9860-ap-clk";
-+		reg = <0 0x20000000 0 0x400>;
-+		clocks = <&ext_26m>, <&pll 0>,
-+			 <&pmu_gate 0>;
-+		#clock-cells = <1>;
-+	};
++	return sprd_div_helper_recalc_rate(&cd->common, &cd->div, parent_rate);
++}
++
++int sprd_div_helper_set_rate(const struct sprd_clk_common *common,
++			     const struct sprd_div_internal *div,
++			     unsigned long rate,
++			     unsigned long parent_rate)
++{
++	unsigned long val;
++	unsigned int reg;
++
++	val = divider_get_val(rate, parent_rate, NULL,
++			      div->width, 0);
++
++	regmap_read(common->regmap, common->reg, &reg);
++	reg &= ~GENMASK(div->width + div->shift - 1, div->shift);
++
++	regmap_write(common->regmap, common->reg,
++			  reg | (val << div->shift));
++
++	return 0;
++
++}
++EXPORT_SYMBOL_GPL(sprd_div_helper_set_rate);
++
++static int sprd_div_set_rate(struct clk_hw *hw, unsigned long rate,
++			     unsigned long parent_rate)
++{
++	struct sprd_div *cd = hw_to_sprd_div(hw);
++
++	return sprd_div_helper_set_rate(&cd->common, &cd->div,
++					rate, parent_rate);
++}
++
++const struct clk_ops sprd_div_ops = {
++	.recalc_rate = sprd_div_recalc_rate,
++	.round_rate = sprd_div_round_rate,
++	.set_rate = sprd_div_set_rate,
++};
++EXPORT_SYMBOL_GPL(sprd_div_ops);
+diff --git a/drivers/clk/sprd/div.h b/drivers/clk/sprd/div.h
+new file mode 100644
+index 0000000..b3033d2
+--- /dev/null
++++ b/drivers/clk/sprd/div.h
+@@ -0,0 +1,75 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Spreadtrum divider clock driver
++//
++// Copyright (C) 2017 Spreadtrum, Inc.
++// Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
++
++#ifndef _SPRD_DIV_H_
++#define _SPRD_DIV_H_
++
++#include "common.h"
++
++/**
++ * struct sprd_div_internal - Internal divider description
++ * @shift: Bit offset of the divider in its register
++ * @width: Width of the divider field in its register
++ *
++ * That structure represents a single divider, and is meant to be
++ * embedded in other structures representing the various clock
++ * classes.
++ */
++struct sprd_div_internal {
++	u8	shift;
++	u8	width;
++};
++
++#define _SPRD_DIV_CLK(_shift, _width)	\
++	{				\
++		.shift	= _shift,	\
++		.width	= _width,	\
++	}
++
++struct sprd_div {
++	struct sprd_div_internal	div;
++	struct sprd_clk_common	common;
++};
++
++#define SPRD_DIV_CLK(_struct, _name, _parent, _reg,			\
++			_shift, _width, _flags)				\
++	struct sprd_div _struct = {					\
++		.div	= _SPRD_DIV_CLK(_shift, _width),		\
++		.common	= {						\
++			.regmap		= NULL,				\
++			.reg		= _reg,				\
++			.hw.init	= CLK_HW_INIT(_name,		\
++						      _parent,		\
++						      &sprd_div_ops,	\
++						      _flags),		\
++		}							\
++	}
++
++static inline struct sprd_div *hw_to_sprd_div(const struct clk_hw *hw)
++{
++	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
++
++	return container_of(common, struct sprd_div, common);
++}
++
++long sprd_div_helper_round_rate(struct sprd_clk_common *common,
++				const struct sprd_div_internal *div,
++				unsigned long rate,
++				unsigned long *parent_rate);
++
++unsigned long sprd_div_helper_recalc_rate(struct sprd_clk_common *common,
++					  const struct sprd_div_internal *div,
++					  unsigned long parent_rate);
++
++int sprd_div_helper_set_rate(const struct sprd_clk_common *common,
++			     const struct sprd_div_internal *div,
++			     unsigned long rate,
++			     unsigned long parent_rate);
++
++extern const struct clk_ops sprd_div_ops;
++
++#endif /* _SPRD_DIV_H_ */
 -- 
 2.7.4
