@@ -1,24 +1,25 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V7 2/2] dt-bindings: Add qcom spmi_pmic clock divider
- bindings
-Date: Wed, 6 Dec 2017 22:32:39 -0800
-Message-ID: <20171207063239.GK4283@codeaurora.org>
+Subject: Re: [PATCH V7 1/2] clk: qcom: Add spmi_pmic clock divider support
+Date: Wed, 6 Dec 2017 22:32:43 -0800
+Message-ID: <20171207063243.GL4283@codeaurora.org>
 References: <1511255465-3984-1-git-send-email-tirupath@codeaurora.org>
- <1511255465-3984-3-git-send-email-tirupath@codeaurora.org>
+ <1511255465-3984-2-git-send-email-tirupath@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1511255465-3984-3-git-send-email-tirupath@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+In-Reply-To: <1511255465-3984-2-git-send-email-tirupath@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Tirupathi Reddy <tirupath@codeaurora.org>
 Cc: robh+dt@kernel.org, mturquette@baylibre.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 11/21, Tirupathi Reddy wrote:
-> This patch adds device tree bindings for Qualcomm SPMI PMIC
-> clock divider module.
+> Clkdiv module provides a clock output on the PMIC with CXO as
+> the source. This clock can be routed through PMIC GPIOs. Add
+> a device driver to configure this clkdiv module.
 > 
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 > Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
 > ---
 
