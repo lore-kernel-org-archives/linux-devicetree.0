@@ -1,41 +1,98 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH V6 4/7] OF: properties: Implement get_match_data() callback
-Date: Thu, 7 Dec 2017 14:10:29 +0100
-Message-ID: <20171207141029.575c0a03@karo-electronics.de>
-References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
- <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, timur@codeaurora.org, open list <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 0/7] Add CPU Frequency scaling support on Armada 37xx
+Date: Thu,  7 Dec 2017 14:56:09 +0100
+Message-ID: <20171207135616.23670-1-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Evan Wang <xswang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andre Heider <a.heider-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWUsICA1IERlYyAyMDE3IDEyOjA0OjQ5IC0wNTAwIFNpbmFuIEtheWEgd3JvdGU6
-Cj4gTm93IHRoYXQgd2UgaGF2ZSBhIGdldF9tYXRjaF9kYXRhKCkgY2FsbGJhY2sgYXMgcGFydCBv
-ZiB0aGUgZmlybXdhcmUgbm9kZSwKPiBpbXBsZW1lbnQgdGhlIE9GIHNwZWNpZmljIHBpZWNlIGZv
-ciBpdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBTaW5hbiBLYXlhIDxva2F5YUBjb2RlYXVyb3JhLm9y
-Zz4KPiAtLS0KPiAgZHJpdmVycy9vZi9wcm9wZXJ0eS5jIHwgNyArKysrKysrCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9wcm9w
-ZXJ0eS5jIGIvZHJpdmVycy9vZi9wcm9wZXJ0eS5jCj4gaW5kZXggMjY0YzM1NS4uOTk2NDE2OSAx
-MDA2NDQKPiAtLS0gYS9kcml2ZXJzL29mL3Byb3BlcnR5LmMKPiArKysgYi9kcml2ZXJzL29mL3By
-b3BlcnR5LmMKPiBAQCAtOTgxLDYgKzk4MSwxMiBAQCBzdGF0aWMgaW50IG9mX2Z3bm9kZV9ncmFw
-aF9wYXJzZV9lbmRwb2ludChjb25zdCBzdHJ1Y3QgZndub2RlX2hhbmRsZSAqZndub2RlLAo+ICAJ
-cmV0dXJuIDA7Cj4gIH0KPiAgCj4gK3ZvaWQgKm9mX2Z3bm9kZV9nZXRfbWF0Y2hfZGF0YShjb25z
-dCBzdHJ1Y3QgZndub2RlX2hhbmRsZSAqZndub2RlLAo+ICsJCQkgICAgICAgc3RydWN0IGRldmlj
-ZSAqZGV2KQpTaG91bGRuJ3QgdGhpcyBiZSAnY29uc3Qgdm9pZCAqb2ZfZndub2RlX2dldF9tYXRj
-aF9kYXRhJwoKCgpMb3RoYXIgV2HDn21hbm4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi,
+
+This is the second version of a series adding the CPU Frequency
+support on Armada 37xx using DVFS. It is based on the initial work of
+Evan Wang and Victor Gu.
+
+The main change since the first version was a bug fixed in the
+"cpufreq: Add DVFS support for Armada 37xx" patch which was preventing
+to register the opp. An other noticeable change is the 4th patch which
+is new adding the use of dev_pm_opp_remove and removing an comment
+became wrong. The other changes are described in the change log.
+
+DVFS control is done by a set of registers from the North Bridge Power
+Management block. The binding for this block is documented in patch 1.
+
+While adding a new cpufreq driver I found that the Kconfig and
+Makefile were no more in order, so it is fixed by patch 2 and 3.
+
+The 5th patch is just about updating the MAINTAINERS file with the new
+driver.
+
+The next patch is the real purpose of the series. The main goal of
+this driver is to setup the CPU load level in the hardware to
+associate them to CPU frequencies and register a standard cpufreq
+driver. Note that the hardware also capable of doing AVS (Adaptive
+Voltage Scaling), by associating a voltage on each level beside the
+CPU frequency. However, this support is not yet ready, so it is not
+part of this series.
+
+Finally, the last patch is for arm-soc the arm-soc subsystem through
+mvebu and update the device tree to support the CPU frequency scaling.
+
+An update on the CPU clock driver is needed in order to take into
+account the DVFS setting. It's the purpose of an other series already
+sent, but is no dependencies between the series (for building or at
+runtime).
+
+Thanks,
+
+Gregory
+
+Changelog:
+
+v1 -> v2:
+
+ - using syscon instead of nb_pm for the binding of the North bridge
+   power management unit: reported by Rob Herring
+
+ - fix sorting inside the big LITTLE section for the Kconfig: reported
+   by Viresh Kumar
+
+ - fix the bogus freq calculation in armada37xx_cpufreq_driver_init,
+   bug reported by Andre Heider
+
+ - use dev_pm_opp_remove() on the previous opp if dev_pm_opp_add()
+   failed, reported by Viresh Kumar
+
+ - add the Tested-by flag from Andre Heider on "cpufreq: Add DVFS
+   support for Armada 37xx" patch
+
+Gregory CLEMENT (7):
+  dt-bindings: marvell: Add documentation for the North Bridge PM on
+    Armada 37xx
+  cpufreq: ARM: sort the Kconfig menu
+  cpufreq: sort the drivers in ARM part
+  cpufreq: mvebu: Use dev_pm_opp_remove()
+  MAINTAINERS: add new entries for Armada 37xx cpufreq driver
+  cpufreq: Add DVFS support for Armada 37xx
+  arm64: dts: marvell: armada-37xx: add nodes allowing cpufreq support
+
+ .../bindings/arm/marvell/armada-37xx.txt           |  19 ++
+ MAINTAINERS                                        |   1 +
+ arch/arm64/boot/dts/marvell/armada-372x.dtsi       |   1 +
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi       |   7 +
+ drivers/cpufreq/Kconfig.arm                        |  89 ++++----
+ drivers/cpufreq/Makefile                           |   9 +-
+ drivers/cpufreq/armada-37xx-cpufreq.c              | 241 +++++++++++++++++++++
+ drivers/cpufreq/mvebu-cpufreq.c                    |  11 +-
+ 8 files changed, 327 insertions(+), 51 deletions(-)
+ create mode 100644 drivers/cpufreq/armada-37xx-cpufreq.c
+
+-- 
+2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
