@@ -1,84 +1,44 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v3 2/3] clk: hisilicon: Add support for Hi3660 stub clocks
-Date: Thu, 7 Dec 2017 16:04:49 +0800
-Message-ID: <20171207080449.GB5371@leoy-linaro>
-References: <1510910852-2175-1-git-send-email-xuyiping@hisilicon.com>
- <1510910852-2175-3-git-send-email-xuyiping@hisilicon.com>
- <20171207070550.GY4283@codeaurora.org>
+From: =?UTF-8?Q?Nuno_Gon=C3=A7alves?= <nunojpg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: sunxi: add H3/H5 uart2 rts/cts bindings
+Date: Thu, 7 Dec 2017 09:07:08 +0100
+Message-ID: <CAEXMXLRWSHizLHiT+Nmhcdb17kv2_UCMhVaTN0N6suk2wEepuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171207070550.GY4283@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Xu YiPing <xuyiping@hisilicon.com>, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, xuejiancheng@hisilicon.com, wenpan@hisilicon.com, zhangfei.gao@linaro.org, guodong.xu@linaro.org, zhongkaihua@huawei.com, chenjun14@huawei.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, suzhuangluan@hisilicon.com, xuezhiliang@hisilicon.com, kevin.wangtao@hisilicon.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 06, 2017 at 11:05:50PM -0800, Stephen Boyd wrote:
-> On 11/17, Xu YiPing wrote:
-> > From: Kaihua Zhong <zhongkaihua@huawei.com>
-> > +
-> > +static struct clk_hw *hi3660_stub_clk_hw_get(struct of_phandle_args *clkspec,
-> > +					     void *data)
-> > +{
-> > +	unsigned int idx = clkspec->args[0];
-> > +
-> > +	if (idx > HI3660_CLK_STUB_NUM) {
-> 
-> This should be >=
-> 
-> > +	}
-> > +
-> > +	return &hi3660_stub_clks[idx].hw;
-> > +}
-> > +
-> > +static int hi3660_stub_clk_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct resource *res;
-> > +	unsigned int i;
-> > +	int ret;
-> > +
-> > +	/* Use mailbox client without blocking */
-> > +	stub_clk_chan.cl.dev = dev;
-> > +	stub_clk_chan.cl.tx_done = NULL;
-> > +	stub_clk_chan.cl.tx_block = false;
-> > +	stub_clk_chan.cl.knows_txdone = false;
-> > +
-> > +	/* Allocate mailbox channel */
-> > +	stub_clk_chan.mbox = mbox_request_channel(&stub_clk_chan.cl, 0);
-> > +	if (IS_ERR(stub_clk_chan.mbox))
-> > +		return PTR_ERR(stub_clk_chan.mbox);
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	freq_reg = devm_ioremap(dev, res->start, resource_size(res));
-> > +	if (IS_ERR(freq_reg))
-> 
-> Pretty sure this returns NULL on failure, not an error pointer.
-> 
-> > +		return -ENOMEM;
-> > +
-> > +	freq_reg += HI3660_STUB_CLOCK_DATA;
-> > +
-> > +	for (i = 0; i < HI3660_CLK_STUB_NUM; i++) {
-> > +		ret = devm_clk_hw_register(&pdev->dev, &hi3660_stub_clks[i].hw);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	ret = of_clk_add_hw_provider(pdev->dev.of_node, hi3660_stub_clk_hw_get,
-> > +				     hi3660_stub_clks);
-> 
-> This can use devm
-> 
-> > +	return ret;
-> > +}
-> > +
-> 
-> I fixed it all and merged into clk-next.
+Currently there are already bindings for uart1 and uart3 but uart2 was
+lacking.
 
-Ah, very appreciate your help, Stephen.
+Tested on H2+ (H3) and confirmed to be identical on H3 and H5 datasheets.
 
-Thanks,
-Leo Yan
+Signed-off-by: Nuno Goncalves <nunojpg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 8d40c00d64bb..e0e0551b3f05 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -377,6 +377,11 @@
+  function = "uart2";
+  };
+
++ uart2_rts_cts_pins: uart2_rts_cts {
++ pins = "PA2", "PA3";
++ function = "uart2";
++ };
++
+  uart3_pins: uart3 {
+  pins = "PA13", "PA14";
+  function = "uart3";
+-- 
+2.11.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
