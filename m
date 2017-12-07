@@ -1,24 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RESEND 2/2] MAINTAINERS: add DT binding docs for AT24
-Date: Thu, 7 Dec 2017 09:41:33 -0600
-Message-ID: <CAL_JsqKw5hcPDwPsp98jdZKJ+Pw0JrvNab_OijPWvrRrMYdEaA@mail.gmail.com>
-References: <20171207103829.3342-1-wsa@the-dreams.de> <20171207103829.3342-3-wsa@the-dreams.de>
+Subject: Re: [PATCH] dt: bindings: as3645a: Fix the example node
+Date: Thu, 7 Dec 2017 09:42:29 -0600
+Message-ID: <CAL_JsqKG2TWLTREqNecy_3pOqLFJWa4SM4G4yzyKsZqW7opDvw@mail.gmail.com>
+References: <20171205133637.30022-1-dmurphy@ti.com> <20171206215204.7qyjjd2oue7n7l37@rob-hp-laptop>
+ <2c2b1fc0-6156-2897-b597-6911fee64556@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20171207103829.3342-3-wsa@the-dreams.de>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <2c2b1fc0-6156-2897-b597-6911fee64556@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 7, 2017 at 4:38 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> The driver gained DT support recently, so we should add the binding docs
-> in the MAINTAINERS file.
+On Wed, Dec 6, 2017 at 4:32 PM, Dan Murphy <dmurphy@ti.com> wrote:
+> Rob
 >
-> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+> On 12/06/2017 03:52 PM, Rob Herring wrote:
+>> On Tue, Dec 05, 2017 at 07:36:37AM -0600, Dan Murphy wrote:
+>>> Fix the address-cells and size-cells example node
+>>> to reflect to the correct representation.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/leds/ams,as3645a.txt | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+>>> index fdc40e354a64..8a49ccfec29b 100644
+>>> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+>>> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+>>> @@ -59,8 +59,8 @@ Example
+>>>  =======
+>>>
+>>>      as3645a@30 {
+>>> -            #address-cells: 1
+>>> -            #size-cells: 0
+>>> +            #address-cells = <1>;
+>>> +            #size-cells = <0>;
+>>>              reg = <0x30>;
+>>>              compatible = "ams,as3645a";
+>>
+>> Convention is also we put compatible first.
+>>
+>
+> OK I will move that too for v2.
+>
+> Can that be in the same patch or do you want a separate patch?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Same patch is fine.
+
+Rob
