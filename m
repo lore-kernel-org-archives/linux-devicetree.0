@@ -1,53 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt: bindings: as3645a: Fix the example node
-Date: Thu, 7 Dec 2017 09:42:29 -0600
-Message-ID: <CAL_JsqKG2TWLTREqNecy_3pOqLFJWa4SM4G4yzyKsZqW7opDvw@mail.gmail.com>
-References: <20171205133637.30022-1-dmurphy@ti.com> <20171206215204.7qyjjd2oue7n7l37@rob-hp-laptop>
- <2c2b1fc0-6156-2897-b597-6911fee64556@ti.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [RESEND PATCH v3 2/2] ARM64: dts: meson-axg: add pinctrl DT info
+ for Meson-AXG SoC
+Date: Thu, 7 Dec 2017 07:52:52 -0800
+Message-ID: <CAOi56cXtSjsNjOWLEwzox7nCGnG-WOOzPkM1+MSvaPnyOtLuZw@mail.gmail.com>
+References: <20171120102354.5354-1-yixun.lan@amlogic.com> <20171120102354.5354-3-yixun.lan@amlogic.com>
+ <7htvx3r4o7.fsf@baylibre.com> <9d28dcdf-655b-a843-1f21-24ebb1f27be3@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <2c2b1fc0-6156-2897-b597-6911fee64556@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9d28dcdf-655b-a843-1f21-24ebb1f27be3@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Xingyu Chen <xingyu.chen@amlogic.com>, devicetree <devicetree@vger.kernel.org>, linux-gpio@vger.kernel.org, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 6, 2017 at 4:32 PM, Dan Murphy <dmurphy@ti.com> wrote:
-> Rob
+On Wed, Dec 6, 2017 at 5:44 PM, Yixun Lan <yixun.lan@amlogic.com> wrote:
+> Hi Kevin
 >
-> On 12/06/2017 03:52 PM, Rob Herring wrote:
->> On Tue, Dec 05, 2017 at 07:36:37AM -0600, Dan Murphy wrote:
->>> Fix the address-cells and size-cells example node
->>> to reflect to the correct representation.
+>
+> On 12/07/17 04:18, Kevin Hilman wrote:
+>> Yixun Lan <yixun.lan@amlogic.com> writes:
+>>
+>>> From: Xingyu Chen <xingyu.chen@amlogic.com>
 >>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> Add new pinctrl DT info for the Amlogic's Meson-AXG SoC.
+>>>
+>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+>>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+>>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 >>> ---
->>>  Documentation/devicetree/bindings/leds/ams,as3645a.txt | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 44 ++++++++++++++++++++++++++++++
+>>>  1 file changed, 44 insertions(+)
 >>>
->>> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
->>> index fdc40e354a64..8a49ccfec29b 100644
->>> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
->>> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
->>> @@ -59,8 +59,8 @@ Example
->>>  =======
->>>
->>>      as3645a@30 {
->>> -            #address-cells: 1
->>> -            #size-cells: 0
->>> +            #address-cells = <1>;
->>> +            #size-cells = <0>;
->>>              reg = <0x30>;
->>>              compatible = "ams,as3645a";
+>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>>> index 5fc33b76b91c..e0fb860e12c5 100644
+>>> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>>> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>>> @@ -9,6 +9,7 @@
+>>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>  #include <dt-bindings/clock/axg-clkc.h>
+>>>  #include <dt-bindings/clock/axg-aoclkc.h>
 >>
->> Convention is also we put compatible first.
+>> This doesn't apply because this aoclkc.h header does not exist in
+>> mainline.
+>>
+>> Kevin
 >>
 >
-> OK I will move that too for v2.
+> this is due to I create the patch in serial sequence (first clk, then
+> pinctrl), I probably will fix my work flow next time - to rebase all the
+> patch separately on the -rc version
 >
-> Can that be in the same patch or do you want a separate patch?
+> but here, the pinctrl DT part has no dependency on DT clk patch..
+> you could drop the above two #include and just apply the reset
+>
+> could you amend & apply this? or do you want me to send another updated
+> version?
 
-Same patch is fine.
+I prefer that you rebase (either on -rc or my v4.16/dt64 branch[1]) and resend.
 
-Rob
+Thanks,
+
+Kevin
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/log/?h=v4.16/dt64
