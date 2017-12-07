@@ -1,87 +1,58 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: amlogic: use generic bus node names
-Date: Thu, 7 Dec 2017 09:35:50 +0100
-Message-ID: <fb631d1c-2b12-34e4-c157-ba11242e68de@baylibre.com>
-References: <20171206193005.24171-1-khilman@baylibre.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 34/35] clocksource/drivers/Kconfig: Support andestech
+ atcpit100 timer
+Date: Thu, 7 Dec 2017 09:39:47 +0100
+Message-ID: <091aa6eb-32f3-2a59-167f-c4eafa77de06@linaro.org>
+References: <cover.1511785528.git.green.hu@gmail.com>
+ <1a22db002413ff60851737736a86b40c38877220.1511785528.git.green.hu@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171206193005.24171-1-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1a22db002413ff60851737736a86b40c38877220.1511785528.git.green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org, dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rick Chen <rickchen36-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2017 20:30, Kevin Hilman wrote:
-> The DT spec recommends that node-names have generic names like "bus".
-> Fix that in the Amlogic DTs, while leaving the label names to have more
-> SoC-specific names that match with the HW documentation.
+On 27/11/2017 13:28, Greentime Hu wrote:
+> From: Rick Chen <rickchen36-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> Suggested-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Add CLKSRC_ATCPIT100 for Andestech atcpit100 timer selection.
+> It often be used in Andestech AE3XX platform.
+> 
+> Signed-off-by: Rick Chen <rickchen36-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 ++--
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 6 +++---
->  2 files changed, 5 insertions(+), 5 deletions(-)
+>  drivers/clocksource/Kconfig  |    6 ++++++
+>  drivers/clocksource/Makefile |    1 +
+>  2 files changed, 7 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index b932a784b02a..e7213eb53958 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -113,7 +113,7 @@
->  		#size-cells = <2>;
->  		ranges;
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index cc60620..591362a 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -615,4 +615,10 @@ config CLKSRC_ST_LPC
+>  	  Enable this option to use the Low Power controller timer
+>  	  as clocksource.
 >  
-> -		cbus: cbus@ffd00000 {
-> +		cbus: bus@ffd00000 {
->  			compatible = "simple-bus";
->  			reg = <0x0 0xffd00000 0x0 0x25000>;
->  			#address-cells = <2>;
-> @@ -175,7 +175,7 @@
->  			};
->  		};
->  
-> -		aobus: aobus@ff800000 {
-> +		aobus: bus@ff800000 {
->  			compatible = "simple-bus";
->  			reg = <0x0 0xff800000 0x0 0x100000>;
->  			#address-cells = <2>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> index 7cdbf58a062f..6cb3c2a52baf 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> @@ -211,7 +211,7 @@
->  		#size-cells = <2>;
->  		ranges;
->  
-> -		cbus: cbus@c1100000 {
-> +		cbus: bus@c1100000 {
->  			compatible = "simple-bus";
->  			reg = <0x0 0xc1100000 0x0 0x100000>;
->  			#address-cells = <2>;
-> @@ -366,7 +366,7 @@
->  			};
->  		};
->  
-> -		aobus: aobus@c8100000 {
-> +		aobus: bus@c8100000 {
->  			compatible = "simple-bus";
->  			reg = <0x0 0xc8100000 0x0 0x100000>;
->  			#address-cells = <2>;
-> @@ -453,7 +453,7 @@
->  			};
->  		};
->  
-> -		hiubus: hiubus@c883c000 {
-> +		hiubus: bus@c883c000 {
->  			compatible = "simple-bus";
->  			reg = <0x0 0xc883c000 0x0 0x2000>;
->  			#address-cells = <2>;
-> 
+> +config CLKSRC_ATCPIT100
+> +	bool "Clocksource for AE3XX platform" if COMPILE_TEST
+> +	depends on GENERIC_CLOCKEVENTS && HAS_IOMEM
 
-Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+You can remove the GENERIC_CLOCKEVENTS as now it is factored out in the
+higher menuconfig option.
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
