@@ -1,85 +1,87 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [RFC 2/2] drivers: dma-mapping: parse per device reserved mem
- at probe time
-Date: Thu, 07 Dec 2017 13:01:45 +0100
-Message-ID: <c47720b4-17cf-200b-bac4-85653cd06700@samsung.com>
-References: <20171126131346.12532-1-peng.fan@nxp.com>
-        <CGME20171126131432epcas4p23145c6f438f7f186545456960f284b91@epcas4p2.samsung.com>
-        <20171126131346.12532-2-peng.fan@nxp.com>
-        <875c3a8c-a857-823e-0243-487d1dd9bee7@samsung.com>
-        <20171127083713.clh6oz5sgere4usq@linux-u7w5.ap.freescale.net>
-        <e44416ee-0f33-e310-d881-aaa3edfdf69e@samsung.com>
-        <20171127090409.posgikgumpoq4wdm@linux-u7w5.ap.freescale.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 16/19] ASoC: tlv320aic31xx: Add short
+ circuit detection support
+Date: Thu, 7 Dec 2017 12:03:52 +0000
+Message-ID: <20171207120352.4obvlu4cemagfom7@sirena.org.uk>
+References: <20171129213300.20021-1-afd@ti.com>
+ <20171129213300.20021-17-afd@ti.com>
+ <20171201133930.xzfjjj6wzkbtk6c4@sirena.org.uk>
+ <4d956cbc-829c-0d81-2980-aa2a79f36660@ti.com>
+ <fd362117-ae71-a6a2-eb43-70c2457c0a5d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20171127090409.posgikgumpoq4wdm@linux-u7w5.ap.freescale.net>
-Content-language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <van.freenix@gmail.com>
-Cc: Peng Fan <peng.fan@nxp.com>, hch@lst.de, robin.murphy@arm.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, frowand.list@gmail.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1059093800932191349=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <fd362117-ae71-a6a2-eb43-70c2457c0a5d@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peng,
 
-On 2017-11-27 10:04, Peng Fan wrote:
-> On Mon, Nov 27, 2017 at 09:44:20AM +0100, Marek Szyprowski wrote:
->> On 2017-11-27 09:37, Peng Fan wrote:
->>> On Mon, Nov 27, 2017 at 09:31:00AM +0100, Marek Szyprowski wrote:
->>>> On 2017-11-26 14:13, Peng Fan wrote:
->>>>> Invoke of_reserved_mem_device_init at dma_configure, then
->>>>> there is no need to call of_reserved_mem_device_init in device
->>>>> specific probe function.
->>>>>
->>>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->>>> This has been already tried long time ago, without success:
->>>> http://patches.linaro.org/patch/33558/
->>> Thanks for the info. I should first search mail list before
->>> sending out patches.
->> It doesn't mean that I'm against such idea. I just pointed that I've
->> already tried. That time, however there was no dma_configure() function
->> yet, which seems to be better place for of_rmem_device_init().
->>
->> I would however always call of_dma_configure(), even when reserved mem
->> node is there. IIRC on ARM64 that function configures dma_ops, without
->> which no dma is possible at all.
-> So, you prefer this?
-> 	if (dma_dev->of_node) {
-> +		of_reserved_mem_device_init(dev);
-> 		ret = of_dma_configure(dev, dma_dev->of_node);
->
-> However in of_reserved_mem_device, there is also an call to
-> of_dma_configure.
->
-> "
-> 	/* ensure that dma_ops is set for virtual devices
-> 	 * using reserved memory
-> 	 */
-> 	 ret = of_dma_configure(dev, np);
-> "
->
-> If always call of_dma_configure, of_dma_configure maybe called twice.
+--===============1059093800932191349==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2rxxai2avwi7xst3"
+Content-Disposition: inline
 
-Right, I forgot about this.
 
-> I just checked more. of_reserved_mem_device_init only handle the first
-> memory-region. To nodes which have multiple memory-region, seems 2nd and etc
-> could not be handled, such as drivers/media/platform/s5p-mfc/s5p_mfc.c.
+--2rxxai2avwi7xst3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Well, maybe automatic assignment should be done only when there is only
-one reserved region set? In case more than one region assigned to a device,
-the driver has to create virtual child devices and configure DMA for them
-to be able to let dma-mapping API to use those reserved regions. It looks
-that the call to of_dma_configure(dev, np) can be moved back to the driver
-(it was not possible at the time that code was merged due to missing
-export symbols).
+On Wed, Dec 06, 2017 at 02:22:39PM -0600, Andrew F. Davis wrote:
+> On 12/01/2017 09:32 AM, Andrew F. Davis wrote:
 
-Configuring more than one reserved memory region for given device might
-then moved to some helper function to have a common code for that across
-the drivers.
+> >> This will report the interrupt as handled even if we didn't see an
+> >> interrupt we understand which will break shared interrupt lines.  At the
+> >> very least we should log other interrupt sources numerically.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+> > Okay, I think I can make that work by checking if no bits are set in the
+> > interrupt regs and returning early if not, IRQ_NONE.
+
+> This turned out to be more difficult than I expected, plus if I do
+> handle an interrupt it doesn't mean the other device did not right? So
+> this wouldn't fix shared lines as far as I can tell, but I don't
+> register it as shared so this should be fine.
+
+It'll mean that we don't offer the interrupt to anything else sharing
+the line.
+
+> As for your other suggestion of "log other interrupt sources
+> numerically", could you explain this or point to an example of what you
+> mean?
+
+Just print out the bits that were set.
+
+--2rxxai2avwi7xst3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlopLicACgkQJNaLcl1U
+h9DlkAf/Swg/pQ9TfBpAbuL1qabvbPSFYutbVk2QDkaIJII+toomOWiK55H/jIQL
+roYqlO2HchUUcD92WPm+kR9zclGbqFJWhBkxXhZwzNfZqB2QpBQw74aVTjYyLmwZ
+D3GCeqxDq/mHbgMB5j3aBD9uo/lX44eA75vi+37+tgXzrAz/GbM4IGkY/6cQxPnC
+ntrHDMuVBPDOPTLkGdqjTuHjKfGiYbnsYQUWKaeveG6Ew7kenUv3qMASYowqJ61V
+Y9al7/OxVitva4uYODj2cDmi/Y4uL8rr0xo9v/CcuubI24n7b8gZPgrRGXO1Tg/t
+4naeMJttnrXsmaiSGyMjzXWyULOcDA==
+=oks2
+-----END PGP SIGNATURE-----
+
+--2rxxai2avwi7xst3--
+
+--===============1059093800932191349==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1059093800932191349==--
