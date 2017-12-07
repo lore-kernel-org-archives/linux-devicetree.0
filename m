@@ -1,66 +1,100 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [RESEND PATCH v3 2/2] ARM64: dts: meson-axg: add pinctrl DT info
- for Meson-AXG SoC
-Date: Thu, 7 Dec 2017 07:52:52 -0800
-Message-ID: <CAOi56cXtSjsNjOWLEwzox7nCGnG-WOOzPkM1+MSvaPnyOtLuZw@mail.gmail.com>
-References: <20171120102354.5354-1-yixun.lan@amlogic.com> <20171120102354.5354-3-yixun.lan@amlogic.com>
- <7htvx3r4o7.fsf@baylibre.com> <9d28dcdf-655b-a843-1f21-24ebb1f27be3@amlogic.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 00/15] drm/sun4i: Add A83t LVDS support
+Date: Thu,  7 Dec 2017 16:58:45 +0100
+Message-ID: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9d28dcdf-655b-a843-1f21-24ebb1f27be3@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Xingyu Chen <xingyu.chen@amlogic.com>, devicetree <devicetree@vger.kernel.org>, linux-gpio@vger.kernel.org, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 6, 2017 at 5:44 PM, Yixun Lan <yixun.lan@amlogic.com> wrote:
-> Hi Kevin
->
->
-> On 12/07/17 04:18, Kevin Hilman wrote:
->> Yixun Lan <yixun.lan@amlogic.com> writes:
->>
->>> From: Xingyu Chen <xingyu.chen@amlogic.com>
->>>
->>> Add new pinctrl DT info for the Amlogic's Meson-AXG SoC.
->>>
->>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->>> ---
->>>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 44 ++++++++++++++++++++++++++++++
->>>  1 file changed, 44 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->>> index 5fc33b76b91c..e0fb860e12c5 100644
->>> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->>> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->>> @@ -9,6 +9,7 @@
->>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>  #include <dt-bindings/clock/axg-clkc.h>
->>>  #include <dt-bindings/clock/axg-aoclkc.h>
->>
->> This doesn't apply because this aoclkc.h header does not exist in
->> mainline.
->>
->> Kevin
->>
->
-> this is due to I create the patch in serial sequence (first clk, then
-> pinctrl), I probably will fix my work flow next time - to rebase all the
-> patch separately on the -rc version
->
-> but here, the pinctrl DT part has no dependency on DT clk patch..
-> you could drop the above two #include and just apply the reset
->
-> could you amend & apply this? or do you want me to send another updated
-> version?
-
-I prefer that you rebase (either on -rc or my v4.16/dt64 branch[1]) and resend.
-
-Thanks,
-
-Kevin
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git/log/?h=v4.16/dt64
+SGksCgpIZXJlIGlzIGFuIGF0dGVtcHQgYXQgc3VwcG9ydGluZyB0aGUgTFZEUyBvdXRwdXQgaW4g
+b3VyIERSTSBkcml2ZXIuIFRoaXMKaGFzIGJlZW4gdGVzdGVkIG9uIHRoZSBBODNUICh3aXRoIERF
+MiksIGJ1dCBzaW5jZSBldmVyeXRoaW5nIGlzIGJhc2ljYWxseQppbiB0aGUgVENPTiwgaXQgc2hv
+dWxkIGFsc28gYmUgdXNhYmxlIG9uIHRoZSBvbGRlciBTb0NzIHdpdGggbWlub3IKbW9kaWZpY2F0
+aW9ucy4KClRoaXMgd2FzIHRoZSBvY2Nhc2lvbiB0byByZWZhY3RvciBhIGJ1bmNoIG9mIHRoaW5n
+cy4gVGhlIG1vc3Qgbm90YWJsZSBvbmVzCndvdWxkIGJlIHRoZSBkb2N1bWVudGF0aW9uLCBhbmQg
+c3BsaXQgb2YgdGhlIFVJIGxheWVycyBpbiB0aGUgbWl4ZXIgY29kZSwKYW5kIHRoZSBzd2l0Y2gg
+dG8ga2ZpZm8gZm9yIG91ciBlbmRwb2ludCBwYXJzaW5nIGNvZGUgaW4gdGhlIGRyaXZlciB0aGF0
+CmZpeGVzIGFuIGlzc3VlIGludHJvZHVjZWQgYnkgdGhlIHN3aXRjaCB0byBCRlMuCgpMZXQgbWUg
+a25vdyB3aGF0IHlvdSB0aGluaywKTWF4aW1lCgpDaGFuZ2VzIGZyb20gdjM6CiAgLSBDb2xsZWN0
+IHRoZSB0YWdzCiAgLSBVc2UgU1BEWCBoZWFkZXJzIHdoZW4gcG9zc2libGUKICAtIEFkZGVkIHRo
+ZSBuZXcgbWl4ZXIgY29uZmlndXJhdGlvbiBvcHRpb25zCiAgLSBDaGFuZ2VkIHRoZSBMVkRTIGNs
+b2NrIGZvciBsdmRzLWFsdCBpbnN0ZWFkIG9mIGx2ZHMtcGxsCiAgLSBSZW1vdmVkIHRoZSBNSVBJ
+IFBMTCBmcm9tIHRoZSBBMzFzCiAgLSBDaGFuZ2VkIHRoZSBMVkRTX0FOQTAgbWFjcm9zIG5hbWUg
+dG8gcmVmbGVjdCB0aGUgZ2VuZXJhdGlvbiB0aGV5IHdlcmUKICAgIGludHJvZHVjZWQgaW4sIGFu
+ZCBhZGRlZCBhIGNvbW1lbnQgdG8gbWVudGlvbiB0aGUgY2hhbmdlcyBuZWVkZWQgdG8KICAgIHN1
+cHBvcnQgdGhlIG9sZGVyIFNvQ3MKCkNoYW5nZXMgZnJvbSB2MjoKICAtIE1vdmUgdGhlIG1vZHVs
+ZSBjbG9jayByYXRlIHRvIHRoZSBtaXhlciBzdHJ1Y3R1cmUKICAtIEFkanVzdGVkIHRoZSBzaW1w
+bGUtcGFuZWwgZG9jdW1lbnRhdGlvbiBmb3IgcG93ZXItc3VwcGx5CiAgLSBDaGFuZ2VkIHRoZSBj
+b21wYXRpYmxlIGZvciB0aGUgZmlyc3QgQTgzdCBtaXhlciB0byBtaXhlciAwCiAgLSBSZWJhc2Vk
+IG9uIHRvcCBvZiBjdXJyZW50IGRybS1taXNjCiAgLSBTcGxpdCBvdXQgdGhlIEE4M3QgYmluZGlu
+Z3MgaW4gaXRzIHNlcGFyYXRlIHBhdGNoCgpDaGFuZ2VzIGZyb20gdjE6CiAgLSBBZGRlZCBhIGZp
+eCBmb3IgdGhlIGVycm9yIHBhdGggaGFuZGxpbmcgaW4gdGhlIFRDT04KICAtIEVuYWJsZSB0aGUg
+VENPTiBieSBkZWZhdWx0CiAgLSBSZW1vdmVkIHRoZSBwYXRjaCB0aGF0IGNoYW5nZXMgdGhlIGNo
+YW5uZWxzIG9mZnNldCBidXQga2VwdCBtb3N0IG9mIHRoZQogICAgbW9kaWZpY2F0aW9ucyBhcyBh
+IGNsZWFudXAKICAtIERlYWwgd2l0aCB0aGUgTFZEUyBjbG9jayBiZWluZyBhYmxlIHRvIGhhdmUg
+YW5vdGhlciBQTEwgcGFyZW50IG9uIHNvbWUKICAgIFNvQ3MKICAtIFJlbmFtZWQgdGhlIFRDT04g
+Y29tcGF0aWJsZSB0byBUQ09OLVRWLCBmb2xsb3dpbmcgdGhlIGNvbnZlbnRpb24gdXNlZAogICAg
+b24gbmV3ZXIgU29DcwogIC0gUmVtb3ZlZCB0aGUgaGFyZGNvZGVkIHRpbWluZ3MKICAtIE1vdmVk
+IExWRFMgZW5hYmxlIHF1aXJrcyB0byBhIHNlcGFyYXRlIGZ1bmN0aW9uCiAgLSBVc2VkIGNsb2Nr
+IGluZGljZXMgZGVmaW5lIGluIHRoZSBEVAogIC0gUmVtb3ZlZCB0aGUgaGFyZGNvZGVkIGNsb2Nr
+IHJhdGUgaW4gdGhlIERUIGFuZCBtb3ZlZCBpdCB0byB0aGUgZHJpdmVyCiAgLSBDaGFuZ2VkIHN1
+bjhpX21peGVyX3BsYW5lcyB0byBzdW44aV9taXhlcl91aV9wbGFuZXMgdG8gYmUgY29uc2lzdGVu
+dAogIC0gQWRkZWQgdGhlIHZhcmlvdXMgdGFncyBjb2xsZWN0ZWQKICAtIFJlYmFzZWQgb24gdG9w
+IG9mIDQuMTUKCk1heGltZSBSaXBhcmQgKDE1KToKICBkdC1iaW5kaW5nczogcGFuZWw6IGx2ZHM6
+IERvY3VtZW50IHBvd2VyLXN1cHBseSBwcm9wZXJ0eQogIGRybS9wYW5lbDogbHZkczogQWRkIHN1
+cHBvcnQgZm9yIHRoZSBwb3dlci1zdXBwbHkgcHJvcGVydHkKICBkdC1iaW5kaW5nczogZGlzcGxh
+eTogc3VuNGktZHJtOiBBZGQgTFZEUyBwcm9wZXJ0aWVzCiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6
+IHN1bjRpLWRybTogQWRkIEE4M1QgcGlwZWxpbmUKICBkcm0vc3VuNGk6IEZpeCBlcnJvciBwYXRo
+IGhhbmRsaW5nCiAgZHJtL3N1bjRpOiBGb3JjZSB0aGUgbWl4ZXIgcmF0ZSBhdCAxNTBNSHoKICBk
+cm0vc3VuNGk6IENyZWF0ZSBtaW5pbWFsIG11bHRpcGxpZXJzIGFuZCBkaXZpZGVycwogIGRybS9z
+dW40aTogQWRkIExWRFMgc3VwcG9ydAogIGRybS9zdW40aTogQWRkIEE4M1Qgc3VwcG9ydAogIEFS
+TTogZHRzOiBzdW44aTogYTgzdDogQWRkIGRpc3BsYXkgcGlwZWxpbmUKICBBUk06IGR0czogc3Vu
+OGk6IGE4M3Q6IEVuYWJsZSB0aGUgUFdNCiAgQVJNOiBkdHM6IHN1bjhpOiBhODN0OiBBZGQgTFZE
+UyBwaW5zIGdyb3VwCiAgQVJNOiBkdHM6IHN1bjhpOiBhODN0OiBBZGQgdGhlIFBXTSBwaW4gZ3Jv
+dXAKICBBUk06IGR0czogc3VuOGk6IGE3MTE6IFJlaW5zdGF0ZSB0aGUgUE1JQyBjb21wYXRpYmxl
+CiAgQVJNOiBkdHM6IHN1bjhpOiBhNzExOiBFbmFibGUgdGhlIExDRAoKIERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQgfCAgIDYg
+KystCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5l
+bC1sdmRzLnR4dCAgIHwgICAxICstCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0IHwgICAyICstCiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW40aS1kcm0udHh0ICAgIHwgIDEyICsr
+Ky0KIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QtdGJzLWE3MTEuZHRzICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgNjIgKysrKysrKysrKysrKysrKysrLQogYXJjaC9hcm0vYm9vdC9kdHMv
+c3VuOGktYTgzdC5kdHNpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICA5OSArKysr
+KysrKysrKysrKysrKysrKysrKysrKysrLQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWx2
+ZHMuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyMyArKysrKysrLQogZHJpdmVy
+cy9ncHUvZHJtL3N1bjRpL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgMSArLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2RvdGNsb2NrLmMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAxMCArKy0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40
+aV9kcnYuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKy0KIGRyaXZlcnMv
+Z3B1L2RybS9zdW40aS9zdW40aV9sdmRzLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAxNzcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+LQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2x2ZHMuaCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAxOCArKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29u
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyNTEgKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystCiBk
+cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5oICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgIDMxICsrKysrKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW44aV9taXhl
+ci5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMjAgKysrKysrLQogZHJpdmVycy9n
+cHUvZHJtL3N1bjRpL3N1bjhpX21peGVyLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMyArLQogMTYgZmlsZXMgY2hhbmdlZCwgNzEwIGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25z
+KC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2x2ZHMu
+YwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9sdmRzLmgK
+CmJhc2UtY29tbWl0OiAzYjcxMjM5MTgxZTU0Mjk3MDIzODc2NjZmMWFjNzBhOWU2ODU2Y2NlCi0t
+IApnaXQtc2VyaWVzIDAuOS4xCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
