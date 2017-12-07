@@ -1,52 +1,36 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH net-next v4 1/4] phylib: Add device reset delay support
-Date: Thu, 7 Dec 2017 15:52:17 +0100
-Message-ID: <CAMuHMdVgWif=1K-S2j1Y39B9yDNvV12sUm7nrFLOP-=ndSYtVA@mail.gmail.com>
-References: <20171207144358.3351-1-dev@g0hl1n.net> <20171207144358.3351-2-dev@g0hl1n.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] arm: dts: qcom: fix missing #phy-cells for apq8064
+Date: Thu, 7 Dec 2017 15:53:59 +0100
+Message-ID: <CAK8P3a1VAquccZnvDKUwjToHM6qBeKzehwmTGCjb5_yPhsrPaw@mail.gmail.com>
+References: <20171109225422.14280-1-robh@kernel.org> <CAK8P3a3wupYd7XiJrYsFafbmdpiw_zFVd42E8Ucm9oNXtwzWSQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20171207144358.3351-2-dev@g0hl1n.net>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Leitner <dev@g0hl1n.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fugang Duan <fugang.duan@nxp.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Frank Rowand <frowand.list@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Baruch Siach <baruch@tkos.co.il>, David Wu <david.wu@rock-chips.com>, lukma@denx.de, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Richard Leitner <richard.leitner@skidata.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a3wupYd7XiJrYsFafbmdpiw_zFVd42E8Ucm9oNXtwzWSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
-
-On Thu, Dec 7, 2017 at 3:43 PM, Richard Leitner <dev@g0hl1n.net> wrote:
-> --- a/drivers/net/phy/mdio_device.c
-> +++ b/drivers/net/phy/mdio_device.c
-> @@ -24,6 +24,7 @@
->  #include <linux/slab.h>
->  #include <linux/string.h>
->  #include <linux/unistd.h>
-> +#include <linux/delay.h>
+On Thu, Dec 7, 2017 at 3:43 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thu, Nov 9, 2017 at 11:54 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> Fix dtc warnings for missing #phy-cells for apq8064:
+>>
+>> Warning (phys_property): Missing property '#phy-cells' in node /soc/dsi-phy@4700200 or bad phandle (referred from /soc/mdss_dsi@4700000:phys[0])
+>> Warning (phys_property): Missing property '#phy-cells' in node /soc/hdmi-phy@4a00400 or bad phandle (referred from /soc/hdmi-tx@4a00000:phys[0])
+>>
+>> Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
->  void mdio_device_free(struct mdio_device *mdiodev)
->  {
-> @@ -118,8 +119,16 @@ EXPORT_SYMBOL(mdio_device_remove);
->
->  void mdio_device_reset(struct mdio_device *mdiodev, int value)
->  {
-> -       if (mdiodev->reset)
-> -               gpiod_set_value(mdiodev->reset, value);
-> +       unsigned int d;
-> +
-> +       if (!mdiodev->reset)
-> +               return;
-> +
-> +       gpiod_set_value(mdiodev->reset, value);
-> +
-> +       d = value ? mdiodev->reset_delay : mdiodev->reset_post_delay;
-> +       if (d)
-> +               usleep_range(d, d + min_t(unsigned int, d / 10, 100));
+> Applied to fixes, thanks!
 
-Oops, I meant "max_t", not "min_t", else the upper limit can be "d + 0",
-which is not what we want.
+This was apparently already there, I took it out again, as applying it
+twice resulted in build failure :(
 
-Sorry, my fault.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+       Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
