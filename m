@@ -1,38 +1,37 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH 2/3] bluetooth: hci_ll: add constant for vendor-specific
- command
-Date: Thu, 7 Dec 2017 22:43:18 +0100
-Message-ID: <C76378A5-AAAF-42A6-BD74-119E4863D813@holtmann.org>
-References: <1512357682-8911-1-git-send-email-david@lechnology.com>
- <1512357682-8911-3-git-send-email-david@lechnology.com>
- <5C65FB74-D7FD-4653-993A-5A68AD844A41@holtmann.org>
- <55fff19a-c30f-88f0-afb2-6c0b9bad25a7@lechnology.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <55fff19a-c30f-88f0-afb2-6c0b9bad25a7@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Network Development <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
+From: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/2] Documentation and driver of logicoreIP
+Date: Thu, 7 Dec 2017 13:31:14 -0800
+Message-ID: <1512682276-6082-1-git-send-email-dshah@xilinx.com>
+References: <20171207104757.GA27343@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171207104757.GA27343-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+1st patch provide Device Tree binding document for logicoreIP
+2nd patch provide the xlnx_vcu logicoreIP driver, Kconfig changes
+and Makefile changes for the driver.
 
->>> This adds a #define for the vendor-specific HCI command to set the
->>> baudrate instead of using the bare 0xff36 multiple times.
->>> 
->>> Signed-off-by: David Lechner <david@lechnology.com>
->>> ---
->>> drivers/bluetooth/hci_ll.c | 10 ++++++++--
->>> 1 file changed, 8 insertions(+), 2 deletions(-)
->> patch has been applied to bluetooth-next tree.
-> 
-> I am new to the bluetooth tree, so just to be sure... does this mean I should not include this patch in v2 of this series since this patch has been applied?
+Dhaval Shah (2):
+  Documentation: devicetree: Add DT bindings to xlnx_vcu driver
+  misc: Add Xilinx ZYNQMP VCU logicoreIP init driver
 
-please don’t include already applied patches. Base everything against bluetooth-next tree.
+ .../devicetree/bindings/misc/xlnx,vcu.txt          |  31 +
+ drivers/misc/Kconfig                               |  15 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/xlnx_vcu.c                            | 629 +++++++++++++++++++++
+ 4 files changed, 676 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/xlnx,vcu.txt
+ create mode 100644 drivers/misc/xlnx_vcu.c
 
-Regards
+-- 
+2.7.4
 
-Marcel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
