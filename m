@@ -1,30 +1,33 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v4 2/2] dt-bindings: add eeprom "at24,no-read-rollover" property
-Date: Thu, 7 Dec 2017 15:21:54 +0100
-Message-ID: <CAMRc=Mc1MvDcZO=Lr-v33G-bFR1ds-uLs1ra2XO68g4vqSkafw@mail.gmail.com>
-References: <1512487422-6284-1-git-send-email-svendev@arcx.com>
- <1512487422-6284-3-git-send-email-svendev@arcx.com> <20171206220404.oyqg6ckhdx7jtbxw@rob-hp-laptop>
- <CAGngYiXLeVVSn-Fn9WGXd4zNmQ0SBZcuSAdrv-d2K=Wp0zHN0A@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 6/8] staging: octeon: Remove USE_ASYNC_IOBDMA macro.
+Date: Thu, 7 Dec 2017 15:28:44 +0100
+Message-ID: <20171207142844.GA22444@kroah.com>
+References: <20171129005540.28829-1-david.daney@cavium.com>
+ <20171129005540.28829-7-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAGngYiXLeVVSn-Fn9WGXd4zNmQ0SBZcuSAdrv-d2K=Wp0zHN0A@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Sven Van Asbroeck <thesven73@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Sven Van Asbroeck <svendev@arcx.com>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, nsekhar@ti.com, Sakari Ailus <sakari.ailus@linux.intel.com>, David Lechner <david@lechnology.com>, Javier Martinez Canillas <javier@dowhile0.org>, Divagar Mohandass <divagar.mohandass@intel.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20171129005540.28829-7-david.daney@cavium.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: David Daney <david.daney@cavium.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, ralf@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, "Steven J. Hill" <steven.hill@cavium.com>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-2017-12-07 15:06 GMT+01:00 Sven Van Asbroeck <thesven73@gmail.com>:
->> at24 is not a vendor prefix. Either this is atmel specific and you want
->> atmel,no-read-rollover or it is for all vendors at24 compatible eeproms
->> and you want at24-no-read-rollover. Or just drop the at24 if this
->> binding is in fact for just at24 eeproms as none of the other properties
->> has at24 in them.
->
-> Bartosz, shall I rename
-> at24,no-read-rollover -> no-read-rollover ?
+On Tue, Nov 28, 2017 at 04:55:38PM -0800, David Daney wrote:
+> Previous patch sets USE_ASYNC_IOBDMA to 1 unconditionally.  Remove
+> USE_ASYNC_IOBDMA from all if statements.  Remove dead code caused by
+> the change.
+> 
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-Yes, please.
-
-Thanks,
-Bartosz
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
