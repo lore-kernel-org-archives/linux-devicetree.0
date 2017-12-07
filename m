@@ -1,156 +1,107 @@
-From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Subject: [PATCH v9 2/2] ARM: dts: TS-4600: add basic device tree
-Date: Thu,  7 Dec 2017 12:11:18 -0500
-Message-ID: <20171207171118.5448-2-sebastien.bourdelin@savoirfairelinux.com>
-References: <20171207171118.5448-1-sebastien.bourdelin@savoirfairelinux.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171207171118.5448-1-sebastien.bourdelin@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@savoirfairelinux.com, fabio.estevam@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: mark@embeddedarm.com, kris@embeddedarm.com, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] Add CPU Frequency scaling support on Armada 37xx
+Date: Thu, 07 Dec 2017 18:14:22 +0100
+Message-ID: <88999738.5axjmjKUcc@aspire.rjw.lan>
+References: <20171207135616.23670-1-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171207135616.23670-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?ISO-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Evan Wang <xswang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andre Heider <a.heider-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These device trees add support for the TS-4600 by Technologic Systems.
+On Thursday, December 7, 2017 2:56:09 PM CET Gregory CLEMENT wrote:
+> Hi,
+> 
+> This is the second version of a series adding the CPU Frequency
+> support on Armada 37xx using DVFS. It is based on the initial work of
+> Evan Wang and Victor Gu.
+> 
+> The main change since the first version was a bug fixed in the
+> "cpufreq: Add DVFS support for Armada 37xx" patch which was preventing
+> to register the opp. An other noticeable change is the 4th patch which
+> is new adding the use of dev_pm_opp_remove and removing an comment
+> became wrong. The other changes are described in the change log.
+> 
+> DVFS control is done by a set of registers from the North Bridge Power
+> Management block. The binding for this block is documented in patch 1.
+> 
+> While adding a new cpufreq driver I found that the Kconfig and
+> Makefile were no more in order, so it is fixed by patch 2 and 3.
+> 
+> The 5th patch is just about updating the MAINTAINERS file with the new
+> driver.
+> 
+> The next patch is the real purpose of the series. The main goal of
+> this driver is to setup the CPU load level in the hardware to
+> associate them to CPU frequencies and register a standard cpufreq
+> driver. Note that the hardware also capable of doing AVS (Adaptive
+> Voltage Scaling), by associating a voltage on each level beside the
+> CPU frequency. However, this support is not yet ready, so it is not
+> part of this series.
+> 
+> Finally, the last patch is for arm-soc the arm-soc subsystem through
+> mvebu and update the device tree to support the CPU frequency scaling.
+> 
+> An update on the CPU clock driver is needed in order to take into
+> account the DVFS setting. It's the purpose of an other series already
+> sent, but is no dependencies between the series (for building or at
+> runtime).
+> 
+> Thanks,
+> 
+> Gregory
+> 
+> Changelog:
+> 
+> v1 -> v2:
+> 
+>  - using syscon instead of nb_pm for the binding of the North bridge
+>    power management unit: reported by Rob Herring
+> 
+>  - fix sorting inside the big LITTLE section for the Kconfig: reported
+>    by Viresh Kumar
+> 
+>  - fix the bogus freq calculation in armada37xx_cpufreq_driver_init,
+>    bug reported by Andre Heider
+> 
+>  - use dev_pm_opp_remove() on the previous opp if dev_pm_opp_add()
+>    failed, reported by Viresh Kumar
+> 
+>  - add the Tested-by flag from Andre Heider on "cpufreq: Add DVFS
+>    support for Armada 37xx" patch
+> 
+> Gregory CLEMENT (7):
+>   dt-bindings: marvell: Add documentation for the North Bridge PM on
+>     Armada 37xx
+>   cpufreq: ARM: sort the Kconfig menu
+>   cpufreq: sort the drivers in ARM part
+>   cpufreq: mvebu: Use dev_pm_opp_remove()
+>   MAINTAINERS: add new entries for Armada 37xx cpufreq driver
+>   cpufreq: Add DVFS support for Armada 37xx
+>   arm64: dts: marvell: armada-37xx: add nodes allowing cpufreq support
+> 
+>  .../bindings/arm/marvell/armada-37xx.txt           |  19 ++
+>  MAINTAINERS                                        |   1 +
+>  arch/arm64/boot/dts/marvell/armada-372x.dtsi       |   1 +
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi       |   7 +
+>  drivers/cpufreq/Kconfig.arm                        |  89 ++++----
+>  drivers/cpufreq/Makefile                           |   9 +-
+>  drivers/cpufreq/armada-37xx-cpufreq.c              | 241 +++++++++++++++++++++
+>  drivers/cpufreq/mvebu-cpufreq.c                    |  11 +-
+>  8 files changed, 327 insertions(+), 51 deletions(-)
+>  create mode 100644 drivers/cpufreq/armada-37xx-cpufreq.c
 
-More details here:
-  http://wiki.embeddedarm.com/wiki/TS-4600
+I'd like you to split patches [2-3/7] off this series as they aren't
+exactly related to the other changes in it.
 
-Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
----
-Changes v8 -> v9:
-  - rebase on master
-  - fix gpio active direction (suggested by Fabio Estevam)
+Thanks,
+Rafael
 
-Changes v7 -> v8:
-  - rebase on master
-  - merge the rev A and B into one device tree based on the last rev B
-  because only the memory size change between the two rev currently
-  (suggested by Shawn Guo)
-
-Changes v6 -> v7:
-  - rebase on master
-  - remove unneeded pinctrl-name (suggested by Shawn Guo)
-  - add reg to the node en-sd-pwr (suggested by Shawn Guo)
-  - use define for gpio polarity (suggested by Shawn Guo)
-  - remove the fake bus container for regulator (suggested by Shawn Guo)
-
-Changes v5 -> v6:
-  - rebase on master
-  - split the previous patch series into series by subsystem
-
-Changes v4 -> v5:
-  - fix missing signed off
-
-Changes v3 -> v4:
-  - rebase on master
-
-Changes v2 -> v3:
-  - rebase on master
-
-Changes v1 -> v2:
-  - rebase on master
----
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/imx28-ts4600.dts | 79 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx28-ts4600.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d0381e9caf21..678373d299d8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -558,6 +558,7 @@ dtb-$(CONFIG_ARCH_MXS) += \
- 	imx28-m28cu3.dtb \
- 	imx28-m28evk.dtb \
- 	imx28-sps1.dtb \
-+	imx28-ts4600.dtb \
- 	imx28-tx28.dtb
- dtb-$(CONFIG_ARCH_NOMADIK) += \
- 	ste-nomadik-s8815.dtb \
-diff --git a/arch/arm/boot/dts/imx28-ts4600.dts b/arch/arm/boot/dts/imx28-ts4600.dts
-new file mode 100644
-index 000000000000..1e391c9f1b7a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx28-ts4600.dts
-@@ -0,0 +1,79 @@
-+/*
-+ * Copyright (C) 2016 Savoir-Faire Linux
-+ * Author: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include "imx28.dtsi"
-+#include "dt-bindings/gpio/gpio.h"
-+
-+/ {
-+
-+	model = "Technologic Systems i.MX28 TS-4600";
-+	compatible = "technologic,imx28-ts4600", "fsl,imx28";
-+
-+	memory {
-+		reg = <0x40000000 0x10000000>;   /* 256MB */
-+	};
-+
-+	apb@80000000 {
-+		apbh@80000000 {
-+			ssp0: ssp@80010000 {
-+				compatible = "fsl,imx28-mmc";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&mmc0_4bit_pins_a
-+					     &mmc0_sck_cfg
-+					     &en_sd_pwr>;
-+				broken-cd = <1>;
-+				bus-width = <4>;
-+				vmmc-supply = <&reg_vddio_sd0>;
-+				status = "okay";
-+			};
-+
-+			pinctrl@80018000 {
-+
-+				en_sd_pwr: en-sd-pwr@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_PWM3__GPIO_3_28
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+			};
-+		};
-+
-+		apbx@80040000 {
-+			pwm: pwm@80064000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pwm2_pins_a>;
-+				status = "okay";
-+			};
-+
-+			duart: serial@80074000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&duart_pins_a>;
-+				status = "okay";
-+			};
-+		};
-+	};
-+
-+	reg_vddio_sd0: regulator-vddio-sd0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vddio-sd0";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		gpio = <&gpio3 28 GPIO_ACTIVE_LOW>;
-+	};
-+
-+};
--- 
-2.15.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
