@@ -1,40 +1,52 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] at24: support eeproms that do not auto-rollover
- reads.
-Date: Thu, 7 Dec 2017 20:02:30 +0100
-Message-ID: <20171207190230.ttq5xthgsuuy4swn@pengutronix.de>
-References: <1512657378-5221-1-git-send-email-svendev@arcx.com>
- <1512657378-5221-2-git-send-email-svendev@arcx.com>
- <CAMRc=MdhJRD+G18Xh5vfmaHHdJ+g9EnDTxUHVxhzDzVt-D0KMg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdhJRD+G18Xh5vfmaHHdJ+g9EnDTxUHVxhzDzVt-D0KMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Cc: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Jagan Teki <jagannadh.teki@gmail.com>
+Subject: [PATCH v2 1/3] regulator: axp20x: add drivevbus support for axp803
+Date: Fri,  8 Dec 2017 00:34:18 +0530
+Message-ID: <1512673460-7865-1-git-send-email-jagan@amarulasolutions.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Like axp221, axp223, axp813 the axp803 is also supporting external
+regulator to drive the  OTG VBus through N_VBUSEN PMIC pin.
 
-On Thu, Dec 07, 2017 at 05:26:50PM +0100, Bartosz Golaszewski wrote:
-> > +       if (at24->chip.flags & AT24_FLAG_NO_RDROL) {
-> > +               bits = (at24->chip.flags & AT24_FLAG_ADDR16) ? 16 : 8;
-> 
-> There's no need for braces around the ternary operator's condition.
+Add support for it.
 
-Even if not required, I'd keep them for clearity.
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- New patch
 
-Best regards
-Uwe
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 2 +-
+ drivers/regulator/axp20x-regulator.c             | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index 9455503..34f24a2 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -43,7 +43,7 @@ Optional properties:
+ 			  regulator to drive the OTG VBus, rather then
+ 			  as an input pin which signals whether the
+ 			  board is driving OTG VBus or not.
+-			  (axp221 / axp223 / axp813 only)
++			  (axp221 / axp223 / axp803/ axp813 only)
+ 
+ - x-powers,master-mode: Boolean (axp806 only). Set this when the PMIC is
+ 			wired for master mode. The default is slave mode.
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 181622b..91b8ff8 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -721,6 +721,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+ 	case AXP803_ID:
+ 		regulators = axp803_regulators;
+ 		nregulators = AXP803_REG_ID_MAX;
++		drivevbus = of_property_read_bool(pdev->dev.parent->of_node,
++						  "x-powers,drive-vbus-en");
+ 		break;
+ 	case AXP806_ID:
+ 		regulators = axp806_regulators;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
