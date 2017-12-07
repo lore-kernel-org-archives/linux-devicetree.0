@@ -1,78 +1,55 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4.1] phylib: Add device reset GPIO support
-Date: Thu, 7 Dec 2017 20:40:37 +0300
-Message-ID: <7019d8c1-4444-e981-b2fb-7fefde4a34be@cogentembedded.com>
-References: <1512383692-14009-2-git-send-email-geert+renesas@glider.be>
- <1512390905-28094-1-git-send-email-geert+renesas@glider.be>
- <69fe9a6d-4039-6f80-b80d-7dc0de31e5bf@cogentembedded.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V6 4/7] OF: properties: Implement get_match_data()
+ callback
+Date: Thu, 7 Dec 2017 12:50:50 -0500
+Message-ID: <661cbe4d-ea33-3e84-b5f2-ab6517cbb135@codeaurora.org>
+References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
+ <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
+ <20171207141029.575c0a03@karo-electronics.de>
+ <def8e351-bc2d-7adc-fdc5-362b365302a8@codeaurora.org>
+ <20171207162036.6a71a4f5@karo-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <69fe9a6d-4039-6f80-b80d-7dc0de31e5bf-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-MW
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171207162036.6a71a4f5@karo-electronics.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <LW@KARO-electronics.de>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, timur@codeaurora.org, open list <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/07/2017 08:20 PM, Sergei Shtylyov wrote:
-
->> The PHY devices sometimes do have their reset signal (maybe even power
->> supply?) tied to some GPIO and sometimes it also does happen that a boot
->> loader does not leave it deasserted. So far this issue has been attacked
->> from (as I believe) a wrong angle: by teaching the MAC driver to manipulate
->> the GPIO in question; that solution, when applied to the device trees, led
->> to adding the PHY reset GPIO properties to the MAC device node, with one
->> exception: Cadence MACB driver which could handle the "reset-gpios" prop
->> in a PHY device subnode. I believe that the correct approach is to teach
->> the 'phylib' to get the MDIO device reset GPIO from the device tree node
->> corresponding to this device -- which this patch is doing...
+On 12/7/2017 10:20 AM, Lothar Waßmann wrote:
+> Hi,
+> 
+> On Thu, 7 Dec 2017 09:45:31 -0500 Sinan Kaya wrote:
+>> On 12/7/2017 8:10 AM, Lothar Waßmann wrote:
+>>>> +void *of_fwnode_get_match_data(const struct fwnode_handle *fwnode,
+>>>> +			       struct device *dev)
+>>> Shouldn't this be 'const void *of_fwnode_get_match_data
 >>
->> Note that I had to modify the AT803x PHY driver as it would stop working
->> otherwise -- it made use of the reset GPIO for its own purposes...
+>> OF keeps the driver data as a (const void*) internally. ACPI keeps the
+>> driver data as kernel_ulong_t in struct acpi_device_id.
 >>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> [geert: Propagate actual errors from fwnode_get_named_gpiod()]
->> [geert: Avoid destroying initial setup]
->> [geert: Consolidate GPIO descriptor acquiring code]
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> [...]
->> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
->> index 2df7b62c1a36811e..8f8b7747c54bc478 100644
->> --- a/drivers/net/phy/mdio_bus.c
->> +++ b/drivers/net/phy/mdio_bus.c
-> [...]
->> @@ -48,9 +49,26 @@
->>   int mdiobus_register_device(struct mdio_device *mdiodev)
->>   {
->> +    struct gpio_desc *gpiod = NULL;
->> +
->>       if (mdiodev->bus->mdio_map[mdiodev->addr])
->>           return -EBUSY;
->> +    /* Deassert the optional reset signal */
+>> I tried to find the middle ground here by converting output to void*
+>> but not keeping const.
+>>
+> It should be no problem to cast a (const void *) to an unsigned long
+> data type (without const qualifier).
 > 
->     Umm, but why deassert it here for such a short time?
+
+It is the other way around. If I change this API to return a a (const void*),
+the device_get_match_data() function need to return a (const void *).
+
+While implementing the ACPI piece, I have to convert an unsigned long to
+(const void *) in ACPI code so that the APIs are compatible.
+
 > 
->> +    if (mdiodev->dev.of_node)
->> +        gpiod = fwnode_get_named_gpiod(&mdiodev->dev.of_node->fwnode,
->> +                           "reset-gpios", 0, GPIOD_OUT_LOW,
->> +                           "PHY reset");
->> +    if (PTR_ERR(gpiod) == -ENOENT)
->> +        gpiod = NULL;
->> +    else if (IS_ERR(gpiod))
->> +        return PTR_ERR(gpiod);
+> Lothar Waßmann
 > 
->     Hm, returning on error with reset deasserted?
 
-    Oops, error means we couldn't drive the GPIO at all...
-    The 1st question remains though...
 
-[...]
-
-MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
