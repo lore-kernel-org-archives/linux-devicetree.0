@@ -1,64 +1,88 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: Re: [PATCH] video: hd44780: Add hd44780 lcd display driver
-Date: Thu, 07 Dec 2017 09:33:21 +0100
-Message-ID: <2226720.5tM4mKizis@lem-wkst-02>
-References: <20171206135255.6990-1-poeschel@lemonage.de> <CAMuHMdUn-wx7YC=QWazb4e-vJGts8iXbkC64NYiEjha-kQPKLg@mail.gmail.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: amlogic: use generic bus node names
+Date: Thu, 7 Dec 2017 09:35:50 +0100
+Message-ID: <fb631d1c-2b12-34e4-c157-ba11242e68de@baylibre.com>
+References: <20171206193005.24171-1-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUn-wx7YC=QWazb4e-vJGts8iXbkC64NYiEjha-kQPKLg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Manuel =?ISO-8859-1?Q?Sch=F6lling?= <manuel.schoelling@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Stafford Horne <shorne@gmail.com>, Christophe Leroy <christophe.leroy@c-s.fr>, Randy Dunlap <rdunlap@infradead.org>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Sean Paul <seanpaul@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, DRI Development <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171206193005.24171-1-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 6, 2017 at 16:04:10 CET Geert Uytterhoeven wrote:
-> Hi Lars,
+On 06/12/2017 20:30, Kevin Hilman wrote:
+> The DT spec recommends that node-names have generic names like "bus".
+> Fix that in the Amlogic DTs, while leaving the label names to have more
+> SoC-specific names that match with the HW documentation.
 > 
-> On Wed, Dec 6, 2017 at 2:52 PM, Lars Poeschel <poeschel@lemonage.de> wrote:
-> > This adds a console driver for hd44780 based character lcd displays and
-> > clones. The driver currently supports 20x4 character displays with
-> > character ROMs A00 and A02.
-> > The hardware wirings to the display have to be supplied to the kernel in
-> > the devicetree. The binding doc has the necessary information.
-> > There are also tons of these cheap displays sold with a serial
-> > interface. Many of them use a simple pcf8574 gpio expanders. An example
-> > for using that kind of display is also in the binding doc.
-> > 
-> > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> Suggested-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 ++--
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 6 +++---
+>  2 files changed, 5 insertions(+), 5 deletions(-)
 > 
-> Thanks for your patch!
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index b932a784b02a..e7213eb53958 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -113,7 +113,7 @@
+>  		#size-cells = <2>;
+>  		ranges;
+>  
+> -		cbus: cbus@ffd00000 {
+> +		cbus: bus@ffd00000 {
+>  			compatible = "simple-bus";
+>  			reg = <0x0 0xffd00000 0x0 0x25000>;
+>  			#address-cells = <2>;
+> @@ -175,7 +175,7 @@
+>  			};
+>  		};
+>  
+> -		aobus: aobus@ff800000 {
+> +		aobus: bus@ff800000 {
+>  			compatible = "simple-bus";
+>  			reg = <0x0 0xff800000 0x0 0x100000>;
+>  			#address-cells = <2>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> index 7cdbf58a062f..6cb3c2a52baf 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> @@ -211,7 +211,7 @@
+>  		#size-cells = <2>;
+>  		ranges;
+>  
+> -		cbus: cbus@c1100000 {
+> +		cbus: bus@c1100000 {
+>  			compatible = "simple-bus";
+>  			reg = <0x0 0xc1100000 0x0 0x100000>;
+>  			#address-cells = <2>;
+> @@ -366,7 +366,7 @@
+>  			};
+>  		};
+>  
+> -		aobus: aobus@c8100000 {
+> +		aobus: bus@c8100000 {
+>  			compatible = "simple-bus";
+>  			reg = <0x0 0xc8100000 0x0 0x100000>;
+>  			#address-cells = <2>;
+> @@ -453,7 +453,7 @@
+>  			};
+>  		};
+>  
+> -		hiubus: hiubus@c883c000 {
+> +		hiubus: bus@c883c000 {
+>  			compatible = "simple-bus";
+>  			reg = <0x0 0xc883c000 0x0 0x2000>;
+>  			#address-cells = <2>;
 > 
-> > ---
-> > 
-> >  .../bindings/video/console/hd44780con.txt          |  42 ++
-> >  drivers/video/console/Kconfig                      |  13 +
-> >  drivers/video/console/Makefile                     |   1 +
-> >  drivers/video/console/hd44780con.c                 | 676
-> >  +++++++++++++++++++++
-> I'm wondering if you could implement this on top of the existing charlcd
-> framework:
-> 
->     drivers/auxdisplay/charlcd.c
->     include/misc/charlcd.h
-> 
-> which can use the existing hd44780 backend:
-> 
->     Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
->     drivers/auxdisplay/hd44780.c
-> 
-> That way it can be used on other character LCDs, like the one supported by
-> drivers/auxdisplay/panel.c.
 
-Oh! Yes, this is a very interesting idea! This would involve multiple steps 
-until this would be useful for me, but I will definitely have a look at this!
-So, please drop my patch for now. If for some reason in the future I find, 
-that it should go upstream, I will submit it again.
-
-BTW thanks for the hint about the hd44780 charlcd backend. I did not know 
-about this. My hd44780 console driver is quite a bit old. I just found time to 
-clean up, rebase, test and submit it now.
-
-Regards,
-Lars
+Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
