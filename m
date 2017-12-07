@@ -1,42 +1,62 @@
 From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Subject: Re: [PATCH v8 2/2] ARM: dts: TS-4600: add basic device tree
-Date: Thu, 7 Dec 2017 12:06:11 -0500
-Message-ID: <1f11151e-fa71-5af6-245d-482fcbcec5e9@savoirfairelinux.com>
-References: <20171123210410.7107-1-sebastien.bourdelin@savoirfairelinux.com>
- <20171123210410.7107-2-sebastien.bourdelin@savoirfairelinux.com>
- <CAOMZO5DcM0u9+DZjywsqadu834++rXAckqnkMqzZOo-vgFVs_w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v9 1/2] of: documentation: add bindings documentation for TS-4600
+Date: Thu,  7 Dec 2017 12:11:17 -0500
+Message-ID: <20171207171118.5448-1-sebastien.bourdelin@savoirfairelinux.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DcM0u9+DZjywsqadu834++rXAckqnkMqzZOo-vgFVs_w@mail.gmail.com>
-Content-Language: fr-classic
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, kernel@savoirfairelinux.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Featherston <mark@embeddedarm.com>, kris@embeddedarm.com
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@savoirfairelinux.com, fabio.estevam@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: mark@embeddedarm.com, kris@embeddedarm.com, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio
+This adds the documentation for the TS-4600 by Technologic Systems.
 
-On 11/26/2017 02:39 PM, Fabio Estevam wrote:
-> Hi Sebastien,
-> 
-> On Thu, Nov 23, 2017 at 7:04 PM, Sebastien Bourdelin
-> <sebastien.bourdelin@savoirfairelinux.com> wrote:
-> 
->> +       reg_vddio_sd0: regulator-vddio-sd0 {
->> +               compatible = "regulator-fixed";
->> +               regulator-name = "vddio-sd0";
->> +               regulator-min-microvolt = <3300000>;
->> +               regulator-max-microvolt = <3300000>;
->> +               regulator-boot-on;
->> +               gpio = <&gpio3 28 GPIO_ACTIVE_HIGH>;
-> 
-> It seems this should be GPIO_ACTIVE_LOW instead, as you don't pass
-> 'enable-active-high' here.
-> 
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes v8 -> v9:
+  - rebase on master
 
-Yes! you are right, thanks for the catch!
+Changes v7 -> v8:
+  - rebase on master
 
-Regards,
-Sebastien.
+Changes v6 -> v7:
+  - rebase on master
+
+Changes v5 -> v6:
+  - rebase on master
+  - split the previous patch series into series by subsystem
+
+Changes v4 -> v5:
+  - fix missing signed off
+
+Changes v3 -> v4:
+  - rebase on master
+
+Changes v2 -> v3:
+  - rebase on master
+
+Changes v1 -> v2:
+  - rebase on master
+  - add ack by Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/technologic.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/technologic.txt b/Documentation/devicetree/bindings/arm/technologic.txt
+index 33797acad846..e9d6d6575566 100644
+--- a/Documentation/devicetree/bindings/arm/technologic.txt
++++ b/Documentation/devicetree/bindings/arm/technologic.txt
+@@ -1,6 +1,11 @@
+ Technologic Systems Platforms Device Tree Bindings
+ --------------------------------------------------
+ 
++TS-4600 is a System-on-Module based on the Freescale i.MX28 System-on-Chip.
++It can be mounted on a carrier board providing additional peripheral connectors.
++Required root node properties:
++	- compatible = "technologic,imx28-ts4600", "fsl,imx28"
++
+ TS-4800 board
+ Required root node properties:
+ 	- compatible = "technologic,imx51-ts4800", "fsl,imx51";
+-- 
+2.15.0
