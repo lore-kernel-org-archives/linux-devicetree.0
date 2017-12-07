@@ -1,97 +1,83 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: amlogic: use generic bus node names
-Date: Thu, 07 Dec 2017 11:30:27 -0800
-Message-ID: <7hindiqqss.fsf@baylibre.com>
-References: <20171206193005.24171-1-khilman@baylibre.com>
-        <fb631d1c-2b12-34e4-c157-ba11242e68de@baylibre.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V6 3/7] device property: Introduce a common API to fetch
+ device match data
+Date: Thu, 7 Dec 2017 15:15:29 -0500
+Message-ID: <74f88482-71ff-db72-ee6e-cc9b3b0bc37e@codeaurora.org>
+References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
+ <1512493493-6464-4-git-send-email-okaya@codeaurora.org>
+ <20171207122948.yyl6adb6lnb56gok@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fb631d1c-2b12-34e4-c157-ba11242e68de-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
-        Armstrong's message of "Thu, 7 Dec 2017 09:35:50 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20171207122948.yyl6adb6lnb56gok@valkosipuli.retiisi.org.uk>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+On 12/7/2017 7:29 AM, Sakari Ailus wrote:
+> Hi Sinan,
+> 
+> Thanks for the update.
+> 
+> Just one small comment below.
+> 
+[snip]
 
-> On 06/12/2017 20:30, Kevin Hilman wrote:
->> The DT spec recommends that node-names have generic names like "bus".
->> Fix that in the Amlogic DTs, while leaving the label names to have more
->> SoC-specific names that match with the HW documentation.
->> 
->> Suggested-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 ++--
->>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 6 +++---
->>  2 files changed, 5 insertions(+), 5 deletions(-)
->> 
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> index b932a784b02a..e7213eb53958 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> @@ -113,7 +113,7 @@
->>  		#size-cells = <2>;
->>  		ranges;
 >>  
->> -		cbus: cbus@ffd00000 {
->> +		cbus: bus@ffd00000 {
->>  			compatible = "simple-bus";
->>  			reg = <0x0 0xffd00000 0x0 0x25000>;
->>  			#address-cells = <2>;
->> @@ -175,7 +175,7 @@
->>  			};
->>  		};
->>  
->> -		aobus: aobus@ff800000 {
->> +		aobus: bus@ff800000 {
->>  			compatible = "simple-bus";
->>  			reg = <0x0 0xff800000 0x0 0x100000>;
->>  			#address-cells = <2>;
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> index 7cdbf58a062f..6cb3c2a52baf 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> @@ -211,7 +211,7 @@
->>  		#size-cells = <2>;
->>  		ranges;
->>  
->> -		cbus: cbus@c1100000 {
->> +		cbus: bus@c1100000 {
->>  			compatible = "simple-bus";
->>  			reg = <0x0 0xc1100000 0x0 0x100000>;
->>  			#address-cells = <2>;
->> @@ -366,7 +366,7 @@
->>  			};
->>  		};
->>  
->> -		aobus: aobus@c8100000 {
->> +		aobus: bus@c8100000 {
->>  			compatible = "simple-bus";
->>  			reg = <0x0 0xc8100000 0x0 0x100000>;
->>  			#address-cells = <2>;
->> @@ -453,7 +453,7 @@
->>  			};
->>  		};
->>  
->> -		hiubus: hiubus@c883c000 {
->> +		hiubus: bus@c883c000 {
->>  			compatible = "simple-bus";
->>  			reg = <0x0 0xc883c000 0x0 0x2000>;
->>  			#address-cells = <2>;
->> 
->
-> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>  struct fwnode_handle {
+>>  	struct fwnode_handle *secondary;
+>> @@ -66,6 +67,7 @@ struct fwnode_reference_args {
+>>   *			       endpoint node.
+>>   * @graph_get_port_parent: Return the parent node of a port node.
+>>   * @graph_parse_endpoint: Parse endpoint for port and endpoint id.
+>> + * @get_match_data: Return the driver match data.
+> 
+> Could you arrange the new get_match_data op closer to the other ops that
+> don't deal with the graphs? Such as device_is_available. As the ops are
+> dealing generally with fwnodes, I might call this device_get_match_data to
+> explicitly mention it's for devices.
 
-Applied to v4.16/dt64 with Neil's review and after doing some basic
-build/boot tests.
+done
 
-Thanks,
+> 
+>>   */
+>>  struct fwnode_operations {
+>>  	void (*get)(struct fwnode_handle *fwnode);
+>> @@ -101,6 +103,8 @@ struct fwnode_operations {
+>>  	(*graph_get_port_parent)(struct fwnode_handle *fwnode);
+>>  	int (*graph_parse_endpoint)(const struct fwnode_handle *fwnode,
+>>  				    struct fwnode_endpoint *endpoint);
+>> +	void *(*get_match_data)(const struct fwnode_handle *fwnode,
+>> +				struct device *dev);
+> 
+> Same comment about the order here.
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ok
+
+> 
+>>  };
+>>  
+>>  #define fwnode_has_op(fwnode, op)				\
+>> diff --git a/include/linux/property.h b/include/linux/property.h
+>> index 6bebee1..01fa55b 100644
+>> --- a/include/linux/property.h
+>> +++ b/include/linux/property.h
+>> @@ -275,6 +275,8 @@ int device_add_properties(struct device *dev,
+>>  
+>>  enum dev_dma_attr device_get_dma_attr(struct device *dev);
+>>  
+>> +void *device_get_match_data(struct device *dev);
+>> +
+>>  int device_get_phy_mode(struct device *dev);
+>>  
+>>  void *device_get_mac_address(struct device *dev, char *addr, int alen);
+> 
+
+
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
