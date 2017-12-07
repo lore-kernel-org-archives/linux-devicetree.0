@@ -1,97 +1,179 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: allwinner: a64: bananapi-m64:
- add usb otg
-Date: Thu, 7 Dec 2017 12:40:25 +0530
-Message-ID: <CAD6G_RR0RMrx-oziEJS_8+7dLH9PeOqOHRaXAvLwFaVyC01BwA@mail.gmail.com>
-References: <1512582664-24936-1-git-send-email-jagan@amarulasolutions.com>
- <CAGb2v67uFnV+m1Ub7rFVGhkv0HKD4ukpQFtJ1pqRi2vf4F=tFA@mail.gmail.com>
- <CAD6G_RR-VccHjdrXs55=C50OvDEr96c7axtbR0eKp2THFNx6sg@mail.gmail.com>
- <CAGb2v67dh=dfPKdDOwfj8m7qmUk-=s4kXS3FvZLczskrjbr7eQ@mail.gmail.com>
- <CAD6G_RR-L1RH899peZgWdapyrENJC7b9-H0pNPu9+Ji93JnQ=w@mail.gmail.com> <CAGb2v65OcqHSDyRowK7UKUpav_CbNtRm9DSs+_uLaZcbu6b7fg@mail.gmail.com>
-Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v2] arm64: dts: ls1088a: Add USB support
+Date: Thu, 7 Dec 2017 07:33:28 +0000
+Message-ID: <VI1PR04MB1262C44016CE4ECB8902E7E7E9330@VI1PR04MB1262.eurprd04.prod.outlook.com>
+References: <20170913091009.21448-1-yinbo.zhu@nxp.com>
+ <20170922065454.GF26358@dragon>
+ <VI1PR04MB1262D160BA8625330E32CAF9E9470@VI1PR04MB1262.eurprd04.prod.outlook.com>
+ <AM3PR04MB12515DB71B8ACF7422A20244E9280@AM3PR04MB1251.eurprd04.prod.outlook.com>
+ <VI1PR04MB1262DD3C6A18257DEE2E907DE9200@VI1PR04MB1262.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRBY6SUPIQKGQEUEE67WY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v65OcqHSDyRowK7UKUpav_CbNtRm9DSs+_uLaZcbu6b7fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <VI1PR04MB1262DD3C6A18257DEE2E907DE9200-mr6QIVyDiCGbtYzA8xQqo89NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Catalin Marinas )" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "Will Deacon )" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, Raghav Dogra <raghav.dogra-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>, Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 7, 2017 at 12:31 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Thu, Dec 7, 2017 at 2:54 PM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Thu, Dec 7, 2017 at 11:56 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->>> On Thu, Dec 7, 2017 at 2:18 PM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On Thu, Dec 7, 2017 at 8:54 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->>>>> On Thu, Dec 7, 2017 at 1:51 AM, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>> usb otg on bananapi-m64 has configured with USB-ID with PH9
->>>>>> and USB-DRVVBUS attached with dcdc1 regulatort.
->>>>>
->>>>> That is not how you read the schematic...
->>>>>
->>>>> Intersecting lines that are tied together will have a dot representing
->>>>> the connection. The DCDC1 line is a pull-up for the ID pin. This is very
->>>>> clear because it has a resistor connected in series.
->>>>>
->>>>> VBUS for OTG is controlled by the IC displayed to the right in the
->>>>> schematic, which is powered from 5V, and controlled by the DRVVBUS
->>>>> pin from the PMIC. Please take a look at how the A31/A33/A83T board
->>>>> dts files represent this.
->>>>
->>>> This is where I confused, USB-DRVVBUS is connected to pin 51 of PMIC
->>>> if we add 5v regulator how can configure gpio number for this? I saw
->>>
->>> From the axp20x bindings:
->>>
->>> - x-powers,drive-vbus-en: boolean, set this when the N_VBUSEN pin is
->>>                           used as an output pin to control an external
->>>                           regulator to drive the OTG VBus, rather then
->>>                           as an input pin which signals whether the
->>>                           board is driving OTG VBus or not.
->>>                           (axp221 / axp223 / axp813 only)
->>>
->>> Setting this allows you to use the "drivevbus" regulator under the PMIC.
->>> As I said, look at how other boards are doing it.
->>>
->>>> sun8i-a33-olinuxino.dts which is also similar but it has gpio = <&pio
->>>> 1 9 GPIO_ACTIVE_HIGH>;
->>>
->>> I have no idea where you saw this. It does not exist in my tree.
->>>
->>> Why don't you just trace backwards from the usb0_vbus-supply property
->>> under the usbphy node, and see where it all leads.
->>
->> This what exactly I did, usb0_vbus-supply = <&reg_drivevbus>; on
->
-> This is not what you did in your patch.
->
->> sun8i-a33-olinuxino.dts is using usb0-vbus from
->> sunxi-common-regulators.dtsi. reg_usb0_vbus regulator using gpio9
->> which I couldn't find it on schematics.
->
-> And I'm telling you that in mainline a33-olinuxino.dts it is:
->
->     usb0_vbus-supply = <&reg_drivevbus>;
->
-> It has been that way since the initial commit adding the file.
-> What tree are you looking at exactly? Take a good look at everything,
-> including your patch, and stop arguing.
+Hi shawn guo,
 
-Sorry, you miss understand. I've seen a33-olinuxino and bananapi-m64
-has similar connection in otg. Just trying to compare both and
-understand what I did different in my patch. Anyway thanks for your
-time I will send next version it will be worth discussing the same
-there.
+If my patch has no other issue,=20
+Can you help me push it to upstream.
 
-thanks!
--- 
-Jagan Teki
-Free Software Engineer | www.openedev.com
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+Thanks.
+BRs.
+
+-----Original Message-----
+From: Yinbo Zhu=20
+Sent: Wednesday, November 22, 2017 9:32 AM
+To: 'Shawn Guo' <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; 'Mark Rutland' <mark.rutland-AbSShOkvfpQ@public.gmane.org=
+m>; 'Catalin Marinas )' <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; 'Will Deacon )' <will.de=
+acon-5wv7dgnIgG8@public.gmane.org>; Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>; 'Raghav Dogra' <ragha=
+v.dogra-3arQi8VN3Tc@public.gmane.org>; Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>; Andy Tang <andy.tang=
+@nxp.com>; 'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS' <de=
+vicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; 'linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org' <linux-ar=
+m-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>; 'open list' <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Subject: RE: [PATCH v2] arm64: dts: ls1088a: Add USB support
+
+Hi
+
+-----Original Message-----
+From: Yinbo Zhu=20
+Sent: Tuesday, November 14, 2017 4:00 PM
+To: 'Shawn Guo' <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; 'Mark Rutland' <mark.rutland-AbSShOkvfpQ@public.gmane.org=
+m>; 'Catalin Marinas )' <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; 'Will Deacon )' <will.de=
+acon-5wv7dgnIgG8@public.gmane.org>; Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>; 'Raghav Dogra' <ragha=
+v.dogra-3arQi8VN3Tc@public.gmane.org>; Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>; Andy Tang <andy.tang=
+@nxp.com>; 'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS' <de=
+vicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; 'linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org' <linux-ar=
+m-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>; 'open list' <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Subject: RE: [PATCH v2] arm64: dts: ls1088a: Add USB support
+
+
+
+-----Original Message-----
+From: Yinbo Zhu=20
+Sent: Tuesday, October 24, 2017 5:15 PM
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; =
+Catalin Marinas ) <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; Will Deacon ) <will.deacon@arm=
+.com>; Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>; Raghav Dogra <raghav.dogra@nx=
+p.com>; Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>; Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>;=
+ open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vge=
+r.kernel.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; open list <linux-kerne=
+l@vger.kernel.org>
+Subject: RE: [PATCH v2] arm64: dts: ls1088a: Add USB support
+
+
+-----Original Message-----
+From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]=20
+Sent: Friday, September 22, 2017 2:55 PM
+To: Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>; =
+Catalin Marinas ) <catalin.marinas-5wv7dgnIgG8@public.gmane.org>; Will Deacon ) <will.deacon@arm=
+.com>; Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>; Raghav Dogra <raghav.dogra@nx=
+p.com>; Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>; Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>;=
+ open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vge=
+r.kernel.org>; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; open list <linux-kerne=
+l@vger.kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: ls1088a: Add USB support
+
+On Wed, Sep 13, 2017 at 05:10:09PM +0800, yinbo.zhu-3arQi8VN3Tc@public.gmane.org wrote:
+> From: "yinbo.zhu" <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+>=20
+> Fix the issue that usb is not detected on ls1088ardb
+
+>It's not really about fixing issue but adding support.
+
+The patch had been tested on upstream 4.14 code, it can fix the issue.=20
+>=20
+> Signed-off-by: yinbo.zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
+> ---
+
+>You should better have a version history here to tell what's changed betwe=
+en version.
+
+>I will add a version history on next v3 patch
+Hi,
+
+I had modified the code as v4 version,=20
+https://patchwork.kernel.org/patch/10027393/
+please check.
+
+Thanks,
+BRs
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 20 +++++++++++++++++=
++++
+>  2 files changed, 28 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts=20
+> b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+> index 213abb72de93..6c3c3bc4b681 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+> @@ -118,6 +118,14 @@
+>  	status =3D "okay";
+>  };
+> =20
+> +&usb0 {
+> +	status =3D "okay";
+> +};
+> +
+> +&usb1 {
+> +	status =3D "okay";
+> +};
+> +
+>  &esdhc {
+
+>Please sort these labeled nodes alphabetically.
+
+>Shawn
+
+>  	status =3D "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi=20
+> b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index c144d06a6e33..c23fede8cf5d 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -359,6 +359,26 @@
+>  			status =3D "disabled";
+>  		};
+> =20
+> +		usb0: usb3@3100000 {
+> +			compatible =3D "snps,dwc3";
+> +			reg =3D <0x0 0x3100000 0x0 0x10000>;
+> +			interrupts =3D <0 80 IRQ_TYPE_LEVEL_HIGH>;
+> +			dr_mode =3D "host";
+> +			snps,quirk-frame-length-adjustment =3D <0x20>;
+> +			snps,dis_rxdet_inp3_quirk;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		usb1: usb3@3110000 {
+> +			compatible =3D "snps,dwc3";
+> +			reg =3D <0x0 0x3110000 0x0 0x10000>;
+> +			interrupts =3D <0 81 IRQ_TYPE_LEVEL_HIGH>;
+> +			dr_mode =3D "host";
+> +			snps,quirk-frame-length-adjustment =3D <0x20>;
+> +			snps,dis_rxdet_inp3_quirk;
+> +			status =3D "disabled";
+> +		};
+> +
+>  		sata: sata@3200000 {
+>  			compatible =3D "fsl,ls1088a-ahci";
+>  			reg =3D <0x0 0x3200000 0x0 0x10000>,
+> --
+> 2.14.1
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
