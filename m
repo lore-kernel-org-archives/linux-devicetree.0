@@ -1,87 +1,242 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 16/19] ASoC: tlv320aic31xx: Add short
- circuit detection support
-Date: Thu, 7 Dec 2017 12:03:52 +0000
-Message-ID: <20171207120352.4obvlu4cemagfom7@sirena.org.uk>
-References: <20171129213300.20021-1-afd@ti.com>
- <20171129213300.20021-17-afd@ti.com>
- <20171201133930.xzfjjj6wzkbtk6c4@sirena.org.uk>
- <4d956cbc-829c-0d81-2980-aa2a79f36660@ti.com>
- <fd362117-ae71-a6a2-eb43-70c2457c0a5d@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 08/15] drm/sun4i: Add LVDS support
+Date: Thu, 7 Dec 2017 13:25:21 +0100
+Message-ID: <20171207122521.frv5zgaay3sgol6f@flea.lan>
+References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
+ <b900e5963180c94ca02bde178b6674622a127787.1512486553.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v65Voua-AjHDnCLgDOKqUeSG-yD4wuSO5-BJ230FCp4OuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1059093800932191349=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <fd362117-ae71-a6a2-eb43-70c2457c0a5d@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "Andrew F. Davis" <afd@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>
+Content-Type: multipart/mixed; boundary="===============1970307876=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAGb2v65Voua-AjHDnCLgDOKqUeSG-yD4wuSO5-BJ230FCp4OuQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jernej Skrabec <jernej.skrabec@siol.net>, Priit Laes <plaes@plaes.org>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
 
---===============1059093800932191349==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2rxxai2avwi7xst3"
+--===============1970307876==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pdfzor5trmdcpiok"
 Content-Disposition: inline
 
 
---2rxxai2avwi7xst3
+--pdfzor5trmdcpiok
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 06, 2017 at 02:22:39PM -0600, Andrew F. Davis wrote:
-> On 12/01/2017 09:32 AM, Andrew F. Davis wrote:
+Hi,
 
-> >> This will report the interrupt as handled even if we didn't see an
-> >> interrupt we understand which will break shared interrupt lines.  At the
-> >> very least we should log other interrupt sources numerically.
+On Thu, Dec 07, 2017 at 02:05:47PM +0800, Chen-Yu Tsai wrote:
+> > +static void sun4i_tcon_lvds_set_status(struct sun4i_tcon *tcon,
+> > +                                      const struct drm_encoder *encode=
+r,
+> > +                                      bool enabled)
+> > +{
+> > +       if (enabled) {
+> > +               u8 val;
+> > +
+> > +               regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+> > +                                  SUN4I_TCON0_LVDS_IF_EN,
+> > +                                  SUN4I_TCON0_LVDS_IF_EN);
+> > +
+> > +               regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> > +                            SUN4I_TCON0_LVDS_ANA0_C(2) |
+> > +                            SUN4I_TCON0_LVDS_ANA0_V(3) |
+> > +                            SUN4I_TCON0_LVDS_ANA0_PD(2) |
+> > +                            SUN4I_TCON0_LVDS_ANA0_EN_LDO);
+> > +               udelay(2);
+> > +
+> > +               regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_RE=
+G,
+> > +                                  SUN4I_TCON0_LVDS_ANA0_EN_MB,
+> > +                                  SUN4I_TCON0_LVDS_ANA0_EN_MB);
+> > +               udelay(2);
+> > +
+> > +               regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_RE=
+G,
+> > +                                  SUN4I_TCON0_LVDS_ANA0_EN_DRVC,
+> > +                                  SUN4I_TCON0_LVDS_ANA0_EN_DRVC);
+> > +
+> > +               if (sun4i_tcon_get_pixel_depth(encoder) =3D=3D 18)
+> > +                       val =3D 7;
+> > +               else
+> > +                       val =3D 0xf;
+> > +
+> > +               regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> > +                                 SUN4I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
+> > +                                 SUN4I_TCON0_LVDS_ANA0_EN_DRVD(val));
+>=20
+> I suggest changing the prefix of the macros of the analog bits to
+> SUN6I_TCON0_*. The register definitions and sequence do not apply
+> to the A10/A20. Furthermore you should add a comment saying this
+> doesn't apply to the A10/A20. In the future we might want to move
+> this part into a separate function, referenced by a function pointer
+> from the quirks structure.
 
-> > Okay, I think I can make that work by checking if no bits are set in the
-> > interrupt regs and returning early if not, IRQ_NONE.
+I'll change the bit field names and add a comment like you suggested.
 
-> This turned out to be more difficult than I expected, plus if I do
-> handle an interrupt it doesn't mean the other device did not right? So
-> this wouldn't fix shared lines as far as I can tell, but I don't
-> register it as shared so this should be fine.
+> > +       } else {
+> > +               regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+> > +                                  SUN4I_TCON0_LVDS_IF_EN, 0);
+> > +       }
+> > +}
+> > +
+> >  void sun4i_tcon_set_status(struct sun4i_tcon *tcon,
+> >                            const struct drm_encoder *encoder,
+> >                            bool enabled)
+> >  {
+> > +       bool is_lvds =3D false;
+> >         int channel;
+> >
+> >         switch (encoder->encoder_type) {
+> > +       case DRM_MODE_ENCODER_LVDS:
+> > +               is_lvds =3D true;
+> > +               /* Fallthrough */
+> >         case DRM_MODE_ENCODER_NONE:
+> >                 channel =3D 0;
+> >                 break;
+> > @@ -84,10 +171,16 @@ void sun4i_tcon_set_status(struct sun4i_tcon *tcon,
+> >                 return;
+> >         }
+> >
+> > +       if (is_lvds && !enabled)
+> > +               sun4i_tcon_lvds_set_status(tcon, encoder, false);
+> > +
+> >         regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
+> >                            SUN4I_TCON_GCTL_TCON_ENABLE,
+> >                            enabled ? SUN4I_TCON_GCTL_TCON_ENABLE : 0);
+> >
+> > +       if (is_lvds && enabled)
+> > +               sun4i_tcon_lvds_set_status(tcon, encoder, true);
+> > +
+> >         sun4i_tcon_channel_set_status(tcon, channel, enabled);
+> >  }
+> >
+> > @@ -170,6 +263,78 @@ static void sun4i_tcon0_mode_set_common(struct sun=
+4i_tcon *tcon,
+> >                      SUN4I_TCON0_BASIC0_Y(mode->crtc_vdisplay));
+> >  }
+> >
+> > +static void sun4i_tcon0_mode_set_lvds(struct sun4i_tcon *tcon,
+> > +                                     const struct drm_encoder *encoder,
+> > +                                     const struct drm_display_mode *mo=
+de)
+> > +{
+> > +       unsigned int bp;
+> > +       u8 clk_delay;
+> > +       u32 reg, val =3D 0;
+> > +
+> > +       tcon->dclk_min_div =3D 7;
+> > +       tcon->dclk_max_div =3D 7;
+> > +       sun4i_tcon0_mode_set_common(tcon, mode);
+> > +
+> > +       /* Adjust clock delay */
+> > +       clk_delay =3D sun4i_tcon_get_clk_delay(mode, 0);
+> > +       regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
+> > +                          SUN4I_TCON0_CTL_CLK_DELAY_MASK,
+> > +                          SUN4I_TCON0_CTL_CLK_DELAY(clk_delay));
+> > +
+> > +       /*
+> > +        * This is called a backporch in the register documentation,
+> > +        * but it really is the back porch + hsync
+> > +        */
+> > +       bp =3D mode->crtc_htotal - mode->crtc_hsync_start;
+> > +       DRM_DEBUG_DRIVER("Setting horizontal total %d, backporch %d\n",
+> > +                        mode->crtc_htotal, bp);
+> > +
+> > +       /* Set horizontal display timings */
+> > +       regmap_write(tcon->regs, SUN4I_TCON0_BASIC1_REG,
+> > +                    SUN4I_TCON0_BASIC1_H_TOTAL(mode->htotal) |
+> > +                    SUN4I_TCON0_BASIC1_H_BACKPORCH(bp));
+> > +
+> > +       /*
+> > +        * This is called a backporch in the register documentation,
+> > +        * but it really is the back porch + hsync
+> > +        */
+> > +       bp =3D mode->crtc_vtotal - mode->crtc_vsync_start;
+> > +       DRM_DEBUG_DRIVER("Setting vertical total %d, backporch %d\n",
+> > +                        mode->crtc_vtotal, bp);
+> > +
+> > +       /* Set vertical display timings */
+> > +       regmap_write(tcon->regs, SUN4I_TCON0_BASIC2_REG,
+> > +                    SUN4I_TCON0_BASIC2_V_TOTAL(mode->crtc_vtotal * 2) |
+> > +                    SUN4I_TCON0_BASIC2_V_BACKPORCH(bp));
+>=20
+> Can we move the above to a common function?
 
-It'll mean that we don't offer the interrupt to anything else sharing
-the line.
+Until we have DSI support figured out I'd rather not do too much of
+consolidation. We know already a few things are going to change there
+(like the clk_delay), but it's not clear yet how much.
 
-> As for your other suggestion of "log other interrupt sources
-> numerically", could you explain this or point to an example of what you
-> mean?
+> > +       /* Map output pins to channel 0 */
+> > +       regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
+> > +                          SUN4I_TCON_GCTL_IOMAP_MASK,
+> > +                          SUN4I_TCON_GCTL_IOMAP_TCON0);
+> > +
+> > +       /* Enable the output on the pins */
+> > +       regmap_write(tcon->regs, SUN4I_TCON0_IO_TRI_REG, 0xe0000000);
+>=20
+> Is this still needed? You are no longer using the TCON LCD pins
+> with LVDS.
 
-Just print out the bits that were set.
+We do. It's a separate function of the pins, but it's the same pins.
 
---2rxxai2avwi7xst3
+> >  static const struct sun4i_tcon_quirks sun6i_a31s_quirks =3D {
+> >         .has_channel_1          =3D true,
+> > +       .has_lvds_pll           =3D true,
+>=20
+> The A31s does not have MIPI.
+
+I'll change that.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--pdfzor5trmdcpiok
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlopLicACgkQJNaLcl1U
-h9DlkAf/Swg/pQ9TfBpAbuL1qabvbPSFYutbVk2QDkaIJII+toomOWiK55H/jIQL
-roYqlO2HchUUcD92WPm+kR9zclGbqFJWhBkxXhZwzNfZqB2QpBQw74aVTjYyLmwZ
-D3GCeqxDq/mHbgMB5j3aBD9uo/lX44eA75vi+37+tgXzrAz/GbM4IGkY/6cQxPnC
-ntrHDMuVBPDOPTLkGdqjTuHjKfGiYbnsYQUWKaeveG6Ew7kenUv3qMASYowqJ61V
-Y9al7/OxVitva4uYODj2cDmi/Y4uL8rr0xo9v/CcuubI24n7b8gZPgrRGXO1Tg/t
-4naeMJttnrXsmaiSGyMjzXWyULOcDA==
-=oks2
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlopMy0ACgkQ0rTAlCFN
+r3R94BAAl4KtCU9xrhOljgjUWRmE4pcSM1TDY5QiNF60Mh46xSYhMnft+Lic7Gjf
+3iO746q5rGr2xV5P2Xc8bfrWN5C8zKq+Yrd/gn48+yjPiKJij0MSSJJ1U401sXAq
+QMfl+3sd56XCTOjlh7RbrwT3fBfiZeVGBh6FcktcUAQsTgCyMt7yy5MSQ0qzD48K
+39s4ajH/VOA07kh940P+Y7l2VqlpMREkxfcmHDSMFnArKjK6c2xyTzN2P2PlpCUd
+TmVxggiZw2MXYEp0XAIqu9ZZMKow5y1Sh0aDwaiW7m10NtuSQ2CejbhtTGmiTb3k
+9SRZ4QI0N6bv0wPdfVuapxWFWolOCPKL9OsA5OFSg/4B/VQjp6qOucpNsP7ko5DN
+NgUSNBlYpxUVj1h9CMc59g4JPObfFxG0cOh+rUQR4jLhpgjcsWP1JN9NtlUMjxOa
+EGiG/a7aukmpfQTM7qGC+dByo1MtIhCkoYr29eARsTrJuuCIRRM66iptLfW1G3uc
+iN+IPo+4qdat0ccPa1gYcfk4qWx1iEp9lN2f9//sV+ik3tIcwD/UiLvZd5K3NqTg
+IHaVX930v77oEzG9R4ChsjsCJs5dTpl3eis4316P0HbmWDmA0hTqjL2EgbCTB0iF
+jtgElPIONadFzP/w1KXIqHe3qX8G4hpVbuLcQLWwLayzTEvTJgg=
+=w2MB
 -----END PGP SIGNATURE-----
 
---2rxxai2avwi7xst3--
+--pdfzor5trmdcpiok--
 
---===============1059093800932191349==
-Content-Type: text/plain; charset="us-ascii"
+--===============1970307876==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Content-Disposition: inline
 
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============1059093800932191349==--
+--===============1970307876==--
