@@ -1,111 +1,106 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH 5/5] PCI: cadence: add EndPoint Controller driver for
- Cadence PCIe controller
-Date: Thu, 7 Dec 2017 11:05:17 +0100
-Message-ID: <CAOFm3uGQzAOrAmQLx7uJ0SJGQxMSB+oAniq9wd93tvupKWv=uA@mail.gmail.com>
-References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
- <297fa17e12cf0f2fb223c05eeb18570707ff5bf1.1511439189.git.cyrille.pitchen@free-electrons.com>
- <20171201122048.GB25010@red-moon> <ed6d811e-608e-e6aa-7b07-2f2d2d68adbd@ti.com>
+From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH resend v3] dt-bindings: mvebu-uart: update documentation with extended UART
+Date: Thu,  7 Dec 2017 11:12:59 +0100
+Message-ID: <20171207101259.2213-1-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <ed6d811e-608e-e6aa-7b07-2f2d2d68adbd@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, bhelgaas@google.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cyrille,
+Update the device tree binding documentation for the Marvell EBU UART,
+in order to allow describing the extended UART IP block, in addition to
+the already supported standard UART IP. This requires adding a new
+compatible string, the introduction of a clocks property, and extensions
+to the interrupts property.
+
+Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+
+Hello,
+
+Due to a conflict when applying this patch it did not make it to the last
+release. This time it should apply cleanly.
+
+Thanks,
+Miquèl
 
 
-On Tue, Dec 5, 2017 at 10:19 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi,
->
-> On Friday 01 December 2017 05:50 PM, Lorenzo Pieralisi wrote:
->> On Thu, Nov 23, 2017 at 04:01:50PM +0100, Cyrille Pitchen wrote:
->>> This patch adds support to the Cadence PCIe controller in endpoint mode.
->>
->> Please add a brief description to the log to describe the most salient
->> features.
->>
->>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
->>> ---
->>>  drivers/pci/cadence/Kconfig           |   9 +
->>>  drivers/pci/cadence/Makefile          |   1 +
->>>  drivers/pci/cadence/pcie-cadence-ep.c | 553 ++++++++++++++++++++++++++++++++++
->>>  3 files changed, 563 insertions(+)
->>>  create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
->>>
->>> diff --git a/drivers/pci/cadence/Kconfig b/drivers/pci/cadence/Kconfig
->>> index 120306cae2aa..b2e6af71f39e 100644
->>> --- a/drivers/pci/cadence/Kconfig
->>> +++ b/drivers/pci/cadence/Kconfig
->>> @@ -21,4 +21,13 @@ config PCIE_CADENCE_HOST
->>>        mode. This PCIe controller may be embedded into many different vendors
->>>        SoCs.
->>>
->>> +config PCIE_CADENCE_EP
->>> +    bool "Cadence PCIe endpoint controller"
->>> +    depends on PCI_ENDPOINT
->>> +    select PCIE_CADENCE
->>> +    help
->>> +      Say Y here if you want to support the Cadence PCIe  controller in
->>> +      endpoint mode. This PCIe controller may be embedded into many
->>> +      different vendors SoCs.
->>> +
->>>  endif # PCI_CADENCE
->>> diff --git a/drivers/pci/cadence/Makefile b/drivers/pci/cadence/Makefile
->>> index d57d192d2595..61e9c8d6839d 100644
->>> --- a/drivers/pci/cadence/Makefile
->>> +++ b/drivers/pci/cadence/Makefile
->>> @@ -1,2 +1,3 @@
->>>  obj-$(CONFIG_PCIE_CADENCE) += pcie-cadence.o
->>>  obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
->>> +obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
->>> diff --git a/drivers/pci/cadence/pcie-cadence-ep.c b/drivers/pci/cadence/pcie-cadence-ep.c
->>> new file mode 100644
->>> index 000000000000..a1d761101a9c
->>> --- /dev/null
->>> +++ b/drivers/pci/cadence/pcie-cadence-ep.c
->>> @@ -0,0 +1,553 @@
->>> +/*
->>> + * Cadence PCIe host controller driver.
->>
->> You should update this comment.
->>
->>> + *
->>> + * Copyright (c) 2017 Cadence
->>> + *
->>> + * Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + *
->>> + * You should have received a copy of the GNU General Public License along with
->>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
->>> + */
+ .../devicetree/bindings/serial/mvebu-uart.txt      | 50 +++++++++++++++++++---
+ 1 file changed, 45 insertions(+), 5 deletions(-)
 
-Would you consider using the new SPDX ids instead of this long legalese blurb?
-You can  check tglx's doc patches for details and Linus comments on
-why he wants it a certain way with C++ // comments.
-
-Here this could come out much streamlined with this top level comment block:
-
-// SPDX-License-Identifier: GPL-2.0
-// Copyright (c) 2017 Cadence
-// Cadence PCIe host controller driver.
-// Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-
-This is only a suggestion, but everyone kinda likes it when the
-licensing boilerplate is minimal and out of the visual way in order to
-focus is on what matters most: the code!
-Thank you for your kind consideration.
+diff --git a/Documentation/devicetree/bindings/serial/mvebu-uart.txt b/Documentation/devicetree/bindings/serial/mvebu-uart.txt
+index d37fabe17bd1..2ae2fee7e023 100644
+--- a/Documentation/devicetree/bindings/serial/mvebu-uart.txt
++++ b/Documentation/devicetree/bindings/serial/mvebu-uart.txt
+@@ -1,13 +1,53 @@
+-* Marvell UART : Non standard UART used in some of Marvell EBU SoCs (e.g., Armada-3700)
++* Marvell UART : Non standard UART used in some of Marvell EBU SoCs
++                 e.g., Armada-3700.
+ 
+ Required properties:
+-- compatible: "marvell,armada-3700-uart"
++- compatible:
++    - "marvell,armada-3700-uart" for the standard variant of the UART
++      (32 bytes FIFO, no DMA, level interrupts, 8-bit access to the
++      FIFO, baudrate limited to 230400).
++    - "marvell,armada-3700-uart-ext" for the extended variant of the
++      UART (128 bytes FIFO, DMA, front interrupts, 8-bit or 32-bit
++      accesses to the FIFO, baudrate unlimited by the dividers).
+ - reg: offset and length of the register set for the device.
+-- interrupts: device interrupt
++- clocks: UART reference clock used to derive the baudrate. If no clock
++      is provided (possible only with the "marvell,armada-3700-uart"
++      compatible string for backward compatibility), it will only work
++      if the baudrate was initialized by the bootloader and no baudrate
++      change will then be possible.
++- interrupts:
++    - Must contain three elements for the standard variant of the IP
++      (marvell,armada-3700-uart): "uart-sum", "uart-tx" and "uart-rx",
++      respectively the UART sum interrupt, the UART TX interrupt and
++      UART RX interrupt. A corresponding interrupt-names property must
++      be defined.
++    - Must contain two elements for the extended variant of the IP
++      (marvell,armada-3700-uart-ext): "uart-tx" and "uart-rx",
++      respectively the UART TX interrupt and the UART RX interrupt. A
++      corresponding interrupts-names property must be defined.
++    - For backward compatibility reasons, a single element interrupts
++      property is also supported for the standard variant of the IP,
++      containing only the UART sum interrupt. This form is deprecated
++      and should no longer be used.
+ 
+ Example:
+-	serial@12000 {
++	uart0: serial@12000 {
+ 		compatible = "marvell,armada-3700-uart";
+ 		reg = <0x12000 0x200>;
+-		interrupts = <43>;
++		clocks = <&xtalclk>;
++		interrupts =
++		<GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++		<GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++		<GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "uart-sum", "uart-tx", "uart-rx";
++	};
++
++	uart1: serial@12200 {
++		compatible = "marvell,armada-3700-uart-ext";
++		reg = <0x12200 0x30>;
++		clocks = <&xtalclk>;
++		interrupts =
++		<GIC_SPI 30 IRQ_TYPE_EDGE_RISING>,
++		<GIC_SPI 31 IRQ_TYPE_EDGE_RISING>;
++		interrupt-names = "uart-tx", "uart-rx";
+ 	};
 -- 
-Cordially
-Philippe Ombredanne
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
