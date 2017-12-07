@@ -1,43 +1,41 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v4 11/15] ARM: dts: sun8i: a83t: Enable the PWM
-Date: Thu,  7 Dec 2017 16:58:56 +0100
-Message-ID: <0ba30615a45a4dbbde0403b19ec3dd70ee7a8f4b.1512662253.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 13/15] ARM: dts: sun8i: a83t: Add the PWM pin group
+Date: Thu,  7 Dec 2017 16:58:58 +0100
+Message-ID: <b58547cd03f88c65162f362361023b44a4b6fc89.1512662253.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 In-Reply-To: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, devicetree@vger.kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEE4M1QgaGFzIHRoZSBzYW1lIFBXTSBibG9jayB0aGFuIHRoZSBIMy4gQWRkIGl0IHRvIG91
-ciBEVC4KClJldmlld2VkLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+ClNpZ25lZC1v
-ZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgot
-LS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaSB8ICA5ICsrKysrKysrKwogMSBm
-aWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjhpLWE4M3QuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaQpp
-bmRleCBlNGRiMzhjNzE3ZDkuLjdhNDliOWYwODVlYiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9v
-dC9kdHMvc3VuOGktYTgzdC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3Qu
-ZHRzaQpAQCAtNDk3LDYgKzQ5NywxNSBAQAogCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJfTsK
-IAorCQlwd206IHB3bUAxYzIxNDAwIHsKKwkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjhp
-LWE4M3QtcHdtIiwKKwkJCQkgICAgICJhbGx3aW5uZXIsc3VuOGktaDMtcHdtIjsKKwkJCXJlZyA9
-IDwweDAxYzIxNDAwIDB4NDAwPjsKKwkJCWNsb2NrcyA9IDwmb3NjMjRNPjsKKwkJCSNwd20tY2Vs
-bHMgPSA8Mz47CisJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOworCQl9OworCiAJCXVhcnQwOiBzZXJp
-YWxAMWMyODAwMCB7CiAJCQljb21wYXRpYmxlID0gInNucHMsZHctYXBiLXVhcnQiOwogCQkJcmVn
-ID0gPDB4MDFjMjgwMDAgMHg0MDA+OwotLSAKZ2l0LXNlcmllcyAwLjkuMQpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+The A83T has a PWM that can be output from the SoC. Let's add a pinctrl
+group for it.
+
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index e200df5a9058..a37517d4472a 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -446,6 +446,11 @@
+ 				bias-pull-up;
+ 			};
+ 
++			pwm_pin: pwm-pin {
++				pins = "PD28";
++				function = "pwm";
++			};
++
+ 			spdif_tx_pin: spdif-tx-pin {
+ 				pins = "PE18";
+ 				function = "spdif";
+-- 
+git-series 0.9.1
