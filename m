@@ -1,32 +1,34 @@
 From: Georgi Djakov <georgi.djakov@linaro.org>
 Subject: Re: [PATCH v11 0/6] Add support for Qualcomm A53 CPU clock
-Date: Thu, 7 Dec 2017 18:00:37 +0200
-Message-ID: <176b5b3a-d1da-247a-1a90-acf7624df460@linaro.org>
+Date: Thu, 7 Dec 2017 18:02:36 +0200
+Message-ID: <0b365abd-1683-6fcd-b013-7b517c2b9283@linaro.org>
 References: <20171205154701.27730-1-georgi.djakov@linaro.org>
- <CAHLCerMok=-0hFLm27_VzSWzC7nArmTz+shQH05DAuBr3An9qw@mail.gmail.com>
+ <20171206210847.mhrsxgytl4ihwgyq@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAHLCerMok=-0hFLm27_VzSWzC7nArmTz+shQH05DAuBr3An9qw@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171206210847.mhrsxgytl4ihwgyq@rob-hp-laptop>
 Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@verdurent.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Amit,
-
-On 12/06/2017 07:51 AM, Amit Kucheria wrote:
-> On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+On 12/06/2017 11:08 PM, Rob Herring wrote:
+> On Tue, Dec 05, 2017 at 05:46:55PM +0200, Georgi Djakov wrote:
 >> This patchset adds support for the A53 CPU clock on MSM8916 platforms
 >> and allows scaling of the CPU frequency on msm8916 based platforms.
+>>
+>> Changes since v10 (https://lkml.org/lkml/2017/12/1/577)
+>> * Addressed Bjorn's comments on APCS clock driver.
+>> * Picked Acks from Rob and Bjorn.
 > 
-> Though it currently needs some additional patches (that'll follow
-> soon), FWIW, Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Errr, really?
 
-Thanks for testing! I will submit the platform specific dts changes as
-separate follow-up patches when this is merged.
+Oops sorry, it was a Reviewed-by for the mailbox binding change and not
+an Ack. Thank you for reviewing the constantly changing binding in this
+patchset. I hope that it will not change anymore.
 
 BR,
 Georgi
