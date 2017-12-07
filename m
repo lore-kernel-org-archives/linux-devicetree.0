@@ -1,40 +1,60 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH V7 02/12] clk: sprd: Add common infrastructure
-Date: Thu, 7 Dec 2017 14:25:04 +0100
-Message-ID: <CAOFm3uEuftL5HuRvg+huPkLHEYUAVQzkGfZD0Ksd00Z+e41P=Q@mail.gmail.com>
-References: <20171207125715.16160-1-chunyan.zhang@spreadtrum.com> <20171207125715.16160-3-chunyan.zhang@spreadtrum.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: allwinner: a64: orangepi-zero-plus2:
+ add usb otg
+Date: Thu, 7 Dec 2017 14:34:09 +0100
+Message-ID: <20171207133409.cpp7wxx4yflkgavp@flea.lan>
+References: <1512644748-14491-1-git-send-email-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171207125715.16160-3-chunyan.zhang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="cgqjnyc3phbbrm7n"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBU4GUXIQKGQEW5IVMQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1512644748-14491-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Chunyan,
 
-On Thu, Dec 7, 2017 at 1:57 PM, Chunyan Zhang
-<chunyan.zhang@spreadtrum.com> wrote:
-> Added Spreadtrum's clock driver framework together with common
-> structures and interface functions.
->
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+--cgqjnyc3phbbrm7n
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-> --- /dev/null
-> +++ b/drivers/clk/sprd/common.c
-> @@ -0,0 +1,96 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Spreadtrum clock infrastructure
-> +//
-> +// Copyright (C) 2017 Spreadtrum, Inc.
-> +// Author: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Hi,
 
-Thank you++ for using SPDX ids!
+On Thu, Dec 07, 2017 at 04:35:48PM +0530, Jagan Teki wrote:
+> Add usb otg support for orangepi-zero-plus2 board:
+> - Add usb_otg node with dr_mode as 'otg'
+> - USB0-IDDET connected to PA21
+> - VBUS connected through DCIN which always on
+> 
+> Tested mass storage function.
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Acked-by:  Philippe Ombredanne <pombredanne@nexb.com>
+Did you test the OTG or peripheral modes?
+
+> Note: Anyone please check vbus connection [1]
+> Since it is connected through DCIN of vcc-5v, I've added vcc-5v0
+> regulator for the same and attached to usb0_vbus-supply but it is
+> disabling during kernel boot.
+> [    1.887854] vcc5v0: disabling
+
+VBUS is the power line that is provided on the USB connector. In
+peripheral, that power is provided by the host, therefore it needs to
+be shutdown on the peripheral end. This is the expected behaviour.
+
+Maxime
 
 -- 
-Cordially
-Philippe Ombredanne
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--cgqjnyc3phbbrm7n--
