@@ -1,327 +1,121 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 18/20] ARM: dts: am43xx: add clkctrl nodes
-Date: Thu, 7 Dec 2017 10:46:51 +0200
-Message-ID: <1512636413-25243-19-git-send-email-t-kristo@ti.com>
-References: <1512636413-25243-1-git-send-email-t-kristo@ti.com>
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/8] mfd: axp20x: probe axp20x_adc driver
+ for AXP813
+Date: Thu, 7 Dec 2017 09:51:29 +0100
+Message-ID: <2021a653-d01e-f46f-2438-0760f579e0dc@free-electrons.com>
+References: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz@free-electrons.com>
+ <302c93023d8c4a54cafe321d912df484e39727b7.1512396054.git-series.quentin.schulz@free-electrons.com>
+ <20171205080855.arr7vlgnxoxmyedd@flea.lan>
+Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512636413-25243-1-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="CKe7BMNQHPDOaBDUGGk5sXG7SusBOD6rT"
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBIECUTIQKGQE74SGDAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171205080855.arr7vlgnxoxmyedd-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add clkctrl nodes for AM43xx SoC. These are going to be acting as
-replacement for part of the existing clock data and the existing
-clkctrl hooks under hwmod data.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--CKe7BMNQHPDOaBDUGGk5sXG7SusBOD6rT
+Content-Type: multipart/mixed; boundary="L8Vm8d4SIciBN1MfClM1D85tcCuLeDfav";
+ protected-headers="v1"
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org,
+ linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org,
+ knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org,
+ linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
+ linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org,
+ thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Message-ID: <2021a653-d01e-f46f-2438-0760f579e0dc-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/8] mfd: axp20x: probe axp20x_adc driver for AXP813
+References: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+ <302c93023d8c4a54cafe321d912df484e39727b7.1512396054.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+ <20171205080855.arr7vlgnxoxmyedd-ZC1Zs529Oq4@public.gmane.org>
+In-Reply-To: <20171205080855.arr7vlgnxoxmyedd-ZC1Zs529Oq4@public.gmane.org>
 
-This patch also removes any obsolete clock nodes, and reroutes all users
-for these to use the new clkctrl clocks instead.
+--L8Vm8d4SIciBN1MfClM1D85tcCuLeDfav
+Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
 
-Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am4372.dtsi        |   4 +-
- arch/arm/boot/dts/am43x-epos-evm.dts |   2 +-
- arch/arm/boot/dts/am43xx-clocks.dtsi | 230 +++++++++++------------------------
- 3 files changed, 73 insertions(+), 163 deletions(-)
+Hi Maxime,
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index bf4e58e..e9777df 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -998,7 +998,7 @@
- 				reg = <0x483a8000 0x8000>;
- 				syscon-phy-power = <&scm_conf 0x620>;
- 				clocks = <&usb_phy0_always_on_clk32k>,
--					 <&usb_otg_ss0_refclk960m>;
-+					 <&l4_per_clkctrl 0x240 8>;
- 				clock-names = "wkupclk", "refclk";
- 				#phy-cells = <0>;
- 				status = "disabled";
-@@ -1017,7 +1017,7 @@
- 				reg = <0x483e8000 0x8000>;
- 				syscon-phy-power = <&scm_conf 0x628>;
- 				clocks = <&usb_phy1_always_on_clk32k>,
--					 <&usb_otg_ss1_refclk960m>;
-+					 <&l4_per_clkctrl 0x248 8>;
- 				clock-names = "wkupclk", "refclk";
- 				#phy-cells = <0>;
- 				status = "disabled";
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index a04d79e..d3363fb 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -985,7 +985,7 @@
- 	rx-num-evt = <32>;
- };
- 
--&synctimer_32kclk {
-+&mux_synctimer32k_ck {
- 	assigned-clocks = <&mux_synctimer32k_ck>;
- 	assigned-clock-parents = <&clkdiv32k_ick>;
- };
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 430be58..a7037a4 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -524,54 +524,6 @@
- 		reg = <0x4240>;
- 	};
- 
--	gpio0_dbclk: gpio0_dbclk@2b68 {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&gpio0_dbclk_mux_ck>;
--		ti,bit-shift = <8>;
--		reg = <0x2b68>;
--	};
--
--	gpio1_dbclk: gpio1_dbclk@8c78 {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&clkdiv32k_ick>;
--		ti,bit-shift = <8>;
--		reg = <0x8c78>;
--	};
--
--	gpio2_dbclk: gpio2_dbclk@8c80 {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&clkdiv32k_ick>;
--		ti,bit-shift = <8>;
--		reg = <0x8c80>;
--	};
--
--	gpio3_dbclk: gpio3_dbclk@8c88 {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&clkdiv32k_ick>;
--		ti,bit-shift = <8>;
--		reg = <0x8c88>;
--	};
--
--	gpio4_dbclk: gpio4_dbclk@8c90 {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&clkdiv32k_ick>;
--		ti,bit-shift = <8>;
--		reg = <0x8c90>;
--	};
--
--	gpio5_dbclk: gpio5_dbclk@8c98 {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&clkdiv32k_ick>;
--		ti,bit-shift = <8>;
--		reg = <0x8c98>;
--	};
--
- 	mmc_clk: mmc_clk {
- 		#clock-cells = <0>;
- 		compatible = "fixed-factor-clock";
-@@ -629,14 +581,6 @@
- 		reg = <0x4230>;
- 	};
- 
--	synctimer_32kclk: synctimer_32kclk@2a30 {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&mux_synctimer32k_ck>;
--		ti,bit-shift = <8>;
--		reg = <0x2a30>;
--	};
--
- 	timer8_fck: timer8_fck@421c {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
-@@ -763,110 +707,76 @@
- 		ti,bit-shift = <8>;
- 		reg = <0x2a48>;
- 	};
-+};
- 
--	usb_otg_ss0_refclk960m: usb_otg_ss0_refclk960m@8a60 {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&dpll_per_clkdcoldo>;
--		ti,bit-shift = <8>;
--		reg = <0x8a60>;
--	};
--
--	usb_otg_ss1_refclk960m: usb_otg_ss1_refclk960m@8a68 {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&dpll_per_clkdcoldo>;
--		ti,bit-shift = <8>;
--		reg = <0x8a68>;
--	};
--
--	clkout1_osc_div_ck: clkout1_osc_div_ck {
--		#clock-cells = <0>;
--		compatible = "ti,divider-clock";
--		clocks = <&sys_clkin_ck>;
--		ti,bit-shift = <20>;
--		ti,max-div = <4>;
--		reg = <0x4100>;
--	};
--
--	clkout1_src2_mux_ck: clkout1_src2_mux_ck {
--		#clock-cells = <0>;
--		compatible = "ti,mux-clock";
--		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
--			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
--			 <&dpll_mpu_m2_ck>;
--		reg = <0x4100>;
--	};
--
--	clkout1_src2_pre_div_ck: clkout1_src2_pre_div_ck {
--		#clock-cells = <0>;
--		compatible = "ti,divider-clock";
--		clocks = <&clkout1_src2_mux_ck>;
--		ti,bit-shift = <4>;
--		ti,max-div = <8>;
--		reg = <0x4100>;
--	};
--
--	clkout1_src2_post_div_ck: clkout1_src2_post_div_ck {
--		#clock-cells = <0>;
--		compatible = "ti,divider-clock";
--		clocks = <&clkout1_src2_pre_div_ck>;
--		ti,bit-shift = <8>;
--		ti,max-div = <32>;
--		ti,index-power-of-two;
--		reg = <0x4100>;
--	};
--
--	clkout1_mux_ck: clkout1_mux_ck {
--		#clock-cells = <0>;
--		compatible = "ti,mux-clock";
--		clocks = <&clkout1_osc_div_ck>, <&clk_rc32k_ck>,
--			 <&clkout1_src2_post_div_ck>, <&dpll_extdev_m2_ck>;
--		ti,bit-shift = <16>;
--		reg = <0x4100>;
--	};
--
--	clkout1_ck: clkout1_ck {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&clkout1_mux_ck>;
--		ti,bit-shift = <23>;
--		reg = <0x4100>;
--	};
--
--	clkout2_src_mux_ck: clkout2_src_mux_ck {
--		#clock-cells = <0>;
--		compatible = "ti,mux-clock";
--		clocks = <&clk_rc32k_ck>, <&sysclk_div>, <&dpll_ddr_m2_ck>,
--			 <&dpll_per_m2_ck>, <&dpll_disp_m2_ck>,
--			 <&dpll_mpu_m2_ck>, <&dpll_extdev_ck>;
--		reg = <0x4108>;
--	};
--
--	clkout2_pre_div_ck: clkout2_pre_div_ck {
--		#clock-cells = <0>;
--		compatible = "ti,divider-clock";
--		clocks = <&clkout2_src_mux_ck>;
--		ti,bit-shift = <4>;
--		ti,max-div = <8>;
--		reg = <0x4108>;
--	};
--
--	clkout2_post_div_ck: clkout2_post_div_ck {
--		#clock-cells = <0>;
--		compatible = "ti,divider-clock";
--		clocks = <&clkout2_pre_div_ck>;
--		ti,bit-shift = <8>;
--		ti,max-div = <32>;
--		ti,index-power-of-two;
--		reg = <0x4108>;
--	};
--
--	clkout2_ck: clkout2_ck {
--		#clock-cells = <0>;
--		compatible = "ti,gate-clock";
--		clocks = <&clkout2_post_div_ck>;
--		ti,bit-shift = <16>;
--		reg = <0x4108>;
-+&prcm {
-+	l4_wkup_cm: l4_wkup_cm@2800 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x2800 0x400>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x2800 0x400>;
-+
-+		l4_wkup_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x34c>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	mpu_cm: mpu_cm@8300 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x8300 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x8300 0x100>;
-+
-+		mpu_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	gfx_l3_cm: gfx_l3_cm@8400 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x8400 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x8400 0x100>;
-+
-+		gfx_l3_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l4_rtc_cm: l4_rtc_cm@8500 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x8500 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x8500 0x100>;
-+
-+		l4_rtc_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0x4>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
-+	l4_per_cm: l4_per_cm@8800 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x8800 0xc00>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x8800 0xc00>;
-+
-+		l4_per_clkctrl: clk@20 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x20 0xb04>;
-+			#clock-cells = <2>;
-+		};
- 	};
- };
+On 05/12/2017 09:08, Maxime Ripard wrote:
+> On Mon, Dec 04, 2017 at 03:12:49PM +0100, Quentin Schulz wrote:
+>> This makes the axp20x_adc driver probe with platform device id
+>> "axp813-adc".
+>>
+>> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  drivers/mfd/axp20x.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>> index 2468b43..42e54d1 100644
+>> --- a/drivers/mfd/axp20x.c
+>> +++ b/drivers/mfd/axp20x.c
+>> @@ -878,7 +878,9 @@ static struct mfd_cell axp813_cells[] = {
+>>  		.resources		= axp803_pek_resources,
+>>  	}, {
+>>  		.name			= "axp20x-regulator",
+>> -	}
+>> +	}, {
+>> +		.name			= "axp813-adc",
+>> +	},
+> 
+> Any particular reason you're not adding it to the DT?
+> 
+
+No, no particular reason. It's just the way it is currently for AXP209
+and AXP22x so did the same for AXP813.
+
+I'll add DT "support" in next version for all AXPs supported by this
+driver. Or is it worthy of a small separate patch series?
+
+Thanks,
+Quentin
 -- 
-1.9.1
+Quentin Schulz, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--L8Vm8d4SIciBN1MfClM1D85tcCuLeDfav--
+
+--CKe7BMNQHPDOaBDUGGk5sXG7SusBOD6rT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJaKQEfAAoJEIS4mnU+4PGjl7wQAKV051f4Ogq8VT/6GjoD0HTq
+6BVWQ6noHHW+mGZJBdQ8bSsa+oLjA/UbOPraZUdUn6tiiNWVsuGji3N0LpJPnlQC
+8pIGLrC3A4arFGlHEgZCPTdvvwnKcE2lu9RxWbY38GHAvWIcZyOK7G5s2KUOlmpC
+6TecdVq6JjSIETVch5syOYA9/x5WfS1tiquOGDbCOJs3+SlUe/WVLnm7QZ6zJVcs
+8OFl2cjJFOaArVCwRih2sECMRGbn9Y7h/wdXkTcW4obmtkzV84xjx5pKrWcoof2l
+X+Uv0jVgZhlto1FhrUfajwE/Xj90r4vchfJJFjUF/FWVIJ09REqlkIxLhnjlf7iI
+otyPRi3RGtR3CO0A1LwKmR8+IlIgq214c/foBhMcLOyDAneHdW7DdWyWOfba7aqt
+vUXOvETU9isCdCV6d8FvydqHpdJqpXnJhjX9YeYU8f+2hYginFdd7maN1UVZb03K
+eaiFbYD3zbvguSCVVlHbvhfy84Uvo0qyVN/fDwH8vGNXjhFYwDKw0AA4BqJWiWOM
+OE3req92nrSeEZYUakoW0kwdVjbRd2UdC7BEiPH4SOw4ZhZiUv6lxdT6nNoO+xWA
+Z8T4WtrSPnK74tAEIZoTzhGncK3kAMESyouh/lpPkCpghPu9HHGx8351zLmynkNc
+6WYdwKKAF5oLo6OZEhd1
+=bEdh
+-----END PGP SIGNATURE-----
+
+--CKe7BMNQHPDOaBDUGGk5sXG7SusBOD6rT--
