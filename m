@@ -1,47 +1,76 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v3 08/15] drm/sun4i: Add LVDS support
-Date: Thu, 7 Dec 2017 11:14:27 +0100
-Message-ID: <CAOFm3uEpnBFUDBHK+SqQ-pGUPcWbGXNrWum4HRJ34tMtoX-2Qw@mail.gmail.com>
-References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
- <b900e5963180c94ca02bde178b6674622a127787.1512486553.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b900e5963180c94ca02bde178b6674622a127787.1512486553.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, plaes@plaes.org, Icenowy Zheng <icenowy@aosc.io>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH 2/2] ARM: dts: r8a7743: move timer node out of bus
+Date: Thu,  7 Dec 2017 11:19:23 +0100
+Message-ID: <20171207101923.19846-3-horms+renesas@verge.net.au>
+References: <20171207101923.19846-1-horms+renesas@verge.net.au>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171207101923.19846-1-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 5, 2017 at 4:10 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> The TCON supports the LVDS interface to output to a panel or a bridge.
-> Let's add support for it.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-[]
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sun4i/sun4i_lvds.c
-> @@ -0,0 +1,183 @@
-> +/*
-> + * Copyright (C) 2015 NextThing Co
-> + * Copyright (C) 2015-2017 Free Electrons
-> + *
-> + * Maxime Ripard <maxime.ripard@free-electrons.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + */
+The timer node does not have any register properties and thus shouldn't be
+placed on the bus.
 
-Maxime,
+This problem is flagged by the compiler as follows:
+$ make
+  DTC     arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dtb
+arch/arm/boot/dts/r8a7743-iwg20d-q7.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+  DTC     arch/arm/boot/dts/r8a7743-sk-rzg1m.dtb
+arch/arm/boot/dts/r8a7743-sk-rzg1m.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
 
-Would you consider using the new SPDX ids instead of this fine legalese?
-e.g. this as the top line:
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ arch/arm/boot/dts/r8a7743.dtsi | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-// SPDX-License-Identifier: GPL-2.0+
-
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index 2fe852bb10cd..f1c77f0b5e69 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -281,18 +281,6 @@
+ 			resets = <&cpg 407>;
+ 		};
+ 
+-		timer {
+-			compatible = "arm,armv7-timer";
+-			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
+-						  IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
+-						  IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
+-						  IRQ_TYPE_LEVEL_LOW)>,
+-				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
+-						  IRQ_TYPE_LEVEL_LOW)>;
+-		};
+-
+ 		cpg: clock-controller@e6150000 {
+ 			compatible = "renesas,r8a7743-cpg-mssr";
+ 			reg = <0 0xe6150000 0 0x1000>;
+@@ -1261,6 +1249,22 @@
+ 		};
+ 	};
+ 
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts-extended = <&gic GIC_PPI 13
++				       (GIC_CPU_MASK_SIMPLE(2) |
++				        IRQ_TYPE_LEVEL_LOW)>,
++				      <&gic GIC_PPI 14
++				       (GIC_CPU_MASK_SIMPLE(2) |
++				        IRQ_TYPE_LEVEL_LOW)>,
++				      <&gic GIC_PPI 11
++				       (GIC_CPU_MASK_SIMPLE(2) |
++				        IRQ_TYPE_LEVEL_LOW)>,
++				      <&gic GIC_PPI 10
++				       (GIC_CPU_MASK_SIMPLE(2) |
++				        IRQ_TYPE_LEVEL_LOW)>;
++	};
++
+ 	/* External USB clock - can be overridden by the board */
+ 	usb_extal_clk: usb_extal {
+ 		compatible = "fixed-clock";
 -- 
-Cordially
-Philippe Ombredanne
+2.11.0
