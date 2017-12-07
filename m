@@ -1,101 +1,56 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 03/17] mfd: madera: Add common support for Cirrus Logic
- Madera codecs
-Date: Thu, 7 Dec 2017 09:54:06 +0100
-Message-ID: <CACRpkdb_i4k3F0fmDbQciPYTBUCcfpFkqM=5e3gr75-X51TTkg@mail.gmail.com>
-References: <20171123171316.10868-1-rf@opensource.wolfsonmicro.com>
- <fe8064a5-8692-46c1-9f53-ab0a429baeeb@EX17.ad.cirrus.com> <CACRpkdaxKjPd_k8tuO3R4+5LFT4_37zn6ruDRPd5j9xNAH4+Dw@mail.gmail.com>
- <1eff5a38-cff3-449b-bda4-047f50a9f1d4@EX17.ad.cirrus.com> <CACRpkdZ4QuOhk1LuGftcFozUKdZ4vFAO3omkQ004k39J=jKL7g@mail.gmail.com>
- <ce3772d8-3ae7-474f-b9c2-8008bb39fd0b@EX17.ad.cirrus.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 3/8] mfd: axp20x: probe axp20x_adc driver for AXP813
+Date: Thu, 7 Dec 2017 16:54:18 +0800
+Message-ID: <CAGb2v67nD+WAEEyridP1K=k_KgBprWmbNNL7FPdZWv9ZYdrjJg@mail.gmail.com>
+References: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz@free-electrons.com>
+ <302c93023d8c4a54cafe321d912df484e39727b7.1512396054.git-series.quentin.schulz@free-electrons.com>
+ <20171205080855.arr7vlgnxoxmyedd@flea.lan> <2021a653-d01e-f46f-2438-0760f579e0dc@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ce3772d8-3ae7-474f-b9c2-8008bb39fd0b-MRjWshV2NDGMZzV0eMwobdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nikesh Oswal <Nikesh.Oswal-UVNVL95qEvAciDkP5Hr2oA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2021a653-d01e-f46f-2438-0760f579e0dc-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 4, 2017 at 10:47 AM, Richard Fitzgerald
-<rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> On 02/12/17 12:10, Linus Walleij wrote:
->> On Wed, Nov 29, 2017 at 12:36 PM, Richard Fitzgerald
->> <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
->>> On 29/11/17 10:18, Linus Walleij wrote:
->>>> On Thu, Nov 23, 2017 at 6:13 PM, Richard Fitzgerald
->>>> <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
->>>>
->>>>> +config MFD_MADERA_I2C
->>>>> +       bool "Cirrus Logic Madera codecs with I2C"
->>>>> +       select MFD_MADERA
->>>>> +       select REGMAP_I2C
->>>>> +       depends on I2C
->>>>> +       depends on PINCTRL
->>>>> +       help
->>>>> +         Support for the Cirrus Logic Madera platform audio SoC
->>>>> +         core functionality controlled via I2C.
->>>>> +
->>>>> +config MFD_MADERA_SPI
->>>>> +       bool "Cirrus Logic Madera codecs with SPI"
->>>>> +       select MFD_MADERA
->>>>> +       select REGMAP_SPI
->>>>> +       depends on SPI_MASTER
->>>>> +       depends on PINCTRL
->>>>> +       help
->>>>> +         Support for the Cirrus Logic Madera platform audio SoC
->>>>> +         core functionality controlled via SPI.
->>>>
->>>>
->>>>
->>>> Why do the I2C and SPI subdrivers depend on PINCTRL?
->>>>
->>>> They sure don't seem to be using any pinctrl-specific APIs.
->>>>
+On Thu, Dec 7, 2017 at 4:51 PM, Quentin Schulz
+<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Maxime,
+>
+> On 05/12/2017 09:08, Maxime Ripard wrote:
+>> On Mon, Dec 04, 2017 at 03:12:49PM +0100, Quentin Schulz wrote:
+>>> This makes the axp20x_adc driver probe with platform device id
+>>> "axp813-adc".
 >>>
->>> They require PINCTRL even if they don't call any functions on it because
->>> the
->>> chip won't work correctly if there isn't a PINCTRL driver to apply the
->>> correct pinmux configuration.
+>>> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>>  drivers/mfd/axp20x.c | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>>> index 2468b43..42e54d1 100644
+>>> --- a/drivers/mfd/axp20x.c
+>>> +++ b/drivers/mfd/axp20x.c
+>>> @@ -878,7 +878,9 @@ static struct mfd_cell axp813_cells[] = {
+>>>              .resources              = axp803_pek_resources,
+>>>      }, {
+>>>              .name                   = "axp20x-regulator",
+>>> -    }
+>>> +    }, {
+>>> +            .name                   = "axp813-adc",
+>>> +    },
 >>
+>> Any particular reason you're not adding it to the DT?
 >>
->> Apply the configuration to what? Sorry I don't get it.
->>
->> You can't be referring to the internal pin controller of the Madera, since
 >
-> Yes I am
-
-You are saying that the I2C and SPI interface to the Madera codec
-depends on pin control.
-
-It does not.
-
-You can most certainly talk I2C and SPI to the coded without any
-pin control. Probably the MFD driver can come up without it.
-
-If what you want is unconditional pin control enabled for this circuit,
-then have MFD_MADERA select PINCTRL.
-
->> that has to come up before its pin controller can even be communicated
->> with.
+> No, no particular reason. It's just the way it is currently for AXP209
+> and AXP22x so did the same for AXP813.
 >
->
-> So?
->
-> The MFD driver powers up the chip before registering child drivers.
+> I'll add DT "support" in next version for all AXPs supported by this
+> driver. Or is it worthy of a small separate patch series?
 
-Including the pin controller. You just confirmed what I said: the
-I2C and SPI interfaces do not require pin control to talk to the
-chip.
+IIRC there's no DT support because there's no need to reference
+it in the device tree.
 
-> Also that's not entirely relevant, the pinctrl settings can still be written
-> with the chip off because they will go into the regmap cache and be applied
-> when the chip is next resumed.
-
-You still have the dependencies wrong.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
