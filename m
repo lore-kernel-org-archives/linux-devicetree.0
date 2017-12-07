@@ -1,123 +1,151 @@
-From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 12/12] ARM64: dts: marvell: use reworked NAND controller driver on Armada 8K
-Date: Thu,  7 Dec 2017 21:18:14 +0100
-Message-ID: <20171207201814.30411-13-miquel.raynal@free-electrons.com>
-References: <20171207201814.30411-1-miquel.raynal@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171207201814.30411-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ofer Heifetz <oferh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v8 4/6] clocksource: stm32: only use 32 bits timers
+Date: Thu, 7 Dec 2017 21:36:09 +0100
+Message-ID: <CA+M3ks4KLy0VkJOSGR7tmefOT1rw9nrMsRQvwwK-YZQ7Gm7hQA@mail.gmail.com>
+References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1510649563-22975-5-git-send-email-benjamin.gaignard@linaro.org>
+ <44bb54e6-c9e8-4b54-d490-a1800bf6d74c@linaro.org> <CA+M3ks5Q_ZUHODV=eA4caT9NdrxKw1qiaWwc87w9FiC_uqwfBQ@mail.gmail.com>
+ <2afa343b-3a23-3352-33b3-2133678a4122@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2afa343b-3a23-3352-33b3-2133678a4122@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thomas Gleixner <tglx@linutronix.de>, Ludovic Barre <ludovic.barre@st.com>, Julien Thierry <julien.thierry@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the new bindings of the reworked Marvell NAND controller driver.
-Also adapt the nand controller node organization to distinguish which
-property is relevant for the controller, and which one is NAND chip
-specific. Expose the partitions as a subnode of the NAND chip.
+2017-12-07 17:49 GMT+01:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+> On 07/12/2017 17:33, Benjamin Gaignard wrote:
+>> 2017-12-07 16:27 GMT+01:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>>> On 14/11/2017 09:52, Benjamin Gaignard wrote:
+>>>> The clock driving counters is at 90MHz so the maximum period
+>>>> for 16 bis counters is around 750 ms which is a short period
+>>>> for a clocksource.
+>>>
+>>> Isn't it 728us ?
+>>
+>> yes it is: 2^16 / 90.000.000 =3D> 728us
+>
+> Ok, now I can do the connection with the previous patch.
+>
+> So, the real issue of all this is the 16bits clocksource is wrapping up
+> every 728us, hence the clockevent periodically expires every ~728us to
+> keep the timekeeping consistent. Unfortunately, the kernel has a too
+> high overhead for this as the system is consistently processing this
+> timer leading to a CPU time resource starvation.
+>
+> Is that correct ?
 
-Remove the 'marvell,nand-enable-arbiter' property, not needed anymore as
-the driver activates the arbiter by default for all boards (either
-needed or harmless).
+Yes that is correct
 
-Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/marvell/armada-8040-db.dts     | 46 +++++++++++++---------
- .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi | 10 ++---
- 2 files changed, 32 insertions(+), 24 deletions(-)
+>
+>
+>>>> For 32 bits counters this period is close
+>>>> 47 secondes which is more acceptable.
+>>>>
+>>>> This patch remove 16 bits counters support and makes sure that
+>>>> they won't be probed anymore.
+>>>>
+>>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+>>>> ---
+>>>>  drivers/clocksource/timer-stm32.c | 26 ++++++++++++--------------
+>>>>  1 file changed, 12 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/t=
+imer-stm32.c
+>>>> index ae41a19..8173bcf 100644
+>>>> --- a/drivers/clocksource/timer-stm32.c
+>>>> +++ b/drivers/clocksource/timer-stm32.c
+>>>> @@ -83,9 +83,9 @@ static irqreturn_t stm32_clock_event_handler(int irq=
+, void *dev_id)
+>>>>  static int __init stm32_clockevent_init(struct device_node *node)
+>>>>  {
+>>>>       struct reset_control *rstc;
+>>>> -     unsigned long max_delta;
+>>>> -     int ret, bits, prescaler =3D 1;
+>>>> +     unsigned long max_arr;
+>>>>       struct timer_of *to;
+>>>> +     int ret;
+>>>>
+>>>>       to =3D kzalloc(sizeof(*to), GFP_KERNEL);
+>>>>       if (!to)
+>>>> @@ -115,29 +115,27 @@ static int __init stm32_clockevent_init(struct d=
+evice_node *node)
+>>>>
+>>>>       /* Detect whether the timer is 16 or 32 bits */
+>>>>       writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
+>>>> -     max_delta =3D readl_relaxed(timer_of_base(to) + TIM_ARR);
+>>>> -     if (max_delta =3D=3D ~0U) {
+>>>> -             prescaler =3D 1;
+>>>> -             bits =3D 32;
+>>>> -     } else {
+>>>> -             prescaler =3D 1024;
+>>>> -             bits =3D 16;
+>>>> +     max_arr =3D readl_relaxed(timer_of_base(to) + TIM_ARR);
+>>>> +     if (max_arr !=3D ~0U) {
+>>>> +             pr_err("32 bits timer is needed\n");
+>>>> +             ret =3D -EINVAL;
+>>>> +             goto deinit;
+>>>>       }
+>>>> +
+>>>>       writel_relaxed(0, timer_of_base(to) + TIM_ARR);
+>>>>
+>>>> -     writel_relaxed(prescaler - 1, timer_of_base(to) + TIM_PSC);
+>>>> +     writel_relaxed(0, timer_of_base(to) + TIM_PSC);
+>>>>       writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
+>>>>       writel_relaxed(TIM_DIER_UIE, timer_of_base(to) + TIM_DIER);
+>>>>       writel_relaxed(0, timer_of_base(to) + TIM_SR);
+>>>>
+>>>>       clockevents_config_and_register(&to->clkevt,
+>>>> -                                     timer_of_period(to), MIN_DELTA, =
+max_delta);
+>>>> -
+>>>> -     pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
+>>>> -                     node, bits);
+>>>> +                                     timer_of_period(to), MIN_DELTA, =
+~0U);
+>>>>
+>>>>       return 0;
+>>>>
+>>>> +deinit:
+>>>> +     timer_of_exit(to);
+>>>>  err:
+>>>>       kfree(to);
+>>>>       return ret;
+>>>>
+>>>
+>>>
+>>> --
+>>>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for=
+ ARM SoCs
+>>>
+>>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>>> <http://twitter.com/#!/linaroorg> Twitter |
+>>> <http://www.linaro.org/linaro-blog/> Blog
+>>>
+>>
+>>
+>>
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-index b1f6cccc5081..c25ac3fa9aec 100644
---- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
-@@ -272,27 +272,35 @@
-  * Proper NAND usage will require DPR-76 to be in position 1-2, which disables
-  * MDIO signal of CP1.
-  */
--&cps_nand {
--	num-cs = <1>;
-+&cps_nand_controller {
- 	pinctrl-0 = <&nand_pins>, <&nand_rb>;
- 	pinctrl-names = "default";
--	nand-ecc-strength = <4>;
--	nand-ecc-step-size = <512>;
--	marvell,nand-enable-arbiter;
--	marvell,system-controller = <&cps_syscon0>;
--	nand-on-flash-bbt;
--
--	partition@0 {
--		label = "U-Boot";
--		reg = <0 0x200000>;
--	};
--	partition@200000 {
--		label = "Linux";
--		reg = <0x200000 0xe00000>;
--	};
--	partition@1000000 {
--		label = "Filesystem";
--		reg = <0x1000000 0x3f000000>;
-+
-+	nand@0 {
-+		reg = <0>;
-+		marvell,rb = <0>;
-+		nand-on-flash-bbt;
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "U-Boot";
-+				reg = <0 0x200000>;
-+			};
-+			partition@200000 {
-+				label = "Linux";
-+				reg = <0x200000 0xe00000>;
-+			};
-+			partition@1000000 {
-+				label = "Filesystem";
-+				reg = <0x1000000 0x3f000000>;
-+			};
-+		};
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-index cb1fb49ccf81..8610163bb1a4 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-@@ -310,20 +310,20 @@
- 				status = "disabled";
- 			};
- 
--			cps_nand: nand@720000 {
-+			cps_nand_controller: nand@720000 {
- 				/*
- 				 * Due to the limiation of the pin available
- 				 * this controller is only usable on the CPM
- 				 * for A7K and on the CPS for A8K.
- 				 */
--				compatible = "marvell,armada370-nand",
--					     "marvell,armada-8k-nand";
-+				compatible = "marvell,armada-8k-nand-controller",
-+					     "marvell,armada370-nand-controller";
- 				reg = <0x720000 0x54>;
- 				#address-cells = <1>;
--				#size-cells = <1>;
-+				#size-cells = <0>;
- 				interrupts = <ICU_GRP_NSR 115 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&cps_clk 1 2>;
--				marvell,system-controller = <&cpm_syscon0>;
-+				marvell,system-controller = <&cps_syscon0>;
- 				status = "disabled";
- 			};
- 
--- 
-2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--=20
+Benjamin Gaignard
+
+Graphic Study Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+Follow Linaro: Facebook | Twitter | Blog
