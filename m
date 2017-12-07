@@ -1,46 +1,96 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH V6 3/7] device property: Introduce a common API to fetch
- device match data
-Date: Thu, 7 Dec 2017 23:19:51 +0100
-Message-ID: <CAJZ5v0inHMCLGyPaAeuJNo2VH7f3Th0KdpT2UkPBCsvrSDi0gQ@mail.gmail.com>
-References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
- <1512493493-6464-4-git-send-email-okaya@codeaurora.org> <20171207124044.utyrn2mzzyml42b2@valkosipuli.retiisi.org.uk>
- <c2b38889-888a-3518-bf59-c2377f64a8ce@codeaurora.org> <20171207220642.qqiwf4vvk2gf42uf@valkosipuli.retiisi.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/6] dt: bindings: lp8860: Update bindings for lp8860
+Date: Thu, 7 Dec 2017 16:42:29 -0600
+Message-ID: <20171207224229.wd6nc4ukiksebxw4@rob-hp-laptop>
+References: <20171205204327.12111-1-dmurphy@ti.com>
+ <20171205204327.12111-2-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171207220642.qqiwf4vvk2gf42uf@valkosipuli.retiisi.org.uk>
+Content-Disposition: inline
+In-Reply-To: <20171205204327.12111-2-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Sinan Kaya <okaya@codeaurora.org>, dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, open list <linux-kernel@vger.kernel.org>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 7, 2017 at 11:06 PM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> On Thu, Dec 07, 2017 at 03:17:52PM -0500, Sinan Kaya wrote:
->> On 12/7/2017 7:40 AM, Sakari Ailus wrote:
->> > On Tue, Dec 05, 2017 at 12:04:48PM -0500, Sinan Kaya wrote:
->> >> @@ -101,6 +103,8 @@ struct fwnode_operations {
->> >>    (*graph_get_port_parent)(struct fwnode_handle *fwnode);
->> >>    int (*graph_parse_endpoint)(const struct fwnode_handle *fwnode,
->> >>                                struct fwnode_endpoint *endpoint);
->> >> +  void *(*get_match_data)(const struct fwnode_handle *fwnode,
->> >> +                          struct device *dev);
->> >
->> > You can make dev const, too.
->> >
->>
->> done, I couldn't change device_get_match_data() parameter const due to
->> dev_fwnode() function.
->>
->>                  from /local/mnt/workspace/projects/caf/kernel/drivers/base/property.c:13:
->>
->> /local/mnt/workspace/projects/caf/kernel/drivers/base/property.c:1341:39: warning: passing argument 1 of 'dev_fwnode' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
->>   return fwnode_call_ptr_op(dev_fwnode(dev), device_get_match_data,
->
-> Right. Makes sense.
->
-> I guess it's not perhaps worth it introducing dev_fwnode_const just for
-> this. devices are seldom if ever const anyway.
+gOn Tue, Dec 05, 2017 at 02:43:22PM -0600, Dan Murphy wrote:
+> Update the lp8860 bindings to fix various issues
+> found.  Add address-cells and size-cells, rename
+> enable-gpio to enable-gpios, update the node name
+> to the device name and indent the node example.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v2 - New patch
+> 
+>  .../devicetree/bindings/leds/leds-lp8860.txt       | 28 ++++++++++++----------
+>  1 file changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+> index aad38dd94d4b..1b2fab05ec6a 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+> +++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+> @@ -6,24 +6,28 @@ current sinks that can be controlled by a PWM input
+>  signal, a SPI/I2C master, or both.
+>  
+>  Required properties:
+> -	- compatible:
+> +	- compatible :
+>  		"ti,lp8860"
+> -	- reg -  I2C slave address
+> -	- label - Used for naming LEDs
+> +	- reg : I2C slave address
+> +	- label : Used for naming LEDs
+> +	- #address-cells : 1
+> +	- #size-cells : 0
+>  
+>  Optional properties:
+> -	- enable-gpio - gpio pin to enable/disable the device.
+> -	- supply - "vled" - LED supply
+> +	- enable-gpios : gpio pin to enable/disable the device.
 
-They cannot be const.  Had they been const, it wouldn't have been
-possible to register them even. :-)
+Needs to state active high or low.
+
+> +	- supply : "vled" - LED supply
+
+"vled-supply : ..."
+
+>  
+>  Example:
+>  
+> -leds: leds@6 {
+> -	compatible = "ti,lp8860";
+> -	reg = <0x2d>;
+> -	label = "display_cluster";
+> -	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> -	vled-supply = <&vbatt>;
+> -}
+> +	lp8860@2d {
+
+leds@2d
+
+There's not really any point in adding the indentation.
+
+> +		compatible = "ti,lp8860";
+
+> +		#address-cells: 1
+> +		#size-cells: 0
+
+s/:/=/
+
+Though, these aren't necessary without any child nodes. Is there more 
+than 1 LED channel/driver?
+
+> +		reg = <0x2d>;
+> +		label = "display_cluster";
+> +		enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> +		vled-supply = <&vbatt>;
+> +	}
+>  
+>  For more product information please see the link below:
+>  http://www.ti.com/product/lp8860-q1
+> -- 
+> 2.15.0.124.g7668cbc60
+> 
