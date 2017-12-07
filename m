@@ -1,53 +1,42 @@
-From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: [PATCH v2 03/10] arm64: dts: qcom: msm8916-pins: keep cdc_dmic pins
- in suspend mode
-Date: Thu,  7 Dec 2017 10:19:35 -0500
-Message-ID: <20171207151942.5805-4-damien.riegel@savoirfairelinux.com>
-References: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH V6 4/7] OF: properties: Implement get_match_data()
+ callback
+Date: Thu, 7 Dec 2017 16:20:36 +0100
+Message-ID: <20171207162036.6a71a4f5@karo-electronics.de>
+References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
+        <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
+        <20171207141029.575c0a03@karo-electronics.de>
+        <def8e351-bc2d-7adc-fdc5-362b365302a8@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Damien Riegel <damien.riegel@savoirfairelinux.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, kernel@savoirfairelinux.com, Andy Gross <andy.gross@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <def8e351-bc2d-7adc-fdc5-362b365302a8-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This node was the only one that didn't have the same set of pins in
-active and suspend mode.
+Hi,
 
-Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
----
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Thu, 7 Dec 2017 09:45:31 -0500 Sinan Kaya wrote:
+> On 12/7/2017 8:10 AM, Lothar Waßmann wrote:
+> >> +void *of_fwnode_get_match_data(const struct fwnode_handle *fwnode,
+> >> +			       struct device *dev)
+> > Shouldn't this be 'const void *of_fwnode_get_match_data
+> 
+> OF keeps the driver data as a (const void*) internally. ACPI keeps the
+> driver data as kernel_ulong_t in struct acpi_device_id.
+> 
+> I tried to find the middle ground here by converting output to void*
+> but not keeping const.
+> 
+It should be no problem to cast a (const void *) to an unsigned long
+data type (without const qualifier).
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index c67ad8ed8b60..10fc1fc90682 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -687,6 +687,14 @@
- 			};
- 		};
- 		cdc_dmic_lines_sus: dmic_lines_off {
-+			pinmux_dmic0_clk {
-+				function = "dmic0_clk";
-+				pins = "gpio0";
-+			};
-+			pinmux_dmic0_data {
-+				function = "dmic0_data";
-+				pins = "gpio1";
-+			};
- 			pinconf {
- 				pins = "gpio0", "gpio1";
- 				drive-strength = <2>;
--- 
-2.15.0
+
+Lothar Waßmann
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
