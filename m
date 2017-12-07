@@ -1,34 +1,39 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v11 0/6] Add support for Qualcomm A53 CPU clock
-Date: Thu, 7 Dec 2017 18:02:36 +0200
-Message-ID: <0b365abd-1683-6fcd-b013-7b517c2b9283@linaro.org>
-References: <20171205154701.27730-1-georgi.djakov@linaro.org>
- <20171206210847.mhrsxgytl4ihwgyq@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+Subject: [PATCH v4 1/2] of: documentation: add bindings documentation for TS-7970
+Date: Thu,  7 Dec 2017 11:05:49 -0500
+Message-ID: <20171207160550.2782-1-sebastien.bourdelin@savoirfairelinux.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171206210847.mhrsxgytl4ihwgyq@rob-hp-laptop>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@savoirfairelinux.com, fabio.estevam@nxp.com, kernel@pengutronix.de, shawnguo@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: mark@embeddedarm.com, kris@embeddedarm.com, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2017 11:08 PM, Rob Herring wrote:
-> On Tue, Dec 05, 2017 at 05:46:55PM +0200, Georgi Djakov wrote:
->> This patchset adds support for the A53 CPU clock on MSM8916 platforms
->> and allows scaling of the CPU frequency on msm8916 based platforms.
->>
->> Changes since v10 (https://lkml.org/lkml/2017/12/1/577)
->> * Addressed Bjorn's comments on APCS clock driver.
->> * Picked Acks from Rob and Bjorn.
-> 
-> Errr, really?
+This adds the documentation for the TS-7970 by Technologic Systems.
 
-Oops sorry, it was a Reviewed-by for the mailbox binding change and not
-an Ack. Thank you for reviewing the constantly changing binding in this
-patchset. I hope that it will not change anymore.
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+---
+Changes v3 -> v4:
+  - rebase on master
 
-BR,
-Georgi
+Changes v1 -> v2:
+  - rebase on master
+---
+ Documentation/devicetree/bindings/arm/technologic.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/technologic.txt b/Documentation/devicetree/bindings/arm/technologic.txt
+index 33797acad846..187830bd4f51 100644
+--- a/Documentation/devicetree/bindings/arm/technologic.txt
++++ b/Documentation/devicetree/bindings/arm/technologic.txt
+@@ -10,3 +10,9 @@ It can be mounted on a carrier board providing additional peripheral connectors.
+ Required root node properties:
+ 	- compatible = "technologic,imx6dl-ts4900", "fsl,imx6dl"
+ 	- compatible = "technologic,imx6q-ts4900", "fsl,imx6q"
++
++TS-7970 is a System-on-Module based on the Freescale i.MX6 System-on-Chip.
++It can be mounted on a carrier board providing additional peripheral connectors.
++Required root node properties:
++	- compatible = "technologic,imx6dl-ts7970", "fsl,imx6dl"
++	- compatible = "technologic,imx6q-ts7970", "fsl,imx6q"
+-- 
+2.15.0
