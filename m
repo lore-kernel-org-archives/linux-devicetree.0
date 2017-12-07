@@ -1,235 +1,105 @@
-From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: [PATCH v2 10/10] arm64: dts: qcom: msm8916: add nodes for i2c1, i2c3, i2c5
-Date: Thu,  7 Dec 2017 10:19:42 -0500
-Message-ID: <20171207151942.5805-11-damien.riegel@savoirfairelinux.com>
-References: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kernel@savoirfairelinux.com, Damien Riegel <damien.riegel@savoirfairelinux.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 4/6] clocksource: stm32: only use 32 bits timers
+Date: Thu, 7 Dec 2017 16:27:24 +0100
+Message-ID: <44bb54e6-c9e8-4b54-d490-a1800bf6d74c@linaro.org>
+References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1510649563-22975-5-git-send-email-benjamin.gaignard@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1510649563-22975-5-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, julien.thierry-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
----
-Changes in v2:
- - Reworded commit title
- - Changed size to 0x500
+On 14/11/2017 09:52, Benjamin Gaignard wrote:
+> The clock driving counters is at 90MHz so the maximum period
+> for 16 bis counters is around 750 ms which is a short period
+> for a clocksource.
 
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi  | 48 ++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 42 ++++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi      | 45 ++++++++++++++++++++++++++++
- 3 files changed, 135 insertions(+)
+Isn't it 728us ?
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 53c1ddd281a4..11305015ba0b 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -630,6 +630,22 @@
- 	};
- };
- 
-+&i2c1_default {
-+	pinconf {
-+		pins = "gpio2", "gpio3";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+};
-+
-+&i2c1_sleep {
-+	pinconf {
-+		pins = "gpio2", "gpio3";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
- &i2c2_default {
- 	pinconf {
- 		pins = "gpio6", "gpio7";
-@@ -646,6 +662,22 @@
- 	};
- };
- 
-+&i2c3_default {
-+	pinconf {
-+		pins = "gpio10", "gpio11";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+};
-+
-+&i2c3_sleep {
-+	pinconf {
-+		pins = "gpio10", "gpio11";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
- &i2c4_default {
- 	pinconf {
- 		pins = "gpio14", "gpio15";
-@@ -662,6 +694,22 @@
- 	};
- };
- 
-+&i2c5_default {
-+	pinconf {
-+		pins = "gpio18", "gpio19";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
-+};
-+
-+&i2c5_sleep {
-+	pinconf {
-+		pins = "gpio18", "gpio19";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
- &i2c6_default {
- 	pinconf {
- 		pins = "gpio22", "gpio23";
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index 7704ddecb6c4..44e68860fc8c 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -152,6 +152,20 @@
- 		};
- 	};
- 
-+	i2c1_default: i2c1_default {
-+		pinmux {
-+			function = "blsp_i2c1";
-+			pins = "gpio2", "gpio3";
-+		};
-+	};
-+
-+	i2c1_sleep: i2c1_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio2", "gpio3";
-+		};
-+	};
-+
- 	i2c2_default: i2c2_default {
- 		pinmux {
- 			function = "blsp_i2c2";
-@@ -166,6 +180,20 @@
- 		};
- 	};
- 
-+	i2c3_default: i2c3_default {
-+		pinmux {
-+			function = "blsp_i2c3";
-+			pins = "gpio10", "gpio11";
-+		};
-+	};
-+
-+	i2c3_sleep: i2c3_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio10", "gpio11";
-+		};
-+	};
-+
- 	i2c4_default: i2c4_default {
- 		pinmux {
- 			function = "blsp_i2c4";
-@@ -180,6 +208,20 @@
- 		};
- 	};
- 
-+	i2c5_default: i2c5_default {
-+		pinmux {
-+			function = "blsp_i2c5";
-+			pins = "gpio18", "gpio19";
-+		};
-+	};
-+
-+	i2c5_sleep: i2c5_sleep {
-+		pinmux {
-+			function = "gpio";
-+			pins = "gpio18", "gpio19";
-+		};
-+	};
-+
- 	i2c6_default: i2c6_default {
- 		pinmux {
- 			function = "blsp_i2c6";
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index ac440f287633..7478c7337995 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -455,6 +455,21 @@
- 			status = "disabled";
- 		};
- 
-+		blsp_i2c1: i2c@78b5000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0x078b5000 0x500>;
-+			interrupts = <GIC_SPI 95 0>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				 <&gcc GCC_BLSP1_QUP1_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c1_default>;
-+			pinctrl-1 = <&i2c1_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		blsp_i2c2: i2c@78b6000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x078b6000 0x500>;
-@@ -470,6 +485,21 @@
- 			status = "disabled";
- 		};
- 
-+		blsp_i2c3: i2c@78b7000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0x078b7000 0x500>;
-+			interrupts = <GIC_SPI 97 0>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				 <&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c3_default>;
-+			pinctrl-1 = <&i2c3_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		blsp_i2c4: i2c@78b8000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x078b8000 0x500>;
-@@ -485,6 +515,21 @@
- 			status = "disabled";
- 		};
- 
-+		blsp_i2c5: i2c@78b9000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			reg = <0x078b9000 0x500>;
-+			interrupts = <GIC_SPI 99 0>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				 <&gcc GCC_BLSP1_QUP5_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c5_default>;
-+			pinctrl-1 = <&i2c5_sleep>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		blsp_i2c6: i2c@78ba000 {
- 			compatible = "qcom,i2c-qup-v2.2.1";
- 			reg = <0x078ba000 0x500>;
+> For 32 bits counters this period is close
+> 47 secondes which is more acceptable.
+> 
+> This patch remove 16 bits counters support and makes sure that
+> they won't be probed anymore.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/clocksource/timer-stm32.c | 26 ++++++++++++--------------
+>  1 file changed, 12 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
+> index ae41a19..8173bcf 100644
+> --- a/drivers/clocksource/timer-stm32.c
+> +++ b/drivers/clocksource/timer-stm32.c
+> @@ -83,9 +83,9 @@ static irqreturn_t stm32_clock_event_handler(int irq, void *dev_id)
+>  static int __init stm32_clockevent_init(struct device_node *node)
+>  {
+>  	struct reset_control *rstc;
+> -	unsigned long max_delta;
+> -	int ret, bits, prescaler = 1;
+> +	unsigned long max_arr;
+>  	struct timer_of *to;
+> +	int ret;
+>  
+>  	to = kzalloc(sizeof(*to), GFP_KERNEL);
+>  	if (!to)
+> @@ -115,29 +115,27 @@ static int __init stm32_clockevent_init(struct device_node *node)
+>  
+>  	/* Detect whether the timer is 16 or 32 bits */
+>  	writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
+> -	max_delta = readl_relaxed(timer_of_base(to) + TIM_ARR);
+> -	if (max_delta == ~0U) {
+> -		prescaler = 1;
+> -		bits = 32;
+> -	} else {
+> -		prescaler = 1024;
+> -		bits = 16;
+> +	max_arr = readl_relaxed(timer_of_base(to) + TIM_ARR);
+> +	if (max_arr != ~0U) {
+> +		pr_err("32 bits timer is needed\n");
+> +		ret = -EINVAL;
+> +		goto deinit;
+>  	}
+> +
+>  	writel_relaxed(0, timer_of_base(to) + TIM_ARR);
+>  
+> -	writel_relaxed(prescaler - 1, timer_of_base(to) + TIM_PSC);
+> +	writel_relaxed(0, timer_of_base(to) + TIM_PSC);
+>  	writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
+>  	writel_relaxed(TIM_DIER_UIE, timer_of_base(to) + TIM_DIER);
+>  	writel_relaxed(0, timer_of_base(to) + TIM_SR);
+>  
+>  	clockevents_config_and_register(&to->clkevt,
+> -					timer_of_period(to), MIN_DELTA, max_delta);
+> -
+> -	pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
+> -			node, bits);
+> +					timer_of_period(to), MIN_DELTA, ~0U);
+>  
+>  	return 0;
+>  
+> +deinit:
+> +	timer_of_exit(to);
+>  err:
+>  	kfree(to);
+>  	return ret;
+> 
+
+
 -- 
-2.15.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
