@@ -1,54 +1,93 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v4 05/15] drm/sun4i: Fix error path handling
-Date: Thu,  7 Dec 2017 16:58:50 +0100
-Message-ID: <f83c1cebc731f0b4251f5ddd7b38c718cd79bb0b.1512662253.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 07/15] drm/sun4i: Create minimal multipliers and dividers
+Date: Thu,  7 Dec 2017 16:58:52 +0100
+Message-ID: <4f8708474fdd6e6e6c8452042e1ce70fc4cb5fa8.1512662253.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 In-Reply-To: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, devicetree@vger.kernel.org, thierry.reding@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGNvbW1pdCA0YzdmMTZkMTRhMzMgKCJkcm0vc3VuNGk6IEZpeCBUQ09OIGNsb2NrIGFuZCBy
-ZWdtYXAKaW5pdGlhbGl6YXRpb24gc2VxdWVuY2UiKSBtb3ZlZCBhIGJ1bmNoIG9mIGxvZ2ljIGFy
-b3VuZCwgYnV0IGZvcmdvdCB0bwp1cGRhdGUgdGhlIGdvdG9zIGFmdGVyIHRoZSBpbnRyb2R1Y3Rp
-b24gb2YgdGhlIGVycl9mcmVlX2RvdGNsb2NrIGxhYmVsLgoKSXQgbWVhbnMgdGhhdCBpZiB3ZSBm
-YWlsIGxhdGVyIHRoYXQgdGhlIG9uZSBpbnRyb2R1Y2VkIGluIHRoYXQgY29tbWl0LAp3ZSdsbCBq
-dXN0IHRvIHRoZSBvbGQgbGFiZWwgd2hpY2ggaXNuJ3QgZnJlZSB0aGUgY2xvY2sgd2UgY3JlYXRl
-ZC4gVGhpcwp3aWxsIHJlc3VsdCBpbiBhIGJyZWFrYWdlIGFzIHNvb24gYXMgc29tZW9uZSB0cmll
-cyB0byBkbyBzb21ldGhpbmcgd2l0aAp0aGF0IGNsb2NrLCBzaW5jZSBpdHMgcmVzb3VyY2VzIHdp
-bGwgaGF2ZSBiZWVuIGxvbmcgcmVjbGFpbWVkLgoKQ2M6IDxzdGFibGVAdmdlci5rZXJuZWwub3Jn
-PgpGaXhlczogNGM3ZjE2ZDE0YTMzICgiZHJtL3N1bjRpOiBGaXggVENPTiBjbG9jayBhbmQgcmVn
-bWFwIGluaXRpYWxpemF0aW9uIHNlcXVlbmNlIikKUmV2aWV3ZWQtYnk6IENoZW4tWXUgVHNhaSA8
-d2Vuc0Bjc2llLm9yZz4KU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFy
-ZEBmcmVlLWVsZWN0cm9ucy5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rj
-b24uYyB8IDQgKystLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
-bnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jIGIv
-ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwppbmRleCBhMWVkNDYyYzI0MzAuLmVh
-MDU2YTNkMjEzMSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24u
-YworKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5jCkBAIC03MjQsMTIgKzcy
-NCwxMiBAQCBzdGF0aWMgaW50IHN1bjRpX3Rjb25fYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0
-cnVjdCBkZXZpY2UgKm1hc3RlciwKIAlpZiAoSVNfRVJSKHRjb24tPmNydGMpKSB7CiAJCWRldl9l
-cnIoZGV2LCAiQ291bGRuJ3QgY3JlYXRlIG91ciBDUlRDXG4iKTsKIAkJcmV0ID0gUFRSX0VSUih0
-Y29uLT5jcnRjKTsKLQkJZ290byBlcnJfZnJlZV9jbG9ja3M7CisJCWdvdG8gZXJyX2ZyZWVfZG90
-Y2xvY2s7CiAJfQogCiAJcmV0ID0gc3VuNGlfcmdiX2luaXQoZHJtLCB0Y29uKTsKIAlpZiAocmV0
-IDwgMCkKLQkJZ290byBlcnJfZnJlZV9jbG9ja3M7CisJCWdvdG8gZXJyX2ZyZWVfZG90Y2xvY2s7
-CiAKIAlpZiAodGNvbi0+cXVpcmtzLT5uZWVkc19kZV9iZV9tdXgpIHsKIAkJLyoKLS0gCmdpdC1z
-ZXJpZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+The various outputs the TCON can provide have different constraints on the
+dotclock divider. Let's make them configurable by the various mode_set
+functions.
+
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ drivers/gpu/drm/sun4i/sun4i_dotclock.c | 10 +++++++---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c     |  2 ++
+ drivers/gpu/drm/sun4i/sun4i_tcon.h     |  2 ++
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun4i_dotclock.c b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+index d401156490f3..023f39bda633 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_dotclock.c
++++ b/drivers/gpu/drm/sun4i/sun4i_dotclock.c
+@@ -17,8 +17,9 @@
+ #include "sun4i_dotclock.h"
+ 
+ struct sun4i_dclk {
+-	struct clk_hw	hw;
+-	struct regmap	*regmap;
++	struct clk_hw		hw;
++	struct regmap		*regmap;
++	struct sun4i_tcon	*tcon;
+ };
+ 
+ static inline struct sun4i_dclk *hw_to_dclk(struct clk_hw *hw)
+@@ -73,11 +74,13 @@ static unsigned long sun4i_dclk_recalc_rate(struct clk_hw *hw,
+ static long sun4i_dclk_round_rate(struct clk_hw *hw, unsigned long rate,
+ 				  unsigned long *parent_rate)
+ {
++	struct sun4i_dclk *dclk = hw_to_dclk(hw);
++	struct sun4i_tcon *tcon = dclk->tcon;
+ 	unsigned long best_parent = 0;
+ 	u8 best_div = 1;
+ 	int i;
+ 
+-	for (i = 6; i <= 127; i++) {
++	for (i = tcon->dclk_min_div; i <= tcon->dclk_max_div; i++) {
+ 		unsigned long ideal = rate * i;
+ 		unsigned long rounded;
+ 
+@@ -167,6 +170,7 @@ int sun4i_dclk_create(struct device *dev, struct sun4i_tcon *tcon)
+ 	dclk = devm_kzalloc(dev, sizeof(*dclk), GFP_KERNEL);
+ 	if (!dclk)
+ 		return -ENOMEM;
++	dclk->tcon = tcon;
+ 
+ 	init.name = clk_name;
+ 	init.ops = &sun4i_dclk_ops;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index ea056a3d2131..46e28ca1f676 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -177,6 +177,8 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
+ 	u8 clk_delay;
+ 	u32 val = 0;
+ 
++	tcon->dclk_min_div = 6;
++	tcon->dclk_max_div = 127;
+ 	sun4i_tcon0_mode_set_common(tcon, mode);
+ 
+ 	/* Adjust clock delay */
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index 839266a38505..bd3ad7684870 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -169,6 +169,8 @@ struct sun4i_tcon {
+ 
+ 	/* Pixel clock */
+ 	struct clk			*dclk;
++	u8				dclk_max_div;
++	u8				dclk_min_div;
+ 
+ 	/* Reset control */
+ 	struct reset_control		*lcd_rst;
+-- 
+git-series 0.9.1
