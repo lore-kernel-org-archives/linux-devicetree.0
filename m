@@ -1,76 +1,32 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH 2/2] ARM: dts: r8a7743: move timer node out of bus
-Date: Thu,  7 Dec 2017 11:19:23 +0100
-Message-ID: <20171207101923.19846-3-horms+renesas@verge.net.au>
-References: <20171207101923.19846-1-horms+renesas@verge.net.au>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171207101923.19846-1-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: [PATCH 0/2] ARM: dts: r8a7743: Timer node nodes out of bus
+Date: Thu,  7 Dec 2017 11:19:21 +0100
+Message-ID: <20171207101923.19846-1-horms+renesas@verge.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The timer node does not have any register properties and thus shouldn't be
-placed on the bus.
+Move the timer node, which have no reg property, out of the root node.
+The nodes that have been moved do not have any register properties and thus
+shouldn't be placed on the bus.
 
-This problem is flagged by the compiler as follows:
-$ make
-  DTC     arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dtb
-arch/arm/boot/dts/r8a7743-iwg20d-q7.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
-arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
-  DTC     arch/arm/boot/dts/r8a7743-sk-rzg1m.dtb
-arch/arm/boot/dts/r8a7743-sk-rzg1m.dtb: Warning (simple_bus_reg): Node /soc/timer missing or empty reg/ranges property
+In preparation for the above sort nodes in the root node alphabetically.
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- arch/arm/boot/dts/r8a7743.dtsi | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+Based on renesas-devel-20171207-v4.15-rc2
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 2fe852bb10cd..f1c77f0b5e69 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -281,18 +281,6 @@
- 			resets = <&cpg 407>;
- 		};
- 
--		timer {
--			compatible = "arm,armv7-timer";
--			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
--						  IRQ_TYPE_LEVEL_LOW)>,
--				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
--						  IRQ_TYPE_LEVEL_LOW)>,
--				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
--						  IRQ_TYPE_LEVEL_LOW)>,
--				     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
--						  IRQ_TYPE_LEVEL_LOW)>;
--		};
--
- 		cpg: clock-controller@e6150000 {
- 			compatible = "renesas,r8a7743-cpg-mssr";
- 			reg = <0 0xe6150000 0 0x1000>;
-@@ -1261,6 +1249,22 @@
- 		};
- 	};
- 
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts-extended = <&gic GIC_PPI 13
-+				       (GIC_CPU_MASK_SIMPLE(2) |
-+				        IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 14
-+				       (GIC_CPU_MASK_SIMPLE(2) |
-+				        IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 11
-+				       (GIC_CPU_MASK_SIMPLE(2) |
-+				        IRQ_TYPE_LEVEL_LOW)>,
-+				      <&gic GIC_PPI 10
-+				       (GIC_CPU_MASK_SIMPLE(2) |
-+				        IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
- 	/* External USB clock - can be overridden by the board */
- 	usb_extal_clk: usb_extal {
- 		compatible = "fixed-clock";
+Simon Horman (2):
+  ARM: dts: r8a7743: sort root sub-nodes alphabetically
+  ARM: dts: r8a7743: move timer node out of bus
+
+ arch/arm/boot/dts/r8a7743.dtsi | 86 ++++++++++++++++++++++--------------------
+ 1 file changed, 45 insertions(+), 41 deletions(-)
+
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
