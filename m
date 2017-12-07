@@ -1,77 +1,100 @@
-From: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2 08/10] arm64: dts: qcom: msm8916-pins: move sdhc2 cd node with its siblings
-Date: Thu,  7 Dec 2017 10:19:40 -0500
-Message-ID: <20171207151942.5805-9-damien.riegel@savoirfairelinux.com>
+From: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Subject: [PATCH v2 07/10] arm64: dts: qcom: msm8916: drop remaining unused pinconfs
+Date: Thu,  7 Dec 2017 10:19:39 -0500
+Message-ID: <20171207151942.5805-8-damien.riegel@savoirfairelinux.com>
 References: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171207151942.5805-1-damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kernel@savoirfairelinux.com, Damien Riegel <damien.riegel@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Nodes relative to the first sdhc node were interlaced with node of the
-second sdhc. Move sdhc2_cd_pin with its siblings to prevent that. Also
-rename the grouping node from sdhc2_cd_pin to pmx_sdc2_cd_pin, as
-"pmx_sdc" is the prefix used by other nodes.
+This commit drops pin configs that cannot be moved to board files as
+no boards use them.
 
-Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
 ---
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 33 ------------------------------
+ 1 file changed, 33 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index c79301f204b7..7704ddecb6c4 100644
+index 0790232c4654..c79301f204b7 100644
 --- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -194,21 +194,6 @@
+@@ -311,26 +311,13 @@
+ 				pins = "gpio113", "gpio114", "gpio115",
+ 				       "gpio116";
+ 			};
+-			pinconf {
+-				pins = "gpio113", "gpio114", "gpio115",
+-				       "gpio116";
+-				drive-strength = <8>;
+-				bias-pull-none;
+-			};
  		};
- 	};
- 
--	sdhc2_cd_pin {
--		sdc2_cd_on: cd_on {
--			pinmux {
--				function = "gpio";
--				pins = "gpio38";
--			};
--		};
--		sdc2_cd_off: cd_off {
--			pinmux {
--				function = "gpio";
--				pins = "gpio38";
--			};
--		};
--	};
 -
- 	pmx_sdc1_clk {
- 		sdc1_clk_on: clk_on {
+ 		ext_pri_tlmm_lines_sus: ext_pa_off {
  			pinmux {
-@@ -287,6 +272,21 @@
+ 				function = "pri_mi2s";
+ 				pins = "gpio113", "gpio114", "gpio115",
+ 				       "gpio116";
+ 			};
+-			pinconf {
+-				pins = "gpio113", "gpio114", "gpio115",
+-				       "gpio116";
+-				drive-strength = <2>;
+-				bias-disable;
+-			};
  		};
  	};
  
-+	pmx_sdc2_cd_pin {
-+		sdc2_cd_on: cd_on {
-+			pinmux {
-+				function = "gpio";
-+				pins = "gpio38";
-+			};
-+		};
-+		sdc2_cd_off: cd_off {
-+			pinmux {
-+				function = "gpio";
-+				pins = "gpio38";
-+			};
-+		};
-+	};
-+
- 	cdc-pdm-lines {
- 		cdc_pdm_lines_act: pdm_lines_on {
+@@ -340,23 +327,12 @@
+ 				function = "pri_mi2s_ws";
+ 				pins = "gpio110";
+ 			};
+-			pinconf {
+-				pins = "gpio110";
+-				drive-strength = <8>;
+-				bias-pull-none;
+-			};
+ 		};
+-
+ 		ext_pri_ws_sus: ext_pa_off {
  			pinmux {
+ 				function = "pri_mi2s_ws";
+ 				pins = "gpio110";
+ 			};
+-			pinconf {
+-				pins = "gpio110";
+-				drive-strength = <2>;
+-				bias-disable;
+-			};
+ 		};
+ 	};
+ 
+@@ -403,10 +379,6 @@
+ 				function = "dmic0_data";
+ 				pins = "gpio1";
+ 			};
+-			pinconf {
+-				pins = "gpio0", "gpio1";
+-				drive-strength = <8>;
+-			};
+ 		};
+ 		cdc_dmic_lines_sus: dmic_lines_off {
+ 			pinmux_dmic0_clk {
+@@ -417,11 +389,6 @@
+ 				function = "dmic0_data";
+ 				pins = "gpio1";
+ 			};
+-			pinconf {
+-				pins = "gpio0", "gpio1";
+-				drive-strength = <2>;
+-				bias-disable;
+-			};
+ 		};
+ 	};
+ 
 -- 
 2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
