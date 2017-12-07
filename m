@@ -1,121 +1,101 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/8] mfd: axp20x: probe axp20x_adc driver
- for AXP813
-Date: Thu, 7 Dec 2017 09:51:29 +0100
-Message-ID: <2021a653-d01e-f46f-2438-0760f579e0dc@free-electrons.com>
-References: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz@free-electrons.com>
- <302c93023d8c4a54cafe321d912df484e39727b7.1512396054.git-series.quentin.schulz@free-electrons.com>
- <20171205080855.arr7vlgnxoxmyedd@flea.lan>
-Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 03/17] mfd: madera: Add common support for Cirrus Logic
+ Madera codecs
+Date: Thu, 7 Dec 2017 09:54:06 +0100
+Message-ID: <CACRpkdb_i4k3F0fmDbQciPYTBUCcfpFkqM=5e3gr75-X51TTkg@mail.gmail.com>
+References: <20171123171316.10868-1-rf@opensource.wolfsonmicro.com>
+ <fe8064a5-8692-46c1-9f53-ab0a429baeeb@EX17.ad.cirrus.com> <CACRpkdaxKjPd_k8tuO3R4+5LFT4_37zn6ruDRPd5j9xNAH4+Dw@mail.gmail.com>
+ <1eff5a38-cff3-449b-bda4-047f50a9f1d4@EX17.ad.cirrus.com> <CACRpkdZ4QuOhk1LuGftcFozUKdZ4vFAO3omkQ004k39J=jKL7g@mail.gmail.com>
+ <ce3772d8-3ae7-474f-b9c2-8008bb39fd0b@EX17.ad.cirrus.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="CKe7BMNQHPDOaBDUGGk5sXG7SusBOD6rT"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBIECUTIQKGQE74SGDAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171205080855.arr7vlgnxoxmyedd-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ce3772d8-3ae7-474f-b9c2-8008bb39fd0b-MRjWshV2NDGMZzV0eMwobdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Nikesh Oswal <Nikesh.Oswal-UVNVL95qEvAciDkP5Hr2oA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---CKe7BMNQHPDOaBDUGGk5sXG7SusBOD6rT
-Content-Type: multipart/mixed; boundary="L8Vm8d4SIciBN1MfClM1D85tcCuLeDfav";
- protected-headers="v1"
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org,
- linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org,
- knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org,
- linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
- linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org,
- thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Message-ID: <2021a653-d01e-f46f-2438-0760f579e0dc-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/8] mfd: axp20x: probe axp20x_adc driver for AXP813
-References: <cover.4052f8c517c42db26a3cabe078cad333243d371c.1512396054.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
- <302c93023d8c4a54cafe321d912df484e39727b7.1512396054.git-series.quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
- <20171205080855.arr7vlgnxoxmyedd-ZC1Zs529Oq4@public.gmane.org>
-In-Reply-To: <20171205080855.arr7vlgnxoxmyedd-ZC1Zs529Oq4@public.gmane.org>
-
---L8Vm8d4SIciBN1MfClM1D85tcCuLeDfav
-Content-Type: text/plain; charset="UTF-8"
-Content-Language: en-US
-
-Hi Maxime,
-
-On 05/12/2017 09:08, Maxime Ripard wrote:
-> On Mon, Dec 04, 2017 at 03:12:49PM +0100, Quentin Schulz wrote:
->> This makes the axp20x_adc driver probe with platform device id
->> "axp813-adc".
+On Mon, Dec 4, 2017 at 10:47 AM, Richard Fitzgerald
+<rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On 02/12/17 12:10, Linus Walleij wrote:
+>> On Wed, Nov 29, 2017 at 12:36 PM, Richard Fitzgerald
+>> <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+>>> On 29/11/17 10:18, Linus Walleij wrote:
+>>>> On Thu, Nov 23, 2017 at 6:13 PM, Richard Fitzgerald
+>>>> <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+>>>>
+>>>>> +config MFD_MADERA_I2C
+>>>>> +       bool "Cirrus Logic Madera codecs with I2C"
+>>>>> +       select MFD_MADERA
+>>>>> +       select REGMAP_I2C
+>>>>> +       depends on I2C
+>>>>> +       depends on PINCTRL
+>>>>> +       help
+>>>>> +         Support for the Cirrus Logic Madera platform audio SoC
+>>>>> +         core functionality controlled via I2C.
+>>>>> +
+>>>>> +config MFD_MADERA_SPI
+>>>>> +       bool "Cirrus Logic Madera codecs with SPI"
+>>>>> +       select MFD_MADERA
+>>>>> +       select REGMAP_SPI
+>>>>> +       depends on SPI_MASTER
+>>>>> +       depends on PINCTRL
+>>>>> +       help
+>>>>> +         Support for the Cirrus Logic Madera platform audio SoC
+>>>>> +         core functionality controlled via SPI.
+>>>>
+>>>>
+>>>>
+>>>> Why do the I2C and SPI subdrivers depend on PINCTRL?
+>>>>
+>>>> They sure don't seem to be using any pinctrl-specific APIs.
+>>>>
+>>>
+>>> They require PINCTRL even if they don't call any functions on it because
+>>> the
+>>> chip won't work correctly if there isn't a PINCTRL driver to apply the
+>>> correct pinmux configuration.
 >>
->> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  drivers/mfd/axp20x.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
->> index 2468b43..42e54d1 100644
->> --- a/drivers/mfd/axp20x.c
->> +++ b/drivers/mfd/axp20x.c
->> @@ -878,7 +878,9 @@ static struct mfd_cell axp813_cells[] = {
->>  		.resources		= axp803_pek_resources,
->>  	}, {
->>  		.name			= "axp20x-regulator",
->> -	}
->> +	}, {
->> +		.name			= "axp813-adc",
->> +	},
-> 
-> Any particular reason you're not adding it to the DT?
-> 
+>> Apply the configuration to what? Sorry I don't get it.
+>>
+>> You can't be referring to the internal pin controller of the Madera, since
+>
+> Yes I am
 
-No, no particular reason. It's just the way it is currently for AXP209
-and AXP22x so did the same for AXP813.
+You are saying that the I2C and SPI interface to the Madera codec
+depends on pin control.
 
-I'll add DT "support" in next version for all AXPs supported by this
-driver. Or is it worthy of a small separate patch series?
+It does not.
 
-Thanks,
-Quentin
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+You can most certainly talk I2C and SPI to the coded without any
+pin control. Probably the MFD driver can come up without it.
 
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+If what you want is unconditional pin control enabled for this circuit,
+then have MFD_MADERA select PINCTRL.
 
---L8Vm8d4SIciBN1MfClM1D85tcCuLeDfav--
+>> that has to come up before its pin controller can even be communicated
+>> with.
+>
+>
+> So?
+>
+> The MFD driver powers up the chip before registering child drivers.
 
---CKe7BMNQHPDOaBDUGGk5sXG7SusBOD6rT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Including the pin controller. You just confirmed what I said: the
+I2C and SPI interfaces do not require pin control to talk to the
+chip.
 
------BEGIN PGP SIGNATURE-----
+> Also that's not entirely relevant, the pinctrl settings can still be written
+> with the chip off because they will go into the regmap cache and be applied
+> when the chip is next resumed.
 
-iQIcBAEBCAAGBQJaKQEfAAoJEIS4mnU+4PGjl7wQAKV051f4Ogq8VT/6GjoD0HTq
-6BVWQ6noHHW+mGZJBdQ8bSsa+oLjA/UbOPraZUdUn6tiiNWVsuGji3N0LpJPnlQC
-8pIGLrC3A4arFGlHEgZCPTdvvwnKcE2lu9RxWbY38GHAvWIcZyOK7G5s2KUOlmpC
-6TecdVq6JjSIETVch5syOYA9/x5WfS1tiquOGDbCOJs3+SlUe/WVLnm7QZ6zJVcs
-8OFl2cjJFOaArVCwRih2sECMRGbn9Y7h/wdXkTcW4obmtkzV84xjx5pKrWcoof2l
-X+Uv0jVgZhlto1FhrUfajwE/Xj90r4vchfJJFjUF/FWVIJ09REqlkIxLhnjlf7iI
-otyPRi3RGtR3CO0A1LwKmR8+IlIgq214c/foBhMcLOyDAneHdW7DdWyWOfba7aqt
-vUXOvETU9isCdCV6d8FvydqHpdJqpXnJhjX9YeYU8f+2hYginFdd7maN1UVZb03K
-eaiFbYD3zbvguSCVVlHbvhfy84Uvo0qyVN/fDwH8vGNXjhFYwDKw0AA4BqJWiWOM
-OE3req92nrSeEZYUakoW0kwdVjbRd2UdC7BEiPH4SOw4ZhZiUv6lxdT6nNoO+xWA
-Z8T4WtrSPnK74tAEIZoTzhGncK3kAMESyouh/lpPkCpghPu9HHGx8351zLmynkNc
-6WYdwKKAF5oLo6OZEhd1
-=bEdh
------END PGP SIGNATURE-----
+You still have the dependencies wrong.
 
---CKe7BMNQHPDOaBDUGGk5sXG7SusBOD6rT--
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
