@@ -1,30 +1,49 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V7 1/2] clk: qcom: Add spmi_pmic clock divider support
-Date: Wed, 6 Dec 2017 22:32:43 -0800
-Message-ID: <20171207063243.GL4283@codeaurora.org>
-References: <1511255465-3984-1-git-send-email-tirupath@codeaurora.org>
- <1511255465-3984-2-git-send-email-tirupath@codeaurora.org>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 2/3] arm: dts: mt7623: update mmc related nodes with the appropriate fallback
+Date: Thu, 7 Dec 2017 14:43:23 +0800
+Message-ID: <134d7930a10387749cba9a630185c67912c924c8.1512628593.git.sean.wang@mediatek.com>
+References: <cover.1512628593.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1511255465-3984-2-git-send-email-tirupath@codeaurora.org>
+In-Reply-To: <cover.1512628593.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tirupathi Reddy <tirupath@codeaurora.org>
-Cc: robh+dt@kernel.org, mturquette@baylibre.com, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/21, Tirupathi Reddy wrote:
-> Clkdiv module provides a clock output on the PMIC with CXO as
-> the source. This clock can be routed through PMIC GPIOs. Add
-> a device driver to configure this clkdiv module.
-> 
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> Signed-off-by: Tirupathi Reddy <tirupath@codeaurora.org>
-> ---
+From: Sean Wang <sean.wang@mediatek.com>
 
-Applied to clk-next
+The current mmc related nodes should be falling back to MT2701
+as the dt-binding defines and which has more appropriate setup
+for MT7623.
 
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ arch/arm/boot/dts/mt7623.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index 0640fb7..343d3b1 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -641,7 +641,7 @@
+ 
+ 	mmc0: mmc@11230000 {
+ 		compatible = "mediatek,mt7623-mmc",
+-			     "mediatek,mt8135-mmc";
++			     "mediatek,mt2701-mmc";
+ 		reg = <0 0x11230000 0 0x1000>;
+ 		interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&pericfg CLK_PERI_MSDC30_0>,
+@@ -652,7 +652,7 @@
+ 
+ 	mmc1: mmc@11240000 {
+ 		compatible = "mediatek,mt7623-mmc",
+-			     "mediatek,mt8135-mmc";
++			     "mediatek,mt2701-mmc";
+ 		reg = <0 0x11240000 0 0x1000>;
+ 		interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&pericfg CLK_PERI_MSDC30_1>,
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
