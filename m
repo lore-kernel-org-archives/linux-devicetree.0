@@ -1,33 +1,45 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 6/8] staging: octeon: Remove USE_ASYNC_IOBDMA macro.
-Date: Thu, 7 Dec 2017 15:28:44 +0100
-Message-ID: <20171207142844.GA22444@kroah.com>
-References: <20171129005540.28829-1-david.daney@cavium.com>
- <20171129005540.28829-7-david.daney@cavium.com>
+From: Sven Van Asbroeck <svendev@arcx.com>
+Subject: [PATCH v5 0/2] at24: support eeproms that do not auto-rollover reads.
+Date: Thu, 7 Dec 2017 09:36:16 -0500
+Message-ID: <1512657378-5221-1-git-send-email-svendev@arcx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20171129005540.28829-7-david.daney@cavium.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: David Daney <david.daney@cavium.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, ralf@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, "Steven J. Hill" <steven.hill@cavium.com>, Florian Fainelli <f.fainelli@gmail.com>, James Hogan <james.hogan@mips.com>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: svendev@arcx.com, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, brgl@bgdev.pl, nsekhar@ti.com, sakari.ailus@linux.intel.com, david@lechnology.com, javier@dowhile0.org, divagar.mohandass@intel.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 04:55:38PM -0800, David Daney wrote:
-> Previous patch sets USE_ASYNC_IOBDMA to 1 unconditionally.  Remove
-> USE_ASYNC_IOBDMA from all if statements.  Remove dead code caused by
-> the change.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+v5:
+	at Rob Herring's request, renamed devicetree property:
+		at24,no-read-rollover -> no-read-rollover
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+v4:
+	renamed devicetree property:
+		no-read-rollover -> at24,no-read-rollover
+	dt-bindings update now a separate patch
+
+v3:
+	rebased against at24 maintainer's devel staging branch:
+	git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git at24/devel
+	clarified some of the comments and wording
+
+v2:
+	kbuild test robot feedback: correct
+		"warning: comparison of distinct pointer types lacks a cast"
+	build warning on some compilers / architectures.
+
+v1:
+	original patch
+
+Sven Van Asbroeck (2):
+  at24: support eeproms that do not auto-rollover reads.
+  dt-bindings: add eeprom "at24,no-read-rollover" property
+
+ .../devicetree/bindings/eeprom/eeprom.txt          |  5 +++
+ drivers/misc/eeprom/at24.c                         | 37 +++++++++++++++-------
+ include/linux/platform_data/at24.h                 |  2 ++
+ 3 files changed, 32 insertions(+), 12 deletions(-)
+
+-- 
+1.9.1
