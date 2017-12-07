@@ -1,41 +1,69 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v4 13/15] ARM: dts: sun8i: a83t: Add the PWM pin group
-Date: Thu,  7 Dec 2017 16:58:58 +0100
-Message-ID: <b58547cd03f88c65162f362361023b44a4b6fc89.1512662253.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 15/15] ARM: dts: sun8i: a711: Enable the LCD
+Date: Thu,  7 Dec 2017 16:59:00 +0100
+Message-ID: <190e169fb62cbc75ac786ecaa3c63cdcb1b5b209.1512662253.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 In-Reply-To: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
 References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, plaes@plaes.org, icenowy@aosc.io, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, devicetree@vger.kernel.org, thierry.reding@gmail.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
 List-Id: devicetree@vger.kernel.org
 
-The A83T has a PWM that can be output from the SoC. Let's add a pinctrl
-group for it.
-
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index e200df5a9058..a37517d4472a 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -446,6 +446,11 @@
- 				bias-pull-up;
- 			};
- 
-+			pwm_pin: pwm-pin {
-+				pins = "PD28";
-+				function = "pwm";
-+			};
-+
- 			spdif_tx_pin: spdif-tx-pin {
- 				pins = "PE18";
- 				function = "spdif";
--- 
-git-series 0.9.1
+VGhlIEE3MTEgaGFzIDEwMjR4NjAwIExWRFMgcGFuZWwsIHdpdGggYSBQV00tYmFzZWQgYmFja2xp
+Z2h0LiBBZGQgaXQgdG8gb3VyCkRULgoKUmV2aWV3ZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bj
+c2llLm9yZz4KU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVl
+LWVsZWN0cm9ucy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcx
+MS5kdHMgfCA2MSArKysrKysrKysrKysrKysrKysrKysrKystCiAxIGZpbGUgY2hhbmdlZCwgNjEg
+aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3Qt
+dGJzLWE3MTEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC10YnMtYTcxMS5kdHMK
+aW5kZXggYTAyMWVlNmRhMzk2Li41MTFmY2E0OTFmZTggMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL3N1bjhpLWE4M3QtdGJzLWE3MTEuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1
+bjhpLWE4M3QtdGJzLWE3MTEuZHRzCkBAIC00NSw2ICs0NSw3IEBACiAjaW5jbHVkZSAic3VuOGkt
+YTgzdC5kdHNpIgogCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+CisjaW5jbHVk
+ZSA8ZHQtYmluZGluZ3MvcHdtL3B3bS5oPgogCiAvIHsKIAltb2RlbCA9ICJUQlMgQTcxMSBUYWJs
+ZXQiOwpAQCAtNTksNiArNjAsNDQgQEAKIAkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBu
+OCI7CiAJfTsKIAorCWJhY2tsaWdodDogYmFja2xpZ2h0IHsKKwkJY29tcGF0aWJsZSA9ICJwd20t
+YmFja2xpZ2h0IjsKKwkJcHdtcyA9IDwmcHdtIDAgNTAwMDAgUFdNX1BPTEFSSVRZX0lOVkVSVEVE
+PjsKKwkJZW5hYmxlLWdwaW9zID0gPCZwaW8gMyAyOSBHUElPX0FDVElWRV9ISUdIPjsKKworCQli
+cmlnaHRuZXNzLWxldmVscyA9IDwwIDEgMiA0IDggMTYgMzIgNjQgMTI4IDI1NT47CisJCWRlZmF1
+bHQtYnJpZ2h0bmVzcy1sZXZlbCA9IDw5PjsKKwl9OworCisJcGFuZWwgeworCQljb21wYXRpYmxl
+ID0gInRicyxhNzExLXBhbmVsIiwgInBhbmVsLWx2ZHMiOworCQliYWNrbGlnaHQgPSA8JmJhY2ts
+aWdodD47CisJCXBvd2VyLXN1cHBseSA9IDwmcmVnX3N3PjsKKworCQl3aWR0aC1tbSA9IDwxNTM+
+OworCQloZWlnaHQtbW0gPSA8OTA+OworCQlkYXRhLW1hcHBpbmcgPSAidmVzYS0yNCI7CisKKwkJ
+cGFuZWwtdGltaW5nIHsKKwkJCS8qIDEwMjR4NjAwIEA2MEh6ICovCisJCQljbG9jay1mcmVxdWVu
+Y3kgPSA8NTIwMDAwMDA+OworCQkJaGFjdGl2ZSA9IDwxMDI0PjsKKwkJCXZhY3RpdmUgPSA8NjAw
+PjsKKwkJCWhzeW5jLWxlbiA9IDwyMD47CisJCQloZnJvbnQtcG9yY2ggPSA8MTgwPjsKKwkJCWhi
+YWNrLXBvcmNoID0gPDE2MD47CisJCQl2ZnJvbnQtcG9yY2ggPSA8MTI+OworCQkJdmJhY2stcG9y
+Y2ggPSA8MjM+OworCQkJdnN5bmMtbGVuID0gPDU+OworCQl9OworCisJCXBvcnQgeworCQkJcGFu
+ZWxfaW5wdXQ6IGVuZHBvaW50IHsKKwkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRjb24wX291dF9s
+Y2Q+OworCQkJfTsKKwkJfTsKKwl9OworCiAJcmVnX3ZiYXQ6IHJlZy12YmF0IHsKIAkJY29tcGF0
+aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwogCQlyZWd1bGF0b3ItbmFtZSA9ICJ2YmF0IjsKQEAg
+LTg5LDYgKzEyOCwxMCBAQAogCX07CiB9OwogCismZGUgeworCXN0YXR1cyA9ICJva2F5IjsKK307
+CisKIC8qCiAgKiBBbiBVU0ItMiBodWIgaXMgY29ubmVjdGVkIGhlcmUsIHdoaWNoIGFsc28gbWVh
+bnMgd2UgZG9uJ3QgbmVlZCB0bwogICogZW5hYmxlIHRoZSBPSENJIGNvbnRyb2xsZXIuCkBAIC0x
+NDIsNiArMTg1LDEyIEBACiAJc3RhdHVzID0gIm9rYXkiOwogfTsKIAorJnB3bSB7CisJcGluY3Ry
+bC1uYW1lcyA9ICJkZWZhdWx0IjsKKwlwaW5jdHJsLTAgPSA8JnB3bV9waW4+OworCXN0YXR1cyA9
+ICJva2F5IjsKK307CisKICZyX3JzYiB7CiAJc3RhdHVzID0gIm9rYXkiOwogCkBAIC0zMjMsNiAr
+MzcyLDE4IEBACiAJcmVndWxhdG9yLW5hbWUgPSAidmNjLWxjZCI7CiB9OwogCismdGNvbjAgewor
+CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPCZsY2RfbHZkc19waW5z
+PjsKK307CisKKyZ0Y29uMF9vdXQgeworCXRjb24wX291dF9sY2Q6IGVuZHBvaW50QDAgeworCQly
+ZWcgPSA8MD47CisJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxfaW5wdXQ+OworCX07Cit9Owor
+CiAmdWFydDAgewogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZ1
+YXJ0MF9wYl9waW5zPjsKLS0gCmdpdC1zZXJpZXMgMC45LjEKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
