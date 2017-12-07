@@ -1,124 +1,97 @@
-From: Sven Van Asbroeck <svendev@arcx.com>
-Subject: [PATCH v6 1/2] at24: support eeproms that do not auto-rollover reads.
-Date: Thu, 7 Dec 2017 14:26:18 -0500
-Message-ID: <1512674779-10349-2-git-send-email-svendev@arcx.com>
-References: <1512674779-10349-1-git-send-email-svendev@arcx.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: amlogic: use generic bus node names
+Date: Thu, 07 Dec 2017 11:30:27 -0800
+Message-ID: <7hindiqqss.fsf@baylibre.com>
+References: <20171206193005.24171-1-khilman@baylibre.com>
+        <fb631d1c-2b12-34e4-c157-ba11242e68de@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1512674779-10349-1-git-send-email-svendev@arcx.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: svendev@arcx.com, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, brgl@bgdev.pl, nsekhar@ti.com, sakari.ailus@linux.intel.com, david@lechnology.com, javier@dowhile0.org, divagar.mohandass@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <fb631d1c-2b12-34e4-c157-ba11242e68de-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Thu, 7 Dec 2017 09:35:50 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some multi-address eeproms in the at24 family may not automatically
-roll-over reads to the next slave address. On those eeproms, reads
-that straddle slave boundaries will not work correctly.
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-Solution:
-Mark such eeproms with a flag that prevents reads straddling
-slave boundaries. Add the AT24_FLAG_NO_RDROL flag to the eeprom
-entry in the device_id table, or add 'no-read-rollover' to the
-eeprom devicetree entry.
+> On 06/12/2017 20:30, Kevin Hilman wrote:
+>> The DT spec recommends that node-names have generic names like "bus".
+>> Fix that in the Amlogic DTs, while leaving the label names to have more
+>> SoC-specific names that match with the HW documentation.
+>> 
+>> Suggested-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 4 ++--
+>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 6 +++---
+>>  2 files changed, 5 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> index b932a784b02a..e7213eb53958 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> @@ -113,7 +113,7 @@
+>>  		#size-cells = <2>;
+>>  		ranges;
+>>  
+>> -		cbus: cbus@ffd00000 {
+>> +		cbus: bus@ffd00000 {
+>>  			compatible = "simple-bus";
+>>  			reg = <0x0 0xffd00000 0x0 0x25000>;
+>>  			#address-cells = <2>;
+>> @@ -175,7 +175,7 @@
+>>  			};
+>>  		};
+>>  
+>> -		aobus: aobus@ff800000 {
+>> +		aobus: bus@ff800000 {
+>>  			compatible = "simple-bus";
+>>  			reg = <0x0 0xff800000 0x0 0x100000>;
+>>  			#address-cells = <2>;
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> index 7cdbf58a062f..6cb3c2a52baf 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> @@ -211,7 +211,7 @@
+>>  		#size-cells = <2>;
+>>  		ranges;
+>>  
+>> -		cbus: cbus@c1100000 {
+>> +		cbus: bus@c1100000 {
+>>  			compatible = "simple-bus";
+>>  			reg = <0x0 0xc1100000 0x0 0x100000>;
+>>  			#address-cells = <2>;
+>> @@ -366,7 +366,7 @@
+>>  			};
+>>  		};
+>>  
+>> -		aobus: aobus@c8100000 {
+>> +		aobus: bus@c8100000 {
+>>  			compatible = "simple-bus";
+>>  			reg = <0x0 0xc8100000 0x0 0x100000>;
+>>  			#address-cells = <2>;
+>> @@ -453,7 +453,7 @@
+>>  			};
+>>  		};
+>>  
+>> -		hiubus: hiubus@c883c000 {
+>> +		hiubus: bus@c883c000 {
+>>  			compatible = "simple-bus";
+>>  			reg = <0x0 0xc883c000 0x0 0x2000>;
+>>  			#address-cells = <2>;
+>> 
+>
+> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Note that I have not personally enountered an at24 chip that
-does not support read rollovers. They may or may not exist.
-However, my hardware requires this functionality because of
-a quirk.
+Applied to v4.16/dt64 with Neil's review and after doing some basic
+build/boot tests.
 
-It's up to the Linux community to decide if this patch is useful/
-general enough to warrant merging.
+Thanks,
 
-Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
----
- drivers/misc/eeprom/at24.c         | 39 ++++++++++++++++++++++++++------------
- include/linux/platform_data/at24.h |  2 ++
- 2 files changed, 29 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 625b001..06ffa11 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -251,15 +251,6 @@ struct at24_data {
-  * Slave address and byte offset derive from the offset. Always
-  * set the byte address; on a multi-master board, another master
-  * may have changed the chip's "current" address pointer.
-- *
-- * REVISIT some multi-address chips don't rollover page reads to
-- * the next slave address, so we may need to truncate the count.
-- * Those chips might need another quirk flag.
-- *
-- * If the real hardware used four adjacent 24c02 chips and that
-- * were misconfigured as one 24c08, that would be a similar effect:
-- * one "eeprom" file not four, but larger reads would fail when
-- * they crossed certain pages.
-  */
- static struct at24_client *at24_translate_offset(struct at24_data *at24,
- 						 unsigned int *offset)
-@@ -277,6 +268,30 @@ static struct at24_client *at24_translate_offset(struct at24_data *at24,
- 	return &at24->client[i];
- }
- 
-+static size_t at24_adjust_read_count(struct at24_data *at24,
-+				      unsigned int offset, size_t count)
-+{
-+	unsigned int bits;
-+	size_t remainder;
-+
-+	/*
-+	 * In case of multi-address chips that don't rollover reads to
-+	 * the next slave address: truncate the count to the slave boundary,
-+	 * so that the read never straddles slaves.
-+	 */
-+	if (at24->chip.flags & AT24_FLAG_NO_RDROL) {
-+		bits = (at24->chip.flags & AT24_FLAG_ADDR16) ? 16 : 8;
-+		remainder = BIT(bits) - offset;
-+		if (count > remainder)
-+			count = remainder;
-+	}
-+
-+	if (count > io_limit)
-+		count = io_limit;
-+
-+	return count;
-+}
-+
- static ssize_t at24_regmap_read(struct at24_data *at24, char *buf,
- 				unsigned int offset, size_t count)
- {
-@@ -289,9 +304,7 @@ static ssize_t at24_regmap_read(struct at24_data *at24, char *buf,
- 	at24_client = at24_translate_offset(at24, &offset);
- 	regmap = at24_client->regmap;
- 	client = at24_client->client;
--
--	if (count > io_limit)
--		count = io_limit;
-+	count = at24_adjust_read_count(at24, offset, count);
- 
- 	/* adjust offset for mac and serial read ops */
- 	offset += at24->offset_adj;
-@@ -457,6 +470,8 @@ static void at24_get_pdata(struct device *dev, struct at24_platform_data *chip)
- 
- 	if (device_property_present(dev, "read-only"))
- 		chip->flags |= AT24_FLAG_READONLY;
-+	if (device_property_present(dev, "no-read-rollover"))
-+		chip->flags |= AT24_FLAG_NO_RDROL;
- 
- 	err = device_property_read_u32(dev, "size", &val);
- 	if (!err)
-diff --git a/include/linux/platform_data/at24.h b/include/linux/platform_data/at24.h
-index 271a4e2..841bb28 100644
---- a/include/linux/platform_data/at24.h
-+++ b/include/linux/platform_data/at24.h
-@@ -50,6 +50,8 @@ struct at24_platform_data {
- #define AT24_FLAG_TAKE8ADDR	BIT(4)	/* take always 8 addresses (24c00) */
- #define AT24_FLAG_SERIAL	BIT(3)	/* factory-programmed serial number */
- #define AT24_FLAG_MAC		BIT(2)	/* factory-programmed mac address */
-+#define AT24_FLAG_NO_RDROL  BIT(1)	/* does not auto-rollover reads to */
-+					/* the next slave address */
- 
- 	void		(*setup)(struct nvmem_device *nvmem, void *context);
- 	void		*context;
--- 
-1.9.1
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
