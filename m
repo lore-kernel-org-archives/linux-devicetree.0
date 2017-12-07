@@ -1,7 +1,7 @@
 From: Nuno Goncalves <nunojpg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: [PATCH] ARM: dts: sunxi: add H3/H5 uart2 rts/cts bindings
-Date: Thu,  7 Dec 2017 10:35:39 +0100
-Message-ID: <20171207093539.7915-1-nunojpg@gmail.com>
+Date: Thu,  7 Dec 2017 10:42:34 +0100
+Message-ID: <20171207094234.8549-1-nunojpg@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
