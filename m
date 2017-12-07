@@ -1,36 +1,38 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v5 1/2] at24: support eeproms that do not auto-rollover reads.
-Date: Thu, 7 Dec 2017 22:33:51 +0100
-Message-ID: <CAMRc=MeEnDYjDTpE=XKuP3LricsnEnh0RHKMzxEPUcOS6E0tPQ@mail.gmail.com>
-References: <1512657378-5221-1-git-send-email-svendev@arcx.com>
- <1512657378-5221-2-git-send-email-svendev@arcx.com> <CAMRc=MdhJRD+G18Xh5vfmaHHdJ+g9EnDTxUHVxhzDzVt-D0KMg@mail.gmail.com>
- <20171207190230.ttq5xthgsuuy4swn@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20171207190230.ttq5xthgsuuy4swn@pengutronix.de>
-Sender: linux-i2c-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, nsekhar@ti.com, Sakari Ailus <sakari.ailus@linux.intel.com>, David Lechner <david@lechnology.com>, Javier Martinez Canillas <javier@dowhile0.org>, Divagar Mohandass <divagar.mohandass@intel.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 2/3] bluetooth: hci_ll: add constant for vendor-specific
+ command
+Date: Thu, 7 Dec 2017 22:43:18 +0100
+Message-ID: <C76378A5-AAAF-42A6-BD74-119E4863D813@holtmann.org>
+References: <1512357682-8911-1-git-send-email-david@lechnology.com>
+ <1512357682-8911-3-git-send-email-david@lechnology.com>
+ <5C65FB74-D7FD-4653-993A-5A68AD844A41@holtmann.org>
+ <55fff19a-c30f-88f0-afb2-6c0b9bad25a7@lechnology.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <55fff19a-c30f-88f0-afb2-6c0b9bad25a7@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Network Development <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2017-12-07 20:02 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutron=
-ix.de>:
-> Hello,
->
-> On Thu, Dec 07, 2017 at 05:26:50PM +0100, Bartosz Golaszewski wrote:
->> > +       if (at24->chip.flags & AT24_FLAG_NO_RDROL) {
->> > +               bits =3D (at24->chip.flags & AT24_FLAG_ADDR16) ? 16 : =
-8;
->>
->> There's no need for braces around the ternary operator's condition.
->
-> Even if not required, I'd keep them for clearity.
->
+Hi David,
 
-I don't want to start bikeshedding, so I'll take it as it is, but I
-prefer to avoid braces wherever it's not necessary.
+>>> This adds a #define for the vendor-specific HCI command to set the
+>>> baudrate instead of using the bare 0xff36 multiple times.
+>>> 
+>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>> ---
+>>> drivers/bluetooth/hci_ll.c | 10 ++++++++--
+>>> 1 file changed, 8 insertions(+), 2 deletions(-)
+>> patch has been applied to bluetooth-next tree.
+> 
+> I am new to the bluetooth tree, so just to be sure... does this mean I should not include this patch in v2 of this series since this patch has been applied?
 
-Thanks,
-Bartosz
+please don’t include already applied patches. Base everything against bluetooth-next tree.
+
+Regards
+
+Marcel
