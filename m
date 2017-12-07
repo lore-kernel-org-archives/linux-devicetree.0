@@ -1,317 +1,46 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v3 1/2] clocksource: npcm: add NPCM7xx timer driver
-Date: Thu, 7 Dec 2017 12:40:33 -0800
-Message-ID: <CAFd5g45PX+8Dmc1FC-X9DoPqLPxEf4Qgf-VJwcJ9WL_Nq5LAqg@mail.gmail.com>
-References: <1509985716-25759-1-git-send-email-tmaimon77@gmail.com>
- <1509985716-25759-2-git-send-email-tmaimon77@gmail.com> <CAFd5g44tDoV-9yeaZ3UCUZibW7vUMeBVQRAihB++LSC44ZO0TA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g44tDoV-9yeaZ3UCUZibW7vUMeBVQRAihB++LSC44ZO0TA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Avi Fishman <avifishman70@gmail.com>, Rick Altherr <raltherr@google.com>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH V7 0/7] dmaengine: qcom_hidma: add support for bugfixed HW
+Date: Thu,  7 Dec 2017 16:10:24 -0500
+Message-ID: <1512681031-11343-1-git-send-email-okaya@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 17, 2017 at 11:29 AM, Brendan Higgins
-<brendanhiggins@google.com> wrote:
-> On Mon, Nov 6, 2017 at 8:28 AM, Tomer Maimon <tmaimon77@gmail.com> wrote:
->> Add Nuvoton BMC NPCM7xx timer driver.
->>
->> the clocksource Enable 24-bit TIMER0 and TIMER1 counters,
->> while TIMER0 serves as clockevent and TIMER1 serves as clocksource.
->>
->> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->> ---
->>  drivers/clocksource/Kconfig         |   8 ++
->>  drivers/clocksource/Makefile        |   1 +
->>  drivers/clocksource/npcm7xx-timer.c | 239 ++++++++++++++++++++++++++++++++++++
->>  3 files changed, 248 insertions(+)
->>  create mode 100644 drivers/clocksource/npcm7xx-timer.c
->>
->> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->> index cc6062049170..46184af75d6c 100644
->> --- a/drivers/clocksource/Kconfig
->> +++ b/drivers/clocksource/Kconfig
->> @@ -140,6 +140,14 @@ config VT8500_TIMER
->>         help
->>           Enables support for the VT8500 driver.
->>
->> +config NPCM7XX_TIMER
->> +       bool "NPCM7xx timer driver" if COMPILE_TEST
->> +       depends on HAS_IOMEM
->> +       select CLKSRC_MMIO
->> +       help
->> +         Enable 24-bit TIMER0 and TIMER1 counters in the NPCM7xx arcithcture,
->> +         While TIMER0 serves as clockevent and TIMER1 serves as clocksource.
->> +
->>  config CADENCE_TTC_TIMER
->>         bool "Cadence TTC timer driver" if COMPILE_TEST
->>         depends on COMMON_CLK
->> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
->> index 72711f1491e3..ff2b30b75b5b 100644
->> --- a/drivers/clocksource/Makefile
->> +++ b/drivers/clocksource/Makefile
->> @@ -54,6 +54,7 @@ obj-$(CONFIG_CLKSRC_TI_32K)   += timer-ti-32k.o
->>  obj-$(CONFIG_CLKSRC_NPS)       += timer-nps.o
->>  obj-$(CONFIG_OXNAS_RPS_TIMER)  += timer-oxnas-rps.o
->>  obj-$(CONFIG_OWL_TIMER)                += owl-timer.o
->> +obj-$(CONFIG_NPCM7XX_TIMER)    += npcm7xx-timer.o
->>
->>  obj-$(CONFIG_ARC_TIMERS)               += arc_timer.o
->>  obj-$(CONFIG_ARM_ARCH_TIMER)           += arm_arch_timer.o
->> diff --git a/drivers/clocksource/npcm7xx-timer.c b/drivers/clocksource/npcm7xx-timer.c
->> new file mode 100644
->> index 000000000000..b9b468da4560
->> --- /dev/null
->> +++ b/drivers/clocksource/npcm7xx-timer.c
->> @@ -0,0 +1,239 @@
->> +
->> +/*
->> + * Copyright (c) 2017 Nuvoton Technology corporation.
->> + * Copyright 2017 Google, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation;version 2 of the License.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/sched.h>
->> +#include <linux/init.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/err.h>
->> +#include <linux/clk.h>
->> +#include <linux/io.h>
->> +#include <linux/clockchips.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/of_address.h>
->> +#include "timer-of.h"
->> +
->> +/* Timers registers */
->> +#define NPCM7XX_REG_TCSR0      0x0 /* Timer 0 Control and Status Register */
->> +#define NPCM7XX_REG_TICR0      0x8 /* Timer 0 Initial Count Register */
->> +#define NPCM7XX_REG_TCSR1      0x4 /* Timer 1 Control and Status Register */
->> +#define NPCM7XX_REG_TICR1      0xc /* Timer 1 Initial Count Register */
->> +#define NPCM7XX_REG_TDR1       0x14 /* Timer 1 Data Register */
->> +#define NPCM7XX_REG_TISR       0x18 /* Timer Interrupt Status Register */
->> +
->> +/* Timers control */
->> +#define NPCM7XX_Tx_RESETINT            0x1f
->> +#define NPCM7XX_Tx_PERIOD              BIT(27)
->> +#define NPCM7XX_Tx_INTEN               BIT(29)
->> +#define NPCM7XX_Tx_COUNTEN             BIT(30)
->> +#define NPCM7XX_Tx_ONESHOT             0x0
->> +#define NPCM7XX_Tx_OPER                        GENMASK(3, 27)
->> +#define NPCM7XX_Tx_MIN_PRESCALE                0x1
->> +#define NPCM7XX_Tx_TDR_MASK_BITS       24
->> +#define NPCM7XX_Tx_MAX_CNT             0xFFFFFF
->> +#define NPCM7XX_T0_CLR_INT             0x1
->> +#define NPCM7XX_Tx_CLR_CSR             0x0
->> +
->> +/* Timers operating mode */
->> +#define NPCM7XX_START_PERIODIC_Tx (NPCM7XX_Tx_PERIOD | NPCM7XX_Tx_COUNTEN | \
->> +                                       NPCM7XX_Tx_INTEN | \
->> +                                       NPCM7XX_Tx_MIN_PRESCALE)
->> +
->> +#define NPCM7XX_START_ONESHOT_Tx (NPCM7XX_Tx_ONESHOT | NPCM7XX_Tx_COUNTEN | \
->> +                                       NPCM7XX_Tx_INTEN | \
->> +                                       NPCM7XX_Tx_MIN_PRESCALE)
->> +
->> +#define NPCM7XX_START_Tx (NPCM7XX_Tx_COUNTEN | NPCM7XX_Tx_PERIOD | \
->> +                               NPCM7XX_Tx_MIN_PRESCALE)
->> +
->> +#define NPCM7XX_DEFAULT_CSR (NPCM7XX_Tx_CLR_CSR | NPCM7XX_Tx_MIN_PRESCALE)
->> +
->> +static int npcm7xx_timer_resume(struct clock_event_device *evt)
->> +{
->> +       struct timer_of *to = to_timer_of(evt);
->> +       u32 val;
->> +
->> +       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +       val |= NPCM7XX_Tx_COUNTEN;
->> +       writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +
->> +       return 0;
->> +}
->> +
->> +static int npcm7xx_timer_shutdown(struct clock_event_device *evt)
->> +{
->> +       struct timer_of *to = to_timer_of(evt);
->> +       u32 val;
->> +
->> +       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +       val &= ~NPCM7XX_Tx_COUNTEN;
->> +       writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +
->> +       return 0;
->> +}
->> +
->> +static int npcm7xx_timer_oneshot(struct clock_event_device *evt)
->> +{
->> +       struct timer_of *to = to_timer_of(evt);
->> +       u32 val;
->> +
->> +       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +       val &= ~NPCM7XX_Tx_OPER;
->> +
->> +       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +       val |= NPCM7XX_START_ONESHOT_Tx;
->> +       writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +
->> +       return 0;
->> +}
->> +
->> +static int npcm7xx_timer_periodic(struct clock_event_device *evt)
->> +{
->> +       struct timer_of *to = to_timer_of(evt);
->> +       u32 val;
->> +
->> +       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +       val &= ~NPCM7XX_Tx_OPER;
->> +
->> +       writel((timer_of_rate(to) / HZ),
->> +               timer_of_base(to) + NPCM7XX_REG_TICR0);
->> +       val |= NPCM7XX_START_PERIODIC_Tx;
->> +
->> +       writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +
->> +       return 0;
->> +}
->> +
->> +static int npcm7xx_clockevent_setnextevent(unsigned long evt,
->> +               struct clock_event_device *clk)
->> +{
->> +       struct timer_of *to = to_timer_of(clk);
->> +       u32 val;
->> +
->> +       writel(evt, timer_of_base(to) + NPCM7XX_REG_TICR0);
->> +       val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +       val |= NPCM7XX_START_Tx;
->> +       writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
->> +
->> +       return 0;
->> +}
->> +
->> +static irqreturn_t npcm7xx_timer0_interrupt(int irq, void *dev_id)
->> +{
->> +       struct clock_event_device *evt = (struct clock_event_device *)dev_id;
->> +       struct timer_of *to = to_timer_of(evt);
->> +
->> +       writel(NPCM7XX_T0_CLR_INT, timer_of_base(to) + NPCM7XX_REG_TISR);
->> +
->> +       evt->event_handler(evt);
->> +
->> +       return IRQ_HANDLED;
->> +}
->> +
->> +static struct timer_of to_npcm7xx = {
->
-> nit: the prefix should be npcm7xx_*
->
->> +       .flags = TIMER_OF_IRQ | TIMER_OF_BASE,
->> +
->> +       .clkevt = {
->> +               .name               = "npcm7xx-timer0",
->> +               .features           = CLOCK_EVT_FEAT_PERIODIC |
->> +                                     CLOCK_EVT_FEAT_ONESHOT,
->> +               .set_next_event     = npcm7xx_clockevent_setnextevent,
->> +               .set_state_shutdown = npcm7xx_timer_shutdown,
->> +               .set_state_periodic = npcm7xx_timer_periodic,
->> +               .set_state_oneshot  = npcm7xx_timer_oneshot,
->> +               .tick_resume        = npcm7xx_timer_resume,
->> +               .rating             = 300,
->> +       },
->> +
->> +       .of_irq = {
->> +               .handler = npcm7xx_timer0_interrupt,
->> +               .flags = IRQF_TIMER | IRQF_IRQPOLL,
->> +       },
->> +};
->> +
->> +static void __init npcm7xx_clockevents_init(u32 rate)
->> +{
->> +       writel(NPCM7XX_DEFAULT_CSR,
->> +               timer_of_base(&to_npcm7xx) + NPCM7XX_REG_TCSR0);
->> +
->> +       writel(NPCM7XX_Tx_RESETINT,
->> +               timer_of_base(&to_npcm7xx) + NPCM7XX_REG_TISR);
->> +
->> +       to_npcm7xx.clkevt.cpumask = cpumask_of(0);
->> +       clockevents_config_and_register(&to_npcm7xx.clkevt, rate,
->> +                                       0x1, NPCM7XX_Tx_MAX_CNT);
->> +}
->> +
->> +static void __init npcm7xx_clocksource_init(u32 rate)
->> +{
->> +       u32 val;
->> +
->> +       writel(NPCM7XX_DEFAULT_CSR,
->> +               timer_of_base(&to_npcm7xx) + NPCM7XX_REG_TCSR1);
->> +       writel(NPCM7XX_Tx_MAX_CNT,
->> +               timer_of_base(&to_npcm7xx) + NPCM7XX_REG_TICR1);
->> +
->> +       val = readl(timer_of_base(&to_npcm7xx) + NPCM7XX_REG_TCSR1);
->> +       val |= NPCM7XX_START_Tx;
->> +       writel(val, timer_of_base(&to_npcm7xx) + NPCM7XX_REG_TCSR1);
->> +
->> +       clocksource_mmio_init(timer_of_base(&to_npcm7xx) +
->> +                               NPCM7XX_REG_TDR1,
->> +                               "npcm7xx-timer1", rate,
->> +                               300, (unsigned int)NPCM7XX_Tx_TDR_MASK_BITS,
->> +                               clocksource_mmio_readl_down);
->> +}
->> +
->> +static int __init npcm7xx_timer_init(struct device_node *np)
->> +{
->> +       struct clk *clk;
->> +       int ret;
->> +       u32 rate;
->> +
->> +       clk = of_clk_get(np, 0);
->> +
->> +       if (IS_ERR(clk)) {
->> +               ret = of_property_read_u32(np, "clock-frequency", &rate);
->> +               if (ret)
->> +                       return ret;
->> +       } else {
->> +               clk_prepare_enable(clk);
->> +               rate = clk_get_rate(clk);
->> +               to_npcm7xx.of_clk.clk = clk;
->> +       }
->> +
->> +       ret = timer_of_init(np, &to_npcm7xx);
->> +       if (ret)
->> +               goto err_timer_of_init;
->> +
->> +       /* Clock input is divided by PRESCALE + 1 before it is fed */
->> +       /* to the counter */
->> +       rate = rate / (NPCM7XX_Tx_MIN_PRESCALE + 1);
->> +       to_npcm7xx.of_clk.rate = rate;
->> +
->> +       npcm7xx_clocksource_init(rate);
->> +       npcm7xx_clockevents_init(rate);
->> +
->> +       pr_info("Enabling NPCM7xx clocksource timer base: %p, IRQ: %d\n",
->> +                timer_of_base(&to_npcm7xx), timer_of_irq(&to_npcm7xx));
->> +
->> +       return 0;
->> +
->> +err_timer_of_init:
->> +       if (!IS_ERR(clk)) {
->> +               clk_disable_unprepare(clk);
->> +               clk_put(clk);
->> +       }
->> +
->> +       return ret;
->> +}
->> +
->> +TIMER_OF_DECLARE(npcm7xx, "nuvoton,npcm750-timer", npcm7xx_timer_init);
->> +
->> --
->> 2.14.1
->>
->
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Introduce new ACPI and OF device ids for thw HW along with the helper
+functions.
 
-Any update on this?
+Changes from v6:
+* add const to the device callback parameter in fwnode.
+* reorganize the callbacks in the code
+* rename get_match_data() as device_get_match_data()
+* place pointer checks into acpi_get_match_data()
+
+Sinan Kaya (7):
+  Documentation: DT: qcom_hidma: Bump HW revision for the bugfixed HW
+  ACPI / bus: Introduce acpi_get_match_data() function
+  device property: Introduce a common API to fetch device match data
+  OF: properties: Implement get_match_data() callback
+  ACPI: properties: Implement get_match_data() callback
+  dmaengine: qcom_hidma: Add support for the new revision
+  dmaengine: qcom_hidma: Add identity register support
+
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  4 +--
+ drivers/acpi/bus.c                                 | 18 ++++++++++
+ drivers/acpi/property.c                            |  8 +++++
+ drivers/base/property.c                            |  7 ++++
+ drivers/dma/qcom/hidma.c                           | 41 ++++++++++------------
+ drivers/of/property.c                              |  8 +++++
+ include/linux/acpi.h                               |  6 ++++
+ include/linux/fwnode.h                             |  4 +++
+ include/linux/property.h                           |  2 ++
+ 9 files changed, 74 insertions(+), 24 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
