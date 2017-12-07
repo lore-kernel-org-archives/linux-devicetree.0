@@ -1,7 +1,7 @@
 From: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Subject: [PATCH v2 04/10] arm64: dts: qcom: msm8916: drop unused board-specific nodes
-Date: Thu,  7 Dec 2017 10:19:36 -0500
-Message-ID: <20171207151942.5805-5-damien.riegel@savoirfairelinux.com>
+Subject: [PATCH v2 09/10] arm64: dts: qcom: msm8916: normalize I2C and SPI nodes
+Date: Thu,  7 Dec 2017 10:19:41 -0500
+Message-ID: <20171207151942.5805-10-damien.riegel@savoirfairelinux.com>
 References: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
@@ -10,84 +10,119 @@ To: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.ke
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kernel@savoirfairelinux.com, Damien Riegel <damien.riegel@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-These nodes reserve and configure some pins as GPIOs. They are not
-generic pinctrls, they actually belong to board files but they are not
-used by any other node, so just drop them altogether.
+The QUP core can be used either for I2C or SPI, so the same IP is mapped
+by a driver or the other. SPI bindings use a leading 0 for the start
+address and a size of 0x600, I2C bindings don't have the leading 0 and
+have a size 0x1000.
+
+To make them more similar, add the leading 0 to I2C bindings and changes
+the size to 0x500 for all of them, as this is the actual size of these
+blocks. Also align the second entry of the clocks array.
 
 Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
 ---
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 52 ------------------------------
- 1 file changed, 52 deletions(-)
+Changes in v2:
+ - Set size to 0x500
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index 10fc1fc90682..21f144c55638 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -505,32 +505,6 @@
- 		};
- 	};
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index e16ba8334518..ac440f287633 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -355,7 +355,7 @@
  
--	ext-codec-lines {
--		ext_codec_lines_act: lines_on {
--			pinmux {
--				function = "gpio";
--				pins = "gpio67";
--			};
--			pinconf {
--				pins = "gpio67";
--				drive-strength = <8>;
--				bias-disable;
--				output-high;
--			};
--		};
--		ext_codec_lines_sus: lines_off {
--			pinmux {
--				function = "gpio";
--				pins = "gpio67";
--			};
--			pinconf {
--				pins = "gpio67";
--				drive-strength = <2>;
--				bias-disable;
--			};
--		};
--	};
--
- 	cdc-pdm-lines {
- 		cdc_pdm_lines_act: pdm_lines_on {
- 			pinmux {
-@@ -703,32 +677,6 @@
- 		};
- 	};
+ 		blsp_spi1: spi@78b5000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+-			reg = <0x078b5000 0x600>;
++			reg = <0x078b5000 0x500>;
+ 			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
+ 				 <&gcc GCC_BLSP1_AHB_CLK>;
+@@ -372,7 +372,7 @@
  
--	cross-conn-det {
--		cross_conn_det_act: lines_on {
--			pinmux {
--				function = "gpio";
--				pins = "gpio120";
--			};
--			pinconf {
--				pins = "gpio120";
--				drive-strength = <8>;
--				output-low;
--				bias-pull-down;
--			};
--		};
--		cross_conn_det_sus: lines_off {
--			pinmux {
--				function = "gpio";
--				pins = "gpio120";
--			};
--			pinconf {
--				pins = "gpio120";
--				drive-strength = <2>;
--				bias-disable;
--			};
--		};
--	};
--
- 	wcnss_pin_a: wcnss-active {
- 		pinmux {
- 			pins = "gpio40", "gpio41", "gpio42", "gpio43", "gpio44";
+ 		blsp_spi2: spi@78b6000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+-			reg = <0x078b6000 0x600>;
++			reg = <0x078b6000 0x500>;
+ 			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_QUP2_SPI_APPS_CLK>,
+ 				 <&gcc GCC_BLSP1_AHB_CLK>;
+@@ -389,7 +389,7 @@
+ 
+ 		blsp_spi3: spi@78b7000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+-			reg = <0x078b7000 0x600>;
++			reg = <0x078b7000 0x500>;
+ 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_QUP3_SPI_APPS_CLK>,
+ 				 <&gcc GCC_BLSP1_AHB_CLK>;
+@@ -406,7 +406,7 @@
+ 
+ 		blsp_spi4: spi@78b8000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+-			reg = <0x078b8000 0x600>;
++			reg = <0x078b8000 0x500>;
+ 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_QUP4_SPI_APPS_CLK>,
+ 				 <&gcc GCC_BLSP1_AHB_CLK>;
+@@ -423,7 +423,7 @@
+ 
+ 		blsp_spi5: spi@78b9000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+-			reg = <0x078b9000 0x600>;
++			reg = <0x078b9000 0x500>;
+ 			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_QUP5_SPI_APPS_CLK>,
+ 				 <&gcc GCC_BLSP1_AHB_CLK>;
+@@ -440,7 +440,7 @@
+ 
+ 		blsp_spi6: spi@78ba000 {
+ 			compatible = "qcom,spi-qup-v2.2.1";
+-			reg = <0x078ba000 0x600>;
++			reg = <0x078ba000 0x500>;
+ 			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_QUP6_SPI_APPS_CLK>,
+ 				 <&gcc GCC_BLSP1_AHB_CLK>;
+@@ -457,10 +457,10 @@
+ 
+ 		blsp_i2c2: i2c@78b6000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+-			reg = <0x78b6000 0x1000>;
++			reg = <0x078b6000 0x500>;
+ 			interrupts = <GIC_SPI 96 0>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+-				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
++				 <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
+ 			clock-names = "iface", "core";
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&i2c2_default>;
+@@ -472,10 +472,10 @@
+ 
+ 		blsp_i2c4: i2c@78b8000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+-			reg = <0x78b8000 0x1000>;
++			reg = <0x078b8000 0x500>;
+ 			interrupts = <GIC_SPI 98 0>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+-				<&gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>;
++				 <&gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>;
+ 			clock-names = "iface", "core";
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&i2c4_default>;
+@@ -487,10 +487,10 @@
+ 
+ 		blsp_i2c6: i2c@78ba000 {
+ 			compatible = "qcom,i2c-qup-v2.2.1";
+-			reg = <0x78ba000 0x1000>;
++			reg = <0x078ba000 0x500>;
+ 			interrupts = <GIC_SPI 100 0>;
+ 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
+-				<&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>;
++				 <&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>;
+ 			clock-names = "iface", "core";
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&i2c6_default>;
 -- 
 2.15.0
