@@ -1,464 +1,77 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v3 18/33] nds32: Signal handling support
-Date: Fri,  8 Dec 2017 17:12:01 +0800
-Message-ID: <303239da5939ea6a8fc5eb4e5250c2eb0941d204.1512723245.git.green.hu@gmail.com>
-References: <cover.1512723245.git.green.hu@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4.1] phylib: Add device reset GPIO support
+Date: Fri, 8 Dec 2017 10:53:26 +0100
+Message-ID: <CAMuHMdWv6CiCihjFHn-k2=3PC+-bRQaKMsZcsx51MYpynTLO4A@mail.gmail.com>
+References: <1512383692-14009-2-git-send-email-geert+renesas@glider.be>
+ <1512390905-28094-1-git-send-email-geert+renesas@glider.be> <69fe9a6d-4039-6f80-b80d-7dc0de31e5bf@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1512723245.git.green.hu@gmail.com>
-In-Reply-To: <cover.1512723245.git.green.hu@gmail.com>
-References: <cover.1512723245.git.green.hu@gmail.com>
+In-Reply-To: <69fe9a6d-4039-6f80-b80d-7dc0de31e5bf@cogentembedded.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com
-Cc: green.hu@gmail.com, Vincent Chen <vincentc@andestech.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "David S . Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Leitner <richard.leitner@skidata.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Greentime Hu <greentime@andestech.com>
+Hi Sergei,
 
-This patch adds support for signal handling.
+On Thu, Dec 7, 2017 at 6:20 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 12/04/2017 03:35 PM, Geert Uytterhoeven wrote:
+>> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> The PHY devices sometimes do have their reset signal (maybe even power
+>> supply?) tied to some GPIO and sometimes it also does happen that a boot
+>> loader does not leave it deasserted. So far this issue has been attacked
+>> from (as I believe) a wrong angle: by teaching the MAC driver to
+>> manipulate
+>> the GPIO in question; that solution, when applied to the device trees, led
+>> to adding the PHY reset GPIO properties to the MAC device node, with one
+>> exception: Cadence MACB driver which could handle the "reset-gpios" prop
+>> in a PHY device subnode. I believe that the correct approach is to teach
+>> the 'phylib' to get the MDIO device reset GPIO from the device tree node
+>> corresponding to this device -- which this patch is doing...
+>>
+>> Note that I had to modify the AT803x PHY driver as it would stop working
+>> otherwise -- it made use of the reset GPIO for its own purposes...
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> [geert: Propagate actual errors from fwnode_get_named_gpiod()]
+>> [geert: Avoid destroying initial setup]
+>> [geert: Consolidate GPIO descriptor acquiring code]
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> [...]
+>>
+>> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+>> index 2df7b62c1a36811e..8f8b7747c54bc478 100644
+>> --- a/drivers/net/phy/mdio_bus.c
+>> +++ b/drivers/net/phy/mdio_bus.c
+>
+> [...]
+>>
+>> @@ -48,9 +49,26 @@
+>>     int mdiobus_register_device(struct mdio_device *mdiodev)
+>>   {
+>> +       struct gpio_desc *gpiod = NULL;
+>> +
+>>         if (mdiodev->bus->mdio_map[mdiodev->addr])
+>>                 return -EBUSY;
+>>   +     /* Deassert the optional reset signal */
+>
+>
+>    Umm, but why deassert it here for such a short time?
 
-Signed-off-by: Vincent Chen <vincentc@andestech.com>
-Signed-off-by: Greentime Hu <greentime@andestech.com>
----
- arch/nds32/include/uapi/asm/sigcontext.h |   73 +++++++
- arch/nds32/kernel/signal.c               |  350 ++++++++++++++++++++++++++++++
- 2 files changed, 423 insertions(+)
- create mode 100644 arch/nds32/include/uapi/asm/sigcontext.h
- create mode 100644 arch/nds32/kernel/signal.c
+That's a consequence of moving it from drivers/of/of_mdio.c to here.
+Not that it was deasserted that much longer in drivers/of/of_mdio.c, though...
 
-diff --git a/arch/nds32/include/uapi/asm/sigcontext.h b/arch/nds32/include/uapi/asm/sigcontext.h
-new file mode 100644
-index 0000000..1c0dfcb
---- /dev/null
-+++ b/arch/nds32/include/uapi/asm/sigcontext.h
-@@ -0,0 +1,73 @@
-+/*
-+ * Copyright (C) 2005-2017 Andes Technology Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef _ASMNDS32_SIGCONTEXT_H
-+#define _ASMNDS32_SIGCONTEXT_H
-+
-+/*
-+ * Signal context structure - contains all info to do with the state
-+ * before the signal handler was invoked.  Note: only add new entries
-+ * to the end of the structure.
-+ */
-+
-+struct zol_struct {
-+	unsigned long nds32_lc;	/* $LC */
-+	unsigned long nds32_le;	/* $LE */
-+	unsigned long nds32_lb;	/* $LB */
-+};
-+
-+struct sigcontext {
-+	unsigned long trap_no;
-+	unsigned long error_code;
-+	unsigned long oldmask;
-+	unsigned long nds32_r0;
-+	unsigned long nds32_r1;
-+	unsigned long nds32_r2;
-+	unsigned long nds32_r3;
-+	unsigned long nds32_r4;
-+	unsigned long nds32_r5;
-+	unsigned long nds32_r6;
-+	unsigned long nds32_r7;
-+	unsigned long nds32_r8;
-+	unsigned long nds32_r9;
-+	unsigned long nds32_r10;
-+	unsigned long nds32_r11;
-+	unsigned long nds32_r12;
-+	unsigned long nds32_r13;
-+	unsigned long nds32_r14;
-+	unsigned long nds32_r15;
-+	unsigned long nds32_r16;
-+	unsigned long nds32_r17;
-+	unsigned long nds32_r18;
-+	unsigned long nds32_r19;
-+	unsigned long nds32_r20;
-+	unsigned long nds32_r21;
-+	unsigned long nds32_r22;
-+	unsigned long nds32_r23;
-+	unsigned long nds32_r24;
-+	unsigned long nds32_r25;
-+	unsigned long nds32_fp;	/* $r28 */
-+	unsigned long nds32_gp;	/* $r29 */
-+	unsigned long nds32_lp;	/* $r30 */
-+	unsigned long nds32_sp;	/* $r31 */
-+	unsigned long nds32_ipc;
-+	unsigned long fault_address;
-+	unsigned long used_math_flag;
-+	/* FPU Registers */
-+	struct zol_struct zol;
-+};
-+
-+#endif
-diff --git a/arch/nds32/kernel/signal.c b/arch/nds32/kernel/signal.c
-new file mode 100644
-index 0000000..f43248a
---- /dev/null
-+++ b/arch/nds32/kernel/signal.c
-@@ -0,0 +1,350 @@
-+/*
-+ * Copyright (C) 2005-2017 Andes Technology Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/signal.h>
-+#include <linux/ptrace.h>
-+#include <linux/personality.h>
-+#include <linux/freezer.h>
-+#include <linux/tracehook.h>
-+#include <linux/uaccess.h>
-+
-+#include <asm/cacheflush.h>
-+#include <asm/ucontext.h>
-+#include <asm/unistd.h>
-+
-+#include <asm/ptrace.h>
-+#include <asm/vdso.h>
-+
-+struct rt_sigframe {
-+	struct siginfo info;
-+	struct ucontext uc;
-+};
-+
-+static int restore_sigframe(struct pt_regs *regs,
-+			    struct rt_sigframe __user * sf)
-+{
-+	sigset_t set;
-+	int err;
-+
-+	err = __copy_from_user(&set, &sf->uc.uc_sigmask, sizeof(set));
-+	if (err == 0) {
-+		set_current_blocked(&set);
-+	}
-+
-+	__get_user_error(regs->uregs[0], &sf->uc.uc_mcontext.nds32_r0, err);
-+	__get_user_error(regs->uregs[1], &sf->uc.uc_mcontext.nds32_r1, err);
-+	__get_user_error(regs->uregs[2], &sf->uc.uc_mcontext.nds32_r2, err);
-+	__get_user_error(regs->uregs[3], &sf->uc.uc_mcontext.nds32_r3, err);
-+	__get_user_error(regs->uregs[4], &sf->uc.uc_mcontext.nds32_r4, err);
-+	__get_user_error(regs->uregs[5], &sf->uc.uc_mcontext.nds32_r5, err);
-+	__get_user_error(regs->uregs[6], &sf->uc.uc_mcontext.nds32_r6, err);
-+	__get_user_error(regs->uregs[7], &sf->uc.uc_mcontext.nds32_r7, err);
-+	__get_user_error(regs->uregs[8], &sf->uc.uc_mcontext.nds32_r8, err);
-+	__get_user_error(regs->uregs[9], &sf->uc.uc_mcontext.nds32_r9, err);
-+	__get_user_error(regs->uregs[10], &sf->uc.uc_mcontext.nds32_r10, err);
-+	__get_user_error(regs->uregs[11], &sf->uc.uc_mcontext.nds32_r11, err);
-+	__get_user_error(regs->uregs[12], &sf->uc.uc_mcontext.nds32_r12, err);
-+	__get_user_error(regs->uregs[13], &sf->uc.uc_mcontext.nds32_r13, err);
-+	__get_user_error(regs->uregs[14], &sf->uc.uc_mcontext.nds32_r14, err);
-+	__get_user_error(regs->uregs[15], &sf->uc.uc_mcontext.nds32_r15, err);
-+	__get_user_error(regs->uregs[16], &sf->uc.uc_mcontext.nds32_r16, err);
-+	__get_user_error(regs->uregs[17], &sf->uc.uc_mcontext.nds32_r17, err);
-+	__get_user_error(regs->uregs[18], &sf->uc.uc_mcontext.nds32_r18, err);
-+	__get_user_error(regs->uregs[19], &sf->uc.uc_mcontext.nds32_r19, err);
-+	__get_user_error(regs->uregs[20], &sf->uc.uc_mcontext.nds32_r20, err);
-+	__get_user_error(regs->uregs[21], &sf->uc.uc_mcontext.nds32_r21, err);
-+	__get_user_error(regs->uregs[22], &sf->uc.uc_mcontext.nds32_r22, err);
-+	__get_user_error(regs->uregs[23], &sf->uc.uc_mcontext.nds32_r23, err);
-+	__get_user_error(regs->uregs[24], &sf->uc.uc_mcontext.nds32_r24, err);
-+	__get_user_error(regs->uregs[25], &sf->uc.uc_mcontext.nds32_r25, err);
-+
-+	__get_user_error(regs->fp, &sf->uc.uc_mcontext.nds32_fp, err);
-+	__get_user_error(regs->gp, &sf->uc.uc_mcontext.nds32_gp, err);
-+	__get_user_error(regs->lp, &sf->uc.uc_mcontext.nds32_lp, err);
-+	__get_user_error(regs->sp, &sf->uc.uc_mcontext.nds32_sp, err);
-+	__get_user_error(regs->ipc, &sf->uc.uc_mcontext.nds32_ipc, err);
-+#if defined(CONFIG_HWZOL)
-+	__get_user_error(regs->lc, &sf->uc.uc_mcontext.zol.nds32_lc, err);
-+	__get_user_error(regs->le, &sf->uc.uc_mcontext.zol.nds32_le, err);
-+	__get_user_error(regs->lb, &sf->uc.uc_mcontext.zol.nds32_lb, err);
-+#endif
-+
-+	return err;
-+}
-+
-+asmlinkage long sys_rt_sigreturn(struct pt_regs *regs)
-+{
-+	struct rt_sigframe __user *frame;
-+
-+	/* Always make any pending restarted system calls return -EINTR */
-+	current->restart_block.fn = do_no_restart_syscall;
-+
-+	/*
-+	 * Since we stacked the signal on a 64-bit boundary,
-+	 * then 'sp' should be two-word aligned here.  If it's
-+	 * not, then the user is trying to mess with us.
-+	 */
-+	if (regs->sp & 7)
-+		goto badframe;
-+
-+	frame = (struct rt_sigframe __user *)regs->sp;
-+
-+	if (!access_ok(VERIFY_READ, frame, sizeof(*frame)))
-+		goto badframe;
-+
-+	if (restore_sigframe(regs, frame))
-+		goto badframe;
-+
-+	if (restore_altstack(&frame->uc.uc_stack))
-+		goto badframe;
-+
-+	return regs->uregs[0];
-+
-+badframe:
-+	force_sig(SIGSEGV, current);
-+	return 0;
-+}
-+
-+static int
-+setup_sigframe(struct rt_sigframe __user * sf, struct pt_regs *regs,
-+	       sigset_t * set)
-+{
-+	int err = 0;
-+
-+
-+	__put_user_error(regs->uregs[0], &sf->uc.uc_mcontext.nds32_r0, err);
-+	__put_user_error(regs->uregs[1], &sf->uc.uc_mcontext.nds32_r1, err);
-+	__put_user_error(regs->uregs[2], &sf->uc.uc_mcontext.nds32_r2, err);
-+	__put_user_error(regs->uregs[3], &sf->uc.uc_mcontext.nds32_r3, err);
-+	__put_user_error(regs->uregs[4], &sf->uc.uc_mcontext.nds32_r4, err);
-+	__put_user_error(regs->uregs[5], &sf->uc.uc_mcontext.nds32_r5, err);
-+	__put_user_error(regs->uregs[6], &sf->uc.uc_mcontext.nds32_r6, err);
-+	__put_user_error(regs->uregs[7], &sf->uc.uc_mcontext.nds32_r7, err);
-+	__put_user_error(regs->uregs[8], &sf->uc.uc_mcontext.nds32_r8, err);
-+	__put_user_error(regs->uregs[9], &sf->uc.uc_mcontext.nds32_r9, err);
-+	__put_user_error(regs->uregs[10], &sf->uc.uc_mcontext.nds32_r10, err);
-+	__put_user_error(regs->uregs[11], &sf->uc.uc_mcontext.nds32_r11, err);
-+	__put_user_error(regs->uregs[12], &sf->uc.uc_mcontext.nds32_r12, err);
-+	__put_user_error(regs->uregs[13], &sf->uc.uc_mcontext.nds32_r13, err);
-+	__put_user_error(regs->uregs[14], &sf->uc.uc_mcontext.nds32_r14, err);
-+	__put_user_error(regs->uregs[15], &sf->uc.uc_mcontext.nds32_r15, err);
-+	__put_user_error(regs->uregs[16], &sf->uc.uc_mcontext.nds32_r16, err);
-+	__put_user_error(regs->uregs[17], &sf->uc.uc_mcontext.nds32_r17, err);
-+	__put_user_error(regs->uregs[18], &sf->uc.uc_mcontext.nds32_r18, err);
-+	__put_user_error(regs->uregs[19], &sf->uc.uc_mcontext.nds32_r19, err);
-+	__put_user_error(regs->uregs[20], &sf->uc.uc_mcontext.nds32_r20, err);
-+
-+	__put_user_error(regs->uregs[21], &sf->uc.uc_mcontext.nds32_r21, err);
-+	__put_user_error(regs->uregs[22], &sf->uc.uc_mcontext.nds32_r22, err);
-+	__put_user_error(regs->uregs[23], &sf->uc.uc_mcontext.nds32_r23, err);
-+	__put_user_error(regs->uregs[24], &sf->uc.uc_mcontext.nds32_r24, err);
-+	__put_user_error(regs->uregs[25], &sf->uc.uc_mcontext.nds32_r25, err);
-+	__put_user_error(regs->fp, &sf->uc.uc_mcontext.nds32_fp, err);
-+	__put_user_error(regs->gp, &sf->uc.uc_mcontext.nds32_gp, err);
-+	__put_user_error(regs->lp, &sf->uc.uc_mcontext.nds32_lp, err);
-+	__put_user_error(regs->sp, &sf->uc.uc_mcontext.nds32_sp, err);
-+	__put_user_error(regs->ipc, &sf->uc.uc_mcontext.nds32_ipc, err);
-+#if defined(CONFIG_HWZOL)
-+	__put_user_error(regs->lc, &sf->uc.uc_mcontext.zol.nds32_lc, err);
-+	__put_user_error(regs->le, &sf->uc.uc_mcontext.zol.nds32_le, err);
-+	__put_user_error(regs->lb, &sf->uc.uc_mcontext.zol.nds32_lb, err);
-+#endif
-+
-+	__put_user_error(current->thread.trap_no, &sf->uc.uc_mcontext.trap_no,
-+			 err);
-+	__put_user_error(current->thread.error_code,
-+			 &sf->uc.uc_mcontext.error_code, err);
-+	__put_user_error(current->thread.address,
-+			 &sf->uc.uc_mcontext.fault_address, err);
-+	__put_user_error(set->sig[0], &sf->uc.uc_mcontext.oldmask, err);
-+
-+	err |= __copy_to_user(&sf->uc.uc_sigmask, set, sizeof(*set));
-+
-+	return err;
-+}
-+
-+static inline void __user *get_sigframe(struct ksignal *ksig,
-+					struct pt_regs *regs, int framesize)
-+{
-+	unsigned long sp = sigsp(regs->sp, ksig);
-+	void __user *frame;
-+
-+	/*
-+	 * nds32 mandates 8-byte alignment
-+	 */
-+	frame = (void __user *)((sp - framesize) & ~7);
-+
-+	/*
-+	 * Check that we can actually write to the signal frame.
-+	 */
-+	if (!access_ok(VERIFY_WRITE, frame, framesize))
-+		frame = NULL;
-+
-+	return frame;
-+}
-+
-+static int
-+setup_return(struct pt_regs *regs, struct ksignal *ksig, void __user * frame)
-+{
-+	unsigned long handler = (unsigned long)ksig->ka.sa.sa_handler;
-+	unsigned long retcode;
-+
-+	retcode = VDSO_SYMBOL(current->mm->context.vdso, rt_sigtramp);
-+	regs->uregs[0] = ksig->sig;
-+	regs->sp = (unsigned long)frame;
-+	regs->lp = retcode;
-+	regs->ipc = handler;
-+
-+	return 0;
-+}
-+
-+static int
-+setup_rt_frame(struct ksignal *ksig, sigset_t * set, struct pt_regs *regs)
-+{
-+	struct rt_sigframe __user *frame =
-+	    get_sigframe(ksig, regs, sizeof(*frame));
-+	int err = 0;
-+
-+	if (!frame)
-+		return 1;
-+
-+	err |= copy_siginfo_to_user(&frame->info, &ksig->info);
-+
-+	__put_user_error(0, &frame->uc.uc_flags, err);
-+	__put_user_error(NULL, &frame->uc.uc_link, err);
-+
-+	err |= __save_altstack(&frame->uc.uc_stack, regs->sp);
-+	err |= setup_sigframe(frame, regs, set);
-+	if (err == 0) {
-+		setup_return(regs, ksig, frame);
-+
-+		if (err == 0) {
-+			/*
-+			 * For realtime signals we must also set the second and third
-+			 * arguments for the signal handler.
-+			 *   -- Peter Maydell <pmaydell@chiark.greenend.org.uk> 2000-12-06
-+			 */
-+			regs->uregs[1] = (unsigned long)&frame->info;
-+			regs->uregs[2] = (unsigned long)&frame->uc;
-+		}
-+	}
-+	return err;
-+}
-+
-+/*
-+ * OK, we're invoking a handler
-+ */
-+static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
-+{
-+	int ret;
-+	sigset_t *oldset = sigmask_to_save();
-+
-+	/*
-+	 * Set up the stack frame
-+	 */
-+	ret = setup_rt_frame(ksig, oldset, regs);
-+
-+	/*
-+	 * Check that the resulting registers are actually sane.
-+	 */
-+	ret |= !valid_user_regs(regs);
-+
-+	signal_setup_done(ret, ksig, 0);
-+}
-+
-+/*
-+ * Note that 'init' is a special process: it doesn't get signals it doesn't
-+ * want to handle. Thus you cannot kill init even with a SIGKILL even by
-+ * mistake.
-+ *
-+ * Note that we go through the signals twice: once to check the signals that
-+ * the kernel can handle, and then we build all the user-level signal handling
-+ * stack-frames in one go after that.
-+ */
-+static int do_signal(struct pt_regs *regs, int syscall)
-+{
-+	unsigned int retval = 0, continue_addr = 0, restart_addr = 0;
-+	struct ksignal ksig;
-+	int restart = 0;
-+
-+	/*
-+	 * If we were from a system call, check for system call restarting...
-+	 */
-+	if (syscall) {
-+		continue_addr = regs->ipc;
-+		restart_addr = continue_addr - 4;
-+		retval = regs->uregs[0];
-+
-+		/*
-+		 * Prepare for system call restart.  We do this here so that a
-+		 * debugger will see the already changed PSW.
-+		 */
-+		switch (retval) {
-+		case -ERESTART_RESTARTBLOCK:
-+			restart -= 2;
-+		case -ERESTARTNOHAND:
-+		case -ERESTARTSYS:
-+		case -ERESTARTNOINTR:
-+			restart++;
-+			regs->uregs[0] = regs->orig_r0;
-+			regs->ipc = restart_addr;
-+			break;
-+		}
-+	}
-+
-+	/*
-+	 * Get the signal to deliver.  When running under ptrace, at this
-+	 * point the debugger may change all our registers ...
-+	 */
-+	/*
-+	 * Depending on the signal settings we may need to revert the
-+	 * decision to restart the system call.  But skip this if a
-+	 * debugger has chosen to restart at a different PC.
-+	 */
-+	if (get_signal(&ksig)) {
-+		if (unlikely(restart) && regs->ipc == restart_addr) {
-+			if (retval == -ERESTARTNOHAND ||
-+			    retval == -ERESTART_RESTARTBLOCK
-+			    || (retval == -ERESTARTSYS
-+				&& !(ksig.ka.sa.sa_flags & SA_RESTART))) {
-+				regs->uregs[0] = -EINTR;
-+				regs->ipc = continue_addr;
-+			}
-+		}
-+		handle_signal(&ksig, regs);
-+	} else {
-+		restore_saved_sigmask();
-+		if (unlikely(restart) && regs->ipc == restart_addr) {
-+			regs->ipc = continue_addr;
-+			return restart;
-+		}
-+	}
-+	return 0;
-+}
-+
-+asmlinkage int
-+do_notify_resume(struct pt_regs *regs, unsigned int thread_flags, int syscall)
-+{
-+	if (thread_flags & _TIF_SIGPENDING)
-+		return do_signal(regs, syscall);
-+
-+	if (thread_flags & _TIF_NOTIFY_RESUME) {
-+		clear_thread_flag(TIF_NOTIFY_RESUME);
-+		tracehook_notify_resume(regs);
-+	}
-+	return 0;
-+}
--- 
-1.7.9.5
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
