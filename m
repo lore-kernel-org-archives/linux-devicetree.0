@@ -1,88 +1,72 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 09/12] clk: qcom: Add Krait clock controller driver
-Date: Fri, 8 Dec 2017 16:30:02 +0530
-Message-ID: <797300f7-d655-8df3-8597-099e44bd209c@codeaurora.org>
-References: <1512725401-4944-1-git-send-email-sricharan@codeaurora.org>
- <1512725401-4944-10-git-send-email-sricharan@codeaurora.org>
- <CAOFm3uHdFn_GxJuQ-HfQpGAM5rWOT7=DyKUGtDz6dadoxdkBcw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v9 0/6] stm32 clocksource driver rework
+Date: Fri,  8 Dec 2017 12:32:44 +0100
+Message-ID: <20171208113250.359-1-benjamin.gaignard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOFm3uHdFn_GxJuQ-HfQpGAM5rWOT7=DyKUGtDz6dadoxdkBcw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philippe,
+version 9:
+ - rebased on timer/master where timer_of_cleanup() exist
+ - fix the comments done by Daniel on v8
+ - reword commits message to be more explicit about 16 bits counter issue
+ - add one patch about copyrights and licences
+   
+version 8:
+ - rebased on timers/core
+ - change timer_of_exit() name to timer_of_cleanup()
+ - update stm32 clocksource driver to use this function
 
+version 7:
+ - reword "clocksource: stm32: only use 32 bits timers" commit message
+   to give more details about why 16 bits are problematics.
 
-On 12/8/2017 3:53 PM, Philippe Ombredanne wrote:
-> Sricharan, Stephen,
-> 
-> On Fri, Dec 8, 2017 at 10:29 AM, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>
->> The Krait CPU clocks are made up of a primary mux and secondary
->> mux for each CPU and the L2, controlled via cp15 accessors. For
->> Kraits within KPSSv1 each secondary mux accepts a different aux
->> source, but on KPSSv2 each secondary mux accepts the same aux
->> source.
->>
->> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
->> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> []
->> --- /dev/null
->> +++ b/drivers/clk/qcom/krait-cc.c
->> @@ -0,0 +1,350 @@
->> +/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 and
->> + * only version 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
-> 
-> Have you considered using the new SPDX ids? Something like this:
-> 
-> // SPDX-License-Identifier: GPL-2.0
-> // Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
-> 
-> Beside  being simpler and increasing the code to comment ratio by
-> deleting 9 lines of boilerplate, this will also save a few trees over
-> the long term each time that I print the source code of the kernel ;)
-> (do not worry, I am NOT as insane as to really print the kernel
-> sources, but someone more insane than me may well do it)
-> 
-> You may wonder about the C++ // comment style I used here... Please
-> see Linus posts on the topic as well as Thomas doc patches overall for
-> instructions on using the SPDX ids.
-> 
-> And if you were to do this for your past, present and future
-> contributions (eventually these of your group), I would be quite
-> grateful.
-> 
-> Thank you for your kind consideration
-> 
+version 6:
+ - add dedicated patch min delta change
+ - rework commit messages, I hope it will be better now
+ - change new function name from timer_of_deinit to timer_of_exit
+ - make stm32_clock_event_set_next_event() safer like done in other
+   drivers
 
-Ha ok. will change it to use this one. Infact saw this feedback on other
-patches, but missed updating to it while sending.
+version 6:
+- add timer_of_deinit function in core
+- rework failure cases in probe function
 
-Regards,
- Sricharan
+version 5:
+- rebase on top of timer/core branch
+- rework commit message of the first patch
+
+version 4:
+- split patch in 3 parts
+  - convert code to timer_of
+  - only use 32 bits timers
+  - add clocksource support
+
+version 3:
+- fix comments done by Daniel
+- use timer_of helper functions
+
+version 2:
+- fix uninitialized variable
+
+Benjamin Gaignard (6):
+  clocksource: stm32: convert driver to timer_of
+  clocksource: stm32: increase min delta value
+  clocksource: stm32: only use 32 bits timers
+  clocksource: stm32: add clocksource support
+  clocksource: stm32: Update license and copyright
+  arm: dts: stm32: remove useless clocksource nodes
+
+ arch/arm/boot/dts/stm32f429.dtsi  |  32 -----
+ arch/arm/boot/dts/stm32f746.dtsi  |  32 -----
+ drivers/clocksource/Kconfig       |   1 +
+ drivers/clocksource/timer-stm32.c | 253 +++++++++++++++++++++-----------------
+ 4 files changed, 139 insertions(+), 179 deletions(-)
 
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+2.15.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
