@@ -1,153 +1,65 @@
 From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v9 6/6] arm: dts: stm32: remove useless clocksource nodes
-Date: Fri,  8 Dec 2017 12:32:50 +0100
-Message-ID: <20171208113250.359-7-benjamin.gaignard@st.com>
+Subject: [PATCH v9 2/6] clocksource: stm32: increase min delta value
+Date: Fri,  8 Dec 2017 12:32:46 +0100
+Message-ID: <20171208113250.359-3-benjamin.gaignard@st.com>
 References: <20171208113250.359-1-benjamin.gaignard@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20171208113250.359-1-benjamin.gaignard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, daniel.lezcano@linaro.org, tglx@linutronix.de, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
 
-16 bits timers aren't accurate enough to be used as
-clocksource, remove them from stm32f4 and stm32f7 devicetree.
+The CPU is a CortexM4 @ 200MHZ and the clocks driving
+the timers are at 90MHZ with a min delta at 1 you could
+have an interrupt each 0.01 ms which is really to much.
+By increase it to 0x60 it give more time (around 1 ms)
+to CPU to handle the interrupt.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
 ---
- arch/arm/boot/dts/stm32f429.dtsi | 32 --------------------------------
- arch/arm/boot/dts/stm32f746.dtsi | 32 --------------------------------
- 2 files changed, 64 deletions(-)
+ drivers/clocksource/timer-stm32.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index 10099df8b73e..b507e04a52c6 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -107,14 +107,6 @@
- 			};
- 		};
+diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
+index fc61fd18a182..a45f1f1cd040 100644
+--- a/drivers/clocksource/timer-stm32.c
++++ b/drivers/clocksource/timer-stm32.c
+@@ -36,6 +36,12 @@
  
--		timer3: timer@40000400 {
--			compatible = "st,stm32-timer";
--			reg = <0x40000400 0x400>;
--			interrupts = <29>;
--			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM3)>;
--			status = "disabled";
--		};
--
- 		timers3: timers@40000400 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -136,14 +128,6 @@
- 			};
- 		};
+ #define TIM_EGR_UG	BIT(0)
  
--		timer4: timer@40000800 {
--			compatible = "st,stm32-timer";
--			reg = <0x40000800 0x400>;
--			interrupts = <30>;
--			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM4)>;
--			status = "disabled";
--		};
--
- 		timers4: timers@40000800 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -193,14 +177,6 @@
- 			};
- 		};
++/*
++ * The clock driving the hardware is at 90MHZ with a MIN_DELTA
++ * at 0x60 it gives around 1 ms to the CPU to handle the interrupt
++ */
++#define MIN_DELTA	0x60
++
+ static int stm32_clock_event_shutdown(struct clock_event_device *evt)
+ {
+ 	struct timer_of *to = to_timer_of(evt);
+@@ -129,7 +135,8 @@ static int __init stm32_clockevent_init(struct device_node *node)
+ 	writel_relaxed(0, timer_of_base(to) + TIM_SR);
  
--		timer6: timer@40001000 {
--			compatible = "st,stm32-timer";
--			reg = <0x40001000 0x400>;
--			interrupts = <54>;
--			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM6)>;
--			status = "disabled";
--		};
--
- 		timers6: timers@40001000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -217,14 +193,6 @@
- 			};
- 		};
+ 	clockevents_config_and_register(&to->clkevt,
+-					timer_of_period(to), 0x1, max_delta);
++					timer_of_period(to),
++					MIN_DELTA, max_delta);
  
--		timer7: timer@40001400 {
--			compatible = "st,stm32-timer";
--			reg = <0x40001400 0x400>;
--			interrupts = <55>;
--			clocks = <&rcc 0 STM32F4_APB1_CLOCK(TIM7)>;
--			status = "disabled";
--		};
--
- 		timers7: timers@40001400 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index 5f66d151eedb..bb3e262bd456 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -103,14 +103,6 @@
- 			};
- 		};
- 
--		timer3: timer@40000400 {
--			compatible = "st,stm32-timer";
--			reg = <0x40000400 0x400>;
--			interrupts = <29>;
--			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM3)>;
--			status = "disabled";
--		};
--
- 		timers3: timers@40000400 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -132,14 +124,6 @@
- 			};
- 		};
- 
--		timer4: timer@40000800 {
--			compatible = "st,stm32-timer";
--			reg = <0x40000800 0x400>;
--			interrupts = <30>;
--			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM4)>;
--			status = "disabled";
--		};
--
- 		timers4: timers@40000800 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -189,14 +173,6 @@
- 			};
- 		};
- 
--		timer6: timer@40001000 {
--			compatible = "st,stm32-timer";
--			reg = <0x40001000 0x400>;
--			interrupts = <54>;
--			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM6)>;
--			status = "disabled";
--		};
--
- 		timers6: timers@40001000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -213,14 +189,6 @@
- 			};
- 		};
- 
--		timer7: timer@40001400 {
--			compatible = "st,stm32-timer";
--			reg = <0x40001400 0x400>;
--			interrupts = <55>;
--			clocks = <&rcc 0 STM32F7_APB1_CLOCK(TIM7)>;
--			status = "disabled";
--		};
--
- 		timers7: timers@40001400 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+ 	pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
+ 			node, bits);
 -- 
 2.15.0
