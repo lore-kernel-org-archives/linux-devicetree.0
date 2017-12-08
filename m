@@ -1,81 +1,54 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v4 09/12] clk: qcom: Add Krait clock controller driver
-Date: Fri, 8 Dec 2017 14:10:34 +0100
-Message-ID: <CAOFm3uErpOH9Sug8q9QQaWqjTT2_ZS99p35oFmiadLP2iiHtsA@mail.gmail.com>
-References: <1512725401-4944-1-git-send-email-sricharan@codeaurora.org>
- <1512725401-4944-10-git-send-email-sricharan@codeaurora.org>
- <CAOFm3uHdFn_GxJuQ-HfQpGAM5rWOT7=DyKUGtDz6dadoxdkBcw@mail.gmail.com> <797300f7-d655-8df3-8597-099e44bd209c@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <797300f7-d655-8df3-8597-099e44bd209c@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, mturquette@linaro.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, viresh.kumar@linaro.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/2] of: overlay: Crash fix and improvement
+Date: Fri,  8 Dec 2017 14:13:01 +0100
+Message-ID: <1512738783-17452-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Sricharan,
+	Hi Pantelis, Rob, Frank,
 
-On Fri, Dec 8, 2017 at 12:00 PM, Sricharan R <sricharan@codeaurora.org> wrote:
-> Hi Philippe,
->
->
-> On 12/8/2017 3:53 PM, Philippe Ombredanne wrote:
->> Sricharan, Stephen,
->>
->> On Fri, Dec 8, 2017 at 10:29 AM, Sricharan R <sricharan@codeaurora.org> wrote:
->>> From: Stephen Boyd <sboyd@codeaurora.org>
->>>
->>> The Krait CPU clocks are made up of a primary mux and secondary
->>> mux for each CPU and the L2, controlled via cp15 accessors. For
->>> Kraits within KPSSv1 each secondary mux accepts a different aux
->>> source, but on KPSSv2 each secondary mux accepts the same aux
->>> source.
->>>
->>> Cc: <devicetree@vger.kernel.org>
->>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->> []
->>> --- /dev/null
->>> +++ b/drivers/clk/qcom/krait-cc.c
->>> @@ -0,0 +1,350 @@
->>> +/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 and
->>> + * only version 2 as published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + */
->>
->> Have you considered using the new SPDX ids? Something like this:
->>
->> // SPDX-License-Identifier: GPL-2.0
->> // Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
->>
->> Beside  being simpler and increasing the code to comment ratio by
->> deleting 9 lines of boilerplate, this will also save a few trees over
->> the long term each time that I print the source code of the kernel ;)
->> (do not worry, I am NOT as insane as to really print the kernel
->> sources, but someone more insane than me may well do it)
->>
->> You may wonder about the C++ // comment style I used here... Please
->> see Linus posts on the topic as well as Thomas doc patches overall for
->> instructions on using the SPDX ids.
->>
->> And if you were to do this for your past, present and future
->> contributions (eventually these of your group), I would be quite
->> grateful.
->>
->> Thank you for your kind consideration
->>
->
-> Ha ok. will change it to use this one. Infact saw this feedback on other
-> patches, but missed updating to it while sending.
+This patch series fixes memory corruption when applying overlays.
+
+I first noticed this when using OF configfs.  After lots of failed
+debugging attempts, I bisected it to "of: overlay: add per overlay sysfs
+attributes", which is not upstream.  But that was a red herring: that
+commit enlarged struct fragment to exactly 64-bytes, which just made it
+more likely to cause random corruption when writing beyond the end of an
+array of fragment structures.  With the smaller structure size before,
+such writes usually ended up in the unused holes between allocated
+blocks, causing no harm.
+
+The first patch is the real fix, and applies to both v4.15-rc2 and Rob's
+for-next branch.
+The second patch is a small improvement, and applies to Rob's for-next
+branch only.
+
+I've updated my topic/overlays and topic/renesas-overlays branches at
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git
+accordingly.
 
 Thanks!
+
+Geert Uytterhoeven (2):
+  of: overlay: Fix out-of-bounds write in init_overlay_changeset()
+  of: overlay: Make node skipping in init_overlay_changeset() clearer
+
+ drivers/of/overlay.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
+
 -- 
-Cordially
-Philippe Ombredanne
+2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
