@@ -1,104 +1,68 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: [PATCH v7 00/13]  Add STM32 DFSDM support
-Date: Fri, 8 Dec 2017 15:49:13 +0100
-Message-ID: <1512744566-13233-1-git-send-email-arnaud.pouliquen@st.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH v4 4/4] arm64: dts: meson-axg: add clock DT info for Meson
+ AXG SoC
+Date: Fri, 8 Dec 2017 22:50:38 +0800
+Message-ID: <92c1b309-15a1-4978-4f76-358fd4e22890@amlogic.com>
+References: <20171201012452.27086-1-yixun.lan@amlogic.com>
+ <20171201012452.27086-5-yixun.lan@amlogic.com> <7ho9nbmked.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-iio@vger.kernel.org, arnaud.pouliquen@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <7ho9nbmked.fsf@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: yixun.lan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 12/07/17 08:50, Kevin Hilman wrote:
+> Yixun Lan <yixun.lan@amlogic.com> writes:
+> 
+>> From: Qiufang Dai <qiufang.dai@amlogic.com>
+>>
+>> Try to add Hiubus DT info, and also enable clock DT info
+>> for the Amlogic's Meson-AXG SoC.
+>>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
+>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> index b932a784b02a..36a2e98338a8 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> @@ -7,6 +7,7 @@
+>>  #include <dt-bindings/gpio/gpio.h>
+>>  #include <dt-bindings/interrupt-controller/irq.h>
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/clock/axg-clkc.h>
+> 
+> This #include will cause an unnessary dependency from the amlogic tree
+> to the clock tree even though this patch is not currently using any of
+> the #defines from that header.  It will simplify the dependencies if you
+> drop this #include from this patch.
+> 
+> In my comment on the cover letter, I suggested adding a patch that also
+> switches the UART over to the new clock provider.  That is the patch
+> that should add this #include, since it will actually need #defines from
+> the header.
+> 
+ok, make sense
+> Doing it in that order means that we could merge this patch
+> independently of the clock driver, and then merge the UART switch-over
+> patch only after the driver (and headers) are merged.
+I was planing to add UART DT part as separately patches (including the
+UARt's pinctrl part information)
 
-Here is a new version integrating last comments 
+but as follow your suggestion, I could split the UART's clock DT info
+into separate patch, and send along with this series.
 
-Main deltas V7 vs V6:
-- Replaces the custom license information text with the appropriate 
-  SPDX identifier.
-- Few fixes in sound/soc/stm/stm32_adfsdm.c and stm32-dfsdm-core.c.
-- Add missing #interrupt-cells in binding examples.
-- Integrate last Jonathan's comments.
+> 
+> Kevin
+> 
+> .
+> 
 
-
-Main deltas V6 vs V5:
-- Fix warning reported by kbuild test in :
-   include/linux/iio/consumer.h
-   sound/soc/stm/stm32_adfsdm.c
-
-Main deltas V5 vs V4:
-- Integrate ASOC DAI as a subnode of the DFSDM.
-- Add in kernel consumer interface to allow to manipulate attribute.
-
-Regards,
-Arnaud
-
-Arnaud Pouliquen (12):
-  docs: driver-api: add iio hw consumer section
-  IIO: hw_consumer: add devm_iio_hw_consumer_alloc
-  IIO: inkern: API for manipulating channel attributes
-  IIO: Add DT bindings for sigma delta adc modulator
-  IIO: ADC: add sigma delta modulator support
-  IIO: add DT bindings for stm32 DFSDM filter
-  IIO: ADC: add stm32 DFSDM core support
-  IIO: ADC: add STM32 DFSDM sigma delta ADC support
-  IIO: ADC: add stm32 DFSDM support for PDM microphone
-  IIO: consumer: allow to set buffer sizes
-  ASoC: add bindings for stm32 DFSDM filter
-  ASoC: stm32: add DFSDM DAI support
-
-Lars-Peter Clausen (1):
-  iio: Add hardware consumer buffer support
-
- .../ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32      |   16 +
- .../bindings/iio/adc/sigma-delta-modulator.txt     |   13 +
- .../bindings/iio/adc/st,stm32-dfsdm-adc.txt        |  128 ++
- .../devicetree/bindings/sound/st,stm32-adfsdm.txt  |   63 +
- Documentation/driver-api/iio/hw-consumer.rst       |   51 +
- Documentation/driver-api/iio/index.rst             |    1 +
- drivers/iio/adc/Kconfig                            |   37 +
- drivers/iio/adc/Makefile                           |    3 +
- drivers/iio/adc/sd_adc_modulator.c                 |   68 ++
- drivers/iio/adc/stm32-dfsdm-adc.c                  | 1220 ++++++++++++++++++++
- drivers/iio/adc/stm32-dfsdm-core.c                 |  309 +++++
- drivers/iio/adc/stm32-dfsdm.h                      |  310 +++++
- drivers/iio/buffer/Kconfig                         |   10 +
- drivers/iio/buffer/Makefile                        |    1 +
- drivers/iio/buffer/industrialio-buffer-cb.c        |   11 +
- drivers/iio/buffer/industrialio-hw-consumer.c      |  247 ++++
- drivers/iio/inkern.c                               |   18 +-
- include/linux/iio/adc/stm32-dfsdm-adc.h            |   18 +
- include/linux/iio/consumer.h                       |   37 +
- include/linux/iio/hw-consumer.h                    |   21 +
- include/linux/iio/iio.h                            |   28 -
- include/linux/iio/types.h                          |   28 +
- sound/soc/stm/Kconfig                              |   11 +
- sound/soc/stm/Makefile                             |    3 +
- sound/soc/stm/stm32_adfsdm.c                       |  351 ++++++
- 25 files changed, 2970 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
- create mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
- create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
- create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-adfsdm.txt
- create mode 100644 Documentation/driver-api/iio/hw-consumer.rst
- create mode 100644 drivers/iio/adc/sd_adc_modulator.c
- create mode 100644 drivers/iio/adc/stm32-dfsdm-adc.c
- create mode 100644 drivers/iio/adc/stm32-dfsdm-core.c
- create mode 100644 drivers/iio/adc/stm32-dfsdm.h
- create mode 100644 drivers/iio/buffer/industrialio-hw-consumer.c
- create mode 100644 include/linux/iio/adc/stm32-dfsdm-adc.h
- create mode 100644 include/linux/iio/hw-consumer.h
- create mode 100644 sound/soc/stm/stm32_adfsdm.c
-
--- 
-2.7.4
