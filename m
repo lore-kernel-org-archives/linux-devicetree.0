@@ -1,64 +1,58 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] eeprom: at25: Add DT support for EEPROMs with odd address bits
-Date: Fri,  8 Dec 2017 14:46:41 +0100
-Message-ID: <1512740801-21142-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ivo Sieben <meltedpianoman@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH v9 5/6] clocksource: stm32: Update license and copyright
+Date: Fri, 8 Dec 2017 14:46:25 +0100
+Message-ID: <CAOFm3uEGweexMydumojVKBuJ6QskBV+zWXUQBCx67dZvhiXrxg@mail.gmail.com>
+References: <20171208113250.359-1-benjamin.gaignard@st.com> <20171208113250.359-6-benjamin.gaignard@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171208113250.359-6-benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Certain EEPROMS have a size that is larger than the number of address
-bytes would allow, and store the MSB of the address in bit 3 of the
-instruction byte.
+On Fri, Dec 8, 2017 at 12:32 PM, Benjamin Gaignard
+<benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Adopt SPDX License Identifier and add STMicroelectronics
+> copyright
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/clocksource/timer-stm32.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
+> index c9aed2314194..21479c3cfcb9 100644
+> --- a/drivers/clocksource/timer-stm32.c
+> +++ b/drivers/clocksource/timer-stm32.c
+> @@ -1,7 +1,9 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * Copyright (C) Maxime Coquelin 2015
+> + * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
+>   * Author:  Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> - * License terms:  GNU General Public License (GPL), version 2
+> + * Author: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
+>   *
+>   * Inspired by time-efm32.c from Uwe Kleine-Koenig
+>   */
+> --
+> 2.15.0
+>
 
-This can be described in platform data using EE_INSTR_BIT3_IS_ADDR, or
-in DT using the obsolete legacy "at25,addr-mode" property.
-But currently there exists no non-deprecated way to describe this in DT.
+Benjamin,
 
-Hence extend the existing "address-width" DT property to allow
-specifying 9 address bits, and enable support for that in the driver.
+Thank you for this: every little bit of help counts towards making the
+whole kernel licensing easily greppable!
 
-This has been tested with a Microchip 25LC040A.
+FWIW:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Do not consider odd address widths of 17 or 25 bits,
-  - Move handling inside the switch() statement.
----
- Documentation/devicetree/bindings/eeprom/at25.txt | 4 +++-
- drivers/misc/eeprom/at25.c                        | 3 +++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+Reviewed-by: Philippe Ombredanne <pombredanne-kIH2VFuay/A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/eeprom/at25.txt b/Documentation/devicetree/bindings/eeprom/at25.txt
-index e823d90b802f7f8f..b3bde97dc19913ea 100644
---- a/Documentation/devicetree/bindings/eeprom/at25.txt
-+++ b/Documentation/devicetree/bindings/eeprom/at25.txt
-@@ -11,7 +11,9 @@ Required properties:
- - spi-max-frequency : max spi frequency to use
- - pagesize : size of the eeprom page
- - size : total eeprom size in bytes
--- address-width : number of address bits (one of 8, 16, or 24)
-+- address-width : number of address bits (one of 8, 9, 16, or 24).
-+  For 9 bits, the MSB of the address is sent as bit 3 of the instruction
-+  byte, before the address byte.
- 
- Optional properties:
- - spi-cpha : SPI shifted clock phase, as per spi-bus bindings.
-diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
-index 5afe4cd165699060..9282ffd607ff2799 100644
---- a/drivers/misc/eeprom/at25.c
-+++ b/drivers/misc/eeprom/at25.c
-@@ -276,6 +276,9 @@ static int at25_fw_to_chip(struct device *dev, struct spi_eeprom *chip)
- 			return -ENODEV;
- 		}
- 		switch (val) {
-+		case 9:
-+			chip->flags |= EE_INSTR_BIT3_IS_ADDR;
-+			/* fall through */
- 		case 8:
- 			chip->flags |= EE_ADDR1;
- 			break;
--- 
-2.7.4
+--
+Philippe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
