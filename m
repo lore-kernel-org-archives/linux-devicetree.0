@@ -1,39 +1,97 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH v5 2/4] clk: meson-axg: add clocks dt-bindings required
- header
-Date: Fri, 8 Dec 2017 09:14:31 +0800
-Message-ID: <a0cd3135-4ca1-ee18-6177-b98be4f7b5bd@amlogic.com>
-References: <20171207095300.15384-1-yixun.lan@amlogic.com>
- <20171207095300.15384-3-yixun.lan@amlogic.com>
- <20171207221014.6qwcb43w5hms4ma5@rob-hp-laptop>
+From: "liwei (CM)" <liwei213@huawei.com>
+Subject: =?gb2312?B?tPC4tDogW1BBVENIIHY2IDIvNV0gZHQtYmluZGluZ3M6IHNjc2k6IHVmczog?=
+ =?gb2312?Q?add_document_for_hisi-ufs?=
+Date: Fri, 8 Dec 2017 01:22:19 +0000
+Message-ID: <1699CE87DE933F49876AD744B5DC140FA4D67E@DGGEMM506-MBS.china.huawei.com>
+References: <20171207102026.14977-1-liwei213@huawei.com>
+ <20171207102026.14977-3-liwei213@huawei.com>
+ <20171207233548.kcgtlxfdsh3ibsxu@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171207221014.6qwcb43w5hms4ma5@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171207233548.kcgtlxfdsh3ibsxu@rob-hp-laptop>
+Content-Language: zh-CN
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: yixun.lan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "eric@anholt.net" <eric@anholt.net>, "krzk@kernel.org" <krzk@kernel.org>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "khilman@baylibre.com" <khilman@baylibre.com>, zangleigang <zangleigang@hisilicon.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>, "treding@nvidia.com" <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "Fengbaopeng (kevin,
+ Kirin Solution Dept)" <fengbaopeng@hisilicon.com>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.or
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/08/17 06:10, Rob Herring wrote:
-> On Thu, Dec 07, 2017 at 05:52:58PM +0800, Yixun Lan wrote:
->> From: Qiufang Dai <qiufang.dai@amlogic.com>
->>
->> Add the required header for the clocks ID dt-bindings
->> exported from various subsystem in the Meson-AXG SoC.
->>
->> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
->> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->> ---
->>  include/dt-bindings/clock/axg-clkc.h | 71 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 71 insertions(+)
->>  create mode 100644 include/dt-bindings/clock/axg-clkc.h
-> 
-> Please add acks when posting new versions.
-> 
-
-HI Rob
- thanks for the suggestion, I will keep this in mind
+SGksIFJvYg0KDQpUaGFuayB5b3UgZm9yIHlvdXIgYXR0ZW50aW9uICxpdCdzIHRoZSBuZXcgdmVy
+c2lvbi4gVGhlIGJlbGxvdyBpcyBubyB1c2UsIHNvIEknbGwgcmVtb3ZlIGl0IG5leHQgcGF0Y2gu
+DQoNCj4gKwkJZnJlcS10YWJsZS1oeiA9IDwwIDA+LCA8MCAwPjsNCg0KSW4gdGhlIG5ldyB2ZXJz
+aW9uLCB3ZSByZW1vdmUgc29tZSBubyB1c2UgY29kZXMgaW4gdGhlIGRyaXZlcjsgQW5kIHRha2lu
+ZyBpbnRvIGFjY291bnQgdGhlIG91ciBuZXh0IGhpMzY3MCBwbGF0Zm9ybSwgc29tZSBvZiB0aGUg
+cHVibGljIGZ1bmN0aW9ucyBpbiB0aGUgZHJpdmUgYXJlIGV4dHJhY3RlZC4NCkluIGFkZGl0aW9u
+Og0KMSkgd2UgZG8gbm90IGhhdmUgYSBzaW5nbGUgYXJlYSB0aGF0IGNvbnRyb2xzIFBIWSBhcyBR
+dWFsY29tbSwgc28gInBoeV9jbGsiIHJlbWFpbnMgdGhlIHNhbWUuDQoyo6kicnN0IiwgImFzc2Vy
+dCIgaXMgbm90IGdlbmVyaWMgYW5kIHJlbGF0ZWQgd2l0aCBvdXIgc29jIGltcGxlbWVudGF0aW9u
+LCBTbyBpdCdzIGtlcHQgYW5kIHRoZXJlJ3Mgbm8gY2hhbmdlLg0KDQoNCg0KLS0tLS3Tyrz+1K28
+/i0tLS0tDQq3orz+yMs6IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXSANCrei
+y83KsbzkOiAyMDE3xOoxMtTCOMjVIDc6MzYNCsrVvP7IyzogbGl3ZWkgKENNKQ0Ks63LzTogbWFy
+ay5ydXRsYW5kQGFybS5jb207IHh1d2VpIChPKTsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdp
+bGwuZGVhY29uQGFybS5jb207IHZpbmhvbGlrYXR0aUBnbWFpbC5jb207IGplamJAbGludXgudm5l
+dC5pYm0uY29tOyBtYXJ0aW4ucGV0ZXJzZW5Ab3JhY2xlLmNvbTsga2hpbG1hbkBiYXlsaWJyZS5j
+b207IGFybmRAYXJuZGIuZGU7IGdyZWdvcnkuY2xlbWVudEBmcmVlLWVsZWN0cm9ucy5jb207IHRo
+b21hcy5wZXRhenpvbmlAZnJlZS1lbGVjdHJvbnMuY29tOyB5YW1hZGEubWFzYWhpcm9Ac29jaW9u
+ZXh0LmNvbTsgcmlrdS52b2lwaW9AbGluYXJvLm9yZzsgdHJlZGluZ0BudmlkaWEuY29tOyBrcnpr
+QGtlcm5lbC5vcmc7IGVyaWNAYW5ob2x0Lm5ldDsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZzsgbGludXgtc2NzaUB2Z2VyLmtlcm5lbC5vcmc7IHphbmdsZWlnYW5nOyBHZW5n
+amlhbmZlbmc7IGd1b2RvbmcueHVAbGluYXJvLm9yZzsgemhhbmdmZWkuZ2FvQGxpbmFyby5vcmc7
+IEZlbmdiYW9wZW5nIChrZXZpbiwgS2lyaW4gU29sdXRpb24gRGVwdCkNCtb3zOI6IFJlOiBbUEFU
+Q0ggdjYgMi81XSBkdC1iaW5kaW5nczogc2NzaTogdWZzOiBhZGQgZG9jdW1lbnQgZm9yIGhpc2kt
+dWZzDQoNCk9uIFRodSwgRGVjIDA3LCAyMDE3IGF0IDA2OjIwOjIzUE0gKzA4MDAsIExpIFdlaSB3
+cm90ZToNCj4gYWRkIHVmcyBub2RlIGRvY3VtZW50IGZvciBIaXNpbGljb24uDQo+IA0KPiBTaWdu
+ZWQtb2ZmLWJ5OiBMaSBXZWkgPGxpd2VpMjEzQGh1YXdlaS5jb20+DQo+IC0tLQ0KDQpWZXJzaW9u
+IGhpc3Rvcnk/DQoNCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZz
+LWhpc2kudHh0IHwgMzggKysrKysrKysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDM4IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdWZzL3Vmcy1oaXNpLnR4dA0KPiANCj4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZzLWhpc2kudHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnMtaGlzaS50eHQNCj4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi43M2UxMDY5ODk2MGUNCj4gLS0tIC9k
+ZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vm
+cy1oaXNpLnR4dA0KPiBAQCAtMCwwICsxLDM4IEBADQo+ICsqIEhpc2lsaWNvbiBVbml2ZXJzYWwg
+Rmxhc2ggU3RvcmFnZSAoVUZTKSBIb3N0IENvbnRyb2xsZXINCj4gKw0KPiArVUZTIG5vZGVzIGFy
+ZSBkZWZpbmVkIHRvIGRlc2NyaWJlIG9uLWNoaXAgVUZTIGhhcmR3YXJlIG1hY3JvLg0KPiArRWFj
+aCBVRlMgSG9zdCBDb250cm9sbGVyIHNob3VsZCBoYXZlIGl0cyBvd24gbm9kZS4NCj4gKw0KPiAr
+UmVxdWlyZWQgcHJvcGVydGllczoNCj4gKy0gY29tcGF0aWJsZSAgICAgICAgOiBjb21wYXRpYmxl
+IGxpc3QsIGNvbnRhaW5zIG9uZSBvZiB0aGUgZm9sbG93aW5nIC0NCj4gKwkJCQkJImhpc2lsaWNv
+bixoaTM2NjAtdWZzIiwgImplZGVjLHVmcy0xLjEiIGZvciBoaXNpIHVmcw0KPiArCQkJCQlob3N0
+IGNvbnRyb2xsZXIgcHJlc2VudCBvbiBIaTM2eHggY2hpcHNldC4NCj4gKy0gcmVnICAgICAgICAg
+ICAgICAgOiBzaG91bGQgY29udGFpbiBVRlMgcmVnaXN0ZXIgYWRkcmVzcyBzcGFjZSAmIFVGUyBT
+WVMgQ1RSTCByZWdpc3RlciBhZGRyZXNzLA0KPiArLSBpbnRlcnJ1cHQtcGFyZW50ICA6IGludGVy
+cnVwdCBkZXZpY2UNCj4gKy0gaW50ZXJydXB0cyAgICAgICAgOiBpbnRlcnJ1cHQgbnVtYmVyDQo+
+ICstIGNsb2NrcwkgICAgICAgIDogTGlzdCBvZiBwaGFuZGxlIGFuZCBjbG9jayBzcGVjaWZpZXIg
+cGFpcnMNCj4gKy0gY2xvY2stbmFtZXMgICAgICAgOiBMaXN0IG9mIGNsb2NrIGlucHV0IG5hbWUg
+c3RyaW5ncyBzb3J0ZWQgaW4gdGhlIHNhbWUNCj4gKwkJCQkJb3JkZXIgYXMgdGhlIGNsb2NrcyBw
+cm9wZXJ0eS4gInJlZl9jbGsiLCAicGh5X2NsayIgaXMgb3B0aW9uYWwNCj4gKy0gcmVzZXRzICAg
+ICAgICAgICAgOiByZXNldCBub2RlIHJlZ2lzdGVyLCBvbmUgcmVzZXQgdGhlIGNsayBhbmQgdGhl
+IG90aGVyIHJlc2V0IHRoZSBjb250cm9sbGVyDQo+ICstIHJlc2V0LW5hbWVzICAgICAgIDogZGVz
+Y3JpYmUgcmVzZXQgbm9kZSByZWdpc3Rlcg0KPiArDQo+ICtFeGFtcGxlOg0KPiArDQo+ICsJdWZz
+OiB1ZnNAZmYzYjAwMDAgew0KPiArCQljb21wYXRpYmxlID0gImhpc2lsaWNvbixoaTM2NjAtdWZz
+IiwgImplZGVjLHVmcy0xLjEiOw0KPiArCQkvKiAwOiBIQ0kgc3RhbmRhcmQgKi8NCj4gKwkJLyog
+MTogVUZTIFNZUyBDVFJMICovDQo+ICsJCXJlZyA9IDwweDAgMHhmZjNiMDAwMCAweDAgMHgxMDAw
+PiwNCj4gKwkJCTwweDAgMHhmZjNiMTAwMCAweDAgMHgxMDAwPjsNCj4gKwkJaW50ZXJydXB0LXBh
+cmVudCA9IDwmZ2ljPjsNCj4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI3OCBJUlFfVFlQRV9M
+RVZFTF9ISUdIPjsNCj4gKwkJY2xvY2tzID0gPCZjcmdfY3RybCBISTM2NjBfQ0xLX0dBVEVfVUZT
+SU9fUkVGPiwNCj4gKwkJCTwmY3JnX2N0cmwgSEkzNjYwX0NMS19HQVRFX1VGU1BIWV9DRkc+Ow0K
+PiArCQljbG9jay1uYW1lcyA9ICJyZWZfY2xrIiwgInBoeV9jbGsiOw0KPiArCQlmcmVxLXRhYmxl
+LWh6ID0gPDAgMD4sIDwwIDA+Ow0KDQo/IE5vdCBkb2N1bWVudGVkLg0KDQo+ICsJCS8qIG9mZnNl
+dDogMHg4NDsgYml0OiAxMiAqLw0KPiArCQkvKiBvZmZzZXQ6IDB4ODQ7IGJpdDogNyAgKi8NCj4g
+KwkJcmVzZXRzID0gPCZjcmdfcnN0IDB4ODQgMTI+LA0KPiArCQkJPCZjcmdfcnN0IDB4ODQgNz47
+DQo+ICsJCXJlc2V0LW5hbWVzID0gInJzdCIsICJhc3NlcnQiOw0KPiArCX07DQo+IC0tIA0KPiAy
+LjE1LjANCj4gDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCg==
