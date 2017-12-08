@@ -1,76 +1,86 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4.14] Add support for bq27521 battery monitor
-Date: Fri, 8 Dec 2017 18:06:10 +0100
-Message-ID: <20171208170610.gbmlsgm7xzh2zpyn@earth>
-References: <20171109210615.GA27638@amd>
- <20171110103937.GA29900@amd>
- <20171201230649.GA27533@amd>
- <cfa89227-e08a-849f-c886-723268ae657c@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4.1] phylib: Add device reset GPIO support
+Date: Fri, 8 Dec 2017 20:20:09 +0300
+Message-ID: <837cb555-f747-e8a8-ac1a-aa25ad213c0a@cogentembedded.com>
+References: <1512383692-14009-2-git-send-email-geert+renesas@glider.be>
+ <1512390905-28094-1-git-send-email-geert+renesas@glider.be>
+ <69fe9a6d-4039-6f80-b80d-7dc0de31e5bf@cogentembedded.com>
+ <CAMuHMdWv6CiCihjFHn-k2=3PC+-bRQaKMsZcsx51MYpynTLO4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4b73ibcjevchptm6"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cfa89227-e08a-849f-c886-723268ae657c-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAMuHMdWv6CiCihjFHn-k2=3PC+-bRQaKMsZcsx51MYpynTLO4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-MW
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello!
 
---4b73ibcjevchptm6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/08/2017 12:53 PM, Geert Uytterhoeven wrote:
 
-Hi,
+>> On 12/04/2017 03:35 PM, Geert Uytterhoeven wrote:
+>>> From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>> The PHY devices sometimes do have their reset signal (maybe even power
+>>> supply?) tied to some GPIO and sometimes it also does happen that a boot
+>>> loader does not leave it deasserted. So far this issue has been attacked
+>>> from (as I believe) a wrong angle: by teaching the MAC driver to
+>>> manipulate
+>>> the GPIO in question; that solution, when applied to the device trees, led
+>>> to adding the PHY reset GPIO properties to the MAC device node, with one
+>>> exception: Cadence MACB driver which could handle the "reset-gpios" prop
+>>> in a PHY device subnode. I believe that the correct approach is to teach
+>>> the 'phylib' to get the MDIO device reset GPIO from the device tree node
+>>> corresponding to this device -- which this patch is doing...
+>>>
+>>> Note that I had to modify the AT803x PHY driver as it would stop working
+>>> otherwise -- it made use of the reset GPIO for its own purposes...
+>>>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> [geert: Propagate actual errors from fwnode_get_named_gpiod()]
+>>> [geert: Avoid destroying initial setup]
+>>> [geert: Consolidate GPIO descriptor acquiring code]
+>>> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>>
+>> [...]
+>>>
+>>> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+>>> index 2df7b62c1a36811e..8f8b7747c54bc478 100644
+>>> --- a/drivers/net/phy/mdio_bus.c
+>>> +++ b/drivers/net/phy/mdio_bus.c
+>>
+>> [...]
+>>>
+>>> @@ -48,9 +49,26 @@
+>>>      int mdiobus_register_device(struct mdio_device *mdiodev)
+>>>    {
+>>> +       struct gpio_desc *gpiod = NULL;
+>>> +
+>>>          if (mdiodev->bus->mdio_map[mdiodev->addr])
+>>>                  return -EBUSY;
+>>>    +     /* Deassert the optional reset signal */
+>>
+>>
+>>     Umm, but why deassert it here for such a short time?
+> 
+> That's a consequence of moving it from drivers/of/of_mdio.c to here.
 
-On Mon, Dec 04, 2017 at 09:20:33AM -0600, Andrew F. Davis wrote:
-> On 12/01/2017 05:06 PM, Pavel Machek wrote:
-> > Hi!
-> >=20
-> >> This adds basic support for BQ27521 battery monitor, used in Nokia N9
-> >> and N950. In particular, battery voltage is important to be able to
-> >> tell when the battery is almost empty. Emptying battery on N950 is
-> >> pretty painful, as flasher needs to be used to recover phone in such
-> >> case.
-> >=20
-> > Sebastian, ping? This one should not be too controversial.
->
-> Acked-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+    Well, you shouldn't do code moves without some thinking. ;-)
 
-Thanks, queued, I dropped the spurious change in twl.h and added the
-dt-binding from the previous patch version, that was lost somehow.
+> Not that it was deasserted that much longer in drivers/of/of_mdio.c, though...
 
-> > If you could also apply the "shut down when battery is low", that
-> > would be nice.
+    There it had a reason, here I'm not seeing one. Perhaps using GPIOD_ASIS 
+(or GPIOD_OUT_HIGH) instead of GPIOD_OUT_LOW and dropping 
+mdio_device_reset(mdiodev, 1) afterwards would make more sense here?
 
-I only have one with values specific to N900 hardcoded in the
-driver. That one can't be applied for obvious reasons.
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
 
--- Sebastian
-
---4b73ibcjevchptm6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAloqxnwACgkQ2O7X88g7
-+ppmHxAAohSyPOiKxNsmte5Ut12ziRfcwyA91iNTe//P65PGAfYPuO8vGNJCUCWf
-53RwrT8ayHMTGbNbEeWKs9Sw5VlTiKliRA1KkfPAUGflW6l+qJbbWI7YlcZmz4EN
-XuOTSO+ORJb+E4lRn7XoLNgLfDaBt24g784v69kZ39AHgX28WXcTLHAQTKi4qBHg
-yUIXonBWRk8R+O3a/YJdIdWcKVVOennS/M2Ayc2pHdHRjPR8ozdj08N0Zwo1N4ZE
-xFDAn45zXa1fkTB1qPehjqq8KvmHPBOmOd8ikG0IZljdQ3Zu9tWoGdCy681wO2Vr
-Wggxxq+lg2pCmCZyPwmpkbVbK5mSWK4iaerLNKr05HA9ai7jzoyEMJRY9Ux5N/Cb
-VTtYAPKG+MabJIbPDe3hsv1c6Z130/V1PpVsClJM9iMwgFMn/rOBhcjs84UIqWIe
-ZVn/5e9vIQV1kr0rFEXbdltxQzKxtmxRaJX/n1KYi5Ik+KRmGSDv+NwxpfLWSlxx
-rOtRasFDcLDINNLyzRnwn+SSeDzBoJ7VdDmaSWgWR88/IgTInxRifamCAxM+Sf7W
-aBW0Z6Hxvwc2F2U3yGQ0g6zOFQyVLSwDCrrgze8BuoYOrD3Kk3XRTfM90CmqrEBF
-AHn0Dspsjuedp3CZU7a+Z19efH02qhsYCF6F4PbI/RjnvPjO+7o=
-=DZ36
------END PGP SIGNATURE-----
-
---4b73ibcjevchptm6--
+MBR, Sergei
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
