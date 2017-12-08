@@ -1,56 +1,144 @@
-From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: bindings: add new dt entry for ath10k calibration
- variant
-Date: Fri, 8 Dec 2017 09:22:24 +0000
-Message-ID: <87k1xxtvzk.fsf@kamboji.qca.qualcomm.com>
-References: <20170310080615.22958-1-sven.eckelmann@openmesh.com>
-        <5158144.BXJK97egUR@bentobox>
-        <CAL_JsqKSBA8WcR9Q8+6+kVfYoPggZ83yQ_47LWf971Aegqv4yA@mail.gmail.com>
-        <5711518.JB9VTipMpE@bentobox>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5711518.JB9VTipMpE@bentobox> (Sven Eckelmann's message of "Wed,
-        22 Mar 2017 08:20:25 +0100")
-Content-Language: en-US
-Content-ID: <73C0065E88773A4BB69C6A644BB65515-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org" <ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org>
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH] PCI: qcom: add missing supplies required for msm8996
+Date: Fri,  8 Dec 2017 09:20:53 +0000
+Message-ID: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: stanimir.varbanov@linaro.org, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org, bhelgaas@google.com
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCmdldHRpbmcgYmFjayB0byB0aGlzIG9sZCB0aHJlYWQsIGhlcmUncyB0aGUgZGlzY3Vz
-c2lvbjoNCg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NjE1MTgzLw0KDQpo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk2MTUxODUvDQoNClN2ZW4gRWNrZWxt
-YW5uIDxzdmVuLmVja2VsbWFubkBvcGVubWVzaC5jb20+IHdyaXRlczoNCg0KPiBPbiBEaWVuc3Rh
-ZywgMjEuIE3DpHJ6IDIwMTcgMjE6NTY6NTQgQ0VUIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBbLi4u
-XQ0KPj4gSXMgdGhpcyBhbHdheXMgdGhlIGNhc2U/IFRoZXJlJ3MgbmV2ZXIgc29tZSB2YXJpYXRp
-b24gYmV5b25kIHRoZQ0KPj4gcmVmZXJlbmNlIGRlc2lnbiB0aGF0IGEgQkRGIGRpZmZlcmVuY2Ug
-Y2FuJ3QgaGFuZGxlPw0KPg0KPiBJIGhhdmUgbm8ga25vd2xlZGdlIGFib3V0IGFueXRoaW5nIHdo
-aWNoIGlzbid0IGhhbmRsZWQgZGlyZWN0bHkgYnkgdGhlIEJERg0KPiB2YXJpYW50cy4gQnV0IG1h
-eWJlIEthbGxlIGNhbiBjb3JyZWN0IG1lIGhlcmUuDQoNCkN1cnJlbnRseSBJJ20gbm90IGF3YXJl
-IG9mIGFueSBleHRyYSBwcm9wZXJ0aWVzIHdoaWNoIHdlIHdvdWxkIG5lZWQgaW4NCmF0aDEwaywg
-aGF2aW5nIHRoZSBjdXN0b20gYm9hcmQgZmlsZSBzZWVtcyB0byBiZSB0aGUgb25seSByZXF1aXJl
-bWVudCBJDQpoYXZlIHNlZW4uDQoNCj4+ID4gVGhleSBhcmUgYmFzaWNhbGx5ICJxY29tLGlwcTQw
-MTktd2lmaSIgKyBhIHByb2R1Y3Qgc3BlY2lmaWMgc3RyaW5nLiBUaGUgZmlyc3QNCj4+ID4gcGFy
-dCBpcyB0aGVyZWZvcmUgdGhlIHN0cmluZyB3aGljaCBpZGVudGlmaWVzIHRoZSB3aWZpIGRldmlj
-ZShzKSBpbiB0aGUNCj4+ID4gUUNBNDAxOC80MDE5IFNvQy4gVGhlIHByb2R1Y3Qgc3BlY2lmaWMg
-c3RyaW5nIGlzIHNpbXBseSB0aGUgcGFydCAob3IgYQ0KPj4gPiB2YXJpYXRpb24gb2YgaXQpIHdo
-aWNoIHdvdWxkIGJlZW4gdXNlZCBiZWZvcmUgaW4NCj4+ID4gInFjb20sYXRoMTBrLWNhbGlicmF0
-aW9uLXZhcmlhbnQiIC0ganVzdCB0byBtYWtlIGl0ICJ1c2UgYSBtb3JlIHNwZWNpZmljDQo+PiA+
-IGNvbXBhdGlibGUgc3RyaW5nIi4NCj4+IA0KPj4gSXQgd291bGQgcHJvYmFibHkgYmUgbW9yZSBs
-aWtlOiAiYXN1cyxydC1hYzU4dS13aWZpIiwgInFjb20saXBxNDAxOS13aWZpIg0KPj4gDQo+PiBB
-IG1vcmUgc3BlY2lmaWMgY29tcGF0aWJsZSBpcyBpbnN1cmFuY2UgdGhhdCBhdCBzb21lIGxhdGVy
-IHBvaW50IGluDQo+PiB0aW1lIHlvdSBjYW4gZGlzdGluZ3Vpc2ggYmV0d2VlbiAyIGJvYXJkcyBk
-dWUgdG8gc29tZSBkaWZmZXJlbmNlIGV2ZW4NCj4+IGlmIG5vdyB5b3UgYmVsaWV2ZSB0aGV5IGFy
-ZSAidGhlIHNhbWUiLg0KPiBbLi4uXQ0KPj4gSSB0aGluayB0aGUgc2VwYXJhdGUgcHJvcGVydHkg
-aXMgZmluZSBpZiB0aGlzIGlzIHRoZSBvbmx5IG9uZSB5b3UNCj4+IGVudmlzaW9uIG5lZWRpbmcg
-dG8gYWRkLiBJZiB0aGVyZSdzIDEwIG1vcmUgcHJvcGVydGllcywgdGhlbiBJJ2QgZmVlbA0KPj4g
-bW9yZSBzdHJvbmdseSB0b3dhcmRzIGEgYm9hcmQgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcu
-DQo+DQo+IFRoYW5rIHlvdS4gTGV0J3Mgd2FpdCBhIGxpdHRsZSBiaXQgaW4gY2FzZSBzb21lb25l
-IGZyb20gUUNBL0NvZGVhdXJvcmENCj4gaGFzIHNvbWUgYWRkaXRpb25hbCBpbnB1dC4NCg0KSSBk
-aWRuJ3Qgc2VlIGFueSBjb21tZW50cyBmcm9tIGFueW9uZSBlbHNlIGFuZCBJIHRoaW5rIFN2ZW4n
-cyBhcHByb2FjaA0KaGVyZSBpcyB0aGUgYmVzdC4gU3ZlbiwgY2FuIHlvdSBzdWJtaXQgdjIgc28g
-dGhhdCB3ZSBnZXQgYW4gYWNrIGZyb20NCmRldmljZSB0cmVlIG1haW50YWluZXJzIGFuZCBJIGNh
-biBhcHBseSB0aGVzZT8NCg0KLS0gDQpLYWxsZSBWYWxv
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+This patch adds supplies that are required for msm8996. Two of them vdda
+and vdda-1p8 are analog supplies that go in to controller, and the rest
+of the two vddpe's are supplies to PCIe endpoints.
+
+Without these supplies PCIe endpoints which require power supplies are
+not enumerated at all, as there is no one to power it up.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ .../devicetree/bindings/pci/qcom,pcie.txt          | 16 +++++++++++++
+ drivers/pci/dwc/pcie-qcom.c                        | 28 ++++++++++++++++++++--
+ 2 files changed, 42 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index 3c9d321b3d3b..045102cb3e12 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -179,6 +179,11 @@
+ 	Value type: <phandle>
+ 	Definition: A phandle to the core analog power supply
+ 
++- vdda-1p8-supply:
++	Usage: required for msm8996
++	Value type: <phandle>
++	Definition: A phandle to the 1.8v analog power supply
++
+ - vdda_phy-supply:
+ 	Usage: required for ipq/apq8064
+ 	Value type: <phandle>
+@@ -189,6 +194,15 @@
+ 	Value type: <phandle>
+ 	Definition: A phandle to the analog power supply for IC which generates
+ 		    reference clock
++- vddpe-supply:
++	Usage: optional
++	Value type: <phandle>
++	Definition: A phandle to the PCIe endpoint power supply
++
++- vddpe1-supply:
++	Usage: optional
++	Value type: <phandle>
++	Definition: A phandle to the PCIe endpoint power supply 1
+ 
+ - phys:
+ 	Usage: required for apq8084
+@@ -205,6 +219,8 @@
+ 	Value type: <prop-encoded-array>
+ 	Definition: List of phandle and GPIO specifier pairs. Should contain
+ 			- "perst-gpios"	PCIe endpoint reset signal line
++			- "pe_en-gpios"	PCIe endpoint enable signal line
++			- "pe_en1-gpios" PCIe endpoint enable1 signal line
+ 			- "wake-gpios"	PCIe endpoint wake signal line
+ 
+ * Example for ipq/apq8064
+diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
+index 952a4fc4bf3c..01488f90da31 100644
+--- a/drivers/pci/dwc/pcie-qcom.c
++++ b/drivers/pci/dwc/pcie-qcom.c
+@@ -109,13 +109,15 @@ struct qcom_pcie_resources_1_0_0 {
+ 	struct reset_control *core;
+ 	struct regulator *vdda;
+ };
+-
++#define QCOM_PCIE_MAX_SUPPLY	4
+ struct qcom_pcie_resources_2_3_2 {
+ 	struct clk *aux_clk;
+ 	struct clk *master_clk;
+ 	struct clk *slave_clk;
+ 	struct clk *cfg_clk;
+ 	struct clk *pipe_clk;
++	int num_supplies;
++	struct regulator_bulk_data supplies[QCOM_PCIE_MAX_SUPPLY];
+ };
+ 
+ struct qcom_pcie_resources_2_4_0 {
+@@ -529,6 +531,17 @@ static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
+ 	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
++	int ret;
++
++	res->supplies[0].supply = "vdda";
++	res->supplies[1].supply = "vdda-1p8";
++	res->supplies[2].supply = "vddpe";
++	res->supplies[3].supply = "vddpe1";
++	res->num_supplies = QCOM_PCIE_MAX_SUPPLY;
++	ret = devm_regulator_bulk_get(dev, QCOM_PCIE_MAX_SUPPLY,
++				      res->supplies);
++	if (ret)
++		return ret;
+ 
+ 	res->aux_clk = devm_clk_get(dev, "aux");
+ 	if (IS_ERR(res->aux_clk))
+@@ -558,6 +571,8 @@ static void qcom_pcie_deinit_2_3_2(struct qcom_pcie *pcie)
+ 	clk_disable_unprepare(res->master_clk);
+ 	clk_disable_unprepare(res->cfg_clk);
+ 	clk_disable_unprepare(res->aux_clk);
++
++	regulator_bulk_disable(res->num_supplies, res->supplies);
+ }
+ 
+ static void qcom_pcie_post_deinit_2_3_2(struct qcom_pcie *pcie)
+@@ -575,10 +590,16 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+ 	u32 val;
+ 	int ret;
+ 
++	ret = regulator_bulk_enable(res->num_supplies, res->supplies);
++	if (ret < 0) {
++		dev_err(dev, "cannot enable regulators\n");
++		return ret;
++	}
++
+ 	ret = clk_prepare_enable(res->aux_clk);
+ 	if (ret) {
+ 		dev_err(dev, "cannot prepare/enable aux clock\n");
+-		return ret;
++		goto err_aux_clk;
+ 	}
+ 
+ 	ret = clk_prepare_enable(res->cfg_clk);
+@@ -629,6 +650,9 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+ err_cfg_clk:
+ 	clk_disable_unprepare(res->aux_clk);
+ 
++err_aux_clk:
++	regulator_bulk_disable(res->num_supplies, res->supplies);
++
+ 	return ret;
+ }
+ 
+-- 
+2.15.0
