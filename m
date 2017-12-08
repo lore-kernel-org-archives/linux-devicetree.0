@@ -1,37 +1,102 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v9 5/6] clocksource: stm32: Update license and copyright
-Date: Fri,  8 Dec 2017 12:32:49 +0100
-Message-ID: <20171208113250.359-6-benjamin.gaignard@st.com>
-References: <20171208113250.359-1-benjamin.gaignard@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171208113250.359-1-benjamin.gaignard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, daniel.lezcano@linaro.org, tglx@linutronix.de, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v3 17/33] nds32: VDSO support
+Date: Fri, 8 Dec 2017 19:54:42 +0800
+Message-ID: <CAEbi=3e9Ep4_DL4SSwp15as1t7ALvw-s2gqv+NsuRZiebNGFAQ@mail.gmail.com>
+References: <cover.1512723245.git.green.hu@gmail.com> <921ccfa97c4c13f12c7b22b9554f52dcce51f87e.1512723245.git.green.hu@gmail.com>
+ <20171208102149.iqiieszktwzorkuw@lakrids.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20171208102149.iqiieszktwzorkuw@lakrids.cambridge.arm.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg KH <greg@kroah.com>, Vincent Chen <vincentc@andestech.co>
 List-Id: devicetree@vger.kernel.org
 
-Adopt SPDX License Identifier and add STMicroelectronics
-copyright
+Hi, Mark:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- drivers/clocksource/timer-stm32.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+2017-12-08 18:21 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
+> On Fri, Dec 08, 2017 at 05:12:00PM +0800, Greentime Hu wrote:
+>> From: Greentime Hu <greentime@andestech.com>
+>>
+>> This patch adds VDSO support. The VDSO code is currently used for
+>> sys_rt_sigreturn() and optimised gettimeofday() (using the SoC timer counter).
+>
+> [...]
+>
+>> +static int grab_timer_node_info(void)
+>> +{
+>> +     struct device_node *timer_node;
+>> +
+>> +     timer_node = of_find_node_by_name(NULL, "timer");
+>
+> Please use a compatible string, rather than matching the timer by name.
+>
+> It's plausible that you have multiple nodes called "timer" in the DT,
+> under different parent nodes, and this might not be the device you
+> think it is. I see your dt in patch 24 has two timer nodes.
+>
+> It would be best if your clocksource driver exposed some stuct that you
+> looked at here, so that you're guaranteed to user the same device.
 
-diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
-index c9aed2314194..21479c3cfcb9 100644
---- a/drivers/clocksource/timer-stm32.c
-+++ b/drivers/clocksource/timer-stm32.c
-@@ -1,7 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) Maxime Coquelin 2015
-+ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
-  * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-- * License terms:  GNU General Public License (GPL), version 2
-+ * Author: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
-  *
-  * Inspired by time-efm32.c from Uwe Kleine-Koenig
-  */
--- 
-2.15.0
+We'd like to use "timer" here because there are 2 different timer IPs
+and we are sure that they won't be in the same SoC.
+We think this implementation in VDSO should be platform independent to
+get cycle-count register.
+Our customer or other SoC provider who can use "timer" and define
+cycle-count-offset or cycle-count-down then we can get the correct
+cycle-count.
+
+We sent atcpit100 patch last time along with our arch, however we'd
+like to send it to its sub system this time and my colleague is still
+working on it.
+He may send the timer patch next week.
+
+
+>> +     of_property_read_u32(timer_node, "cycle-count-offset",
+>> +                          &vdso_data->cycle_count_offset);
+>> +     vdso_data->cycle_count_down =
+>> +         of_property_read_bool(timer_node, "cycle-count-down");
+>
+> ... and then you'd only need to parse these in one place, too.
+>
+> IIUC these are proeprties for the atcpit device, which has no
+> documentation or driver in this series.
+>
+> So I'm rather confused as to what's going on here.
+>
+
+These properties are defined in dts which can provide the cycle count
+register offset address of that timer, so that we can get cycle-count.
+
+>> +     return of_address_to_resource(timer_node, 0, &timer_res);
+>> +}
+>
+>> +int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+>> +{
+>
+>> +     /*Map timer to user space */
+>> +     vdso_base += PAGE_SIZE;
+>> +     prot = __pgprot(_PAGE_V | _PAGE_M_UR_KR | _PAGE_D |
+>> +                     _PAGE_G | _PAGE_C_DEV);
+>> +     ret = io_remap_pfn_range(vma, vdso_base, timer_res.start >> PAGE_SHIFT,
+>> +                              PAGE_SIZE, prot);
+>> +     if (ret)
+>> +             goto up_fail;
+>
+> Maybe this is fine, but it looks a bit suspicious.
+>
+> Is it safe to map IO memory to a userspace process like this?
+>
+> In general that isn't safe, since userspace could access other registers
+> (if those exist), perform accesses that change the state of hardware, or
+> make unsupported access types (e.g. unaligned, atomic) that result in
+> errors the kernel can't handle.
+>
+> Does none of that apply here?
+
+We only provide read permission to this page so hareware state won't
+be chagned. It will trigger exception if we try to write.
+We will check about the alignment/atomic issue of this region.
+
+Thanks.
