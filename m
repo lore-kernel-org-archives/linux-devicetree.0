@@ -1,150 +1,226 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v3 25/33] nds32: Miscellaneous header files
-Date: Fri,  8 Dec 2017 17:12:08 +0800
-Message-ID: <866c7f7f29136eb97da6c06ec31d74217a7ae29a.1512723245.git.green.hu@gmail.com>
-References: <cover.1512723245.git.green.hu@gmail.com>
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <cover.1512723245.git.green.hu@gmail.com>
-In-Reply-To: <cover.1512723245.git.green.hu@gmail.com>
-References: <cover.1512723245.git.green.hu@gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com
-Cc: green.hu@gmail.com, Vincent Chen <vincentc@andestech.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v4 04/12] clk: qcom: Add HFPLL driver
+Date: Fri,  8 Dec 2017 15:12:22 +0530
+Message-ID: <1512726150-7204-5-git-send-email-sricharan@codeaurora.org>
+References: <1512726150-7204-1-git-send-email-sricharan@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1512726150-7204-1-git-send-email-sricharan@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-From: Greentime Hu <greentime@andestech.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
 
-This patch introduces some miscellaneous header files.
+On some devices (MSM8974 for example), the HFPLLs are
+instantiated within the Krait processor subsystem as separate
+register regions. Add a driver for these PLLs so that we can
+provide HFPLL clocks for use by the system.
 
-Signed-off-by: Vincent Chen <vincentc@andestech.com>
-Signed-off-by: Greentime Hu <greentime@andestech.com>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- arch/nds32/include/asm/delay.h          |   51 +++++++++++++++++++++++++++++++
- arch/nds32/include/asm/linkage.h        |   24 +++++++++++++++
- arch/nds32/include/uapi/asm/byteorder.h |   26 ++++++++++++++++
- 3 files changed, 101 insertions(+)
- create mode 100644 arch/nds32/include/asm/delay.h
- create mode 100644 arch/nds32/include/asm/linkage.h
- create mode 100644 arch/nds32/include/uapi/asm/byteorder.h
+ .../devicetree/bindings/clock/qcom,hfpll.txt       |  40 ++++++++
+ drivers/clk/qcom/Kconfig                           |   8 ++
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/hfpll.c                           | 106 +++++++++++++++++++++
+ 4 files changed, 155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,hfpll.txt
+ create mode 100644 drivers/clk/qcom/hfpll.c
 
-diff --git a/arch/nds32/include/asm/delay.h b/arch/nds32/include/asm/delay.h
+diff --git a/Documentation/devicetree/bindings/clock/qcom,hfpll.txt b/Documentation/devicetree/bindings/clock/qcom,hfpll.txt
 new file mode 100644
-index 0000000..bdeeb76
+index 0000000..fee92bb
 --- /dev/null
-+++ b/arch/nds32/include/asm/delay.h
-@@ -0,0 +1,51 @@
++++ b/Documentation/devicetree/bindings/clock/qcom,hfpll.txt
+@@ -0,0 +1,40 @@
++High-Frequency PLL (HFPLL)
++
++PROPERTIES
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be "qcom,hfpll"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: address and size of HPLL registers. An optional second
++		    element specifies the address and size of the alias
++		    register region.
++
++- clock-output-names:
++	Usage: required
++	Value type: <string>
++	Definition: Name of the PLL. Typically hfpllX where X is a CPU number
++		    starting at 0. Otherwise hfpll_Y where Y is more specific
++		    such as "l2".
++
++Example:
++
++1) An HFPLL for the L2 cache.
++
++	clock-controller@f9016000 {
++		compatible = "qcom,hfpll";
++		reg = <0xf9016000 0x30>;
++		clock-output-names = "hfpll_l2";
++	};
++
++2) An HFPLL for CPU0. This HFPLL has the alias register region.
++
++	clock-controller@f908a000 {
++		compatible = "qcom,hfpll";
++		reg = <0xf908a000 0x30>, <0xf900a000 0x30>;
++		clock-output-names = "hfpll0";
++	};
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 20b5d6f..6c811bd 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -205,3 +205,11 @@ config SPMI_PMIC_CLKDIV
+ 	  Technologies, Inc. SPMI PMIC. It configures the frequency of
+ 	  clkdiv outputs of the PMIC. These clocks are typically wired
+ 	  through alternate functions on GPIO pins.
++
++config QCOM_HFPLL
++	tristate "High-Frequency PLL (HFPLL) Clock Controller"
++	depends on COMMON_CLK_QCOM
++	help
++	  Support for the high-frequency PLLs present on Qualcomm devices.
++	  Say Y if you want to support CPU frequency scaling on devices
++	  such as MSM8974, APQ8084, etc.
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index 4795e21..4a4bf38 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -36,3 +36,4 @@ obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
+ obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
+ obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
+ obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
++obj-$(CONFIG_QCOM_HFPLL) += hfpll.o
+diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
+new file mode 100644
+index 0000000..7405bb6
+--- /dev/null
++++ b/drivers/clk/qcom/hfpll.c
+@@ -0,0 +1,106 @@
 +/*
-+ * Copyright (C) 2005-2017 Andes Technology Corporation
++ * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
 + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
 +
-+#ifndef __NDS32_DELAY_H__
-+#define __NDS32_DELAY_H__
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/regmap.h>
 +
-+#include <asm/param.h>
++#include "clk-regmap.h"
++#include "clk-hfpll.h"
 +
-+static inline void __delay(unsigned long loops)
++static const struct hfpll_data hdata = {
++	.mode_reg = 0x00,
++	.l_reg = 0x04,
++	.m_reg = 0x08,
++	.n_reg = 0x0c,
++	.user_reg = 0x10,
++	.config_reg = 0x14,
++	.config_val = 0x430405d,
++	.status_reg = 0x1c,
++	.lock_bit = 16,
++
++	.user_val = 0x8,
++	.user_vco_mask = 0x100000,
++	.low_vco_max_rate = 1248000000,
++	.min_rate = 537600000UL,
++	.max_rate = 2900000000UL,
++};
++
++static const struct of_device_id qcom_hfpll_match_table[] = {
++	{ .compatible = "qcom,hfpll" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, qcom_hfpll_match_table);
++
++static const struct regmap_config hfpll_regmap_config = {
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.val_bits	= 32,
++	.max_register	= 0x30,
++	.fast_io	= true,
++};
++
++static int qcom_hfpll_probe(struct platform_device *pdev)
 +{
-+	__asm__ __volatile__(".align 2\n"
-+			     "1:\n"
-+			     "\taddi\t%0, %0, -1\n"
-+			     "\tbgtz\t%0, 1b\n"
-+			     :"=r"(loops)
-+			     :"0"(loops));
++	struct resource *res;
++	struct device *dev = &pdev->dev;
++	void __iomem *base;
++	struct regmap *regmap;
++	struct clk_hfpll *h;
++	struct clk_init_data init = {
++		.parent_names = (const char *[]){ "xo" },
++		.num_parents = 1,
++		.ops = &clk_ops_hfpll,
++	};
++
++	h = devm_kzalloc(dev, sizeof(*h), GFP_KERNEL);
++	if (!h)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	regmap = devm_regmap_init_mmio(&pdev->dev, base, &hfpll_regmap_config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	if (of_property_read_string_index(dev->of_node, "clock-output-names",
++					  0, &init.name))
++		return -ENODEV;
++
++	h->d = &hdata;
++	h->clkr.hw.init = &init;
++	spin_lock_init(&h->lock);
++
++	return devm_clk_register_regmap(&pdev->dev, &h->clkr);
 +}
 +
-+static inline void __udelay(unsigned long usecs, unsigned long lpj)
-+{
-+	usecs *= (unsigned long)(((0x8000000000000000ULL / (500000 / HZ)) +
-+				  0x80000000ULL) >> 32);
-+	usecs = (unsigned long)(((unsigned long long)usecs * lpj) >> 32);
-+	__delay(usecs);
-+}
++static struct platform_driver qcom_hfpll_driver = {
++	.probe		= qcom_hfpll_probe,
++	.driver		= {
++		.name	= "qcom-hfpll",
++		.of_match_table = qcom_hfpll_match_table,
++	},
++};
++module_platform_driver(qcom_hfpll_driver);
 +
-+#define udelay(usecs) __udelay((usecs), loops_per_jiffy)
-+
-+/* make sure "usecs *= ..." in udelay do not overflow. */
-+#if HZ >= 1000
-+#define MAX_UDELAY_MS	1
-+#elif HZ <= 200
-+#define MAX_UDELAY_MS	5
-+#else
-+#define MAX_UDELAY_MS	(1000 / HZ)
-+#endif
-+
-+#endif
-diff --git a/arch/nds32/include/asm/linkage.h b/arch/nds32/include/asm/linkage.h
-new file mode 100644
-index 0000000..d17abd8
---- /dev/null
-+++ b/arch/nds32/include/asm/linkage.h
-@@ -0,0 +1,24 @@
-+/*
-+ * Copyright (C) 2005-2017 Andes Technology Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef __ASM_LINKAGE_H
-+#define __ASM_LINKAGE_H
-+
-+/* This file is required by include/linux/linkage.h */
-+#define __ALIGN .align 2
-+#define __ALIGN_STR ".align 2"
-+
-+#endif
-diff --git a/arch/nds32/include/uapi/asm/byteorder.h b/arch/nds32/include/uapi/asm/byteorder.h
-new file mode 100644
-index 0000000..198e8dd
---- /dev/null
-+++ b/arch/nds32/include/uapi/asm/byteorder.h
-@@ -0,0 +1,26 @@
-+/*
-+ * Copyright (C) 2005-2017 Andes Technology Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef __NDS32_BYTEORDER_H__
-+#define __NDS32_BYTEORDER_H__
-+
-+#ifdef __NDS32_EB__
-+#include <linux/byteorder/big_endian.h>
-+#else
-+#include <linux/byteorder/little_endian.h>
-+#endif
-+
-+#endif /* __NDS32_BYTEORDER_H__ */
++MODULE_DESCRIPTION("QCOM HFPLL Clock Driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:qcom-hfpll");
 -- 
-1.7.9.5
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
