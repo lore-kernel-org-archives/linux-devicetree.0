@@ -1,142 +1,151 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] drm/tinydrm: add driver for ST7735R panels
-Date: Fri, 8 Dec 2017 15:11:05 +0100
-Message-ID: <523fd532-3302-4a43-c28d-89fbe75de599@tronnes.org>
-References: <1511924469-11448-1-git-send-email-david@lechnology.com>
- <1511924469-11448-3-git-send-email-david@lechnology.com>
- <455f5c7a-9f3c-c019-9418-94f0c2015afd@tronnes.org>
+From: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 6/6] ARM: dts: stm32: add initial support of stm32mp157c eval board
+Date: Fri, 8 Dec 2017 15:11:17 +0100
+Message-ID: <1512742277-28205-7-git-send-email-ludovic.Barre@st.com>
+References: <1512742277-28205-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <455f5c7a-9f3c-c019-9418-94f0c2015afd-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <1512742277-28205-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, limor-6aDhHjTmHzzR7s880joybQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 
-Den 06.12.2017 19.27, skrev Noralf Trønnes:
->
-> Den 29.11.2017 04.01, skrev David Lechner:
->> This adds a new driver for Sitronix ST7735R display panels.
->>
->> This has been tested using an Adafruit 1.8" TFT.
->>
->> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->> ---
+Add support of stm32mp157c evaluation board (part number: STM32MP157C-EV1)
+split in 2 elements:
+-Daughter board (part number: STM32MP157C-ED1)
+ which includes CPU, memory and power supply
+-Mother board (part number: STM32MP157C-EM1)
+ which includes external peripherals (like display, camera,...)
+ and extension connectors.
 
-<snip>
+The daughter board can run alone, this is why the device tree files
+are split in two layers, for the complete evaluation board (ev1)
+and for the daughter board alone (ed1).
 
->> diff --git a/drivers/gpu/drm/tinydrm/st7735r.c 
->> b/drivers/gpu/drm/tinydrm/st7735r.c
+Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                |  5 ++++-
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 13 +++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts     | 29 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts     | 19 +++++++++++++++++++
+ 4 files changed, 65 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/stm32mp157c-ed1.dts
+ create mode 100644 arch/arm/boot/dts/stm32mp157c-ev1.dts
 
-<snip>
-
->> +static struct drm_driver st7735r_driver = {
->> +    .driver_features    = DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
->> +                  DRIVER_ATOMIC,
->> +    .fops            = &st7735r_fops,
->> +    TINYDRM_GEM_DRIVER_OPS,
->> +    .lastclose        = tinydrm_lastclose,
-
-tinydrm_lastclose() is going away, please use:
-
-     .lastclose        = drm_fb_helper_lastclose,
-
-Noralf.
-
->> +    .name            = "st7735r",
->> +    .desc            = "Sitronix ST7735R",
->> +    .date            = "20171128",
->> +    .major            = 1,
->> +    .minor            = 0,
->> +};
->> +
->> +static const struct of_device_id st7735r_of_match[] = {
->> +    { .compatible = "sitronix,st7735r-jd-t18003-t01" },
->> +    {},
->> +};
->> +MODULE_DEVICE_TABLE(of, st7735r_of_match);
->> +
->> +static const struct spi_device_id st7735r_id[] = {
->> +    { "st7735r-jd-t18003-t01", 0 },
->> +    { },
->> +};
->> +MODULE_DEVICE_TABLE(spi, st7735r_id);
->> +
->> +static int st7735r_probe(struct spi_device *spi)
->> +{
->> +    struct device *dev = &spi->dev;
->> +    struct mipi_dbi *mipi;
->> +    struct gpio_desc *dc;
->> +    u32 rotation = 0;
->> +    int ret;
->> +
->> +    mipi = devm_kzalloc(dev, sizeof(*mipi), GFP_KERNEL);
->> +    if (!mipi)
->> +        return -ENOMEM;
->> +
->> +    mipi->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
->> +    if (IS_ERR(mipi->reset)) {
->> +        DRM_DEV_ERROR(dev, "Failed to get gpio 'reset'\n");
->> +        return PTR_ERR(mipi->reset);
->> +    }
->> +
->> +    dc = devm_gpiod_get(dev, "dc", GPIOD_OUT_LOW);
->> +    if (IS_ERR(dc)) {
->> +        DRM_DEV_ERROR(dev, "Failed to get gpio 'dc'\n");
->> +        return PTR_ERR(dc);
->> +    }
->> +
->> +    mipi->backlight = tinydrm_of_find_backlight(dev);
->> +    if (IS_ERR(mipi->backlight))
->> +        return PTR_ERR(mipi->backlight);
->> +
->> +    device_property_read_u32(dev, "rotation", &rotation);
->> +
->> +    ret = mipi_dbi_spi_init(spi, mipi, dc);
->> +    if (ret)
->> +        return ret;
->> +
->> +    ret = mipi_dbi_init(&spi->dev, mipi, &st7735r_pipe_funcs,
->> +                &st7735r_driver, &st7735r_mode, rotation);
->> +    if (ret)
->> +        return ret;
->> +
->> +    spi_set_drvdata(spi, mipi);
->> +
->> +    return devm_tinydrm_register(&mipi->tinydrm);
->> +}
->> +
->> +static void st7735r_shutdown(struct spi_device *spi)
->> +{
->> +    struct mipi_dbi *mipi = spi_get_drvdata(spi);
->> +
->> +    tinydrm_shutdown(&mipi->tinydrm);
->> +}
->> +
->> +static struct spi_driver st7735r_spi_driver = {
->> +    .driver = {
->> +        .name = "st7735r",
->> +        .owner = THIS_MODULE,
->> +        .of_match_table = st7735r_of_match,
->> +    },
->> +    .id_table = st7735r_id,
->> +    .probe = st7735r_probe,
->> +    .shutdown = st7735r_shutdown,
->> +};
->> +module_spi_driver(st7735r_spi_driver);
->> +
->> +MODULE_DESCRIPTION("Sitronix ST7735R DRM driver");
->> +MODULE_AUTHOR("David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>");
->> +MODULE_LICENSE("GPL");
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d0381e9..ddfa3b3 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -839,7 +839,7 @@ dtb-$(CONFIG_ARCH_STI) += \
+ 	stih410-b2120.dtb \
+ 	stih410-b2260.dtb \
+ 	stih418-b2199.dtb
+-dtb-$(CONFIG_ARCH_STM32)+= \
++dtb-$(CONFIG_ARCH_STM32_MCU) += \
+ 	stm32f429-disco.dtb \
+ 	stm32f469-disco.dtb \
+ 	stm32f746-disco.dtb \
+@@ -848,6 +848,9 @@ dtb-$(CONFIG_ARCH_STM32)+= \
+ 	stm32746g-eval.dtb \
+ 	stm32h743i-eval.dtb \
+ 	stm32h743i-disco.dtb
++dtb-$(CONFIG_ARCH_STM32_MPU) += \
++	stm32mp157c-ed1.dtb \
++	stm32mp157c-ev1.dtb
+ dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-a1000.dtb \
+ 	sun4i-a10-ba10-tvbox.dtb \
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index 440276a..7ac65f4 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -145,6 +145,19 @@
+ 				ngpios = <8>;
+ 				gpio-ranges = <&pinctrl 0 160 8>;
+ 			};
++
++			uart4_pins_a: uart4@0 {
++				pins1 {
++					pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
++					bias-disable;
++					drive-push-pull;
++					slew-rate = <0>;
++				};
++				pins2 {
++					pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
++					bias-disable;
++				};
++			};
+ 		};
+ 
+ 		pinctrl_z: pin-controller-z {
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+new file mode 100644
+index 0000000..f6a2618
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved 
++ * Author: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
++ */
++/dts-v1/;
++
++#include "stm32mp157c.dtsi"
++#include "stm32mp157-pinctrl.dtsi"
++
++/ {
++	model = "STMicroelectronics STM32MP157C eval daughter";
++	compatible = "st,stm32mp157c-ed1", "st,stm32mp157";
++
++	chosen {
++		bootargs = "earlyprintk console=ttySTM3,115200 root=/dev/ram";
++		stdout-path = "serial3:115200n8";
++	};
++
++	memory {
++		reg = <0xC0000000 0x4000000>;
++	};
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_pins_a>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+new file mode 100644
+index 0000000..a310703
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved 
++ * Author: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
++ */
++/dts-v1/;
++
++#include "stm32mp157c-ed1.dts"
++
++/ {
++	model = "STMicroelectronics STM32MP157C eval daughter on eval mother";
++	compatible = "st,stm32mp157c-ev1", "st,stm32mp157c-ed1", "st,stm32mp157";
++
++	chosen {
++		bootargs = "earlyprintk console=ttySTM3,115200 root=/dev/ram";
++		stdout-path = "serial3:115200n8";
++	};
++};
++
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
