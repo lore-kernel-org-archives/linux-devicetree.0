@@ -1,136 +1,29 @@
-From: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 2/6] ARM: stm32: add initial support for STM32MP157
-Date: Fri, 8 Dec 2017 15:11:13 +0100
-Message-ID: <1512742277-28205-3-git-send-email-ludovic.Barre@st.com>
-References: <1512742277-28205-1-git-send-email-ludovic.Barre@st.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Subject: Re: [PATCH v1 1/2] eeprom: at24: convert magic numbers to structs.
+Date: Fri, 8 Dec 2017 09:17:00 -0500
+Message-ID: <CAGngYiWdnE9Ztu3uGeqAS+Ksag6-W84AORJnWb1Xzc7EMBwZNg@mail.gmail.com>
+References: <1512576272-25563-1-git-send-email-svendev@arcx.com>
+ <1512576272-25563-2-git-send-email-svendev@arcx.com> <CAMRc=MeQUavcxejmTO5G7w2GBBY-7KKQ649qW_GhEZ9bV755nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512742277-28205-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAMRc=MeQUavcxejmTO5G7w2GBBY-7KKQ649qW_GhEZ9bV755nw@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sven Van Asbroeck <svendev@arcx.com>, Wolfram Sang <wsa@the-dreams.de>, nsekhar@ti.com, Sakari Ailus <sakari.ailus@linux.intel.com>, Javier Martinez Canillas <javier@dowhile0.org>, Divagar Mohandass <divagar.mohandass@intel.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Bartosz wrote:
+>> +#define AT24_OF_DEVICE_ID(_mfg, _name) \
+>> +       { .compatible = #_mfg "," #_name, .data = &platdata_##_name }
+>
+> I don't like hiding the way the compatible is created here from the
+> user. It doesn't save any code neither. Please make the macro accept
+> the whole compatible string.
+>
 
-This patch adds initial support of STM32MP157 microprocessor (MPU)
-based on Arm Cortex-A7. Under new ARCH_STM32_MPU flag we select the
-needed Cortex-A infrastructure (like gic, timer,...)
-
-Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
----
- Documentation/arm/stm32/stm32mp157-overview.txt | 12 ++++++++++++
- Documentation/devicetree/bindings/arm/stm32.txt |  1 +
- arch/arm/mach-stm32/Kconfig                     | 22 ++++++++++++++++++++--
- arch/arm/mach-stm32/Makefile                    |  1 +
- arch/arm/mach-stm32/board-mpu-dt.c              | 16 ++++++++++++++++
- 5 files changed, 50 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/arm/stm32/stm32mp157-overview.txt
- create mode 100644 arch/arm/mach-stm32/board-mpu-dt.c
-
-diff --git a/Documentation/arm/stm32/stm32mp157-overview.txt b/Documentation/arm/stm32/stm32mp157-overview.txt
-new file mode 100644
-index 0000000..8a3e7cb
---- /dev/null
-+++ b/Documentation/arm/stm32/stm32mp157-overview.txt
-@@ -0,0 +1,12 @@
-+			STM32MP157 Overview
-+			===================
-+
-+  Introduction
-+  ------------
-+	The STM32MP157 is a Cortex-A MPU aimed at various applications.
-+	It features:
-+	- Dual core Cortex-A7 application core
-+	- 2D/3D image composition with GPU
-+	- Standard memories interface support
-+	- Standard connectivity, widely inherited from the STM32 MCU family
-+	- Comprehensive security support
-diff --git a/Documentation/devicetree/bindings/arm/stm32.txt b/Documentation/devicetree/bindings/arm/stm32.txt
-index 05762b0..6808ed9 100644
---- a/Documentation/devicetree/bindings/arm/stm32.txt
-+++ b/Documentation/devicetree/bindings/arm/stm32.txt
-@@ -7,3 +7,4 @@ using one of the following compatible strings:
-   st,stm32f469
-   st,stm32f746
-   st,stm32h743
-+  st,stm32mp157
-diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
-index c8059ea..2b227c7 100644
---- a/arch/arm/mach-stm32/Kconfig
-+++ b/arch/arm/mach-stm32/Kconfig
-@@ -1,12 +1,12 @@
- menuconfig ARCH_STM32
--	bool "STMicrolectronics STM32 family" if ARM_SINGLE_ARMV7M
-+	bool "STMicrolectronics STM32 family" if ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select CLKSRC_STM32
- 	select PINCTRL
- 	select RESET_CONTROLLER
- 	select STM32_EXTI
- 	help
--	  Support for STMicroelectronics STM32 MCU family
-+	  Support for STMicroelectronics STM32 MCU/MPU family
- 
- if ARCH_STM32
- 
-@@ -40,4 +40,22 @@ config MACH_STM32H743
- 
- endif
- 
-+if ARCH_MULTI_V7
-+
-+config ARCH_STM32_MPU
-+	bool "STMicrolectronics STM32 MPU"
-+	default y
-+	select ARM_GIC
-+	select HAVE_ARM_ARCH_TIMER
-+	select ARM_PSCI
-+	help
-+	  Support for STMicroelectronics STM32 Microprocessors.
-+
-+config MACH_STM32MP157
-+	bool "STMicrolectronics STM32MP157"
-+	depends on ARCH_STM32_MPU
-+	default y
-+
-+endif
-+
- endif
-diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
-index 90c1b71..a405eb6 100644
---- a/arch/arm/mach-stm32/Makefile
-+++ b/arch/arm/mach-stm32/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_ARCH_STM32_MCU) += board-mcu-dt.o
-+obj-$(CONFIG_ARCH_STM32_MPU) += board-mpu-dt.o
-diff --git a/arch/arm/mach-stm32/board-mpu-dt.c b/arch/arm/mach-stm32/board-mpu-dt.c
-new file mode 100644
-index 0000000..9e18405
---- /dev/null
-+++ b/arch/arm/mach-stm32/board-mpu-dt.c
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
-+ * Author: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
-+ */
-+#include <asm/mach/arch.h>
-+#include <linux/of_platform.h>
-+
-+static const char *const stm32mp_compat[] __initconst = {
-+	"st,stm32mp157",
-+	NULL
-+};
-+
-+DT_MACHINE_START(STM32MPDT, "STM32 MP (Device Tree Support)")
-+	.dt_compat = stm32mp_compat,
-+MACHINE_END
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If the macro accepts the whole compatible string "mfg,chip-name" (e.g.
+"atmel,24c01")
+then how can I extract chip-name from that string? I need to attach
+chip-name to the
+platdata_ static structures. (e.g. "atmel,24c01" -> .data = platdata_24c01)
