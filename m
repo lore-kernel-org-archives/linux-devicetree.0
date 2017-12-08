@@ -1,141 +1,69 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 4/6] clocksource: stm32: only use 32 bits timers
-Date: Fri, 8 Dec 2017 09:34:44 +0100
-Message-ID: <f22fd299-a742-1144-75d0-256a538af619@linaro.org>
-References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
- <1510649563-22975-5-git-send-email-benjamin.gaignard@linaro.org>
+From: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 2/7] PCI: Export pci_find_host_bridge()
+Date: Fri, 8 Dec 2017 14:07:54 +0530
+Message-ID: <aebabb88-d894-2b1f-d3e8-63a2acad9665@nvidia.com>
+References: <1512120007-28088-1-git-send-email-mmaddireddy@nvidia.com>
+ <1512120007-28088-3-git-send-email-mmaddireddy@nvidia.com>
+ <20171205200402.GF23510@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510649563-22975-5-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171205200402.GF23510-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, julien.thierry-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: cyndis-/1wQRMveznE@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/11/2017 09:52, Benjamin Gaignard wrote:
-> The clock driving counters is at 90MHz so the maximum period
-> for 16 bis counters is around 750 ms
 
-728 us
 
-> which is a short period for a clocksource.
-
-Which clocksource are you talking about ?
-
-> For 32 bits counters this period is close
-> 47 secondes which is more acceptable.
+On 06-Dec-17 1:34 AM, Bjorn Helgaas wrote:
+> On Fri, Dec 01, 2017 at 02:50:02PM +0530, Manikanta Maddireddy wrote:
+>> PCI subsystem pass pci_bus pointer to pci_ops callback functions, Tegra
 > 
-> This patch remove 16 bits counters support and makes sure that
-> they won't be probed anymore.
-
-Are we talking about clockevent or clocksource?
-
-Is this issue present today ? Or is it if we add the clocksource support
-? We are talking about clocksource but we change the clockevent code.
-
-All this is very confusing.
-
-I have a rough idea of what is happening, but it is not up to me to
-decode and infer from the changes, you need to describe *clearly* the
-situation.
-
- - What happens if we use a 16bits timer as a clockevent ?
- - What happens if we use a 16bits timer as a clocksource ?
- - Why is it preferable to remove the support of the 16bits timers
-instead of downgrading them with the rating ?
-
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> ---
->  drivers/clocksource/timer-stm32.c | 26 ++++++++++++--------------
->  1 file changed, 12 insertions(+), 14 deletions(-)
+> s/PCI subsystem pass/The PCI subsystem passes a/
+> s/, Tegra/.  The Tegra/
 > 
-> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
-> index ae41a19..8173bcf 100644
-> --- a/drivers/clocksource/timer-stm32.c
-> +++ b/drivers/clocksource/timer-stm32.c
-> @@ -83,9 +83,9 @@ static irqreturn_t stm32_clock_event_handler(int irq, void *dev_id)
->  static int __init stm32_clockevent_init(struct device_node *node)
->  {
->  	struct reset_control *rstc;
-> -	unsigned long max_delta;
-> -	int ret, bits, prescaler = 1;
-> +	unsigned long max_arr;
->  	struct timer_of *to;
-> +	int ret;
->  
->  	to = kzalloc(sizeof(*to), GFP_KERNEL);
->  	if (!to)
-> @@ -115,29 +115,27 @@ static int __init stm32_clockevent_init(struct device_node *node)
->  
->  	/* Detect whether the timer is 16 or 32 bits */
->  	writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
-> -	max_delta = readl_relaxed(timer_of_base(to) + TIM_ARR);
-> -	if (max_delta == ~0U) {
-> -		prescaler = 1;
-> -		bits = 32;
-> -	} else {
-> -		prescaler = 1024;
-> -		bits = 16;
-> +	max_arr = readl_relaxed(timer_of_base(to) + TIM_ARR);
-> +	if (max_arr != ~0U) {
-> +		pr_err("32 bits timer is needed\n");
-> +		ret = -EINVAL;
-> +		goto deinit;
->  	}
+>> host driver use pci_find_host_bridge() to get pci_host_bridge from pci_bus.
+> 
+> s/use/uses/
+> 
+>> Export pci_find_host_bridge() to allow Tegra PCIe driver to be compiled as
+>> loadable kernel module.
+> 
+> s/allow Tegra/allow the Tegra/
+> s/loadable/a loadable/
+> 
+> But why do you need pci_find_host_bridge() at all?  Most drivers use
+> the pci_bus.sysdata pointer for this purpose, e.g., see db271747a04d
+> ("PCI: mediatek: Use bus->sysdata to get host private data")
+> 
 
-Wrap this in a function:
+I will send a patch to use bus->sysdata instead of pci_find_host_bridge().
 
-static bool stm32_timer_is_32bits(struct timer_of *to)
-{
-	return readl_relaxed(timer_of_base(to) + TIM_ARR) == ~0UL;
-}
-
-Then clearly inform the user.
-
-if (!stm32_timer_is_32bits(to)) {
-	pr_warn("Timer %pOF is a 16 bits timer\n", node);
-	/* abort the registration or downgrade the timer's rating */
-}
-
-> +
->  	writel_relaxed(0, timer_of_base(to) + TIM_ARR);
->  
-> -	writel_relaxed(prescaler - 1, timer_of_base(to) + TIM_PSC);
-> +	writel_relaxed(0, timer_of_base(to) + TIM_PSC);
->  	writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
->  	writel_relaxed(TIM_DIER_UIE, timer_of_base(to) + TIM_DIER);
->  	writel_relaxed(0, timer_of_base(to) + TIM_SR);
->  
->  	clockevents_config_and_register(&to->clkevt,
-> -					timer_of_period(to), MIN_DELTA, max_delta);
-> -
-> -	pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
-> -			node, bits);
-> +					timer_of_period(to), MIN_DELTA, ~0U);
->  
->  	return 0;
->  
-> +deinit:
-> +	timer_of_exit(to);
-
-Fix this please (timer_of_cleanup).
-
-In the future, make sure the patches are git-bisect safe.
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> V2:
+>> * commit message update
+>> V3:
+>> * EXPORT_SYMBOL is changed to EXPORT_SYMBOL_GPL
+>>
+>>  drivers/pci/host-bridge.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+>> index add66236215c..b8c0fcde9bd7 100644
+>> --- a/drivers/pci/host-bridge.c
+>> +++ b/drivers/pci/host-bridge.c
+>> @@ -22,6 +22,7 @@ struct pci_host_bridge *pci_find_host_bridge(struct pci_bus *bus)
+>>  
+>>  	return to_pci_host_bridge(root_bus->bridge);
+>>  }
+>> +EXPORT_SYMBOL_GPL(pci_find_host_bridge);
+>>  
+>>  struct device *pci_get_host_bridge_device(struct pci_dev *dev)
+>>  {
+>> -- 
+>> 2.1.4
+>>
