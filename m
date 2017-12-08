@@ -1,49 +1,48 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH 1/1] dt-bindings: arm: document supported STM32 SoC family
-Date: Fri, 8 Dec 2017 14:56:34 +0100
-Message-ID: <1512741394-27341-1-git-send-email-ludovic.Barre@st.com>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v9 4/6] clocksource: stm32: add clocksource support
+Date: Fri, 8 Dec 2017 15:04:42 +0100
+Message-ID: <CA+M3ks6uWUQqD-c_FWETDLp097AfUEVs1srpH_C7kK-X8ADQ1Q@mail.gmail.com>
+References: <20171208113250.359-1-benjamin.gaignard@st.com>
+ <20171208113250.359-5-benjamin.gaignard@st.com> <ac396fdb-1658-d2f3-bd92-b2b9fe04f201@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gwenael Treuveur <gwenael.treuveur@st.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ac396fdb-1658-d2f3-bd92-b2b9fe04f201@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+2017-12-08 14:46 GMT+01:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+> On 08/12/2017 12:32, Benjamin Gaignard wrote:
+>> The stm32 timer hardware is currently only used as a clock event device,
+>> but it can be utilized as a clocksource as well.
+>>
+>> Implement this by enabling the free running counter in the hardware bloc=
+k
+>> and converting the clock event part from a count down event timer to a
+>> comparator based timer.
+>
+>
+> Split this patch in two:
+>  - periodic support
+>  - clocksource support
 
-This adds a list of supported STM32 SoC bindings.
+No because the way of implementing periodic support depend of how clocksour=
+ce
+part is implemented on the hardware.
+I don't want to code functions that I will completely remove just after
 
-Signed-off-by: Gwenael Treuveur <gwenael.treuveur@st.com>
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- Documentation/devicetree/bindings/arm/stm32.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/stm32.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/stm32.txt b/Documentation/devicetree/bindings/arm/stm32.txt
-new file mode 100644
-index 0000000..05762b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/stm32.txt
-@@ -0,0 +1,9 @@
-+STMicroelectronics STM32 Platforms Device Tree Bindings
-+
-+Each device tree must specify which STM32 SoC it uses,
-+using one of the following compatible strings:
-+
-+  st,stm32f429
-+  st,stm32f469
-+  st,stm32f746
-+  st,stm32h743
--- 
-2.7.4
+>
+>
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
