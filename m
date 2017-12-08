@@ -1,102 +1,90 @@
-From: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/2] ath10k: search DT for qcom,ath10k-calibration-variant
-Date: Fri,  8 Dec 2017 11:37:42 +0100
-Message-ID: <20171208103742.3181-3-sven.eckelmann@openmesh.com>
-References: <20171208103742.3181-1-sven.eckelmann@openmesh.com>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171208103742.3181-1-sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 09/12] clk: qcom: Add Krait clock controller driver
+Date: Fri, 8 Dec 2017 16:30:02 +0530
+Message-ID: <797300f7-d655-8df3-8597-099e44bd209c@codeaurora.org>
+References: <1512725401-4944-1-git-send-email-sricharan@codeaurora.org>
+ <1512725401-4944-10-git-send-email-sricharan@codeaurora.org>
+ <CAOFm3uHdFn_GxJuQ-HfQpGAM5rWOT7=DyKUGtDz6dadoxdkBcw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOFm3uHdFn_GxJuQ-HfQpGAM5rWOT7=DyKUGtDz6dadoxdkBcw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Board Data File (BDF) is loaded upon driver boot-up procedure. The right
-board data file is identified on QCA4019 using bus, bmi-chip-id and
-bmi-board-id.
+Hi Philippe,
 
-The problem, however, can occur when the (default) board data file cannot
-fulfill with the vendor requirements and it is necessary to use a different
-board data file.
 
-This problem was solved for SMBIOS by adding a special SMBIOS type 0xF8.
-Something similar has to be provided for systems without SMBIOS but with
-device trees. No solution was specified by QCA and therefore a new one has
-to be found for ath10k.
+On 12/8/2017 3:53 PM, Philippe Ombredanne wrote:
+> Sricharan, Stephen,
+> 
+> On Fri, Dec 8, 2017 at 10:29 AM, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>
+>> The Krait CPU clocks are made up of a primary mux and secondary
+>> mux for each CPU and the L2, controlled via cp15 accessors. For
+>> Kraits within KPSSv1 each secondary mux accepts a different aux
+>> source, but on KPSSv2 each secondary mux accepts the same aux
+>> source.
+>>
+>> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+>> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> []
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/krait-cc.c
+>> @@ -0,0 +1,350 @@
+>> +/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 and
+>> + * only version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+> 
+> Have you considered using the new SPDX ids? Something like this:
+> 
+> // SPDX-License-Identifier: GPL-2.0
+> // Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+> 
+> Beside  being simpler and increasing the code to comment ratio by
+> deleting 9 lines of boilerplate, this will also save a few trees over
+> the long term each time that I print the source code of the kernel ;)
+> (do not worry, I am NOT as insane as to really print the kernel
+> sources, but someone more insane than me may well do it)
+> 
+> You may wonder about the C++ // comment style I used here... Please
+> see Linus posts on the topic as well as Thomas doc patches overall for
+> instructions on using the SPDX ids.
+> 
+> And if you were to do this for your past, present and future
+> contributions (eventually these of your group), I would be quite
+> grateful.
+> 
+> Thank you for your kind consideration
+> 
 
-The device tree requires addition strings to define the variant name
+Ha ok. will change it to use this one. Infact saw this feedback on other
+patches, but missed updating to it while sending.
 
-    wifi@a000000 {
-    	status = "okay";
-    	qcom,ath10k-calibration-variant = "RT-AC58U";
-    };
+Regards,
+ Sricharan
 
-    wifi@a800000 {
-    	status = "okay";
-    	qcom,ath10k-calibration-variant = "RT-AC58U";
-    };
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-This would create the boarddata identifiers for the board-2.bin search
-
- *  bus=ahb,bmi-chip-id=0,bmi-board-id=16,variant=RT-AC58U
- *  bus=ahb,bmi-chip-id=0,bmi-board-id=17,variant=RT-AC58U
-
-Signed-off-by: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
 ---
- drivers/net/wireless/ath/ath10k/core.c | 40 ++++++++++++++++++++++++++++------
- 1 file changed, 33 insertions(+), 7 deletions(-)
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
-index b29fdbd21ead..6264e2cc4c0d 100644
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -860,6 +860,28 @@ static int ath10k_core_check_smbios(struct ath10k *ar)
- 	return 0;
- }
- 
-+static int ath10k_core_check_dt(struct ath10k *ar)
-+{
-+	struct device_node *node;
-+	const char *variant = NULL;
-+
-+	node = ar->dev->of_node;
-+	if (!node)
-+		return -ENOENT;
-+
-+	of_property_read_string(node, "qcom,ath10k-calibration-variant",
-+				&variant);
-+	if (!variant)
-+		return -ENODATA;
-+
-+	if (strscpy(ar->id.bdf_ext, variant, sizeof(ar->id.bdf_ext)) < 0)
-+		ath10k_dbg(ar, ATH10K_DBG_BOOT,
-+			   "bdf variant string is longer than the buffer can accommodate (variant: %s)\n",
-+			    variant);
-+
-+	return 0;
-+}
-+
- static int ath10k_download_and_run_otp(struct ath10k *ar)
- {
- 	u32 result, address = ar->hw_params.patch_load_addr;
-@@ -1231,19 +1253,19 @@ static int ath10k_core_create_board_name(struct ath10k *ar, char *name,
- 	/* strlen(',variant=') + strlen(ar->id.bdf_ext) */
- 	char variant[9 + ATH10K_SMBIOS_BDF_EXT_STR_LENGTH] = { 0 };
- 
-+	if (ar->id.bdf_ext[0] != '\0')
-+		scnprintf(variant, sizeof(variant), ",variant=%s",
-+			  ar->id.bdf_ext);
-+
- 	if (ar->id.bmi_ids_valid) {
- 		scnprintf(name, name_len,
--			  "bus=%s,bmi-chip-id=%d,bmi-board-id=%d",
-+			  "bus=%s,bmi-chip-id=%d,bmi-board-id=%d%s",
- 			  ath10k_bus_str(ar->hif.bus),
- 			  ar->id.bmi_chip_id,
--			  ar->id.bmi_board_id);
-+			  ar->id.bmi_board_id, variant);
- 		goto out;
- 	}
- 
--	if (ar->id.bdf_ext[0] != '\0')
--		scnprintf(variant, sizeof(variant), ",variant=%s",
--			  ar->id.bdf_ext);
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
