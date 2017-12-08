@@ -1,77 +1,54 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v9 01/13] Documentation: Add SLIMbus summary
-Date: Fri, 8 Dec 2017 14:14:54 +0530
-Message-ID: <20171208084454.GD18649@localhost>
-References: <20171207102720.21071-1-srinivas.kandagatla@linaro.org>
- <20171207102720.21071-2-srinivas.kandagatla@linaro.org>
- <20171207103253.25834a68@lwn.net>
- <138216ca-4351-f895-fae2-0289cf2a3872@linaro.org>
+From: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V4 0/7] Add loadable kernel module and power management support
+Date: Fri, 8 Dec 2017 14:28:06 +0530
+Message-ID: <1512723493-865-1-git-send-email-mmaddireddy@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <138216ca-4351-f895-fae2-0289cf2a3872@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, pombredanne@nexb.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jonathan Corbet <corbet@lwn.net>, j.neuschaefer@gmx.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cyndis-/1wQRMveznE@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+Cc: jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 07, 2017 at 11:22:51PM +0000, Srinivas Kandagatla wrote:
-> Thankyou for taking time to review the patch,
-> 
-> On 07/12/17 17:32, Jonathan Corbet wrote:
-> >On Thu,  7 Dec 2017 10:27:08 +0000
-> >srinivas.kandagatla@linaro.org wrote:
-> >
-> >A couple of overall comments...
-> >
-> >>  Documentation/driver-api/index.rst           |   1 +
-> >>  Documentation/driver-api/slimbus/index.rst   |  15 ++++
-> >>  Documentation/driver-api/slimbus/summary.rst | 106 +++++++++++++++++++++++++++
-> >>  3 files changed, 122 insertions(+)
-> >>  create mode 100644 Documentation/driver-api/slimbus/index.rst
-> >>  create mode 100644 Documentation/driver-api/slimbus/summary.rst
-> >
-> >Do we really need a separate subdirectory for a single file?
-> >
-> May be not, TBH, I did take some inspiration from soundwire patches.
+This series of patches adds loadable kernel module and power management
+support to Tegra PCIe host controller driver.
 
-FWIW, SoundWire patches have more Documentation. We have 4 files atm, though
-they are not part of current series, so a directory looks apt for that
+These patches are tested on Jetson TK1, TX1 and TX2 platforms, following
+are the verification details.
+	- Multiple module insert & remove
+	- PCIe device functionality after module insert
+	- Free clock, resets, regulators, powergate, iomem and interrupt
+	resources after module remove
+	- PCIe device functionality after resume from RAM
 
-> I can drop that in next version. We can think of adding directory if we end
-> up adding more apis for the new features in future.
-> 
-> >It seems you have kerneldoc comments for your data structures and at least
-> >some of your exported symbols.  If you really want to document this stuff
-> >well, I'd suggest finishing out those comments, then pulling them into the
-> >documentation in the appropriate places.
-> Am sure all the exported symbols have kernel doc, I will pull them into
-> relevant sub sections.
-> 
-> Do you think something like this http://paste.ubuntu.com/26135862/ makes
-> sense?
-> 
-> thanks,
-> srini
-> >
-> >Thanks,
-> >
-> >jon
-> >
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+Tegra PCIe host controller driver is using ioremap_page_range() which is
+not exported. This is switched with devm_ioremap() in the series
+'https://patchwork.ozlabs.org/project/linux-tegra/list/?series=9907'.
+
+V2: PM QoS fix is dropped in V2 from this series because the fix is
+incorporated in latest 'commit 0759e80b84e3 ("PM / QoS: Fix device resume
+latency framework")'. Update commit message of few patches in V2.
+
+V3: Patches to export irq_set_msi_desc() and tegra_cpuidle_pcie_irqs_in_use()
+are dropped based on review comments. These symbols will be addressed in next
+series. Took care of few other review comments.
+
+V4: Dropped pci_find_host_bridge() export patch and added new patch to use
+bus->sysdata for private data.
+
+Manikanta Maddireddy (7):
+  of: Export of_pci_range_to_resource()
+  PCI: tegra: Use bus->sysdata to store and get host private data
+  PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for Tegra PCIe
+  PCI: tegra: Free resources on probe failure
+  PCI: tegra: Add loadable kernel module support
+  PCI: tegra: Broadcast PME_Turn_Off message before link goes to L2
+  PCI: tegra: Add power management support
+
+ drivers/of/address.c         |   1 +
+ drivers/pci/host/Kconfig     |   2 +-
+ drivers/pci/host/pci-tegra.c | 344 ++++++++++++++++++++++++++++++++-----------
+ 3 files changed, 261 insertions(+), 86 deletions(-)
 
 -- 
-~Vinod
+2.1.4
