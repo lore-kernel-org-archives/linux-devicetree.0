@@ -1,49 +1,70 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH V7 5/7] ACPI: properties: Implement get_match_data() callback
-Date: Fri, 8 Dec 2017 15:51:41 +0100
-Message-ID: <CAJZ5v0hr28q-xj=mYC1xdcTu5FW6cdnCZ4n9xv0fWDF6vcZygA@mail.gmail.com>
-References: <1512681031-11343-1-git-send-email-okaya@codeaurora.org> <1512681031-11343-6-git-send-email-okaya@codeaurora.org>
+From: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v7 11/13] IIO: consumer: allow to set buffer sizes
+Date: Fri, 8 Dec 2017 15:49:24 +0100
+Message-ID: <1512744566-13233-12-git-send-email-arnaud.pouliquen@st.com>
+References: <1512744566-13233-1-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1512681031-11343-6-git-send-email-okaya@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512744566-13233-1-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 7, 2017 at 10:10 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
-> Now that we have a get_match_data() callback as part of the firmware node,
-> implement the ACPI specific piece for it.
->
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/acpi/property.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index e26ea20..466d150 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -1271,9 +1271,17 @@ static int acpi_fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
->         return 0;
->  }
->
-> +static void *
-> +acpi_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
-> +                                 const struct device *dev)
-> +{
-> +       return acpi_get_match_data(dev);
-> +}
-> +
->  #define DECLARE_ACPI_FWNODE_OPS(ops) \
->         const struct fwnode_operations ops = {                          \
->                 .device_is_available = acpi_fwnode_device_is_available, \
-> +               .device_get_match_data = acpi_fwnode_device_get_match_data, \
->                 .property_present = acpi_fwnode_property_present,       \
->                 .property_read_int_array =                              \
->                         acpi_fwnode_property_read_int_array,            \
-> --
+Add iio consumer API to set buffer size and watermark according
+to sysfs API.
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+---
+ drivers/iio/buffer/industrialio-buffer-cb.c | 11 +++++++++++
+ include/linux/iio/consumer.h                | 11 +++++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/drivers/iio/buffer/industrialio-buffer-cb.c b/drivers/iio/buffer/industrialio-buffer-cb.c
+index 4847534..ea63c83 100644
+--- a/drivers/iio/buffer/industrialio-buffer-cb.c
++++ b/drivers/iio/buffer/industrialio-buffer-cb.c
+@@ -104,6 +104,17 @@ struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(iio_channel_get_all_cb);
+ 
++int iio_channel_cb_set_buffer_watermark(struct iio_cb_buffer *cb_buff,
++					size_t watermark)
++{
++	if (!watermark)
++		return -EINVAL;
++	cb_buff->buffer.watermark = watermark;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(iio_channel_cb_set_buffer_watermark);
++
+ int iio_channel_start_all_cb(struct iio_cb_buffer *cb_buff)
+ {
+ 	return iio_update_buffers(cb_buff->indio_dev, &cb_buff->buffer,
+diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+index 2017f35..9887f4f 100644
+--- a/include/linux/iio/consumer.h
++++ b/include/linux/iio/consumer.h
+@@ -134,6 +134,17 @@ struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
+ 						       void *private),
+ 					     void *private);
+ /**
++ * iio_channel_cb_set_buffer_watermark() - set the buffer watermark.
++ * @cb_buffer:		The callback buffer from whom we want the channel
++ *			information.
++ * @watermark: buffer watermark in bytes.
++ *
++ * This function allows to configure the buffer watermark.
++ */
++int iio_channel_cb_set_buffer_watermark(struct iio_cb_buffer *cb_buffer,
++					size_t watermark);
++
++/**
+  * iio_channel_release_all_cb() - release and unregister the callback.
+  * @cb_buffer:		The callback buffer that was allocated.
+  */
+-- 
+2.7.4
