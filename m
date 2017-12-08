@@ -1,79 +1,77 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: allwinner: a64: orangepi-zero-plus2:
- add usb otg
-Date: Fri, 8 Dec 2017 08:57:35 +0100
-Message-ID: <20171208075735.nk5gsdpmbrol7fnq@flea.lan>
-References: <1512644748-14491-1-git-send-email-jagan@amarulasolutions.com>
- <20171207133409.cpp7wxx4yflkgavp@flea.lan>
- <CAD6G_RQkBWth6iygyGfBX_rROEM7XUh3BmvoXfsxm8=po+kksQ@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="km5sivfxzg2ekixt"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6MLVHIQKGQE2G66U7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAD6G_RQkBWth6iygyGfBX_rROEM7XUh3BmvoXfsxm8=po+kksQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] Bluetooth: hci_ll: add support for setting public
+ address
+Date: Fri, 8 Dec 2017 09:07:56 +0100
+Message-ID: <8B6C3CFA-35C6-4A9B-90AB-22834B9AE2C4@holtmann.org>
+References: <1512701860-8321-1-git-send-email-david@lechnology.com>
+ <1512701860-8321-2-git-send-email-david@lechnology.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512701860-8321-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi David,
 
---km5sivfxzg2ekixt
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Thu, Dec 07, 2017 at 10:23:18PM +0530, Jagan Teki wrote:
-> On Thu, Dec 7, 2017 at 7:04 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Thu, Dec 07, 2017 at 04:35:48PM +0530, Jagan Teki wrote:
-> >> Add usb otg support for orangepi-zero-plus2 board:
-> >> - Add usb_otg node with dr_mode as 'otg'
-> >> - USB0-IDDET connected to PA21
-> >> - VBUS connected through DCIN which always on
-> >>
-> >> Tested mass storage function.
-> >>
-> >> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> >
-> > Did you test the OTG or peripheral modes?
+> This adds support for setting the public address on Texas Instruments
+> Bluetooth chips using a vendor-specific command.
 > 
-> dr_mode with otg and I've tested mas storage gadget with mmc disk
-> emulation.
-
-So, peripheral, not OTG.
-
-> >
-> >> Note: Anyone please check vbus connection [1]
-> >> Since it is connected through DCIN of vcc-5v, I've added vcc-5v0
-> >> regulator for the same and attached to usb0_vbus-supply but it is
-> >> disabling during kernel boot.
-> >> [    1.887854] vcc5v0: disabling
-> >
-> > VBUS is the power line that is provided on the USB connector. In
-> > peripheral, that power is provided by the host, therefore it needs to
-> > be shutdown on the peripheral end. This is the expected behaviour.
+> This has been tested on a CC2560A. The TI wiki also indicates that this
+> command should work on TI WL17xx/WL18xx Bluetooth chips.
 > 
-> So, in my test with 'otg' host drive the vbus so-it is disabling at
-> target end is it?
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> ---
+> 
+> v2 changes:
+> * This is a new patch in v2
+> 
+> drivers/bluetooth/hci_ll.c | 17 +++++++++++++++++
+> 1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
+> index 974a788..b732004 100644
+> --- a/drivers/bluetooth/hci_ll.c
+> +++ b/drivers/bluetooth/hci_ll.c
+> @@ -57,6 +57,7 @@
+> #include "hci_uart.h"
+> 
+> /* Vendor-specific HCI commands */
+> +#define HCI_VS_WRITE_BD_ADDR			0xfc06
+> #define HCI_VS_UPDATE_UART_HCI_BAUDRATE		0xff36
+> 
+> /* HCILL commands */
+> @@ -662,6 +663,20 @@ static int download_firmware(struct ll_device *lldev)
+> 	return err;
+> }
+> 
+> +static int ll_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
+> +{
+> +	bdaddr_t bdaddr_swapped;
+> +	struct sk_buff *skb;
+> +
+> +	baswap(&bdaddr_swapped, bdaddr);
+> +	skb = __hci_cmd_sync(hdev, HCI_VS_WRITE_BD_ADDR, sizeof(bdaddr_t),
+> +			     &bdaddr_swapped, HCI_INIT_TIMEOUT);
+> +	if (!IS_ERR(skb))
+> +		kfree_skb(skb);
+> +	
 
-You're not testing OTG, you're testing in peripheral mode. OTG is
-switching between host and peripheral at runtime. And I'm pretty sure
-this board cannot implement OTG at all, since its only source of power
-seems to be USB.
+You have a trailing whitespace here.
 
-Maxime
+Does the HCI command really expect the BD_ADDR in the swapped order. The caller of hdev->set_bdaddr while provide it in the same order as the HCI Read BD Address command and everything in HCI. So it seems odd that you have to swap it for the vendor command.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---km5sivfxzg2ekixt--
+So have you actually tested this with btmgmt public-add <xx:xx..> and checked that the address comes out correctly. I think ll_set_bdaddr should function correctly for the mgmt interface. And if needed any other caller outside of mgmt has to do the swapping.
+
+Regards
+
+Marcel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
