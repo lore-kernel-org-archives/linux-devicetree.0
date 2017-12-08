@@ -1,45 +1,38 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: sun8i: a83t: Enable EMAC Ethernet
-Date: Fri, 8 Dec 2017 10:06:59 +0100
-Message-ID: <20171208090659.tji2xhukpys3gw7h@flea.lan>
-References: <20171208073157.14599-1-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v9 01/13] Documentation: Add SLIMbus summary
+Date: Fri, 8 Dec 2017 09:09:43 +0000
+Message-ID: <7567568c-d132-ff09-0211-c217c036b8b7@linaro.org>
+References: <20171207102720.21071-1-srinivas.kandagatla@linaro.org>
+ <20171207102720.21071-2-srinivas.kandagatla@linaro.org>
+ <20171207103253.25834a68@lwn.net>
+ <138216ca-4351-f895-fae2-0289cf2a3872@linaro.org>
+ <20171208084454.GD18649@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hb5lgt3u4fjicxux"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPNMVHIQKGQEQFJCAIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20171208073157.14599-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171208084454.GD18649@localhost>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, pombredanne@nexb.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jonathan Corbet <corbet@lwn.net>, j.neuschaefer@gmx.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
 
---hb5lgt3u4fjicxux
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
 
-On Fri, Dec 08, 2017 at 03:31:55PM +0800, Chen-Yu Tsai wrote:
-> Hi,
+On 08/12/17 08:44, Vinod Koul wrote:
+>>> Do we really need a separate subdirectory for a single file?
+>>>
+>> May be not, TBH, I did take some inspiration from soundwire patches.
+> FWIW, SoundWire patches have more Documentation. We have 4 files atm, though
+> they are not part of current series, so a directory looks apt for that
 > 
-> This is my spin on enabling Ethernet on the A83T. It consists of
-> Corentin's dtsi patch plus my board level patch. There's nothing
-> really special about them.
-> 
-> ChenYu
-
-Applied both, thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---hb5lgt3u4fjicxux--
+Yes, it does makes sense for soundwire!!
