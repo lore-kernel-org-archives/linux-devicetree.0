@@ -1,129 +1,88 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH RESEND v7 1/2] at24: support eeproms that do not
- auto-rollover reads.
-Date: Fri, 8 Dec 2017 18:22:36 +0100
-Message-ID: <CAMRc=MeWUwgG08XN_UWbnarDMfk9Zm5OoQJCRVG2aqSiv2AZ0g@mail.gmail.com>
-References: <1512750511-24505-1-git-send-email-svendev@arcx.com> <1512750511-24505-2-git-send-email-svendev@arcx.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/4] PCI: dwc: pci-dra7xx: Fix legacy IRQ handling
+Date: Fri, 8 Dec 2017 18:35:23 +0000
+Message-ID: <20171208183523.GB1885@e107981-ln.cambridge.arm.com>
+References: <20171201061311.16691-1-vigneshr@ti.com>
+ <20171201061311.16691-5-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1512750511-24505-2-git-send-email-svendev@arcx.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Sven Van Asbroeck <svendev@arcx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, nsekhar@ti.com, Sakari Ailus <sakari.ailus@linux.intel.com>, David Lechner <david@lechnology.com>, Javier Martinez Canillas <javier@dowhile0.org>, Divagar Mohandass <divagar.mohandass@intel.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171201061311.16691-5-vigneshr-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Chris Welch <Chris.Welch-ojoHHoaXhABCkLs28/y7ANBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-12-08 17:28 GMT+01:00 Sven Van Asbroeck <svendev@arcx.com>:
-> Some multi-address eeproms in the at24 family may not automatically
-> roll-over reads to the next slave address. On those eeproms, reads
-> that straddle slave boundaries will not work correctly.
->
-> Solution:
-> Mark such eeproms with a flag that prevents reads straddling
-> slave boundaries. Add the AT24_FLAG_NO_RDROL flag to the eeprom
-> entry in the device_id table, or add 'no-read-rollover' to the
-> eeprom devicetree entry.
->
-> Note that I have not personally enountered an at24 chip that
-> does not support read rollovers. They may or may not exist.
-> However, my hardware requires this functionality because of
-> a quirk.
->
-> It's up to the Linux community to decide if this patch is useful/
-> general enough to warrant merging.
->
-> Signed-off-by: Sven Van Asbroeck <svendev@arcx.com>
-> ---
->  drivers/misc/eeprom/at24.c         | 39 ++++++++++++++++++++++++++------------
->  include/linux/platform_data/at24.h |  2 ++
->  2 files changed, 29 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> index 625b001..06ffa11 100644
-> --- a/drivers/misc/eeprom/at24.c
-> +++ b/drivers/misc/eeprom/at24.c
-> @@ -251,15 +251,6 @@ struct at24_data {
->   * Slave address and byte offset derive from the offset. Always
->   * set the byte address; on a multi-master board, another master
->   * may have changed the chip's "current" address pointer.
-> - *
-> - * REVISIT some multi-address chips don't rollover page reads to
-> - * the next slave address, so we may need to truncate the count.
-> - * Those chips might need another quirk flag.
-> - *
-> - * If the real hardware used four adjacent 24c02 chips and that
-> - * were misconfigured as one 24c08, that would be a similar effect:
-> - * one "eeprom" file not four, but larger reads would fail when
-> - * they crossed certain pages.
->   */
->  static struct at24_client *at24_translate_offset(struct at24_data *at24,
->                                                  unsigned int *offset)
-> @@ -277,6 +268,30 @@ static struct at24_client *at24_translate_offset(struct at24_data *at24,
->         return &at24->client[i];
->  }
->
-> +static size_t at24_adjust_read_count(struct at24_data *at24,
-> +                                     unsigned int offset, size_t count)
-> +{
-> +       unsigned int bits;
-> +       size_t remainder;
-> +
-> +       /*
-> +        * In case of multi-address chips that don't rollover reads to
-> +        * the next slave address: truncate the count to the slave boundary,
-> +        * so that the read never straddles slaves.
-> +        */
-> +       if (at24->chip.flags & AT24_FLAG_NO_RDROL) {
-> +               bits = (at24->chip.flags & AT24_FLAG_ADDR16) ? 16 : 8;
-> +               remainder = BIT(bits) - offset;
-> +               if (count > remainder)
-> +                       count = remainder;
-> +       }
-> +
-> +       if (count > io_limit)
-> +               count = io_limit;
-> +
-> +       return count;
-> +}
-> +
->  static ssize_t at24_regmap_read(struct at24_data *at24, char *buf,
->                                 unsigned int offset, size_t count)
->  {
-> @@ -289,9 +304,7 @@ static ssize_t at24_regmap_read(struct at24_data *at24, char *buf,
->         at24_client = at24_translate_offset(at24, &offset);
->         regmap = at24_client->regmap;
->         client = at24_client->client;
-> -
-> -       if (count > io_limit)
-> -               count = io_limit;
-> +       count = at24_adjust_read_count(at24, offset, count);
->
->         /* adjust offset for mac and serial read ops */
->         offset += at24->offset_adj;
-> @@ -457,6 +470,8 @@ static void at24_get_pdata(struct device *dev, struct at24_platform_data *chip)
->
->         if (device_property_present(dev, "read-only"))
->                 chip->flags |= AT24_FLAG_READONLY;
-> +       if (device_property_present(dev, "no-read-rollover"))
-> +               chip->flags |= AT24_FLAG_NO_RDROL;
->
->         err = device_property_read_u32(dev, "size", &val);
->         if (!err)
-> diff --git a/include/linux/platform_data/at24.h b/include/linux/platform_data/at24.h
-> index 271a4e2..841bb28 100644
-> --- a/include/linux/platform_data/at24.h
-> +++ b/include/linux/platform_data/at24.h
-> @@ -50,6 +50,8 @@ struct at24_platform_data {
->  #define AT24_FLAG_TAKE8ADDR    BIT(4)  /* take always 8 addresses (24c00) */
->  #define AT24_FLAG_SERIAL       BIT(3)  /* factory-programmed serial number */
->  #define AT24_FLAG_MAC          BIT(2)  /* factory-programmed mac address */
-> +#define AT24_FLAG_NO_RDROL  BIT(1)     /* does not auto-rollover reads to */
-> +                                       /* the next slave address */
->
->         void            (*setup)(struct nvmem_device *nvmem, void *context);
->         void            *context;
-> --
-> 1.9.1
->
+On Fri, Dec 01, 2017 at 11:43:11AM +0530, Vignesh R wrote:
+> Legacy INTD IRQ handling is broken on dra7xx due to fact that driver
+> uses hwirq in range of 1-4 for INTA, INTD whereas IRQ domain is of size
+> 4 which is numbered 0-3. Therefore when INTD IRQ line is used with
+> pci-dra7xx driver following warning is seen:
+> 
+>        WARNING: CPU: 0 PID: 1 at kernel/irq/irqdomain.c:342 irq_domain_associate+0x12c/0x1c4
+>        error: hwirq 0x4 is too large for dummy
+> 
+> Fix this by using pci_irqd_intx_xlate() helper to translate the INTx 1-4
+> range into the 0-3 as done in other PCIe drivers.
+> 
+> Also, iterate over all the INTx bits and call their respective IRQ
+> handlers before clearing the status register.
 
-Applied, thanks!
+It seems to me that you are fixing two bugs with one patch and therefore
+I would ask you to split it in two or explain to me why we should
+consider lumping them together.
+
+Thanks,
+Lorenzo
+
+> Suggested-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Reported-by: Chris Welch <Chris.Welch-ojoHHoaXhABCkLs28/y7ANBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/pci/dwc/pci-dra7xx.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/dwc/pci-dra7xx.c b/drivers/pci/dwc/pci-dra7xx.c
+> index 53f721d1cc40..59e8de34cec6 100644
+> --- a/drivers/pci/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/dwc/pci-dra7xx.c
+> @@ -226,6 +226,7 @@ static int dra7xx_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+>  
+>  static const struct irq_domain_ops intx_domain_ops = {
+>  	.map = dra7xx_pcie_intx_map,
+> +	.xlate = pci_irqd_intx_xlate,
+>  };
+>  
+>  static int dra7xx_pcie_init_irq_domain(struct pcie_port *pp)
+> @@ -256,7 +257,8 @@ static irqreturn_t dra7xx_pcie_msi_irq_handler(int irq, void *arg)
+>  	struct dra7xx_pcie *dra7xx = arg;
+>  	struct dw_pcie *pci = dra7xx->pci;
+>  	struct pcie_port *pp = &pci->pp;
+> -	u32 reg;
+> +	unsigned long reg;
+> +	u32 virq, bit;
+>  
+>  	reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI);
+>  
+> @@ -268,8 +270,11 @@ static irqreturn_t dra7xx_pcie_msi_irq_handler(int irq, void *arg)
+>  	case INTB:
+>  	case INTC:
+>  	case INTD:
+> -		generic_handle_irq(irq_find_mapping(dra7xx->irq_domain,
+> -						    ffs(reg)));
+> +		for_each_set_bit(bit, &reg, PCI_NUM_INTX) {
+> +			virq = irq_find_mapping(dra7xx->irq_domain, bit);
+> +			if (virq)
+> +				generic_handle_irq(virq);
+> +		}
+>  		break;
+>  	}
+>  
+> -- 
+> 2.15.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
