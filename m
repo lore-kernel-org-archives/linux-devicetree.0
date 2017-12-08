@@ -1,319 +1,51 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v4 11/12] cpufreq: Add module to register cpufreq on Krait CPUs
-Date: Fri,  8 Dec 2017 15:00:00 +0530
-Message-ID: <1512725401-4944-12-git-send-email-sricharan@codeaurora.org>
-References: <1512725401-4944-1-git-send-email-sricharan@codeaurora.org>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] clk: meson-axg: add clocks dt-bindings required
+ header
+Date: Fri, 08 Dec 2017 10:33:07 +0100
+Message-ID: <1512725587.17256.19.camel@baylibre.com>
+References: <20171207095300.15384-1-yixun.lan@amlogic.com>
+         <20171207095300.15384-3-yixun.lan@amlogic.com>
+         <20171207221014.6qwcb43w5hms4ma5@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512725401-4944-1-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20171207221014.6qwcb43w5hms4ma5@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Qiufang Dai <qiufang.dai-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Jian Hu <jian.hu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On Thu, 2017-12-07 at 16:10 -0600, Rob Herring wrote:
+> On Thu, Dec 07, 2017 at 05:52:58PM +0800, Yixun Lan wrote:
+> > From: Qiufang Dai <qiufang.dai-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > Add the required header for the clocks ID dt-bindings
+> > exported from various subsystem in the Meson-AXG SoC.
+> > 
+> > Signed-off-by: Qiufang Dai <qiufang.dai-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  include/dt-bindings/clock/axg-clkc.h | 71
+> > ++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 71 insertions(+)
+> >  create mode 100644 include/dt-bindings/clock/axg-clkc.h
+> 
+> Please add acks when posting new versions.
+> 
+> Rob
 
-Register a cpufreq-generic device whenever we detect that a
-"qcom,krait" compatible CPU is present in DT.
+Yixun, please be consistent about this. Maintainers are not going to dig
+through your previous revision to collect Tags
 
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../devicetree/bindings/arm/msm/qcom,pvs.txt       |  38 ++++
- drivers/cpufreq/Kconfig.arm                        |   9 +
- drivers/cpufreq/Makefile                           |   1 +
- drivers/cpufreq/qcom-cpufreq.c                     | 204 +++++++++++++++++++++
- 4 files changed, 252 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,pvs.txt
- create mode 100644 drivers/cpufreq/qcom-cpufreq.c
+I believe Neil acked patch 3, didn't he ?
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,pvs.txt b/Documentation/devicetree/bindings/arm/msm/qcom,pvs.txt
-new file mode 100644
-index 0000000..e7cb104
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/qcom,pvs.txt
-@@ -0,0 +1,38 @@
-+Qualcomm Process Voltage Scaling Tables
-+
-+The node name is required to be "qcom,pvs". There shall only be one
-+such node present in the root of the tree.
-+
-+PROPERTIES
-+
-+- qcom,pvs-format-a or qcom,pvs-format-b:
-+	Usage: required
-+	Value type: <empty>
-+	Definition: Indicates the format of qcom,speedX-pvsY-bin-vZ properties.
-+		    If qcom,pvs-format-a is used the table is two columns
-+		    (frequency and voltage in that order). If qcom,pvs-format-b 		    is used the table is three columns (frequency, voltage,
-+		    and current in that order).
-+
-+- qcom,speedX-pvsY-bin-vZ:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: The PVS table corresponding to the speed bin X, pvs bin Y,
-+		    and version Z.
-+Example:
-+
-+	qcom,pvs {
-+		qcom,pvs-format-a;
-+		qcom,speed0-pvs0-bin-v0 =
-+			<  384000000  950000 >,
-+			<  486000000  975000 >,
-+			<  594000000 1000000 >,
-+			<  702000000 1025000 >,
-+			<  810000000 1075000 >,
-+			<  918000000 1100000 >,
-+			< 1026000000 1125000 >,
-+			< 1134000000 1175000 >,
-+			< 1242000000 1200000 >,
-+			< 1350000000 1225000 >,
-+			< 1458000000 1237500 >,
-+			< 1512000000 1250000 >;
-+	};
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index bdce448..60f28e7 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -100,6 +100,15 @@ config ARM_OMAP2PLUS_CPUFREQ
- 	depends on ARCH_OMAP2PLUS
- 	default ARCH_OMAP2PLUS
- 
-+config ARM_QCOM_CPUFREQ
-+	tristate "Qualcomm based"
-+	depends on ARCH_QCOM
-+	select PM_OPP
-+	help
-+	  This adds the CPUFreq driver for Qualcomm SoC based boards.
-+
-+	  If in doubt, say N.
-+
- config ARM_S3C_CPUFREQ
- 	bool
- 	help
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index 812f9e0..1496464 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -62,6 +62,7 @@ obj-$(CONFIG_ARM_MEDIATEK_CPUFREQ)	+= mediatek-cpufreq.o
- obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
- obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
- obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
-+obj-$(CONFIG_ARM_QCOM_CPUFREQ)		+= qcom-cpufreq.o
- obj-$(CONFIG_ARM_S3C24XX_CPUFREQ)	+= s3c24xx-cpufreq.o
- obj-$(CONFIG_ARM_S3C24XX_CPUFREQ_DEBUGFS) += s3c24xx-cpufreq-debugfs.o
- obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
-diff --git a/drivers/cpufreq/qcom-cpufreq.c b/drivers/cpufreq/qcom-cpufreq.c
-new file mode 100644
-index 0000000..95ed2ba
---- /dev/null
-+++ b/drivers/cpufreq/qcom-cpufreq.c
-@@ -0,0 +1,204 @@
-+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/slab.h>
-+#include "cpufreq-dt.h"
-+
-+static void __init get_krait_bin_format_a(int *speed, int *pvs, int *pvs_ver)
-+{
-+	void __iomem *base;
-+	u32 pte_efuse;
-+
-+	*speed = *pvs = *pvs_ver = 0;
-+
-+	base = ioremap(0x007000c0, 4);
-+	if (!base) {
-+		pr_warn("Unable to read efuse data. Defaulting to 0!\n");
-+		return;
-+	}
-+
-+	pte_efuse = readl_relaxed(base);
-+	iounmap(base);
-+
-+	*speed = pte_efuse & 0xf;
-+	if (*speed == 0xf)
-+		*speed = (pte_efuse >> 4) & 0xf;
-+
-+	if (*speed == 0xf) {
-+		*speed = 0;
-+		pr_warn("Speed bin: Defaulting to %d\n", *speed);
-+	} else {
-+		pr_info("Speed bin: %d\n", *speed);
-+	}
-+
-+	*pvs = (pte_efuse >> 10) & 0x7;
-+	if (*pvs == 0x7)
-+		*pvs = (pte_efuse >> 13) & 0x7;
-+
-+	if (*pvs == 0x7) {
-+		*pvs = 0;
-+		pr_warn("PVS bin: Defaulting to %d\n", *pvs);
-+	} else {
-+		pr_info("PVS bin: %d\n", *pvs);
-+	}
-+}
-+
-+static void __init get_krait_bin_format_b(int *speed, int *pvs, int *pvs_ver)
-+{
-+	u32 pte_efuse, redundant_sel;
-+	void __iomem *base;
-+
-+	*speed = 0;
-+	*pvs = 0;
-+	*pvs_ver = 0;
-+
-+	base = ioremap(0xfc4b80b0, 8);
-+	if (!base) {
-+		pr_warn("Unable to read efuse data. Defaulting to 0!\n");
-+		return;
-+	}
-+
-+	pte_efuse = readl_relaxed(base);
-+	redundant_sel = (pte_efuse >> 24) & 0x7;
-+	*speed = pte_efuse & 0x7;
-+	/* 4 bits of PVS are in efuse register bits 31, 8-6. */
-+	*pvs = ((pte_efuse >> 28) & 0x8) | ((pte_efuse >> 6) & 0x7);
-+	*pvs_ver = (pte_efuse >> 4) & 0x3;
-+
-+	switch (redundant_sel) {
-+	case 1:
-+		*speed = (pte_efuse >> 27) & 0xf;
-+		break;
-+	case 2:
-+		*pvs = (pte_efuse >> 27) & 0xf;
-+		break;
-+	}
-+
-+	/* Check SPEED_BIN_BLOW_STATUS */
-+	if (pte_efuse & BIT(3)) {
-+		pr_info("Speed bin: %d\n", *speed);
-+	} else {
-+		pr_warn("Speed bin not set. Defaulting to 0!\n");
-+		*speed = 0;
-+	}
-+
-+	/* Check PVS_BLOW_STATUS */
-+	pte_efuse = readl_relaxed(base + 0x4) & BIT(21);
-+	if (pte_efuse) {
-+		pr_info("PVS bin: %d\n", *pvs);
-+	} else {
-+		pr_warn("PVS bin not set. Defaulting to 0!\n");
-+		*pvs = 0;
-+	}
-+
-+	pr_info("PVS version: %d\n", *pvs_ver);
-+	iounmap(base);
-+}
-+
-+static int __init qcom_cpufreq_populate_opps(void)
-+{
-+	int len, rows, cols, i, k, speed, pvs, pvs_ver;
-+	char table_name[] = "qcom,speedXX-pvsXX-bin-vXX";
-+	struct device_node *np;
-+	struct device *dev;
-+	int cpu = 0;
-+
-+	np = of_find_node_by_name(NULL, "qcom,pvs");
-+	if (!np)
-+		return -ENODEV;
-+
-+	if (of_property_read_bool(np, "qcom,pvs-format-a")) {
-+		get_krait_bin_format_a(&speed, &pvs, &pvs_ver);
-+		cols = 2;
-+	} else if (of_property_read_bool(np, "qcom,pvs-format-b")) {
-+		get_krait_bin_format_b(&speed, &pvs, &pvs_ver);
-+		cols = 3;
-+	} else {
-+		return -ENODEV;
-+	}
-+
-+	snprintf(table_name, sizeof(table_name),
-+		 "qcom,speed%d-pvs%d-bin-v%d", speed, pvs, pvs_ver);
-+
-+	if (!of_find_property(np, table_name, &len))
-+		return -EINVAL;
-+
-+	len /= sizeof(u32);
-+	if (len % cols || len == 0)
-+		return -EINVAL;
-+
-+	rows = len / cols;
-+
-+	for (i = 0, k = 0; i < rows; i++) {
-+		u32 freq, volt;
-+
-+		of_property_read_u32_index(np, table_name, k++, &freq);
-+		of_property_read_u32_index(np, table_name, k++, &volt);
-+		while (k % cols)
-+			k++; /* Skip uA entries if present */
-+		for (cpu = 0; cpu < num_possible_cpus(); cpu++) {
-+			dev = get_cpu_device(cpu);
-+			if (!dev)
-+				return -ENODEV;
-+			if (dev_pm_opp_add(dev, freq, volt))
-+				pr_warn("failed to add OPP %u\n", freq);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init qcom_cpufreq_driver_init(void)
-+{
-+	struct cpufreq_dt_platform_data pdata = { .independent_clocks = true };
-+	struct platform_device_info devinfo = {
-+		.name = "cpufreq-dt",
-+		.data = &pdata,
-+		.size_data = sizeof(pdata),
-+	};
-+	struct device *cpu_dev;
-+	struct device_node *np;
-+	int ret;
-+
-+	cpu_dev = get_cpu_device(0);
-+	if (!cpu_dev)
-+		return -ENODEV;
-+
-+	np = of_node_get(cpu_dev->of_node);
-+	if (!np)
-+		return -ENOENT;
-+
-+	if (!of_device_is_compatible(np, "qcom,krait")) {
-+		of_node_put(np);
-+		return -ENODEV;
-+	}
-+	of_node_put(np);
-+
-+	ret = qcom_cpufreq_populate_opps();
-+	if (ret)
-+		return ret;
-+
-+	return PTR_ERR_OR_ZERO(platform_device_register_full(&devinfo));
-+}
-+module_init(qcom_cpufreq_driver_init);
-+
-+MODULE_DESCRIPTION("Qualcomm CPUfreq driver");
-+MODULE_LICENSE("GPL v2");
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Please resend your series with the Tags collected
+If not already done, please make sure patches 1-3 apply on top of rc1 and patch
+4 on Kevin's dt64 branch.
+
+Thanks
+Jerome
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
