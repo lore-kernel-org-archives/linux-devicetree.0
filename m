@@ -1,68 +1,55 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH v4 4/4] arm64: dts: meson-axg: add clock DT info for Meson
- AXG SoC
-Date: Fri, 8 Dec 2017 22:50:38 +0800
-Message-ID: <92c1b309-15a1-4978-4f76-358fd4e22890@amlogic.com>
-References: <20171201012452.27086-1-yixun.lan@amlogic.com>
- <20171201012452.27086-5-yixun.lan@amlogic.com> <7ho9nbmked.fsf@baylibre.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH v7 05/13] IIO: Add DT bindings for sigma delta adc modulator
+Date: Fri, 8 Dec 2017 15:49:18 +0100
+Message-ID: <1512744566-13233-6-git-send-email-arnaud.pouliquen@st.com>
+References: <1512744566-13233-1-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <7ho9nbmked.fsf@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: yixun.lan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1512744566-13233-1-git-send-email-arnaud.pouliquen@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-iio@vger.kernel.org, arnaud.pouliquen@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/07/17 08:50, Kevin Hilman wrote:
-> Yixun Lan <yixun.lan@amlogic.com> writes:
-> 
->> From: Qiufang Dai <qiufang.dai@amlogic.com>
->>
->> Try to add Hiubus DT info, and also enable clock DT info
->> for the Amlogic's Meson-AXG SoC.
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
->> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> index b932a784b02a..36a2e98338a8 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> @@ -7,6 +7,7 @@
->>  #include <dt-bindings/gpio/gpio.h>
->>  #include <dt-bindings/interrupt-controller/irq.h>
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/clock/axg-clkc.h>
-> 
-> This #include will cause an unnessary dependency from the amlogic tree
-> to the clock tree even though this patch is not currently using any of
-> the #defines from that header.  It will simplify the dependencies if you
-> drop this #include from this patch.
-> 
-> In my comment on the cover letter, I suggested adding a patch that also
-> switches the UART over to the new clock provider.  That is the patch
-> that should add this #include, since it will actually need #defines from
-> the header.
-> 
-ok, make sense
-> Doing it in that order means that we could merge this patch
-> independently of the clock driver, and then merge the UART switch-over
-> patch only after the driver (and headers) are merged.
-I was planing to add UART DT part as separately patches (including the
-UARt's pinctrl part information)
+Add documentation of device tree bindings to support
+sigma delta modulator in IIO framework.
 
-but as follow your suggestion, I could split the UART's clock DT info
-into separate patch, and send along with this series.
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ .../devicetree/bindings/iio/adc/sigma-delta-modulator.txt   | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
 
-> 
-> Kevin
-> 
-> .
-> 
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+new file mode 100644
+index 0000000..e9ebb8a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+@@ -0,0 +1,13 @@
++Device-Tree bindings for sigma delta modulator
++
++Required properties:
++- compatible: should be "ads1201", "sd-modulator". "sd-modulator" can be use
++	as a generic SD modulator if modulator not specified in compatible list.
++- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers".
++
++Example node:
++
++	ads1202: adc@0 {
++		compatible = "sd-modulator";
++		#io-channel-cells = <1>;
++	};
+-- 
+2.7.4
