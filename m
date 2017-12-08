@@ -1,69 +1,77 @@
-From: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3 2/7] PCI: Export pci_find_host_bridge()
-Date: Fri, 8 Dec 2017 14:07:54 +0530
-Message-ID: <aebabb88-d894-2b1f-d3e8-63a2acad9665@nvidia.com>
-References: <1512120007-28088-1-git-send-email-mmaddireddy@nvidia.com>
- <1512120007-28088-3-git-send-email-mmaddireddy@nvidia.com>
- <20171205200402.GF23510@bhelgaas-glaptop.roam.corp.google.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v9 01/13] Documentation: Add SLIMbus summary
+Date: Fri, 8 Dec 2017 14:14:54 +0530
+Message-ID: <20171208084454.GD18649@localhost>
+References: <20171207102720.21071-1-srinivas.kandagatla@linaro.org>
+ <20171207102720.21071-2-srinivas.kandagatla@linaro.org>
+ <20171207103253.25834a68@lwn.net>
+ <138216ca-4351-f895-fae2-0289cf2a3872@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171205200402.GF23510-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: cyndis-/1wQRMveznE@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <138216ca-4351-f895-fae2-0289cf2a3872@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, pombredanne@nexb.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jonathan Corbet <corbet@lwn.net>, j.neuschaefer@gmx.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Dec 07, 2017 at 11:22:51PM +0000, Srinivas Kandagatla wrote:
+> Thankyou for taking time to review the patch,
+> 
+> On 07/12/17 17:32, Jonathan Corbet wrote:
+> >On Thu,  7 Dec 2017 10:27:08 +0000
+> >srinivas.kandagatla@linaro.org wrote:
+> >
+> >A couple of overall comments...
+> >
+> >>  Documentation/driver-api/index.rst           |   1 +
+> >>  Documentation/driver-api/slimbus/index.rst   |  15 ++++
+> >>  Documentation/driver-api/slimbus/summary.rst | 106 +++++++++++++++++++++++++++
+> >>  3 files changed, 122 insertions(+)
+> >>  create mode 100644 Documentation/driver-api/slimbus/index.rst
+> >>  create mode 100644 Documentation/driver-api/slimbus/summary.rst
+> >
+> >Do we really need a separate subdirectory for a single file?
+> >
+> May be not, TBH, I did take some inspiration from soundwire patches.
 
+FWIW, SoundWire patches have more Documentation. We have 4 files atm, though
+they are not part of current series, so a directory looks apt for that
 
-On 06-Dec-17 1:34 AM, Bjorn Helgaas wrote:
-> On Fri, Dec 01, 2017 at 02:50:02PM +0530, Manikanta Maddireddy wrote:
->> PCI subsystem pass pci_bus pointer to pci_ops callback functions, Tegra
+> I can drop that in next version. We can think of adding directory if we end
+> up adding more apis for the new features in future.
 > 
-> s/PCI subsystem pass/The PCI subsystem passes a/
-> s/, Tegra/.  The Tegra/
+> >It seems you have kerneldoc comments for your data structures and at least
+> >some of your exported symbols.  If you really want to document this stuff
+> >well, I'd suggest finishing out those comments, then pulling them into the
+> >documentation in the appropriate places.
+> Am sure all the exported symbols have kernel doc, I will pull them into
+> relevant sub sections.
 > 
->> host driver use pci_find_host_bridge() to get pci_host_bridge from pci_bus.
+> Do you think something like this http://paste.ubuntu.com/26135862/ makes
+> sense?
 > 
-> s/use/uses/
-> 
->> Export pci_find_host_bridge() to allow Tegra PCIe driver to be compiled as
->> loadable kernel module.
-> 
-> s/allow Tegra/allow the Tegra/
-> s/loadable/a loadable/
-> 
-> But why do you need pci_find_host_bridge() at all?  Most drivers use
-> the pci_bus.sysdata pointer for this purpose, e.g., see db271747a04d
-> ("PCI: mediatek: Use bus->sysdata to get host private data")
-> 
+> thanks,
+> srini
+> >
+> >Thanks,
+> >
+> >jon
+> >
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
 
-I will send a patch to use bus->sysdata instead of pci_find_host_bridge().
-
->> Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->> V2:
->> * commit message update
->> V3:
->> * EXPORT_SYMBOL is changed to EXPORT_SYMBOL_GPL
->>
->>  drivers/pci/host-bridge.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
->> index add66236215c..b8c0fcde9bd7 100644
->> --- a/drivers/pci/host-bridge.c
->> +++ b/drivers/pci/host-bridge.c
->> @@ -22,6 +22,7 @@ struct pci_host_bridge *pci_find_host_bridge(struct pci_bus *bus)
->>  
->>  	return to_pci_host_bridge(root_bus->bridge);
->>  }
->> +EXPORT_SYMBOL_GPL(pci_find_host_bridge);
->>  
->>  struct device *pci_get_host_bridge_device(struct pci_dev *dev)
->>  {
->> -- 
->> 2.1.4
->>
+-- 
+~Vinod
