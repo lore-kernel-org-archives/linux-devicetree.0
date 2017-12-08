@@ -1,86 +1,126 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH V7 2/7] ACPI / bus: Introduce acpi_get_match_data() function
-Date: Fri, 8 Dec 2017 15:51:16 +0100
-Message-ID: <CAJZ5v0iw1u4o0SbCN12ctG+Kpg0EP+JBGvToLyiEcQopY=KPzw@mail.gmail.com>
-References: <1512681031-11343-1-git-send-email-okaya@codeaurora.org> <1512681031-11343-3-git-send-email-okaya@codeaurora.org>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH v7 03/13] IIO: hw_consumer: add
+	devm_iio_hw_consumer_alloc
+Date: Fri, 8 Dec 2017 15:49:16 +0100
+Message-ID: <1512744566-13233-4-git-send-email-arnaud.pouliquen@st.com>
+References: <1512744566-13233-1-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1512681031-11343-3-git-send-email-okaya@codeaurora.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1512744566-13233-1-git-send-email-arnaud.pouliquen@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-iio@vger.kernel.org, arnaud.pouliquen@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 7, 2017 at 10:10 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
-> OF has of_device_get_match_data() function to extract driver specific data
-> structure. Add a similar function for ACPI.
->
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> ---
->  drivers/acpi/bus.c   | 18 ++++++++++++++++++
->  include/linux/acpi.h |  6 ++++++
->  2 files changed, 24 insertions(+)
->
-> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-> index 4d0979e..f87ed3b 100644
-> --- a/drivers/acpi/bus.c
-> +++ b/drivers/acpi/bus.c
-> @@ -785,6 +785,24 @@ const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
->  }
->  EXPORT_SYMBOL_GPL(acpi_match_device);
->
-> +void *acpi_get_match_data(const struct device *dev)
-> +{
-> +       const struct acpi_device_id *match;
-> +
-> +       if (!dev->driver)
-> +               return NULL;
-> +
-> +       if (!dev->driver->acpi_match_table)
-> +               return NULL;
+Add devm_iio_hw_consumer_alloc function that calls iio_hw_consumer_free
+when the device is unbound from the bus.
 
-You can safely check dev->driver and this in the same statement (as
-long as the first check to be made is on the left).
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/iio/buffer/industrialio-hw-consumer.c | 66 +++++++++++++++++++++++++++
+ include/linux/iio/hw-consumer.h               |  2 +
+ 2 files changed, 68 insertions(+)
 
-> +
-> +       match = acpi_match_device(dev->driver->acpi_match_table, dev);
-> +       if (!match)
-> +               return NULL;
-> +
-> +       return (void *)match->driver_data;
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_get_match_data);
-> +
->  int acpi_match_device_ids(struct acpi_device *device,
->                           const struct acpi_device_id *ids)
->  {
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 502af53..a927260 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -584,6 +584,7 @@ extern int acpi_nvs_for_each_region(int (*func)(__u64, __u64, void *),
->  const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
->                                                const struct device *dev);
->
-> +void *acpi_get_match_data(const struct device *dev);
->  extern bool acpi_driver_match_device(struct device *dev,
->                                      const struct device_driver *drv);
->  int acpi_device_uevent_modalias(struct device *, struct kobj_uevent_env *);
-> @@ -755,6 +756,11 @@ static inline const struct acpi_device_id *acpi_match_device(
->         return NULL;
->  }
->
-> +static inline void *acpi_get_match_data(const struct device *dev)
-> +{
-> +       return NULL;
-> +}
-> +
->  static inline bool acpi_driver_match_device(struct device *dev,
->                                             const struct device_driver *drv)
->  {
-> --
-
-But anyway
-
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+diff --git a/drivers/iio/buffer/industrialio-hw-consumer.c b/drivers/iio/buffer/industrialio-hw-consumer.c
+index 993ecdc..9516569 100644
+--- a/drivers/iio/buffer/industrialio-hw-consumer.c
++++ b/drivers/iio/buffer/industrialio-hw-consumer.c
+@@ -137,6 +137,72 @@ void iio_hw_consumer_free(struct iio_hw_consumer *hwc)
+ }
+ EXPORT_SYMBOL_GPL(iio_hw_consumer_free);
+ 
++static void devm_iio_hw_consumer_release(struct device *dev, void *res)
++{
++	iio_hw_consumer_free(*(struct iio_hw_consumer **)res);
++}
++
++static int devm_iio_hw_consumer_match(struct device *dev, void *res, void *data)
++{
++	struct iio_hw_consumer **r = res;
++
++	if (!r || !*r) {
++		WARN_ON(!r || !*r);
++		return 0;
++	}
++	return *r == data;
++}
++
++/**
++ * devm_iio_hw_consumer_alloc - Resource-managed iio_hw_consumer_alloc()
++ * @dev: Pointer to consumer device.
++ *
++ * Managed iio_hw_consumer_alloc. iio_hw_consumer allocated with this function
++ * is automatically freed on driver detach.
++ *
++ * If an iio_hw_consumer allocated with this function needs to be freed
++ * separately, devm_iio_hw_consumer_free() must be used.
++ *
++ * returns pointer to allocated iio_hw_consumer on success, NULL on failure.
++ */
++struct iio_hw_consumer *devm_iio_hw_consumer_alloc(struct device *dev)
++{
++	struct iio_hw_consumer **ptr, *iio_hwc;
++
++	ptr = devres_alloc(devm_iio_hw_consumer_release, sizeof(*ptr),
++			   GFP_KERNEL);
++	if (!ptr)
++		return NULL;
++
++	iio_hwc = iio_hw_consumer_alloc(dev);
++	if (IS_ERR(iio_hwc)) {
++		devres_free(ptr);
++	} else {
++		*ptr = iio_hwc;
++		devres_add(dev, ptr);
++	}
++
++	return iio_hwc;
++}
++EXPORT_SYMBOL_GPL(devm_iio_hw_consumer_alloc);
++
++/**
++ * devm_iio_hw_consumer_free - Resource-managed iio_hw_consumer_free()
++ * @dev: Pointer to consumer device.
++ * @hwc: iio_hw_consumer to free.
++ *
++ * Free iio_hw_consumer allocated with devm_iio_hw_consumer_alloc().
++ */
++void devm_iio_hw_consumer_free(struct device *dev, struct iio_hw_consumer *hwc)
++{
++	int rc;
++
++	rc = devres_release(dev, devm_iio_hw_consumer_release,
++			    devm_iio_hw_consumer_match, hwc);
++	WARN_ON(rc);
++}
++EXPORT_SYMBOL_GPL(devm_iio_hw_consumer_free);
++
+ /**
+  * iio_hw_consumer_enable() - Enable IIO hardware consumer
+  * @hwc: iio_hw_consumer to enable.
+diff --git a/include/linux/iio/hw-consumer.h b/include/linux/iio/hw-consumer.h
+index db8c00b..44d48bb 100644
+--- a/include/linux/iio/hw-consumer.h
++++ b/include/linux/iio/hw-consumer.h
+@@ -13,6 +13,8 @@ struct iio_hw_consumer;
+ 
+ struct iio_hw_consumer *iio_hw_consumer_alloc(struct device *dev);
+ void iio_hw_consumer_free(struct iio_hw_consumer *hwc);
++struct iio_hw_consumer *devm_iio_hw_consumer_alloc(struct device *dev);
++void devm_iio_hw_consumer_free(struct device *dev, struct iio_hw_consumer *hwc);
+ int iio_hw_consumer_enable(struct iio_hw_consumer *hwc);
+ void iio_hw_consumer_disable(struct iio_hw_consumer *hwc);
+ 
+-- 
+2.7.4
