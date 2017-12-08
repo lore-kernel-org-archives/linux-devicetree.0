@@ -1,50 +1,355 @@
-From: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 4/6] ARM: configs: multi_v7: add stm32 support
-Date: Fri, 8 Dec 2017 15:11:15 +0100
-Message-ID: <1512742277-28205-5-git-send-email-ludovic.Barre@st.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH 5/6] ARM: dts: stm32: add stm32mp157c initial support
+Date: Fri, 8 Dec 2017 15:11:16 +0100
+Message-ID: <1512742277-28205-6-git-send-email-ludovic.Barre@st.com>
 References: <1512742277-28205-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512742277-28205-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512742277-28205-1-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch adds stm32 support to multi_v7_defconfig
+Add stm32mp157c initial support with:
+-Dual Cortex-A7
+-Arm psci, timer, gic
+-Pinctrl
+-Uart
 
-Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- arch/arm/configs/multi_v7_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 172 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c.dtsi        | 139 ++++++++++++++++++++++++
+ 2 files changed, 311 insertions(+)
+ create mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stm32mp157c.dtsi
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 61509c4..4b70ec7 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -81,6 +81,7 @@ CONFIG_ARCH_SPEAR13XX=y
- CONFIG_MACH_SPEAR1310=y
- CONFIG_MACH_SPEAR1340=y
- CONFIG_ARCH_STI=y
-+CONFIG_ARCH_STM32=y
- CONFIG_ARCH_EXYNOS=y
- CONFIG_EXYNOS5420_MCPM=y
- CONFIG_ARCH_RENESAS=y
-@@ -346,6 +347,7 @@ CONFIG_SERIAL_CONEXANT_DIGICOLOR=y
- CONFIG_SERIAL_CONEXANT_DIGICOLOR_CONSOLE=y
- CONFIG_SERIAL_ST_ASC=y
- CONFIG_SERIAL_ST_ASC_CONSOLE=y
-+CONFIG_SERIAL_STM32=y
- CONFIG_HVC_DRIVER=y
- CONFIG_VIRTIO_CONSOLE=y
- CONFIG_I2C_CHARDEV=y
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+new file mode 100644
+index 0000000..440276a
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -0,0 +1,172 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
++ * Author: Ludovic Barre <ludovic.barre@st.com> for STMicroelectronics.
++ */
++#include <dt-bindings/pinctrl/stm32-pinfunc.h>
++
++/ {
++	soc {
++		pinctrl: pin-controller {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "st,stm32mp157-pinctrl";
++			ranges = <0 0x50002000 0xa400>;
++			pins-are-numbered;
++
++			gpioa: gpio@50002000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x0 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOA";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 0 16>;
++			};
++
++			gpiob: gpio@50003000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x1000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOB";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 16 16>;
++			};
++
++			gpioc: gpio@50004000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x2000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOC";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 32 16>;
++			};
++
++			gpiod: gpio@50005000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x3000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOD";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 48 16>;
++			};
++
++			gpioe: gpio@50006000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x4000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOE";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 64 16>;
++			};
++
++			gpiof: gpio@50007000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x5000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOF";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 80 16>;
++			};
++
++			gpiog: gpio@50008000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x6000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOG";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 96 16>;
++			};
++
++			gpioh: gpio@50009000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x7000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOH";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 112 16>;
++			};
++
++			gpioi: gpio@5000a000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x8000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOI";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 128 16>;
++			};
++
++			gpioj: gpio@5000b000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0x9000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOJ";
++				ngpios = <16>;
++				gpio-ranges = <&pinctrl 0 144 16>;
++			};
++
++			gpiok: gpio@5000c000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0xa000 0x400>;
++				clocks = <&clk_pll3_p>;
++				st,bank-name = "GPIOK";
++				ngpios = <8>;
++				gpio-ranges = <&pinctrl 0 160 8>;
++			};
++		};
++
++		pinctrl_z: pin-controller-z {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "st,stm32mp157-z-pinctrl";
++			ranges = <0 0x54004000 0x400>;
++			pins-are-numbered;
++			status = "disabled";
++
++			gpioz: gpio@54004000 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				reg = <0 0x400>;
++				clocks = <&clk_pll2_p>;
++				st,bank-name = "GPIOZ";
++				st,bank-ioport = <11>;
++				ngpios = <8>;
++				gpio-ranges = <&pinctrl_z 0 400 8>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+new file mode 100644
+index 0000000..93dbcac
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -0,0 +1,139 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
++ * Author: Ludovic Barre <ludovic.barre@st.com> for STMicroelectronics.
++ */
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <0>;
++		};
++
++		cpu1: cpu@1 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <1>;
++		};
++	};
++
++	psci {
++		compatible = "arm,psci";
++		method = "smc";
++		cpu_off = <0x84000002>;
++		cpu_on = <0x84000003>;
++	};
++
++	aliases {
++		gpio0 = &gpioa;
++		gpio1 = &gpiob;
++		gpio2 = &gpioc;
++		gpio3 = &gpiod;
++		gpio4 = &gpioe;
++		gpio5 = &gpiof;
++		gpio6 = &gpiog;
++		gpio7 = &gpioh;
++		gpio8 = &gpioi;
++		gpio9 = &gpioj;
++		gpio10 = &gpiok;
++		serial3 = &uart4;
++	};
++
++	intc: interrupt-controller@a0021000 {
++		compatible = "arm,cortex-a7-gic";
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		reg = <0xa0021000 0x1000>,
++		      <0xa0022000 0x2000>;
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		interrupt-parent = <&intc>;
++	};
++
++	clocks {
++		clk_hse: clk-hse {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++		};
++
++		clk_pll_per: clk-pll-per {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <64000000>;
++		};
++
++		clk_hsi: clk-hsi {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <64000000>;
++		};
++
++		clk_lse: clk-lse {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <32768>;
++		};
++
++		clk_lsi: clk-lsi {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <32000>;
++		};
++
++		clk_csi: clk-csi {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <4000000>;
++		};
++
++		clk_pclk1: clk-pclk1 {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <86000000>;
++		};
++
++		clk_pll3_p: clk-pll3_p {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <172000000>;
++		};
++
++		clk_pll2_p: clk-pll2_p {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <264000000>;
++		};
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		interrupt-parent = <&intc>;
++		ranges;
++
++		uart4: serial@40010000 {
++			compatible = "st,stm32h7-uart";
++			reg = <0x40010000 0x400>;
++			interrupts = <GIC_SPI 52 IRQ_TYPE_NONE>;
++			clocks = <&clk_pclk1>;
++			status = "disabled";
++		};
++	};
++};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
