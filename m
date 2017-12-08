@@ -1,144 +1,158 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH] PCI: qcom: add missing supplies required for msm8996
-Date: Fri,  8 Dec 2017 09:20:53 +0000
-Message-ID: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: stanimir.varbanov@linaro.org, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 4/6] clocksource: stm32: only use 32 bits timers
+Date: Fri, 8 Dec 2017 10:25:59 +0100
+Message-ID: <CA+M3ks6Co2LxQ=EPODvwYrxmoRqiiQBr3Li4L3Nx3RY2As58dg@mail.gmail.com>
+References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1510649563-22975-5-git-send-email-benjamin.gaignard@linaro.org> <f22fd299-a742-1144-75d0-256a538af619@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f22fd299-a742-1144-75d0-256a538af619-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+2017-12-08 9:34 GMT+01:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On 14/11/2017 09:52, Benjamin Gaignard wrote:
+>> The clock driving counters is at 90MHz so the maximum period
+>> for 16 bis counters is around 750 ms
+>
+> 728 us
+>
+>> which is a short period for a clocksource.
+>
+> Which clocksource are you talking about ?
+>
+>> For 32 bits counters this period is close
+>> 47 secondes which is more acceptable.
+>>
+>> This patch remove 16 bits counters support and makes sure that
+>> they won't be probed anymore.
+>
+> Are we talking about clockevent or clocksource?
+>
+> Is this issue present today ? Or is it if we add the clocksource support
+> ? We are talking about clocksource but we change the clockevent code.
+>
+> All this is very confusing.
+>
+> I have a rough idea of what is happening, but it is not up to me to
+> decode and infer from the changes, you need to describe *clearly* the
+> situation.
+>
+>  - What happens if we use a 16bits timer as a clockevent ?
+>  - What happens if we use a 16bits timer as a clocksource ?
+>  - Why is it preferable to remove the support of the 16bits timers
+> instead of downgrading them with the rating ?
 
-This patch adds supplies that are required for msm8996. Two of them vdda
-and vdda-1p8 are analog supplies that go in to controller, and the rest
-of the two vddpe's are supplies to PCIe endpoints.
+Up to this patch it is only about clockevent, clocksource code is
+introduced in patch 5.
+For the both cases 16bits counter have a a too short period (728us)
+and can't be used
+so downgrading the rating is not a solution.
 
-Without these supplies PCIe endpoints which require power supplies are
-not enumerated at all, as there is no one to power it up.
+I will change the wording in v9
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../devicetree/bindings/pci/qcom,pcie.txt          | 16 +++++++++++++
- drivers/pci/dwc/pcie-qcom.c                        | 28 ++++++++++++++++++++--
- 2 files changed, 42 insertions(+), 2 deletions(-)
+>
+>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+>> ---
+>>  drivers/clocksource/timer-stm32.c | 26 ++++++++++++--------------
+>>  1 file changed, 12 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/tim=
+er-stm32.c
+>> index ae41a19..8173bcf 100644
+>> --- a/drivers/clocksource/timer-stm32.c
+>> +++ b/drivers/clocksource/timer-stm32.c
+>> @@ -83,9 +83,9 @@ static irqreturn_t stm32_clock_event_handler(int irq, =
+void *dev_id)
+>>  static int __init stm32_clockevent_init(struct device_node *node)
+>>  {
+>>       struct reset_control *rstc;
+>> -     unsigned long max_delta;
+>> -     int ret, bits, prescaler =3D 1;
+>> +     unsigned long max_arr;
+>>       struct timer_of *to;
+>> +     int ret;
+>>
+>>       to =3D kzalloc(sizeof(*to), GFP_KERNEL);
+>>       if (!to)
+>> @@ -115,29 +115,27 @@ static int __init stm32_clockevent_init(struct dev=
+ice_node *node)
+>>
+>>       /* Detect whether the timer is 16 or 32 bits */
+>>       writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
+>> -     max_delta =3D readl_relaxed(timer_of_base(to) + TIM_ARR);
+>> -     if (max_delta =3D=3D ~0U) {
+>> -             prescaler =3D 1;
+>> -             bits =3D 32;
+>> -     } else {
+>> -             prescaler =3D 1024;
+>> -             bits =3D 16;
+>> +     max_arr =3D readl_relaxed(timer_of_base(to) + TIM_ARR);
+>> +     if (max_arr !=3D ~0U) {
+>> +             pr_err("32 bits timer is needed\n");
+>> +             ret =3D -EINVAL;
+>> +             goto deinit;
+>>       }
+>
+> Wrap this in a function:
+>
+> static bool stm32_timer_is_32bits(struct timer_of *to)
+> {
+>         return readl_relaxed(timer_of_base(to) + TIM_ARR) =3D=3D ~0UL;
+> }
+>
+> Then clearly inform the user.
+>
+> if (!stm32_timer_is_32bits(to)) {
+>         pr_warn("Timer %pOF is a 16 bits timer\n", node);
+>         /* abort the registration or downgrade the timer's rating */
+> }
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 3c9d321b3d3b..045102cb3e12 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -179,6 +179,11 @@
- 	Value type: <phandle>
- 	Definition: A phandle to the core analog power supply
- 
-+- vdda-1p8-supply:
-+	Usage: required for msm8996
-+	Value type: <phandle>
-+	Definition: A phandle to the 1.8v analog power supply
-+
- - vdda_phy-supply:
- 	Usage: required for ipq/apq8064
- 	Value type: <phandle>
-@@ -189,6 +194,15 @@
- 	Value type: <phandle>
- 	Definition: A phandle to the analog power supply for IC which generates
- 		    reference clock
-+- vddpe-supply:
-+	Usage: optional
-+	Value type: <phandle>
-+	Definition: A phandle to the PCIe endpoint power supply
-+
-+- vddpe1-supply:
-+	Usage: optional
-+	Value type: <phandle>
-+	Definition: A phandle to the PCIe endpoint power supply 1
- 
- - phys:
- 	Usage: required for apq8084
-@@ -205,6 +219,8 @@
- 	Value type: <prop-encoded-array>
- 	Definition: List of phandle and GPIO specifier pairs. Should contain
- 			- "perst-gpios"	PCIe endpoint reset signal line
-+			- "pe_en-gpios"	PCIe endpoint enable signal line
-+			- "pe_en1-gpios" PCIe endpoint enable1 signal line
- 			- "wake-gpios"	PCIe endpoint wake signal line
- 
- * Example for ipq/apq8064
-diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
-index 952a4fc4bf3c..01488f90da31 100644
---- a/drivers/pci/dwc/pcie-qcom.c
-+++ b/drivers/pci/dwc/pcie-qcom.c
-@@ -109,13 +109,15 @@ struct qcom_pcie_resources_1_0_0 {
- 	struct reset_control *core;
- 	struct regulator *vdda;
- };
--
-+#define QCOM_PCIE_MAX_SUPPLY	4
- struct qcom_pcie_resources_2_3_2 {
- 	struct clk *aux_clk;
- 	struct clk *master_clk;
- 	struct clk *slave_clk;
- 	struct clk *cfg_clk;
- 	struct clk *pipe_clk;
-+	int num_supplies;
-+	struct regulator_bulk_data supplies[QCOM_PCIE_MAX_SUPPLY];
- };
- 
- struct qcom_pcie_resources_2_4_0 {
-@@ -529,6 +531,17 @@ static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
-+	int ret;
-+
-+	res->supplies[0].supply = "vdda";
-+	res->supplies[1].supply = "vdda-1p8";
-+	res->supplies[2].supply = "vddpe";
-+	res->supplies[3].supply = "vddpe1";
-+	res->num_supplies = QCOM_PCIE_MAX_SUPPLY;
-+	ret = devm_regulator_bulk_get(dev, QCOM_PCIE_MAX_SUPPLY,
-+				      res->supplies);
-+	if (ret)
-+		return ret;
- 
- 	res->aux_clk = devm_clk_get(dev, "aux");
- 	if (IS_ERR(res->aux_clk))
-@@ -558,6 +571,8 @@ static void qcom_pcie_deinit_2_3_2(struct qcom_pcie *pcie)
- 	clk_disable_unprepare(res->master_clk);
- 	clk_disable_unprepare(res->cfg_clk);
- 	clk_disable_unprepare(res->aux_clk);
-+
-+	regulator_bulk_disable(res->num_supplies, res->supplies);
- }
- 
- static void qcom_pcie_post_deinit_2_3_2(struct qcom_pcie *pcie)
-@@ -575,10 +590,16 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
- 	u32 val;
- 	int ret;
- 
-+	ret = regulator_bulk_enable(res->num_supplies, res->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot enable regulators\n");
-+		return ret;
-+	}
-+
- 	ret = clk_prepare_enable(res->aux_clk);
- 	if (ret) {
- 		dev_err(dev, "cannot prepare/enable aux clock\n");
--		return ret;
-+		goto err_aux_clk;
- 	}
- 
- 	ret = clk_prepare_enable(res->cfg_clk);
-@@ -629,6 +650,9 @@ static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
- err_cfg_clk:
- 	clk_disable_unprepare(res->aux_clk);
- 
-+err_aux_clk:
-+	regulator_bulk_disable(res->num_supplies, res->supplies);
-+
- 	return ret;
- }
- 
--- 
-2.15.0
+Ok I will change that in v9
+
+>
+>> +
+>>       writel_relaxed(0, timer_of_base(to) + TIM_ARR);
+>>
+>> -     writel_relaxed(prescaler - 1, timer_of_base(to) + TIM_PSC);
+>> +     writel_relaxed(0, timer_of_base(to) + TIM_PSC);
+>>       writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
+>>       writel_relaxed(TIM_DIER_UIE, timer_of_base(to) + TIM_DIER);
+>>       writel_relaxed(0, timer_of_base(to) + TIM_SR);
+>>
+>>       clockevents_config_and_register(&to->clkevt,
+>> -                                     timer_of_period(to), MIN_DELTA, ma=
+x_delta);
+>> -
+>> -     pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
+>> -                     node, bits);
+>> +                                     timer_of_period(to), MIN_DELTA, ~0=
+U);
+>>
+>>       return 0;
+>>
+>> +deinit:
+>> +     timer_of_exit(to);
+>
+> Fix this please (timer_of_cleanup).
+>
+> In the future, make sure the patches are git-bisect safe.
+>
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
