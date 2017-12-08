@@ -1,300 +1,1110 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: Re: [RFC] irqchip: add support for LS1021A external interrupt lines
-Date: Fri, 08 Dec 2017 16:11:28 +0100
-Message-ID: <2278177.dEyeroM47a@ws-stein>
-References: <48d2d08c-c57a-ce49-5958-0fd5ad4a2dc7@arm.com> <1512743580-15358-1-git-send-email-rasmus.villemoes@prevas.dk>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: [PATCHv2 14/20] ARM: dts: omap4: add clkctrl nodes
+Date: Fri, 8 Dec 2017 17:17:27 +0200
+Message-ID: <1512746251-20123-2-git-send-email-t-kristo@ti.com>
+References: <1512746251-20123-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512743580-15358-1-git-send-email-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+In-Reply-To: <1512746251-20123-1-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rasmus,
+Add clkctrl nodes for OMAP4 SoC. These are going to be acting as
+replacement for part of the existing clock data and the existing
+clkctrl hooks under hwmod data.
 
-thanks for your effort. unfortunatly I won't be able to test it currently :(
-But some comments below.
+This patch also removes any obsolete clock nodes, and reroutes all users
+for these to use the new clkctrl clocks instead.
 
-On Friday, December 8, 2017, 3:33:00 PM CET Rasmus Villemoes wrote:
-> The LS1021A allows inverting the polarity of six interrupt lines
-> IRQ[0:5] via the scfg_intpcr register, effectively allowing
-> IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_EDGE_FALLING for those. We just need to
-> check the type, set the relevant bit in INTPCR accordingly, and fixup
-> the type argument before calling the GIC's irq_set_type.
-> 
-> In fact, the power-on-reset value of the INTPCR register is so that all
-> six lines have their polarity inverted. Hence any hardware connected to
-> those lines is unusable without this: If the line is indeed active low,
-> the generic GIC code will reject an irq spec with IRQ_TYPE_LEVEL_LOW,
-> while if the line is active high, we must obviously disable the polarity
-> inversion before unmasking the interrupt.
-> 
-> I suspect other layerscape SOCs may have something similar, but I have
-> neither hardware nor documentation.
-> 
-> Since we only need to keep a single pointer in the chip_data (the syscon
-> regmap), the code could be a little simpler by dropping the struct
-> extirq_chip_data and just store the regmap directly - but I don't know
-> if I do need to add a lock or something else to the chip_data, so for
-> this RFC I've kept the struct.
-> 
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-> ---
-> Marc, Alexander, thanks a lot for your hints. This is what I came up
-> with, mostly just copy-pasted from the mtk-sysirq case. I've tested
-> that it works as expected on my board.
-> 
->  .../interrupt-controller/fsl,ls1021a-extirq.txt    |  19 +++
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-ls1021a.c                      | 157 +++++++++++++++++++++
->  3 files changed, 177 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,ls1021a-extirq.txt
->  create mode 100644 drivers/irqchip/irq-ls1021a.c
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls1021a-extirq.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls1021a-extirq.txt
-> new file mode 100644
-> index 000000000000..53b04b6e1a80
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls1021a-extirq.txt
-> @@ -0,0 +1,19 @@
-> +* Freescale LS1021A external IRQs
-> +
-> +The LS1021A supports inverting the polarity of six external interrupt lines.
-> +
-> +Required properties:
-> +- compatible: should be "fsl,ls1021a-extirq"
-> +- interrupt-controller: Identifies the node as an interrupt controller
-> +- #interrupt-cells: Use the same format as specified by GIC in arm,gic.txt.
+Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/omap4.dtsi           |  24 +-
+ arch/arm/boot/dts/omap44xx-clocks.dtsi | 895 +++++++++++----------------------
+ 2 files changed, 306 insertions(+), 613 deletions(-)
 
-Do you really need 3 interrupt-cells here? As you've written below you don't
-support PPI anyway the 1st flag might be dropped then. So support just 2 cells:
-* IRQ number (IRQ0 - IRQ5)
-* IRQ flags
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 787ea2a..e912639 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/omap.h>
++#include <dt-bindings/clock/omap4.h>
+ 
+ / {
+ 	compatible = "ti,omap4430", "ti,omap4";
+@@ -683,7 +684,7 @@
+ 			reg-names = "sys", "gdd";
+ 			ti,hwmods = "hsi";
+ 
+-			clocks = <&hsi_fck>;
++			clocks = <&l3_init_clkctrl OMAP4_HSI_CLKCTRL 0>;
+ 			clock-names = "hsi_fck";
+ 
+ 			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+@@ -982,7 +983,7 @@
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+ 			ti,hwmods = "timer1";
+ 			ti,timer-alwon;
+-			clocks = <&dmt1_clk_mux>;
++			clocks = <&l4_wkup_clkctrl OMAP4_TIMER1_CLKCTRL 24>;
+ 			clock-names = "fck";
+ 		};
+ 
+@@ -1214,7 +1215,7 @@
+ 			reg = <0x58000000 0x80>;
+ 			status = "disabled";
+ 			ti,hwmods = "dss_core";
+-			clocks = <&dss_dss_clk>;
++			clocks = <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 8>;
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -1225,7 +1226,7 @@
+ 				reg = <0x58001000 0x1000>;
+ 				interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 				ti,hwmods = "dss_dispc";
+-				clocks = <&dss_dss_clk>;
++				clocks = <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 8>;
+ 				clock-names = "fck";
+ 			};
+ 
+@@ -1234,7 +1235,7 @@
+ 				reg = <0x58002000 0x1000>;
+ 				status = "disabled";
+ 				ti,hwmods = "dss_rfbi";
+-				clocks = <&dss_dss_clk>, <&l3_div_ck>;
++				clocks = <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 8>, <&l3_div_ck>;
+ 				clock-names = "fck", "ick";
+ 			};
+ 
+@@ -1243,7 +1244,7 @@
+ 				reg = <0x58003000 0x1000>;
+ 				status = "disabled";
+ 				ti,hwmods = "dss_venc";
+-				clocks = <&dss_tv_clk>;
++				clocks = <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 11>;
+ 				clock-names = "fck";
+ 			};
+ 
+@@ -1256,7 +1257,8 @@
+ 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 				ti,hwmods = "dss_dsi1";
+-				clocks = <&dss_dss_clk>, <&dss_sys_clk>;
++				clocks = <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 8>,
++					 <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 10>;
+ 				clock-names = "fck", "sys_clk";
+ 			};
+ 
+@@ -1269,7 +1271,8 @@
+ 				interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 				ti,hwmods = "dss_dsi2";
+-				clocks = <&dss_dss_clk>, <&dss_sys_clk>;
++				clocks = <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 8>,
++					 <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 10>;
+ 				clock-names = "fck", "sys_clk";
+ 			};
+ 
+@@ -1283,7 +1286,8 @@
+ 				interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 				ti,hwmods = "dss_hdmi";
+-				clocks = <&dss_48mhz_clk>, <&dss_sys_clk>;
++				clocks = <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 9>,
++					 <&l3_dss_clkctrl OMAP4_DSS_CORE_CLKCTRL 10>;
+ 				clock-names = "fck", "sys_clk";
+ 				dmas = <&sdma 76>;
+ 				dma-names = "audio_tx";
+@@ -1292,4 +1296,4 @@
+ 	};
+ };
+ 
+-/include/ "omap44xx-clocks.dtsi"
++#include "omap44xx-clocks.dtsi"
+diff --git a/arch/arm/boot/dts/omap44xx-clocks.dtsi b/arch/arm/boot/dts/omap44xx-clocks.dtsi
+index 05732ed..279ff2f 100644
+--- a/arch/arm/boot/dts/omap44xx-clocks.dtsi
++++ b/arch/arm/boot/dts/omap44xx-clocks.dtsi
+@@ -174,14 +174,6 @@
+ 		ti,index-power-of-two;
+ 	};
+ 
+-	aess_fclk: aess_fclk@528 {
+-		#clock-cells = <0>;
+-		compatible = "ti,divider-clock";
+-		clocks = <&abe_clk>;
+-		ti,bit-shift = <24>;
+-		ti,max-div = <2>;
+-		reg = <0x0528>;
+-	};
+ 
+ 	dpll_abe_m3x2_ck: dpll_abe_m3x2_ck@1f4 {
+ 		#clock-cells = <0>;
+@@ -464,7 +456,7 @@
+ 	ocp_abe_iclk: ocp_abe_iclk@528 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,divider-clock";
+-		clocks = <&aess_fclk>;
++		clocks = <&abe_clkctrl OMAP4_AESS_CLKCTRL 24>;
+ 		ti,bit-shift = <24>;
+ 		reg = <0x0528>;
+ 		ti,dividers = <2>, <1>;
+@@ -478,156 +470,13 @@
+ 		clock-div = <4>;
+ 	};
+ 
+-	dmic_sync_mux_ck: dmic_sync_mux_ck@538 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&abe_24m_fclk>, <&syc_clk_div_ck>, <&func_24m_clk>;
+-		ti,bit-shift = <25>;
+-		reg = <0x0538>;
+-	};
+-
+-	func_dmic_abe_gfclk: func_dmic_abe_gfclk@538 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&dmic_sync_mux_ck>, <&pad_clks_ck>, <&slimbus_clk>;
+-		ti,bit-shift = <24>;
+-		reg = <0x0538>;
+-	};
+-
+-	mcasp_sync_mux_ck: mcasp_sync_mux_ck@540 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&abe_24m_fclk>, <&syc_clk_div_ck>, <&func_24m_clk>;
+-		ti,bit-shift = <25>;
+-		reg = <0x0540>;
+-	};
+-
+-	func_mcasp_abe_gfclk: func_mcasp_abe_gfclk@540 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&mcasp_sync_mux_ck>, <&pad_clks_ck>, <&slimbus_clk>;
+-		ti,bit-shift = <24>;
+-		reg = <0x0540>;
+-	};
+-
+-	mcbsp1_sync_mux_ck: mcbsp1_sync_mux_ck@548 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&abe_24m_fclk>, <&syc_clk_div_ck>, <&func_24m_clk>;
+-		ti,bit-shift = <25>;
+-		reg = <0x0548>;
+-	};
+-
+-	func_mcbsp1_gfclk: func_mcbsp1_gfclk@548 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&mcbsp1_sync_mux_ck>, <&pad_clks_ck>, <&slimbus_clk>;
+-		ti,bit-shift = <24>;
+-		reg = <0x0548>;
+-	};
+-
+-	mcbsp2_sync_mux_ck: mcbsp2_sync_mux_ck@550 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&abe_24m_fclk>, <&syc_clk_div_ck>, <&func_24m_clk>;
+-		ti,bit-shift = <25>;
+-		reg = <0x0550>;
+-	};
+-
+-	func_mcbsp2_gfclk: func_mcbsp2_gfclk@550 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&mcbsp2_sync_mux_ck>, <&pad_clks_ck>, <&slimbus_clk>;
+-		ti,bit-shift = <24>;
+-		reg = <0x0550>;
+-	};
+-
+-	mcbsp3_sync_mux_ck: mcbsp3_sync_mux_ck@558 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&abe_24m_fclk>, <&syc_clk_div_ck>, <&func_24m_clk>;
+-		ti,bit-shift = <25>;
+-		reg = <0x0558>;
+-	};
+-
+-	func_mcbsp3_gfclk: func_mcbsp3_gfclk@558 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&mcbsp3_sync_mux_ck>, <&pad_clks_ck>, <&slimbus_clk>;
+-		ti,bit-shift = <24>;
+-		reg = <0x0558>;
+-	};
+-
+-	slimbus1_fclk_1: slimbus1_fclk_1@560 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&func_24m_clk>;
+-		ti,bit-shift = <9>;
+-		reg = <0x0560>;
+-	};
+-
+-	slimbus1_fclk_0: slimbus1_fclk_0@560 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&abe_24m_fclk>;
+-		ti,bit-shift = <8>;
+-		reg = <0x0560>;
+-	};
+-
+-	slimbus1_fclk_2: slimbus1_fclk_2@560 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&pad_clks_ck>;
+-		ti,bit-shift = <10>;
+-		reg = <0x0560>;
+-	};
+-
+-	slimbus1_slimbus_clk: slimbus1_slimbus_clk@560 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&slimbus_clk>;
+-		ti,bit-shift = <11>;
+-		reg = <0x0560>;
+-	};
+-
+-	timer5_sync_mux: timer5_sync_mux@568 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&syc_clk_div_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x0568>;
+-	};
+-
+-	timer6_sync_mux: timer6_sync_mux@570 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&syc_clk_div_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x0570>;
+-	};
+-
+-	timer7_sync_mux: timer7_sync_mux@578 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&syc_clk_div_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x0578>;
+-	};
+-
+-	timer8_sync_mux: timer8_sync_mux@580 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&syc_clk_div_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x0580>;
+-	};
+-
+ 	dummy_ck: dummy_ck {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <0>;
+ 	};
+ };
++
+ &prm_clocks {
+ 	sys_clkin_ck: sys_clkin_ck@110 {
+ 		#clock-cells = <0>;
+@@ -675,22 +524,6 @@
+ 		ti,max-div = <2>;
+ 	};
+ 
+-	gpio1_dbclk: gpio1_dbclk@1838 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&sys_32k_ck>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1838>;
+-	};
+-
+-	dmt1_clk_mux: dmt1_clk_mux@1840 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1840>;
+-	};
+-
+ 	usim_ck: usim_ck@1858 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,divider-clock";
+@@ -708,45 +541,10 @@
+ 		reg = <0x1858>;
+ 	};
+ 
+-	pmd_stm_clock_mux_ck: pmd_stm_clock_mux_ck@1a20 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&dpll_core_m6x2_ck>, <&tie_low_clock_ck>;
+-		ti,bit-shift = <20>;
+-		reg = <0x1a20>;
+-	};
+-
+-	pmd_trace_clk_mux_ck: pmd_trace_clk_mux_ck@1a20 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&dpll_core_m6x2_ck>, <&tie_low_clock_ck>;
+-		ti,bit-shift = <22>;
+-		reg = <0x1a20>;
+-	};
+-
+-	stm_clk_div_ck: stm_clk_div_ck@1a20 {
+-		#clock-cells = <0>;
+-		compatible = "ti,divider-clock";
+-		clocks = <&pmd_stm_clock_mux_ck>;
+-		ti,bit-shift = <27>;
+-		ti,max-div = <64>;
+-		reg = <0x1a20>;
+-		ti,index-power-of-two;
+-	};
+-
+-	trace_clk_div_div_ck: trace_clk_div_div_ck@1a20 {
+-		#clock-cells = <0>;
+-		compatible = "ti,divider-clock";
+-		clocks = <&pmd_trace_clk_mux_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1a20>;
+-		ti,dividers = <0>, <1>, <2>, <0>, <4>;
+-	};
+-
+ 	trace_clk_div_ck: trace_clk_div_ck {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,clkdm-gate-clock";
+-		clocks = <&trace_clk_div_div_ck>;
++		clocks = <&emu_sys_clkctrl OMAP4_DEBUGSS_CLKCTRL 24>;
+ 	};
+ };
+ 
+@@ -975,155 +773,6 @@
+ 		ti,max-div = <2>;
+ 	};
+ 
+-	dss_sys_clk: dss_sys_clk@1120 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&syc_clk_div_ck>;
+-		ti,bit-shift = <10>;
+-		reg = <0x1120>;
+-	};
+-
+-	dss_tv_clk: dss_tv_clk@1120 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&extalt_clkin_ck>;
+-		ti,bit-shift = <11>;
+-		reg = <0x1120>;
+-	};
+-
+-	dss_dss_clk: dss_dss_clk@1120 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&dpll_per_m5x2_ck>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1120>;
+-		ti,set-rate-parent;
+-	};
+-
+-	dss_48mhz_clk: dss_48mhz_clk@1120 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&func_48mc_fclk>;
+-		ti,bit-shift = <9>;
+-		reg = <0x1120>;
+-	};
+-
+-	fdif_fck: fdif_fck@1028 {
+-		#clock-cells = <0>;
+-		compatible = "ti,divider-clock";
+-		clocks = <&dpll_per_m4x2_ck>;
+-		ti,bit-shift = <24>;
+-		ti,max-div = <4>;
+-		reg = <0x1028>;
+-		ti,index-power-of-two;
+-	};
+-
+-	gpio2_dbclk: gpio2_dbclk@1460 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&sys_32k_ck>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1460>;
+-	};
+-
+-	gpio3_dbclk: gpio3_dbclk@1468 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&sys_32k_ck>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1468>;
+-	};
+-
+-	gpio4_dbclk: gpio4_dbclk@1470 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&sys_32k_ck>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1470>;
+-	};
+-
+-	gpio5_dbclk: gpio5_dbclk@1478 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&sys_32k_ck>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1478>;
+-	};
+-
+-	gpio6_dbclk: gpio6_dbclk@1480 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&sys_32k_ck>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1480>;
+-	};
+-
+-	sgx_clk_mux: sgx_clk_mux@1220 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&dpll_core_m7x2_ck>, <&dpll_per_m7x2_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1220>;
+-	};
+-
+-	hsi_fck: hsi_fck@1338 {
+-		#clock-cells = <0>;
+-		compatible = "ti,divider-clock";
+-		clocks = <&dpll_per_m2x2_ck>;
+-		ti,bit-shift = <24>;
+-		ti,max-div = <4>;
+-		reg = <0x1338>;
+-		ti,index-power-of-two;
+-	};
+-
+-	iss_ctrlclk: iss_ctrlclk@1020 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&func_96m_fclk>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1020>;
+-	};
+-
+-	mcbsp4_sync_mux_ck: mcbsp4_sync_mux_ck@14e0 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&func_96m_fclk>, <&per_abe_nc_fclk>;
+-		ti,bit-shift = <25>;
+-		reg = <0x14e0>;
+-	};
+-
+-	per_mcbsp4_gfclk: per_mcbsp4_gfclk@14e0 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&mcbsp4_sync_mux_ck>, <&pad_clks_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x14e0>;
+-	};
+-
+-	hsmmc1_fclk: hsmmc1_fclk@1328 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&func_64m_fclk>, <&func_96m_fclk>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1328>;
+-	};
+-
+-	hsmmc2_fclk: hsmmc2_fclk@1330 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&func_64m_fclk>, <&func_96m_fclk>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1330>;
+-	};
+-
+-	ocp2scp_usb_phy_phy_48m: ocp2scp_usb_phy_phy_48m@13e0 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&func_48m_fclk>;
+-		ti,bit-shift = <8>;
+-		reg = <0x13e0>;
+-	};
+-
+ 	sha2md5_fck: sha2md5_fck@15c8 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,gate-clock";
+@@ -1132,222 +781,6 @@
+ 		reg = <0x15c8>;
+ 	};
+ 
+-	slimbus2_fclk_1: slimbus2_fclk_1@1538 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&per_abe_24m_fclk>;
+-		ti,bit-shift = <9>;
+-		reg = <0x1538>;
+-	};
+-
+-	slimbus2_fclk_0: slimbus2_fclk_0@1538 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&func_24mc_fclk>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1538>;
+-	};
+-
+-	slimbus2_slimbus_clk: slimbus2_slimbus_clk@1538 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&pad_slimbus_core_clks_ck>;
+-		ti,bit-shift = <10>;
+-		reg = <0x1538>;
+-	};
+-
+-	smartreflex_core_fck: smartreflex_core_fck@638 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&l4_wkup_clk_mux_ck>;
+-		ti,bit-shift = <1>;
+-		reg = <0x0638>;
+-	};
+-
+-	smartreflex_iva_fck: smartreflex_iva_fck@630 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&l4_wkup_clk_mux_ck>;
+-		ti,bit-shift = <1>;
+-		reg = <0x0630>;
+-	};
+-
+-	smartreflex_mpu_fck: smartreflex_mpu_fck@628 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&l4_wkup_clk_mux_ck>;
+-		ti,bit-shift = <1>;
+-		reg = <0x0628>;
+-	};
+-
+-	cm2_dm10_mux: cm2_dm10_mux@1428 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1428>;
+-	};
+-
+-	cm2_dm11_mux: cm2_dm11_mux@1430 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1430>;
+-	};
+-
+-	cm2_dm2_mux: cm2_dm2_mux@1438 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1438>;
+-	};
+-
+-	cm2_dm3_mux: cm2_dm3_mux@1440 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1440>;
+-	};
+-
+-	cm2_dm4_mux: cm2_dm4_mux@1448 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1448>;
+-	};
+-
+-	cm2_dm9_mux: cm2_dm9_mux@1450 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&sys_clkin_ck>, <&sys_32k_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1450>;
+-	};
+-
+-	usb_host_fs_fck: usb_host_fs_fck@13d0 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&func_48mc_fclk>;
+-		ti,bit-shift = <1>;
+-		reg = <0x13d0>;
+-	};
+-
+-	utmi_p1_gfclk: utmi_p1_gfclk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&init_60m_fclk>, <&xclk60mhsp1_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1358>;
+-	};
+-
+-	usb_host_hs_utmi_p1_clk: usb_host_hs_utmi_p1_clk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&utmi_p1_gfclk>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1358>;
+-	};
+-
+-	utmi_p2_gfclk: utmi_p2_gfclk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&init_60m_fclk>, <&xclk60mhsp2_ck>;
+-		ti,bit-shift = <25>;
+-		reg = <0x1358>;
+-	};
+-
+-	usb_host_hs_utmi_p2_clk: usb_host_hs_utmi_p2_clk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&utmi_p2_gfclk>;
+-		ti,bit-shift = <9>;
+-		reg = <0x1358>;
+-	};
+-
+-	usb_host_hs_utmi_p3_clk: usb_host_hs_utmi_p3_clk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&init_60m_fclk>;
+-		ti,bit-shift = <10>;
+-		reg = <0x1358>;
+-	};
+-
+-	usb_host_hs_hsic480m_p1_clk: usb_host_hs_hsic480m_p1_clk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&dpll_usb_m2_ck>;
+-		ti,bit-shift = <13>;
+-		reg = <0x1358>;
+-	};
+-
+-	usb_host_hs_hsic60m_p1_clk: usb_host_hs_hsic60m_p1_clk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&init_60m_fclk>;
+-		ti,bit-shift = <11>;
+-		reg = <0x1358>;
+-	};
+-
+-	usb_host_hs_hsic60m_p2_clk: usb_host_hs_hsic60m_p2_clk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&init_60m_fclk>;
+-		ti,bit-shift = <12>;
+-		reg = <0x1358>;
+-	};
+-
+-	usb_host_hs_hsic480m_p2_clk: usb_host_hs_hsic480m_p2_clk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&dpll_usb_m2_ck>;
+-		ti,bit-shift = <14>;
+-		reg = <0x1358>;
+-	};
+-
+-	usb_host_hs_func48mclk: usb_host_hs_func48mclk@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&func_48mc_fclk>;
+-		ti,bit-shift = <15>;
+-		reg = <0x1358>;
+-	};
+-
+-	usb_host_hs_fck: usb_host_hs_fck@1358 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&init_60m_fclk>;
+-		ti,bit-shift = <1>;
+-		reg = <0x1358>;
+-	};
+-
+-	otg_60m_gfclk: otg_60m_gfclk@1360 {
+-		#clock-cells = <0>;
+-		compatible = "ti,mux-clock";
+-		clocks = <&utmi_phy_clkout_ck>, <&xclk60motg_ck>;
+-		ti,bit-shift = <24>;
+-		reg = <0x1360>;
+-	};
+-
+-	usb_otg_hs_xclk: usb_otg_hs_xclk@1360 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&otg_60m_gfclk>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1360>;
+-	};
+-
+-	usb_otg_hs_ick: usb_otg_hs_ick@1360 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&l3_div_ck>;
+-		ti,bit-shift = <0>;
+-		reg = <0x1360>;
+-	};
+-
+ 	usb_phy_cm_clk32k: usb_phy_cm_clk32k@640 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,gate-clock";
+@@ -1355,44 +788,12 @@
+ 		ti,bit-shift = <8>;
+ 		reg = <0x0640>;
+ 	};
+-
+-	usb_tll_hs_usb_ch2_clk: usb_tll_hs_usb_ch2_clk@1368 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&init_60m_fclk>;
+-		ti,bit-shift = <10>;
+-		reg = <0x1368>;
+-	};
+-
+-	usb_tll_hs_usb_ch0_clk: usb_tll_hs_usb_ch0_clk@1368 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&init_60m_fclk>;
+-		ti,bit-shift = <8>;
+-		reg = <0x1368>;
+-	};
+-
+-	usb_tll_hs_usb_ch1_clk: usb_tll_hs_usb_ch1_clk@1368 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&init_60m_fclk>;
+-		ti,bit-shift = <9>;
+-		reg = <0x1368>;
+-	};
+-
+-	usb_tll_hs_ick: usb_tll_hs_ick@1368 {
+-		#clock-cells = <0>;
+-		compatible = "ti,gate-clock";
+-		clocks = <&l4_div_ck>;
+-		ti,bit-shift = <0>;
+-		reg = <0x1368>;
+-	};
+ };
+ 
+ &cm2_clockdomains {
+ 	l3_init_clkdm: l3_init_clkdm {
+ 		compatible = "ti,clockdomain";
+-		clocks = <&dpll_usb_ck>, <&usb_host_fs_fck>;
++		clocks = <&dpll_usb_ck>;
+ 	};
+ };
+ 
+@@ -1631,3 +1032,291 @@
+ 		reg = <0x0224>;
+ 	};
+ };
++
++&cm1 {
++	mpuss_cm: mpuss_cm@300 {
++		compatible = "ti,omap4-cm";
++		reg = <0x300 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x300 0x100>;
++
++		mpuss_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x4>;
++			#clock-cells = <2>;
++		};
++	};
++
++	tesla_cm: tesla_cm@400 {
++		compatible = "ti,omap4-cm";
++		reg = <0x400 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x400 0x100>;
++
++		tesla_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x4>;
++			#clock-cells = <2>;
++		};
++	};
++
++	abe_cm: abe_cm@500 {
++		compatible = "ti,omap4-cm";
++		reg = <0x500 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x500 0x100>;
++
++		abe_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x6c>;
++			#clock-cells = <2>;
++		};
++	};
++
++};
++
++&cm2 {
++	l4_ao_cm: l4_ao_cm@600 {
++		compatible = "ti,omap4-cm";
++		reg = <0x600 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x600 0x100>;
++
++		l4_ao_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x1c>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l3_1_cm: l3_1_cm@700 {
++		compatible = "ti,omap4-cm";
++		reg = <0x700 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x700 0x100>;
++
++		l3_1_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x4>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l3_2_cm: l3_2_cm@800 {
++		compatible = "ti,omap4-cm";
++		reg = <0x800 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x800 0x100>;
++
++		l3_2_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x14>;
++			#clock-cells = <2>;
++		};
++	};
++
++	ducati_cm: ducati_cm@900 {
++		compatible = "ti,omap4-cm";
++		reg = <0x900 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x900 0x100>;
++
++		ducati_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x4>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l3_dma_cm: l3_dma_cm@a00 {
++		compatible = "ti,omap4-cm";
++		reg = <0xa00 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xa00 0x100>;
++
++		l3_dma_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x4>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l3_emif_cm: l3_emif_cm@b00 {
++		compatible = "ti,omap4-cm";
++		reg = <0xb00 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xb00 0x100>;
++
++		l3_emif_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x1c>;
++			#clock-cells = <2>;
++		};
++	};
++
++	d2d_cm: d2d_cm@c00 {
++		compatible = "ti,omap4-cm";
++		reg = <0xc00 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xc00 0x100>;
++
++		d2d_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x4>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l4_cfg_cm: l4_cfg_cm@d00 {
++		compatible = "ti,omap4-cm";
++		reg = <0xd00 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xd00 0x100>;
++
++		l4_cfg_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x14>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l3_instr_cm: l3_instr_cm@e00 {
++		compatible = "ti,omap4-cm";
++		reg = <0xe00 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xe00 0x100>;
++
++		l3_instr_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x24>;
++			#clock-cells = <2>;
++		};
++	};
++
++	ivahd_cm: ivahd_cm@f00 {
++		compatible = "ti,omap4-cm";
++		reg = <0xf00 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xf00 0x100>;
++
++		ivahd_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0xc>;
++			#clock-cells = <2>;
++		};
++	};
++
++	iss_cm: iss_cm@1000 {
++		compatible = "ti,omap4-cm";
++		reg = <0x1000 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x1000 0x100>;
++
++		iss_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0xc>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l3_dss_cm: l3_dss_cm@1100 {
++		compatible = "ti,omap4-cm";
++		reg = <0x1100 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x1100 0x100>;
++
++		l3_dss_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x4>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l3_gfx_cm: l3_gfx_cm@1200 {
++		compatible = "ti,omap4-cm";
++		reg = <0x1200 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x1200 0x100>;
++
++		l3_gfx_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x4>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l3_init_cm: l3_init_cm@1300 {
++		compatible = "ti,omap4-cm";
++		reg = <0x1300 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x1300 0x100>;
++
++		l3_init_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0xc4>;
++			#clock-cells = <2>;
++		};
++	};
++
++	l4_per_cm: l4_per_cm@1400 {
++		compatible = "ti,omap4-cm";
++		reg = <0x1400 0x200>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x1400 0x200>;
++
++		l4_per_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x144>;
++			#clock-cells = <2>;
++		};
++	};
++
++};
++
++&prm {
++	l4_wkup_cm: l4_wkup_cm@1800 {
++		compatible = "ti,omap4-cm";
++		reg = <0x1800 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x1800 0x100>;
++
++		l4_wkup_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x5c>;
++			#clock-cells = <2>;
++		};
++	};
++
++	emu_sys_cm: emu_sys_cm@1a00 {
++		compatible = "ti,omap4-cm";
++		reg = <0x1a00 0x100>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x1a00 0x100>;
++
++		emu_sys_clkctrl: clk@20 {
++			compatible = "ti,clkctrl";
++			reg = <0x20 0x4>;
++			#clock-cells = <2>;
++		};
++	};
++};
+-- 
+1.9.1
 
-> +- interrupt-parent: phandle of GIC.
-> +- syscon: phandle of Supplemental Configuration Unit (scfg).
-> +
-> +Example:
-> +		extirq: interrupt-controller@15701ac {
-> +			compatible = "fsl,ls1021a-extirq";
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			interrupt-parent = <&gic>;
-> +			syscon = <&scfg>;
-> +		};
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index b842dfdc903f..d4576dce24b2 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -80,3 +80,4 @@ obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
->  obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
->  obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
->  obj-$(CONFIG_IRQ_UNIPHIER_AIDET)	+= irq-uniphier-aidet.o
-> +obj-$(CONFIG_SOC_LS1021A)		+= irq-ls1021a.o
-
-I guess this should be kept sorted alphabetically.
-
-> diff --git a/drivers/irqchip/irq-ls1021a.c b/drivers/irqchip/irq-ls1021a.c
-> new file mode 100644
-> index 000000000000..2ec4fc023549
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-ls1021a.c
-> @@ -0,0 +1,157 @@
-> +#define pr_fmt(fmt) "irq-ls1021a: " fmt
-> +
-> +#include <linux/irq.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_address.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define INTPCR_REG 0x01ac
-> +#define NIRQ 6
-> +
-> +struct extirq_chip_data {
-> +	struct regmap *syscon;
-> +};
-> +
-> +static int
-> +ls1021a_extirq_set_type(struct irq_data *data, unsigned int type)
-> +{
-> +	irq_hw_number_t hwirq = data->hwirq;
-> +	struct extirq_chip_data *chip_data = data->chip_data;
-> +	u32 value, mask;
-> +	int ret;
-> +
-> +	mask = 1U << (31 - hwirq);
-
-Is this really correct? IRQ0 is still at bit position 0. Don't be mislead
-by the left most position in the register layout. This is just strange way
-to express bit-endian access.
-Anyway, please use BIT(x) instead.
-
-> +	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
-> +		if (type == IRQ_TYPE_LEVEL_LOW)
-> +			type = IRQ_TYPE_LEVEL_HIGH;
-> +		else
-> +			type = IRQ_TYPE_EDGE_RISING;
-> +		value = mask;
-> +	} else {
-> +		value = 0;
-> +	}
-> +
-> +	/* Don't do the INTPCR_REG update if the parent irq_set_type will EINVAL. */
-> +	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
-> +		return -EINVAL;
-
-I wonder if it is better to call data->parent_data->chip->irq_set_type(data, type)
-here instead and call regmap if this suceeded.
-
-> +	/* regmap does internal locking, but do we need to provide our
-> +	 * own across the parent irq_set_type call? */
-> +	regmap_update_bits(chip_data->syscon, INTPCR_REG, mask, value);
-> +
-> +	data = data->parent_data;
-> +	ret = data->chip->irq_set_type(data, type);
-> +
-> +	return ret;
-> +}
-> +
-> +static struct irq_chip extirq_chip = {
-> +	.name			= "LS1021A_EXTIRQ",
-> +	.irq_mask		= irq_chip_mask_parent,
-> +	.irq_unmask		= irq_chip_unmask_parent,
-> +	.irq_eoi		= irq_chip_eoi_parent,
-> +	.irq_set_type		= ls1021a_extirq_set_type,
-> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
-> +};
-> +
-> +static int
-> +ls1021a_extirq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
-> +				unsigned long *hwirq, unsigned int *type)
-> +{
-> +	if (!is_of_node(fwspec->fwnode))
-> +		return -EINVAL;
-> +
-> +	if (fwspec->param_count != 3)
-> +		return -EINVAL;
-> +
-> +	/* No PPI should point to this domain */
-> +	if (fwspec->param[0] != 0)
-> +		return -EINVAL;
-> +
-> +	*hwirq = fwspec->param[1];
-
-Is a check for the hwirq value required here? I'm not an expert on
-irqchip API, so I just wonder.
-
-> +	*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-> +	return 0;
-> +}
-> +
-> +static int
-> +ls1021a_extirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +			    unsigned int nr_irqs, void *arg)
-> +{
-> +	static const unsigned xlate[NIRQ] = {163,164,165,167,168,169};
-    ^^^^^^
-No need for static here.
-
-> +	int i;
-> +	irq_hw_number_t hwirq;
-> +	struct irq_fwspec *fwspec = arg;
-> +	struct irq_fwspec gic_fwspec;
-> +
-> +	if (fwspec->param_count != 3)
-> +		return -EINVAL;
-> +
-> +	if (fwspec->param[0])
-> +		return -EINVAL;
-> +
-> +	hwirq = fwspec->param[1];
-
-Is there any guarantee hwirq is in range 0-5?
-
-> +	for (i = 0; i < nr_irqs; i++)
-> +		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
-> +					      &extirq_chip,
-> +					      domain->host_data);
-> +
-> +	gic_fwspec.fwnode = domain->parent->fwnode;
-> +	gic_fwspec.param_count = 3;
-> +	gic_fwspec.param[0] = 0;
-
-As this param is fixed, you should be able to drop the 1st param in your
-interrupt-cells.
-
-> +	gic_fwspec.param[1] = xlate[hwirq];
-> +	gic_fwspec.param[2] = fwspec->param[2];
-> +	
-> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &gic_fwspec);
-> +}
-> +
-> +static const struct irq_domain_ops extirq_domain_ops = {
-> +	.translate	= ls1021a_extirq_domain_translate,
-> +	.alloc		= ls1021a_extirq_domain_alloc,
-> +	.free		= irq_domain_free_irqs_common,
-> +};
-> +
-> +static int __init
-> +ls1021a_extirq_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +
-> +	struct irq_domain *domain, *domain_parent;
-> +	struct extirq_chip_data *chip_data;
-> +	int ret;
-> +
-> +	domain_parent = irq_find_host(parent);
-> +	if (!domain_parent) {
-> +		pr_err("interrupt-parent not found\n");
-> +		return -EINVAL;
-> +	}
-
-Mh, does this mean if GIC has not been probed, this probe is not deferred?
-Is there an API to check for that?
-
-> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-				^^^^^^^
-				devm_kzalloc
-> +	if (!chip_data)
-> +		return -ENOMEM;
-> +
-> +	chip_data->syscon = syscon_regmap_lookup_by_phandle(node, "syscon");
-> +	if (IS_ERR(chip_data->syscon)) {
-> +		ret = PTR_ERR(chip_data->syscon);
-> +		goto out_free_chip;
-> +	}
-> +
-> +	domain = irq_domain_add_hierarchy(domain_parent, 0, NIRQ, node,
-> +					  &extirq_domain_ops, chip_data);
-> +	if (!domain) {
-> +		ret = -ENOMEM;
-> +		goto out_free_chip;
-> +	}
-> +
-> +	return 0;
-> +
-> +out_free_chip:
-> +	kfree(chip_data);
-> +	return ret;
-
-Using devm_kzalloc this label can be skipped.
-
-> +}
-> +
-> +IRQCHIP_DECLARE(ls1021a_extirq, "fsl,ls1021a-extirq", ls1021a_extirq_of_init);
-
-Best regards,
-Alexander
-
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
