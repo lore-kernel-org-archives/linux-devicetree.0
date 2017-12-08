@@ -1,98 +1,50 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] drm/tinydrm: add driver for ST7735R panels
-Date: Fri, 8 Dec 2017 15:25:09 -0600
-Message-ID: <63ca5df1-3908-fcba-9391-ce9ef035086f@lechnology.com>
-References: <1511924469-11448-1-git-send-email-david@lechnology.com>
- <1511924469-11448-3-git-send-email-david@lechnology.com>
- <455f5c7a-9f3c-c019-9418-94f0c2015afd@tronnes.org>
+From: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>
+Subject: [PATCH v2 2/2] eeprom: at24: remove temporary fix for at24mac402 size.
+Date: Fri, 8 Dec 2017 16:25:06 -0500
+Message-ID: <1512768306-14816-3-git-send-email-svendev@arcx.com>
+References: <1512768306-14816-1-git-send-email-svendev@arcx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <455f5c7a-9f3c-c019-9418-94f0c2015afd-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1512768306-14816-1-git-send-email-svendev-fuHqz3Nb1YI@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: limor-6aDhHjTmHzzR7s880joybQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: svendev-fuHqz3Nb1YI@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, brgl-ARrdPY/1zhM@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2017 12:27 PM, Noralf Trønnes wrote:
-> 
-> Den 29.11.2017 04.01, skrev David Lechner:
->> This adds a new driver for Sitronix ST7735R display panels.
->>
->> This has been tested using an Adafruit 1.8" TFT.
->>
->> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->> ---
->>   MAINTAINERS                       |   6 +
->>   drivers/gpu/drm/tinydrm/Kconfig   |  10 ++
->>   drivers/gpu/drm/tinydrm/Makefile  |   1 +
->>   drivers/gpu/drm/tinydrm/st7735r.c | 237 
->> ++++++++++++++++++++++++++++++++++++++
->>   4 files changed, 254 insertions(+)
->>   create mode 100644 drivers/gpu/drm/tinydrm/st7735r.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index a174632..9c7707e 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -4462,6 +4462,12 @@ S:    Maintained
->>   F:    drivers/gpu/drm/tinydrm/st7586.c
->>   F:    Documentation/devicetree/bindings/display/st7586.txt
->> +DRM DRIVER FOR SITRONIX ST7735R PANELS
->> +M:    David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> 
-> I know we haven't done this in the other tinydrm drivers, but I think
-> we should start adding which tree the development is happening in:
-> 
-> T:    git git://anongit.freedesktop.org/drm/drm-misc
+The chip size passed via devicetree, i2c, or acpi device ids is
+now no longer limited to a power of two. So the temporary
+fix can be removed.
 
-This is inherited, just like L:, so get_maintainers.pl --scm returns git 
-git://anongit.freedesktop.org/drm/drm-misc already. So there doesn't 
-seem to be a need to add this line.
+Signed-off-by: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>
+---
+ drivers/misc/eeprom/at24.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-> 
->> +S:    Maintained
->> +F:    drivers/gpu/drm/tinydrm/st7735r.c
->> +F:    Documentation/devicetree/bindings/display/st7735r.txt
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index c3759cb..e522350 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -569,16 +569,6 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		dev_warn(&client->dev,
+ 			"page_size looks suspicious (no power of 2)!\n");
+ 
+-	/*
+-	 * REVISIT: the size of the EUI-48 byte array is 6 in at24mac402, while
+-	 * the call to ilog2() in AT24_DEVICE_MAGIC() rounds it down to 4.
+-	 *
+-	 * Eventually we'll get rid of the magic values altoghether in favor of
+-	 * real structs, but for now just manually set the right size.
+-	 */
+-	if (chip.flags & AT24_FLAG_MAC && chip.byte_len == 4)
+-		chip.byte_len = 6;
+-
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C) &&
+ 	    !i2c_check_functionality(client->adapter,
+ 				     I2C_FUNC_SMBUS_WRITE_I2C_BLOCK))
+-- 
+1.9.1
 
-<snip>
-
->> +}
->> +
->> +static void st7735r_pipe_disable(struct drm_simple_display_pipe *pipe)
->> +{
->> +    struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
->> +    struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
->> +
-> 
-> Please use mipi_dbi_pipe_disable() here.
-> 
->> +    DRM_DEBUG_KMS("\n");
->> +
->> +    if (!mipi->enabled)
->> +        return;
->> +
->> +    tinydrm_disable_backlight(mipi->backlight);
->> +
->> +    mipi_dbi_command(mipi, MIPI_DCS_SET_DISPLAY_OFF);
-> 
-> You turn off the panel, have you checked what it looks like if you don't
-> turn off backlight (which is optional in this driver)?
-> 
-> On the displays I have tried this on, all pixels turn white when they're
-> not driven, letting backlight through, giving an all white display.
-> That's why I have that blanking code in mipi_dbi_pipe_disable() when we
-> don't have backlight control and the reason I don't turn off the panel.
-> The power savings of not driving the panel is negligible AFAICR.
-> 
-> If you don't need DISPLAY_OFF, you can just use mipi_dbi_pipe_disable()
-> directly as the callback.
-> 
-
-I tested this and you are right, it causes the panel to go white when a 
-backlight is not specified, so I will just use mipi_dbi_pipe_disable().
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
