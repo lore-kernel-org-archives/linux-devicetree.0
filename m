@@ -1,84 +1,37 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH v2 06/13] dt-bindings: mips: Add bindings for Microsemi SoCs
-Date: Fri,  8 Dec 2017 16:46:11 +0100
-Message-ID: <20171208154618.20105-7-alexandre.belloni@free-electrons.com>
-References: <20171208154618.20105-1-alexandre.belloni@free-electrons.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20171208154618.20105-1-alexandre.belloni@free-electrons.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH] dt-bindings: pinctrl: stm32: fix copyright and adopt SPDX identifier
+Date: Fri, 8 Dec 2017 16:53:11 +0100
+Message-ID: <1512748391-22004-1-git-send-email-alexandre.torgue@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for Microsemi SoCs. Currently only Ocelot is supported.
+Add missing copyright and add SPDX identifier.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
- Documentation/devicetree/bindings/mips/mscc.txt | 46 +++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/mscc.txt
+Signed-off-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/mips/mscc.txt b/Documentation/devicetree/bindings/mips/mscc.txt
-new file mode 100644
-index 000000000000..1bb578b9d135
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/mscc.txt
-@@ -0,0 +1,46 @@
-+* Microsemi MIPS CPUs
+diff --git a/include/dt-bindings/pinctrl/stm32-pinfunc.h b/include/dt-bindings/pinctrl/stm32-pinfunc.h
+index b8dfe31..b5a2174 100644
+--- a/include/dt-bindings/pinctrl/stm32-pinfunc.h
++++ b/include/dt-bindings/pinctrl/stm32-pinfunc.h
+@@ -1,3 +1,9 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/*
++ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
++ * Author: Torgue Alexandre <alexandre.torgue-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
++ */
 +
-+Boards with a SoC of the Microsemi MIPS family shall have the following
-+properties:
-+
-+Required properties:
-+- compatible: "mscc,ocelot"
-+- mips-hpt-frequency: CPU counter frequency.
-+
-+
-+* Other peripherals:
-+
-+o CPU chip regs:
-+
-+The SoC has a few registers (DEVCPU_GCB:CHIP_REGS) handling miscellaneous
-+functionalities: chip ID, general purpose register for software use, reset
-+controller, hardware status and configuration, efuses.
-+
-+Required properties:
-+- compatible: Should be "mscc,ocelot-chip-regs", "simple-mfd", "syscon"
-+- reg : Should contain registers location and length
-+
-+Example:
-+	syscon@71070000 {
-+		compatible = "mscc,ocelot-chip-regs", "simple-mfd", "syscon";
-+		reg = <0x71070000 0x1c>;
-+	};
-+
-+
-+o CPU system control:
-+
-+The SoC has a few registers (ICPU_CFG:CPU_SYSTEM_CTRL) handling configuration of
-+the CPU: 8 general purpose registers, reset control, CPU en/disabling, CPU
-+endianess, CPU bus control, CPU status.
-+
-+Required properties:
-+- compatible: Should be "mscc,ocelot-cpu-syscon", "syscon"
-+- reg : Should contain registers location and length
-+
-+Example:
-+	syscon@70000000 {
-+		compatible = "mscc,ocelot-cpu-syscon", "syscon";
-+		reg = <0x70000000 0x2c>;
-+	};
-+
-+
+ #ifndef _DT_BINDINGS_STM32_PINFUNC_H
+ #define _DT_BINDINGS_STM32_PINFUNC_H
+ 
 -- 
-2.15.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
