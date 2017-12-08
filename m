@@ -1,94 +1,43 @@
 From: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 0/2] ath10k: DT support for ath10k calibration variant
-Date: Fri,  8 Dec 2017 11:37:40 +0100
-Message-ID: <20171208103742.3181-1-sven.eckelmann@openmesh.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v2 1/2] dt: bindings: add new dt entry for ath10k calibration variant
+Date: Fri,  8 Dec 2017 11:37:41 +0100
+Message-ID: <20171208103742.3181-2-sven.eckelmann@openmesh.com>
+References: <20171208103742.3181-1-sven.eckelmann@openmesh.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171208103742.3181-1-sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sven Eckelmann <sven-KaDOiPu9UxWEi8DpZVb4nw@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sven Eckelmann <sven-KaDOiPu9UxWEi8DpZVb4nw@public.gmane.org>
+The bus + bmi-chip-id + bmi-board-id is not enough to identify the correct
+board data file on QCA4019 based devices. Multiple different boards share
+the same values. Only the original reference designs can currently be
+identified and loaded from the board-2.bin. But these will not result in
+the correct calibration data when combined with the pre-calibration data
+from the device.
 
-Hi,
+An additional "variant" information has to be provided (via SMBIOS or DT)
+to select the correct board data for a design which was modified by an ODM.
 
-here is the second version of the qcom,ath10k-calibration-variant support
-patchset. I think the ath10k patch describes these changes the best:
+Signed-off-by: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Board Data File (BDF) is loaded upon driver boot-up procedure. The right
-board data file is identified on QCA4019 using bus, bmi-chip-id and
-bmi-board-id.
-
-The problem, however, can occur when the (default) board data file cannot
-fulfill with the vendor requirements and it is necessary to use a different
-board data file.
-
-This problem was solved for SMBIOS by adding a special SMBIOS type 0xF8.
-Something similar has to be provided for systems without SMBIOS but with
-device trees. No solution was specified by QCA and therefore a new one has
-to be found for ath10k.
-
-The device tree requires addition strings to define the variant name
-
-    wifi@a000000 {
-    	status = "okay";
-    	qcom,ath10k-calibration-variant = "RT-AC58U";
-    };
-
-    wifi@a800000 {
-    	status = "okay";
-    	qcom,ath10k-calibration-variant = "RT-AC58U";
-    };
-
-This would create the boarddata identifiers for the board-2.bin search
-
- *  bus=ahb,bmi-chip-id=0,bmi-board-id=16,variant=RT-AC58U
- *  bus=ahb,bmi-chip-id=0,bmi-board-id=17,variant=RT-AC58U
-
-
-The discussions to the old submissions can be found in:
-
-RFC:
-====
-
-* https://patchwork.kernel.org/patch/9613615/
-
-v1:
-===
-
-* https://patchwork.kernel.org/patch/9615183/
-* https://patchwork.kernel.org/patch/9615185/
-
-Changes since v1:
-=================
-
-* check the return value of strscpy and print debug message when buffer
-  was not big enough (I would have preferred ath10k_warn but
-  ath10k_core_check_bdfext disagreed)
-
-Changes since RFC:
-==================
-
-* Split patch in DT doc and ath10k part (thanks Christian Lamparter)
-* Remove the words "bmi-chip-id" and "bmi-board-id" and replace them with
-  more generic "device specific ids"
-
-Kind regards,
-	Sven
-
-
-Sven Eckelmann (2):
-  dt: bindings: add new dt entry for ath10k calibration variant
-  ath10k: search DT for qcom,ath10k-calibration-variant
-
- .../bindings/net/wireless/qcom,ath10k.txt          |  3 ++
- drivers/net/wireless/ath/ath10k/core.c             | 40 ++++++++++++++++++----
- 2 files changed, 36 insertions(+), 7 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+index 74d7f0af209c..3d2a031217da 100644
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+@@ -41,6 +41,9 @@ Optional properties:
+ - qcom,msi_addr: MSI interrupt address.
+ - qcom,msi_base: Base value to add before writing MSI data into
+ 		MSI address register.
++- qcom,ath10k-calibration-variant: string to search for in the board-2.bin
++				   variant list with the same bus and device
++				   specific ids
+ - qcom,ath10k-calibration-data : calibration data + board specific data
+ 				 as an array, the length can vary between
+ 				 hw versions.
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
