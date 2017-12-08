@@ -1,37 +1,44 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH] dt-bindings: pinctrl: stm32: fix copyright and adopt SPDX identifier
-Date: Fri, 8 Dec 2017 16:53:11 +0100
-Message-ID: <1512748391-22004-1-git-send-email-alexandre.torgue@st.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [RESEND PATCH v2] dt: bindings: as3645a: Fix the example node
+Date: Fri, 8 Dec 2017 09:55:14 -0600
+Message-ID: <20171208155514.7696-1-dmurphy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add missing copyright and add SPDX identifier.
+Fix the address-cells and size-cells example node
+to reflect to the correct representation.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+---
 
-diff --git a/include/dt-bindings/pinctrl/stm32-pinfunc.h b/include/dt-bindings/pinctrl/stm32-pinfunc.h
-index b8dfe31..b5a2174 100644
---- a/include/dt-bindings/pinctrl/stm32-pinfunc.h
-+++ b/include/dt-bindings/pinctrl/stm32-pinfunc.h
-@@ -1,3 +1,9 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
-+/*
-+ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
-+ * Author: Torgue Alexandre <alexandre.torgue-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
-+ */
-+
- #ifndef _DT_BINDINGS_STM32_PINFUNC_H
- #define _DT_BINDINGS_STM32_PINFUNC_H
+v2 - Moved compatible to be first in the node - https://patchwork.kernel.org/patch/10092937/
+
+ Documentation/devicetree/bindings/leds/ams,as3645a.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+index fdc40e354a64..fc7f5f9f234c 100644
+--- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
++++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+@@ -59,10 +59,10 @@ Example
+ =======
  
+ 	as3645a@30 {
+-		#address-cells: 1
+-		#size-cells: 0
+-		reg = <0x30>;
+ 		compatible = "ams,as3645a";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x30>;
+ 		flash@0 {
+ 			reg = <0x0>;
+ 			flash-timeout-us = <150000>;
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.15.0.124.g7668cbc60
