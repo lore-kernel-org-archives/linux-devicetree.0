@@ -1,79 +1,67 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 17/33] nds32: VDSO support
-Date: Fri, 8 Dec 2017 10:21:49 +0000
-Message-ID: <20171208102149.iqiieszktwzorkuw@lakrids.cambridge.arm.com>
-References: <cover.1512723245.git.green.hu@gmail.com>
- <921ccfa97c4c13f12c7b22b9554f52dcce51f87e.1512723245.git.green.hu@gmail.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH v4 09/12] clk: qcom: Add Krait clock controller driver
+Date: Fri, 8 Dec 2017 11:23:02 +0100
+Message-ID: <CAOFm3uHdFn_GxJuQ-HfQpGAM5rWOT7=DyKUGtDz6dadoxdkBcw@mail.gmail.com>
+References: <1512725401-4944-1-git-send-email-sricharan@codeaurora.org> <1512725401-4944-10-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <921ccfa97c4c13f12c7b22b9554f52dcce51f87e.1512723245.git.green.hu@gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, greg@kroah.com, Vincent Chen <vincentc@andestech.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1512725401-4944-10-git-send-email-sricharan@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: mturquette@linaro.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, viresh.kumar@linaro.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 08, 2017 at 05:12:00PM +0800, Greentime Hu wrote:
-> From: Greentime Hu <greentime@andestech.com>
-> 
-> This patch adds VDSO support. The VDSO code is currently used for
-> sys_rt_sigreturn() and optimised gettimeofday() (using the SoC timer counter).
+Sricharan, Stephen,
 
-[...]
+On Fri, Dec 8, 2017 at 10:29 AM, Sricharan R <sricharan@codeaurora.org> wrote:
+> From: Stephen Boyd <sboyd@codeaurora.org>
+>
+> The Krait CPU clocks are made up of a primary mux and secondary
+> mux for each CPU and the L2, controlled via cp15 accessors. For
+> Kraits within KPSSv1 each secondary mux accepts a different aux
+> source, but on KPSSv2 each secondary mux accepts the same aux
+> source.
+>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+[]
+> --- /dev/null
+> +++ b/drivers/clk/qcom/krait-cc.c
+> @@ -0,0 +1,350 @@
+> +/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 
-> +static int grab_timer_node_info(void)
-> +{
-> +	struct device_node *timer_node;
-> +
-> +	timer_node = of_find_node_by_name(NULL, "timer");
+Have you considered using the new SPDX ids? Something like this:
 
-Please use a compatible string, rather than matching the timer by name.
+// SPDX-License-Identifier: GPL-2.0
+// Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
 
-It's plausible that you have multiple nodes called "timer" in the DT,
-under different parent nodes, and this might not be the device you
-think it is. I see your dt in patch 24 has two timer nodes.
+Beside  being simpler and increasing the code to comment ratio by
+deleting 9 lines of boilerplate, this will also save a few trees over
+the long term each time that I print the source code of the kernel ;)
+(do not worry, I am NOT as insane as to really print the kernel
+sources, but someone more insane than me may well do it)
 
-It would be best if your clocksource driver exposed some stuct that you
-looked at here, so that you're guaranteed to user the same device.
+You may wonder about the C++ // comment style I used here... Please
+see Linus posts on the topic as well as Thomas doc patches overall for
+instructions on using the SPDX ids.
 
-> +	of_property_read_u32(timer_node, "cycle-count-offset",
-> +			     &vdso_data->cycle_count_offset);
-> +	vdso_data->cycle_count_down =
-> +	    of_property_read_bool(timer_node, "cycle-count-down");
+And if you were to do this for your past, present and future
+contributions (eventually these of your group), I would be quite
+grateful.
 
-... and then you'd only need to parse these in one place, too.
+Thank you for your kind consideration
 
-IIUC these are proeprties for the atcpit device, which has no
-documentation or driver in this series.
-
-So I'm rather confused as to what's going on here.
-
-> +	return of_address_to_resource(timer_node, 0, &timer_res);
-> +}
-
-> +int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
-> +{
-
-> +	/*Map timer to user space */
-> +	vdso_base += PAGE_SIZE;
-> +	prot = __pgprot(_PAGE_V | _PAGE_M_UR_KR | _PAGE_D |
-> +			_PAGE_G | _PAGE_C_DEV);
-> +	ret = io_remap_pfn_range(vma, vdso_base, timer_res.start >> PAGE_SHIFT,
-> +				 PAGE_SIZE, prot);
-> +	if (ret)
-> +		goto up_fail;
-
-Maybe this is fine, but it looks a bit suspicious.
-
-Is it safe to map IO memory to a userspace process like this?
-
-In general that isn't safe, since userspace could access other registers
-(if those exist), perform accesses that change the state of hardware, or
-make unsupported access types (e.g. unaligned, atomic) that result in
-errors the kernel can't handle.
-
-Does none of that apply here?
-
-Thanks,
-Mark.
+-- 
+Cordially
+Philippe Ombredanne
