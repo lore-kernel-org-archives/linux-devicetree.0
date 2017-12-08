@@ -1,56 +1,43 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH V6 4/7] OF: properties: Implement get_match_data()
- callback
-Date: Fri, 8 Dec 2017 10:11:42 +0100
-Message-ID: <20171208101142.1ea9bc13@karo-electronics.de>
-References: <1512493493-6464-1-git-send-email-okaya@codeaurora.org>
-        <1512493493-6464-5-git-send-email-okaya@codeaurora.org>
-        <20171207141029.575c0a03@karo-electronics.de>
-        <def8e351-bc2d-7adc-fdc5-362b365302a8@codeaurora.org>
-        <20171207162036.6a71a4f5@karo-electronics.de>
-        <661cbe4d-ea33-3e84-b5f2-ab6517cbb135@codeaurora.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i-h3: Remove
+ allwinner,leds-active-low for non internal PHY
+Date: Fri, 8 Dec 2017 10:13:48 +0100
+Message-ID: <20171208091348.a4qo6pzgvoocoamz@flea.lan>
+References: <20171207182102.16127-1-clabbe.montjoie@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <661cbe4d-ea33-3e84-b5f2-ab6517cbb135@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, timur@codeaurora.org, open list <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uya4hwo7fj5syygz"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBV5PVHIQKGQEKKCFV5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20171207182102.16127-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thu, 7 Dec 2017 12:50:50 -0500 Sinan Kaya wrote:
-> On 12/7/2017 10:20 AM, Lothar Waßmann wrote:
-> > Hi,
-> > 
-> > On Thu, 7 Dec 2017 09:45:31 -0500 Sinan Kaya wrote:
-> >> On 12/7/2017 8:10 AM, Lothar Waßmann wrote:
-> >>>> +void *of_fwnode_get_match_data(const struct fwnode_handle *fwnode,
-> >>>> +			       struct device *dev)
-> >>> Shouldn't this be 'const void *of_fwnode_get_match_data
-> >>
-> >> OF keeps the driver data as a (const void*) internally. ACPI keeps the
-> >> driver data as kernel_ulong_t in struct acpi_device_id.
-> >>
-> >> I tried to find the middle ground here by converting output to void*
-> >> but not keeping const.
-> >>
-> > It should be no problem to cast a (const void *) to an unsigned long
-> > data type (without const qualifier).
-> > 
-> 
-> It is the other way around. If I change this API to return a a (const void*),
-> the device_get_match_data() function need to return a (const void *).
-> 
-> While implementing the ACPI piece, I have to convert an unsigned long to
-> (const void *) in ACPI code so that the APIs are compatible.
-> 
-Just one more remark: Do you need write access to the data the pointer
-returned by device_get_match_data() or of_fwnode_get_match_data()
-points to?
-If not, the return type of those functions should be 'const void *'.
+--uya4hwo7fj5syygz
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
+On Thu, Dec 07, 2017 at 07:21:02PM +0100, Corentin Labbe wrote:
+> allwinner,leds-active-low have effect only on boards which us the internal PHY.
+> So this patch remove it from all boards which do not use the internal PHY.
+> 
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Lothar Waßmann
+Applied, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--uya4hwo7fj5syygz--
