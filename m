@@ -1,27 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 23/33] nds32: Generic timers support
-Date: Fri, 8 Dec 2017 14:43:23 +0100
-Message-ID: <CACRpkdYGGCu9PtAHRM1zRRawWmTFnitV91BG2_6LOo+67KNKRA@mail.gmail.com>
-References: <cover.1512723245.git.green.hu@gmail.com> <9f074c94b56617d99f9c6741176bb2ee9dfc4331.1512723245.git.green.hu@gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v9 4/6] clocksource: stm32: add clocksource support
+Date: Fri, 8 Dec 2017 14:46:34 +0100
+Message-ID: <ac396fdb-1658-d2f3-bd92-b2b9fe04f201@linaro.org>
+References: <20171208113250.359-1-benjamin.gaignard@st.com>
+ <20171208113250.359-5-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <9f074c94b56617d99f9c6741176bb2ee9dfc4331.1512723245.git.green.hu@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: greentime@andestech.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, deanbo422@gmail.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Vincent Chen <vincentc@andestech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171208113250.359-5-benjamin.gaignard@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, tglx@linutronix.de, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 8, 2017 at 10:12 AM, Greentime Hu <green.hu@gmail.com> wrote:
+On 08/12/2017 12:32, Benjamin Gaignard wrote:
+> The stm32 timer hardware is currently only used as a clock event device,
+> but it can be utilized as a clocksource as well.
+> 
+> Implement this by enabling the free running counter in the hardware block
+> and converting the clock event part from a count down event timer to a
+> comparator based timer.
 
-> From: Greentime Hu <greentime@andestech.com>
->
-> This patch adds support for timer.
->
-> Signed-off-by: Vincent Chen <vincentc@andestech.com>
-> Signed-off-by: Greentime Hu <greentime@andestech.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Split this patch in two:
+ - periodic support
+ - clocksource support
 
-Yours,
-Linus Walleij
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
