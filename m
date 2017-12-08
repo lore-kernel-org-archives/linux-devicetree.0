@@ -1,7 +1,7 @@
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v6 net-next,mips 2/7] MIPS: Octeon: Enable LMTDMA/LMTST operations.
-Date: Thu,  7 Dec 2017 16:09:29 -0800
-Message-ID: <20171208000934.6554-3-david.daney@cavium.com>
+Subject: [PATCH v6 net-next,mips 4/7] staging: octeon: Remove USE_ASYNC_IOBDMA macro.
+Date: Thu,  7 Dec 2017 16:09:31 -0800
+Message-ID: <20171208000934.6554-5-david.daney@cavium.com>
 References: <20171208000934.6554-1-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,79 +9,232 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171208000934.6554-1-david.daney@cavium.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Philippe Ombredanne <pombredanne@nexb.com>, Carlos Munoz <cmunoz@cavium.com>, "Steven J . Hill" <Steven.Hill@cavium.com>, David Daney <david.daney@cavium.com>
+Cc: linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Philippe Ombredanne <pombredanne@nexb.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlos Munoz <cmunoz@cavium.com>
+Previous patch sets USE_ASYNC_IOBDMA to 1 unconditionally.  Remove
+USE_ASYNC_IOBDMA from all if statements.  Remove dead code caused by
+the change.
 
-LMTDMA/LMTST operations move data between cores and I/O devices:
-
-* LMTST operations can send an address and a variable length
-  (up to 128 bytes) of data to an I/O device.
-* LMTDMA operations can send an address and a variable length
-  (up to 128) of data to the I/O device and then return a
-  variable length (up to 128 bytes) response from the I/O device.
-
-For both LMTST and LMTDMA, the data sent to the device is first stored
-in the CVMSEG core local memory cache line indexed by
-CVMMEMCTL[LMTLINE], the data is then atomically transmitted to the
-device with a store to the CVMSEG LMTDMA trigger location.
-
-Reviewed-by: James Hogan <jhogan@kernel.org>
-Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
-Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- arch/mips/cavium-octeon/setup.c       |  6 ++++++
- arch/mips/include/asm/octeon/octeon.h | 12 ++++++++++--
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ drivers/staging/octeon/ethernet-defines.h |  6 ---
+ drivers/staging/octeon/ethernet-rx.c      | 25 ++++-----
+ drivers/staging/octeon/ethernet-tx.c      | 85 ++++++++++---------------------
+ 3 files changed, 37 insertions(+), 79 deletions(-)
 
-diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
-index a8034d0dcade..99e6a68bc652 100644
---- a/arch/mips/cavium-octeon/setup.c
-+++ b/arch/mips/cavium-octeon/setup.c
-@@ -609,6 +609,12 @@ void octeon_user_io_init(void)
- #else
- 	cvmmemctl.s.cvmsegenak = 0;
- #endif
-+	if (OCTEON_IS_OCTEON3()) {
-+		/* Enable LMTDMA */
-+		cvmmemctl.s.lmtena = 1;
-+		/* Scratch line to use for LMT operation */
-+		cvmmemctl.s.lmtline = 2;
-+	}
- 	/* R/W If set, CVMSEG is available for loads/stores in
- 	 * supervisor mode. */
- 	cvmmemctl.s.cvmsegenas = 0;
-diff --git a/arch/mips/include/asm/octeon/octeon.h b/arch/mips/include/asm/octeon/octeon.h
-index c99c4b6a79f4..92a17d67c1fa 100644
---- a/arch/mips/include/asm/octeon/octeon.h
-+++ b/arch/mips/include/asm/octeon/octeon.h
-@@ -179,7 +179,15 @@ union octeon_cvmemctl {
- 		/* RO 1 = BIST fail, 0 = BIST pass */
- 		__BITFIELD_FIELD(uint64_t wbfbist:1,
- 		/* Reserved */
--		__BITFIELD_FIELD(uint64_t reserved:17,
-+		__BITFIELD_FIELD(uint64_t reserved_52_57:6,
-+		/* When set, LMTDMA/LMTST operations are permitted */
-+		__BITFIELD_FIELD(uint64_t lmtena:1,
-+		/* Selects the CVMSEG LM cacheline used by LMTDMA
-+		 * LMTST and wide atomic store operations.
-+		 */
-+		__BITFIELD_FIELD(uint64_t lmtline:6,
-+		/* Reserved */
-+		__BITFIELD_FIELD(uint64_t reserved_41_44:4,
- 		/* OCTEON II - TLB replacement policy: 0 = bitmask LRU; 1 = NLU.
- 		 * This field selects between the TLB replacement policies:
- 		 * bitmask LRU or NLU. Bitmask LRU maintains a mask of
-@@ -275,7 +283,7 @@ union octeon_cvmemctl {
- 		/* R/W Size of local memory in cache blocks, 54 (6912
- 		 * bytes) is max legal value. */
- 		__BITFIELD_FIELD(uint64_t lmemsz:6,
--		;)))))))))))))))))))))))))))))))))
-+		;))))))))))))))))))))))))))))))))))))
- 	} s;
- };
+diff --git a/drivers/staging/octeon/ethernet-defines.h b/drivers/staging/octeon/ethernet-defines.h
+index e898df25b87f..21438c804a43 100644
+--- a/drivers/staging/octeon/ethernet-defines.h
++++ b/drivers/staging/octeon/ethernet-defines.h
+@@ -10,10 +10,6 @@
  
+ /*
+  * A few defines are used to control the operation of this driver:
+- *  USE_ASYNC_IOBDMA
+- *      Use asynchronous IO access to hardware. This uses Octeon's asynchronous
+- *      IOBDMAs to issue IO accesses without stalling. Set this to zero
+- *      to disable this. Note that IOBDMAs require CVMSEG.
+  *  REUSE_SKBUFFS_WITHOUT_FREE
+  *      Allows the TX path to free an skbuff into the FPA hardware pool. This
+  *      can significantly improve performance for forwarding and bridging, but
+@@ -32,8 +28,6 @@
+ #define REUSE_SKBUFFS_WITHOUT_FREE  1
+ #endif
+ 
+-#define USE_ASYNC_IOBDMA	1
+-
+ /* Maximum number of SKBs to try to free per xmit packet. */
+ #define MAX_OUT_QUEUE_DEPTH 1000
+ 
+diff --git a/drivers/staging/octeon/ethernet-rx.c b/drivers/staging/octeon/ethernet-rx.c
+index 1a44291318ee..dd76c99d5ae0 100644
+--- a/drivers/staging/octeon/ethernet-rx.c
++++ b/drivers/staging/octeon/ethernet-rx.c
+@@ -201,11 +201,9 @@ static int cvm_oct_poll(struct oct_rx_group *rx_group, int budget)
+ 	/* Prefetch cvm_oct_device since we know we need it soon */
+ 	prefetch(cvm_oct_device);
+ 
+-	if (USE_ASYNC_IOBDMA) {
+-		/* Save scratch in case userspace is using it */
+-		CVMX_SYNCIOBDMA;
+-		old_scratch = cvmx_scratch_read64(CVMX_SCR_SCRATCH);
+-	}
++	/* Save scratch in case userspace is using it */
++	CVMX_SYNCIOBDMA;
++	old_scratch = cvmx_scratch_read64(CVMX_SCR_SCRATCH);
+ 
+ 	/* Only allow work for our group (and preserve priorities) */
+ 	if (OCTEON_IS_MODEL(OCTEON_CN68XX)) {
+@@ -220,10 +218,8 @@ static int cvm_oct_poll(struct oct_rx_group *rx_group, int budget)
+ 			       BIT(rx_group->group));
+ 	}
+ 
+-	if (USE_ASYNC_IOBDMA) {
+-		cvmx_pow_work_request_async(CVMX_SCR_SCRATCH, CVMX_POW_NO_WAIT);
+-		did_work_request = 1;
+-	}
++	cvmx_pow_work_request_async(CVMX_SCR_SCRATCH, CVMX_POW_NO_WAIT);
++	did_work_request = 1;
+ 
+ 	while (rx_count < budget) {
+ 		struct sk_buff *skb = NULL;
+@@ -232,7 +228,7 @@ static int cvm_oct_poll(struct oct_rx_group *rx_group, int budget)
+ 		cvmx_wqe_t *work;
+ 		int port;
+ 
+-		if (USE_ASYNC_IOBDMA && did_work_request)
++		if (did_work_request)
+ 			work = cvmx_pow_work_response_async(CVMX_SCR_SCRATCH);
+ 		else
+ 			work = cvmx_pow_work_request_sync(CVMX_POW_NO_WAIT);
+@@ -260,7 +256,7 @@ static int cvm_oct_poll(struct oct_rx_group *rx_group, int budget)
+ 			sizeof(void *));
+ 		prefetch(pskb);
+ 
+-		if (USE_ASYNC_IOBDMA && rx_count < (budget - 1)) {
++		if (rx_count < (budget - 1)) {
+ 			cvmx_pow_work_request_async_nocheck(CVMX_SCR_SCRATCH,
+ 							    CVMX_POW_NO_WAIT);
+ 			did_work_request = 1;
+@@ -403,10 +399,9 @@ static int cvm_oct_poll(struct oct_rx_group *rx_group, int budget)
+ 		cvmx_write_csr(CVMX_POW_PP_GRP_MSKX(coreid), old_group_mask);
+ 	}
+ 
+-	if (USE_ASYNC_IOBDMA) {
+-		/* Restore the scratch area */
+-		cvmx_scratch_write64(CVMX_SCR_SCRATCH, old_scratch);
+-	}
++	/* Restore the scratch area */
++	cvmx_scratch_write64(CVMX_SCR_SCRATCH, old_scratch);
++
+ 	cvm_oct_rx_refill_pool(0);
+ 
+ 	return rx_count;
+diff --git a/drivers/staging/octeon/ethernet-tx.c b/drivers/staging/octeon/ethernet-tx.c
+index 31f35025d19e..2eede0907924 100644
+--- a/drivers/staging/octeon/ethernet-tx.c
++++ b/drivers/staging/octeon/ethernet-tx.c
+@@ -179,23 +179,18 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		qos = 0;
+ 	}
+ 
+-	if (USE_ASYNC_IOBDMA) {
+-		/* Save scratch in case userspace is using it */
+-		CVMX_SYNCIOBDMA;
+-		old_scratch = cvmx_scratch_read64(CVMX_SCR_SCRATCH);
+-		old_scratch2 = cvmx_scratch_read64(CVMX_SCR_SCRATCH + 8);
+-
+-		/*
+-		 * Fetch and increment the number of packets to be
+-		 * freed.
+-		 */
+-		cvmx_fau_async_fetch_and_add32(CVMX_SCR_SCRATCH + 8,
+-					       FAU_NUM_PACKET_BUFFERS_TO_FREE,
+-					       0);
+-		cvmx_fau_async_fetch_and_add32(CVMX_SCR_SCRATCH,
+-					       priv->fau + qos * 4,
+-					       MAX_SKB_TO_FREE);
+-	}
++	/* Save scratch in case userspace is using it */
++	CVMX_SYNCIOBDMA;
++	old_scratch = cvmx_scratch_read64(CVMX_SCR_SCRATCH);
++	old_scratch2 = cvmx_scratch_read64(CVMX_SCR_SCRATCH + 8);
++
++	/* Fetch and increment the number of packets to be freed. */
++	cvmx_fau_async_fetch_and_add32(CVMX_SCR_SCRATCH + 8,
++				       FAU_NUM_PACKET_BUFFERS_TO_FREE,
++				       0);
++	cvmx_fau_async_fetch_and_add32(CVMX_SCR_SCRATCH,
++				       priv->fau + qos * 4,
++				       MAX_SKB_TO_FREE);
+ 
+ 	/*
+ 	 * We have space for 6 segment pointers, If there will be more
+@@ -204,22 +199,11 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	if (unlikely(skb_shinfo(skb)->nr_frags > 5)) {
+ 		if (unlikely(__skb_linearize(skb))) {
+ 			queue_type = QUEUE_DROP;
+-			if (USE_ASYNC_IOBDMA) {
+-				/*
+-				 * Get the number of skbuffs in use
+-				 * by the hardware
+-				 */
+-				CVMX_SYNCIOBDMA;
+-				skb_to_free =
+-					cvmx_scratch_read64(CVMX_SCR_SCRATCH);
+-			} else {
+-				/*
+-				 * Get the number of skbuffs in use
+-				 * by the hardware
+-				 */
+-				skb_to_free = cvmx_fau_fetch_and_add32(
+-					priv->fau + qos * 4, MAX_SKB_TO_FREE);
+-			}
++			/* Get the number of skbuffs in use by the
++			 * hardware
++			 */
++			CVMX_SYNCIOBDMA;
++			skb_to_free = cvmx_scratch_read64(CVMX_SCR_SCRATCH);
+ 			skb_to_free = cvm_oct_adjust_skb_to_free(skb_to_free,
+ 								 priv->fau +
+ 								 qos * 4);
+@@ -387,18 +371,10 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		pko_command.s.ipoffp1 = skb_network_offset(skb) + 1;
+ 	}
+ 
+-	if (USE_ASYNC_IOBDMA) {
+-		/* Get the number of skbuffs in use by the hardware */
+-		CVMX_SYNCIOBDMA;
+-		skb_to_free = cvmx_scratch_read64(CVMX_SCR_SCRATCH);
+-		buffers_to_free = cvmx_scratch_read64(CVMX_SCR_SCRATCH + 8);
+-	} else {
+-		/* Get the number of skbuffs in use by the hardware */
+-		skb_to_free = cvmx_fau_fetch_and_add32(priv->fau + qos * 4,
+-						       MAX_SKB_TO_FREE);
+-		buffers_to_free =
+-		    cvmx_fau_fetch_and_add32(FAU_NUM_PACKET_BUFFERS_TO_FREE, 0);
+-	}
++	/* Get the number of skbuffs in use by the hardware */
++	CVMX_SYNCIOBDMA;
++	skb_to_free = cvmx_scratch_read64(CVMX_SCR_SCRATCH);
++	buffers_to_free = cvmx_scratch_read64(CVMX_SCR_SCRATCH + 8);
+ 
+ 	skb_to_free = cvm_oct_adjust_skb_to_free(skb_to_free,
+ 						 priv->fau + qos * 4);
+@@ -416,9 +392,7 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	} else {
+ 		queue_type = QUEUE_HW;
+ 	}
+-	if (USE_ASYNC_IOBDMA)
+-		cvmx_fau_async_fetch_and_add32(
+-				CVMX_SCR_SCRATCH, FAU_TOTAL_TX_TO_CLEAN, 1);
++	cvmx_fau_async_fetch_and_add32(CVMX_SCR_SCRATCH, FAU_TOTAL_TX_TO_CLEAN, 1);
+ 
+ 	spin_lock_irqsave(&priv->tx_free_list[qos].lock, flags);
+ 
+@@ -488,16 +462,11 @@ int cvm_oct_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		dev_kfree_skb_any(t);
+ 	}
+ 
+-	if (USE_ASYNC_IOBDMA) {
+-		CVMX_SYNCIOBDMA;
+-		total_to_clean = cvmx_scratch_read64(CVMX_SCR_SCRATCH);
+-		/* Restore the scratch area */
+-		cvmx_scratch_write64(CVMX_SCR_SCRATCH, old_scratch);
+-		cvmx_scratch_write64(CVMX_SCR_SCRATCH + 8, old_scratch2);
+-	} else {
+-		total_to_clean = cvmx_fau_fetch_and_add32(
+-						FAU_TOTAL_TX_TO_CLEAN, 1);
+-	}
++	CVMX_SYNCIOBDMA;
++	total_to_clean = cvmx_scratch_read64(CVMX_SCR_SCRATCH);
++	/* Restore the scratch area */
++	cvmx_scratch_write64(CVMX_SCR_SCRATCH, old_scratch);
++	cvmx_scratch_write64(CVMX_SCR_SCRATCH + 8, old_scratch2);
+ 
+ 	if (total_to_clean & 0x3ff) {
+ 		/*
 -- 
 2.14.3
