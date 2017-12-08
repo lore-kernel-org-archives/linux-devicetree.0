@@ -1,371 +1,192 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH v4 03/12] clk: qcom: Add support for High-Frequency PLLs
- (HFPLLs)
-Date: Fri,  8 Dec 2017 14:59:52 +0530
-Message-ID: <1512725401-4944-4-git-send-email-sricharan@codeaurora.org>
-References: <1512725401-4944-1-git-send-email-sricharan@codeaurora.org>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 4/6] clocksource: stm32: only use 32 bits timers
+Date: Fri, 8 Dec 2017 10:31:32 +0100
+Message-ID: <CA+M3ks47fE4uo=wtoWkmp+cr8gmwWFVMWk5dYc9G5=guGU0SOQ@mail.gmail.com>
+References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1510649563-22975-5-git-send-email-benjamin.gaignard@linaro.org>
+ <f22fd299-a742-1144-75d0-256a538af619@linaro.org> <CA+M3ks6Co2LxQ=EPODvwYrxmoRqiiQBr3Li4L3Nx3RY2As58dg@mail.gmail.com>
+ <56ba2617-ab7b-9715-928e-c922c1b32866@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1512725401-4944-1-git-send-email-sricharan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@linaro.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org
-Cc: sricharan@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56ba2617-ab7b-9715-928e-c922c1b32866-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Boyd <sboyd@codeaurora.org>
+2017-12-08 10:29 GMT+01:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On 08/12/2017 10:25, Benjamin Gaignard wrote:
+>> 2017-12-08 9:34 GMT+01:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+>>> On 14/11/2017 09:52, Benjamin Gaignard wrote:
+>>>> The clock driving counters is at 90MHz so the maximum period
+>>>> for 16 bis counters is around 750 ms
+>>>
+>>> 728 us
+>>>
+>>>> which is a short period for a clocksource.
+>>>
+>>> Which clocksource are you talking about ?
+>>>
+>>>> For 32 bits counters this period is close
+>>>> 47 secondes which is more acceptable.
+>>>>
+>>>> This patch remove 16 bits counters support and makes sure that
+>>>> they won't be probed anymore.
+>>>
+>>> Are we talking about clockevent or clocksource?
+>>>
+>>> Is this issue present today ? Or is it if we add the clocksource suppor=
+t
+>>> ? We are talking about clocksource but we change the clockevent code.
+>>>
+>>> All this is very confusing.
+>>>
+>>> I have a rough idea of what is happening, but it is not up to me to
+>>> decode and infer from the changes, you need to describe *clearly* the
+>>> situation.
+>>>
+>>>  - What happens if we use a 16bits timer as a clockevent ?
+>>>  - What happens if we use a 16bits timer as a clocksource ?
+>>>  - Why is it preferable to remove the support of the 16bits timers
+>>> instead of downgrading them with the rating ?
+>>
+>> Up to this patch it is only about clockevent, clocksource code is
+>> introduced in patch 5.
+>> For the both cases 16bits counter have a a too short period (728us)
+>> and can't be used
+>> so downgrading the rating is not a solution.
+>
+> You have to explain why it is a too short period. I will be happy to see
+> an example of the issues the user is facing.
 
-HFPLLs are the main frequency source for Krait CPU clocks. Add
-support for changing the rate of these PLLs.
+This a very basic issue, the kernel doesn't boot at all...
 
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- drivers/clk/qcom/Makefile    |   1 +
- drivers/clk/qcom/clk-hfpll.c | 253 +++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/qcom/clk-hfpll.h |  54 +++++++++
- 3 files changed, 308 insertions(+)
- create mode 100644 drivers/clk/qcom/clk-hfpll.c
- create mode 100644 drivers/clk/qcom/clk-hfpll.h
+>
+>
+>
+>> I will change the wording in v9
+>>
+>>>
+>>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>
+>>>> ---
+>>>>  drivers/clocksource/timer-stm32.c | 26 ++++++++++++--------------
+>>>>  1 file changed, 12 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/t=
+imer-stm32.c
+>>>> index ae41a19..8173bcf 100644
+>>>> --- a/drivers/clocksource/timer-stm32.c
+>>>> +++ b/drivers/clocksource/timer-stm32.c
+>>>> @@ -83,9 +83,9 @@ static irqreturn_t stm32_clock_event_handler(int irq=
+, void *dev_id)
+>>>>  static int __init stm32_clockevent_init(struct device_node *node)
+>>>>  {
+>>>>       struct reset_control *rstc;
+>>>> -     unsigned long max_delta;
+>>>> -     int ret, bits, prescaler =3D 1;
+>>>> +     unsigned long max_arr;
+>>>>       struct timer_of *to;
+>>>> +     int ret;
+>>>>
+>>>>       to =3D kzalloc(sizeof(*to), GFP_KERNEL);
+>>>>       if (!to)
+>>>> @@ -115,29 +115,27 @@ static int __init stm32_clockevent_init(struct d=
+evice_node *node)
+>>>>
+>>>>       /* Detect whether the timer is 16 or 32 bits */
+>>>>       writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
+>>>> -     max_delta =3D readl_relaxed(timer_of_base(to) + TIM_ARR);
+>>>> -     if (max_delta =3D=3D ~0U) {
+>>>> -             prescaler =3D 1;
+>>>> -             bits =3D 32;
+>>>> -     } else {
+>>>> -             prescaler =3D 1024;
+>>>> -             bits =3D 16;
+>>>> +     max_arr =3D readl_relaxed(timer_of_base(to) + TIM_ARR);
+>>>> +     if (max_arr !=3D ~0U) {
+>>>> +             pr_err("32 bits timer is needed\n");
+>>>> +             ret =3D -EINVAL;
+>>>> +             goto deinit;
+>>>>       }
+>>>
+>>> Wrap this in a function:
+>>>
+>>> static bool stm32_timer_is_32bits(struct timer_of *to)
+>>> {
+>>>         return readl_relaxed(timer_of_base(to) + TIM_ARR) =3D=3D ~0UL;
+>>> }
+>>>
+>>> Then clearly inform the user.
+>>>
+>>> if (!stm32_timer_is_32bits(to)) {
+>>>         pr_warn("Timer %pOF is a 16 bits timer\n", node);
+>>>         /* abort the registration or downgrade the timer's rating */
+>>> }
+>>
+>> Ok I will change that in v9
+>>
+>>>
+>>>> +
+>>>>       writel_relaxed(0, timer_of_base(to) + TIM_ARR);
+>>>>
+>>>> -     writel_relaxed(prescaler - 1, timer_of_base(to) + TIM_PSC);
+>>>> +     writel_relaxed(0, timer_of_base(to) + TIM_PSC);
+>>>>       writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
+>>>>       writel_relaxed(TIM_DIER_UIE, timer_of_base(to) + TIM_DIER);
+>>>>       writel_relaxed(0, timer_of_base(to) + TIM_SR);
+>>>>
+>>>>       clockevents_config_and_register(&to->clkevt,
+>>>> -                                     timer_of_period(to), MIN_DELTA, =
+max_delta);
+>>>> -
+>>>> -     pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
+>>>> -                     node, bits);
+>>>> +                                     timer_of_period(to), MIN_DELTA, =
+~0U);
+>>>>
+>>>>       return 0;
+>>>>
+>>>> +deinit:
+>>>> +     timer_of_exit(to);
+>>>
+>>> Fix this please (timer_of_cleanup).
+>>>
+>>> In the future, make sure the patches are git-bisect safe.
+>>>
+>>>
+>>>
+>>> --
+>>>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for=
+ ARM SoCs
+>>>
+>>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>>> <http://twitter.com/#!/linaroorg> Twitter |
+>>> <http://www.linaro.org/linaro-blog/> Blog
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
 
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 602af38..4795e21 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -10,6 +10,7 @@ clk-qcom-y += clk-rcg2.o
- clk-qcom-y += clk-branch.o
- clk-qcom-y += clk-regmap-divider.o
- clk-qcom-y += clk-regmap-mux.o
-+clk-qcom-y += clk-hfpll.o
- clk-qcom-y += reset.o
- clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
- 
-diff --git a/drivers/clk/qcom/clk-hfpll.c b/drivers/clk/qcom/clk-hfpll.c
-new file mode 100644
-index 0000000..5b0bb71
---- /dev/null
-+++ b/drivers/clk/qcom/clk-hfpll.c
-@@ -0,0 +1,253 @@
-+/*
-+ * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/export.h>
-+#include <linux/regmap.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/clk-provider.h>
-+#include <linux/spinlock.h>
-+
-+#include "clk-regmap.h"
-+#include "clk-hfpll.h"
-+
-+#define PLL_OUTCTRL	BIT(0)
-+#define PLL_BYPASSNL	BIT(1)
-+#define PLL_RESET_N	BIT(2)
-+
-+/* Initialize a HFPLL at a given rate and enable it. */
-+static void __clk_hfpll_init_once(struct clk_hw *hw)
-+{
-+	struct clk_hfpll *h = to_clk_hfpll(hw);
-+	struct hfpll_data const *hd = h->d;
-+	struct regmap *regmap = h->clkr.regmap;
-+
-+	if (likely(h->init_done))
-+		return;
-+
-+	/* Configure PLL parameters for integer mode. */
-+	if (hd->config_val)
-+		regmap_write(regmap, hd->config_reg, hd->config_val);
-+	regmap_write(regmap, hd->m_reg, 0);
-+	regmap_write(regmap, hd->n_reg, 1);
-+
-+	if (hd->user_reg) {
-+		u32 regval = hd->user_val;
-+		unsigned long rate;
-+
-+		rate = clk_hw_get_rate(hw);
-+
-+		/* Pick the right VCO. */
-+		if (hd->user_vco_mask && rate > hd->low_vco_max_rate)
-+			regval |= hd->user_vco_mask;
-+		regmap_write(regmap, hd->user_reg, regval);
-+	}
-+
-+	if (hd->droop_reg)
-+		regmap_write(regmap, hd->droop_reg, hd->droop_val);
-+
-+	h->init_done = true;
-+}
-+
-+static void __clk_hfpll_enable(struct clk_hw *hw)
-+{
-+	struct clk_hfpll *h = to_clk_hfpll(hw);
-+	struct hfpll_data const *hd = h->d;
-+	struct regmap *regmap = h->clkr.regmap;
-+	u32 val;
-+
-+	__clk_hfpll_init_once(hw);
-+
-+	/* Disable PLL bypass mode. */
-+	regmap_update_bits(regmap, hd->mode_reg, PLL_BYPASSNL, PLL_BYPASSNL);
-+
-+	/*
-+	 * H/W requires a 5us delay between disabling the bypass and
-+	 * de-asserting the reset. Delay 10us just to be safe.
-+	 */
-+	usleep_range(10, 100);
-+
-+	/* De-assert active-low PLL reset. */
-+	regmap_update_bits(regmap, hd->mode_reg, PLL_RESET_N, PLL_RESET_N);
-+
-+	/* Wait for PLL to lock. */
-+	if (hd->status_reg) {
-+		do {
-+			regmap_read(regmap, hd->status_reg, &val);
-+		} while (!(val & BIT(hd->lock_bit)));
-+	} else {
-+		usleep_range(60, 100);
-+	}
-+
-+	/* Enable PLL output. */
-+	regmap_update_bits(regmap, hd->mode_reg, PLL_OUTCTRL, PLL_OUTCTRL);
-+}
-+
-+/* Enable an already-configured HFPLL. */
-+static int clk_hfpll_enable(struct clk_hw *hw)
-+{
-+	unsigned long flags;
-+	struct clk_hfpll *h = to_clk_hfpll(hw);
-+	struct hfpll_data const *hd = h->d;
-+	struct regmap *regmap = h->clkr.regmap;
-+	u32 mode;
-+
-+	spin_lock_irqsave(&h->lock, flags);
-+	regmap_read(regmap, hd->mode_reg, &mode);
-+	if (!(mode & (PLL_BYPASSNL | PLL_RESET_N | PLL_OUTCTRL)))
-+		__clk_hfpll_enable(hw);
-+	spin_unlock_irqrestore(&h->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void __clk_hfpll_disable(struct clk_hfpll *h)
-+{
-+	struct hfpll_data const *hd = h->d;
-+	struct regmap *regmap = h->clkr.regmap;
-+
-+	/*
-+	 * Disable the PLL output, disable test mode, enable the bypass mode,
-+	 * and assert the reset.
-+	 */
-+	regmap_update_bits(regmap, hd->mode_reg,
-+			   PLL_BYPASSNL | PLL_RESET_N | PLL_OUTCTRL, 0);
-+}
-+
-+static void clk_hfpll_disable(struct clk_hw *hw)
-+{
-+	struct clk_hfpll *h = to_clk_hfpll(hw);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&h->lock, flags);
-+	__clk_hfpll_disable(h);
-+	spin_unlock_irqrestore(&h->lock, flags);
-+}
-+
-+static long clk_hfpll_round_rate(struct clk_hw *hw, unsigned long rate,
-+				 unsigned long *parent_rate)
-+{
-+	struct clk_hfpll *h = to_clk_hfpll(hw);
-+	struct hfpll_data const *hd = h->d;
-+	unsigned long rrate;
-+
-+	rate = clamp(rate, hd->min_rate, hd->max_rate);
-+
-+	rrate = DIV_ROUND_UP(rate, *parent_rate) * *parent_rate;
-+	if (rrate > hd->max_rate)
-+		rrate -= *parent_rate;
-+
-+	return rrate;
-+}
-+
-+/*
-+ * For optimization reasons, assumes no downstream clocks are actively using
-+ * it.
-+ */
-+static int clk_hfpll_set_rate(struct clk_hw *hw, unsigned long rate,
-+			      unsigned long parent_rate)
-+{
-+	struct clk_hfpll *h = to_clk_hfpll(hw);
-+	struct hfpll_data const *hd = h->d;
-+	struct regmap *regmap = h->clkr.regmap;
-+	unsigned long flags;
-+	u32 l_val, val;
-+	bool enabled;
-+
-+	l_val = rate / parent_rate;
-+
-+	spin_lock_irqsave(&h->lock, flags);
-+
-+	enabled = __clk_is_enabled(hw->clk);
-+	if (enabled)
-+		__clk_hfpll_disable(h);
-+
-+	/* Pick the right VCO. */
-+	if (hd->user_reg && hd->user_vco_mask) {
-+		regmap_read(regmap, hd->user_reg, &val);
-+		if (rate <= hd->low_vco_max_rate)
-+			val &= ~hd->user_vco_mask;
-+		else
-+			val |= hd->user_vco_mask;
-+		regmap_write(regmap, hd->user_reg, val);
-+	}
-+
-+	regmap_write(regmap, hd->l_reg, l_val);
-+
-+	if (enabled)
-+		__clk_hfpll_enable(hw);
-+
-+	spin_unlock_irqrestore(&h->lock, flags);
-+
-+	return 0;
-+}
-+
-+static unsigned long clk_hfpll_recalc_rate(struct clk_hw *hw,
-+					   unsigned long parent_rate)
-+{
-+	struct clk_hfpll *h = to_clk_hfpll(hw);
-+	struct hfpll_data const *hd = h->d;
-+	struct regmap *regmap = h->clkr.regmap;
-+	u32 l_val;
-+
-+	regmap_read(regmap, hd->l_reg, &l_val);
-+
-+	return l_val * parent_rate;
-+}
-+
-+static void clk_hfpll_init(struct clk_hw *hw)
-+{
-+	struct clk_hfpll *h = to_clk_hfpll(hw);
-+	struct hfpll_data const *hd = h->d;
-+	struct regmap *regmap = h->clkr.regmap;
-+	u32 mode, status;
-+
-+	regmap_read(regmap, hd->mode_reg, &mode);
-+	if (mode != (PLL_BYPASSNL | PLL_RESET_N | PLL_OUTCTRL)) {
-+		__clk_hfpll_init_once(hw);
-+		return;
-+	}
-+
-+	if (hd->status_reg) {
-+		regmap_read(regmap, hd->status_reg, &status);
-+		if (!(status & BIT(hd->lock_bit))) {
-+			WARN(1, "HFPLL %s is ON, but not locked!\n",
-+			     __clk_get_name(hw->clk));
-+			clk_hfpll_disable(hw);
-+			__clk_hfpll_init_once(hw);
-+		}
-+	}
-+}
-+
-+static int hfpll_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_hfpll *h = to_clk_hfpll(hw);
-+	struct hfpll_data const *hd = h->d;
-+	struct regmap *regmap = h->clkr.regmap;
-+	u32 mode;
-+
-+	regmap_read(regmap, hd->mode_reg, &mode);
-+	mode &= 0x7;
-+	return mode == (PLL_BYPASSNL | PLL_RESET_N | PLL_OUTCTRL);
-+}
-+
-+const struct clk_ops clk_ops_hfpll = {
-+	.enable = clk_hfpll_enable,
-+	.disable = clk_hfpll_disable,
-+	.is_enabled = hfpll_is_enabled,
-+	.round_rate = clk_hfpll_round_rate,
-+	.set_rate = clk_hfpll_set_rate,
-+	.recalc_rate = clk_hfpll_recalc_rate,
-+	.init = clk_hfpll_init,
-+};
-+EXPORT_SYMBOL_GPL(clk_ops_hfpll);
-diff --git a/drivers/clk/qcom/clk-hfpll.h b/drivers/clk/qcom/clk-hfpll.h
-new file mode 100644
-index 0000000..48c18d6
---- /dev/null
-+++ b/drivers/clk/qcom/clk-hfpll.h
-@@ -0,0 +1,54 @@
-+/*
-+ * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __QCOM_CLK_HFPLL_H__
-+#define __QCOM_CLK_HFPLL_H__
-+
-+#include <linux/clk-provider.h>
-+#include <linux/spinlock.h>
-+#include "clk-regmap.h"
-+
-+struct hfpll_data {
-+	u32 mode_reg;
-+	u32 l_reg;
-+	u32 m_reg;
-+	u32 n_reg;
-+	u32 user_reg;
-+	u32 droop_reg;
-+	u32 config_reg;
-+	u32 status_reg;
-+	u8  lock_bit;
-+
-+	u32 droop_val;
-+	u32 config_val;
-+	u32 user_val;
-+	u32 user_vco_mask;
-+	unsigned long low_vco_max_rate;
-+
-+	unsigned long min_rate;
-+	unsigned long max_rate;
-+};
-+
-+struct clk_hfpll {
-+	struct hfpll_data const *d;
-+	int init_done;
-+
-+	struct clk_regmap clkr;
-+	spinlock_t lock;
-+};
-+
-+#define to_clk_hfpll(_hw) \
-+	container_of(to_clk_regmap(_hw), struct clk_hfpll, clkr)
-+
-+extern const struct clk_ops clk_ops_hfpll;
-+
-+#endif
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+
+--=20
+Benjamin Gaignard
+
+Graphic Study Group
+
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
