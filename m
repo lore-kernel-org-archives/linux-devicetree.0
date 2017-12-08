@@ -1,78 +1,138 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH] dt-bindings: at24/eeprom: add an undocumented compatible string
-Date: Fri, 8 Dec 2017 01:03:56 +0100
-Message-ID: <CABxcv=mRfYTs0YPvFg5_T+PVdjnK2BgXe-_b6MVQ=UkSWrV6xw@mail.gmail.com>
-References: <20171206101219.14011-1-brgl@bgdev.pl> <20171207225045.tm3rnyjaylx46nxy@rob-hp-laptop>
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 net-next,mips 0/7] Cavium OCTEON-III network driver.
+Date: Thu,  7 Dec 2017 16:09:27 -0800
+Message-ID: <20171208000934.6554-1-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171207225045.tm3rnyjaylx46nxy@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Divagar Mohandass <divagar.mohandass@intel.com>, David Lechner <david@lechnology.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob and Bartosz,
+We are adding the Cavium OCTEON-III network driver.  But since
+interacting with the input and output queues is done via special CPU
+local memory, we also need to add support to the MIPS/Octeon
+architecture code.  Aren't SoCs nice in this way?
 
-On Thu, Dec 7, 2017 at 11:50 PM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Dec 06, 2017 at 11:12:19AM +0100, Bartosz Golaszewski wrote:
->> The "atmel,sdp" compatible is reported by checkpatch as undocumented.
->>
->> Add it to the device tree bindings document for at24.
->>
->> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
->> ---
->>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 2 ++
->>  1 file changed, 2 insertions(+)
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+The first five patches add the SoC support needed by the driver, the
+last two add the driver and an entry in MAINTAINERS.
 
-My understanding is that DT bindings not necessarily have to list all
-the possible compatible strings but can also document a set
-comprehension of the possible values. If that's the case, then I
-disagree with this patch and I think that this is caused by a
-checkpatch limitation.
+Since these touch several subsystems (mips, netdev), I would
+propose merging via netdev, but defer to the maintainers if they think
+something else would work better.
 
-In the case of the Atmel EEPROM DT binding, it was quite lax at
-describing the possible compatible strings. It just used to say:
+A separate pull request was recently done by Steven Hill for the
+firmware required by the driver.
 
-- compatible : should be "<manufacturer>,<type>", like these:
+Changes in v6:
 
-Followed by a list of _possible_ compatible strings. So these were
-just examples, it was by no means a comprehensive list.
+o Added back cleanup patch for previous generation SoC "staging"
+  driver, as Greg K-H acked it.
 
-And then it used to say:
+o Moved FPA driver to drivers/net/ethernet/cavium/octeon as it is
+  currently only used by the octeon3-ethernet driver.
 
-If there is no specific driver for <manufacturer>, a generic driver
-based on <type> is selected. Possible types are:
-"24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32",
-"24c64", "24c128", "24c256", "24c512", "24c1024", "spd"
+o Many code formatting fixes as noted by davem.
 
-Which basically said that it was valid to only match using the device
-model but not the vendor part of the compatible string. This is
-obviously incorrect and only worked due a implementation detail in the
-I2C core.
+Changes in v5:
 
-After some discussions, the DT binding was changed to say the following:
+o Removed cleanup patch for previous generation SoC "staging" driver,
+  as it will be sent as a follow-on.
 
-If there is no specific driver for <manufacturer>, a generic device
-with <type> and manufacturer "atmel" should be used. Possible types
-are:
-"24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32",
-"24c64", "24c128", "24c256", "24c512", "24c1024", "spd"
+o Fixed kernel doc formatting in all patches.
 
-And the driver changed accordingly to honor these. Old DTBs just using
-"24c08" or "microchip,24c08" should still work, but the correct thing
-to do now is to use "atmel,24c08".
+o Removed redundant licensing text boilerplate.
 
-The "spd" <type> is in the list mentioned above, so the "atmel,spd"
-isn't documented as the $SUBJECT commit message says. In any case,
-what could be done is to instead reword the DT binding to list all the
-valid "atmel,<type>" combinations.
+o Reviewed-by: header added to 2/7.
 
-I didn't do that in my patch since it originally said "Possibles types
-are", not "all the possible types are" so it wasn't clear to me if
-there were other undocumented <types> that were still valid.
+o Rewrote locking code in 3/7 to eliminate inline asm.
 
-Best regards,
-Javier
+Changes in v4:
+
+o Use phy_print_status() instead of open coding the equivalent.
+
+o Print warning on phy mode mismatch.
+
+o Improve dt-bindings and add Acked-by.
+
+Changes in v3:
+
+o Fix PKI (RX path) initialization to work with little endian kernel.
+
+Changes in v2:
+
+o Cleanup and use of standard bindings in the device tree bindings
+  document.
+
+o Added (hopefully) clarifying comments about several OCTEON
+  architectural peculiarities.
+
+o Removed unused testing code from the driver.
+
+o Removed some module parameters that already default to the proper
+  values.
+
+o KConfig cleanup, including testing on x86_64, arm64 and mips.
+
+o Fixed breakage to the driver for previous generation of OCTEON SoCs (in
+  the staging directory still).
+
+o Verified bisectability of the patch set.
+
+Carlos Munoz (4):
+  dt-bindings: Add Cavium Octeon Common Ethernet Interface.
+  MIPS: Octeon: Enable LMTDMA/LMTST operations.
+  MIPS: Octeon: Add a global resource manager.
+  netdev: octeon-ethernet: Add Cavium Octeon III support.
+
+David Daney (3):
+  MIPS: Octeon: Automatically provision CVMSEG space.
+  staging: octeon: Remove USE_ASYNC_IOBDMA macro.
+  MAINTAINERS: Add entry for
+    drivers/net/ethernet/cavium/octeon/octeon3-*
+
+ .../devicetree/bindings/net/cavium-bgx.txt         |   61 +
+ MAINTAINERS                                        |    6 +
+ arch/mips/cavium-octeon/Kconfig                    |   27 +-
+ arch/mips/cavium-octeon/Makefile                   |    1 +
+ arch/mips/cavium-octeon/resource-mgr.c             |  351 ++++
+ arch/mips/cavium-octeon/setup.c                    |   22 +-
+ .../asm/mach-cavium-octeon/kernel-entry-init.h     |   20 +-
+ arch/mips/include/asm/mipsregs.h                   |    2 +
+ arch/mips/include/asm/octeon/octeon.h              |   32 +-
+ arch/mips/include/asm/processor.h                  |    2 +-
+ arch/mips/kernel/octeon_switch.S                   |    2 -
+ arch/mips/mm/tlbex.c                               |   29 +-
+ drivers/net/ethernet/cavium/Kconfig                |   59 +-
+ drivers/net/ethernet/cavium/octeon/Makefile        |    7 +
+ .../net/ethernet/cavium/octeon/octeon3-bgx-nexus.c |  417 ++++
+ .../net/ethernet/cavium/octeon/octeon3-bgx-port.c  | 2018 +++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-core.c  | 2079 ++++++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-fpa.c   |  358 ++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pki.c   |  823 ++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-pko.c   | 1688 ++++++++++++++++
+ drivers/net/ethernet/cavium/octeon/octeon3-sso.c   |  301 +++
+ drivers/net/ethernet/cavium/octeon/octeon3.h       |  430 ++++
+ drivers/staging/octeon/ethernet-defines.h          |    6 -
+ drivers/staging/octeon/ethernet-rx.c               |   25 +-
+ drivers/staging/octeon/ethernet-tx.c               |   85 +-
+ 25 files changed, 8709 insertions(+), 142 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
+ create mode 100644 arch/mips/cavium-octeon/resource-mgr.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-nexus.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-bgx-port.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-core.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-fpa.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pki.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-pko.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3-sso.c
+ create mode 100644 drivers/net/ethernet/cavium/octeon/octeon3.h
+
+-- 
+2.14.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
