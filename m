@@ -1,72 +1,86 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: [PATCH v7 02/13] docs: driver-api: add iio hw consumer
-	section
-Date: Fri, 8 Dec 2017 15:49:15 +0100
-Message-ID: <1512744566-13233-3-git-send-email-arnaud.pouliquen@st.com>
-References: <1512744566-13233-1-git-send-email-arnaud.pouliquen@st.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH V7 2/7] ACPI / bus: Introduce acpi_get_match_data() function
+Date: Fri, 8 Dec 2017 15:51:16 +0100
+Message-ID: <CAJZ5v0iw1u4o0SbCN12ctG+Kpg0EP+JBGvToLyiEcQopY=KPzw@mail.gmail.com>
+References: <1512681031-11343-1-git-send-email-okaya@codeaurora.org> <1512681031-11343-3-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1512744566-13233-1-git-send-email-arnaud.pouliquen@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-iio@vger.kernel.org, arnaud.pouliquen@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1512681031-11343-3-git-send-email-okaya@codeaurora.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGEgc2VjdGlvbiBhYm91dCB0aGUgSGFyZHdhcmUgY29uc3VtZXIKQVBJIG9mIHRo
-ZSBJSU8gc3Vic3lzdGVtIHRvIHRoZSBkcml2ZXIgQVBJCmRvY3VtZW50YXRpb24uCgpTaWduZWQt
-b2ZmLWJ5OiBBcm5hdWQgUG91bGlxdWVuIDxhcm5hdWQucG91bGlxdWVuQHN0LmNvbT4KUmV2aWV3
-ZWQtYnk6IEpvbmF0aGFuIENhbWVyb24gPEpvbmF0aGFuLkNhbWVyb25AaHVhd2VpLmNvbT4KLS0t
-CiBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaWlvL2h3LWNvbnN1bWVyLnJzdCB8IDUxICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysKIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaW5k
-ZXgucnN0ICAgICAgIHwgIDEgKwogMiBmaWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspCiBj
-cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lpby9ody1jb25zdW1l
-ci5yc3QKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaWlvL2h3LWNvbnN1
-bWVyLnJzdCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaHctY29uc3VtZXIucnN0Cm5l
-dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjhmYWNjZTYKLS0tIC9kZXYvbnVsbAor
-KysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaWlvL2h3LWNvbnN1bWVyLnJzdApAQCAtMCww
-ICsxLDUxIEBACis9PT09PT09PT09PQorSFcgY29uc3VtZXIKKz09PT09PT09PT09CitBbiBJSU8g
-ZGV2aWNlIGNhbiBiZSBkaXJlY3RseSBjb25uZWN0ZWQgdG8gYW5vdGhlciBkZXZpY2UgaW4gaGFy
-ZHdhcmUuIGluIHRoaXMKK2Nhc2UgdGhlIGJ1ZmZlcnMgYmV0d2VlbiBJSU8gcHJvdmlkZXIgYW5k
-IElJTyBjb25zdW1lciBhcmUgaGFuZGxlZCBieSBoYXJkd2FyZS4KK1RoZSBJbmR1c3RyaWFsIEkv
-TyBIVyBjb25zdW1lciBvZmZlcnMgYSB3YXkgdG8gYm9uZCB0aGVzZSBJSU8gZGV2aWNlcyB3aXRo
-b3V0Citzb2Z0d2FyZSBidWZmZXIgZm9yIGRhdGEuIFRoZSBpbXBsZW1lbnRhdGlvbiBjYW4gYmUg
-Zm91bmQgdW5kZXIKKzpmaWxlOmBkcml2ZXJzL2lpby9idWZmZXIvaHctY29uc3VtZXIuY2AKKwor
-CisqIHN0cnVjdCA6Yzp0eXBlOmBpaW9faHdfY29uc3VtZXJgIOKAlCBIYXJkd2FyZSBjb25zdW1l
-ciBzdHJ1Y3R1cmUKKyogOmM6ZnVuYzpgaWlvX2h3X2NvbnN1bWVyX2FsbG9jYCDigJQgQWxsb2Nh
-dGUgSUlPIGhhcmR3YXJlIGNvbnN1bWVyCisqIDpjOmZ1bmM6YGlpb19od19jb25zdW1lcl9mcmVl
-YCDigJQgRnJlZSBJSU8gaGFyZHdhcmUgY29uc3VtZXIKKyogOmM6ZnVuYzpgaWlvX2h3X2NvbnN1
-bWVyX2VuYWJsZWAg4oCUIEVuYWJsZSBJSU8gaGFyZHdhcmUgY29uc3VtZXIKKyogOmM6ZnVuYzpg
-aWlvX2h3X2NvbnN1bWVyX2Rpc2FibGVgIOKAlCBEaXNhYmxlIElJTyBoYXJkd2FyZSBjb25zdW1l
-cgorCisKK0hXIGNvbnN1bWVyIHNldHVwCis9PT09PT09PT09PT09PT09PQorCitBcyBzdGFuZGFy
-ZCBJSU8gZGV2aWNlIHRoZSBpbXBsZW1lbnRhdGlvbiBpcyBiYXNlZCBvbiBJSU8gcHJvdmlkZXIv
-Y29uc3VtZXIuCitBIHR5cGljYWwgSUlPIEhXIGNvbnN1bWVyIHNldHVwIGxvb2tzIGxpa2UgdGhp
-czo6CisKKwlzdGF0aWMgc3RydWN0IGlpb19od19jb25zdW1lciAqaHdjOworCisJc3RhdGljIGNv
-bnN0IHN0cnVjdCBpaW9faW5mbyBhZGNfaW5mbyA9IHsKKwkJLnJlYWRfcmF3ID0gYWRjX3JlYWRf
-cmF3LAorCX07CisKKwlzdGF0aWMgaW50IGFkY19yZWFkX3JhdyhzdHJ1Y3QgaWlvX2RldiAqaW5k
-aW9fZGV2LAorCQkJCXN0cnVjdCBpaW9fY2hhbl9zcGVjIGNvbnN0ICpjaGFuLCBpbnQgKnZhbCwK
-KwkJCQlpbnQgKnZhbDIsIGxvbmcgbWFzaykKKwl7CisJCXJldCA9IGlpb19od19jb25zdW1lcl9l
-bmFibGUoaHdjKTsKKworCQkvKiBBY3F1aXJlIGRhdGEgKi8KKworCQlyZXQgPSBpaW9faHdfY29u
-c3VtZXJfZGlzYWJsZShod2MpOworCX0KKworCXN0YXRpYyBpbnQgYWRjX3Byb2JlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCisJeworCQlod2MgPSBkZXZtX2lpb19od19jb25zdW1lcl9h
-bGxvYygmaWlvLT5kZXYpOworCX0KKworTW9yZSBkZXRhaWxzCis9PT09PT09PT09PT0KKy4uIGtl
-cm5lbC1kb2M6OiBpbmNsdWRlL2xpbnV4L2lpby9ody1jb25zdW1lci5oCisuLiBrZXJuZWwtZG9j
-OjogZHJpdmVycy9paW8vYnVmZmVyL2luZHVzdHJpYWxpby1ody1jb25zdW1lci5jCisgICA6ZXhw
-b3J0OgorCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaWlvL2luZGV4LnJz
-dCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaW5kZXgucnN0CmluZGV4IGU1YzM5MjIu
-LjdmYmEzNDEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaW5kZXgu
-cnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaW5kZXgucnN0CkBAIC0xNSwz
-ICsxNSw0IEBAIENvbnRlbnRzOgogICAgYnVmZmVycwogICAgdHJpZ2dlcnMKICAgIHRyaWdnZXJl
-ZC1idWZmZXJzCisgICBody1jb25zdW1lcgotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2Et
-ZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21h
-aWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+On Thu, Dec 7, 2017 at 10:10 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
+> OF has of_device_get_match_data() function to extract driver specific data
+> structure. Add a similar function for ACPI.
+>
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> ---
+>  drivers/acpi/bus.c   | 18 ++++++++++++++++++
+>  include/linux/acpi.h |  6 ++++++
+>  2 files changed, 24 insertions(+)
+>
+> diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
+> index 4d0979e..f87ed3b 100644
+> --- a/drivers/acpi/bus.c
+> +++ b/drivers/acpi/bus.c
+> @@ -785,6 +785,24 @@ const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_match_device);
+>
+> +void *acpi_get_match_data(const struct device *dev)
+> +{
+> +       const struct acpi_device_id *match;
+> +
+> +       if (!dev->driver)
+> +               return NULL;
+> +
+> +       if (!dev->driver->acpi_match_table)
+> +               return NULL;
+
+You can safely check dev->driver and this in the same statement (as
+long as the first check to be made is on the left).
+
+> +
+> +       match = acpi_match_device(dev->driver->acpi_match_table, dev);
+> +       if (!match)
+> +               return NULL;
+> +
+> +       return (void *)match->driver_data;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_get_match_data);
+> +
+>  int acpi_match_device_ids(struct acpi_device *device,
+>                           const struct acpi_device_id *ids)
+>  {
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 502af53..a927260 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -584,6 +584,7 @@ extern int acpi_nvs_for_each_region(int (*func)(__u64, __u64, void *),
+>  const struct acpi_device_id *acpi_match_device(const struct acpi_device_id *ids,
+>                                                const struct device *dev);
+>
+> +void *acpi_get_match_data(const struct device *dev);
+>  extern bool acpi_driver_match_device(struct device *dev,
+>                                      const struct device_driver *drv);
+>  int acpi_device_uevent_modalias(struct device *, struct kobj_uevent_env *);
+> @@ -755,6 +756,11 @@ static inline const struct acpi_device_id *acpi_match_device(
+>         return NULL;
+>  }
+>
+> +static inline void *acpi_get_match_data(const struct device *dev)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline bool acpi_driver_match_device(struct device *dev,
+>                                             const struct device_driver *drv)
+>  {
+> --
+
+But anyway
+
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
