@@ -1,65 +1,36 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 0/2] of: overlay: Crash fix and improvement
-Date: Fri, 8 Dec 2017 16:24:02 +0100
-Message-ID: <CAMuHMdWWnbaVPbBHkONcJTn1RATCy6kwQ+MFnqbYO=koACqvow@mail.gmail.com>
-References: <1512738783-17452-1-git-send-email-geert+renesas@glider.be> <20171208151114.ly7sqymznmeme4w4@rob-hp-laptop>
+From: Sven Van Asbroeck <thesven73@gmail.com>
+Subject: Re: [PATCH v1 1/2] eeprom: at24: convert magic numbers to structs.
+Date: Fri, 8 Dec 2017 10:28:27 -0500
+Message-ID: <CAGngYiXpwcjndtFhtCFhESagN9CRWiS0jFdndiNE2oupBQdDSw@mail.gmail.com>
+References: <1512576272-25563-1-git-send-email-svendev@arcx.com>
+ <1512576272-25563-2-git-send-email-svendev@arcx.com> <CAMRc=MeQUavcxejmTO5G7w2GBBY-7KKQ649qW_GhEZ9bV755nw@mail.gmail.com>
+ <CAGngYiWdnE9Ztu3uGeqAS+Ksag6-W84AORJnWb1Xzc7EMBwZNg@mail.gmail.com> <CAMRc=Mf6e=O_M40Vaq4jygBwPHB8-X6wyDVG8Ee7qw+PjLTXUA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171208151114.ly7sqymznmeme4w4@rob-hp-laptop>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMRc=Mf6e=O_M40Vaq4jygBwPHB8-X6wyDVG8Ee7qw+PjLTXUA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sven Van Asbroeck <svendev@arcx.com>, Wolfram Sang <wsa@the-dreams.de>, nsekhar@ti.com, Sakari Ailus <sakari.ailus@linux.intel.com>, Javier Martinez Canillas <javier@dowhile0.org>, Divagar Mohandass <divagar.mohandass@intel.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Fri, Dec 8, 2017 at 4:11 PM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Dec 08, 2017 at 02:13:01PM +0100, Geert Uytterhoeven wrote:
->> This patch series fixes memory corruption when applying overlays.
->>
->> I first noticed this when using OF configfs.  After lots of failed
->> debugging attempts, I bisected it to "of: overlay: add per overlay sysfs
->> attributes", which is not upstream.  But that was a red herring: that
->> commit enlarged struct fragment to exactly 64-bytes, which just made it
->> more likely to cause random corruption when writing beyond the end of an
->> array of fragment structures.  With the smaller structure size before,
->> such writes usually ended up in the unused holes between allocated
->> blocks, causing no harm.
->>
->> The first patch is the real fix, and applies to both v4.15-rc2 and Rob's
->> for-next branch.
->> The second patch is a small improvement, and applies to Rob's for-next
->> branch only.
->>
->> I've updated my topic/overlays and topic/renesas-overlays branches at
->> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git
->> accordingly.
->>
->> Thanks!
->>
->> Geert Uytterhoeven (2):
->>   of: overlay: Fix out-of-bounds write in init_overlay_changeset()
->>   of: overlay: Make node skipping in init_overlay_changeset() clearer
+Bartosz wrote:
+> Just make it accept two parameters: the string and the data object
+> name. For example:
 >
-> I've applied both and am updating my pull req to Linus. I hope that's
-> the end of it. If further fixes can't be reproduced with mainline, I'm
-> not going to be inclined to take them for 4.15.
+> AT24_OF_DEVICE_ID("atmel,24c01", 24c01);
+>
 
-Tahnks!
+I don't want to do too much bikeshedding,
+but one last comment.
 
-BTW, seems I accidentally used "--" instead of "---" as a separator, so the
-commit message
-https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/linus&id=efb72067c287cd6aba8eb434bd5bdc1ae0af6ed7
-contains a few more lines than intended.
+Is it a good idea to have duplicated information?
+Do you think the risk of a typo mismatch is acceptable? E.g.
+AT24_OF_DEVICE_ID("atmel,24c01", 24c02);
 
-Gr{oetje,eeting}s,
+At least the original syntax is not susceptible to this problem,
+but of course as you say, it hides the of_ compatible string:
+AT24_OF_DEVICE_ID(atmel, 24c01);
+/* hides 'atmel,24c01' */
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pros and cons. Pick one.
