@@ -1,108 +1,81 @@
-From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: at24/eeprom: add an undocumented compatible string
-Date: Fri, 8 Dec 2017 14:10:40 +0100
-Message-ID: <CAMRc=Mfr0DxNnCd=XycxNk647QX9bUODRY37bFdWrRSZQ_Ap3A@mail.gmail.com>
-References: <20171206101219.14011-1-brgl@bgdev.pl> <20171207225045.tm3rnyjaylx46nxy@rob-hp-laptop>
- <CABxcv=mRfYTs0YPvFg5_T+PVdjnK2BgXe-_b6MVQ=UkSWrV6xw@mail.gmail.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH v4 09/12] clk: qcom: Add Krait clock controller driver
+Date: Fri, 8 Dec 2017 14:10:34 +0100
+Message-ID: <CAOFm3uErpOH9Sug8q9QQaWqjTT2_ZS99p35oFmiadLP2iiHtsA@mail.gmail.com>
+References: <1512725401-4944-1-git-send-email-sricharan@codeaurora.org>
+ <1512725401-4944-10-git-send-email-sricharan@codeaurora.org>
+ <CAOFm3uHdFn_GxJuQ-HfQpGAM5rWOT7=DyKUGtDz6dadoxdkBcw@mail.gmail.com> <797300f7-d655-8df3-8597-099e44bd209c@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=mRfYTs0YPvFg5_T+PVdjnK2BgXe-_b6MVQ=UkSWrV6xw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <797300f7-d655-8df3-8597-099e44bd209c@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, mturquette@linaro.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, viresh.kumar@linaro.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-12-08 1:03 GMT+01:00 Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>:
-> Hello Rob and Bartosz,
+Sricharan,
+
+On Fri, Dec 8, 2017 at 12:00 PM, Sricharan R <sricharan@codeaurora.org> wrote:
+> Hi Philippe,
 >
-> On Thu, Dec 7, 2017 at 11:50 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Dec 06, 2017 at 11:12:19AM +0100, Bartosz Golaszewski wrote:
->>> The "atmel,sdp" compatible is reported by checkpatch as undocumented.
->>>
->>> Add it to the device tree bindings document for at24.
->>>
->>> Signed-off-by: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 2 ++
->>>  1 file changed, 2 insertions(+)
+>
+> On 12/8/2017 3:53 PM, Philippe Ombredanne wrote:
+>> Sricharan, Stephen,
 >>
->> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> On Fri, Dec 8, 2017 at 10:29 AM, Sricharan R <sricharan@codeaurora.org> wrote:
+>>> From: Stephen Boyd <sboyd@codeaurora.org>
+>>>
+>>> The Krait CPU clocks are made up of a primary mux and secondary
+>>> mux for each CPU and the L2, controlled via cp15 accessors. For
+>>> Kraits within KPSSv1 each secondary mux accepts a different aux
+>>> source, but on KPSSv2 each secondary mux accepts the same aux
+>>> source.
+>>>
+>>> Cc: <devicetree@vger.kernel.org>
+>>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>> []
+>>> --- /dev/null
+>>> +++ b/drivers/clk/qcom/krait-cc.c
+>>> @@ -0,0 +1,350 @@
+>>> +/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 and
+>>> + * only version 2 as published by the Free Software Foundation.
+>>> + *
+>>> + * This program is distributed in the hope that it will be useful,
+>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + */
+>>
+>> Have you considered using the new SPDX ids? Something like this:
+>>
+>> // SPDX-License-Identifier: GPL-2.0
+>> // Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+>>
+>> Beside  being simpler and increasing the code to comment ratio by
+>> deleting 9 lines of boilerplate, this will also save a few trees over
+>> the long term each time that I print the source code of the kernel ;)
+>> (do not worry, I am NOT as insane as to really print the kernel
+>> sources, but someone more insane than me may well do it)
+>>
+>> You may wonder about the C++ // comment style I used here... Please
+>> see Linus posts on the topic as well as Thomas doc patches overall for
+>> instructions on using the SPDX ids.
+>>
+>> And if you were to do this for your past, present and future
+>> contributions (eventually these of your group), I would be quite
+>> grateful.
+>>
+>> Thank you for your kind consideration
+>>
 >
-> My understanding is that DT bindings not necessarily have to list all
-> the possible compatible strings but can also document a set
-> comprehension of the possible values. If that's the case, then I
-> disagree with this patch and I think that this is caused by a
-> checkpatch limitation.
->
-> In the case of the Atmel EEPROM DT binding, it was quite lax at
-> describing the possible compatible strings. It just used to say:
->
-> - compatible : should be "<manufacturer>,<type>", like these:
->
-> Followed by a list of _possible_ compatible strings. So these were
-> just examples, it was by no means a comprehensive list.
->
+> Ha ok. will change it to use this one. Infact saw this feedback on other
+> patches, but missed updating to it while sending.
 
-I couldn't find any info on that policy, but I would prefer as the
-maintainer that this change and that we list all the compatibles in
-the bindings explicitly.
-
-> And then it used to say:
->
-> If there is no specific driver for <manufacturer>, a generic driver
-> based on <type> is selected. Possible types are:
-> "24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32",
-> "24c64", "24c128", "24c256", "24c512", "24c1024", "spd"
->
-> Which basically said that it was valid to only match using the device
-> model but not the vendor part of the compatible string. This is
-> obviously incorrect and only worked due a implementation detail in the
-> I2C core.
->
-
-Indeed.
-
-> After some discussions, the DT binding was changed to say the following:
->
-> If there is no specific driver for <manufacturer>, a generic device
-> with <type> and manufacturer "atmel" should be used. Possible types
-> are:
-> "24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32",
-> "24c64", "24c128", "24c256", "24c512", "24c1024", "spd"
->
-
-This basically says the same as the first part of the list of compatibles above.
-
-> And the driver changed accordingly to honor these. Old DTBs just using
-> "24c08" or "microchip,24c08" should still work, but the correct thing
-> to do now is to use "atmel,24c08".
->
-
-Maybe we could start converting all the incorrect compatibles? I only
-found 19 occurrences in the tree.
-
-> The "spd" <type> is in the list mentioned above, so the "atmel,spd"
-> isn't documented as the $SUBJECT commit message says. In any case,
-> what could be done is to instead reword the DT binding to list all the
-> valid "atmel,<type>" combinations.
->
-
-Yes, I believe this is correct. I'd like to just list all the accepted
-compatibles and possibly mention the fact that old, incorrect
-compatible strings still work, but will not be accepted anymore in the
-tree.
-
-> I didn't do that in my patch since it originally said "Possibles types
-> are", not "all the possible types are" so it wasn't clear to me if
-> there were other undocumented <types> that were still valid.
->
-
-I'll send a new patch.
-
-Thanks,
-Bartosz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+-- 
+Cordially
+Philippe Ombredanne
