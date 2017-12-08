@@ -1,158 +1,106 @@
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 4/6] clocksource: stm32: only use 32 bits timers
-Date: Fri, 8 Dec 2017 10:25:59 +0100
-Message-ID: <CA+M3ks6Co2LxQ=EPODvwYrxmoRqiiQBr3Li4L3Nx3RY2As58dg@mail.gmail.com>
-References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
- <1510649563-22975-5-git-send-email-benjamin.gaignard@linaro.org> <f22fd299-a742-1144-75d0-256a538af619@linaro.org>
+From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ath10k: search DT for qcom,ath10k-calibration-variant
+Date: Fri, 8 Dec 2017 09:27:52 +0000
+Message-ID: <87fu8ltvqg.fsf@kamboji.qca.qualcomm.com>
+References: <20170310080615.22958-1-sven.eckelmann@openmesh.com>
+        <20170310080615.22958-2-sven.eckelmann@openmesh.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f22fd299-a742-1144-75d0-256a538af619-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170310080615.22958-2-sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org> (Sven
+        Eckelmann's message of "Fri, 10 Mar 2017 09:06:15 +0100")
+Content-Language: en-US
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
+Cc: "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org" <ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-12-08 9:34 GMT+01:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> On 14/11/2017 09:52, Benjamin Gaignard wrote:
->> The clock driving counters is at 90MHz so the maximum period
->> for 16 bis counters is around 750 ms
->
-> 728 us
->
->> which is a short period for a clocksource.
->
-> Which clocksource are you talking about ?
->
->> For 32 bits counters this period is close
->> 47 secondes which is more acceptable.
->>
->> This patch remove 16 bits counters support and makes sure that
->> they won't be probed anymore.
->
-> Are we talking about clockevent or clocksource?
->
-> Is this issue present today ? Or is it if we add the clocksource support
-> ? We are talking about clocksource but we change the clockevent code.
->
-> All this is very confusing.
->
-> I have a rough idea of what is happening, but it is not up to me to
-> decode and infer from the changes, you need to describe *clearly* the
-> situation.
->
->  - What happens if we use a 16bits timer as a clockevent ?
->  - What happens if we use a 16bits timer as a clocksource ?
->  - Why is it preferable to remove the support of the 16bits timers
-> instead of downgrading them with the rating ?
+Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org> writes:
 
-Up to this patch it is only about clockevent, clocksource code is
-introduced in patch 5.
-For the both cases 16bits counter have a a too short period (728us)
-and can't be used
-so downgrading the rating is not a solution.
+> Board Data File (BDF) is loaded upon driver boot-up procedure. The right
+> board data file is identified on QCA4019 using bus, bmi-chip-id and
+> bmi-board-id.
+>
+> The problem, however, can occur when the (default) board data file cannot
+> fulfill with the vendor requirements and it is necessary to use a differe=
+nt
+> board data file.
+>
+> This problem was solved for SMBIOS by adding a special SMBIOS type 0xF8.
+> Something similar has to be provided for systems without SMBIOS but with
+> device trees. No solution was specified by QCA and therefore a new one ha=
+s
+> to be found for ath10k.
+>
+> The device tree requires addition strings to define the variant name
+>
+>     wifi@a000000 {
+>     	status =3D "okay";
+>     	qcom,ath10k-calibration-variant =3D "RT-AC58U";
+>     };
+>
+>     wifi@a800000 {
+>     	status =3D "okay";
+>     	qcom,ath10k-calibration-variant =3D "RT-AC58U";
+>     };
+>
+> This would create the boarddata identifiers for the board-2.bin search
+>
+>  *  bus=3Dahb,bmi-chip-id=3D0,bmi-board-id=3D16,variant=3DRT-AC58U
+>  *  bus=3Dahb,bmi-chip-id=3D0,bmi-board-id=3D17,variant=3DRT-AC58U
+>
+> Signed-off-by: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
+> ---
+> Since RFC:
+>
+>  - initialize variant pointer to have it initialized to NULL when
+>    of_property_read_string fails (thanks Christian Lamparter)
+>  - Only print warning that DT doesn't contain string ones (thanks Christi=
+an
+>    Lamparter)
+>  - Split patch in DT doc and ath10k part (thanks Christian Lamparter)
+>  - Allow to overwrite the variant string via DT and ignore that SMBIOS ha=
+d
+>    written anything to it
 
-I will change the wording in v9
+[...]
 
->
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
->> ---
->>  drivers/clocksource/timer-stm32.c | 26 ++++++++++++--------------
->>  1 file changed, 12 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/tim=
-er-stm32.c
->> index ae41a19..8173bcf 100644
->> --- a/drivers/clocksource/timer-stm32.c
->> +++ b/drivers/clocksource/timer-stm32.c
->> @@ -83,9 +83,9 @@ static irqreturn_t stm32_clock_event_handler(int irq, =
-void *dev_id)
->>  static int __init stm32_clockevent_init(struct device_node *node)
->>  {
->>       struct reset_control *rstc;
->> -     unsigned long max_delta;
->> -     int ret, bits, prescaler =3D 1;
->> +     unsigned long max_arr;
->>       struct timer_of *to;
->> +     int ret;
->>
->>       to =3D kzalloc(sizeof(*to), GFP_KERNEL);
->>       if (!to)
->> @@ -115,29 +115,27 @@ static int __init stm32_clockevent_init(struct dev=
-ice_node *node)
->>
->>       /* Detect whether the timer is 16 or 32 bits */
->>       writel_relaxed(~0U, timer_of_base(to) + TIM_ARR);
->> -     max_delta =3D readl_relaxed(timer_of_base(to) + TIM_ARR);
->> -     if (max_delta =3D=3D ~0U) {
->> -             prescaler =3D 1;
->> -             bits =3D 32;
->> -     } else {
->> -             prescaler =3D 1024;
->> -             bits =3D 16;
->> +     max_arr =3D readl_relaxed(timer_of_base(to) + TIM_ARR);
->> +     if (max_arr !=3D ~0U) {
->> +             pr_err("32 bits timer is needed\n");
->> +             ret =3D -EINVAL;
->> +             goto deinit;
->>       }
->
-> Wrap this in a function:
->
-> static bool stm32_timer_is_32bits(struct timer_of *to)
-> {
->         return readl_relaxed(timer_of_base(to) + TIM_ARR) =3D=3D ~0UL;
-> }
->
-> Then clearly inform the user.
->
-> if (!stm32_timer_is_32bits(to)) {
->         pr_warn("Timer %pOF is a 16 bits timer\n", node);
->         /* abort the registration or downgrade the timer's rating */
-> }
+> --- a/drivers/net/wireless/ath/ath10k/core.c
+> +++ b/drivers/net/wireless/ath/ath10k/core.c
+> @@ -779,6 +779,25 @@ static int ath10k_core_check_smbios(struct ath10k *a=
+r)
+>  	return 0;
+>  }
+> =20
+> +static int ath10k_core_check_dt(struct ath10k *ar)
+> +{
+> +	struct device_node *node;
+> +	const char *variant =3D NULL;
+> +
+> +	node =3D ar->dev->of_node;
+> +	if (!node)
+> +		return -ENOENT;
+> +
+> +	of_property_read_string(node, "qcom,ath10k-calibration-variant",
+> +				&variant);
+> +	if (!variant)
+> +		return -ENODATA;
+> +
+> +	strscpy(ar->id.bdf_ext, variant, sizeof(ar->id.bdf_ext));
 
-Ok I will change that in v9
+Kbuild bot found a warning here:
 
->
->> +
->>       writel_relaxed(0, timer_of_base(to) + TIM_ARR);
->>
->> -     writel_relaxed(prescaler - 1, timer_of_base(to) + TIM_PSC);
->> +     writel_relaxed(0, timer_of_base(to) + TIM_PSC);
->>       writel_relaxed(TIM_EGR_UG, timer_of_base(to) + TIM_EGR);
->>       writel_relaxed(TIM_DIER_UIE, timer_of_base(to) + TIM_DIER);
->>       writel_relaxed(0, timer_of_base(to) + TIM_SR);
->>
->>       clockevents_config_and_register(&to->clkevt,
->> -                                     timer_of_period(to), MIN_DELTA, ma=
-x_delta);
->> -
->> -     pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
->> -                     node, bits);
->> +                                     timer_of_period(to), MIN_DELTA, ~0=
-U);
->>
->>       return 0;
->>
->> +deinit:
->> +     timer_of_exit(to);
->
-> Fix this please (timer_of_cleanup).
->
-> In the future, make sure the patches are git-bisect safe.
->
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+   drivers/net/wireless/ath/ath10k/core.c: In function 'ath10k_core_check_d=
+t':
+>> drivers/net/wireless/ath/ath10k/core.c:877:2: warning: ignoring return v=
+alue of 'strscpy', declared with attribute warn_unused_result [-Wunused-res=
+ult]
+     strscpy(ar->id.bdf_ext, variant, sizeof(ar->id.bdf_ext));
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I guess warn_unused_result in strscpy() is a recent addition and that's
+why you didn't see it.
+
+--=20
+Kalle Valo=
