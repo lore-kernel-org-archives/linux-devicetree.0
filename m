@@ -1,203 +1,49 @@
-From: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v7 04/13] IIO: inkern: API for manipulating channel attributes
-Date: Fri, 8 Dec 2017 15:49:17 +0100
-Message-ID: <1512744566-13233-5-git-send-email-arnaud.pouliquen@st.com>
-References: <1512744566-13233-1-git-send-email-arnaud.pouliquen@st.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH V7 5/7] ACPI: properties: Implement get_match_data() callback
+Date: Fri, 8 Dec 2017 15:51:41 +0100
+Message-ID: <CAJZ5v0hr28q-xj=mYC1xdcTu5FW6cdnCZ4n9xv0fWDF6vcZygA@mail.gmail.com>
+References: <1512681031-11343-1-git-send-email-okaya@codeaurora.org> <1512681031-11343-6-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512744566-13233-1-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1512681031-11343-6-git-send-email-okaya@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Extend the inkern API with functions for reading and writing
-attribute of iio channels.
+On Thu, Dec 7, 2017 at 10:10 PM, Sinan Kaya <okaya@codeaurora.org> wrote:
+> Now that we have a get_match_data() callback as part of the firmware node,
+> implement the ACPI specific piece for it.
+>
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/acpi/property.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> index e26ea20..466d150 100644
+> --- a/drivers/acpi/property.c
+> +++ b/drivers/acpi/property.c
+> @@ -1271,9 +1271,17 @@ static int acpi_fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+>         return 0;
+>  }
+>
+> +static void *
+> +acpi_fwnode_device_get_match_data(const struct fwnode_handle *fwnode,
+> +                                 const struct device *dev)
+> +{
+> +       return acpi_get_match_data(dev);
+> +}
+> +
+>  #define DECLARE_ACPI_FWNODE_OPS(ops) \
+>         const struct fwnode_operations ops = {                          \
+>                 .device_is_available = acpi_fwnode_device_is_available, \
+> +               .device_get_match_data = acpi_fwnode_device_get_match_data, \
+>                 .property_present = acpi_fwnode_property_present,       \
+>                 .property_read_int_array =                              \
+>                         acpi_fwnode_property_read_int_array,            \
+> --
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
----
-V6 to V7 update:
- - Move iio_chan_info_enum from iio.h to types.h.
-
- drivers/iio/inkern.c         | 18 +++++++++++++-----
- include/linux/iio/consumer.h | 26 ++++++++++++++++++++++++++
- include/linux/iio/iio.h      | 28 ----------------------------
- include/linux/iio/types.h    | 28 ++++++++++++++++++++++++++++
- 4 files changed, 67 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-index 069defc..f2e7824 100644
---- a/drivers/iio/inkern.c
-+++ b/drivers/iio/inkern.c
-@@ -664,9 +664,8 @@ int iio_convert_raw_to_processed(struct iio_channel *chan, int raw,
- }
- EXPORT_SYMBOL_GPL(iio_convert_raw_to_processed);
- 
--static int iio_read_channel_attribute(struct iio_channel *chan,
--				      int *val, int *val2,
--				      enum iio_chan_info_enum attribute)
-+int iio_read_channel_attribute(struct iio_channel *chan, int *val, int *val2,
-+			       enum iio_chan_info_enum attribute)
- {
- 	int ret;
- 
-@@ -682,6 +681,8 @@ static int iio_read_channel_attribute(struct iio_channel *chan,
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(iio_read_channel_attribute);
-+
- 
- int iio_read_channel_offset(struct iio_channel *chan, int *val, int *val2)
- {
-@@ -850,7 +851,8 @@ static int iio_channel_write(struct iio_channel *chan, int val, int val2,
- 						chan->channel, val, val2, info);
- }
- 
--int iio_write_channel_raw(struct iio_channel *chan, int val)
-+int iio_write_channel_attribute(struct iio_channel *chan, int val, int val2,
-+				enum iio_chan_info_enum attribute)
- {
- 	int ret;
- 
-@@ -860,12 +862,18 @@ int iio_write_channel_raw(struct iio_channel *chan, int val)
- 		goto err_unlock;
- 	}
- 
--	ret = iio_channel_write(chan, val, 0, IIO_CHAN_INFO_RAW);
-+	ret = iio_channel_write(chan, val, val2, attribute);
- err_unlock:
- 	mutex_unlock(&chan->indio_dev->info_exist_lock);
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(iio_write_channel_attribute);
-+
-+int iio_write_channel_raw(struct iio_channel *chan, int val)
-+{
-+	return iio_write_channel_attribute(chan, val, 0, IIO_CHAN_INFO_RAW);
-+}
- EXPORT_SYMBOL_GPL(iio_write_channel_raw);
- 
- unsigned int iio_get_channel_ext_info_count(struct iio_channel *chan)
-diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-index 5e347a9..2017f35 100644
---- a/include/linux/iio/consumer.h
-+++ b/include/linux/iio/consumer.h
-@@ -216,6 +216,32 @@ int iio_read_channel_average_raw(struct iio_channel *chan, int *val);
- int iio_read_channel_processed(struct iio_channel *chan, int *val);
- 
- /**
-+ * iio_write_channel_attribute() - Write values to the device attribute.
-+ * @chan:	The channel being queried.
-+ * @val:	Value being written.
-+ * @val2:	Value being written.val2 use depends on attribute type.
-+ * @attribute:	info attribute to be read.
-+ *
-+ * Returns an error code or 0.
-+ */
-+int iio_write_channel_attribute(struct iio_channel *chan, int val,
-+				int val2, enum iio_chan_info_enum attribute);
-+
-+/**
-+ * iio_read_channel_attribute() - Read values from the device attribute.
-+ * @chan:	The channel being queried.
-+ * @val:	Value being written.
-+ * @val2:	Value being written.Val2 use depends on attribute type.
-+ * @attribute:	info attribute to be written.
-+ *
-+ * Returns an error code if failed. Else returns a description of what is in val
-+ * and val2, such as IIO_VAL_INT_PLUS_MICRO telling us we have a value of val
-+ * + val2/1e6
-+ */
-+int iio_read_channel_attribute(struct iio_channel *chan, int *val,
-+			       int *val2, enum iio_chan_info_enum attribute);
-+
-+/**
-  * iio_write_channel_raw() - write to a given channel
-  * @chan:		The channel being queried.
-  * @val:		Value being written.
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index c380daa..007caf7 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -20,34 +20,6 @@
-  * Currently assumes nano seconds.
-  */
- 
--enum iio_chan_info_enum {
--	IIO_CHAN_INFO_RAW = 0,
--	IIO_CHAN_INFO_PROCESSED,
--	IIO_CHAN_INFO_SCALE,
--	IIO_CHAN_INFO_OFFSET,
--	IIO_CHAN_INFO_CALIBSCALE,
--	IIO_CHAN_INFO_CALIBBIAS,
--	IIO_CHAN_INFO_PEAK,
--	IIO_CHAN_INFO_PEAK_SCALE,
--	IIO_CHAN_INFO_QUADRATURE_CORRECTION_RAW,
--	IIO_CHAN_INFO_AVERAGE_RAW,
--	IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY,
--	IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY,
--	IIO_CHAN_INFO_SAMP_FREQ,
--	IIO_CHAN_INFO_FREQUENCY,
--	IIO_CHAN_INFO_PHASE,
--	IIO_CHAN_INFO_HARDWAREGAIN,
--	IIO_CHAN_INFO_HYSTERESIS,
--	IIO_CHAN_INFO_INT_TIME,
--	IIO_CHAN_INFO_ENABLE,
--	IIO_CHAN_INFO_CALIBHEIGHT,
--	IIO_CHAN_INFO_CALIBWEIGHT,
--	IIO_CHAN_INFO_DEBOUNCE_COUNT,
--	IIO_CHAN_INFO_DEBOUNCE_TIME,
--	IIO_CHAN_INFO_CALIBEMISSIVITY,
--	IIO_CHAN_INFO_OVERSAMPLING_RATIO,
--};
--
- enum iio_shared_by {
- 	IIO_SEPARATE,
- 	IIO_SHARED_BY_TYPE,
-diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
-index 2aa7b63..6eb3d683 100644
---- a/include/linux/iio/types.h
-+++ b/include/linux/iio/types.h
-@@ -34,4 +34,32 @@ enum iio_available_type {
- 	IIO_AVAIL_RANGE,
- };
- 
-+enum iio_chan_info_enum {
-+	IIO_CHAN_INFO_RAW = 0,
-+	IIO_CHAN_INFO_PROCESSED,
-+	IIO_CHAN_INFO_SCALE,
-+	IIO_CHAN_INFO_OFFSET,
-+	IIO_CHAN_INFO_CALIBSCALE,
-+	IIO_CHAN_INFO_CALIBBIAS,
-+	IIO_CHAN_INFO_PEAK,
-+	IIO_CHAN_INFO_PEAK_SCALE,
-+	IIO_CHAN_INFO_QUADRATURE_CORRECTION_RAW,
-+	IIO_CHAN_INFO_AVERAGE_RAW,
-+	IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY,
-+	IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY,
-+	IIO_CHAN_INFO_SAMP_FREQ,
-+	IIO_CHAN_INFO_FREQUENCY,
-+	IIO_CHAN_INFO_PHASE,
-+	IIO_CHAN_INFO_HARDWAREGAIN,
-+	IIO_CHAN_INFO_HYSTERESIS,
-+	IIO_CHAN_INFO_INT_TIME,
-+	IIO_CHAN_INFO_ENABLE,
-+	IIO_CHAN_INFO_CALIBHEIGHT,
-+	IIO_CHAN_INFO_CALIBWEIGHT,
-+	IIO_CHAN_INFO_DEBOUNCE_COUNT,
-+	IIO_CHAN_INFO_DEBOUNCE_TIME,
-+	IIO_CHAN_INFO_CALIBEMISSIVITY,
-+	IIO_CHAN_INFO_OVERSAMPLING_RATIO,
-+};
-+
- #endif /* _IIO_TYPES_H_ */
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
