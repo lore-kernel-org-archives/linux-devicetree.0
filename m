@@ -1,28 +1,136 @@
-From: Sven Van Asbroeck <thesven73@gmail.com>
-Subject: Re: [PATCH v1 1/2] eeprom: at24: convert magic numbers to structs.
-Date: Fri, 8 Dec 2017 09:10:17 -0500
-Message-ID: <CAGngYiXtUBbYocb885CPCaXNM=uckeiHc47FXKghDz_B-WNYrg@mail.gmail.com>
-References: <1512576272-25563-1-git-send-email-svendev@arcx.com>
- <1512576272-25563-2-git-send-email-svendev@arcx.com> <CAMRc=MeQUavcxejmTO5G7w2GBBY-7KKQ649qW_GhEZ9bV755nw@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree fixes for 4.15, part 2
+Date: Fri, 8 Dec 2017 08:10:14 -0600
+Message-ID: <CAL_Jsq+EztEAQwqV4LLE5111MjnmV6hHCrzUbaRYLuMTWYY7Fg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=MeQUavcxejmTO5G7w2GBBY-7KKQ649qW_GhEZ9bV755nw@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sven Van Asbroeck <svendev@arcx.com>, Wolfram Sang <wsa@the-dreams.de>, nsekhar@ti.com, Sakari Ailus <sakari.ailus@linux.intel.com>, Javier Martinez Canillas <javier@dowhile0.org>, Divagar Mohandass <divagar.mohandass@intel.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bartosz, thanks for the encouragement !
+Hi Linus,
 
-Bartosz wrote:
-> Also: please have the AT24/at24 prefix for symbols in the driver.
+Please pull another set of DT fixes.
 
-These specific symbols are declared static, i.e. they're visible only
-inside at24.c.
-Do you think they should still have an at24 prefix ?
+Rob
 
-+#define DECLARE_AT24_PLATDATA(_name, _len, _flags) \
-+       static const struct at24_platform_data platdata_##_name = { \
-+               .byte_len = _len, .flags = _flags, \
-+       }
+The following changes since commit 4fbd8d194f06c8a3fd2af1ce560ddb31f7ec8323:
+
+  Linux 4.15-rc1 (2017-11-26 16:01:47 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.15-part2
+
+for you to fetch changes up to 5e4748175fe942c86cbab840e2fa41a92b4d6cf6:
+
+  of: overlay: Fix (un)locking in of_overlay_apply() (2017-12-06 16:08:30 -0600)
+
+----------------------------------------------------------------
+DeviceTree fixes for v4.15 (part2):
+
+- Fixes from overlay code rework. Fix the locking and a memory leak in
+  of_overlay_apply().
+
+- Clean-up at25 eeprom binding document
+
+- Remove leading '0x' in unit-addresses from binding docs
+
+----------------------------------------------------------------
+Geert Uytterhoeven (7):
+      of: unittest: Remove bogus overlay mutex release from overlay_data_add()
+      of: Spelling s/changset/changeset/
+      of: overlay: Remove else after goto
+      dt-bindings: eeprom: at25: Grammar s/are can/can/
+      dt-bindings: eeprom: at25: Document device-specific compatible values
+      of: overlay: Fix memory leak in of_overlay_apply() error path
+      of: overlay: Fix (un)locking in of_overlay_apply()
+
+Mathieu Malaterre (1):
+      dt-bindings: Remove leading 0x from bindings notation
+
+ Documentation/devicetree/bindings/arm/ccn.txt      |  2 +-
+ .../devicetree/bindings/arm/omap/crossbar.txt      |  2 +-
+ .../bindings/arm/tegra/nvidia,tegra20-mc.txt       |  2 +-
+ .../devicetree/bindings/clock/axi-clkgen.txt       |  2 +-
+ .../bindings/clock/brcm,bcm2835-aux-clock.txt      |  2 +-
+ .../devicetree/bindings/clock/exynos4-clock.txt    |  2 +-
+ .../devicetree/bindings/clock/exynos5250-clock.txt |  2 +-
+ .../devicetree/bindings/clock/exynos5410-clock.txt |  2 +-
+ .../devicetree/bindings/clock/exynos5420-clock.txt |  2 +-
+ .../devicetree/bindings/clock/exynos5440-clock.txt |  2 +-
+ .../bindings/clock/ti-keystone-pllctrl.txt         |  2 +-
+ .../devicetree/bindings/clock/zx296702-clk.txt     |  4 +-
+ .../devicetree/bindings/crypto/fsl-sec4.txt        |  4 +-
+ .../bindings/devfreq/event/rockchip-dfi.txt        |  2 +-
+ .../devicetree/bindings/display/atmel,lcdc.txt     |  4 +-
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |  4 +-
+ Documentation/devicetree/bindings/dma/zxdma.txt    |  2 +-
+ Documentation/devicetree/bindings/eeprom/at25.txt  | 13 +++--
+ .../devicetree/bindings/gpio/gpio-altera.txt       |  2 +-
+ .../devicetree/bindings/i2c/i2c-jz4780.txt         |  2 +-
+ .../devicetree/bindings/iio/pressure/hp03.txt      |  2 +-
+ .../bindings/input/touchscreen/bu21013.txt         |  2 +-
+ .../bindings/interrupt-controller/arm,gic.txt      |  4 +-
+ .../interrupt-controller/img,meta-intc.txt         |  2 +-
+ .../bindings/interrupt-controller/img,pdc-intc.txt |  2 +-
+ .../interrupt-controller/st,spear3xx-shirq.txt     |  2 +-
+ .../devicetree/bindings/mailbox/altera-mailbox.txt |  6 +-
+ .../bindings/mailbox/brcm,iproc-pdc-mbox.txt       |  2 +-
+ .../devicetree/bindings/media/exynos5-gsc.txt      |  2 +-
+ .../devicetree/bindings/media/mediatek-vcodec.txt  |  2 +-
+ .../devicetree/bindings/media/rcar_vin.txt         |  2 +-
+ .../devicetree/bindings/media/samsung-fimc.txt     |  2 +-
+ .../devicetree/bindings/media/sh_mobile_ceu.txt    |  2 +-
+ .../devicetree/bindings/media/video-interfaces.txt | 10 ++--
+ .../bindings/memory-controllers/ti/emif.txt        |  2 +-
+ .../bindings/mfd/ti-keystone-devctrl.txt           |  2 +-
+ .../devicetree/bindings/misc/brcm,kona-smc.txt     |  2 +-
+ .../devicetree/bindings/mmc/brcm,kona-sdhci.txt    |  2 +-
+ .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |  2 +-
+ .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |  4 +-
+ Documentation/devicetree/bindings/mtd/gpmc-nor.txt |  6 +-
+ Documentation/devicetree/bindings/mtd/mtk-nand.txt |  2 +-
+ .../devicetree/bindings/net/altera_tse.txt         |  4 +-
+ Documentation/devicetree/bindings/net/mdio.txt     |  2 +-
+ .../devicetree/bindings/net/socfpga-dwmac.txt      |  2 +-
+ Documentation/devicetree/bindings/nios2/nios2.txt  |  2 +-
+ .../devicetree/bindings/pci/altera-pcie.txt        |  2 +-
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  2 +-
+ .../devicetree/bindings/pci/hisilicon-pcie.txt     |  2 +-
+ .../devicetree/bindings/phy/sun4i-usb-phy.txt      |  2 +-
+ .../bindings/pinctrl/brcm,cygnus-pinmux.txt        |  2 +-
+ .../devicetree/bindings/pinctrl/pinctrl-atlas7.txt |  4 +-
+ .../devicetree/bindings/pinctrl/pinctrl-sirf.txt   |  2 +-
+ .../bindings/pinctrl/rockchip,pinctrl.txt          |  4 +-
+ .../devicetree/bindings/regulator/regulator.txt    |  2 +-
+ .../devicetree/bindings/serial/efm32-uart.txt      |  2 +-
+ .../bindings/serio/allwinner,sun4i-ps2.txt         |  2 +-
+ .../bindings/soc/ti/keystone-navigator-qmss.txt    |  2 +-
+ .../devicetree/bindings/sound/adi,axi-i2s.txt      |  2 +-
+ .../devicetree/bindings/sound/adi,axi-spdif-tx.txt |  2 +-
+ Documentation/devicetree/bindings/sound/ak4613.txt |  2 +-
+ Documentation/devicetree/bindings/sound/ak4642.txt |  2 +-
+ .../devicetree/bindings/sound/max98371.txt         |  2 +-
+ .../devicetree/bindings/sound/max9867.txt          |  2 +-
+ .../devicetree/bindings/sound/renesas,fsi.txt      |  2 +-
+ .../devicetree/bindings/sound/rockchip-spdif.txt   |  2 +-
+ .../devicetree/bindings/sound/st,sti-asoc-card.txt |  8 +--
+ .../devicetree/bindings/spi/efm32-spi.txt          |  2 +-
+ .../devicetree/bindings/thermal/thermal.txt        | 12 ++--
+ Documentation/devicetree/bindings/ufs/ufs-qcom.txt |  4 +-
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  2 +-
+ Documentation/devicetree/bindings/usb/ehci-st.txt  |  2 +-
+ Documentation/devicetree/bindings/usb/ohci-st.txt  |  2 +-
+ .../bindings/watchdog/ingenic,jz4740-wdt.txt       |  2 +-
+ drivers/of/dynamic.c                               |  4 +-
+ drivers/of/overlay.c                               | 66 ++++++++++------------
+ drivers/of/unittest.c                              |  1 -
+ 77 files changed, 139 insertions(+), 143 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
