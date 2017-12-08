@@ -1,41 +1,66 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v4 1/2] documentation: Add compatibles for Amlogic Meson AXG pin controllers
-Date: Fri, 8 Dec 2017 09:54:17 +0800
-Message-ID: <20171208015418.9632-2-yixun.lan@amlogic.com>
-References: <20171208015418.9632-1-yixun.lan@amlogic.com>
+From: Wenyou Yang <wenyou.yang@microchip.com>
+Subject: [PATCH v8 0/2] media: ov7740: Add a V4L2 sensor-level driver
+Date: Fri, 8 Dec 2017 09:55:40 +0800
+Message-ID: <20171208015542.15444-1-wenyou.yang@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171208015418.9632-1-yixun.lan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, Jonathan Corbet <corbet@lwn.net>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Wenyou Yang <wenyou.yang@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Xingyu Chen <xingyu.chen@amlogic.com>
+Add a Video4Linux2 sensor-level driver for the OmniVision OV7740
+VGA camera image sensor.
 
-Add compatibles for Amlogic Meson AXG pin controllers
+Changes in v8:
+ - As the registers are written at stream start, remove the written
+   code from the set fmt function.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Rob Herring <robh at kernel.org>
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v7:
+ - Add Acked-by tag.
+ - Fix the wrong handle of default register configuration.
+ - Add the missed assignment of ov7740->frmsize.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index 2392557ede27..2c12f9789116 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -9,6 +9,8 @@ Required properties for the root node:
- 		      "amlogic,meson-gxbb-aobus-pinctrl"
- 		      "amlogic,meson-gxl-periphs-pinctrl"
- 		      "amlogic,meson-gxl-aobus-pinctrl"
-+		      "amlogic,meson-axg-periphs-pinctrl"
-+		      "amlogic,meson-axg-aobus-pinctrl"
-  - reg: address and size of registers controlling irq functionality
- 
- === GPIO sub-nodes ===
+Changes in v6:
+ - Remove unnecessary #include <linux/init>.
+ - Remove unnecessary comments and extra newline.
+ - Add const for some structures.
+ - Add the check of the return value from regmap_write().
+ - Simplify the calling of __v4l2_ctrl_handler_setup().
+ - Add the default format initialization function.
+ - Integrate the set_power() and enable/disable the clock into
+   one function.
+
+Changes in v5:
+ - Squash the driver and MAINTAINERS entry patches to one.
+ - Precede the driver patch with the bindings patch.
+
+Changes in v4:
+ - Assign 'val' a initial value to avoid warning: 'val' may be
+   used uninitialized.
+ - Rename REG_REG15 to avoid warning: "REG_REG15" redefined.
+
+Changes in v3:
+ - Explicitly document the "remote-endpoint" property.
+ - Put the MAINTAINERS change to a separate patch.
+
+Changes in v2:
+ - Split off the bindings into a separate patch.
+ - Add a new entry to the MAINTAINERS file.
+
+Wenyou Yang (2):
+  media: ov7740: Document device tree bindings
+  media: i2c: Add the ov7740 image sensor driver
+
+ .../devicetree/bindings/media/i2c/ov7740.txt       |   47 +
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/ov7740.c                         | 1226 ++++++++++++++++++++
+ 5 files changed, 1290 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
+ create mode 100644 drivers/media/i2c/ov7740.c
+
 -- 
-2.15.1
+2.15.0
