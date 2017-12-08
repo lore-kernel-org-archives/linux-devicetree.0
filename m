@@ -1,89 +1,62 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: sun8i: a83t: add dwmac-sun8i
- device node
-Date: Fri,  8 Dec 2017 15:31:56 +0800
-Message-ID: <20171208073157.14599-2-wens@csie.org>
-References: <20171208073157.14599-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 4/6] clocksource: stm32: only use 32 bits timers
+Date: Fri, 8 Dec 2017 08:52:12 +0100
+Message-ID: <4f9ed3dd-cf02-eed7-7fdd-38f8dc092eee@linaro.org>
+References: <1510649563-22975-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1510649563-22975-5-git-send-email-benjamin.gaignard@linaro.org>
+ <44bb54e6-c9e8-4b54-d490-a1800bf6d74c@linaro.org>
+ <CA+M3ks5Q_ZUHODV=eA4caT9NdrxKw1qiaWwc87w9FiC_uqwfBQ@mail.gmail.com>
+ <2afa343b-3a23-3352-33b3-2133678a4122@linaro.org>
+ <CA+M3ks4KLy0VkJOSGR7tmefOT1rw9nrMsRQvwwK-YZQ7Gm7hQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB5H7VDIQKGQEV222OXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171208073157.14599-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+M3ks4KLy0VkJOSGR7tmefOT1rw9nrMsRQvwwK-YZQ7Gm7hQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 07/12/2017 21:36, Benjamin Gaignard wrote:
+> 2017-12-07 17:49 GMT+01:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+>> On 07/12/2017 17:33, Benjamin Gaignard wrote:
+>>> 2017-12-07 16:27 GMT+01:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+>>>> On 14/11/2017 09:52, Benjamin Gaignard wrote:
+>>>>> The clock driving counters is at 90MHz so the maximum period
+>>>>> for 16 bis counters is around 750 ms which is a short period
+>>>>> for a clocksource.
+>>>>
+>>>> Isn't it 728us ?
+>>>
+>>> yes it is: 2^16 / 90.000.000 => 728us
+>>
+>> Ok, now I can do the connection with the previous patch.
+>>
+>> So, the real issue of all this is the 16bits clocksource is wrapping up
+>> every 728us, hence the clockevent periodically expires every ~728us to
+>> keep the timekeeping consistent. Unfortunately, the kernel has a too
+>> high overhead for this as the system is consistently processing this
+>> timer leading to a CPU time resource starvation.
+>>
+>> Is that correct ?
+> 
+> Yes that is correct
 
-The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
-This patch add support for it on the Allwinner a83t SoC Device-tree.
+Oh man. That was unclear since the beginning, we are not talking about
+inaccurate clocksource or whatever but just these 16bits timers can't
+work on Linux.
 
-This patch add the emac device node and the related RGMII pins node.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 19acae1b4089..a384b766f3dc 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -336,6 +336,18 @@
- 			#interrupt-cells = <3>;
- 			#gpio-cells = <3>;
- 
-+			emac_rgmii_pins: emac-rgmii-pins {
-+				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
-+				       "PD11", "PD12", "PD13", "PD14", "PD18",
-+				       "PD19", "PD21", "PD22", "PD23";
-+				function = "gmac";
-+				/*
-+				 * data lines in RGMII mode use DDR mode
-+				 * and need a higher signal drive strength
-+				 */
-+				drive-strength = <40>;
-+			};
-+
- 			mmc0_pins: mmc0-pins {
- 				pins = "PF0", "PF1", "PF2",
- 				       "PF3", "PF4", "PF5";
-@@ -440,6 +452,27 @@
- 			status = "disabled";
- 		};
- 
-+		emac: ethernet@1c30000 {
-+			compatible = "allwinner,sun8i-a83t-emac";
-+			syscon = <&syscon>;
-+			reg = <0x01c30000 0x104>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			resets = <&ccu 13>;
-+			reset-names = "stmmaceth";
-+			clocks = <&ccu 27>;
-+			clock-names = "stmmaceth";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+
-+			mdio: mdio {
-+				compatible = "snps,dwmac-mdio";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
- 		gic: interrupt-controller@1c81000 {
- 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
- 			reg = <0x01c81000 0x1000>,
 -- 
-2.15.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
