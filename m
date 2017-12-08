@@ -1,62 +1,68 @@
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 4/6] clocksource: stm32: add clocksource support
-Date: Fri, 8 Dec 2017 15:19:24 +0100
-Message-ID: <CA+M3ks7DQ7xH8WyKkwjU+=XHFjAE=N7hvsN8Pcxpkz1L5LHqKQ@mail.gmail.com>
-References: <20171208113250.359-1-benjamin.gaignard@st.com>
- <20171208113250.359-5-benjamin.gaignard@st.com> <ac396fdb-1658-d2f3-bd92-b2b9fe04f201@linaro.org>
- <CA+M3ks6uWUQqD-c_FWETDLp097AfUEVs1srpH_C7kK-X8ADQ1Q@mail.gmail.com> <810270c4-c6b4-ee05-2481-ced52f7d2685@linaro.org>
+From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] clk: meson-axg: add clocks dt-bindings required
+ header
+Date: Fri, 8 Dec 2017 22:22:36 +0800
+Message-ID: <060fab5b-0832-198d-9aab-d986a909c449@amlogic.com>
+References: <20171207095300.15384-1-yixun.lan@amlogic.com>
+ <20171207095300.15384-3-yixun.lan@amlogic.com>
+ <20171207221014.6qwcb43w5hms4ma5@rob-hp-laptop>
+ <1512725587.17256.19.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <810270c4-c6b4-ee05-2481-ced52f7d2685-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1512725587.17256.19.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Qiufang Dai <qiufang.dai-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Jian Hu <jian.hu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-12-08 15:08 GMT+01:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> On 08/12/2017 15:04, Benjamin Gaignard wrote:
->> 2017-12-08 14:46 GMT+01:00 Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
->>> On 08/12/2017 12:32, Benjamin Gaignard wrote:
->>>> The stm32 timer hardware is currently only used as a clock event devic=
-e,
->>>> but it can be utilized as a clocksource as well.
->>>>
->>>> Implement this by enabling the free running counter in the hardware bl=
-ock
->>>> and converting the clock event part from a count down event timer to a
->>>> comparator based timer.
+On 12/08/17 17:33, Jerome Brunet wrote:
+> On Thu, 2017-12-07 at 16:10 -0600, Rob Herring wrote:
+>> On Thu, Dec 07, 2017 at 05:52:58PM +0800, Yixun Lan wrote:
+>>> From: Qiufang Dai <qiufang.dai-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 >>>
+>>> Add the required header for the clocks ID dt-bindings
+>>> exported from various subsystem in the Meson-AXG SoC.
 >>>
->>> Split this patch in two:
->>>  - periodic support
->>>  - clocksource support
+>>> Signed-off-by: Qiufang Dai <qiufang.dai-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+>>> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>  include/dt-bindings/clock/axg-clkc.h | 71
+>>> ++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 71 insertions(+)
+>>>  create mode 100644 include/dt-bindings/clock/axg-clkc.h
 >>
->> No because the way of implementing periodic support depend of how clocks=
-ource
->> part is implemented on the hardware.
->> I don't want to code functions that I will completely remove just after
->
-> Sorry, I don't get it. Can you elaborate please ?
+>> Please add acks when posting new versions.
+>>
+>> Rob
+> 
+> Yixun, please be consistent about this. Maintainers are not going to dig
+> through your previous revision to collect Tags
+> 
+> I believe Neil acked patch 3, didn't he ?
+> 
+> Please resend your series with the Tags collected
+sorry, I missed Neil's ACK for the pacth [3/4]
 
-To add clocksource support I use the counter part of the hardware
-which was before
-used for clockevent and make clockevent use the comparator instead.
-So implementing periodic on counter side of the hardware is a waste of
-time because
-I will to remove right after
+let's just wait for a few more days, to see if there are more comments
+coming up, then I would fold them together
 
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
+> If not already done, please make sure patches 1-3 apply on top of rc1 and patch
+> 4 on Kevin's dt64 branch.
+> 
+the above is already base on -rc2, and patch 4 can apply to kevin's dt64
+cleanly
+
+> Thanks
+> Jerome
+> 
+> .
+> 
+
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
