@@ -1,57 +1,70 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 0/2] of: overlay: Crash fix and improvement
-Date: Fri, 8 Dec 2017 22:01:42 -0800
-Message-ID: <f78620d2-7a6d-b90e-d773-9e3cc3d0cb6a@gmail.com>
-References: <1512738783-17452-1-git-send-email-geert+renesas@glider.be>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/7] Add USB remote wakeup driver
+Date: Sat, 9 Dec 2017 16:45:29 +0800
+Message-ID: <1512809136-2779-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1512738783-17452-1-git-send-email-geert+renesas@glider.be>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/08/17 05:13, Geert Uytterhoeven wrote:
-> 	Hi Pantelis, Rob, Frank,
-> 
-> This patch series fixes memory corruption when applying overlays.
-> 
-> I first noticed this when using OF configfs.  After lots of failed
-> debugging attempts, I bisected it to "of: overlay: add per overlay sysfs
-> attributes", which is not upstream.  But that was a red herring: that
-> commit enlarged struct fragment to exactly 64-bytes, which just made it
-> more likely to cause random corruption when writing beyond the end of an
-> array of fragment structures.  With the smaller structure size before,
-> such writes usually ended up in the unused holes between allocated
-> blocks, causing no harm.
-> 
-> The first patch is the real fix, and applies to both v4.15-rc2 and Rob's
-> for-next branch.
-> The second patch is a small improvement, and applies to Rob's for-next
-> branch only.
+    These patches introduce the SSUSB and SPM glue layer driver which is
+used to support usb remote wakeup. Usually the glue layer is put into
+a system controller, such as PERICFG module.
+    The old way to support usb wakeup is put into SSUSB controller drivers,
+including xhci-mtk driver and mtu3 driver, but there are some problems:
+    1. can't disdinguish the relation between glue layer and SSUSB IP
+       when SoCs supports multi SSUSB IPs;
+    2. duplicated code for wakeup are put into both xhci-mtk and mtu3
+       drivers;
+    3. the glue layer may vary on different SoCs with SSUSB IP, and will
+       make SSUSB controller drivers complicated;
+    In order to resolve these problems, it's useful to make the glue layer
+transparent by extracting a seperated driver, meanwhile to reduce the
+duplicated code and simplify SSUSB controller drivers.
 
-Overlay FDT files should not have invalid contents.  But they inevitably
-will, so the code has to handle those cases.  Thanks for finding this
-problem and making the code better!
+Changes from v1:
+ * Introduce USB remote wakeup driver
+ * Use the new way to support remote wakeup for SSUSB controller drivers
+ * Add binding document for USB remote wakeup driver
+ * Update binding documents of SSUSB controller drivers
+ * Update DTS of MT8173 platform
 
-For the full series:
+Chunfeng Yun (7):
+  soc: mediatek: Add USB wakeup driver
+  dt-bindings: soc: mediatek: add bindings document for USB wakeup
+  usb: xhci-mtk: use APIs of mtu_wakeup to support remote wakeup
+  usb: mtu3: use APIs of mtu_wakeup to support remote wakeup
+  dt-bindings: usb: mtk-xhci: add USB wakeup properties
+  dt-bindings: usb: mtu3: add USB wakeup properties
+  arm64: dts: mt8173: add uwk node and remove unused usb property
 
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+ .../bindings/soc/mediatek/usb-wakeup.txt           |  77 +++
+ .../devicetree/bindings/usb/mediatek,mtk-xhci.txt  |  15 +-
+ .../devicetree/bindings/usb/mediatek,mtu3.txt      |  14 +-
+ arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |  28 +-
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  16 +-
+ drivers/soc/mediatek/Kconfig                       |   8 +
+ drivers/soc/mediatek/Makefile                      |   1 +
+ drivers/soc/mediatek/mtk-usb-wakeup.c              | 519 +++++++++++++++++++++
+ drivers/usb/host/xhci-mtk.c                        |  39 +-
+ drivers/usb/host/xhci-mtk.h                        |   2 +
+ drivers/usb/mtu3/mtu3.h                            |   2 +
+ drivers/usb/mtu3/mtu3_host.c                       |  39 +-
+ include/dt-bindings/soc/mediatek,usb-wakeup.h      |  15 +
+ include/linux/soc/mediatek/usb-wakeup.h            |  88 ++++
+ 14 files changed, 803 insertions(+), 60 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/usb-wakeup.txt
+ create mode 100644 drivers/soc/mediatek/mtk-usb-wakeup.c
+ create mode 100644 include/dt-bindings/soc/mediatek,usb-wakeup.h
+ create mode 100644 include/linux/soc/mediatek/usb-wakeup.h
 
+-- 
+1.9.1
 
-> I've updated my topic/overlays and topic/renesas-overlays branches at
-> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git
-> accordingly.
-> 
-> Thanks!
-> 
-> Geert Uytterhoeven (2):
->   of: overlay: Fix out-of-bounds write in init_overlay_changeset()
->   of: overlay: Make node skipping in init_overlay_changeset() clearer
-> 
->  drivers/of/overlay.c | 22 ++++++++++++----------
->  1 file changed, 12 insertions(+), 10 deletions(-)
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
