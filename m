@@ -1,51 +1,42 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Subject: [PATCH] dt-bindings: chosen: Document linux,initrd-{start,end}
-Date: Sat,  9 Dec 2017 16:33:02 +0100
-Message-ID: <20171209153305.11012-1-j.neuschaefer@gmx.net>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] dt-bindings: mailbox: ti,message-manager: Fix interrupt name error
+Date: Sat, 9 Dec 2017 13:35:28 -0600
+Message-ID: <20171209193528.29491-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Marco Franchi <marco.franchi@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These properties have been in use for a very long time (at least since
-2005), but were never documented in chosen.txt.
+Message Manager's mailbox interrupts are queue based and not proxy
+specific. The interrupt names are wrong in the binding, however
+correctly reflected in the example provided. Remove the relation
+to proxy ID in the documentation of binding. Existing device tree
+descriptions follow the correct conventions already and documentation
+update has been missed.
 
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
- Documentation/devicetree/bindings/chosen.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ Documentation/devicetree/bindings/mailbox/ti,message-manager.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index e3b13ea7d2ae..45e79172a646 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -120,3 +120,18 @@ e.g.
- While this property does not represent a real hardware, the address
- and the size are expressed in #address-cells and #size-cells,
- respectively, of the root node.
-+
-+linux,initrd-start and linux,initrd-end
-+---------------------------------------
-+
-+These properties hold the physical start and end address of an initrd that's
-+loaded by the bootloader. Note that linux,initrd-start is inclusive, but
-+linux,initrd-end is exclusive.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,initrd-start = <0x82000000>;
-+		linux,initrd-end = <0x82800000>;
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
+index c3b55b3ede8a..ebf0e3710cee 100644
+--- a/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
++++ b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
+@@ -20,9 +20,9 @@ Required properties:
+ 		        order referring to the transfer path.
+ - interrupt-names:	Contains interrupt names matching the rx transfer path
+ 			for a given SoC. Receive interrupts shall be of the
+-			format: "rx_<QID>_<PID>".
++			format: "rx_<QID>".
+ 			For ti,k2g-message-manager, this shall contain:
+-				"rx_005_002", "rx_057_002"
++				"rx_005", "rx_057"
+ - interrupts:		Contains the interrupt information corresponding to
+ 			interrupt-names property.
+ 
 -- 
-2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.14.1
