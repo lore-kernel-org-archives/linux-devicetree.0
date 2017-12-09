@@ -1,80 +1,57 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 4/5] Input: edt-ft5x06 - Add support for regulator
-Date: Fri, 8 Dec 2017 17:24:46 -0800
-Message-ID: <20171209012446.4oha36s6pf2fjlvn@dtor-ws>
-References: <20171208215419.30396-1-mylene.josserand@free-electrons.com>
- <20171208215419.30396-5-mylene.josserand@free-electrons.com>
- <20171209011629.4nkcjxj2l2j7zyph@dtor-ws>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 0/2] of: overlay: Crash fix and improvement
+Date: Fri, 8 Dec 2017 22:01:42 -0800
+Message-ID: <f78620d2-7a6d-b90e-d773-9e3cc3d0cb6a@gmail.com>
+References: <1512738783-17452-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171209011629.4nkcjxj2l2j7zyph@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, linux-input@vger.kernel.org, simon.budig@kernelconcepts.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1512738783-17452-1-git-send-email-geert+renesas@glider.be>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 08, 2017 at 05:16:29PM -0800, Dmitry Torokhov wrote:
-> Hi Mylène,
+On 12/08/17 05:13, Geert Uytterhoeven wrote:
+> 	Hi Pantelis, Rob, Frank,
 > 
-> On Fri, Dec 08, 2017 at 10:54:18PM +0100, Mylène Josserand wrote:
-> > Add the support of regulator to use them as VCC source.
-> > 
-> > Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
-> > ---
-> >  drivers/input/touchscreen/edt-ft5x06.c | 33 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 33 insertions(+)
-> > 
-> > diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-> > index c53a3d7239e7..44b0e04a8f35 100644
-> > --- a/drivers/input/touchscreen/edt-ft5x06.c
-> > +++ b/drivers/input/touchscreen/edt-ft5x06.c
-> > @@ -39,6 +39,7 @@
-> >  #include <linux/input/mt.h>
-> >  #include <linux/input/touchscreen.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/regulator/consumer.h>
-> >  
-> >  #define WORK_REGISTER_THRESHOLD		0x00
-> >  #define WORK_REGISTER_REPORT_RATE	0x08
-> > @@ -91,6 +92,7 @@ struct edt_ft5x06_ts_data {
-> >  	struct touchscreen_properties prop;
-> >  	u16 num_x;
-> >  	u16 num_y;
-> > +	struct regulator *supply;
-> >  
-> >  	struct gpio_desc *reset_gpio;
-> >  	struct gpio_desc *wake_gpio;
-> > @@ -993,6 +995,23 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
-> >  
-> >  	tsdata->max_support_points = chip_data->max_support_points;
-> >  
-> > +	tsdata->supply = devm_regulator_get_optional(&client->dev, "power");
+> This patch series fixes memory corruption when applying overlays.
 > 
-> I'd prefer if we used devm_regulator_get() instead. On a
-> fully-constrained systems a missing regulator will be substituted with a
-> dummy one that you can then use in regulator_enable() and
-> regulator_disable(). The _optional regulator API is reserved for cases
-> where some of chip functionality is optional and you can engage it by
-> powering up parts of the chip. The reset is not such case: it is always
-> present, but may not be exposed to the OS to control.
+> I first noticed this when using OF configfs.  After lots of failed
+> debugging attempts, I bisected it to "of: overlay: add per overlay sysfs
+> attributes", which is not upstream.  But that was a red herring: that
+> commit enlarged struct fragment to exactly 64-bytes, which just made it
+> more likely to cause random corruption when writing beyond the end of an
+> array of fragment structures.  With the smaller structure size before,
+> such writes usually ended up in the unused holes between allocated
+> blocks, causing no harm.
 > 
-> I think the preference is to call the supply by the name is a datasheet,
-> something like "vcc" or "vdd", etc.
+> The first patch is the real fix, and applies to both v4.15-rc2 and Rob's
+> for-next branch.
+> The second patch is a small improvement, and applies to Rob's for-next
+> branch only.
 
-Looking at this some more, you need to make sure your new regulator
-support plays well with reset/wake GPIOs. I.e. you probably want to
-properly bring the chip out of reset in edt_ft5x06_ts_resume() and maybe
-driver the reset line low in suspend to make sure you do not leak into
-the unpowered chip?
+Overlay FDT files should not have invalid contents.  But they inevitably
+will, so the code has to handle those cases.  Thanks for finding this
+problem and making the code better!
 
-Also, please update
-Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt with
-the additional binding data and cc device tree folks and Rob Herring.
+For the full series:
 
-Thanks.
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
 
--- 
-Dmitry
+
+> I've updated my topic/overlays and topic/renesas-overlays branches at
+> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git
+> accordingly.
+> 
+> Thanks!
+> 
+> Geert Uytterhoeven (2):
+>   of: overlay: Fix out-of-bounds write in init_overlay_changeset()
+>   of: overlay: Make node skipping in init_overlay_changeset() clearer
+> 
+>  drivers/of/overlay.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
