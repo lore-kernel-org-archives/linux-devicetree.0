@@ -1,49 +1,49 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] drm/tinydrm: add driver for ST7735R panels
-Date: Sat, 9 Dec 2017 13:21:02 +0100
-Message-ID: <927ddfa7-92b5-7dd0-44c4-0b02a998cd88@tronnes.org>
-References: <1511924469-11448-1-git-send-email-david@lechnology.com>
- <1511924469-11448-3-git-send-email-david@lechnology.com>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Subject: [PATCH] dt-bindings: chosen: Document linux,initrd-{start,end}
+Date: Sat,  9 Dec 2017 16:33:02 +0100
+Message-ID: <20171209153305.11012-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511924469-11448-3-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: limor-6aDhHjTmHzzR7s880joybQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+These properties have been in use for a very long time (at least since
+2005), but were never documented in chosen.txt.
 
-Den 29.11.2017 04.01, skrev David Lechner:
-> This adds a new driver for Sitronix ST7735R display panels.
->
-> This has been tested using an Adafruit 1.8" TFT.
->
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
-<snip>
-> diff --git a/drivers/gpu/drm/tinydrm/st7735r.c b/drivers/gpu/drm/tinydrm/st7735r.c
-<snip>
-> +static struct drm_driver st7735r_driver = {
-> +	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
-> +				  DRIVER_ATOMIC,
-> +	.fops			= &st7735r_fops,
-> +	TINYDRM_GEM_DRIVER_OPS,
-> +	.lastclose		= tinydrm_lastclose,
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+---
+ Documentation/devicetree/bindings/chosen.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-I was reminded of this since it would have made it easy to turn off the
-panel and see if it turned white. Adding this makes it possible to send
-commands from userspace for testing:
-
-     .debugfs_init        = mipi_dbi_debugfs_init,
-
-If you do that you have to set this to NULL since it's not possible to
-read from the controller in this panel:
-
-     mipi->read_commands = NULL;
-
-Noralf.
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index e3b13ea7d2ae..45e79172a646 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -120,3 +120,18 @@ e.g.
+ While this property does not represent a real hardware, the address
+ and the size are expressed in #address-cells and #size-cells,
+ respectively, of the root node.
++
++linux,initrd-start and linux,initrd-end
++---------------------------------------
++
++These properties hold the physical start and end address of an initrd that's
++loaded by the bootloader. Note that linux,initrd-start is inclusive, but
++linux,initrd-end is exclusive.
++e.g.
++
++/ {
++	chosen {
++		linux,initrd-start = <0x82000000>;
++		linux,initrd-end = <0x82800000>;
++	};
++};
+-- 
+2.15.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
