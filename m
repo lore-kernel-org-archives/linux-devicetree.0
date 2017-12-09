@@ -1,59 +1,71 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 2/3] arm64: dts: rockchip: add rk3328 mali gpu node
-Date: Sat,  9 Dec 2017 01:07:37 +0100
-Message-ID: <20171209000738.32187-3-heiko@sntech.de>
-References: <20171209000738.32187-1-heiko@sntech.de>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/5] Input: edt-ft5x06 - Add support for regulator
+Date: Fri, 8 Dec 2017 17:16:29 -0800
+Message-ID: <20171209011629.4nkcjxj2l2j7zyph@dtor-ws>
+References: <20171208215419.30396-1-mylene.josserand@free-electrons.com>
+ <20171208215419.30396-5-mylene.josserand@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171209000738.32187-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171208215419.30396-5-mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, simon.budig-t93Ne7XHvje5bSeCtf/tX7NAH6kLmebB@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the core gpu node for the rk3328, a Mali450MP2.
+Hi Mylène,
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+On Fri, Dec 08, 2017 at 10:54:18PM +0100, Mylène Josserand wrote:
+> Add the support of regulator to use them as VCC source.
+> 
+> Signed-off-by: Mylène Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/input/touchscreen/edt-ft5x06.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+> index c53a3d7239e7..44b0e04a8f35 100644
+> --- a/drivers/input/touchscreen/edt-ft5x06.c
+> +++ b/drivers/input/touchscreen/edt-ft5x06.c
+> @@ -39,6 +39,7 @@
+>  #include <linux/input/mt.h>
+>  #include <linux/input/touchscreen.h>
+>  #include <linux/of_device.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #define WORK_REGISTER_THRESHOLD		0x00
+>  #define WORK_REGISTER_REPORT_RATE	0x08
+> @@ -91,6 +92,7 @@ struct edt_ft5x06_ts_data {
+>  	struct touchscreen_properties prop;
+>  	u16 num_x;
+>  	u16 num_y;
+> +	struct regulator *supply;
+>  
+>  	struct gpio_desc *reset_gpio;
+>  	struct gpio_desc *wake_gpio;
+> @@ -993,6 +995,23 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+>  
+>  	tsdata->max_support_points = chip_data->max_support_points;
+>  
+> +	tsdata->supply = devm_regulator_get_optional(&client->dev, "power");
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 41d61840fb99..4bff6422f4da 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -543,6 +543,29 @@
- 		status = "disabled";
- 	};
- 
-+	gpu: gpu@ff300000 {
-+		compatible = "rockchip,rk3328-mali", "arm,mali-450";
-+		reg = <0x0 0xff300000 0x0 0x40000>;
-+		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "gp",
-+				  "gpmmu",
-+				  "pp",
-+				  "pp0",
-+				  "ppmmu0",
-+				  "pp1",
-+				  "ppmmu1";
-+		clocks = <&cru ACLK_GPU>, <&cru ACLK_GPU>;
-+		clock-names = "bus", "core";
-+		resets = <&cru SRST_GPU_A>;
-+		status = "disabled";
-+	};
-+
- 	h265e_mmu: iommu@ff330200 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff330200 0 0x100>;
+I'd prefer if we used devm_regulator_get() instead. On a
+fully-constrained systems a missing regulator will be substituted with a
+dummy one that you can then use in regulator_enable() and
+regulator_disable(). The _optional regulator API is reserved for cases
+where some of chip functionality is optional and you can engage it by
+powering up parts of the chip. The reset is not such case: it is always
+present, but may not be exposed to the OS to control.
+
+I think the preference is to call the supply by the name is a datasheet,
+something like "vcc" or "vdd", etc.
+
+Thanks.
+
 -- 
-2.14.2
-
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
