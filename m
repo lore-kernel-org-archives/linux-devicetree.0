@@ -1,54 +1,124 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 6/7] dt-bindings: usb: mtu3: add USB wakeup properties
-Date: Sat, 9 Dec 2017 16:45:35 +0800
-Message-ID: <1512809136-2779-7-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 3/7] usb: xhci-mtk: use APIs of mtu_wakeup to support remote
+ wakeup
+Date: Sat, 9 Dec 2017 16:45:32 +0800
+Message-ID: <1512809136-2779-4-git-send-email-chunfeng.yun@mediatek.com>
 References: <1512809136-2779-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512809136-2779-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1512809136-2779-1-git-send-email-chunfeng.yun@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Jean Delvare <jdelvare@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Modify the properties of usb wakeup, and use the new way of mtu_wakeup
-which is extracted from SSUSB controller dirver as a new driver.
+On some platforms, there are two xHCI IPs, but the old way of
+usb wakeup doesn't support it, so use the new APIs of mtu_wakeup
+to support it.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- Documentation/devicetree/bindings/usb/mediatek,mtu3.txt | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-mtk.c | 39 +++++++++++++++++++++++----------------
+ drivers/usb/host/xhci-mtk.h |  2 ++
+ 2 files changed, 25 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index b2271d8..2ed546d 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -42,9 +42,17 @@ Optional properties:
-  - enable-manual-drd : supports manual dual-role switch via debugfs; usually
- 	used when receptacle is TYPE-A and also wants to support dual-role
- 	mode.
-- - mediatek,enable-wakeup : supports ip sleep wakeup used by host mode
-- - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
--	control register, it depends on "mediatek,enable-wakeup".
-+ - mediatek,uwks : a phandle to USB-Wakeup node to control the type of wakeup,
-+	it's used to replace the old way which is realized by the property of
-+	"mediatek,wakeup-wakeup" and "mediatek,syscon-wakeup",
-+	see: Documentation/devicetree/bindings/soc/mediatek/usb-wakeup.txt
-+ - wakeup-source : Decides if the new way of USB wakeup is supported or
-+	not, it depends on "mediatek,uwks" property.
-+ - mediatek,enable-wakeup : (deprecated) supports ip sleep wakeup used by
-+	host mode, only supports mt8173 platform, use the property of
-+	"mediatek,uwks" instead on other SoCs.
-+ - mediatek,syscon-wakeup : (deprecated) phandle to syscon used to access
-+	USB wakeup control register, it depends on "mediatek,enable-wakeup".
-  - mediatek,u3p-dis-msk : mask to disable u3ports, bit0 for u3port0,
- 	bit1 for u3port1, ... etc;
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index b62a1d2..3176a10 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -19,6 +19,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/soc/mediatek/usb-wakeup.h>
  
+ #include "xhci.h"
+ #include "xhci-mtk.h"
+@@ -366,7 +367,9 @@ static void usb_wakeup_line_state_dis(struct xhci_hcd_mtk *mtk)
+ 
+ static void usb_wakeup_enable(struct xhci_hcd_mtk *mtk)
+ {
+-	if (mtk->wakeup_src == SSUSB_WK_IP_SLEEP)
++	if (mtk->wakeup)
++		mtu_wakeup_enable(mtk->uwk);
++	else if (mtk->wakeup_src == SSUSB_WK_IP_SLEEP)
+ 		usb_wakeup_ip_sleep_en(mtk);
+ 	else if (mtk->wakeup_src == SSUSB_WK_LINE_STATE)
+ 		usb_wakeup_line_state_en(mtk);
+@@ -374,7 +377,9 @@ static void usb_wakeup_enable(struct xhci_hcd_mtk *mtk)
+ 
+ static void usb_wakeup_disable(struct xhci_hcd_mtk *mtk)
+ {
+-	if (mtk->wakeup_src == SSUSB_WK_IP_SLEEP)
++	if (mtk->wakeup)
++		mtu_wakeup_disable(mtk->uwk);
++	else if (mtk->wakeup_src == SSUSB_WK_IP_SLEEP)
+ 		usb_wakeup_ip_sleep_dis(mtk);
+ 	else if (mtk->wakeup_src == SSUSB_WK_LINE_STATE)
+ 		usb_wakeup_line_state_dis(mtk);
+@@ -383,24 +388,26 @@ static void usb_wakeup_disable(struct xhci_hcd_mtk *mtk)
+ static int usb_wakeup_of_property_parse(struct xhci_hcd_mtk *mtk,
+ 				struct device_node *dn)
+ {
+-	struct device *dev = mtk->dev;
++	/* try the new way first */
++	mtk->wakeup = of_property_read_bool(dn, "wakeup-source");
++	if (mtk->wakeup) {
++		mtk->uwk = devm_of_uwk_get_by_index(mtk->dev, dn, 0);
++		if (IS_ERR(mtk->uwk))
++			dev_err(mtk->dev, "fail to get uwk\n");
++
++		return PTR_ERR_OR_ZERO(mtk->uwk);
++	}
+ 
+-	/*
+-	* wakeup function is optional, so it is not an error if this property
+-	* does not exist, and in such case, no need to get relative
+-	* properties anymore.
+-	*/
++	/* wakeup function is optional (deprecated, use the new way instead) */
+ 	of_property_read_u32(dn, "mediatek,wakeup-src", &mtk->wakeup_src);
+-	if (!mtk->wakeup_src)
+-		return 0;
+-
+-	mtk->pericfg = syscon_regmap_lookup_by_phandle(dn,
++	if (mtk->wakeup_src) {
++		mtk->pericfg = syscon_regmap_lookup_by_phandle(dn,
+ 						"mediatek,syscon-wakeup");
+-	if (IS_ERR(mtk->pericfg)) {
+-		dev_err(dev, "fail to get pericfg regs\n");
+-		return PTR_ERR(mtk->pericfg);
++		if (IS_ERR(mtk->pericfg)) {
++			dev_err(mtk->dev, "fail to get pericfg regs\n");
++			return PTR_ERR(mtk->pericfg);
++		}
+ 	}
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/usb/host/xhci-mtk.h b/drivers/usb/host/xhci-mtk.h
+index 6b74ce5..95bd6ca 100644
+--- a/drivers/usb/host/xhci-mtk.h
++++ b/drivers/usb/host/xhci-mtk.h
+@@ -124,6 +124,8 @@ struct xhci_hcd_mtk {
+ 	int num_phys;
+ 	int wakeup_src;
+ 	bool lpm_support;
++	struct mtu_wakeup *uwk;
++	bool wakeup;
+ };
+ 
+ static inline struct xhci_hcd_mtk *hcd_to_mtk(struct usb_hcd *hcd)
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
