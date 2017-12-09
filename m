@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: rockchip: enable gpu on rk3328-rock64
-Date: Sat,  9 Dec 2017 01:07:38 +0100
-Message-ID: <20171209000738.32187-4-heiko@sntech.de>
+Subject: [PATCH 1/3] dt-bindings: gpu: mali-utgard: add rockchip,rk3328-mali compatible
+Date: Sat,  9 Dec 2017 01:07:36 +0100
+Message-ID: <20171209000738.32187-2-heiko@sntech.de>
 References: <20171209000738.32187-1-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20171209000738.32187-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
@@ -10,28 +10,26 @@ To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the Mali450MP2 on the Rock64 board.
+The rk3328 quad-core Cortex A53 uses a Mali-450MP2 with 2 PPs, so
+add a compatible for it.
 
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-index d4f80786e7c2..4351fdd1f101 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -144,6 +144,10 @@
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index c6814d7cc2b2..ad876548ab5d 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+@@ -17,6 +17,7 @@ Required properties:
+       + rockchip,rk3066-mali
+       + rockchip,rk3188-mali
+       + rockchip,rk3228-mali
++      + rockchip,rk3328-mali
+       + stericsson,db8500-mali
  
-+&gpu {
-+	status = "okay";
-+};
-+
- &i2c1 {
- 	status = "okay";
- 
+   - reg: Physical base address and length of the GPU registers
 -- 
 2.14.2
 
