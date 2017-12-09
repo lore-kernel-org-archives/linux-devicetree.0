@@ -1,118 +1,113 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 2/7] dt-bindings: soc: mediatek: add bindings document for USB
- wakeup
-Date: Sat, 9 Dec 2017 16:45:31 +0800
-Message-ID: <1512809136-2779-3-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH 4/7] usb: mtu3: use APIs of mtu_wakeup to support remote wakeup
+Date: Sat, 9 Dec 2017 16:45:33 +0800
+Message-ID: <1512809136-2779-5-git-send-email-chunfeng.yun@mediatek.com>
 References: <1512809136-2779-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1512809136-2779-1-git-send-email-chunfeng.yun@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Jean Delvare <jdelvare@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Jean Delvare <jdelvare@suse.de>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds bindings document for the SSUSB-SPM glue layer driver found
-in MediaTek SoCs which is used to support usb remote wakeup.
+On some platforms, there are two SSUSB IPs, but the old way of
+usb wakeup doesn't support it, so use the new APIs of mtu_wakeup
+to support it.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../bindings/soc/mediatek/usb-wakeup.txt           | 77 ++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/mediatek/usb-wakeup.txt
+ drivers/usb/mtu3/mtu3.h      |  2 ++
+ drivers/usb/mtu3/mtu3_host.c | 39 +++++++++++++++++++++++----------------
+ 2 files changed, 25 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/usb-wakeup.txt b/Documentation/devicetree/bindings/soc/mediatek/usb-wakeup.txt
-new file mode 100644
-index 0000000..313d927
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/mediatek/usb-wakeup.txt
-@@ -0,0 +1,77 @@
-+MediaTek USB Wakeup binding
-+-----------------------------
+diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
+index 3c888d9..9f3eb79 100644
+--- a/drivers/usb/mtu3/mtu3.h
++++ b/drivers/usb/mtu3/mtu3.h
+@@ -255,6 +255,8 @@ struct ssusb_mtk {
+ 	/* usb wakeup for host mode */
+ 	bool wakeup_en;
+ 	struct regmap *pericfg;
++	struct mtu_wakeup *uwk;
++	bool new_wakeup;
+ };
+ 
+ /**
+diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
+index 7e948c0..f769b65 100644
+--- a/drivers/usb/mtu3/mtu3_host.c
++++ b/drivers/usb/mtu3/mtu3_host.c
+@@ -14,6 +14,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/of_device.h>
+ #include <linux/regmap.h>
++#include <linux/soc/mediatek/usb-wakeup.h>
+ 
+ #include "mtu3.h"
+ #include "mtu3_dr.h"
+@@ -56,24 +57,26 @@ static void ssusb_wakeup_ip_sleep_dis(struct ssusb_mtk *ssusb)
+ int ssusb_wakeup_of_property_parse(struct ssusb_mtk *ssusb,
+ 				struct device_node *dn)
+ {
+-	struct device *dev = ssusb->dev;
++	/* try the new way first */
++	ssusb->new_wakeup = of_property_read_bool(dn, "wakeup-source");
++	if (ssusb->new_wakeup) {
++		ssusb->uwk = devm_of_uwk_get_by_index(ssusb->dev, dn, 0);
++		if (IS_ERR(ssusb->uwk))
++			dev_err(ssusb->dev, "fail to get mtu_wakeup\n");
 +
-+The SSUSB-SPM glue layer is used to control some signals of USB
-+wakeup, such as IP-SLEEP, LINE-STATE, IDDIG etc, which are mutually
-+exclusive.
-+
-+Required properties (controller (parent) node):
-+- compatible: Should be one of:
-+	- "mediatek,<soc-model>-uwk","mediatek,usb-wk-v1"
-+		soc-model is the name of SoC, supports one of:
-+		- mt8173, mt8176
-+	- "mediatek,<soc-model>-uwk","mediatek,usb-wk-v2"
-+		soc-model is the name of SoC, supports one of:
-+		- mt2712
-+
-+- mediatek,wkc: must contain a syscon phandle, such as pericfg controller
-+- #address-cells : should be '1'
-+- #size-cells : should be '1'
-+
-+Required nodes: a sub-node is required for each glue layer provided for
-+	each SSUSB IP. Address range information including the usual 'reg'
-+	property is used inside these nodes to describe the controller's
-+	topology.
-+
-+Required properties (glue layer (child) node):
-+- reg: address and length of the register set within the syscon which is
-+	assigned to @mediatek,wkc.
-+- #mediatek,uwk-cells: should be 1 (see the second example), cell after
-+	glue layer phandle is wakeup type from:
-+		- MTU_WK_IP_SLEEP
-+		- MTU_WK_LINE_STATE
-+	The wakeup types defined in
-+		- include/dt-bindings/soc/mediatek,usb-wakeup.h
-+
-+
-+Example:
-+
-+usb_wakeup: uwk@0 {
-+	compatible = "mediatek,mt2712-uwk","mediatek,usb-wk-v2";
-+	mediatek,wkc = <&pericfg>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	status = "okay";
-+
-+	usb_wk0: uwk@510 {
-+		reg = <0x510 0x4>;
-+		#mediatek,uwk-cells = <1>;
-+		status = "okay";
-+	};
-+
-+	usb_wk1: uwk@514 {
-+		reg = <0x514 0x4>;
-+		#mediatek,uwk-cells = <1>;
-+		status = "okay";
-+	};
-+};
-+
-+
-+Specifying wakeup control of devices
-+---------------------------------
-+
-+Device nodes should specify the configuration required in their
-+"mediatek,uwks" property, containing a phandle to the glue layer
-+node and a wakeup type, because each USB controller has just one
-+glue layer for wakeup, so only one phandle is supported;
-+
-+Example:
-+
-+#include <dt-bindings/soc/mediatek,usb-wakeup.h>
-+
-+usb_host1: xhci@112c0000 {
-+	...
-+	mediatek,uwks = <&usb_wk2 MTU_WK_IP_SLEEP>;
-+	...
-+};
-+
++		return PTR_ERR_OR_ZERO(ssusb->uwk);
++	}
+ 
+-	/*
+-	 * Wakeup function is optional, so it is not an error if this property
+-	 * does not exist, and in such case, no need to get relative
+-	 * properties anymore.
+-	 */
++	/* Wakeup function is optional. (deprecated, use the new way instead) */
+ 	ssusb->wakeup_en = of_property_read_bool(dn, "mediatek,enable-wakeup");
+-	if (!ssusb->wakeup_en)
+-		return 0;
+-
+-	ssusb->pericfg = syscon_regmap_lookup_by_phandle(dn,
++	if (ssusb->wakeup_en) {
++		ssusb->pericfg = syscon_regmap_lookup_by_phandle(dn,
+ 						"mediatek,syscon-wakeup");
+-	if (IS_ERR(ssusb->pericfg)) {
+-		dev_err(dev, "fail to get pericfg regs\n");
+-		return PTR_ERR(ssusb->pericfg);
++		if (IS_ERR(ssusb->pericfg)) {
++			dev_err(ssusb->dev, "fail to get pericfg regs\n");
++			return PTR_ERR(ssusb->pericfg);
++		}
+ 	}
+-
+ 	return 0;
+ }
+ 
+@@ -235,7 +238,9 @@ void ssusb_host_exit(struct ssusb_mtk *ssusb)
+ 
+ int ssusb_wakeup_enable(struct ssusb_mtk *ssusb)
+ {
+-	if (ssusb->wakeup_en)
++	if (ssusb->new_wakeup)
++		mtu_wakeup_enable(ssusb->uwk);
++	else if (ssusb->wakeup_en)
+ 		ssusb_wakeup_ip_sleep_en(ssusb);
+ 
+ 	return 0;
+@@ -243,6 +248,8 @@ int ssusb_wakeup_enable(struct ssusb_mtk *ssusb)
+ 
+ void ssusb_wakeup_disable(struct ssusb_mtk *ssusb)
+ {
+-	if (ssusb->wakeup_en)
++	if (ssusb->new_wakeup)
++		mtu_wakeup_disable(ssusb->uwk);
++	else if (ssusb->wakeup_en)
+ 		ssusb_wakeup_ip_sleep_dis(ssusb);
+ }
 -- 
 1.9.1
