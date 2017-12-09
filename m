@@ -1,131 +1,54 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 7/7] arm64: dts: mt8173: add uwk node and remove unused usb property
-Date: Sat, 9 Dec 2017 16:45:36 +0800
-Message-ID: <1512809136-2779-8-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 6/7] dt-bindings: usb: mtu3: add USB wakeup properties
+Date: Sat, 9 Dec 2017 16:45:35 +0800
+Message-ID: <1512809136-2779-7-git-send-email-chunfeng.yun@mediatek.com>
 References: <1512809136-2779-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1512809136-2779-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Jean Delvare <jdelvare@suse.de>, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512809136-2779-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add uwk node for new way of usb remote wakeup instead of old one,
-and modify some usb properties according binding documents
-of mediatek,mtu3.txt and mediatek,mtk-xhci.txt
+Modify the properties of usb wakeup, and use the new way of mtu_wakeup
+which is extracted from SSUSB controller dirver as a new driver.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173-evb.dts | 28 ++++++++++++++++++----------
- arch/arm64/boot/dts/mediatek/mt8173.dtsi    | 16 +++++-----------
- 2 files changed, 23 insertions(+), 21 deletions(-)
+ Documentation/devicetree/bindings/usb/mediatek,mtu3.txt | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-index 1c3634f..08a323b 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-evb.dts
-@@ -14,6 +14,7 @@
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+index b2271d8..2ed546d 100644
+--- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
++++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
+@@ -42,9 +42,17 @@ Optional properties:
+  - enable-manual-drd : supports manual dual-role switch via debugfs; usually
+ 	used when receptacle is TYPE-A and also wants to support dual-role
+ 	mode.
+- - mediatek,enable-wakeup : supports ip sleep wakeup used by host mode
+- - mediatek,syscon-wakeup : phandle to syscon used to access USB wakeup
+-	control register, it depends on "mediatek,enable-wakeup".
++ - mediatek,uwks : a phandle to USB-Wakeup node to control the type of wakeup,
++	it's used to replace the old way which is realized by the property of
++	"mediatek,wakeup-wakeup" and "mediatek,syscon-wakeup",
++	see: Documentation/devicetree/bindings/soc/mediatek/usb-wakeup.txt
++ - wakeup-source : Decides if the new way of USB wakeup is supported or
++	not, it depends on "mediatek,uwks" property.
++ - mediatek,enable-wakeup : (deprecated) supports ip sleep wakeup used by
++	host mode, only supports mt8173 platform, use the property of
++	"mediatek,uwks" instead on other SoCs.
++ - mediatek,syscon-wakeup : (deprecated) phandle to syscon used to access
++	USB wakeup control register, it depends on "mediatek,enable-wakeup".
+  - mediatek,u3p-dis-msk : mask to disable u3ports, bit0 for u3port0,
+ 	bit1 for u3port1, ... etc;
  
- /dts-v1/;
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/soc/mediatek,usb-wakeup.h>
- #include "mt8173.dtsi"
- 
- / {
-@@ -68,6 +69,20 @@
- 		gpio = <&pio 9 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
-+
-+	usb_wakeup: uwk@0 {
-+		compatible = "mediatek,mt8173-uwk","mediatek,usb-wk-v1";
-+		mediatek,wkc = <&pericfg>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		status = "okay";
-+
-+		usb_wk0: uwk@400 {
-+			reg = <0x400 0x8>;
-+			#mediatek,uwk-cells = <1>;
-+			status = "okay";
-+		};
-+	};
- };
- 
- &cec {
-@@ -268,12 +283,6 @@
- 		};
- 	};
- 
--	usb_id_pins_ground: usb_iddig_pull_down {
--		pins_iddig {
--			pinmux = <MT8173_PIN_16_IDDIG__FUNC_IDDIG>;
--			bias-pull-down;
--		};
--	};
- };
- 
- &pwm0 {
-@@ -501,15 +510,14 @@
- };
- 
- &ssusb {
-+	mediatek,uwks = <&usb_wk0 MTU_WK_IP_SLEEP>;
- 	vusb33-supply = <&mt6397_vusb_reg>;
- 	vbus-supply = <&usb_p0_vbus>;
- 	extcon = <&extcon_usb>;
- 	dr_mode = "otg";
--	mediatek,enable-wakeup;
--	pinctrl-names = "default", "id_float", "id_ground";
-+	wakeup-source;
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&usb_id_pins_float>;
--	pinctrl-1 = <&usb_id_pins_float>;
--	pinctrl-2 = <&usb_id_pins_ground>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 26396ef..818ead7 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -722,7 +722,7 @@
- 		};
- 
- 		ssusb: usb@11271000 {
--			compatible = "mediatek,mt8173-mtu3";
-+			compatible = "mediatek,mt8173-mtu3", "mediatek,mtu3";
- 			reg = <0 0x11271000 0 0x3000>,
- 			      <0 0x11280700 0 0x0100>;
- 			reg-names = "mac", "ippc";
-@@ -731,22 +731,16 @@
- 			       <&u3port0 PHY_TYPE_USB3>,
- 			       <&u2port1 PHY_TYPE_USB2>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
--			clocks = <&topckgen CLK_TOP_USB30_SEL>,
--				 <&clk26m>,
--				 <&pericfg CLK_PERI_USB0>,
--				 <&pericfg CLK_PERI_USB1>;
--			clock-names = "sys_ck",
--				      "ref_ck",
--				      "wakeup_deb_p0",
--				      "wakeup_deb_p1";
--			mediatek,syscon-wakeup = <&pericfg>;
-+			clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>;
-+			clock-names = "sys_ck", "ref_ck";
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges;
- 			status = "disabled";
- 
- 			usb_host: xhci@11270000 {
--				compatible = "mediatek,mt8173-xhci";
-+				compatible = "mediatek,mt8173-xhci",
-+					     "mediatek,mtk-xhci";
- 				reg = <0 0x11270000 0 0x1000>;
- 				reg-names = "mac";
- 				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
