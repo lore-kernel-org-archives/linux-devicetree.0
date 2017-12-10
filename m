@@ -1,178 +1,136 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v2 2/2] drm/tinydrm: add driver for ST7735R panels
-Date: Sun, 10 Dec 2017 16:10:33 -0600
-Message-ID: <1512943833-31352-3-git-send-email-david@lechnology.com>
-References: <1512943833-31352-1-git-send-email-david@lechnology.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH net-next 1/2 v8] net: ethernet: Add DT bindings for the Gemini ethernet
+Date: Sun, 10 Dec 2017 23:45:57 +0100
+Message-ID: <20171210224558.27122-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1512943833-31352-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, limor@ladyada.net, David Lechner <david@lechnology.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGEgbmV3IGRyaXZlciBmb3IgU2l0cm9uaXggU1Q3NzM1UiBkaXNwbGF5IHBhbmVs
-cy4KClRoaXMgaGFzIGJlZW4gdGVzdGVkIHVzaW5nIGFuIEFkYWZydWl0IDEuOCIgVEZULgoKU2ln
-bmVkLW9mZi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+Ci0tLQoKdjIg
-Y2hhbmdlczoKKiBDaGFuZ2UgZGVsYXkgZnJvbSAxMG1zIHRvIDIwbXMgdG8gYXZvaWQgY2hlY2tw
-YXRjaCB3YXJuaW5nCiogVXNlIG1pcGlfZGJpX3BpcGVfZW5hYmxlKCkvbWlwaV9kYmlfcGlwZV9k
-aXNhYmxlKCkgdG8gcmVkdWNlIGR1cGxpY2F0ZWQgY29kZQoqIFJlYmFzZSBvbiBkcm0tbWlzYy1u
-ZXh0ICh0aW55ZHJtX2xhc3RjbG9zZSA9PiBkcm1fZmJfaGVscGVyX2xhc3RjbG9zZSkKKiBVc2Ug
-bWlwaV9kYmlfZGVidWdmc19pbml0CiogQWRkIG1pcGktPnJlYWRfY29tbWFuZHMgPSBOVUxMOyBz
-aW5jZSB0aGlzIGRpc3BsYXkgaXMgd3JpdGUtb25seQoKCiBNQUlOVEFJTkVSUyAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgIDYgKysKIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL0tjb25maWcgICB8
-ICAxMCArKwogZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vTWFrZWZpbGUgIHwgICAxICsKIGRyaXZl
-cnMvZ3B1L2RybS90aW55ZHJtL3N0NzczNXIuYyB8IDIxOSArKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKwogNCBmaWxlcyBjaGFuZ2VkLCAyMzYgaW5zZXJ0aW9ucygrKQogY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL3N0NzczNXIuYwoKZGlmZiAt
-LWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKaW5kZXggMGU0OTA5OS4uMmNlMTdmNSAx
-MDA2NDQKLS0tIGEvTUFJTlRBSU5FUlMKKysrIGIvTUFJTlRBSU5FUlMKQEAgLTQ1NTEsNiArNDU1
-MSwxMiBAQCBTOglNYWludGFpbmVkCiBGOglkcml2ZXJzL2dwdS9kcm0vdGlueWRybS9zdDc1ODYu
-YwogRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Q3NTg2LnR4
-dAogCitEUk0gRFJJVkVSIEZPUiBTSVRST05JWCBTVDc3MzVSIFBBTkVMUworTToJRGF2aWQgTGVj
-aG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+CitTOglNYWludGFpbmVkCitGOglkcml2ZXJzL2dw
-dS9kcm0vdGlueWRybS9zdDc3MzVyLmMKK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3N0NzczNXIudHh0CisKIERSTSBEUklWRVIgRk9SIFRERlggVklERU8gQ0FS
-RFMKIFM6CU9ycGhhbiAvIE9ic29sZXRlCiBGOglkcml2ZXJzL2dwdS9kcm0vdGRmeC8KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0v
-dGlueWRybS9LY29uZmlnCmluZGV4IDkwYzViZDUuLmIwZTU2N2QgMTAwNjQ0Ci0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS90aW55ZHJtL0tjb25maWcKKysrIGIvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0v
-S2NvbmZpZwpAQCAtNTIsMyArNTIsMTMgQEAgY29uZmlnIFRJTllEUk1fU1Q3NTg2CiAJICAqIExF
-R08gTUlORFNUT1JNUyBFVjMKIAogCSAgSWYgTSBpcyBzZWxlY3RlZCB0aGUgbW9kdWxlIHdpbGwg
-YmUgY2FsbGVkIHN0NzU4Ni4KKworY29uZmlnIFRJTllEUk1fU1Q3NzM1UgorCXRyaXN0YXRlICJE
-Uk0gc3VwcG9ydCBmb3IgU2l0cm9uaXggU1Q3NzM1UiBkaXNwbGF5IHBhbmVscyIKKwlkZXBlbmRz
-IG9uIERSTV9USU5ZRFJNICYmIFNQSQorCXNlbGVjdCBUSU5ZRFJNX01JUElfREJJCisJaGVscAor
-CSAgRFJNIGRyaXZlciBTaXRyb25peCBTVDc3MzVSIHdpdGggb25lIG9mIHRoZSBmb2xsb3dpbmcg
-TENEczoKKwkgICogSkQtVDE4MDAzLVQwMSAxLjgiIDEyOHgxNjAgVEZUCisKKwkgIElmIE0gaXMg
-c2VsZWN0ZWQgdGhlIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBzdDc3MzVyLgpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0vdGlueWRy
-bS9NYWtlZmlsZQppbmRleCA4YWVlZTUzLi40OWExMTE5IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vdGlueWRybS9NYWtlZmlsZQorKysgYi9kcml2ZXJzL2dwdS9kcm0vdGlueWRybS9NYWtl
-ZmlsZQpAQCAtOCwzICs4LDQgQEAgb2JqLSQoQ09ORklHX1RJTllEUk1fSUxJOTIyNSkJCSs9IGls
-aTkyMjUubwogb2JqLSQoQ09ORklHX1RJTllEUk1fTUkwMjgzUVQpCQkrPSBtaTAyODNxdC5vCiBv
-YmotJChDT05GSUdfVElOWURSTV9SRVBBUEVSKQkJKz0gcmVwYXBlci5vCiBvYmotJChDT05GSUdf
-VElOWURSTV9TVDc1ODYpCQkrPSBzdDc1ODYubworb2JqLSQoQ09ORklHX1RJTllEUk1fU1Q3NzM1
-UikJCSs9IHN0NzczNXIubwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vc3Q3
-NzM1ci5jIGIvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vc3Q3NzM1ci5jCm5ldyBmaWxlIG1vZGUg
-MTAwNjQ0CmluZGV4IDAwMDAwMDAuLjBmNWMyOTUKLS0tIC9kZXYvbnVsbAorKysgYi9kcml2ZXJz
-L2dwdS9kcm0vdGlueWRybS9zdDc3MzVyLmMKQEAgLTAsMCArMSwyMTkgQEAKKy8qCisgKiBEUk0g
-ZHJpdmVyIGZvciBTaXRyb25peCBTVDc3MzVSIHBhbmVscworICoKKyAqIENvcHlyaWdodCAyMDE3
-IERhdmlkIExlY2huZXIgPGRhdmlkQGxlY2hub2xvZ3kuY29tPgorICoKKyAqIFRoaXMgcHJvZ3Jh
-bSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5
-CisgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNl
-IGFzIHB1Ymxpc2hlZCBieQorICogdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0aGVy
-IHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwgb3IKKyAqIChhdCB5b3VyIG9wdGlvbikgYW55IGxh
-dGVyIHZlcnNpb24uCisgKi8KKworI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+CisjaW5jbHVkZSA8
-bGludXgvZG1hLWJ1Zi5oPgorI2luY2x1ZGUgPGxpbnV4L2dwaW8vY29uc3VtZXIuaD4KKyNpbmNs
-dWRlIDxsaW51eC9tb2R1bGUuaD4KKyNpbmNsdWRlIDxsaW51eC9wcm9wZXJ0eS5oPgorI2luY2x1
-ZGUgPGxpbnV4L3NwaS9zcGkuaD4KKyNpbmNsdWRlIDx2aWRlby9taXBpX2Rpc3BsYXkuaD4KKwor
-I2luY2x1ZGUgPGRybS9kcm1fZmJfaGVscGVyLmg+CisjaW5jbHVkZSA8ZHJtL2RybV9nZW1fZnJh
-bWVidWZmZXJfaGVscGVyLmg+CisjaW5jbHVkZSA8ZHJtL3Rpbnlkcm0vbWlwaS1kYmkuaD4KKyNp
-bmNsdWRlIDxkcm0vdGlueWRybS90aW55ZHJtLWhlbHBlcnMuaD4KKworI2RlZmluZSBTVDc3MzVS
-X0ZSTUNUUjEJCTB4YjEKKyNkZWZpbmUgU1Q3NzM1Ul9GUk1DVFIyCQkweGIyCisjZGVmaW5lIFNU
-NzczNVJfRlJNQ1RSMwkJMHhiMworI2RlZmluZSBTVDc3MzVSX0lOVkNUUgkJMHhiNAorI2RlZmlu
-ZSBTVDc3MzVSX1BXQ1RSMQkJMHhjMAorI2RlZmluZSBTVDc3MzVSX1BXQ1RSMgkJMHhjMQorI2Rl
-ZmluZSBTVDc3MzVSX1BXQ1RSMwkJMHhjMgorI2RlZmluZSBTVDc3MzVSX1BXQ1RSNAkJMHhjMwor
-I2RlZmluZSBTVDc3MzVSX1BXQ1RSNQkJMHhjNAorI2RlZmluZSBTVDc3MzVSX1ZNQ1RSMQkJMHhj
-NQorI2RlZmluZSBTVDc3MzVSX0dBTUNUUlAxCTB4ZTAKKyNkZWZpbmUgU1Q3NzM1Ul9HQU1DVFJO
-MQkweGUxCisKKyNkZWZpbmUgU1Q3NzM1Ul9NWQlCSVQoNykKKyNkZWZpbmUgU1Q3NzM1Ul9NWAlC
-SVQoNikKKyNkZWZpbmUgU1Q3NzM1Ul9NVglCSVQoNSkKKworc3RhdGljIHZvaWQgc3Q3NzM1cl9w
-aXBlX2VuYWJsZShzdHJ1Y3QgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGUgKnBpcGUsCisJCQkJc3Ry
-dWN0IGRybV9jcnRjX3N0YXRlICpjcnRjX3N0YXRlKQoreworCXN0cnVjdCB0aW55ZHJtX2Rldmlj
-ZSAqdGRldiA9IHBpcGVfdG9fdGlueWRybShwaXBlKTsKKwlzdHJ1Y3QgbWlwaV9kYmkgKm1pcGkg
-PSBtaXBpX2RiaV9mcm9tX3Rpbnlkcm0odGRldik7CisJc3RydWN0IGRldmljZSAqZGV2ID0gdGRl
-di0+ZHJtLT5kZXY7CisJaW50IHJldDsKKwl1OCBhZGRyX21vZGU7CisKKwlEUk1fREVCVUdfS01T
-KCJcbiIpOworCisJbWlwaV9kYmlfaHdfcmVzZXQobWlwaSk7CisKKwlyZXQgPSBtaXBpX2RiaV9j
-b21tYW5kKG1pcGksIE1JUElfRENTX1NPRlRfUkVTRVQpOworCWlmIChyZXQpIHsKKwkJRFJNX0RF
-Vl9FUlJPUihkZXYsICJFcnJvciBzZW5kaW5nIGNvbW1hbmQgJWRcbiIsIHJldCk7CisJCXJldHVy
-bjsKKwl9CisKKwltc2xlZXAoMTUwKTsKKworCW1pcGlfZGJpX2NvbW1hbmQobWlwaSwgTUlQSV9E
-Q1NfRVhJVF9TTEVFUF9NT0RFKTsKKwltc2xlZXAoNTAwKTsKKworCW1pcGlfZGJpX2NvbW1hbmQo
-bWlwaSwgU1Q3NzM1Ul9GUk1DVFIxLCAweDAxLCAweDJjLCAweDJkKTsKKwltaXBpX2RiaV9jb21t
-YW5kKG1pcGksIFNUNzczNVJfRlJNQ1RSMiwgMHgwMSwgMHgyYywgMHgyZCk7CisJbWlwaV9kYmlf
-Y29tbWFuZChtaXBpLCBTVDc3MzVSX0ZSTUNUUjMsIDB4MDEsIDB4MmMsIDB4MmQsIDB4MDEsIDB4
-MmMsCisJCQkgMHgyZCk7CisJbWlwaV9kYmlfY29tbWFuZChtaXBpLCBTVDc3MzVSX0lOVkNUUiwg
-MHgwNyk7CisJbWlwaV9kYmlfY29tbWFuZChtaXBpLCBTVDc3MzVSX1BXQ1RSMSwgMHhhMiwgMHgw
-MiwgMHg4NCk7CisJbWlwaV9kYmlfY29tbWFuZChtaXBpLCBTVDc3MzVSX1BXQ1RSMiwgMHhjNSk7
-CisJbWlwaV9kYmlfY29tbWFuZChtaXBpLCBTVDc3MzVSX1BXQ1RSMywgMHgwYSwgMHgwMCk7CisJ
-bWlwaV9kYmlfY29tbWFuZChtaXBpLCBTVDc3MzVSX1BXQ1RSNCwgMHg4YSwgMHgyYSk7CisJbWlw
-aV9kYmlfY29tbWFuZChtaXBpLCBTVDc3MzVSX1BXQ1RSNSwgMHg4YSwgMHhlZSk7CisJbWlwaV9k
-YmlfY29tbWFuZChtaXBpLCBTVDc3MzVSX1ZNQ1RSMSwgMHgwZSk7CisJbWlwaV9kYmlfY29tbWFu
-ZChtaXBpLCBNSVBJX0RDU19FWElUX0lOVkVSVF9NT0RFKTsKKwlzd2l0Y2ggKG1pcGktPnJvdGF0
-aW9uKSB7CisJZGVmYXVsdDoKKwkJYWRkcl9tb2RlID0gU1Q3NzM1Ul9NWCB8IFNUNzczNVJfTVk7
-CisJCWJyZWFrOworCWNhc2UgOTA6CisJCWFkZHJfbW9kZSA9IFNUNzczNVJfTVggfCBTVDc3MzVS
-X01WOworCQlicmVhazsKKwljYXNlIDE4MDoKKwkJYWRkcl9tb2RlID0gMDsKKwkJYnJlYWs7CisJ
-Y2FzZSAyNzA6CisJCWFkZHJfbW9kZSA9IFNUNzczNVJfTVkgfCBTVDc3MzVSX01WOworCQlicmVh
-azsKKwl9CisJbWlwaV9kYmlfY29tbWFuZChtaXBpLCBNSVBJX0RDU19TRVRfQUREUkVTU19NT0RF
-LCBhZGRyX21vZGUpOworCW1pcGlfZGJpX2NvbW1hbmQobWlwaSwgTUlQSV9EQ1NfU0VUX1BJWEVM
-X0ZPUk1BVCwKKwkJCSBNSVBJX0RDU19QSVhFTF9GTVRfMTZCSVQpOworCW1pcGlfZGJpX2NvbW1h
-bmQobWlwaSwgU1Q3NzM1Ul9HQU1DVFJQMSwgMHgwZiwgMHgxYSwgMHgwZiwgMHgxOCwgMHgyZiwK
-KwkJCSAweDI4LCAweDIwLCAweDIyLCAweDFmLCAweDFiLCAweDIzLCAweDM3LCAweDAwLCAweDA3
-LAorCQkJIDB4MDIsIDB4MTApOworCW1pcGlfZGJpX2NvbW1hbmQobWlwaSwgU1Q3NzM1Ul9HQU1D
-VFJOMSwgMHgwZiwgMHgxYiwgMHgwZiwgMHgxNywgMHgzMywKKwkJCSAweDJjLCAweDI5LCAweDJl
-LCAweDMwLCAweDMwLCAweDM5LCAweDNmLCAweDAwLCAweDA3LAorCQkJIDB4MDMsIDB4MTApOwor
-CW1pcGlfZGJpX2NvbW1hbmQobWlwaSwgTUlQSV9EQ1NfU0VUX0RJU1BMQVlfT04pOworCisJbXNs
-ZWVwKDEwMCk7CisKKwltaXBpX2RiaV9jb21tYW5kKG1pcGksIE1JUElfRENTX0VOVEVSX05PUk1B
-TF9NT0RFKTsKKworCW1zbGVlcCgyMCk7CisKKwltaXBpX2RiaV9waXBlX2VuYWJsZShwaXBlLCBj
-cnRjX3N0YXRlKTsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fc2ltcGxlX2Rpc3BsYXlf
-cGlwZV9mdW5jcyBzdDc3MzVyX3BpcGVfZnVuY3MgPSB7CisJLmVuYWJsZQkJPSBzdDc3MzVyX3Bp
-cGVfZW5hYmxlLAorCS5kaXNhYmxlCT0gbWlwaV9kYmlfcGlwZV9kaXNhYmxlLAorCS51cGRhdGUJ
-CT0gdGlueWRybV9kaXNwbGF5X3BpcGVfdXBkYXRlLAorCS5wcmVwYXJlX2ZiCT0gdGlueWRybV9k
-aXNwbGF5X3BpcGVfcHJlcGFyZV9mYiwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rp
-c3BsYXlfbW9kZSBzdDc3MzVyX21vZGUgPSB7CisJVElOWURSTV9NT0RFKDEyOCwgMTYwLCAyOCwg
-MzUpLAorfTsKKworREVGSU5FX0RSTV9HRU1fQ01BX0ZPUFMoc3Q3NzM1cl9mb3BzKTsKKworc3Rh
-dGljIHN0cnVjdCBkcm1fZHJpdmVyIHN0NzczNXJfZHJpdmVyID0geworCS5kcml2ZXJfZmVhdHVy
-ZXMJPSBEUklWRVJfR0VNIHwgRFJJVkVSX01PREVTRVQgfCBEUklWRVJfUFJJTUUgfAorCQkJCSAg
-RFJJVkVSX0FUT01JQywKKwkuZm9wcwkJCT0gJnN0NzczNXJfZm9wcywKKwlUSU5ZRFJNX0dFTV9E
-UklWRVJfT1BTLAorCS5sYXN0Y2xvc2UJCT0gZHJtX2ZiX2hlbHBlcl9sYXN0Y2xvc2UsCisJLmRl
-YnVnZnNfaW5pdAkJPSBtaXBpX2RiaV9kZWJ1Z2ZzX2luaXQsCisJLm5hbWUJCQk9ICJzdDc3MzVy
-IiwKKwkuZGVzYwkJCT0gIlNpdHJvbml4IFNUNzczNVIiLAorCS5kYXRlCQkJPSAiMjAxNzExMjgi
-LAorCS5tYWpvcgkJCT0gMSwKKwkubWlub3IJCQk9IDAsCit9OworCitzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG9mX2RldmljZV9pZCBzdDc3MzVyX29mX21hdGNoW10gPSB7CisJeyAuY29tcGF0aWJsZSA9
-ICJzaXRyb25peCxzdDc3MzVyLWpkLXQxODAwMy10MDEiIH0sCisJe30sCit9OworTU9EVUxFX0RF
-VklDRV9UQUJMRShvZiwgc3Q3NzM1cl9vZl9tYXRjaCk7CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3Qg
-c3BpX2RldmljZV9pZCBzdDc3MzVyX2lkW10gPSB7CisJeyAic3Q3NzM1ci1qZC10MTgwMDMtdDAx
-IiwgMCB9LAorCXsgfSwKK307CitNT0RVTEVfREVWSUNFX1RBQkxFKHNwaSwgc3Q3NzM1cl9pZCk7
-CisKK3N0YXRpYyBpbnQgc3Q3NzM1cl9wcm9iZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQorewor
-CXN0cnVjdCBkZXZpY2UgKmRldiA9ICZzcGktPmRldjsKKwlzdHJ1Y3QgbWlwaV9kYmkgKm1pcGk7
-CisJc3RydWN0IGdwaW9fZGVzYyAqZGM7CisJdTMyIHJvdGF0aW9uID0gMDsKKwlpbnQgcmV0Owor
-CisJbWlwaSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqbWlwaSksIEdGUF9LRVJORUwpOwor
-CWlmICghbWlwaSkKKwkJcmV0dXJuIC1FTk9NRU07CisKKwltaXBpLT5yZXNldCA9IGRldm1fZ3Bp
-b2RfZ2V0KGRldiwgInJlc2V0IiwgR1BJT0RfT1VUX0hJR0gpOworCWlmIChJU19FUlIobWlwaS0+
-cmVzZXQpKSB7CisJCURSTV9ERVZfRVJST1IoZGV2LCAiRmFpbGVkIHRvIGdldCBncGlvICdyZXNl
-dCdcbiIpOworCQlyZXR1cm4gUFRSX0VSUihtaXBpLT5yZXNldCk7CisJfQorCisJZGMgPSBkZXZt
-X2dwaW9kX2dldChkZXYsICJkYyIsIEdQSU9EX09VVF9MT1cpOworCWlmIChJU19FUlIoZGMpKSB7
-CisJCURSTV9ERVZfRVJST1IoZGV2LCAiRmFpbGVkIHRvIGdldCBncGlvICdkYydcbiIpOworCQly
-ZXR1cm4gUFRSX0VSUihkYyk7CisJfQorCisJbWlwaS0+YmFja2xpZ2h0ID0gdGlueWRybV9vZl9m
-aW5kX2JhY2tsaWdodChkZXYpOworCWlmIChJU19FUlIobWlwaS0+YmFja2xpZ2h0KSkKKwkJcmV0
-dXJuIFBUUl9FUlIobWlwaS0+YmFja2xpZ2h0KTsKKworCWRldmljZV9wcm9wZXJ0eV9yZWFkX3Uz
-MihkZXYsICJyb3RhdGlvbiIsICZyb3RhdGlvbik7CisKKwlyZXQgPSBtaXBpX2RiaV9zcGlfaW5p
-dChzcGksIG1pcGksIGRjKTsKKwlpZiAocmV0KQorCQlyZXR1cm4gcmV0OworCisJLyogQ2Fubm90
-IHJlYWQgZnJvbSBBZGFmcnVpdCAxLjgiIGRpc3BsYXkgdmlhIFNQSSAqLworCW1pcGktPnJlYWRf
-Y29tbWFuZHMgPSBOVUxMOworCisJcmV0ID0gbWlwaV9kYmlfaW5pdCgmc3BpLT5kZXYsIG1pcGks
-ICZzdDc3MzVyX3BpcGVfZnVuY3MsCisJCQkgICAgJnN0NzczNXJfZHJpdmVyLCAmc3Q3NzM1cl9t
-b2RlLCByb3RhdGlvbik7CisJaWYgKHJldCkKKwkJcmV0dXJuIHJldDsKKworCXNwaV9zZXRfZHJ2
-ZGF0YShzcGksIG1pcGkpOworCisJcmV0dXJuIGRldm1fdGlueWRybV9yZWdpc3RlcigmbWlwaS0+
-dGlueWRybSk7Cit9CisKK3N0YXRpYyB2b2lkIHN0NzczNXJfc2h1dGRvd24oc3RydWN0IHNwaV9k
-ZXZpY2UgKnNwaSkKK3sKKwlzdHJ1Y3QgbWlwaV9kYmkgKm1pcGkgPSBzcGlfZ2V0X2RydmRhdGEo
-c3BpKTsKKworCXRpbnlkcm1fc2h1dGRvd24oJm1pcGktPnRpbnlkcm0pOworfQorCitzdGF0aWMg
-c3RydWN0IHNwaV9kcml2ZXIgc3Q3NzM1cl9zcGlfZHJpdmVyID0geworCS5kcml2ZXIgPSB7CisJ
-CS5uYW1lID0gInN0NzczNXIiLAorCQkub3duZXIgPSBUSElTX01PRFVMRSwKKwkJLm9mX21hdGNo
-X3RhYmxlID0gc3Q3NzM1cl9vZl9tYXRjaCwKKwl9LAorCS5pZF90YWJsZSA9IHN0NzczNXJfaWQs
-CisJLnByb2JlID0gc3Q3NzM1cl9wcm9iZSwKKwkuc2h1dGRvd24gPSBzdDc3MzVyX3NodXRkb3du
-LAorfTsKK21vZHVsZV9zcGlfZHJpdmVyKHN0NzczNXJfc3BpX2RyaXZlcik7CisKK01PRFVMRV9E
-RVNDUklQVElPTigiU2l0cm9uaXggU1Q3NzM1UiBEUk0gZHJpdmVyIik7CitNT0RVTEVfQVVUSE9S
-KCJEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4iKTsKK01PRFVMRV9MSUNFTlNF
-KCJHUEwiKTsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+This adds the device tree bindings for the Gemini ethernet
+controller. It is pretty straight-forward, using standard
+bindings and modelling the two child ports as child devices
+under the parent ethernet controller device.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michał Mirosław <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v7->v8:
+- Use ethernet-port@0 and ethernet-port@1 with unit names
+  and following OF graph requirements.
+---
+ .../bindings/net/cortina,gemini-ethernet.txt       | 92 ++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+
+diff --git a/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+new file mode 100644
+index 000000000000..6c559981d110
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
+@@ -0,0 +1,92 @@
++Cortina Systems Gemini Ethernet Controller
++==========================================
++
++This ethernet controller is found in the Gemini SoC family:
++StorLink SL3512 and SL3516, also known as Cortina Systems
++CS3512 and CS3516.
++
++Required properties:
++- compatible: must be "cortina,gemini-ethernet"
++- reg: must contain the global registers and the V-bit and A-bit
++  memory areas, in total three register sets.
++- syscon: a phandle to the system controller
++- #address-cells: must be specified, must be <1>
++- #size-cells: must be specified, must be <1>
++- ranges: should be state like this giving a 1:1 address translation
++  for the subnodes
++
++The subnodes represents the two ethernet ports in this device.
++They are not independent of each other since they share resources
++in the parent node, and are thus children.
++
++Required subnodes:
++- port0: contains the resources for ethernet port 0
++- port1: contains the resources for ethernet port 1
++
++Required subnode properties:
++- compatible: must be "cortina,gemini-ethernet-port"
++- reg: must contain two register areas: the DMA/TOE memory and
++  the GMAC memory area of the port
++- interrupts: should contain the interrupt line of the port.
++  this is nominally a level interrupt active high.
++- resets: this must provide an SoC-integrated reset line for
++  the port.
++- clocks: this should contain a handle to the PCLK clock for
++  clocking the silicon in this port
++- clock-names: must be "PCLK"
++
++Optional subnode properties:
++- phy-mode: see ethernet.txt
++- phy-handle: see ethernet.txt
++
++Example:
++
++mdio-bus {
++	(...)
++	phy0: ethernet-phy@1 {
++		reg = <1>;
++		device_type = "ethernet-phy";
++	};
++	phy1: ethernet-phy@3 {
++		reg = <3>;
++		device_type = "ethernet-phy";
++	};
++};
++
++
++ethernet@60000000 {
++	compatible = "cortina,gemini-ethernet";
++	reg = <0x60000000 0x4000>, /* Global registers, queue */
++	      <0x60004000 0x2000>, /* V-bit */
++	      <0x60006000 0x2000>; /* A-bit */
++	syscon = <&syscon>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++
++	gmac0: ethernet-port@0 {
++		compatible = "cortina,gemini-ethernet-port";
++		reg = <0x60008000 0x2000>, /* Port 0 DMA/TOE */
++		      <0x6000a000 0x2000>; /* Port 0 GMAC */
++		interrupt-parent = <&intcon>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
++		resets = <&syscon GEMINI_RESET_GMAC0>;
++		clocks = <&syscon GEMINI_CLK_GATE_GMAC0>;
++		clock-names = "PCLK";
++		phy-mode = "rgmii";
++		phy-handle = <&phy0>;
++	};
++
++	gmac1: ethernet-port@1 {
++		compatible = "cortina,gemini-ethernet-port";
++		reg = <0x6000c000 0x2000>, /* Port 1 DMA/TOE */
++		      <0x6000e000 0x2000>; /* Port 1 GMAC */
++		interrupt-parent = <&intcon>;
++		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
++		resets = <&syscon GEMINI_RESET_GMAC1>;
++		clocks = <&syscon GEMINI_CLK_GATE_GMAC1>;
++		clock-names = "PCLK";
++		phy-mode = "rgmii";
++		phy-handle = <&phy1>;
++	};
++};
+-- 
+2.14.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
