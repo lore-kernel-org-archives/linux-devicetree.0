@@ -1,35 +1,66 @@
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-Subject: Re: [PATCH v4 3/5] staging: Introduce NVIDIA Tegra video decoder
- driver
-Date: Sun, 10 Dec 2017 14:29:39 -0500
-Message-ID: <1512934179.4281.15.camel@ndufresne.ca>
-References: <cover.1508448293.git.digetx@gmail.com>
-         <1a3798f337c0097e67d70226ae3ba665fd9156c2.1508448293.git.digetx@gmail.com>
-         <ad2da9f4-8899-7db3-493f-5aa15297c33c@xs4all.nl>
-         <3ac6a087-def2-014f-673d-1be9d5094635@gmail.com>
-         <93c98569-0282-80d9-78ad-c8ab8fd9db92@xs4all.nl>
-         <f46f397d-28e1-f4e5-55d4-9863214e8f6c@gmail.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: Add binding for Sitronix ST7735R
+ display panels
+Date: Sun, 10 Dec 2017 13:33:50 -0600
+Message-ID: <a4b67cf6-a132-170c-5a71-edfd84aa2da1@lechnology.com>
+References: <1511924469-11448-1-git-send-email-david@lechnology.com>
+ <1511924469-11448-2-git-send-email-david@lechnology.com>
+ <0cade030-030c-f6da-6f79-6fbd520ad753@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <f46f397d-28e1-f4e5-55d4-9863214e8f6c@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Vladimir Zapolskiy <vz@mleia.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>, linux-media@vger.kernel.org, linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Giulio Benetti <giulio.benetti@micronovasrl.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0cade030-030c-f6da-6f79-6fbd520ad753-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: limor-6aDhHjTmHzzR7s880joybQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le dimanche 10 décembre 2017 à 21:56 +0300, Dmitry Osipenko a écrit :
-> > I've CC-ed Maxime and Giulio as well: they are looking into adding support for
-> > the stateless allwinner codec based on this code as well. There may well be
-> > opportunities for you to work together, esp. on the userspace side. Note that
-> > Rockchip has the same issue, they too have a stateless HW codec.
+On 12/08/2017 03:41 PM, Noralf Trønnes wrote:
 > 
-> IIUC, we will have to define video decoder parameters in V4L API and then make a
-> V4L driver / userspace prototype (ffmpeg for example) that will use the requests
-> API for video decoding in order to upstream the requests API. Does it sound good?
+> Den 29.11.2017 04.01, skrev David Lechner:
+>> This adds a new device tree binding for Sitronix ST7735R display panels,
+>> such as the Adafruit 1.8" TFT.
+>>
+>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>> ---
+>>   .../bindings/display/sitronix,st7735r.txt          | 35 
+>> ++++++++++++++++++++++
+>>   1 file changed, 35 insertions(+)
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt 
+>> b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+>> new file mode 100644
+>> index 0000000..bbb8ba6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+>> @@ -0,0 +1,35 @@
+>> +Sitronix ST7735R display panels
+>> +
+>> +This binding is for display panels using a Sitronix ST7735R 
+>> controller in SPI
+>> +mode.
+>> +
+>> +Required properties:
+>> +- compatible:    "sitronix,st7735r-jd-t18003-t01"
+>> +- dc-gpios:    Display data/command selection (D/CX)
+>> +- reset-gpios:    Reset signal (RSTX)
+> 
+> I'm wondering if this should be optional.
+> 
+> Even though the display needs the reset line to be driven, it doesn't
+> have to be so by a gpio, I believe you can even get away with just
+> using a resistor as a reset circuit.
+> 
+> Not terribly important, it's up to you.
+> 
 
-Chromium/Chrome already have support for that type of decoder in their
-tree. In theory, it should just work.
-
-Nicolas
+It can be made optional later if needed, so I'm going to leave it as-is.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
