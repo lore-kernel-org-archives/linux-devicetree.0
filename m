@@ -1,38 +1,114 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v2 0/2] DRM driver for Sitronix ST7735R display panels
-Date: Sun, 10 Dec 2017 16:10:31 -0600
-Message-ID: <1512943833-31352-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, limor-6aDhHjTmHzzR7s880joybQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v2 1/2] dt-bindings: Add binding for Sitronix ST7735R display
+ panels
+Date: Sun, 10 Dec 2017 16:10:32 -0600
+Message-ID: <1512943833-31352-2-git-send-email-david@lechnology.com>
+References: <1512943833-31352-1-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1512943833-31352-1-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, limor@ladyada.net, David Lechner <david@lechnology.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds a new DRM/TinyDRM driver for Sitronix ST7735R, specifically
-the Adafruit 1.8" TFT.
-
-Nothing fancy here. Just mostly TinyDRM boilerplate with the init sequence
-from the fbtft driver for the same panel.
-
-Please see new discussion on device tree bindings in patch 1/2.
-
-David Lechner (2):
-  dt-bindings: Add binding for Sitronix ST7735R display panels
-  drm/tinydrm: add driver for ST7735R panels
-
- .../bindings/display/sitronix,st7735r.txt          |  35 ++++
- MAINTAINERS                                        |   6 +
- drivers/gpu/drm/tinydrm/Kconfig                    |  10 +
- drivers/gpu/drm/tinydrm/Makefile                   |   1 +
- drivers/gpu/drm/tinydrm/st7735r.c                  | 219 +++++++++++++++++++++
- 5 files changed, 271 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/sitronix,st7735r.txt
- create mode 100644 drivers/gpu/drm/tinydrm/st7735r.c
-
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIGEgbmV3IGRldmljZSB0cmVlIGJpbmRpbmcgZm9yIFNpdHJvbml4IFNUNzczNVIg
+ZGlzcGxheSBwYW5lbHMsCnN1Y2ggYXMgdGhlIEFkYWZydWl0IDEuOCIgVEZULgoKU2lnbmVkLW9m
+Zi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+CkFja2VkLWJ5OiBSb2Ig
+SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KCnYyOiBjaGFuZ2VzOgoqIE5vbmUsIGJ1dC4u
+LgoKSSdtIHdvbmRlcmluZyBhYm91dCBteSBjaG9pY2Ugb2YgY29tcGF0aWJsZSBoZXJlLiBJIGNo
+b3NlIHRoZSBuYW1lCiJzaXRyb25peCxzdDc3MzVyLWpkLXQxODAwMy10MDEiIHRvIG1lYW4gYSBT
+aXRyb25peCBTVDc3MzVSIGNvbnRyb2xsZXIKY29ubmVjdGVkIHRvIGEgSkQtVDE4MDAzLVQwMSBM
+Q0Qgc2NyZWVuLgoKV2hhdCBJIGFtIGFjdHVhbGx5IHVzaW5nLCB0aG91Z2gsIGlzIGFuIEFkYWZy
+dWl0IDEuOCIgVEZUIGJyZWFrb3V0IFsxXS4gSXQKaGFzIHNvbWUgYWRkaXRpb25hbCBlbGVjdHJv
+bmljcyB3aGljaCBqdXN0IHBhc3MgdGhyb3VnaCBzaWduYWxzIHRvIHRoZQpjb250cm9sbGVyLiBU
+aGUgYmFyZSBkaXNwbGF5IGlzIGFsc28gYXZhaWxhYmxlIGZyb20gQWRhZnJ1aXQgWzJdLgoKTGlt
+b3IgYnJvdWdodCB1cCBhbiBpbnRlcmVzdGluZyBwb2ludCBpbiBhbiBvZmYtbGlzdCBkaXNjdXNz
+aW9uLiBUaGUKc2FtZSBjb250cm9sbGVyIGNhbiBiZSB3aXJlZCB0byB0aGUgc2FtZSBMQ0QgaW4g
+ZGlmZmVyZW50IHdheXMuIFRoaXMgaXMKZXZpZGVudCBpbiB0aGUgZmJmdGYgZHJpdmVycyBpbiBz
+dGFnaW5nLiBUaGVyZSBpcyBhbiAiYWRhZnJ1aXQxOCIgYW5kIGFuCiJhZGFmcnVpdDE4X2dyZWVu
+IiBpbiBmYmZ0Zl9kZXZpY2VzLmMgd2hlcmUgYXBwYXJlbnRseSwgdHdvIG90aGVyd2lzZQppZGVu
+dGljYWwgZGlzcGxheXMgd2VyZSB3aXJlZCBzbGlnaHRseSBkaWZmZXJlbnRseSBhdCB0aGUgZmFj
+dG9yeSBzbyB0aGF0Cm9uIG9uZSwgdGhlIG9uLWJvYXJkIEdSQU0gd29yZCAwIGRvZXMgbm90IGNv
+cnJlc3BvbmQgdG8gcGl4ZWwgMCwwIG9uIHRoZQpMQ0QuIEl0IHJlcXVpcmVzIGEgc3BlY2lhbCBv
+ZmZzZXQgdG8gdGhlIEdSQU0gc3RhcnRpbmcgYWRkcmVzcyBpbiBvcmRlciB0bwpoYXZlIHRoZSBp
+bWFnZSBkaXNwbGF5ZWQgY29ycmVjdGx5LgoKQWRkaXRpb25hbGx5LCBmYnRmdCBzdXBwb3J0cyBh
+IFNhaW5TbWFydCAxLjgiIFRGVCBbM10gdGhhdCB1c2VzIHRoZSBzYW1lCmNvbnRyb2xsZXIsIGJ1
+dCBpdCBhcHBlYXJzIHRoYXQgdGhlc2UgaGF2ZSBkaWZmZXJlbnQgZ2FtbWEgY3VydmVzIChwZXJo
+YXBzCnRoZXkgdXNlIGRpZmZlcmVudCBMQ0RzPykuIFRoZSBhdmFpbGFibGUgcGlucyBhcmUgZXhh
+Y3RseSB0aGUgc2FtZSBhcyB0aGUKQWRhZnJ1aXQgZGlzcGxheSB0aG91Z2guCgpBcyBJIGFtIHdy
+aXRpbmcgdGhpcywgSSBhbSBsb29raW5nIGF0IHRoZSBKRC0xODAwIGRhdGFzaGVldCBbNF0gYWdh
+aW4gZm9yCnRoZSBBZGFmcnVpdCBkaXNwbGF5IGFuZCBJIHNlZSB0aGF0IGluIGFkZGl0aW9uIHRv
+IHNwZWNpZnlpbmcgdGhlIHNpemUgb2YKdGhlIGRpc3BsYXkgaXQgc2F5cyAiSUM6IFNUNzczNUIi
+LiBTbywgSSBhbSBzdGFydGluZyB0byB0aGluayB0aGF0ICJqaWFuZGEsCmpkLXQxODAwMy10MDEi
+IHdvdWxkIGJlIGEgYmV0dGVyIGNvbXBhdGlibGUgc3RyaW5nIHNpbmNlIGl0IHRlbGxzIHlvdQpl
+dmVyeXRoaW5nIHlvdSBuZWVkIHRvIGtub3cgYWJvdXQgdGhpcyBkaXNwbGF5LiBKdXN0IHVzaW5n
+IHRoZSBjb250cm9sbGVyCm5hbWUgYnkgaXRzZWxmICgic2l0cm9uaXgsc3Q3NzM1ciIpIGlzIG5v
+dCBlbm91Z2ggYmVjYXVzZSBpdCBkb2VzIG5vdCB0ZWxsCnlvdSB0aGluZ3MgbGlrZSB0aGUgbnVt
+YmVyIG9mIHBpeGVscyBvciB0aGUgcGh5c2ljYWwgc2l6ZSBvZiB0aGUgTENELgoKV2hhdCBJIGFt
+IG5vdCBzdXJlIGFib3V0LCB0aG91Z2gsIGlzIGhvdyB0byByZXByZXNlbnQgdGhlIEFkYWZydWl0
+IGRpc3BsYXkKdGhhdCByZXF1aXJlcyB0aGUgb2Zmc2V0IGluIHRoZSBkZXZpY2UgdHJlZS4gV291
+bGQgaXQgYmUgYSBkaWZmZXJlbnQKY29tcGF0aWJsZSBzdHJpbmcgb3Igc2hvdWxkIHdlIGFkZCBh
+biBleHRyYSBwcm9wZXJ0eSB0byBpbmRpY2F0ZSB0aGlzCnF1aXJrPwoKT24gYSByZWxhdGVkIG5v
+dGUsIEkgcmVjZW50bHkgc3VibWl0dGVkIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciBhIHNpbWls
+YXIKU1BJIGRpc3BsYXkgYnJlYWtvdXQgYm9hcmQgWzVdWzZdLiBBZnRlciBtb3JlIGRpZ2dpbmcg
+dGhvdWdoLCBJIGZvdW5kIGEKZGF0YXNoZWV0IGZvciB0aGF0IGRpc3BsYXkgWzddLCBzbyBJJ20g
+dGhpbmtpbmcgYSBjb21wYXRpYmxlIHN0cmluZyBvZgoidm90LHYyMjBoZjAxYS10IiB3b3VsZCBi
+ZSBiZXR0ZXIgYnkgdGhlIHNhbWUgcmVhc29uaW5nIGFib3ZlLgoKQW5kLCBJIGtub3cgdGhpcyBp
+cyBnZXR0aW5nIGxvbmcsIGJ1dCBvbmUgbW9yZSB0aGluZy4uLgoKVGhlcmUgd2FzIGEgYmluZGlu
+ZyBhY2tlZCByZWNlbnRseSBmb3IgdGhlIExDRCBvbiBhIEQtTGluayBESVItNjg1IFdpcmVsZXNz
+Ck4gU3RvcmFnZSBSb3V0ZXIgWzhdLiBUaGlzIHVzZXMgdGhlIGNvbXBvdW5kIGNvbXBhdGlibGUg
+c3RyaW5nIG9mICJkbGluaywKZGlyLTY4NS1wYW5lbCIsICJpbGl0ZWssaWxpOTMyMiIuIElmIHdl
+IHdhbnQgdG8gdHJ5IHRvIGtlZXAgdGhpbmdzIApjb25zaXN0ZW50LCBwZXJoYXBzIEkgc2hvdWxk
+IGJlIGFkb3B0aW5nIHRoaXMgcGF0dGVybiBhcyB3ZWxsPyBBbmQgcGVyaGFwcwppdCB3b3VsZCBi
+ZSBiZXR0ZXIgdG8gdXNlIHRoZSBiZXR0ZXIga25vd24gdmVuZG9yIG5hbWUgaW5zdGVhZCBvZiB0
+aGUKb2JzY3VyZSB2ZW5kb3JzIGZyb20gdGhlIGRhdGFzaGVldHMgdGhhdCBJIGhhdmUgZm91bmQ/
+IEZvciBleGFtcGxlLAoiYWRhZnJ1aXQsNjE4IiAic2l0cm9uaXgsc3Q3NzM1ciIgaW5zdGVhZCBv
+ZiAiamlhbmRhLGpkLXQxODAwMy10MDEiPwoKWzFdOiBodHRwczovL3d3dy5hZGFmcnVpdC5jb20v
+cHJvZHVjdC8zNTgKWzJdOiBodHRwczovL3d3dy5hZGFmcnVpdC5jb20vcHJvZHVjdC82MTgKWzNd
+OiBodHRwczovL3d3dy5zYWluc21hcnQuY29tL3Byb2R1Y3RzLzEtOC10ZnQtc3BpLWxjZC1zY3Jl
+ZW4td2l0aC1taWNyb3NkLXNvY2tldApbNF06IGh0dHA6Ly93d3cuYWRhZnJ1aXQuY29tL2RhdGFz
+aGVldHMvSkQtVDE4MDAucGRmCls1XTogaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3Jn
+L3BhdGNoLzE4NzAzOC8KWzZdOiBodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0
+Y2gvMTg5MjMzLwpbN106IGh0dHA6Ly93d3cuaG90bWN1LmNvbS8yMi0xNzZ4MjIwLXRmdC1sY2Qt
+d2l0aC1zcGktaW50ZXJmYWNlLXAtMzE2Lmh0bWwKWzhdOiBodHRwczovL3BhdGNod29yay5mcmVl
+ZGVza3RvcC5vcmcvcGF0Y2gvMTkxNDYyLwoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4
+LHN0NzczNXIudHh0ICAgICAgICAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxl
+IGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc3MzVyLnR4dAoKZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJv
+bml4LHN0NzczNXIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvc2l0cm9uaXgsc3Q3NzM1ci50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAw
+MC4uYmJiOGJhNgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzczNXIudHh0CkBAIC0wLDAgKzEsMzUgQEAKK1Np
+dHJvbml4IFNUNzczNVIgZGlzcGxheSBwYW5lbHMKKworVGhpcyBiaW5kaW5nIGlzIGZvciBkaXNw
+bGF5IHBhbmVscyB1c2luZyBhIFNpdHJvbml4IFNUNzczNVIgY29udHJvbGxlciBpbiBTUEkKK21v
+ZGUuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6CSJzaXRyb25peCxzdDc3
+MzVyLWpkLXQxODAwMy10MDEiCistIGRjLWdwaW9zOglEaXNwbGF5IGRhdGEvY29tbWFuZCBzZWxl
+Y3Rpb24gKEQvQ1gpCistIHJlc2V0LWdwaW9zOglSZXNldCBzaWduYWwgKFJTVFgpCisKK1RoZSBu
+b2RlIGZvciB0aGlzIGRyaXZlciBtdXN0IGJlIGEgY2hpbGQgbm9kZSBvZiBhIFNQSSBjb250cm9s
+bGVyLCBoZW5jZQorYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2NyaWJlZCBpbiAuLi9zcGkv
+c3BpLWJ1cy50eHQgbXVzdCBiZSBzcGVjaWZpZWQuCisKK09wdGlvbmFsIHByb3BlcnRpZXM6Cist
+IHJvdGF0aW9uOglwYW5lbCByb3RhdGlvbiBpbiBkZWdyZWVzIGNvdW50ZXIgY2xvY2t3aXNlICgw
+LDkwLDE4MCwyNzApCistIGJhY2tsaWdodDoJcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmlj
+ZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKKworRXhhbXBsZToKKworCWJhY2tsaWdodDogYmFja2xp
+Z2h0IHsKKwkJY29tcGF0aWJsZSA9ICJncGlvLWJhY2tsaWdodCI7CisJCWdwaW9zID0gPCZncGlv
+IDQ0IEdQSU9fQUNUSVZFX0hJR0g+OworCX0KKworCS4uLgorCisJZGlzcGxheUAweworCQljb21w
+YXRpYmxlID0gInNpdHJvbml4LHN0NzczNXItamQtdDE4MDAzLXQwMSI7CisJCXJlZyA9IDwwPjsK
+KwkJc3BpLW1heC1mcmVxdWVuY3kgPSA8MzIwMDAwMDA+OworCQlkYy1ncGlvcyA9IDwmZ3BpbyA0
+MyBHUElPX0FDVElWRV9ISUdIPjsKKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8gODAgR1BJT19BQ1RJ
+VkVfSElHSD47CisJCXJvdGF0aW9uID0gPDI3MD47CisJCWJhY2tsaWdodCA9ICZiYWNrbGlnaHQ7
+CisJfTsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
