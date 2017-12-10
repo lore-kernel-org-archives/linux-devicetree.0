@@ -1,136 +1,129 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH net-next 1/2 v8] net: ethernet: Add DT bindings for the Gemini ethernet
-Date: Sun, 10 Dec 2017 23:45:57 +0100
-Message-ID: <20171210224558.27122-1-linus.walleij@linaro.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: Allow indicating loss of pin states
+ during low-power
+Date: Sun, 10 Dec 2017 15:38:00 -0800
+Message-ID: <908c66f9-f9bd-a4df-e241-75595a3a3e27@gmail.com>
+References: <20171102231551.16220-1-f.fainelli@gmail.com>
+ <20171102231551.16220-3-f.fainelli@gmail.com>
+ <CACRpkdZtFRB_iy1bDPZ0wkK0jf7pkTGtbZG4gQUJVR+eiO+dhA@mail.gmail.com>
+ <20171129170247.GI28152@atomide.com>
+ <96cf5d74-3acf-07b9-9ad8-1011cd99a860@gmail.com>
+ <CACRpkdbFHj9pM6R3azVPKgbQ-LMmitEdJHQ5BOEb7Vy=kpNk4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbFHj9pM6R3azVPKgbQ-LMmitEdJHQ5BOEb7Vy=kpNk4A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Charles Keepax <ckeepax@opensource.cirrus.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Al Cooper <alcooperx@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the Gemini ethernet
-controller. It is pretty straight-forward, using standard
-bindings and modelling the two child ports as child devices
-under the parent ethernet controller device.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tobias Waldvogel <tobias.waldvogel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michał Mirosław <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v7->v8:
-- Use ethernet-port@0 and ethernet-port@1 with unit names
-  and following OF graph requirements.
----
- .../bindings/net/cortina,gemini-ethernet.txt       | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
 
-diff --git a/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
-new file mode 100644
-index 000000000000..6c559981d110
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/cortina,gemini-ethernet.txt
-@@ -0,0 +1,92 @@
-+Cortina Systems Gemini Ethernet Controller
-+==========================================
-+
-+This ethernet controller is found in the Gemini SoC family:
-+StorLink SL3512 and SL3516, also known as Cortina Systems
-+CS3512 and CS3516.
-+
-+Required properties:
-+- compatible: must be "cortina,gemini-ethernet"
-+- reg: must contain the global registers and the V-bit and A-bit
-+  memory areas, in total three register sets.
-+- syscon: a phandle to the system controller
-+- #address-cells: must be specified, must be <1>
-+- #size-cells: must be specified, must be <1>
-+- ranges: should be state like this giving a 1:1 address translation
-+  for the subnodes
-+
-+The subnodes represents the two ethernet ports in this device.
-+They are not independent of each other since they share resources
-+in the parent node, and are thus children.
-+
-+Required subnodes:
-+- port0: contains the resources for ethernet port 0
-+- port1: contains the resources for ethernet port 1
-+
-+Required subnode properties:
-+- compatible: must be "cortina,gemini-ethernet-port"
-+- reg: must contain two register areas: the DMA/TOE memory and
-+  the GMAC memory area of the port
-+- interrupts: should contain the interrupt line of the port.
-+  this is nominally a level interrupt active high.
-+- resets: this must provide an SoC-integrated reset line for
-+  the port.
-+- clocks: this should contain a handle to the PCLK clock for
-+  clocking the silicon in this port
-+- clock-names: must be "PCLK"
-+
-+Optional subnode properties:
-+- phy-mode: see ethernet.txt
-+- phy-handle: see ethernet.txt
-+
-+Example:
-+
-+mdio-bus {
-+	(...)
-+	phy0: ethernet-phy@1 {
-+		reg = <1>;
-+		device_type = "ethernet-phy";
-+	};
-+	phy1: ethernet-phy@3 {
-+		reg = <3>;
-+		device_type = "ethernet-phy";
-+	};
-+};
-+
-+
-+ethernet@60000000 {
-+	compatible = "cortina,gemini-ethernet";
-+	reg = <0x60000000 0x4000>, /* Global registers, queue */
-+	      <0x60004000 0x2000>, /* V-bit */
-+	      <0x60006000 0x2000>; /* A-bit */
-+	syscon = <&syscon>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+
-+	gmac0: ethernet-port@0 {
-+		compatible = "cortina,gemini-ethernet-port";
-+		reg = <0x60008000 0x2000>, /* Port 0 DMA/TOE */
-+		      <0x6000a000 0x2000>; /* Port 0 GMAC */
-+		interrupt-parent = <&intcon>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-+		resets = <&syscon GEMINI_RESET_GMAC0>;
-+		clocks = <&syscon GEMINI_CLK_GATE_GMAC0>;
-+		clock-names = "PCLK";
-+		phy-mode = "rgmii";
-+		phy-handle = <&phy0>;
-+	};
-+
-+	gmac1: ethernet-port@1 {
-+		compatible = "cortina,gemini-ethernet-port";
-+		reg = <0x6000c000 0x2000>, /* Port 1 DMA/TOE */
-+		      <0x6000e000 0x2000>; /* Port 1 GMAC */
-+		interrupt-parent = <&intcon>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+		resets = <&syscon GEMINI_RESET_GMAC1>;
-+		clocks = <&syscon GEMINI_CLK_GATE_GMAC1>;
-+		clock-names = "PCLK";
-+		phy-mode = "rgmii";
-+		phy-handle = <&phy1>;
-+	};
-+};
+On 12/02/2017 04:48 AM, Linus Walleij wrote:
+> On Wed, Nov 29, 2017 at 6:37 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>> On 11/29/2017 09:02 AM, Tony Lindgren wrote:
+> 
+>>> Hmm well typically a device driver that loses it's context just does
+>>> save and restore of the registers in runtime PM suspend/resume
+>>> as needed. In this case it would mean duplicating the state for
+>>> potentially for hundreds of registers.. So using the existing
+>>> state in the pinctrl subsystem totally makes sense for the pins.
+>>>
+>>> Florian do you have other reasons why this should be done in the
+>>> pinctrl framework instead of the driver? Might be worth describing
+>>> the reasoning in the patch descriptions :)
+>>
+>> The pinctrl provider driver that I am using is pinctrl-single, which has
+>> proper suspend/resume callbacks but those are not causing any HW
+>> programming to happen because of the (p->state == state) check, hence
+>> this patch series.
+> 
+> So we are talking about these callbacks, correct?
+> 
+> #ifdef CONFIG_PM
+> static int pinctrl_single_suspend(struct platform_device *pdev,
+>                                         pm_message_t state)
+> {
+>         struct pcs_device *pcs;
+> 
+>         pcs = platform_get_drvdata(pdev);
+>         if (!pcs)
+>                 return -EINVAL;
+> 
+>         return pinctrl_force_sleep(pcs->pctl);
+> }
+> 
+> static int pinctrl_single_resume(struct platform_device *pdev)
+> {
+>         struct pcs_device *pcs;
+> 
+>         pcs = platform_get_drvdata(pdev);
+>         if (!pcs)
+>                 return -EINVAL;
+> 
+>         return pinctrl_force_default(pcs->pctl);
+> }
+> #endif
+> 
+> Which falls through to this:
+> 
+> /**
+>  * pinctrl_force_sleep() - turn a given controller device into sleep state
+>  * @pctldev: pin controller device
+>  */
+> int pinctrl_force_sleep(struct pinctrl_dev *pctldev)
+> {
+>         if (!IS_ERR(pctldev->p) && !IS_ERR(pctldev->hog_sleep))
+>                 return pinctrl_select_state(pctldev->p, pctldev->hog_sleep);
+>         return 0;
+> }
+> EXPORT_SYMBOL_GPL(pinctrl_force_sleep);
+> 
+> /**
+>  * pinctrl_force_default() - turn a given controller device into default state
+>  * @pctldev: pin controller device
+>  */
+> int pinctrl_force_default(struct pinctrl_dev *pctldev)
+> {
+>         if (!IS_ERR(pctldev->p) && !IS_ERR(pctldev->hog_default))
+>                 return pinctrl_select_state(pctldev->p, pctldev->hog_default);
+>         return 0;
+> }
+> EXPORT_SYMBOL_GPL(pinctrl_force_default);
+> 
+> So am I right in assuming it is actually the hogs that is your biggest
+> problem, and those are the states that get lost over suspend/resume
+> that are especially problematic?
+> 
+> I.e. you don't have any problem with any non-hogged pinctrl
+> handles, those are handled just fine in the suspend/resume
+> paths of the client drivers?
+> 
+> If this is the case, it changes the problem scope slightly.
+> 
+> It is fair that functions named *force* should actually enforce
+> programming a state.
+> 
+> So then I would suggest somethin else: break pinctrl_select_state()
+> into two:
+> 
+> pinctrl_select_state() that works just like before, checking if
+> (p->state == state) but which calls a static function
+> pinctrl_select_state_commit() that commits the change unconditonally.
+> Then alter pinctrl_force_sleep() and pinctrl_force_sleep() to call
+> that function.
+> 
+> This should solve your problem without having to alter the semantics
+> of pinctrl_select_state() for everyone.
+
+This was exactly what I proposed initially here:
+
+http://patchwork.ozlabs.org/patch/734326/
+
+I really want to get this fixed, but I can't do that if we keep losing
+the context of the discussion (pun intended) :).
 -- 
-2.14.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
