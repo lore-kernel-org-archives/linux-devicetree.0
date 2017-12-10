@@ -1,30 +1,115 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 6/6] ARM: dts: imx7s: add usb hsic phy domain
-Date: Sun, 10 Dec 2017 13:23:00 -0200
-Message-ID: <CAOMZO5ByDN2805b+PcnP+zJcs7OLmO_X7dwBH_eiTOgGH-cqoQ@mail.gmail.com>
-References: <20171205222707.11302-1-tyler@opensourcefoundries.com> <20171205222707.11302-7-tyler@opensourcefoundries.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: accel: bmc150: Add OF device ID table
+Date: Sun, 10 Dec 2017 16:12:23 +0000
+Message-ID: <20171210161223.3a68c61c@archlinux>
+References: <20171201111058.13483-1-javierm@redhat.com>
+        <313108f3-2815-b030-4fa6-614efc31a8a9@redhat.com>
+        <20171204092259.00006250@huawei.com>
+        <337e54d5-7248-9eb2-e0c0-3a8b5443723d@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171205222707.11302-7-tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+In-Reply-To: <337e54d5-7248-9eb2-e0c0-3a8b5443723d-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+To: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 5, 2017 at 8:27 PM,  <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org> wrote:
-> From: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
->
-> The GPCv2 driver should control the MIPI, PCIe,
-> and USB HSIC PHY regulators. Add the USB HSIC
-> power domain to the GPC node.
->
-> Signed-off-by: Tyler Baker <tyler-yzvPICuk2AAEdKtRPRuaE5USO3DlRtUf@public.gmane.org>
+On Mon, 4 Dec 2017 11:24:40 +0100
+Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
 
-Looks good. I am assuming you tested USB HSIC operation on the mx7
-compulab board, right?
+> Hello Jonathan,
+> 
+> On 12/04/2017 10:44 AM, Jonathan Cameron wrote:
+> > On Mon, 4 Dec 2017 09:29:38 +0100
+> > Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> >   
+> >> Hi,
+> >>
+> >> On 01-12-17 12:10, Javier Martinez Canillas wrote:  
+> >>> The driver doesn't have a struct of_device_id table but supported devices
+> >>> are registered via Device Trees. This is working on the assumption that a
+> >>> I2C device registered via OF will always match a legacy I2C device ID and
+> >>> that the MODALIAS reported will always be of the form i2c:<device>.
+> >>>
+> >>> But this could change in the future so the correct approach is to have an
+> >>> OF device ID table if the devices are registered via OF.
+> >>>
+> >>> The I2C device ID table entries have the .driver_data field set, but they
+> >>> are not used in the driver so weren't set in the OF device table entries.
+> >>>
+> >>> Signed-off-by: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>> ---
+> >>>
+> >>>   drivers/iio/accel/bmc150-accel-i2c.c | 12 ++++++++++++
+> >>>   1 file changed, 12 insertions(+)
+> >>>
+> >>> diff --git a/drivers/iio/accel/bmc150-accel-i2c.c b/drivers/iio/accel/bmc150-accel-i2c.c
+> >>> index f85014fbaa12..8ffc308d5fd0 100644
+> >>> --- a/drivers/iio/accel/bmc150-accel-i2c.c
+> >>> +++ b/drivers/iio/accel/bmc150-accel-i2c.c
+> >>> @@ -81,9 +81,21 @@ static const struct i2c_device_id bmc150_accel_id[] = {
+> >>>   
+> >>>   MODULE_DEVICE_TABLE(i2c, bmc150_accel_id);
+> >>>   
+> >>> +static const struct of_device_id bmc150_accel_of_match[] = {
+> >>> +	{ .compatible = "bosch,bmc150_accel" },
+> >>> +	{ .compatible = "bosch,bmi055_accel" },    
+> >>
+> >> These look a bit weird, there is no reason to mirror the i2c_device_ids  
+> > 
+> > There has been a steady move for a long time to add these IDs with the plan
+> > that we would stop automatically matching against the manufacturer free
+> > i2c IDs. Mostly on the basis that was a hack that brought a lot  
+> 
+> Matching using OF IDs have been working for some time (since v4.10 AFAICT)
+> after the following commit:
+> 
+> da10c06a044b ("i2c: Make I2C ID tables non-mandatory for DT'ed devices").
+> 
+> The only remaining problem is with module auto-loading.
+> 
+> > of effectively unreviewed device tree bindings. As I understand it the
+> > eventual plan is to be able to get rid of that old path entirely...
+> > +CC Wolfram to see what his view is on this.
+> >  
+> 
+> I don't think we can get rid of the old path entirely since are valid use cases
+> for it. For example when the I2C devices are registered with the i2c_new_device
+> interface where the bus and address are declared in a struct i2c_board_info (ie:
+> old platforms that still use board files or devices with an embedded I2C chip).
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Agreed. I only meant the use of that path when matching device tree IDs.
+There are still reasons to use it otherwise - including the ones you mention
+and indeed manually adding the device - commonly done with various sensors
+supported by lm-sensors on x86 boards.   These are often not described in
+any way at all.
+
+> 
+> What I think though is that drivers should only be required to define the device
+> table for the firmware interface used to instantiate them. For example, a driver
+> for a device that's DT-only should only have an OF device ID table just like a
+> driver for an ACPI-only device only requires to have an ACPI ID table.
+> 
+> Conversely, a driver for a device that's only instantiated using platform data
+> should only have an I2C device ID table.
+> 
+
+A lot of drivers are used on both ACPI and DT platforms.  For newer cases we
+perhaps don't need the i2c table.
+
+
+> If a driver supports both DT and legacy platforms, then it's OK to have both ID
+> tables defined. What is not correct is to require OF-only drivers to have an I2C
+> device ID table just as a workaround to have their modules auto-loading working.
+
+Absolutely agree.
+
+Jonathan
+> 
+> Best regards,
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
