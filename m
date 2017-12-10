@@ -1,116 +1,34 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: accel: bmc150: Add OF device ID table
-Date: Sun, 10 Dec 2017 16:12:23 +0000
-Message-ID: <20171210161223.3a68c61c@archlinux>
-References: <20171201111058.13483-1-javierm@redhat.com>
-        <313108f3-2815-b030-4fa6-614efc31a8a9@redhat.com>
-        <20171204092259.00006250@huawei.com>
-        <337e54d5-7248-9eb2-e0c0-3a8b5443723d@redhat.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V7 0/7] dmaengine: qcom_hidma: add support for bugfixed HW
+Date: Sun, 10 Dec 2017 22:09:08 +0530
+Message-ID: <20171210163908.GH18649@localhost>
+References: <1512681031-11343-1-git-send-email-okaya@codeaurora.org>
+ <CAJZ5v0g8v3mwCZOCXHsy_0iA+0RzFFhBxfo4f_cEv5QVLEccsA@mail.gmail.com>
+ <bad52be7-4ff8-4f06-4bd0-83e97701f495@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <337e54d5-7248-9eb2-e0c0-3a8b5443723d-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <bad52be7-4ff8-4f06-4bd0-83e97701f495@codeaurora.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-arm-msm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 4 Dec 2017 11:24:40 +0100
-Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+On Fri, Dec 08, 2017 at 09:44:46AM -0500, Sinan Kaya wrote:
+> On 12/8/2017 8:48 AM, Rafael J. Wysocki wrote:
+> > The series is fine by me, by how do you want to route it?
+> 
+> Probably through the DMA engine route as it has pieces that didn't get any
+> review from Vinod yet.
+> 
+> Vinod,
+> 
+> Do you have any preference?
 
-> Hello Jonathan,
-> 
-> On 12/04/2017 10:44 AM, Jonathan Cameron wrote:
-> > On Mon, 4 Dec 2017 09:29:38 +0100
-> > Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> >   
-> >> Hi,
-> >>
-> >> On 01-12-17 12:10, Javier Martinez Canillas wrote:  
-> >>> The driver doesn't have a struct of_device_id table but supported devices
-> >>> are registered via Device Trees. This is working on the assumption that a
-> >>> I2C device registered via OF will always match a legacy I2C device ID and
-> >>> that the MODALIAS reported will always be of the form i2c:<device>.
-> >>>
-> >>> But this could change in the future so the correct approach is to have an
-> >>> OF device ID table if the devices are registered via OF.
-> >>>
-> >>> The I2C device ID table entries have the .driver_data field set, but they
-> >>> are not used in the driver so weren't set in the OF device table entries.
-> >>>
-> >>> Signed-off-by: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>> ---
-> >>>
-> >>>   drivers/iio/accel/bmc150-accel-i2c.c | 12 ++++++++++++
-> >>>   1 file changed, 12 insertions(+)
-> >>>
-> >>> diff --git a/drivers/iio/accel/bmc150-accel-i2c.c b/drivers/iio/accel/bmc150-accel-i2c.c
-> >>> index f85014fbaa12..8ffc308d5fd0 100644
-> >>> --- a/drivers/iio/accel/bmc150-accel-i2c.c
-> >>> +++ b/drivers/iio/accel/bmc150-accel-i2c.c
-> >>> @@ -81,9 +81,21 @@ static const struct i2c_device_id bmc150_accel_id[] = {
-> >>>   
-> >>>   MODULE_DEVICE_TABLE(i2c, bmc150_accel_id);
-> >>>   
-> >>> +static const struct of_device_id bmc150_accel_of_match[] = {
-> >>> +	{ .compatible = "bosch,bmc150_accel" },
-> >>> +	{ .compatible = "bosch,bmi055_accel" },    
-> >>
-> >> These look a bit weird, there is no reason to mirror the i2c_device_ids  
-> > 
-> > There has been a steady move for a long time to add these IDs with the plan
-> > that we would stop automatically matching against the manufacturer free
-> > i2c IDs. Mostly on the basis that was a hack that brought a lot  
-> 
-> Matching using OF IDs have been working for some time (since v4.10 AFAICT)
-> after the following commit:
-> 
-> da10c06a044b ("i2c: Make I2C ID tables non-mandatory for DT'ed devices").
-> 
-> The only remaining problem is with module auto-loading.
-> 
-> > of effectively unreviewed device tree bindings. As I understand it the
-> > eventual plan is to be able to get rid of that old path entirely...
-> > +CC Wolfram to see what his view is on this.
-> >  
-> 
-> I don't think we can get rid of the old path entirely since are valid use cases
-> for it. For example when the I2C devices are registered with the i2c_new_device
-> interface where the bus and address are declared in a struct i2c_board_info (ie:
-> old platforms that still use board files or devices with an embedded I2C chip).
+Yeah sure sounds okay to me as DMA parts are dependent on these.
+Rafael if you need an immutable tag to pull this, let me know.
 
-Agreed. I only meant the use of that path when matching device tree IDs.
-There are still reasons to use it otherwise - including the ones you mention
-and indeed manually adding the device - commonly done with various sensors
-supported by lm-sensors on x86 boards.   These are often not described in
-any way at all.
-
-> 
-> What I think though is that drivers should only be required to define the device
-> table for the firmware interface used to instantiate them. For example, a driver
-> for a device that's DT-only should only have an OF device ID table just like a
-> driver for an ACPI-only device only requires to have an ACPI ID table.
-> 
-> Conversely, a driver for a device that's only instantiated using platform data
-> should only have an I2C device ID table.
-> 
-
-A lot of drivers are used on both ACPI and DT platforms.  For newer cases we
-perhaps don't need the i2c table.
-
-
-> If a driver supports both DT and legacy platforms, then it's OK to have both ID
-> tables defined. What is not correct is to require OF-only drivers to have an I2C
-> device ID table just as a workaround to have their modules auto-loading working.
-
-Absolutely agree.
-
-Jonathan
-> 
-> Best regards,
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+-- 
+~Vinod
