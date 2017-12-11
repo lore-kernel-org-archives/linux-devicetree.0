@@ -1,51 +1,55 @@
-From: Javier Martinez Canillas <javierm@redhat.com>
-Subject: [RFT PATCH] ARM: dts: exynos: Enable Mixer node for Exynos5800 Peach Pi machine
-Date: Mon, 11 Dec 2017 23:48:56 +0100
-Message-ID: <20171211224856.29264-1-javierm@redhat.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Guillaume Tucker <guillaume.tucker@collabora.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Shuah Khan <shuahkh@osg.samsung.com>, Javier Martinez Canillas <javierm@redhat.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: rtc: add bindings for i.MX53 SRTC
+Date: Mon, 11 Dec 2017 21:08:00 -0200
+Message-ID: <CAOMZO5DoiLW3DxLF=agHua9jO-+LgWA3xw6h7kyj_uot47pkjw@mail.gmail.com>
+References: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
+ <20171205140646.30367-2-linux-kernel-dev@beckhoff.com> <20171206215436.lwttn445wjilh3wo@rob-hp-laptop>
+ <3BB206AB2B1BD448954845CE6FF69A8E01CB53233C@NT-Mail07.beckhoff.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3BB206AB2B1BD448954845CE6FF69A8E01CB53233C-vUij6NSodOcSOXk/eDA+lhuDmiLEvxRJ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Patrick_Br=C3=BCnn?= <P.Bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-dev <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Patrick Bruenn <p.bruenn-QonKdJ6Bx34e+czBwuGJN7NAH6kLmebB@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
 List-Id: devicetree@vger.kernel.org
 
-Commit 1cb686c08d12 ("ARM: dts: exynos: Add status property to Exynos 542x
-Mixer nodes") disabled the Mixer node by default in the DTSI and enabled
-for each Exynos 542x DTS. But unfortunately it missed to enable it for the
-Exynos5800 Peach Pi machine, since the 5800 is also an 542x SoC variant.
+Hi Patrick,
 
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+On Mon, Dec 11, 2017 at 5:08 AM, Patrick Br=C3=BCnn <P.Bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>=
+ wrote:
 
----
+>>rtc@...
+>>
+> The rtc for which this series adds support is embedded within a function =
+block called
+> "Secure Real Time Clock". This driver doesn't utilize all of the hardware=
+ features by
+> now. But maybe someone else wants to extend the functionalities, later.
+> For that possibility I wanted to name the node "srtc". Should I still cha=
+nge this?
+>
+> I believe you have a much better understanding of what should be done her=
+e. I don't
+> want to argue with you, just thought you might not had that information. =
+So if I am
+> wrong just tell me and I will change it without further "complaining".
 
-I believe this may cause the boot issues reported on Exynos5800 Peach Pi
-from v4.15-rc3, the mentioned commit made to v4.15-rc1 but it seems that
-didn't cause any harm until commit ("510353a63796 drm/bridge: analogix
-dp: Fix runtime PM state in get_modes() callback") fixed the runtime PM
-management in the DP driver.
+>From the Devicetree Specification document:
 
-I can't test right now, but I'm posting anyways as a RFT in case others
-that have access to a Peach Pi can test it.
+"Generic Names Recommendation
 
-Best regards,
-Javier
+The name of a node should be somewhat generic, reflecting the function
+of the device and not its precise program-
+ming model. If appropriate, the name should be one of the following choices=
+:
+...
+rtc
+"
 
- arch/arm/boot/dts/exynos5800-peach-pi.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index b2b95ff205e8..0029ec27819c 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -664,6 +664,10 @@
- 	status = "okay";
- };
- 
-+&mixer {
-+	status = "okay";
-+};
-+
- /* eMMC flash */
- &mmc_0 {
- 	status = "okay";
--- 
-2.14.3
+So better use 'rtc' as suggested by Rob.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
