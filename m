@@ -1,40 +1,91 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 03/20] ARM: dts: aspeed-g4: Correct VUART IRQ number
-Date: Mon, 11 Dec 2017 21:14:18 +1030
-Message-ID: <CACPK8XfSxxVFT7y6M17LZhVO0GHuL1L=6KET75Qojg8rpgD9iw@mail.gmail.com>
-References: <20171211050704.20621-1-joel@jms.id.au> <20171211050704.20621-4-joel@jms.id.au>
- <CAK8P3a2psgOYZEgO8O3H_xxpDTNd=ESJpSf4bs9kf0nPvKYqtQ@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 0/2] Tegra PCIe end point config space map code
+ refactoring
+Date: Mon, 11 Dec 2017 11:54:31 +0100
+Message-ID: <20171211105431.GI10671@ulmo>
+References: <1512410030-21038-1-git-send-email-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a2psgOYZEgO8O3H_xxpDTNd=ESJpSf4bs9kf0nPvKYqtQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KrHCbChajFcK0yQE"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1512410030-21038-1-git-send-email-vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 6:28 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Mon, Dec 11, 2017 at 6:06 AM, Joel Stanley <joel@jms.id.au> wrote:
->> This should have always been 8.
->>
->> Signed-off-by: Joel Stanley <joel@jms.id.au>
->
-> As this is a bugfix, should we backport it to stable kernels? When you
-> fix a bug,
-> I generally recommend including a 'Fixes' tag with the commit ID of the patch
-> that introduced the problem, and either a 'Cc: stable@vger.kernel.org' tag
-> if you want it backported, or an explanation in the changelog why it should
-> not get backported. This really helps Greg and the other stable maintainers
-> trying to make a decision what to backport and what not.
 
-We could do this, and I generally follow the practice of adding Fixes
-tags. I hadn't because without an upstream clock driver, the Aspeed
-port is not usable by anyone without making modifications. We're
-really depending on getting that code merged.
+--KrHCbChajFcK0yQE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I will send it as a fix to 4.15. Do you mind taking individual patches
-for the arm dt tree, or would you prefer a pull request?
+On Mon, Dec 04, 2017 at 11:23:48PM +0530, Vidya Sagar wrote:
+> PCIe host controller in Tegra SoCs has 1GB of aperture available
+> for mapping end points config space, IO and BARs. In that, currently
+> 256MB is being reserved for mapping end points configuration space
+> which leaves less memory space available for mapping end points BARs
+> on some of the platforms.
+> This patch series attempts to map only 4K space from 1GB aperture to
+> access end points configuration space.
+>=20
+> Currently, this change can benefit T20 and T186 in saving (i.e. repurposed
+> to use for BAR mapping) physical space as well as kernel virtual mapping =
+space,
+> it saves only kernel virtual address space in T30, T124, T132 and T210.
+>=20
+> NOTE: Since T186 PCIe DT entry is not yet present in main line (it is cur=
+rently
+> merged to 'for-4.15/arm64/dt' branch), nothing gets broken with this chan=
+ge for T186.
+> For older platforms (T20, T30, T124, T132, T210), this change works fine =
+without any
+> DT modifications
+>=20
+> Testing Done on T124, T210 & T186:
+>  Enumeration and basic functionality of immediate devices
+>  Enumeration of devices behind a PCIe switch
+>  Complete 4K configuration space access
+>=20
+> Vidya Sagar (2):
+>   PCI: tegra: refactor config space mapping code
+>   ARM64: tegra: limit PCIe config space mapping to 4K for T186
+>=20
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
+>  drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------------=
+------
+>  2 files changed, 44 insertions(+), 89 deletions(-)
 
-Cheers,
+Hi Bjorn,
 
-Joel
+there's a bunch of PCI related patches for Tegra floating around on the
+lists. I'm wondering if you'd be okay if I pick those up into the Tegra
+tree after they've been reviewed and send you a pull request later on
+(say around v4.15-rc6). That would allow me to get things cooking in
+linux-next for a bit and get broader testing in addition to the
+flexibility to patch things up if they break.
+
+Thierry
+
+--KrHCbChajFcK0yQE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlouY+QACgkQ3SOs138+
+s6Gv/A/+I3RDNHLScnSYOD6XgtW2jtMYkMSXhFht/Xx6+3BJ4/lgxLLrhQ/QScel
+ZgaO7nEsHsHKBTiaINm5DiFWMLrQMfp2txF0UKwbcmcfmElZmkdK/rXCUm0ALMCh
+wu5f8jN3E0Pwn4bUBjFVz2apeSDC6F0jOb3UR3wjsRv6MkdfakP+yVVCdy0ljyzs
++AofdrBvQC7a75pERFC6vYlXqYoUjbN+puTQWMOn7/knXYlRJcqra4sgPdme7YS4
+YgOujKoxlhDg0PQqNYmJwDnx52KKaRt9JXjLSuBkwMcJ8p5xHVAq7lkzsue2xbHJ
+jNvQKs0/J3+rxUo/Y2t2lPW6nyzL465EPPVeCYhp8ABDi3mPdhQvFclw9mgfxIpE
+mfx71HA3VaHDCDgwK6C02TWU2jvZaG6Ub4uRYAwyjo/slial6mASttspME8Id80I
+ClDBJZ1UXkTmBDqTlNbfT5GFCfZM6RaGG2b9Mf0fHPFEi/LAyBy8P/eP34DZOh45
+Rd7suNsd0sDUdrYjPfGnZoiF0K0gvT10Uz+BLBkVVhI8/HrpbXM01OzZouSEd8vh
+9fXwcdTziKaYMsTppx/v0a1O2RUMFBv2sW+JHKsU9+QF18lTYLbKWoi1eqflZRNX
+CbCBEXIfC3Vo7ZPbPxnSHbCQgad3VihPBAUsmcycHBa3YhJs7Jo=
+=T1P+
+-----END PGP SIGNATURE-----
+
+--KrHCbChajFcK0yQE--
