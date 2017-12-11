@@ -1,53 +1,67 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v7 5/6] arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
-Date: Mon, 11 Dec 2017 22:13:47 +0800
-Message-ID: <20171211141348.22048-6-yixun.lan@amlogic.com>
+Subject: [PATCH v7 6/6] arm64: dts: meson-axg: switch uart_ao clock to CLK81
+Date: Mon, 11 Dec 2017 22:13:48 +0800
+Message-ID: <20171211141348.22048-7-yixun.lan@amlogic.com>
 References: <20171211141348.22048-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <20171211141348.22048-1-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Qiufang Dai <qiufang.dai@amlogic.com>
+Switch the uart_ao pclk to CLK81 since the clock driver is ready.
+Also move the clock info to the board.dts instead in the soc.dtsi.
 
-Try to add Hiubus DT info, and also enable clock DT info
-for the Amlogic's Meson-AXG SoC.
-
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
 Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 2 ++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 5 +----
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 70eca1f8736a..718bbebff107 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -19,4 +19,6 @@
+ 
+ &uart_AO {
+ 	status = "okay";
++	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
++	clock-names = "xtal", "pclk", "baud";
+ };
 diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index b932a784b02a..6fe5ee0c144e 100644
+index 6fe5ee0c144e..f5b496bfd4de 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -148,6 +148,20 @@
- 			#address-cells = <0>;
- 		};
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/axg-clkc.h>
  
-+		hiubus: bus@ff63c000 {
-+			compatible = "simple-bus";
-+			reg = <0x0 0xff63c000 0x0 0x1c00>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges = <0x0 0x0 0x0 0xff63c000 0x0 0x1c00>;
-+
-+			clkc: clock-controller@0 {
-+				compatible = "amlogic,axg-clkc";
-+				#clock-cells = <1>;
-+				reg = <0x0 0x0 0x0 0x320>;
-+			};
-+		};
-+
- 		mailbox: mailbox@ff63dc00 {
- 			compatible = "amlogic,meson-gx-mhu", "amlogic,meson-gxbb-mhu";
- 			reg = <0 0xff63dc00 0 0x400>;
+ / {
+ 	compatible = "amlogic,meson-axg";
+@@ -200,8 +201,6 @@
+ 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
+ 				reg = <0x0 0x3000 0x0 0x18>;
+ 				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
+-				clocks = <&xtal>, <&xtal>, <&xtal>;
+-				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
+ 
+@@ -209,8 +208,6 @@
+ 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
+ 				reg = <0x0 0x4000 0x0 0x18>;
+ 				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
+-				clocks = <&xtal>, <&xtal>, <&xtal>;
+-				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
+ 		};
 -- 
 2.15.1
+
