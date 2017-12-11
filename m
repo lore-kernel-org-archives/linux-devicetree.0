@@ -1,114 +1,58 @@
-From: Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
- ethernet driver
-Date: Mon, 11 Dec 2017 22:34:17 +0900
-Message-ID: <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
-References: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
- <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com> <20171211210455.170A.4A936039@socionext.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: stm32: prepare stm32 family to welcome armv7 architecture
+Date: Mon, 11 Dec 2017 14:40:43 +0100
+Message-ID: <CAK8P3a2rrpFuwET8r1H0YWVABbCZr5c2ySrKCgA4mfoZPfWp6Q@mail.gmail.com>
+References: <1512742277-28205-1-git-send-email-ludovic.Barre@st.com>
+ <1512742277-28205-2-git-send-email-ludovic.Barre@st.com> <CACRpkdaKZk5N9F=_nYSzKWyXgW4xQ9Ltft7-UNM+a-nOpqq2xg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211210455.170A.4A936039-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <CACRpkdaKZk5N9F=_nYSzKWyXgW4xQ9Ltft7-UNM+a-nOpqq2xg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux kernel mailing list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-2017-12-11 21:04 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> On Mon, 11 Dec 2017 10:19:15 +0100 Phlippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org> wrote:
+On Mon, Dec 11, 2017 at 11:25 AM, Linus Walleij
+<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Dec 8, 2017 at 3:11 PM, Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org> wrote:
 >
->> Dear Kunihiko-san,
+>> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 >>
->> On Mon, Dec 11, 2017 at 8:57 AM, Kunihiko Hayashi
->> <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
->> > The UniPhier platform from Socionext provides the AVE ethernet
->> > controller that includes MAC and MDIO bus supporting RGMII/RMII
->> > modes. The controller is named AVE.
->> >
->> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
->> > Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
->> [...]
->> > --- /dev/null
->> > +++ b/drivers/net/ethernet/socionext/Makefile
->> > @@ -0,0 +1,5 @@
->> > +# SPDX-License-Identifier: GPL-2.0
+>> This patch prepares the STM32 machine for the integration of Cortex-A
+>> based microprocessor (MPU), on top of the existing Cortex-M
+>> microcontroller family (MCU). Since both MCUs and MPUs are sharing
+>> common hardware blocks we can keep using ARCH_STM32 flag for most of
+>> them. If a hardware block is specific to one family we can use either
+>> ARCH_STM32_MCU or ARCH_STM32_MPU flag.
 >>
->> You are correctly using SPDX ids here....
->>
->> > +obj-$(CONFIG_SNI_AVE) += sni_ave.o
->> > diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
->> > new file mode 100644
->> > index 0000000..7b293c2
->> > --- /dev/null
->> > +++ b/drivers/net/ethernet/socionext/sni_ave.c
->> > @@ -0,0 +1,1744 @@
->> > +/**
->> > + * sni_ave.c - Socionext UniPhier AVE ethernet driver
->> > + *
->> > + * Copyright 2014 Panasonic Corporation
->> > + * Copyright 2015-2017 Socionext Inc.
->> > + *
->> > + * This program is free software: you can redistribute it and/or modify
->> > + * it under the terms of the GNU General Public License version 2  of
->> > + * the License as published by the Free Software Foundation.
->> > + *
->> > + * This program is distributed in the hope that it will be useful,
->> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> > + * GNU General Public License for more details.
->> > + */
->>
->> ... then I guess you could also use them here, replacing at least 7
->> lines of boilerplate by a single id line?
->>
->> > +// SDPX-License-Identifier: GPL-2.0
->
-> Thank you for your kindly comment.
->
-> It seems there are few ethernet drivers applying SPDX-License-Identifier
-> to C source, then it has been difficult for me to decide whether to replace
-> boilerplate.
->
-> If it's no problem to apply SPDX to sources of ethernet drivers,
-> I'll replace it with the single line.
->
->> And if you go C++ style all the way, this could be even more compact:
->>
->> > +// SDPX-License-Identifier: GPL-2.0
->> > +// sni_ave.c - Socionext UniPhier AVE ethernet driver
->> > +// Copyright 2014 Panasonic Corporation
->> > +// Copyright 2015-2017 Socionext Inc.
->
-> It's much simpler.
-> If it's reasonable to apply this style here, I can replace it, too.
+>> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 
-IMHO, even if we use SPDX license identifier, I recommend to use
-C-style comments as many other files do, since it is C code.
-If SPDX identifier requires C++ style, that is SPDX parser's issue
-and should be fixed to get it from C-style comment.
+To what degree do we need to treat them as separate families
+at all then? I wonder if the MCU/MPU distinction is always that
+clear along the Cortex-M/Cortex-A separation, especially if
+we ever get to a chip that has both types of cores. What
+exactly would we miss if we do away with the ARCH_STM32_MCU
+symbol here?
 
-https://spdx.org/sites/cpstandard/files/pages/files/using_spdx_license_list_short_identifiers.pdf
-
-Anyway, SPDX.org itself shows C-style (short header) example. See page 6.
-
-Thank you,
-
+> So yesterdays application processors are todays MCU processors.
 >
-> Thank you,
+> I said this on a lecture for control systems a while back and
+> stated it as a reason I think RTOSes are not really seeing a bright
+> future compared to Linux.
 >
-> ---
-> Best Regards,
-> Kunihiko Hayashi
->
->
+> It happened quicker than I thought though, interesting.
 
+I think there is still lots of room for smaller RTOS in the long run,
+but it's likely that the 'MPU + external DRAM' design point will
+shift further to Linux, as there isn't really a benefit in squeezing
+in anything smaller when the minimum is 32MB or 128MB of
+RAM, depending on the interface.
 
+For on-chip eDRAM or SRAM based MPUs, that doesn't hold
+true, the memory size is what drives the cost here.
 
--- 
-Masami Hiramatsu
+        Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
