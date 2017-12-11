@@ -1,7 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 09/20] ARM: dts: imx6*-hummingboard2: fix formatting
-Date: Mon, 11 Dec 2017 16:58:03 +0000
-Message-ID: <E1eORP1-0000Hm-Gk@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 10/20] ARM: dts: imx6*-hummingboard2: add SGTL5000 VDDD supply
+Date: Mon, 11 Dec 2017 16:58:08 +0000
+Message-ID: <E1eORP6-0000Hv-Mk@rmk-PC.armlinux.org.uk>
 References: <20171211165631.GW10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -16,42 +16,26 @@ List-Id: devicetree@vger.kernel.org
 
 From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
 
-Trivial formatting change.
+VDDD is supplied by VCC_1P8 on HB2.
 
 Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-index 7e94548c0de7..ab809ee0c58c 100644
+index ab809ee0c58c..dfbcdf33b84c 100644
 --- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-@@ -482,9 +482,9 @@
+@@ -178,6 +178,7 @@
+ 		reg = <0x0a>;
+ 		VDDA-supply = <&reg_3p3v>;
+ 		VDDIO-supply = <&reg_3p3v>;
++		VDDD-supply = <&reg_1p8v>;
+ 	};
  };
  
- &pwm1 {
--        pinctrl-names = "default";
--        pinctrl-0 = <&pinctrl_hummingboard2_pwm1>;
--        status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hummingboard2_pwm1>;
-+	status = "okay";
- };
- 
- &pwm3 {
-@@ -534,9 +534,7 @@
- 
- &usdhc3 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <
--		&pinctrl_hummingboard2_usdhc3
--	>;
-+	pinctrl-0 = <&pinctrl_hummingboard2_usdhc3>;
- 	vmmc-supply = <&reg_3p3v>;
- 	vqmmc-supply = <&reg_3p3v>;
- 	bus-width = <8>;
 -- 
 2.7.4
 
