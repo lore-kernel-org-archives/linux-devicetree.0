@@ -1,91 +1,104 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3 0/2] Tegra PCIe end point config space map code
- refactoring
-Date: Mon, 11 Dec 2017 11:54:31 +0100
-Message-ID: <20171211105431.GI10671@ulmo>
-References: <1512410030-21038-1-git-send-email-vidyas@nvidia.com>
+From: <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/4] rtc: add mxc driver for i.MX53 SRTC
+Date: Mon, 11 Dec 2017 11:56:53 +0100
+Message-ID: <20171211105657.20251-1-linux-kernel-dev@beckhoff.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KrHCbChajFcK0yQE"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1512410030-21038-1-git-send-email-vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
 
---KrHCbChajFcK0yQE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Neither rtc-imxdi, rtc-mxc nor rtc-snvs are compatible with i.MX53.
 
-On Mon, Dec 04, 2017 at 11:23:48PM +0530, Vidya Sagar wrote:
-> PCIe host controller in Tegra SoCs has 1GB of aperture available
-> for mapping end points config space, IO and BARs. In that, currently
-> 256MB is being reserved for mapping end points configuration space
-> which leaves less memory space available for mapping end points BARs
-> on some of the platforms.
-> This patch series attempts to map only 4K space from 1GB aperture to
-> access end points configuration space.
->=20
-> Currently, this change can benefit T20 and T186 in saving (i.e. repurposed
-> to use for BAR mapping) physical space as well as kernel virtual mapping =
-space,
-> it saves only kernel virtual address space in T30, T124, T132 and T210.
->=20
-> NOTE: Since T186 PCIe DT entry is not yet present in main line (it is cur=
-rently
-> merged to 'for-4.15/arm64/dt' branch), nothing gets broken with this chan=
-ge for T186.
-> For older platforms (T20, T30, T124, T132, T210), this change works fine =
-without any
-> DT modifications
->=20
-> Testing Done on T124, T210 & T186:
->  Enumeration and basic functionality of immediate devices
->  Enumeration of devices behind a PCIe switch
->  Complete 4K configuration space access
->=20
-> Vidya Sagar (2):
->   PCI: tegra: refactor config space mapping code
->   ARM64: tegra: limit PCIe config space mapping to 4K for T186
->=20
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
->  drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------------=
-------
->  2 files changed, 44 insertions(+), 89 deletions(-)
+This is driver enables support for the low power domain SRTC features:
+- 32-bit MSB of non-rollover time counter
+- 32-bit alarm register
 
-Hi Bjorn,
+Select the new config option RTC_DRV_MXC_V2 to build this driver
 
-there's a bunch of PCI related patches for Tegra floating around on the
-lists. I'm wondering if you'd be okay if I pick those up into the Tegra
-tree after they've been reviewed and send you a pull request later on
-(say around v4.15-rc6). That would allow me to get things cooking in
-linux-next for a bit and get broader testing in addition to the
-flexibility to patch things up if they break.
+Based on:
+http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/drivers/rtc/rtc-mxc_v2.c?h=imx_2.6.35_11.09.01
 
-Thierry
+Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
 
---KrHCbChajFcK0yQE
-Content-Type: application/pgp-signature; name="signature.asc"
+---
 
------BEGIN PGP SIGNATURE-----
+Open issue:
+- naming of the device tree node "rtc" vs. "srtc"
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlouY+QACgkQ3SOs138+
-s6Gv/A/+I3RDNHLScnSYOD6XgtW2jtMYkMSXhFht/Xx6+3BJ4/lgxLLrhQ/QScel
-ZgaO7nEsHsHKBTiaINm5DiFWMLrQMfp2txF0UKwbcmcfmElZmkdK/rXCUm0ALMCh
-wu5f8jN3E0Pwn4bUBjFVz2apeSDC6F0jOb3UR3wjsRv6MkdfakP+yVVCdy0ljyzs
-+AofdrBvQC7a75pERFC6vYlXqYoUjbN+puTQWMOn7/knXYlRJcqra4sgPdme7YS4
-YgOujKoxlhDg0PQqNYmJwDnx52KKaRt9JXjLSuBkwMcJ8p5xHVAq7lkzsue2xbHJ
-jNvQKs0/J3+rxUo/Y2t2lPW6nyzL465EPPVeCYhp8ABDi3mPdhQvFclw9mgfxIpE
-mfx71HA3VaHDCDgwK6C02TWU2jvZaG6Ub4uRYAwyjo/slial6mASttspME8Id80I
-ClDBJZ1UXkTmBDqTlNbfT5GFCfZM6RaGG2b9Mf0fHPFEi/LAyBy8P/eP34DZOh45
-Rd7suNsd0sDUdrYjPfGnZoiF0K0gvT10Uz+BLBkVVhI8/HrpbXM01OzZouSEd8vh
-9fXwcdTziKaYMsTppx/v0a1O2RUMFBv2sW+JHKsU9+QF18lTYLbKWoi1eqflZRNX
-CbCBEXIfC3Vo7ZPbPxnSHbCQgad3VihPBAUsmcycHBa3YhJs7Jo=
-=T1P+
------END PGP SIGNATURE-----
+v3:
+- introduce new config option with the same patch, which adds the driver
+- call rtc_update_irq() only if necessary
+- merge mxc_rtc_write_alarm_locked() with mxc_rtc_set_alarm()
+- only use clk_enable/disable (without "prepare") during operation
+- rebase on v4.15-rc3
+- consistently use rtc_tm_to_time64() and time64_t
+- refactor mxc_rtc_read_time(): don't lock for readl() only;
+  don't rtc_valid_tm(); use time64_t
+- check returncode of mxc_rtc_wait_for_flag()
+- restructure mxc_rtc_sync_lp_locked() to replace pr_err() with
+  dev_err_once(); remove explicit 'inline'
+- don't touch imx_v4_v5_defconfig, instead add to imx_v6_v7_defconfig
 
---KrHCbChajFcK0yQE--
+v2:
+- have seperate patches for dt-binding, CONFIG option, imx53.dtsi and driver
+- add SPDX-License-Identifier and cleanup copyright notice
+- replace __raw_readl/writel() with readl/writel()
+- fix PM_SLEEP callbacks
+- add CONFIG_RTC_DRV_MXC_V2 to build rtc-mxc_v2.c
+- remove misleading or obvious comments and fix style of the remaining
+- avoid endless loop while waiting for hw
+- implement consistent locking; make spinlock a member of dev struct
+- enable clk only for register accesses
+- remove all udelay() calls since they are obsolete or redundant
+  (we are already waiting for register flags to change)
+- init platform_data before registering irq callback
+- let set_time() fail, when 32 bit rtc counter exceeded
+- make names more consistent
+- cleanup and reorder includes
+- cleanup and remove unused defines
+
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+Cc: linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM)
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> (maintainer:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> (maintainer:ARM PORT)
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
+
+Cc: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Cc: Lothar Waßmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+
+Patrick Bruenn (4):
+  dt-bindings: rtc: add bindings for i.MX53 SRTC
+  ARM: dts: imx53: add srtc node
+  rtc: add mxc driver for i.MX53 SRTC
+  ARM: imx_v6_v7_defconfig: enable RTC_DRV_MXC_V2
+
+ .../devicetree/bindings/rtc/rtc-mxc_v2.txt         |  17 +
+ arch/arm/boot/dts/imx53.dtsi                       |   7 +
+ arch/arm/configs/imx_v6_v7_defconfig               |   1 +
+ drivers/rtc/Kconfig                                |  10 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-mxc_v2.c                           | 422 +++++++++++++++++++++
+ 6 files changed, 458 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mxc_v2.txt
+ create mode 100644 drivers/rtc/rtc-mxc_v2.c
+
+-- 
+2.11.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
