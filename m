@@ -1,49 +1,66 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: Re: [RFC] irqchip: add support for LS1021A external interrupt lines
-Date: Mon, 11 Dec 2017 11:02:51 +0100
-Message-ID: <2475814.YIHTfursNv@ws-stein>
-References: <48d2d08c-c57a-ce49-5958-0fd5ad4a2dc7@arm.com> <58297576-cc32-819d-c6b3-7d1355095482@prevas.dk> <5117875.4tMaEC1223@ws-stein>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Add binding for Sitronix ST7735R
+ display panels
+Date: Mon, 11 Dec 2017 11:11:39 +0100
+Message-ID: <CACRpkdaXH4Amj9qTKz73bTFqip+wHrX1G7yKmXB17r5+y+eN8A@mail.gmail.com>
+References: <1512943833-31352-1-git-send-email-david@lechnology.com>
+ <1512943833-31352-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5117875.4tMaEC1223@ws-stein>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Cc: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1512943833-31352-2-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, limor@ladyada.net, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, December 11, 2017, 10:45:09 AM CET Alexander Stein wrote:
-> On Monday, December 11, 2017, 10:08:20 AM CET Rasmus Villemoes wrote:
-> > >>> +static int
-> > >>> +ls1021a_extirq_set_type(struct irq_data *data, unsigned int type)
-> > >>> +{
-> > >>> +	irq_hw_number_t hwirq = data->hwirq;
-> > >>> +	struct extirq_chip_data *chip_data = data->chip_data;
-> > >>> +	u32 value, mask;
-> > >>> +	int ret;
-> > >>> +
-> > >>> +	mask = 1U << (31 - hwirq);
-> > >>
-> > >> Is this really correct? IRQ0 is still at bit position 0. Don't be mislead
-> > >> by the left most position in the register layout. This is just strange way
-> > >> to express bit-endian access.
-> > 
-> > Yes, I'm sure. The 26 unused bits in the INTPCR register are marked as
-> > reserved with a POR value of 0. Fortunately, they can still be set and
-> > read back, and when I did 1U << hwirq it was some of those bits that got
-> > set (the POR value of the six used bits are all 1, so the hardware still
-> > worked on my board because all the lines happen to be of negative polarity).
-> 
-> Which functions do reg_read and reg_write in chip_data->syscon->bus_context
-> actually point to?
-> bus_context is actually a struct regmap_mmio_context *.
-
-Oh, and what is the content of register SCFG_SCFGREVCR?
-
-Alexander
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCBEZWMgMTAsIDIwMTcgYXQgMTE6MTAgUE0sIERhdmlkIExlY2huZXIgPGRhdmlkQGxl
+Y2hub2xvZ3kuY29tPiB3cm90ZToKCj4gVGhpcyBhZGRzIGEgbmV3IGRldmljZSB0cmVlIGJpbmRp
+bmcgZm9yIFNpdHJvbml4IFNUNzczNVIgZGlzcGxheSBwYW5lbHMsCj4gc3VjaCBhcyB0aGUgQWRh
+ZnJ1aXQgMS44IiBURlQuCj4KPiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBs
+ZWNobm9sb2d5LmNvbT4KPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4K
+CiguLi4pCj4gTGltb3IgYnJvdWdodCB1cCBhbiBpbnRlcmVzdGluZyBwb2ludCBpbiBhbiBvZmYt
+bGlzdCBkaXNjdXNzaW9uLiBUaGUKPiBzYW1lIGNvbnRyb2xsZXIgY2FuIGJlIHdpcmVkIHRvIHRo
+ZSBzYW1lIExDRCBpbiBkaWZmZXJlbnQgd2F5cy4gVGhpcyBpcwo+IGV2aWRlbnQgaW4gdGhlIGZi
+ZnRmIGRyaXZlcnMgaW4gc3RhZ2luZy4gVGhlcmUgaXMgYW4gImFkYWZydWl0MTgiIGFuZCBhbgo+
+ICJhZGFmcnVpdDE4X2dyZWVuIiBpbiBmYmZ0Zl9kZXZpY2VzLmMgd2hlcmUgYXBwYXJlbnRseSwg
+dHdvIG90aGVyd2lzZQo+IGlkZW50aWNhbCBkaXNwbGF5cyB3ZXJlIHdpcmVkIHNsaWdodGx5IGRp
+ZmZlcmVudGx5IGF0IHRoZSBmYWN0b3J5IHNvIHRoYXQKPiBvbiBvbmUsIHRoZSBvbi1ib2FyZCBH
+UkFNIHdvcmQgMCBkb2VzIG5vdCBjb3JyZXNwb25kIHRvIHBpeGVsIDAsMCBvbiB0aGUKPiBMQ0Qu
+IEl0IHJlcXVpcmVzIGEgc3BlY2lhbCBvZmZzZXQgdG8gdGhlIEdSQU0gc3RhcnRpbmcgYWRkcmVz
+cyBpbiBvcmRlciB0bwo+IGhhdmUgdGhlIGltYWdlIGRpc3BsYXllZCBjb3JyZWN0bHkuCj4KPiBB
+ZGRpdGlvbmFsbHksIGZidGZ0IHN1cHBvcnRzIGEgU2FpblNtYXJ0IDEuOCIgVEZUIFszXSB0aGF0
+IHVzZXMgdGhlIHNhbWUKPiBjb250cm9sbGVyLCBidXQgaXQgYXBwZWFycyB0aGF0IHRoZXNlIGhh
+dmUgZGlmZmVyZW50IGdhbW1hIGN1cnZlcyAocGVyaGFwcwo+IHRoZXkgdXNlIGRpZmZlcmVudCBM
+Q0RzPykuIFRoZSBhdmFpbGFibGUgcGlucyBhcmUgZXhhY3RseSB0aGUgc2FtZSBhcyB0aGUKPiBB
+ZGFmcnVpdCBkaXNwbGF5IHRob3VnaC4KClRoaXMgZGlzY3Vzc2lvbiBjYW1lIHVwIGluIHJlbGF0
+aW9uIHRvIHRoZSBJbGl0ZWsgSUxJOTMyMiBiaW5kaW5ncywgaGVyZQphcmUgc29tZSBsaW5rczoK
+aHR0cHM6Ly9tYXJjLmluZm8vP2w9ZHJpLWRldmVsJm09MTUwMzAwMjY3ODExOTc5Jnc9MgpodHRw
+czovL21hcmMuaW5mby8/bD1kZXZpY2V0cmVlJm09MTUwNDM4NzAyOTA5NTA2Jnc9MgpodHRwczov
+L21hcmMuaW5mby8/bD1kcmktZGV2ZWwmbT0xNTA2Mjg1NDI2MDM2ODImdz0yCgpUaGUgbGFzdCBt
+YWlsIGZyb20gUm9iIGNsZWFybHkgaW5kaWNhdGVzIHRoYXQgaGUgZG9lc24ndCBsaWtlIHRoaXMg
+a2luZApvZiBvcGVuLWVuZGVkIGNvbmZpZ3VyYXRpb24gZGF0YSBzdGFzaGVkIHVwIGluIHRoZSBE
+VFMuCgo+IFRoZXJlIHdhcyBhIGJpbmRpbmcgYWNrZWQgcmVjZW50bHkgZm9yIHRoZSBMQ0Qgb24g
+YSBELUxpbmsgRElSLTY4NSBXaXJlbGVzcwo+IE4gU3RvcmFnZSBSb3V0ZXIgWzhdLiBUaGlzIHVz
+ZXMgdGhlIGNvbXBvdW5kIGNvbXBhdGlibGUgc3RyaW5nIG9mICJkbGluaywKPiBkaXItNjg1LXBh
+bmVsIiwgImlsaXRlayxpbGk5MzIyIi4gSWYgd2Ugd2FudCB0byB0cnkgdG8ga2VlcCB0aGluZ3MK
+PiBjb25zaXN0ZW50LCBwZXJoYXBzIEkgc2hvdWxkIGJlIGFkb3B0aW5nIHRoaXMgcGF0dGVybiBh
+cyB3ZWxsPwoKSSB0aGluayBzby4KCj4gQW5kIHBlcmhhcHMKPiBpdCB3b3VsZCBiZSBiZXR0ZXIg
+dG8gdXNlIHRoZSBiZXR0ZXIga25vd24gdmVuZG9yIG5hbWUgaW5zdGVhZCBvZiB0aGUKPiBvYnNj
+dXJlIHZlbmRvcnMgZnJvbSB0aGUgZGF0YXNoZWV0cyB0aGF0IEkgaGF2ZSBmb3VuZD8gRm9yIGV4
+YW1wbGUsCj4gImFkYWZydWl0LDYxOCIgInNpdHJvbml4LHN0NzczNXIiIGluc3RlYWQgb2YgImpp
+YW5kYSxqZC10MTgwMDMtdDAxIj8KCkkgZG9uJ3Qga25vdyB0aGlzLCBqdXN0IHRoYXQgaXQgc2hv
+dWxkIGJlOgoKInZlbmRvcixzcGVjaWZpYy1zeXN0ZW0tY29uZmlnIiwgInZlbmRvcixpcC1wYXJ0
+IjsKCllvdXJzLApMaW51cyBXYWxsZWlqCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
