@@ -1,52 +1,115 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v4 12/12] cpufreq: dt: Reintroduce independent_clocks
- platform data
-Date: Mon, 11 Dec 2017 18:54:23 +0530
-Message-ID: <30a8a0b5-bd46-9e6f-e534-205a7c00ebe2@codeaurora.org>
-References: <1512726150-7204-1-git-send-email-sricharan@codeaurora.org>
- <1512726150-7204-13-git-send-email-sricharan@codeaurora.org>
- <20171211083328.GE25177@vireshk-i7>
+From: Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
+ ethernet driver
+Date: Mon, 11 Dec 2017 22:34:17 +0900
+Message-ID: <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
+References: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com> <20171211210455.170A.4A936039@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171211083328.GE25177@vireshk-i7>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171211210455.170A.4A936039-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux kernel mailing list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
+Hello,
 
-On 12/11/2017 2:03 PM, Viresh Kumar wrote:
-> On 08-12-17, 15:12, Sricharan R wrote:
->> The Platform data was removed earlier by,
->> 'commit eb96924acddc ("cpufreq: dt: Kill platform-data")'
->> since there were no users at that time.
->> Now this is required when the each of the cpu clocks
->> can be scaled independently, which is the case
->> for krait cores. So reintroduce it.
+2017-12-11 21:04 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> On Mon, 11 Dec 2017 10:19:15 +0100 Phlippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org> wrote:
+>
+>> Dear Kunihiko-san,
 >>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>  drivers/cpufreq/cpufreq-dt.c | 7 ++++++-
->>  drivers/cpufreq/cpufreq-dt.h | 6 ++++++
->>  2 files changed, 12 insertions(+), 1 deletion(-)
-> 
-> Nack. This information should come from the OPP layer (Hint:
-> dev_pm_opp_of_get_sharing_cpus()).
-> 
+>> On Mon, Dec 11, 2017 at 8:57 AM, Kunihiko Hayashi
+>> <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>> > The UniPhier platform from Socionext provides the AVE ethernet
+>> > controller that includes MAC and MDIO bus supporting RGMII/RMII
+>> > modes. The controller is named AVE.
+>> >
+>> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>> > Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>> [...]
+>> > --- /dev/null
+>> > +++ b/drivers/net/ethernet/socionext/Makefile
+>> > @@ -0,0 +1,5 @@
+>> > +# SPDX-License-Identifier: GPL-2.0
+>>
+>> You are correctly using SPDX ids here....
+>>
+>> > +obj-$(CONFIG_SNI_AVE) += sni_ave.o
+>> > diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
+>> > new file mode 100644
+>> > index 0000000..7b293c2
+>> > --- /dev/null
+>> > +++ b/drivers/net/ethernet/socionext/sni_ave.c
+>> > @@ -0,0 +1,1744 @@
+>> > +/**
+>> > + * sni_ave.c - Socionext UniPhier AVE ethernet driver
+>> > + *
+>> > + * Copyright 2014 Panasonic Corporation
+>> > + * Copyright 2015-2017 Socionext Inc.
+>> > + *
+>> > + * This program is free software: you can redistribute it and/or modify
+>> > + * it under the terms of the GNU General Public License version 2  of
+>> > + * the License as published by the Free Software Foundation.
+>> > + *
+>> > + * This program is distributed in the hope that it will be useful,
+>> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> > + * GNU General Public License for more details.
+>> > + */
+>>
+>> ... then I guess you could also use them here, replacing at least 7
+>> lines of boilerplate by a single id line?
+>>
+>> > +// SDPX-License-Identifier: GPL-2.0
+>
+> Thank you for your kindly comment.
+>
+> It seems there are few ethernet drivers applying SPDX-License-Identifier
+> to C source, then it has been difficult for me to decide whether to replace
+> boilerplate.
+>
+> If it's no problem to apply SPDX to sources of ethernet drivers,
+> I'll replace it with the single line.
+>
+>> And if you go C++ style all the way, this could be even more compact:
+>>
+>> > +// SDPX-License-Identifier: GPL-2.0
+>> > +// sni_ave.c - Socionext UniPhier AVE ethernet driver
+>> > +// Copyright 2014 Panasonic Corporation
+>> > +// Copyright 2015-2017 Socionext Inc.
+>
+> It's much simpler.
+> If it's reasonable to apply this style here, I can replace it, too.
 
-Thanks. Understand. As replied on the other patch, after using
-dev_pm_opp_set_prop_name and opp-v2 bindings, this patch is no more
-required.
+IMHO, even if we use SPDX license identifier, I recommend to use
+C-style comments as many other files do, since it is C code.
+If SPDX identifier requires C++ style, that is SPDX parser's issue
+and should be fixed to get it from C-style comment.
 
-Regards,
- Sricharan
+https://spdx.org/sites/cpstandard/files/pages/files/using_spdx_license_list_short_identifiers.pdf
+
+Anyway, SPDX.org itself shows C-style (short header) example. See page 6.
+
+Thank you,
+
+>
+> Thank you,
+>
+> ---
+> Best Regards,
+> Kunihiko Hayashi
+>
+>
+
+
+
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+Masami Hiramatsu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
