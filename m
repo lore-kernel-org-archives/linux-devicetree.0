@@ -1,170 +1,60 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V1 3/4] qcom: spmi-wled: Add support for OVP interrupt
- handling
-Date: Mon, 11 Dec 2017 15:01:39 +0530
-Message-ID: <7b20cca3fe0785e5683275a6f93e8cc4@codeaurora.org>
-References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
- <1510834717-21765-4-git-send-email-kgunda@codeaurora.org>
- <20171205044523.GF28761@minitux>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH 0/5] Add STM32F769 pinctrl support
+Date: Mon, 11 Dec 2017 10:37:42 +0100
+Message-ID: <1512985062-1147-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171205044523.GF28761@minitux>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-12-05 10:15, Bjorn Andersson wrote:
-> On Thu 16 Nov 04:18 PST 2017, Kiran Gunda wrote:
-> 
->> WLED peripheral has over voltage protection(OVP) circuitry and the OVP
->> fault is notified through an interrupt. Though this fault condition 
->> rising
->> is due to an incorrect hardware configuration is mitigated in the 
->> hardware,
->> it still needs to be detected and handled. Add support for it.
->> 
->> When WLED module is enabled, keep OVP fault interrupt disabled for 10 
->> ms to
->> account for soft start delay.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> ---
->>  .../bindings/leds/backlight/qcom-spmi-wled.txt     |  7 +-
->>  drivers/video/backlight/qcom-spmi-wled.c           | 83 
->> ++++++++++++++++++++++
->>  2 files changed, 87 insertions(+), 3 deletions(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt 
->> b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
->> index 768608c..d39ee93 100644
->> --- 
->> a/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
->> +++ 
->> b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
->> @@ -92,7 +92,7 @@ The PMIC is connected to the host processor via SPMI 
->> bus.
->>  	Usage:      optional
->>  	Value type: <string>
->>  	Definition: Interrupt names associated with the interrupts.
->> -		    Must be "sc-irq".
->> +		    Currently supported interrupts are "sc-irq" and "ovp-irq".
->> 
-> 
-> As before, we know this is an IRQ, so omit the -irq from the name.
-> 
-> [..]
-Sure. Will change it in the next series.
->> diff --git a/drivers/video/backlight/qcom-spmi-wled.c 
->> b/drivers/video/backlight/qcom-spmi-wled.c
-> [..]
->> @@ -115,6 +123,28 @@ static int qcom_wled_module_enable(struct 
->> qcom_wled *wled, int val)
->>  	rc = regmap_update_bits(wled->regmap, wled->ctrl_addr +
->>  			QCOM_WLED_CTRL_MOD_ENABLE, QCOM_WLED_CTRL_MOD_EN_MASK,
->>  			val << QCOM_WLED_CTRL_MODULE_EN_SHIFT);
->> +	if (rc < 0)
->> +		return rc;
->> +	/*
->> +	 * Wait for at least 10ms before enabling OVP fault interrupt after
->> +	 * enabling the module so that soft start is completed. Keep the OVP
->> +	 * interrupt disabled when the module is disabled.
->> +	 */
->> +	if (val) {
->> +		usleep_range(QCOM_WLED_SOFT_START_DLY_US,
->> +				QCOM_WLED_SOFT_START_DLY_US + 1000);
-> 
-> This is sleeping in the brightness/enable code path, can you
-> schedule_delayed_work() instead to not block this code path
-> unnecessarily?
-> 
-Sure. Will change it in the next series.
->> +
->> +		if (wled->cfg.ovp_irq > 0 && wled->ovp_irq_disabled) {
->> +			enable_irq(wled->cfg.ovp_irq);
->> +			wled->ovp_irq_disabled = false;
->> +		}
->> +	} else {
->> +		if (wled->cfg.ovp_irq > 0 && !wled->ovp_irq_disabled) {
->> +			disable_irq(wled->cfg.ovp_irq);
->> +			wled->ovp_irq_disabled = true;
->> +		}
->> +	}
->> +
->>  	return rc;
->>  }
->> 
->> @@ -264,12 +294,42 @@ static irqreturn_t qcom_wled_sc_irq_handler(int 
->> irq, void *_wled)
->>  	return IRQ_HANDLED;
->>  }
->> 
->> +static irqreturn_t qcom_wled_ovp_irq_handler(int irq, void *_wled)
->> +{
->> +	struct qcom_wled *wled = _wled;
->> +	int rc;
->> +	u32 int_sts, fault_sts;
->> +
->> +	rc = regmap_read(wled->regmap,
->> +			wled->ctrl_addr + QCOM_WLED_CTRL_INT_RT_STS, &int_sts);
->> +	if (rc < 0) {
->> +		pr_err("Error in reading WLED_INT_RT_STS rc=%d\n", rc);
->> +		return IRQ_HANDLED;
->> +	}
->> +
->> +	rc = regmap_read(wled->regmap, wled->ctrl_addr +
->> +			QCOM_WLED_CTRL_FAULT_STATUS, &fault_sts);
->> +	if (rc < 0) {
->> +		pr_err("Error in reading WLED_FAULT_STATUS rc=%d\n", rc);
->> +		return IRQ_HANDLED;
->> +	}
->> +
->> +	if (fault_sts &
->> +		(QCOM_WLED_CTRL_OVP_FAULT_BIT | QCOM_WLED_CTRL_ILIM_FAULT_BIT))
->> +		pr_err("WLED OVP fault detected, int_sts=%x fault_sts= %x\n",
->> +			int_sts, fault_sts);
-> 
-> All this function does is print things to the log. When is this
-> information consumed and by whom? dev_dbg() instead?
-> 
-Sure. Will change it in the next series.
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->>  static int qcom_wled_setup(struct qcom_wled *wled)
->>  {
->>  	int rc, temp, i;
->>  	u8 sink_en = 0;
->> +	u32 val;
->>  	u8 string_cfg = wled->cfg.string_cfg;
->>  	int sc_irq = wled->cfg.sc_irq;
->> +	int ovp_irq = wled->cfg.ovp_irq;
->> 
->>  	rc = regmap_update_bits(wled->regmap,
->>  			wled->ctrl_addr + QCOM_WLED_CTRL_OVP,
->> @@ -367,6 +427,25 @@ static int qcom_wled_setup(struct qcom_wled 
->> *wled)
->>  		}
->>  	}
->> 
->> +	if (ovp_irq >= 0) {
-> 
-> As with the previous patch.
-> 
-> [..]
-Sure. Will change it in the next series.
->> @@ -539,6 +618,10 @@ static int qcom_wled_configure(struct qcom_wled 
->> *wled, struct device *dev)
-> [..]
->> +	wled->cfg.ovp_irq = platform_get_irq_byname(wled->pdev, "ovp-irq");
->> +	if (wled->cfg.ovp_irq < 0)
->> +		dev_dbg(&wled->pdev->dev, "ovp irq is not used\n");
->> +
-> 
-> Regards,
-> Bjorn
+This series adds STM32F769 pinctrl and GPIO support, relies on the
+generic STM32 pinctrl driver. It also changes stm32f7 device tree 
+structure to use dedicated files for stm32f746 pinctrl and stm32f769
+pinctrl.
+
+Regards
+Alex
+
+Alexandre Torgue (5):
+  dt-bindings: pinctrl: Add st,stm32f769-pinctrl compatible to
+    stm32-pinctrl
+  pinctrl: stm32: add STM32F769 MCU support
+  ARM: mach-stm32: Kconfig: introduce MACH_STM32F769 flag
+  ARM: mach-stm32: add new STM32F769 MCU
+  ARM: dts: stm32: use dedicated files for pinctrl on stm32f7 family
+
+ Documentation/arm/stm32/stm32f769-overview.txt     |   36 +
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |    1 +
+ arch/arm/boot/dts/stm32746g-eval.dts               |    1 +
+ arch/arm/boot/dts/stm32f7-pinctrl.dtsi             |  227 +++
+ arch/arm/boot/dts/stm32f746-disco.dts              |    1 +
+ arch/arm/boot/dts/stm32f746-pinctrl.dtsi           |   11 +
+ arch/arm/boot/dts/stm32f746.dtsi                   |  217 ---
+ arch/arm/boot/dts/stm32f769-disco.dts              |    3 +-
+ arch/arm/boot/dts/stm32f769-pinctrl.dtsi           |   11 +
+ arch/arm/mach-stm32/Kconfig                        |    5 +
+ arch/arm/mach-stm32/board-dt.c                     |    1 +
+ drivers/pinctrl/stm32/Kconfig                      |    6 +
+ drivers/pinctrl/stm32/Makefile                     |    1 +
+ drivers/pinctrl/stm32/pinctrl-stm32f769.c          | 1827 ++++++++++++++++++++
+ 14 files changed, 2130 insertions(+), 218 deletions(-)
+ create mode 100644 Documentation/arm/stm32/stm32f769-overview.txt
+ create mode 100644 arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stm32f746-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stm32f769-pinctrl.dtsi
+ create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f769.c
+
+-- 
+2.7.4
