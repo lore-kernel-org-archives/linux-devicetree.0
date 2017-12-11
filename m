@@ -1,318 +1,92 @@
-From: SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: ls1021a: add support for Moxa UC-8410A open platform
-Date: Mon, 11 Dec 2017 19:51:25 +0800
-Message-ID: <20171211115126.14553-1-sz.lin@moxa.com>
+From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE ethernet driver
+Date: Mon, 11 Dec 2017 21:04:56 +0900
+Message-ID: <20171211210455.170A.4A936039@socionext.com>
+References: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com> <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, Jimmy Chen <jimmy.chen-D4fb9hXD9d4@public.gmane.org>, Harry YJ Jhou <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Moxa UC-8410A open platform
+On Mon, 11 Dec 2017 10:19:15 +0100 Phlippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org> wrote:
 
-The UC-8410A computing platform is designed
-for embedded communication-centric industrial applications
+> Dear Kunihiko-san,
+> 
+> On Mon, Dec 11, 2017 at 8:57 AM, Kunihiko Hayashi
+> <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> > The UniPhier platform from Socionext provides the AVE ethernet
+> > controller that includes MAC and MDIO bus supporting RGMII/RMII
+> > modes. The controller is named AVE.
+> >
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> > Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> [...]
+> > --- /dev/null
+> > +++ b/drivers/net/ethernet/socionext/Makefile
+> > @@ -0,0 +1,5 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> 
+> You are correctly using SPDX ids here....
+> 
+> > +obj-$(CONFIG_SNI_AVE) += sni_ave.o
+> > diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
+> > new file mode 100644
+> > index 0000000..7b293c2
+> > --- /dev/null
+> > +++ b/drivers/net/ethernet/socionext/sni_ave.c
+> > @@ -0,0 +1,1744 @@
+> > +/**
+> > + * sni_ave.c - Socionext UniPhier AVE ethernet driver
+> > + *
+> > + * Copyright 2014 Panasonic Corporation
+> > + * Copyright 2015-2017 Socionext Inc.
+> > + *
+> > + * This program is free software: you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2  of
+> > + * the License as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> 
+> ... then I guess you could also use them here, replacing at least 7
+> lines of boilerplate by a single id line?
+> 
+> > +// SDPX-License-Identifier: GPL-2.0
 
-The features of UC-8410A are:
-* QSPI flash
-* SD slot
-* 3x LAN
-* 8x RS-232/422/485 ports, software-selectable
-* Mini PCIe form factor with PCIe/USB signal
-* 2x USB host
-* TPM
-* Watchdog
-* RTC
-* User LEDs
-* Beeper
-* Push button
+Thank you for your kindly comment.
 
-Signed-off-by: Jimmy Chen <jimmy.chen-D4fb9hXD9d4@public.gmane.org>
-Signed-off-by: Harry YJ Jhou <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>
-Signed-off-by: SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>
+It seems there are few ethernet drivers applying SPDX-License-Identifier
+to C source, then it has been difficult for me to decide whether to replace
+boilerplate.
 
---
-Changes from v1:
-- Add newline between nodes
-- Add push button node
-- Insert newline between property list and child node
-- Include file of "include/dt-bindings/gpio/gpio.h"
-- Include file of "include/dt-bindings/input/input.h"
-- Use polartiy defines for gpios to make it more readable
-- Put 'status' at the end of property list
-- Change GPIO pin number in cel_pwr and cel_reset
-- Sort the labeled node alphabetically
-- Drop container node of regulator and put fixed regulator directly
-  under root
+If it's no problem to apply SPDX to sources of ethernet drivers,
+I'll replace it with the single line.
+
+> And if you go C++ style all the way, this could be even more compact:
+> 
+> > +// SDPX-License-Identifier: GPL-2.0
+> > +// sni_ave.c - Socionext UniPhier AVE ethernet driver
+> > +// Copyright 2014 Panasonic Corporation
+> > +// Copyright 2015-2017 Socionext Inc.
+
+It's much simpler.
+If it's reasonable to apply this style here, I can replace it, too.
+
+Thank you,
+
 ---
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 241 ++++++++++++++++++++++++++++
- 2 files changed, 242 insertions(+)
- create mode 100644 arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+Best Regards,
+Kunihiko Hayashi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d0381e9caf21..62ce9b27ad30 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -520,6 +520,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7s-colibri-eval-v3.dtb \
- 	imx7s-warp.dtb
- dtb-$(CONFIG_SOC_LS1021A) += \
-+	ls1021a-moxa-uc-8410a.dtb \
- 	ls1021a-qds.dtb \
- 	ls1021a-twr.dtb
- dtb-$(CONFIG_SOC_VF610) += \
-diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-new file mode 100644
-index 000000000000..bc73b5187990
---- /dev/null
-+++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-@@ -0,0 +1,241 @@
-+/*
-+ * Copyright (C) 2017 Moxa Inc. - https://www.moxa.com/
-+ *
-+ * Author: Harry YJ Jhou (周亞諄) <harryyj.jhou-D4fb9hXD9d4@public.gmane.org>
-+ *         Jimmy Chen (陳永達)    <jimmy.chen-D4fb9hXD9d4@public.gmane.org>
-+ *         SZ Lin (林上智)        <sz.lin-D4fb9hXD9d4@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "ls1021a.dtsi"
-+
-+/ {
-+	model = "Moxa UC-8410A";
-+
-+	aliases {
-+		enet0_rgmii_phy = &rgmii_phy0;
-+		enet1_rgmii_phy = &rgmii_phy1;
-+		enet2_rgmii_phy = &rgmii_phy2;
-+	};
-+
-+	sys_mclk: clock-mclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <24576000>;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		  compatible = "regulator-fixed";
-+		  regulator-name = "3P3V";
-+		  regulator-min-microvolt = <3300000>;
-+		  regulator-max-microvolt = <3300000>;
-+		  regulator-always-on;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		cel_pwr {
-+			label = "UC8410A:CEL-PWR";
-+			gpios = <&gpio3 27 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		cel_reset {
-+			label = "UC8410A:CEL-RESET";
-+			gpios = <&gpio3 28 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		str_led {
-+			label = "UC8410A:RED:PROG";
-+			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+		};
-+
-+		sw_ready {
-+			label = "UC8410A:GREEN:SWRDY";
-+			gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		beeper {
-+			label = "UC8410A:BEEP";
-+			gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		prog_led0 {
-+			label = "UC8410A:GREEN:PROG2";
-+			gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		prog_led1 {
-+			label = "UC8410A:GREEN:PROG1";
-+			gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		prog_led2 {
-+			label = "UC8410A:GREEN:PROG0";
-+			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		wifi_signal0 {
-+			label = "UC8410A:GREEN:CEL2";
-+			gpios = <&gpio3 17 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		wifi_signal1 {
-+			label = "UC8410A:GREEN:CEL1";
-+			gpios = <&gpio3 18 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		wifi_signal2 {
-+			label = "UC8410A:GREEN:CEL0";
-+			gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		cpu_diag_red {
-+			label = "UC8410A:RED:DIA";
-+			gpios = <&gpio3 20 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		cpu_diag_green {
-+			label = "UC8410A:GREEN:DIA";
-+			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		cpu_diag_yellow {
-+			label = "UC8410A:YELLOW:DIA";
-+			gpios = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pushbtn-key {
-+			label = "push button key";
-+			gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
-+			linux,code = <BTN_MISC>;
-+			default-state = "on";
-+		};
-+	};
-+};
-+
-+&enet0 {
-+	phy-handle = <&rgmii_phy0>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&enet1 {
-+	phy-handle = <&rgmii_phy1>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&enet2 {
-+	phy-handle = <&rgmii_phy2>;
-+	phy-connection-type = "rgmii-id";
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	clock-frequency = <100000>;
-+	status = "okay";
-+
-+	rtc {
-+		compatible = "dallas,ds1374";
-+		reg = <0x68>;
-+	};
-+
-+	tpm {
-+		compatible = "infineon,slb9635tt";
-+		reg = <0x20>;
-+	};
-+};
-+
-+&lpuart0 {
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	rgmii_phy0: ethernet-phy@0 {
-+		compatible = "marvell,88e1118";
-+		reg = <0x0>;
-+		marvell,reg-init =
-+			<3 0x11 0 0x4415>, /* Reg 3,17 */
-+			<3 0x10 0 0x77>; /* Reg 3,16 */
-+	};
-+
-+	rgmii_phy1: ethernet-phy@1 {
-+		compatible = "marvell,88e1118";
-+		reg = <0x1>;
-+		marvell,reg-init =
-+			<3 0x11 0 0x4415>, /* Reg 3,17 */
-+			<3 0x10 0 0x77>; /* Reg 3,16 */
-+	};
-+
-+	rgmii_phy2: ethernet-phy@2 {
-+		compatible = "marvell,88e1118";
-+		reg = <0x2>;
-+		marvell,reg-init =
-+			<3 0x11 0 0x4415>, /* Reg 3,17 */
-+			<3 0x10 0 0x77>; /* Reg 3,16 */
-+	};
-+};
-+
-+&qspi {
-+	bus-num = <0>;
-+	fsl,spi-num-chipselects = <2>;
-+	fsl,spi-flash-chipselects = <0>;
-+	fsl,qspi-has-second-chip;
-+	status = "okay";
-+
-+	flash: flash@0 {
-+		compatible = "spansion,s25fl064l", "spansion,s25fl164k";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+
-+		partitions@0 {
-+			label = "U-Boot";
-+			reg = <0x0 0x180000>;
-+		};
-+
-+		partitions@1 {
-+			label = "U-Boot Env";
-+			reg = <0x180000 0x680000>;
-+		};
-+	};
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
--- 
-2.15.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
