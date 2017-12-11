@@ -1,40 +1,40 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 11/12] cpufreq: Add module to register cpufreq on
- Krait CPUs
-Date: Mon, 11 Dec 2017 14:09:05 +0530
-Message-ID: <20171211083905.GF25177@vireshk-i7>
-References: <1512726150-7204-1-git-send-email-sricharan@codeaurora.org>
- <1512726150-7204-12-git-send-email-sricharan@codeaurora.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH 1/5] dt-bindings: pinctrl: Add st,
+ stm32f769-pinctrl compatible to stm32-pinctrl
+Date: Mon, 11 Dec 2017 09:54:31 +0100
+Message-ID: <1512982475-32661-2-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1512726150-7204-12-git-send-email-sricharan@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08-12-17, 15:12, Sricharan R wrote:
-> From: Stephen Boyd <sboyd@codeaurora.org>
-> 
-> Register a cpufreq-generic device whenever we detect that a
-> "qcom,krait" compatible CPU is present in DT.
-> 
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  .../devicetree/bindings/arm/msm/qcom,pvs.txt       |  38 ++++
->  drivers/cpufreq/Kconfig.arm                        |   9 +
->  drivers/cpufreq/Makefile                           |   1 +
->  drivers/cpufreq/qcom-cpufreq.c                     | 204 +++++++++++++++++++++
->  4 files changed, 252 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,pvs.txt
->  create mode 100644 drivers/cpufreq/qcom-cpufreq.c
+Add new compatible for stm32f769 MCU.
 
-This must be done differently as we have enhanced OPP core to support such
-hardware. Look at: dev_pm_opp_set_prop_name() and the binding around it
-(opp-microvolt-<name>). Talk to Stephen, he was part of all those discussions.
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index 58c2a4c..fd7a4c7 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -11,6 +11,7 @@ Required properies:
+    "st,stm32f429-pinctrl"
+    "st,stm32f469-pinctrl"
+    "st,stm32f746-pinctrl"
++   "st,stm32f769-pinctrl"
+    "st,stm32h743-pinctrl"
+  - #address-cells: The value of this property must be 1
+  - #size-cells	: The value of this property must be 1
 -- 
-viresh
+2.7.4
