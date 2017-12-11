@@ -1,66 +1,35 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v6 6/6] arm64: dts: meson-axg: switch uart_ao clock to CLK81
-Date: Mon, 11 Dec 2017 14:48:53 +0800
-Message-ID: <20171211064853.32111-7-yixun.lan@amlogic.com>
-References: <20171211064853.32111-1-yixun.lan@amlogic.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 0/4] Teach phylib hard-resetting devices
+Date: Mon, 11 Dec 2017 08:04:48 +0100
+Message-ID: <20171211070447.kyipuoygofhuggye@verge.net.au>
+References: <1512383692-14009-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171211064853.32111-1-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1512383692-14009-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "David S . Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Richard Leitner <richard.leitner@skidata.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Switch the uart_ao pclk to CLK81 since the clock driver is ready.
-Also move the clock info to the board.dts instead in the soc.dtsi.
+On Mon, Dec 04, 2017 at 11:34:48AM +0100, Geert Uytterhoeven wrote:
+> 	Hi David, Andrew, Florian, Simon, Magnus,
+> 
+> This patch series adds optional PHY reset support to phylib.
+> 
+> The first two patches are destined for David's net-next tree. They add
+> core PHY reset code, and update a driver that currently uses its own
+> reset code.
+> 
+> The last two patches are destined for Simon's renesas tree.  They add
+> properties to describe the EthernetAVB PHY reset topology to the common
+> Salvator-X/XS and ULCB DTS files, which solves two issues:
+>   1. On Salvator-XS, the enable pin of the regulator providing PHY power
+>      is connected to PRESETn, and PSCI powers down the SoC during system
+>      suspend.  Hence a PHY reset is needed to restore network
+>      functionality after system resume.
+>   2. Linux should not rely on the boot loader having reset the PHY, but
+>      should reset the PHY during driver probe.
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 2 ++
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 5 +----
- 2 files changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 70eca1f8736a..718bbebff107 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -19,4 +19,6 @@
- 
- &uart_AO {
- 	status = "okay";
-+	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+	clock-names = "xtal", "pclk", "baud";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index 6fe5ee0c144e..f5b496bfd4de 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/axg-clkc.h>
- 
- / {
- 	compatible = "amlogic,meson-axg";
-@@ -200,8 +201,6 @@
- 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
- 				reg = <0x0 0x3000 0x0 0x18>;
- 				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&xtal>, <&xtal>;
--				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
- 
-@@ -209,8 +208,6 @@
- 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
- 				reg = <0x0 0x4000 0x0 0x18>;
- 				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&xtal>, <&xtal>;
--				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
- 		};
--- 
-2.15.1
+Thanks, I have applied patches 3/4 and 4/4 for v4.16.
