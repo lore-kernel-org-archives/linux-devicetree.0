@@ -1,384 +1,183 @@
-From: kgunda@codeaurora.org
-Subject: Re: [PATCH V1 2/4] qcom: spmi-wled: Add support for short circuit
- handling
-Date: Mon, 11 Dec 2017 14:58:24 +0530
-Message-ID: <f1295a358459da5ad0e680657f3d7457@codeaurora.org>
-References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
- <1510834717-21765-3-git-send-email-kgunda@codeaurora.org>
- <20171205043515.GE28761@minitux>
+From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [RFC] irqchip: add support for LS1021A external interrupt lines
+Date: Mon, 11 Dec 2017 10:30:14 +0100
+Message-ID: <563e0aaa-faf9-ae6a-ccd4-2aa89d7e457b@prevas.dk>
+References: <48d2d08c-c57a-ce49-5958-0fd5ad4a2dc7@arm.com>
+ <1512743580-15358-1-git-send-email-rasmus.villemoes@prevas.dk>
+ <da843420-cede-e787-838d-1fd48e3ca7dd@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171205043515.GE28761@minitux>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <da843420-cede-e787-838d-1fd48e3ca7dd-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-12-05 10:05, Bjorn Andersson wrote:
-> On Thu 16 Nov 04:18 PST 2017, Kiran Gunda wrote:
-> 
->> Handle the short circuit(SC) interrupt and check if the SC interrupt
->> is valid. Re-enable the module to check if it goes away. Disable the
->> module altogether if the SC event persists.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> ---
->>  .../bindings/leds/backlight/qcom-spmi-wled.txt     |  22 ++++
->>  drivers/video/backlight/qcom-spmi-wled.c           | 126 
->> ++++++++++++++++++++-
->>  2 files changed, 142 insertions(+), 6 deletions(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt 
->> b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
->> index f1ea25b..768608c 100644
->> --- 
->> a/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
->> +++ 
->> b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
->> @@ -74,6 +74,26 @@ The PMIC is connected to the host processor via 
->> SPMI bus.
->>  	Definition: Specify if cabc (content adaptive backlight control) is
->>  		    needed.
->> 
->> +- qcom,ext-pfet-sc-pro-en
-> 
-> Please use readable names, rather than a bunch of abbreviations.
-> 
-Ok. Will address it in next series.
->> +	Usage:      optional
->> +	Value type: <bool>
->> +	Definition: Specify if external PFET control for short circuit
->> +		    protection is needed.
-> 
-> What does this mean? At least change the wording to "...protection is
-> used".
-> 
-Ok. Will address it in next series.
+On 2017-12-08 17:02, Marc Zyngier wrote:
 >> +
->> +- interrupts
->> +	Usage:      optional
->> +	Value type: <prop encoded array>
->> +	Definition: Interrupts associated with WLED. Interrupts can be
->> +		    specified as per the encoding listed under
->> +		    Documentation/devicetree/bindings/spmi/
->> +		    qcom,spmi-pmic-arb.txt.
->> +
->> +- interrupt-names
->> +	Usage:      optional
->> +	Value type: <string>
->> +	Definition: Interrupt names associated with the interrupts.
->> +		    Must be "sc-irq".
+>> +#define INTPCR_REG 0x01ac
+>> +#define NIRQ 6
 > 
-> This is obviously an irq, so no need to include that in the name. I
-> would also prefer if you use the name "short" to make this easier to
-> read.
-> 
-Ok. Will address it in next series.
->> +
->>  Example:
->> 
->>  qcom-wled@d800 {
->> @@ -82,6 +102,8 @@ qcom-wled@d800 {
->>  	reg-names = "qcom-wled-ctrl-base", "qcom-wled-sink-base";
->>  	label = "backlight";
->> 
->> +	interrupts = <0x3 0xd8 0x2 IRQ_TYPE_EDGE_RISING>;
-> 
-> We tend to write these on the form <decimal, hex, decimal, enum>, 
-> please
-> follow this.
-> 
-Ok. Will address it in next series.
->> +	interrupt-names = "sc-irq";
->>  	qcom,fs-current-limit = <25000>;
->>  	qcom,current-boost-limit = <970>;
->>  	qcom,switching-freq = <800>;
->> diff --git a/drivers/video/backlight/qcom-spmi-wled.c 
->> b/drivers/video/backlight/qcom-spmi-wled.c
->> index 14c3adc..7dbaaa7 100644
->> --- a/drivers/video/backlight/qcom-spmi-wled.c
->> +++ b/drivers/video/backlight/qcom-spmi-wled.c
->> @@ -11,6 +11,9 @@
->>   * GNU General Public License for more details.
->>   */
->> 
->> +#include <linux/delay.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/ktime.h>
->>  #include <linux/kernel.h>
->>  #include <linux/backlight.h>
->>  #include <linux/module.h>
->> @@ -23,7 +26,13 @@
->>  #define QCOM_WLED_DEFAULT_BRIGHTNESS		2048
->>  #define  QCOM_WLED_MAX_BRIGHTNESS		4095
->> 
->> +#define QCOM_WLED_SC_DLY_MS			20
->> +#define QCOM_WLED_SC_CNT_MAX			5
->> +#define QCOM_WLED_SC_RESET_CNT_DLY_US		1000000
-> 
-> With times of this ballpark you can just use jiffies, with this just
-> being HZ.
-> 
-Ok. Will address it in next series.
->> +
->>  /* WLED control registers */
->> +#define QCOM_WLED_CTRL_FAULT_STATUS		0x08
->> +
->>  #define QCOM_WLED_CTRL_MOD_ENABLE		0x46
->>  #define  QCOM_WLED_CTRL_MOD_EN_MASK		BIT(7)
->>  #define  QCOM_WLED_CTRL_MODULE_EN_SHIFT		7
->> @@ -37,6 +46,15 @@
->>  #define QCOM_WLED_CTRL_ILIM			0x4e
->>  #define  QCOM_WLED_CTRL_ILIM_MASK		GENMASK(2, 0)
->> 
->> +#define QCOM_WLED_CTRL_SHORT_PROTECT		0x5e
->> +#define  QCOM_WLED_CTRL_SHORT_EN_MASK		BIT(7)
->> +
->> +#define QCOM_WLED_CTRL_SEC_ACCESS		0xd0
->> +#define  QCOM_WLED_CTRL_SEC_UNLOCK		0xa5
->> +
->> +#define QCOM_WLED_CTRL_TEST1			0xe2
->> +#define  QCOM_WLED_EXT_FET_DTEST2		0x09
->> +
->>  /* WLED sink registers */
->>  #define QCOM_WLED_SINK_CURR_SINK_EN		0x46
->>  #define  QCOM_WLED_SINK_CURR_SINK_MASK		GENMASK(7, 4)
->> @@ -71,19 +89,23 @@ struct qcom_wled_config {
->>  	u32 switch_freq;
->>  	u32 fs_current;
->>  	u32 string_cfg;
->> +	int sc_irq;
-> 
-> Keep data parsed directly from DT in the config and move this to
-> qcom_wled.
-> 
-Ok. Will address it in next series.
->>  	bool en_cabc;
->> +	bool ext_pfet_sc_pro_en;
-> 
-> This name is long and hard to parse. "external_pfet" would be much
-> easier to read.
-> 
-Ok. Will address it in next series.
->>  };
->> 
->>  struct qcom_wled {
->>  	const char *name;
->>  	struct platform_device *pdev;
->>  	struct regmap *regmap;
->> +	struct mutex lock;
->> +	struct qcom_wled_config cfg;
->> +	ktime_t last_sc_event_time;
->>  	u16 sink_addr;
->>  	u16 ctrl_addr;
->>  	u32 brightness;
->> +	u32 sc_count;
->>  	bool prev_state;
->> -
->> -	struct qcom_wled_config cfg;
-> 
-> Moving this seems unnecessary.
-> 
-Ok. Will address it in next series.
->>  };
->> 
->>  static int qcom_wled_module_enable(struct qcom_wled *wled, int val)
->> @@ -157,25 +179,26 @@ static int qcom_wled_update_status(struct 
->> backlight_device *bl)
->>  	    bl->props.state & BL_CORE_FBBLANK)
->>  		brightness = 0;
->> 
->> +	mutex_lock(&wled->lock);
-> 
-> Is this lock necessary?
-> 
-Yes. It avoid the race between the upate_status and sc_irq as the module 
-is enabled
-at one place and disabled at other place respectively.
->> +static irqreturn_t qcom_wled_sc_irq_handler(int irq, void *_wled)
->> +{
->> +	struct qcom_wled *wled = _wled;
->> +	int rc;
->> +	u32 val;
->> +	s64 elapsed_time;
->> +
->> +	rc = regmap_read(wled->regmap,
->> +		wled->ctrl_addr + QCOM_WLED_CTRL_FAULT_STATUS, &val);
->> +	if (rc < 0) {
->> +		pr_err("Error in reading WLED_FAULT_STATUS rc=%d\n", rc);
->> +		return IRQ_HANDLED;
->> +	}
->> +
->> +	wled->sc_count++;
->> +	pr_err("WLED short circuit detected %d times fault_status=%x\n",
->> +		wled->sc_count, val);
-> 
-> Who will read this and is it worth the extra read of FAULT_STATUS just
-> to produce this print?
-> 
-As this SC irq gets triggered in very rare conditions, i think it is 
-okay
-to have a print for the information purpose.
->> +	mutex_lock(&wled->lock);
->> +	rc = qcom_wled_module_enable(wled, false);
->> +	if (rc < 0) {
->> +		pr_err("wled disable failed rc:%d\n", rc);
->> +		goto unlock_mutex;
->> +	}
->> +
->> +	elapsed_time = ktime_us_delta(ktime_get(),
->> +				wled->last_sc_event_time);
->> +	if (elapsed_time > QCOM_WLED_SC_RESET_CNT_DLY_US) {
->> +		wled->sc_count = 0;
->> +	} else if (wled->sc_count > QCOM_WLED_SC_CNT_MAX) {
-> 
-> This isn't really "else elapsed_time was more than DLY_US". Split this
-> into:
-> 
-> if (elapsed_time > xyz)
-> 	wled->sc_count = 0;
-> 
-> if (wled->sc_count > QCOM_WLED_SC_CNT_MAX)
-> 	...
-> 
-Ok. sure.
->> +		pr_err("SC trigged %d times, disabling WLED forever!\n",
-> 
-> "forever" as in "until someone turns it on again"?
-> 
-Yes. It is turned on for the next reboot or some one forcefully enables 
-it form the
-sysfs.
+> These should come from the DT, specially if as suggested above, there
+> are other similar HW in the wild.
 
->> +			wled->sc_count);
->> +		goto unlock_mutex;
+OK, but see below.
+
+>> +static int
+>> +ls1021a_extirq_set_type(struct irq_data *data, unsigned int type)
+>> +{
+>> +	irq_hw_number_t hwirq = data->hwirq;
+>> +	struct extirq_chip_data *chip_data = data->chip_data;
+>> +	u32 value, mask;
+>> +	int ret;
+>> +
+>> +	mask = 1U << (31 - hwirq);
+>> +	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
+>> +		if (type == IRQ_TYPE_LEVEL_LOW)
+>> +			type = IRQ_TYPE_LEVEL_HIGH;
+>> +		else
+>> +			type = IRQ_TYPE_EDGE_RISING;
+>> +		value = mask;
+>> +	} else {
+>> +		value = 0;
 >> +	}
 >> +
->> +	wled->last_sc_event_time = ktime_get();
+>> +	/* Don't do the INTPCR_REG update if the parent irq_set_type will EINVAL. */
+>> +	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
+>> +		return -EINVAL;
+> 
+> How about starting by rejecting the values that you cannot handle (which
+> seems to only be IRQ_TYPE_EDGE_BOTH)? Actually, if you wrote the whole
+> thing as a swtch/case, it'd be a lot more readable.
+
+OK, will try that.
+
 >> +
->> +	msleep(QCOM_WLED_SC_DLY_MS);
->> +	rc = qcom_wled_module_enable(wled, true);
->> +	if (rc < 0)
->> +		pr_err("wled enable failed rc:%d\n", rc);
+>> +	/* regmap does internal locking, but do we need to provide our
+>> +	 * own across the parent irq_set_type call? */
+> 
+> Comment format.
+
+[Somewhat deliberate, I never meant for that comment to stay in a final
+version. It's gone once I figure out the answer.]
+
+>> +	regmap_update_bits(chip_data->syscon, INTPCR_REG, mask, value);
 >> +
->> +unlock_mutex:
->> +	mutex_unlock(&wled->lock);
+>> +	data = data->parent_data;
+>> +	ret = data->chip->irq_set_type(data, type);
+> 
+> Restore the previous regmap configuration on failure?
+
+Not sure what one would get from that?
+
+> Also, given that
+> you end-up changing the interrupt polarity in a non-atomic way (you have
+> two independent irqchips), it'd feel safer if you'd use
+> IRQCHIP_SET_TYPE_MASKED.
+
+Ah, yes, makes sense. Will do.
+
 >> +
->> +	return IRQ_HANDLED;
+>> +	return ret;
 >> +}
 >> +
->>  static int qcom_wled_setup(struct qcom_wled *wled)
->>  {
->>  	int rc, temp, i;
->>  	u8 sink_en = 0;
->>  	u8 string_cfg = wled->cfg.string_cfg;
->> +	int sc_irq = wled->cfg.sc_irq;
->> 
->>  	rc = regmap_update_bits(wled->regmap,
->>  			wled->ctrl_addr + QCOM_WLED_CTRL_OVP,
->> @@ -261,6 +334,39 @@ static int qcom_wled_setup(struct qcom_wled 
->> *wled)
->>  		return rc;
->>  	}
->> 
->> +	if (sc_irq >= 0) {
+>> +static struct irq_chip extirq_chip = {
+>> +	.name			= "LS1021A_EXTIRQ",
 > 
-> I think things will be cleaner if you let qcom_wled_setup() configure
-> the hardware based on the wled->cfg (as is done to this point) and then
-> deal with the interrupts in a separate code path from the probe
-> function.
+> Care to make this shorter?
+
+Sure, I'll just call it extirq.
+
+>> +static int
+>> +ls1021a_extirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>> +			    unsigned int nr_irqs, void *arg)
+>> +{
+>> +	static const unsigned xlate[NIRQ] = {163,164,165,167,168,169};
 > 
-Ok. sure.
->> +		rc = devm_request_threaded_irq(&wled->pdev->dev, sc_irq,
->> +				NULL, qcom_wled_sc_irq_handler, IRQF_ONESHOT,
->> +				"qcom_wled_sc_irq", wled);
->> +		if (rc < 0) {
->> +			pr_err("Unable to request sc(%d) IRQ(err:%d)\n",
->> +				sc_irq, rc);
+> This should really come from your DT.
 > 
-> sc_irq is just a number without meaning, no need to print it.
-> 
-Sure. Will remove it.
->> +			return rc;
->> +		}
+>> +	int i;
+>> +	irq_hw_number_t hwirq;
+>> +	struct irq_fwspec *fwspec = arg;
+>> +	struct irq_fwspec gic_fwspec;
 >> +
->> +		rc = regmap_update_bits(wled->regmap,
->> +				wled->ctrl_addr + QCOM_WLED_CTRL_SHORT_PROTECT,
->> +				QCOM_WLED_CTRL_SHORT_EN_MASK,
->> +				QCOM_WLED_CTRL_SHORT_EN_MASK);
->> +		if (rc < 0)
->> +			return rc;
+>> +	if (fwspec->param_count != 3)
+>> +		return -EINVAL;
 >> +
->> +		if (wled->cfg.ext_pfet_sc_pro_en) {
->> +			/* unlock the secure access regisetr */
-> 
-> Spelling of register, and this operation does "Unlock the secure
-> register access" it doesn't unlock the secure access register.
-> 
-Sure. Will correct it.
->> +			rc = regmap_write(wled->regmap, wled->ctrl_addr +
->> +					QCOM_WLED_CTRL_SEC_ACCESS,
->> +					QCOM_WLED_CTRL_SEC_UNLOCK);
->> +			if (rc < 0)
->> +				return rc;
+>> +	if (fwspec->param[0])
+>> +		return -EINVAL;
 >> +
->> +			rc = regmap_write(wled->regmap,
->> +					wled->ctrl_addr + QCOM_WLED_CTRL_TEST1,
->> +					QCOM_WLED_EXT_FET_DTEST2);
+>> +	hwirq = fwspec->param[1];
+>> +	for (i = 0; i < nr_irqs; i++)
 > 
-> What is the relationship between DTEST2 and the external FET?
-> External FET is controlled through the DTEST2 register. External FET is 
-> not part of the
-WLED IP so it is controlled from the DTEST pins.
->> +			if (rc < 0)
->> +				return rc;
->> +		}
+> This loop is pointless, as nr_irqs can only be >1 in the multi-MSI case.
+
+OK, thanks.
+
+>> +static int __init
+>> +ls1021a_extirq_of_init(struct device_node *node, struct device_node *parent)
+>> +{
+>> +
+>> +	struct irq_domain *domain, *domain_parent;
+>> +	struct extirq_chip_data *chip_data;
+>> +	int ret;
+>> +
+>> +	domain_parent = irq_find_host(parent);
+>> +	if (!domain_parent) {
+>> +		pr_err("interrupt-parent not found\n");
+>> +		return -EINVAL;
 >> +	}
 >> +
->>  	return 0;
->>  }
->> 
->> @@ -271,6 +377,7 @@ static int qcom_wled_setup(struct qcom_wled *wled)
->>  	.switch_freq = 11,
->>  	.string_cfg = 0xf,
->>  	.en_cabc = 0,
->> +	.ext_pfet_sc_pro_en = 1,
->>  };
->> 
->>  struct qcom_wled_var_cfg {
->> @@ -376,6 +483,7 @@ static int qcom_wled_configure(struct qcom_wled 
->> *wled, struct device *dev)
->>  		bool *val_ptr;
->>  	} bool_opts[] = {
->>  		{ "qcom,en-cabc", &cfg->en_cabc, },
->> +		{ "qcom,ext-pfet-sc-pro", &cfg->ext_pfet_sc_pro_en, },
->>  	};
->> 
->>  	prop_addr = of_get_address(dev->of_node, 0, NULL, NULL);
->> @@ -427,6 +535,10 @@ static int qcom_wled_configure(struct qcom_wled 
->> *wled, struct device *dev)
->>  			*bool_opts[i].val_ptr = true;
->>  	}
->> 
->> +	wled->cfg.sc_irq = platform_get_irq_byname(wled->pdev, "sc-irq");
->> +	if (wled->cfg.sc_irq < 0)
->> +		dev_dbg(&wled->pdev->dev, "sc irq is not used\n");
+>> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+>> +	if (!chip_data)
+>> +		return -ENOMEM;
 >> +
+>> +	chip_data->syscon = syscon_regmap_lookup_by_phandle(node, "syscon");
+>> +	if (IS_ERR(chip_data->syscon)) {
+>> +		ret = PTR_ERR(chip_data->syscon);
+>> +		goto out_free_chip;
+>> +	}
+>> +
+>> +	domain = irq_domain_add_hierarchy(domain_parent, 0, NIRQ, node,
+>> +					  &extirq_domain_ops, chip_data);
+>> +	if (!domain) {
+>> +		ret = -ENOMEM;
+>> +		goto out_free_chip;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +out_free_chip:
+>> +	kfree(chip_data);
+>> +	return ret;
+>> +}
+>> +
+>> +IRQCHIP_DECLARE(ls1021a_extirq, "fsl,ls1021a-extirq", ls1021a_extirq_of_init);
+>>
 > 
-> Move this to qcom_wled_probe() or into its own code path, together with
-> the rest of the sc_irq initialization.
-> 
-> And as you're not enabling or disabling it you can store it in a local
-> variable.
-> 
-Ok. Sure.
->>  	return 0;
->>  }
->> 
-> 
-> Regards,
-> Bjorn
+> Overall, it is a bit annoying that you just copied the driver altogether
+> instead of trying to allow the common stuff to be shared between
+> drivers. Most of this is just boilerplate code...
+
+Yes, it did annoy me as well. However, the real meat of this is which
+bits of which register to poke to support a negative polarity irq, and
+there doesn't seem to be a good way to express that in DT. The register
+offset and the mapping from external irq# to the GIC one is reasonably
+easy (and would thus get rid of my NIRQ and INTPCR macros), but
+describing the mapping from IRQ# to the bit that needs to be set (or
+cleared) seems much harder. I cannot generalize from one example, so
+lacking documentation for any other Layerscape SOC, whatever I might
+come up with might not actually be useful for other hardware, making it
+rather pointless. But if you have any suggestions for how the DT
+bindings might look, I'm all ears.
+
+Thanks a lot for your feedback!
+
+Rasmus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
