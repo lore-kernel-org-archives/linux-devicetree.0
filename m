@@ -1,80 +1,234 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH V3 0/2] Tegra PCIe end point config space map code
- refactoring
-Date: Mon, 11 Dec 2017 11:54:53 -0600
-Message-ID: <20171211175452.GC16032@bhelgaas-glaptop.roam.corp.google.com>
-References: <1512410030-21038-1-git-send-email-vidyas@nvidia.com>
- <20171211105431.GI10671@ulmo>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v12 1/2] rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver documentation
+Date: Mon, 11 Dec 2017 20:00:21 +0200
+Message-ID: <5713027.4ELTcTEoZh@avalon>
+References: <20171129193235.25423-1-niklas.soderlund+renesas@ragnatech.se> <20171129193235.25423-2-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171211105431.GI10671@ulmo>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Vidya Sagar <vidyas@nvidia.com>, treding@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, kthota@nvidia.com, mmaddireddy@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171129193235.25423-2-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[+cc Lorenzo]
+Hi Niklas,
 
-On Mon, Dec 11, 2017 at 11:54:31AM +0100, Thierry Reding wrote:
-> On Mon, Dec 04, 2017 at 11:23:48PM +0530, Vidya Sagar wrote:
-> > PCIe host controller in Tegra SoCs has 1GB of aperture available
-> > for mapping end points config space, IO and BARs. In that, currently
-> > 256MB is being reserved for mapping end points configuration space
-> > which leaves less memory space available for mapping end points BARs
-> > on some of the platforms.
-> > This patch series attempts to map only 4K space from 1GB aperture to
-> > access end points configuration space.
-> > 
-> > Currently, this change can benefit T20 and T186 in saving (i.e. repurposed
-> > to use for BAR mapping) physical space as well as kernel virtual mapping space,
-> > it saves only kernel virtual address space in T30, T124, T132 and T210.
-> > 
-> > NOTE: Since T186 PCIe DT entry is not yet present in main line (it is currently
-> > merged to 'for-4.15/arm64/dt' branch), nothing gets broken with this change for T186.
-> > For older platforms (T20, T30, T124, T132, T210), this change works fine without any
-> > DT modifications
-> > 
-> > Testing Done on T124, T210 & T186:
-> >  Enumeration and basic functionality of immediate devices
-> >  Enumeration of devices behind a PCIe switch
-> >  Complete 4K configuration space access
-> > 
-> > Vidya Sagar (2):
-> >   PCI: tegra: refactor config space mapping code
-> >   ARM64: tegra: limit PCIe config space mapping to 4K for T186
-> > 
-> >  arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
-> >  drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------------------
-> >  2 files changed, 44 insertions(+), 89 deletions(-)
-> 
-> Hi Bjorn,
-> 
-> there's a bunch of PCI related patches for Tegra floating around on the
-> lists. I'm wondering if you'd be okay if I pick those up into the Tegra
-> tree after they've been reviewed and send you a pull request later on
-> (say around v4.15-rc6). That would allow me to get things cooking in
-> linux-next for a bit and get broader testing in addition to the
-> flexibility to patch things up if they break.
+Thank you for the patch.
 
-Lorenzo will be merging the Tegra stuff, so this is more a question
-for him.
+On Wednesday, 29 November 2017 21:32:34 EET Niklas S=F6derlund wrote:
+> Documentation for Renesas R-Car MIPI CSI-2 receiver. The CSI-2 receivers
+> are located between the video sources (CSI-2 transmitters) and the video
+> grabbers (VIN) on Gen3 of Renesas R-Car SoC.
+>=20
+> Each CSI-2 device is connected to more then one VIN device which
 
-Just to clarify, I think your questions is about putting those patches
-in
-git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux.git#for-next.
-If you put them there they will show up in linux-next, and then when
-Lorenzo merges them, you'll have to coordinate so they don't get
-merged into linux-next twice (once via the usual PCI tree route and
-again via the Tegra tree).
+s/then/than/
 
-If you wait until after they've been reviewed to put them into the
-Tegra tree, I'm not sure what the gain is, because I assume Lorenzo
-would merge them at about that same point.
+> simultaneously can receive video from the same CSI-2 device. Each VIN
+> device can also be connected to more then one CSI-2 device. The routing
 
-This cycle isn't going to be ideal timing with all the holidays
-coming up.  I know I'm going to be traveling and on vacation quite a
-bit in the rc5, 6, 7 timeframe.
+s/then/than/
 
-Bjorn
+> of which link are used are controlled by the VIN devices. There are only
+
+s/link are/links are/ or s/link are/link is/
+s/are controlled/is controlled/
+
+> a few possible routes which are set by hardware limitations, which are
+> different for each SoC in the Gen3 family.
+>=20
+> To work with the limitations of routing possibilities it is necessary
+> for the DT bindings to describe which VIN device is connected to which
+> CSI-2 device. This is why port 1 needs to to assign reg numbers for each
+> VIN device that be connected to it. To setup and to know which links are
+
+s/that be/that is/
+
+> valid for each SoC is the responsibility of the VIN driver since the
+> register to configure it belongs to the VIN hardware.
+>=20
+> Signed-off-by: Niklas S=F6derlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/media/renesas,rcar-csi2.txt           | 105 +++++++++++++++=
++++
+>  MAINTAINERS                                        |   1 +
+>  2 files changed, 106 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt new file
+> mode 100644
+> index 0000000000000000..688afd83bf66f8cf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+> @@ -0,0 +1,105 @@
+> +Renesas R-Car MIPI CSI-2
+> +------------------------
+> +
+> +The rcar-csi2 device provides MIPI CSI-2 capabilities for the Renesas R-=
+Car
+
+rcar-csi2 is the name of the driver, I would call it the "R-Car CSI-2 recei=
+ver=20
+device" (or s/device/IP core/).
+
+> +family of devices. It is to be used in conjunction with the R-Car VIN
+> module,
+
+The IP core itself doesn't have to be used with the VIN, but in R-Car SoCs =
+it=20
+is, so I would phrase it as "It is used ...".
+
+> +which provides the video capture capabilities.
+> +
+> +Mandatory properties
+> +--------------------
+> + - compatible: Must be one or more of the following
+> +   - "renesas,r8a7795-csi2" for the R8A7795 device.
+> +   - "renesas,r8a7796-csi2" for the R8A7796 device.
+> +
+> + - reg: the register base and size for the device registers
+> + - interrupts: the interrupt for the device
+> + - clocks: Reference to the parent clock
+
+Either capitalize the first word after the colon or don't, but please don't=
+=20
+mix them :-)
+
+> +
+> +The device node shall contain two 'port' child nodes according to the
+> +bindings defined in Documentation/devicetree/bindings/media/
+> +video-interfaces.txt. Port 0 shall connect the node that is the video
+> +source for to the CSI-2.
+
+Or simply "Port 0 shall connect to the CSI-2 source." ?
+
+> Port 1 shall connect all the R-Car VIN
+> +modules, which can make use of the CSI-2 module.
+
+And to be a bit more explicit, how about "Port 1 shall connect to all the R-
+Car VIN modules that have a hardware connection to the CSI-2 receiver." ?
+
+> +
+> +- Port 0 - Video source (Mandatory)
+
+Nitpicking, I don't think you need to capitalize Mandatory.
+
+> +	- Endpoint 0 - sub-node describing the endpoint that is the video source
+> +
+> +- Port 1 - VIN instances (Mandatory for all VIN present in the SoC)
+> +	- Endpoint 0 - sub-node describing the endpoint that is VIN0
+> +	- Endpoint 1 - sub-node describing the endpoint that is VIN1
+> +	- Endpoint 2 - sub-node describing the endpoint that is VIN2
+> +	- Endpoint 3 - sub-node describing the endpoint that is VIN3
+> +	- Endpoint 4 - sub-node describing the endpoint that is VIN4
+> +	- Endpoint 5 - sub-node describing the endpoint that is VIN5
+> +	- Endpoint 6 - sub-node describing the endpoint that is VIN6
+> +	- Endpoint 7 - sub-node describing the endpoint that is VIN7
+
+Should we clarify that only a subset of those endpoints shall be present wh=
+en=20
+the CSI-2 receiver isn't connected to all VIN instances ?
+
+=46urthermore, as explained in a comment I made when reviewing the VIN patc=
+h=20
+series, I wonder whether we shouldn't identify the CSI-2 receiver instances=
+ by=20
+ID the same way we do with the VIN instances (using the renesas,id property=
+).=20
+In that case I think the endpoint numbering won't matter.
+
+> +Example:
+> +
+> +	csi20: csi2@fea80000 {
+> +		compatible =3D "renesas,r8a7796-csi2";
+> +		reg =3D <0 0xfea80000 0 0x10000>;
+> +		interrupts =3D <0 184 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks =3D <&cpg CPG_MOD 714>;
+> +		power-domains =3D <&sysc R8A7796_PD_ALWAYS_ON>;
+> +		resets =3D <&cpg 714>;
+> +
+> +		ports {
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <0>;
+> +
+> +			port@0 {
+> +				#address-cells =3D <1>;
+> +				#size-cells =3D <0>;
+> +
+> +				reg =3D <0>;
+> +
+> +				csi20_in: endpoint@0 {
+> +					reg =3D <0>;
+> +					clock-lanes =3D <0>;
+> +					data-lanes =3D <1>;
+> +					remote-endpoint =3D <&adv7482_txb>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				#address-cells =3D <1>;
+> +				#size-cells =3D <0>;
+> +
+> +				reg =3D <1>;
+> +
+> +				csi20vin0: endpoint@0 {
+> +					reg =3D <0>;
+> +					remote-endpoint =3D <&vin0csi20>;
+> +				};
+> +				csi20vin1: endpoint@1 {
+> +					reg =3D <1>;
+> +					remote-endpoint =3D <&vin1csi20>;
+> +				};
+> +				csi20vin2: endpoint@2 {
+> +					reg =3D <2>;
+> +					remote-endpoint =3D <&vin2csi20>;
+> +				};
+> +				csi20vin3: endpoint@3 {
+> +					reg =3D <3>;
+> +					remote-endpoint =3D <&vin3csi20>;
+> +				};
+> +				csi20vin4: endpoint@4 {
+> +					reg =3D <4>;
+> +					remote-endpoint =3D <&vin4csi20>;
+> +				};
+> +				csi20vin5: endpoint@5 {
+> +					reg =3D <5>;
+> +					remote-endpoint =3D <&vin5csi20>;
+> +				};
+> +				csi20vin6: endpoint@6 {
+> +					reg =3D <6>;
+> +					remote-endpoint =3D <&vin6csi20>;
+> +				};
+> +				csi20vin7: endpoint@7 {
+> +					reg =3D <7>;
+> +					remote-endpoint =3D <&vin7csi20>;
+> +				};
+> +			};
+> +		};
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index aa71ab52fd76d160..4737de9f41bff570 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8652,6 +8652,7 @@ L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>  L:	linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Supported
+> +F:	Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
+>  F:	Documentation/devicetree/bindings/media/rcar_vin.txt
+>  F:	drivers/media/platform/rcar-vin/
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
