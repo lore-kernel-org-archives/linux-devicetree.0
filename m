@@ -1,618 +1,147 @@
-From: Brandon Wyman <bjwyman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 16/20] ARM: dts: aspeed: Add Witherspoon BMC machine
-Date: Mon, 11 Dec 2017 13:27:56 -0600
-Message-ID: <CAK_vbW1iLBkRRco18e8edjatE6y=Aa9XMi9B8wOaY0FFybPFAA@mail.gmail.com>
-References: <20171211050704.20621-1-joel@jms.id.au> <20171211050704.20621-17-joel@jms.id.au>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] Sunxi: Add SMP support on A83T
+Date: Mon, 11 Dec 2017 20:35:34 +0100
+Message-ID: <20171211193534.GA3967@Red>
+References: <20171211075001.6100-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211050704.20621-17-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171211075001.6100-1-mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Matt Spinler <spinler-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Brad Bishop <bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org>, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 10, 2017 at 11:07 PM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
-> The Witherspoon BMC is an ASPEED ast2500 based BMC that is part of an
-> OpenPower Power9 server.
->
-> This adds the device tree description for most upstream components. It
-> is a squashed commit from the OpenBMC kernel tree.
->
-> Signed-off-by: Brandon Wyman <bjwyman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Matt Spinler <spinler-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Brad Bishop <bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile                       |   4 +-
->  arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts | 547 +++++++++++++++++=
-++++++
->  2 files changed, 550 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 5d1e9d37bf3a..15a9207319c1 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1104,5 +1104,7 @@ dtb-$(CONFIG_ARCH_ZX) +=3D zx296702-ad1.dtb
->  dtb-$(CONFIG_ARCH_ASPEED) +=3D \
->         aspeed-ast2500-evb.dtb \
->         aspeed-bmc-opp-palmetto.dtb \
-> -       aspeed-bmc-opp-romulus.dtb
-> +       aspeed-bmc-opp-romulus.dtb \
-> +       aspeed-bmc-opp-witherspoon.dtb
-> +
->  endif
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/=
-boot/dts/aspeed-bmc-opp-witherspoon.dts
-> new file mode 100644
-> index 000000000000..9a0937512e5b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-> @@ -0,0 +1,547 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/dts-v1/;
-> +#include "aspeed-g5.dtsi"
-> +#include <dt-bindings/leds/leds-pca955x.h>
-> +
-> +/ {
-> +       model =3D "Witherspoon BMC";
-> +       compatible =3D "ibm,witherspoon-bmc", "aspeed,ast2500";
-> +
-> +       chosen {
-> +               stdout-path =3D &uart5;
-> +               bootargs =3D "console=3DttyS4,115200 earlyprintk";
-> +       };
-> +
-> +       memory {
-> +               reg =3D <0x80000000 0x20000000>;
-> +       };
-> +
-> +       reserved-memory {
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <1>;
-> +               ranges;
-> +
-> +               flash_memory: region@98000000 {
-> +                       no-map;
-> +                       reg =3D <0x98000000 0x04000000>; /* 64M */
-> +               };
-> +       };
-> +
-> +       gpio-keys-polled {
-> +               compatible =3D "gpio-keys-polled";
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +               poll-interval =3D <1000>;
-> +
-> +               fan0-presence {
-> +                       label =3D "fan0-presence";
-> +                       gpios =3D <&pca0 4 GPIO_ACTIVE_LOW>;
-> +                       linux,code =3D <4>;
-> +               };
-> +
-> +               fan1-presence {
-> +                       label =3D "fan1-presence";
-> +                       gpios =3D <&pca0 5 GPIO_ACTIVE_LOW>;
-> +                       linux,code =3D <5>;
-> +               };
-> +
-> +               fan2-presence {
-> +                       label =3D "fan2-presence";
-> +                       gpios =3D <&pca0 6 GPIO_ACTIVE_LOW>;
-> +                       linux,code =3D <6>;
-> +               };
-> +
-> +               fan3-presence {
-> +                       label =3D "fan3-presence";
-> +                       gpios =3D <&pca0 7 GPIO_ACTIVE_LOW>;
-> +                       linux,code =3D <7>;
-> +               };
-> +       };
-> +
-> +       leds {
-> +               compatible =3D "gpio-leds";
-> +
-> +               fan0 {
-> +                       retain-state-shutdown;
-> +                       default-state =3D "keep";
-> +                       gpios =3D <&pca0 0 GPIO_ACTIVE_LOW>;
-> +               };
-> +
-> +               fan1 {
-> +                       retain-state-shutdown;
-> +                       default-state =3D "keep";
-> +                       gpios =3D <&pca0 1 GPIO_ACTIVE_LOW>;
-> +               };
-> +
-> +               fan2 {
-> +                       retain-state-shutdown;
-> +                       default-state =3D "keep";
-> +                       gpios =3D <&pca0 2 GPIO_ACTIVE_LOW>;
-> +               };
-> +
-> +               fan3 {
-> +                       retain-state-shutdown;
-> +                       default-state =3D "keep";
-> +                       gpios =3D <&pca0 3 GPIO_ACTIVE_LOW>;
-> +               };
-> +
-> +               front-fault {
-> +                       retain-state-shutdown;
-> +                       default-state =3D "keep";
-> +                       gpios =3D <&pca0 13 GPIO_ACTIVE_LOW>;
-> +               };
-> +
-> +               front-power {
-> +                       retain-state-shutdown;
-> +                       default-state =3D "keep";
-> +                       gpios =3D <&pca0 14 GPIO_ACTIVE_LOW>;
-> +               };
-> +
-> +               front-id {
-> +                       retain-state-shutdown;
-> +                       default-state =3D "keep";
-> +                       gpios =3D <&pca0 15 GPIO_ACTIVE_LOW>;
-> +               };
-> +
-> +               rear-fault {
-> +                       gpios =3D <&gpio ASPEED_GPIO(N, 2) GPIO_ACTIVE_LO=
-W>;
-> +               };
-> +
-> +               rear-id {
-> +                       gpios =3D <&gpio ASPEED_GPIO(N, 4) GPIO_ACTIVE_LO=
-W>;
-> +               };
-> +
-> +               rear-power {
-> +                       gpios =3D <&gpio ASPEED_GPIO(N, 3) GPIO_ACTIVE_LO=
-W>;
-> +               };
-> +
-> +               power-button {
-> +                       gpios =3D <&gpio ASPEED_GPIO(R, 5) GPIO_ACTIVE_LO=
-W>;
-> +               };
-> +       };
-> +
-> +       fsi: gpio-fsi {
-> +               compatible =3D "fsi-master-gpio", "fsi-master";
-> +               #address-cells =3D <2>;
-> +               #size-cells =3D <0>;
-> +
-> +               clock-gpios =3D <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIG=
-H>;
-> +               data-gpios =3D <&gpio ASPEED_GPIO(E, 0) GPIO_ACTIVE_HIGH>=
-;
-> +               mux-gpios =3D <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
-> +               enable-gpios =3D <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIG=
-H>;
-> +               trans-gpios =3D <&gpio ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH=
->;
-> +       };
-> +
-> +       iio-hwmon-dps310 {
-> +               compatible =3D "iio-hwmon";
-> +               io-channels =3D <&dps 0>;
-> +       };
-> +
-> +       iio-hwmon-bmp280 {
-> +               compatible =3D "iio-hwmon";
-> +               io-channels =3D <&bmp 1>;
-> +       };
-> +
-> +};
-> +
-> +&fmc {
-> +       status =3D "okay";
-> +
-> +       flash@0 {
-> +               status =3D "okay";
-> +               label =3D "bmc";
-> +               m25p,fast-read;
-> +#include "openbmc-flash-layout.dtsi"
-> +       };
-> +
-> +       flash@1 {
-> +               status =3D "okay";
-> +               label =3D "alt";
-> +               m25p,fast-read;
-> +       };
-> +};
-> +
-> +&spi1 {
-> +       status =3D "okay";
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_spi1_default>;
-> +
-> +       flash@0 {
-> +               status =3D "okay";
-> +               label =3D "pnor";
-> +               m25p,fast-read;
-> +       };
-> +};
-> +
-> +&uart1 {
-> +       /* Rear RS-232 connector */
-> +       status =3D "okay";
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_txd1_default
-> +                       &pinctrl_rxd1_default
-> +                       &pinctrl_nrts1_default
-> +                       &pinctrl_ndtr1_default
-> +                       &pinctrl_ndsr1_default
-> +                       &pinctrl_ncts1_default
-> +                       &pinctrl_ndcd1_default
-> +                       &pinctrl_nri1_default>;
-> +};
-> +
-> +&uart2 {
-> +       /* APSS */
-> +       status =3D "okay";
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_txd2_default &pinctrl_rxd2_default>;
-> +};
-> +
-> +&uart5 {
-> +       status =3D "okay";
-> +};
-> +
-> +&lpc_ctrl {
-> +       status =3D "okay";
-> +       memory-region =3D <&flash_memory>;
-> +       flash =3D <&spi1>;
-> +};
-> +
-> +&mac0 {
-> +       status =3D "okay";
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_rmii1_default>;
-> +       use-ncsi;
-> +};
-> +
-> +&i2c2 {
-> +       status =3D "okay";
-> +
-> +       /* MUX ->
-> +        *    Samtec 1
-> +        *    Samtec 2
-> +        */
-> +};
-> +
-> +&i2c3 {
-> +       status =3D "okay";
-> +
-> +       bmp: bmp280@77 {
-> +               compatible =3D "bosch,bmp280";
-> +               reg =3D <0x77>;
-> +               #io-channel-cells =3D <1>;
-> +       };
-> +
-> +       max31785@52 {
-> +               compatible =3D "maxim,max31785a";
-> +               reg =3D <0x52>;
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +       };
-> +
-> +       dps: dps310@76 {
-> +               compatible =3D "infineon,dps310";
-> +               reg =3D <0x76>;
-> +               #io-channel-cells =3D <0>;
-> +       };
-> +
-> +       pca0: pca9552@60 {
-> +               compatible =3D "nxp,pca9552";
-> +               reg =3D <0x60>;
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +
-> +               gpio-controller;
-> +               #gpio-cells =3D <2>;
-> +
-> +               gpio@0 {
-> +                       reg =3D <0>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@1 {
-> +                       reg =3D <1>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@2 {
-> +                       reg =3D <2>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@3 {
-> +                       reg =3D <3>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@4 {
-> +                       reg =3D <4>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@5 {
-> +                       reg =3D <5>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@6 {
-> +                       reg =3D <6>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@7 {
-> +                       reg =3D <7>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@8 {
-> +                       reg =3D <8>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@9 {
-> +                       reg =3D <9>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@10 {
-> +                       reg =3D <10>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@11 {
-> +                       reg =3D <11>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@12 {
-> +                       reg =3D <12>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@13 {
-> +                       reg =3D <13>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@14 {
-> +                       reg =3D <14>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@15 {
-> +                       reg =3D <15>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +       };
-> +
-> +       power-supply@68 {
-> +               compatible =3D "ibm,cffps1";
-> +               reg =3D <0x68>;
-> +       };
-> +
-> +       power-supply@69 {
-> +               compatible =3D "ibm,cffps1";
-> +               reg =3D <0x69>;
-> +       };
-> +};
-> +
-> +&i2c4 {
-> +       status =3D "okay";
-> +
-> +       tmp423a@4c {
-> +               compatible =3D "ti,tmp423";
-> +               reg =3D <0x4c>;
-> +       };
-> +
-> +       ir35221@70 {
-> +               compatible =3D "infineon,ir35221";
-> +               reg =3D <0x70>;
-> +       };
-> +
-> +       ir35221@71 {
-> +               compatible =3D "infineon,ir35221";
-> +               reg =3D <0x71>;
-> +       };
-> +};
-> +
-> +
-> +&i2c5 {
-> +       status =3D "okay";
-> +
-> +       tmp423a@4c {
-> +               compatible =3D "ti,tmp423";
-> +               reg =3D <0x4c>;
-> +       };
-> +
-> +       ir35221@70 {
-> +               compatible =3D "infineon,ir35221";
-> +               reg =3D <0x70>;
-> +       };
-> +
-> +       ir35221@71 {
-> +               compatible =3D "infineon,ir35221";
-> +               reg =3D <0x71>;
-> +       };
-> +};
-> +
-> +&i2c9 {
-> +       status =3D "okay";
-> +
-> +       tmp275@4a {
-> +               compatible =3D "ti,tmp275";
-> +               reg =3D <0x4a>;
-> +       };
-> +};
-> +
-> +&i2c10 {
-> +       /* MUX
-> +        *   -> PCIe Slot 3
-> +        *   -> PCIe Slot 4
-> +        */
-> +       status =3D "okay";
-> +};
-> +
-> +&i2c11 {
-> +       status =3D "okay";
-> +
-> +       pca9552: pca9552@60 {
-> +               compatible =3D "nxp,pca9552";
-> +               reg =3D <0x60>;
-> +               #address-cells =3D <1>;
-> +               #size-cells =3D <0>;
-> +               gpio-controller;
-> +               #gpio-cells =3D <2>;
-> +
-> +               gpio-line-names =3D "PS_SMBUS_RESET_N", "APSS_RESET_N",
-> +                       "GPU0_TH_OVERT_N_BUFF", "GPU1_TH_OVERT_N_BUFF",
-> +                       "GPU2_TH_OVERT_N_BUFF", "GPU3_TH_OVERT_N_BUFF",
-> +                       "GPU4_TH_OVERT_N_BUFF", "GPU5_TH_OVERT_N_BUFF",
-> +                       "GPU0_PWR_GOOD_BUFF", "GPU1_PWR_GOOD_BUFF",
-> +                       "GPU2_PWR_GOOD_BUFF", "GPU3_PWR_GOOD_BUFF",
-> +                       "GPU4_PWR_GOOD_BUFF", "GPU5_PWR_GOOD_BUFF",
-> +                       "12V_BREAKER_FLT_N", "THROTTLE_UNLATCHED_N";
-> +
-> +               gpio@0 {
-> +                       reg =3D <0>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@1 {
-> +                       reg =3D <1>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@2 {
-> +                       reg =3D <2>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@3 {
-> +                       reg =3D <3>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@4 {
-> +                       reg =3D <4>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@5 {
-> +                       reg =3D <5>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@6 {
-> +                       reg =3D <6>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@7 {
-> +                       reg =3D <7>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@8 {
-> +                       reg =3D <8>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@9 {
-> +                       reg =3D <9>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@10 {
-> +                       reg =3D <10>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@11 {
-> +                       reg =3D <11>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@12 {
-> +                       reg =3D <12>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@13 {
-> +                       reg =3D <13>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@14 {
-> +                       reg =3D <14>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +
-> +               gpio@15 {
-> +                       reg =3D <15>;
-> +                       type =3D <PCA955X_TYPE_GPIO>;
-> +               };
-> +       };
-> +
-> +       rtc@32 {
-> +               compatible =3D "epson,rx8900";
-> +               reg =3D <0x32>;
-> +       };
-> +
-> +       eeprom@51 {
-> +               compatible =3D "atmel,24c64";
-> +               reg =3D <0x51>;
-> +       };
-> +
-> +       ucd90160@64 {
-> +               compatible =3D "ti,ucd90160";
-> +               reg =3D <0x64>;
-> +       };
-> +};
-> +
-> +&i2c12 {
-> +       status =3D "okay";
-> +};
-> +
-> +&i2c13 {
-> +       status =3D "okay";
-> +};
-> +
-> +&vuart {
-> +       status =3D "okay";
-> +};
-> +
-> +&gfx {
-> +       status =3D "okay";
-> +};
-> +
-> +&pinctrl {
-> +       aspeed,external-nodes =3D <&gfx &lhc>;
-> +};
-> +
-> +&wdt1 {
-> +       aspeed,reset-type =3D "none";
-> +       aspeed,external-signal;
-> +       aspeed,ext-push-pull;
-> +       aspeed,ext-active-high;
-> +
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&pinctrl_wdtrst1_default>;
-> +};
-> --
-> 2.14.1
->
-Reviewed-by: Brandon Wyman <bjwyman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon, Dec 11, 2017 at 08:49:57AM +0100, Mylène Josserand wrote:
+> Hello everyone,
+> 
+> This series adds SMP support for Allwinner Sun8i-a83t
+> with MCPM (Multi-Cluster Power Management).
+> Series information:
+> 	- Based on last linux-next (next-20171211)
+> 	- Had dependencies on Chen Yu's patch that add MCPM
+> 	support:
+> 	https://patchwork.kernel.org/patch/6402801/
+> 
+> Patch 01: Convert the mcpm driver (initially for A80) to be able
+> to use it for A83T. This SoC has a bit flip that needs to be handled.
+> Patch 02: Add registers nodes (prcm, cpucfg and r_cpucfg) needed
+> for MCPM.
+> Patch 03: Add CCI-400 node for a83t.
+> Patch 04: Fix the use of virtual timers that hangs the kernel in
+> case of SMP support.
+> 
+> If you have any remarks/questions, let me know.
+> Thank you in advance,
+> Mylène
+> 
+
+Hello
+
+As we discussed in private, Chen Yu's patch should be added in your series.
+
+Furthermore, MCPM is not automaticaly selected via imply.
+
+With all patchs I hit a bug:
+[    0.898668] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:238
+[    0.911162] in_atomic(): 1, irqs_disabled(): 0, pid: 1, name: swapper/0
+[    0.917776] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.15.0-rc2-next-20171211+ #73
+[    0.925418] Hardware name: Allwinner sun8i Family
+[    0.930118] Backtrace: 
+[    0.932596] [<c010cc50>] (dump_backtrace) from [<c010cf0c>] (show_stack+0x18/0x1c)
+[    0.940158]  r7:c0b261e4 r6:60000013 r5:00000000 r4:c0b51958
+[    0.945820] [<c010cef4>] (show_stack) from [<c06baccc>] (dump_stack+0x8c/0xa0)
+[    0.953045] [<c06bac40>] (dump_stack) from [<c0149d40>] (___might_sleep+0x150/0x170)
+[    0.960779]  r7:c0b261e4 r6:00000000 r5:000000ee r4:ee844000
+[    0.966437] [<c0149bf0>] (___might_sleep) from [<c0149dc8>] (__might_sleep+0x68/0xa0)
+[    0.974253]  r4:c0861690
+[    0.976796] [<c0149d60>] (__might_sleep) from [<c06d2918>] (mutex_lock+0x24/0x68)
+[    0.984269]  r6:c0892f6c r5:ffffffff r4:c0b1bb24
+[    0.988891] [<c06d28f4>] (mutex_lock) from [<c01ccb6c>] (perf_pmu_register+0x24/0x3e4)
+[    0.996795]  r5:ffffffff r4:ee98b014
+[    1.000375] [<c01ccb48>] (perf_pmu_register) from [<c03efabc>] (cci_pmu_probe+0x340/0x484)
+[    1.008631]  r10:c0892f6c r9:c0bfd5f0 r8:eea19010 r7:c0b261e4 r6:c0b26240 r5:eea19000
+[    1.016447]  r4:ee98b010
+[    1.018989] [<c03ef77c>] (cci_pmu_probe) from [<c045e21c>] (platform_drv_probe+0x58/0xb8)
+[    1.027158]  r10:00000000 r9:c0b2610c r8:00000000 r7:fffffdfb r6:c0b2610c r5:ffffffed
+[    1.034974]  r4:eea19010
+[    1.037511] [<c045e1c4>] (platform_drv_probe) from [<c045c984>] (driver_probe_device+0x254/0x330)
+[    1.046371]  r7:00000000 r6:c0bff498 r5:c0bff494 r4:eea19010
+[    1.052026] [<c045c730>] (driver_probe_device) from [<c045cbc4>] (__device_attach_driver+0xa0/0xd4)
+[    1.061062]  r10:00000000 r9:c0bff470 r8:00000000 r7:00000001 r6:eea19010 r5:ee845ac0
+[    1.068879]  r4:c0b2610c r3:00000000
+[    1.072454] [<c045cb24>] (__device_attach_driver) from [<c045ad68>] (bus_for_each_drv+0x68/0x9c)
+[    1.081228]  r7:00000001 r6:c045cb24 r5:ee845ac0 r4:00000000
+[    1.086883] [<c045ad00>] (bus_for_each_drv) from [<c045c60c>] (__device_attach+0xb8/0x11c)
+[    1.095135]  r6:c0b3e848 r5:eea19044 r4:eea19010
+[    1.099750] [<c045c554>] (__device_attach) from [<c045cc44>] (device_initial_probe+0x14/0x18)
+[    1.108263]  r7:c0b0a4c8 r6:c0b3e848 r5:eea19010 r4:eea19018
+[    1.113919] [<c045cc30>] (device_initial_probe) from [<c045bb58>] (bus_probe_device+0x8c/0x94)
+[    1.122523] [<c045bacc>] (bus_probe_device) from [<c0459db8>] (device_add+0x40c/0x5a0)
+[    1.130429]  r7:c0b0a4c8 r6:eea19010 r5:eea18a10 r4:eea19018
+[    1.136089] [<c04599ac>] (device_add) from [<c0582a58>] (of_device_add+0x3c/0x44)
+[    1.143564]  r10:00000000 r9:00000000 r8:00000000 r7:eedf21a4 r6:eea18a10 r5:00000000
+[    1.151380]  r4:eea19000
+[    1.153915] [<c0582a1c>] (of_device_add) from [<c0582f80>] (of_platform_device_create_pdata+0x7c/0xac)
+[    1.163210] [<c0582f04>] (of_platform_device_create_pdata) from [<c0583100>] (of_platform_bus_create+0xf4/0x1f0)
+[    1.173372]  r9:00000000 r8:00000000 r7:00000001 r6:00000000 r5:eedf2154 r4:00000000
+[    1.181107] [<c058300c>] (of_platform_bus_create) from [<c0583374>] (of_platform_populate+0x74/0xd4)
+[    1.190229]  r10:00000001 r9:eea18a10 r8:00000000 r7:00000000 r6:00000000 r5:eedf1d04
+[    1.198045]  r4:eedf2154
+[    1.200580] [<c0583300>] (of_platform_populate) from [<c03ef2a8>] (cci_platform_probe+0x3c/0x54)
+[    1.209356]  r10:00000000 r9:c0b26168 r8:00000000 r7:fffffdfb r6:c0b26168 r5:ffffffed
+[    1.217172]  r4:eea18a00
+[    1.219708] [<c03ef26c>] (cci_platform_probe) from [<c045e21c>] (platform_drv_probe+0x58/0xb8)
+[    1.228306]  r5:ffffffed r4:eea18a10
+[    1.231881] [<c045e1c4>] (platform_drv_probe) from [<c045c984>] (driver_probe_device+0x254/0x330)
+[    1.240742]  r7:00000000 r6:c0bff498 r5:c0bff494 r4:eea18a10
+[    1.246397] [<c045c730>] (driver_probe_device) from [<c045cbc4>] (__device_attach_driver+0xa0/0xd4)
+[    1.255433]  r10:00000000 r9:c0bff470 r8:00000000 r7:00000001 r6:eea18a10 r5:ee845ce8
+[    1.263250]  r4:c0b26168 r3:00000000
+[    1.266825] [<c045cb24>] (__device_attach_driver) from [<c045ad68>] (bus_for_each_drv+0x68/0x9c)
+[    1.275598]  r7:00000001 r6:c045cb24 r5:ee845ce8 r4:00000000
+[    1.281253] [<c045ad00>] (bus_for_each_drv) from [<c045c60c>] (__device_attach+0xb8/0x11c)
+[    1.289506]  r6:c0b3e848 r5:eea18a44 r4:eea18a10
+[    1.294120] [<c045c554>] (__device_attach) from [<c045cc44>] (device_initial_probe+0x14/0x18)
+[    1.302633]  r7:c0b0a4c8 r6:c0b3e848 r5:eea18a10 r4:eea18a18
+[    1.308288] [<c045cc30>] (device_initial_probe) from [<c045bb58>] (bus_probe_device+0x8c/0x94)
+[    1.316890] [<c045bacc>] (bus_probe_device) from [<c0459db8>] (device_add+0x40c/0x5a0)
+[    1.324796]  r7:c0b0a4c8 r6:eea18a10 r5:ee993810 r4:eea18a18
+[    1.330450] [<c04599ac>] (device_add) from [<c0582a58>] (of_device_add+0x3c/0x44)
+[    1.337926]  r10:00000000 r9:c07759d8 r8:00000000 r7:eedf1d54 r6:ee993810 r5:00000000
+[    1.345743]  r4:eea18a00
+[    1.348277] [<c0582a1c>] (of_device_add) from [<c0582f80>] (of_platform_device_create_pdata+0x7c/0xac)
+[    1.357572] [<c0582f04>] (of_platform_device_create_pdata) from [<c0583100>] (of_platform_bus_create+0xf4/0x1f0)
+[    1.367734]  r9:c07759d8 r8:00000000 r7:00000001 r6:00000000 r5:eedf1d04 r4:00000000
+[    1.375469] [<c058300c>] (of_platform_bus_create) from [<c058315c>] (of_platform_bus_create+0x150/0x1f0)
+[    1.384938]  r10:ee993810 r9:c07759d8 r8:00000000 r7:00000001 r6:00000000 r5:eedefe1c
+[    1.392754]  r4:eedf1d04
+[    1.395289] [<c058300c>] (of_platform_bus_create) from [<c0583374>] (of_platform_populate+0x74/0xd4)
+[    1.404411]  r10:00000001 r9:00000000 r8:00000000 r7:c07759d8 r6:00000000 r5:eedee844
+[    1.412228]  r4:eedefe1c
+[    1.414769] [<c0583300>] (of_platform_populate) from [<c0a25ee8>] (of_platform_default_populate_init+0x80/0x94)
+[    1.424844]  r10:c0a37848 r9:00000000 r8:c0b59680 r7:c0a37834 r6:ffffe000 r5:c0775ce8
+[    1.432661]  r4:00000000
+[    1.435200] [<c0a25e68>] (of_platform_default_populate_init) from [<c0102794>] (do_one_initcall+0x5c/0x194)
+[    1.444925]  r5:c0a25e68 r4:c0b0a4c8
+[    1.448506] [<c0102738>] (do_one_initcall) from [<c0a00f88>] (kernel_init_freeable+0x1d4/0x268)
+[    1.457195]  r9:00000004 r8:c0b59680 r7:c0a37834 r6:c0b59680 r5:c0a47308 r4:c090cfb8
+[    1.464932] [<c0a00db4>] (kernel_init_freeable) from [<c06cf3b0>] (kernel_init+0x10/0x118)
+[    1.473187]  r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:c06cf3a0
+[    1.481004]  r4:00000000
+[    1.483540] [<c06cf3a0>] (kernel_init) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+[    1.491098] Exception stack(0xee845fb0 to 0xee845ff8)
+[    1.496146] 5fa0:                                     00000000 00000000 00000000 00000000
+[    1.504313] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    1.512480] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    1.519084]  r5:c06cf3a0 r4:00000000
+[    1.522737] ARM CCI_400_r1 PMU driver probed
+
+And only CPU 0 show up.
+
+Regards
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
