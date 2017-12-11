@@ -1,8 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 20/20] ARM: dts: imx6qdl-hummingboard2: rename regulators to
- match schematic
-Date: Mon, 11 Dec 2017 16:59:00 +0000
-Message-ID: <E1eORPw-0000JD-38@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 16/20] ARM: dts: imx6*-hummingboard2: split out eMMC support
+Date: Mon, 11 Dec 2017 16:58:39 +0000
+Message-ID: <E1eORPb-0000Ih-G6@rmk-PC.armlinux.org.uk>
 References: <20171211165631.GW10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -15,186 +14,164 @@ To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <ke
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Make the regulators match the schematic - name the regulators after
-one of their schematic supply names, and arrange them into their
-heirarchy.
+eMMC is optional on HB2 boards, and may be implemented by the SOM.  Move
+it out of the base HB2 include file.
 
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-hummingboard2-emmc.dtsi |  4 +-
- arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi      | 86 ++++++++++++++---------
- 2 files changed, 56 insertions(+), 34 deletions(-)
+ arch/arm/boot/dts/imx6dl-hummingboard2.dts        |  1 +
+ arch/arm/boot/dts/imx6q-hummingboard2.dts         |  1 +
+ arch/arm/boot/dts/imx6qdl-hummingboard2-emmc.dtsi | 72 +++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi      | 26 --------
+ 4 files changed, 74 insertions(+), 26 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6qdl-hummingboard2-emmc.dtsi
 
+diff --git a/arch/arm/boot/dts/imx6dl-hummingboard2.dts b/arch/arm/boot/dts/imx6dl-hummingboard2.dts
+index 99b6cce13175..b12cd87f3f94 100644
+--- a/arch/arm/boot/dts/imx6dl-hummingboard2.dts
++++ b/arch/arm/boot/dts/imx6dl-hummingboard2.dts
+@@ -45,6 +45,7 @@
+ #include "imx6qdl-sr-som.dtsi"
+ #include "imx6qdl-sr-som-brcm.dtsi"
+ #include "imx6qdl-hummingboard2.dtsi"
++#include "imx6qdl-hummingboard2-emmc.dtsi"
+ 
+ / {
+ 	model = "SolidRun HummingBoard2 Solo/DualLite";
+diff --git a/arch/arm/boot/dts/imx6q-hummingboard2.dts b/arch/arm/boot/dts/imx6q-hummingboard2.dts
+index fab388a0f673..5249f53dcdbc 100644
+--- a/arch/arm/boot/dts/imx6q-hummingboard2.dts
++++ b/arch/arm/boot/dts/imx6q-hummingboard2.dts
+@@ -45,6 +45,7 @@
+ #include "imx6qdl-sr-som.dtsi"
+ #include "imx6qdl-sr-som-brcm.dtsi"
+ #include "imx6qdl-hummingboard2.dtsi"
++#include "imx6qdl-hummingboard2-emmc.dtsi"
+ 
+ / {
+ 	model = "SolidRun HummingBoard2 Dual/Quad";
 diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2-emmc.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2-emmc.dtsi
-index 1aa97817e751..f400405381a7 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard2-emmc.dtsi
+new file mode 100644
+index 000000000000..1aa97817e751
+--- /dev/null
 +++ b/arch/arm/boot/dts/imx6qdl-hummingboard2-emmc.dtsi
-@@ -64,8 +64,8 @@
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hummingboard2_usdhc3>;
--	vmmc-supply = <&reg_3p3v>;
--	vqmmc-supply = <&reg_3p3v>;
-+	vmmc-supply = <&v_3v2>;
-+	vqmmc-supply = <&v_3v2>;
- 	bus-width = <8>;
- 	non-removable;
- 	status = "okay";
+@@ -0,0 +1,72 @@
++/*
++ * Device Tree file for SolidRun HummingBoard2
++ * Copyright (C) 2015 Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++&iomuxc {
++	hummingboard2 {
++		pinctrl_hummingboard2_usdhc3: hummingboard2-usdhc3 {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
++				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10059
++				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17059
++				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17059
++				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17059
++				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17059
++				MX6QDL_PAD_SD3_DAT4__SD3_DATA4 0x17059
++				MX6QDL_PAD_SD3_DAT5__SD3_DATA5 0x17059
++				MX6QDL_PAD_SD3_DAT6__SD3_DATA6 0x17059
++				MX6QDL_PAD_SD3_DAT7__SD3_DATA7 0x17059
++				MX6QDL_PAD_SD3_RST__SD3_RESET  0x17059
++			>;
++		};
++	};
++};
++
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hummingboard2_usdhc3>;
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_3p3v>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
 diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-index 1089f693ebde..117c4daf31e9 100644
+index 52ed580cf64a..6954d4875cd8 100644
 --- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-@@ -52,20 +52,29 @@
- 		linux,rc-map-name = "rc-rc6-mce";
- 	};
+@@ -441,22 +441,6 @@
+ 			>;
+ 		};
  
--	reg_3p3v: regulator-3p3v {
-+	v_3v2: regulator-v-3v2 {
- 		compatible = "regulator-fixed";
--		regulator-name = "VCC_3V2";
--		regulator-min-microvolt = <3300000>;
-+		regulator-always-on;
- 		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "v_3v2";
-+	};
-+
-+	v_5v0: regulator-v-5v0 {
-+		compatible = "regulator-fixed";
- 		regulator-always-on;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_5v0";
- 	};
- 
--	reg_1p8v: regulator-1p8v {
-+	vcc_1p8: regulator-vcc-1p8 {
- 		compatible = "regulator-fixed";
--		regulator-name = "VCC_1V8";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
- 		regulator-always-on;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-name = "vcc_1p8";
-+		vin-supply = <&v_3v2>;
- 	};
- 
- 	v_sd: regulator-v-sd {
-@@ -78,53 +87,62 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-name = "v_sd";
- 		startup-delay-us = <1000>;
-+		vin-supply = <&v_3v2>;
- 	};
- 
--	reg_usbh2_vbus: regulator-usb-h1-vbus {
-+	v_usb1: regulator-v-usb1 {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_hummingboard2_usbh1_vbus>;
--		regulator-name = "V_USB2";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
-+		pinctrl-0 = <&pinctrl_hummingboard2_usbotg_vbus>;
- 		regulator-always-on;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb1";
-+		vin-supply = <&v_5v0>;
- 	};
- 
--	reg_usbotg_vbus: regulator-usb-otg-vbus {
-+	v_usb2: regulator-v-usb2 {
-+		/* USB hub port 1 */
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_hummingboard2_usbotg_vbus>;
--		regulator-name = "V_USB1";
--		regulator-min-microvolt = <5000000>;
-+		pinctrl-0 = <&pinctrl_hummingboard2_usbh1_vbus>;
-+		regulator-always-on;
- 		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb2";
-+		vin-supply = <&v_5v0>;
- 	};
- 
--	reg_usbh3_vbus: regulator-usb-h2-vbus {
-+	v_usb3: regulator-v-usb3 {
-+		/* USB hub port 3 */
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		enable-gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_hummingboard2_usbh2_vbus>;
--		regulator-name = "V_USB3";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
- 		regulator-always-on;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb3";
-+		vin-supply = <&v_5v0>;
- 	};
- 
--	reg_usbh4_vbus: regulator-usb-h3-vbus {
-+	v_usb4: regulator-v-usb4 {
-+		/* USB hub port 4 */
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		enable-gpio = <&gpio7 10 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio7 10 GPIO_ACTIVE_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_hummingboard2_usbh3_vbus>;
--		regulator-name = "V_USB4";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
- 		regulator-always-on;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-name = "v_usb4";
-+		vin-supply = <&v_5v0>;
- 	};
- 
- 	sound-sgtl5000 {
-@@ -176,9 +194,9 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pinctrl_hummingboard2_sgtl5000>;
- 		reg = <0x0a>;
--		VDDA-supply = <&reg_3p3v>;
--		VDDIO-supply = <&reg_3p3v>;
--		VDDD-supply = <&reg_1p8v>;
-+		VDDA-supply = <&v_3v2>;
-+		VDDD-supply = <&vcc_1p8>;
-+		VDDIO-supply = <&v_3v2>;
- 	};
+-		pinctrl_hummingboard2_usdhc3: hummingboard2-usdhc3 {
+-			fsl,pins = <
+-				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
+-				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10059
+-				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17059
+-				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17059
+-				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17059
+-				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17059
+-				MX6QDL_PAD_SD3_DAT4__SD3_DATA4 0x17059
+-				MX6QDL_PAD_SD3_DAT5__SD3_DATA5 0x17059
+-				MX6QDL_PAD_SD3_DAT6__SD3_DATA6 0x17059
+-				MX6QDL_PAD_SD3_DAT7__SD3_DATA7 0x17059
+-				MX6QDL_PAD_SD3_RST__SD3_RESET  0x17059
+-			>;
+-		};
+-
+ 		pinctrl_hummingboard2_uart3: hummingboard2-uart3 {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_EIM_D25__UART3_TX_DATA	0x1b0b1
+@@ -515,16 +499,6 @@
+ 	status = "okay";
  };
  
-@@ -488,7 +506,7 @@
- 	disable-over-current;
+-&usdhc3 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_hummingboard2_usdhc3>;
+-	vmmc-supply = <&reg_3p3v>;
+-	vqmmc-supply = <&reg_3p3v>;
+-	bus-width = <8>;
+-	non-removable;
+-	status = "okay";
+-};
+-
+ &uart3 {
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hummingboard2_usbotg_id>;
--	vbus-supply = <&reg_usbotg_vbus>;
-+	vbus-supply = <&v_usb1>;
- 	status = "okay";
- };
- 
-@@ -516,3 +534,7 @@
  	pinctrl-0 = <&pinctrl_hummingboard2_uart3>;
- 	status = "okay";
- };
-+
-+&vcc_3v3 {
-+	vin-supply = <&v_3v2>;
-+};
 -- 
 2.7.4
 
