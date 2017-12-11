@@ -1,57 +1,36 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm: dts: sun8i: a83t: Add I2C0 node
-Date: Mon, 11 Dec 2017 16:31:20 +0800
-Message-ID: <CAGb2v64awf8YwBM-M6GS_dy+6mpT1e5Bzy-zLYNfRmjLGb55bw@mail.gmail.com>
-References: <20171208215419.30396-1-mylene.josserand@free-electrons.com>
- <20171208215419.30396-2-mylene.josserand@free-electrons.com> <20171211071513.xgni3t6ihmeeebre@flea.lan>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 12/12] cpufreq: dt: Reintroduce independent_clocks
+ platform data
+Date: Mon, 11 Dec 2017 14:03:28 +0530
+Message-ID: <20171211083328.GE25177@vireshk-i7>
+References: <1512726150-7204-1-git-send-email-sricharan@codeaurora.org>
+ <1512726150-7204-13-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211071513.xgni3t6ihmeeebre-ZC1Zs529Oq4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, simon.budig-t93Ne7XHvje5bSeCtf/tX7NAH6kLmebB@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1512726150-7204-13-git-send-email-sricharan@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 3:15 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Fri, Dec 08, 2017 at 10:54:15PM +0100, Mylène Josserand wrote:
->> Add I2C0 node for A83T.
->>
->> Signed-off-by: Mylène Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun8i-a83t.dtsi | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
->> index 19acae1b4089..848cf3f19962 100644
->> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
->> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
->> @@ -177,6 +177,17 @@
->>                       #dma-cells = <1>;
->>               };
->>
->> +             i2c0: i2c@01c2ac00 {
->
-> Drop the leading 0, it generates a warning in dtc.
->
->> +                     compatible = "allwinner,sun6i-a31-i2c";
->
-> Can you add a SoC-specific compatible there please?
->
->> +                     reg = <0x01c2ac00 0x400>;
->
-> And you should order your nodes by physical address.
+On 08-12-17, 15:12, Sricharan R wrote:
+> The Platform data was removed earlier by,
+> 'commit eb96924acddc ("cpufreq: dt: Kill platform-data")'
+> since there were no users at that time.
+> Now this is required when the each of the cpu clocks
+> can be scaled independently, which is the case
+> for krait cores. So reintroduce it.
+> 
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+>  drivers/cpufreq/cpufreq-dt.c | 7 ++++++-
+>  drivers/cpufreq/cpufreq-dt.h | 6 ++++++
+>  2 files changed, 12 insertions(+), 1 deletion(-)
 
-I have a similar patch in my A83T I2S branch:
+Nack. This information should come from the OPP layer (Hint:
+dev_pm_opp_of_get_sharing_cpus()).
 
-https://github.com/wens/linux/commit/8b76a3e555b39a06f3f8182e4ff5645de4c4cbc3
-
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+viresh
