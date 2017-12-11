@@ -1,136 +1,72 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH v6 3/6] clk: meson-axg: add clock controller drivers
-Date: Mon, 11 Dec 2017 18:16:52 +0800
-Message-ID: <a6a9454f-be94-4fee-9083-f37eae2c1749@amlogic.com>
-References: <20171211064853.32111-1-yixun.lan@amlogic.com>
- <20171211064853.32111-4-yixun.lan@amlogic.com>
- <1512985560.334.17.camel@baylibre.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH v8 02/13] docs: driver-api: add iio hw consumer
+	section
+Date: Mon, 11 Dec 2017 11:18:33 +0100
+Message-ID: <1512987524-2901-3-git-send-email-arnaud.pouliquen@st.com>
+References: <1512987524-2901-1-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1512985560.334.17.camel@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: yixun.lan@amlogic.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1512987524-2901-1-git-send-email-arnaud.pouliquen@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-iio@vger.kernel.org, arnaud.pouliquen@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-HI Jerome:
-
-On 12/11/17 17:46, Jerome Brunet wrote:
-> On Mon, 2017-12-11 at 14:48 +0800, Yixun Lan wrote:
->> From: Qiufang Dai <qiufang.dai@amlogic.com>
->>
->> Add clock controller drivers for Amlogic Meson-AXG SoC.
->>
->> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
->> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
->> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->> ---
->>  arch/arm64/Kconfig.platforms |   1 +
->>  drivers/clk/meson/Kconfig    |   8 +
->>  drivers/clk/meson/Makefile   |   1 +
->>  drivers/clk/meson/axg.c      | 944
->> +++++++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/meson/axg.h      | 126 ++++++
->>  5 files changed, 1080 insertions(+)
->>  create mode 100644 drivers/clk/meson/axg.c
->>  create mode 100644 drivers/clk/meson/axg.h
-> 
-> Overall, the changes looks good to me.
-> I still have a few comments which I'd like to see addressed quickly after this
-> series is merged
-did you say that:
- you will merge these patches now, then I could send fixes later?
-
-or I can send another version (v7) to address this..
-
-> 
-> [...]
-> 
->>
->> +static struct meson_clk_pll axg_fixed_pll = {
->> +	.m = {
->> +		.reg_off = HHI_MPLL_CNTL,
->> +		.shift   = 0,
->> +		.width   = 9,
->> +	},
->> +	.n = {
->> +		.reg_off = HHI_MPLL_CNTL,
->> +		.shift   = 9,
->> +		.width   = 5,
->> +	},
->> +	.od = {
->> +		.reg_off = HHI_MPLL_CNTL,
->> +		.shift   = 16,
->> +		.width   = 2,
->> +	},
->> +	.lock = &clk_lock,
->> +	.hw.init = &(struct clk_init_data){
->> +		.name = "fixed_pll",
->> +		.ops = &meson_clk_pll_ro_ops,
->> +		.parent_names = (const char *[]){ "xtal" },
->> +		.num_parents = 1,
->> +		.flags = CLK_GET_RATE_NOCACHE,
-> 
-> Is the rate of this clock supposed to changed by something else than
-> the CCF after boot ?
-> 
-> If not, you should drop this flag.
-> Same comment goes for axg_sys_pll and axg_gp0_pll
-> 
-we need to keep the CLK_GET_RATE_NOCACHE flag for axg_sys_pll, since the
-BL30 will change it for the frequency change.
-for the other two, we can drop them safely
-
-
->> +	},
->> +};
-> 
-> [...]
-> 
->> +/*
->> + * FIXME The legacy composite clocks (e.g. clk81) are both PLL post-dividers
->> + * and should be modeled with their respective PLLs via the forthcoming
->> + * coordinated clock rates feature
->> + */
->> +static u32 mux_table_clk81[]	= { 0, 2, 3, 4, 5, 6, 7 };
->> +static const char * const clk81_parent_names[] = {
->> +	"xtal", "fclk_div7", "mpll1", "mpll2", "fclk_div4",
->> +	"fclk_div3", "fclk_div5"
->> +};
->> +
->> +static struct clk_mux axg_mpeg_clk_sel = {
->> +	.reg = (void *)HHI_MPEG_CLK_CNTL,
->> +	.mask = 0x7,
->> +	.shift = 12,
->> +	.flags = CLK_MUX_READ_ONLY,
->> +	.table = mux_table_clk81,
->> +	.lock = &clk_lock,
->> +	.hw.init = &(struct clk_init_data){
->> +		.name = "mpeg_clk_sel",
->> +		.ops = &clk_mux_ro_ops,
->> +		/*
->> +		 * bits 14:12 selects from 8 possible parents:
->> +		 * xtal, 1'b0 (wtf), fclk_div7, mpll_clkout1, mpll_clkout2,
->> +		 * fclk_div4, fclk_div3, fclk_div5
->> +		 */
-> 
-> This comment is not necessary with table above.
-> 
-can drop
-
->> +		.parent_names = clk81_parent_names,
->> +		.num_parents = ARRAY_SIZE(clk81_parent_names),
->> +		.flags = CLK_SET_RATE_NO_REPARENT,
-> 
-> With ro_ops, this flag is not necessary, consider removing it.
-> 
-can drop
->> +	},
->> +};
->> +
->>
-> 
-> .
-> 
+VGhpcyBhZGRzIGEgc2VjdGlvbiBhYm91dCB0aGUgSGFyZHdhcmUgY29uc3VtZXIKQVBJIG9mIHRo
+ZSBJSU8gc3Vic3lzdGVtIHRvIHRoZSBkcml2ZXIgQVBJCmRvY3VtZW50YXRpb24uCgpTaWduZWQt
+b2ZmLWJ5OiBBcm5hdWQgUG91bGlxdWVuIDxhcm5hdWQucG91bGlxdWVuQHN0LmNvbT4KUmV2aWV3
+ZWQtYnk6IEpvbmF0aGFuIENhbWVyb24gPEpvbmF0aGFuLkNhbWVyb25AaHVhd2VpLmNvbT4KLS0t
+CiBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaWlvL2h3LWNvbnN1bWVyLnJzdCB8IDUxICsrKysr
+KysrKysrKysrKysrKysrKysrKysrKysKIERvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaW5k
+ZXgucnN0ICAgICAgIHwgIDEgKwogMiBmaWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kcml2ZXItYXBpL2lpby9ody1jb25zdW1l
+ci5yc3QKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaWlvL2h3LWNvbnN1
+bWVyLnJzdCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaHctY29uc3VtZXIucnN0Cm5l
+dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjhmYWNjZTYKLS0tIC9kZXYvbnVsbAor
+KysgYi9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaWlvL2h3LWNvbnN1bWVyLnJzdApAQCAtMCww
+ICsxLDUxIEBACis9PT09PT09PT09PQorSFcgY29uc3VtZXIKKz09PT09PT09PT09CitBbiBJSU8g
+ZGV2aWNlIGNhbiBiZSBkaXJlY3RseSBjb25uZWN0ZWQgdG8gYW5vdGhlciBkZXZpY2UgaW4gaGFy
+ZHdhcmUuIGluIHRoaXMKK2Nhc2UgdGhlIGJ1ZmZlcnMgYmV0d2VlbiBJSU8gcHJvdmlkZXIgYW5k
+IElJTyBjb25zdW1lciBhcmUgaGFuZGxlZCBieSBoYXJkd2FyZS4KK1RoZSBJbmR1c3RyaWFsIEkv
+TyBIVyBjb25zdW1lciBvZmZlcnMgYSB3YXkgdG8gYm9uZCB0aGVzZSBJSU8gZGV2aWNlcyB3aXRo
+b3V0Citzb2Z0d2FyZSBidWZmZXIgZm9yIGRhdGEuIFRoZSBpbXBsZW1lbnRhdGlvbiBjYW4gYmUg
+Zm91bmQgdW5kZXIKKzpmaWxlOmBkcml2ZXJzL2lpby9idWZmZXIvaHctY29uc3VtZXIuY2AKKwor
+CisqIHN0cnVjdCA6Yzp0eXBlOmBpaW9faHdfY29uc3VtZXJgIOKAlCBIYXJkd2FyZSBjb25zdW1l
+ciBzdHJ1Y3R1cmUKKyogOmM6ZnVuYzpgaWlvX2h3X2NvbnN1bWVyX2FsbG9jYCDigJQgQWxsb2Nh
+dGUgSUlPIGhhcmR3YXJlIGNvbnN1bWVyCisqIDpjOmZ1bmM6YGlpb19od19jb25zdW1lcl9mcmVl
+YCDigJQgRnJlZSBJSU8gaGFyZHdhcmUgY29uc3VtZXIKKyogOmM6ZnVuYzpgaWlvX2h3X2NvbnN1
+bWVyX2VuYWJsZWAg4oCUIEVuYWJsZSBJSU8gaGFyZHdhcmUgY29uc3VtZXIKKyogOmM6ZnVuYzpg
+aWlvX2h3X2NvbnN1bWVyX2Rpc2FibGVgIOKAlCBEaXNhYmxlIElJTyBoYXJkd2FyZSBjb25zdW1l
+cgorCisKK0hXIGNvbnN1bWVyIHNldHVwCis9PT09PT09PT09PT09PT09PQorCitBcyBzdGFuZGFy
+ZCBJSU8gZGV2aWNlIHRoZSBpbXBsZW1lbnRhdGlvbiBpcyBiYXNlZCBvbiBJSU8gcHJvdmlkZXIv
+Y29uc3VtZXIuCitBIHR5cGljYWwgSUlPIEhXIGNvbnN1bWVyIHNldHVwIGxvb2tzIGxpa2UgdGhp
+czo6CisKKwlzdGF0aWMgc3RydWN0IGlpb19od19jb25zdW1lciAqaHdjOworCisJc3RhdGljIGNv
+bnN0IHN0cnVjdCBpaW9faW5mbyBhZGNfaW5mbyA9IHsKKwkJLnJlYWRfcmF3ID0gYWRjX3JlYWRf
+cmF3LAorCX07CisKKwlzdGF0aWMgaW50IGFkY19yZWFkX3JhdyhzdHJ1Y3QgaWlvX2RldiAqaW5k
+aW9fZGV2LAorCQkJCXN0cnVjdCBpaW9fY2hhbl9zcGVjIGNvbnN0ICpjaGFuLCBpbnQgKnZhbCwK
+KwkJCQlpbnQgKnZhbDIsIGxvbmcgbWFzaykKKwl7CisJCXJldCA9IGlpb19od19jb25zdW1lcl9l
+bmFibGUoaHdjKTsKKworCQkvKiBBY3F1aXJlIGRhdGEgKi8KKworCQlyZXQgPSBpaW9faHdfY29u
+c3VtZXJfZGlzYWJsZShod2MpOworCX0KKworCXN0YXRpYyBpbnQgYWRjX3Byb2JlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCisJeworCQlod2MgPSBkZXZtX2lpb19od19jb25zdW1lcl9h
+bGxvYygmaWlvLT5kZXYpOworCX0KKworTW9yZSBkZXRhaWxzCis9PT09PT09PT09PT0KKy4uIGtl
+cm5lbC1kb2M6OiBpbmNsdWRlL2xpbnV4L2lpby9ody1jb25zdW1lci5oCisuLiBrZXJuZWwtZG9j
+OjogZHJpdmVycy9paW8vYnVmZmVyL2luZHVzdHJpYWxpby1ody1jb25zdW1lci5jCisgICA6ZXhw
+b3J0OgorCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvaWlvL2luZGV4LnJz
+dCBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaW5kZXgucnN0CmluZGV4IGU1YzM5MjIu
+LjdmYmEzNDEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaW5kZXgu
+cnN0CisrKyBiL0RvY3VtZW50YXRpb24vZHJpdmVyLWFwaS9paW8vaW5kZXgucnN0CkBAIC0xNSwz
+ICsxNSw0IEBAIENvbnRlbnRzOgogICAgYnVmZmVycwogICAgdHJpZ2dlcnMKICAgIHRyaWdnZXJl
+ZC1idWZmZXJzCisgICBody1jb25zdW1lcgotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2Et
+ZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21h
+aWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
