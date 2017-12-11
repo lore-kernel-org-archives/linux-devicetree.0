@@ -1,53 +1,53 @@
 From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v7 2/6] dt-bindings: clock: add compatible variant for the
- Meson-AXG
-Date: Mon, 11 Dec 2017 22:13:44 +0800
-Message-ID: <20171211141348.22048-3-yixun.lan@amlogic.com>
+Subject: [PATCH v7 5/6] arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
+Date: Mon, 11 Dec 2017 22:13:47 +0800
+Message-ID: <20171211141348.22048-6-yixun.lan@amlogic.com>
 References: <20171211141348.22048-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171211141348.22048-1-yixun.lan@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yixun Lan <yixun.lan@amlogic.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Update the documentation to support clock driver for the Amlogic's
-Meson-AXG SoC.
+From: Qiufang Dai <qiufang.dai@amlogic.com>
+
+Try to add Hiubus DT info, and also enable clock DT info
+for the Amlogic's Meson-AXG SoC.
 
 Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
 Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 ---
- Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-index 924040769186..e2b377ed6f91 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-@@ -5,8 +5,11 @@ controllers within the SoC.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index b932a784b02a..6fe5ee0c144e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -148,6 +148,20 @@
+ 			#address-cells = <0>;
+ 		};
  
- Required Properties:
- 
--- compatible: should be "amlogic,gxbb-clkc" for GXBB SoC,
--	      or "amlogic,gxl-clkc" for GXL and GXM SoC.
-+- compatible: should be:
-+		"amlogic,gxbb-clkc" for GXBB SoC,
-+		"amlogic,gxl-clkc" for GXL and GXM SoC,
-+		"amlogic,axg-clkc" for AXG SoC.
++		hiubus: bus@ff63c000 {
++			compatible = "simple-bus";
++			reg = <0x0 0xff63c000 0x0 0x1c00>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges = <0x0 0x0 0x0 0xff63c000 0x0 0x1c00>;
 +
- - reg: physical base address of the clock controller and length of memory
-        mapped region.
- 
++			clkc: clock-controller@0 {
++				compatible = "amlogic,axg-clkc";
++				#clock-cells = <1>;
++				reg = <0x0 0x0 0x0 0x320>;
++			};
++		};
++
+ 		mailbox: mailbox@ff63dc00 {
+ 			compatible = "amlogic,meson-gx-mhu", "amlogic,meson-gxbb-mhu";
+ 			reg = <0 0xff63dc00 0 0x400>;
 -- 
 2.15.1
