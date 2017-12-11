@@ -1,141 +1,133 @@
-From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 02/12] mtd: nand: add reworked Marvell NAND controller
- driver
-Date: Mon, 11 Dec 2017 22:02:55 +0100
-Message-ID: <20171211220255.0292fd8f@xps13>
-References: <20171207201814.30411-1-miquel.raynal@free-electrons.com>
-        <20171207201814.30411-3-miquel.raynal@free-electrons.com>
-        <CAAEAJfC89bRugBsK8jrK=6fdq76yzjThA74UCAhAaVuonLLNvg@mail.gmail.com>
-        <20171211175506.0b8ea4d1@xps13>
-        <20171211180511.1d734b37@bbrezillon>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] drm/tinydrm: add driver for ST7735R panels
+Date: Mon, 11 Dec 2017 22:18:58 +0100
+Message-ID: <1d6124f3-613f-45b4-1862-aad7453239e6@tronnes.org>
+References: <1512943833-31352-1-git-send-email-david@lechnology.com>
+ <1512943833-31352-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211180511.1d734b37@bbrezillon>
+In-Reply-To: <1512943833-31352-3-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.>
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: limor-6aDhHjTmHzzR7s880joybQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Dec 2017 18:05:11 +0100
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> On Mon, 11 Dec 2017 17:55:06 +0100
-> Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> > On Mon, 11 Dec 2017 13:27:30 -0300
-> > Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> >   
-> > > On 7 December 2017 at 17:18, Miquel Raynal
-> > > <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:    
-> > > > Add marvell_nand driver which aims at replacing the existing
-> > > > pxa3xx_nand driver.
-> > > >
-> > > > The new driver intends to be easier to understand and follows
-> > > > the brand new NAND framework rules by implementing hooks for
-> > > > every pattern the controller might support and referencing them
-> > > > inside a parser object that will be given to the core at each
-> > > > ->exec_op() call.
-> > > >
-> > > > Raw accessors are implemented, useful to test/debug
-> > > > memory/filesystem corruptions. Userspace binaries contained in
-> > > > the mtd-utils package may now be used and their output trusted.
-> > > >
-> > > > Timings may not be kept from the bootloader anymore, the timings
-> > > > used for instance in U-Boot were not optimal and it supposed to
-> > > > have NAND support (and initialized) in the bootloader.
-> > > >
-> > > > Thanks to the improved timings, implementation of ONFI mode 5
-> > > > support (with EDO managed by adding a delay on data sampling),
-> > > > merging the commands together and optimizing writes in the
-> > > > command registers, the new driver may achieve faster
-> > > > throughputs in both directions. Measurements show an
-> > > > improvement of about +23% read throughput and +24% write
-> > > > throughput. These measurements have been done with an
-> > > > Armada-385-DB-AP (4kiB NAND pages forced in 4-bit strength BCH
-> > > > ECC correction) using the userspace tool 'flash_speed' from the
-> > > > MTD test suite.
-> > > >
-> > > > Besides these important topics, the new driver addresses several
-> > > > unsolved known issues in the old driver which:
-> > > > - did not work with ECC soft neither with ECC none ;
-> > > > - relied on naked read/write (which is unchanged) while the
-> > > > NFCv1 embedded in the pxa3xx platforms do not implement it, so
-> > > > several NAND commands did not actually ever work without any
-> > > > notice (like reading the ONFI PARAM_PAGE or SET/GET_FEATURES) ;
-> > > > - wrote the OOB data correctly, but was not able to read it
-> > > > correctly past the first OOB data chunk ;
-> > > > - did not displayed ECC bytes ;
-> > > > - used device tree bindings that did not allow more than one
-> > > > NAND chip, and did not allow to choose the correct chip select
-> > > > if not incrementing from 0. Plus, the Ready/Busy line used had
-> > > > to be 0.
-> > > >
-> > > > Old device tree bindings are still supported but deprecated. A
-> > > > more hierarchical view has to be used to keep the controller
-> > > > and the NAND chip structures clearly separated both inside the
-> > > > device tree and also in the driver code.
-> > > >      
-> > > 
-> > > So, is this driver fully compatible with the current pxa3xx-nand
-> > > driver?    
-> > 
-> > It should be!
-> >   
-> > > 
-> > > Have you tested with U-Boot's driver (based on the pxa3xx-nand)?
-> > > 
-> > > I recally some subtle issues with the fact that U-Boot and Linux
-> > > had to agree about the BBT format.    
-> > 
-> > I kept the pxa3xx_nand driver BBT format.
-> > 
-> > This is something I mistakenly omitted from the commit message:
-> > 
-> > There are 5 supported layouts in the driver (the same as withing the
-> > pxa3xx_nand driver):
-> >     1/ Page: 512B, strength 1b/512B (hamming)
-> >     2/ Page: 2kiB, strength 4b/2kiB (hamming)
-> >     3/ page: 2kiB, strength 16b/2kiB (BCH)
-> >     4/ page: 4kiB, strength 16b/2kiB (BCH)
-> >     5/ page: 4kiB, strength 32b/2kiB (BCH)  
-> 
-> Are you sure of #5? I thought the engine was only capable of modifying
-> the ECC block size, not the strength. If this is the case, then mode
-> #5 is actually 16b/1024kiB.
+Den 10.12.2017 23.10, skrev David Lechner:
+> This adds a new driver for Sitronix ST7735R display panels.
+>
+> This has been tested using an Adafruit 1.8" TFT.
+>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> ---
 
-You are right, #5 you actually be:
+> +static void st7735r_pipe_enable(struct drm_simple_display_pipe *pipe,
+> +				struct drm_crtc_state *crtc_state)
+> +{
+> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+> +	struct device *dev = tdev->drm->dev;
+> +	int ret;
+> +	u8 addr_mode;
+> +
+> +	DRM_DEBUG_KMS("\n");
+> +
+> +	mipi_dbi_hw_reset(mipi);
+> +
+> +	ret = mipi_dbi_command(mipi, MIPI_DCS_SOFT_RESET);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(dev, "Error sending command %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	msleep(150);
+> +
+> +	mipi_dbi_command(mipi, MIPI_DCS_EXIT_SLEEP_MODE);
+> +	msleep(500);
+> +
+> +	mipi_dbi_command(mipi, ST7735R_FRMCTR1, 0x01, 0x2c, 0x2d);
+> +	mipi_dbi_command(mipi, ST7735R_FRMCTR2, 0x01, 0x2c, 0x2d);
+> +	mipi_dbi_command(mipi, ST7735R_FRMCTR3, 0x01, 0x2c, 0x2d, 0x01, 0x2c,
+> +			 0x2d);
+> +	mipi_dbi_command(mipi, ST7735R_INVCTR, 0x07);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR1, 0xa2, 0x02, 0x84);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR2, 0xc5);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR3, 0x0a, 0x00);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR4, 0x8a, 0x2a);
+> +	mipi_dbi_command(mipi, ST7735R_PWCTR5, 0x8a, 0xee);
+> +	mipi_dbi_command(mipi, ST7735R_VMCTR1, 0x0e);
+> +	mipi_dbi_command(mipi, MIPI_DCS_EXIT_INVERT_MODE);
+> +	switch (mipi->rotation) {
+> +	default:
+> +		addr_mode = ST7735R_MX | ST7735R_MY;
+> +		break;
+> +	case 90:
+> +		addr_mode = ST7735R_MX | ST7735R_MV;
+> +		break;
+> +	case 180:
+> +		addr_mode = 0;
+> +		break;
+> +	case 270:
+> +		addr_mode = ST7735R_MY | ST7735R_MV;
+> +		break;
+> +	}
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_PIXEL_FORMAT,
+> +			 MIPI_DCS_PIXEL_FMT_16BIT);
+> +	mipi_dbi_command(mipi, ST7735R_GAMCTRP1, 0x0f, 0x1a, 0x0f, 0x18, 0x2f,
+> +			 0x28, 0x20, 0x22, 0x1f, 0x1b, 0x23, 0x37, 0x00, 0x07,
+> +			 0x02, 0x10);
+> +	mipi_dbi_command(mipi, ST7735R_GAMCTRN1, 0x0f, 0x1b, 0x0f, 0x17, 0x33,
+> +			 0x2c, 0x29, 0x2e, 0x30, 0x30, 0x39, 0x3f, 0x00, 0x07,
+> +			 0x03, 0x10);
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_DISPLAY_ON);
+> +
+> +	msleep(100);
+> +
+> +	mipi_dbi_command(mipi, MIPI_DCS_ENTER_NORMAL_MODE);
+> +
+> +	msleep(20);
+> +
+> +	mipi_dbi_pipe_enable(pipe, crtc_state);
+> +}
+> +
+> +static const struct drm_simple_display_pipe_funcs st7735r_pipe_funcs = {
+> +	.enable		= st7735r_pipe_enable,
+> +	.disable	= mipi_dbi_pipe_disable,
+> +	.update		= tinydrm_display_pipe_update,
+> +	.prepare_fb	= tinydrm_display_pipe_prepare_fb,
+> +};
+> +
+> +static const struct drm_display_mode st7735r_mode = {
+> +	TINYDRM_MODE(128, 160, 28, 35),
+> +};
 
-    5/ page: 4kiB, strength 16b/1kiB (BCH)  
+This naming talk has made me realise that these should be named after
+the panel since they're not generic controller functions.
+Maybe the mode can be generic, not sure if the physical size can/will
+differ, the resolution is very likely to be the same for all.
 
-Thanks for pointing it,
-Miquèl
+What's your view on my descision to split the MIPI DBI compatible
+controllers into per controller drivers instead of having one driver
+that supports them all?
+I've been afraid that it will be a very big file with macro definitions
+per controller and enable functions per panel.
 
-> 
-> > 
-> > Layout 2 has been tested with CM_X300 compulab module (PXA SoC) with
-> > and without DMA.
-> > Layout 4 has been tested with an Armada 385 db, an Armada 7040 DB
-> > and an Armada 8040 DB.
-> > Layout 5 has been tested with an Armada 398 db.
-> > 
-> > Layout 1 has been tested with the Armada 385 db with some hacks.
-> > Layout 3 has been tested with the Armada 385 db with some other
-> > hacks, that is why I am concerned about the other thread on the MTD
-> > mailing list "wait timeout when scanning for BB" where a 2kiB page
-> > with 16b/2048B strength is in use.
-> > 
-> > Regards,
-> > Miquèl  
-> 
+This driver has 15 macros and ~80 panel specific lines.
+With one panel supported, half the driver is boilerplate.
+The mi0283qt panel (MIPI DBI compatible) is in the same ballpark.
 
+Adding helpers for panel reset/exit_sleep, for MIPI_DCS_SET_ADDRESS_MODE
+and for display_on/enter_normal/flush could cut it down some more if we
+made one driver to rule them all. Maybe the enable function per panel
+could be cut in half that way.
 
+I'm starting to wonder if one driver isn't such a bad solution after all...
 
--- 
-Miquel Raynal, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Noralf.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
