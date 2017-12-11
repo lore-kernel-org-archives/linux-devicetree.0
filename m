@@ -1,60 +1,80 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH 0/5] Add STM32F769 pinctrl support
-Date: Mon, 11 Dec 2017 10:37:42 +0100
-Message-ID: <1512985062-1147-1-git-send-email-alexandre.torgue@st.com>
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: Re: [RFC] irqchip: add support for LS1021A external interrupt lines
+Date: Mon, 11 Dec 2017 10:45:09 +0100
+Message-ID: <5117875.4tMaEC1223@ws-stein>
+References: <48d2d08c-c57a-ce49-5958-0fd5ad4a2dc7@arm.com> <9eab29c0-3347-635c-af92-4e8429064ed3@arm.com> <58297576-cc32-819d-c6b3-7d1355095482@prevas.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58297576-cc32-819d-c6b3-7d1355095482-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds STM32F769 pinctrl and GPIO support, relies on the
-generic STM32 pinctrl driver. It also changes stm32f7 device tree 
-structure to use dedicated files for stm32f746 pinctrl and stm32f769
-pinctrl.
+On Monday, December 11, 2017, 10:08:20 AM CET Rasmus Villemoes wrote:
+> >>> +static int
+> >>> +ls1021a_extirq_set_type(struct irq_data *data, unsigned int type)
+> >>> +{
+> >>> +	irq_hw_number_t hwirq = data->hwirq;
+> >>> +	struct extirq_chip_data *chip_data = data->chip_data;
+> >>> +	u32 value, mask;
+> >>> +	int ret;
+> >>> +
+> >>> +	mask = 1U << (31 - hwirq);
+> >>
+> >> Is this really correct? IRQ0 is still at bit position 0. Don't be mislead
+> >> by the left most position in the register layout. This is just strange way
+> >> to express bit-endian access.
+> 
+> Yes, I'm sure. The 26 unused bits in the INTPCR register are marked as
+> reserved with a POR value of 0. Fortunately, they can still be set and
+> read back, and when I did 1U << hwirq it was some of those bits that got
+> set (the POR value of the six used bits are all 1, so the hardware still
+> worked on my board because all the lines happen to be of negative polarity).
 
-Regards
-Alex
+Which functions do reg_read and reg_write in chip_data->syscon->bus_context
+actually point to?
+bus_context is actually a struct regmap_mmio_context *.
 
-Alexandre Torgue (5):
-  dt-bindings: pinctrl: Add st,stm32f769-pinctrl compatible to
-    stm32-pinctrl
-  pinctrl: stm32: add STM32F769 MCU support
-  ARM: mach-stm32: Kconfig: introduce MACH_STM32F769 flag
-  ARM: mach-stm32: add new STM32F769 MCU
-  ARM: dts: stm32: use dedicated files for pinctrl on stm32f7 family
+> >> Anyway, please use BIT(x) instead.
+> 
+> I really prefer not to, that macro obfuscates the type, and unsigned
+> long is the wrong thing to use for something that must be a 32 bit
+> quantity. Sure, BITS_PER_LONG==32 in this case, but I don't think
+> BIT(foo) is any easier to read than 1U << (foo).
 
- Documentation/arm/stm32/stm32f769-overview.txt     |   36 +
- .../bindings/pinctrl/st,stm32-pinctrl.txt          |    1 +
- arch/arm/boot/dts/stm32746g-eval.dts               |    1 +
- arch/arm/boot/dts/stm32f7-pinctrl.dtsi             |  227 +++
- arch/arm/boot/dts/stm32f746-disco.dts              |    1 +
- arch/arm/boot/dts/stm32f746-pinctrl.dtsi           |   11 +
- arch/arm/boot/dts/stm32f746.dtsi                   |  217 ---
- arch/arm/boot/dts/stm32f769-disco.dts              |    3 +-
- arch/arm/boot/dts/stm32f769-pinctrl.dtsi           |   11 +
- arch/arm/mach-stm32/Kconfig                        |    5 +
- arch/arm/mach-stm32/board-dt.c                     |    1 +
- drivers/pinctrl/stm32/Kconfig                      |    6 +
- drivers/pinctrl/stm32/Makefile                     |    1 +
- drivers/pinctrl/stm32/pinctrl-stm32f769.c          | 1827 ++++++++++++++++++++
- 14 files changed, 2130 insertions(+), 218 deletions(-)
- create mode 100644 Documentation/arm/stm32/stm32f769-overview.txt
- create mode 100644 arch/arm/boot/dts/stm32f7-pinctrl.dtsi
- create mode 100644 arch/arm/boot/dts/stm32f746-pinctrl.dtsi
- create mode 100644 arch/arm/boot/dts/stm32f769-pinctrl.dtsi
- create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f769.c
+Well, there a lots of other places where BIT(x) is used for u32 data types,
+or even 16 Bit types. IMHO BIT(x) is more obvious as it already says set Bit x
 
--- 
-2.7.4
+> >>> +	*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+> >>> +	return 0;
+> >>> +}
+> >>> +
+> >>> +static int
+> >>> +ls1021a_extirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> >>> +			    unsigned int nr_irqs, void *arg)
+> >>> +{
+> >>> +	static const unsigned xlate[NIRQ] = {163,164,165,167,168,169};
+> >>     ^^^^^^
+> >> No need for static here.
+> > 
+> > Why would you store this on the stack each time you enter the function?
+> 
+> Exactly, it takes a lot less .rodata to make this static than having gcc
+> generate .text to build this array on the stack.
+> 
+> > That's the wrong construct (these values should come from DT), but
+> > static is perfectly fine.
+> 
+> OK.
+
+Intresting. Thanks for the info.
+
+Regards,
+Alexander
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
