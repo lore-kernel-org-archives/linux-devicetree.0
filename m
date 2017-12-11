@@ -1,64 +1,73 @@
-From: "Yang, Wenyou" <Wenyou.Yang-P1yVeZNtzML3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH v8 2/2] media: i2c: Add the ov7740 image sensor driver
-Date: Mon, 11 Dec 2017 09:33:37 +0800
-Message-ID: <d51138eb-0a59-034f-9810-dd72a1690ea2@Microchip.com>
-References: <20171208015542.15444-1-wenyou.yang@microchip.com>
- <20171208015542.15444-3-wenyou.yang@microchip.com>
- <CAOFm3uFASPpuMtGSetcYME0pQEmuzoLqY=Yhv5aaFu5AzJwaew@mail.gmail.com>
+From: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v9 0/2] media: ov7740: Add a V4L2 sensor-level driver
+Date: Mon, 11 Dec 2017 09:31:44 +0800
+Message-ID: <20171211013146.2497-1-wenyou.yang@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOFm3uFASPpuMtGSetcYME0pQEmuzoLqY=Yhv5aaFu5AzJwaew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philippe,
+Add a Video4Linux2 sensor-level driver for the OmniVision OV7740
+VGA camera image sensor.
 
+Changes in v9:
+ - Use the new SPDX ids.
 
-On 2017/12/8 21:14, Philippe Ombredanne wrote:
-> Wenyou,
->
-> On Fri, Dec 8, 2017 at 2:55 AM, Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
->> The ov7740 (color) image sensor is a high performance VGA CMOS
->> image snesor, which supports for output formats: RAW RGB and YUV
->> and image sizes: VGA, and QVGA, CIF and any size smaller.
->>
->> Signed-off-by: Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> Signed-off-by: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> []
->> --- /dev/null
->> +++ b/drivers/media/i2c/ov7740.c
->> @@ -0,0 +1,1226 @@
->> +/*
->> + * Copyright (c) 2017 Microchip Corporation.
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License version
->> + * 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
->> + *
->> + */
-> Have you considered using the new SPDX ids instead of this fine legalese?
-> e.g.:
->
-> // SPDX-License-Identifier: GPL-2.0
-> // Copyright (c) 2017 Microchip Corporation.
->
-> Short and neat! Check also Thomas doc patches and Linus comments on
-> why he prefers the C++ comment style for these.
-Thank you for your suggestion and information.
+Changes in v8:
+ - As the registers are written at stream start, remove the written
+   code from the set fmt function.
 
+Changes in v7:
+ - Add Acked-by tag.
+ - Fix the wrong handle of default register configuration.
+ - Add the missed assignment of ov7740->frmsize.
 
-Best Regards,
-Wenyou Yang
+Changes in v6:
+ - Remove unnecessary #include <linux/init>.
+ - Remove unnecessary comments and extra newline.
+ - Add const for some structures.
+ - Add the check of the return value from regmap_write().
+ - Simplify the calling of __v4l2_ctrl_handler_setup().
+ - Add the default format initialization function.
+ - Integrate the set_power() and enable/disable the clock into
+   one function.
+
+Changes in v5:
+ - Squash the driver and MAINTAINERS entry patches to one.
+ - Precede the driver patch with the bindings patch.
+
+Changes in v4:
+ - Assign 'val' a initial value to avoid warning: 'val' may be
+   used uninitialized.
+ - Rename REG_REG15 to avoid warning: "REG_REG15" redefined.
+
+Changes in v3:
+ - Explicitly document the "remote-endpoint" property.
+ - Put the MAINTAINERS change to a separate patch.
+
+Changes in v2:
+ - Split off the bindings into a separate patch.
+ - Add a new entry to the MAINTAINERS file.
+
+Wenyou Yang (2):
+  media: ov7740: Document device tree bindings
+  media: i2c: Add the ov7740 image sensor driver
+
+ .../devicetree/bindings/media/i2c/ov7740.txt       |   47 +
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/ov7740.c                         | 1216 ++++++++++++++++++++
+ 5 files changed, 1280 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7740.txt
+ create mode 100644 drivers/media/i2c/ov7740.c
+
+-- 
+2.15.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
