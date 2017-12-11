@@ -1,66 +1,136 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add binding for Sitronix ST7735R
- display panels
-Date: Mon, 11 Dec 2017 11:11:39 +0100
-Message-ID: <CACRpkdaXH4Amj9qTKz73bTFqip+wHrX1G7yKmXB17r5+y+eN8A@mail.gmail.com>
-References: <1512943833-31352-1-git-send-email-david@lechnology.com>
- <1512943833-31352-2-git-send-email-david@lechnology.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH v6 3/6] clk: meson-axg: add clock controller drivers
+Date: Mon, 11 Dec 2017 18:16:52 +0800
+Message-ID: <a6a9454f-be94-4fee-9083-f37eae2c1749@amlogic.com>
+References: <20171211064853.32111-1-yixun.lan@amlogic.com>
+ <20171211064853.32111-4-yixun.lan@amlogic.com>
+ <1512985560.334.17.camel@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1512943833-31352-2-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, limor@ladyada.net, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512985560.334.17.camel@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: yixun.lan@amlogic.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBEZWMgMTAsIDIwMTcgYXQgMTE6MTAgUE0sIERhdmlkIExlY2huZXIgPGRhdmlkQGxl
-Y2hub2xvZ3kuY29tPiB3cm90ZToKCj4gVGhpcyBhZGRzIGEgbmV3IGRldmljZSB0cmVlIGJpbmRp
-bmcgZm9yIFNpdHJvbml4IFNUNzczNVIgZGlzcGxheSBwYW5lbHMsCj4gc3VjaCBhcyB0aGUgQWRh
-ZnJ1aXQgMS44IiBURlQuCj4KPiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBs
-ZWNobm9sb2d5LmNvbT4KPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4K
-CiguLi4pCj4gTGltb3IgYnJvdWdodCB1cCBhbiBpbnRlcmVzdGluZyBwb2ludCBpbiBhbiBvZmYt
-bGlzdCBkaXNjdXNzaW9uLiBUaGUKPiBzYW1lIGNvbnRyb2xsZXIgY2FuIGJlIHdpcmVkIHRvIHRo
-ZSBzYW1lIExDRCBpbiBkaWZmZXJlbnQgd2F5cy4gVGhpcyBpcwo+IGV2aWRlbnQgaW4gdGhlIGZi
-ZnRmIGRyaXZlcnMgaW4gc3RhZ2luZy4gVGhlcmUgaXMgYW4gImFkYWZydWl0MTgiIGFuZCBhbgo+
-ICJhZGFmcnVpdDE4X2dyZWVuIiBpbiBmYmZ0Zl9kZXZpY2VzLmMgd2hlcmUgYXBwYXJlbnRseSwg
-dHdvIG90aGVyd2lzZQo+IGlkZW50aWNhbCBkaXNwbGF5cyB3ZXJlIHdpcmVkIHNsaWdodGx5IGRp
-ZmZlcmVudGx5IGF0IHRoZSBmYWN0b3J5IHNvIHRoYXQKPiBvbiBvbmUsIHRoZSBvbi1ib2FyZCBH
-UkFNIHdvcmQgMCBkb2VzIG5vdCBjb3JyZXNwb25kIHRvIHBpeGVsIDAsMCBvbiB0aGUKPiBMQ0Qu
-IEl0IHJlcXVpcmVzIGEgc3BlY2lhbCBvZmZzZXQgdG8gdGhlIEdSQU0gc3RhcnRpbmcgYWRkcmVz
-cyBpbiBvcmRlciB0bwo+IGhhdmUgdGhlIGltYWdlIGRpc3BsYXllZCBjb3JyZWN0bHkuCj4KPiBB
-ZGRpdGlvbmFsbHksIGZidGZ0IHN1cHBvcnRzIGEgU2FpblNtYXJ0IDEuOCIgVEZUIFszXSB0aGF0
-IHVzZXMgdGhlIHNhbWUKPiBjb250cm9sbGVyLCBidXQgaXQgYXBwZWFycyB0aGF0IHRoZXNlIGhh
-dmUgZGlmZmVyZW50IGdhbW1hIGN1cnZlcyAocGVyaGFwcwo+IHRoZXkgdXNlIGRpZmZlcmVudCBM
-Q0RzPykuIFRoZSBhdmFpbGFibGUgcGlucyBhcmUgZXhhY3RseSB0aGUgc2FtZSBhcyB0aGUKPiBB
-ZGFmcnVpdCBkaXNwbGF5IHRob3VnaC4KClRoaXMgZGlzY3Vzc2lvbiBjYW1lIHVwIGluIHJlbGF0
-aW9uIHRvIHRoZSBJbGl0ZWsgSUxJOTMyMiBiaW5kaW5ncywgaGVyZQphcmUgc29tZSBsaW5rczoK
-aHR0cHM6Ly9tYXJjLmluZm8vP2w9ZHJpLWRldmVsJm09MTUwMzAwMjY3ODExOTc5Jnc9MgpodHRw
-czovL21hcmMuaW5mby8/bD1kZXZpY2V0cmVlJm09MTUwNDM4NzAyOTA5NTA2Jnc9MgpodHRwczov
-L21hcmMuaW5mby8/bD1kcmktZGV2ZWwmbT0xNTA2Mjg1NDI2MDM2ODImdz0yCgpUaGUgbGFzdCBt
-YWlsIGZyb20gUm9iIGNsZWFybHkgaW5kaWNhdGVzIHRoYXQgaGUgZG9lc24ndCBsaWtlIHRoaXMg
-a2luZApvZiBvcGVuLWVuZGVkIGNvbmZpZ3VyYXRpb24gZGF0YSBzdGFzaGVkIHVwIGluIHRoZSBE
-VFMuCgo+IFRoZXJlIHdhcyBhIGJpbmRpbmcgYWNrZWQgcmVjZW50bHkgZm9yIHRoZSBMQ0Qgb24g
-YSBELUxpbmsgRElSLTY4NSBXaXJlbGVzcwo+IE4gU3RvcmFnZSBSb3V0ZXIgWzhdLiBUaGlzIHVz
-ZXMgdGhlIGNvbXBvdW5kIGNvbXBhdGlibGUgc3RyaW5nIG9mICJkbGluaywKPiBkaXItNjg1LXBh
-bmVsIiwgImlsaXRlayxpbGk5MzIyIi4gSWYgd2Ugd2FudCB0byB0cnkgdG8ga2VlcCB0aGluZ3MK
-PiBjb25zaXN0ZW50LCBwZXJoYXBzIEkgc2hvdWxkIGJlIGFkb3B0aW5nIHRoaXMgcGF0dGVybiBh
-cyB3ZWxsPwoKSSB0aGluayBzby4KCj4gQW5kIHBlcmhhcHMKPiBpdCB3b3VsZCBiZSBiZXR0ZXIg
-dG8gdXNlIHRoZSBiZXR0ZXIga25vd24gdmVuZG9yIG5hbWUgaW5zdGVhZCBvZiB0aGUKPiBvYnNj
-dXJlIHZlbmRvcnMgZnJvbSB0aGUgZGF0YXNoZWV0cyB0aGF0IEkgaGF2ZSBmb3VuZD8gRm9yIGV4
-YW1wbGUsCj4gImFkYWZydWl0LDYxOCIgInNpdHJvbml4LHN0NzczNXIiIGluc3RlYWQgb2YgImpp
-YW5kYSxqZC10MTgwMDMtdDAxIj8KCkkgZG9uJ3Qga25vdyB0aGlzLCBqdXN0IHRoYXQgaXQgc2hv
-dWxkIGJlOgoKInZlbmRvcixzcGVjaWZpYy1zeXN0ZW0tY29uZmlnIiwgInZlbmRvcixpcC1wYXJ0
-IjsKCllvdXJzLApMaW51cyBXYWxsZWlqCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+HI Jerome:
+
+On 12/11/17 17:46, Jerome Brunet wrote:
+> On Mon, 2017-12-11 at 14:48 +0800, Yixun Lan wrote:
+>> From: Qiufang Dai <qiufang.dai@amlogic.com>
+>>
+>> Add clock controller drivers for Amlogic Meson-AXG SoC.
+>>
+>> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+>> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
+>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+>> ---
+>>  arch/arm64/Kconfig.platforms |   1 +
+>>  drivers/clk/meson/Kconfig    |   8 +
+>>  drivers/clk/meson/Makefile   |   1 +
+>>  drivers/clk/meson/axg.c      | 944
+>> +++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/clk/meson/axg.h      | 126 ++++++
+>>  5 files changed, 1080 insertions(+)
+>>  create mode 100644 drivers/clk/meson/axg.c
+>>  create mode 100644 drivers/clk/meson/axg.h
+> 
+> Overall, the changes looks good to me.
+> I still have a few comments which I'd like to see addressed quickly after this
+> series is merged
+did you say that:
+ you will merge these patches now, then I could send fixes later?
+
+or I can send another version (v7) to address this..
+
+> 
+> [...]
+> 
+>>
+>> +static struct meson_clk_pll axg_fixed_pll = {
+>> +	.m = {
+>> +		.reg_off = HHI_MPLL_CNTL,
+>> +		.shift   = 0,
+>> +		.width   = 9,
+>> +	},
+>> +	.n = {
+>> +		.reg_off = HHI_MPLL_CNTL,
+>> +		.shift   = 9,
+>> +		.width   = 5,
+>> +	},
+>> +	.od = {
+>> +		.reg_off = HHI_MPLL_CNTL,
+>> +		.shift   = 16,
+>> +		.width   = 2,
+>> +	},
+>> +	.lock = &clk_lock,
+>> +	.hw.init = &(struct clk_init_data){
+>> +		.name = "fixed_pll",
+>> +		.ops = &meson_clk_pll_ro_ops,
+>> +		.parent_names = (const char *[]){ "xtal" },
+>> +		.num_parents = 1,
+>> +		.flags = CLK_GET_RATE_NOCACHE,
+> 
+> Is the rate of this clock supposed to changed by something else than
+> the CCF after boot ?
+> 
+> If not, you should drop this flag.
+> Same comment goes for axg_sys_pll and axg_gp0_pll
+> 
+we need to keep the CLK_GET_RATE_NOCACHE flag for axg_sys_pll, since the
+BL30 will change it for the frequency change.
+for the other two, we can drop them safely
+
+
+>> +	},
+>> +};
+> 
+> [...]
+> 
+>> +/*
+>> + * FIXME The legacy composite clocks (e.g. clk81) are both PLL post-dividers
+>> + * and should be modeled with their respective PLLs via the forthcoming
+>> + * coordinated clock rates feature
+>> + */
+>> +static u32 mux_table_clk81[]	= { 0, 2, 3, 4, 5, 6, 7 };
+>> +static const char * const clk81_parent_names[] = {
+>> +	"xtal", "fclk_div7", "mpll1", "mpll2", "fclk_div4",
+>> +	"fclk_div3", "fclk_div5"
+>> +};
+>> +
+>> +static struct clk_mux axg_mpeg_clk_sel = {
+>> +	.reg = (void *)HHI_MPEG_CLK_CNTL,
+>> +	.mask = 0x7,
+>> +	.shift = 12,
+>> +	.flags = CLK_MUX_READ_ONLY,
+>> +	.table = mux_table_clk81,
+>> +	.lock = &clk_lock,
+>> +	.hw.init = &(struct clk_init_data){
+>> +		.name = "mpeg_clk_sel",
+>> +		.ops = &clk_mux_ro_ops,
+>> +		/*
+>> +		 * bits 14:12 selects from 8 possible parents:
+>> +		 * xtal, 1'b0 (wtf), fclk_div7, mpll_clkout1, mpll_clkout2,
+>> +		 * fclk_div4, fclk_div3, fclk_div5
+>> +		 */
+> 
+> This comment is not necessary with table above.
+> 
+can drop
+
+>> +		.parent_names = clk81_parent_names,
+>> +		.num_parents = ARRAY_SIZE(clk81_parent_names),
+>> +		.flags = CLK_SET_RATE_NO_REPARENT,
+> 
+> With ro_ops, this flag is not necessary, consider removing it.
+> 
+can drop
+>> +	},
+>> +};
+>> +
+>>
+> 
+> .
+> 
