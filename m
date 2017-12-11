@@ -1,80 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 5/8] ASoC: uniphier: add support for
-	UniPhier AIO driver
-Date: Mon, 11 Dec 2017 15:16:29 +0000
-Message-ID: <20171211151629.GD9854@sirena.org.uk>
-References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com>
- <20171122114321.29196-6-suzuki.katsuhiro@socionext.com>
- <20171204183934.rd4vin22ktukwpip@sirena.org.uk>
- <002b01d36d84$51d80aa0$f5881fe0$@socionext.com>
- <20171205121440.GC11658@finisterre>
- <004801d36e57$ea1940d0$be4bc270$@socionext.com>
- <20171206125817.GF1827@finisterre>
- <001501d37261$7ea89d10$7bf9d730$@socionext.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v4 1/2] DTS: GTA04: improve panel compatibility string
+Date: Mon, 11 Dec 2017 07:22:03 -0800
+Message-ID: <20171211152203.GH24344@atomide.com>
+References: <cover.1512114082.git.hns@goldelico.com>
+ <280160905017f67c91b96bf38ea9b6094ec277c3.1512114082.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6698725748950181796=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <001501d37261$7ea89d10$7bf9d730$@socionext.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, vinod.koul@linaro.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <280160905017f67c91b96bf38ea9b6094ec277c3.1512114082.git.hns@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Julia Lawall <Julia.Lawall@lip6.fr>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
+* H. Nikolaus Schaller <hns@goldelico.com> [171201 07:44]:
+> Official vendor string is now "tpo" and not "toppoly".
+> 
+> Requires patch "omapdrm: panel: fix compatible vendor string for td028ttec1"
+> so that the driver understands both.
 
---===============6698725748950181796==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WChQLJJJfbwij+9x"
-Content-Disposition: inline
+Tomi, so what's the plan with the dependency patch, is that for v4.16
+or for the v4.15-rc cycle?
 
+Regards,
 
---WChQLJJJfbwij+9x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Dec 11, 2017 at 06:21:58PM +0900, Katsuhiro Suzuki wrote:
-
-> But I can't find how to use/map this DAI in machine driver or Device-Tree or
-> something. I think that it's same as PCM DAI, am I correct?
-
-Yes, that probably makes sense from a binding point of view.
-
-> I read compress-offload.rst, but I can't find how do I test it. It seems aplay
-> of
-> alsa-util doesn't know compress audio formats. Should I use PulseAudio or
-> Android HAL to test compress audio APIs?
-
-IIRC tinyalsa has a compressed API test application - Vinod?
-
---WChQLJJJfbwij+9x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlouoUwACgkQJNaLcl1U
-h9ARPQf+PMXnrKIL23fYeyj1KTSHQe5hA6zsx76EfW6KwhDKOc22W/xWKGahKiSi
-88aMs8o/qIofpPSH9NZOfgSmnXOCMqRK38T9sW0WHqIugRc7UKBh93PV4/xjHR1w
-U4PfJVBeTDoHx81oOhtRyuAKV1Pt8n2EIutk+Xha12tCqzpRPrXr26WeQt2NXBrm
-Y3d1kcjugs9VOUlciPlboMZnXfWaVUzelvWM6FYW+oN4B9BxCKs4uuR3O8Cs92K9
-3I7GZkwMcowhcdpS5G5+5xXi3yPlCiC4+miyymITMvvjpi37wNLlf7NdP6ENnE6/
-LRWeMtupwTX1HhiRN2/2sqV/Vt2JUQ==
-=oCvC
------END PGP SIGNATURE-----
-
---WChQLJJJfbwij+9x--
-
---===============6698725748950181796==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Tony
 
 
---===============6698725748950181796==--
+
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> index 4504908c23fe..ec27ed67a22a 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -86,7 +86,7 @@
+>  
+>  		/* lcd panel */
+>  		lcd: td028ttec1@0 {
+> -			compatible = "toppoly,td028ttec1";
+> +			compatible = "tpo,td028ttec1";
+>  			reg = <0>;
+>  			spi-max-frequency = <100000>;
+>  			spi-cpol;
+> -- 
+> 2.12.2
+> 
