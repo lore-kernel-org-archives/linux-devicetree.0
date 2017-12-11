@@ -1,147 +1,144 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add binding for Sitronix ST7735R
- display panels
-Date: Mon, 11 Dec 2017 17:59:53 +0100
-Message-ID: <8e69773e-d36e-7010-7bc8-ca0da8ca7725@tronnes.org>
-References: <1512943833-31352-1-git-send-email-david@lechnology.com>
- <1512943833-31352-2-git-send-email-david@lechnology.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 3/4] thermal: armada: add support for CP110
+Date: Mon, 11 Dec 2017 18:02:49 +0100
+Message-ID: <87y3m9qjt2.fsf@free-electrons.com>
+References: <f8c589337a4fb78852eadf15058e8f8d132d4dc0.1512299484.git.baruch@tkos.co.il>
+        <d48c916a2502f9c75e9ea4ba41300e2ffbb254d8.1512299484.git.baruch@tkos.co.il>
+        <20171211160932.692ba8be@xps13>
+        <20171211152731.glkkes5errcxmsvz@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1512943833-31352-2-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, limor@ladyada.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171211152731.glkkes5errcxmsvz@sapphire.tkos.co.il> (Baruch
+        Siach's message of "Mon, 11 Dec 2017 17:27:31 +0200")
+Sender: linux-pm-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: Miquel RAYNAL <miquel.raynal@free-electrons.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAxMC4xMi4yMDE3IDIzLjEwLCBza3JldiBEYXZpZCBMZWNobmVyOgo+IFRoaXMgYWRkcyBh
-IG5ldyBkZXZpY2UgdHJlZSBiaW5kaW5nIGZvciBTaXRyb25peCBTVDc3MzVSIGRpc3BsYXkgcGFu
-ZWxzLAo+IHN1Y2ggYXMgdGhlIEFkYWZydWl0IDEuOCIgVEZULgo+Cj4gU2lnbmVkLW9mZi1ieTog
-RGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+Cj4gQWNrZWQtYnk6IFJvYiBIZXJy
-aW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gLS0tCj4KPiB2MjogY2hhbmdlczoKPiAqIE5vbmUsIGJ1
-dC4uLgo+Cj4gSSdtIHdvbmRlcmluZyBhYm91dCBteSBjaG9pY2Ugb2YgY29tcGF0aWJsZSBoZXJl
-LiBJIGNob3NlIHRoZSBuYW1lCj4gInNpdHJvbml4LHN0NzczNXItamQtdDE4MDAzLXQwMSIgdG8g
-bWVhbiBhIFNpdHJvbml4IFNUNzczNVIgY29udHJvbGxlcgo+IGNvbm5lY3RlZCB0byBhIEpELVQx
-ODAwMy1UMDEgTENEIHNjcmVlbi4KPgo+IFdoYXQgSSBhbSBhY3R1YWxseSB1c2luZywgdGhvdWdo
-LCBpcyBhbiBBZGFmcnVpdCAxLjgiIFRGVCBicmVha291dCBbMV0uIEl0Cj4gaGFzIHNvbWUgYWRk
-aXRpb25hbCBlbGVjdHJvbmljcyB3aGljaCBqdXN0IHBhc3MgdGhyb3VnaCBzaWduYWxzIHRvIHRo
-ZQo+IGNvbnRyb2xsZXIuIFRoZSBiYXJlIGRpc3BsYXkgaXMgYWxzbyBhdmFpbGFibGUgZnJvbSBB
-ZGFmcnVpdCBbMl0uCj4KPiBMaW1vciBicm91Z2h0IHVwIGFuIGludGVyZXN0aW5nIHBvaW50IGlu
-IGFuIG9mZi1saXN0IGRpc2N1c3Npb24uIFRoZQo+IHNhbWUgY29udHJvbGxlciBjYW4gYmUgd2ly
-ZWQgdG8gdGhlIHNhbWUgTENEIGluIGRpZmZlcmVudCB3YXlzLiBUaGlzIGlzCj4gZXZpZGVudCBp
-biB0aGUgZmJmdGYgZHJpdmVycyBpbiBzdGFnaW5nLiBUaGVyZSBpcyBhbiAiYWRhZnJ1aXQxOCIg
-YW5kIGFuCj4gImFkYWZydWl0MThfZ3JlZW4iIGluIGZiZnRmX2RldmljZXMuYyB3aGVyZSBhcHBh
-cmVudGx5LCB0d28gb3RoZXJ3aXNlCj4gaWRlbnRpY2FsIGRpc3BsYXlzIHdlcmUgd2lyZWQgc2xp
-Z2h0bHkgZGlmZmVyZW50bHkgYXQgdGhlIGZhY3Rvcnkgc28gdGhhdAo+IG9uIG9uZSwgdGhlIG9u
-LWJvYXJkIEdSQU0gd29yZCAwIGRvZXMgbm90IGNvcnJlc3BvbmQgdG8gcGl4ZWwgMCwwIG9uIHRo
-ZQo+IExDRC4gSXQgcmVxdWlyZXMgYSBzcGVjaWFsIG9mZnNldCB0byB0aGUgR1JBTSBzdGFydGlu
-ZyBhZGRyZXNzIGluIG9yZGVyIHRvCj4gaGF2ZSB0aGUgaW1hZ2UgZGlzcGxheWVkIGNvcnJlY3Rs
-eS4KPgo+IEFkZGl0aW9uYWxseSwgZmJ0ZnQgc3VwcG9ydHMgYSBTYWluU21hcnQgMS44IiBURlQg
-WzNdIHRoYXQgdXNlcyB0aGUgc2FtZQo+IGNvbnRyb2xsZXIsIGJ1dCBpdCBhcHBlYXJzIHRoYXQg
-dGhlc2UgaGF2ZSBkaWZmZXJlbnQgZ2FtbWEgY3VydmVzIChwZXJoYXBzCj4gdGhleSB1c2UgZGlm
-ZmVyZW50IExDRHM/KS4gVGhlIGF2YWlsYWJsZSBwaW5zIGFyZSBleGFjdGx5IHRoZSBzYW1lIGFz
-IHRoZQo+IEFkYWZydWl0IGRpc3BsYXkgdGhvdWdoLgo+Cj4gQXMgSSBhbSB3cml0aW5nIHRoaXMs
-IEkgYW0gbG9va2luZyBhdCB0aGUgSkQtMTgwMCBkYXRhc2hlZXQgWzRdIGFnYWluIGZvcgo+IHRo
-ZSBBZGFmcnVpdCBkaXNwbGF5IGFuZCBJIHNlZSB0aGF0IGluIGFkZGl0aW9uIHRvIHNwZWNpZnlp
-bmcgdGhlIHNpemUgb2YKPiB0aGUgZGlzcGxheSBpdCBzYXlzICJJQzogU1Q3NzM1QiIuIFNvLCBJ
-IGFtIHN0YXJ0aW5nIHRvIHRoaW5rIHRoYXQgImppYW5kYSwKPiBqZC10MTgwMDMtdDAxIiB3b3Vs
-ZCBiZSBhIGJldHRlciBjb21wYXRpYmxlIHN0cmluZyBzaW5jZSBpdCB0ZWxscyB5b3UKPiBldmVy
-eXRoaW5nIHlvdSBuZWVkIHRvIGtub3cgYWJvdXQgdGhpcyBkaXNwbGF5LiBKdXN0IHVzaW5nIHRo
-ZSBjb250cm9sbGVyCj4gbmFtZSBieSBpdHNlbGYgKCJzaXRyb25peCxzdDc3MzVyIikgaXMgbm90
-IGVub3VnaCBiZWNhdXNlIGl0IGRvZXMgbm90IHRlbGwKPiB5b3UgdGhpbmdzIGxpa2UgdGhlIG51
-bWJlciBvZiBwaXhlbHMgb3IgdGhlIHBoeXNpY2FsIHNpemUgb2YgdGhlIExDRC4KPgo+IFdoYXQg
-SSBhbSBub3Qgc3VyZSBhYm91dCwgdGhvdWdoLCBpcyBob3cgdG8gcmVwcmVzZW50IHRoZSBBZGFm
-cnVpdCBkaXNwbGF5Cj4gdGhhdCByZXF1aXJlcyB0aGUgb2Zmc2V0IGluIHRoZSBkZXZpY2UgdHJl
-ZS4gV291bGQgaXQgYmUgYSBkaWZmZXJlbnQKPiBjb21wYXRpYmxlIHN0cmluZyBvciBzaG91bGQg
-d2UgYWRkIGFuIGV4dHJhIHByb3BlcnR5IHRvIGluZGljYXRlIHRoaXMKPiBxdWlyaz8KPgo+IE9u
-IGEgcmVsYXRlZCBub3RlLCBJIHJlY2VudGx5IHN1Ym1pdHRlZCBkZXZpY2UgdHJlZSBiaW5kaW5n
-cyBmb3IgYSBzaW1pbGFyCj4gU1BJIGRpc3BsYXkgYnJlYWtvdXQgYm9hcmQgWzVdWzZdLiBBZnRl
-ciBtb3JlIGRpZ2dpbmcgdGhvdWdoLCBJIGZvdW5kIGEKPiBkYXRhc2hlZXQgZm9yIHRoYXQgZGlz
-cGxheSBbN10sIHNvIEknbSB0aGlua2luZyBhIGNvbXBhdGlibGUgc3RyaW5nIG9mCj4gInZvdCx2
-MjIwaGYwMWEtdCIgd291bGQgYmUgYmV0dGVyIGJ5IHRoZSBzYW1lIHJlYXNvbmluZyBhYm92ZS4K
-Pgo+IEFuZCwgSSBrbm93IHRoaXMgaXMgZ2V0dGluZyBsb25nLCBidXQgb25lIG1vcmUgdGhpbmcu
-Li4KPgo+IFRoZXJlIHdhcyBhIGJpbmRpbmcgYWNrZWQgcmVjZW50bHkgZm9yIHRoZSBMQ0Qgb24g
-YSBELUxpbmsgRElSLTY4NSBXaXJlbGVzcwo+IE4gU3RvcmFnZSBSb3V0ZXIgWzhdLiBUaGlzIHVz
-ZXMgdGhlIGNvbXBvdW5kIGNvbXBhdGlibGUgc3RyaW5nIG9mICJkbGluaywKPiBkaXItNjg1LXBh
-bmVsIiwgImlsaXRlayxpbGk5MzIyIi4gSWYgd2Ugd2FudCB0byB0cnkgdG8ga2VlcCB0aGluZ3MK
-PiBjb25zaXN0ZW50LCBwZXJoYXBzIEkgc2hvdWxkIGJlIGFkb3B0aW5nIHRoaXMgcGF0dGVybiBh
-cyB3ZWxsPyBBbmQgcGVyaGFwcwo+IGl0IHdvdWxkIGJlIGJldHRlciB0byB1c2UgdGhlIGJldHRl
-ciBrbm93biB2ZW5kb3IgbmFtZSBpbnN0ZWFkIG9mIHRoZQo+IG9ic2N1cmUgdmVuZG9ycyBmcm9t
-IHRoZSBkYXRhc2hlZXRzIHRoYXQgSSBoYXZlIGZvdW5kPyBGb3IgZXhhbXBsZSwKPiAiYWRhZnJ1
-aXQsNjE4IiAic2l0cm9uaXgsc3Q3NzM1ciIgaW5zdGVhZCBvZiAiamlhbmRhLGpkLXQxODAwMy10
-MDEiPwoKSSB2b3RlIGZvciB0aGlzOgoiamlhbmRhLGpkLXQxODAwMy10MDEiCgpUaGUgZGlzcGxh
-eSBjb250cm9sbGVyIGlzIHBhcnQgb2YgdGhlIHBhbmVsIHNvIHlvdSBjYW4ndCBoYXZlIHRoaXMK
-cGFuZWwgd2l0aCBhbm90aGVyIGNvbnRyb2xsZXIuIElmIHRoZSBBZGFmcnVpdCAjMzU4IHBhbmVs
-IHdpdGgKYnJlYWtvdXQgYm9hcmQgZGlkIHNvbWV0aGluZyB0aGF0IG1hZGUgaXQgaW5jb21wYXRp
-YmxlIHdpdGggYSBiYXJlCmppYW5kYSBwYW5lbCwgdGhlbiBpdCB3b3VsZCBtYWtlIHNlbnNlIHRv
-IGNhbGwgaXQgImFkYWZydWl0LHNvbWV0aGluZyIuCgpJIGRvbid0IGtub3cgdGhlIGZ1bGwgc3Rv
-cnkgYWJvdXQgdGhlIGdyZWVuIHRhYiB2ZXJzaW9uIG9mIHRoZSBkaXNwbGF5CndpdGggdGhlIG9m
-ZnNldCBwcm9ibGVtLCBidXQgaXQncyBhIGxvbmcgdGltZSBhZ28gYW5kIEkgZG9uJ3QgdGhpbmsK
-aXQncyB3b3J0aCBpdCB0byBzdXBwb3J0IGl0LiBJdCB3b3VsZCByZXF1aXJlIGEgY3VzdG9tIGRp
-cnR5ZmIgY2FsbGJhY2suCgpUaGVyZSdzIGFsc28gYSBibGFjayB0YWIgdmVyc2lvbiBvZiB0aGlz
-IEFkYWZydWl0IGRpc3BsYXkgd2l0aCB0aGUKY29sb3JzIHJldmVyc2VkIEJHUi9SR0IsIGJ1dCB0
-aGF0IGFsc28gaXMgc29tZSB0aW1lIGJhY2sgbm93LgoKSSBndWVzcyB0aGV5IGFsbCBoYWQgZGlm
-ZmVyZW50IHBhbmVscyB3aXRoIHRoZWlyIG93biBuYW1lcyB3aGljaCB3b3VsZApyZXN1bHQgaW4g
-ZGlmZmVyZW50IGNvbXBhdGlibGUgc3RyaW5ncy4gVGhpcyBtZWFucyB0aGF0IHRoZSBlbmQgdXNl
-cgp3b3VsZCBoYXZlIHRvIGtub3cgZXhjYXRseSB3aGljaCB2ZXJzaW9uIG9mIHRoZSBBZGFmcnVp
-dCBkaXNwbGF5IHRoZXkncmUKdXNpbmcgdG8ga25vdyB3aGljaCBjb21wYXRpYmxlIHN0cmluZyB0
-byB1c2UuIElmIHRoZSBTUEkgTUlTTyBzaWduYWwKaGFkIGJlZW4gcm91dGVkIG91dCBmcm9tIHRo
-ZSBwYW5lbCwgaXQgd291bGQgaGF2ZSBiZWVuIHBvc3NpYmxlIHRvIG1ha2UKYSBkcml2ZXIganVz
-dCB3aXRoIGEgImFkYWZydWl0LHRmdDE4IiBjb21hcHRpYmxlIGFuZCBsZXQgdGhlIGRyaXZlciBh
-c2sKdGhlIGNvbnRyb2xsZXIgd2hpY2ggdmVyc2lvbiBpdCBpcy4gQXNzdW1pbmcgdGhhdCBpbmZv
-IGlzIGF2YWlsYWJsZSBpbgp0aGUgY29udHJvbGxlci4gTm90IGFsbCBwYW5lbCB2ZW5kb3JzIGJv
-dGhlciB0byBkbyB0aGF0LgoKVGhlICJtaSxtaTAyODNxdCIgcGFuZWwgZm9yIGluc3RhbmNlIGlz
-IHVzZWQgb24gdGhlIEFkYWZydWl0IFBpVEZUIDI4CmFuZCB0aGUgV2F0dGVyb3R0IHJwaS1kaXNw
-bGF5LCBtYWtpbmcgaXQgcG9zc2libGUgdG8gdXNlIHRoZSBzYW1lCmNvbXBhdGlibGUgZm9yIGJv
-dGggZGlzcGxheXMgYW5kIGFsc28gZm9yIGFueW9uZSBidXlpbmcgdGhhdCBwYW5lbCBmcm9tCnNv
-bWUgb3RoZXIgc291cmNlLgoKT25lIGxhc3QgdGhpbmcsIGlmIHRoZSBwYW5lbCBpcyBtYWRlIHNw
-ZWNpZmljYWxseSBmb3IgQWRhZnJ1aXQgYW5kIG5vdAphdmFpbGFibGUgZnJvbSBhbnkgb3RoZXIg
-c291cmNlLCB0aGVuIGl0IG1ha2VzIHNlbnNlIHRvIGNhbGwgaXQKc29tZXRoaW5nICJhZGFmcnVp
-dCIuCgpOb3JhbGYuCgo+IFsxXTogaHR0cHM6Ly93d3cuYWRhZnJ1aXQuY29tL3Byb2R1Y3QvMzU4
-Cj4gWzJdOiBodHRwczovL3d3dy5hZGFmcnVpdC5jb20vcHJvZHVjdC82MTgKPiBbM106IGh0dHBz
-Oi8vd3d3LnNhaW5zbWFydC5jb20vcHJvZHVjdHMvMS04LXRmdC1zcGktbGNkLXNjcmVlbi13aXRo
-LW1pY3Jvc2Qtc29ja2V0Cj4gWzRdOiBodHRwOi8vd3d3LmFkYWZydWl0LmNvbS9kYXRhc2hlZXRz
-L0pELVQxODAwLnBkZgo+IFs1XTogaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Bh
-dGNoLzE4NzAzOC8KPiBbNl06IGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9wYXRj
-aC8xODkyMzMvCj4gWzddOiBodHRwOi8vd3d3LmhvdG1jdS5jb20vMjItMTc2eDIyMC10ZnQtbGNk
-LXdpdGgtc3BpLWludGVyZmFjZS1wLTMxNi5odG1sCj4gWzhdOiBodHRwczovL3BhdGNod29yay5m
-cmVlZGVza3RvcC5vcmcvcGF0Y2gvMTkxNDYyLwo+Cj4gICAuLi4vYmluZGluZ3MvZGlzcGxheS9z
-aXRyb25peCxzdDc3MzVyLnR4dCAgICAgICAgICB8IDM1ICsrKysrKysrKysrKysrKysrKysrKysK
-PiAgIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCj4gICBjcmVhdGUgbW9kZSAxMDA2
-NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3
-NzM1ci50eHQKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9zaXRyb25peCxzdDc3MzVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzczNXIudHh0Cj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKPiBpbmRleCAwMDAwMDAwLi5iYmI4YmE2Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzczNXIu
-dHh0Cj4gQEAgLTAsMCArMSwzNSBAQAo+ICtTaXRyb25peCBTVDc3MzVSIGRpc3BsYXkgcGFuZWxz
-Cj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgZm9yIGRpc3BsYXkgcGFuZWxzIHVzaW5nIGEgU2l0cm9u
-aXggU1Q3NzM1UiBjb250cm9sbGVyIGluIFNQSQo+ICttb2RlLgo+ICsKPiArUmVxdWlyZWQgcHJv
-cGVydGllczoKPiArLSBjb21wYXRpYmxlOgkic2l0cm9uaXgsc3Q3NzM1ci1qZC10MTgwMDMtdDAx
-Igo+ICstIGRjLWdwaW9zOglEaXNwbGF5IGRhdGEvY29tbWFuZCBzZWxlY3Rpb24gKEQvQ1gpCj4g
-Ky0gcmVzZXQtZ3Bpb3M6CVJlc2V0IHNpZ25hbCAoUlNUWCkKPiArCj4gK1RoZSBub2RlIGZvciB0
-aGlzIGRyaXZlciBtdXN0IGJlIGEgY2hpbGQgbm9kZSBvZiBhIFNQSSBjb250cm9sbGVyLCBoZW5j
-ZQo+ICthbGwgbWFuZGF0b3J5IHByb3BlcnRpZXMgZGVzY3JpYmVkIGluIC4uL3NwaS9zcGktYnVz
-LnR4dCBtdXN0IGJlIHNwZWNpZmllZC4KPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0g
-cm90YXRpb246CXBhbmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2UgKDAs
-OTAsMTgwLDI3MCkKPiArLSBiYWNrbGlnaHQ6CXBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZp
-Y2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCj4gKwo+ICtFeGFtcGxlOgo+ICsKPiArCWJhY2tsaWdo
-dDogYmFja2xpZ2h0IHsKPiArCQljb21wYXRpYmxlID0gImdwaW8tYmFja2xpZ2h0IjsKPiArCQln
-cGlvcyA9IDwmZ3BpbyA0NCBHUElPX0FDVElWRV9ISUdIPjsKPiArCX0KPiArCj4gKwkuLi4KPiAr
-Cj4gKwlkaXNwbGF5QDB7Cj4gKwkJY29tcGF0aWJsZSA9ICJzaXRyb25peCxzdDc3MzVyLWpkLXQx
-ODAwMy10MDEiOwo+ICsJCXJlZyA9IDwwPjsKPiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwzMjAw
-MDAwMD47Cj4gKwkJZGMtZ3Bpb3MgPSA8JmdwaW8gNDMgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJ
-cmVzZXQtZ3Bpb3MgPSA8JmdwaW8gODAgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJcm90YXRpb24g
-PSA8MjcwPjsKPiArCQliYWNrbGlnaHQgPSAmYmFja2xpZ2h0Owo+ICsJfTsKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Baruch,
+ 
+ On lun., déc. 11 2017, Baruch Siach <baruch@tkos.co.il> wrote:
+
+> Hi Miquel,
+>
+> On Mon, Dec 11, 2017 at 04:09:32PM +0100, Miquel RAYNAL wrote:
+>> On Sun,  3 Dec 2017 13:11:23 +0200
+>> Baruch Siach <baruch@tkos.co.il> wrote:
+>> 
+>> > The CP110 component is integrated in the Armada 8k and 7k lines of
+>> > processors.
+>> > 
+>> > This patch also adds an option of offset to the MSB of the control
+>> > register. The existing DT binding for Armada 38x refers to a single
+>> > 32 bit control register. It turns out that this is actually only the
+>> > MSB of the control area. Changing the binding to fix that would break
+>> > existing DT files, so the Armada 38x binding is left as is.
+>> > 
+>> > The new CP110 binding increases the size of the control area to 64
+>> > bits, thus moving the MSB to offset 4.
+>> > 
+>> > Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+>> > ---
+>> > v2: No change
+>> > ---
+>> >  drivers/thermal/armada_thermal.c | 24 ++++++++++++++++++++++--
+>> >  1 file changed, 22 insertions(+), 2 deletions(-)
+>> > 
+>> > diff --git a/drivers/thermal/armada_thermal.c
+>> > b/drivers/thermal/armada_thermal.c index 0eb82097571f..59b75f63945d
+>> > 100644 --- a/drivers/thermal/armada_thermal.c
+>> > +++ b/drivers/thermal/armada_thermal.c
+>> > @@ -73,6 +73,7 @@ struct armada_thermal_data {
+>> >  	unsigned int temp_shift;
+>> >  	unsigned int temp_mask;
+>> >  	unsigned int is_valid_shift;
+>> > +	unsigned int control_msb_offset;
+>> >  };
+>> >  
+>> >  static void armadaxp_init_sensor(struct platform_device *pdev,
+>> > @@ -142,12 +143,14 @@ static void armada375_init_sensor(struct
+>> > platform_device *pdev, static void armada380_init_sensor(struct
+>> > platform_device *pdev, struct armada_thermal_priv *priv)
+>> >  {
+>> > -	unsigned long reg = readl_relaxed(priv->control);
+>> > +	void __iomem *control_msb =
+>> > +		priv->control + priv->data->control_msb_offset;
+>> > +	unsigned long reg = readl_relaxed(control_msb);
+>> >  
+>> >  	/* Reset hardware once */
+>> >  	if (!(reg & A380_HW_RESET)) {
+>> >  		reg |= A380_HW_RESET;
+>> > -		writel(reg, priv->control);
+>> > +		writel(reg, control_msb);
+>> >  		mdelay(10);
+>> >  	}
+>> >  }
+>> > @@ -266,6 +269,19 @@ static const struct armada_thermal_data
+>> > armada_ap806_data = { .signed_sample = true,
+>> >  };
+>> >  
+>> > +static const struct armada_thermal_data armada_cp110_data = {
+>> > +	.is_valid = armada_is_valid,
+>> > +	.init_sensor = armada380_init_sensor,
+>> 
+>> I see the initialization for CP110 thermal IP is close to
+>> Armada-380's, but, as you point it in the commit log it is still
+>> different.
+>> 
+>> I don't know what is the best way to handle this but until now each
+>> new compatible had his own ->init_sensor function, shouldn't we do
+>> the same here as changes are requested? This would naturally avoid the
+>> situation with Armada-380 bindings.
+>
+> I'm not sure I understand your suggestion.
+>
+> There is no difference between the CP110 and the Armada 38x, as far as I can 
+> see. The only quirk is that the existing Armada 38x DT binding is wrong I that 
+> the 'reg' property references the control MSB, while leaving the LSB
+> out. We
+
+Well I would not say it was wrong but more incomplete :)
+
+
+> can't change the Armada 38x binding without breaking existing DTs. The 
+> 'control_msb_offset' field that this patch adds allows correct binding for 
+> CP110, while keeping compatibility with the existing Armada 38x
+> binding.
+
+I am not against adding a new compatible string for CP110 but ot be
+honest the new binding for CP110 does not bring anything as you don't
+use at all the LSB register.
+
+Actually, if on Armada 375 we initially mapped the LSB register it was
+to support an very early release of the SoC (stepping Z) and only for
+resetting its value. So I guess you started to write the AP860 part
+based on the Armada 375 and then found that we could map a more complete
+range of the registers.
+
+>
+> How would a separate init_sensor routine improve things?
+
+So yes please do it, thanks to this you won't have to add the
+control_msb_offset member and can use a clean function. Moreover if in
+the future we see some usefulness for this LSB register then we could use
+the new compatible for the Armada 38x.
+
+Thanks,
+
+Gregory
+
+>
+> baruch
+>
+> -- 
+>      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+> =}------------------------------------------------ooO--U--Ooo------------{=
+>    - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
