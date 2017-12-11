@@ -1,7 +1,8 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 11/20] ARM: dts: imx6*-hummingboard2: remove LDB node
-Date: Mon, 11 Dec 2017 16:58:13 +0000
-Message-ID: <E1eORPB-0000I2-Qa@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 14/20] ARM: dts: imx6*-hummingboard2: remove redundant PWM
+ disables
+Date: Mon, 11 Dec 2017 16:58:29 +0000
+Message-ID: <E1eORPR-0000IQ-8K@rmk-PC.armlinux.org.uk>
 References: <20171211165631.GW10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -16,35 +17,34 @@ List-Id: devicetree@vger.kernel.org
 
 From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
 
-It's disabled by default and the data mapping is supposed to be
-retrieved from the attached panel driver in mainline.
+The PWM nodes are already disabled in the imx6qdl.dtsi, so there
+is no need to disable them again in the board DTS.
 
 Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 9 ---------
- 1 file changed, 9 deletions(-)
+ arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-index dfbcdf33b84c..4ddc4b73b9ae 100644
+index 2a63c992b62c..6fbfa970a0a7 100644
 --- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-@@ -466,15 +466,6 @@
- 	};
+@@ -478,14 +478,6 @@
+ 	status = "okay";
  };
  
--&ldb {
+-&pwm3 {
 -	status = "disabled";
--
--	lvds-channel@0 {
--		fsl,data-mapping = "spwg";
--		fsl,data-width = <18>;
--	};
 -};
 -
- &pcie {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hummingboard2_pcie_reset>;
+-&pwm4 {
+-	status = "disabled";
+-};
+-
+ &ssi1 {
+ 	status = "okay";
+ };
 -- 
 2.7.4
 
