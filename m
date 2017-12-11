@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
         <mylene.josserand@free-electrons.com>
-Subject: [PATCH 1/4] ARM: sunxi: mcpm: Add support for A83T
-Date: Mon, 11 Dec 2017 08:49:58 +0100
-Message-ID: <20171211075001.6100-2-mylene.josserand@free-electrons.com>
+Subject: [PATCH 3/4] arm: dts: sun8i: a83t: Add CCI-400 node
+Date: Mon, 11 Dec 2017 08:50:00 +0100
+Message-ID: <20171211075001.6100-4-mylene.josserand@free-electrons.com>
 References: <20171211075001.6100-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -14,209 +14,113 @@ To: maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, robh
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Add the support for A83T.
-
-A83T SoC has an additional register than A80 to handle CPU configurations:
-R_CPUS_CFG. Information about the register comes from Allwinner's BSP
-driver.
-An important difference is the Power Off Gating register for clusters
-which is BIT(4) in case of SUN9I-A80 and BIT(0) in case of SUN8I-A83T.
+Add CCI-400 node and control-port on CPUs needed by MCPM (ie SMP).
 
 Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
 ---
- arch/arm/mach-sunxi/Kconfig |  1 +
- arch/arm/mach-sunxi/mcpm.c  | 90 ++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 86 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 41 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-index 177380548d99..ae7b57fbd7ac 100644
---- a/arch/arm/mach-sunxi/Kconfig
-+++ b/arch/arm/mach-sunxi/Kconfig
-@@ -42,6 +42,7 @@ config MACH_SUN8I
- 	default ARCH_SUNXI
- 	select ARM_GIC
- 	select MFD_SUN6I_PRCM
-+	imply MCPM
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index eeb2e7d0d6dc..3e2aad537972 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -62,48 +62,56 @@
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0>;
++			cci-control-port = <&cci_control0>;
+ 		};
  
- config MACH_SUN9I
- 	bool "Allwinner (sun9i) SoCs support"
-diff --git a/arch/arm/mach-sunxi/mcpm.c b/arch/arm/mach-sunxi/mcpm.c
-index 4b6e1d6ae379..fc8a28dcb576 100644
---- a/arch/arm/mach-sunxi/mcpm.c
-+++ b/arch/arm/mach-sunxi/mcpm.c
-@@ -43,17 +43,25 @@
- #define CPUCFG_CX_RST_CTRL_L2_RST	BIT(8)
- #define CPUCFG_CX_RST_CTRL_CX_RST(n)	BIT(4 + (n))
- #define CPUCFG_CX_RST_CTRL_CORE_RST(n)	BIT(n)
-+#define CPUCFG_CX_RST_CTRL_CORE_RST_ALL	(0xf << 0)
+ 		cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <1>;
++			cci-control-port = <&cci_control0>;
+ 		};
  
- #define PRCM_CPU_PO_RST_CTRL(c)		(0x4 + 0x4 * (c))
- #define PRCM_CPU_PO_RST_CTRL_CORE(n)	BIT(n)
- #define PRCM_CPU_PO_RST_CTRL_CORE_ALL	0xf
- #define PRCM_PWROFF_GATING_REG(c)	(0x100 + 0x4 * (c))
--#define PRCM_PWROFF_GATING_REG_CLUSTER	BIT(4)
-+/* The power off register for clusters are different from SUN9I and SUN8I */
-+#define PRCM_PWROFF_GATING_REG_CLUSTER_SUN8I	BIT(0)
-+#define PRCM_PWROFF_GATING_REG_CLUSTER_SUN9I	BIT(4)
- #define PRCM_PWROFF_GATING_REG_CORE(n)	BIT(n)
- #define PRCM_PWR_SWITCH_REG(c, cpu)	(0x140 + 0x10 * (c) + 0x4 * (cpu))
- #define PRCM_CPU_SOFT_ENTRY_REG		0x164
+ 		cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <2>;
++			cci-control-port = <&cci_control0>;
+ 		};
  
-+#define R_CPUCFG_CLUSTER_PO_RST_CTRL(c)	(0x30 + (c) * 0x4)
-+#define R_CPUCFG_CLUSTER_PO_RST_CTRL_CORE(n)	BIT(n)
-+#define R_CPUCFG_CPU_SOFT_ENTRY_REG	0x01a4
+ 		cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <3>;
++			cci-control-port = <&cci_control0>;
+ 		};
+ 
+ 		cpu@100 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0x100>;
++			cci-control-port = <&cci_control1>;
+ 		};
+ 
+ 		cpu@101 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0x101>;
++			cci-control-port = <&cci_control1>;
+ 		};
+ 
+ 		cpu@102 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0x102>;
++			cci-control-port = <&cci_control1>;
+ 		};
+ 
+ 		cpu@103 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0x103>;
++			cci-control-port = <&cci_control1>;
+ 		};
+ 	};
+ 
+@@ -314,6 +322,39 @@
+ 			status = "disabled";
+ 		};
+ 
++		cci: cci@1790000 {
++			compatible = "arm,cci-400";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x01790000 0x1000>;
++			ranges = <0x0 0x01790000 0x10000>;
 +
- static void __iomem *cpucfg_base;
-+static void __iomem *r_cpucfg_base;
- static void __iomem *prcm_base;
- 
- static int sunxi_cpu_power_switch_set(unsigned int cpu, unsigned int cluster,
-@@ -101,6 +109,16 @@ static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
- 	reg &= ~PRCM_CPU_PO_RST_CTRL_CORE(cpu);
- 	writel(reg, prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
- 
-+	if (r_cpucfg_base) {
-+		/* assert cpu power-on reset */
-+		reg  = readl(r_cpucfg_base +
-+			     R_CPUCFG_CLUSTER_PO_RST_CTRL(cluster));
-+		reg &= ~(R_CPUCFG_CLUSTER_PO_RST_CTRL_CORE(cpu));
-+		writel(reg, r_cpucfg_base +
-+		       R_CPUCFG_CLUSTER_PO_RST_CTRL(cluster));
-+		udelay(10);
-+	}
++			cci_control0: slave-if@4000 {
++				compatible = "arm,cci-400-ctrl-if";
++				interface-type = "ace";
++				reg = <0x4000 0x1000>;
++			};
 +
- 	/* Cortex-A7: hold L1 reset disable signal low */
- 	if (!(of_machine_is_compatible("allwinner,sun9i-a80") &&
- 			cluster == SUN9I_A80_A15_CLUSTER)) {
-@@ -126,17 +144,37 @@ static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
- 	/* open power switch */
- 	sunxi_cpu_power_switch_set(cpu, cluster, true);
- 
-+	/* Handle A83T bit swap */
-+	if (of_machine_is_compatible("allwinner,sun8i-a83t")) {
-+		if (cpu == 0)
-+			cpu = 4;
-+	}
++			cci_control1: slave-if@5000 {
++				compatible = "arm,cci-400-ctrl-if";
++				interface-type = "ace";
++				reg = <0x5000 0x1000>;
++			};
 +
- 	/* clear processor power gate */
- 	reg = readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
- 	reg &= ~PRCM_PWROFF_GATING_REG_CORE(cpu);
- 	writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
- 	udelay(20);
- 
-+	if (of_machine_is_compatible("allwinner,sun8i-a83t")) {
-+		if (cpu == 4)
-+			cpu = 0;
-+	}
++			pmu@9000 {
++				compatible = "arm,cci-400-pmu,r1";
++				reg = <0x9000 0x5000>;
++				interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
 +
- 	/* de-assert processor power-on reset */
- 	reg = readl(prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
- 	reg |= PRCM_CPU_PO_RST_CTRL_CORE(cpu);
- 	writel(reg, prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
- 
-+	if (r_cpucfg_base) {
-+		reg  = readl(r_cpucfg_base +
-+			     R_CPUCFG_CLUSTER_PO_RST_CTRL(cluster));
-+		reg |= R_CPUCFG_CLUSTER_PO_RST_CTRL_CORE(cpu);
-+		writel(reg, r_cpucfg_base +
-+		       R_CPUCFG_CLUSTER_PO_RST_CTRL(cluster));
-+		udelay(10);
-+	}
-+
- 	/* de-assert all processor resets */
- 	reg = readl(cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
- 	reg |= CPUCFG_CX_RST_CTRL_DBG_RST(cpu);
-@@ -160,6 +198,14 @@ static int sunxi_cluster_powerup(unsigned int cluster)
- 	if (cluster >= SUNXI_NR_CLUSTERS)
- 		return -EINVAL;
- 
-+	/* For A83T, assert cluster cores resets */
-+	if (of_machine_is_compatible("allwinner,sun8i-a83t")) {
-+		reg = readl(cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
-+		reg &= ~CPUCFG_CX_RST_CTRL_CORE_RST_ALL;   /* Core Reset    */
-+		writel(reg, cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
-+		udelay(10);
-+	}
-+
- 	/* assert ACINACTM */
- 	reg = readl(cpucfg_base + CPUCFG_CX_CTRL_REG1(cluster));
- 	reg |= CPUCFG_CX_CTRL_REG1_ACINACTM;
-@@ -170,6 +216,16 @@ static int sunxi_cluster_powerup(unsigned int cluster)
- 	reg &= ~PRCM_CPU_PO_RST_CTRL_CORE_ALL;
- 	writel(reg, prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
- 
-+	/* assert cluster cores resets */
-+	if (r_cpucfg_base) {
-+		reg  = readl(r_cpucfg_base +
-+			     R_CPUCFG_CLUSTER_PO_RST_CTRL(cluster));
-+		reg &= ~CPUCFG_CX_RST_CTRL_CORE_RST_ALL;
-+		writel(reg, r_cpucfg_base +
-+		       R_CPUCFG_CLUSTER_PO_RST_CTRL(cluster));
-+		udelay(10);
-+	}
-+
- 	/* assert cluster resets */
- 	reg = readl(cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
- 	reg &= ~CPUCFG_CX_RST_CTRL_DBG_SOC_RST;
-@@ -202,7 +258,10 @@ static int sunxi_cluster_powerup(unsigned int cluster)
- 
- 	/* clear cluster power gate */
- 	reg = readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
--	reg &= ~PRCM_PWROFF_GATING_REG_CLUSTER;
-+	if (of_machine_is_compatible("allwinner,sun8i-a83t"))
-+		reg &= ~PRCM_PWROFF_GATING_REG_CLUSTER_SUN8I;
-+	else
-+		reg &= ~PRCM_PWROFF_GATING_REG_CLUSTER_SUN9I;
- 	writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
- 	udelay(20);
- 
-@@ -327,8 +386,12 @@ static void __naked sunxi_power_up_setup(unsigned int affinity_level)
- 
- static void sunxi_mcpm_setup_entry_point(void)
- {
--	__raw_writel(virt_to_phys(mcpm_entry_point),
--		     prcm_base + PRCM_CPU_SOFT_ENTRY_REG);
-+	if (of_machine_is_compatible("allwinner,sun9i-a80"))
-+		__raw_writel(virt_to_phys(mcpm_entry_point),
-+			     prcm_base + PRCM_CPU_SOFT_ENTRY_REG);
-+	else
-+		__raw_writel(virt_to_phys(mcpm_entry_point), r_cpucfg_base +
-+			     R_CPUCFG_CPU_SOFT_ENTRY_REG);
- }
- 
- static int __init sunxi_mcpm_init(void)
-@@ -336,7 +399,8 @@ static int __init sunxi_mcpm_init(void)
- 	struct device_node *node;
- 	int ret;
- 
--	if (!of_machine_is_compatible("allwinner,sun9i-a80"))
-+	if (!of_machine_is_compatible("allwinner,sun9i-a80") &&
-+	    !of_machine_is_compatible("allwinner,sun8i-a83t"))
- 		return -ENODEV;
- 
- 	if (!cci_probed())
-@@ -367,6 +431,22 @@ static int __init sunxi_mcpm_init(void)
- 		return -ENOMEM;
- 	}
- 
-+	r_cpucfg_base = NULL;
-+	if (of_machine_is_compatible("allwinner,sun8i-a83t")) {
-+		node = of_find_compatible_node(NULL, NULL,
-+					       "allwinner,sun8i-a83t-r-cpucfg");
-+		if (!node)
-+			return -ENODEV;
-+
-+		r_cpucfg_base = of_iomap(node, 0);
-+		of_node_put(node);
-+		if (!r_cpucfg_base) {
-+			pr_err("%s: failed to map R-CPUCFG registers\n",
-+			       __func__);
-+			return -ENOMEM;
-+		}
-+	}
-+
- 	ret = mcpm_platform_register(&sunxi_power_ops);
- 	if (!ret)
- 		ret = mcpm_sync_init(sunxi_power_up_setup);
+ 		ccu: clock@1c20000 {
+ 			compatible = "allwinner,sun8i-a83t-ccu";
+ 			reg = <0x01c20000 0x400>;
 -- 
 2.11.0
