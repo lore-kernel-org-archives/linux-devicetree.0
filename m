@@ -1,74 +1,60 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
- ethernet driver
-Date: Mon, 11 Dec 2017 10:19:15 +0100
-Message-ID: <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com>
-References: <1512979049-15930-1-git-send-email-hayashi.kunihiko@socionext.com> <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: netdev-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 3/3] dt-bindings: iio: temperature: add MLX90632 device bindings
+Date: Mon, 11 Dec 2017 10:20:02 +0100
+Message-ID: <20171211092002.8687-1-cmo@melexis.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Kunihiko-san,
+Add device tree bindings for MLX90632 IR temperature sensor.
 
-On Mon, Dec 11, 2017 at 8:57 AM, Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
-> The UniPhier platform from Socionext provides the AVE ethernet
-> controller that includes MAC and MDIO bus supporting RGMII/RMII
-> modes. The controller is named AVE.
->
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-[...]
-> --- /dev/null
-> +++ b/drivers/net/ethernet/socionext/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
 
-You are correctly using SPDX ids here....
-
-> +obj-$(CONFIG_SNI_AVE) += sni_ave.o
-> diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
-> new file mode 100644
-> index 0000000..7b293c2
-> --- /dev/null
-> +++ b/drivers/net/ethernet/socionext/sni_ave.c
-> @@ -0,0 +1,1744 @@
-> +/**
-> + * sni_ave.c - Socionext UniPhier AVE ethernet driver
-> + *
-> + * Copyright 2014 Panasonic Corporation
-> + * Copyright 2015-2017 Socionext Inc.
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2  of
-> + * the License as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-
-... then I guess you could also use them here, replacing at least 7
-lines of boilerplate by a single id line?
-
-> +// SDPX-License-Identifier: GPL-2.0
-
-And if you go C++ style all the way, this could be even more compact:
-
-> +// SDPX-License-Identifier: GPL-2.0
-> +// sni_ave.c - Socionext UniPhier AVE ethernet driver
-> +// Copyright 2014 Panasonic Corporation
-> +// Copyright 2015-2017 Socionext Inc.
-
-Thank you for your kind consideration!
-
+diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+new file mode 100644
+index 000000000000..0b05812001f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+@@ -0,0 +1,28 @@
++* Melexis MLX90632 contactless Infra Red temperature sensor
++
++Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
++
++There are various applications for the Infra Red contactless temperature sensor
++and MLX90632 is most suitable for consumer applications where measured object
++temperature is in range between -20 to 200 degrees Celsius with relative error
++of measurement below 1 degree Celsius in object temperature range for
++industrial applications. Since it can operate and measure ambient temperature
++in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
++
++Be aware that electronics surrounding the sensor can increase ambient
++temperature. MLX90632 can be calibrated to reduce the housing effect via
++already existing EEPROM parameters.
++
++Since measured object emissivity effects Infra Red energy emitted, emissivity
++should be set before requesting the object temperature.
++
++Required properties:
++  - compatible: should be "melexis,mlx90632"
++  - reg: the I2C address of the sensor (default 0x3a)
++
++Example:
++
++mlx90632@3a {
++	compatible = "melexis,mlx90632";
++	reg = <0x3a>;
++};
 -- 
-Cordially
-Philippe Ombredanne
+2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
