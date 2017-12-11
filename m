@@ -1,83 +1,67 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH v10 10/13] dt-bindings: Add qcom slimbus
-	controller bindings
-Date: Mon, 11 Dec 2017 23:43:04 +0000
-Message-ID: <20171211234307.14465-11-srinivas.kandagatla@linaro.org>
-References: <20171211234307.14465-1-srinivas.kandagatla@linaro.org>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/3] Meson8 GPIO interrupt support
+Date: Mon, 11 Dec 2017 15:59:29 -0800
+Message-ID: <7hvahcak9q.fsf@baylibre.com>
+References: <20171029230523.7355-1-martin.blumenstingl@googlemail.com>
+        <8637605bly.fsf@arm.com> <7h1sljmxp6.fsf@baylibre.com>
+        <CAFBinCDdJtE4g7iCgaw9KEYPhKWjt0YoDy2CfXcTKq+OTDPbLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171211234307.14465-1-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, alsa-devel@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org, j.neuschaefer@gmx.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, pombredanne@nexb.com, sdharia@codeaurora.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCDdJtE4g7iCgaw9KEYPhKWjt0YoDy2CfXcTKq+OTDPbLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+        (Martin Blumenstingl's message of "Sun, 10 Dec 2017 19:15:28 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sagar Dharia <sdharia@codeaurora.org>
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-This patch add device tree bindings for Qualcomm slimbus controller.
+> Hi Kevin,
+>
+> On Tue, Oct 31, 2017 at 11:13 AM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+>> Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> writes:
+>>
+>>> On Mon, Oct 30 2017 at 12:05:20 am GMT, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>>>> This is a simple follow-up of two series from Jerome:
+>>>> - "irqchip: meson: add support for the gpio interrupt controller"
+>>>> - "ARM: meson: enable gpio interrupt controller"
+>>>>
+>>>> This fills in the missing bits to have GPIO interrupt support on Meson8,
+>>>> which includes:
+>>>> - a new binding in the driver with the correct IRQ number
+>>>> - enabling the GPIO interrupt controller in meson8.dts
+>>>> - enabling the GPIO interrupt controller via Kconfig for MACH_MESON8
+>>>>
+>>>>
+>>>> Martin Blumenstingl (3):
+>>>>   irqchip/meson-gpio: add support for Meson8 SoCs
+>>>>   ARM: dts: meson8: enable the GPIO interrupt controller
+>>>>   ARM: meson: enable MESON_IRQ_GPIO also for MACH_MESON8
+>>>>
+>>>>  .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt        | 1 +
+>>>>  arch/arm/boot/dts/meson8.dtsi                                        | 5 +++++
+>>>>  arch/arm/mach-meson/Kconfig                                          | 1 +
+>>>>  drivers/irqchip/irq-meson-gpio.c                                     | 5 +++++
+>>>>  4 files changed, 12 insertions(+)
+>>>
+>>> Kevin, Carlos: Are you OK with this one? It seems pretty minor, and I'm
+>>> happy to queue it if I get an Ack for it. If you'd rather get it through
+>>> via armsoc, let me know.
+>>
+>> Can you take the drivers/irqchip and bindings patch (PATCH 1/3) and I'll
+>> take the rest to avoid conflicts with a bunch of other moving parts we
+>> have in arch/arm.
+> PATCH 1/3 even made it into v4.15
+> can you please queue the remaining two patches for v4.16 - or do you
+> want me to re-send these?
 
-Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/slimbus/slim-qcom-ctrl.txt | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
+No need to resend, I've applied them to v4.16/dt.
 
-diff --git a/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-new file mode 100644
-index 000000000000..922dcb8ff24a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/slimbus/slim-qcom-ctrl.txt
-@@ -0,0 +1,39 @@
-+Qualcomm SLIMbus controller
-+This controller is used if applications processor driver controls SLIMbus
-+master component.
-+
-+Required properties:
-+
-+ - #address-cells - refer to Documentation/devicetree/bindings/slimbus/bus.txt
-+ - #size-cells	- refer to Documentation/devicetree/bindings/slimbus/bus.txt
-+
-+ - reg : Offset and length of the register region(s) for the device
-+ - reg-names : Register region name(s) referenced in reg above
-+	 Required register resource entries are:
-+	 "ctrl": Physical address of controller register blocks
-+ 	 "slew": required for "qcom,apq8064-slim" SOC.
-+ - compatible : should be "qcom,<SOC-NAME>-slim" for SOC specific compatible
-+ 		followed by "qcom,slim" for fallback.
-+ - interrupts : Interrupt number used by this controller
-+ - clocks : Interface and core clocks used by this SLIMbus controller
-+ - clock-names : Required clock-name entries are:
-+	"iface" : Interface clock for this controller
-+	"core" : Interrupt for controller core's BAM
-+
-+Example:
-+
-+	slim@28080000 {
-+		compatible = "qcom,apq8064-slim", "qcom,slim";
-+		reg = <0x28080000 0x2000>, <0x80207C 4>;
-+		reg-names = "ctrl", "slew";
-+		interrupts = <0 33 0>;
-+		clocks = <&lcc SLIMBUS_SRC>, <&lcc AUDIO_SLIMBUS_CLK>;
-+		clock-names = "iface", "core";
-+		#address-cells = <2>;
-+		#size-cell = <0>;
-+
-+		wcd9310: audio-codec@1,0{
-+			compatible = "slim217,60";
-+			reg = <1 0>;
-+		};
-+	};
--- 
-2.15.0
+Thanks for following up.
+
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
