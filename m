@@ -1,45 +1,47 @@
-From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: Re: [RFC] irqchip: add support for LS1021A external interrupt lines
-Date: Mon, 11 Dec 2017 14:45:39 +0100
-Message-ID: <42019fb5-393a-08b0-924d-bf1a97e078fe@prevas.dk>
-References: <48d2d08c-c57a-ce49-5958-0fd5ad4a2dc7@arm.com>
- <58297576-cc32-819d-c6b3-7d1355095482@prevas.dk>
- <5117875.4tMaEC1223@ws-stein> <2475814.YIHTfursNv@ws-stein>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
+ ethernet driver
+Date: Mon, 11 Dec 2017 13:46:27 +0000
+Message-ID: <20171211134627.GU10595@n2100.armlinux.org.uk>
+References: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com>
+ <20171211210455.170A.4A936039@socionext.com>
+ <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2475814.YIHTfursNv@ws-stein>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, Linux kernel mailing list <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Philippe Ombredanne <pombredanne@nexb.com>, Jassi Brar <jaswinder.singh@linaro.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-12-11 11:02, Alexander Stein wrote:
+On Mon, Dec 11, 2017 at 10:34:17PM +0900, Masami Hiramatsu wrote:
+> IMHO, even if we use SPDX license identifier, I recommend to use
+> C-style comments as many other files do, since it is C code.
+> If SPDX identifier requires C++ style, that is SPDX parser's issue
+> and should be fixed to get it from C-style comment.
 
-> Oh, and what is the content of register SCFG_SCFGREVCR?
+See the numerous emails on this subject already.  The issue of C
+vs C++ comments has come up many times by many different people, but
+the result is the same.  That's not going to happen.  Linux kernel
+C files are required to use "//" for the SPDX identifier by order
+of Linus Torvalds.
 
-Good point. On my board it's 0xffffffff, set even before U-boot starts,
-and lots board support code in U-boot expects this. I can't immediately
-find examples in the linux source code that actually writes to the scfg,
-so I don't know if we already have that as an implicit assumption as
-well. But it would be kind of nasty to have to make the code read
-SCFG_SCFGREVCR and decide the bit pattern to use based on that -
-especially since I wouldn't be able to test it.
+Linus has also revealed in that discussion that he has a preference
+for "//" style commenting for single comments, so it seems that the
+kernel coding style may change - but there is no desire for patches
+to "clean up" single line comments to use "//".
 
-Who thought such a magic switch could ever be a good idea?
+For further information, and to see the discussion that has already
+happened, the arguments that have been made about style, see the
+threads for the patch series that tglx has been posting wrt documenting
+the SPDX stuff for the kernel.
+
+Thanks (let's stop rehashing the same arguments.)
 
 -- 
-Rasmus Villemoes
-Software Developer
-Prevas A/S
-Hedeager 3
-DK-8200 Aarhus N
-+45 51210274
-rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org
-www.prevas.dk
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
