@@ -1,117 +1,54 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v6 3/6] clk: meson-axg: add clock controller drivers
-Date: Mon, 11 Dec 2017 10:46:00 +0100
-Message-ID: <1512985560.334.17.camel@baylibre.com>
-References: <20171211064853.32111-1-yixun.lan@amlogic.com>
-         <20171211064853.32111-4-yixun.lan@amlogic.com>
+From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: net: wireless: Add sg parameters dts parsing
+Date: Mon, 11 Dec 2017 10:55:18 +0100
+Message-ID: <5A2E5606.8010707@broadcom.com>
+References: <20171211081144.GA140567@aremote07.aus.cypress.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171211064853.32111-4-yixun.lan@amlogic.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171211081144.GA140567-Oa2joqsrgCQFtx9iUY/I1CAzFfycyo/qAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list <brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-12-11 at 14:48 +0800, Yixun Lan wrote:
-> From: Qiufang Dai <qiufang.dai@amlogic.com>
-> 
-> Add clock controller drivers for Amlogic Meson-AXG SoC.
-> 
-> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+On 12/11/2017 9:11 AM, Chi-Hsien Lin wrote:
+> broken_sg_support, sd_head_align, and sd_sgentry_align are used in
+> brcmfmac code but not configurable in dts file. Add the parsing logic.
+> Now they can be configured like below in dts:
+> 	brcm,broken_sg_support;
+> 	brcm,sd_head_align = <4>;
+> 	brcm,sd_sgentry_align = <4>;
+>
+> Signed-off-by: Chi-hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
 > ---
->  arch/arm64/Kconfig.platforms |   1 +
->  drivers/clk/meson/Kconfig    |   8 +
->  drivers/clk/meson/Makefile   |   1 +
->  drivers/clk/meson/axg.c      | 944
-> +++++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/axg.h      | 126 ++++++
->  5 files changed, 1080 insertions(+)
->  create mode 100644 drivers/clk/meson/axg.c
->  create mode 100644 drivers/clk/meson/axg.h
+>   .../devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt        | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> index 86602f2..4d42f0d 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> @@ -17,6 +17,11 @@ Optional properties:
+>   	When not specified the device will use in-band SDIO interrupts.
+>    - interrupt-names : name of the out-of-band interrupt, which must be set
+>   	to "host-wake".
+> + - broken_sg_support : flag for broken sg list support of SDIO host controller.
+> +	Set this to true if the SDIO host controller has higher align
+> +	requirement than 32 bytes for each scatterlist item.
 
-Overall, the changes looks good to me.
-I still have a few comments which I'd like to see addressed quickly after this
-series is merged
+In DT context, this does not characterize the device but as described it 
+is about the SDIO host controller. I think the same applies to the 
+properties below, but not entirely sure about that.
 
-[...]
+> + - sg_head_align : alignment requirement for start of data buffer.
+> + - sg_sgentry_align : length alignment requirement for each sg entry.
 
-> 
-> +static struct meson_clk_pll axg_fixed_pll = {
-> +	.m = {
-> +		.reg_off = HHI_MPLL_CNTL,
-> +		.shift   = 0,
-> +		.width   = 9,
-> +	},
-> +	.n = {
-> +		.reg_off = HHI_MPLL_CNTL,
-> +		.shift   = 9,
-> +		.width   = 5,
-> +	},
-> +	.od = {
-> +		.reg_off = HHI_MPLL_CNTL,
-> +		.shift   = 16,
-> +		.width   = 2,
-> +	},
-> +	.lock = &clk_lock,
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "fixed_pll",
-> +		.ops = &meson_clk_pll_ro_ops,
-> +		.parent_names = (const char *[]){ "xtal" },
-> +		.num_parents = 1,
-> +		.flags = CLK_GET_RATE_NOCACHE,
+Regards,
+Arend
 
-Is the rate of this clock supposed to changed by something else than
-the CCF after boot ?
-
-If not, you should drop this flag.
-Same comment goes for axg_sys_pll and axg_gp0_pll
-
-> +	},
-> +};
-
-[...]
-
-> +/*
-> + * FIXME The legacy composite clocks (e.g. clk81) are both PLL post-dividers
-> + * and should be modeled with their respective PLLs via the forthcoming
-> + * coordinated clock rates feature
-> + */
-> +static u32 mux_table_clk81[]	= { 0, 2, 3, 4, 5, 6, 7 };
-> +static const char * const clk81_parent_names[] = {
-> +	"xtal", "fclk_div7", "mpll1", "mpll2", "fclk_div4",
-> +	"fclk_div3", "fclk_div5"
-> +};
-> +
-> +static struct clk_mux axg_mpeg_clk_sel = {
-> +	.reg = (void *)HHI_MPEG_CLK_CNTL,
-> +	.mask = 0x7,
-> +	.shift = 12,
-> +	.flags = CLK_MUX_READ_ONLY,
-> +	.table = mux_table_clk81,
-> +	.lock = &clk_lock,
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "mpeg_clk_sel",
-> +		.ops = &clk_mux_ro_ops,
-> +		/*
-> +		 * bits 14:12 selects from 8 possible parents:
-> +		 * xtal, 1'b0 (wtf), fclk_div7, mpll_clkout1, mpll_clkout2,
-> +		 * fclk_div4, fclk_div3, fclk_div5
-> +		 */
-
-This comment is not necessary with table above.
-
-> +		.parent_names = clk81_parent_names,
-> +		.num_parents = ARRAY_SIZE(clk81_parent_names),
-> +		.flags = CLK_SET_RATE_NO_REPARENT,
-
-With ro_ops, this flag is not necessary, consider removing it.
-
-> +	},
-> +};
-> +
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
