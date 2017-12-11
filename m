@@ -1,52 +1,47 @@
-From: Arend van Spriel <arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: net: wireless: Add sg parameters dts parsing
-Date: Mon, 11 Dec 2017 10:55:18 +0100
-Message-ID: <5A2E5606.8010707@broadcom.com>
-References: <20171211081144.GA140567@aremote07.aus.cypress.com>
+From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Subject: Re: [RFC] irqchip: add support for LS1021A external interrupt lines
+Date: Mon, 11 Dec 2017 11:02:51 +0100
+Message-ID: <2475814.YIHTfursNv@ws-stein>
+References: <48d2d08c-c57a-ce49-5958-0fd5ad4a2dc7@arm.com> <58297576-cc32-819d-c6b3-7d1355095482@prevas.dk> <5117875.4tMaEC1223@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211081144.GA140567-Oa2joqsrgCQFtx9iUY/I1CAzFfycyo/qAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <5117875.4tMaEC1223@ws-stein>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chi-Hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list <brcm80211-dev-list-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>, brcm80211-dev-list.pdl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+Cc: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/2017 9:11 AM, Chi-Hsien Lin wrote:
-> broken_sg_support, sd_head_align, and sd_sgentry_align are used in
-> brcmfmac code but not configurable in dts file. Add the parsing logic.
-> Now they can be configured like below in dts:
-> 	brcm,broken_sg_support;
-> 	brcm,sd_head_align = <4>;
-> 	brcm,sd_sgentry_align = <4>;
->
-> Signed-off-by: Chi-hsien Lin <chi-hsien.lin-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org>
-> ---
->   .../devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt        | 8 ++++++++
->   1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> index 86602f2..4d42f0d 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> @@ -17,6 +17,11 @@ Optional properties:
->   	When not specified the device will use in-band SDIO interrupts.
->    - interrupt-names : name of the out-of-band interrupt, which must be set
->   	to "host-wake".
-> + - broken_sg_support : flag for broken sg list support of SDIO host controller.
-> +	Set this to true if the SDIO host controller has higher align
-> +	requirement than 32 bytes for each scatterlist item.
+On Monday, December 11, 2017, 10:45:09 AM CET Alexander Stein wrote:
+> On Monday, December 11, 2017, 10:08:20 AM CET Rasmus Villemoes wrote:
+> > >>> +static int
+> > >>> +ls1021a_extirq_set_type(struct irq_data *data, unsigned int type)
+> > >>> +{
+> > >>> +	irq_hw_number_t hwirq = data->hwirq;
+> > >>> +	struct extirq_chip_data *chip_data = data->chip_data;
+> > >>> +	u32 value, mask;
+> > >>> +	int ret;
+> > >>> +
+> > >>> +	mask = 1U << (31 - hwirq);
+> > >>
+> > >> Is this really correct? IRQ0 is still at bit position 0. Don't be mislead
+> > >> by the left most position in the register layout. This is just strange way
+> > >> to express bit-endian access.
+> > 
+> > Yes, I'm sure. The 26 unused bits in the INTPCR register are marked as
+> > reserved with a POR value of 0. Fortunately, they can still be set and
+> > read back, and when I did 1U << hwirq it was some of those bits that got
+> > set (the POR value of the six used bits are all 1, so the hardware still
+> > worked on my board because all the lines happen to be of negative polarity).
+> 
+> Which functions do reg_read and reg_write in chip_data->syscon->bus_context
+> actually point to?
+> bus_context is actually a struct regmap_mmio_context *.
 
-In DT context, this does not characterize the device but as described it 
-is about the SDIO host controller. I think the same applies to the 
-properties below, but not entirely sure about that.
+Oh, and what is the content of register SCFG_SCFGREVCR?
 
-> + - sg_head_align : alignment requirement for start of data buffer.
-> + - sg_sgentry_align : length alignment requirement for each sg entry.
-
-Regards,
-Arend
+Alexander
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
