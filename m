@@ -1,47 +1,352 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
- ethernet driver
-Date: Mon, 11 Dec 2017 13:46:27 +0000
-Message-ID: <20171211134627.GU10595@n2100.armlinux.org.uk>
-References: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
- <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com>
- <20171211210455.170A.4A936039@socionext.com>
- <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
+From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] eeprom: at24: convert magic numbers to structs.
+Date: Mon, 11 Dec 2017 14:55:40 +0100
+Message-ID: <CAMRc=Mfk5+_muBwY5ADPTiGV_YoJGhHrEx7+cX+AOK6srxus_Q@mail.gmail.com>
+References: <1512768306-14816-1-git-send-email-svendev@arcx.com> <1512768306-14816-2-git-send-email-svendev@arcx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, Linux kernel mailing list <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Philippe Ombredanne <pombredanne@nexb.com>, Jassi Brar <jaswinder.singh@linaro.org>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512768306-14816-2-git-send-email-svendev-fuHqz3Nb1YI@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 10:34:17PM +0900, Masami Hiramatsu wrote:
-> IMHO, even if we use SPDX license identifier, I recommend to use
-> C-style comments as many other files do, since it is C code.
-> If SPDX identifier requires C++ style, that is SPDX parser's issue
-> and should be fixed to get it from C-style comment.
+2017-12-08 22:25 GMT+01:00 Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>:
+> Fundamental properties such as capacity and page size differ
+> among at24-type chips. But these chips do not have an id register,
+> so this can't be discovered at runtime.
+>
+> Traditionally, at24-type eeprom properties were determined in two ways:
+> - by passing a 'struct at24_platform_data' via platform_data, or
+> - by naming the chip type in the devicetree, which passes a
+>         'magic number' to probe(), which is then converted to
+>         a 'struct at24_platform_data'.
+>
+> Recently a bug was discovered because the magic number rounds down
 
-See the numerous emails on this subject already.  The issue of C
-vs C++ comments has come up many times by many different people, but
-the result is the same.  That's not going to happen.  Linux kernel
-C files are required to use "//" for the SPDX identifier by order
-of Linus Torvalds.
+Can you reference the commit here? Use the xxxxxxxxxxxx ("something
+something") format.
 
-Linus has also revealed in that discussion that he has a preference
-for "//" style commenting for single comments, so it seems that the
-kernel coding style may change - but there is no desire for patches
-to "clean up" single line comments to use "//".
+> all chip sizes to the lowest power of two. This was addressed by
+> a work-around, with the wish that magic numbers should over time
+> be converted to structs.
+>
+> This patch replaces the magic numbers with 'struct at24_chip_data'.
+>
+> Signed-off-by: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>
+> ---
+>  drivers/misc/eeprom/at24.c | 230 ++++++++++++++++++++++-----------------------
+>  1 file changed, 110 insertions(+), 120 deletions(-)
+>
+> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> index 06ffa11..c3759cb 100644
+> --- a/drivers/misc/eeprom/at24.c
+> +++ b/drivers/misc/eeprom/at24.c
+> @@ -105,16 +105,6 @@ struct at24_data {
+>  module_param(write_timeout, uint, 0);
+>  MODULE_PARM_DESC(write_timeout, "Time (in ms) to try writes (default 25)");
+>
+> -#define AT24_SIZE_BYTELEN 5
+> -#define AT24_SIZE_FLAGS 8
+> -
+> -#define AT24_BITMASK(x) (BIT(x) - 1)
+> -
+> -/* create non-zero magic value for given eeprom parameters */
+> -#define AT24_DEVICE_MAGIC(_len, _flags)                \
+> -       ((1 << AT24_SIZE_FLAGS | (_flags))              \
+> -           << AT24_SIZE_BYTELEN | ilog2(_len))
+> -
+>  /*
+>   * Both reads and writes fail if the previous write didn't complete yet. This
+>   * macro loops a few times waiting at least long enough for one entire page
+> @@ -131,113 +121,119 @@ struct at24_data {
+>              op_time ? time_before(op_time, tout) : true;               \
+>              usleep_range(1000, 1500), op_time = jiffies)
+>
+> +struct at24_chip_data {
+> +       /*
+> +        * these fields mirror their equivalents in
+> +        * struct at24_platform_data
+> +        */
+> +       u32 byte_len;
+> +       u8 flags;
+> +};
+> +
+> +#define AT24_CHIP_DATA(_name, _len, _flags) \
 
-For further information, and to see the discussion that has already
-happened, the arguments that have been made about style, see the
-threads for the patch series that tglx has been posting wrt documenting
-the SPDX stuff for the kernel.
+Move the backslash to the end of the line as is done in other macros
+in this file. Same applies below.
 
-Thanks (let's stop rehashing the same arguments.)
+> +       static const struct at24_chip_data at24_data_##_name = { \
+> +               .byte_len = _len, .flags = _flags, \
+> +       }
+> +
+> +#define AT24_I2C_DEVICE_ID(_name) \
+> +       { #_name, (kernel_ulong_t)&at24_data_##_name }
+> +
+> +#define AT24_ACPI_DEVICE_ID(_name) \
+> +       { #_name, (kernel_ulong_t)&at24_data_##_name }
+> +
+> +#define AT24_OF_DEVICE_ID(_of_compat, _name) \
+> +       { .compatible = _of_compat, .data = &at24_data_##_name }
+> +
+> +/* needs 8 addresses as A0-A2 are ignored */
+> +AT24_CHIP_DATA(24c00, 128 / 8, AT24_FLAG_TAKE8ADDR);
+> +/* old variants can't be handled with this generic entry! */
+> +AT24_CHIP_DATA(24c01, 1024 / 8, 0);
+> +AT24_CHIP_DATA(24cs01, 16, AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
+> +AT24_CHIP_DATA(24c02, 2048 / 8,        0);
+> +AT24_CHIP_DATA(24cs02, 16, AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
+> +AT24_CHIP_DATA(24mac402, 48 / 8,
+> +       AT24_FLAG_MAC | AT24_FLAG_READONLY);
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+Why are you breaking the line here if it fits fine within the 80
+characters limit?
+
+> +AT24_CHIP_DATA(24mac602, 64 / 8,
+> +       AT24_FLAG_MAC | AT24_FLAG_READONLY);
+> +/* spd is a 24c02 in memory DIMMs */
+> +AT24_CHIP_DATA(spd, 2048 / 8,
+> +       AT24_FLAG_READONLY | AT24_FLAG_IRUGO);
+> +AT24_CHIP_DATA(24c04, 4096 / 8,        0);
+> +AT24_CHIP_DATA(24cs04, 16,
+> +       AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
+> +/* 24rf08 quirk is handled at i2c-core */
+> +AT24_CHIP_DATA(24c08, 8192 / 8,        0);
+> +AT24_CHIP_DATA(24cs08, 16,
+> +       AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
+> +AT24_CHIP_DATA(24c16, 16384 / 8, 0);
+> +AT24_CHIP_DATA(24cs16, 16,
+> +       AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
+> +AT24_CHIP_DATA(24c32, 32768 / 8,       AT24_FLAG_ADDR16);
+> +AT24_CHIP_DATA(24cs32, 16,
+> +       AT24_FLAG_ADDR16 |
+> +       AT24_FLAG_SERIAL |
+> +       AT24_FLAG_READONLY);
+
+All the flags fit nicely in a single line, so don't be to eager to break them.
+
+> +AT24_CHIP_DATA(24c64, 65536 / 8,       AT24_FLAG_ADDR16);
+> +AT24_CHIP_DATA(24cs64, 16,
+> +       AT24_FLAG_ADDR16 |
+> +       AT24_FLAG_SERIAL |
+> +       AT24_FLAG_READONLY);
+> +AT24_CHIP_DATA(24c128, 131072 / 8,     AT24_FLAG_ADDR16);
+> +AT24_CHIP_DATA(24c256, 262144 / 8,     AT24_FLAG_ADDR16);
+> +AT24_CHIP_DATA(24c512, 524288 / 8,     AT24_FLAG_ADDR16);
+> +AT24_CHIP_DATA(24c1024, 1048576 / 8,   AT24_FLAG_ADDR16);
+> +/* identical to 24c08 ? */
+> +AT24_CHIP_DATA(INT3499, 8192 / 8, 0);
+> +
+>  static const struct i2c_device_id at24_ids[] = {
+> -       /* needs 8 addresses as A0-A2 are ignored */
+> -       { "24c00",      AT24_DEVICE_MAGIC(128 / 8,      AT24_FLAG_TAKE8ADDR) },
+> -       /* old variants can't be handled with this generic entry! */
+> -       { "24c01",      AT24_DEVICE_MAGIC(1024 / 8,     0) },
+> -       { "24cs01",     AT24_DEVICE_MAGIC(16,
+> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
+> -       { "24c02",      AT24_DEVICE_MAGIC(2048 / 8,     0) },
+> -       { "24cs02",     AT24_DEVICE_MAGIC(16,
+> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
+> -       { "24mac402",   AT24_DEVICE_MAGIC(48 / 8,
+> -                               AT24_FLAG_MAC | AT24_FLAG_READONLY) },
+> -       { "24mac602",   AT24_DEVICE_MAGIC(64 / 8,
+> -                               AT24_FLAG_MAC | AT24_FLAG_READONLY) },
+> -       /* spd is a 24c02 in memory DIMMs */
+> -       { "spd",        AT24_DEVICE_MAGIC(2048 / 8,
+> -                               AT24_FLAG_READONLY | AT24_FLAG_IRUGO) },
+> -       { "24c04",      AT24_DEVICE_MAGIC(4096 / 8,     0) },
+> -       { "24cs04",     AT24_DEVICE_MAGIC(16,
+> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
+> -       /* 24rf08 quirk is handled at i2c-core */
+> -       { "24c08",      AT24_DEVICE_MAGIC(8192 / 8,     0) },
+> -       { "24cs08",     AT24_DEVICE_MAGIC(16,
+> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
+> -       { "24c16",      AT24_DEVICE_MAGIC(16384 / 8,    0) },
+> -       { "24cs16",     AT24_DEVICE_MAGIC(16,
+> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
+> -       { "24c32",      AT24_DEVICE_MAGIC(32768 / 8,    AT24_FLAG_ADDR16) },
+> -       { "24cs32",     AT24_DEVICE_MAGIC(16,
+> -                               AT24_FLAG_ADDR16 |
+> -                               AT24_FLAG_SERIAL |
+> -                               AT24_FLAG_READONLY) },
+> -       { "24c64",      AT24_DEVICE_MAGIC(65536 / 8,    AT24_FLAG_ADDR16) },
+> -       { "24cs64",     AT24_DEVICE_MAGIC(16,
+> -                               AT24_FLAG_ADDR16 |
+> -                               AT24_FLAG_SERIAL |
+> -                               AT24_FLAG_READONLY) },
+> -       { "24c128",     AT24_DEVICE_MAGIC(131072 / 8,   AT24_FLAG_ADDR16) },
+> -       { "24c256",     AT24_DEVICE_MAGIC(262144 / 8,   AT24_FLAG_ADDR16) },
+> -       { "24c512",     AT24_DEVICE_MAGIC(524288 / 8,   AT24_FLAG_ADDR16) },
+> -       { "24c1024",    AT24_DEVICE_MAGIC(1048576 / 8,  AT24_FLAG_ADDR16) },
+> +       AT24_I2C_DEVICE_ID(24c00),
+> +       AT24_I2C_DEVICE_ID(24c01),
+> +       AT24_I2C_DEVICE_ID(24cs01),
+> +       AT24_I2C_DEVICE_ID(24c02),
+> +       AT24_I2C_DEVICE_ID(24cs02),
+> +       AT24_I2C_DEVICE_ID(24mac402),
+> +       AT24_I2C_DEVICE_ID(24mac602),
+> +       AT24_I2C_DEVICE_ID(spd),
+> +       AT24_I2C_DEVICE_ID(24c04),
+> +       AT24_I2C_DEVICE_ID(24cs04),
+> +       AT24_I2C_DEVICE_ID(24c08),
+> +       AT24_I2C_DEVICE_ID(24cs08),
+> +       AT24_I2C_DEVICE_ID(24c16),
+> +       AT24_I2C_DEVICE_ID(24cs16),
+> +       AT24_I2C_DEVICE_ID(24c32),
+> +       AT24_I2C_DEVICE_ID(24cs32),
+> +       AT24_I2C_DEVICE_ID(24c64),
+> +       AT24_I2C_DEVICE_ID(24cs64),
+> +       AT24_I2C_DEVICE_ID(24c128),
+> +       AT24_I2C_DEVICE_ID(24c256),
+> +       AT24_I2C_DEVICE_ID(24c512),
+> +       AT24_I2C_DEVICE_ID(24c1024),
+
+I missed that before, but we use strings which can be found in the
+device tree and sysfs here and we may want to grep for them too.
+Please make these macros similar to the of ones and have the names
+explicitly in the source code. The same applies for the single chip
+defined in the ACPI table.
+
+>         { "at24", 0 },
+>         { /* END OF LIST */ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, at24_ids);
+>
+>  static const struct of_device_id at24_of_match[] = {
+> -       {
+> -               .compatible = "atmel,24c00",
+> -               .data = (void *)AT24_DEVICE_MAGIC(128 / 8, AT24_FLAG_TAKE8ADDR)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c01",
+> -               .data = (void *)AT24_DEVICE_MAGIC(1024 / 8, 0)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c02",
+> -               .data = (void *)AT24_DEVICE_MAGIC(2048 / 8, 0)
+> -       },
+> -       {
+> -               .compatible = "atmel,spd",
+> -               .data = (void *)AT24_DEVICE_MAGIC(2048 / 8,
+> -                               AT24_FLAG_READONLY | AT24_FLAG_IRUGO)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c04",
+> -               .data = (void *)AT24_DEVICE_MAGIC(4096 / 8, 0)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c08",
+> -               .data = (void *)AT24_DEVICE_MAGIC(8192 / 8, 0)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c16",
+> -               .data = (void *)AT24_DEVICE_MAGIC(16384 / 8, 0)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c32",
+> -               .data = (void *)AT24_DEVICE_MAGIC(32768 / 8, AT24_FLAG_ADDR16)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c64",
+> -               .data = (void *)AT24_DEVICE_MAGIC(65536 / 8, AT24_FLAG_ADDR16)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c128",
+> -               .data = (void *)AT24_DEVICE_MAGIC(131072 / 8, AT24_FLAG_ADDR16)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c256",
+> -               .data = (void *)AT24_DEVICE_MAGIC(262144 / 8, AT24_FLAG_ADDR16)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c512",
+> -               .data = (void *)AT24_DEVICE_MAGIC(524288 / 8, AT24_FLAG_ADDR16)
+> -       },
+> -       {
+> -               .compatible = "atmel,24c1024",
+> -               .data = (void *)AT24_DEVICE_MAGIC(1048576 / 8, AT24_FLAG_ADDR16)
+> -       },
+> -       { },
+> +       AT24_OF_DEVICE_ID("atmel,24c00", 24c00),
+> +       AT24_OF_DEVICE_ID("atmel,24c01", 24c01),
+> +       AT24_OF_DEVICE_ID("atmel,24c02", 24c02),
+> +       AT24_OF_DEVICE_ID("atmel,spd", spd),
+> +       AT24_OF_DEVICE_ID("atmel,24c04", 24c04),
+> +       AT24_OF_DEVICE_ID("atmel,24c08", 24c08),
+> +       AT24_OF_DEVICE_ID("atmel,24c16", 24c16),
+> +       AT24_OF_DEVICE_ID("atmel,24c32", 24c32),
+> +       AT24_OF_DEVICE_ID("atmel,24c64", 24c64),
+> +       AT24_OF_DEVICE_ID("atmel,24c128", 24c128),
+> +       AT24_OF_DEVICE_ID("atmel,24c256", 24c256),
+> +       AT24_OF_DEVICE_ID("atmel,24c512", 24c512),
+> +       AT24_OF_DEVICE_ID("atmel,24c1024", 24c1024),
+> +       { /* END OF LIST */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, at24_of_match);
+>
+>  static const struct acpi_device_id at24_acpi_ids[] = {
+> -       { "INT3499", AT24_DEVICE_MAGIC(8192 / 8, 0) },
+> -       { }
+> +       AT24_ACPI_DEVICE_ID(INT3499),
+> +       { /* END OF LIST */ }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, at24_acpi_ids);
+>
+> @@ -525,8 +521,8 @@ static unsigned int at24_get_offset_adj(u8 flags, unsigned int byte_len)
+>
+>  static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  {
+> -       struct at24_platform_data chip;
+> -       kernel_ulong_t magic = 0;
+> +       struct at24_platform_data chip = { 0 };
+> +       const struct at24_chip_data *cd = NULL;
+>         bool writable;
+>         struct at24_data *at24;
+>         int err;
+> @@ -544,28 +540,22 @@ static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>                  */
+>                 if (client->dev.of_node &&
+>                     of_match_device(at24_of_match, &client->dev)) {
+> -                       magic = (kernel_ulong_t)
+> -                               of_device_get_match_data(&client->dev);
+> +                       cd = of_device_get_match_data(&client->dev);
+>                 } else if (id) {
+> -                       magic = id->driver_data;
+> +                       cd = (void *)id->driver_data;
+>                 } else {
+>                         const struct acpi_device_id *aid;
+>
+>                         aid = acpi_match_device(at24_acpi_ids, &client->dev);
+>                         if (aid)
+> -                               magic = aid->driver_data;
+> +                               cd = (void *)aid->driver_data;
+>                 }
+> -               if (!magic)
+> +               if (!cd)
+>                         return -ENODEV;
+>
+> -               chip.byte_len = BIT(magic & AT24_BITMASK(AT24_SIZE_BYTELEN));
+> -               magic >>= AT24_SIZE_BYTELEN;
+> -               chip.flags = magic & AT24_BITMASK(AT24_SIZE_FLAGS);
+> -
+> +               chip.byte_len = cd->byte_len;
+> +               chip.flags = cd->flags;
+>                 at24_get_pdata(&client->dev, &chip);
+> -
+> -               chip.setup = NULL;
+> -               chip.context = NULL;
+>         }
+>
+>         if (!is_power_of_2(chip.byte_len))
+> --
+> 1.9.1
+>
+
+Thanks,
+Bartosz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
