@@ -1,115 +1,233 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
- LED driver
-Date: Mon, 11 Dec 2017 10:05:42 -0600
-Message-ID: <CAL_JsqJHdPgnd7rwqVH_43FN1go3Sorw3Kexz=NSKF5FpOkKxA@mail.gmail.com>
-References: <20171205204630.12267-1-dmurphy@ti.com> <20171207224938.6nvy63ghxe5vwvk4@rob-hp-laptop>
- <c354b66d-f501-99bc-5928-efcfe33dbd06@ti.com> <CAL_JsqLE_qNjZ9qPUKsc3o5LVOimTKz80sd-mUsLNLdrwjHi2w@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] arm: dts: uniphier: add efuse node for UniPhier 32bit SoC
+Date: Tue, 12 Dec 2017 01:05:40 +0900
+Message-ID: <CAK7LNARmYfnYpACrUtYccBPyjnvXg0ymA=WZ=+nGAtanaXZk1w@mail.gmail.com>
+References: <1512375130-16860-1-git-send-email-hayashibara.keiji@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLE_qNjZ9qPUKsc3o5LVOimTKz80sd-mUsLNLdrwjHi2w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512375130-16860-1-git-send-email-hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Kiyoshi Owada <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 9:51 AM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Dec 7, 2017 at 5:04 PM, Dan Murphy <dmurphy@ti.com> wrote:
->> Rob
->>
->>
->> On 12/07/2017 04:49 PM, Rob Herring wrote:
->>> On Tue, Dec 05, 2017 at 02:46:29PM -0600, Dan Murphy wrote:
->>>> This adds the devicetree bindings for the LM3692x
->>>> I2C LED string driver.
->>>>
->>>> Acked-by: Pavel Machek <pavel@ucw.cz>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>>
->>>> v8 - Added address-cells and size-cells as well as child node reg - https://patchwork.kernel.org/patch/10091259/
->>>> v7 - No changes - https://patchwork.kernel.org/patch/10087475/
->>>> v6 - No changes -https://patchwork.kernel.org/patch/10085567/
->>>> v5 - No Changes - https://patchwork.kernel.org/patch/10081071/
->>>> v4 - Fix example node, added trigger entry, removed ambiguous x for compatible and
->>>> added common.txt pointer for label - https://patchwork.kernel.org/patch/10060107
->>>> v3 - No changes
->>>> v2 - No changes - https://patchwork.kernel.org/patch/10056677/
->>>>
->>>>  .../devicetree/bindings/leds/leds-lm3692x.txt      | 47 ++++++++++++++++++++++
->>>>  1 file changed, 47 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3692x.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
->>>> new file mode 100644
->>>> index 000000000000..84f69342d879
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
->>>> @@ -0,0 +1,47 @@
->>>> +* Texas Instruments - LM3692x Highly Efficient White LED Driver
->>>> +
->>>> +The LM3692x is an ultra-compact, highly efficient,
->>>> +white-LED driver designed for LCD display backlighting.
->>>> +
->>>> +The main difference between the LM36922 and LM36923 is the number of
->>>> +LED strings it supports.  The LM36922 supports two strings while the LM36923
->>>> +supports three strings.
->>>> +
->>>> +Required properties:
->>>> +    - compatible:
->>>> +            "ti,lm36922"
->>>> +            "ti,lm36923"
->>>> +    - reg :  I2C slave address
->>>> +    - #address-cells : 1
->>>> +    - #size-cells : 0
->>>> +
->>>> +Optional properties:
->>>> +    - label : see Documentation/devicetree/bindings/leds/common.txt
->>>
->>> Should be a child prop.
->>
->> Thanks I forgot to move this to Optional Child Properties.
->>
->>>
->>>> +    - enable-gpios : gpio pin to enable/disable the device.
->>>> +    - vled-supply : LED supply
->>>> +    - linux,default-trigger : (optional)
->>>> +       see Documentation/devicetree/bindings/leds/common.txt
->>>
->>> Ditto.
->>
->> Ack
->>
->>>
->>>> +
->>>> +Required child properties:
->>>> +    - reg : 0
->>>> +
->>>> +Example:
->>>> +
->>>> +lm3692x@36 {
->>>
->>> leds@36
->>
->> Rob why does this need to be leds?  Is this because it would be a child of an I2C node?
+2017-12-04 17:12 GMT+09:00 Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> Add efuse node for UniPhier LD4, Pro4, sLD8, Pro5 and PXs2.
+> This efuse node is included in soc-glue.
 >
-> Because node names are supposed to follow the generic type of device
-> they are (e.g. serial, ethernet, bus, etc.), not the model of device.
-> And yes, there are many examples that don't follow this.
+> Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/uniphier-ld4.dtsi  | 18 ++++++++++++++++++
+>  arch/arm/boot/dts/uniphier-pro4.dtsi | 23 +++++++++++++++++++++++
+>  arch/arm/boot/dts/uniphier-pro5.dtsi | 33 +++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/uniphier-pxs2.dtsi | 18 ++++++++++++++++++
+>  arch/arm/boot/dts/uniphier-sld8.dtsi | 18 ++++++++++++++++++
+>  5 files changed, 110 insertions(+)
 
-Actually, it should be led-controller and led or leds be used for the
-LED child nodes (and gpio-led or pwd-led bindings), so like this:
 
-led-controller@12 {
-  reg = <12>;
+Applied to linux-uniphier,
+but please reconsider To: list next time.
 
-  led@0 {
-    reg = <0>;
-  };
-  led@1 {
-    reg = <1>;
-  };
-};
+This patch was addressed to Rob and Mark,
+but they do not pick up platform DT patches.
 
-Rob
+
+You do not need to get Rob's Ack for a patch like this.
+
+
+Binding is a contract between operation system and DT.
+
+The binding for this
+(Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt)
+was approved by Rob and merged in the mainline.
+
+Given that this patch follows the binding correctly,
+it should be safe.
+
+Thanks.
+
+
+
+> diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi b/arch/arm/boot/dts/uniphier-ld4.dtsi
+> index 01fc3e1..6883f3b 100644
+> --- a/arch/arm/boot/dts/uniphier-ld4.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
+> @@ -273,6 +273,24 @@
+>                         };
+>                 };
+>
+> +               soc-glue@5f900000 {
+> +                       compatible = "socionext,uniphier-ld4-soc-glue-debug",
+> +                                    "simple-mfd";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges = <0 0x5f900000 0x2000>;
+> +
+> +                       efuse@100 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x100 0x28>;
+> +                       };
+> +
+> +                       efuse@130 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x130 0x8>;
+> +                       };
+> +               };
+> +
+>                 timer@60000200 {
+>                         compatible = "arm,cortex-a9-global-timer";
+>                         reg = <0x60000200 0x20>;
+> diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> index 7955c3a..150726b 100644
+> --- a/arch/arm/boot/dts/uniphier-pro4.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> @@ -294,6 +294,29 @@
+>                         };
+>                 };
+>
+> +               soc-glue@5f900000 {
+> +                       compatible = "socionext,uniphier-pro4-soc-glue-debug",
+> +                                    "simple-mfd";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges = <0 0x5f900000 0x2000>;
+> +
+> +                       efuse@100 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x100 0x28>;
+> +                       };
+> +
+> +                       efuse@130 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x130 0x8>;
+> +                       };
+> +
+> +                       efuse@200 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x200 0x14>;
+> +                       };
+> +               };
+> +
+>                 aidet: aidet@5fc20000 {
+>                         compatible = "socionext,uniphier-pro4-aidet";
+>                         reg = <0x5fc20000 0x200>;
+> diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> index 6589b8a..f291dd6 100644
+> --- a/arch/arm/boot/dts/uniphier-pro5.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+> @@ -355,6 +355,39 @@
+>                         };
+>                 };
+>
+> +               soc-glue@5f900000 {
+> +                       compatible = "socionext,uniphier-pro5-soc-glue-debug",
+> +                                    "simple-mfd";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges = <0 0x5f900000 0x2000>;
+> +
+> +                       efuse@100 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x100 0x28>;
+> +                       };
+> +
+> +                       efuse@130 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x130 0x8>;
+> +                       };
+> +
+> +                       efuse@200 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x200 0x28>;
+> +                       };
+> +
+> +                       efuse@300 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x300 0x14>;
+> +                       };
+> +
+> +                       efuse@400 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x400 0x8>;
+> +                       };
+> +               };
+> +
+>                 aidet: aidet@5fc20000 {
+>                         compatible = "socionext,uniphier-pro5-aidet";
+>                         reg = <0x5fc20000 0x200>;
+> diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> index d82d6d8..8e54e87 100644
+> --- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+> @@ -375,6 +375,24 @@
+>                         };
+>                 };
+>
+> +               soc-glue@5f900000 {
+> +                       compatible = "socionext,uniphier-pxs2-soc-glue-debug",
+> +                                    "simple-mfd";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges = <0 0x5f900000 0x2000>;
+> +
+> +                       efuse@100 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x100 0x28>;
+> +                       };
+> +
+> +                       efuse@200 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x200 0x58>;
+> +                       };
+> +               };
+> +
+>                 aidet: aidet@5fc20000 {
+>                         compatible = "socionext,uniphier-pxs2-aidet";
+>                         reg = <0x5fc20000 0x200>;
+> diff --git a/arch/arm/boot/dts/uniphier-sld8.dtsi b/arch/arm/boot/dts/uniphier-sld8.dtsi
+> index 7188536..afafe7c 100644
+> --- a/arch/arm/boot/dts/uniphier-sld8.dtsi
+> +++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
+> @@ -277,6 +277,24 @@
+>                         };
+>                 };
+>
+> +               soc-glue@5f900000 {
+> +                       compatible = "socionext,uniphier-sld8-soc-glue-debug",
+> +                                    "simple-mfd";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges = <0 0x5f900000 0x2000>;
+> +
+> +                       efuse@100 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x100 0x28>;
+> +                       };
+> +
+> +                       efuse@200 {
+> +                               compatible = "socionext,uniphier-efuse";
+> +                               reg = <0x200 0x14>;
+> +                       };
+> +               };
+> +
+>                 timer@60000200 {
+>                         compatible = "arm,cortex-a9-global-timer";
+>                         reg = <0x60000200 0x20>;
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
