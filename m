@@ -1,7 +1,7 @@
 From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 19/20] ARM: dts: imx6qdl-hummingboard2: add v1.5 som with eMMC
-Date: Mon, 11 Dec 2017 16:58:54 +0000
-Message-ID: <E1eORPq-0000J6-Vj@rmk-PC.armlinux.org.uk>
+Subject: [PATCH 15/20] ARM: dts: imx6*-hummingboard2: rework regulators
+Date: Mon, 11 Dec 2017 16:58:34 +0000
+Message-ID: <E1eORPW-0000IX-CT@rmk-PC.armlinux.org.uk>
 References: <20171211165631.GW10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -14,169 +14,112 @@ To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <ke
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the v1.5 SOM with TI Wi-Fi and eMMC.  As the pinmux
-settings are different for the microsom, we need to use a separate
-board-level dts for this as there is no support for overlays.
+From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
 
+Name the regulators according to the voltage rails they are feeding in
+the schematic. The USB 2-4 regulators are fixed regulators and are always
+on, as they are not a VBUS supply for a single USB host port on the i.MX6,
+but supply VBUS to ports behind a USB hub and there is currently no way
+to model this in mainline.
+
+Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
 Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                         |  2 +
- .../boot/dts/imx6dl-hummingboard2-emmc-som-v15.dts | 55 +++++++++++++++++++
- .../boot/dts/imx6q-hummingboard2-emmc-som-v15.dts  | 63 ++++++++++++++++++++++
- 3 files changed, 120 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-hummingboard2-emmc-som-v15.dts
- create mode 100644 arch/arm/boot/dts/imx6q-hummingboard2-emmc-som-v15.dts
+ arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b72799b464b5..458e2c886c0e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -389,6 +389,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-hummingboard-emmc-som-v15.dtb \
- 	imx6dl-hummingboard-som-v15.dtb \
- 	imx6dl-hummingboard2.dtb \
-+	imx6dl-hummingboard2-emmc-som-v15.dtb \
- 	imx6dl-hummingboard2-som-v15.dtb \
- 	imx6dl-icore.dtb \
- 	imx6dl-icore-rqs.dtb \
-@@ -450,6 +451,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-hummingboard-emmc-som-v15.dtb \
- 	imx6q-hummingboard-som-v15.dtb \
- 	imx6q-hummingboard2.dtb \
-+	imx6q-hummingboard2-emmc-som-v15.dtb \
- 	imx6q-hummingboard2-som-v15.dtb \
- 	imx6q-icore.dtb \
- 	imx6q-icore-ofcap10.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-hummingboard2-emmc-som-v15.dts b/arch/arm/boot/dts/imx6dl-hummingboard2-emmc-som-v15.dts
-new file mode 100644
-index 000000000000..80313c13bcdb
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-hummingboard2-emmc-som-v15.dts
-@@ -0,0 +1,55 @@
-+/*
-+ * Device Tree file for SolidRun HummingBoard2
-+ * Copyright (C) 2015 Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-+ * Based on work by Russell King
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+/dts-v1/;
-+
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-sr-som.dtsi"
-+#include "imx6qdl-sr-som-emmc.dtsi"
-+#include "imx6qdl-sr-som-ti.dtsi"
-+#include "imx6qdl-hummingboard2.dtsi"
-+
-+/ {
-+	model = "SolidRun HummingBoard2 Solo/DualLite (1.5som+emmc)";
-+	compatible = "solidrun,hummingboard2/dl", "fsl,imx6dl";
-+};
-diff --git a/arch/arm/boot/dts/imx6q-hummingboard2-emmc-som-v15.dts b/arch/arm/boot/dts/imx6q-hummingboard2-emmc-som-v15.dts
-new file mode 100644
-index 000000000000..1998ebfa0fe0
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-hummingboard2-emmc-som-v15.dts
-@@ -0,0 +1,63 @@
-+/*
-+ * Device Tree file for SolidRun HummingBoard2
-+ * Copyright (C) 2015 Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-+ * Based on work by Russell King
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+#include "imx6qdl-sr-som.dtsi"
-+#include "imx6qdl-sr-som-emmc.dtsi"
-+#include "imx6qdl-sr-som-ti.dtsi"
-+#include "imx6qdl-hummingboard2.dtsi"
-+
-+/ {
-+	model = "SolidRun HummingBoard2 Dual/Quad (1.5som+emmc)";
-+	compatible = "solidrun,hummingboard2/q", "fsl,imx6q";
-+};
-+
-+&sata {
-+	status = "okay";
-+	fsl,transmit-level-mV = <1104>;
-+	fsl,transmit-boost-mdB = <0>;
-+	fsl,transmit-atten-16ths = <9>;
-+	fsl,no-spread-spectrum;
-+};
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+index 6fbfa970a0a7..52ed580cf64a 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+@@ -54,7 +54,7 @@
+ 
+ 	reg_3p3v: regulator-3p3v {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "3P3V";
++		regulator-name = "VCC_3V2";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+@@ -62,7 +62,7 @@
+ 
+ 	reg_1p8v: regulator-1p8v {
+ 		compatible = "regulator-fixed";
+-		regulator-name = "1P8V";
++		regulator-name = "VCC_1V8";
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
+ 		regulator-always-on;
+@@ -80,15 +80,16 @@
+ 		startup-delay-us = <1000>;
+ 	};
+ 
+-	reg_usbh1_vbus: regulator-usb-h1-vbus {
++	reg_usbh2_vbus: regulator-usb-h1-vbus {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		gpio = <&gpio1 0 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_hummingboard2_usbh1_vbus>;
+-		regulator-name = "usb_h1_vbus";
++		regulator-name = "V_USB2";
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
+ 	};
+ 
+ 	reg_usbotg_vbus: regulator-usb-otg-vbus {
+@@ -97,33 +98,33 @@
+ 		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_hummingboard2_usbotg_vbus>;
+-		regulator-name = "usb_otg_vbus";
++		regulator-name = "V_USB1";
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+ 	};
+ 
+-	reg_usbh2_vbus: regulator-usb-h2-vbus {
+-		compatible = "regulator-gpio";
++	reg_usbh3_vbus: regulator-usb-h2-vbus {
++		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		enable-gpio = <&gpio2 13 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_hummingboard2_usbh2_vbus>;
+-		regulator-name = "usb_h2_vbus";
++		regulator-name = "V_USB3";
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+-		regulator-boot-on;
++		regulator-always-on;
+ 	};
+ 
+-	reg_usbh3_vbus: regulator-usb-h3-vbus {
+-		compatible = "regulator-gpio";
++	reg_usbh4_vbus: regulator-usb-h3-vbus {
++		compatible = "regulator-fixed";
+ 		enable-active-high;
+ 		enable-gpio = <&gpio7 10 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_hummingboard2_usbh3_vbus>;
+-		regulator-name = "usb_h3_vbus";
++		regulator-name = "V_USB4";
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
+-		regulator-boot-on;
++		regulator-always-on;
+ 	};
+ 
+ 	sound-sgtl5000 {
+@@ -484,7 +485,6 @@
+ 
+ &usbh1 {
+ 	disable-over-current;
+-	vbus-supply = <&reg_usbh1_vbus>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.7.4
 
