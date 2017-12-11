@@ -1,7 +1,8 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH 06/20] ARM: dts: imx6*-hummingboard2: fix SD card detect
-Date: Mon, 11 Dec 2017 16:57:48 +0000
-Message-ID: <E1eOROm-0000HI-2F@rmk-PC.armlinux.org.uk>
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH 05/20] ARM: dts: imx6*-hummingboard2: add Broadcom Wi-Fi
+ include
+Date: Mon, 11 Dec 2017 16:57:42 +0000
+Message-ID: <E1eOROg-0000HB-Ur@rmk-PC.armlinux.org.uk>
 References: <20171211165631.GW10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -14,36 +15,39 @@ To: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <ke
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix the SD card detect signal, which was missing the polarity
-specification, and the pull-up necessary for proper signalling.
+The Broadcom Wi-Fi was moved out to a separate include file.  Add the
+include.
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6dl-hummingboard2.dts | 1 +
+ arch/arm/boot/dts/imx6q-hummingboard2.dts  | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-index 676160ef2718..b632eb73e85c 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-@@ -389,7 +389,7 @@
+diff --git a/arch/arm/boot/dts/imx6dl-hummingboard2.dts b/arch/arm/boot/dts/imx6dl-hummingboard2.dts
+index 30e042822ec6..99b6cce13175 100644
+--- a/arch/arm/boot/dts/imx6dl-hummingboard2.dts
++++ b/arch/arm/boot/dts/imx6dl-hummingboard2.dts
+@@ -43,6 +43,7 @@
  
- 		pinctrl_hummingboard2_usdhc2_aux: hummingboard2-usdhc2-aux {
- 			fsl,pins = <
--				MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x13071
-+				MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x1f071
- 				MX6QDL_PAD_KEY_ROW1__SD2_VSELECT 0x1b071
- 				MX6QDL_PAD_DISP0_DAT9__GPIO4_IO30 0x1b0b0
- 			>;
-@@ -516,7 +516,7 @@
- 		&pinctrl_hummingboard2_usdhc2_200mhz
- 	>;
- 	mmc-pwrseq = <&usdhc2_pwrseq>;
--	cd-gpios = <&gpio1 4 0>;
-+	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
+ #include "imx6dl.dtsi"
+ #include "imx6qdl-sr-som.dtsi"
++#include "imx6qdl-sr-som-brcm.dtsi"
+ #include "imx6qdl-hummingboard2.dtsi"
  
+ / {
+diff --git a/arch/arm/boot/dts/imx6q-hummingboard2.dts b/arch/arm/boot/dts/imx6q-hummingboard2.dts
+index 8dcad5668c17..fab388a0f673 100644
+--- a/arch/arm/boot/dts/imx6q-hummingboard2.dts
++++ b/arch/arm/boot/dts/imx6q-hummingboard2.dts
+@@ -43,6 +43,7 @@
+ 
+ #include "imx6q.dtsi"
+ #include "imx6qdl-sr-som.dtsi"
++#include "imx6qdl-sr-som-brcm.dtsi"
+ #include "imx6qdl-hummingboard2.dtsi"
+ 
+ / {
 -- 
 2.7.4
 
