@@ -1,43 +1,27 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
-        <mylene.josserand@free-electrons.com>
-Subject: [PATCH 4/4] arm: dts: sun8i: a83t: Set timer node to use phy timer
-Date: Mon, 11 Dec 2017 08:50:01 +0100
-Message-ID: <20171211075001.6100-5-mylene.josserand@free-electrons.com>
-References: <20171211075001.6100-1-mylene.josserand@free-electrons.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 01/20] dt-bindings: clock: Add ASPEED constants
+Date: Mon, 11 Dec 2017 08:53:54 +0100
+Message-ID: <CAK8P3a38ynNdqeE_1EVMpSxgmCAsC_rAHiMfHv3rxjWwka4H+Q@mail.gmail.com>
+References: <20171211050704.20621-1-joel@jms.id.au> <20171211050704.20621-2-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171211075001.6100-1-mylene.josserand@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171211050704.20621-2-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-By default, virtual timers are used. These timers need an offset
-that must be set by firmware, for example. In case of SMP support,
-after a reset, this offset is in "unknown" state and produced
-a hang of the kernel.
+On Mon, Dec 11, 2017 at 6:06 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
 
-Use "arm,cpu-registers-not-fw-configured" property allows to use
-physical timers instead of virtual ones.
+> +#define ASPEED_NUM_CLKS                        35
 
-Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Why is this part of the ABI? What if they ever come out with a new
+chip that needs
+one more clock and you can't change it?
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 3e2aad537972..0fe4b9e5dee1 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -121,6 +121,7 @@
- 			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-+		arm,cpu-registers-not-fw-configured;
- 	};
- 
- 	clocks {
--- 
-2.11.0
+     Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
