@@ -1,232 +1,484 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v12 1/2] rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver documentation
-Date: Mon, 11 Dec 2017 20:00:21 +0200
-Message-ID: <5713027.4ELTcTEoZh@avalon>
-References: <20171129193235.25423-1-niklas.soderlund+renesas@ragnatech.se> <20171129193235.25423-2-niklas.soderlund+renesas@ragnatech.se>
+From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v9 2/2] leds: lm3692x: Introduce LM3692x dual string driver
+Date: Mon, 11 Dec 2017 12:26:59 -0600
+Message-ID: <20171211182659.21533-2-dmurphy@ti.com>
+References: <20171211182659.21533-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171129193235.25423-2-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+In-Reply-To: <20171211182659.21533-1-dmurphy-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+Introducing the LM3692x Dual-String white LED driver.
 
-Thank you for the patch.
+Data sheet is located
+http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
 
-On Wednesday, 29 November 2017 21:32:34 EET Niklas S=F6derlund wrote:
-> Documentation for Renesas R-Car MIPI CSI-2 receiver. The CSI-2 receivers
-> are located between the video sources (CSI-2 transmitters) and the video
-> grabbers (VIN) on Gen3 of Renesas R-Car SoC.
->=20
-> Each CSI-2 device is connected to more then one VIN device which
+Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+---
 
-s/then/than/
+v9 - Change the no DT label case to pull the device name from the i2c_id struct
+so that the device name can be part of the sysfs node - https://patchwork.kernel.org/patch/10093759/
 
-> simultaneously can receive video from the same CSI-2 device. Each VIN
-> device can also be connected to more then one CSI-2 device. The routing
+v8 - No changes
+v7 - Reverted back to creating the LED label within the driver -
+https://patchwork.kernel.org/patch/10087473/
+v6 - Use new LED API to compose LED label as opposed to creating it. -
+https://patchwork.kernel.org/patch/10085565/
+v5 - Added OF dependency in Kconfig, added extra fault flag read to ensure that
+if a fault exists and it is not a artifact, fixed LED class label to be derived
+from either the DT child "label" node or create a label based on 
+parent_node_name:led color:trigger, removed ifdef for CONFIG_OF and removed
+of_match_ptr - https://patchwork.kernel.org/patch/10081073/
+v4 - Converted to devm led class register, changed MODULE_LICENSE to GPL v2, 
+set the led name based on child node name or label entry, removed fault and
+returned read_buf for fault checking, added mutex_destroy to remove function,
+and removed LED_FULL - https://patchwork.kernel.org/patch/10060109/
+v3 - Add missing Makefile and Kconfig from v1 and v2 - https://patchwork.kernel.org/patch/10060075/
+v2 - Added data sheet link, fixed linuxdoc format, returned on failure in init
+routine, return on fault_check failure, updated brightness calculation and
+fixed capitalization issue - https://patchwork.kernel.org/patch/10056675/
 
-s/then/than/
+ drivers/leds/Kconfig        |   7 +
+ drivers/leds/Makefile       |   1 +
+ drivers/leds/leds-lm3692x.c | 393 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 401 insertions(+)
+ create mode 100644 drivers/leds/leds-lm3692x.c
 
-> of which link are used are controlled by the VIN devices. There are only
-
-s/link are/links are/ or s/link are/link is/
-s/are controlled/is controlled/
-
-> a few possible routes which are set by hardware limitations, which are
-> different for each SoC in the Gen3 family.
->=20
-> To work with the limitations of routing possibilities it is necessary
-> for the DT bindings to describe which VIN device is connected to which
-> CSI-2 device. This is why port 1 needs to to assign reg numbers for each
-> VIN device that be connected to it. To setup and to know which links are
-
-s/that be/that is/
-
-> valid for each SoC is the responsibility of the VIN driver since the
-> register to configure it belongs to the VIN hardware.
->=20
-> Signed-off-by: Niklas S=F6derlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/media/renesas,rcar-csi2.txt           | 105 +++++++++++++++=
-+++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 106 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt new file
-> mode 100644
-> index 0000000000000000..688afd83bf66f8cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
-> @@ -0,0 +1,105 @@
-> +Renesas R-Car MIPI CSI-2
-> +------------------------
-> +
-> +The rcar-csi2 device provides MIPI CSI-2 capabilities for the Renesas R-=
-Car
-
-rcar-csi2 is the name of the driver, I would call it the "R-Car CSI-2 recei=
-ver=20
-device" (or s/device/IP core/).
-
-> +family of devices. It is to be used in conjunction with the R-Car VIN
-> module,
-
-The IP core itself doesn't have to be used with the VIN, but in R-Car SoCs =
-it=20
-is, so I would phrase it as "It is used ...".
-
-> +which provides the video capture capabilities.
-> +
-> +Mandatory properties
-> +--------------------
-> + - compatible: Must be one or more of the following
-> +   - "renesas,r8a7795-csi2" for the R8A7795 device.
-> +   - "renesas,r8a7796-csi2" for the R8A7796 device.
-> +
-> + - reg: the register base and size for the device registers
-> + - interrupts: the interrupt for the device
-> + - clocks: Reference to the parent clock
-
-Either capitalize the first word after the colon or don't, but please don't=
-=20
-mix them :-)
-
-> +
-> +The device node shall contain two 'port' child nodes according to the
-> +bindings defined in Documentation/devicetree/bindings/media/
-> +video-interfaces.txt. Port 0 shall connect the node that is the video
-> +source for to the CSI-2.
-
-Or simply "Port 0 shall connect to the CSI-2 source." ?
-
-> Port 1 shall connect all the R-Car VIN
-> +modules, which can make use of the CSI-2 module.
-
-And to be a bit more explicit, how about "Port 1 shall connect to all the R-
-Car VIN modules that have a hardware connection to the CSI-2 receiver." ?
-
-> +
-> +- Port 0 - Video source (Mandatory)
-
-Nitpicking, I don't think you need to capitalize Mandatory.
-
-> +	- Endpoint 0 - sub-node describing the endpoint that is the video source
-> +
-> +- Port 1 - VIN instances (Mandatory for all VIN present in the SoC)
-> +	- Endpoint 0 - sub-node describing the endpoint that is VIN0
-> +	- Endpoint 1 - sub-node describing the endpoint that is VIN1
-> +	- Endpoint 2 - sub-node describing the endpoint that is VIN2
-> +	- Endpoint 3 - sub-node describing the endpoint that is VIN3
-> +	- Endpoint 4 - sub-node describing the endpoint that is VIN4
-> +	- Endpoint 5 - sub-node describing the endpoint that is VIN5
-> +	- Endpoint 6 - sub-node describing the endpoint that is VIN6
-> +	- Endpoint 7 - sub-node describing the endpoint that is VIN7
-
-Should we clarify that only a subset of those endpoints shall be present wh=
-en=20
-the CSI-2 receiver isn't connected to all VIN instances ?
-
-=46urthermore, as explained in a comment I made when reviewing the VIN patc=
-h=20
-series, I wonder whether we shouldn't identify the CSI-2 receiver instances=
- by=20
-ID the same way we do with the VIN instances (using the renesas,id property=
-).=20
-In that case I think the endpoint numbering won't matter.
-
-> +Example:
-> +
-> +	csi20: csi2@fea80000 {
-> +		compatible =3D "renesas,r8a7796-csi2";
-> +		reg =3D <0 0xfea80000 0 0x10000>;
-> +		interrupts =3D <0 184 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks =3D <&cpg CPG_MOD 714>;
-> +		power-domains =3D <&sysc R8A7796_PD_ALWAYS_ON>;
-> +		resets =3D <&cpg 714>;
-> +
-> +		ports {
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <0>;
-> +
-> +			port@0 {
-> +				#address-cells =3D <1>;
-> +				#size-cells =3D <0>;
-> +
-> +				reg =3D <0>;
-> +
-> +				csi20_in: endpoint@0 {
-> +					reg =3D <0>;
-> +					clock-lanes =3D <0>;
-> +					data-lanes =3D <1>;
-> +					remote-endpoint =3D <&adv7482_txb>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				#address-cells =3D <1>;
-> +				#size-cells =3D <0>;
-> +
-> +				reg =3D <1>;
-> +
-> +				csi20vin0: endpoint@0 {
-> +					reg =3D <0>;
-> +					remote-endpoint =3D <&vin0csi20>;
-> +				};
-> +				csi20vin1: endpoint@1 {
-> +					reg =3D <1>;
-> +					remote-endpoint =3D <&vin1csi20>;
-> +				};
-> +				csi20vin2: endpoint@2 {
-> +					reg =3D <2>;
-> +					remote-endpoint =3D <&vin2csi20>;
-> +				};
-> +				csi20vin3: endpoint@3 {
-> +					reg =3D <3>;
-> +					remote-endpoint =3D <&vin3csi20>;
-> +				};
-> +				csi20vin4: endpoint@4 {
-> +					reg =3D <4>;
-> +					remote-endpoint =3D <&vin4csi20>;
-> +				};
-> +				csi20vin5: endpoint@5 {
-> +					reg =3D <5>;
-> +					remote-endpoint =3D <&vin5csi20>;
-> +				};
-> +				csi20vin6: endpoint@6 {
-> +					reg =3D <6>;
-> +					remote-endpoint =3D <&vin6csi20>;
-> +				};
-> +				csi20vin7: endpoint@7 {
-> +					reg =3D <7>;
-> +					remote-endpoint =3D <&vin7csi20>;
-> +				};
-> +			};
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index aa71ab52fd76d160..4737de9f41bff570 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8652,6 +8652,7 @@ L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  L:	linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Supported
-> +F:	Documentation/devicetree/bindings/media/renesas,rcar-csi2.txt
->  F:	Documentation/devicetree/bindings/media/rcar_vin.txt
->  F:	drivers/media/platform/rcar-vin/
-
-=2D-=20
-Regards,
-
-Laurent Pinchart
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 318a28fd58fe..1d215b39cefd 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -137,6 +137,13 @@ config LEDS_LM3642
+ 	  converter plus 1.5A constant current driver for a high-current
+ 	  white LED.
+ 
++config LEDS_LM3692X
++	tristate "LED support for LM3692x Chips"
++	depends on LEDS_CLASS && I2C && OF
++	select REGMAP_I2C
++	help
++	  This option enables support for the TI LM3692x family
++	  of white LED string drivers used for backlighting.
+ 
+ config LEDS_LOCOMO
+ 	tristate "LED Support for Locomo device"
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index a2a6b5a4f86d..987884a5b9a5 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -74,6 +74,7 @@ obj-$(CONFIG_LEDS_PM8058)		+= leds-pm8058.o
+ obj-$(CONFIG_LEDS_MLXCPLD)		+= leds-mlxcpld.o
+ obj-$(CONFIG_LEDS_NIC78BX)		+= leds-nic78bx.o
+ obj-$(CONFIG_LEDS_MT6323)		+= leds-mt6323.o
++obj-$(CONFIG_LEDS_LM3692X)		+= leds-lm3692x.o
+ 
+ # LED SPI Drivers
+ obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
+diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+new file mode 100644
+index 000000000000..7077f9459bce
+--- /dev/null
++++ b/drivers/leds/leds-lm3692x.c
+@@ -0,0 +1,393 @@
++/*
++ * TI lm3692x LED Driver
++ *
++ * Copyright (C) 2017 Texas Instruments
++ *
++ * Author: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * Data sheet is located
++ * http://www.ti.com/lit/ds/snvsa29/snvsa29.pdf
++ */
++
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/leds.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/gpio/consumer.h>
++#include <linux/slab.h>
++#include <uapi/linux/uleds.h>
++
++#define LM3692X_REV		0x0
++#define LM3692X_RESET		0x1
++#define LM3692X_EN		0x10
++#define LM3692X_BRT_CTRL	0x11
++#define LM3692X_PWM_CTRL	0x12
++#define LM3692X_BOOST_CTRL	0x13
++#define LM3692X_AUTO_FREQ_HI	0x15
++#define LM3692X_AUTO_FREQ_LO	0x16
++#define LM3692X_BL_ADJ_THRESH	0x17
++#define LM3692X_BRT_LSB		0x18
++#define LM3692X_BRT_MSB		0x19
++#define LM3692X_FAULT_CTRL	0x1e
++#define LM3692X_FAULT_FLAGS	0x1f
++
++#define LM3692X_SW_RESET	BIT(0)
++#define LM3692X_DEVICE_EN	BIT(0)
++#define LM3692X_LED1_EN		BIT(1)
++#define LM3692X_LED2_EN		BIT(2)
++
++/* Brightness Control Bits */
++#define LM3692X_BL_ADJ_POL	BIT(0)
++#define LM3692X_RAMP_RATE_125us	0x00
++#define LM3692X_RAMP_RATE_250us	BIT(1)
++#define LM3692X_RAMP_RATE_500us BIT(2)
++#define LM3692X_RAMP_RATE_1ms	(BIT(1) | BIT(2))
++#define LM3692X_RAMP_RATE_2ms	BIT(3)
++#define LM3692X_RAMP_RATE_4ms	(BIT(3) | BIT(1))
++#define LM3692X_RAMP_RATE_8ms	(BIT(2) | BIT(3))
++#define LM3692X_RAMP_RATE_16ms	(BIT(1) | BIT(2) | BIT(3))
++#define LM3692X_RAMP_EN		BIT(4)
++#define LM3692X_BRHT_MODE_REG	0x00
++#define LM3692X_BRHT_MODE_PWM	BIT(5)
++#define LM3692X_BRHT_MODE_MULTI_RAMP BIT(6)
++#define LM3692X_BRHT_MODE_RAMP_MULTI (BIT(5) | BIT(6))
++#define LM3692X_MAP_MODE_EXP	BIT(7)
++
++/* PWM Register Bits */
++#define LM3692X_PWM_FILTER_100	BIT(0)
++#define LM3692X_PWM_FILTER_150	BIT(1)
++#define LM3692X_PWM_FILTER_200	(BIT(0) | BIT(1))
++#define LM3692X_PWM_HYSTER_1LSB BIT(2)
++#define LM3692X_PWM_HYSTER_2LSB	BIT(3)
++#define LM3692X_PWM_HYSTER_3LSB (BIT(3) | BIT(2))
++#define LM3692X_PWM_HYSTER_4LSB BIT(4)
++#define LM3692X_PWM_HYSTER_5LSB (BIT(4) | BIT(2))
++#define LM3692X_PWM_HYSTER_6LSB (BIT(4) | BIT(3))
++#define LM3692X_PWM_POLARITY	BIT(5)
++#define LM3692X_PWM_SAMP_4MHZ	BIT(6)
++#define LM3692X_PWM_SAMP_24MHZ	BIT(7)
++
++/* Boost Control Bits */
++#define LM3692X_OCP_PROT_1A	BIT(0)
++#define LM3692X_OCP_PROT_1_25A	BIT(1)
++#define LM3692X_OCP_PROT_1_5A	(BIT(0) | BIT(1))
++#define LM3692X_OVP_21V		BIT(2)
++#define LM3692X_OVP_25V		BIT(3)
++#define LM3692X_OVP_29V		(BIT(2) | BIT(3))
++#define LM3692X_MIN_IND_22UH	BIT(4)
++#define LM3692X_BOOST_SW_1MHZ	BIT(5)
++#define LM3692X_BOOST_SW_NO_SHIFT	BIT(6)
++
++/* Fault Control Bits */
++#define LM3692X_FAULT_CTRL_OVP BIT(0)
++#define LM3692X_FAULT_CTRL_OCP BIT(1)
++#define LM3692X_FAULT_CTRL_TSD BIT(2)
++#define LM3692X_FAULT_CTRL_OPEN BIT(3)
++
++/* Fault Flag Bits */
++#define LM3692X_FAULT_FLAG_OVP BIT(0)
++#define LM3692X_FAULT_FLAG_OCP BIT(1)
++#define LM3692X_FAULT_FLAG_TSD BIT(2)
++#define LM3692X_FAULT_FLAG_SHRT BIT(3)
++#define LM3692X_FAULT_FLAG_OPEN BIT(4)
++
++/**
++ * struct lm3692x_led -
++ * @lock - Lock for reading/writing the device
++ * @client - Pointer to the I2C client
++ * @led_dev - LED class device pointer
++ * @regmap - Devices register map
++ * @enable_gpio - VDDIO/EN gpio to enable communication interface
++ * @regulator - LED supply regulator pointer
++ * @label - LED label
++ */
++struct lm3692x_led {
++	struct mutex lock;
++	struct i2c_client *client;
++	struct led_classdev led_dev;
++	struct regmap *regmap;
++	struct gpio_desc *enable_gpio;
++	struct regulator *regulator;
++	char label[LED_MAX_NAME_SIZE];
++};
++
++static const struct reg_default lm3692x_reg_defs[] = {
++	{LM3692X_EN, 0xf},
++	{LM3692X_BRT_CTRL, 0x61},
++	{LM3692X_PWM_CTRL, 0x73},
++	{LM3692X_BOOST_CTRL, 0x6f},
++	{LM3692X_AUTO_FREQ_HI, 0x0},
++	{LM3692X_AUTO_FREQ_LO, 0x0},
++	{LM3692X_BL_ADJ_THRESH, 0x0},
++	{LM3692X_BRT_LSB, 0x7},
++	{LM3692X_BRT_MSB, 0xff},
++	{LM3692X_FAULT_CTRL, 0x7},
++};
++
++static const struct regmap_config lm3692x_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++
++	.max_register = LM3692X_FAULT_FLAGS,
++	.reg_defaults = lm3692x_reg_defs,
++	.num_reg_defaults = ARRAY_SIZE(lm3692x_reg_defs),
++	.cache_type = REGCACHE_RBTREE,
++};
++
++static int lm3692x_fault_check(struct lm3692x_led *led)
++{
++	int ret;
++	unsigned int read_buf;
++
++	ret = regmap_read(led->regmap, LM3692X_FAULT_FLAGS, &read_buf);
++	if (ret)
++		return ret;
++
++	if (read_buf)
++		dev_err(&led->client->dev, "Detected a fault 0x%X\n", read_buf);
++
++	/* The first read may clear the fault.  Check again to see if the fault
++	 * still exits and return that value.
++	 */
++	regmap_read(led->regmap, LM3692X_FAULT_FLAGS, &read_buf);
++	if (read_buf)
++		dev_err(&led->client->dev, "Second read of fault flags 0x%X\n",
++			read_buf);
++
++	return read_buf;
++}
++
++static int lm3692x_brightness_set(struct led_classdev *led_cdev,
++				enum led_brightness brt_val)
++{
++	struct lm3692x_led *led =
++			container_of(led_cdev, struct lm3692x_led, led_dev);
++	int ret;
++	int led_brightness_lsb = (brt_val >> 5);
++
++	mutex_lock(&led->lock);
++
++	ret = lm3692x_fault_check(led);
++	if (ret) {
++		dev_err(&led->client->dev, "Cannot read/clear faults\n");
++		goto out;
++	}
++
++	ret = regmap_write(led->regmap, LM3692X_BRT_MSB, brt_val);
++	if (ret) {
++		dev_err(&led->client->dev, "Cannot write MSB\n");
++		goto out;
++	}
++
++	ret = regmap_write(led->regmap, LM3692X_BRT_LSB, led_brightness_lsb);
++	if (ret) {
++		dev_err(&led->client->dev, "Cannot write LSB\n");
++		goto out;
++	}
++out:
++	mutex_unlock(&led->lock);
++	return ret;
++}
++
++static int lm3692x_init(struct lm3692x_led *led)
++{
++	int ret;
++
++	if (led->regulator) {
++		ret = regulator_enable(led->regulator);
++		if (ret) {
++			dev_err(&led->client->dev,
++				"Failed to enable regulator\n");
++			return ret;
++		}
++	}
++
++	if (led->enable_gpio)
++		gpiod_direction_output(led->enable_gpio, 1);
++
++	ret = lm3692x_fault_check(led);
++	if (ret) {
++		dev_err(&led->client->dev, "Cannot read/clear faults\n");
++		goto out;
++	}
++
++	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, 0x00);
++	if (ret)
++		goto out;
++
++	/*
++	 * For glitch free operation, the following data should
++	 * only be written while device enable bit is 0
++	 * per Section 7.5.14 of the data sheet
++	 */
++	ret = regmap_write(led->regmap, LM3692X_PWM_CTRL,
++		LM3692X_PWM_FILTER_100 | LM3692X_PWM_SAMP_24MHZ);
++	if (ret)
++		goto out;
++
++	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
++			LM3692X_BRHT_MODE_RAMP_MULTI |
++			LM3692X_BL_ADJ_POL |
++			LM3692X_RAMP_RATE_250us);
++	if (ret)
++		goto out;
++
++	ret = regmap_write(led->regmap, LM3692X_AUTO_FREQ_HI, 0x00);
++	if (ret)
++		goto out;
++
++	ret = regmap_write(led->regmap, LM3692X_AUTO_FREQ_LO, 0x00);
++	if (ret)
++		goto out;
++
++	ret = regmap_write(led->regmap, LM3692X_BL_ADJ_THRESH, 0x00);
++	if (ret)
++		goto out;
++
++	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
++			LM3692X_BL_ADJ_POL | LM3692X_PWM_HYSTER_4LSB);
++	if (ret)
++		goto out;
++
++	return ret;
++out:
++	dev_err(&led->client->dev, "Fail writing initialization values\n");
++
++	if (led->enable_gpio)
++		gpiod_direction_output(led->enable_gpio, 0);
++
++	if (led->regulator) {
++		ret = regulator_disable(led->regulator);
++		if (ret)
++			dev_err(&led->client->dev,
++				"Failed to disable regulator\n");
++	}
++
++	return ret;
++}
++
++static int lm3692x_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	int ret;
++	struct lm3692x_led *led;
++	struct device_node *np = client->dev.of_node;
++	struct device_node *child_node;
++	const char *name;
++
++	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
++	if (!led)
++		return -ENOMEM;
++
++	for_each_available_child_of_node(np, child_node) {
++		led->led_dev.default_trigger = of_get_property(child_node,
++						    "linux,default-trigger",
++						    NULL);
++
++		ret = of_property_read_string(child_node, "label", &name);
++		if (!ret)
++		    snprintf(led->label, sizeof(led->label), "%s:%s",
++					np->name, name);
++		else
++		    snprintf(led->label, sizeof(led->label),
++			     "%s::backlight_cluster", id->name);
++	};
++
++	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
++						   "enable", GPIOD_OUT_LOW);
++	if (IS_ERR(led->enable_gpio)) {
++		ret = PTR_ERR(led->enable_gpio);
++		dev_err(&client->dev, "Failed to get enable gpio: %d\n", ret);
++		return ret;
++	}
++
++	led->regulator = devm_regulator_get(&client->dev, "vled");
++	if (IS_ERR(led->regulator))
++		led->regulator = NULL;
++
++	led->client = client;
++	led->led_dev.name = led->label;
++	led->led_dev.brightness_set_blocking = lm3692x_brightness_set;
++
++	mutex_init(&led->lock);
++
++	i2c_set_clientdata(client, led);
++
++	led->regmap = devm_regmap_init_i2c(client, &lm3692x_regmap_config);
++	if (IS_ERR(led->regmap)) {
++		ret = PTR_ERR(led->regmap);
++		dev_err(&client->dev, "Failed to allocate register map: %d\n",
++			ret);
++		return ret;
++	}
++
++	ret = lm3692x_init(led);
++	if (ret)
++		return ret;
++
++	ret = devm_led_classdev_register(&client->dev, &led->led_dev);
++	if (ret) {
++		dev_err(&client->dev, "led register err: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int lm3692x_remove(struct i2c_client *client)
++{
++	struct lm3692x_led *led = i2c_get_clientdata(client);
++	int ret;
++
++	if (led->enable_gpio)
++		gpiod_direction_output(led->enable_gpio, 0);
++
++	if (led->regulator) {
++		ret = regulator_disable(led->regulator);
++		if (ret)
++			dev_err(&led->client->dev,
++				"Failed to disable regulator\n");
++	}
++
++	mutex_destroy(&led->lock);
++
++	return 0;
++}
++
++static const struct i2c_device_id lm3692x_id[] = {
++	{ "lm36922", 0 },
++	{ "lm36923", 1 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, lm3692x_id);
++
++static const struct of_device_id of_lm3692x_leds_match[] = {
++	{ .compatible = "ti,lm36922", },
++	{ .compatible = "ti,lm36923", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_lm3692x_leds_match);
++
++static struct i2c_driver lm3692x_driver = {
++	.driver = {
++		.name	= "lm3692x",
++		.of_match_table = of_lm3692x_leds_match,
++	},
++	.probe		= lm3692x_probe,
++	.remove		= lm3692x_remove,
++	.id_table	= lm3692x_id,
++};
++module_i2c_driver(lm3692x_driver);
++
++MODULE_DESCRIPTION("Texas Instruments LM3692X LED driver");
++MODULE_AUTHOR("Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.15.0.124.g7668cbc60
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
