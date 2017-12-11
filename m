@@ -1,45 +1,27 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 2/2] ASoC: tfa9879: add DT bindings to
-	MAINTAINERS
-Date: Mon, 11 Dec 2017 15:26:15 +0100
-Message-ID: <20171211142615.11440-3-peda@axentia.se>
-References: <20171211142615.11440-1-peda@axentia.se>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
+ ethernet driver
+Date: Mon, 11 Dec 2017 09:35:20 -0500 (EST)
+Message-ID: <20171211.093520.1509647114338216500.davem@davemloft.net>
+References: <1512979049-15930-1-git-send-email-hayashi.kunihiko@socionext.com>
+        <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171211142615.11440-1-peda@axentia.se>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Fabio Estevam <festevam@gmail.com>, Peter Rosin <peda@axentia.se>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: hayashi.kunihiko@socionext.com
+Cc: netdev@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yamada.masahiro@socionext.com, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Let's keep maintenance of the driver and the bindings in one place.
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Date: Mon, 11 Dec 2017 16:57:29 +0900
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> +static inline u32 ave_desc_read(struct net_device *ndev, enum desc_id id,
+> +				int entry, int offset)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d4fdcb12616c..e7c2ca89fec4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9804,6 +9804,7 @@ NXP TFA9879 DRIVER
- M:	Peter Rosin <peda@axentia.se>
- L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
- S:	Maintained
-+F:	Documentation/devicetree/bindings/sound/tfa9879.txt
- F:	sound/soc/codecs/tfa9879*
- 
- NXP-NCI NFC DRIVER
--- 
-2.11.0
+Do not use inline functions in foo.c files, let the compiler decide what
+to do.
+
+Thank you.
