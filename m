@@ -1,88 +1,59 @@
-From: Miquel RAYNAL <miquel.raynal@free-electrons.com>
-Subject: Re: [PATCH v2 3/4] thermal: armada: add support for CP110
-Date: Mon, 11 Dec 2017 16:09:32 +0100
-Message-ID: <20171211160932.692ba8be@xps13>
-References: <f8c589337a4fb78852eadf15058e8f8d132d4dc0.1512299484.git.baruch@tkos.co.il>
-        <d48c916a2502f9c75e9ea4ba41300e2ffbb254d8.1512299484.git.baruch@tkos.co.il>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] DTS: Pandora: fix panel compatibility string
+Date: Mon, 11 Dec 2017 07:16:03 -0800
+Message-ID: <20171211151603.GG24344@atomide.com>
+References: <b6001c7b7fb98e7a3ad4c712084fea9dae9e6b27.1511884135.git.hns@goldelico.com>
+ <20171128160437.GD28152@atomide.com>
+ <ADAFBBA4-6AC4-4EC4-AB0E-98B59718E12E@goldelico.com>
+ <20171128161834.GE28152@atomide.com>
+ <4EE1E298-6461-48FF-977C-958DD16AD83A@goldelico.com>
+ <20171130152430.GM28152@atomide.com>
+ <20171130220633.imkfyeiqtftnw4j4@earth>
+ <6ca5f2ea-e725-9a9e-ac02-e16beca4a1a0@ti.com>
+ <0324FA0E-F06A-41F1-84AD-5BC72F6B6BFF@goldelico.com>
+ <a27001ba-5ffd-365d-93e3-06fd1a2e01c2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <d48c916a2502f9c75e9ea4ba41300e2ffbb254d8.1512299484.git.baruch@tkos.co.il>
-Sender: linux-pm-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <a27001ba-5ffd-365d-93e3-06fd1a2e01c2-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Discussions
 List-Id: devicetree@vger.kernel.org
 
-Hello Baruch,
-
-On Sun,  3 Dec 2017 13:11:23 +0200
-Baruch Siach <baruch@tkos.co.il> wrote:
-
-> The CP110 component is integrated in the Armada 8k and 7k lines of
-> processors.
+* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [171201 02:03]:
+> On 01/12/17 11:48, H. Nikolaus Schaller wrote:
 > 
-> This patch also adds an option of offset to the MSB of the control
-> register. The existing DT binding for Armada 38x refers to a single
-> 32 bit control register. It turns out that this is actually only the
-> MSB of the control area. Changing the binding to fix that would break
-> existing DT files, so the Armada 38x binding is left as is.
+> > Just a note: there is no toppoly->tpo change for *this* panel and
+> > Pandora board. Just omapdss removal.
+> > 
+> > The GTA04 needs a toppoly->tpo change but no omapdss, removal.
+> > 
+> > So they solve different problems and are independent of each other.
+> > 
+> > GTA04: change vendor string
+> > Pandora: remove omapdss, prefix
 > 
-> The new CP110 binding increases the size of the control area to 64
-> bits, thus moving the MSB to offset 4.
+> Oh, right, I totally missed that. I thought they were changes to the
+> same file...
 > 
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
-> v2: No change
-> ---
->  drivers/thermal/armada_thermal.c | 24 ++++++++++++++++++++++--
->  1 file changed, 22 insertions(+), 2 deletions(-)
+> In that case, Tony, can you pick this one as a fix? I'll pick the
+> toppoly->tpo patch and merge via drm tree, if you give the ack.
 > 
-> diff --git a/drivers/thermal/armada_thermal.c
-> b/drivers/thermal/armada_thermal.c index 0eb82097571f..59b75f63945d
-> 100644 --- a/drivers/thermal/armada_thermal.c
-> +++ b/drivers/thermal/armada_thermal.c
-> @@ -73,6 +73,7 @@ struct armada_thermal_data {
->  	unsigned int temp_shift;
->  	unsigned int temp_mask;
->  	unsigned int is_valid_shift;
-> +	unsigned int control_msb_offset;
->  };
->  
->  static void armadaxp_init_sensor(struct platform_device *pdev,
-> @@ -142,12 +143,14 @@ static void armada375_init_sensor(struct
-> platform_device *pdev, static void armada380_init_sensor(struct
-> platform_device *pdev, struct armada_thermal_priv *priv)
->  {
-> -	unsigned long reg = readl_relaxed(priv->control);
-> +	void __iomem *control_msb =
-> +		priv->control + priv->data->control_msb_offset;
-> +	unsigned long reg = readl_relaxed(control_msb);
->  
->  	/* Reset hardware once */
->  	if (!(reg & A380_HW_RESET)) {
->  		reg |= A380_HW_RESET;
-> -		writel(reg, priv->control);
-> +		writel(reg, control_msb);
->  		mdelay(10);
->  	}
->  }
-> @@ -266,6 +269,19 @@ static const struct armada_thermal_data
-> armada_ap806_data = { .signed_sample = true,
->  };
->  
-> +static const struct armada_thermal_data armada_cp110_data = {
-> +	.is_valid = armada_is_valid,
-> +	.init_sensor = armada380_init_sensor,
+> For this:
+> 
+> Acked-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 
-I see the initialization for CP110 thermal IP is close to
-Armada-380's, but, as you point it in the commit log it is still
-different.
+Sorry I've lost track of this thread and what if anything is really
+needed as a fix for v4.16. And now there's newer version of the two
+dts patches in thread "[PATCH v4 0/2] Fixes for omapdrm on
+OpenPandora and GTA04" so let's move the discussion there.
 
-I don't know what is the best way to handle this but until now each
-new compatible had his own ->init_sensor function, shouldn't we do
-the same here as changes are requested? This would naturally avoid the
-situation with Armada-380 bindings.
+Regards,
 
-Thanks,
-Miquèl
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
