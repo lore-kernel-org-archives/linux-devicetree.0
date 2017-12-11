@@ -1,102 +1,141 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 2/3] irqchip: irq-bcm2836: add support for DT interrupt polarity
-Date: Mon, 11 Dec 2017 21:39:11 +0100
-Message-ID: <1513024752-11246-3-git-send-email-stefan.wahren@i2se.com>
-References: <1513024752-11246-1-git-send-email-stefan.wahren@i2se.com>
+From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 02/12] mtd: nand: add reworked Marvell NAND controller
+ driver
+Date: Mon, 11 Dec 2017 22:02:55 +0100
+Message-ID: <20171211220255.0292fd8f@xps13>
+References: <20171207201814.30411-1-miquel.raynal@free-electrons.com>
+        <20171207201814.30411-3-miquel.raynal@free-electrons.com>
+        <CAAEAJfC89bRugBsK8jrK=6fdq76yzjThA74UCAhAaVuonLLNvg@mail.gmail.com>
+        <20171211175506.0b8ea4d1@xps13>
+        <20171211180511.1d734b37@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513024752-11246-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <20171211180511.1d734b37@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.>
 List-Id: devicetree@vger.kernel.org
 
-In order to properly define the polarity of the per-cpu interrupts,
-we need to support for a second property cell. But this must be
-optional to keep backward compatibility with old DT blobs.
+On Mon, 11 Dec 2017 18:05:11 +0100
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Suggested-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- drivers/irqchip/irq-bcm2836.c | 46 ++++++++++++++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 18 deletions(-)
+> On Mon, 11 Dec 2017 17:55:06 +0100
+> Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > On Mon, 11 Dec 2017 13:27:30 -0300
+> > Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+> >   
+> > > On 7 December 2017 at 17:18, Miquel Raynal
+> > > <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:    
+> > > > Add marvell_nand driver which aims at replacing the existing
+> > > > pxa3xx_nand driver.
+> > > >
+> > > > The new driver intends to be easier to understand and follows
+> > > > the brand new NAND framework rules by implementing hooks for
+> > > > every pattern the controller might support and referencing them
+> > > > inside a parser object that will be given to the core at each
+> > > > ->exec_op() call.
+> > > >
+> > > > Raw accessors are implemented, useful to test/debug
+> > > > memory/filesystem corruptions. Userspace binaries contained in
+> > > > the mtd-utils package may now be used and their output trusted.
+> > > >
+> > > > Timings may not be kept from the bootloader anymore, the timings
+> > > > used for instance in U-Boot were not optimal and it supposed to
+> > > > have NAND support (and initialized) in the bootloader.
+> > > >
+> > > > Thanks to the improved timings, implementation of ONFI mode 5
+> > > > support (with EDO managed by adding a delay on data sampling),
+> > > > merging the commands together and optimizing writes in the
+> > > > command registers, the new driver may achieve faster
+> > > > throughputs in both directions. Measurements show an
+> > > > improvement of about +23% read throughput and +24% write
+> > > > throughput. These measurements have been done with an
+> > > > Armada-385-DB-AP (4kiB NAND pages forced in 4-bit strength BCH
+> > > > ECC correction) using the userspace tool 'flash_speed' from the
+> > > > MTD test suite.
+> > > >
+> > > > Besides these important topics, the new driver addresses several
+> > > > unsolved known issues in the old driver which:
+> > > > - did not work with ECC soft neither with ECC none ;
+> > > > - relied on naked read/write (which is unchanged) while the
+> > > > NFCv1 embedded in the pxa3xx platforms do not implement it, so
+> > > > several NAND commands did not actually ever work without any
+> > > > notice (like reading the ONFI PARAM_PAGE or SET/GET_FEATURES) ;
+> > > > - wrote the OOB data correctly, but was not able to read it
+> > > > correctly past the first OOB data chunk ;
+> > > > - did not displayed ECC bytes ;
+> > > > - used device tree bindings that did not allow more than one
+> > > > NAND chip, and did not allow to choose the correct chip select
+> > > > if not incrementing from 0. Plus, the Ready/Busy line used had
+> > > > to be 0.
+> > > >
+> > > > Old device tree bindings are still supported but deprecated. A
+> > > > more hierarchical view has to be used to keep the controller
+> > > > and the NAND chip structures clearly separated both inside the
+> > > > device tree and also in the driver code.
+> > > >      
+> > > 
+> > > So, is this driver fully compatible with the current pxa3xx-nand
+> > > driver?    
+> > 
+> > It should be!
+> >   
+> > > 
+> > > Have you tested with U-Boot's driver (based on the pxa3xx-nand)?
+> > > 
+> > > I recally some subtle issues with the fact that U-Boot and Linux
+> > > had to agree about the BBT format.    
+> > 
+> > I kept the pxa3xx_nand driver BBT format.
+> > 
+> > This is something I mistakenly omitted from the commit message:
+> > 
+> > There are 5 supported layouts in the driver (the same as withing the
+> > pxa3xx_nand driver):
+> >     1/ Page: 512B, strength 1b/512B (hamming)
+> >     2/ Page: 2kiB, strength 4b/2kiB (hamming)
+> >     3/ page: 2kiB, strength 16b/2kiB (BCH)
+> >     4/ page: 4kiB, strength 16b/2kiB (BCH)
+> >     5/ page: 4kiB, strength 32b/2kiB (BCH)  
+> 
+> Are you sure of #5? I thought the engine was only capable of modifying
+> the ECC block size, not the strength. If this is the case, then mode
+> #5 is actually 16b/1024kiB.
 
-diff --git a/drivers/irqchip/irq-bcm2836.c b/drivers/irqchip/irq-bcm2836.c
-index 667b9e1..dfe4a46 100644
---- a/drivers/irqchip/irq-bcm2836.c
-+++ b/drivers/irqchip/irq-bcm2836.c
-@@ -98,13 +98,35 @@ static struct irq_chip bcm2836_arm_irqchip_gpu = {
- 	.irq_unmask	= bcm2836_arm_irqchip_unmask_gpu_irq,
- };
- 
--static void bcm2836_arm_irqchip_register_irq(int hwirq, struct irq_chip *chip)
--{
--	int irq = irq_create_mapping(intc.domain, hwirq);
-+static int bcm2836_map(struct irq_domain *d, unsigned int irq,
-+		       irq_hw_number_t hw)
-+{
-+	struct irq_chip *chip;
-+
-+	switch (hw) {
-+	case LOCAL_IRQ_CNTPSIRQ:
-+	case LOCAL_IRQ_CNTPNSIRQ:
-+	case LOCAL_IRQ_CNTHPIRQ:
-+	case LOCAL_IRQ_CNTVIRQ:
-+		chip = &bcm2836_arm_irqchip_timer;
-+		break;
-+	case LOCAL_IRQ_GPU_FAST:
-+		chip = &bcm2836_arm_irqchip_gpu;
-+		break;
-+	case LOCAL_IRQ_PMU_FAST:
-+		chip = &bcm2836_arm_irqchip_pmu;
-+		break;
-+	default:
-+		pr_warn_once("Unexpected hw irq: %lu\n", hw);
-+		return -EINVAL;
-+	}
- 
- 	irq_set_percpu_devid(irq);
--	irq_set_chip_and_handler(irq, chip, handle_percpu_devid_irq);
-+	irq_domain_set_info(d, irq, hw, chip, d->host_data,
-+			    handle_percpu_devid_irq, NULL, NULL);
- 	irq_set_status_flags(irq, IRQ_NOAUTOEN);
-+
-+	return 0;
- }
- 
- static void
-@@ -165,7 +187,8 @@ static int bcm2836_cpu_dying(unsigned int cpu)
- #endif
- 
- static const struct irq_domain_ops bcm2836_arm_irqchip_intc_ops = {
--	.xlate = irq_domain_xlate_onecell
-+	.xlate = irq_domain_xlate_onetwocell,
-+	.map = bcm2836_map,
- };
- 
- static void
-@@ -218,19 +241,6 @@ static int __init bcm2836_arm_irqchip_l1_intc_of_init(struct device_node *node,
- 	if (!intc.domain)
- 		panic("%pOF: unable to create IRQ domain\n", node);
- 
--	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTPSIRQ,
--					 &bcm2836_arm_irqchip_timer);
--	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTPNSIRQ,
--					 &bcm2836_arm_irqchip_timer);
--	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTHPIRQ,
--					 &bcm2836_arm_irqchip_timer);
--	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_CNTVIRQ,
--					 &bcm2836_arm_irqchip_timer);
--	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_GPU_FAST,
--					 &bcm2836_arm_irqchip_gpu);
--	bcm2836_arm_irqchip_register_irq(LOCAL_IRQ_PMU_FAST,
--					 &bcm2836_arm_irqchip_pmu);
--
- 	bcm2836_arm_irqchip_smp_init();
- 
- 	set_handle_irq(bcm2836_arm_irqchip_handle_irq);
+You are right, #5 you actually be:
+
+    5/ page: 4kiB, strength 16b/1kiB (BCH)  
+
+Thanks for pointing it,
+Miquèl
+
+> 
+> > 
+> > Layout 2 has been tested with CM_X300 compulab module (PXA SoC) with
+> > and without DMA.
+> > Layout 4 has been tested with an Armada 385 db, an Armada 7040 DB
+> > and an Armada 8040 DB.
+> > Layout 5 has been tested with an Armada 398 db.
+> > 
+> > Layout 1 has been tested with the Armada 385 db with some hacks.
+> > Layout 3 has been tested with the Armada 385 db with some other
+> > hacks, that is why I am concerned about the other thread on the MTD
+> > mailing list "wait timeout when scanning for BB" where a 2kiB page
+> > with 16b/2048B strength is in use.
+> > 
+> > Regards,
+> > Miquèl  
+> 
+
+
+
 -- 
-2.7.4
-
+Miquel Raynal, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
