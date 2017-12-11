@@ -1,72 +1,61 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH 13/20] ARM: dts: aspeed: Update license headers
-Date: Mon, 11 Dec 2017 15:36:57 +1030
-Message-ID: <20171211050704.20621-14-joel@jms.id.au>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 14/20] ARM: dts: Add OpenBMC flash layout
+Date: Mon, 11 Dec 2017 15:36:58 +1030
+Message-ID: <20171211050704.20621-15-joel@jms.id.au>
 References: <20171211050704.20621-1-joel@jms.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211050704.20621-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171211050704.20621-1-joel@jms.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-In b24413180f56 ("License cleanup: add SPDX GPL-2.0 license identifier
-to files with no license") these files had the GPL-2.0 licence added
-automatically. Update them to be GPL 2.0+ in line with other IBM kernel
-contributions.
+This is a layout used by OpenBMC systems. It describes the fixed flash
+layout of a 32MB mtd device.
 
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- arch/arm/boot/dts/aspeed-ast2500-evb.dts      | 2 +-
- arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 2 +-
- arch/arm/boot/dts/aspeed-g4.dtsi              | 2 +-
- arch/arm/boot/dts/aspeed-g5.dtsi              | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/openbmc-flash-layout.dtsi | 32 +++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 arch/arm/boot/dts/openbmc-flash-layout.dtsi
 
-diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-index 602bc10fdaf4..3e6f38e5d5d0 100644
---- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-+++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/arm/boot/dts/openbmc-flash-layout.dtsi b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
+new file mode 100644
+index 000000000000..63ad8db7a431
+--- /dev/null
++++ b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
+@@ -0,0 +1,32 @@
 +// SPDX-License-Identifier: GPL-2.0+
- /dts-v1/;
- 
- #include "aspeed-g5.dtsi"
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-index c786bc2f2919..a8f0c046e83e 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0+
- /dts-v1/;
- 
- #include "aspeed-g4.dtsi"
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 2d7ac577d6b5..9c175832babc 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0+
- #include <dt-bindings/clock/aspeed-clock.h>
- #include <dt-bindings/gpio/aspeed-gpio.h>
- 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 030a760696fd..360329eab7c3 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0+
- #include <dt-bindings/clock/aspeed-clock.h>
- #include <dt-bindings/gpio/aspeed-gpio.h>
- 
++
++partitions {
++	compatible = "fixed-partitions";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	u-boot@0 {
++		reg = <0x0 0x60000>;
++		label = "u-boot";
++	};
++
++	u-boot-env@60000 {
++		reg = <0x60000 0x20000>;
++		label = "u-boot-env";
++	};
++
++	kernel@80000 {
++		reg = <0x80000 0x440000>;
++		label = "kernel";
++	};
++
++	rofs@0c0000 {
++		reg = <0x4c0000 0x1740000>;
++		label = "rofs";
++	};
++
++	rwfs@1c00000 {
++		reg = <0x1c00000 0x400000>;
++		label = "rwfs";
++	};
++};
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
