@@ -1,51 +1,80 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [alsa-devel] [PATCH 5/8] ASoC: uniphier: add support for
- UniPhier AIO driver
-Date: Mon, 11 Dec 2017 23:18:54 +0530
-Message-ID: <20171211174854.GZ18649@localhost>
-References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com>
- <20171122114321.29196-6-suzuki.katsuhiro@socionext.com>
- <20171204183934.rd4vin22ktukwpip@sirena.org.uk>
- <002b01d36d84$51d80aa0$f5881fe0$@socionext.com>
- <20171205121440.GC11658@finisterre>
- <004801d36e57$ea1940d0$be4bc270$@socionext.com>
- <20171206125817.GF1827@finisterre>
- <001501d37261$7ea89d10$7bf9d730$@socionext.com>
- <20171211151629.GD9854@sirena.org.uk>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH V3 0/2] Tegra PCIe end point config space map code
+ refactoring
+Date: Mon, 11 Dec 2017 11:54:53 -0600
+Message-ID: <20171211175452.GC16032@bhelgaas-glaptop.roam.corp.google.com>
+References: <1512410030-21038-1-git-send-email-vidyas@nvidia.com>
+ <20171211105431.GI10671@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171211151629.GD9854@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20171211105431.GI10671@ulmo>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Vidya Sagar <vidyas@nvidia.com>, treding@nvidia.com, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, kthota@nvidia.com, mmaddireddy@nvidia.com, robh+dt@kernel.org, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 03:16:29PM +0000, Mark Brown wrote:
-> On Mon, Dec 11, 2017 at 06:21:58PM +0900, Katsuhiro Suzuki wrote:
-> 
-> > But I can't find how to use/map this DAI in machine driver or Device-Tree or
-> > something. I think that it's same as PCM DAI, am I correct?
-> 
-> Yes, that probably makes sense from a binding point of view.
-> 
-> > I read compress-offload.rst, but I can't find how do I test it. It seems aplay
-> > of
-> > alsa-util doesn't know compress audio formats. Should I use PulseAudio or
-> > Android HAL to test compress audio APIs?
-> 
-> IIRC tinyalsa has a compressed API test application - Vinod?
+[+cc Lorenzo]
 
-I guess it was sheer luck that i saw this :) email in CC reads
-vinod.koul@linaro.org! I don't work for Linaro, not yet :D
+On Mon, Dec 11, 2017 at 11:54:31AM +0100, Thierry Reding wrote:
+> On Mon, Dec 04, 2017 at 11:23:48PM +0530, Vidya Sagar wrote:
+> > PCIe host controller in Tegra SoCs has 1GB of aperture available
+> > for mapping end points config space, IO and BARs. In that, currently
+> > 256MB is being reserved for mapping end points configuration space
+> > which leaves less memory space available for mapping end points BARs
+> > on some of the platforms.
+> > This patch series attempts to map only 4K space from 1GB aperture to
+> > access end points configuration space.
+> > 
+> > Currently, this change can benefit T20 and T186 in saving (i.e. repurposed
+> > to use for BAR mapping) physical space as well as kernel virtual mapping space,
+> > it saves only kernel virtual address space in T30, T124, T132 and T210.
+> > 
+> > NOTE: Since T186 PCIe DT entry is not yet present in main line (it is currently
+> > merged to 'for-4.15/arm64/dt' branch), nothing gets broken with this change for T186.
+> > For older platforms (T20, T30, T124, T132, T210), this change works fine without any
+> > DT modifications
+> > 
+> > Testing Done on T124, T210 & T186:
+> >  Enumeration and basic functionality of immediate devices
+> >  Enumeration of devices behind a PCIe switch
+> >  Complete 4K configuration space access
+> > 
+> > Vidya Sagar (2):
+> >   PCI: tegra: refactor config space mapping code
+> >   ARM64: tegra: limit PCIe config space mapping to 4K for T186
+> > 
+> >  arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
+> >  drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------------------
+> >  2 files changed, 44 insertions(+), 89 deletions(-)
+> 
+> Hi Bjorn,
+> 
+> there's a bunch of PCI related patches for Tegra floating around on the
+> lists. I'm wondering if you'd be okay if I pick those up into the Tegra
+> tree after they've been reviewed and send you a pull request later on
+> (say around v4.15-rc6). That would allow me to get things cooking in
+> linux-next for a bit and get broader testing in addition to the
+> flexibility to patch things up if they break.
 
-And to the answer the question, Yes we have compressed API test application
-in tinycompress which is located at git.alsa-project.org:tinycompress.git
+Lorenzo will be merging the Tegra stuff, so this is more a question
+for him.
 
-We have both compressed audio playback as well as record test app, cplay and
-crecord.
+Just to clarify, I think your questions is about putting those patches
+in
+git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux.git#for-next.
+If you put them there they will show up in linux-next, and then when
+Lorenzo merges them, you'll have to coordinate so they don't get
+merged into linux-next twice (once via the usual PCI tree route and
+again via the Tegra tree).
 
-HTH
--- 
-~Vinod
+If you wait until after they've been reviewed to put them into the
+Tegra tree, I'm not sure what the gain is, because I assume Lorenzo
+would merge them at about that same point.
+
+This cycle isn't going to be ideal timing with all the holidays
+coming up.  I know I'm going to be traveling and on vacation quite a
+bit in the rc5, 6, 7 timeframe.
+
+Bjorn
