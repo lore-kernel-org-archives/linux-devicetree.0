@@ -1,95 +1,51 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 0/2] of: overlay: Crash fix and improvement
-Date: Mon, 11 Dec 2017 14:33:07 -0800
-Message-ID: <bdd10617-269b-cc75-b97e-a49d9f5a9d6d@gmail.com>
-References: <1512738783-17452-1-git-send-email-geert+renesas@glider.be>
- <f78620d2-7a6d-b90e-d773-9e3cc3d0cb6a@gmail.com>
- <CAMuHMdXGg9hF+AS8TtW2LSxVDaSkDit+7=QO2=p3_BZ-8TROWA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXGg9hF+AS8TtW2LSxVDaSkDit+7=QO2=p3_BZ-8TROWA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Javier Martinez Canillas <javierm@redhat.com>
+Subject: [RFT PATCH] ARM: dts: exynos: Enable Mixer node for Exynos5800 Peach Pi machine
+Date: Mon, 11 Dec 2017 23:48:56 +0100
+Message-ID: <20171211224856.29264-1-javierm@redhat.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Guillaume Tucker <guillaume.tucker@collabora.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Shuah Khan <shuahkh@osg.samsung.com>, Javier Martinez Canillas <javierm@redhat.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/17 01:04, Geert Uytterhoeven wrote:
-> Hi Frank,
-> 
-> On Sat, Dec 9, 2017 at 7:01 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->> On 12/08/17 05:13, Geert Uytterhoeven wrote:
->>> This patch series fixes memory corruption when applying overlays.
->>> I first noticed this when using OF configfs.  After lots of failed
->>> debugging attempts, I bisected it to "of: overlay: add per overlay sysfs
->>> attributes", which is not upstream.  But that was a red herring: that
->>> commit enlarged struct fragment to exactly 64-bytes, which just made it
->>> more likely to cause random corruption when writing beyond the end of an
->>> array of fragment structures.  With the smaller structure size before,
->>> such writes usually ended up in the unused holes between allocated
->>> blocks, causing no harm.
->>>
->>> The first patch is the real fix, and applies to both v4.15-rc2 and Rob's
->>> for-next branch.
->>> The second patch is a small improvement, and applies to Rob's for-next
->>> branch only.
->>
->> Overlay FDT files should not have invalid contents.  But they inevitably
->> will, so the code has to handle those cases.  Thanks for finding this
->> problem and making the code better!
-> 
-> Sure, people can throw anything at it ;-)
-> 
-> In my case, I'm wondering if the dtbo was actually invalid?
-> Simplification of the decompiled dtbo:
-> 
-> /dts-v1/;
-> 
-> / {
-> 
->         fragment-name {
->                 target-path = [2f 00];
-> 
->                 __overlay__ {
-> 
->                         node-name {
->                                 compatible = "foo,bar";
->                                 gpios = <0xffffffff 0x0 0x0>;
->                         };
->                 };
->         };
-> 
->         __fixups__ {
->                 bank0 = "/fragment-name/__overlay__/node-name:gpios:0";
->         };
-> };
-> 
-> So it has __fixup__, but no __symbols__, which looks totally valid to me.
+Commit 1cb686c08d12 ("ARM: dts: exynos: Add status property to Exynos 542x
+Mixer nodes") disabled the Mixer node by default in the DTSI and enabled
+for each Exynos 542x DTS. But unfortunately it missed to enable it for the
+Exynos5800 Peach Pi machine, since the 5800 is also an 542x SoC variant.
 
-Yes, that is correct.  The bug would also be exposed if there was a __local_fixups__
-node without a __symbols__ node.  Which is also a valid overlay.
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
 
-My comment was triggered by another possible case, where a non-overlay node
-occurs in an overlay, without a __symbols__ node.  I'm not positive, but I
-don't think that dtc would find an error in that case. 
+---
 
+I believe this may cause the boot issues reported on Exynos5800 Peach Pi
+from v4.15-rc3, the mentioned commit made to v4.15-rc1 but it seems that
+didn't cause any harm until commit ("510353a63796 drm/bridge: analogix
+dp: Fix runtime PM state in get_modes() callback") fixed the runtime PM
+management in the DP driver.
 
->> For the full series:
->>
->> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-> 
-> Thanks!
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+I can't test right now, but I'm posting anyways as a RFT in case others
+that have access to a Peach Pi can test it.
+
+Best regards,
+Javier
+
+ arch/arm/boot/dts/exynos5800-peach-pi.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index b2b95ff205e8..0029ec27819c 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -664,6 +664,10 @@
+ 	status = "okay";
+ };
+ 
++&mixer {
++	status = "okay";
++};
++
+ /* eMMC flash */
+ &mmc_0 {
+ 	status = "okay";
+-- 
+2.14.3
