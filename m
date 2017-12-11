@@ -1,74 +1,63 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 02/20] dt-bindings: gpio: Add ASPEED constants
-Date: Mon, 11 Dec 2017 21:13:58 +1030
-Message-ID: <CACPK8XekveEuX5vNv7uGVmSEqwLmQMqfdikV4F+xAiwmH9zkxQ@mail.gmail.com>
-References: <20171211050704.20621-1-joel@jms.id.au> <20171211050704.20621-3-joel@jms.id.au>
- <CAK8P3a17iWxJVv=f+=w+4sS7zWimxMSD5+Gz9qC5ms-RrcQneg@mail.gmail.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 05/20] ARM: dts: aspeed: Add proper clock references
+Date: Mon, 11 Dec 2017 21:14:23 +1030
+Message-ID: <CACPK8XeTtiejw1SyDHNn5w6be-FqCQFuT5PT-yeRho2Hhs2K8g@mail.gmail.com>
+References: <20171211050704.20621-1-joel@jms.id.au> <20171211050704.20621-6-joel@jms.id.au>
+ <CAK8P3a10wjXvFpE5zbwCfQNC-UiRCzKE+9-ENg-Sr577ZCF+Xw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a17iWxJVv=f+=w+4sS7zWimxMSD5+Gz9qC5ms-RrcQneg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a10wjXvFpE5zbwCfQNC-UiRCzKE+9-ENg-Sr577ZCF+Xw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 6:26 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Mon, Dec 11, 2017 at 6:06 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
->> These are used to by the device tree to map pin numbers to constants
->> required by the GPIO bindings.
->> +
->> +#define ASPEED_GPIO_PORT_A 0
->> +#define ASPEED_GPIO_PORT_B 1
->> +#define ASPEED_GPIO_PORT_C 2
->> +#define ASPEED_GPIO_PORT_D 3
->> +#define ASPEED_GPIO_PORT_E 4
->> +#define ASPEED_GPIO_PORT_F 5
->> +#define ASPEED_GPIO_PORT_G 6
->> +#define ASPEED_GPIO_PORT_H 7
->> +#define ASPEED_GPIO_PORT_I 8
->> +#define ASPEED_GPIO_PORT_J 9
->> +#define ASPEED_GPIO_PORT_K 10
->> +#define ASPEED_GPIO_PORT_L 11
->> +#define ASPEED_GPIO_PORT_M 12
->> +#define ASPEED_GPIO_PORT_N 13
->> +#define ASPEED_GPIO_PORT_O 14
->> +#define ASPEED_GPIO_PORT_P 15
->> +#define ASPEED_GPIO_PORT_Q 16
->> +#define ASPEED_GPIO_PORT_R 17
->> +#define ASPEED_GPIO_PORT_S 18
->> +#define ASPEED_GPIO_PORT_T 19
->> +#define ASPEED_GPIO_PORT_U 20
->> +#define ASPEED_GPIO_PORT_V 21
->> +#define ASPEED_GPIO_PORT_W 22
->> +#define ASPEED_GPIO_PORT_X 23
->> +#define ASPEED_GPIO_PORT_Y 24
->> +#define ASPEED_GPIO_PORT_Z 25
->> +#define ASPEED_GPIO_PORT_AA 26
->> +#define ASPEED_GPIO_PORT_AB 27
->> +#define ASPEED_GPIO_PORT_AC 28
+On Mon, Dec 11, 2017 at 6:39 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Mon, Dec 11, 2017 at 6:06 AM, Joel Stanley <joel@jms.id.au> wrote:
+>> The existing device trees use fixed-clocks in order to boot without a
+>> clk driver. The newly added clk driver provides proper clock support,
+>> including gating, so we move the device trees over to properly request
+>> clocks.
+>>
+>> Signed-off-by: Joel Stanley <joel@jms.id.au>
 >
-> This looks like a 1:1 mapping, wouldn't it be easier to just describe
-> it in the binding document?
+> Can you clarify here whether this will break running old kernels with
+> new DT files or vice versa, and why this is ok here?
 
-You're right, it is a linear mapping. We use it so references to GPIO
-numbers are human readable in the device tree:
+This device tree will break kernels that do not have the clk patches
+applied (no clocksource, as we don't know the speed of the APB clock.
+You can boot if you pass a lpj value on the command line, but won't
+have a uart).
 
-#define ASPEED_GPIO(port, offset) \
-        ((ASPEED_GPIO_PORT_##port * 8) + offset)
+Older device trees running with the newer kernel will function as well
+as pre-4.16 kernels. That is, that some IP blocks (i2c, pwm/tach, adc)
+will not work as the kernel lacks reset controller and clock enabling.
 
-can be used:
+> I assume you have thought about it carefully, but I'd still like to document
+> every time we intentionally break compatibility like this. It looks like
+> you too care to merge the driver changes and the DT binding change first,
+> so we don't get any bisection problems.
 
-                identify {
-                        gpios = <&gpio ASPEED_GPIO(A, 2) GPIO_ACTIVE_LOW>;
-                };
+Thanks for calling it out. I will modify the commit message to say
+that this device tree change depends on the newer driver, and it will
+not boot with kernels that lack the driver.
 
-We find that has cut down on mistakes in calculating offsets into GPIO banks.
+>
+> What I'm not completely clear about is the difference between the
+> "aspeed,g4-scu" binding and the "aspeed,ast2400-scu" binding.
+> They are listed as equal in
+> Documentation/devicetree/bindings/mfd/aspeed-scu.txt, so why do you
+> change it here?
+
+The g4-scu string made it into the tree before we had decided that we
+would settle on aspeed,astX000-<ip> as the format for the strings. We
+list both in the docs, but I would like to deprecate the old one.
+
+If I was doing this again, I would make sure we had the clock driver
+upstream before completing the other driver. It's caused a lot of
+pain. Thanks for your help getting us there.
 
 Cheers,
 
 Joel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
