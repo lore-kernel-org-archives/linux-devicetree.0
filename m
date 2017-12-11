@@ -1,41 +1,64 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] staging: Introduce NVIDIA Tegra video decoder
- driver
-Date: Mon, 11 Dec 2017 03:12:55 +0300
-Message-ID: <c9d8ad71-2fb3-4ce9-2672-9006511f5079@gmail.com>
-References: <cover.1508448293.git.digetx@gmail.com>
- <1a3798f337c0097e67d70226ae3ba665fd9156c2.1508448293.git.digetx@gmail.com>
- <ad2da9f4-8899-7db3-493f-5aa15297c33c@xs4all.nl>
- <3ac6a087-def2-014f-673d-1be9d5094635@gmail.com>
- <93c98569-0282-80d9-78ad-c8ab8fd9db92@xs4all.nl>
- <f46f397d-28e1-f4e5-55d4-9863214e8f6c@gmail.com>
- <1512934179.4281.15.camel@ndufresne.ca>
+From: "Yang, Wenyou" <Wenyou.Yang-P1yVeZNtzML3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH v8 2/2] media: i2c: Add the ov7740 image sensor driver
+Date: Mon, 11 Dec 2017 09:33:37 +0800
+Message-ID: <d51138eb-0a59-034f-9810-dd72a1690ea2@Microchip.com>
+References: <20171208015542.15444-1-wenyou.yang@microchip.com>
+ <20171208015542.15444-3-wenyou.yang@microchip.com>
+ <CAOFm3uFASPpuMtGSetcYME0pQEmuzoLqY=Yhv5aaFu5AzJwaew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512934179.4281.15.camel-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
+In-Reply-To: <CAOFm3uFASPpuMtGSetcYME0pQEmuzoLqY=Yhv5aaFu5AzJwaew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
+To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10.12.2017 22:29, Nicolas Dufresne wrote:
-> Le dimanche 10 décembre 2017 à 21:56 +0300, Dmitry Osipenko a écrit :
->>> I've CC-ed Maxime and Giulio as well: they are looking into adding support for
->>> the stateless allwinner codec based on this code as well. There may well be
->>> opportunities for you to work together, esp. on the userspace side. Note that
->>> Rockchip has the same issue, they too have a stateless HW codec.
->>
->> IIUC, we will have to define video decoder parameters in V4L API and then make a
->> V4L driver / userspace prototype (ffmpeg for example) that will use the requests
->> API for video decoding in order to upstream the requests API. Does it sound good?
-> 
-> Chromium/Chrome already have support for that type of decoder in their
-> tree. In theory, it should just work.
+Hi Philippe,
 
-Everything is possible, in theory ;)
+
+On 2017/12/8 21:14, Philippe Ombredanne wrote:
+> Wenyou,
+>
+> On Fri, Dec 8, 2017 at 2:55 AM, Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
+>> The ov7740 (color) image sensor is a high performance VGA CMOS
+>> image snesor, which supports for output formats: RAW RGB and YUV
+>> and image sizes: VGA, and QVGA, CIF and any size smaller.
+>>
+>> Signed-off-by: Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>> Signed-off-by: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> []
+>> --- /dev/null
+>> +++ b/drivers/media/i2c/ov7740.c
+>> @@ -0,0 +1,1226 @@
+>> +/*
+>> + * Copyright (c) 2017 Microchip Corporation.
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License version
+>> + * 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + */
+> Have you considered using the new SPDX ids instead of this fine legalese?
+> e.g.:
+>
+> // SPDX-License-Identifier: GPL-2.0
+> // Copyright (c) 2017 Microchip Corporation.
+>
+> Short and neat! Check also Thomas doc patches and Linus comments on
+> why he prefers the C++ comment style for these.
+Thank you for your suggestion and information.
+
+
+Best Regards,
+Wenyou Yang
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
