@@ -1,160 +1,619 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH 1/4] ASoC: codecs: tas5720: add basic support for TAS5722 devices
-Date: Mon, 11 Dec 2017 13:01:54 -0600
-Message-ID: <20171211190157.12371-1-afd@ti.com>
+From: Brandon Wyman <bjwyman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 16/20] ARM: dts: aspeed: Add Witherspoon BMC machine
+Date: Mon, 11 Dec 2017 13:27:56 -0600
+Message-ID: <CAK_vbW1iLBkRRco18e8edjatE6y=Aa9XMi9B8wOaY0FFybPFAA@mail.gmail.com>
+References: <20171211050704.20621-1-joel@jms.id.au> <20171211050704.20621-17-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171211050704.20621-17-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Matt Spinler <spinler-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Brad Bishop <bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org>, "Edward A . James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andreas Dannenberg <dannenberg@ti.com>
-
-The TI TAS5722 digital amplifier is very similar to the TAS5720 from an
-overall and register map perspective. Therefore the existing driver can be
-extended easily to support this additional device. This commit allows
-TAS5722 devices to be used in a "subset" type of fashion, without exposing
-any of the additional features they offer.
-
-Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
-Signed-off-by: Andrew F. Davis <afd@ti.com>
----
- .../devicetree/bindings/sound/tas5720.txt          |  4 ++-
- sound/soc/codecs/tas5720.c                         | 38 ++++++++++++++++++----
- sound/soc/codecs/tas5720.h                         |  1 +
- 3 files changed, 35 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/tas5720.txt b/Documentation/devicetree/bindings/sound/tas5720.txt
-index 40d94f82beb3..7481653fe8e3 100644
---- a/Documentation/devicetree/bindings/sound/tas5720.txt
-+++ b/Documentation/devicetree/bindings/sound/tas5720.txt
-@@ -6,10 +6,12 @@ audio playback. For more product information please see the links below:
- 
- http://www.ti.com/product/TAS5720L
- http://www.ti.com/product/TAS5720M
-+http://www.ti.com/product/TAS5722L
- 
- Required properties:
- 
--- compatible : "ti,tas5720"
-+- compatible : "ti,tas5720",
-+               "ti,tas5722"
- - reg : I2C slave address
- - dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
- - pvdd-supply : phandle to a supply used for the Class-D amp and the analog
-diff --git a/sound/soc/codecs/tas5720.c b/sound/soc/codecs/tas5720.c
-index a736a2a6976c..5def54d1336d 100644
---- a/sound/soc/codecs/tas5720.c
-+++ b/sound/soc/codecs/tas5720.c
-@@ -36,6 +36,11 @@
- /* Define how often to check (and clear) the fault status register (in ms) */
- #define TAS5720_FAULT_CHECK_INTERVAL		200
- 
-+enum tas572x_type {
-+	TAS5720,
-+	TAS5722,
-+};
-+
- static const char * const tas5720_supply_names[] = {
- 	"dvdd",		/* Digital power supply. Connect to 3.3-V supply. */
- 	"pvdd",		/* Class-D amp and analog power supply (connected). */
-@@ -47,6 +52,7 @@ struct tas5720_data {
- 	struct snd_soc_codec *codec;
- 	struct regmap *regmap;
- 	struct i2c_client *tas5720_client;
-+	enum tas572x_type devtype;
- 	struct regulator_bulk_data supplies[TAS5720_NUM_SUPPLIES];
- 	struct delayed_work fault_check_work;
- 	unsigned int last_fault;
-@@ -264,7 +270,7 @@ static void tas5720_fault_check_work(struct work_struct *work)
- static int tas5720_codec_probe(struct snd_soc_codec *codec)
- {
- 	struct tas5720_data *tas5720 = snd_soc_codec_get_drvdata(codec);
--	unsigned int device_id;
-+	unsigned int device_id, expected_device_id;
- 	int ret;
- 
- 	tas5720->codec = codec;
-@@ -276,6 +282,11 @@ static int tas5720_codec_probe(struct snd_soc_codec *codec)
- 		return ret;
- 	}
- 
-+	/*
-+	 * Take a liberal approach to checking the device ID to allow the
-+	 * driver to be used even if the device ID does not match, however
-+	 * issue a warning if there is a mismatch.
-+	 */
- 	ret = regmap_read(tas5720->regmap, TAS5720_DEVICE_ID_REG, &device_id);
- 	if (ret < 0) {
- 		dev_err(codec->dev, "failed to read device ID register: %d\n",
-@@ -283,13 +294,22 @@ static int tas5720_codec_probe(struct snd_soc_codec *codec)
- 		goto probe_fail;
- 	}
- 
--	if (device_id != TAS5720_DEVICE_ID) {
--		dev_err(codec->dev, "wrong device ID. expected: %u read: %u\n",
--			TAS5720_DEVICE_ID, device_id);
--		ret = -ENODEV;
--		goto probe_fail;
-+	switch (tas5720->devtype) {
-+	case TAS5720:
-+		expected_device_id = TAS5720_DEVICE_ID;
-+		break;
-+	case TAS5722:
-+		expected_device_id = TAS5722_DEVICE_ID;
-+		break;
-+	default:
-+		dev_err(codec->dev, "unexpected private driver data\n");
-+		return -EINVAL;
- 	}
- 
-+	if (device_id != expected_device_id)
-+		dev_warn(codec->dev, "wrong device ID. expected: %u read: %u\n",
-+			 expected_device_id, device_id);
-+
- 	/* Set device to mute */
- 	ret = snd_soc_update_bits(codec, TAS5720_DIGITAL_CTRL2_REG,
- 				  TAS5720_MUTE, TAS5720_MUTE);
-@@ -552,6 +572,8 @@ static int tas5720_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 
- 	data->tas5720_client = client;
-+	data->devtype = id->driver_data;
-+
- 	data->regmap = devm_regmap_init_i2c(client, &tas5720_regmap_config);
- 	if (IS_ERR(data->regmap)) {
- 		ret = PTR_ERR(data->regmap);
-@@ -592,7 +614,8 @@ static int tas5720_remove(struct i2c_client *client)
- }
- 
- static const struct i2c_device_id tas5720_id[] = {
--	{ "tas5720", 0 },
-+	{ "tas5720", TAS5720 },
-+	{ "tas5722", TAS5722 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, tas5720_id);
-@@ -600,6 +623,7 @@ MODULE_DEVICE_TABLE(i2c, tas5720_id);
- #if IS_ENABLED(CONFIG_OF)
- static const struct of_device_id tas5720_of_match[] = {
- 	{ .compatible = "ti,tas5720", },
-+	{ .compatible = "ti,tas5722", },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, tas5720_of_match);
-diff --git a/sound/soc/codecs/tas5720.h b/sound/soc/codecs/tas5720.h
-index 3d077c779b12..bef802afcc69 100644
---- a/sound/soc/codecs/tas5720.h
-+++ b/sound/soc/codecs/tas5720.h
-@@ -32,6 +32,7 @@
- 
- /* TAS5720_DEVICE_ID_REG */
- #define TAS5720_DEVICE_ID		0x01
-+#define TAS5722_DEVICE_ID		0x12
- 
- /* TAS5720_POWER_CTRL_REG */
- #define TAS5720_DIG_CLIP_MASK		GENMASK(7, 2)
--- 
-2.15.0
+On Sun, Dec 10, 2017 at 11:07 PM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
+> The Witherspoon BMC is an ASPEED ast2500 based BMC that is part of an
+> OpenPower Power9 server.
+>
+> This adds the device tree description for most upstream components. It
+> is a squashed commit from the OpenBMC kernel tree.
+>
+> Signed-off-by: Brandon Wyman <bjwyman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Matt Spinler <spinler-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Brad Bishop <bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile                       |   4 +-
+>  arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts | 547 +++++++++++++++++=
+++++++
+>  2 files changed, 550 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 5d1e9d37bf3a..15a9207319c1 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1104,5 +1104,7 @@ dtb-$(CONFIG_ARCH_ZX) +=3D zx296702-ad1.dtb
+>  dtb-$(CONFIG_ARCH_ASPEED) +=3D \
+>         aspeed-ast2500-evb.dtb \
+>         aspeed-bmc-opp-palmetto.dtb \
+> -       aspeed-bmc-opp-romulus.dtb
+> +       aspeed-bmc-opp-romulus.dtb \
+> +       aspeed-bmc-opp-witherspoon.dtb
+> +
+>  endif
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/=
+boot/dts/aspeed-bmc-opp-witherspoon.dts
+> new file mode 100644
+> index 000000000000..9a0937512e5b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+> @@ -0,0 +1,547 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/dts-v1/;
+> +#include "aspeed-g5.dtsi"
+> +#include <dt-bindings/leds/leds-pca955x.h>
+> +
+> +/ {
+> +       model =3D "Witherspoon BMC";
+> +       compatible =3D "ibm,witherspoon-bmc", "aspeed,ast2500";
+> +
+> +       chosen {
+> +               stdout-path =3D &uart5;
+> +               bootargs =3D "console=3DttyS4,115200 earlyprintk";
+> +       };
+> +
+> +       memory {
+> +               reg =3D <0x80000000 0x20000000>;
+> +       };
+> +
+> +       reserved-memory {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <1>;
+> +               ranges;
+> +
+> +               flash_memory: region@98000000 {
+> +                       no-map;
+> +                       reg =3D <0x98000000 0x04000000>; /* 64M */
+> +               };
+> +       };
+> +
+> +       gpio-keys-polled {
+> +               compatible =3D "gpio-keys-polled";
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +               poll-interval =3D <1000>;
+> +
+> +               fan0-presence {
+> +                       label =3D "fan0-presence";
+> +                       gpios =3D <&pca0 4 GPIO_ACTIVE_LOW>;
+> +                       linux,code =3D <4>;
+> +               };
+> +
+> +               fan1-presence {
+> +                       label =3D "fan1-presence";
+> +                       gpios =3D <&pca0 5 GPIO_ACTIVE_LOW>;
+> +                       linux,code =3D <5>;
+> +               };
+> +
+> +               fan2-presence {
+> +                       label =3D "fan2-presence";
+> +                       gpios =3D <&pca0 6 GPIO_ACTIVE_LOW>;
+> +                       linux,code =3D <6>;
+> +               };
+> +
+> +               fan3-presence {
+> +                       label =3D "fan3-presence";
+> +                       gpios =3D <&pca0 7 GPIO_ACTIVE_LOW>;
+> +                       linux,code =3D <7>;
+> +               };
+> +       };
+> +
+> +       leds {
+> +               compatible =3D "gpio-leds";
+> +
+> +               fan0 {
+> +                       retain-state-shutdown;
+> +                       default-state =3D "keep";
+> +                       gpios =3D <&pca0 0 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               fan1 {
+> +                       retain-state-shutdown;
+> +                       default-state =3D "keep";
+> +                       gpios =3D <&pca0 1 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               fan2 {
+> +                       retain-state-shutdown;
+> +                       default-state =3D "keep";
+> +                       gpios =3D <&pca0 2 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               fan3 {
+> +                       retain-state-shutdown;
+> +                       default-state =3D "keep";
+> +                       gpios =3D <&pca0 3 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               front-fault {
+> +                       retain-state-shutdown;
+> +                       default-state =3D "keep";
+> +                       gpios =3D <&pca0 13 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               front-power {
+> +                       retain-state-shutdown;
+> +                       default-state =3D "keep";
+> +                       gpios =3D <&pca0 14 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               front-id {
+> +                       retain-state-shutdown;
+> +                       default-state =3D "keep";
+> +                       gpios =3D <&pca0 15 GPIO_ACTIVE_LOW>;
+> +               };
+> +
+> +               rear-fault {
+> +                       gpios =3D <&gpio ASPEED_GPIO(N, 2) GPIO_ACTIVE_LO=
+W>;
+> +               };
+> +
+> +               rear-id {
+> +                       gpios =3D <&gpio ASPEED_GPIO(N, 4) GPIO_ACTIVE_LO=
+W>;
+> +               };
+> +
+> +               rear-power {
+> +                       gpios =3D <&gpio ASPEED_GPIO(N, 3) GPIO_ACTIVE_LO=
+W>;
+> +               };
+> +
+> +               power-button {
+> +                       gpios =3D <&gpio ASPEED_GPIO(R, 5) GPIO_ACTIVE_LO=
+W>;
+> +               };
+> +       };
+> +
+> +       fsi: gpio-fsi {
+> +               compatible =3D "fsi-master-gpio", "fsi-master";
+> +               #address-cells =3D <2>;
+> +               #size-cells =3D <0>;
+> +
+> +               clock-gpios =3D <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIG=
+H>;
+> +               data-gpios =3D <&gpio ASPEED_GPIO(E, 0) GPIO_ACTIVE_HIGH>=
+;
+> +               mux-gpios =3D <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
+> +               enable-gpios =3D <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIG=
+H>;
+> +               trans-gpios =3D <&gpio ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH=
+>;
+> +       };
+> +
+> +       iio-hwmon-dps310 {
+> +               compatible =3D "iio-hwmon";
+> +               io-channels =3D <&dps 0>;
+> +       };
+> +
+> +       iio-hwmon-bmp280 {
+> +               compatible =3D "iio-hwmon";
+> +               io-channels =3D <&bmp 1>;
+> +       };
+> +
+> +};
+> +
+> +&fmc {
+> +       status =3D "okay";
+> +
+> +       flash@0 {
+> +               status =3D "okay";
+> +               label =3D "bmc";
+> +               m25p,fast-read;
+> +#include "openbmc-flash-layout.dtsi"
+> +       };
+> +
+> +       flash@1 {
+> +               status =3D "okay";
+> +               label =3D "alt";
+> +               m25p,fast-read;
+> +       };
+> +};
+> +
+> +&spi1 {
+> +       status =3D "okay";
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_spi1_default>;
+> +
+> +       flash@0 {
+> +               status =3D "okay";
+> +               label =3D "pnor";
+> +               m25p,fast-read;
+> +       };
+> +};
+> +
+> +&uart1 {
+> +       /* Rear RS-232 connector */
+> +       status =3D "okay";
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_txd1_default
+> +                       &pinctrl_rxd1_default
+> +                       &pinctrl_nrts1_default
+> +                       &pinctrl_ndtr1_default
+> +                       &pinctrl_ndsr1_default
+> +                       &pinctrl_ncts1_default
+> +                       &pinctrl_ndcd1_default
+> +                       &pinctrl_nri1_default>;
+> +};
+> +
+> +&uart2 {
+> +       /* APSS */
+> +       status =3D "okay";
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_txd2_default &pinctrl_rxd2_default>;
+> +};
+> +
+> +&uart5 {
+> +       status =3D "okay";
+> +};
+> +
+> +&lpc_ctrl {
+> +       status =3D "okay";
+> +       memory-region =3D <&flash_memory>;
+> +       flash =3D <&spi1>;
+> +};
+> +
+> +&mac0 {
+> +       status =3D "okay";
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_rmii1_default>;
+> +       use-ncsi;
+> +};
+> +
+> +&i2c2 {
+> +       status =3D "okay";
+> +
+> +       /* MUX ->
+> +        *    Samtec 1
+> +        *    Samtec 2
+> +        */
+> +};
+> +
+> +&i2c3 {
+> +       status =3D "okay";
+> +
+> +       bmp: bmp280@77 {
+> +               compatible =3D "bosch,bmp280";
+> +               reg =3D <0x77>;
+> +               #io-channel-cells =3D <1>;
+> +       };
+> +
+> +       max31785@52 {
+> +               compatible =3D "maxim,max31785a";
+> +               reg =3D <0x52>;
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +       };
+> +
+> +       dps: dps310@76 {
+> +               compatible =3D "infineon,dps310";
+> +               reg =3D <0x76>;
+> +               #io-channel-cells =3D <0>;
+> +       };
+> +
+> +       pca0: pca9552@60 {
+> +               compatible =3D "nxp,pca9552";
+> +               reg =3D <0x60>;
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +
+> +               gpio-controller;
+> +               #gpio-cells =3D <2>;
+> +
+> +               gpio@0 {
+> +                       reg =3D <0>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@1 {
+> +                       reg =3D <1>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@2 {
+> +                       reg =3D <2>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@3 {
+> +                       reg =3D <3>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@4 {
+> +                       reg =3D <4>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@5 {
+> +                       reg =3D <5>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@6 {
+> +                       reg =3D <6>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@7 {
+> +                       reg =3D <7>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@8 {
+> +                       reg =3D <8>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@9 {
+> +                       reg =3D <9>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@10 {
+> +                       reg =3D <10>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@11 {
+> +                       reg =3D <11>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@12 {
+> +                       reg =3D <12>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@13 {
+> +                       reg =3D <13>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@14 {
+> +                       reg =3D <14>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@15 {
+> +                       reg =3D <15>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +       };
+> +
+> +       power-supply@68 {
+> +               compatible =3D "ibm,cffps1";
+> +               reg =3D <0x68>;
+> +       };
+> +
+> +       power-supply@69 {
+> +               compatible =3D "ibm,cffps1";
+> +               reg =3D <0x69>;
+> +       };
+> +};
+> +
+> +&i2c4 {
+> +       status =3D "okay";
+> +
+> +       tmp423a@4c {
+> +               compatible =3D "ti,tmp423";
+> +               reg =3D <0x4c>;
+> +       };
+> +
+> +       ir35221@70 {
+> +               compatible =3D "infineon,ir35221";
+> +               reg =3D <0x70>;
+> +       };
+> +
+> +       ir35221@71 {
+> +               compatible =3D "infineon,ir35221";
+> +               reg =3D <0x71>;
+> +       };
+> +};
+> +
+> +
+> +&i2c5 {
+> +       status =3D "okay";
+> +
+> +       tmp423a@4c {
+> +               compatible =3D "ti,tmp423";
+> +               reg =3D <0x4c>;
+> +       };
+> +
+> +       ir35221@70 {
+> +               compatible =3D "infineon,ir35221";
+> +               reg =3D <0x70>;
+> +       };
+> +
+> +       ir35221@71 {
+> +               compatible =3D "infineon,ir35221";
+> +               reg =3D <0x71>;
+> +       };
+> +};
+> +
+> +&i2c9 {
+> +       status =3D "okay";
+> +
+> +       tmp275@4a {
+> +               compatible =3D "ti,tmp275";
+> +               reg =3D <0x4a>;
+> +       };
+> +};
+> +
+> +&i2c10 {
+> +       /* MUX
+> +        *   -> PCIe Slot 3
+> +        *   -> PCIe Slot 4
+> +        */
+> +       status =3D "okay";
+> +};
+> +
+> +&i2c11 {
+> +       status =3D "okay";
+> +
+> +       pca9552: pca9552@60 {
+> +               compatible =3D "nxp,pca9552";
+> +               reg =3D <0x60>;
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +               gpio-controller;
+> +               #gpio-cells =3D <2>;
+> +
+> +               gpio-line-names =3D "PS_SMBUS_RESET_N", "APSS_RESET_N",
+> +                       "GPU0_TH_OVERT_N_BUFF", "GPU1_TH_OVERT_N_BUFF",
+> +                       "GPU2_TH_OVERT_N_BUFF", "GPU3_TH_OVERT_N_BUFF",
+> +                       "GPU4_TH_OVERT_N_BUFF", "GPU5_TH_OVERT_N_BUFF",
+> +                       "GPU0_PWR_GOOD_BUFF", "GPU1_PWR_GOOD_BUFF",
+> +                       "GPU2_PWR_GOOD_BUFF", "GPU3_PWR_GOOD_BUFF",
+> +                       "GPU4_PWR_GOOD_BUFF", "GPU5_PWR_GOOD_BUFF",
+> +                       "12V_BREAKER_FLT_N", "THROTTLE_UNLATCHED_N";
+> +
+> +               gpio@0 {
+> +                       reg =3D <0>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@1 {
+> +                       reg =3D <1>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@2 {
+> +                       reg =3D <2>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@3 {
+> +                       reg =3D <3>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@4 {
+> +                       reg =3D <4>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@5 {
+> +                       reg =3D <5>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@6 {
+> +                       reg =3D <6>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@7 {
+> +                       reg =3D <7>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@8 {
+> +                       reg =3D <8>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@9 {
+> +                       reg =3D <9>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@10 {
+> +                       reg =3D <10>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@11 {
+> +                       reg =3D <11>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@12 {
+> +                       reg =3D <12>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@13 {
+> +                       reg =3D <13>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@14 {
+> +                       reg =3D <14>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +
+> +               gpio@15 {
+> +                       reg =3D <15>;
+> +                       type =3D <PCA955X_TYPE_GPIO>;
+> +               };
+> +       };
+> +
+> +       rtc@32 {
+> +               compatible =3D "epson,rx8900";
+> +               reg =3D <0x32>;
+> +       };
+> +
+> +       eeprom@51 {
+> +               compatible =3D "atmel,24c64";
+> +               reg =3D <0x51>;
+> +       };
+> +
+> +       ucd90160@64 {
+> +               compatible =3D "ti,ucd90160";
+> +               reg =3D <0x64>;
+> +       };
+> +};
+> +
+> +&i2c12 {
+> +       status =3D "okay";
+> +};
+> +
+> +&i2c13 {
+> +       status =3D "okay";
+> +};
+> +
+> +&vuart {
+> +       status =3D "okay";
+> +};
+> +
+> +&gfx {
+> +       status =3D "okay";
+> +};
+> +
+> +&pinctrl {
+> +       aspeed,external-nodes =3D <&gfx &lhc>;
+> +};
+> +
+> +&wdt1 {
+> +       aspeed,reset-type =3D "none";
+> +       aspeed,external-signal;
+> +       aspeed,ext-push-pull;
+> +       aspeed,ext-active-high;
+> +
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&pinctrl_wdtrst1_default>;
+> +};
+> --
+> 2.14.1
+>
+Reviewed-by: Brandon Wyman <bjwyman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
