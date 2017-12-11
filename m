@@ -1,45 +1,43 @@
-From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] rtc: add mxc driver for i.MX53 SRTC
-Date: Mon, 11 Dec 2017 12:28:04 +0100
-Message-ID: <CAOFm3uHkZoRqdbv1O0kGD6Jomexj3a3pAhUrMYJyphSu0gLdhQ@mail.gmail.com>
-References: <20171211105657.20251-1-linux-kernel-dev@beckhoff.com> <20171211105657.20251-4-linux-kernel-dev@beckhoff.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 03/20] ARM: dts: aspeed-g4: Correct VUART IRQ number
+Date: Mon, 11 Dec 2017 12:38:18 +0100
+Message-ID: <CAK8P3a0kryZNKwzZ-57XMiJc9=7qcFpU6J0sCvbg9VGAQ_LHYg@mail.gmail.com>
+References: <20171211050704.20621-1-joel@jms.id.au> <20171211050704.20621-4-joel@jms.id.au>
+ <CAK8P3a2psgOYZEgO8O3H_xxpDTNd=ESJpSf4bs9kf0nPvKYqtQ@mail.gmail.com> <CACPK8XfSxxVFT7y6M17LZhVO0GHuL1L=6KET75Qojg8rpgD9iw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211105657.20251-4-linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-dev <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-Cc: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACPK8XfSxxVFT7y6M17LZhVO0GHuL1L=6KET75Qojg8rpgD9iw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 11:56 AM,  <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org> wrote:
-> From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+On Mon, Dec 11, 2017 at 11:44 AM, Joel Stanley <joel@jms.id.au> wrote:
+> On Mon, Dec 11, 2017 at 6:28 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Mon, Dec 11, 2017 at 6:06 AM, Joel Stanley <joel@jms.id.au> wrote:
+>>> This should have always been 8.
+>>>
+>>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>>
+>> As this is a bugfix, should we backport it to stable kernels? When you
+>> fix a bug,
+>> I generally recommend including a 'Fixes' tag with the commit ID of the patch
+>> that introduced the problem, and either a 'Cc: stable@vger.kernel.org' tag
+>> if you want it backported, or an explanation in the changelog why it should
+>> not get backported. This really helps Greg and the other stable maintainers
+>> trying to make a decision what to backport and what not.
 >
-> Neither rtc-imxdi, rtc-mxc nor rtc-snvs are compatible with i.MX53.
+> We could do this, and I generally follow the practice of adding Fixes
+> tags. I hadn't because without an upstream clock driver, the Aspeed
+> port is not usable by anyone without making modifications. We're
+> really depending on getting that code merged.
 >
-> This is driver enables support for the low power domain SRTC features:
-> - 32-bit MSB of non-rollover time counter
-> - 32-bit alarm register
->
-> Select the new config option RTC_DRV_MXC_V2 to build this driver
->
-> Based on:
-> http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/drivers/rtc/rtc-mxc_v2.c?h=imx_2.6.35_11.09.01
->
-> Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-[...]
-> v2:
-[...]
-> - add SPDX-License-Identifier and cleanup copyright notice
+> I will send it as a fix to 4.15. Do you mind taking individual patches
+> for the arm dt tree, or would you prefer a pull request?
 
-Thank you for using the SPDX ids in this patch series.
+For bugfixes, we don't distinguish between DT and other fixes. If it's
+a single patch, a pull request works just as well as a emailed patch,
+your choice.
 
-Acked-by: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-
--- 
-Cordially
-Philippe Ombredanne
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+      Arnd
