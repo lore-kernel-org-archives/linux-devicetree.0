@@ -1,129 +1,42 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: Allow indicating loss of pin states
- during low-power
-Date: Sun, 10 Dec 2017 15:38:00 -0800
-Message-ID: <908c66f9-f9bd-a4df-e241-75595a3a3e27@gmail.com>
-References: <20171102231551.16220-1-f.fainelli@gmail.com>
- <20171102231551.16220-3-f.fainelli@gmail.com>
- <CACRpkdZtFRB_iy1bDPZ0wkK0jf7pkTGtbZG4gQUJVR+eiO+dhA@mail.gmail.com>
- <20171129170247.GI28152@atomide.com>
- <96cf5d74-3acf-07b9-9ad8-1011cd99a860@gmail.com>
- <CACRpkdbFHj9pM6R3azVPKgbQ-LMmitEdJHQ5BOEb7Vy=kpNk4A@mail.gmail.com>
+From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] staging: Introduce NVIDIA Tegra video decoder
+ driver
+Date: Mon, 11 Dec 2017 03:12:55 +0300
+Message-ID: <c9d8ad71-2fb3-4ce9-2672-9006511f5079@gmail.com>
+References: <cover.1508448293.git.digetx@gmail.com>
+ <1a3798f337c0097e67d70226ae3ba665fd9156c2.1508448293.git.digetx@gmail.com>
+ <ad2da9f4-8899-7db3-493f-5aa15297c33c@xs4all.nl>
+ <3ac6a087-def2-014f-673d-1be9d5094635@gmail.com>
+ <93c98569-0282-80d9-78ad-c8ab8fd9db92@xs4all.nl>
+ <f46f397d-28e1-f4e5-55d4-9863214e8f6c@gmail.com>
+ <1512934179.4281.15.camel@ndufresne.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbFHj9pM6R3azVPKgbQ-LMmitEdJHQ5BOEb7Vy=kpNk4A@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512934179.4281.15.camel-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>
 Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Charles Keepax <ckeepax@opensource.cirrus.com>, Charles Keepax <ckeepax@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Al Cooper <alcooperx@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Giulio Benetti <giulio.benetti-W14uJ/fiAyBY2hyreNRi6g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/02/2017 04:48 AM, Linus Walleij wrote:
-> On Wed, Nov 29, 2017 at 6:37 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
->> On 11/29/2017 09:02 AM, Tony Lindgren wrote:
-> 
->>> Hmm well typically a device driver that loses it's context just does
->>> save and restore of the registers in runtime PM suspend/resume
->>> as needed. In this case it would mean duplicating the state for
->>> potentially for hundreds of registers.. So using the existing
->>> state in the pinctrl subsystem totally makes sense for the pins.
->>>
->>> Florian do you have other reasons why this should be done in the
->>> pinctrl framework instead of the driver? Might be worth describing
->>> the reasoning in the patch descriptions :)
+On 10.12.2017 22:29, Nicolas Dufresne wrote:
+> Le dimanche 10 décembre 2017 à 21:56 +0300, Dmitry Osipenko a écrit :
+>>> I've CC-ed Maxime and Giulio as well: they are looking into adding support for
+>>> the stateless allwinner codec based on this code as well. There may well be
+>>> opportunities for you to work together, esp. on the userspace side. Note that
+>>> Rockchip has the same issue, they too have a stateless HW codec.
 >>
->> The pinctrl provider driver that I am using is pinctrl-single, which has
->> proper suspend/resume callbacks but those are not causing any HW
->> programming to happen because of the (p->state == state) check, hence
->> this patch series.
+>> IIUC, we will have to define video decoder parameters in V4L API and then make a
+>> V4L driver / userspace prototype (ffmpeg for example) that will use the requests
+>> API for video decoding in order to upstream the requests API. Does it sound good?
 > 
-> So we are talking about these callbacks, correct?
-> 
-> #ifdef CONFIG_PM
-> static int pinctrl_single_suspend(struct platform_device *pdev,
->                                         pm_message_t state)
-> {
->         struct pcs_device *pcs;
-> 
->         pcs = platform_get_drvdata(pdev);
->         if (!pcs)
->                 return -EINVAL;
-> 
->         return pinctrl_force_sleep(pcs->pctl);
-> }
-> 
-> static int pinctrl_single_resume(struct platform_device *pdev)
-> {
->         struct pcs_device *pcs;
-> 
->         pcs = platform_get_drvdata(pdev);
->         if (!pcs)
->                 return -EINVAL;
-> 
->         return pinctrl_force_default(pcs->pctl);
-> }
-> #endif
-> 
-> Which falls through to this:
-> 
-> /**
->  * pinctrl_force_sleep() - turn a given controller device into sleep state
->  * @pctldev: pin controller device
->  */
-> int pinctrl_force_sleep(struct pinctrl_dev *pctldev)
-> {
->         if (!IS_ERR(pctldev->p) && !IS_ERR(pctldev->hog_sleep))
->                 return pinctrl_select_state(pctldev->p, pctldev->hog_sleep);
->         return 0;
-> }
-> EXPORT_SYMBOL_GPL(pinctrl_force_sleep);
-> 
-> /**
->  * pinctrl_force_default() - turn a given controller device into default state
->  * @pctldev: pin controller device
->  */
-> int pinctrl_force_default(struct pinctrl_dev *pctldev)
-> {
->         if (!IS_ERR(pctldev->p) && !IS_ERR(pctldev->hog_default))
->                 return pinctrl_select_state(pctldev->p, pctldev->hog_default);
->         return 0;
-> }
-> EXPORT_SYMBOL_GPL(pinctrl_force_default);
-> 
-> So am I right in assuming it is actually the hogs that is your biggest
-> problem, and those are the states that get lost over suspend/resume
-> that are especially problematic?
-> 
-> I.e. you don't have any problem with any non-hogged pinctrl
-> handles, those are handled just fine in the suspend/resume
-> paths of the client drivers?
-> 
-> If this is the case, it changes the problem scope slightly.
-> 
-> It is fair that functions named *force* should actually enforce
-> programming a state.
-> 
-> So then I would suggest somethin else: break pinctrl_select_state()
-> into two:
-> 
-> pinctrl_select_state() that works just like before, checking if
-> (p->state == state) but which calls a static function
-> pinctrl_select_state_commit() that commits the change unconditonally.
-> Then alter pinctrl_force_sleep() and pinctrl_force_sleep() to call
-> that function.
-> 
-> This should solve your problem without having to alter the semantics
-> of pinctrl_select_state() for everyone.
+> Chromium/Chrome already have support for that type of decoder in their
+> tree. In theory, it should just work.
 
-This was exactly what I proposed initially here:
-
-http://patchwork.ozlabs.org/patch/734326/
-
-I really want to get this fixed, but I can't do that if we keep losing
-the context of the discussion (pun intended) :).
--- 
-Florian
+Everything is possible, in theory ;)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
