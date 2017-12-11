@@ -1,61 +1,94 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v3 1/3] regulator: axp20x: add drivevbus support for axp803
-Date: Mon, 11 Dec 2017 22:26:38 +0530
-Message-ID: <1513011400-4120-1-git-send-email-jagan@amarulasolutions.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v3 3/3] arm64: allwinner: a64: bananapi-m64: add usb otg
+Date: Mon, 11 Dec 2017 22:26:40 +0530
+Message-ID: <1513011400-4120-3-git-send-email-jagan@amarulasolutions.com>
+References: <1513011400-4120-1-git-send-email-jagan@amarulasolutions.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513011400-4120-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Like axp221, axp223, axp813 the axp803 is also supporting external
-regulator to drive the  OTG VBus through N_VBUSEN PMIC pin.
+Add usb otg support for bananapi-m64 board,
+- USB-ID connected with PH9
+- USB-DRVVBUS controlled by N_VBUSEN pin from PMIC
 
-Add support for it.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
 Changes for v3:
-- Update drivevbus in table of regulators
+- Move the position of reg_drivevbus as per binding documentation.
+Changes for v2:
+- add drvvbus regulator
+- add N_VBUSEN pin
 
- Documentation/devicetree/bindings/mfd/axp20x.txt | 3 ++-
- drivers/regulator/axp20x-regulator.c             | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts  | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index 9455503..d1762f3 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -43,7 +43,7 @@ Optional properties:
- 			  regulator to drive the OTG VBus, rather then
- 			  as an input pin which signals whether the
- 			  board is driving OTG VBus or not.
--			  (axp221 / axp223 / axp813 only)
-+			  (axp221 / axp223 / axp803/ axp813 only)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index 4a8d3f8..a23c113 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -66,6 +66,10 @@
+ 	};
+ };
  
- - x-powers,master-mode: Boolean (axp806 only). Set this when the PMIC is
- 			wired for master mode. The default is slave mode.
-@@ -132,6 +132,7 @@ FLDO2		: LDO		: fldoin-supply		: shared supply
- LDO_IO0		: LDO		: ips-supply		: GPIO 0
- LDO_IO1		: LDO		: ips-supply		: GPIO 1
- RTC_LDO		: LDO		: ips-supply		: always on
-+DRIVEVBUS	: Enable output	: drivevbus-supply	: external regulator
++&ehci0 {
++	status = "okay";
++};
++
+ &ehci1 {
+ 	status = "okay";
+ };
+@@ -136,6 +140,10 @@
+ 	status = "okay";
+ };
  
- AXP806 regulators, type, and corresponding input supply names:
++&ohci0 {
++	status = "okay";
++};
++
+ &ohci1 {
+ 	status = "okay";
+ };
+@@ -148,6 +156,7 @@
+ 		reg = <0x3a3>;
+ 		interrupt-parent = <&r_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		x-powers,drive-vbus-en; /* set N_VBUSEN as output pin */
+ 	};
+ };
  
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 181622b..91b8ff8 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -721,6 +721,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 	case AXP803_ID:
- 		regulators = axp803_regulators;
- 		nregulators = AXP803_REG_ID_MAX;
-+		drivevbus = of_property_read_bool(pdev->dev.parent->of_node,
-+						  "x-powers,drive-vbus-en");
- 		break;
- 	case AXP806_ID:
- 		regulators = axp806_regulators;
+@@ -247,6 +256,11 @@
+ 	regulator-name = "vcc-rtc";
+ };
+ 
++&reg_drivevbus {
++	regulator-name = "usb0-vbus";
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+@@ -259,6 +273,13 @@
+ 	status = "okay";
+ };
+ 
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
+ &usbphy {
++	usb0_id_det-gpios = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
++	usb0_vbus-supply = <&reg_drivevbus>;
+ 	status = "okay";
+ };
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
