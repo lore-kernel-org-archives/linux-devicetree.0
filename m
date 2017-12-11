@@ -1,59 +1,80 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] DTS: Pandora: fix panel compatibility string
-Date: Mon, 11 Dec 2017 07:16:03 -0800
-Message-ID: <20171211151603.GG24344@atomide.com>
-References: <b6001c7b7fb98e7a3ad4c712084fea9dae9e6b27.1511884135.git.hns@goldelico.com>
- <20171128160437.GD28152@atomide.com>
- <ADAFBBA4-6AC4-4EC4-AB0E-98B59718E12E@goldelico.com>
- <20171128161834.GE28152@atomide.com>
- <4EE1E298-6461-48FF-977C-958DD16AD83A@goldelico.com>
- <20171130152430.GM28152@atomide.com>
- <20171130220633.imkfyeiqtftnw4j4@earth>
- <6ca5f2ea-e725-9a9e-ac02-e16beca4a1a0@ti.com>
- <0324FA0E-F06A-41F1-84AD-5BC72F6B6BFF@goldelico.com>
- <a27001ba-5ffd-365d-93e3-06fd1a2e01c2@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 5/8] ASoC: uniphier: add support for
+	UniPhier AIO driver
+Date: Mon, 11 Dec 2017 15:16:29 +0000
+Message-ID: <20171211151629.GD9854@sirena.org.uk>
+References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com>
+ <20171122114321.29196-6-suzuki.katsuhiro@socionext.com>
+ <20171204183934.rd4vin22ktukwpip@sirena.org.uk>
+ <002b01d36d84$51d80aa0$f5881fe0$@socionext.com>
+ <20171205121440.GC11658@finisterre>
+ <004801d36e57$ea1940d0$be4bc270$@socionext.com>
+ <20171206125817.GF1827@finisterre>
+ <001501d37261$7ea89d10$7bf9d730$@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <a27001ba-5ffd-365d-93e3-06fd1a2e01c2-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Discussions
+Content-Type: multipart/mixed; boundary="===============6698725748950181796=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <001501d37261$7ea89d10$7bf9d730$@socionext.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, vinod.koul@linaro.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [171201 02:03]:
-> On 01/12/17 11:48, H. Nikolaus Schaller wrote:
-> 
-> > Just a note: there is no toppoly->tpo change for *this* panel and
-> > Pandora board. Just omapdss removal.
-> > 
-> > The GTA04 needs a toppoly->tpo change but no omapdss, removal.
-> > 
-> > So they solve different problems and are independent of each other.
-> > 
-> > GTA04: change vendor string
-> > Pandora: remove omapdss, prefix
-> 
-> Oh, right, I totally missed that. I thought they were changes to the
-> same file...
-> 
-> In that case, Tony, can you pick this one as a fix? I'll pick the
-> toppoly->tpo patch and merge via drm tree, if you give the ack.
-> 
-> For this:
-> 
-> Acked-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 
-Sorry I've lost track of this thread and what if anything is really
-needed as a fix for v4.16. And now there's newer version of the two
-dts patches in thread "[PATCH v4 0/2] Fixes for omapdrm on
-OpenPandora and GTA04" so let's move the discussion there.
+--===============6698725748950181796==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="WChQLJJJfbwij+9x"
+Content-Disposition: inline
 
-Regards,
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--WChQLJJJfbwij+9x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Dec 11, 2017 at 06:21:58PM +0900, Katsuhiro Suzuki wrote:
+
+> But I can't find how to use/map this DAI in machine driver or Device-Tree or
+> something. I think that it's same as PCM DAI, am I correct?
+
+Yes, that probably makes sense from a binding point of view.
+
+> I read compress-offload.rst, but I can't find how do I test it. It seems aplay
+> of
+> alsa-util doesn't know compress audio formats. Should I use PulseAudio or
+> Android HAL to test compress audio APIs?
+
+IIRC tinyalsa has a compressed API test application - Vinod?
+
+--WChQLJJJfbwij+9x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlouoUwACgkQJNaLcl1U
+h9ARPQf+PMXnrKIL23fYeyj1KTSHQe5hA6zsx76EfW6KwhDKOc22W/xWKGahKiSi
+88aMs8o/qIofpPSH9NZOfgSmnXOCMqRK38T9sW0WHqIugRc7UKBh93PV4/xjHR1w
+U4PfJVBeTDoHx81oOhtRyuAKV1Pt8n2EIutk+Xha12tCqzpRPrXr26WeQt2NXBrm
+Y3d1kcjugs9VOUlciPlboMZnXfWaVUzelvWM6FYW+oN4B9BxCKs4uuR3O8Cs92K9
+3I7GZkwMcowhcdpS5G5+5xXi3yPlCiC4+miyymITMvvjpi37wNLlf7NdP6ENnE6/
+LRWeMtupwTX1HhiRN2/2sqV/Vt2JUQ==
+=oCvC
+-----END PGP SIGNATURE-----
+
+--WChQLJJJfbwij+9x--
+
+--===============6698725748950181796==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6698725748950181796==--
