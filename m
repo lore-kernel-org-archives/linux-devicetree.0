@@ -1,37 +1,45 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v6 4/6] clk: meson: make the spinlock naming more
- specific
-Date: Mon, 11 Dec 2017 12:27:17 +0100
-Message-ID: <1512991637.334.28.camel@baylibre.com>
-References: <20171211064853.32111-1-yixun.lan@amlogic.com>
-         <20171211064853.32111-5-yixun.lan@amlogic.com>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] rtc: add mxc driver for i.MX53 SRTC
+Date: Mon, 11 Dec 2017 12:28:04 +0100
+Message-ID: <CAOFm3uHkZoRqdbv1O0kGD6Jomexj3a3pAhUrMYJyphSu0gLdhQ@mail.gmail.com>
+References: <20171211105657.20251-1-linux-kernel-dev@beckhoff.com> <20171211105657.20251-4-linux-kernel-dev@beckhoff.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171211064853.32111-5-yixun.lan@amlogic.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171211105657.20251-4-linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-dev <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+Cc: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-12-11 at 14:48 +0800, Yixun Lan wrote:
->                 .ops = &clk_gate_ops,
-> diff --git a/drivers/clk/meson/clkc.h b/drivers/clk/meson/clkc.h
-> index 1629da9b4141..87f06a801a4d 100644
-> --- a/drivers/clk/meson/clkc.h
-> +++ b/drivers/clk/meson/clkc.h
-> @@ -134,7 +134,7 @@ struct meson_clk_audio_divider {
->  struct clk_gate _name = {                                              \
->         .reg = (void __iomem *) _reg,                                   \
->         .bit_idx = (_bit),                                              \
-> -       .lock = &clk_lock,                                              \
-> +       .lock = &meson_clk_lock,                                                \
+On Mon, Dec 11, 2017 at 11:56 AM,  <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org> wrote:
+> From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+>
+> Neither rtc-imxdi, rtc-mxc nor rtc-snvs are compatible with i.MX53.
+>
+> This is driver enables support for the low power domain SRTC features:
+> - 32-bit MSB of non-rollover time counter
+> - 32-bit alarm register
+>
+> Select the new config option RTC_DRV_MXC_V2 to build this driver
+>
+> Based on:
+> http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/drivers/rtc/rtc-mxc_v2.c?h=imx_2.6.35_11.09.01
+>
+> Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+[...]
+> v2:
+[...]
+> - add SPDX-License-Identifier and cleanup copyright notice
 
-Something is not right here, line is over 80 characters
-Remember to run checkpatch on your series please.
+Thank you for using the SPDX ids in this patch series.
 
->         .hw.init = &(struct clk_init_data) {                            \
->                 .name = #_name,                                 \
->                 .ops = &clk_gate_ops,                                   \
+Acked-by: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
 
+-- 
+Cordially
+Philippe Ombredanne
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
