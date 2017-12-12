@@ -1,67 +1,58 @@
-From: Javier Martinez Canillas <javierm@redhat.com>
-Subject: Re: [PATCH v2] ARM: dts: exynos: Enable Mixer node for Exynos5800
- Peach Pi machine
-Date: Tue, 12 Dec 2017 11:40:57 +0100
-Message-ID: <fe7b9dd6-c169-32bf-50c5-dc708872f977@redhat.com>
-References: <20171212074208.30753-1-javierm@redhat.com>
- <CAJKOXPc1rJCWABXUuyU2MKxnLY-MptrM9Mm0HyHVCJn870R+sg@mail.gmail.com>
- <CAJKOXPc1_n2cdgjuFbA9jNdcSXxfr8Zjf=fUx_jt_N3+LP0n8A@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] [v4] pinctrl: qcom: qdf2xxx: add support for new ACPI
+ HID QCOM8002
+Date: Tue, 12 Dec 2017 11:42:11 +0100
+Message-ID: <CACRpkdYer_Q5R4XhWTX3=jwshcKZRSDY9=gOvSeUPsQHbUw6vw@mail.gmail.com>
+References: <1512170904-4749-1-git-send-email-timur@codeaurora.org> <1512170904-4749-5-git-send-email-timur@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPc1_n2cdgjuFbA9jNdcSXxfr8Zjf=fUx_jt_N3+LP0n8A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Guillaume Tucker <guillaume.tucker@collabora.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Shuah Khan <shuahkh@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512170904-4749-5-git-send-email-timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On Sat, Dec 2, 2017 at 12:28 AM, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 
-On 12/12/2017 11:09 AM, Krzysztof Kozlowski wrote:
-> On Tue, Dec 12, 2017 at 10:55 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> On Tue, Dec 12, 2017 at 8:42 AM, Javier Martinez Canillas
->> <javierm@redhat.com> wrote:
->>> Commit 1cb686c08d12 ("ARM: dts: exynos: Add status property to Exynos 542x
->>> Mixer nodes") disabled the Mixer node by default in the DTSI and enabled
->>> for each Exynos 542x DTS. But unfortunately it missed to enable it for the
->>> Exynos5800 Peach Pi machine, since the 5800 is also an 542x SoC variant.
->>>
->>> Fixes: 1cb686c08d12 ("ARM: dts: exynos: Add status property to Exynos 542x Mixer nodes")
->>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
->>> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>
->>> ---
->>>
->>> Changes in v2:
->>> - Remove RFT tag.
+>         /* Query the number of GPIOs from ACPI */
+>         ret = device_property_read_u32(&pdev->dev, "num-gpios", &num_gpios);
+>         if (ret < 0) {
+> -               dev_warn(&pdev->dev, "missing num-gpios property\n");
+> +               dev_err(&pdev->dev, "missing 'num-gpios' property\n");
+>                 return ret;
+>         }
 
-I removed the tag because Marek acked it and the patch has merits on its own
-regardless of the boot issue (it just introduces a change that was missed in
-the mentioned commit).
->>
->> Thanks guys! However I still would like to see a tested-by for this on
->> Peach Pi (AFAIU, Marek's only acked the code/solution).
-> 
-> On the other hand I could just apply it for my for-next branch and
-> we'll see if it fixes kernel-ci boot tests... Not a nice way of
+It's unfortunate that this driver uses the undocumented "num-gpios"
+when the device tree bindings already has standardized "ngpios"
+as the name for this.
 
-As Marek said this probably won't solve the issue, or at best it would just
-mask it. Seems the problem is on the probe deferral path in exynos-drm driver.
+Maybe it was not standardized back in 2015 when this driver was merged.
 
-> testing but apparently no one has Peach Pi.
->
+Or we were all sloppy :/
 
-I do have one, but I haven't used it for months and don't have time to setup
-a test environment now. I will probably do that this weekend to dig deeper.
+> +               /* The number of GPIOs in the approved list */
+> +               ret = device_property_read_u16_array(&pdev->dev, "gpios",
+> +                                                    NULL, 0);
+> +               if (ret < 0) {
+> +                       dev_err(&pdev->dev, "missing 'gpios' property\n");
+> +                       return ret;
+> +               }
 
-> Best regards,
-> Krzysztof
-> 
+This is in direct conflict with the existing "gpios" binding in device tree.
 
-Best regards,
--- 
-Javier Martinez Canillas
-Software Engineer - Desktop Hardware Enablement
-Red Hat
+Where is this name coming from? ACPI standards?
+
+If device tree and ACPI start defining things which are in direct conflict
+we can just shut down this device_property() business altogether,
+it will never work that way.
+
+I would try to merge a DT bindings doc defining "valid-gpios" or something
+like this, can we proceed like that?
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
