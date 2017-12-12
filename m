@@ -1,38 +1,86 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt: bindings: add new dt entry for ath10k
- calibration variant
-Date: Tue, 12 Dec 2017 14:53:22 -0600
-Message-ID: <20171212205322.xwswit2myivd7o6h@rob-hp-laptop>
-References: <20171208103742.3181-1-sven.eckelmann@openmesh.com>
- <20171208103742.3181-2-sven.eckelmann@openmesh.com>
+From: Jim Quinlan <jim2101024@gmail.com>
+Subject: Re: [PATCH v3 1/8] SOC: brcmstb: add memory API
+Date: Tue, 12 Dec 2017 15:53:28 -0500
+Message-ID: <CANCKTBvoXpF-H8Pck5TsH+7tNM=di1-uoedqACE+kjNEAUodYg@mail.gmail.com>
+References: <1510697532-32828-1-git-send-email-jim2101024@gmail.com>
+ <1510697532-32828-2-git-send-email-jim2101024@gmail.com> <20171205205926.GJ23510@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171208103742.3181-2-sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171205205926.GJ23510@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, linux-pci <linux-pci@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, linux-arm-kernel@lists.
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 08, 2017 at 11:37:41AM +0100, Sven Eckelmann wrote:
-> The bus + bmi-chip-id + bmi-board-id is not enough to identify the correct
-> board data file on QCA4019 based devices. Multiple different boards share
-> the same values. Only the original reference designs can currently be
-> identified and loaded from the board-2.bin. But these will not result in
-> the correct calibration data when combined with the pre-calibration data
-> from the device.
-> 
-> An additional "variant" information has to be provided (via SMBIOS or DT)
-> to select the correct board data for a design which was modified by an ODM.
-> 
-> Signed-off-by: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 3 +++
->  1 file changed, 3 insertions(+)
+On Tue, Dec 5, 2017 at 3:59 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Tue, Nov 14, 2017 at 05:12:05PM -0500, Jim Quinlan wrote:
+>> From: Florian Fainelli <f.fainelli@gmail.com>
+>>
+>> This commit adds a memory API suitable for ascertaining the sizes of
+>> each of the N memory controllers in a Broadcom STB chip.  Its first
+>> user will be the Broadcom STB PCIe root complex driver, which needs
+>> to know these sizes to properly set up DMA mappings for inbound
+>> regions.
+>>
+>> We cannot use memblock here or anything like what Linux provides
+>> because it collapses adjacent regions within a larger block, and here
+>> we actually need per-memory controller addresses and sizes, which is
+>> why we resort to manual DT parsing.
+>>
+>> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+>> ---
+>>  drivers/soc/bcm/brcmstb/Makefile |   2 +-
+>>  drivers/soc/bcm/brcmstb/memory.c | 172 ++++++++++++++++++++++++++++++++=
++++++++
+>>  include/soc/brcmstb/memory_api.h |  25 ++++++
+>>  3 files changed, 198 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/soc/bcm/brcmstb/memory.c
+>>  create mode 100644 include/soc/brcmstb/memory_api.h
+>>
+>> diff --git a/drivers/soc/bcm/brcmstb/Makefile b/drivers/soc/bcm/brcmstb/=
+Makefile
+>> index 9120b27..4cea7b6 100644
+>> --- a/drivers/soc/bcm/brcmstb/Makefile
+>> +++ b/drivers/soc/bcm/brcmstb/Makefile
+>> @@ -1 +1 @@
+>> -obj-y                                +=3D common.o biuctrl.o
+>> +obj-y                                +=3D common.o biuctrl.o memory.o
+>> diff --git a/drivers/soc/bcm/brcmstb/memory.c b/drivers/soc/bcm/brcmstb/=
+memory.c
+>> new file mode 100644
+>> index 0000000..eb647ad9
+>> --- /dev/null
+>> +++ b/drivers/soc/bcm/brcmstb/memory.c
+>
+> I sort of assume based on [1] that every new file should have an SPDX
+> identifier ("The Linux kernel requires the precise SPDX identifier in
+> all source files") and that the actual text of the GPL can be omitted.
+>
+> Only a few files in drivers/pci currently have an SPDX identifier.  I
+> don't know if that's oversight or work-in-progress or what.
+>
+> [1] https://lkml.kernel.org/r/20171204212120.484179273@linutronix.de
+>
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>                  
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn, Did you get a chance to review the other commits of this
+submission (V3)?  I would like any additional feedback before I send
+out a V4 with SPDX fixes.  Thanks, JimQ
+
+>> @@ -0,0 +1,172 @@
+>> +/*
+>> + * Copyright =C2=A9 2015-2017 Broadcom
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * A copy of the GPL is available at
+>> + * http://www.broadcom.com/licenses/GPLv2.php or from the Free Software
+>> + * Foundation at https://www.gnu.org/licenses/ .
