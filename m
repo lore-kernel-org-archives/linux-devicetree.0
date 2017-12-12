@@ -1,74 +1,71 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 4/4] [v4] pinctrl: qcom: qdf2xxx: add support for new
- ACPI HID QCOM8002
-Date: Tue, 12 Dec 2017 13:07:16 +0200
-Message-ID: <1513076836.25007.641.camel@linux.intel.com>
-References: <1512170904-4749-1-git-send-email-timur@codeaurora.org>
- <1512170904-4749-5-git-send-email-timur@codeaurora.org>
- <CACRpkdYer_Q5R4XhWTX3=jwshcKZRSDY9=gOvSeUPsQHbUw6vw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYer_Q5R4XhWTX3=jwshcKZRSDY9=gOvSeUPsQHbUw6vw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Timur Tabi <timur@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
- BINDINGS" <devicetree@vger.kernel.org>
-Cc: Archit Taneja <architt@codeaurora.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Andy Gross <andy.gross@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Varadarajan Narayanan <varada@codeaurora.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: tfa9879: add DT bindings to MAINTAINERS" to the asoc tree
+Date: Tue, 12 Dec 2017 11:16:41 +0000
+Message-ID: <E1eOiYD-0007qT-E1@debutante>
+References: <20171211142615.11440-3-peda@axentia.se>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171211142615.11440-3-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-12-12 at 11:42 +0100, Linus Walleij wrote:
-> On Sat, Dec 2, 2017 at 12:28 AM, Timur Tabi <timur@codeaurora.org>
-> wrote:
+The patch
 
-> > +               /* The number of GPIOs in the approved list */
-> > +               ret = device_property_read_u16_array(&pdev->dev,
-> > "gpios",
-> > +                                                    NULL, 0);
-> > +               if (ret < 0) {
-> > +                       dev_err(&pdev->dev, "missing 'gpios'
-> > property\n");
-> > +                       return ret;
-> > +               }
-> 
-> This is in direct conflict with the existing "gpios" binding in device
-> tree.
-> 
-> Where is this name coming from? ACPI standards?
+   ASoC: tfa9879: add DT bindings to MAINTAINERS
 
-Not ACPI standards as of my knowledge. ACPI standard defines a common
-scheme how to define properties, it doesn't tell anything about property
-names or any mappings between names to values or names to "OS
-subsystem").
+has been applied to the asoc tree at
 
-As for GPIO we just follow *de facto* what DT has right now, i.e. "xxx-
-gpio" or "xxx-gpios" pattern is used to map ACPI standard resource to a
-GPIO name. That's how GPIO ACPI lib is being developed.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> If device tree and ACPI start defining things which are in direct
-> conflict
-> we can just shut down this device_property() business altogether,
-> it will never work that way.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-This is fully understandable. Also it works in other direction, i.e. if
-DT will break the established thing it will break also ACPI and built-in 
-device properties.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-We are keeping an eye on this not to happen as much as we can in any
-direction.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-So, summarize above, I don't see any impediments (except maybe very
-broken ARM64 firmware that is already on devices on market) to make it
-properly from the beginning.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
+
+>From a73be94364b80388c0a600715117923669f165f8 Mon Sep 17 00:00:00 2001
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Date: Mon, 11 Dec 2017 15:26:15 +0100
+Subject: [PATCH] ASoC: tfa9879: add DT bindings to MAINTAINERS
+
+Let's keep maintenance of the driver and the bindings in one place.
+
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aa71ab52fd76..a04aaa270ad5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9805,6 +9805,7 @@ NXP TFA9879 DRIVER
+ M:	Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+ L:	alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org (moderated for non-subscribers)
+ S:	Maintained
++F:	Documentation/devicetree/bindings/sound/tfa9879.txt
+ F:	sound/soc/codecs/tfa9879*
+ 
+ NXP-NCI NFC DRIVER
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
