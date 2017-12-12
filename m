@@ -1,73 +1,44 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [RFC 0/5] Add I3C subsystem
-Date: Tue, 12 Dec 2017 20:58:32 +0100
-Message-ID: <20171212205832.4b317b21@bbrezillon>
-References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
-        <20170731191745.GB1542@katana>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: devicetree: Add DT bindings to
+ xlnx_vcu driver
+Date: Tue, 12 Dec 2017 14:07:03 -0600
+Message-ID: <20171212200703.nxabyfcjbswwbp4v@rob-hp-laptop>
+References: <20171207104757.GA27343@kroah.com>
+ <1512682276-6082-1-git-send-email-dshah@xilinx.com>
+ <1512682276-6082-2-git-send-email-dshah@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20170731191745.GB1542@katana>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1512682276-6082-2-git-send-email-dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 31 Jul 2017 21:17:45 +0200
-Wolfram Sang <wsa@the-dreams.de> wrote:
+On Thu, Dec 07, 2017 at 01:31:15PM -0800, Dhaval Shah wrote:
+> Add Device Tree binding document for logicoreIP. This logicoreIP
+> provides the isolation between the processing system and
+> programmable logic. Also provides the clock related information.
+> 
+> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes since v2:
+>  * Describe the h/w
+>  * compatible string is updated to make it more specific
+>    based on the logicoreIP version.
+>  * Removed that encoder and decoder child nodes and relatd properties as that
+>    will be a separate driver and dts nodes. other team is working on that.
+>  * Updated to use as a single driver.
+> 
+>  .../devicetree/bindings/misc/xlnx,vcu.txt          | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,vcu.txt
 
-> Hi Boris,
-> 
-> > This patch series is a proposal for a new I3C [1] subsystem.  
-> 
-> Nice. Good luck with that!
-> 
-> Some hi-level comments from me related to I2C. I can't say a lot more
-> because the specs are not public :(
-> 
-> > - the bus element is a separate object and is not implicitly described
-> >   by the master (as done in I2C). The reason is that I want to be able
-> >   to handle multiple master connected to the same bus and visible to
-> >   Linux.
-> >   In this situation, we should only have one instance of the device and
-> >   not one per master, and sharing the bus object would be part of the
-> >   solution to gracefully handle this case.
-> >   I'm not sure if we will ever need to deal with multiple masters
-> >   controlling the same bus and exposed under Linux, but separating the
-> >   bus and master concept is pretty easy, hence the decision to do it
-> >   now, just in case we need it some day.  
-> 
-> From my experience, it is a good thing to have this separation.
-> 
-> > - I2C backward compatibility has been designed to be transparent to I2C
-> >   drivers and the I2C subsystem. The I3C master just registers an I2C
-> >   adapter which creates a new I2C bus. I'd say that, from a
-> >   representation PoV it's not ideal because what should appear as a
-> >   single I3C bus exposing I3C and I2C devices here appears as 2
-> >   different busses connected to each other through the parenting (the
-> >   I3C master is the parent of the I2C and I3C busses).
-> >   On the other hand, I don't see a better solution if we want something
-> >   that is not invasive.  
-> 
-> I agree this is the least invasive and also the most compatible
-> approach. The other solution would probably be to have some kind of
-> emulation layer?
-> 
-> > I'd also like to get feedback on the doc. Should I detail a bit more
-> > the protocol or the framework API? Is this the kind of things you
-> > expect in a subsystem doc?  
-> 
-> Since the spec is not public, details about the protocol will be
-> especially useful, I'd say.
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-MIPI has opened the I3C spec [1], it can be downloaded here [2].
-
-v2 of this series will come soon (sorry for the delay).
-
-Regards,
-
-Boris
-
-[1]https://www.businesswire.com/news//home/20171212005059/en/MIPI-Alliance-Opens-Access-MIPI-I3C-Sensor
-[2]http://resources.mipi.org/mipi-i3c-v1-download
+One nit. Use "dt-bindings: misc: ..." for the subject.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
