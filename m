@@ -1,60 +1,41 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v3 0/3] Bluetooth: hci_ll: Get BD address from NVMEM
-Date: Tue, 12 Dec 2017 23:52:53 +0100
-Message-ID: <4646D298-A5A9-486D-8F7B-27D05BE2572A@holtmann.org>
-References: <1513115958-23761-1-git-send-email-david@lechnology.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1513115958-23761-1-git-send-email-david@lechnology.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Gustavo F. Padovan" <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Network Development <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] dt-bindings: arm: document supported STM32 SoC family
+Date: Tue, 12 Dec 2017 17:17:44 -0600
+Message-ID: <20171212231744.u4wtadrpaq3wp4sq@rob-hp-laptop>
+References: <1512741394-27341-1-git-send-email-ludovic.Barre@st.com>
+ <20171212210348.proilmqmxf4yl5jn@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171212210348.proilmqmxf4yl5jn@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gwenael Treuveur <gwenael.treuveur-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
-
-> This series adds supporting getting the BD address from a NVMEM provider
-> for "LL" HCI controllers (Texas Instruments).
+On Tue, Dec 12, 2017 at 03:03:48PM -0600, Rob Herring wrote:
+> On Fri, Dec 08, 2017 at 02:56:34PM +0100, Ludovic Barre wrote:
+> > From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> > 
+> > This adds a list of supported STM32 SoC bindings.
+> > 
+> > Signed-off-by: Gwenael Treuveur <gwenael.treuveur-qxv4g6HH51o@public.gmane.org>
+> > Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/stm32.txt | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/stm32.txt
 > 
-> v3 changes:
-> * Additional comments on why swapping bytes is needed.
-> * Fixed comment style and trailing whitespace.
-> * Rework error handling for nvmem cell code.
-> 
-> v2 changes:
-> * Fixed typos in dt-bindings
-> * Use "bd-address" instead of "mac-address"
-> * Updated dt-bindings to specify the byte order of "bd-address"
-> * New patch "Bluetooth: hci_ll: add support for setting public address"
-> * Dropped patch "Bluetooth: hci_ll: add constant for vendor-specific command"
->  that is already in bluetooth-next
-> * Rework error handling
-> * Use bdaddr_t, bacmp and other bluetooth utils
-> 
-> David Lechner (3):
->  Bluetooth: hci_ll: add support for setting public address
->  dt-bindings: Add optional nvmem BD address bindings to ti,wlink-st
->  Bluetooth: hci_ll: Add optional nvmem BD address source
-> 
-> .../devicetree/bindings/net/ti,wilink-st.txt       |  5 ++
-> drivers/bluetooth/hci_ll.c                         | 77 ++++++++++++++++++++++
-> 2 files changed, 82 insertions(+)
+> Applied, thanks.
 
-I applied to first 2 patches to bluetooth-next tree, but the 3rd is throwing a warning.
+Now dropped as this will conflict with your other series. Send this with 
+the other series or indicate who should apply.
 
-  CC      drivers/bluetooth/hci_ll.o
-drivers/bluetooth/hci_ll.c: In function ‘hci_ti_probe’:
-drivers/bluetooth/hci_ll.c:814:41: error: passing argument 2 of ‘nvmem_cell_read’ from incompatible pointer type [-Werror=incompatible-pointer-types]
-   bdaddr = nvmem_cell_read(bdaddr_cell, &len);
-                                         ^
-In file included from drivers/bluetooth/hci_ll.c:56:0:
-./include/linux/nvmem-consumer.h:81:21: note: expected ‘size_t * {aka long unsigned int *}’ but argument is of type ‘int *’
- static inline void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len)
-                     ^~~~~~~~~~~~~~~
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Regards
-
-Marcel
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
