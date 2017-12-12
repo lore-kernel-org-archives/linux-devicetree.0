@@ -1,115 +1,86 @@
-From: Vincent Chen <deanbo422@gmail.com>
-Subject: Re: [PATCH v3 17/33] nds32: VDSO support
-Date: Tue, 12 Dec 2017 09:58:31 +0800
-Message-ID: <CAJsyPhzQvZ1QTPcE=p3cTv2c9BbjRFCnB1ROoEBqZuRzMraeug@mail.gmail.com>
-References: <cover.1512723245.git.green.hu@gmail.com> <921ccfa97c4c13f12c7b22b9554f52dcce51f87e.1512723245.git.green.hu@gmail.com>
- <20171208102149.iqiieszktwzorkuw@lakrids.cambridge.arm.com>
- <CAEbi=3e9Ep4_DL4SSwp15as1t7ALvw-s2gqv+NsuRZiebNGFAQ@mail.gmail.com> <20171208121405.dy6raczdlbxtbnfo@lakrids.cambridge.arm.com>
+From: Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
+ ethernet driver
+Date: Tue, 12 Dec 2017 11:29:25 +0900
+Message-ID: <CAA93ih0C-aMpFAhU+5x6P=QjiOVRPZ0UL1wyKh1oeXzC8UjPXQ@mail.gmail.com>
+References: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com>
+ <20171211210455.170A.4A936039@socionext.com> <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
+ <20171211134627.GU10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171208121405.dy6raczdlbxtbnfo@lakrids.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg KH <greg@kroah.com>, Vincent Chen <vincentc@andestech.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171211134627.GU10595-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux kernel mailing list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-12-08 20:14 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
-> On Fri, Dec 08, 2017 at 07:54:42PM +0800, Greentime Hu wrote:
->> 2017-12-08 18:21 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
->> > On Fri, Dec 08, 2017 at 05:12:00PM +0800, Greentime Hu wrote:
->> >> +static int grab_timer_node_info(void)
->> >> +{
->> >> +     struct device_node *timer_node;
->> >> +
->> >> +     timer_node = of_find_node_by_name(NULL, "timer");
->> >
->> > Please use a compatible string, rather than matching the timer by name.
->> >
->> > It's plausible that you have multiple nodes called "timer" in the DT,
->> > under different parent nodes, and this might not be the device you
->> > think it is. I see your dt in patch 24 has two timer nodes.
->> >
->> > It would be best if your clocksource driver exposed some stuct that you
->> > looked at here, so that you're guaranteed to user the same device.
->>
->> We'd like to use "timer" here because there are 2 different timer IPs
->> and we are sure that they won't be in the same SoC.
->> We think this implementation in VDSO should be platform independent to
->> get cycle-count register.
->> Our customer or other SoC provider who can use "timer" and define
->> cycle-count-offset or cycle-count-down then we can get the correct
->> cycle-count.
->
-> This is not the right way to do things.
->
-> So from a DT perspective, NAK.
->
-> You should not add properties to arbitrary DT bindings to handle a Linux
-> implementation detail.
->
-> Please remove this DT code, and have the drivers for those timer blocks
-> export this information to your vdso code somehow.
->
+Hi Russell,
 
-Hi, Mark:
-Based on your suggestion, we define a new sturct timer_info to let
-timer driver record the value
-of cycle-count-offset and cycle-count-down in timer_init function. The
-above code in timer driver
-is validate only when CONFIG_NDS32 is defined.
+2017-12-11 22:46 GMT+09:00 Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>:
+> On Mon, Dec 11, 2017 at 10:34:17PM +0900, Masami Hiramatsu wrote:
+>> IMHO, even if we use SPDX license identifier, I recommend to use
+>> C-style comments as many other files do, since it is C code.
+>> If SPDX identifier requires C++ style, that is SPDX parser's issue
+>> and should be fixed to get it from C-style comment.
+>
+> See the numerous emails on this subject already.  The issue of C
+> vs C++ comments has come up many times by many different people, but
+> the result is the same.  That's not going to happen.  Linux kernel
+> C files are required to use "//" for the SPDX identifier by order
+> of Linus Torvalds.
 
->> We sent atcpit100 patch last time along with our arch, however we'd
->> like to send it to its sub system this time and my colleague is still
->> working on it.
->> He may send the timer patch next week.
->
-> I think that it would make sense for that patch to be part of the arch
-> port, especially given that (AFAICT) there is no dirver for the other
-> timer IP that you mention.
->
-> [...]
->
->> >> +int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
->> >> +{
->> >
->> >> +     /*Map timer to user space */
->> >> +     vdso_base += PAGE_SIZE;
->> >> +     prot = __pgprot(_PAGE_V | _PAGE_M_UR_KR | _PAGE_D |
->> >> +                     _PAGE_G | _PAGE_C_DEV);
->> >> +     ret = io_remap_pfn_range(vma, vdso_base, timer_res.start >> PAGE_SHIFT,
->> >> +                              PAGE_SIZE, prot);
->> >> +     if (ret)
->> >> +             goto up_fail;
->> >
->> > Maybe this is fine, but it looks a bit suspicious.
->> >
->> > Is it safe to map IO memory to a userspace process like this?
->> >
->> > In general that isn't safe, since userspace could access other registers
->> > (if those exist), perform accesses that change the state of hardware, or
->> > make unsupported access types (e.g. unaligned, atomic) that result in
->> > errors the kernel can't handle.
->> >
->> > Does none of that apply here?
->>
->> We only provide read permission to this page so hareware state won't
->> be chagned. It will trigger exception if we try to write.
->> We will check about the alignment/atomic issue of this region.
->
+OK, I got it.
 
-For alignment issue, we intentionally make an un-alignment read to
-access this region and we
-got "Segmentation fault" as expected.
+>
+> Linus has also revealed in that discussion that he has a preference
+> for "//" style commenting for single comments, so it seems that the
+> kernel coding style may change - but there is no desire for patches
+> to "clean up" single line comments to use "//".
+
+Thank you for making it clear.
+
+Then what I'm considering is copyright notice lines. Those are usually
+treat as the header lines, not single line. So
+
+> +// SDPX-License-Identifier: GPL-2.0
+> +// sni_ave.c - Socionext UniPhier AVE ethernet driver
+> +// Copyright 2014 Panasonic Corporation
+> +// Copyright 2015-2017 Socionext Inc.
+
+is acceptable? or should we keep C-style header lines for new drivers?
+
+> +// SDPX-License-Identifier: GPL-2.0
+> +/*
+> + * sni_ave.c - Socionext UniPhier AVE ethernet driver
+> + * Copyright 2014 Panasonic Corporation
+> + * Copyright 2015-2017 Socionext Inc.
+> + */
+
+I just concern that those lines are not "single". that's all. :)
+
+>
+> For further information, and to see the discussion that has already
+> happened, the arguments that have been made about style, see the
+> threads for the patch series that tglx has been posting wrt documenting
+> the SPDX stuff for the kernel.
+
+OK, got it.
+
+https://lkml.org/lkml/2017/11/16/663
 
 
 Thanks,
-Vincent
 
-> Ok, thanks.
 >
-> This is another reason to only do this for devices/drivers that we have
-> drivers for, since we can't know that this is safe in general.
+> Thanks (let's stop rehashing the same arguments.)
 >
-> Thanks,
-> Mark.
+
+
+-- 
+Masami Hiramatsu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
