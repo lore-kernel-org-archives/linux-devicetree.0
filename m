@@ -1,114 +1,65 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 6/6] leds: lp8860: Various fixes to align with LED framework
-Date: Tue, 12 Dec 2017 12:58:09 -0600
-Message-ID: <20171212185809.23880-8-dmurphy@ti.com>
-References: <20171212185809.23880-1-dmurphy@ti.com>
+From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] dt-bindings: iio: temperature: add MLX90632 device bindings
+Date: Tue, 12 Dec 2017 20:19:07 +0100
+Message-ID: <CAKv63utbAiN3AdR1xRKbHjPeEN2fCGQ8ZocA=T2mKwciqYVfgw@mail.gmail.com>
+References: <20171211092002.8687-1-cmo@melexis.com> <13b298c0-d618-e217-406d-63bac56106fc@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171212185809.23880-1-dmurphy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <13b298c0-d618-e217-406d-63bac56106fc-l3A5Bk7waGM@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update the driver to conform with the LED framework.
-Use devm_led_classdev_register
-Destroy mutex on exit
-Remove dependency on CONFIG_OF in the driver and move
-to the Kconfig
-Update the MODULE_LICENSE to GPL v2
-Remove setting of MAX brightness as the LED framework
-does this.
+On 12 December 2017 at 18:45, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> wrote:
+> Am 11.12.2017 um 10:20 schrieb Crt Mori:
+>> Add device tree bindings for MLX90632 IR temperature sensor.
+>>
+>> Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+>> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../bindings/iio/temperature/mlx90632.txt          | 28 +++++++++++++++=
++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/ml=
+x90632.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.=
+txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+>> new file mode 100644
+>> index 000000000000..0b05812001f8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+> [...]
+>> +Example:
+>> +
+>> +mlx90632@3a {
+>
+> Shouldn't the node name be more general like temperature@3a?
+>
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+None of the current temperature drivers have that, but it would be
+nice for portability. I can prepare a patch to fix them all (a quick
+check confirmed it is not consistent in pressure and light as well)
 
-v3 - no changes - https://patchwork.kernel.org/patch/10093747/
+>> +     compatible =3D "melexis,mlx90632";
+>> +     reg =3D <0x3a>;
+>> +};
+>
+> Also generally the dt-bindings patch should go before the first use of
+> the compatible string.
+>
 
-v2 - no changes
+OK, will keep in mind in case of v5 to reorder the commits once again.
 
- drivers/leds/Kconfig       |  2 +-
- drivers/leds/leds-lp8860.c | 13 +++++--------
- 2 files changed, 6 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 318a28fd58fe..ac4d9d8bf96b 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -347,7 +347,7 @@ config LEDS_LP8788
- 
- config LEDS_LP8860
- 	tristate "LED support for the TI LP8860 4 channel LED driver"
--	depends on LEDS_CLASS && I2C
-+	depends on LEDS_CLASS && I2C && OF
- 	select REGMAP_I2C
- 	help
- 	  If you say yes here you get support for the TI LP8860 4 channel
-diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
-index 309a73a0c2dd..f38531c30185 100644
---- a/drivers/leds/leds-lp8860.c
-+++ b/drivers/leds/leds-lp8860.c
-@@ -399,7 +399,6 @@ static int lp8860_probe(struct i2c_client *client,
- 
- 	led->client = client;
- 	led->led_dev.name = led->label;
--	led->led_dev.max_brightness = LED_FULL;
- 	led->led_dev.brightness_set_blocking = lp8860_brightness_set;
- 
- 	mutex_init(&led->lock);
-@@ -426,7 +425,7 @@ static int lp8860_probe(struct i2c_client *client,
- 	if (ret)
- 		return ret;
- 
--	ret = led_classdev_register(&client->dev, &led->led_dev);
-+	ret = devm_led_classdev_register(&client->dev, &led->led_dev);
- 	if (ret) {
- 		dev_err(&client->dev, "led register err: %d\n", ret);
- 		return ret;
-@@ -440,8 +439,6 @@ static int lp8860_remove(struct i2c_client *client)
- 	struct lp8860_led *led = i2c_get_clientdata(client);
- 	int ret;
- 
--	led_classdev_unregister(&led->led_dev);
--
- 	if (led->enable_gpio)
- 		gpiod_direction_output(led->enable_gpio, 0);
- 
-@@ -452,6 +449,8 @@ static int lp8860_remove(struct i2c_client *client)
- 				"Failed to disable regulator\n");
- 	}
- 
-+	mutex_destroy(&led->lock);
-+
- 	return 0;
- }
- 
-@@ -461,18 +460,16 @@ static const struct i2c_device_id lp8860_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, lp8860_id);
- 
--#ifdef CONFIG_OF
- static const struct of_device_id of_lp8860_leds_match[] = {
- 	{ .compatible = "ti,lp8860", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, of_lp8860_leds_match);
--#endif
- 
- static struct i2c_driver lp8860_driver = {
- 	.driver = {
- 		.name	= "lp8860",
--		.of_match_table = of_match_ptr(of_lp8860_leds_match),
-+		.of_match_table = of_lp8860_leds_match,
- 	},
- 	.probe		= lp8860_probe,
- 	.remove		= lp8860_remove,
-@@ -482,4 +479,4 @@ module_i2c_driver(lp8860_driver);
- 
- MODULE_DESCRIPTION("Texas Instruments LP8860 LED driver");
- MODULE_AUTHOR("Dan Murphy <dmurphy@ti.com>");
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("GPL v2");
--- 
-2.15.0.124.g7668cbc60
+Best regards,
+Crt
+> Regards,
+> Andreas
+>
+> --
+> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+> GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton
+> HRB 21284 (AG N=C3=BCrnberg)
