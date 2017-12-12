@@ -1,71 +1,51 @@
-From: "Katsuhiro Suzuki" <suzuki.katsuhiro@socionext.com>
-Subject: Re: [alsa-devel] [PATCH 5/8] ASoC: uniphier: add support for UniPhier AIO driver
-Date: Tue, 12 Dec 2017 13:33:34 +0900
-Message-ID: <003201d37302$5f40fde0$1dc2f9a0$@socionext.com>
-References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com> <20171122114321.29196-6-suzuki.katsuhiro@socionext.com> <20171204183934.rd4vin22ktukwpip@sirena.org.uk> <002b01d36d84$51d80aa0$f5881fe0$@socionext.com> <20171205121440.GC11658@finisterre> <004801d36e57$ea1940d0$be4bc270$@socionext.com> <20171206125817.GF1827@finisterre> <001501d37261$7ea89d10$7bf9d730$@socionext.com> <20171211151629.GD9854@sirena.org.uk> <20171211174854.GZ18649@localhost>
+From: =?utf-8?B?UGF0cmljayBCcsO8bm4=?= <P.Bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH v2 1/5] dt-bindings: rtc: add bindings for i.MX53 SRTC
+Date: Tue, 12 Dec 2017 05:05:14 +0000
+Message-ID: <3BB206AB2B1BD448954845CE6FF69A8E01CB532561@NT-Mail07.beckhoff.com>
+References: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
+ <20171205140646.30367-2-linux-kernel-dev@beckhoff.com>
+ <20171206215436.lwttn445wjilh3wo@rob-hp-laptop>
+ <3BB206AB2B1BD448954845CE6FF69A8E01CB53233C@NT-Mail07.beckhoff.com>
+ <CAOMZO5DoiLW3DxLF=agHua9jO-+LgWA3xw6h7kyj_uot47pkjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171211174854.GZ18649@localhost>
-Content-Language: ja
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Vinod Koul' <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, =?iso-2022-jp?B?WWFtYWRhLCBNYXNhaGlyby8bJEI7M0VEGyhCIBskQj8/OTAbKEI=?= <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5DoiLW3DxLF=agHua9jO-+LgWA3xw6h7kyj_uot47pkjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-dev <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Patrick Bruenn <p.bruenn-QonKdJ6Bx34e+czBwuGJN7NAH6kLmebB@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITE
 List-Id: devicetree@vger.kernel.org
 
-Hello Vinod, Mark,
+PkZyb206IEZhYmlvIEVzdGV2YW0gW21haWx0bzpmZXN0ZXZhbUBnbWFpbC5jb21dDQo+U2VudDog
+RGllbnN0YWcsIDEyLiBEZXplbWJlciAyMDE3IDAwOjA4DQo+SGkgUGF0cmljaywNCj4NCkhpIEZh
+YmlvLA0KPk9uIE1vbiwgRGVjIDExLCAyMDE3IGF0IDU6MDggQU0sIFBhdHJpY2sgQnLDvG5uIDxQ
+LkJydWVubkBiZWNraG9mZi5jb20+DQo+d3JvdGU6DQo+DQo+Pj5ydGNALi4uDQo+Pj4NCj4+IFRo
+ZSBydGMgZm9yIHdoaWNoIHRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBpcyBlbWJlZGRlZCB3aXRo
+aW4gYSBmdW5jdGlvbg0KPmJsb2NrIGNhbGxlZA0KPj4gIlNlY3VyZSBSZWFsIFRpbWUgQ2xvY2si
+LiBUaGlzIGRyaXZlciBkb2Vzbid0IHV0aWxpemUgYWxsIG9mIHRoZSBoYXJkd2FyZQ0KPmZlYXR1
+cmVzIGJ5DQo+PiBub3cuIEJ1dCBtYXliZSBzb21lb25lIGVsc2Ugd2FudHMgdG8gZXh0ZW5kIHRo
+ZSBmdW5jdGlvbmFsaXRpZXMsIGxhdGVyLg0KPj4gRm9yIHRoYXQgcG9zc2liaWxpdHkgSSB3YW50
+ZWQgdG8gbmFtZSB0aGUgbm9kZSAic3J0YyIuIFNob3VsZCBJIHN0aWxsIGNoYW5nZQ0KPnRoaXM/
+DQo+Pg0KPj4gSSBiZWxpZXZlIHlvdSBoYXZlIGEgbXVjaCBiZXR0ZXIgdW5kZXJzdGFuZGluZyBv
+ZiB3aGF0IHNob3VsZCBiZSBkb25lDQo+aGVyZS4gSSBkb24ndA0KPj4gd2FudCB0byBhcmd1ZSB3
+aXRoIHlvdSwganVzdCB0aG91Z2h0IHlvdSBtaWdodCBub3QgaGFkIHRoYXQgaW5mb3JtYXRpb24u
+IFNvDQo+aWYgSSBhbQ0KPj4gd3JvbmcganVzdCB0ZWxsIG1lIGFuZCBJIHdpbGwgY2hhbmdlIGl0
+IHdpdGhvdXQgZnVydGhlciAiY29tcGxhaW5pbmciLg0KPg0KPkZyb20gdGhlIERldmljZXRyZWUg
+U3BlY2lmaWNhdGlvbiBkb2N1bWVudDoNCj4NCj4iR2VuZXJpYyBOYW1lcyBSZWNvbW1lbmRhdGlv
+bg0KPg0KPlRoZSBuYW1lIG9mIGEgbm9kZSBzaG91bGQgYmUgc29tZXdoYXQgZ2VuZXJpYywgcmVm
+bGVjdGluZyB0aGUgZnVuY3Rpb24NCj5vZiB0aGUgZGV2aWNlIGFuZCBub3QgaXRzIHByZWNpc2Ug
+cHJvZ3JhbS0NCj5taW5nIG1vZGVsLiBJZiBhcHByb3ByaWF0ZSwgdGhlIG5hbWUgc2hvdWxkIGJl
+IG9uZSBvZiB0aGUgZm9sbG93aW5nIGNob2ljZXM6DQo+Li4uDQo+cnRjDQo+Ig0KPg0KPlNvIGJl
+dHRlciB1c2UgJ3J0YycgYXMgc3VnZ2VzdGVkIGJ5IFJvYi4NCg0KVGhhbmtzIGZvciB0aGlzIGNs
+YXJpZmljYXRpb24uIEkgd2lsbCB3YWl0IGEgZmV3IGRheXMgZm9yIG1vcmUgY29tbWVudHMgb24g
+dGhlIHJlc3Qgb2YgdGhlIGRyaXZlciBhbmQgdGhlbiBzZW5kIGEgdjQuDQoNClJlZ2FyZHMsIFBh
+dHJpY2sNCkJlY2tob2ZmIEF1dG9tYXRpb24gR21iSCAmIENvLiBLRyB8IE1hbmFnaW5nIERpcmVj
+dG9yOiBEaXBsLiBQaHlzLiBIYW5zIEJlY2tob2ZmDQpSZWdpc3RlcmVkIG9mZmljZTogVmVybCwg
+R2VybWFueSB8IFJlZ2lzdGVyIGNvdXJ0OiBHdWV0ZXJzbG9oIEhSQSA3MDc1DQoNCg0K
 
-> -----Original Message-----
-> From: Vinod Koul [mailto:vinod.koul@intel.com]
-> Sent: Tuesday, December 12, 2017 2:49 AM
-> To: Mark Brown <broonie@kernel.org>
-> Cc: Suzuki, Katsuhiro/鈴木 勝博 <suzuki.katsuhiro@socionext.com>;
-> devicetree@vger.kernel.org; alsa-devel@alsa-project.org; Masami Hiramatsu
-> <masami.hiramatsu@linaro.org>; Yamada, Masahiro/山田 真弘
-> <yamada.masahiro@socionext.com>; linux-kernel@vger.kernel.org; Jassi Brar
-> <jaswinder.singh@linaro.org>; Rob Herring <robh+dt@kernel.org>;
-> linux-arm-kernel@lists.infradead.org
-> Subject: Re: [alsa-devel] [PATCH 5/8] ASoC: uniphier: add support for UniPhier
-> AIO driver
-> 
-> On Mon, Dec 11, 2017 at 03:16:29PM +0000, Mark Brown wrote:
-> > On Mon, Dec 11, 2017 at 06:21:58PM +0900, Katsuhiro Suzuki wrote:
-> >
-> > > But I can't find how to use/map this DAI in machine driver or Device-Tree
-or
-> > > something. I think that it's same as PCM DAI, am I correct?
-> >
-> > Yes, that probably makes sense from a binding point of view.
-> >
-> > > I read compress-offload.rst, but I can't find how do I test it. It seems
-aplay
-> > > of
-> > > alsa-util doesn't know compress audio formats. Should I use PulseAudio or
-> > > Android HAL to test compress audio APIs?
-> >
-> > IIRC tinyalsa has a compressed API test application - Vinod?
-> 
-> I guess it was sheer luck that i saw this :) email in CC reads
-> vinod.koul@linaro.org! I don't work for Linaro, not yet :D
-> 
-> And to the answer the question, Yes we have compressed API test application
-> in tinycompress which is located at git.alsa-project.org:tinycompress.git
-> 
-> We have both compressed audio playback as well as record test app, cplay and
-> crecord.
-> 
-
-Ah, I didn't check tinyalsa, thanks a lot!
-I'll try it.
-
-
-Regards,
 --
-Katsuhiro Suzuki
-
-
-> HTH
-> --
-> ~Vinod
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
