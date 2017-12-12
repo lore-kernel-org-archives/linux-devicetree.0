@@ -1,93 +1,111 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v3 1/8] SOC: brcmstb: add memory API
-Date: Tue, 12 Dec 2017 15:14:04 -0600
-Message-ID: <20171212211404.GA95453@bhelgaas-glaptop.roam.corp.google.com>
-References: <1510697532-32828-1-git-send-email-jim2101024@gmail.com>
- <1510697532-32828-2-git-send-email-jim2101024@gmail.com>
- <20171205205926.GJ23510@bhelgaas-glaptop.roam.corp.google.com>
- <CANCKTBvoXpF-H8Pck5TsH+7tNM=di1-uoedqACE+kjNEAUodYg@mail.gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v3 3/6] leds: lp8860: Update the dt parsing for LED
+ labeling
+Date: Tue, 12 Dec 2017 22:13:37 +0100
+Message-ID: <f191482b-65a0-1520-8d72-d7626ca1b0b6@gmail.com>
+References: <20171212185809.23880-1-dmurphy@ti.com>
+ <20171212185809.23880-5-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANCKTBvoXpF-H8Pck5TsH+7tNM=di1-uoedqACE+kjNEAUodYg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jim Quinlan <jim2101024@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, linux-pci <linux-pci@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, linux-arm-kernel@lists.
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20171212185809.23880-5-dmurphy@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[+cc Lorenzo]
+Hi Dan,
 
-On Tue, Dec 12, 2017 at 03:53:28PM -0500, Jim Quinlan wrote:
-> On Tue, Dec 5, 2017 at 3:59 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Tue, Nov 14, 2017 at 05:12:05PM -0500, Jim Quinlan wrote:
-> >> From: Florian Fainelli <f.fainelli@gmail.com>
-> >>
-> >> This commit adds a memory API suitable for ascertaining the sizes of
-> >> each of the N memory controllers in a Broadcom STB chip.  Its first
-> >> user will be the Broadcom STB PCIe root complex driver, which needs
-> >> to know these sizes to properly set up DMA mappings for inbound
-> >> regions.
-> >>
-> >> We cannot use memblock here or anything like what Linux provides
-> >> because it collapses adjacent regions within a larger block, and here
-> >> we actually need per-memory controller addresses and sizes, which is
-> >> why we resort to manual DT parsing.
-> >>
-> >> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-> >> ---
-> >>  drivers/soc/bcm/brcmstb/Makefile |   2 +-
-> >>  drivers/soc/bcm/brcmstb/memory.c | 172 +++++++++++++++++++++++++++++++++++++++
-> >>  include/soc/brcmstb/memory_api.h |  25 ++++++
-> >>  3 files changed, 198 insertions(+), 1 deletion(-)
-> >>  create mode 100644 drivers/soc/bcm/brcmstb/memory.c
-> >>  create mode 100644 include/soc/brcmstb/memory_api.h
-> >>
-> >> diff --git a/drivers/soc/bcm/brcmstb/Makefile b/drivers/soc/bcm/brcmstb/Makefile
-> >> index 9120b27..4cea7b6 100644
-> >> --- a/drivers/soc/bcm/brcmstb/Makefile
-> >> +++ b/drivers/soc/bcm/brcmstb/Makefile
-> >> @@ -1 +1 @@
-> >> -obj-y                                += common.o biuctrl.o
-> >> +obj-y                                += common.o biuctrl.o memory.o
-> >> diff --git a/drivers/soc/bcm/brcmstb/memory.c b/drivers/soc/bcm/brcmstb/memory.c
-> >> new file mode 100644
-> >> index 0000000..eb647ad9
-> >> --- /dev/null
-> >> +++ b/drivers/soc/bcm/brcmstb/memory.c
-> >
-> > I sort of assume based on [1] that every new file should have an SPDX
-> > identifier ("The Linux kernel requires the precise SPDX identifier in
-> > all source files") and that the actual text of the GPL can be omitted.
-> >
-> > Only a few files in drivers/pci currently have an SPDX identifier.  I
-> > don't know if that's oversight or work-in-progress or what.
-> >
-> > [1] https://lkml.kernel.org/r/20171204212120.484179273@linutronix.de
-> >
+Thanks for the patch set.
+
+On 12/12/2017 07:58 PM, Dan Murphy wrote:
+> Update the DT parsing for the label node so that
+> the label is retrieved from the device child as
+> opposed to being part of the parent.
 > 
-> Bjorn, Did you get a chance to review the other commits of this
-> submission (V3)?  I would like any additional feedback before I send
-> out a V4 with SPDX fixes.  Thanks, JimQ
+> This will align this driver with the LED
+> binding documentation
+> 
+> Documentation/devicetree/bindings/leds/common.txt
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v3 - Changed the label generation to pull the name from the i2c device id 
+> as opposed to pulling the id from the parent dt node since that will just be 
+> led-controller - https://patchwork.kernel.org/patch/10093753/
+> 
+> v2 - no changes
+> 
+>  drivers/leds/leds-lp8860.c | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
+> index 3e70775a2d54..bc432764c99d 100644
+> --- a/drivers/leds/leds-lp8860.c
+> +++ b/drivers/leds/leds-lp8860.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_gpio.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/slab.h>
+> +#include <uapi/linux/uleds.h>
+>  
+>  #define LP8860_DISP_CL1_BRT_MSB		0x00
+>  #define LP8860_DISP_CL1_BRT_LSB		0x01
+> @@ -86,8 +87,6 @@
+>  
+>  #define LP8860_CLEAR_FAULTS		0x01
+>  
+> -#define LP8860_DISP_LED_NAME		"display_cluster"
+> -
+>  /**
+>   * struct lp8860_led -
+>   * @lock - Lock for reading/writing the device
+> @@ -107,7 +106,7 @@ struct lp8860_led {
+>  	struct regmap *eeprom_regmap;
+>  	struct gpio_desc *enable_gpio;
+>  	struct regulator *regulator;
+> -	const char *label;
+> +	char label[LED_MAX_NAME_SIZE];
+>  };
+>  
+>  struct lp8860_eeprom_reg {
+> @@ -365,19 +364,21 @@ static int lp8860_probe(struct i2c_client *client,
+>  	int ret;
+>  	struct lp8860_led *led;
+>  	struct device_node *np = client->dev.of_node;
+> +	struct device_node *child_node;
+> +	const char *name;
+>  
+>  	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
+>  	if (!led)
+>  		return -ENOMEM;
+>  
+> -	led->label = LP8860_DISP_LED_NAME;
+> -
+> -	if (client->dev.of_node) {
+> -		ret = of_property_read_string(np, "label", &led->label);
+> -		if (ret) {
+> -			dev_err(&client->dev, "Missing label in dt\n");
+> -			return -EINVAL;
+> -		}
+> +	for_each_available_child_of_node(np, child_node) {
+> +		ret = of_property_read_string(child_node, "label", &name);
+> +		if (!ret)
+> +		    snprintf(led->label, sizeof(led->label), "%s:%s",
+> +					id->name, name);
+> +		else
+> +		    snprintf(led->label, sizeof(led->label),
+> +			     "%s::display_cluster", id->name);
 
-Lorenzo is taking over drivers/pci/host/* and he'll no doubt have some
-comments when he gets to this.  I'll point out a few quick formatting
-things in the meantime.
+Here we have the same indentation problem as in case of leds-lm3692x.c
 
-> >> @@ -0,0 +1,172 @@
-> >> +/*
-> >> + * Copyright © 2015-2017 Broadcom
-> >> + *
-> >> + * This program is free software; you can redistribute it and/or modify
-> >> + * it under the terms of the GNU General Public License version 2 as
-> >> + * published by the Free Software Foundation.
-> >> + *
-> >> + * This program is distributed in the hope that it will be useful,
-> >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> >> + * GNU General Public License for more details.
-> >> + *
-> >> + * A copy of the GPL is available at
-> >> + * http://www.broadcom.com/licenses/GPLv2.php or from the Free Software
-> >> + * Foundation at https://www.gnu.org/licenses/ .
+>  	}
+>  
+>  	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
