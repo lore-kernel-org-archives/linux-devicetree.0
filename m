@@ -1,28 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 30/33] dt-bindings: nds32 SoC Bindings
-Date: Tue, 12 Dec 2017 14:12:01 -0600
-Message-ID: <20171212201201.icuuddpm5in2rege@rob-hp-laptop>
-References: <cover.1512723245.git.green.hu@gmail.com>
- <4c33141ec34c73abe4a9106cbe71f2a97621958e.1512723245.git.green.hu@gmail.com>
+Subject: Re: [PATCH] PCI: qcom: add missing supplies required for msm8996
+Date: Tue, 12 Dec 2017 14:17:54 -0600
+Message-ID: <20171212201754.lv7hsb3e5fx4eap5@rob-hp-laptop>
+References: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4c33141ec34c73abe4a9106cbe71f2a97621958e.1512723245.git.green.hu@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>
-Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com
+In-Reply-To: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org
+Cc: stanimir.varbanov@linaro.org, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org, bhelgaas@google.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 08, 2017 at 05:12:13PM +0800, Greentime Hu wrote:
-> From: Greentime Hu <greentime@andestech.com>
+On Fri, Dec 08, 2017 at 09:20:53AM +0000, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > 
-> This patch adds nds32 SoC(AE3XX and AG101P) binding documents.
+> This patch adds supplies that are required for msm8996. Two of them vdda
+> and vdda-1p8 are analog supplies that go in to controller, and the rest
+> of the two vddpe's are supplies to PCIe endpoints.
 > 
-> Signed-off-by: Greentime Hu <greentime@andestech.com>
+> Without these supplies PCIe endpoints which require power supplies are
+> not enumerated at all, as there is no one to power it up.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  .../devicetree/bindings/nds32/andestech-boards     |   40 ++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nds32/andestech-boards
+>  .../devicetree/bindings/pci/qcom,pcie.txt          | 16 +++++++++++++
+>  drivers/pci/dwc/pcie-qcom.c                        | 28 ++++++++++++++++++++--
+>  2 files changed, 42 insertions(+), 2 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>                  
