@@ -1,154 +1,71 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] drm/tinydrm: add driver for ST7735R panels
-Date: Mon, 11 Dec 2017 20:55:07 -0600
-Message-ID: <cfcbba17-bb87-d6cc-39e4-1328ff132e9f@lechnology.com>
-References: <1512943833-31352-1-git-send-email-david@lechnology.com>
- <1512943833-31352-3-git-send-email-david@lechnology.com>
- <1d6124f3-613f-45b4-1862-aad7453239e6@tronnes.org>
+From: "Katsuhiro Suzuki" <suzuki.katsuhiro@socionext.com>
+Subject: Re: [alsa-devel] [PATCH 5/8] ASoC: uniphier: add support for UniPhier AIO driver
+Date: Tue, 12 Dec 2017 13:33:34 +0900
+Message-ID: <003201d37302$5f40fde0$1dc2f9a0$@socionext.com>
+References: <20171122114321.29196-1-suzuki.katsuhiro@socionext.com> <20171122114321.29196-6-suzuki.katsuhiro@socionext.com> <20171204183934.rd4vin22ktukwpip@sirena.org.uk> <002b01d36d84$51d80aa0$f5881fe0$@socionext.com> <20171205121440.GC11658@finisterre> <004801d36e57$ea1940d0$be4bc270$@socionext.com> <20171206125817.GF1827@finisterre> <001501d37261$7ea89d10$7bf9d730$@socionext.com> <20171211151629.GD9854@sirena.org.uk> <20171211174854.GZ18649@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1d6124f3-613f-45b4-1862-aad7453239e6-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: limor-6aDhHjTmHzzR7s880joybQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain;
+        charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171211174854.GZ18649@localhost>
+Content-Language: ja
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Vinod Koul' <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, =?iso-2022-jp?B?WWFtYWRhLCBNYXNhaGlyby8bJEI7M0VEGyhCIBskQj8/OTAbKEI=?= <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/11/2017 03:18 PM, Noralf Trønnes wrote:
-> 
-> Den 10.12.2017 23.10, skrev David Lechner:
->> This adds a new driver for Sitronix ST7735R display panels.
->>
->> This has been tested using an Adafruit 1.8" TFT.
->>
->> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->> ---
-> 
->> +static void st7735r_pipe_enable(struct drm_simple_display_pipe *pipe,
->> +                struct drm_crtc_state *crtc_state)
->> +{
->> +    struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
->> +    struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
->> +    struct device *dev = tdev->drm->dev;
->> +    int ret;
->> +    u8 addr_mode;
->> +
->> +    DRM_DEBUG_KMS("\n");
->> +
->> +    mipi_dbi_hw_reset(mipi);
->> +
->> +    ret = mipi_dbi_command(mipi, MIPI_DCS_SOFT_RESET);
->> +    if (ret) {
->> +        DRM_DEV_ERROR(dev, "Error sending command %d\n", ret);
->> +        return;
->> +    }
->> +
->> +    msleep(150);
->> +
->> +    mipi_dbi_command(mipi, MIPI_DCS_EXIT_SLEEP_MODE);
->> +    msleep(500);
->> +
->> +    mipi_dbi_command(mipi, ST7735R_FRMCTR1, 0x01, 0x2c, 0x2d);
->> +    mipi_dbi_command(mipi, ST7735R_FRMCTR2, 0x01, 0x2c, 0x2d);
->> +    mipi_dbi_command(mipi, ST7735R_FRMCTR3, 0x01, 0x2c, 0x2d, 0x01, 
->> 0x2c,
->> +             0x2d);
->> +    mipi_dbi_command(mipi, ST7735R_INVCTR, 0x07);
->> +    mipi_dbi_command(mipi, ST7735R_PWCTR1, 0xa2, 0x02, 0x84);
->> +    mipi_dbi_command(mipi, ST7735R_PWCTR2, 0xc5);
->> +    mipi_dbi_command(mipi, ST7735R_PWCTR3, 0x0a, 0x00);
->> +    mipi_dbi_command(mipi, ST7735R_PWCTR4, 0x8a, 0x2a);
->> +    mipi_dbi_command(mipi, ST7735R_PWCTR5, 0x8a, 0xee);
->> +    mipi_dbi_command(mipi, ST7735R_VMCTR1, 0x0e);
->> +    mipi_dbi_command(mipi, MIPI_DCS_EXIT_INVERT_MODE);
->> +    switch (mipi->rotation) {
->> +    default:
->> +        addr_mode = ST7735R_MX | ST7735R_MY;
->> +        break;
->> +    case 90:
->> +        addr_mode = ST7735R_MX | ST7735R_MV;
->> +        break;
->> +    case 180:
->> +        addr_mode = 0;
->> +        break;
->> +    case 270:
->> +        addr_mode = ST7735R_MY | ST7735R_MV;
->> +        break;
->> +    }
->> +    mipi_dbi_command(mipi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
->> +    mipi_dbi_command(mipi, MIPI_DCS_SET_PIXEL_FORMAT,
->> +             MIPI_DCS_PIXEL_FMT_16BIT);
->> +    mipi_dbi_command(mipi, ST7735R_GAMCTRP1, 0x0f, 0x1a, 0x0f, 0x18, 
->> 0x2f,
->> +             0x28, 0x20, 0x22, 0x1f, 0x1b, 0x23, 0x37, 0x00, 0x07,
->> +             0x02, 0x10);
->> +    mipi_dbi_command(mipi, ST7735R_GAMCTRN1, 0x0f, 0x1b, 0x0f, 0x17, 
->> 0x33,
->> +             0x2c, 0x29, 0x2e, 0x30, 0x30, 0x39, 0x3f, 0x00, 0x07,
->> +             0x03, 0x10);
->> +    mipi_dbi_command(mipi, MIPI_DCS_SET_DISPLAY_ON);
->> +
->> +    msleep(100);
->> +
->> +    mipi_dbi_command(mipi, MIPI_DCS_ENTER_NORMAL_MODE);
->> +
->> +    msleep(20);
->> +
->> +    mipi_dbi_pipe_enable(pipe, crtc_state);
->> +}
->> +
->> +static const struct drm_simple_display_pipe_funcs st7735r_pipe_funcs = {
->> +    .enable        = st7735r_pipe_enable,
->> +    .disable    = mipi_dbi_pipe_disable,
->> +    .update        = tinydrm_display_pipe_update,
->> +    .prepare_fb    = tinydrm_display_pipe_prepare_fb,
->> +};
->> +
->> +static const struct drm_display_mode st7735r_mode = {
->> +    TINYDRM_MODE(128, 160, 28, 35),
->> +};
-> 
-> This naming talk has made me realise that these should be named after
-> the panel since they're not generic controller functions.
-> Maybe the mode can be generic, not sure if the physical size can/will
-> differ, the resolution is very likely to be the same for all.
+Hello Vinod, Mark,
 
-Adafruit has a 1.44" 128x128px display [1] with the same controller, so 
-the answer is no, the mode cannot be generic.
-
-[1]: https://www.adafruit.com/product/2088
+> -----Original Message-----
+> From: Vinod Koul [mailto:vinod.koul@intel.com]
+> Sent: Tuesday, December 12, 2017 2:49 AM
+> To: Mark Brown <broonie@kernel.org>
+> Cc: Suzuki, Katsuhiro/$BNkLZ(B $B>!Gn(B <suzuki.katsuhiro@socionext.com>;
+> devicetree@vger.kernel.org; alsa-devel@alsa-project.org; Masami Hiramatsu
+> <masami.hiramatsu@linaro.org>; Yamada, Masahiro/$B;3ED(B $B??90(B
+> <yamada.masahiro@socionext.com>; linux-kernel@vger.kernel.org; Jassi Brar
+> <jaswinder.singh@linaro.org>; Rob Herring <robh+dt@kernel.org>;
+> linux-arm-kernel@lists.infradead.org
+> Subject: Re: [alsa-devel] [PATCH 5/8] ASoC: uniphier: add support for UniPhier
+> AIO driver
 > 
-> What's your view on my descision to split the MIPI DBI compatible
-> controllers into per controller drivers instead of having one driver
-> that supports them all?
-
-My first impression was that I didn't like it so much. But now, I 
-actually think that it is a good idea. I think it is a good compromise 
-between some boilerplate code in every driver and a driver with so many 
-quirks that it is very difficult to work on. It may make sense to 
-combine some very similar controllers, but as a rule of thumb, I think 
-one driver per controller will work nicely.
-
-> I've been afraid that it will be a very big file with macro definitions
-> per controller and enable functions per panel.
+> On Mon, Dec 11, 2017 at 03:16:29PM +0000, Mark Brown wrote:
+> > On Mon, Dec 11, 2017 at 06:21:58PM +0900, Katsuhiro Suzuki wrote:
+> >
+> > > But I can't find how to use/map this DAI in machine driver or Device-Tree
+or
+> > > something. I think that it's same as PCM DAI, am I correct?
+> >
+> > Yes, that probably makes sense from a binding point of view.
+> >
+> > > I read compress-offload.rst, but I can't find how do I test it. It seems
+aplay
+> > > of
+> > > alsa-util doesn't know compress audio formats. Should I use PulseAudio or
+> > > Android HAL to test compress audio APIs?
+> >
+> > IIRC tinyalsa has a compressed API test application - Vinod?
 > 
-> This driver has 15 macros and ~80 panel specific lines.
-> With one panel supported, half the driver is boilerplate.
-> The mi0283qt panel (MIPI DBI compatible) is in the same ballpark.
+> I guess it was sheer luck that i saw this :) email in CC reads
+> vinod.koul@linaro.org! I don't work for Linaro, not yet :D
 > 
-> Adding helpers for panel reset/exit_sleep, for MIPI_DCS_SET_ADDRESS_MODE
-> and for display_on/enter_normal/flush could cut it down some more if we
-> made one driver to rule them all. Maybe the enable function per panel
-> could be cut in half that way.
+> And to the answer the question, Yes we have compressed API test application
+> in tinycompress which is located at git.alsa-project.org:tinycompress.git
 > 
-> I'm starting to wonder if one driver isn't such a bad solution after all...
+> We have both compressed audio playback as well as record test app, cplay and
+> crecord.
+> 
 
-I think as we add more drivers, the parts that get duplicated will 
-become obvious candidates for helper functions to refactor, but I don't 
-think trying to cram everything all into one driver is such a good idea.
+Ah, I didn't check tinyalsa, thanks a lot!
+I'll try it.
+
+
+Regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Katsuhiro Suzuki
+
+
+> HTH
+> --
+> ~Vinod
