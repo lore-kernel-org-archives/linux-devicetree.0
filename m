@@ -1,57 +1,99 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] cpufreq: mvebu: Use dev_pm_opp_remove()
-Date: Tue, 12 Dec 2017 13:03:20 +0530
-Message-ID: <20171212073320.GN25177@vireshk-i7>
-References: <20171207135616.23670-1-gregory.clement@free-electrons.com>
- <20171207135616.23670-5-gregory.clement@free-electrons.com>
- <20171212082846.4e201953@windsurf.png.is.keysight.com>
+From: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFT PATCH] ARM: dts: exynos: Enable Mixer node for Exynos5800
+ Peach Pi machine
+Date: Tue, 12 Dec 2017 08:41:46 +0100
+Message-ID: <2dcc4a3d-bb9a-8338-8273-c5eae58dce34@redhat.com>
+References: <CGME20171211224905epcas1p4e6d66369f60c7dae0678efc95d0bdb6e@epcas1p4.samsung.com>
+ <20171211224856.29264-1-javierm@redhat.com>
+ <3e6e4b15-9f8a-bea1-3c8e-2d85fc4c512d@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171212082846.4e201953-dFHcqWZE4newlwMtHBQNBj9sBOhXbXn6VpNB7YpNyf8@public.gmane.org>
+In-Reply-To: <3e6e4b15-9f8a-bea1-3c8e-2d85fc4c512d-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Evan Wang <xswang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andre Heider <a.heider-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12-12-17, 08:28, Thomas Petazzoni wrote:
-> Hello,
-> 
-> On Thu,  7 Dec 2017 14:56:13 +0100, Gregory CLEMENT wrote:
-> 
-> > -		/*
-> > -		 * In case of a failure of dev_pm_opp_add(), we don't
-> > -		 * bother with cleaning up the registered OPP (there's
-> > -		 * no function to do so), and simply cancel the
-> > -		 * registration of the cpufreq device.
-> > -		 */
-> >  		ret = dev_pm_opp_add(cpu_dev, clk_get_rate(clk), 0);
-> >  		if (ret) {
-> >  			clk_put(clk);
-> > @@ -90,6 +84,11 @@ static int __init armada_xp_pmsu_cpufreq_init(void)
-> >  
-> >  		ret = dev_pm_opp_add(cpu_dev, clk_get_rate(clk) / 2, 0);
-> >  		if (ret) {
-> > +			/*
-> > +			 * The second opp failed to be added, remove
-> > +			 * the first one before exiting.
-> > +			 */
-> > +			dev_pm_opp_remove(cpu_dev, clk_get_rate(clk));
-> >  			clk_put(clk);
-> >  			return ret;
-> >  		}
-> 
-> This still doesn't fix the failure situation. Indeed, you are only
-> removing the OPP at full rate for the current CPU, but you are not
-> removing the OPPs for the N-1 previous CPUs that have been handled in
-> previous iterations of the loop.
+Hello Marek,
 
-Sorry for missing that, I quickly looked at source and missed seeing the
-for_each_cpu loop :(
+On 12/12/2017 08:01 AM, Marek Szyprowski wrote:
+> Hi
+> 
+> On 2017-12-11 23:48, Javier Martinez Canillas wrote:
+>> Commit 1cb686c08d12 ("ARM: dts: exynos: Add status property to Exynos 542x
+>> Mixer nodes") disabled the Mixer node by default in the DTSI and enabled
+>> for each Exynos 542x DTS. But unfortunately it missed to enable it for the
+>> Exynos5800 Peach Pi machine, since the 5800 is also an 542x SoC variant.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> 
+> Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
 
+Thanks.
+ 
+>> ---
+>>
+>> I believe this may cause the boot issues reported on Exynos5800 Peach Pi
+>> from v4.15-rc3, the mentioned commit made to v4.15-rc1 but it seems that
+>> didn't cause any harm until commit ("510353a63796 drm/bridge: analogix
+>> dp: Fix runtime PM state in get_modes() callback") fixed the runtime PM
+>> management in the DP driver.
+> 
+> Thanks for analyzing this. Lack of this change was probably responsible for
+> Exynos DRM initialization failure ("exynos-drm exynos-drm: failed to bind
+> 14530000.hdmi (ops hdmi_component_ops): -1" message and probably further
+> error "unbalanced disables for lcd_vdd", which shows that failure path of
+> analogix dp and simple panel causes unbalanced regulator disable.
+>
+
+Yes, I came to the same conclusion than you in the thread started by
+Guillaume. I just couldn't test it.
+ 
+> This patch should go to v4.15-rcX (fixes) if possible.
+>
+
+Indeed. I wondered if it also needed a Fixes tag. I didn't include it because
+I thought that both the culprit and the fix would be in the same kernel release.
+
+But I'll include it anyways.
+ 
+>> I can't test right now, but I'm posting anyways as a RFT in case others
+>> that have access to a Peach Pi can test it.
+>>
+>> Best regards,
+>> Javier
+>>
+>>   arch/arm/boot/dts/exynos5800-peach-pi.dts | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> index b2b95ff205e8..0029ec27819c 100644
+>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>> @@ -664,6 +664,10 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&mixer {
+>> +	status = "okay";
+>> +};
+>> +
+>>   /* eMMC flash */
+>>   &mmc_0 {
+>>   	status = "okay";
+> 
+> Best regards
+> 
+
+Best regards,
 -- 
-viresh
+Javier Martinez Canillas
+Software Engineer - Desktop Hardware Enablement
+Red Hat
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
