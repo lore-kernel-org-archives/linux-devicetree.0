@@ -1,97 +1,74 @@
-From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: exynos: Enable Mixer node for Exynos5800
- Peach Pi machine
-Date: Tue, 12 Dec 2017 11:07:06 +0000
-Message-ID: <4a8edb50-72cf-8603-8ba5-5176cbef9636@collabora.com>
-References: <20171212074208.30753-1-javierm@redhat.com>
- <CAJKOXPc1rJCWABXUuyU2MKxnLY-MptrM9Mm0HyHVCJn870R+sg@mail.gmail.com>
- <CGME20171212100905epcas5p35a40946af3936f2020b4cabb6ee2cc95@epcas5p3.samsung.com>
- <CAJKOXPc1_n2cdgjuFbA9jNdcSXxfr8Zjf=fUx_jt_N3+LP0n8A@mail.gmail.com>
- <a42670aa-b3df-7a53-8ed2-f3acd97fd0d4@samsung.com>
- <ad03e2a8-00eb-464e-6983-374f83b9abf5@collabora.com>
- <1bbedec6-6250-f02a-bf9a-4b9849833de2@samsung.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 4/4] [v4] pinctrl: qcom: qdf2xxx: add support for new
+ ACPI HID QCOM8002
+Date: Tue, 12 Dec 2017 13:07:16 +0200
+Message-ID: <1513076836.25007.641.camel@linux.intel.com>
+References: <1512170904-4749-1-git-send-email-timur@codeaurora.org>
+ <1512170904-4749-5-git-send-email-timur@codeaurora.org>
+ <CACRpkdYer_Q5R4XhWTX3=jwshcKZRSDY9=gOvSeUPsQHbUw6vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1bbedec6-6250-f02a-bf9a-4b9849833de2-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdYer_Q5R4XhWTX3=jwshcKZRSDY9=gOvSeUPsQHbUw6vw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Timur Tabi <timur@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ BINDINGS" <devicetree@vger.kernel.org>
+Cc: Archit Taneja <architt@codeaurora.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Andy Gross <andy.gross@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Varadarajan Narayanan <varada@codeaurora.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/17 10:55, Marek Szyprowski wrote:
-> Hi Guillaume,
-> 
-> On 2017-12-12 11:43, Guillaume Tucker wrote:
->> On 12/12/17 10:17, Marek Szyprowski wrote:
->>> Hi Krzysztof,
->>>
->>> On 2017-12-12 11:09, Krzysztof Kozlowski wrote:
->>>> On Tue, Dec 12, 2017 at 10:55 AM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>>> On Tue, Dec 12, 2017 at 8:42 AM, Javier Martinez Canillas
->>>>> <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>>>> Commit 1cb686c08d12 ("ARM: dts: exynos: Add status property to Exynos 542x
->>>>>> Mixer nodes") disabled the Mixer node by default in the DTSI and enabled
->>>>>> for each Exynos 542x DTS. But unfortunately it missed to enable it for the
->>>>>> Exynos5800 Peach Pi machine, since the 5800 is also an 542x SoC variant.
->>>>>>
->>>>>> Fixes: 1cb686c08d12 ("ARM: dts: exynos: Add status property to Exynos 542x Mixer nodes")
->>>>>> Signed-off-by: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>>> Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>>>
->>>>>> ---
->>>>>>
->>>>>> Changes in v2:
->>>>>> - Remove RFT tag.
->>>>> Thanks guys! However I still would like to see a tested-by for this on
->>>>> Peach Pi (AFAIU, Marek's only acked the code/solution).
->>>> On the other hand I could just apply it for my for-next branch and
->>>> we'll see if it fixes kernel-ci boot tests... Not a nice way of
->>>> testing but apparently no one has Peach Pi.
->>>
->>> Frankly, I don't expect that this will solve the boot hang issue on PeachPi.
->>> However it should at least hide the unbalanced regulator issue.
->>
->> We have a peach-pi in our LAVA lab so I've tested it and
->> actually, it does fix the hang on v4.15-rc3:
->>
->>   https://lava.collabora.co.uk/scheduler/job/1019877
->>   https://lava.collabora.co.uk/scheduler/job/1019878
->>
->> I ran it twice and it booted both times.  I also ran the same
->> boot tests with the same kernel but the dtb from v4.15-rc3
->> without the fix to double check and these failed:
->>
->>   https://lava.collabora.co.uk/scheduler/job/1019879
->>   https://lava.collabora.co.uk/scheduler/job/1019880
->>
->>
->> Tested-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>
->>
->> Thanks for the fix!
-> 
-> Well, thanks for the test! It proves that there the boot failure is
-> caused by an issue somewhere in the error path of Exynos DRM, Analogix
-> DP, Simple Panel or other drivers.
-> 
-> This patch simply hides it by fixing the source issue of the Exynos
-> DRM initialization failure. :-)
-> 
-> I hope Javier will be able to investigate the discussed hang issue
-> later, as fixing it is also imho important.
+On Tue, 2017-12-12 at 11:42 +0100, Linus Walleij wrote:
+> On Sat, Dec 2, 2017 at 12:28 AM, Timur Tabi <timur@codeaurora.org>
+> wrote:
 
-Sure.  This device tree change is needed to get HDMI to work so
-it's still a fix for that.  Also it's good to know that nothing
-else breaks when the driver issue is "hidden".  Might be worth
-testing on -next as well as it might help spot any new issues
-that haven't been merged in mainline yet, or in general give
-another data point.
+> > +               /* The number of GPIOs in the approved list */
+> > +               ret = device_property_read_u16_array(&pdev->dev,
+> > "gpios",
+> > +                                                    NULL, 0);
+> > +               if (ret < 0) {
+> > +                       dev_err(&pdev->dev, "missing 'gpios'
+> > property\n");
+> > +                       return ret;
+> > +               }
+> 
+> This is in direct conflict with the existing "gpios" binding in device
+> tree.
+> 
+> Where is this name coming from? ACPI standards?
 
-Guillaume
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Not ACPI standards as of my knowledge. ACPI standard defines a common
+scheme how to define properties, it doesn't tell anything about property
+names or any mappings between names to values or names to "OS
+subsystem").
+
+As for GPIO we just follow *de facto* what DT has right now, i.e. "xxx-
+gpio" or "xxx-gpios" pattern is used to map ACPI standard resource to a
+GPIO name. That's how GPIO ACPI lib is being developed.
+
+> If device tree and ACPI start defining things which are in direct
+> conflict
+> we can just shut down this device_property() business altogether,
+> it will never work that way.
+
+This is fully understandable. Also it works in other direction, i.e. if
+DT will break the established thing it will break also ACPI and built-in 
+device properties.
+
+We are keeping an eye on this not to happen as much as we can in any
+direction.
+
+So, summarize above, I don't see any impediments (except maybe very
+broken ARM64 firmware that is already on devices on market) to make it
+properly from the beginning.
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
