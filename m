@@ -1,82 +1,97 @@
-From: afzal mohammed <afzal.mohd.ma@gmail.com>
-Subject: Re: [PATCH 1/6] ARM: stm32: prepare stm32 family to welcome armv7
- architecture
-Date: Tue, 12 Dec 2017 16:33:15 +0530
-Message-ID: <20171212110315.GA4118@afzalpc>
-References: <1512742277-28205-1-git-send-email-ludovic.Barre@st.com>
- <1512742277-28205-2-git-send-email-ludovic.Barre@st.com>
- <CACRpkdaKZk5N9F=_nYSzKWyXgW4xQ9Ltft7-UNM+a-nOpqq2xg@mail.gmail.com>
- <CAK8P3a2rrpFuwET8r1H0YWVABbCZr5c2ySrKCgA4mfoZPfWp6Q@mail.gmail.com>
+From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: exynos: Enable Mixer node for Exynos5800
+ Peach Pi machine
+Date: Tue, 12 Dec 2017 11:07:06 +0000
+Message-ID: <4a8edb50-72cf-8603-8ba5-5176cbef9636@collabora.com>
+References: <20171212074208.30753-1-javierm@redhat.com>
+ <CAJKOXPc1rJCWABXUuyU2MKxnLY-MptrM9Mm0HyHVCJn870R+sg@mail.gmail.com>
+ <CGME20171212100905epcas5p35a40946af3936f2020b4cabb6ee2cc95@epcas5p3.samsung.com>
+ <CAJKOXPc1_n2cdgjuFbA9jNdcSXxfr8Zjf=fUx_jt_N3+LP0n8A@mail.gmail.com>
+ <a42670aa-b3df-7a53-8ed2-f3acd97fd0d4@samsung.com>
+ <ad03e2a8-00eb-464e-6983-374f83b9abf5@collabora.com>
+ <1bbedec6-6250-f02a-bf9a-4b9849833de2@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2rrpFuwET8r1H0YWVABbCZr5c2ySrKCgA4mfoZPfWp6Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Ludovic Barre <ludovic.Barre@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1bbedec6-6250-f02a-bf9a-4b9849833de2-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 12/12/17 10:55, Marek Szyprowski wrote:
+> Hi Guillaume,
+> 
+> On 2017-12-12 11:43, Guillaume Tucker wrote:
+>> On 12/12/17 10:17, Marek Szyprowski wrote:
+>>> Hi Krzysztof,
+>>>
+>>> On 2017-12-12 11:09, Krzysztof Kozlowski wrote:
+>>>> On Tue, Dec 12, 2017 at 10:55 AM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>>> On Tue, Dec 12, 2017 at 8:42 AM, Javier Martinez Canillas
+>>>>> <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>>> Commit 1cb686c08d12 ("ARM: dts: exynos: Add status property to Exynos 542x
+>>>>>> Mixer nodes") disabled the Mixer node by default in the DTSI and enabled
+>>>>>> for each Exynos 542x DTS. But unfortunately it missed to enable it for the
+>>>>>> Exynos5800 Peach Pi machine, since the 5800 is also an 542x SoC variant.
+>>>>>>
+>>>>>> Fixes: 1cb686c08d12 ("ARM: dts: exynos: Add status property to Exynos 542x Mixer nodes")
+>>>>>> Signed-off-by: Javier Martinez Canillas <javierm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>>> Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>>>
+>>>>>> ---
+>>>>>>
+>>>>>> Changes in v2:
+>>>>>> - Remove RFT tag.
+>>>>> Thanks guys! However I still would like to see a tested-by for this on
+>>>>> Peach Pi (AFAIU, Marek's only acked the code/solution).
+>>>> On the other hand I could just apply it for my for-next branch and
+>>>> we'll see if it fixes kernel-ci boot tests... Not a nice way of
+>>>> testing but apparently no one has Peach Pi.
+>>>
+>>> Frankly, I don't expect that this will solve the boot hang issue on PeachPi.
+>>> However it should at least hide the unbalanced regulator issue.
+>>
+>> We have a peach-pi in our LAVA lab so I've tested it and
+>> actually, it does fix the hang on v4.15-rc3:
+>>
+>>   https://lava.collabora.co.uk/scheduler/job/1019877
+>>   https://lava.collabora.co.uk/scheduler/job/1019878
+>>
+>> I ran it twice and it booted both times.  I also ran the same
+>> boot tests with the same kernel but the dtb from v4.15-rc3
+>> without the fix to double check and these failed:
+>>
+>>   https://lava.collabora.co.uk/scheduler/job/1019879
+>>   https://lava.collabora.co.uk/scheduler/job/1019880
+>>
+>>
+>> Tested-by: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>>
+>>
+>> Thanks for the fix!
+> 
+> Well, thanks for the test! It proves that there the boot failure is
+> caused by an issue somewhere in the error path of Exynos DRM, Analogix
+> DP, Simple Panel or other drivers.
+> 
+> This patch simply hides it by fixing the source issue of the Exynos
+> DRM initialization failure. :-)
+> 
+> I hope Javier will be able to investigate the discussed hang issue
+> later, as fixing it is also imho important.
 
-On Mon, Dec 11, 2017 at 02:40:43PM +0100, Arnd Bergmann wrote:
-> On Mon, Dec 11, 2017 at 11:25 AM, Linus Walleij
+Sure.  This device tree change is needed to get HDMI to work so
+it's still a fix for that.  Also it's good to know that nothing
+else breaks when the driver issue is "hidden".  Might be worth
+testing on -next as well as it might help spot any new issues
+that haven't been merged in mainline yet, or in general give
+another data point.
 
-> >> This patch prepares the STM32 machine for the integration of Cortex-A
-> >> based microprocessor (MPU), on top of the existing Cortex-M
-> >> microcontroller family (MCU). Since both MCUs and MPUs are sharing
-> >> common hardware blocks we can keep using ARCH_STM32 flag for most of
-> >> them. If a hardware block is specific to one family we can use either
-> >> ARCH_STM32_MCU or ARCH_STM32_MPU flag.
-
-> To what degree do we need to treat them as separate families
-> at all then? I wonder if the MCU/MPU distinction is always that
-> clear along the Cortex-M/Cortex-A separation,
-
-> What
-> exactly would we miss if we do away with the ARCH_STM32_MCU
-> symbol here?
-
-Based on this patch series, the only difference seems to be w.r.t ARM
-components, not peripherals outside ARM subystem. Vybrid VF610 is a
-similar case, though not identical (it can have both instead of
-either), deals w/o extra symbols,
-
-8064887e02fd6 (ARM: vf610: enable Cortex-M4 configuration on Vybrid SoC)
-
-> especially if
-> we ever get to a chip that has both types of cores.
-
-Your wish fulfilled, Vybrid VF610 has both A5 & M4F and mainline Linux
-boots on both (simultaneously as well), and the second Linux support,
-i.e. on M4 went thr' your keyboard, see above commit :)
-
-There are quite a few others as well, TI's AM335x (A8 + M3), AM437x
-(A9 + M3), AM57x (A15 + M4), but of these Cortex M's, the one in AM57x
-only can be Linux'able. On others they are meant for PM with limited
-resources.
-
-> > So yesterdays application processors are todays MCU processors.
-> >
-> > I said this on a lecture for control systems a while back and
-> > stated it as a reason I think RTOSes are not really seeing a bright
-> > future compared to Linux.
-
-> I think there is still lots of room for smaller RTOS in the long run,
-
-Me being an electrical engineer & worked to some extent in motor
-control on RTOS/no OS (the value of my opinion is questionable
-though), the thought of handling the same in Linux (even RT) sends
-shivers down my spine. Here, case being considered is the type of
-motor (like permanent magnet ones) where each phase of the motor has
-to be properly excited during every PWM period (say every 100us,
-depending on the feedback, algorithm, other synchronization) w/o which
-the motor that has been told to run might try to fly. This is
-different from stepper motor where if control misbehaves/stops nothing
-harmful normally happens.
-
-But my opinion is a kind of knee-jerk reaction and based on prevalent
-atitude in that field, hmm.., probably i should attempt it first.
-
-Regards
-afzal
+Guillaume
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
