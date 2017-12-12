@@ -1,98 +1,90 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 08/12] clk: qcom: Add KPSS ACC/GCC driver
-Date: Tue, 12 Dec 2017 14:38:13 -0600
-Message-ID: <20171212203813.f3fkjw4uvxm43yok@rob-hp-laptop>
-References: <1512726150-7204-1-git-send-email-sricharan@codeaurora.org>
- <1512726150-7204-9-git-send-email-sricharan@codeaurora.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] dt-bindings: net: Add DT bindings for Socionext
+ Netsec
+Date: Tue, 12 Dec 2017 21:37:52 +0100
+Message-ID: <20171212203752.GB1523@lunn.ch>
+References: <1513098873-20977-1-git-send-email-jassisinghbrar@gmail.com>
+ <1513098921-21042-1-git-send-email-jassisinghbrar@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1512726150-7204-9-git-send-email-sricharan@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1513098921-21042-1-git-send-email-jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 08, 2017 at 03:12:26PM +0530, Sricharan R wrote:
-> From: Stephen Boyd <sboyd@codeaurora.org>
+On Tue, Dec 12, 2017 at 10:45:21PM +0530, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> The ACC and GCC regions present in KPSSv1 contain registers to
-> control clocks and power to each Krait CPU and L2. For CPUfreq
-> purposes probe these devices and expose a mux clock that chooses
-> between PXO and PLL8.
+> This patch adds documentation for Device-Tree bindings for the
+> Socionext NetSec Controller driver.
 > 
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  |  7 ++
->  .../devicetree/bindings/arm/msm/qcom,kpss-gcc.txt  | 28 +++++++
-
-Please make bindings a separate patch.
-
->  drivers/clk/qcom/Kconfig                           |  8 ++
->  drivers/clk/qcom/Makefile                          |  1 +
->  drivers/clk/qcom/kpss-xcc.c                        | 96 ++++++++++++++++++++++
->  5 files changed, 140 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-gcc.txt
->  create mode 100644 drivers/clk/qcom/kpss-xcc.c
+>  .../devicetree/bindings/net/socionext-netsec.txt   | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/socionext-netsec.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
-> index 1333db9..382a574 100644
-> --- a/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
-> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-acc.txt
-> @@ -21,10 +21,17 @@ PROPERTIES
->  		    the register region. An optional second element specifies
->  		    the base address and size of the alias register region.
->  
-> +- clock-output-names:
-> +	Usage: optional
-> +	Value type: <string>
-> +	Definition: Name of the output clock. Typically acpuX_aux where X is a
-> +		    CPU number starting at 0.
-> +
->  Example:
->  
->  	clock-controller@2088000 {
->  		compatible = "qcom,kpss-acc-v2";
->  		reg = <0x02088000 0x1000>,
->  		      <0x02008000 0x1000>;
-> +		clock-output-names = "acpu0_aux";
->  	};
-> diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,kpss-gcc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-gcc.txt
+> diff --git a/Documentation/devicetree/bindings/net/socionext-netsec.txt b/Documentation/devicetree/bindings/net/socionext-netsec.txt
 > new file mode 100644
-> index 0000000..d1e12f1
+> index 0000000..4695969
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/qcom,kpss-gcc.txt
-> @@ -0,0 +1,28 @@
-> +Krait Processor Sub-system (KPSS) Global Clock Controller (GCC)
+> +++ b/Documentation/devicetree/bindings/net/socionext-netsec.txt
+> @@ -0,0 +1,45 @@
+> +* Socionext NetSec Ethernet Controller IP
 > +
-> +PROPERTIES
+> +Required properties:
+> +- compatible: Should be "socionext,synquacer-netsec"
+> +- reg: Address and length of the control register area, followed by the
+> +       address and length of the EEPROM holding the MAC address and
+> +       microengine firmware
+> +- interrupts: Should contain ethernet controller interrupt
+> +- clocks: phandle to the PHY reference clock, and any other clocks to be
+> +          switched by runtime_pm
+> +- clock-names: Required only if more than a single clock is listed in 'clocks'.
+> +               The PHY reference clock must be named 'phy_refclk'
+> +- phy-mode: See ethernet.txt file in the same directory
+> +- phy-handle: phandle to select child phy
 > +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: should be one of:
-> +			"qcom,kpss-gcc"
+> +Optional properties: (See ethernet.txt file in the same directory)
+> +- dma-coherent: Boolean property, must only be present if memory
+> +		 accesses performed by the device are cache coherent
+> +- local-mac-address
+> +- mac-address
+> +- max-speed
+> +- max-frame-size
+> +
+> +Required properties for the child phy:
+> +- reg: phy address
 
-Only one implementation?
+Hi Jassi
 
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address and size of the register region
-> +
-> +- clock-output-names:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Name of the output clock. Typically acpu_l2_aux indicating
-> +		    an L2 cache auxiliary clock.
+Just reference phy.txt
+
 > +
 > +Example:
+> +	eth0: netsec@522D0000 {
+> +		compatible = "socionext,synquacer-netsec";
+> +		reg = <0 0x522D0000 0x0 0x10000>, <0 0x10000000 0x0 0x10000>;
+> +		interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&clk_netsec>;
+> +		phy-mode = "rgmii";
+> +		max-speed = <1000>;
+> +		max-frame-size = <9000>;
+> +		phy-handle = <&ethphy0>;
 > +
-> +	l2cc: clock-controller@2011000 {
-> +		compatible = "qcom,kpss-gcc";
-> +		reg = <0x2011000 0x1000>;
-> +		clock-output-names = "acpu_l2_aux";
-> +	};
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+
+Please add an mdio node here, and list all the phys and possibly
+Ethernet switches as children of it.
+
+	 Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
