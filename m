@@ -1,30 +1,40 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH] arm64: allwinner: a64: a64-olinuxino: add usb otg
-Date: Tue, 12 Dec 2017 14:57:01 +0530
-Message-ID: <CAMty3ZDEhXjHTE4WsJK8=yAayuR=qvJQaZEjGq=LDS6Y4V7RFw@mail.gmail.com>
-References: <1513058169-25516-1-git-send-email-jagan@amarulasolutions.com> <20171212081335.3qkqcofdbcfuu5zh@flea.lan>
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 1/2] net: dsa: allow XAUI phy interface mode
+Date: Tue, 12 Dec 2017 09:29:46 +0000
+Message-ID: <E1eOgsk-0001AU-5z@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171212081335.3qkqcofdbcfuu5zh@flea.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Stefan Agner <stefan@agner.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 1:43 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Hi,
->
-> On Tue, Dec 12, 2017 at 11:26:09AM +0530, Jagan Teki wrote:
->> Add usb otg support for a64-olinuxino board,
->> - USB0-ID connected with PH9
->> - USB0-VBUSDET connected with PH6
->> - USB-DRVVBUS controlled by N_VBUSEN pin from PMIC
->>
->> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
->
-> How was this tested? Did you test the OTG part, or only the peripheral
-> part?
+XGMII is a 32-bit bus plus two clock signals per direction.  XAUI is
+four serial lanes per direction.  The 88e6190 supports XAUI but not
+XGMII as it doesn't have enough pins.  The same is true of 88e6176.
 
-Yes peripheral.
+Match on PHY_INTERFACE_MODE_XAUI for the XAUI port type, but keep
+accepting XGMII for backwards compatibility.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ drivers/net/dsa/mv88e6xxx/port.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/dsa/mv88e6xxx/port.c b/drivers/net/dsa/mv88e6xxx/port.c
+index a7801f6668a5..6315774d72b3 100644
+--- a/drivers/net/dsa/mv88e6xxx/port.c
++++ b/drivers/net/dsa/mv88e6xxx/port.c
+@@ -338,6 +338,7 @@ int mv88e6390x_port_set_cmode(struct mv88e6xxx_chip *chip, int port,
+ 		cmode = MV88E6XXX_PORT_STS_CMODE_2500BASEX;
+ 		break;
+ 	case PHY_INTERFACE_MODE_XGMII:
++	case PHY_INTERFACE_MODE_XAUI:
+ 		cmode = MV88E6XXX_PORT_STS_CMODE_XAUI;
+ 		break;
+ 	case PHY_INTERFACE_MODE_RXAUI:
+-- 
+2.7.4
