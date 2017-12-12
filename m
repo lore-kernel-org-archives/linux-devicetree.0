@@ -1,7 +1,7 @@
 From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: stm32: enable dma on MCU which embed a cortex-M7
-Date: Tue, 12 Dec 2017 19:02:26 +0100
-Message-ID: <1513101746-18030-4-git-send-email-alexandre.torgue@st.com>
+Subject: [PATCH 2/3] ARM: configs: stm32: Enable ARM_MPU
+Date: Tue, 12 Dec 2017 19:02:25 +0100
+Message-ID: <1513101746-18030-3-git-send-email-alexandre.torgue@st.com>
 References: <1513101746-18030-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,90 +12,23 @@ To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, a
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable dma1 and dma2 on:
--stm32746g-eval board
--stm32f769-disco board
--stm32h743i-disco board
--stm32h743i-eval board
+STM32 MCUs embed a Memory Protection Unit. Enabling this setting will
+allow the Kernel to configure the MPU according to devicetree.
 
 Signed-off-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
-index 3f52a7b..2662a27 100644
---- a/arch/arm/boot/dts/stm32746g-eval.dts
-+++ b/arch/arm/boot/dts/stm32746g-eval.dts
-@@ -113,6 +113,14 @@
- 	status = "okay";
- };
- 
-+&dma1 {
-+	status = "okay";
-+};
-+
-+&dma2 {
-+	status = "okay";
-+};
-+
- &i2c1 {
- 	pinctrl-0 = <&i2c1_pins_b>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-index 08699a2..b9b1ffd 100644
---- a/arch/arm/boot/dts/stm32f769-disco.dts
-+++ b/arch/arm/boot/dts/stm32f769-disco.dts
-@@ -86,6 +86,14 @@
- 	clock-frequency = <25000000>;
- };
- 
-+&dma1 {
-+	status = "okay";
-+};
-+
-+&dma2 {
-+	status = "okay";
-+};
-+
- &usart1 {
- 	pinctrl-0 = <&usart1_pins_a>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/stm32h743i-disco.dts b/arch/arm/boot/dts/stm32h743i-disco.dts
-index 104545a..2d9e553 100644
---- a/arch/arm/boot/dts/stm32h743i-disco.dts
-+++ b/arch/arm/boot/dts/stm32h743i-disco.dts
-@@ -79,6 +79,14 @@
- 	clock-frequency = <125000000>;
- };
- 
-+&dma1 {
-+	status = "okay";
-+};
-+
-+&dma2 {
-+	status = "okay";
-+};
-+
- &usart2 {
- 	pinctrl-0 = <&usart2_pins>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index 5bd4b16..3face6a 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -97,6 +97,14 @@
- 	clock-frequency = <25000000>;
- };
- 
-+&dma1 {
-+	status = "okay";
-+};
-+
-+&dma2 {
-+	status = "okay";
-+};
-+
- &usart1 {
- 	pinctrl-0 = <&usart1_pins>;
- 	pinctrl-names = "default";
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index bb358ff..e642bdf9 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -24,6 +24,7 @@ CONFIG_SET_MEM_PARAM=y
+ CONFIG_DRAM_BASE=0x90000000
+ CONFIG_FLASH_MEM_BASE=0x08000000
+ CONFIG_FLASH_SIZE=0x00200000
++CONFIG_ARM_MPU=y
+ CONFIG_PREEMPT=y
+ # CONFIG_ATAGS is not set
+ CONFIG_ZBOOT_ROM_TEXT=0x0
 -- 
 2.7.4
 
