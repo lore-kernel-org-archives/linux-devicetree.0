@@ -1,96 +1,52 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] arm64: dts: Hi3660: Fix up psci state id
-Date: Tue, 12 Dec 2017 17:12:33 +0800
-Message-ID: <1513069954-22827-1-git-send-email-leo.yan@linaro.org>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
+ ethernet driver
+Date: Tue, 12 Dec 2017 10:14:56 +0100
+Message-ID: <CAOFm3uF65yY3zEfTzM888z2Se24uHyoWi8iy9eBn-x_SP8=kwA@mail.gmail.com>
+References: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com>
+ <20171211210455.170A.4A936039@socionext.com> <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
+ <20171211134627.GU10595@n2100.armlinux.org.uk> <CAA93ih0C-aMpFAhU+5x6P=QjiOVRPZ0UL1wyKh1oeXzC8UjPXQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA93ih0C-aMpFAhU+5x6P=QjiOVRPZ0UL1wyKh1oeXzC8UjPXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
+To: Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux kernel mailing list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks a lot for Vincent Guittot careful work to find bug for 'CPU_NAP'
-idle state.  From ftrace log we can observe CA73 CPUs can be easily
-waken up from 'CPU_NAP' state but the 'waken up' CPUs doesn't handle
-anything and sleep again; so there have tons of trace events for CA73
-CPUs entering and exiting idle state.
+Dear Masami-san,
 
-On Hi3660 CA73 has retention state 'CPU_NAP' for CPU idle, this state we
-set its psci parameter as '0x0000001' and from this parameter it can
-calculate state id is 1.  Unfortunately ARM trusted firmware (ARM-TF)
-takes 1 as a invalid value for state id, so the CPU cannot enter idle
-state and directly bail out to kernel.
+On Tue, Dec 12, 2017 at 3:29 AM, Masami Hiramatsu
+<masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+[...]
+> Then what I'm considering is copyright notice lines. Those are usually
+> treat as the header lines, not single line. So
+>
+>> +// SDPX-License-Identifier: GPL-2.0
+>> +// sni_ave.c - Socionext UniPhier AVE ethernet driver
+>> +// Copyright 2014 Panasonic Corporation
+>> +// Copyright 2015-2017 Socionext Inc.
+>
+> is acceptable? or should we keep C-style header lines for new drivers?
+>
+>> +// SDPX-License-Identifier: GPL-2.0
+>> +/*
+>> + * sni_ave.c - Socionext UniPhier AVE ethernet driver
+>> + * Copyright 2014 Panasonic Corporation
+>> + * Copyright 2015-2017 Socionext Inc.
+>> + */
+>
+> I just concern that those lines are not "single". that's all. :)
 
-We want to create good practice for psci parameters platform definition,
-so review the psci specification. The spec "ARM Power State Coordination
-Interface - Platform Design Document (ARM DEN 0022D)" recommends state
-ID in chapter "6.5 Recommended StateID Encoding".  The recommended power
-state IDs can be presented by below listed values; and it divides into
-three fields, every field can use 4 bits to present power states
-corresponding to core level, cluster level and system level:
-  0: Run
-  1: Standby
-  2: Retention
-  3: Powerdown
+My voice carries the weight of a down feather in this discussion and
+to me the benefit of the first form is that you have removed two
+lines. Both forms work fine.
 
-This commit changes psci parameter to compliance with the suggested
-state ID in the doc.  Except we change 'CPU_NAP' state psci parameter
-to '0x0000002', this commit also changes 'CPU_SLEEP' and 'CLUSTER_SLEEP'
-state parameters to '0x0010003' and '0x1010033' respectively.
-
-Credits to Daniel, Sudeep and Soby for suggestion and consolidation.
-
-Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index ab0b95b..99d5a46 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -147,7 +147,7 @@
- 
- 			CPU_NAP: cpu-nap {
- 				compatible = "arm,idle-state";
--				arm,psci-suspend-param = <0x0000001>;
-+				arm,psci-suspend-param = <0x0000002>;
- 				entry-latency-us = <7>;
- 				exit-latency-us = <2>;
- 				min-residency-us = <15>;
-@@ -156,7 +156,7 @@
- 			CPU_SLEEP: cpu-sleep {
- 				compatible = "arm,idle-state";
- 				local-timer-stop;
--				arm,psci-suspend-param = <0x0010000>;
-+				arm,psci-suspend-param = <0x0010003>;
- 				entry-latency-us = <40>;
- 				exit-latency-us = <70>;
- 				min-residency-us = <3000>;
-@@ -165,7 +165,7 @@
- 			CLUSTER_SLEEP_0: cluster-sleep-0 {
- 				compatible = "arm,idle-state";
- 				local-timer-stop;
--				arm,psci-suspend-param = <0x1010000>;
-+				arm,psci-suspend-param = <0x1010033>;
- 				entry-latency-us = <500>;
- 				exit-latency-us = <5000>;
- 				min-residency-us = <20000>;
-@@ -174,7 +174,7 @@
- 			CLUSTER_SLEEP_1: cluster-sleep-1 {
- 				compatible = "arm,idle-state";
- 				local-timer-stop;
--				arm,psci-suspend-param = <0x1010000>;
-+				arm,psci-suspend-param = <0x1010033>;
- 				entry-latency-us = <1000>;
- 				exit-latency-us = <5000>;
- 				min-residency-us = <20000>;
 -- 
-2.7.4
-
+Cordially
+Philippe Ombredanne
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
