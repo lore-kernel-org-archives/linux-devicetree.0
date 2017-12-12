@@ -1,45 +1,38 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCHv2 2/3] net: socionext: Add Synquacer NetSec driver
-Date: Tue, 12 Dec 2017 21:48:11 +0100
-Message-ID: <20171212204811.GD1523@lunn.ch>
-References: <1513098873-20977-1-git-send-email-jassisinghbrar@gmail.com>
- <1513098954-21093-1-git-send-email-jassisinghbrar@gmail.com>
- <CAKv+Gu-6gb10VromMaTJkzpu1DovDO7B5-GWEQPs04qAG=2ksw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 09/12] clk: qcom: Add Krait clock controller driver
+Date: Tue, 12 Dec 2017 14:51:04 -0600
+Message-ID: <20171212205104.vnnjr3w56w4mrfh6@rob-hp-laptop>
+References: <1512726150-7204-1-git-send-email-sricharan@codeaurora.org>
+ <1512726150-7204-10-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-6gb10VromMaTJkzpu1DovDO7B5-GWEQPs04qAG=2ksw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "<netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1512726150-7204-10-git-send-email-sricharan@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> > +static int netsec_mac_update_to_phy_state(struct netsec_priv *priv)
-> > +{
-> > +       struct phy_device *phydev = priv->ndev->phydev;
-> > +       u32 value = 0;
-> > +
-> > +       value = phydev->duplex ? NETSEC_GMAC_MCR_REG_FULL_DUPLEX_COMMON :
-> > +                                NETSEC_GMAC_MCR_REG_HALF_DUPLEX_COMMON;
-> > +
-> > +       if (phydev->speed != SPEED_1000)
-> > +               value |= NETSEC_MCR_PS;
-> > +
-> > +       if (priv->phy_interface != PHY_INTERFACE_MODE_GMII &&
-> > +           phydev->speed == SPEED_100)
-> > +               value |= NETSEC_GMAC_MCR_REG_FES;
-> > +
-> > +       value |= NETSEC_GMAC_MCR_REG_CST | NETSEC_GMAC_MCR_REG_JE;
-> > +
-> > +       if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII)
-> > +               value |= NETSEC_GMAC_MCR_REG_IBN;
+On Fri, Dec 08, 2017 at 03:12:27PM +0530, Sricharan R wrote:
+> From: Stephen Boyd <sboyd@codeaurora.org>
+> 
+> The Krait CPU clocks are made up of a primary mux and secondary
+> mux for each CPU and the L2, controlled via cp15 accessors. For
+> Kraits within KPSSv1 each secondary mux accepts a different aux
+> source, but on KPSSv2 each secondary mux accepts the same aux
+> source.
+> 
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,krait-cc.txt    |  22 ++
 
-phy_interface_mode_is_rgmii() ??
+Please make bindings a separate patch.
 
-      Andrew
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/clk/qcom/Kconfig                           |   8 +
+>  drivers/clk/qcom/Makefile                          |   1 +
+>  drivers/clk/qcom/krait-cc.c                        | 350 +++++++++++++++++++++
+>  4 files changed, 381 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,krait-cc.txt
+>  create mode 100644 drivers/clk/qcom/krait-cc.c
