@@ -1,90 +1,82 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V3 0/2] Tegra PCIe end point config space map code
- refactoring
-Date: Tue, 12 Dec 2017 11:01:58 +0000
-Message-ID: <20171212110158.GA30601@e107981-ln.cambridge.arm.com>
-References: <1512410030-21038-1-git-send-email-vidyas@nvidia.com>
- <20171211105431.GI10671@ulmo>
- <20171211175452.GC16032@bhelgaas-glaptop.roam.corp.google.com>
+From: afzal mohammed <afzal.mohd.ma@gmail.com>
+Subject: Re: [PATCH 1/6] ARM: stm32: prepare stm32 family to welcome armv7
+ architecture
+Date: Tue, 12 Dec 2017 16:33:15 +0530
+Message-ID: <20171212110315.GA4118@afzalpc>
+References: <1512742277-28205-1-git-send-email-ludovic.Barre@st.com>
+ <1512742277-28205-2-git-send-email-ludovic.Barre@st.com>
+ <CACRpkdaKZk5N9F=_nYSzKWyXgW4xQ9Ltft7-UNM+a-nOpqq2xg@mail.gmail.com>
+ <CAK8P3a2rrpFuwET8r1H0YWVABbCZr5c2ySrKCgA4mfoZPfWp6Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171211175452.GC16032-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAK8P3a2rrpFuwET8r1H0YWVABbCZr5c2ySrKCgA4mfoZPfWp6Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Ludovic Barre <ludovic.Barre@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 11:54:53AM -0600, Bjorn Helgaas wrote:
-> [+cc Lorenzo]
-> 
-> On Mon, Dec 11, 2017 at 11:54:31AM +0100, Thierry Reding wrote:
-> > On Mon, Dec 04, 2017 at 11:23:48PM +0530, Vidya Sagar wrote:
-> > > PCIe host controller in Tegra SoCs has 1GB of aperture available
-> > > for mapping end points config space, IO and BARs. In that, currently
-> > > 256MB is being reserved for mapping end points configuration space
-> > > which leaves less memory space available for mapping end points BARs
-> > > on some of the platforms.
-> > > This patch series attempts to map only 4K space from 1GB aperture to
-> > > access end points configuration space.
-> > > 
-> > > Currently, this change can benefit T20 and T186 in saving (i.e. repurposed
-> > > to use for BAR mapping) physical space as well as kernel virtual mapping space,
-> > > it saves only kernel virtual address space in T30, T124, T132 and T210.
-> > > 
-> > > NOTE: Since T186 PCIe DT entry is not yet present in main line (it is currently
-> > > merged to 'for-4.15/arm64/dt' branch), nothing gets broken with this change for T186.
-> > > For older platforms (T20, T30, T124, T132, T210), this change works fine without any
-> > > DT modifications
-> > > 
-> > > Testing Done on T124, T210 & T186:
-> > >  Enumeration and basic functionality of immediate devices
-> > >  Enumeration of devices behind a PCIe switch
-> > >  Complete 4K configuration space access
-> > > 
-> > > Vidya Sagar (2):
-> > >   PCI: tegra: refactor config space mapping code
-> > >   ARM64: tegra: limit PCIe config space mapping to 4K for T186
-> > > 
-> > >  arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
-> > >  drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------------------
-> > >  2 files changed, 44 insertions(+), 89 deletions(-)
-> > 
-> > Hi Bjorn,
-> > 
-> > there's a bunch of PCI related patches for Tegra floating around on the
-> > lists. I'm wondering if you'd be okay if I pick those up into the Tegra
-> > tree after they've been reviewed and send you a pull request later on
-> > (say around v4.15-rc6). That would allow me to get things cooking in
-> > linux-next for a bit and get broader testing in addition to the
-> > flexibility to patch things up if they break.
-> 
-> Lorenzo will be merging the Tegra stuff, so this is more a question
-> for him.
-> 
-> Just to clarify, I think your questions is about putting those patches
-> in
-> git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux.git#for-next.
-> If you put them there they will show up in linux-next, and then when
-> Lorenzo merges them, you'll have to coordinate so they don't get
-> merged into linux-next twice (once via the usual PCI tree route and
-> again via the Tegra tree).
-> 
-> If you wait until after they've been reviewed to put them into the
-> Tegra tree, I'm not sure what the gain is, because I assume Lorenzo
-> would merge them at about that same point.
+Hi,
 
-I think that after the review, the Tegra patches that are considered for
-upstream they should go to -next via the PCI tree as any other platform PCI
-patches; the relevant patches need ACKs from the respective platform
-maintainer - I am getting to them as fast as I can.
+On Mon, Dec 11, 2017 at 02:40:43PM +0100, Arnd Bergmann wrote:
+> On Mon, Dec 11, 2017 at 11:25 AM, Linus Walleij
 
-> This cycle isn't going to be ideal timing with all the holidays
-> coming up.  I know I'm going to be traveling and on vacation quite a
-> bit in the rc5, 6, 7 timeframe.
+> >> This patch prepares the STM32 machine for the integration of Cortex-A
+> >> based microprocessor (MPU), on top of the existing Cortex-M
+> >> microcontroller family (MCU). Since both MCUs and MPUs are sharing
+> >> common hardware blocks we can keep using ARCH_STM32 flag for most of
+> >> them. If a hardware block is specific to one family we can use either
+> >> ARCH_STM32_MCU or ARCH_STM32_MPU flag.
 
-Yes timing is not ideal - I won't be able to review anything in the -rc5
-week either but apart from that I should be online.
+> To what degree do we need to treat them as separate families
+> at all then? I wonder if the MCU/MPU distinction is always that
+> clear along the Cortex-M/Cortex-A separation,
 
-Lorenzo
+> What
+> exactly would we miss if we do away with the ARCH_STM32_MCU
+> symbol here?
+
+Based on this patch series, the only difference seems to be w.r.t ARM
+components, not peripherals outside ARM subystem. Vybrid VF610 is a
+similar case, though not identical (it can have both instead of
+either), deals w/o extra symbols,
+
+8064887e02fd6 (ARM: vf610: enable Cortex-M4 configuration on Vybrid SoC)
+
+> especially if
+> we ever get to a chip that has both types of cores.
+
+Your wish fulfilled, Vybrid VF610 has both A5 & M4F and mainline Linux
+boots on both (simultaneously as well), and the second Linux support,
+i.e. on M4 went thr' your keyboard, see above commit :)
+
+There are quite a few others as well, TI's AM335x (A8 + M3), AM437x
+(A9 + M3), AM57x (A15 + M4), but of these Cortex M's, the one in AM57x
+only can be Linux'able. On others they are meant for PM with limited
+resources.
+
+> > So yesterdays application processors are todays MCU processors.
+> >
+> > I said this on a lecture for control systems a while back and
+> > stated it as a reason I think RTOSes are not really seeing a bright
+> > future compared to Linux.
+
+> I think there is still lots of room for smaller RTOS in the long run,
+
+Me being an electrical engineer & worked to some extent in motor
+control on RTOS/no OS (the value of my opinion is questionable
+though), the thought of handling the same in Linux (even RT) sends
+shivers down my spine. Here, case being considered is the type of
+motor (like permanent magnet ones) where each phase of the motor has
+to be properly excited during every PWM period (say every 100us,
+depending on the feedback, algorithm, other synchronization) w/o which
+the motor that has been told to run might try to fly. This is
+different from stepper motor where if control misbehaves/stops nothing
+harmful normally happens.
+
+But my opinion is a kind of knee-jerk reaction and based on prevalent
+atitude in that field, hmm.., probably i should attempt it first.
+
+Regards
+afzal
