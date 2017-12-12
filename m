@@ -1,67 +1,91 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/3] Meson8 GPIO interrupt support
-Date: Mon, 11 Dec 2017 15:59:29 -0800
-Message-ID: <7hvahcak9q.fsf@baylibre.com>
-References: <20171029230523.7355-1-martin.blumenstingl@googlemail.com>
-        <8637605bly.fsf@arm.com> <7h1sljmxp6.fsf@baylibre.com>
-        <CAFBinCDdJtE4g7iCgaw9KEYPhKWjt0YoDy2CfXcTKq+OTDPbLA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCDdJtE4g7iCgaw9KEYPhKWjt0YoDy2CfXcTKq+OTDPbLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-        (Martin Blumenstingl's message of "Sun, 10 Dec 2017 19:15:28 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/4] NVIDIA Tegra video decoder driver
+Date: Tue, 12 Dec 2017 03:26:06 +0300
+Message-ID: <cover.1513038011.git.digetx@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+VDE driver provides accelerated video decoding to NVIDIA Tegra SoC's,
+it is a result of reverse-engineering efforts. Driver has been tested on
+Toshiba AC100 and Acer A500, it should work on any Tegra20 device.
 
-> Hi Kevin,
->
-> On Tue, Oct 31, 2017 at 11:13 AM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->> Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> writes:
->>
->>> On Mon, Oct 30 2017 at 12:05:20 am GMT, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->>>> This is a simple follow-up of two series from Jerome:
->>>> - "irqchip: meson: add support for the gpio interrupt controller"
->>>> - "ARM: meson: enable gpio interrupt controller"
->>>>
->>>> This fills in the missing bits to have GPIO interrupt support on Meson8,
->>>> which includes:
->>>> - a new binding in the driver with the correct IRQ number
->>>> - enabling the GPIO interrupt controller in meson8.dts
->>>> - enabling the GPIO interrupt controller via Kconfig for MACH_MESON8
->>>>
->>>>
->>>> Martin Blumenstingl (3):
->>>>   irqchip/meson-gpio: add support for Meson8 SoCs
->>>>   ARM: dts: meson8: enable the GPIO interrupt controller
->>>>   ARM: meson: enable MESON_IRQ_GPIO also for MACH_MESON8
->>>>
->>>>  .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt        | 1 +
->>>>  arch/arm/boot/dts/meson8.dtsi                                        | 5 +++++
->>>>  arch/arm/mach-meson/Kconfig                                          | 1 +
->>>>  drivers/irqchip/irq-meson-gpio.c                                     | 5 +++++
->>>>  4 files changed, 12 insertions(+)
->>>
->>> Kevin, Carlos: Are you OK with this one? It seems pretty minor, and I'm
->>> happy to queue it if I get an Ack for it. If you'd rather get it through
->>> via armsoc, let me know.
->>
->> Can you take the drivers/irqchip and bindings patch (PATCH 1/3) and I'll
->> take the rest to avoid conflicts with a bunch of other moving parts we
->> have in arch/arm.
-> PATCH 1/3 even made it into v4.15
-> can you please queue the remaining two patches for v4.16 - or do you
-> want me to re-send these?
+In userspace this driver is utilized by libvdpau-tegra [0] that implements
+VDPAU interface, so any video player that supports VDPAU can provide
+accelerated video decoding on Tegra20 on Linux.
 
-No need to resend, I've applied them to v4.16/dt.
+[0] https://github.com/grate-driver/libvdpau-tegra
 
-Thanks for following up.
+Change log:
+v5:
+	- Moved driver to staging/media as per Hans's Verkuil request
+	- Addressed review comments to v4 from Vladimir Zapolskiy and
+	  Dan Carpenter
+	- Updated 'TODO', reflecting that this driver require upcoming
+	  support of stateless decoders by V4L2
+	- Dropped patch that enabled VDE driver in tegra_defconfig for now
+	  as I realized that Tegra's DRM staging config is disabled there
+	  and right now we are relying on it in libvdpau-tegra
+	- Added myself to MAINTAINERS in the "Introduce driver" patch as per
+	  Vladimir's suggestion
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v4:
+	- Added mmio-sram "IRAM DT node" patch from Vladimir Zapolskiy to
+	  the series, I modified it to cover all Tegra's and not only Tegra20
+	- Utilized genalloc for the reservation of IRAM region as per
+	  Vladimir's suggestion, VDE driver now selects SRAM driver in Kconfig
+	- Added defconfig patch to the series
+	- Described VDE registers in DT per HW unit, excluding BSE-A / UCQ
+	  and holes between the units
+	- Extended DT compatibility property with Tegra30/114/124/132 in the
+	  binding doc.
+	- Removed BSE-A interrupt from the DT binding because it's very
+	  likely that Audio Bitstream Engine isn't integrated with VDE
+	- Removed UCQ interrupt from the DT binding because in TRM it is
+	  represented as a distinct HW block that probably should have
+	  its own driver
+	- Addressed v3 review comments: factored out DT binding addition
+	  into a standalone patch, moved binding to media/, removed
+	  clocks/resets-names
+
+v3:
+	- Suppressed compilation warnings reported by 'kbuild test robot'
+
+v2:
+	- Addressed v1 review comments from Stephen Warren and Dan Carpenter
+	- Implemented runtime PM
+	- Miscellaneous code cleanups
+	- Changed 'TODO'
+	- CC'd media maintainers for the review as per Greg's K-H request,
+	  v1 can be viewed at https://lkml.org/lkml/2017/9/25/606
+
+Dmitry Osipenko (3):
+  media: dt: bindings: Add binding for NVIDIA Tegra Video Decoder Engine
+  staging: media: Introduce NVIDIA Tegra video decoder driver
+  ARM: dts: tegra20: Add video decoder node
+
+Vladimir Zapolskiy (1):
+  ARM: dts: tegra20: Add device tree node to describe IRAM
+
+ .../devicetree/bindings/media/nvidia,tegra-vde.txt |   55 +
+ MAINTAINERS                                        |    9 +
+ arch/arm/boot/dts/tegra20.dtsi                     |   35 +
+ drivers/staging/media/Kconfig                      |    2 +
+ drivers/staging/media/Makefile                     |    1 +
+ drivers/staging/media/tegra-vde/Kconfig            |    7 +
+ drivers/staging/media/tegra-vde/Makefile           |    1 +
+ drivers/staging/media/tegra-vde/TODO               |    4 +
+ drivers/staging/media/tegra-vde/tegra-vde.c        | 1213 ++++++++++++++++++++
+ drivers/staging/media/tegra-vde/uapi.h             |   78 ++
+ 10 files changed, 1405 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
+ create mode 100644 drivers/staging/media/tegra-vde/Kconfig
+ create mode 100644 drivers/staging/media/tegra-vde/Makefile
+ create mode 100644 drivers/staging/media/tegra-vde/TODO
+ create mode 100644 drivers/staging/media/tegra-vde/tegra-vde.c
+ create mode 100644 drivers/staging/media/tegra-vde/uapi.h
+
+-- 
+2.15.1
