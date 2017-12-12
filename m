@@ -1,54 +1,50 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: vf610-zii-dev: use XAUI for DSA link ports
-Date: Tue, 12 Dec 2017 09:29:51 +0000
-Message-ID: <E1eOgsp-0001Ab-9x@rmk-PC.armlinux.org.uk>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v1 4/4] arm64: dts: mediatek: add mt2712 cpufreq related
+ device nodes
+Date: Tue, 12 Dec 2017 10:34:42 +0100
+Message-ID: <a68c5382-2a9c-6c3c-ea67-99db46bdff1a@gmail.com>
+References: <1512713278-17807-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1512713278-17807-5-git-send-email-andrew-sh.cheng@mediatek.com>
+ <20171211075719.GD25177@vireshk-i7> <1758225.tOgn8eUOoH@aspire.rjw.lan>
+ <20171212072625.GL25177@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171212072625.GL25177@vireshk-i7>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Andrew-sh Cheng <andrew-sh.cheng@mediatek.com>, mark.rutland@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use XAUI rather than XGMII for DSA link ports, as this is the interface
-mode that the switches actually use. XAUI is the 4 lane bus with clock
-per direction, whereas XGMII is a 32 bit bus with clock.
+Hi,
 
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
----
-This must be applied along with patch 1 to avoid breakage.
+On 12/12/2017 08:26 AM, Viresh Kumar wrote:
+> On 12-12-17, 02:17, Rafael J. Wysocki wrote:
+>> On Monday, December 11, 2017 8:57:19 AM CET Viresh Kumar wrote:
+>>> On 08-12-17, 14:07, Andrew-sh Cheng wrote:
+>>>> Add opp v2 information,
+>>>> and also add clocks, regulators and opp information into cpu nodes
+>>>>
+>>>> Signed-off-by: Andrew-sh Cheng <andrew-sh.cheng@mediatek.com>
+>>>> ---
+>>>>  arch/arm64/boot/dts/mediatek/mt2712-evb.dts | 27 ++++++++++++++
+>>>>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 57 +++++++++++++++++++++++++++++
+>>>>  2 files changed, 84 insertions(+)
+>>>
+>>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>>
+>> Of course, DT bindings require ACKs from DT maintainers to be applied.
+> 
+> I didn't knew that we need Acks from DT maintainers for dts files as well? Yeah,
+> its very much required while defining new bindings for sure.
+> 
 
- arch/arm/boot/dts/vf610-zii-dev-rev-c.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I will take the dts parts through the Mediatek SoC tree, so you don't have to
+worry about them.
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
-index 1b102c7f7928..4a972fceb3b5 100644
---- a/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
-+++ b/arch/arm/boot/dts/vf610-zii-dev-rev-c.dts
-@@ -128,7 +128,7 @@
- 					switch0port10: port@10 {
- 						reg = <10>;
- 						label = "dsa";
--						phy-mode = "xgmii";
-+						phy-mode = "xaui";
- 						link = <&switch1port10>;
- 					};
- 				};
-@@ -233,7 +233,7 @@
- 					switch1port10: port@10 {
- 						reg = <10>;
- 						label = "dsa";
--						phy-mode = "xgmii";
-+						phy-mode = "xaui";
- 						link = <&switch0port10>;
- 					};
- 				};
--- 
-2.7.4
+Please let me know when you take patch 1 and 2.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Matthias
