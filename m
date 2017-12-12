@@ -1,123 +1,97 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sun4i-i2s: Add support for A83T" to the asoc tree
-Date: Tue, 12 Dec 2017 11:16:54 +0000
-Message-ID: <E1eOiYQ-0007uD-6c@debutante>
-References: <20171212081148.9194-2-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171212081148.9194-2-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Brown <broonie@kernel.org>Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Marcus Cooper <codekipper@gmail.com>, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] regulator: core: Parse coupled regulators
+ properties
+Date: Tue, 12 Dec 2017 11:35:11 +0000
+Message-ID: <20171212113511.GF16323@sirena.org.uk>
+References: <1512639975-22241-1-git-send-email-m.purski@samsung.com>
+ <CGME20171207094753eucas1p27b835787f92a1da8c46b9a2692376288@eucas1p2.samsung.com>
+ <1512639975-22241-4-git-send-email-m.purski@samsung.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fwqqG+mf3f7vyBCB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1512639975-22241-4-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: sun4i-i2s: Add support for A83T
+--fwqqG+mf3f7vyBCB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the asoc tree at
+On Thu, Dec 07, 2017 at 10:46:14AM +0100, Maciej Purski wrote:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> +static int check_coupled_regulators_array(struct coupling_desc *c_desc,
+> +					  int index)
+> +{
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> +	/* Different number of regulators coupled */
+> +	if (of_count_phandle_with_args(node, "regulator-coupled-with", 0) !=3D
+> +				      (n_coupled - 1))
+> +		return -EINVAL;
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+This is still DT only code in the core file, we really need the core to
+not know anything about DT so that we know that we can support this
+feature with other firmwares if we need to.  Just move all the parsing
+code into the of_regulator.c then have a second step that goes through
+and validates extra stuff like the presence of set voltage operations in
+the generic code.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> +		if (c_desc->coupled_rdevs[i]->constraints->max_spread !=3D
+> +		    rdev->constraints->max_spread) {
+> +			rdev_err(rdev, "coupled regulators max_spread mismatch\n");
+> +			goto err;
+> +		}
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+It's better to print out failing values when things go wrong - it really
+helps people debug their DTs if the error messages are specific about
+what went wrong.  This applies to a bunch of the errors here.
 
-Thanks,
-Mark
+> +	mutex_lock(&regulator_list_mutex);
+> +	regulator_resolve_coupling(rdev);
+> +	mutex_unlock(&regulator_list_mutex);
+> +
 
->From 21faaea1343f2f8dc6539302c92231afc6d999a5 Mon Sep 17 00:00:00 2001
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Tue, 12 Dec 2017 16:11:45 +0800
-Subject: [PATCH] ASoC: sun4i-i2s: Add support for A83T
+I'd really expect us to be failing to probe if we run into an error.
+Otherwise we could end up doing bad things to the hardware at runtime
+later on, or confusing ourselves and crashing with partially set up
+datastructures.  It's also not 100% clear to me how we handle the case
+where only some of the coupled regulators have probed.
 
-The I2S controller in the A83T is mostly compatible with the one found
-in earlier SoCs such as the A20 and A31. While the documents publicly
-available for the A83T do not cover this hardware, the officially
-released BSP kernel does have register definitions for it. These were
-matched against the A20 user manual. The only difference is the TX FIFO
-and interrupt status registers have been swapped around, like what we
-have seen with the SPDIF controller.
+> diff --git a/drivers/regulator/internal.h b/drivers/regulator/internal.h
+> index 2f3218b..6290384 100644
+> --- a/drivers/regulator/internal.h
+> +++ b/drivers/regulator/internal.h
+> @@ -16,6 +16,8 @@
+>  #ifndef __REGULATOR_INTERNAL_H
+>  #define __REGULATOR_INTERNAL_H
+> =20
+> +#include <linux/regulator/driver.h>
+> +
 
-This patch adds support for this hardware.
+Why do we need this?
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/sound/sun4i-i2s.txt         |  2 ++
- sound/soc/sunxi/sun4i-i2s.c                         | 21 +++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+--fwqqG+mf3f7vyBCB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-index 05d7135a8d2f..b9d50d6cdef3 100644
---- a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-@@ -8,6 +8,7 @@ Required properties:
- - compatible: should be one of the following:
-    - "allwinner,sun4i-a10-i2s"
-    - "allwinner,sun6i-a31-i2s"
-+   - "allwinner,sun8i-a83t-i2s"
-    - "allwinner,sun8i-h3-i2s"
- - reg: physical base address of the controller and length of memory mapped
-   region.
-@@ -23,6 +24,7 @@ Required properties:
- 
- Required properties for the following compatibles:
- 	- "allwinner,sun6i-a31-i2s"
-+	- "allwinner,sun8i-a83t-i2s"
- 	- "allwinner,sun8i-h3-i2s"
- - resets: phandle to the reset line for this codec
- 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 04f92583a969..13d7ecabe1b6 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -897,6 +897,23 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
- 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
- };
- 
-+static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
-+	.has_reset		= true,
-+	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
-+	.sun4i_i2s_regmap	= &sun4i_i2s_regmap_config,
-+	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 7, 7),
-+	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 2, 3),
-+	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
-+	.field_fmt_bclk		= REG_FIELD(SUN4I_I2S_FMT0_REG, 6, 6),
-+	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-+	.has_slave_select_bit	= true,
-+	.field_fmt_mode		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
-+	.field_txchanmap	= REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
-+	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
-+	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
-+	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
-+};
-+
- static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
- 	.has_reset		= true,
- 	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
-@@ -1120,6 +1137,10 @@ static const struct of_device_id sun4i_i2s_match[] = {
- 		.compatible = "allwinner,sun6i-a31-i2s",
- 		.data = &sun6i_a31_i2s_quirks,
- 	},
-+	{
-+		.compatible = "allwinner,sun8i-a83t-i2s",
-+		.data = &sun8i_a83t_i2s_quirks,
-+	},
- 	{
- 		.compatible = "allwinner,sun8i-h3-i2s",
- 		.data = &sun8i_h3_i2s_quirks,
--- 
-2.15.1
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlovvu8ACgkQJNaLcl1U
+h9DpJQf+JyzI1Orv714Bsa/Q3UWTpgnF59Qa8vSJpvh4zXeN3kgW2oR48AtugiL/
+1hVtfNja1jhCftVzSYitbQ9sMqy1PK1DTBUBDpPLQqmaPbvJ9Nv+DzoIGQ8/eoq+
+9t3sMfp1Dtg428A/XOg1R/Ec1xy40wHJM5R3RpCSqkgFkT7rlVBXo2ESJQwgOBzY
+rmo+GdmZzKCFcmAtqrNNTYumOw+mL7GMCIWvNx73oGeEfA1xH2AFKPzSmMVjFmxb
+G2GwDA5EGTZiLxJDnICLwjCQWBHUAQ9GXpXDlT7YWPqWhqYbLbug8k+8x9+GvD72
+4JbN5iydnsj1MA7sGcxrLVhK6li8WQ==
+=Y8VD
+-----END PGP SIGNATURE-----
+
+--fwqqG+mf3f7vyBCB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
