@@ -1,101 +1,113 @@
-From: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4] ARM: dts: exynos: Add nodes for True Random Number
- Generator
-Date: Tue, 12 Dec 2017 13:09:02 +0100
-Message-ID: <20171212120902.16561-1-l.stelmach@samsung.com>
-References: <20171204125351.26805-4-l.stelmach@samsung.com>
-        <CGME20171212120906eucas1p23883590efde24a67800473b0d34871e5@eucas1p2.samsung.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 3/5] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Tue, 12 Dec 2017 13:18:37 +0100
+Message-ID: <f1d607e2-3d21-ac05-c815-a5f28b860b1e@xs4all.nl>
+References: <1510253136-14153-1-git-send-email-tharvey@gateworks.com>
+ <1510253136-14153-4-git-send-email-tharvey@gateworks.com>
+ <20171115155204.yhqjocdm32qunllx@rob-hp-laptop>
+ <CAJ+vNU0NuNjZePQBaxWHT4HtYGxZJ_DUSvuHvb6wAFDGA_xX9A@mail.gmail.com>
+ <20171116043059.azaqjfbjeo4rlaon@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20171204125351.26805-4-l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20171116043059.azaqjfbjeo4rlaon@rob-hp-laptop>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Tim Harvey <tharvey@gateworks.com>
+Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for the True Random Number Generator found in Samsung Exynos
-5250+ SoCs.
+Hi Tim,
 
-Signed-off-by: Łukasz Stelmach <l.stelmach-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-Changes since v3:
+Sorry for the delay, I needed to find some time to think about this.
 
-- Rebased accroding to Krzysztof Kozłowski's request
+On 11/16/17 05:30, Rob Herring wrote:
+> On Wed, Nov 15, 2017 at 10:31:14AM -0800, Tim Harvey wrote:
+>> On Wed, Nov 15, 2017 at 7:52 AM, Rob Herring <robh@kernel.org> wrote:
+>>> On Thu, Nov 09, 2017 at 10:45:34AM -0800, Tim Harvey wrote:
+>>>> Add support for the TDA1997x HDMI receivers.
+>>>>
+>>>> Cc: Hans Verkuil <hverkuil@xs4all.nl>
+>>>> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+>>>> ---
+>>>> v3:
+>>>>  - use V4L2_DV_BT_FRAME_WIDTH/HEIGHT macros
+>>>>  - fixed missing break
+>>>>  - use only hdmi_infoframe_log for infoframe logging
+>>>>  - simplify tda1997x_s_stream error handling
+>>>>  - add delayed work proc to handle hotplug enable/disable
+>>>>  - fix set_edid (disable HPD before writing, enable after)
+>>>>  - remove enabling edid by default
+>>>>  - initialize timings
+>>>>  - take quant range into account in colorspace conversion
+>>>>  - remove vendor/product tracking (we provide this in log_status via infoframes)
+>>>>  - add v4l_controls
+>>>>  - add more detail to log_status
+>>>>  - calculate vhref generator timings
+>>>>  - timing detection fixes (rounding errors, hswidth errors)
+>>>>  - rename configure_input/configure_conv functions
+>>>>
+>>>> v2:
+>>>>  - implement dv timings enum/cap
+>>>>  - remove deprecated g_mbus_config op
+>>>>  - fix dv_query_timings
+>>>>  - add EDID get/set handling
+>>>>  - remove max-pixel-rate support
+>>>>  - add audio codec DAI support
+>>>>  - change audio bindings
+>>>> ---
+>>>>  drivers/media/i2c/Kconfig            |    9 +
+>>>>  drivers/media/i2c/Makefile           |    1 +
+>>>>  drivers/media/i2c/tda1997x.c         | 3485 ++++++++++++++++++++++++++++++++++
+>>>>  include/dt-bindings/media/tda1997x.h |   78 +
+>>>
+>>> This belongs with the binding documentation patch.
+>>>
+>>
+>> Rob,
+>>
+>> Thanks - missed that. I will move it for v4.
+>>
+>> Regarding your previous comment to the v2 series:
+>>> The rest of the binding looks fine, but I have some reservations about
+>>> this. I think this should be common probably. There's been a few
+>>> bindings for display recently that deal with the interface format. Maybe
+>>> some vendor property is needed here to map a standard interface format
+>>> back to pin configuration.
+>>
+>> I take it this is not an 'Ack' for the bindings?
+>>
+>> Which did you feel should be made common? I admit I was surprised
+>> there wasn't a common binding for audio bus format (i2s|spdif) but if
+>> you were referring to the video data that would probably be much more
+>> complicated.
+> 
+> The video data. Either you have to try to come up with some way to map 
+> color components to signals/pins (and even cycles) or you just enumerate 
+> the formats and keep adding to them when new ones appear. There's h/w 
+> that allows the former, but in the end you have to interoperate, so 
+> enumerating the formats is probably enough.
+> 
+>> I was hoping one of the media/driver maintainers would respond to your
+>> comment with thoughts as I'm not familiar with a very wide variety of
+>> receivers.
+> 
+> I am hoping, too.
 
- arch/arm/boot/dts/exynos5.dtsi    | 5 +++++
- arch/arm/boot/dts/exynos5250.dtsi | 5 +++++
- arch/arm/boot/dts/exynos5410.dtsi | 5 +++++
- arch/arm/boot/dts/exynos5420.dtsi | 5 +++++
- 4 files changed, 20 insertions(+)
+I don't think it is right to store this in the DT. How you map the output pins
+is a driver thing. So when you are requested to enumerate the mediabus formats
+(include/uapi/linux/media-bus-format.h) you support, you do so based on the
+capabilities of the hardware, and when a format is requested you program the
+hardware accordingly.
 
-diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-index 6cc5c37a9b2a..b3c8428de389 100644
---- a/arch/arm/boot/dts/exynos5.dtsi
-+++ b/arch/arm/boot/dts/exynos5.dtsi
-@@ -216,6 +216,11 @@
- 		      reg = <0x10830400 0x200>;
- 		};
- 
-+		trng: rng@10830600 {
-+		      compatible = "samsung,exynos5250-trng";
-+		      reg = <0x10830600 0x100>;
-+		};
-+
- 		g2d: g2d@10850000 {
- 			compatible = "samsung,exynos5250-g2d";
- 			reg = <0x10850000 0x1000>;
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index e55748798845..bdd742e3f3c3 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -1111,4 +1111,9 @@
- 	clock-names = "secss";
- };
- 
-+&trng {
-+	clocks = <&clock CLK_SSS>;
-+	clock-names = "secss";
-+};
-+
- #include "exynos5250-pinctrl.dtsi"
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index f5541000606b..4e5d9bad085f 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -392,6 +392,11 @@
- 		  3 0 0x07000000 0x20000>;
- };
- 
-+&trng {
-+	clocks = <&clock CLK_SSS>;
-+	clock-names = "secss";
-+};
-+
- &usbdrd3_0 {
- 	clocks = <&clock CLK_USBD300>;
- 	clock-names = "usbdrd30";
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 3611f5c05235..f7c2ba61830b 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -1479,6 +1479,11 @@
- 	clock-names = "secss";
- };
- 
-+&trng {
-+	clocks = <&clock CLK_SSS>;
-+	clock-names = "secss";
-+};
-+
- &usbdrd3_0 {
- 	clocks = <&clock CLK_USBD300>;
- 	clock-names = "usbdrd30";
--- 
-2.11.0
+The device tree should describe the physical characteristics like the number
+of pins that are hooked up (i.e. are there 24, 30 or 36 pins connected).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These vidout-portcfg mappings do not appear to describe physical properties
+but really register settings.
+
+Apologies if I misunderstood any of this.
+
+Regards,
+
+	Hans
