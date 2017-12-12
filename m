@@ -1,31 +1,45 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH V7 0/7] dmaengine: qcom_hidma: add support for bugfixed HW
-Date: Tue, 12 Dec 2017 13:36:01 +0100
-Message-ID: <CAJZ5v0ijQFO_PuwhBRrKovo4EW9Dck9fiT38wiCw6P5hHUjNuw@mail.gmail.com>
-References: <1512681031-11343-1-git-send-email-okaya@codeaurora.org> <20171212053845.GB18649@localhost>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] clocksource: sprd: Add timer driver for Spreadtrum
+ SC9860 platform
+Date: Tue, 12 Dec 2017 13:44:21 +0100
+Message-ID: <CAOFm3uE0Tpwnyi0a9FhSKhdzDNdCA3YRc6SSxvKByy=JGV6gSA@mail.gmail.com>
+References: <346a731ce967b56514b0838bbbd8b4f500cea040.1513075872.git.baolin.wang@spreadtrum.com>
+ <c5948e4bec5b281fd61d8168bad8d35eb254476d.1513075872.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20171212053845.GB18649@localhost>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Sinan Kaya <okaya@codeaurora.org>, dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c5948e4bec5b281fd61d8168bad8d35eb254476d.1513075872.git.baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 6:38 AM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Thu, Dec 07, 2017 at 04:10:24PM -0500, Sinan Kaya wrote:
->> Introduce new ACPI and OF device ids for thw HW along with the helper
->> functions.
->>
->> Changes from v6:
->> * add const to the device callback parameter in fwnode.
->> * reorganize the callbacks in the code
->> * rename get_match_data() as device_get_match_data()
->> * place pointer checks into acpi_get_match_data()
+Baolin,
+
+On Tue, Dec 12, 2017 at 12:28 PM, Baolin Wang
+<baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+> The Spreadtrum SC9860 platform will use the architected timers as local
+> clock events, but we also need a broadcast timer device to wakeup the
+> cpus when the cpus are in sleep mode.
 >
-> This fails for me at 3rd patch. I am on -rc1 is there a dependency?
+> The Spreadtrum timer can support 32bit or 64bit counter, as well as
+> supporting period mode or one-shot mode.
+>
+> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> ---
+[....]
+>  - Change the license format according to Linus[1][2][3],
+>  Thomas[4] and Greg[5] comments on the topic.
+>  [1] https://lkml.org/lkml/2017/11/2/715
+>  [2] https://lkml.org/lkml/2017/11/25/125
+>  [3] https://lkml.org/lkml/2017/11/25/133
+>  [4] https://lkml.org/lkml/2017/11/2/805
+>  [5] https://lkml.org/lkml/2017/10/19/165
 
-There shouldn't be any.
+Thank you for this. For this only:
 
-According to git, all changes to the files touched by the [3/7] are in
--rc1 already.
+Acked-by: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
