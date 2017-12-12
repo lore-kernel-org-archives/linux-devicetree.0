@@ -1,40 +1,57 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v4] ARM: dts: exynos: Add nodes for True Random Number
- Generator
-Date: Tue, 12 Dec 2017 18:44:08 +0100
-Message-ID: <20171212174408.bnyedkd2qebqtpiq@kozik-lap>
-References: <20171204125351.26805-4-l.stelmach@samsung.com>
- <CGME20171212120906eucas1p23883590efde24a67800473b0d34871e5@eucas1p2.samsung.com>
- <20171212120902.16561-1-l.stelmach@samsung.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] dt-bindings: iio: temperature: add MLX90632 device
+ bindings
+Date: Tue, 12 Dec 2017 18:45:48 +0100
+Message-ID: <13b298c0-d618-e217-406d-63bac56106fc@suse.de>
+References: <20171211092002.8687-1-cmo@melexis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171212120902.16561-1-l.stelmach@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171211092002.8687-1-cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 01:09:02PM +0100, Łukasz Stelmach wrote:
-> Add nodes for the True Random Number Generator found in Samsung Exynos
-> 5250+ SoCs.
+Am 11.12.2017 um 10:20 schrieb Crt Mori:
+> Add device tree bindings for MLX90632 IR temperature sensor.
 > 
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
-> Changes since v3:
+>  .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
 > 
-> - Rebased accroding to Krzysztof Kozłowski's request
-> 
->  arch/arm/boot/dts/exynos5.dtsi    | 5 +++++
->  arch/arm/boot/dts/exynos5250.dtsi | 5 +++++
->  arch/arm/boot/dts/exynos5410.dtsi | 5 +++++
->  arch/arm/boot/dts/exynos5420.dtsi | 5 +++++
->  4 files changed, 20 insertions(+)
-> 
+> diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+> new file mode 100644
+> index 000000000000..0b05812001f8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+[...]
+> +Example:
+> +
+> +mlx90632@3a {
 
-Thanks, applied.
+Shouldn't the node name be more general like temperature@3a?
 
-Best regards,
-Krzysztof
+> +	compatible = "melexis,mlx90632";
+> +	reg = <0x3a>;
+> +};
+
+Also generally the dt-bindings patch should go before the first use of
+the compatible string.
+
+Regards,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
