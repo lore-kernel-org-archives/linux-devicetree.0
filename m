@@ -1,113 +1,134 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 3/5] media: i2c: Add TDA1997x HDMI receiver driver
-Date: Tue, 12 Dec 2017 13:18:37 +0100
-Message-ID: <f1d607e2-3d21-ac05-c815-a5f28b860b1e@xs4all.nl>
-References: <1510253136-14153-1-git-send-email-tharvey@gateworks.com>
- <1510253136-14153-4-git-send-email-tharvey@gateworks.com>
- <20171115155204.yhqjocdm32qunllx@rob-hp-laptop>
- <CAJ+vNU0NuNjZePQBaxWHT4HtYGxZJ_DUSvuHvb6wAFDGA_xX9A@mail.gmail.com>
- <20171116043059.azaqjfbjeo4rlaon@rob-hp-laptop>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 0/2] Tegra PCIe end point config space map code
+ refactoring
+Date: Tue, 12 Dec 2017 13:22:52 +0100
+Message-ID: <20171212122252.GA29883@ulmo>
+References: <1512410030-21038-1-git-send-email-vidyas@nvidia.com>
+ <20171211105431.GI10671@ulmo>
+ <20171211175452.GC16032@bhelgaas-glaptop.roam.corp.google.com>
+ <20171212110158.GA30601@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20171116043059.azaqjfbjeo4rlaon@rob-hp-laptop>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Tim Harvey <tharvey@gateworks.com>
-Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171212110158.GA30601-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim,
 
-Sorry for the delay, I needed to find some time to think about this.
+--k1lZvvs/B4yU6o8G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 11/16/17 05:30, Rob Herring wrote:
-> On Wed, Nov 15, 2017 at 10:31:14AM -0800, Tim Harvey wrote:
->> On Wed, Nov 15, 2017 at 7:52 AM, Rob Herring <robh@kernel.org> wrote:
->>> On Thu, Nov 09, 2017 at 10:45:34AM -0800, Tim Harvey wrote:
->>>> Add support for the TDA1997x HDMI receivers.
->>>>
->>>> Cc: Hans Verkuil <hverkuil@xs4all.nl>
->>>> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
->>>> ---
->>>> v3:
->>>>  - use V4L2_DV_BT_FRAME_WIDTH/HEIGHT macros
->>>>  - fixed missing break
->>>>  - use only hdmi_infoframe_log for infoframe logging
->>>>  - simplify tda1997x_s_stream error handling
->>>>  - add delayed work proc to handle hotplug enable/disable
->>>>  - fix set_edid (disable HPD before writing, enable after)
->>>>  - remove enabling edid by default
->>>>  - initialize timings
->>>>  - take quant range into account in colorspace conversion
->>>>  - remove vendor/product tracking (we provide this in log_status via infoframes)
->>>>  - add v4l_controls
->>>>  - add more detail to log_status
->>>>  - calculate vhref generator timings
->>>>  - timing detection fixes (rounding errors, hswidth errors)
->>>>  - rename configure_input/configure_conv functions
->>>>
->>>> v2:
->>>>  - implement dv timings enum/cap
->>>>  - remove deprecated g_mbus_config op
->>>>  - fix dv_query_timings
->>>>  - add EDID get/set handling
->>>>  - remove max-pixel-rate support
->>>>  - add audio codec DAI support
->>>>  - change audio bindings
->>>> ---
->>>>  drivers/media/i2c/Kconfig            |    9 +
->>>>  drivers/media/i2c/Makefile           |    1 +
->>>>  drivers/media/i2c/tda1997x.c         | 3485 ++++++++++++++++++++++++++++++++++
->>>>  include/dt-bindings/media/tda1997x.h |   78 +
->>>
->>> This belongs with the binding documentation patch.
->>>
->>
->> Rob,
->>
->> Thanks - missed that. I will move it for v4.
->>
->> Regarding your previous comment to the v2 series:
->>> The rest of the binding looks fine, but I have some reservations about
->>> this. I think this should be common probably. There's been a few
->>> bindings for display recently that deal with the interface format. Maybe
->>> some vendor property is needed here to map a standard interface format
->>> back to pin configuration.
->>
->> I take it this is not an 'Ack' for the bindings?
->>
->> Which did you feel should be made common? I admit I was surprised
->> there wasn't a common binding for audio bus format (i2s|spdif) but if
->> you were referring to the video data that would probably be much more
->> complicated.
-> 
-> The video data. Either you have to try to come up with some way to map 
-> color components to signals/pins (and even cycles) or you just enumerate 
-> the formats and keep adding to them when new ones appear. There's h/w 
-> that allows the former, but in the end you have to interoperate, so 
-> enumerating the formats is probably enough.
-> 
->> I was hoping one of the media/driver maintainers would respond to your
->> comment with thoughts as I'm not familiar with a very wide variety of
->> receivers.
-> 
-> I am hoping, too.
+On Tue, Dec 12, 2017 at 11:01:58AM +0000, Lorenzo Pieralisi wrote:
+> On Mon, Dec 11, 2017 at 11:54:53AM -0600, Bjorn Helgaas wrote:
+> > [+cc Lorenzo]
+> >=20
+> > On Mon, Dec 11, 2017 at 11:54:31AM +0100, Thierry Reding wrote:
+> > > On Mon, Dec 04, 2017 at 11:23:48PM +0530, Vidya Sagar wrote:
+> > > > PCIe host controller in Tegra SoCs has 1GB of aperture available
+> > > > for mapping end points config space, IO and BARs. In that, currently
+> > > > 256MB is being reserved for mapping end points configuration space
+> > > > which leaves less memory space available for mapping end points BARs
+> > > > on some of the platforms.
+> > > > This patch series attempts to map only 4K space from 1GB aperture to
+> > > > access end points configuration space.
+> > > >=20
+> > > > Currently, this change can benefit T20 and T186 in saving (i.e. rep=
+urposed
+> > > > to use for BAR mapping) physical space as well as kernel virtual ma=
+pping space,
+> > > > it saves only kernel virtual address space in T30, T124, T132 and T=
+210.
+> > > >=20
+> > > > NOTE: Since T186 PCIe DT entry is not yet present in main line (it =
+is currently
+> > > > merged to 'for-4.15/arm64/dt' branch), nothing gets broken with thi=
+s change for T186.
+> > > > For older platforms (T20, T30, T124, T132, T210), this change works=
+ fine without any
+> > > > DT modifications
+> > > >=20
+> > > > Testing Done on T124, T210 & T186:
+> > > >  Enumeration and basic functionality of immediate devices
+> > > >  Enumeration of devices behind a PCIe switch
+> > > >  Complete 4K configuration space access
+> > > >=20
+> > > > Vidya Sagar (2):
+> > > >   PCI: tegra: refactor config space mapping code
+> > > >   ARM64: tegra: limit PCIe config space mapping to 4K for T186
+> > > >=20
+> > > >  arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
+> > > >  drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------=
+------------
+> > > >  2 files changed, 44 insertions(+), 89 deletions(-)
+> > >=20
+> > > Hi Bjorn,
+> > >=20
+> > > there's a bunch of PCI related patches for Tegra floating around on t=
+he
+> > > lists. I'm wondering if you'd be okay if I pick those up into the Teg=
+ra
+> > > tree after they've been reviewed and send you a pull request later on
+> > > (say around v4.15-rc6). That would allow me to get things cooking in
+> > > linux-next for a bit and get broader testing in addition to the
+> > > flexibility to patch things up if they break.
+> >=20
+> > Lorenzo will be merging the Tegra stuff, so this is more a question
+> > for him.
+> >=20
+> > Just to clarify, I think your questions is about putting those patches
+> > in
+> > git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux.git#for-next.
+> > If you put them there they will show up in linux-next, and then when
+> > Lorenzo merges them, you'll have to coordinate so they don't get
+> > merged into linux-next twice (once via the usual PCI tree route and
+> > again via the Tegra tree).
+> >=20
+> > If you wait until after they've been reviewed to put them into the
+> > Tegra tree, I'm not sure what the gain is, because I assume Lorenzo
+> > would merge them at about that same point.
+>=20
+> I think that after the review, the Tegra patches that are considered for
+> upstream they should go to -next via the PCI tree as any other platform P=
+CI
+> patches; the relevant patches need ACKs from the respective platform
+> maintainer - I am getting to them as fast as I can.
 
-I don't think it is right to store this in the DT. How you map the output pins
-is a driver thing. So when you are requested to enumerate the mediabus formats
-(include/uapi/linux/media-bus-format.h) you support, you do so based on the
-capabilities of the hardware, and when a format is requested you program the
-hardware accordingly.
+Just to clarify: I wasn't suggesting that these patches are merged for
+v4.16 via the Tegra tree, only that I carry them in the Tegra tree for a
+little while so that we can get broader testing and fix things up in
+case they break. My proposal was to then send a pull request for
+inclusion in the PCI tree. linux-next can deal with this type of
+scenario just fine because it will simply see the same branch twice and
+ignore the second one.
 
-The device tree should describe the physical characteristics like the number
-of pins that are hooked up (i.e. are there 24, 30 or 36 pins connected).
+If you prefer to merge directly via the PCI tree that works for me too.
 
-These vidout-portcfg mappings do not appear to describe physical properties
-but really register settings.
+Thierry
 
-Apologies if I misunderstood any of this.
+--k1lZvvs/B4yU6o8G
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards,
+-----BEGIN PGP SIGNATURE-----
 
-	Hans
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlovyhkACgkQ3SOs138+
+s6HIoA//UOk1Pqde8iX0UEGdNSME8v7GmCtfPEE8EvLEt2URNFcZDF4KWvFONg7R
+BNpn9yjOs83UTHlVIG0Vqwxl5SwvzMKXshCxNbFvkM5t1a6VUZqdyEFQ8idRtb7F
+4LkY9WHd9zTpw62jVAPZfT76v2XZxKHjR61r/iDeYLefP5r9tbg8iZlYroBO9aAA
+qwaKtU1d8rAeu/UIZle1jm9ThoklA+6KccnkyYg3eyoBChbYEOvf635bVupl9di+
+qJcIHT6ma4tzmVxqxIYKyuTZejjYjoYYjo3DrCBsLfPAJFpGe3ojap5XfaSFYYFl
+GKxf7QuavHGsx1m5sRr6NuK18ZNgRIC1DVZARrfUb6PfRC6TjV9aJEPcwnmW8itO
+cRWxgVjT48sP0gDUfpOd++onDw1jkzdNyINITWv48L+VJU6giHTr7I3XS1pU2fuy
+psE/I8r8S6yWT0jz7mseZu2unHAT8YkHnfIL3Lf5qzHwDXV0Dxc7x7RrexdyKLII
+Q53Vn4C3k8SkvvG6R7LzEZi6he+V7wpY6/yrFsoOEmjKU1pwJi2ypzmno9TBBCHn
++Gs2n30imJ4oh11uc5YaAxub7mIcT3wdnTt8Es3J/ao2MdKtVYRxaw5J4l+H0FOP
+VSWejveoRUpBoNu5JFwqTv/pIDefwBt6Vv+4vQTj+KYXNkXQDwc=
+=9Mbc
+-----END PGP SIGNATURE-----
+
+--k1lZvvs/B4yU6o8G--
