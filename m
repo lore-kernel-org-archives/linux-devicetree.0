@@ -1,34 +1,115 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v1 4/4] arm64: dts: mediatek: add mt2712 cpufreq related device nodes
-Date: Tue, 12 Dec 2017 02:17:06 +0100
-Message-ID: <1758225.tOgn8eUOoH@aspire.rjw.lan>
-References: <1512713278-17807-1-git-send-email-andrew-sh.cheng@mediatek.com> <1512713278-17807-5-git-send-email-andrew-sh.cheng@mediatek.com> <20171211075719.GD25177@vireshk-i7>
+From: Vincent Chen <deanbo422@gmail.com>
+Subject: Re: [PATCH v3 17/33] nds32: VDSO support
+Date: Tue, 12 Dec 2017 09:58:31 +0800
+Message-ID: <CAJsyPhzQvZ1QTPcE=p3cTv2c9BbjRFCnB1ROoEBqZuRzMraeug@mail.gmail.com>
+References: <cover.1512723245.git.green.hu@gmail.com> <921ccfa97c4c13f12c7b22b9554f52dcce51f87e.1512723245.git.green.hu@gmail.com>
+ <20171208102149.iqiieszktwzorkuw@lakrids.cambridge.arm.com>
+ <CAEbi=3e9Ep4_DL4SSwp15as1t7ALvw-s2gqv+NsuRZiebNGFAQ@mail.gmail.com> <20171208121405.dy6raczdlbxtbnfo@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211075719.GD25177@vireshk-i7>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew-sh Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171208121405.dy6raczdlbxtbnfo@lakrids.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg KH <greg@kroah.com>, Vincent Chen <vincentc@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, December 11, 2017 8:57:19 AM CET Viresh Kumar wrote:
-> On 08-12-17, 14:07, Andrew-sh Cheng wrote:
-> > Add opp v2 information,
-> > and also add clocks, regulators and opp information into cpu nodes
-> > 
-> > Signed-off-by: Andrew-sh Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt2712-evb.dts | 27 ++++++++++++++
-> >  arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 57 +++++++++++++++++++++++++++++
-> >  2 files changed, 84 insertions(+)
-> 
-> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+2017-12-08 20:14 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
+> On Fri, Dec 08, 2017 at 07:54:42PM +0800, Greentime Hu wrote:
+>> 2017-12-08 18:21 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
+>> > On Fri, Dec 08, 2017 at 05:12:00PM +0800, Greentime Hu wrote:
+>> >> +static int grab_timer_node_info(void)
+>> >> +{
+>> >> +     struct device_node *timer_node;
+>> >> +
+>> >> +     timer_node = of_find_node_by_name(NULL, "timer");
+>> >
+>> > Please use a compatible string, rather than matching the timer by name.
+>> >
+>> > It's plausible that you have multiple nodes called "timer" in the DT,
+>> > under different parent nodes, and this might not be the device you
+>> > think it is. I see your dt in patch 24 has two timer nodes.
+>> >
+>> > It would be best if your clocksource driver exposed some stuct that you
+>> > looked at here, so that you're guaranteed to user the same device.
+>>
+>> We'd like to use "timer" here because there are 2 different timer IPs
+>> and we are sure that they won't be in the same SoC.
+>> We think this implementation in VDSO should be platform independent to
+>> get cycle-count register.
+>> Our customer or other SoC provider who can use "timer" and define
+>> cycle-count-offset or cycle-count-down then we can get the correct
+>> cycle-count.
+>
+> This is not the right way to do things.
+>
+> So from a DT perspective, NAK.
+>
+> You should not add properties to arbitrary DT bindings to handle a Linux
+> implementation detail.
+>
+> Please remove this DT code, and have the drivers for those timer blocks
+> export this information to your vdso code somehow.
+>
 
-Of course, DT bindings require ACKs from DT maintainers to be applied.
+Hi, Mark:
+Based on your suggestion, we define a new sturct timer_info to let
+timer driver record the value
+of cycle-count-offset and cycle-count-down in timer_init function. The
+above code in timer driver
+is validate only when CONFIG_NDS32 is defined.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> We sent atcpit100 patch last time along with our arch, however we'd
+>> like to send it to its sub system this time and my colleague is still
+>> working on it.
+>> He may send the timer patch next week.
+>
+> I think that it would make sense for that patch to be part of the arch
+> port, especially given that (AFAICT) there is no dirver for the other
+> timer IP that you mention.
+>
+> [...]
+>
+>> >> +int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+>> >> +{
+>> >
+>> >> +     /*Map timer to user space */
+>> >> +     vdso_base += PAGE_SIZE;
+>> >> +     prot = __pgprot(_PAGE_V | _PAGE_M_UR_KR | _PAGE_D |
+>> >> +                     _PAGE_G | _PAGE_C_DEV);
+>> >> +     ret = io_remap_pfn_range(vma, vdso_base, timer_res.start >> PAGE_SHIFT,
+>> >> +                              PAGE_SIZE, prot);
+>> >> +     if (ret)
+>> >> +             goto up_fail;
+>> >
+>> > Maybe this is fine, but it looks a bit suspicious.
+>> >
+>> > Is it safe to map IO memory to a userspace process like this?
+>> >
+>> > In general that isn't safe, since userspace could access other registers
+>> > (if those exist), perform accesses that change the state of hardware, or
+>> > make unsupported access types (e.g. unaligned, atomic) that result in
+>> > errors the kernel can't handle.
+>> >
+>> > Does none of that apply here?
+>>
+>> We only provide read permission to this page so hareware state won't
+>> be chagned. It will trigger exception if we try to write.
+>> We will check about the alignment/atomic issue of this region.
+>
+
+For alignment issue, we intentionally make an un-alignment read to
+access this region and we
+got "Segmentation fault" as expected.
+
+
+Thanks,
+Vincent
+
+> Ok, thanks.
+>
+> This is another reason to only do this for devices/drivers that we have
+> drivers for, since we can't know that this is safe in general.
+>
+> Thanks,
+> Mark.
