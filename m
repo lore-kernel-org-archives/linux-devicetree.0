@@ -1,255 +1,32 @@
-From: "Keiji Hayashibara" <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: RE: [PATCH] arm: dts: uniphier: add efuse node for UniPhier 32bit SoC
-Date: Tue, 12 Dec 2017 09:56:37 +0900
-Message-ID: <000101d372e4$10721be0$315653a0$@socionext.com>
-References: <1512375130-16860-1-git-send-email-hayashibara.keiji@socionext.com> <CAK7LNARmYfnYpACrUtYccBPyjnvXg0ymA=WZ=+nGAtanaXZk1w@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v1 4/4] arm64: dts: mediatek: add mt2712 cpufreq related device nodes
+Date: Tue, 12 Dec 2017 02:17:06 +0100
+Message-ID: <1758225.tOgn8eUOoH@aspire.rjw.lan>
+References: <1512713278-17807-1-git-send-email-andrew-sh.cheng@mediatek.com> <1512713278-17807-5-git-send-email-andrew-sh.cheng@mediatek.com> <20171211075719.GD25177@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNARmYfnYpACrUtYccBPyjnvXg0ymA=WZ=+nGAtanaXZk1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: ja
+In-Reply-To: <20171211075719.GD25177@vireshk-i7>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Masahiro Yamada' <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, =?utf-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew-sh Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Yamada-san,
-
-Sorry, I will be careful next time.
-I was checking with the command of 
-"get_maintainer.pl -f arch/arm/boot/dts/".
-
-Thank you.
-
-Best Regards,
-Keiji Hayashibara
-
-
-> From: Masahiro Yamada [mailto:yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org]
-> Sent: Tuesday, December 12, 2017 1:06 AM
-> 
-> 2017-12-04 17:12 GMT+09:00 Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> > Add efuse node for UniPhier LD4, Pro4, sLD8, Pro5 and PXs2.
-> > This efuse node is included in soc-glue.
-> >
-> > Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+On Monday, December 11, 2017 8:57:19 AM CET Viresh Kumar wrote:
+> On 08-12-17, 14:07, Andrew-sh Cheng wrote:
+> > Add opp v2 information,
+> > and also add clocks, regulators and opp information into cpu nodes
+> > 
+> > Signed-off-by: Andrew-sh Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > ---
-> >  arch/arm/boot/dts/uniphier-ld4.dtsi  | 18 ++++++++++++++++++
-> > arch/arm/boot/dts/uniphier-pro4.dtsi | 23 +++++++++++++++++++++++
-> > arch/arm/boot/dts/uniphier-pro5.dtsi | 33
-> > +++++++++++++++++++++++++++++++++
-> > arch/arm/boot/dts/uniphier-pxs2.dtsi | 18 ++++++++++++++++++
-> > arch/arm/boot/dts/uniphier-sld8.dtsi | 18 ++++++++++++++++++
-> >  5 files changed, 110 insertions(+)
+> >  arch/arm64/boot/dts/mediatek/mt2712-evb.dts | 27 ++++++++++++++
+> >  arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 57 +++++++++++++++++++++++++++++
+> >  2 files changed, 84 insertions(+)
 > 
-> 
-> Applied to linux-uniphier,
-> but please reconsider To: list next time.
-> 
-> This patch was addressed to Rob and Mark, but they do not pick up platform DT patches.
-> 
-> 
-> You do not need to get Rob's Ack for a patch like this.
-> 
-> 
-> Binding is a contract between operation system and DT.
-> 
-> The binding for this
-> (Documentation/devicetree/bindings/nvmem/uniphier-efuse.txt)
-> was approved by Rob and merged in the mainline.
-> 
-> Given that this patch follows the binding correctly, it should be safe.
-> 
-> Thanks.
-> 
-> 
-> 
-> > diff --git a/arch/arm/boot/dts/uniphier-ld4.dtsi
-> > b/arch/arm/boot/dts/uniphier-ld4.dtsi
-> > index 01fc3e1..6883f3b 100644
-> > --- a/arch/arm/boot/dts/uniphier-ld4.dtsi
-> > +++ b/arch/arm/boot/dts/uniphier-ld4.dtsi
-> > @@ -273,6 +273,24 @@
-> >                         };
-> >                 };
-> >
-> > +               soc-glue@5f900000 {
-> > +                       compatible = "socionext,uniphier-ld4-soc-glue-debug",
-> > +                                    "simple-mfd";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +                       ranges = <0 0x5f900000 0x2000>;
-> > +
-> > +                       efuse@100 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x100 0x28>;
-> > +                       };
-> > +
-> > +                       efuse@130 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x130 0x8>;
-> > +                       };
-> > +               };
-> > +
-> >                 timer@60000200 {
-> >                         compatible = "arm,cortex-a9-global-timer";
-> >                         reg = <0x60000200 0x20>; diff --git
-> > a/arch/arm/boot/dts/uniphier-pro4.dtsi
-> > b/arch/arm/boot/dts/uniphier-pro4.dtsi
-> > index 7955c3a..150726b 100644
-> > --- a/arch/arm/boot/dts/uniphier-pro4.dtsi
-> > +++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
-> > @@ -294,6 +294,29 @@
-> >                         };
-> >                 };
-> >
-> > +               soc-glue@5f900000 {
-> > +                       compatible = "socionext,uniphier-pro4-soc-glue-debug",
-> > +                                    "simple-mfd";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +                       ranges = <0 0x5f900000 0x2000>;
-> > +
-> > +                       efuse@100 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x100 0x28>;
-> > +                       };
-> > +
-> > +                       efuse@130 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x130 0x8>;
-> > +                       };
-> > +
-> > +                       efuse@200 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x200 0x14>;
-> > +                       };
-> > +               };
-> > +
-> >                 aidet: aidet@5fc20000 {
-> >                         compatible = "socionext,uniphier-pro4-aidet";
-> >                         reg = <0x5fc20000 0x200>; diff --git
-> > a/arch/arm/boot/dts/uniphier-pro5.dtsi
-> > b/arch/arm/boot/dts/uniphier-pro5.dtsi
-> > index 6589b8a..f291dd6 100644
-> > --- a/arch/arm/boot/dts/uniphier-pro5.dtsi
-> > +++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
-> > @@ -355,6 +355,39 @@
-> >                         };
-> >                 };
-> >
-> > +               soc-glue@5f900000 {
-> > +                       compatible = "socionext,uniphier-pro5-soc-glue-debug",
-> > +                                    "simple-mfd";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +                       ranges = <0 0x5f900000 0x2000>;
-> > +
-> > +                       efuse@100 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x100 0x28>;
-> > +                       };
-> > +
-> > +                       efuse@130 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x130 0x8>;
-> > +                       };
-> > +
-> > +                       efuse@200 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x200 0x28>;
-> > +                       };
-> > +
-> > +                       efuse@300 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x300 0x14>;
-> > +                       };
-> > +
-> > +                       efuse@400 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x400 0x8>;
-> > +                       };
-> > +               };
-> > +
-> >                 aidet: aidet@5fc20000 {
-> >                         compatible = "socionext,uniphier-pro5-aidet";
-> >                         reg = <0x5fc20000 0x200>; diff --git
-> > a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> > b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> > index d82d6d8..8e54e87 100644
-> > --- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> > +++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
-> > @@ -375,6 +375,24 @@
-> >                         };
-> >                 };
-> >
-> > +               soc-glue@5f900000 {
-> > +                       compatible = "socionext,uniphier-pxs2-soc-glue-debug",
-> > +                                    "simple-mfd";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +                       ranges = <0 0x5f900000 0x2000>;
-> > +
-> > +                       efuse@100 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x100 0x28>;
-> > +                       };
-> > +
-> > +                       efuse@200 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x200 0x58>;
-> > +                       };
-> > +               };
-> > +
-> >                 aidet: aidet@5fc20000 {
-> >                         compatible = "socionext,uniphier-pxs2-aidet";
-> >                         reg = <0x5fc20000 0x200>; diff --git
-> > a/arch/arm/boot/dts/uniphier-sld8.dtsi
-> > b/arch/arm/boot/dts/uniphier-sld8.dtsi
-> > index 7188536..afafe7c 100644
-> > --- a/arch/arm/boot/dts/uniphier-sld8.dtsi
-> > +++ b/arch/arm/boot/dts/uniphier-sld8.dtsi
-> > @@ -277,6 +277,24 @@
-> >                         };
-> >                 };
-> >
-> > +               soc-glue@5f900000 {
-> > +                       compatible = "socionext,uniphier-sld8-soc-glue-debug",
-> > +                                    "simple-mfd";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +                       ranges = <0 0x5f900000 0x2000>;
-> > +
-> > +                       efuse@100 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x100 0x28>;
-> > +                       };
-> > +
-> > +                       efuse@200 {
-> > +                               compatible = "socionext,uniphier-efuse";
-> > +                               reg = <0x200 0x14>;
-> > +                       };
-> > +               };
-> > +
-> >                 timer@60000200 {
-> >                         compatible = "arm,cortex-a9-global-timer";
-> >                         reg = <0x60000200 0x20>;
-> > --
-> > 2.7.4
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree"
-> > in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo
-> > info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
-> --
-> Best Regards
-> Masahiro Yamada
+> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
+Of course, DT bindings require ACKs from DT maintainers to be applied.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
