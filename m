@@ -1,32 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] PCI: qcom: add missing supplies required for msm8996
-Date: Tue, 12 Dec 2017 14:17:54 -0600
-Message-ID: <20171212201754.lv7hsb3e5fx4eap5@rob-hp-laptop>
-References: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 4/4] [v4] pinctrl: qcom: qdf2xxx: add support for new ACPI
+ HID QCOM8002
+Date: Tue, 12 Dec 2017 14:27:10 -0600
+Message-ID: <88349f2e-5243-8061-cc72-d01fa70e6f2e@codeaurora.org>
+References: <1512170904-4749-1-git-send-email-timur@codeaurora.org>
+ <1512170904-4749-5-git-send-email-timur@codeaurora.org>
+ <CACRpkdYer_Q5R4XhWTX3=jwshcKZRSDY9=gOvSeUPsQHbUw6vw@mail.gmail.com>
+ <1513076836.25007.641.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: stanimir.varbanov@linaro.org, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org, bhelgaas@google.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1513076836.25007.641.camel@linux.intel.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, David Brown <david.brown@linaro.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Varadarajan Narayanan <varada@codeaurora.org>, Archit Taneja <architt@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 08, 2017 at 09:20:53AM +0000, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> This patch adds supplies that are required for msm8996. Two of them vdda
-> and vdda-1p8 are analog supplies that go in to controller, and the rest
-> of the two vddpe's are supplies to PCIe endpoints.
-> 
-> Without these supplies PCIe endpoints which require power supplies are
-> not enumerated at all, as there is no one to power it up.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie.txt          | 16 +++++++++++++
->  drivers/pci/dwc/pcie-qcom.c                        | 28 ++++++++++++++++++++--
->  2 files changed, 42 insertions(+), 2 deletions(-)
+On 12/12/2017 05:07 AM, Andy Shevchenko wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>                  
+> Not ACPI standards as of my knowledge. ACPI standard defines a common
+> scheme how to define properties, it doesn't tell anything about property
+> names or any mappings between names to values or names to "OS
+> subsystem").
+
+There was an attempt a while back to standardize this like we do for 
+device tree, but it fell apart.  Device-specific ACPI-only properties 
+are not standarized.  This driver is initialized only on ACPI systems. 
+It has no device tree binding.
+
+> As for GPIO we just follow *de facto* what DT has right now, i.e. "xxx-
+> gpio" or "xxx-gpios" pattern is used to map ACPI standard resource to a
+> GPIO name. That's how GPIO ACPI lib is being developed.
+
+GPIOs in device tree are defined completely differently than in ACPI. 
+On DT, the kernel controls the pin muxing.  On ACPI, pins are muxed by 
+firmware and never re-muxed by the operating system.  So all this driver 
+does is expose a few pins as simple GPIOs.
+
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
