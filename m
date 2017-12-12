@@ -1,65 +1,94 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: sunxi: document new generic binding
-Date: Tue, 12 Dec 2017 11:52:28 +0100
-Message-ID: <CACRpkdZBMeG0d2W9n5UQ6c-XgQcoGYJG4bAwnMqq_awpQCuQ7Q@mail.gmail.com>
-References: <20171113012523.2328-1-andre.przywara@arm.com> <20171113012523.2328-2-andre.przywara@arm.com>
- <CACRpkdbpfkM4odz425+4qyUCF5vqPWBQ=F5Yk7AtJL5SqXghpg@mail.gmail.com>
- <20171124105240.GB3792@ulmo> <20efcf8f-85a5-3cad-a84b-434ee5cad68e@arm.com>
- <20171124133123.GA15999@ulmo> <0c8051e6-5d8c-32d6-97e4-11c2283da5b4@arm.com>
- <CACRpkdZ70a7Vk1QPFhkms6ucWmSH6rOUD9_J0h=NjhK+vfXNAA@mail.gmail.com> <be52417d-9509-f638-65b6-f455fade0c39@arm.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v2] ARM: dts: exynos: Enable Mixer node for Exynos5800
+ Peach Pi machine
+Date: Tue, 12 Dec 2017 11:55:09 +0100
+Message-ID: <1bbedec6-6250-f02a-bf9a-4b9849833de2@samsung.com>
+References: <20171212074208.30753-1-javierm@redhat.com>
+        <CAJKOXPc1rJCWABXUuyU2MKxnLY-MptrM9Mm0HyHVCJn870R+sg@mail.gmail.com>
+        <CGME20171212100905epcas5p35a40946af3936f2020b4cabb6ee2cc95@epcas5p3.samsung.com>
+        <CAJKOXPc1_n2cdgjuFbA9jNdcSXxfr8Zjf=fUx_jt_N3+LP0n8A@mail.gmail.com>
+        <a42670aa-b3df-7a53-8ed2-f3acd97fd0d4@samsung.com>
+        <ad03e2a8-00eb-464e-6983-374f83b9abf5@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <be52417d-9509-f638-65b6-f455fade0c39-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <ad03e2a8-00eb-464e-6983-374f83b9abf5@collabora.com>
+Content-language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Guillaume Tucker <guillaume.tucker@collabora.com>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javierm@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Shuah Khan <shuahkh@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 6, 2017 at 1:55 AM, Andr=C3=A9 Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org=
-> wrote:
-> On 01/12/17 09:56, Linus Walleij wrote:
+Hi Guillaume,
 
->> It is a valid cause. Just
->> has to be weighed with other stuff, like maintainability, debuggability,
->> maintainers viewpoint. ...
+On 2017-12-12 11:43, Guillaume Tucker wrote:
+> On 12/12/17 10:17, Marek Szyprowski wrote:
+>> Hi Krzysztof,
+>>
+>> On 2017-12-12 11:09, Krzysztof Kozlowski wrote:
+>>> On Tue, Dec 12, 2017 at 10:55 AM, Krzysztof Kozlowski 
+>>> <krzk@kernel.org> wrote:
+>>>> On Tue, Dec 12, 2017 at 8:42 AM, Javier Martinez Canillas
+>>>> <javierm@redhat.com> wrote:
+>>>>> Commit 1cb686c08d12 ("ARM: dts: exynos: Add status property to 
+>>>>> Exynos 542x
+>>>>> Mixer nodes") disabled the Mixer node by default in the DTSI and 
+>>>>> enabled
+>>>>> for each Exynos 542x DTS. But unfortunately it missed to enable it 
+>>>>> for the
+>>>>> Exynos5800 Peach Pi machine, since the 5800 is also an 542x SoC 
+>>>>> variant.
+>>>>>
+>>>>> Fixes: 1cb686c08d12 ("ARM: dts: exynos: Add status property to 
+>>>>> Exynos 542x Mixer nodes")
+>>>>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+>>>>> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>>>
+>>>>> ---
+>>>>>
+>>>>> Changes in v2:
+>>>>> - Remove RFT tag.
+>>>> Thanks guys! However I still would like to see a tested-by for this on
+>>>> Peach Pi (AFAIU, Marek's only acked the code/solution).
+>>> On the other hand I could just apply it for my for-next branch and
+>>> we'll see if it fixes kernel-ci boot tests... Not a nice way of
+>>> testing but apparently no one has Peach Pi.
+>>
+>> Frankly, I don't expect that this will solve the boot hang issue on 
+>> PeachPi.
+>> However it should at least hide the unbalanced regulator issue.
 >
-> So to keep Maxime happy I actually designed this "driver" more like a
-> shim: to generate the table the current driver expects from the DT, and
-> actually not touching the existing driver at all.
-> So maintainability should actually be less of a concern: the driver will
-> just work with whatever one throws at it from the DT side, without
-> requiring frequent changes or additions.
-> In the moment we still need to write, review and merge *data* files for
-> each new SoC. And as I mentioned before, Allwinner decided to push for
-> new, slightly different chips every few months, so there will be more to
-> come. With at least the pinctrl driver out of the way we have one
-> problem less to worry about.
+> We have a peach-pi in our LAVA lab so I've tested it and
+> actually, it does fix the hang on v4.15-rc3:
+>
+>   https://lava.collabora.co.uk/scheduler/job/1019877
+>   https://lava.collabora.co.uk/scheduler/job/1019878
+>
+> I ran it twice and it booted both times.  I also ran the same
+> boot tests with the same kernel but the dtb from v4.15-rc3
+> without the fix to double check and these failed:
+>
+>   https://lava.collabora.co.uk/scheduler/job/1019879
+>   https://lava.collabora.co.uk/scheduler/job/1019880
+>
+>
+> Tested-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+>
+>
+> Thanks for the fix!
 
-I think you need mainly to convince Maxime that this is something that
-he wants to maintain, going forward.
+Well, thanks for the test! It proves that there the boot failure is
+caused by an issue somewhere in the error path of Exynos DRM, Analogix
+DP, Simple Panel or other drivers.
 
-I am as subsystem maintainer pretty pleased as long as standard
-properties etc are used to encode the data into the devicetree, and
-DT maintrainers are not actively vetoing what you do.
+This patch simply hides it by fixing the source issue of the Exynos
+DRM initialization failure. :-)
 
-If it leads to a conflict between Allwinner maintainers it is not worth the
-effort for reasons that are social rather than technical. To me it is a ver=
-y
-nice but as with all volunteer communities also very vulnerable
-endavour.
+I hope Javier will be able to investigate the discussed hang issue
+later, as fixing it is also imho important.
 
-Please make sure not to push your point so hard that it hurts your
-our your colleagues feelings.
-
-I know people are passionate about their ideas, which is usally good
-but also scare me sometimes because they sometimes become so
-passionate that it makes them bad team players.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
