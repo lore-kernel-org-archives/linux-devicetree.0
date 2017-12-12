@@ -1,44 +1,33 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: devicetree: Add DT bindings to
- xlnx_vcu driver
-Date: Tue, 12 Dec 2017 14:07:03 -0600
-Message-ID: <20171212200703.nxabyfcjbswwbp4v@rob-hp-laptop>
-References: <20171207104757.GA27343@kroah.com>
- <1512682276-6082-1-git-send-email-dshah@xilinx.com>
- <1512682276-6082-2-git-send-email-dshah@xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: Add optional nvmem BD address
+ bindings to ti,wlink-st
+Date: Tue, 12 Dec 2017 14:09:31 -0600
+Message-ID: <20171212200931.mnlmdwimu4ldmzin@rob-hp-laptop>
+References: <1512701860-8321-1-git-send-email-david@lechnology.com>
+ <1512701860-8321-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1512682276-6082-2-git-send-email-dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1512701860-8321-3-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 07, 2017 at 01:31:15PM -0800, Dhaval Shah wrote:
-> Add Device Tree binding document for logicoreIP. This logicoreIP
-> provides the isolation between the processing system and
-> programmable logic. Also provides the clock related information.
+On Thu, Dec 07, 2017 at 08:57:39PM -0600, David Lechner wrote:
+> This adds optional nvmem consumer properties to the ti,wlink-st device tree
+> bindings to allow specifying the BD address.
 > 
-> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: David Lechner <david@lechnology.com>
 > ---
-> Changes since v2:
->  * Describe the h/w
->  * compatible string is updated to make it more specific
->    based on the logicoreIP version.
->  * Removed that encoder and decoder child nodes and relatd properties as that
->    will be a separate driver and dts nodes. other team is working on that.
->  * Updated to use as a single driver.
 > 
->  .../devicetree/bindings/misc/xlnx,vcu.txt          | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,vcu.txt
+> v2 changes:
+> * Renamed "mac-address" to "bd-address"
+> * Fixed typos in example
+> * Specify byte order of "bd-address"
+> 
+>  Documentation/devicetree/bindings/net/ti,wilink-st.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-One nit. Use "dt-bindings: misc: ..." for the subject.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
