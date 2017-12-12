@@ -1,72 +1,45 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH] of_mdio / mdiobus: ensure mdio devices have fwnode correctly
- populated
-Date: Tue, 12 Dec 2017 10:49:15 +0000
-Message-ID: <E1eOi7f-0002Rs-K7@rmk-PC.armlinux.org.uk>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 3/3] ARM: dts: exynos: Add nodes for True Random Number Generator
+Date: Tue, 12 Dec 2017 11:49:22 +0100
+Message-ID: <CAJKOXPdfftuniLA=N5+5NRAO9jU0wicCUVPJ0zzfd_X--KHSyg@mail.gmail.com>
+References: <CGME20171212103557eucas1p202966a9335d52149ce69ef122f1758d8@eucas1p2.samsung.com>
+ <20171211184913.n67q7vbv2gzknjeb@kozik-lap> <87k1xs6xo3.fsf%l.stelmach@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87k1xs6xo3.fsf%l.stelmach@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Ensure that all mdio devices populate the struct device fwnode pointer
-as well as the of_node pointer to allow drivers that wish to use
-fwnode APIs to work.
+On Tue, Dec 12, 2017 at 11:35 AM, Łukasz Stelmach
+<l.stelmach@samsung.com> wrote:
+> It was <2017-12-11 pon 19:49>, when Krzysztof Kozlowski wrote:
+>> On Mon, Dec 04, 2017 at 01:53:51PM +0100, Łukasz Stelmach wrote:
+>>> Add nodes for the True Random Number Generator found in Samsung Exynos
+>>> 5250+ SoCs.
+>>>
+>>> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+>>> ---
+>>>  arch/arm/boot/dts/exynos5.dtsi    | 5 +++++
+>>>  arch/arm/boot/dts/exynos5250.dtsi | 5 +++++
+>>>  arch/arm/boot/dts/exynos5410.dtsi | 5 +++++
+>>>  arch/arm/boot/dts/exynos5420.dtsi | 5 +++++
+>>>  4 files changed, 20 insertions(+)
+>>>
+>>
+>> Unfortunately the same story as with your PRNG patch - does not apply on
+>> top of my next/dt (after taking PRNG). Also did not apply on v4.15-rc1 +
+>> PRNG.
+>>
+>> Could you rebase on my next/dt?
+>
+> Sure. Should I send it as along with the other two patches, if there were
+> no changes in them since?
 
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
----
- drivers/net/phy/mdio_bus.c | 1 +
- drivers/of/of_mdio.c       | 3 +++
- 2 files changed, 4 insertions(+)
+It is fine to resend just this one as it will go through different tree anyway.
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index d9a185ed0286..c3458b6de7ca 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -270,6 +270,7 @@ static void of_mdiobus_link_mdiodev(struct mii_bus *bus,
- 
- 		if (addr == mdiodev->addr) {
- 			dev->of_node = child;
-+			dev->fwnode = of_fwnode_handle(child);
- 			return;
- 		}
- 	}
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 98258583abb0..3481e69738b5 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -81,6 +81,7 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 	 * can be looked up later */
- 	of_node_get(child);
- 	phy->mdio.dev.of_node = child;
-+	phy->mdio.dev.fwnode = of_fwnode_handle(child);
- 
- 	/* All data is now stored in the phy struct;
- 	 * register it */
-@@ -111,6 +112,7 @@ static int of_mdiobus_register_device(struct mii_bus *mdio,
- 	 */
- 	of_node_get(child);
- 	mdiodev->dev.of_node = child;
-+	mdiodev->dev.fwnode = of_fwnode_handle(child);
- 
- 	/* All data is now stored in the mdiodev struct; register it. */
- 	rc = mdio_device_register(mdiodev);
-@@ -206,6 +208,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 	mdio->phy_mask = ~0;
- 
- 	mdio->dev.of_node = np;
-+	mdio->dev.fwnode = of_fwnode_handle(np);
- 
- 	/* Get bus level PHY reset GPIO details */
- 	mdio->reset_delay_us = DEFAULT_GPIO_RESET_DELAY;
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
