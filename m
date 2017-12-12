@@ -1,45 +1,55 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: exynos: Add nodes for True Random Number Generator
-Date: Tue, 12 Dec 2017 11:49:22 +0100
-Message-ID: <CAJKOXPdfftuniLA=N5+5NRAO9jU0wicCUVPJ0zzfd_X--KHSyg@mail.gmail.com>
-References: <CGME20171212103557eucas1p202966a9335d52149ce69ef122f1758d8@eucas1p2.samsung.com>
- <20171211184913.n67q7vbv2gzknjeb@kozik-lap> <87k1xs6xo3.fsf%l.stelmach@samsung.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: Document the Rockchip RK1608 bindings
+Date: Tue, 12 Dec 2017 11:50:41 +0100
+Message-ID: <1720708.Qj5c0Lsxha@phil>
+References: <1513060095-29588-1-git-send-email-leo.wen@rock-chips.com>
+ <1513060095-29588-3-git-send-email-leo.wen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87k1xs6xo3.fsf%l.stelmach@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
-Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1513060095-29588-3-git-send-email-leo.wen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Leo Wen <leo.wen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 11:35 AM, Łukasz Stelmach
-<l.stelmach@samsung.com> wrote:
-> It was <2017-12-11 pon 19:49>, when Krzysztof Kozlowski wrote:
->> On Mon, Dec 04, 2017 at 01:53:51PM +0100, Łukasz Stelmach wrote:
->>> Add nodes for the True Random Number Generator found in Samsung Exynos
->>> 5250+ SoCs.
->>>
->>> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
->>> ---
->>>  arch/arm/boot/dts/exynos5.dtsi    | 5 +++++
->>>  arch/arm/boot/dts/exynos5250.dtsi | 5 +++++
->>>  arch/arm/boot/dts/exynos5410.dtsi | 5 +++++
->>>  arch/arm/boot/dts/exynos5420.dtsi | 5 +++++
->>>  4 files changed, 20 insertions(+)
->>>
->>
->> Unfortunately the same story as with your PRNG patch - does not apply on
->> top of my next/dt (after taking PRNG). Also did not apply on v4.15-rc1 +
->> PRNG.
->>
->> Could you rebase on my next/dt?
->
-> Sure. Should I send it as along with the other two patches, if there were
-> no changes in them since?
+Hi Leo,
 
-It is fine to resend just this one as it will go through different tree anyway.
+Am Dienstag, 12. Dezember 2017, 14:28:15 CET schrieb Leo Wen:
+> +Optional properties:
+> +
+> +- spi-max-frequency	: Maximum SPI clocking speed of the device;
+> +			        (for RK1608)
+> +- spi-min-frequency	: Minimum SPI clocking speed of the device;
+> +			        (for RK1608)
 
-Best regards,
-Krzysztof
+There is no general spi-min-frequency property specified and I also guess
+systems would try to use a frequency close to maximum anyway, so I don't
+really see the use of specifying a minimum frequency.
+
+
+> +&pinctrl {
+> +	rk1608_irq_gpios {
+> +		rk1608_irq_gpios: rk1608_irq_gpios {
+> +			rockchip,pins = <6 2 RK_FUNC_GPIO &pcfg_pull_none>;
+> +			rockchip,pull = <1>;
+> +		};
+> +	};
+
+There is no need to specify the soc-specific pinctrl settings in a general
+devicetree example and you're using properties from your vendor-tree
+like the rockchip,pull one ... that are not used in the mainline kernel.
+
+So I'd suggest dropping the whole &pinctrl from the example.
+
+
+Heiko
