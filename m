@@ -1,85 +1,153 @@
-From: Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
- ethernet driver
-Date: Tue, 12 Dec 2017 11:29:25 +0900
-Message-ID: <CAA93ih0C-aMpFAhU+5x6P=QjiOVRPZ0UL1wyKh1oeXzC8UjPXQ@mail.gmail.com>
-References: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
- <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com>
- <20171211210455.170A.4A936039@socionext.com> <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
- <20171211134627.GU10595@n2100.armlinux.org.uk>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] drm/tinydrm: add driver for ST7735R panels
+Date: Mon, 11 Dec 2017 20:55:07 -0600
+Message-ID: <cfcbba17-bb87-d6cc-39e4-1328ff132e9f@lechnology.com>
+References: <1512943833-31352-1-git-send-email-david@lechnology.com>
+ <1512943833-31352-3-git-send-email-david@lechnology.com>
+ <1d6124f3-613f-45b4-1862-aad7453239e6@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211134627.GU10595-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+In-Reply-To: <1d6124f3-613f-45b4-1862-aad7453239e6-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux kernel mailing list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: limor-6aDhHjTmHzzR7s880joybQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+On 12/11/2017 03:18 PM, Noralf Trønnes wrote:
+> 
+> Den 10.12.2017 23.10, skrev David Lechner:
+>> This adds a new driver for Sitronix ST7735R display panels.
+>>
+>> This has been tested using an Adafruit 1.8" TFT.
+>>
+>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>> ---
+> 
+>> +static void st7735r_pipe_enable(struct drm_simple_display_pipe *pipe,
+>> +                struct drm_crtc_state *crtc_state)
+>> +{
+>> +    struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+>> +    struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+>> +    struct device *dev = tdev->drm->dev;
+>> +    int ret;
+>> +    u8 addr_mode;
+>> +
+>> +    DRM_DEBUG_KMS("\n");
+>> +
+>> +    mipi_dbi_hw_reset(mipi);
+>> +
+>> +    ret = mipi_dbi_command(mipi, MIPI_DCS_SOFT_RESET);
+>> +    if (ret) {
+>> +        DRM_DEV_ERROR(dev, "Error sending command %d\n", ret);
+>> +        return;
+>> +    }
+>> +
+>> +    msleep(150);
+>> +
+>> +    mipi_dbi_command(mipi, MIPI_DCS_EXIT_SLEEP_MODE);
+>> +    msleep(500);
+>> +
+>> +    mipi_dbi_command(mipi, ST7735R_FRMCTR1, 0x01, 0x2c, 0x2d);
+>> +    mipi_dbi_command(mipi, ST7735R_FRMCTR2, 0x01, 0x2c, 0x2d);
+>> +    mipi_dbi_command(mipi, ST7735R_FRMCTR3, 0x01, 0x2c, 0x2d, 0x01, 
+>> 0x2c,
+>> +             0x2d);
+>> +    mipi_dbi_command(mipi, ST7735R_INVCTR, 0x07);
+>> +    mipi_dbi_command(mipi, ST7735R_PWCTR1, 0xa2, 0x02, 0x84);
+>> +    mipi_dbi_command(mipi, ST7735R_PWCTR2, 0xc5);
+>> +    mipi_dbi_command(mipi, ST7735R_PWCTR3, 0x0a, 0x00);
+>> +    mipi_dbi_command(mipi, ST7735R_PWCTR4, 0x8a, 0x2a);
+>> +    mipi_dbi_command(mipi, ST7735R_PWCTR5, 0x8a, 0xee);
+>> +    mipi_dbi_command(mipi, ST7735R_VMCTR1, 0x0e);
+>> +    mipi_dbi_command(mipi, MIPI_DCS_EXIT_INVERT_MODE);
+>> +    switch (mipi->rotation) {
+>> +    default:
+>> +        addr_mode = ST7735R_MX | ST7735R_MY;
+>> +        break;
+>> +    case 90:
+>> +        addr_mode = ST7735R_MX | ST7735R_MV;
+>> +        break;
+>> +    case 180:
+>> +        addr_mode = 0;
+>> +        break;
+>> +    case 270:
+>> +        addr_mode = ST7735R_MY | ST7735R_MV;
+>> +        break;
+>> +    }
+>> +    mipi_dbi_command(mipi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
+>> +    mipi_dbi_command(mipi, MIPI_DCS_SET_PIXEL_FORMAT,
+>> +             MIPI_DCS_PIXEL_FMT_16BIT);
+>> +    mipi_dbi_command(mipi, ST7735R_GAMCTRP1, 0x0f, 0x1a, 0x0f, 0x18, 
+>> 0x2f,
+>> +             0x28, 0x20, 0x22, 0x1f, 0x1b, 0x23, 0x37, 0x00, 0x07,
+>> +             0x02, 0x10);
+>> +    mipi_dbi_command(mipi, ST7735R_GAMCTRN1, 0x0f, 0x1b, 0x0f, 0x17, 
+>> 0x33,
+>> +             0x2c, 0x29, 0x2e, 0x30, 0x30, 0x39, 0x3f, 0x00, 0x07,
+>> +             0x03, 0x10);
+>> +    mipi_dbi_command(mipi, MIPI_DCS_SET_DISPLAY_ON);
+>> +
+>> +    msleep(100);
+>> +
+>> +    mipi_dbi_command(mipi, MIPI_DCS_ENTER_NORMAL_MODE);
+>> +
+>> +    msleep(20);
+>> +
+>> +    mipi_dbi_pipe_enable(pipe, crtc_state);
+>> +}
+>> +
+>> +static const struct drm_simple_display_pipe_funcs st7735r_pipe_funcs = {
+>> +    .enable        = st7735r_pipe_enable,
+>> +    .disable    = mipi_dbi_pipe_disable,
+>> +    .update        = tinydrm_display_pipe_update,
+>> +    .prepare_fb    = tinydrm_display_pipe_prepare_fb,
+>> +};
+>> +
+>> +static const struct drm_display_mode st7735r_mode = {
+>> +    TINYDRM_MODE(128, 160, 28, 35),
+>> +};
+> 
+> This naming talk has made me realise that these should be named after
+> the panel since they're not generic controller functions.
+> Maybe the mode can be generic, not sure if the physical size can/will
+> differ, the resolution is very likely to be the same for all.
 
-2017-12-11 22:46 GMT+09:00 Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>:
-> On Mon, Dec 11, 2017 at 10:34:17PM +0900, Masami Hiramatsu wrote:
->> IMHO, even if we use SPDX license identifier, I recommend to use
->> C-style comments as many other files do, since it is C code.
->> If SPDX identifier requires C++ style, that is SPDX parser's issue
->> and should be fixed to get it from C-style comment.
->
-> See the numerous emails on this subject already.  The issue of C
-> vs C++ comments has come up many times by many different people, but
-> the result is the same.  That's not going to happen.  Linux kernel
-> C files are required to use "//" for the SPDX identifier by order
-> of Linus Torvalds.
+Adafruit has a 1.44" 128x128px display [1] with the same controller, so 
+the answer is no, the mode cannot be generic.
 
-OK, I got it.
+[1]: https://www.adafruit.com/product/2088
+> 
+> What's your view on my descision to split the MIPI DBI compatible
+> controllers into per controller drivers instead of having one driver
+> that supports them all?
 
->
-> Linus has also revealed in that discussion that he has a preference
-> for "//" style commenting for single comments, so it seems that the
-> kernel coding style may change - but there is no desire for patches
-> to "clean up" single line comments to use "//".
+My first impression was that I didn't like it so much. But now, I 
+actually think that it is a good idea. I think it is a good compromise 
+between some boilerplate code in every driver and a driver with so many 
+quirks that it is very difficult to work on. It may make sense to 
+combine some very similar controllers, but as a rule of thumb, I think 
+one driver per controller will work nicely.
 
-Thank you for making it clear.
+> I've been afraid that it will be a very big file with macro definitions
+> per controller and enable functions per panel.
+> 
+> This driver has 15 macros and ~80 panel specific lines.
+> With one panel supported, half the driver is boilerplate.
+> The mi0283qt panel (MIPI DBI compatible) is in the same ballpark.
+> 
+> Adding helpers for panel reset/exit_sleep, for MIPI_DCS_SET_ADDRESS_MODE
+> and for display_on/enter_normal/flush could cut it down some more if we
+> made one driver to rule them all. Maybe the enable function per panel
+> could be cut in half that way.
+> 
+> I'm starting to wonder if one driver isn't such a bad solution after all...
 
-Then what I'm considering is copyright notice lines. Those are usually
-treat as the header lines, not single line. So
-
-> +// SDPX-License-Identifier: GPL-2.0
-> +// sni_ave.c - Socionext UniPhier AVE ethernet driver
-> +// Copyright 2014 Panasonic Corporation
-> +// Copyright 2015-2017 Socionext Inc.
-
-is acceptable? or should we keep C-style header lines for new drivers?
-
-> +// SDPX-License-Identifier: GPL-2.0
-> +/*
-> + * sni_ave.c - Socionext UniPhier AVE ethernet driver
-> + * Copyright 2014 Panasonic Corporation
-> + * Copyright 2015-2017 Socionext Inc.
-> + */
-
-I just concern that those lines are not "single". that's all. :)
-
->
-> For further information, and to see the discussion that has already
-> happened, the arguments that have been made about style, see the
-> threads for the patch series that tglx has been posting wrt documenting
-> the SPDX stuff for the kernel.
-
-OK, got it.
-
-https://lkml.org/lkml/2017/11/16/663
-
-
-Thanks,
-
->
-> Thanks (let's stop rehashing the same arguments.)
->
-
-
--- 
-Masami Hiramatsu
+I think as we add more drivers, the parts that get duplicated will 
+become obvious candidates for helper functions to refactor, but I don't 
+think trying to cram everything all into one driver is such a good idea.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
