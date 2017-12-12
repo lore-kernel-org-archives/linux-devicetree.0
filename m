@@ -1,7 +1,7 @@
 From: Ilia Lin <ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 05/10] clk: qcom: cpu-8996: Add support to switch to alternate PLL
-Date: Tue, 12 Dec 2017 14:31:32 +0200
-Message-ID: <1513081897-31612-6-git-send-email-ilialin@codeaurora.org>
+Subject: [PATCH 08/10] clk: qcom: Add ACD path to CPU clock driver for msm8996
+Date: Tue, 12 Dec 2017 14:31:35 +0200
+Message-ID: <1513081897-31612-9-git-send-email-ilialin@codeaurora.org>
 References: <1513081897-31612-1-git-send-email-ilialin@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1513081897-31612-1-git-send-email-ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
@@ -10,98 +10,275 @@ To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCv
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, qualcomm-lt-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, celster-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tfinkel-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+The PMUX for each duplex allows for selection of ACD clock source.
+The DVM (Dynamic Variation Monitor) will flag an error
+when a voltage droop event is detected. This flagged error
+enables ACD to provide a div-by-2 clock, sourced from the primary PLL.
+The duplex will be provided the divided clock
+until a pre-programmed delay has expired.
 
-Each of the CPU clusters on msm8996 and powered via a primary
-PLL and a secondary PLL. The primary PLL is what drivers the
-CPU clk, except for times when we are reprogramming the PLL
-itself, when we temporarily switch to an alternate PLL.
-Use clock rate change notifiers to support this.
+This change configures ACD during the probe and switches
+the PMUXes to the ACD clock source.
 
-Signed-off-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Signed-off-by: Ilia Lin <ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- drivers/clk/qcom/clk-cpu-8996.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/clk/qcom/clk-cpu-8996.c | 122 ++++++++++++++++++++++++++++++++++------
+ 1 file changed, 106 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/clk/qcom/clk-cpu-8996.c b/drivers/clk/qcom/clk-cpu-8996.c
-index bc60111..9bb25be 100644
+index 0d41fa9..6f89471 100644
 --- a/drivers/clk/qcom/clk-cpu-8996.c
 +++ b/drivers/clk/qcom/clk-cpu-8996.c
-@@ -119,10 +119,14 @@ struct clk_cpu_8996_mux {
- 	u32	reg;
- 	u32	shift;
- 	u32	width;
-+	struct notifier_block nb;
- 	struct clk_hw	*pll;
- 	struct clk_regmap clkr;
- };
+@@ -17,6 +17,7 @@
+ #include <linux/regmap.h>
+ #include <linux/clk-provider.h>
+ #include "clk-alpha-pll.h"
++#include <soc/qcom/kryo-l2-accessors.h>
  
-+#define to_clk_cpu_8996_mux_nb(_nb) \
-+	container_of(_nb, struct clk_cpu_8996_mux, nb)
+ #define VCO(a, b, c) { \
+ 	.val = a,\
+@@ -29,6 +30,27 @@
+ #define ACD_INDEX		2
+ #define ALT_INDEX		3
+ #define DIV_2_THRESHOLD		600000000
++#define PWRCL_REG_OFFSET 0x0
++#define PERFCL_REG_OFFSET 0x80000
++#define MUX_OFFSET	0x40
++#define ALT_PLL_OFFSET	0x100
++#define SSSCTL_OFFSET 0x160
++/*
++APCy_QLL_SSSCTL value:
++SACDRCLEN=1
++SSWEN=1
++SSTRTEN=1
++SSTPAPMSWEN=1
++*/
++#define SSSCTL_VAL 0xF
 +
- static inline
- struct clk_cpu_8996_mux *to_clk_cpu_8996_mux_hw(struct clk_hw *hw)
- {
-@@ -173,6 +177,27 @@ static int clk_cpu_8996_mux_set_parent(struct clk_hw *hw, u8 index)
- 	return 0;
- }
- 
-+int cpu_clk_notifier_cb(struct notifier_block *nb, unsigned long event,
-+			void *data)
-+{
-+	int ret;
-+	struct clk_cpu_8996_mux *cpuclk = to_clk_cpu_8996_mux_nb(nb);
-+
-+	switch (event) {
-+	case PRE_RATE_CHANGE:
-+		ret = clk_cpu_8996_mux_set_parent(&cpuclk->clkr.hw, ALT_INDEX);
-+		break;
-+	case POST_RATE_CHANGE:
-+		ret = clk_cpu_8996_mux_set_parent(&cpuclk->clkr.hw, PLL_INDEX);
-+		break;
-+	default:
-+		ret = 0;
-+		break;
-+	}
-+
-+	return notifier_from_errno(ret);
++enum {
++	APC_BASE,
++	EFUSE_BASE,
++	NUM_BASES
 +};
 +
- const struct clk_ops clk_cpu_8996_mux_ops = {
- 	.set_parent = clk_cpu_8996_mux_set_parent,
- 	.get_parent = clk_cpu_8996_mux_get_parent,
-@@ -216,6 +241,7 @@ static int clk_cpu_8996_mux_set_parent(struct clk_hw *hw, u8 index)
++static void __iomem *vbases[NUM_BASES];
+ 
+ /* PLLs */
+ 
+@@ -43,7 +65,7 @@
+ };
+ 
+ static struct clk_alpha_pll perfcl_pll = {
+-	.offset = 0x80000,
++	.offset = PERFCL_REG_OFFSET,
+ 	.min_rate = 600000000,
+ 	.max_rate = 3000000000,
+ 	.flags = SUPPORTS_DYNAMIC_UPDATE | SUPPORTS_16BIT_ALPHA
+@@ -57,7 +79,7 @@
+ };
+ 
+ static struct clk_alpha_pll pwrcl_pll = {
+-	.offset = 0x0,
++	.offset = PWRCL_REG_OFFSET,
+ 	.min_rate = 600000000,
+ 	.max_rate = 3000000000,
+ 	.flags = SUPPORTS_DYNAMIC_UPDATE | SUPPORTS_16BIT_ALPHA
+@@ -89,7 +111,7 @@
+ };
+ 
+ static struct clk_alpha_pll perfcl_alt_pll = {
+-	.offset = 0x80100,
++	.offset = PERFCL_REG_OFFSET + ALT_PLL_OFFSET,
+ 	.vco_table = alt_pll_vco_modes,
+ 	.num_vco = ARRAY_SIZE(alt_pll_vco_modes),
+ 	.flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
+@@ -102,7 +124,7 @@
+ };
+ 
+ static struct clk_alpha_pll pwrcl_alt_pll = {
+-	.offset = 0x100,
++	.offset = PWRCL_REG_OFFSET + ALT_PLL_OFFSET,
+ 	.vco_table = alt_pll_vco_modes,
+ 	.num_vco = ARRAY_SIZE(alt_pll_vco_modes),
+ 	.flags = SUPPORTS_OFFLINE_REQ | SUPPORTS_FSM_MODE,
+@@ -113,6 +135,7 @@
+ 		.ops = &clk_alpha_pll_hwfsm_ops,
+ 	},
+ };
++static void qcom_cpu_clk_msm8996_acd_init(void);
+ 
+ /* Mux'es */
+ 
+@@ -196,6 +219,7 @@ int cpu_clk_notifier_cb(struct notifier_block *nb, unsigned long event,
+ 	switch (event) {
+ 	case PRE_RATE_CHANGE:
+ 		ret = clk_cpu_8996_mux_set_parent(&cpuclk->clkr.hw, ALT_INDEX);
++		qcom_cpu_clk_msm8996_acd_init();
+ 		break;
+ 	case POST_RATE_CHANGE:
+ 		if (cnd->new_rate < DIV_2_THRESHOLD)
+@@ -203,7 +227,7 @@ int cpu_clk_notifier_cb(struct notifier_block *nb, unsigned long event,
+ 							  DIV_2_INDEX);
+ 		else
+ 			ret = clk_cpu_8996_mux_set_parent(&cpuclk->clkr.hw,
+-							  PLL_INDEX);
++							  ACD_INDEX);
+ 		break;
+ 	default:
+ 		ret = 0;
+@@ -220,7 +244,7 @@ int cpu_clk_notifier_cb(struct notifier_block *nb, unsigned long event,
+ };
+ 
+ static struct clk_cpu_8996_mux pwrcl_smux = {
+-	.reg = 0x40,
++	.reg = PWRCL_REG_OFFSET + MUX_OFFSET,
+ 	.shift = 2,
+ 	.width = 2,
+ 	.clkr.hw.init = &(struct clk_init_data) {
+@@ -236,7 +260,7 @@ int cpu_clk_notifier_cb(struct notifier_block *nb, unsigned long event,
+ };
+ 
+ static struct clk_cpu_8996_mux perfcl_smux = {
+-	.reg = 0x80040,
++	.reg = PERFCL_REG_OFFSET + MUX_OFFSET,
+ 	.shift = 2,
+ 	.width = 2,
+ 	.clkr.hw.init = &(struct clk_init_data) {
+@@ -252,7 +276,7 @@ int cpu_clk_notifier_cb(struct notifier_block *nb, unsigned long event,
+ };
+ 
+ static struct clk_cpu_8996_mux pwrcl_pmux = {
+-	.reg = 0x40,
++	.reg = PWRCL_REG_OFFSET + MUX_OFFSET,
  	.shift = 0,
  	.width = 2,
  	.pll = &pwrcl_pll.clkr.hw,
-+	.nb.notifier_call = cpu_clk_notifier_cb,
- 	.clkr.hw.init = &(struct clk_init_data) {
- 		.name = "pwrcl_pmux",
- 		.parent_names = (const char *[]){
-@@ -235,6 +261,7 @@ static int clk_cpu_8996_mux_set_parent(struct clk_hw *hw, u8 index)
+@@ -273,7 +297,7 @@ int cpu_clk_notifier_cb(struct notifier_block *nb, unsigned long event,
+ };
+ 
+ static struct clk_cpu_8996_mux perfcl_pmux = {
+-	.reg = 0x80040,
++	.reg = PERFCL_REG_OFFSET + MUX_OFFSET,
  	.shift = 0,
  	.width = 2,
  	.pll = &perfcl_pll.clkr.hw,
-+	.nb.notifier_call = cpu_clk_notifier_cb,
- 	.clkr.hw.init = &(struct clk_init_data) {
- 		.name = "perfcl_pmux",
- 		.parent_names = (const char *[]){
-@@ -310,6 +337,14 @@ struct clk_hw_clks {
- 	clk_alpha_pll_configure(&perfcl_alt_pll, regmap, &altpll_config);
- 	clk_alpha_pll_configure(&pwrcl_alt_pll, regmap, &altpll_config);
+@@ -341,7 +365,17 @@ struct clk_hw_clks {
+ 						   CLK_SET_RATE_PARENT, 1, 2);
+ 	pwrcl_smux.pll = hws->hws[1];
  
-+	ret = clk_notifier_register(pwrcl_pmux.clkr.hw.clk, &pwrcl_pmux.nb);
-+	if (ret)
-+		return ret;
+-	hws->num = 2;
++	hws->hws[2] = clk_hw_register_fixed_factor(dev, "perfcl_pll_acd",
++						   "perfcl_pll",
++						   CLK_SET_RATE_PARENT, 1, 1);
++	perfcl_pmux.pll = hws->hws[2];
 +
-+	ret = clk_notifier_register(perfcl_pmux.clkr.hw.clk, &perfcl_pmux.nb);
-+	if (ret)
-+		return ret;
++	hws->hws[3] = clk_hw_register_fixed_factor(dev, "pwrcl_pll_acd",
++						   "pwrcl_pll",
++						   CLK_SET_RATE_PARENT, 1, 1);
++	pwrcl_pmux.pll = hws->hws[3];
 +
++	hws->num = 4;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(clks); i++) {
+ 		ret = devm_clk_register_regmap(dev, clks[i]);
+@@ -377,10 +411,65 @@ struct clk_hw_clks {
  	return ret;
  }
  
++#define CPU_AFINITY_MASK 0xFFF
++#define PWRCL_CPU_REG_MASK 0x3
++#define PERFCL_CPU_REG_MASK 0x103
++
++/* ACD static settings (HMSS HPG 7.2.2) */
++#define L2ACDCR_REG 0x580ULL
++#define L2ACDTD_REG 0x581ULL
++#define L2ACDDVMRC_REG 0x584ULL
++#define L2ACDSSCR_REG 0x589ULL
++#define ACDTD_VAL 0x00006A11
++#define ACDCR_VAL 0x002C5FFD
++#define ACDSSCR_VAL 0x00000601
++#define ACDDVMRC_VAL 0x000E0F0F
++
++static DEFINE_SPINLOCK(acd_lock);
++
++static void qcom_cpu_clk_msm8996_acd_init(void)
++{
++	u64 hwid;
++	unsigned long flags;
++
++	spin_lock_irqsave(&acd_lock, flags);
++
++	hwid = read_cpuid_mpidr() & CPU_AFINITY_MASK;
++
++	/* Program ACD Tunable-Length Delay (TLD) */
++	set_l2_indirect_reg(L2ACDTD_REG, ACDTD_VAL);
++	/* Initial ACD for *this* cluster */
++	set_l2_indirect_reg(L2ACDDVMRC_REG, ACDDVMRC_VAL);
++	/* Program ACD soft start control bits. */
++	set_l2_indirect_reg(L2ACDSSCR_REG, ACDSSCR_VAL);
++
++	if (PWRCL_CPU_REG_MASK == (hwid | PWRCL_CPU_REG_MASK)) {
++		/* Enable Soft Stop/Start */
++		if (vbases[APC_BASE])
++			writel_relaxed(SSSCTL_VAL, vbases[APC_BASE] +
++					PWRCL_REG_OFFSET + SSSCTL_OFFSET);
++		/* Ensure SSSCTL config goes through before enabling ACD. */
++		mb();
++		/* Program ACD control bits */
++		set_l2_indirect_reg(L2ACDCR_REG, ACDCR_VAL);
++	}
++	if (PERFCL_CPU_REG_MASK == (hwid | PERFCL_CPU_REG_MASK)) { //else {
++		/* Program ACD control bits */
++		set_l2_indirect_reg(L2ACDCR_REG, ACDCR_VAL);
++		/* Enable Soft Stop/Start */
++		if (vbases[APC_BASE])
++			writel_relaxed(SSSCTL_VAL, vbases[APC_BASE] +
++					PERFCL_REG_OFFSET + SSSCTL_OFFSET);
++		/* Ensure SSSCTL config goes through before enabling ACD. */
++		mb();
++	}
++
++	spin_unlock_irqrestore(&acd_lock, flags);
++}
++
+ static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+-	void __iomem *base;
+ 	struct resource *res;
+ 	struct regmap *regmap_cpu;
+ 	struct clk_hw_clks *hws;
+@@ -393,17 +482,17 @@ static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	hws = devm_kzalloc(dev, sizeof(*hws) + 2 * sizeof(struct clk_hw *),
++	hws = devm_kzalloc(dev, sizeof(*hws) + 4 * sizeof(struct clk_hw *),
+ 			   GFP_KERNEL);
+ 	if (!hws)
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(base))
+-		return PTR_ERR(base);
++	vbases[APC_BASE] = devm_ioremap_resource(dev, res);
++	if (IS_ERR(vbases[APC_BASE]))
++		return PTR_ERR(vbases[APC_BASE]);
+ 
+-	regmap_cpu = devm_regmap_init_mmio(dev, base,
++	regmap_cpu = devm_regmap_init_mmio(dev, vbases[APC_BASE],
+ 					   &cpu_msm8996_regmap_config);
+ 	if (IS_ERR(regmap_cpu))
+ 		return PTR_ERR(regmap_cpu);
+@@ -411,6 +500,7 @@ static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
+ 	ret = qcom_cpu_clk_msm8996_register_clks(dev, hws, regmap_cpu);
+ 	if (ret)
+ 		return ret;
++	qcom_cpu_clk_msm8996_acd_init();
+ 
+ 	data->hws[0] = &pwrcl_pmux.clkr.hw;
+ 	data->hws[1] = &perfcl_pmux.clkr.hw;
 -- 
 1.9.1
 
