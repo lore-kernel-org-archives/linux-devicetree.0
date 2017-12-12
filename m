@@ -1,116 +1,126 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v3 1/3] Bluetooth: hci_ll: add support for setting public address
-Date: Tue, 12 Dec 2017 15:59:16 -0600
-Message-ID: <1513115958-23761-2-git-send-email-david@lechnology.com>
+Subject: [PATCH] Bluetooth: hci_ll: Add optional nvmem BD address source
+Date: Tue, 12 Dec 2017 15:59:18 -0600
+Message-ID: <1513115958-23761-4-git-send-email-david@lechnology.com>
 References: <1513115958-23761-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1513115958-23761-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
 Cc: David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for setting the public address on Texas Instruments
-Bluetooth chips using a vendor-specific command.
+This adds an optional nvmem consumer to get a BD address from an external
+source. The BD address is then set in the Bluetooth chip after the
+firmware has been loaded.
 
-This has been tested on a CC2560A chip. The TI wiki also indicates that
-this command should work on TI WL17xx/WL18xx Bluetooth chips.
-
-During review, there was some question as to the correctness of the byte
-swapping since TI's documentation is not clear on this matter. This can
-be tested with the btmgmt utility from bluez. The adapter must be powered
-off to change the address. If the baswap() is omitted, address is reversed.
-
-In case there is a issue in the future, here is the output of btmon during
-the command `btmgmt public-addr 00:11:22:33:44:55`:
-
-Bluetooth monitor ver 5.43
-= Note: Linux version 4.15.0-rc2-08561-gcb132a1-dirty (armv5tejl)      0.707043
-= Note: Bluetooth subsystem version 2.22                               0.707091
-= New Index: 00:17:E7:BD:1C:8E (Primary,UART,hci0)              [hci0] 0.707106
-@ MGMT Open: btmgmt (privileged) version 1.14                 {0x0002} 0.707124
-@ MGMT Open: bluetoothd (privileged) version 1.14             {0x0001} 0.707137
-@ MGMT Open: btmon (privileged) version 1.14                  {0x0003} 0.707540
-@ MGMT Command: Set Public Address (0x0039) plen 6    {0x0002} [hci0] 11.167991
-        Address: 00:11:22:33:44:55 (CIMSYS Inc)
-@ MGMT Event: Command Complete (0x0001) plen 7        {0x0002} [hci0] 11.175681
-      Set Public Address (0x0039) plen 4
-        Status: Success (0x00)
-        Missing options: 0x00000000
-@ MGMT Event: Index Removed (0x0005) plen 0           {0x0003} [hci0] 11.175757
-@ MGMT Event: Index Removed (0x0005) plen 0           {0x0002} [hci0] 11.175757
-@ MGMT Event: Index Removed (0x0005) plen 0           {0x0001} [hci0] 11.175757
-= Open Index: 00:17:E7:BD:1C:8E                                [hci0] 11.176807
-< HCI Command: Vendor (0x3f|0x0006) plen 6                     [hci0] 11.176975
-        00 11 22 33 44 55                                .."3DU
-> HCI Event: Command Complete (0x0e) plen 4                    [hci0] 11.188260
-      Vendor (0x3f|0x0006) ncmd 1
-        Status: Success (0x00)
-...
-< HCI Command: Read Local Version Info.. (0x04|0x0001) plen 0  [hci0] 11.189859
-> HCI Event: Command Complete (0x0e) plen 12                   [hci0] 11.190732
-      Read Local Version Information (0x04|0x0001) ncmd 1
-        Status: Success (0x00)
-        HCI version: Bluetooth 2.1 (0x04) - Revision 0 (0x0000)
-        LMP version: Bluetooth 2.1 (0x04) - Subversion 6431 (0x191f)
-        Manufacturer: Texas Instruments Inc. (13)
-< HCI Command: Read BD ADDR (0x04|0x0009) plen 0               [hci0] 11.191027
-> HCI Event: Command Complete (0x0e) plen 10                   [hci0] 11.192101
-      Read BD ADDR (0x04|0x0009) ncmd 1
-        Status: Success (0x00)
-        Address: 00:11:22:33:44:55 (CIMSYS Inc)
-...
+This has been tested working with a TI CC2560A chip (in a LEGO MINDSTORMS
+EV3).
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
- drivers/bluetooth/hci_ll.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/bluetooth/hci_ll.c | 61 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
 diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
-index efcfbe9..c948e8d 100644
+index c948e8d..ed042ae 100644
 --- a/drivers/bluetooth/hci_ll.c
 +++ b/drivers/bluetooth/hci_ll.c
-@@ -57,6 +57,7 @@
+@@ -53,6 +53,7 @@
+ #include <net/bluetooth/bluetooth.h>
+ #include <net/bluetooth/hci_core.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/nvmem-consumer.h>
+ 
  #include "hci_uart.h"
  
- /* Vendor-specific HCI commands */
-+#define HCI_VS_WRITE_BD_ADDR			0xfc06
- #define HCI_VS_UPDATE_UART_HCI_BAUDRATE		0xff36
+@@ -90,6 +91,7 @@ struct ll_device {
+ 	struct serdev_device *serdev;
+ 	struct gpio_desc *enable_gpio;
+ 	struct clk *ext_clk;
++	bdaddr_t bdaddr;
+ };
  
- /* HCILL commands */
-@@ -662,6 +663,24 @@ static int download_firmware(struct ll_device *lldev)
- 	return err;
+ struct ll_struct {
+@@ -719,6 +721,18 @@ static int ll_setup(struct hci_uart *hu)
+ 	if (err)
+ 		return err;
+ 
++	/* Set BD address if one was specified at probe */
++	if (!bacmp(&lldev->bdaddr, BDADDR_NONE)) {
++		/* This means that there was an error getting the BD address
++		 * during probe, so mark the device as having a bad address.
++		 */
++		set_bit(HCI_QUIRK_INVALID_BDADDR, &hu->hdev->quirks);
++	} else if (bacmp(&lldev->bdaddr, BDADDR_ANY)) {
++		err = ll_set_bdaddr(hu->hdev, &lldev->bdaddr);
++		if (err)
++			set_bit(HCI_QUIRK_INVALID_BDADDR, &hu->hdev->quirks);
++	}
++
+ 	/* Operational speed if any */
+ 	if (hu->oper_speed)
+ 		speed = hu->oper_speed;
+@@ -749,6 +763,7 @@ static int hci_ti_probe(struct serdev_device *serdev)
+ {
+ 	struct hci_uart *hu;
+ 	struct ll_device *lldev;
++	struct nvmem_cell *bdaddr_cell;
+ 	u32 max_speed = 3000000;
+ 
+ 	lldev = devm_kzalloc(&serdev->dev, sizeof(struct ll_device), GFP_KERNEL);
+@@ -770,6 +785,52 @@ static int hci_ti_probe(struct serdev_device *serdev)
+ 	of_property_read_u32(serdev->dev.of_node, "max-speed", &max_speed);
+ 	hci_uart_set_speeds(hu, 115200, max_speed);
+ 
++	/* optional BD address from nvram */
++	bdaddr_cell = nvmem_cell_get(&serdev->dev, "bd-address");
++	if (IS_ERR(bdaddr_cell)) {
++		int err = PTR_ERR(bdaddr_cell);
++
++		if (err == -EPROBE_DEFER)
++			return err;
++
++		/* ENOENT means there is no matching nvmem cell and ENOSYS
++		 * means that nvmem is not enabled in the kernel configuration.
++		 */
++		if (err != -ENOENT && err != -ENOSYS) {
++			/* If there was some other error, give userspace a
++			 * chance to fix the problem instead of failing to load
++			 * the driver. Using BDADDR_NONE as a flag that is
++			 * tested later in the setup function.
++			 */
++			dev_warn(&serdev->dev,
++				 "Failed to get \"bd-address\" nvmem cell (%d)\n",
++				 err);
++			bacpy(&lldev->bdaddr, BDADDR_NONE);
++		}
++	} else {
++		bdaddr_t *bdaddr;
++		int len;
++
++		bdaddr = nvmem_cell_read(bdaddr_cell, &len);
++		nvmem_cell_put(bdaddr_cell);
++		if (IS_ERR(bdaddr)) {
++			dev_err(&serdev->dev, "Failed to read nvmem bd-address\n");
++			return PTR_ERR(bdaddr);
++		}
++		if (len != sizeof(bdaddr_t)) {
++			dev_err(&serdev->dev, "Invalid nvmem bd-address length\n");
++			kfree(bdaddr);
++			return -EINVAL;
++		}
++
++		/* As per the device tree bindings, the value from nvmem is
++		 * expected to be MSB first, but in the kernel it is expected
++		 * that bdaddr_t is LSB first.
++		 */
++		baswap(&lldev->bdaddr, bdaddr);
++		kfree(bdaddr);
++	}
++
+ 	return hci_uart_register_device(hu, &llp);
  }
  
-+static int ll_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
-+{
-+	bdaddr_t bdaddr_swapped;
-+	struct sk_buff *skb;
-+
-+	/* HCI_VS_WRITE_BD_ADDR (at least on a CC2560A chip) expects the BD
-+	 * address to be MSB first, but bdaddr_t has the convention of being
-+	 * LSB first.
-+	 */
-+	baswap(&bdaddr_swapped, bdaddr);
-+	skb = __hci_cmd_sync(hdev, HCI_VS_WRITE_BD_ADDR, sizeof(bdaddr_t),
-+			     &bdaddr_swapped, HCI_INIT_TIMEOUT);
-+	if (!IS_ERR(skb))
-+		kfree_skb(skb);
-+
-+	return PTR_ERR_OR_ZERO(skb);
-+}
-+
- static int ll_setup(struct hci_uart *hu)
- {
- 	int err, retry = 3;
-@@ -674,6 +693,8 @@ static int ll_setup(struct hci_uart *hu)
- 
- 	lldev = serdev_device_get_drvdata(serdev);
- 
-+	hu->hdev->set_bdaddr = ll_set_bdaddr;
-+
- 	serdev_device_set_flow_control(serdev, true);
- 
- 	do {
 -- 
 2.7.4
