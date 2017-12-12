@@ -1,33 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: Add optional nvmem BD address
- bindings to ti,wlink-st
-Date: Tue, 12 Dec 2017 14:09:31 -0600
-Message-ID: <20171212200931.mnlmdwimu4ldmzin@rob-hp-laptop>
-References: <1512701860-8321-1-git-send-email-david@lechnology.com>
- <1512701860-8321-3-git-send-email-david@lechnology.com>
+Subject: Re: [PATCH v3 29/33] dt-bindings: nds32 CPU Bindings
+Date: Tue, 12 Dec 2017 14:10:41 -0600
+Message-ID: <20171212201041.zqapomt7kdte2qvt@rob-hp-laptop>
+References: <cover.1512723245.git.green.hu@gmail.com>
+ <b082ead87b647f6f0797e51d3ceeaf6c87038dd1.1512723245.git.green.hu@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1512701860-8321-3-git-send-email-david@lechnology.com>
+In-Reply-To: <b082ead87b647f6f0797e51d3ceeaf6c87038dd1.1512723245.git.green.hu@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, Vincent Chen <vincentc@andestech.com>, Rick Chen <rick@andestech.com>, Zong Li <zong@andestech.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 07, 2017 at 08:57:39PM -0600, David Lechner wrote:
-> This adds optional nvmem consumer properties to the ti,wlink-st device tree
-> bindings to allow specifying the BD address.
+On Fri, Dec 08, 2017 at 05:12:12PM +0800, Greentime Hu wrote:
+> From: Greentime Hu <greentime@andestech.com>
 > 
-> Signed-off-by: David Lechner <david@lechnology.com>
+> This patch adds nds32 CPU binding documents.
+> 
+> Signed-off-by: Vincent Chen <vincentc@andestech.com>
+> Signed-off-by: Rick Chen <rick@andestech.com>
+> Signed-off-by: Zong Li <zong@andestech.com>
+> Signed-off-by: Greentime Hu <greentime@andestech.com>
 > ---
-> 
-> v2 changes:
-> * Renamed "mac-address" to "bd-address"
-> * Fixed typos in example
-> * Specify byte order of "bd-address"
-> 
->  Documentation/devicetree/bindings/net/ti,wilink-st.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  Documentation/devicetree/bindings/nds32/cpus.txt |   37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nds32/cpus.txt
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>                  
