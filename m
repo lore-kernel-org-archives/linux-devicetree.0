@@ -1,89 +1,49 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 1/4] ASoC: sun4i-i2s: Add support for A83T
-Date: Tue, 12 Dec 2017 16:11:45 +0800
-Message-ID: <20171212081148.9194-2-wens@csie.org>
-References: <20171212081148.9194-1-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171212081148.9194-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Marcus Cooper <codekipper@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: allwinner: a64: a64-olinuxino: add
+ usb otg
+Date: Tue, 12 Dec 2017 09:13:35 +0100
+Message-ID: <20171212081335.3qkqcofdbcfuu5zh@flea.lan>
+References: <1513058169-25516-1-git-send-email-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hybcbj6trq75d25x"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF5AX3IQKGQEL36EYYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1513058169-25516-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The I2S controller in the A83T is mostly compatible with the one found
-in earlier SoCs such as the A20 and A31. While the documents publicly
-available for the A83T do not cover this hardware, the officially
-released BSP kernel does have register definitions for it. These were
-matched against the A20 user manual. The only difference is the TX FIFO
-and interrupt status registers have been swapped around, like what we
-have seen with the SPDIF controller.
 
-This patch adds support for this hardware.
+--hybcbj6trq75d25x
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- .../devicetree/bindings/sound/sun4i-i2s.txt         |  2 ++
- sound/soc/sunxi/sun4i-i2s.c                         | 21 +++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-index 05d7135a8d2f..b9d50d6cdef3 100644
---- a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
-@@ -8,6 +8,7 @@ Required properties:
- - compatible: should be one of the following:
-    - "allwinner,sun4i-a10-i2s"
-    - "allwinner,sun6i-a31-i2s"
-+   - "allwinner,sun8i-a83t-i2s"
-    - "allwinner,sun8i-h3-i2s"
- - reg: physical base address of the controller and length of memory mapped
-   region.
-@@ -23,6 +24,7 @@ Required properties:
- 
- Required properties for the following compatibles:
- 	- "allwinner,sun6i-a31-i2s"
-+	- "allwinner,sun8i-a83t-i2s"
- 	- "allwinner,sun8i-h3-i2s"
- - resets: phandle to the reset line for this codec
- 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index bc147e2dcff5..dca1143c1150 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -921,6 +921,23 @@ static const struct sun4i_i2s_quirks sun6i_a31_i2s_quirks = {
- 	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
- };
- 
-+static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
-+	.has_reset		= true,
-+	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
-+	.sun4i_i2s_regmap	= &sun4i_i2s_regmap_config,
-+	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 7, 7),
-+	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 2, 3),
-+	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 5),
-+	.field_fmt_bclk		= REG_FIELD(SUN4I_I2S_FMT0_REG, 6, 6),
-+	.field_fmt_lrclk	= REG_FIELD(SUN4I_I2S_FMT0_REG, 7, 7),
-+	.has_slave_select_bit	= true,
-+	.field_fmt_mode		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 1),
-+	.field_txchanmap	= REG_FIELD(SUN4I_I2S_TX_CHAN_MAP_REG, 0, 31),
-+	.field_rxchanmap	= REG_FIELD(SUN4I_I2S_RX_CHAN_MAP_REG, 0, 31),
-+	.field_txchansel	= REG_FIELD(SUN4I_I2S_TX_CHAN_SEL_REG, 0, 2),
-+	.field_rxchansel	= REG_FIELD(SUN4I_I2S_RX_CHAN_SEL_REG, 0, 2),
-+};
-+
- static const struct sun4i_i2s_quirks sun8i_h3_i2s_quirks = {
- 	.has_reset		= true,
- 	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
-@@ -1144,6 +1161,10 @@ static const struct of_device_id sun4i_i2s_match[] = {
- 		.compatible = "allwinner,sun6i-a31-i2s",
- 		.data = &sun6i_a31_i2s_quirks,
- 	},
-+	{
-+		.compatible = "allwinner,sun8i-a83t-i2s",
-+		.data = &sun8i_a83t_i2s_quirks,
-+	},
- 	{
- 		.compatible = "allwinner,sun8i-h3-i2s",
- 		.data = &sun8i_h3_i2s_quirks,
+On Tue, Dec 12, 2017 at 11:26:09AM +0530, Jagan Teki wrote:
+> Add usb otg support for a64-olinuxino board,
+> - USB0-ID connected with PH9
+> - USB0-VBUSDET connected with PH6
+> - USB-DRVVBUS controlled by N_VBUSEN pin from PMIC
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+
+How was this tested? Did you test the OTG part, or only the peripheral
+part?
+
+Maxime
+
 -- 
-2.15.0
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--hybcbj6trq75d25x--
