@@ -1,52 +1,66 @@
-From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Subject: Re: [PATCH net-next v5 2/2] net: ethernet: socionext: add AVE
- ethernet driver
-Date: Tue, 12 Dec 2017 10:14:56 +0100
-Message-ID: <CAOFm3uF65yY3zEfTzM888z2Se24uHyoWi8iy9eBn-x_SP8=kwA@mail.gmail.com>
-References: <1512979049-15930-3-git-send-email-hayashi.kunihiko@socionext.com>
- <CAOFm3uELNTgenR91-QGL1QQ08zA0N0rQbH4hzCzFKtRw6TckLw@mail.gmail.com>
- <20171211210455.170A.4A936039@socionext.com> <CAA93ih2i+G2uyL8O-4F1juR1DpUYCd1U1dBCRRM5Xdd3L-m95g@mail.gmail.com>
- <20171211134627.GU10595@n2100.armlinux.org.uk> <CAA93ih0C-aMpFAhU+5x6P=QjiOVRPZ0UL1wyKh1oeXzC8UjPXQ@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] clocksource: sprd: Add timer driver for Spreadtrum
+ SC9860 platform
+Date: Tue, 12 Dec 2017 10:16:32 +0100
+Message-ID: <3c1da7bb-a380-072f-957d-221a6f177217@linaro.org>
+References: <1b80566bd849d68b0fc8de54ecbbc7b4efbb1077.1512708743.git.baolin.wang@spreadtrum.com>
+ <c85f55a434efada592c50f46c0d0532fdb5340b0.1512708743.git.baolin.wang@spreadtrum.com>
+ <05f19500-f8a3-7afc-a8d9-bcf0aff3e6bc@linaro.org>
+ <CAMz4ku+10jTXe4bykByO_iLM33ACTu9jSnrX=i66MD3F79w9dQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAA93ih0C-aMpFAhU+5x6P=QjiOVRPZ0UL1wyKh1oeXzC8UjPXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAMz4ku+10jTXe4bykByO_iLM33ACTu9jSnrX=i66MD3F79w9dQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux kernel mailing list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Masami-san,
 
-On Tue, Dec 12, 2017 at 3:29 AM, Masami Hiramatsu
-<masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-[...]
-> Then what I'm considering is copyright notice lines. Those are usually
-> treat as the header lines, not single line. So
->
->> +// SDPX-License-Identifier: GPL-2.0
->> +// sni_ave.c - Socionext UniPhier AVE ethernet driver
->> +// Copyright 2014 Panasonic Corporation
->> +// Copyright 2015-2017 Socionext Inc.
->
-> is acceptable? or should we keep C-style header lines for new drivers?
->
->> +// SDPX-License-Identifier: GPL-2.0
->> +/*
->> + * sni_ave.c - Socionext UniPhier AVE ethernet driver
->> + * Copyright 2014 Panasonic Corporation
->> + * Copyright 2015-2017 Socionext Inc.
->> + */
->
-> I just concern that those lines are not "single". that's all. :)
+Hi Baolin,
 
-My voice carries the weight of a down feather in this discussion and
-to me the benefit of the first form is that you have removed two
-lines. Both forms work fine.
+
+On 08/12/2017 09:20, Baolin Wang wrote:
+
+[ ... ]
+
+>>> +static irqreturn_t sprd_timer_interrupt(int irq, void *dev_id)
+>>> +{
+>>> +     struct clock_event_device *ce = (struct clock_event_device *)dev_id;
+>>> +     struct timer_of *to = to_timer_of(ce);
+>>> +
+>>> +     sprd_timer_clear_interrupt(timer_of_base(to));
+>>> +
+>>> +     if (clockevent_state_oneshot(ce))
+>>> +             sprd_timer_disable(timer_of_base(to));
+>>> +
+>>> +     ce->event_handler(ce);
+>>> +     return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static struct timer_of to = {
+>>> +     .flags = TIMER_OF_IRQ | TIMER_OF_BASE,
+>>
+>> Why not the TIMER_OF_CLOCK ?
+> 
+> The timer's clock is fixed to 32.768K and no need to divide the
+> frequency, so our clock tree does not supply the timer's clock now.
+
+The driver is fine. However, I would like to unify the clk usage in the
+timer driver, so if you refer to a clock so the TIMER_OF_CLOCK can be
+used, that will nice.
+
+
 
 -- 
-Cordially
-Philippe Ombredanne
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
