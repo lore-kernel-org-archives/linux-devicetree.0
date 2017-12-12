@@ -1,132 +1,64 @@
-From: Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: sunxi: Disable strict mode for
- H5 driver
-Date: Tue, 12 Dec 2017 10:35:16 +0000
-Message-ID: <CAP03XeoHGhN84WUXkBpmGEYiLVM-JZj_NBuQgO84sSzLa1acbw@mail.gmail.com>
-References: <20171125120200.23294-1-andre.przywara@arm.com>
- <20171125120200.23294-3-andre.przywara@arm.com> <CACRpkdZX5U=JoQFS+X96+F68yVSZbnCZpgNfAnvfJGxZ9moi8A@mail.gmail.com>
- <3ef7cfa4-cc1a-f24b-0013-f36db82781e5@arm.com> <CACRpkdaa0rMxaMseTxXryV7=AhWDQgsO_ZGTj-zGzaqBLFp5sw@mail.gmail.com>
-Reply-To: obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?utf-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Subject: Re: [PATCH v3 3/3] ARM: dts: exynos: Add nodes for True Random
+ Number Generator
+Date: Tue, 12 Dec 2017 11:35:56 +0100
+Message-ID: <87k1xs6xo3.fsf%l.stelmach@samsung.com>
+References: <20171211184913.n67q7vbv2gzknjeb@kozik-lap>
+        <CGME20171212103557eucas1p202966a9335d52149ce69ef122f1758d8@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/alternative; boundary="94eb2c1a6580edb3a405602234a4"
-Return-path: <linux-sunxi+bncBCVP56HU4ELBBZPBX3IQKGQEJZHWTJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CACRpkdaa0rMxaMseTxXryV7=AhWDQgsO_ZGTj-zGzaqBLFp5sw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20171211184913.n67q7vbv2gzknjeb@kozik-lap>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "Andrew F . Davis" <afd@ti.com>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---94eb2c1a6580edb3a405602234a4
-Content-Type: text/plain; charset="UTF-8"
-
-Excellent, thanks Linus.  The new DTS files are not in mainline, but this
-can wait ;-)
-
-
-Cheers!
-
-On 12 December 2017 at 08:52, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-wrote:
-
-> On Thu, Nov 30, 2017 at 5:07 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> wrote:
-> > On 30/11/17 15:51, Linus Walleij wrote:
-> >> On Sat, Nov 25, 2017 at 1:02 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> wrote:
-> >>
-> >>> All of the H5 boards in the kernel reference the MMC0 CD pin twice in
-> >>> their DT, so strict mode will make the MMC driver fail to load.
-> >>> To keep existing DTs working, disable strict mode in the H5 driver.
-> >>>
-> >>> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> >>> Reported-by: Chris Obbard <obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>
-> >> Patch applied with Maxime's ACK.
-> >
-> > Thanks for that (also to Maxime and Chen-Yu) and the smooth handling!
-> >
-> > Sorry, I just see that I didn't point this out explicitly, but this is
-> > to fix a regression introduced in 4.15-rc1, so is this on a branch that
-> > will be pushed for 4.15-rc, still? (Couldn't find anything quickly on
-> > kernel.org)
->
-> Should be upstream as:
-> commit 07c43a382d7de3db01cc28bf2e17ed151cde2046
->
-> Yours,
-> Linus Walleij
->
-
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---94eb2c1a6580edb3a405602234a4
-Content-Type: text/html; charset="UTF-8"
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>Excellent, thanks Linus.=C2=A0 The new DTS files are =
-not in mainline, but this can wait=C2=A0;-)</div><div><br></div><div><br></=
-div><div>Cheers!</div></div><div class=3D"gmail_extra"><br><div class=3D"gm=
-ail_quote">On 12 December 2017 at 08:52, Linus Walleij <span dir=3D"ltr">&l=
-t;<a href=3D"mailto:linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" target=3D"_blank">linus.walle=
-ij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">On Th=
-u, Nov 30, 2017 at 5:07 PM, Andre Przywara &lt;<a href=3D"mailto:andre.przy=
-wara-5wv7dgnIgG8@public.gmane.org">andre.przywara-5wv7dgnIgG8@public.gmane.org</a>&gt; wrote:<br>
-&gt; On 30/11/17 15:51, Linus Walleij wrote:<br>
-&gt;&gt; On Sat, Nov 25, 2017 at 1:02 PM, Andre Przywara &lt;<a href=3D"mai=
-lto:andre.przywara-5wv7dgnIgG8@public.gmane.org">andre.przywara-5wv7dgnIgG8@public.gmane.org</a>&gt; wrote:<br>
-&gt;&gt;<br>
-&gt;&gt;&gt; All of the H5 boards in the kernel reference the MMC0 CD pin t=
-wice in<br>
-&gt;&gt;&gt; their DT, so strict mode will make the MMC driver fail to load=
-.<br>
-&gt;&gt;&gt; To keep existing DTs working, disable strict mode in the H5 dr=
-iver.<br>
-&gt;&gt;&gt;<br>
-&gt;&gt;&gt; Signed-off-by: Andre Przywara &lt;<a href=3D"mailto:andre.przy=
-wara-5wv7dgnIgG8@public.gmane.org">andre.przywara-5wv7dgnIgG8@public.gmane.org</a>&gt;<br>
-&gt;&gt;&gt; Reported-by: Chris Obbard &lt;<a href=3D"mailto:obbardc@gmail.=
-com">obbardc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>&gt;<br>
-&gt;&gt;<br>
-&gt;&gt; Patch applied with Maxime&#39;s ACK.<br>
-&gt;<br>
-&gt; Thanks for that (also to Maxime and Chen-Yu) and the smooth handling!<=
-br>
-&gt;<br>
-&gt; Sorry, I just see that I didn&#39;t point this out explicitly, but thi=
-s is<br>
-&gt; to fix a regression introduced in 4.15-rc1, so is this on a branch tha=
-t<br>
-&gt; will be pushed for 4.15-rc, still? (Couldn&#39;t find anything quickly=
- on<br>
-&gt; <a href=3D"http://kernel.org" target=3D"_blank" rel=3D"noreferrer">ker=
-nel.org</a>)<br>
-<br>
-Should be upstream as:<br>
-commit 07c43a382d7de3db01cc28bf2e17ed<wbr>151cde2046<br>
-<br>
-Yours,<br>
-Linus Walleij<br>
-</blockquote></div><br></div>
+It was <2017-12-11 pon 19:49>, when Krzysztof Kozlowski wrote:
+> On Mon, Dec 04, 2017 at 01:53:51PM +0100, =C5=81ukasz Stelmach wrote:
+>> Add nodes for the True Random Number Generator found in Samsung Exynos
+>> 5250+ SoCs.
+>>=20
+>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos5.dtsi    | 5 +++++
+>>  arch/arm/boot/dts/exynos5250.dtsi | 5 +++++
+>>  arch/arm/boot/dts/exynos5410.dtsi | 5 +++++
+>>  arch/arm/boot/dts/exynos5420.dtsi | 5 +++++
+>>  4 files changed, 20 insertions(+)
+>>
+>
+> Unfortunately the same story as with your PRNG patch - does not apply on
+> top of my next/dt (after taking PRNG). Also did not apply on v4.15-rc1 +
+> PRNG.
+>
+> Could you rebase on my next/dt?
 
-<p></p>
+Sure. Should I send it as along with the other two patches, if there were
+no changes in them since?
 
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
---94eb2c1a6580edb3a405602234a4--
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQEcBAEBCAAGBQJaL7EMAAoJELCuHpyYpYAQm8gH/1fXvDs208U1zfesgTY1okfO
+HD7Gzp8aRLP3s99nD89fncOtjp21EfC+uDPFlbtR9q1rkNs95USfzMj+1axGBnJb
+sp2/VKDaGAY6Pa/nV3y42fIR0U1jBghMoUO//Vu8VPUgJVFCeWk6o7cq/aJB9oqW
+LtJn2tmNlEclRRDe0hKJuX/b3TSAQKOjwlfpFtQpO/U4NIOrbpn3UOO1e/SEADNK
+DYJa25df21/mGmZAUpT6f5D+DSj8CnlDsDO2k0JyWPUUcpVo39it42cVeiY7p9x1
+hx+xke5oIa2tWL6ehxec0NXDibKQ+FwVSVzk1aGsPhmSSUOyfFLif/78vPmW1mQ=
+=PWl1
+-----END PGP SIGNATURE-----
+--=-=-=--
