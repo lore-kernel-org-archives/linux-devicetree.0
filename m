@@ -1,94 +1,90 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2] ARM: dts: exynos: Enable Mixer node for Exynos5800
- Peach Pi machine
-Date: Tue, 12 Dec 2017 11:55:09 +0100
-Message-ID: <1bbedec6-6250-f02a-bf9a-4b9849833de2@samsung.com>
-References: <20171212074208.30753-1-javierm@redhat.com>
-        <CAJKOXPc1rJCWABXUuyU2MKxnLY-MptrM9Mm0HyHVCJn870R+sg@mail.gmail.com>
-        <CGME20171212100905epcas5p35a40946af3936f2020b4cabb6ee2cc95@epcas5p3.samsung.com>
-        <CAJKOXPc1_n2cdgjuFbA9jNdcSXxfr8Zjf=fUx_jt_N3+LP0n8A@mail.gmail.com>
-        <a42670aa-b3df-7a53-8ed2-f3acd97fd0d4@samsung.com>
-        <ad03e2a8-00eb-464e-6983-374f83b9abf5@collabora.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V3 0/2] Tegra PCIe end point config space map code
+ refactoring
+Date: Tue, 12 Dec 2017 11:01:58 +0000
+Message-ID: <20171212110158.GA30601@e107981-ln.cambridge.arm.com>
+References: <1512410030-21038-1-git-send-email-vidyas@nvidia.com>
+ <20171211105431.GI10671@ulmo>
+ <20171211175452.GC16032@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <ad03e2a8-00eb-464e-6983-374f83b9abf5@collabora.com>
-Content-language: en-US
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Guillaume Tucker <guillaume.tucker@collabora.com>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javierm@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Shuah Khan <shuahkh@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171211175452.GC16032-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vidya Sagar <vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guillaume,
+On Mon, Dec 11, 2017 at 11:54:53AM -0600, Bjorn Helgaas wrote:
+> [+cc Lorenzo]
+> 
+> On Mon, Dec 11, 2017 at 11:54:31AM +0100, Thierry Reding wrote:
+> > On Mon, Dec 04, 2017 at 11:23:48PM +0530, Vidya Sagar wrote:
+> > > PCIe host controller in Tegra SoCs has 1GB of aperture available
+> > > for mapping end points config space, IO and BARs. In that, currently
+> > > 256MB is being reserved for mapping end points configuration space
+> > > which leaves less memory space available for mapping end points BARs
+> > > on some of the platforms.
+> > > This patch series attempts to map only 4K space from 1GB aperture to
+> > > access end points configuration space.
+> > > 
+> > > Currently, this change can benefit T20 and T186 in saving (i.e. repurposed
+> > > to use for BAR mapping) physical space as well as kernel virtual mapping space,
+> > > it saves only kernel virtual address space in T30, T124, T132 and T210.
+> > > 
+> > > NOTE: Since T186 PCIe DT entry is not yet present in main line (it is currently
+> > > merged to 'for-4.15/arm64/dt' branch), nothing gets broken with this change for T186.
+> > > For older platforms (T20, T30, T124, T132, T210), this change works fine without any
+> > > DT modifications
+> > > 
+> > > Testing Done on T124, T210 & T186:
+> > >  Enumeration and basic functionality of immediate devices
+> > >  Enumeration of devices behind a PCIe switch
+> > >  Complete 4K configuration space access
+> > > 
+> > > Vidya Sagar (2):
+> > >   PCI: tegra: refactor config space mapping code
+> > >   ARM64: tegra: limit PCIe config space mapping to 4K for T186
+> > > 
+> > >  arch/arm64/boot/dts/nvidia/tegra186.dtsi |   8 +-
+> > >  drivers/pci/host/pci-tegra.c             | 125 ++++++++++---------------------
+> > >  2 files changed, 44 insertions(+), 89 deletions(-)
+> > 
+> > Hi Bjorn,
+> > 
+> > there's a bunch of PCI related patches for Tegra floating around on the
+> > lists. I'm wondering if you'd be okay if I pick those up into the Tegra
+> > tree after they've been reviewed and send you a pull request later on
+> > (say around v4.15-rc6). That would allow me to get things cooking in
+> > linux-next for a bit and get broader testing in addition to the
+> > flexibility to patch things up if they break.
+> 
+> Lorenzo will be merging the Tegra stuff, so this is more a question
+> for him.
+> 
+> Just to clarify, I think your questions is about putting those patches
+> in
+> git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux.git#for-next.
+> If you put them there they will show up in linux-next, and then when
+> Lorenzo merges them, you'll have to coordinate so they don't get
+> merged into linux-next twice (once via the usual PCI tree route and
+> again via the Tegra tree).
+> 
+> If you wait until after they've been reviewed to put them into the
+> Tegra tree, I'm not sure what the gain is, because I assume Lorenzo
+> would merge them at about that same point.
 
-On 2017-12-12 11:43, Guillaume Tucker wrote:
-> On 12/12/17 10:17, Marek Szyprowski wrote:
->> Hi Krzysztof,
->>
->> On 2017-12-12 11:09, Krzysztof Kozlowski wrote:
->>> On Tue, Dec 12, 2017 at 10:55 AM, Krzysztof Kozlowski 
->>> <krzk@kernel.org> wrote:
->>>> On Tue, Dec 12, 2017 at 8:42 AM, Javier Martinez Canillas
->>>> <javierm@redhat.com> wrote:
->>>>> Commit 1cb686c08d12 ("ARM: dts: exynos: Add status property to 
->>>>> Exynos 542x
->>>>> Mixer nodes") disabled the Mixer node by default in the DTSI and 
->>>>> enabled
->>>>> for each Exynos 542x DTS. But unfortunately it missed to enable it 
->>>>> for the
->>>>> Exynos5800 Peach Pi machine, since the 5800 is also an 542x SoC 
->>>>> variant.
->>>>>
->>>>> Fixes: 1cb686c08d12 ("ARM: dts: exynos: Add status property to 
->>>>> Exynos 542x Mixer nodes")
->>>>> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
->>>>> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>>>>
->>>>> ---
->>>>>
->>>>> Changes in v2:
->>>>> - Remove RFT tag.
->>>> Thanks guys! However I still would like to see a tested-by for this on
->>>> Peach Pi (AFAIU, Marek's only acked the code/solution).
->>> On the other hand I could just apply it for my for-next branch and
->>> we'll see if it fixes kernel-ci boot tests... Not a nice way of
->>> testing but apparently no one has Peach Pi.
->>
->> Frankly, I don't expect that this will solve the boot hang issue on 
->> PeachPi.
->> However it should at least hide the unbalanced regulator issue.
->
-> We have a peach-pi in our LAVA lab so I've tested it and
-> actually, it does fix the hang on v4.15-rc3:
->
->   https://lava.collabora.co.uk/scheduler/job/1019877
->   https://lava.collabora.co.uk/scheduler/job/1019878
->
-> I ran it twice and it booted both times.  I also ran the same
-> boot tests with the same kernel but the dtb from v4.15-rc3
-> without the fix to double check and these failed:
->
->   https://lava.collabora.co.uk/scheduler/job/1019879
->   https://lava.collabora.co.uk/scheduler/job/1019880
->
->
-> Tested-by: Guillaume Tucker <guillaume.tucker@collabora.com>
->
->
-> Thanks for the fix!
+I think that after the review, the Tegra patches that are considered for
+upstream they should go to -next via the PCI tree as any other platform PCI
+patches; the relevant patches need ACKs from the respective platform
+maintainer - I am getting to them as fast as I can.
 
-Well, thanks for the test! It proves that there the boot failure is
-caused by an issue somewhere in the error path of Exynos DRM, Analogix
-DP, Simple Panel or other drivers.
+> This cycle isn't going to be ideal timing with all the holidays
+> coming up.  I know I'm going to be traveling and on vacation quite a
+> bit in the rc5, 6, 7 timeframe.
 
-This patch simply hides it by fixing the source issue of the Exynos
-DRM initialization failure. :-)
+Yes timing is not ideal - I won't be able to review anything in the -rc5
+week either but apart from that I should be online.
 
-I hope Javier will be able to investigate the discussed hang issue
-later, as fixing it is also imho important.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Lorenzo
