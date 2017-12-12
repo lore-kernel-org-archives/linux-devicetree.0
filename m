@@ -1,46 +1,123 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [linux-sunxi] [PATCH v2 3/6] ARM: sun4i: Convert to CCU
-Date: Tue, 12 Dec 2017 13:24:52 -0800
-Message-ID: <CAOi56cUeRrKQnJ-akJPB160-60aBzy64bDgFeoqMpHRJSCnDeQ@mail.gmail.com>
-References: <cover.a58841efb571d44013658505f3fa140536a89d1c.1490545262.git-series.plaes@plaes.org>
- <4357a69da97f46a324eec4c766f4bc9d9e7733ff.1490545262.git-series.plaes@plaes.org>
- <CAOi56cUjqjcZRz6VSwUWcrW=4RQyqyZHtm1vuM3HT2ypdPJ78g@mail.gmail.com> <20171212172635.2utwz3koyo5iwglt@plaes.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 3/6] leds: lp8860: Update the dt parsing for LED
+ labeling
+Date: Tue, 12 Dec 2017 15:27:01 -0600
+Message-ID: <2ea30a5d-d013-1015-3882-a03e4ae540d3@ti.com>
+References: <20171212185809.23880-1-dmurphy@ti.com>
+ <20171212185809.23880-5-dmurphy@ti.com>
+ <f191482b-65a0-1520-8d72-d7626ca1b0b6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171212172635.2utwz3koyo5iwglt@plaes.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Priit Laes <plaes@plaes.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <f191482b-65a0-1520-8d72-d7626ca1b0b6@gmail.com>
+Content-Language: en-US
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 9:26 AM, Priit Laes <plaes@plaes.org> wrote:
-> On Mon, Dec 11, 2017 at 02:22:30PM -0800, Kevin Hilman wrote:
->> On Sun, Mar 26, 2017 at 10:20 AM, Priit Laes <plaes@plaes.org> wrote:
->> > Convert sun4i-a10.dtsi to new CCU driver.
->> >
->> > Signed-off-by: Priit Laes <plaes@plaes.org>
+Jacek
+
+On 12/12/2017 03:13 PM, Jacek Anaszewski wrote:
+> Hi Dan,
+> 
+> Thanks for the patch set.
+> 
+> On 12/12/2017 07:58 PM, Dan Murphy wrote:
+>> Update the DT parsing for the label node so that
+>> the label is retrieved from the device child as
+>> opposed to being part of the parent.
 >>
->> I finally got around to bisecting a mainline boot failure on
->> sun4i-a10-cubieboard that's been happening for quite a while.  Based
->> on on kernelci.org, it showed up sometime during the v4.15 merge
->> window[1].  It bisected down to this commit (in mainline as commit
->> 41193869f2bdb585ce09bfdd16d9482aadd560ad).
+>> This will align this driver with the LED
+>> binding documentation
 >>
->> When it fails, there is no output on the serial console, so I don't
->> know exactly how it's failing, just that it no longer boots.
->
-> We tried out latest 4.15 with various compilers and it works:
-> - gcc version 7.1.1 20170622 (Red Hat Cross 7.1.1-3) (GCC) - A10 Gemei G9 tablet
-> - gcc 7.2.0-debian - A10 Cubieboard
+>> Documentation/devicetree/bindings/leds/common.txt
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>
+>> v3 - Changed the label generation to pull the name from the i2c device id 
+>> as opposed to pulling the id from the parent dt node since that will just be 
+>> led-controller - https://patchwork.kernel.org/patch/10093753/
+>>
+>> v2 - no changes
+>>
+>>  drivers/leds/leds-lp8860.c | 23 ++++++++++++-----------
+>>  1 file changed, 12 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
+>> index 3e70775a2d54..bc432764c99d 100644
+>> --- a/drivers/leds/leds-lp8860.c
+>> +++ b/drivers/leds/leds-lp8860.c
+>> @@ -22,6 +22,7 @@
+>>  #include <linux/of_gpio.h>
+>>  #include <linux/gpio/consumer.h>
+>>  #include <linux/slab.h>
+>> +#include <uapi/linux/uleds.h>
+>>  
+>>  #define LP8860_DISP_CL1_BRT_MSB		0x00
+>>  #define LP8860_DISP_CL1_BRT_LSB		0x01
+>> @@ -86,8 +87,6 @@
+>>  
+>>  #define LP8860_CLEAR_FAULTS		0x01
+>>  
+>> -#define LP8860_DISP_LED_NAME		"display_cluster"
+>> -
+>>  /**
+>>   * struct lp8860_led -
+>>   * @lock - Lock for reading/writing the device
+>> @@ -107,7 +106,7 @@ struct lp8860_led {
+>>  	struct regmap *eeprom_regmap;
+>>  	struct gpio_desc *enable_gpio;
+>>  	struct regulator *regulator;
+>> -	const char *label;
+>> +	char label[LED_MAX_NAME_SIZE];
+>>  };
+>>  
+>>  struct lp8860_eeprom_reg {
+>> @@ -365,19 +364,21 @@ static int lp8860_probe(struct i2c_client *client,
+>>  	int ret;
+>>  	struct lp8860_led *led;
+>>  	struct device_node *np = client->dev.of_node;
+>> +	struct device_node *child_node;
+>> +	const char *name;
+>>  
+>>  	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
+>>  	if (!led)
+>>  		return -ENOMEM;
+>>  
+>> -	led->label = LP8860_DISP_LED_NAME;
+>> -
+>> -	if (client->dev.of_node) {
+>> -		ret = of_property_read_string(np, "label", &led->label);
+>> -		if (ret) {
+>> -			dev_err(&client->dev, "Missing label in dt\n");
+>> -			return -EINVAL;
+>> -		}
+>> +	for_each_available_child_of_node(np, child_node) {
+>> +		ret = of_property_read_string(child_node, "label", &name);
+>> +		if (!ret)
+>> +		    snprintf(led->label, sizeof(led->label), "%s:%s",
+>> +					id->name, name);
+>> +		else
+>> +		    snprintf(led->label, sizeof(led->label),
+>> +			     "%s::display_cluster", id->name);
+> 
+> Here we have the same indentation problem as in case of leds-lm3692x.c
 
-And you can reproduce the bug with gcc5 or gcc6?
+I will fix it up and re-send.
 
-Very strange that a DT only patch would cause a gcc related regression
-and if it does, it should be investigated.  I don't think requiring
-gcc7 is an appropriate solution.
+Dan
 
-@Chen-Yu, @Maxime: are you guys OK with requiring gcc7 for working
-upstream boot for A10?
+> 
+>>  	}
+>>  
+>>  	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
+>>
+> 
 
-Kevin
+
+-- 
+------------------
+Dan Murphy
