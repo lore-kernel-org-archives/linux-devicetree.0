@@ -1,68 +1,60 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 0/4] add support of pinctrl to MT7622 SoC
-Date: Tue, 12 Dec 2017 14:24:17 +0800
-Message-ID: <cover.1513059081.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 4/4] pinctrl: mediatek: update MAINTAINERS entry with
+ MediaTek pinctrl driver
+Date: Tue, 12 Dec 2017 14:24:21 +0800
+Message-ID: <d41feb63ea2ebbfe58f5940ff27b031dd8024b28.1513059082.git.sean.wang@mediatek.com>
+References: <cover.1513059081.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, matthias.bgg@gmail.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <cover.1513059081.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Changes since v1:
-- add changes for the suggestion in v1.
-- fix up the names for pin 14, 15, 71, 72, 93 and 94.
-- add function "watchdog".
-- change pin groups used by ethernet, i2s, led, pcie, spic, tdm
-  and watchdog for refining the naming and reflecting the actual
-  usage on the board.
+I work for MediaTek on maintaining the existing MediaTek SoC whose target
+to home gateway such as MT7622 and MT7623 that is reusing MT2701 related
+files and will keep adding support for the following such kinds of SoCs
+in the future.
 
-The patchset adds support for pinctrl on MT7622 SoC.
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-patch 1: describe the hardware, also including the defintion for pins,
-	 groups and function.
-patch 2: add cleanup for keep drivers inside the independent menu.
-patch 3/4: add support for mt7622 SoC.
-
-The IO core found on the SoC has the registers for pinctrl, pinconf and
-gpio mixed up in the same register range.
-
-However, the IO core for the MT7622 SoC is completely distinct from
-anyone of previous MediaTek SoCs which already had support, such as the
-hardware internal, register address map and register detailed definition
-for each pin.
-
-Therefore, instead, the driver is being newly implemented by reusing
-generic methods provided from the core layer with GENERIC_PINCONF,
-GENERIC_PINCTRL_GROUPS, and GENERIC_PINMUX_FUNCTIONS for the sake of code
-simplicity and avoiding superfluous code. Where the function of pins
-determined by groups is utilized in this driver which can help developers
-less confused with what combinations of pins effective on the SoC and
-even reducing the mistakes during the integration of those relevant
-boards.
-
-As the gpio_chip handling is also only a few lines, the driver also
-implements the gpio functionality directly through GPIOLIB.
-
-Sean Wang (4):
-  dt-bindings: pinctrl: add bindings for MediaTek MT7622 SoC
-  pinctrl: mediatek: cleanup for placing all drivers under the menu
-  pinctrl: mediatek: add pinctrl driver for MT7622 SoC
-  pinctrl: mediatek: update MAINTAINERS entry with MediaTek pinctrl
-    driver
-
- .../devicetree/bindings/pinctrl/pinctrl-mt7622.txt |  351 +++++
- MAINTAINERS                                        |   10 +
- drivers/pinctrl/Makefile                           |    2 +-
- drivers/pinctrl/mediatek/Kconfig                   |   15 +-
- drivers/pinctrl/mediatek/Makefile                  |    3 +-
- drivers/pinctrl/mediatek/pinctrl-mt7622.c          | 1595 ++++++++++++++++++++
- 6 files changed, 1972 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
- create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7622.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aa71ab52f..c0edf30 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10773,6 +10773,16 @@ M:	Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+ S:	Maintained
+ F:	drivers/pinctrl/intel/
+ 
++PIN CONTROLLER - MEDIATEK
++M:	Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++L:	linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
++F:	Documentation/devicetree/bindings/pinctrl/pinctrl-mt7622.txt
++F:	drivers/pinctrl/mediatek/pinctrl-mtk-common.*
++F:	drivers/pinctrl/mediatek/pinctrl-mt2701.c
++F:	drivers/pinctrl/mediatek/pinctrl-mt7622.c
++
+ PIN CONTROLLER - QUALCOMM
+ M:	Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+ S:	Maintained
 -- 
 2.7.4
