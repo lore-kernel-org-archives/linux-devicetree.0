@@ -1,51 +1,29 @@
-From: =?utf-8?B?UGF0cmljayBCcsO8bm4=?= <P.Bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH v2 1/5] dt-bindings: rtc: add bindings for i.MX53 SRTC
-Date: Tue, 12 Dec 2017 05:05:14 +0000
-Message-ID: <3BB206AB2B1BD448954845CE6FF69A8E01CB532561@NT-Mail07.beckhoff.com>
-References: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
- <20171205140646.30367-2-linux-kernel-dev@beckhoff.com>
- <20171206215436.lwttn445wjilh3wo@rob-hp-laptop>
- <3BB206AB2B1BD448954845CE6FF69A8E01CB53233C@NT-Mail07.beckhoff.com>
- <CAOMZO5DoiLW3DxLF=agHua9jO-+LgWA3xw6h7kyj_uot47pkjw@mail.gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V7 0/7] dmaengine: qcom_hidma: add support for bugfixed HW
+Date: Tue, 12 Dec 2017 11:08:45 +0530
+Message-ID: <20171212053845.GB18649@localhost>
+References: <1512681031-11343-1-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5DoiLW3DxLF=agHua9jO-+LgWA3xw6h7kyj_uot47pkjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-dev <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Patrick Bruenn <p.bruenn-QonKdJ6Bx34e+czBwuGJN7NAH6kLmebB@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Juergen Borleis <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Noel Vellemans <Noel.Vellemans-8UENEgx6w+makBO8gow8eQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITE
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1512681031-11343-1-git-send-email-okaya@codeaurora.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, sakari.ailus@linux.intel.com, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PkZyb206IEZhYmlvIEVzdGV2YW0gW21haWx0bzpmZXN0ZXZhbUBnbWFpbC5jb21dDQo+U2VudDog
-RGllbnN0YWcsIDEyLiBEZXplbWJlciAyMDE3IDAwOjA4DQo+SGkgUGF0cmljaywNCj4NCkhpIEZh
-YmlvLA0KPk9uIE1vbiwgRGVjIDExLCAyMDE3IGF0IDU6MDggQU0sIFBhdHJpY2sgQnLDvG5uIDxQ
-LkJydWVubkBiZWNraG9mZi5jb20+DQo+d3JvdGU6DQo+DQo+Pj5ydGNALi4uDQo+Pj4NCj4+IFRo
-ZSBydGMgZm9yIHdoaWNoIHRoaXMgc2VyaWVzIGFkZHMgc3VwcG9ydCBpcyBlbWJlZGRlZCB3aXRo
-aW4gYSBmdW5jdGlvbg0KPmJsb2NrIGNhbGxlZA0KPj4gIlNlY3VyZSBSZWFsIFRpbWUgQ2xvY2si
-LiBUaGlzIGRyaXZlciBkb2Vzbid0IHV0aWxpemUgYWxsIG9mIHRoZSBoYXJkd2FyZQ0KPmZlYXR1
-cmVzIGJ5DQo+PiBub3cuIEJ1dCBtYXliZSBzb21lb25lIGVsc2Ugd2FudHMgdG8gZXh0ZW5kIHRo
-ZSBmdW5jdGlvbmFsaXRpZXMsIGxhdGVyLg0KPj4gRm9yIHRoYXQgcG9zc2liaWxpdHkgSSB3YW50
-ZWQgdG8gbmFtZSB0aGUgbm9kZSAic3J0YyIuIFNob3VsZCBJIHN0aWxsIGNoYW5nZQ0KPnRoaXM/
-DQo+Pg0KPj4gSSBiZWxpZXZlIHlvdSBoYXZlIGEgbXVjaCBiZXR0ZXIgdW5kZXJzdGFuZGluZyBv
-ZiB3aGF0IHNob3VsZCBiZSBkb25lDQo+aGVyZS4gSSBkb24ndA0KPj4gd2FudCB0byBhcmd1ZSB3
-aXRoIHlvdSwganVzdCB0aG91Z2h0IHlvdSBtaWdodCBub3QgaGFkIHRoYXQgaW5mb3JtYXRpb24u
-IFNvDQo+aWYgSSBhbQ0KPj4gd3JvbmcganVzdCB0ZWxsIG1lIGFuZCBJIHdpbGwgY2hhbmdlIGl0
-IHdpdGhvdXQgZnVydGhlciAiY29tcGxhaW5pbmciLg0KPg0KPkZyb20gdGhlIERldmljZXRyZWUg
-U3BlY2lmaWNhdGlvbiBkb2N1bWVudDoNCj4NCj4iR2VuZXJpYyBOYW1lcyBSZWNvbW1lbmRhdGlv
-bg0KPg0KPlRoZSBuYW1lIG9mIGEgbm9kZSBzaG91bGQgYmUgc29tZXdoYXQgZ2VuZXJpYywgcmVm
-bGVjdGluZyB0aGUgZnVuY3Rpb24NCj5vZiB0aGUgZGV2aWNlIGFuZCBub3QgaXRzIHByZWNpc2Ug
-cHJvZ3JhbS0NCj5taW5nIG1vZGVsLiBJZiBhcHByb3ByaWF0ZSwgdGhlIG5hbWUgc2hvdWxkIGJl
-IG9uZSBvZiB0aGUgZm9sbG93aW5nIGNob2ljZXM6DQo+Li4uDQo+cnRjDQo+Ig0KPg0KPlNvIGJl
-dHRlciB1c2UgJ3J0YycgYXMgc3VnZ2VzdGVkIGJ5IFJvYi4NCg0KVGhhbmtzIGZvciB0aGlzIGNs
-YXJpZmljYXRpb24uIEkgd2lsbCB3YWl0IGEgZmV3IGRheXMgZm9yIG1vcmUgY29tbWVudHMgb24g
-dGhlIHJlc3Qgb2YgdGhlIGRyaXZlciBhbmQgdGhlbiBzZW5kIGEgdjQuDQoNClJlZ2FyZHMsIFBh
-dHJpY2sNCkJlY2tob2ZmIEF1dG9tYXRpb24gR21iSCAmIENvLiBLRyB8IE1hbmFnaW5nIERpcmVj
-dG9yOiBEaXBsLiBQaHlzLiBIYW5zIEJlY2tob2ZmDQpSZWdpc3RlcmVkIG9mZmljZTogVmVybCwg
-R2VybWFueSB8IFJlZ2lzdGVyIGNvdXJ0OiBHdWV0ZXJzbG9oIEhSQSA3MDc1DQoNCg0K
+On Thu, Dec 07, 2017 at 04:10:24PM -0500, Sinan Kaya wrote:
+> Introduce new ACPI and OF device ids for thw HW along with the helper
+> functions.
+> 
+> Changes from v6:
+> * add const to the device callback parameter in fwnode.
+> * reorganize the callbacks in the code
+> * rename get_match_data() as device_get_match_data()
+> * place pointer checks into acpi_get_match_data()
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This fails for me at 3rd patch. I am on -rc1 is there a dependency?
+
+-- 
+~Vinod
