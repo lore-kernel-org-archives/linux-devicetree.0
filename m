@@ -1,50 +1,98 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC 0/5] Add I3C subsystem
-Date: Tue, 12 Dec 2017 23:01:45 +0100
-Message-ID: <20171212220145.4ycef2rxxnnecgx5@ninjato>
-References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
- <20170731191745.GB1542@katana>
- <20171212205832.4b317b21@bbrezillon>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v4 3/6] leds: lp8860: Update the dt parsing for LED labeling
+Date: Tue, 12 Dec 2017 16:01:40 -0600
+Message-ID: <20171212220143.31210-4-dmurphy@ti.com>
+References: <20171212220143.31210-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="klz463mjysbn7d5u"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171212205832.4b317b21@bbrezillon>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Content-Type: text/plain
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20171212220143.31210-1-dmurphy@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Update the DT parsing for the label node so that
+the label is retrieved from the device child as
+opposed to being part of the parent.
 
---klz463mjysbn7d5u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This will align this driver with the LED
+binding documentation
 
+Documentation/devicetree/bindings/leds/common.txt
 
-> MIPI has opened the I3C spec [1], it can be downloaded here [2].
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-Wow, that's good news. And so fast. Congrats and thanks a lot!
+v4 - Fix checkpatch warning for code indentation - https://patchwork.kernel.org/patch/10108157/
 
+v3 - Changed the label generation to pull the name from the i2c device id 
+as opposed to pulling the id from the parent dt node since that will just be 
+led-controller - https://patchwork.kernel.org/patch/10093753/
+v2 - no changes
 
---klz463mjysbn7d5u
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/leds/leds-lp8860.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlowUcUACgkQFA3kzBSg
-KbYYkA//fkae/of5EnZghp6wJeof2LaN407YATLm1u3P2yygY0nC7aPgGUJrsh/G
-3W3JqwAaoTxvfGGjVvNl8h+uXiazKjdXsuMrnATEHOR6BTCrGWyk/O45oqE2mYTI
-eCr3v4dACqo+mjKodlMNW2JbF5Qy/UqVoAyZtYdSRtlYINxNEVDm7dldsTo97nXq
-sxin9Dkr8jaWbornUkBi62ONpT6AZSOhwNvMFZ5XH+h4mEeeE2U1FSW3NoefWSEf
-RLrNxs0NT5TytoKHbNfn0jrQFTZzU2ysyopszwgPrMFaKiilzWiVOg3Lecyi0mg8
-YtycLEfRy/4eC5iy/U9l9v04g0Cvwck8mO09YP41/uZ4s+1H9DcRjh9C7/Q4DzgG
-8UL4P/GAdxaJwHfRXbK/hiVsm0hsIAixpcWveeHqIelgARhGFCRgcvtWPgXuHzWG
-CWXBZhvd6AGEZvd4ZBwdoop6vipOtb4brxXcply0Yj/I5EUHj4zRJTHj84rwWVc1
-0vTX5X3+iJuiHfluaCykk77mS8LmbqFQnk/VlHaMcW3ovAuFktD0NHqS9M5oCdUh
-bkcXduyGcUmNL5/R6uuMqBDkqIdmZsH62Q74OjGvkupVYsQaVrcXqtEOnHsOQ15d
-qX9j8MEXoONvSaTeJoncPz4V5SvqG4ls2RTSg7XBybMICSGzewg=
-=xo/F
------END PGP SIGNATURE-----
-
---klz463mjysbn7d5u--
+diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
+index 3e70775a2d54..46578fbc36be 100644
+--- a/drivers/leds/leds-lp8860.c
++++ b/drivers/leds/leds-lp8860.c
+@@ -22,6 +22,7 @@
+ #include <linux/of_gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/slab.h>
++#include <uapi/linux/uleds.h>
+ 
+ #define LP8860_DISP_CL1_BRT_MSB		0x00
+ #define LP8860_DISP_CL1_BRT_LSB		0x01
+@@ -86,8 +87,6 @@
+ 
+ #define LP8860_CLEAR_FAULTS		0x01
+ 
+-#define LP8860_DISP_LED_NAME		"display_cluster"
+-
+ /**
+  * struct lp8860_led -
+  * @lock - Lock for reading/writing the device
+@@ -107,7 +106,7 @@ struct lp8860_led {
+ 	struct regmap *eeprom_regmap;
+ 	struct gpio_desc *enable_gpio;
+ 	struct regulator *regulator;
+-	const char *label;
++	char label[LED_MAX_NAME_SIZE];
+ };
+ 
+ struct lp8860_eeprom_reg {
+@@ -365,19 +364,21 @@ static int lp8860_probe(struct i2c_client *client,
+ 	int ret;
+ 	struct lp8860_led *led;
+ 	struct device_node *np = client->dev.of_node;
++	struct device_node *child_node;
++	const char *name;
+ 
+ 	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
+ 	if (!led)
+ 		return -ENOMEM;
+ 
+-	led->label = LP8860_DISP_LED_NAME;
+-
+-	if (client->dev.of_node) {
+-		ret = of_property_read_string(np, "label", &led->label);
+-		if (ret) {
+-			dev_err(&client->dev, "Missing label in dt\n");
+-			return -EINVAL;
+-		}
++	for_each_available_child_of_node(np, child_node) {
++		ret = of_property_read_string(child_node, "label", &name);
++		if (!ret)
++			snprintf(led->label, sizeof(led->label), "%s:%s",
++				 id->name, name);
++		else
++			snprintf(led->label, sizeof(led->label),
++				"%s::display_cluster", id->name);
+ 	}
+ 
+ 	led->enable_gpio = devm_gpiod_get_optional(&client->dev,
+-- 
+2.15.0.124.g7668cbc60
