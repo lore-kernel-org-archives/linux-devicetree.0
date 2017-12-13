@@ -1,63 +1,68 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v2 5/5] arm64: dts: rockchip: add pd_usb3 power-domain node for rk3399
-Date: Wed, 13 Dec 2017 11:32:19 +0100
-Message-ID: <20171213103219.1464-5-enric.balletbo@collabora.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v2 3/5] arm64: dts: rockchip: add the aclk_usb3 clocks for
+ USB3.
+Date: Wed, 13 Dec 2017 11:32:17 +0100
+Message-ID: <20171213103219.1464-3-enric.balletbo@collabora.com>
 References: <20171213103219.1464-1-enric.balletbo@collabora.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171213103219.1464-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171213103219.1464-1-enric.balletbo@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@google.com, linux-rockchip@lists.infradead.org, groeck@chromium.org, briannorris@google.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the usb3 power-domain, its qos area and assign it to the usb device
-node.
+The aclk_usb3 must be enabled to support USB3 for rk3399.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 Changes since v1:
  - Split the original patch in different commits
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index ea91f25..c18ff88 100644
+index 17e5e1a..f32e9c4 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -417,6 +417,7 @@
- 			snps,dis_u2_susphy_quirk;
- 			snps,dis-del-phy-power-chg-quirk;
- 			snps,dis-tx-ipgap-linecheck-quirk;
-+			power-domains = <&power RK3399_PD_USB3>;
- 			status = "disabled";
- 		};
- 	};
-@@ -447,6 +448,7 @@
- 			snps,dis_u2_susphy_quirk;
- 			snps,dis-del-phy-power-chg-quirk;
- 			snps,dis-tx-ipgap-linecheck-quirk;
-+			power-domains = <&power RK3399_PD_USB3>;
- 			status = "disabled";
- 		};
- 	};
-@@ -995,6 +997,12 @@
- 				clocks = <&cru HCLK_SDIO>;
- 				pm_qos = <&qos_sdioaudio>;
- 			};
-+			pd_usb3@RK3399_PD_USB3 {
-+				reg = <RK3399_PD_USB3>;
-+				clocks = <&cru ACLK_USB3>;
-+				pm_qos = <&qos_usb_otg0>,
-+					 <&qos_usb_otg1>;
-+			};
- 			pd_vio@RK3399_PD_VIO {
- 				reg = <RK3399_PD_VIO>;
- 				#address-cells = <1>;
+@@ -397,9 +397,11 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
+-			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
++			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_RKSOC_AXI_PERF>,
++			 <&cru ACLK_USB3>, <&cru ACLK_USB3_GRF>;
+ 		clock-names = "ref_clk", "suspend_clk",
+-			      "bus_clk", "grf_clk";
++			      "bus_clk", "aclk_usb3_rksoc_axi_perf",
++			      "aclk_usb3", "grf_clk";
+ 		status = "disabled";
+ 
+ 		usbdrd_dwc3_0: dwc3 {
+@@ -425,9 +427,11 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 		clocks = <&cru SCLK_USB3OTG1_REF>, <&cru SCLK_USB3OTG1_SUSPEND>,
+-			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_GRF>;
++			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_RKSOC_AXI_PERF>,
++			 <&cru ACLK_USB3>, <&cru ACLK_USB3_GRF>;
+ 		clock-names = "ref_clk", "suspend_clk",
+-			      "bus_clk", "grf_clk";
++			      "bus_clk", "aclk_usb3_rksoc_axi_perf",
++			      "aclk_usb3", "grf_clk";
+ 		status = "disabled";
+ 
+ 		usbdrd_dwc3_1: dwc3 {
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
