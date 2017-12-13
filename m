@@ -1,7 +1,7 @@
 From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 2/3] clocksource/drivers: timer-of: parse the chosen node
-Date: Wed, 13 Dec 2017 19:53:12 +0100
-Message-ID: <20171213185313.20017-3-alexandre.belloni@free-electrons.com>
+Subject: [PATCH 1/3] dt-bindings: chosen: Add clocksource and clockevent selection
+Date: Wed, 13 Dec 2017 19:53:11 +0100
+Message-ID: <20171213185313.20017-2-alexandre.belloni@free-electrons.com>
 References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20171213185313.20017-1-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,57 +10,54 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Lezcan
 Cc: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a way for drivers to know whether the timer they are currently handling
-is a clocksource or a clockevent.
+The clocksource and clockevent timer are probed early in the boot process.
+At that time it is difficult for linux to know whether a particular timer
+can be used as the clocksource or the clockevent or by another driver,
+especially when they are all identical or have similar features.
+
+Until now, multiple strategies have been used to solve that:
+ - use Kconfig option as MXC_USE_EPIT or ATMEL_TCB_CLKSRC_BLOCK
+ - use a kernel parameter as the "clocksource" early_param in mach-omap2
+ - registering the first seen timer as a clockevent and the second one as
+ a clocksource as in rk_timer_init or dw_apb_timer_init
+
+Add a linux,clocksource and a linux,clockevent node in chosen with a timer
+property pointing to the timer to use. Other properties, like the targeted
+precision may be added later.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/clocksource/timer-of.c | 22 ++++++++++++++++++++++
- drivers/clocksource/timer-of.h |  3 +++
- 2 files changed, 25 insertions(+)
+ Documentation/devicetree/bindings/chosen.txt | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-index a31990408153..71680eacd390 100644
---- a/drivers/clocksource/timer-of.c
-+++ b/drivers/clocksource/timer-of.c
-@@ -195,3 +195,25 @@ void __init timer_of_cleanup(struct timer_of *to)
- 	if (to->flags & TIMER_OF_BASE)
- 		timer_base_exit(&to->of_base);
- }
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index e3b13ea7d2ae..c7ee3ecb5276 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -120,3 +120,23 @@ e.g.
+ While this property does not represent a real hardware, the address
+ and the size are expressed in #address-cells and #size-cells,
+ respectively, of the root node.
 +
-+int __init timer_of_is_type(struct device_node *np, char *type)
-+{
-+	struct device_node *node, *timer;
++linux,clocksource and linux,clockevent
++--------------------------------------
 +
-+	if (!of_chosen)
-+		return 0;
++Those nodes have a timer property. This property is a phandle to the timer to be
++chosen as the clocksource or clockevent. This is only useful when the platform
++has multiple identical timers and it is not possible to let linux make the
++correct choice.
 +
-+	node = of_get_child_by_name(of_chosen, type);
-+	if (!node)
-+		return 0;
++/ {
++	chosen {
++		linux,clocksource {
++			timer = <&timer0>;
++		};
 +
-+	timer = of_parse_phandle(node, "timer", 0);
-+	of_node_put(node);
-+	if (!timer)
-+		return 0;
-+
-+	if (timer == np)
-+		return 1;
-+
-+	return 0;
-+}
-diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
-index 3f708f1be43d..24923cfe748d 100644
---- a/drivers/clocksource/timer-of.h
-+++ b/drivers/clocksource/timer-of.h
-@@ -70,4 +70,7 @@ extern int __init timer_of_init(struct device_node *np,
- 
- extern void __init timer_of_cleanup(struct timer_of *to);
- 
-+extern int __init timer_of_is_type(struct device_node *np, char *type);
-+#define timer_of_is_clocksource(np) timer_of_is_type(np, "linux,clocksource")
-+#define timer_of_is_clockevent(np) timer_of_is_type(np, "linux,clockevent")
- #endif
++		linux,clockevent {
++			timer = <&timer1>;
++		};
++	};
++};
 -- 
 2.15.1
 
