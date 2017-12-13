@@ -1,45 +1,25 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V7 0/7] dmaengine: qcom_hidma: add support for bugfixed HW
-Date: Tue, 12 Dec 2017 19:09:47 -0500
-Message-ID: <0ed35958-22c9-50e5-3b6a-732821de6d20@codeaurora.org>
-References: <1512681031-11343-1-git-send-email-okaya@codeaurora.org>
- <20171212053845.GB18649@localhost>
- <CAJZ5v0ijQFO_PuwhBRrKovo4EW9Dck9fiT38wiCw6P5hHUjNuw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0ijQFO_PuwhBRrKovo4EW9Dck9fiT38wiCw6P5hHUjNuw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Vinod Koul <vinod.koul@intel.com>
-Cc: dmaengine <dmaengine@vger.kernel.org>, Timur Tabi <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH 0/2] Bluetooth: Add device tree compatible for TI CC2560
+Date: Tue, 12 Dec 2017 18:29:29 -0600
+Message-ID: <1513124971-23717-1-git-send-email-david@lechnology.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
+Cc: David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2017 7:36 AM, Rafael J. Wysocki wrote:
-> On Tue, Dec 12, 2017 at 6:38 AM, Vinod Koul <vinod.koul@intel.com> wrote:
->> On Thu, Dec 07, 2017 at 04:10:24PM -0500, Sinan Kaya wrote:
->>> Introduce new ACPI and OF device ids for thw HW along with the helper
->>> functions.
->>>
->>> Changes from v6:
->>> * add const to the device callback parameter in fwnode.
->>> * reorganize the callbacks in the code
->>> * rename get_match_data() as device_get_match_data()
->>> * place pointer checks into acpi_get_match_data()
->>
->> This fails for me at 3rd patch. I am on -rc1 is there a dependency?
-> 
-> There shouldn't be any.
-> 
-> According to git, all changes to the files touched by the [3/7] are in
-> -rc1 already.
-> 
+This series updates the bindings TI WiLink 7/8 Bluetooth to add TI CC256x
+chips as well. A compatible string is also added to the hci_ll driver for
+TI CC2560.
 
-Let me know if you were able to resolve the conflict. I can rebase against
-a development tree if you can point me to there.
+David Lechner (2):
+  dt-bindings: net: add TI CC2560 Bluetooth chip
+  Bluetooth: hci_ll: add "ti,cc2560" compatible string
+
+ .../bindings/net/{ti,wilink-st.txt => ti-bluetooth.txt}     | 13 +++++++++++--
+ drivers/bluetooth/hci_ll.c                                  |  1 +
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+ rename Documentation/devicetree/bindings/net/{ti,wilink-st.txt => ti-bluetooth.txt} (78%)
 
 -- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.7.4
