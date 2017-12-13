@@ -1,38 +1,44 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCHv2 2/3] net: socionext: Add Synquacer NetSec driver
-Date: Wed, 13 Dec 2017 21:16:24 +0530
-Message-ID: <CABb+yY2VoKs_6CarHjf=_B9vQH06nh+D=RYbvRpvX_x=6RiM-A@mail.gmail.com>
+Date: Wed, 13 Dec 2017 21:16:51 +0530
+Message-ID: <CABb+yY2N8GUDNwjWdTQ4dnMe=wa0DY245Zk=RzRRMrs5PVgoow@mail.gmail.com>
 References: <1513098873-20977-1-git-send-email-jassisinghbrar@gmail.com>
- <1513098954-21093-1-git-send-email-jassisinghbrar@gmail.com> <CAKv+Gu-6gb10VromMaTJkzpu1DovDO7B5-GWEQPs04qAG=2ksw@mail.gmail.com>
+ <1513098954-21093-1-git-send-email-jassisinghbrar@gmail.com>
+ <CAKv+Gu-6gb10VromMaTJkzpu1DovDO7B5-GWEQPs04qAG=2ksw@mail.gmail.com> <20171212204811.GD1523@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAKv+Gu-6gb10VromMaTJkzpu1DovDO7B5-GWEQPs04qAG=2ksw@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd.bergmann@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jaswinder.singh@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171212204811.GD1523-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "<netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 10:54 PM, Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
-> On 12 December 2017 at 17:15,  <jassisinghbrar@gmail.com> wrote:
-....
->> +
->> +static int netsec_netdev_load_microcode(struct netsec_priv *priv)
->> +{
->> +       int err;
->> +
->> +       err = netsec_netdev_load_ucode_region(
->> +               priv, NETSEC_REG_DMAC_HM_CMD_BUF,
->> +               le32_to_cpup(priv->eeprom_base + NETSEC_EEPROM_HM_ME_ADDRESS_H),
->> +               le32_to_cpup(priv->eeprom_base + NETSEC_EEPROM_HM_ME_ADDRESS_L),
->> +               le32_to_cpup(priv->eeprom_base + NETSEC_EEPROM_HM_ME_SIZE));
+On Wed, Dec 13, 2017 at 2:18 AM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+>> > +static int netsec_mac_update_to_phy_state(struct netsec_priv *priv)
+>> > +{
+>> > +       struct phy_device *phydev = priv->ndev->phydev;
+>> > +       u32 value = 0;
+>> > +
+>> > +       value = phydev->duplex ? NETSEC_GMAC_MCR_REG_FULL_DUPLEX_COMMON :
+>> > +                                NETSEC_GMAC_MCR_REG_HALF_DUPLEX_COMMON;
+>> > +
+>> > +       if (phydev->speed != SPEED_1000)
+>> > +               value |= NETSEC_MCR_PS;
+>> > +
+>> > +       if (priv->phy_interface != PHY_INTERFACE_MODE_GMII &&
+>> > +           phydev->speed == SPEED_100)
+>> > +               value |= NETSEC_GMAC_MCR_REG_FES;
+>> > +
+>> > +       value |= NETSEC_GMAC_MCR_REG_CST | NETSEC_GMAC_MCR_REG_JE;
+>> > +
+>> > +       if (priv->phy_interface == PHY_INTERFACE_MODE_RGMII)
+>> > +               value |= NETSEC_GMAC_MCR_REG_IBN;
 >
-> ... here, and in other places below, you are still dereferencing
-> eeprom_base as if it is a pointer, which is not allowed with in the
-> __iomem address space. This should use readl() instead [which happens
-> to incorporate the endian swap as well]
+> phy_interface_mode_is_rgmii() ??
 >
-Ahh, how could it have been just two revisions!
-
-thanks
+Yes, thank you.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
