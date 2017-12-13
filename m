@@ -1,65 +1,40 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 2/3] ARM: dts: r8a7743: Add CMT SoC specific support
-Date: Wed, 13 Dec 2017 10:15:39 +0000
-Message-ID: <TY1PR06MB08954C04D41BDA8EFA04E1DFC0350@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1513104579-6333-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513104579-6333-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20171213083829.ptdeggbon3szmko4@verge.net.au>
- <TY1PR06MB0895B34EFC2A48F49AFF0694C0350@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <CAMuHMdWEFttz_Shve+D1Ku2NoUYX-AomzXY9JFGRjzzM=hOc_A@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 00/12] drivers: Boot Constraints core
+Date: Wed, 13 Dec 2017 15:57:36 +0530
+Message-ID: <20171213102736.GE3322@vireshk-i7>
+References: <cover.1509284255.git.viresh.kumar@linaro.org>
+ <20171128041818.GE11413@vireshk-i7>
+ <20171213095529.GK13194@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWEFttz_Shve+D1Ku2NoUYX-AomzXY9JFGRjzzM=hOc_A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171213095529.GK13194-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR2VlcnQsDQoNCnRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjay4NCg0KPiBIaSBGYWJy
-aXppbywNCj4NCj4gT24gV2VkLCBEZWMgMTMsIDIwMTcgYXQgMTA6NDIgQU0sIEZhYnJpemlvIENh
-c3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPj4gT24g
-VHVlLCBEZWMgMTIsIDIwMTcgYXQgMDY6NDk6MzhQTSArMDAwMCwgRmFicml6aW8gQ2FzdHJvIHdy
-b3RlOg0KPiA+PiA+IEFkZCBDTVRbMDFdIHN1cHBvcnQgdG8gU29DIERULg0KPiA+PiA+IFNpZ25l
-ZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29t
-Pg0KPiA+PiA+IFJldmlld2VkLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+
-DQo+ID4+ID4gLS0tDQo+ID4+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDMuZHRzaSB8IDMw
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+PiA+ICAxIGZpbGUgY2hhbmdlZCwg
-MzAgaW5zZXJ0aW9ucygrKQ0KPiA+Pg0KPiA+PiBJIHdhcyBleHBlY3RpbmcgdGhlIGNtdCBub2Rl
-cyB0byBiZSAiZGlzYWJsZWQiIGluIHRoZSBTb0MgZmlsZQ0KPiA+PiBhbmQgdGhlbiBlbmFibGVk
-IHNlbGVjdGl2ZWx5IGluIGJvYXJkIGZpbGVzLiBBbSBJIG1pc3Npbmcgc29tZXRoaW5nPw0KPiA+
-DQo+ID4gU2luY2UgdGhpcyBjb21wb25lbnQgaXMganVzdCBhIGNvbXBhcmUgYW5kIG1hdGNoIHRp
-bWVyLCBJICB0aG91Z2h0IHRoZXJlIHdhcyBubyBoYXJtIGluIGVuYWJsaW5nIGl0IGJ5IGRlZmF1
-bHQgaW4gdGhlIFNvQyBzcGVjaWZpYyBEVC4NCj4gPiBUaGUgc3lzdGVtIHdpbGwgcGFyayBpdCBh
-bmQgbGVhdmUgaXRzIGNsb2NrIGRpc2FibGVkIHVudGlsIGFjdHVhbGx5IG5lZWRlZCBmb3Igc29t
-ZXRoaW5nLg0KPiA+IFRoZSB1c2VyIGNhbiBzdGlsbCBkaXNhYmxlIGl0IGluIHRoZSBib2FyZCBz
-cGVjaWZpYyBEVCBpZiBoZS9zaGUgZG9lc24ndCBtZWFuIHRvIGV2ZW4gaGF2ZSB0aGUgb3B0aW9u
-IHRvIHVzZSBpdC4gRG8geW91IHByZWZlciBJIGxlZnQgaXQNCj4gZGlzYWJsZWQgYnkgZGVmYXVs
-dD8NCj4NCj4gSXQncyBkZWJhdGFibGUgKHRodXMgdXAgdG8gU2ltb24gdGhlIG1haW50YWluZXIg
-Oy0pLg0KPiBGb3IgSS9PIGRldmljZXMsIHdlIGRpc2FibGUgdGhlbSBpbiB0aGUgU29DIC5kdHNp
-IGZpbGUuDQo+IEZvciBjb3JlIGluZnJhc3RydWN0dXJlIGxpa2UgaW50ZXJydXB0LCBETUEsIGFu
-ZCBHUElPIGNvbnRyb2xsZXJzLCB3ZSBrZWVwDQo+IHRoZW0gZW5hYmxlZC4NCj4NCj4gVGltZXJz
-IGFyZSBjb3JlIGZ1bmN0aW9uYWxpdHksIGJ1dCB3aG8ncyBhY3R1YWxseSB1c2luZyB0aGVzZSB0
-aW1lcnM/DQoNCkkgZG9uJ3QgaGF2ZSBhIHVzZSBjYXNlIGluIG1pbmQgdW5mb3J0dW5hdGVseSwg
-YnV0IGl0J3Mgc3RpbGwgY29yZSBmdW5jdGlvbmFsaXR5IGFuZCBwcmV0dHkgaGFybWxlc3MgYXMg
-ZmFyIGFzIEkgY2FuIHRlbGwuIExldCdzIHNlZSB3aGF0IFNpbW9uIHRoaW5rcyBhYm91dCB0aGlz
-Lg0KDQpUaGFua3MsDQpGYWINCg0KPg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4NCj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0t
-IFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9y
-Zw0KPg0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwg
-SSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5h
-bGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNClto
-dHRwczovL3d3dzIucmVuZXNhcy5ldS9tZWRpYS9lbWFpbC91bmljZWZfMjAxNy5qcGddDQoNClRo
-aXMgQ2hyaXN0bWFzLCBpbnN0ZWFkIG9mIHNlbmRpbmcgb3V0IGNhcmRzLCBSZW5lc2FzIEVsZWN0
-cm9uaWNzIEV1cm9wZSBoYXZlIGRlY2lkZWQgdG8gc3VwcG9ydCBVbmljZWYgd2l0aCBhIGRvbmF0
-aW9uLiBGb3IgZnVydGhlciBkZXRhaWxzIGNsaWNrIGhlcmU8aHR0cHM6Ly93d3cudW5pY2VmLm9y
-Zy8+IHRvIGZpbmQgb3V0IGFib3V0IHRoZSB2YWx1YWJsZSB3b3JrIHRoZXkgZG8sIGhlbHBpbmcg
-Y2hpbGRyZW4gYWxsIG92ZXIgdGhlIHdvcmxkLg0KV2Ugd291bGQgbGlrZSB0byB0YWtlIHRoaXMg
-b3Bwb3J0dW5pdHkgdG8gd2lzaCB5b3UgYSBNZXJyeSBDaHJpc3RtYXMgYW5kIGEgcHJvc3Blcm91
-cyBOZXcgWWVhci4NCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMg
-TWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDgg
-NUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBO
-by4gMDQ1ODY3MDkuDQo=
+On 13-12-17, 10:55, Greg Kroah-Hartman wrote:
+> On Tue, Nov 28, 2017 at 09:48:18AM +0530, Viresh Kumar wrote:
+> > On 29-10-17, 19:18, Viresh Kumar wrote:
+> > > Here is V4 of the boot constraints core based on your feedback from V3.
+> > > We now have support for three platforms (as you suggested) included in
+> > > this series: Hisilicon, IMX and Qualcomm.
+> > 
+> > Hi Greg,
+> > 
+> > I was waiting for rc1 to come out before sending a reminder for this
+> > series and so here is one :)
+> 
+> I've reviewed it enough for now, needs a tiny bit of work, but looking
+> much better, nice job!
+
+Thanks a lot for finding time to get this reviewed. Really appreciate that.
+
+-- 
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
