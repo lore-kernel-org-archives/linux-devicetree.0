@@ -1,142 +1,70 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 1/2] cpufreq: ARM: sort the Kconfig menu
-Date: Wed, 13 Dec 2017 18:05:35 +0100
-Message-ID: <20171213170536.28238-2-gregory.clement@free-electrons.com>
-References: <20171213170536.28238-1-gregory.clement@free-electrons.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171213170536.28238-1-gregory.clement@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Evan Wang <xswang@marvell.com>, Andre Heider <a.heider@gmail.com>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] ARM: sun4i: Convert to CCU
+Date: Wed, 13 Dec 2017 17:09:33 +0000
+Message-ID: <20171213170933.qyfn3hgnrvjpmod7@plaes.org>
+References: <cover.a58841efb571d44013658505f3fa140536a89d1c.1490545262.git-series.plaes@plaes.org>
+ <4357a69da97f46a324eec4c766f4bc9d9e7733ff.1490545262.git-series.plaes@plaes.org>
+ <CAOi56cUjqjcZRz6VSwUWcrW=4RQyqyZHtm1vuM3HT2ypdPJ78g@mail.gmail.com>
+ <20171212172635.2utwz3koyo5iwglt@plaes.org>
+ <CAOi56cUeRrKQnJ-akJPB160-60aBzy64bDgFeoqMpHRJSCnDeQ@mail.gmail.com>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDB4J47M7YERBT55YXIQKGQE7QHVZQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAOi56cUeRrKQnJ-akJPB160-60aBzy64bDgFeoqMpHRJSCnDeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Group all the related big LITTLE configuration together and sort the
-other entries in alphabetic order.
+On Tue, Dec 12, 2017 at 01:24:52PM -0800, Kevin Hilman wrote:
+> On Tue, Dec 12, 2017 at 9:26 AM, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
+> > On Mon, Dec 11, 2017 at 02:22:30PM -0800, Kevin Hilman wrote:
+> >> On Sun, Mar 26, 2017 at 10:20 AM, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
+> >> > Convert sun4i-a10.dtsi to new CCU driver.
+> >> >
+> >> > Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> >>
+> >> I finally got around to bisecting a mainline boot failure on
+> >> sun4i-a10-cubieboard that's been happening for quite a while.  Based
+> >> on on kernelci.org, it showed up sometime during the v4.15 merge
+> >> window[1].  It bisected down to this commit (in mainline as commit
+> >> 41193869f2bdb585ce09bfdd16d9482aadd560ad).
+> >>
+> >> When it fails, there is no output on the serial console, so I don't
+> >> know exactly how it's failing, just that it no longer boots.
+> >
+> > We tried out latest 4.15 with various compilers and it works:
+> > - gcc version 7.1.1 20170622 (Red Hat Cross 7.1.1-3) (GCC) - A10 Gemei G9 tablet
+> > - gcc 7.2.0-debian - A10 Cubieboard
+> 
+> And you can reproduce the bug with gcc5 or gcc6?
 
-Also fixing tab vs space issue while mofifying these entries.
+Tried following commits on Gemei G9 (A10 tablet):
+* 4.15.0-rc3-00037-gd39a01eff9af - latest master
+* 4.14.0-rc1-00002-g41193869f2bd - the exact commit, causing the issue.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/cpufreq/Kconfig.arm | 81 ++++++++++++++++++++++-----------------------
- 1 file changed, 40 insertions(+), 41 deletions(-)
+With the same Linaro toolchain:
+(gcc version 5.3.1 20160412 (Linaro GCC 5.3-2016.05))
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index bdce4488ded1..beb8826afbb1 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -2,6 +2,22 @@
- # ARM CPU Frequency scaling drivers
- #
- 
-+config ACPI_CPPC_CPUFREQ
-+	tristate "CPUFreq driver based on the ACPI CPPC spec"
-+	depends on ACPI_PROCESSOR
-+	select ACPI_CPPC_LIB
-+	help
-+	  This adds a CPUFreq driver which uses CPPC methods
-+	  as described in the ACPIv5.1 spec. CPPC stands for
-+	  Collaborative Processor Performance Controls. It
-+	  is based on an abstract continuous scale of CPU
-+	  performance values which allows the remote power
-+	  processor to flexibly optimize for power and
-+	  performance. CPPC relies on power management firmware
-+	  support for its operation.
-+
-+	  If in doubt, say N.
-+
- # big LITTLE core layer and glue drivers
- config ARM_BIG_LITTLE_CPUFREQ
- 	tristate "Generic ARM big LITTLE CPUfreq driver"
-@@ -12,6 +28,30 @@ config ARM_BIG_LITTLE_CPUFREQ
- 	help
- 	  This enables the Generic CPUfreq driver for ARM big.LITTLE platforms.
- 
-+config ARM_DT_BL_CPUFREQ
-+	tristate "Generic probing via DT for ARM big LITTLE CPUfreq driver"
-+	depends on ARM_BIG_LITTLE_CPUFREQ && OF
-+	help
-+	  This enables probing via DT for Generic CPUfreq driver for ARM
-+	  big.LITTLE platform. This gets frequency tables from DT.
-+
-+config ARM_SCPI_CPUFREQ
-+	tristate "SCPI based CPUfreq driver"
-+	depends on ARM_BIG_LITTLE_CPUFREQ && ARM_SCPI_PROTOCOL && COMMON_CLK_SCPI
-+	help
-+	  This adds the CPUfreq driver support for ARM big.LITTLE platforms
-+	  using SCPI protocol for CPU power management.
-+
-+	  This driver uses SCPI Message Protocol driver to interact with the
-+	  firmware providing the CPU DVFS functionality.
-+
-+config ARM_VEXPRESS_SPC_CPUFREQ
-+	tristate "Versatile Express SPC based CPUfreq driver"
-+	depends on ARM_BIG_LITTLE_CPUFREQ && ARCH_VEXPRESS_SPC
-+	help
-+	  This add the CPUfreq driver support for Versatile Express
-+	  big.LITTLE platforms using SPC for power management.
-+
- config ARM_BRCMSTB_AVS_CPUFREQ
- 	tristate "Broadcom STB AVS CPUfreq driver"
- 	depends on ARCH_BRCMSTB || COMPILE_TEST
-@@ -33,20 +73,6 @@ config ARM_BRCMSTB_AVS_CPUFREQ_DEBUG
- 
- 	  If in doubt, say N.
- 
--config ARM_DT_BL_CPUFREQ
--	tristate "Generic probing via DT for ARM big LITTLE CPUfreq driver"
--	depends on ARM_BIG_LITTLE_CPUFREQ && OF
--	help
--	  This enables probing via DT for Generic CPUfreq driver for ARM
--	  big.LITTLE platform. This gets frequency tables from DT.
--
--config ARM_VEXPRESS_SPC_CPUFREQ
--        tristate "Versatile Express SPC based CPUfreq driver"
--	depends on ARM_BIG_LITTLE_CPUFREQ && ARCH_VEXPRESS_SPC
--        help
--          This add the CPUfreq driver support for Versatile Express
--	  big.LITTLE platforms using SPC for power management.
--
- config ARM_EXYNOS5440_CPUFREQ
- 	tristate "SAMSUNG EXYNOS5440"
- 	depends on SOC_EXYNOS5440
-@@ -205,16 +231,6 @@ config ARM_SA1100_CPUFREQ
- config ARM_SA1110_CPUFREQ
- 	bool
- 
--config ARM_SCPI_CPUFREQ
--        tristate "SCPI based CPUfreq driver"
--	depends on ARM_BIG_LITTLE_CPUFREQ && ARM_SCPI_PROTOCOL && COMMON_CLK_SCPI
--        help
--	  This adds the CPUfreq driver support for ARM big.LITTLE platforms
--	  using SCPI protocol for CPU power management.
--
--	  This driver uses SCPI Message Protocol driver to interact with the
--	  firmware providing the CPU DVFS functionality.
--
- config ARM_SPEAR_CPUFREQ
- 	bool "SPEAr CPUFreq support"
- 	depends on PLAT_SPEAR
-@@ -275,20 +291,3 @@ config ARM_PXA2xx_CPUFREQ
- 	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
- 
- 	  If in doubt, say N.
--
--config ACPI_CPPC_CPUFREQ
--	tristate "CPUFreq driver based on the ACPI CPPC spec"
--	depends on ACPI_PROCESSOR
--	select ACPI_CPPC_LIB
--	default n
--	help
--	  This adds a CPUFreq driver which uses CPPC methods
--	  as described in the ACPIv5.1 spec. CPPC stands for
--	  Collaborative Processor Performance Controls. It
--	  is based on an abstract continuous scale of CPU
--	  performance values which allows the remote power
--	  processor to flexibly optimize for power and
--	  performance. CPPC relies on power management firmware
--	  support for its operation.
--
--	  If in doubt, say N.
--- 
-2.15.1
+> 
+> Very strange that a DT only patch would cause a gcc related regression
+> and if it does, it should be investigated.  I don't think requiring
+> gcc7 is an appropriate solution.
+> 
+> @Chen-Yu, @Maxime: are you guys OK with requiring gcc7 for working
+> upstream boot for A10?
+> 
+> Kevin
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
