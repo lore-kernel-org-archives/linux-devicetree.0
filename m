@@ -1,133 +1,86 @@
-From: Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH] arm64: dts: hisilicon: Add hi3660 cpu capacity-dmips-mhz information
-Date: Wed, 13 Dec 2017 14:21:06 +0000
-Message-ID: <1513174866-6678-1-git-send-email-valentin.schneider@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 01/11] clk: qcom: add read-only divider operations
+Date: Wed, 13 Dec 2017 19:55:32 +0530
+Message-ID: <1513175142-3702-2-git-send-email-absahu@codeaurora.org>
+References: <1513175142-3702-1-git-send-email-absahu@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513175142-3702-1-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The following dt entries are added:
- cpus [0-3] (Cortex A53):
-   - capacity-dmips-mhz = <592>;
+Some of the divider settings are preconfigured and should not
+be changed by the clock framework during frequency change. This
+patch adds the read-only divider operation for QCOM dividers
+which is equivalent to generic divider operations in
+'commit 79c6ab509558 ("clk: divider: add CLK_DIVIDER_READ_ONLY flag")'.
 
- cpus [4-7] (Cortex A73):
-   - capacity-dmips-mhz = <1024>;
-
-Those values were obtained by running dhrystone 2.1 on a
-HiKey960 with the following procedure:
-- Offline all CPUs but CPU0 (A53)
-- Set CPU0 frequency to maximum
-- Run Dhrystone 2.1 for 20 seconds
-
-- Offline all CPUs but CPU4 (A73)
-- set CPU4 frequency to maximum
-- Run Dhrystone 2.1 for 20 seconds
-
-The results are as follows:
-A53: 129633887 loops
-A73: 287034147 loops
-
-By scaling those values so that the A73s use 1024, we end up with 462
-for the A53s. However, they have different maximum frequencies:
-1.844GHz for A53s and 2.362GHz for A73s. Thus, we can scale the A53
-value to truly represent dmips per MHz, and we end up with 592.
-
-The impact of this change can be verified on HiKey960:
-
-$ cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_cur_freq
-1844000
-1844000
-1844000
-1844000
-2362000
-2362000
-2362000
-2362000
-
-$ cat /sys/devices/system/cpu/cpu*/cpu_capacity
-462
-462
-462
-462
-1024
-1024
-1024
-1024
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/clk/qcom/clk-regmap-divider.c | 29 +++++++++++++++++++++++++++++
+ drivers/clk/qcom/clk-regmap-divider.h |  1 +
+ 2 files changed, 30 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index ab0b95b..04a8d28 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -61,6 +61,7 @@
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <592>;
- 		};
+diff --git a/drivers/clk/qcom/clk-regmap-divider.c b/drivers/clk/qcom/clk-regmap-divider.c
+index 5348491..6cf9005 100644
+--- a/drivers/clk/qcom/clk-regmap-divider.c
++++ b/drivers/clk/qcom/clk-regmap-divider.c
+@@ -23,6 +23,29 @@ static inline struct clk_regmap_div *to_clk_regmap_div(struct clk_hw *hw)
+ 	return container_of(to_clk_regmap(hw), struct clk_regmap_div, clkr);
+ }
  
- 		cpu1: cpu@1 {
-@@ -70,6 +71,7 @@
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <592>;
- 		};
++static long div_round_ro_rate(struct clk_hw *hw, unsigned long rate,
++			      unsigned long *prate)
++{
++	struct clk_regmap_div *divider = to_clk_regmap_div(hw);
++	struct clk_regmap *clkr = &divider->clkr;
++	u32 div;
++	struct clk_hw *hw_parent = clk_hw_get_parent(hw);
++
++	regmap_read(clkr->regmap, divider->reg, &div);
++	div >>= divider->shift;
++	div &= BIT(divider->width) - 1;
++	div += 1;
++
++	if (clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) {
++		if (!hw_parent)
++			return -EINVAL;
++
++		*prate = clk_hw_round_rate(hw_parent, rate * div);
++	}
++
++	return DIV_ROUND_UP_ULL((u64)*prate, div);
++}
++
+ static long div_round_rate(struct clk_hw *hw, unsigned long rate,
+ 			   unsigned long *prate)
+ {
+@@ -68,3 +91,9 @@ static unsigned long div_recalc_rate(struct clk_hw *hw,
+ 	.recalc_rate = div_recalc_rate,
+ };
+ EXPORT_SYMBOL_GPL(clk_regmap_div_ops);
++
++const struct clk_ops clk_regmap_div_ro_ops = {
++	.round_rate = div_round_ro_rate,
++	.recalc_rate = div_recalc_rate,
++};
++EXPORT_SYMBOL_GPL(clk_regmap_div_ro_ops);
+diff --git a/drivers/clk/qcom/clk-regmap-divider.h b/drivers/clk/qcom/clk-regmap-divider.h
+index fc4492e..8c39c27 100644
+--- a/drivers/clk/qcom/clk-regmap-divider.h
++++ b/drivers/clk/qcom/clk-regmap-divider.h
+@@ -25,5 +25,6 @@ struct clk_regmap_div {
+ };
  
- 		cpu2: cpu@2 {
-@@ -79,6 +81,7 @@
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <592>;
- 		};
+ extern const struct clk_ops clk_regmap_div_ops;
++extern const struct clk_ops clk_regmap_div_ro_ops;
  
- 		cpu3: cpu@3 {
-@@ -88,6 +91,7 @@
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP_0>;
-+			capacity-dmips-mhz = <592>;
- 		};
- 
- 		cpu4: cpu@100 {
-@@ -101,6 +105,7 @@
- 					&CPU_SLEEP
- 					&CLUSTER_SLEEP_1
- 			>;
-+			capacity-dmips-mhz = <1024>;
- 		};
- 
- 		cpu5: cpu@101 {
-@@ -114,6 +119,7 @@
- 					&CPU_SLEEP
- 					&CLUSTER_SLEEP_1
- 			>;
-+			capacity-dmips-mhz = <1024>;
- 		};
- 
- 		cpu6: cpu@102 {
-@@ -127,6 +133,7 @@
- 					&CPU_SLEEP
- 					&CLUSTER_SLEEP_1
- 			>;
-+			capacity-dmips-mhz = <1024>;
- 		};
- 
- 		cpu7: cpu@103 {
-@@ -140,6 +147,7 @@
- 					&CPU_SLEEP
- 					&CLUSTER_SLEEP_1
- 			>;
-+			capacity-dmips-mhz = <1024>;
- 		};
- 
- 		idle-states {
+ #endif
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
 --
-2.7.4
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
