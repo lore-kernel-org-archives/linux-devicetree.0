@@ -1,80 +1,78 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH 0/5] Add Sound support for iWave RZ/G1M board
-Date: Wed, 13 Dec 2017 09:27:30 +0000
-Message-ID: <KL1PR06MB170226A1E9F3CA011EBF3E2DB8350@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1513103111-45830-1-git-send-email-biju.das@bp.renesas.com>
- <20171213090240.xqgihh4bqsfzeaip@verge.net.au>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] thermal: armada: add support for CP110
+Date: Wed, 13 Dec 2017 11:42:31 +0200
+Message-ID: <20171213094231.sk5fj6fxvpvik3i2@sapphire.tkos.co.il>
+References: <f8c589337a4fb78852eadf15058e8f8d132d4dc0.1512299484.git.baruch@tkos.co.il>
+ <d48c916a2502f9c75e9ea4ba41300e2ffbb254d8.1512299484.git.baruch@tkos.co.il>
+ <20171211160932.692ba8be@xps13>
+ <20171211152731.glkkes5errcxmsvz@sapphire.tkos.co.il>
+ <87y3m9qjt2.fsf@free-electrons.com>
+ <20171213083848.j5het742yavxvkkw@sapphire.tkos.co.il>
+ <874lovq9cx.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171213090240.xqgihh4bqsfzeaip-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <874lovq9cx.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi Gregory,
 
-Thanks.
+On Wed, Dec 13, 2017 at 10:13:02AM +0100, Gregory CLEMENT wrote:
+>  On mer., déc. 13 2017, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 
-There is a typo in the documentation dependency link.
-The correct one is https://patchwork.kernel.org/patch/10108015/
+[...]
 
-Regards,
-Biju
-
-> -----Original Message-----
-> From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
-> Sent: 13 December 2017 09:03
-> To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland
-> <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Magnus
-> Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Chris Paterson
-> <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-renesas-
-> soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: Re: [PATCH 0/5] Add Sound support for iWave RZ/G1M board
->
-> On Tue, Dec 12, 2017 at 06:25:06PM +0000, Biju Das wrote:
-> > This series aims to add sound support for iWave RZ/G1M board.
+> > There are two separate issues here:
 > >
-> > This patch series has documentation dependency on
-> > https://patchwork.kernel.org/patch/10108014/
+> >   1. DT binding
 > >
-> > Biju Das (5):
-> >   ARM: shmobile: defconfig: Enable SGTL5000 audio codec
-> >   ARM: dts: r8a7743: Add audio clocks
-> >   ARM: dts: r8a7743: Add audio DMAC support
-> >   ARM: dts: r8a7743: Add sound support
-> >   ARM: dts: iwg20d-q7-common: Enable SGTL5000 audio codec
+> >   2. init_sensor callback implementation
 > >
-> >  arch/arm/boot/dts/iwg20d-q7-common.dtsi |  24 +++
-> >  arch/arm/boot/dts/r8a7743.dtsi          | 270
-> ++++++++++++++++++++++++++++++++
-> >  arch/arm/configs/shmobile_defconfig     |   1 +
-> >  3 files changed, 295 insertions(+)
->
-> These patches seem clean to me although I do not have sufficient
-> documentation to properly review the last patch.
->
-> I will leave these sit for a few days to allow others to review them.
+> > We both agree on #1. The A38x and CP110 need separate compatible strings. In 
+> > case we want to access the LSB control register on Armada 38x, we will need 
+> > yet another compatible string (marvell,armada380-v2-thermal maybe?).
+> 
+> Actually, if it is _compatible_ then we will use the same compatible, ie
+> "marvell,armadacp110-thermal"
 
+Reusing the same compatible string for the same hardware peripheral in 
+different SoCs is not a good idea. You often find out later that they are not 
+actually the same.
 
-[https://www2.renesas.eu/media/email/unicef_2017.jpg]
+But this point is moot. The A38x and CP110 thermal sensors are not the same. 
+The overheat interrupt registers are in different offsets.
 
-This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
-ve decided to support Unicef with a donation. For further details click her=
-e<https://www.unicef.org/> to find out about the valuable work they do, hel=
-ping children all over the world.
-We would like to take this opportunity to wish you a Merry Christmas and a =
-prosperous New Year.
+> > As for #2, I'm all for sharing as much code as possible. I find the vendor 
+> > kernel approach of duplicating the init routines[1] unhelpful as it violates 
+> > the DRY principle. The differences between armada380_init_sensor() and 
+> > cp110_init_sensor() are minor. In my opinion, these differences should be 
+> > expressed explicitly in the armada_thermal_data, in a similar way to my 
+> > suggested control_msb_offset field. The vendor code hides these differences in 
+> > slight variations of duplicated code.
+> >
+> > What is the advantage of a separate init routine?
+> 
+> The main advantage is to be able keep the armada380_init_sensor as the
+> legacy init, and then being able to use the new armadacp110_init_sensor
+> for the new binding.
 
+I disagree, sorry. I don't think I can make my point any more clear than I 
+did.
 
+I am fine with you or Miquel making the code changes that you think are 
+necessary. I'll comment on the code when I see it.
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
