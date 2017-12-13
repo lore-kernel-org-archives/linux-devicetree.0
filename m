@@ -1,61 +1,64 @@
-From: hao_zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/4] pwm support for allwinner sun8i R40/V40/T3 SOCs.
-Date: Wed, 13 Dec 2017 22:38:40 +0800
-Message-ID: <20171213143840.GA17754@arx-s1>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 4/4] [v4] pinctrl: qcom: qdf2xxx: add support for new
+ ACPI HID QCOM8002
+Date: Wed, 13 Dec 2017 16:36:38 +0200
+Message-ID: <1513175798.7000.15.camel@linux.intel.com>
+References: <1512170904-4749-1-git-send-email-timur@codeaurora.org>
+         <1512170904-4749-5-git-send-email-timur@codeaurora.org>
+         <CACRpkdYer_Q5R4XhWTX3=jwshcKZRSDY9=gOvSeUPsQHbUw6vw@mail.gmail.com>
+         <1513076836.25007.641.camel@linux.intel.com>
+         <88349f2e-5243-8061-cc72-d01fa70e6f2e@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <88349f2e-5243-8061-cc72-d01fa70e6f2e@codeaurora.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, David Brown <david.brown@linaro.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Varadarajan Narayanan <varada@codeaurora.org>, Archit Taneja <architt@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset add pwm support for allwinner sun8i R40/V40/T3 SOCs.
+On Tue, 2017-12-12 at 14:27 -0600, Timur Tabi wrote:
+> On 12/12/2017 05:07 AM, Andy Shevchenko wrote:
+> 
+> > Not ACPI standards as of my knowledge. ACPI standard defines a
+> > common
+> > scheme how to define properties, it doesn't tell anything about
+> > property
+> > names or any mappings between names to values or names to "OS
+> > subsystem").
+> 
+> There was an attempt a while back to standardize this like we do for 
+> device tree, but it fell apart.  Device-specific ACPI-only properties 
+> are not standarized.  This driver is initialized only on ACPI
+> systems. 
+> It has no device tree binding.
 
-all has been teat on T3 board.
+It should follow DT *de facto* standard bindings like "ngpios" (though
+it's not needed in ACPI case IIRC) and other properties.
 
-Some features
-	8 PWM channels outputs(4 PWM pairs) 
-	Supports capturing input 
-	Supports three kinds of output waveforms: continuous waveform, pulse
-	waveform and complementarity pair 
-	Programmable deadzone generator and controllable dead-time 
-	0% to 100% adjustable duty cycle 
-	Up to 24/100MHz output frequency 
-	Minimum resolution is 1/65536 
-	Supports interrupt for PWM output and capturing input
+> > As for GPIO we just follow *de facto* what DT has right now, i.e.
+> > "xxx-
+> > gpio" or "xxx-gpios" pattern is used to map ACPI standard resource
+> > to a
+> > GPIO name. That's how GPIO ACPI lib is being developed.
+> 
+> GPIOs in device tree are defined completely differently than in ACPI. 
+> On DT, the kernel controls the pin muxing.  On ACPI, pins are muxed
+> by 
+> firmware and never re-muxed by the operating system.  So all this
+> driver 
+> does is expose a few pins as simple GPIOs.
 
+Wait, runtime muxing is a matter of requesting another function (usually
+GPIO) and putting it back afterwards. Do you really need anything like
+this at *runtime*?
 
-DOC:
-https://github.com/tinalinux/docs/blob/r40-v1.y/Allwinner_R40_User_Manual_V1.0.pdf
-https://github.com/tinalinux/docs/blob/r40-v1.y/R40_Datasheet_V1.0.pdf
-
-Regards;-)
-Hao Zhang
-
-hao_zhang (4):
-  dt-bindings: pwm: binding allwinner R40, V40, T3
-  ARM: PWM: add allwinner sun8i R40/V40/T3 pwm support.
-  ARM: dts: add pwm node for r40.
-  ARM: pinctrl: sunxi-pinctrl: fix pin funtion can not be match
-    correctly.
-
- .../devicetree/bindings/pwm/pwm-sun8i.txt          |  18 +
- arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |   6 +
- arch/arm/boot/dts/sun8i-r40.dtsi                   |  13 +
- drivers/pinctrl/sunxi/pinctrl-sunxi.c              |   6 +-
- drivers/pwm/Kconfig                                |  10 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-sun8i-r40.c                        | 449 +++++++++++++++++++++
- 7 files changed, 501 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
- create mode 100644 drivers/pwm/pwm-sun8i-r40.c
+Pin control design is not compatible with hardware (too abstract), but
+that is the problem of DT as well: I'm referring here to not carefully
+designed so called "pin states". This is another story and has nothing
+specific for ACPI.
 
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
