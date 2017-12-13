@@ -1,47 +1,57 @@
-From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: am43xx: Fix inverted DS0_PULL_UP_DOWN_EN macro
-Date: Wed, 13 Dec 2017 15:24:43 -0600
-Message-ID: <20171213212443.22632-1-d-gerlach@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] leds: as3645a: Fix checkpatch warnings
+Date: Wed, 13 Dec 2017 23:32:18 +0200
+Message-ID: <11486565.PIGBh3m9bD@avalon>
+References: <20171212215011.30066-1-dmurphy@ti.com> <98df06ef-9ee4-02b1-6d6b-f10b911a8d71@gmail.com> <799ae164-701a-87ce-fadf-8278f01c10d6@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <799ae164-701a-87ce-fadf-8278f01c10d6@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, pavel@ucw.cz, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Due to a mistake in documentation the DS0_PULL_UP_DOWN_EN macro was
-mistakenly defined as an active high bit, however setting the bit
-actually disables the internal pull resistor on the pin, so correct this
-macro and introduce a new DS0_PULL_UP_DOWN_DIS macro with the proper bit
-value set now that the documentation has been updated.
+Hi Dan,
 
-Change based on AM437x Techninal Reference Manual SPRUHL7G Revised June
-2017 Section 7.2.1.
+On Wednesday, 13 December 2017 22:49:38 EET Dan Murphy wrote:
+> On 12/13/2017 02:43 PM, Jacek Anaszewski wrote:
+> > On 12/13/2017 09:41 PM, Dan Murphy wrote:
+> >> On 12/13/2017 02:29 PM, Jacek Anaszewski wrote:
+> >>> Hi Dan,
+> >>> 
+> >>> checkpatch.pl doesn't want to be mentioned in the patch subject :-)
+> >> 
+> >> Ack
+> >> 
+> >>> "WARNING: A patch subject line should describe the change not the tool
+> >>> that found it"
+> >>> 
+> >>> Preferably I'd see two separate patches.
+> >> 
+> >> So you want me to split them up? I have no issue with that.
+> > 
+> > Yeah, it will be easier to come up with concise but meaningful
+> > subjects.
 
-Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
----
- include/dt-bindings/pinctrl/am43xx.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Well, given that one change splits a line that is too long and the other one 
+merges two lines that fit within the limit we could come up with a message 
+that covers both :-) This is nitpicking though, it doesn't matter much. I have 
+no issue with a patch that has some "while at it" portion anyway as long as 
+it's minor (I personally include white space fixes in patches that touch the 
+related code for instance).
 
-diff --git a/include/dt-bindings/pinctrl/am43xx.h b/include/dt-bindings/pinctrl/am43xx.h
-index a69e310789c5..6ce4a32f77d4 100644
---- a/include/dt-bindings/pinctrl/am43xx.h
-+++ b/include/dt-bindings/pinctrl/am43xx.h
-@@ -25,7 +25,8 @@
- #define DS0_FORCE_OFF_MODE	(1 << 24)
- #define DS0_INPUT		(1 << 25)
- #define DS0_FORCE_OUT_HIGH	(1 << 26)
--#define DS0_PULL_UP_DOWN_EN	(1 << 27)
-+#define DS0_PULL_UP_DOWN_EN	(0 << 27)
-+#define DS0_PULL_UP_DOWN_DIS	(1 << 27)
- #define DS0_PULL_UP_SEL		(1 << 28)
- #define WAKEUP_ENABLE		(1 << 29)
- 
+> When I split these up can I add your Acked-by to each patch or would you
+> prefer to resend your Acked-by for each patch?
+
+Assuming you make no mistake, you can keep my ack :-) It will of course not 
+cover the commit message then.
+
+> >>> Also, line length limit for the commit description is 75 characters.
+> >>> Please use whole available space.
+
 -- 
-2.15.1
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
