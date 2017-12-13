@@ -1,139 +1,724 @@
-From: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Subject: [PATCH v5 1/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver DT bindings
-Date: Wed, 13 Dec 2017 11:08:05 -0500
-Message-ID: <1513181285-19865-1-git-send-email-l.subrahmanya@mobiveil.co.in>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, robh@kernel.org
-Cc: devicetree@vger.kernel.org, mingkai.hu@nxp.com, peter.newton@nxp.com, minghuan.lian@nxp.com, rajesh.raina@nxp.com, rajan.kapoor@nxp.com, prabhjot.singh@nxp.com, Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+From: Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
+Subject: [PATCH v5 2/3] PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver
+Date: Wed, 13 Dec 2017 11:08:37 -0500
+Message-ID: <1513181317-19914-1-git-send-email-l.subrahmanya@mobiveil.co.in>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mingkai.hu-3arQi8VN3Tc@public.gmane.org, peter.newton-3arQi8VN3Tc@public.gmane.org, minghuan.lian-3arQi8VN3Tc@public.gmane.org, rajesh.raina-3arQi8VN3Tc@public.gmane.org, rajan.kapoor-3arQi8VN3Tc@public.gmane.org, prabhjot.singh-3arQi8VN3Tc@public.gmane.org, Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DT bindings for Mobiveil PCIe Host Bridge
-IP driver and updates the vendor prefixes file.
+Adds driver for Mobiveil AXI PCIe Host Bridge Soft IP -
+GPEX 4.0, a PCIe gen4 IP. This IP has upto 8
+outbound and inbound windows for the address translation.
 
-Signed-off-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-pci@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
-- updated MAINTAINERS file
+ drivers/pci/host/Kconfig         |   8 +
+ drivers/pci/host/Makefile        |   1 +
+ drivers/pci/host/pcie-mobiveil.c | 653 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 662 insertions(+)
+ create mode 100644 drivers/pci/host/pcie-mobiveil.c
 
- .../devicetree/bindings/pci/mobiveil-pcie.txt      | 73 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- MAINTAINERS                                        |  7 +++
- 3 files changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-
-diff --git a/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-new file mode 100644
-index 0000000..e9dd1e8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-@@ -0,0 +1,73 @@
-+* Mobiveil AXI PCIe Root Port Bridge DT description
-+
-+Mobiveil's GPEX 4.0 is a PCIe Gen4 root port bridge IP. This configurable IP
-+has up to 8 outbound and inbound windows for the address translation.
-+
-+Required properties:
-+- #address-cells: Address representation for root ports, set to <3>
-+- #size-cells: Size representation for root ports, set to <2>
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- compatible: Should contain "mbvl,gpex40-pcie"
-+- reg: Should contain PCIe registers location and length
-+	"config_axi_slave": PCIe controller registers
-+	"csr_axi_slave"	  : Bridge config registers
-+	"gpio_slave"	  : GPIO registers to control slot power
-+	"apb_csr"	  : MSI registers
-+
-+- device_type: must be "pci"
-+- apio-wins : number of requested apio outbound windows
-+		default 2 outbound windows are configured -
-+		1. Config window
-+		2. Memory window
-+- ppio-wins : number of requested ppio inbound windows
-+		default 1 inbound memory window is configured.
-+- bus-range: PCI bus numbers covered
-+- interrupt-controller: identifies the node as an interrupt controller
-+- #interrupt-cells: specifies the number of cells needed to encode an
-+	interrupt source. The value must be 1.
-+- interrupt-parent : phandle to the interrupt controller that
-+		it is attached to, it should be set to gic to point to
-+		ARM's Generic Interrupt Controller node in system DT.
-+- interrupts: The interrupt line of the PCIe controller
-+		last cell of this field is set to 4 to
-+		denote it as IRQ_TYPE_LEVEL_HIGH type interrupt.
-+- interrupt-map-mask,
-+	interrupt-map: standard PCI properties to define the mapping of the
-+	PCI interface to interrupt numbers.
-+- ranges: ranges for the PCI memory regions (I/O space region is not
-+	supported by hardware)
-+	Please refer to the standard PCI bus binding document for a more
-+	detailed explanation
-+
-+
-+Example:
-+++++++++
-+	pcie0: pcie@a0000000 {
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		compatible = "mbvl,gpex40-pcie";
-+		reg =	<0xa0000000 0x00001000>,
-+			<0xb0000000 0x00010000>,
-+			<0xff000000 0x00200000>,
-+			<0xb0010000 0x00001000>;
-+		reg-names =	"config_axi_slave",
-+				"csr_axi_slave",
-+				"gpio_slave",
-+				"apb_csr";
-+		device_type = "pci";
-+		apio-wins = <2>;
-+		ppio-wins = <1>;
-+		bus-range = <0x00000000 0x000000ff>;
-+		interrupt-controller;
-+		interrupt-parent = <&gic>;
-+		#interrupt-cells = <1>;
-+		interrupts = < 0 89 4 >;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pci_express 1>,
-+				<0 0 0 2 &pci_express 2>,
-+				<0 0 0 3 &pci_express 3>,
-+				<0 0 0 4 &pci_express 4>;
-+		ranges = < 0x83000000 0 0x00000000 0xa8000000 0 0x8000000>;
-+
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 0994bdd..8263cc7 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -197,6 +197,7 @@ lwn	Liebherr-Werk Nenzing GmbH
- macnica	Macnica Americas
- marvell	Marvell Technology Group Ltd.
- maxim	Maxim Integrated Products
-+mbvl	Mobiveil Inc.
- mcube	mCube
- meas	Measurement Specialties
- mediatek	MediaTek Inc.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 44512c3..0818ce1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9162,6 +9162,13 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- S:	Maintained
- F:	drivers/media/dvb-frontends/mn88473*
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index 38d1298..09bf1d9 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -27,6 +27,14 @@ config PCIE_XILINX_NWL
+ 	 or End Point. The current option selection will only
+ 	 support root port enabling.
  
-+PCI DRIVER FOR MOBIVEIL PCIE IP
-+M:	Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-+L:	linux-pci@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/pci/mobiveil-pcie.txt
-+F:	drivers/pci/host/pcie-mobiveil.c
++config PCIE_MOBIVEIL
++        bool "Mobiveil AXI PCIe host bridge support"
++        depends on ARCH_ZYNQMP || COMPILE_TEST
++        depends on PCI_MSI_IRQ_DOMAIN
++        help
++          Say 'Y' here if you want kernel to support the Mobiveil AXI PCIe
++          Host Bridge driver.
 +
- MODULE SUPPORT
- M:	Jessica Yu <jeyu@kernel.org>
- M:	Rusty Russell <rusty@rustcorp.com.au>
+ config PCI_FTPCI100
+ 	bool "Faraday Technology FTPCI100 PCI controller"
+ 	depends on OF
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 34ec1d8..d745d68 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_PCIE_ROCKCHIP) += pcie-rockchip.o
+ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+ obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+ obj-$(CONFIG_VMD) += vmd.o
++obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
+ 
+ # The following drivers are for devices that use the generic ACPI
+ # pci_root.c driver but don't support standard ECAM config access.
+diff --git a/drivers/pci/host/pcie-mobiveil.c b/drivers/pci/host/pcie-mobiveil.c
+new file mode 100644
+index 0000000..8611aaa
+--- /dev/null
++++ b/drivers/pci/host/pcie-mobiveil.c
+@@ -0,0 +1,653 @@
++/*
++ * PCIe host controller driver for Mobiveil PCIe Host controller
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ * Copyright (c) 2017 Mobiveil Inc.
++ * Author: Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>
++ */
++
++#include <linux/delay.h>
++#include <linux/interrupt.h>
++#include <linux/init.h>
++#include <linux/irq.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/irqdomain.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/of_pci.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++/* register offsets and bit positions */
++
++/*
++ * translation tables are grouped into windows, each window registers are
++ * grouped into blocks of 4 or 16 registers each
++ */
++#define PAB_REG_BLOCK_SIZE_4	4
++#define PAB_REG_BLOCK_SIZE_16	16
++#define PAB_REG_ADDR_4(offset, win) (offset + (win * PAB_REG_BLOCK_SIZE_4))
++#define PAB_REG_ADDR_16(offset, win) (offset + (win * PAB_REG_BLOCK_SIZE_16))
++
++#define LTSSM_STATUS		0x0404
++#define  LTSSM_STATUS_L0_MASK	0x3f
++#define  LTSSM_STATUS_L0	0x2d
++
++#define PAB_CTRL		0x0808
++#define  AMBA_PIO_ENABLE_SHIFT	0
++#define  PEX_PIO_ENABLE_SHIFT	1
++#define  PAGE_SEL_SHIFT		13
++#define  PAGE_SEL_MASK		0x3f
++#define  PAGE_LO_MASK		0x3ff
++#define  PAGE_SEL_EN		0xc00
++#define  PAGE_SEL_OFFSET_SHIFT	10
++
++#define PAB_AXI_PIO_CTRL	0x0840
++#define  APIO_EN_MASK		0xf
++
++#define PAB_PEX_PIO_CTRL	0x08c0
++#define  PIO_ENABLE_SHIFT	0
++
++#define PAB_INTP_AMBA_MISC_ENB	0x0b0c
++#define PAB_INTP_AMBA_MISC_STAT	0x0b1c
++#define  PAB_INTP_INTX_MASK	0x1e0
++
++#define PAB_AXI_AMAP_CTRL(win)	PAB_REG_ADDR_16(0x0ba0, win)
++#define  WIN_ENABLE_SHIFT	0
++#define  WIN_TYPE_SHIFT		1
++#define  WIN_SIZE_SHIFT		10
++
++#define PAB_EXT_AXI_AMAP_SIZE(win)	PAB_REG_ADDR_4(0xbaf0, win)
++
++#define PAB_AXI_AMAP_AXI_WIN(win)	PAB_REG_ADDR_16(0x0ba4, win)
++#define  AXI_WINDOW_BASE_SHIFT		2
++
++#define PAB_AXI_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR_16(0x0ba8, win)
++#define  PAB_BUS_SHIFT			24
++#define  PAB_DEVICE_SHIFT		19
++#define  PAB_FUNCTION_SHIFT		16
++
++#define PAB_AXI_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR_16(0x0bac, win)
++#define PAB_INTP_AXI_PIO_CLASS		0x474
++
++#define PAB_PEX_AMAP_CTRL(win)		PAB_REG_ADDR_16(0x4ba0, win)
++#define  AMAP_CTRL_EN_SHIFT		0
++#define  AMAP_CTRL_TYPE_SHIFT		1
++
++#define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_REG_ADDR_4(0xbef0, win)
++#define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR_16(0x4ba4, win)
++#define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR_16(0x4ba8, win)
++#define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR_16(0x4bac, win)
++
++/* supported number of interrupts */
++#define PCI_NUM_INTX		4
++#define PAB_INTA_POS		5
++
++/* outbound and inbound window definitions */
++#define WIN_NUM_0		0
++#define WIN_NUM_1		1
++#define CFG_WINDOW_TYPE		0
++#define IO_WINDOW_TYPE		1
++#define MEM_WINDOW_TYPE		2
++#define IB_WIN_SIZE		(256 * 1024 * 1024)
++#define MAX_PIO_WINDOWS		8
++
++/* Parameters for the waiting for link up routine */
++#define LINK_WAIT_MAX_RETRIES	10
++#define LINK_WAIT_MIN		90000
++#define LINK_WAIT_MAX		100000
++
++#ifndef UINT64_MAX
++#define UINT64_MAX		(u64)(~((u64)0))
++#endif
++
++struct mobiveil_pcie {
++	struct platform_device *pdev;
++	struct list_head resources;
++	void __iomem *config_axi_slave_base;	/* endpoint config base */
++	void __iomem *csr_axi_slave_base;	/* root port config base */
++	struct irq_domain *intx_domain;
++	int irq;
++	int apio_wins;
++	int ppio_wins;
++	int ob_wins_configured;	/*  configured outbound windows */
++	int ib_wins_configured;	/*  configured inbound windows */
++	struct resource *ob_io_res;
++	char root_bus_nr;
++};
++
++static inline void csr_writel(struct mobiveil_pcie *pcie, const u32 value,
++		const u32 reg)
++{
++	writel_relaxed(value, pcie->csr_axi_slave_base + reg);
++}
++
++static inline u32 csr_readl(struct mobiveil_pcie *pcie,	const u32 reg)
++{
++	return readl_relaxed(pcie->csr_axi_slave_base + reg);
++}
++
++static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
++{
++	return (csr_readl(pcie, LTSSM_STATUS) &
++		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
++}
++
++static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
++{
++	struct mobiveil_pcie *pcie = bus->sysdata;
++
++	/* Check if link is up when trying to access downstream ports */
++	if (bus->number != pcie->root_bus_nr)
++		if (!mobiveil_pcie_link_up(pcie))
++			return false;
++
++	/* Only one device down on each root port */
++	if ((bus->number == pcie->root_bus_nr) && (devfn > 0))
++		return false;
++
++	/*
++	 * Do not read more than one device on the bus directly
++	 * attached to RC
++	 */
++	if ((bus->primary == pcie->root_bus_nr) && (devfn > 0))
++		return false;
++
++	return true;
++}
++
++/*
++ * mobiveil_pcie_map_bus - routine to get the configuration base of either
++ * root port or endpoint
++ */
++static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
++					unsigned int devfn, int where)
++{
++	struct mobiveil_pcie *pcie = bus->sysdata;
++
++	if (!mobiveil_pcie_valid_device(bus, devfn))
++		return NULL;
++
++	if (bus->number == pcie->root_bus_nr) {
++		/* RC config access */
++		return pcie->csr_axi_slave_base + where;
++	} else {
++		/*
++		 * EP config access (in Config/APIO space)
++		 * Program PEX Address base (31..16 bits) with appropriate value
++		 * (BDF) in PAB_AXI_AMAP_PEX_WIN_L0 Register.
++		 * Relies on pci_lock serialization
++		 */
++		csr_writel(pcie,
++			bus->number << PAB_BUS_SHIFT |
++			PCI_SLOT(devfn) << PAB_DEVICE_SHIFT |
++			PCI_FUNC(devfn) << PAB_FUNCTION_SHIFT,
++			PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
++		return pcie->config_axi_slave_base + where;
++	}
++}
++
++static struct pci_ops mobiveil_pcie_ops = {
++	.map_bus = mobiveil_pcie_map_bus,
++	.read = pci_generic_config_read,
++	.write = pci_generic_config_write,
++};
++
++static void mobiveil_pcie_isr(struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mobiveil_pcie *pcie = irq_desc_get_handler_data(desc);
++	struct device *dev = &pcie->pdev->dev;
++	u32 intr_status;
++	unsigned long shifted_status;
++	u32 bit, virq;
++	u32 val, mask;
++
++	chained_irq_enter(chip, desc);
++
++	/* read INTx status */
++	val = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++	mask = csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
++	intr_status = val & mask;
++
++	/* Handle INTx */
++	if (intr_status & PAB_INTP_INTX_MASK) {
++		shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
++		do {
++			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
++
++				/* clear interrupts */
++				csr_writel(pcie, shifted_status << PAB_INTA_POS,
++						PAB_INTP_AMBA_MISC_STAT);
++
++				virq = irq_find_mapping(pcie->intx_domain,
++					bit + 1);
++				if (virq)
++					generic_handle_irq(virq);
++				else
++					dev_err_ratelimited(dev,
++						"unexpected IRQ, INT%d\n",
++						bit);
++
++			}
++
++			shifted_status = csr_readl(pcie,
++						PAB_INTP_AMBA_MISC_STAT);
++
++		} while ((shifted_status >>  PAB_INTA_POS) != 0);
++	}
++
++	csr_writel(pcie, intr_status, PAB_INTP_AMBA_MISC_STAT);
++	chained_irq_exit(chip, desc);
++}
++
++static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
++{
++	struct device *dev = &pcie->pdev->dev;
++	struct platform_device *pdev = pcie->pdev;
++	struct device_node *node = dev->of_node;
++	struct resource *res;
++	const char *type;
++
++	type = of_get_property(node, "device_type", NULL);
++	if (!type || strcmp(type, "pci")) {
++		dev_err(dev, "invalid \"device_type\" %s\n", type);
++		return -EINVAL;
++	}
++
++	/* map config resource */
++	res = platform_get_resource_byname(pdev,
++		IORESOURCE_MEM, "config_axi_slave");
++	pcie->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
++	if (IS_ERR(pcie->config_axi_slave_base))
++		return PTR_ERR(pcie->config_axi_slave_base);
++	pcie->ob_io_res = res;
++
++	/* map csr resource */
++	res = platform_get_resource_byname(pdev,
++		IORESOURCE_MEM, "csr_axi_slave");
++	pcie->csr_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
++	if (IS_ERR(pcie->csr_axi_slave_base))
++		return PTR_ERR(pcie->csr_axi_slave_base);
++
++	/* read the number of windows requested */
++	if (!pcie->apio_wins &&
++		of_property_read_u32(node, "apio-wins", &pcie->apio_wins)) {
++		pcie->apio_wins = MAX_PIO_WINDOWS;
++	}
++
++	if (!pcie->ppio_wins &&
++		of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins)) {
++		pcie->ppio_wins = MAX_PIO_WINDOWS;
++	}
++
++	pcie->irq = platform_get_irq(pdev, 0);
++	if (pcie->irq <= 0) {
++		dev_err(dev, "failed to map IRQ: %d\n", pcie->irq);
++		return -ENODEV;
++	}
++
++	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
++
++	return 0;
++}
++
++/*
++ * select_paged_register - routine to access paged register of root complex
++ *
++ * registers of RC are paged, for this scheme to work
++ * extracted higher 6 bits of the offset will be written to pg_sel
++ * field of PAB_CTRL register and rest of the lower 10 bits enabled with
++ * PAGE_SEL_EN are used as offset of the register.
++ *
++ */
++static void select_paged_register(struct mobiveil_pcie *pcie, u32 offset)
++{
++	int pab_ctrl_dw, pg_sel;
++
++	/* clear pg_sel field */
++	pab_ctrl_dw = csr_readl(pcie, PAB_CTRL);
++	pab_ctrl_dw = (pab_ctrl_dw & ~(PAGE_SEL_MASK << PAGE_SEL_SHIFT));
++
++	/* set pg_sel field */
++	pg_sel = (offset >> PAGE_SEL_OFFSET_SHIFT) & PAGE_SEL_MASK;
++	pab_ctrl_dw |= ((pg_sel << PAGE_SEL_SHIFT));
++	csr_writel(pcie, pab_ctrl_dw, PAB_CTRL);
++}
++
++static void write_paged_register(struct mobiveil_pcie *pcie,
++		u32 val, u32 offset)
++{
++	u32 off = (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
++
++	select_paged_register(pcie, offset);
++	csr_writel(pcie, val, off);
++}
++
++static u32 read_paged_register(struct mobiveil_pcie *pcie, u32 offset)
++{
++	u32 off = (offset & PAGE_LO_MASK) | PAGE_SEL_EN;
++
++	select_paged_register(pcie, offset);
++	return csr_readl(pcie, off);
++}
++
++static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
++		int pci_addr, int type,	int size_kb)
++{
++	int pio_ctrl_val;
++	int amap_ctrl_dw;
++	u64 size64 = (UINT64_MAX << (WIN_SIZE_SHIFT + ilog2(size_kb)));
++
++	if ((pcie->ib_wins_configured + 1) > pcie->ppio_wins) {
++		dev_err(&pcie->pdev->dev,
++			"ERROR: max inbound windows reached !\n");
++		return;
++	}
++
++	pio_ctrl_val = csr_readl(pcie, PAB_PEX_PIO_CTRL);
++	csr_writel(pcie,
++		pio_ctrl_val | (1 << PIO_ENABLE_SHIFT), PAB_PEX_PIO_CTRL);
++	amap_ctrl_dw =	read_paged_register(pcie, PAB_PEX_AMAP_CTRL(win_num));
++	amap_ctrl_dw = (amap_ctrl_dw | (type << AMAP_CTRL_TYPE_SHIFT));
++	amap_ctrl_dw = (amap_ctrl_dw | (1 << AMAP_CTRL_EN_SHIFT));
++
++	write_paged_register(pcie, amap_ctrl_dw | lower_32_bits(size64),
++				PAB_PEX_AMAP_CTRL(win_num));
++
++	write_paged_register(pcie, upper_32_bits(size64),
++				PAB_EXT_PEX_AMAP_SIZEN(win_num));
++
++	write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
++	write_paged_register(pcie, pci_addr, PAB_PEX_AMAP_PEX_WIN_L(win_num));
++	write_paged_register(pcie, 0, PAB_PEX_AMAP_PEX_WIN_H(win_num));
++}
++
++static void program_ob_windows(struct mobiveil_pcie *pcie, int win_num,
++		u64 cpu_addr, u64 pci_addr, int config_io_bit,
++		int size_kb)
++{
++
++	u32 value, type;
++	u64 size64 = (UINT64_MAX << (WIN_SIZE_SHIFT + ilog2(size_kb)));
++
++	if ((pcie->ob_wins_configured + 1) > pcie->apio_wins) {
++		dev_err(&pcie->pdev->dev,
++			"ERROR: max outbound windows reached !\n");
++		return;
++	}
++
++	/*
++	 * program Enable Bit to 1, Type Bit to (00) base 2, AXI Window Size Bit
++	 * to 4 KB in PAB_AXI_AMAP_CTRL register
++	 */
++	type = config_io_bit;
++	value = csr_readl(pcie, PAB_AXI_AMAP_CTRL(win_num));
++	csr_writel(pcie,
++			1 << WIN_ENABLE_SHIFT |
++			type << WIN_TYPE_SHIFT |
++			lower_32_bits(size64),
++			PAB_AXI_AMAP_CTRL(win_num));
++
++	write_paged_register(pcie, upper_32_bits(size64),
++				PAB_EXT_AXI_AMAP_SIZE(win_num));
++
++	/*
++	 * program AXI window base with appropriate value in
++	 * PAB_AXI_AMAP_AXI_WIN0 register
++	 */
++	value = csr_readl(pcie, PAB_AXI_AMAP_AXI_WIN(win_num));
++	csr_writel(pcie,
++			cpu_addr >> AXI_WINDOW_BASE_SHIFT <<
++			AXI_WINDOW_BASE_SHIFT, PAB_AXI_AMAP_AXI_WIN(win_num));
++
++	value = csr_readl(pcie, PAB_AXI_AMAP_PEX_WIN_H(win_num));
++
++	csr_writel(pcie, lower_32_bits(pci_addr),
++			PAB_AXI_AMAP_PEX_WIN_L(win_num));
++	csr_writel(pcie, upper_32_bits(pci_addr),
++			PAB_AXI_AMAP_PEX_WIN_H(win_num));
++
++	pcie->ob_wins_configured++;
++}
++
++static int mobiveil_bringup_link(struct mobiveil_pcie *pcie)
++{
++	int retries;
++
++	/* check if the link is up or not */
++	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
++		if (mobiveil_pcie_link_up(pcie))
++			return 0;
++
++		usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
++	}
++	dev_err(&pcie->pdev->dev, "link never came up\n");
++	return -ETIMEDOUT;
++}
++
++static int mobiveil_host_init(struct mobiveil_pcie *pcie)
++{
++	u32 value;
++	int type = 0;
++	u32 pab_ctrl;
++	int err;
++	struct resource_entry *win, *tmp;
++
++	/* setup the PCIe slot link power*/
++
++	err = mobiveil_bringup_link(pcie);
++	if (err) {
++		dev_info(&pcie->pdev->dev, "link bring-up failed\n");
++		return err;
++	}
++
++	/*
++	 * program Bus Master Enable Bit in Command Register in PAB Config
++	 * Space
++	 */
++	value = csr_readl(pcie, PCI_COMMAND);
++	csr_writel(pcie,
++		value |
++		PCI_COMMAND_IO | PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
++		PCI_COMMAND);
++
++	/*
++	 * program PIO Enable Bit to 1 (and PEX PIO Enable to 1) in PAB_CTRL
++	 * register
++	 */
++	pab_ctrl = csr_readl(pcie, PAB_CTRL);
++	csr_writel(pcie, pab_ctrl | (1 << AMBA_PIO_ENABLE_SHIFT) |
++		(1 << PEX_PIO_ENABLE_SHIFT),
++		PAB_CTRL);
++
++	csr_writel(pcie, PAB_INTP_INTX_MASK, PAB_INTP_AMBA_MISC_ENB);
++
++	/* program PIO Enable Bit to 1 and Config Window Enable Bit to 1 in
++	 * PAB_AXI_PIO_CTRL Register
++	 */
++	value = csr_readl(pcie, PAB_AXI_PIO_CTRL);
++	csr_writel(pcie, value | APIO_EN_MASK, PAB_AXI_PIO_CTRL);
++
++	/*
++	 * we'll program one outbound window for config reads and
++	 * another default inbound window for all the upstream traffic
++	 * rest of the outbound windows will be configured according to
++	 * the "ranges" field defined in device tree
++	 */
++
++	/* config outbound translation window */
++	program_ob_windows(pcie, pcie->ob_wins_configured,
++			pcie->ob_io_res->start,	0, CFG_WINDOW_TYPE,
++			resource_size(pcie->ob_io_res)/1024);
++
++	/* memory inbound  translation window */
++	program_ib_windows(pcie, WIN_NUM_1, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
++
++	/* Get the I/O and memory ranges from DT */
++	resource_list_for_each_entry_safe(win, tmp, &pcie->resources) {
++		type = 0;
++		if (resource_type(win->res) == IORESOURCE_MEM)
++			type = MEM_WINDOW_TYPE;
++		if (resource_type(win->res) == IORESOURCE_IO)
++			type = IO_WINDOW_TYPE;
++		if (type) {
++			/* configure outbound translation window */
++			program_ob_windows(pcie, pcie->ob_wins_configured,
++				win->res->start, 0, type,
++				resource_size(win->res)/1024);
++		}
++	}
++
++	return err;
++}
++
++/* routine to setup the INTx related data */
++static int mobiveil_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
++		irq_hw_number_t hwirq)
++{
++	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, domain->host_data);
++	return 0;
++}
++
++/* INTx domain opeartions structure */
++static const struct irq_domain_ops intx_domain_ops = {
++	.map = mobiveil_pcie_intx_map,
++};
++
++static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
++{
++	struct device *dev = &pcie->pdev->dev;
++	struct device_node *node = dev->of_node;
++	int ret;
++
++	/* setup INTx */
++	pcie->intx_domain = irq_domain_add_linear(node,
++				PCI_NUM_INTX + 1, &intx_domain_ops, pcie);
++
++	if (!pcie->intx_domain) {
++		dev_err(dev, "Failed to get a INTx IRQ domain\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static int mobiveil_pcie_probe(struct platform_device *pdev)
++{
++	struct mobiveil_pcie *pcie;
++	struct pci_bus *bus;
++	struct pci_bus *child;
++	struct pci_host_bridge *bridge;
++	struct device *dev = &pdev->dev;
++	struct device_node *node = dev->of_node;
++	resource_size_t iobase;
++	int ret;
++
++	/* allocate the PCIe port */
++	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
++	if (!bridge)
++		return -ENODEV;
++
++	pcie = pci_host_bridge_priv(bridge);
++	if (!pcie)
++		return -ENOMEM;
++
++	pcie->pdev = pdev;
++
++	/* parse the device tree */
++	ret = mobiveil_pcie_parse_dt(pcie);
++	if (ret) {
++		dev_err(dev, "Parsing DT failed, ret: %x\n", ret);
++		return ret;
++	}
++
++	INIT_LIST_HEAD(&pcie->resources);
++
++	/* parse the host bridge base addresses from the device tree file */
++	ret = of_pci_get_host_bridge_resources(node,
++			0, 0xff, &pcie->resources, &iobase);
++	if (ret) {
++		dev_err(dev, "Getting bridge resources failed\n");
++		return -ENOMEM;
++	}
++
++	/*
++	 * configure all inbound and outbound windows and prepare the RC for
++	 * config access
++	 */
++	ret = mobiveil_host_init(pcie);
++	if (ret) {
++		dev_err(dev, "Failed to initialize host\n");
++		goto error;
++	}
++
++	/* fixup for PCIe class register */
++	csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
++
++	/* initialize the IRQ domains */
++	ret = mobiveil_pcie_init_irq_domain(pcie);
++	if (ret) {
++		dev_err(dev, "Failed creating IRQ Domain\n");
++		goto error;
++	}
++
++
++	ret = devm_request_pci_bus_resources(dev, &pcie->resources);
++	if (ret)
++		goto error;
++
++	/* Initialize bridge */
++	list_splice_init(&pcie->resources, &bridge->windows);
++	bridge->dev.parent = dev;
++	bridge->sysdata = pcie;
++	bridge->busnr = pcie->root_bus_nr;
++	bridge->ops = &mobiveil_pcie_ops;
++	bridge->map_irq = of_irq_parse_and_map_pci;
++	bridge->swizzle_irq = pci_common_swizzle;
++
++	/* setup the kernel resources for the newly added PCIe root bus */
++	ret = pci_scan_root_bus_bridge(bridge);
++	if (ret)
++		goto error;
++
++	bus = bridge->bus;
++
++	pci_assign_unassigned_bus_resources(bus);
++	list_for_each_entry(child, &bus->children, node)
++		pcie_bus_configure_settings(child);
++	pci_bus_add_devices(bus);
++
++	platform_set_drvdata(pdev, pcie);
++
++	return 0;
++error:
++	pci_free_resource_list(&pcie->resources);
++	return ret;
++}
++
++static const struct of_device_id mobiveil_pcie_of_match[] = {
++	{.compatible = "mbvl,gpex40-pcie",},
++};
++
++MODULE_DEVICE_TABLE(of, mobiveil_pcie_of_match);
++
++static struct platform_driver mobiveil_pcie_driver = {
++	.probe = mobiveil_pcie_probe,
++	.driver = {
++			.name = "mobiveil-pcie",
++			.of_match_table = mobiveil_pcie_of_match,
++			.suppress_bind_attrs = true,
++		},
++};
++
++builtin_platform_driver(mobiveil_pcie_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Mobiveil PCIe host controller driver");
++MODULE_AUTHOR("Subrahmanya Lingappa <l.subrahmanya-DTHOJn6Rh8lhmhkoCovsdw@public.gmane.org>");
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
