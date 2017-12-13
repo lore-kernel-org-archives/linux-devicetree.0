@@ -1,111 +1,31 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 1/3] dt-bindings: timer: renesas, cmt: Document r8a774[35]
- CMT support
-Date: Wed, 13 Dec 2017 09:50:16 +0000
-Message-ID: <TY1PR06MB0895BBA53926995AE47757A9C0350@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1513104579-6333-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513104579-6333-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <20171213084048.jxofa3hinb6gm2ax@verge.net.au>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH V4 00/12] drivers: Boot Constraints core
+Date: Wed, 13 Dec 2017 10:55:29 +0100
+Message-ID: <20171213095529.GK13194@kroah.com>
+References: <cover.1509284255.git.viresh.kumar@linaro.org>
+ <20171128041818.GE11413@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20171213084048.jxofa3hinb6gm2ax@verge.net.au>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171128041818.GE11413@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robdclark@gmail.com, s.hauer@pengutronix.de, l.stach@pengutronix.de, shawnguo@kernel.org, fabio.estevam@nxp.com, nm@ti.com, xuwei5@hisilicon.com, robh+dt@kernel.org, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
+On Tue, Nov 28, 2017 at 09:48:18AM +0530, Viresh Kumar wrote:
+> On 29-10-17, 19:18, Viresh Kumar wrote:
+> > Here is V4 of the boot constraints core based on your feedback from V3.
+> > We now have support for three platforms (as you suggested) included in
+> > this series: Hisilicon, IMX and Qualcomm.
+> 
+> Hi Greg,
+> 
+> I was waiting for rc1 to come out before sending a reminder for this
+> series and so here is one :)
 
-thank you for the feedback.
-I'll apply your comments to V2, but I'll wait for your reply on the CMT "en=
-able by default" issue.
+I've reviewed it enough for now, needs a tiny bit of work, but looking
+much better, nice job!
 
-Thanks,
-Fab
-
-> Subject: Re: [PATCH 1/3] dt-bindings: timer: renesas, cmt: Document r8a77=
-4[35] CMT support
->
-> On Tue, Dec 12, 2017 at 06:49:37PM +0000, Fabrizio Castro wrote:
-> > Document SoC specific compatible strings for r8a7743 and r8a7745.
-> > No driver change is needed as the fallback strings will activate
-> > the right code.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 12 +++++++++=
----
-> >  1 file changed, 9 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> > index d740989..1e4fe98 100644
-> > --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> > +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> > @@ -22,6 +22,10 @@ Required Properties:
-> >
-> >      - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8=
-a73a4.
-> >      - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8=
-a73a4.
-> > +    - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8=
-a7743.
-> > +    - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8=
-a7743.
-> > +    - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8=
-a7745.
-> > +    - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8=
-a7745.
-> >      - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8=
-a7790.
-> >      - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8=
-a7790.
-> >      - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8=
-a7791.
-> > @@ -31,9 +35,11 @@ Required Properties:
-> >      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8=
-a7794.
-> >      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8=
-a7794.
-> >
-> > -    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-C=
-ar Gen2.
-> > -    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-C=
-ar Gen2.
-> > -These are fallbacks for r8a73a4 and all the R-Car Gen2
-> > +    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-C=
-ar Gen2 or
->
-> nit: or -> and ?
->
-> > +RZ/G1.
-> > +    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-C=
-ar Gen2 or
-> > +RZ/G1.
-> > +These are fallbacks for r8a73a4, all the R-Car Gen2 and RZ/G1
-> >  entrieslisted above.
->
-> nit: all the R-Car -> R-Car
->
-> >    - reg: base address and length of the registers block for the timer =
-module.
-
-
-[https://www2.renesas.eu/media/email/unicef_2017.jpg]
-
-This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
-ve decided to support Unicef with a donation. For further details click her=
-e<https://www.unicef.org/> to find out about the valuable work they do, hel=
-ping children all over the world.
-We would like to take this opportunity to wish you a Merry Christmas and a =
-prosperous New Year.
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+gre gk-h
