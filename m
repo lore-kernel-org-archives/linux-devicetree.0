@@ -1,112 +1,85 @@
-From: Alexandre TORGUE <alexandre.torgue@st.com>
-Subject: RE: [PATCH 1/3] ARM: dts: stm32: add DMA memory pool on MCU which
- embed a cortex-M7
-Date: Wed, 13 Dec 2017 12:50:15 +0000
-Message-ID: <b34454840b5346b998a80a98dd05287f@SFHDAG3NODE2.st.com>
-References: <1513101746-18030-1-git-send-email-alexandre.torgue@st.com>
- <1513101746-18030-2-git-send-email-alexandre.torgue@st.com>
- <ab9a2ef4-4944-c935-af6e-12503b477879@arm.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH] leds: as3645a: Fix checkpatch warnings
+Date: Wed, 13 Dec 2017 13:56:46 +0100
+Message-ID: <20171213125646.GB18897@amd>
+References: <20171212215011.30066-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vladimir Murzin <vladimir.murzin@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Patrice CHOTARD <patrice.chotard@st.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="BwCQnh7xodEAoBMC"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171212215011.30066-1-dmurphy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBBbGV4YW5kcmUgVE9SR1VFIA0K
-U2VudDogbWVyY3JlZGkgMTMgZMOpY2VtYnJlIDIwMTcgMTE6MjgNClRvOiAnVmxhZGltaXIgTXVy
-emluJyA8dmxhZGltaXIubXVyemluQGFybS5jb20+OyBNYXhpbWUgQ29xdWVsaW4gPG1jb3F1ZWxp
-bi5zdG0zMkBnbWFpbC5jb20+OyBhcm5kQGFybmRiLmRlOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1h
-cmsucnV0bGFuZEBhcm0uY29tOyBsaW51eEBhcm1saW51eC5vcmcudWs7IFBhdHJpY2UgQ0hPVEFS
-RCA8cGF0cmljZS5jaG90YXJkQHN0LmNvbT47IGxlZS5qb25lc0BsaW5hcm8ub3JnDQpDYzogZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZw0KU3ViamVjdDogUkU6IFtQQVRDSCAxLzNdIEFSTTogZHRzOiBzdG0zMjogYWRkIERNQSBt
-ZW1vcnkgcG9vbCBvbiBNQ1Ugd2hpY2ggZW1iZWQgYSBjb3J0ZXgtTTcNCg0KDQotLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogVmxhZGltaXIgTXVyemluIFttYWlsdG86dmxhZGltaXIu
-bXVyemluQGFybS5jb21dDQpTZW50OiBtZXJjcmVkaSAxMyBkw6ljZW1icmUgMjAxNyAxMTowNw0K
-VG86IEFsZXhhbmRyZSBUT1JHVUUgPGFsZXhhbmRyZS50b3JndWVAc3QuY29tPjsgTWF4aW1lIENv
-cXVlbGluIDxtY29xdWVsaW4uc3RtMzJAZ21haWwuY29tPjsgYXJuZEBhcm5kYi5kZTsgcm9iaCtk
-dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXhAYXJtbGludXgub3JnLnVr
-OyBQYXRyaWNlIENIT1RBUkQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+OyBsZWUuam9uZXNAbGlu
-YXJvLm9yZw0KQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcNClN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8zXSBBUk06IGR0czog
-c3RtMzI6IGFkZCBETUEgbWVtb3J5IHBvb2wgb24gTUNVIHdoaWNoIGVtYmVkIGEgY29ydGV4LU03
-DQoNCk9uIDEyLzEyLzE3IDE4OjAyLCBBbGV4YW5kcmUgVG9yZ3VlIHdyb3RlOg0KPiBPbiBjb3J0
-ZXgtTTcgTUNVLCBETUEgaGF2ZSB0byB1c2UgYSBub24gY2FjaGUtYWJsZSBtZW1vcnkgYXJlYS4g
-Rm9yIA0KPiB0aGlzIHJlYXNvbiBhIGRlZGljYXRlZCBtZW1vcnkgcG9vbCBpcyBjcmVhdGVkIGZv
-ciBETUEuDQo+IFRoaXMgcGF0Y2ggY3JlYXRlcyBhIERNQSBtZW1vcnkgcG9vbCBvZiAxTUIgb2Yg
-ZWFjaCBTVE0zMiBNQ1Ugd2hpY2ggDQo+IGVtYmVkcyBhIGNvcnRleC1NNyBleHBlY3Qgc3RtMzJm
-NzQ2LWRpc2NvLiBJbmRlZWQsIGFzIHN0bTMyZjc0Ni1kaXNjbyANCj4gaGFzDQogICAgICAgICAg
-ICAgICAgICAgICBeXl5eXl4NCiAgICAgICAgICAgICAgICAgICAgIGV4Y2VwdD8NClNvcnJ5LCBJ
-cyB0aGVyZSBhIHR5cG8gaXNzdWUgKG9yIGp1c3Qgd29yZGluZyBpc3N1ZSkgPw0KDQpTb3JyeSBJ
-IHdhcyBub3QgYXdha2UgdGhpcyBtb3JuaW5nLiBJZiBubyB2MiBJIHdpbGwgZml4IHRoaXMgdHlw
-byB3aGVuIEkgd2lsbCBhcHBseSBwYXRjaCBvbiBteSB0cmVlLg0KDQogDQo+IG9ubHkgYSA4TUIg
-U0RSQU0gYW5kIGl0J3MgdHJpY2t5IHRvIHJlZHVjZSBtZW1vcnkgdXNlZCBieSBLZXJuZWwuDQoN
-CkkgZ3Vlc3MgdGhhdCAxTUIgaXMgYSBraW5kIG9mICJzaG91bGQgYmUgZW5vdWdoIiBlc3RpbWF0
-ZSwgcHJvYmFibHkgc29tZXRoaW5nIGFsb25nIHdpdGggWzFdIHdvdWxkIGdpdmUgeW91IGV4YWN0
-IG51bWJlcnMuLi4NCg0KRXhhY3RseSwgMU1CIGlzICBhIGtpbmQgInNob3VsZCBiZSBlbm91Z2gi
-IGFuZCBjb2RlIGlzIGhlcmUgdG8gc2hvdyB0aGF0IHdlIG5lZWQgYSBkZWRpY2F0ZWQgbWVtb3J5
-IGFyZWEgZm9yIERNQS4gQnV0IHRoaXMgdmFsdWUgaGFzIHRvIGJlIGFkYXB0IHJlZ2FyZGluZyB0
-byB1c2UgY2FzZSBuZWVkZWQgYnkgdXNlcnMuIFRoYW5rcyBmb3IgdGhlIGxrbWwgbGluay4gSXQg
-d2lsbCBoZWxwIHVzZXJzIHRvIGFkYXB0IERNQSBhcmVhIGFuZCB0aGFua3MgZm9yIHJldmlld2lu
-Zy4NCg0KUmVnYXJkcw0KQWxleA0KDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcmUgVG9y
-Z3VlIDxhbGV4YW5kcmUudG9yZ3VlQHN0LmNvbT4NCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9zdG0zMjc0NmctZXZhbC5kdHMNCj4gYi9hcmNoL2FybS9ib290L2R0cy9zdG0z
-Mjc0NmctZXZhbC5kdHMNCj4gaW5kZXggMmQ0ZTcxNy4uM2Y1MmE3YiAxMDA2NDQNCj4gLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvc3RtMzI3NDZnLWV2YWwuZHRzDQo+ICsrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N0bTMyNzQ2Zy1ldmFsLmR0cw0KPiBAQCAtNTcsNiArNTcsMTkgQEANCj4gIAkJcmVn
-ID0gPDB4YzAwMDAwMDAgMHgyMDAwMDAwPjsNCj4gIAl9Ow0KPiAgDQo+ICsJcmVzZXJ2ZWQtbWVt
-b3J5IHsNCj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCSNzaXplLWNlbGxzID0gPDE+
-Ow0KPiArCQlyYW5nZXM7DQo+ICsNCj4gKwkJbGludXgsZG1hIHsNCj4gKwkJCWNvbXBhdGlibGUg
-PSAic2hhcmVkLWRtYS1wb29sIjsNCj4gKwkJCWxpbnV4LGRtYS1kZWZhdWx0Ow0KPiArCQkJbm8t
-bWFwOw0KPiArCQkJcmVnID0gPDB4YzFmMDAwMDAgMHgxMDAwMDA+Ow0KPiArCQl9Ow0KPiArCX07
-DQo+ICsNCj4gIAlhbGlhc2VzIHsNCj4gIAkJc2VyaWFsMCA9ICZ1c2FydDE7DQo+ICAJfTsNCj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjc2OS1kaXNjby5kdHMNCj4gYi9h
-cmNoL2FybS9ib290L2R0cy9zdG0zMmY3NjktZGlzY28uZHRzDQo+IGluZGV4IDQ0NjNjYTEuLjA4
-Njk5YTIgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjc2OS1kaXNjby5k
-dHMNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNzY5LWRpc2NvLmR0cw0KPiBAQCAt
-NTcsNiArNTcsMTkgQEANCj4gIAkJcmVnID0gPDB4QzAwMDAwMDAgMHgxMDAwMDAwPjsNCj4gIAl9
-Ow0KPiAgDQo+ICsJcmVzZXJ2ZWQtbWVtb3J5IHsNCj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-DQo+ICsJCSNzaXplLWNlbGxzID0gPDE+Ow0KPiArCQlyYW5nZXM7DQo+ICsNCj4gKwkJbGludXgs
-ZG1hIHsNCj4gKwkJCWNvbXBhdGlibGUgPSAic2hhcmVkLWRtYS1wb29sIjsNCj4gKwkJCWxpbnV4
-LGRtYS1kZWZhdWx0Ow0KPiArCQkJbm8tbWFwOw0KPiArCQkJcmVnID0gPDB4YzBmMDAwMDAgMHgx
-MDAwMDA+Ow0KPiArCQl9Ow0KPiArCX07DQo+ICsNCj4gIAlhbGlhc2VzIHsNCj4gIAkJc2VyaWFs
-MCA9ICZ1c2FydDE7DQo+ICAJfTsNCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0
-bTMyaDc0M2ktZGlzY28uZHRzDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJoNzQzaS1kaXNj
-by5kdHMNCj4gaW5kZXggNzllODQxZC4uMTA0NTQ1YSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvc3RtMzJoNzQzaS1kaXNjby5kdHMNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-c3RtMzJoNzQzaS1kaXNjby5kdHMNCj4gQEAgLTU3LDYgKzU3LDE5IEBADQo+ICAJCXJlZyA9IDww
-eGQwMDAwMDAwIDB4MjAwMDAwMD47DQo+ICAJfTsNCj4gIA0KPiArCXJlc2VydmVkLW1lbW9yeSB7
-DQo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4g
-KwkJcmFuZ2VzOw0KPiArDQo+ICsJCWxpbnV4LGRtYSB7DQo+ICsJCQljb21wYXRpYmxlID0gInNo
-YXJlZC1kbWEtcG9vbCI7DQo+ICsJCQlsaW51eCxkbWEtZGVmYXVsdDsNCj4gKwkJCW5vLW1hcDsN
-Cj4gKwkJCXJlZyA9IDwweGMxZjAwMDAwIDB4MTAwMDAwPjsNCj4gKwkJfTsNCj4gKwl9Ow0KPiAr
-DQo+ICAJYWxpYXNlcyB7DQo+ICAJCXNlcmlhbDAgPSAmdXNhcnQyOw0KPiAgCX07DQo+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMmg3NDNpLWV2YWwuZHRzDQo+IGIvYXJjaC9h
-cm0vYm9vdC9kdHMvc3RtMzJoNzQzaS1ldmFsLmR0cw0KPiBpbmRleCA5ZjBlNzJjLi41YmQ0YjE2
-IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMmg3NDNpLWV2YWwuZHRzDQo+
-ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyaDc0M2ktZXZhbC5kdHMNCj4gQEAgLTU3LDYg
-KzU3LDE5IEBADQo+ICAJCXJlZyA9IDwweGQwMDAwMDAwIDB4MjAwMDAwMD47DQo+ICAJfTsNCj4g
-IA0KPiArCXJlc2VydmVkLW1lbW9yeSB7DQo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiAr
-CQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4gKwkJcmFuZ2VzOw0KPiArDQo+ICsJCWxpbnV4LGRtYSB7
-DQo+ICsJCQljb21wYXRpYmxlID0gInNoYXJlZC1kbWEtcG9vbCI7DQo+ICsJCQlsaW51eCxkbWEt
-ZGVmYXVsdDsNCj4gKwkJCW5vLW1hcDsNCj4gKwkJCXJlZyA9IDwweGMxZjAwMDAwIDB4MTAwMDAw
-PjsNCj4gKwkJfTsNCj4gKwl9Ow0KPiArDQo+ICAJYWxpYXNlcyB7DQo+ICAJCXNlcmlhbDAgPSAm
-dXNhcnQxOw0KPiAgCX07DQo+IA0KDQpVc2FnZSBvZiBkbWEtZGVmYXVsdCBsb29rcyBjb3JyZWN0
-IHRvIG1lLCBzbyBGV0lXDQoNClJldmlld2VkLWJ5OiBWbGFkaW1pciBNdXJ6aW4gPHZsYWRpbWly
-Lm11cnppbkBhcm0uY29tPg0KDQpbMV0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTcvNy83LzI5
-Ng0KDQpWbGFkaW1pcg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtYXJtLWtlcm5lbAo=
+
+--BwCQnh7xodEAoBMC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue 2017-12-12 15:50:11, Dan Murphy wrote:
+> Fix two checkpatch warnings for 80 char
+> length and for a quoted string across multiple
+> line warnings.
+>=20
+> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+> ---
+>  drivers/leds/leds-as3645a.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/leds/leds-as3645a.c b/drivers/leds/leds-as3645a.c
+> index 9a257f969300..f883616d9e60 100644
+> --- a/drivers/leds/leds-as3645a.c
+> +++ b/drivers/leds/leds-as3645a.c
+> @@ -360,7 +360,8 @@ static int as3645a_set_flash_brightness(struct led_cl=
+assdev_flash *fled,
+>  {
+>  	struct as3645a *flash =3D fled_to_as3645a(fled);
+> =20
+> -	flash->flash_current =3D as3645a_current_to_reg(flash, true, brightness=
+_ua);
+> +	flash->flash_current =3D as3645a_current_to_reg(flash, true,
+> +						      brightness_ua);
+> =20
+>  	return as3645a_set_current(flash);
+>  }
+> @@ -455,8 +456,8 @@ static int as3645a_detect(struct as3645a *flash)
+> =20
+>  	/* Verify the chip model and version. */
+>  	if (model !=3D 0x01 || rfu !=3D 0x00) {
+> -		dev_err(dev, "AS3645A not detected "
+> -			"(model %d rfu %d)\n", model, rfu);
+> +		dev_err(dev, "AS3645A not detected (model %d rfu %d)\n",
+> +			model, rfu);
+>  		return -ENODEV;
+>  	}
+> =20
+
+
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--BwCQnh7xodEAoBMC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAloxI44ACgkQMOfwapXb+vI9/ACeMr6B9vt2r3VKOKq4tndatnEw
+Z8kAoLL4A3F+MHldRuqfN6UIuTw9acHK
+=PjMp
+-----END PGP SIGNATURE-----
+
+--BwCQnh7xodEAoBMC--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
