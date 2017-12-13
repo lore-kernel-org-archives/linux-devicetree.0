@@ -1,45 +1,100 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 8/9] pinctrl: axp209: add support for AXP813 GPIOs
-Date: Wed, 13 Dec 2017 08:36:39 +0100
-Message-ID: <CACRpkdY8_8BZ6HJV4qE_b9-Ln6TLK_m6DNUpgoh7x61F915nJw@mail.gmail.com>
-References: <20171205144647.17594-1-quentin.schulz@free-electrons.com>
- <20171205144647.17594-9-quentin.schulz@free-electrons.com> <96bc20e3-97ca-ae76-9e35-e6af644659c7@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/1] arm: sunxi: Add alternative pins for spi0
+Date: Wed, 13 Dec 2017 09:44:34 +0200
+Message-ID: <1513151074-6888-1-git-send-email-stefan@olimex.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <96bc20e3-97ca-ae76-9e35-e6af644659c7-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 8, 2017 at 2:41 PM, Quentin Schulz
-<quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Allwinner A10/A13/A20 SoCs have pinmux for spi0
+on port C. The patch adds these pins in the respective
+dts includes.
 
->> -     pctl->desc = &axp20x_data;
->> +     pctl->desc = (struct axp20x_pctrl_desc *)of_device_get_match_data(dev);
->>       pctl->regmap = axp20x->regmap;
->>       pctl->dev = &pdev->dev;
->>
->
-> I am using pctl->desc before retrieving it, thus dereferencing from a
-> null pointer.
->
-> We just have to move
-> pctl->chip.ngpio                = pctl->desc->npins;
-> after
-> pctl->desc = (struct axp20x_pctrl_desc *)of_device_get_match_data(dev);
->
-> Linus, I guess that I should send a patch to fix this or is there an
-> other way not to have to apply such a small and dumb patch?
+Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi | 10 ++++++++++
+ arch/arm/boot/dts/sun5i.dtsi     | 10 ++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi | 10 ++++++++++
+ 3 files changed, 30 insertions(+)
 
-Just send a patch based on my pin control tree "devel" branch or
-linux-next, it's cool.
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 5840f5c..d835741 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -705,11 +705,21 @@
+ 				bias-pull-up;
+ 			};
+ 
++			spi0_pc_pins: spi0-pc-pins {
++				pins = "PC0", "PC1", "PC2";
++				function = "spi0";
++			};
++
+ 			spi0_pi_pins: spi0-pi-pins {
+ 				pins = "PI11", "PI12", "PI13";
+ 				function = "spi0";
+ 			};
+ 
++			spi0_cs0_pc_pin: spi0-cs0-pc-pin {
++				pins = "PC23";
++				function = "spi0";
++			};
++
+ 			spi0_cs0_pi_pin: spi0-cs0-pi-pin {
+ 				pins = "PI10";
+ 				function = "spi0";
+diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
+index 07f2248..9290e26 100644
+--- a/arch/arm/boot/dts/sun5i.dtsi
++++ b/arch/arm/boot/dts/sun5i.dtsi
+@@ -492,6 +492,16 @@
+ 				function = "nand0";
+ 			};
+ 
++			spi0_pins_a: spi0@0 {
++				pins = "PC0", "PC1", "PC2";
++				function = "spi0";
++			};
++
++			spi0_cs0_pins_a: spi0-cs0@0 {
++				pins = "PC3";
++				function = "spi0";
++			};
++
+ 			spi2_pins_a: spi2@0 {
+ 				pins = "PE1", "PE2", "PE3";
+ 				function = "spi2";
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 59655e4..6930527 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -838,11 +838,21 @@
+ 				function = "spi0";
+ 			};
+ 
++			spi0_pins_b: spi0@1 {
++				pins = "PC0", "PC1", "PC2";
++				function = "spi0";
++			};
++
+ 			spi0_cs0_pins_a: spi0_cs0@0 {
+ 				pins = "PI10";
+ 				function = "spi0";
+ 			};
+ 
++			spi0_cs0_pins_b: spi0_cs0@1 {
++				pins = "PC23";
++				function = "spi0";
++			};
++
+ 			spi0_cs1_pins_a: spi0_cs1@0 {
+ 				pins = "PI14";
+ 				function = "spi0";
+-- 
+2.7.4
 
-Things like this happens all the time.
-
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
