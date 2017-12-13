@@ -1,105 +1,57 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] thermal: armada: add support for CP110
-Date: Wed, 13 Dec 2017 10:21:14 +0100
-Message-ID: <87zi6nouet.fsf@free-electrons.com>
-References: <f8c589337a4fb78852eadf15058e8f8d132d4dc0.1512299484.git.baruch@tkos.co.il>
-        <d48c916a2502f9c75e9ea4ba41300e2ffbb254d8.1512299484.git.baruch@tkos.co.il>
-        <20171211160932.692ba8be@xps13>
-        <20171211152731.glkkes5errcxmsvz@sapphire.tkos.co.il>
-        <87y3m9qjt2.fsf@free-electrons.com>
-        <20171213083848.j5het742yavxvkkw@sapphire.tkos.co.il>
-        <20171213095501.1988749d@xps13>
-        <20171213091040.jwsphlax4yidm4qp@sapphire.tkos.co.il>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v10 00/13] Introduce framework for SLIMbus device driver
+Date: Wed, 13 Dec 2017 10:25:02 +0100
+Message-ID: <20171213092502.GA12631@kroah.com>
+References: <20171211234307.14465-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171213091040.jwsphlax4yidm4qp-MwjkAAnuF3khR1HGirfZ1z4kX+cae0hd@public.gmane.org> (Baruch
-        Siach's message of "Wed, 13 Dec 2017 11:10:40 +0200")
+Content-Disposition: inline
+In-Reply-To: <20171211234307.14465-1-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, pombredanne-od1rfyK75/E@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
- 
- On mer., déc. 13 2017, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+On Mon, Dec 11, 2017 at 11:42:54PM +0000, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
+> developed by MIPI (Mobile Industry Processor Interface) alliance.
+> SLIMbus is a 2-wire implementation, which is used to communicate with
+> peripheral components like audio-codec.
+> SLIMbus uses Time-Division-Multiplexing to accommodate multiple data
+> channels, and control channel. Control channel has messages to do
+> device-enumeration, messages to send/receive control-data to/from
+> SLIMbus devices, messages for port/channel management, and messages to
+> do bandwidth allocation.
+> Framework is introduced to support  multiple instances of the bus
+> (1 controller per bus), and multiple slave devices per controller.
+> SPI and I2C frameworks, and comments from last time when I submitted
+> the patches were referred-to while working on this framework.
+> 
+> These patchsets introduce device-management, OF helpers, and messaging
+> APIs, controller driver for Qualcomm's SLIMbus controller, and
+> clock-pause feature for entering/exiting low-power mode for SLIMbus.
+> Framework patches to do channel, port and bandwidth
+> management are work-in-progress and will be sent out once these
+> initial patches are accepted.
+> 
+> These patchsets were tested on IFC6410 board with Qualcomm APQ8064
+> processor using the controller driver, and a WCD9310 codec.
+> 
+> v9: https://lkml.org/lkml/2017/12/7/289
+> 
+> Changes from v9 to v10:
+> * Added kernel-doc reference into slimbus driver api doc suggested by
+>  Jonathan Corbet
 
-> Hi Miquel,
->
-> On Wed, Dec 13, 2017 at 09:55:01AM +0100, Miquel RAYNAL wrote:
->> > > > How would a separate init_sensor routine improve things?
->> > > 
->> > > So yes please do it, thanks to this you won't have to add the
->> > > control_msb_offset member and can use a clean function. Moreover if
->> > > in the future we see some usefulness for this LSB register then we
->> > > could use the new compatible for the Armada 38x.
->> > 
->> > There are two separate issues here:
->> > 
->> >   1. DT binding
->> > 
->> >   2. init_sensor callback implementation
->> > 
->> > We both agree on #1. The A38x and CP110 need separate compatible
->> > strings. In case we want to access the LSB control register on Armada
->> > 38x, we will need yet another compatible string
->> > (marvell,armada380-v2-thermal maybe?).
->> > 
->> > As for #2, I'm all for sharing as much code as possible. I find the
->> > vendor kernel approach of duplicating the init routines[1] unhelpful
->> > as it violates the DRY principle. The differences between
->> > armada380_init_sensor() and cp110_init_sensor() are minor. In my
->> > opinion, these differences should be expressed explicitly in the
->> > armada_thermal_data, in a similar way to my suggested
->> > control_msb_offset field. The vendor code hides these differences in
->> > slight variations of duplicated code.
->> > 
->> > What is the advantage of a separate init routine?
->> 
->> The advantage is that is the very near future I plan to add the
->> overheat interrupt only on CP110 (not on 38x) and this needs some
->> initialization. So if we don't make different routines now, I will
->> have to do it right after.
->
-> I don't think so. The code of these functions in the vendor kernel overheat 
-> support implementation is the same, duplicated. The variations are only in 
-> registers/bits offsets. A single routine with one or two added 
-> armada_thermal_data fields would be much easier to comprehend and maintain.
->
->> What would be fine is to have the shared code in a separate function,
->> like it is done in Marvell kernel. What do you think about that?
->
-> The Marvell code does not "share" the code. Separate functions means 
-> duplicated code that obscures the hardware details, making maintenance harder 
-> on the long run.
+These all look good to me.  I can take this through my tree if I get the
+ack from Mark for the regmap changes.
 
-Well, Miquel speak about writting new code, so I don't see why you refer
-the Marvell LSP code. Also, I don't see how having common function will
-duplicate the code.
+thanks,
 
-Gregory
-
->
-> https://en.wikipedia.org/wiki/Don%27t_repeat_yourself
->
-> baruch
->
-> -- 
->      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-> =}------------------------------------------------ooO--U--Ooo------------{=
->    - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
