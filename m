@@ -1,65 +1,60 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: [PATCH] drm/panel: Add support for AUO G104SN02 V2 panel
-Date: Wed, 13 Dec 2017 15:00:56 +0100
-Message-ID: <1513173656.2322.16.camel@googlemail.com>
-Reply-To: chf.fritz@googlemail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel@lists.freedesktop.org, Stefan =?ISO-8859-1?Q?Riedm=FCller?= <S.Riedmueller@phytec.de>
+From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 2/3] dt-bindings: iio: temperature: add MLX90632 device bindings
+Date: Wed, 13 Dec 2017 15:00:57 +0100
+Message-ID: <20171213140057.18550-1-cmo@melexis.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIEFVTyBHMTA0U04wMiBWMiA4MDB4NjAwIDEwLjQi
-IHBhbmVsIHRvIERSTQpzaW1wbGUgcGFuZWwgZHJpdmVyLgoKU2lnbmVkLW9mZi1ieTogQ2hyaXN0
-b3BoIEZyaXR6IDxjaGYuZnJpdHpAZ29vZ2xlbWFpbC5jb20+ClNpZ25lZC1vZmYtYnk6IFN0ZWZh
-biBSaWVkbXVlbGxlciA8cy5yaWVkbXVlbGxlckBwaHl0ZWMuZGU+Ci0tLQogLi4uL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvYXVvLGcxMDRzbjAyLnR4dCAgICAgICAgfCAgNyArKysrKysKIGRyaXZl
-cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMjYgKysrKysr
-KysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspCiBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvYXVvLGcxMDRzbjAyLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1byxnMTA0c24wMi50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8sZzEwNHNuMDIudHh0Cm5l
-dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjA1MGFjOTAKLS0tIC9kZXYvbnVsbAor
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8s
-ZzEwNHNuMDIudHh0CkBAIC0wLDAgKzEsNyBAQAorQVUgT3B0cm9uaWNzIENvcnBvcmF0aW9uIDEw
-LjQiICg4MDB4NjAwKSBjb2xvciBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6
-CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiYXVvLGcxMDRzbjAyIgorCitUaGlzIGJpbmRpbmcg
-aXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3Bl
-Y2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJt
-L3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IDIzNGFmODEuLmY0Y2M4NzYgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9k
-cm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTU4Miw2ICs1ODIsMjkgQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBwYW5lbF9kZXNjIGF1b19iMTMzaHRuMDEgPSB7CiAJfSwKIH07CiAKK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBhdW9fZzEwNHNuMDJfbW9kZSA9IHsKKwkuY2xv
-Y2sgPSA0MDAwMCwKKwkuaGRpc3BsYXkgICAgPSA4MDAsCisJLmhzeW5jX3N0YXJ0ID0gODAwICsg
-NDAsCisJLmhzeW5jX2VuZCAgID0gODAwICsgNDAgKyAyMTYsCisJLmh0b3RhbCAgICAgID0gODAw
-ICsgNDAgKyAyMTYgKyAxMjgsCisJLnZkaXNwbGF5ID0gNjAwLAorCS52c3luY19zdGFydCA9IDYw
-MCArIDEwLAorCS52c3luY19lbmQgICA9IDYwMCArIDEwICsgMzUsCisJLnZ0b3RhbCAgICAgID0g
-NjAwICsgMTAgKyAzNSArIDIsCisJLnZyZWZyZXNoID0gNjAsCit9OworCitzdGF0aWMgY29uc3Qg
-c3RydWN0IHBhbmVsX2Rlc2MgYXVvX2cxMDRzbjAyID0geworCS5tb2RlcyA9ICZhdW9fZzEwNHNu
-MDJfbW9kZSwKKwkubnVtX21vZGVzID0gMSwKKwkuYnBjID0gOCwKKwkuc2l6ZSA9IHsKKwkJLndp
-ZHRoID0gMjExLAorCQkuaGVpZ2h0ID0gMTU4LAorCX0sCit9OworCiBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGRpc3BsYXlfdGltaW5nIGF1b19nMTMzaGFuMDFfdGltaW5ncyA9IHsKIAkucGl4ZWxjbG9j
-ayA9IHsgMTM0MDAwMDAwLCAxNDEyMDAwMDAsIDE0OTAwMDAwMCB9LAogCS5oYWN0aXZlID0geyAx
-OTIwLCAxOTIwLCAxOTIwIH0sCkBAIC0xOTY1LDYgKzE5ODgsOSBAQCBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCQkuY29tcGF0aWJsZSA9
-ICJhdW8sYjEzM3h0bjAxIiwKIAkJLmRhdGEgPSAmYXVvX2IxMzN4dG4wMSwKIAl9LCB7CisJCS5j
-b21wYXRpYmxlID0gImF1byxnMTA0c24wMiIsCisJCS5kYXRhID0gJmF1b19nMTA0c24wMiwKKwl9
-LCB7CiAJCS5jb21wYXRpYmxlID0gImF1byxnMTMzaGFuMDEiLAogCQkuZGF0YSA9ICZhdW9fZzEz
-M2hhbjAxLAogCX0sIHsKLS0gCjIuMS40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+Add device tree bindings for MLX90632 IR temperature sensor.
+
+Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+new file mode 100644
+index 000000000000..0b05812001f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+@@ -0,0 +1,28 @@
++* Melexis MLX90632 contactless Infra Red temperature sensor
++
++Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
++
++There are various applications for the Infra Red contactless temperature sensor
++and MLX90632 is most suitable for consumer applications where measured object
++temperature is in range between -20 to 200 degrees Celsius with relative error
++of measurement below 1 degree Celsius in object temperature range for
++industrial applications. Since it can operate and measure ambient temperature
++in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
++
++Be aware that electronics surrounding the sensor can increase ambient
++temperature. MLX90632 can be calibrated to reduce the housing effect via
++already existing EEPROM parameters.
++
++Since measured object emissivity effects Infra Red energy emitted, emissivity
++should be set before requesting the object temperature.
++
++Required properties:
++  - compatible: should be "melexis,mlx90632"
++  - reg: the I2C address of the sensor (default 0x3a)
++
++Example:
++
++mlx90632@3a {
++	compatible = "melexis,mlx90632";
++	reg = <0x3a>;
++};
+-- 
+2.15.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
