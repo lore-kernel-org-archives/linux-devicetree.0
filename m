@@ -1,37 +1,99 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: Re: dt-bindings: mailbox: ti,message-manager: Fix interrupt name
- error
-Date: Wed, 13 Dec 2017 13:32:30 +0530
-Message-ID: <11fac98b-412d-97ff-6bfd-e6def6a6e6f7@ti.com>
-References: <20171209193528.29491-1-nm@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH 1/2] dt: bindings: as3645a: Update dt node example with standard
+Date: Wed, 13 Dec 2017 10:09:04 +0200
+Message-ID: <4192002.yKJgEXTVKE@avalon>
+References: <20171212215024.30116-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171209193528.29491-1-nm-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20171212215024.30116-1-dmurphy@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Dan,
 
+Thank you for the patch.
 
-On Sunday 10 December 2017 01:05 AM, Nishanth Menon wrote:
-> Message Manager's mailbox interrupts are queue based and not proxy
-> specific. The interrupt names are wrong in the binding, however
-> correctly reflected in the example provided. Remove the relation
-> to proxy ID in the documentation of binding. Existing device tree
-> descriptions follow the correct conventions already and documentation
-> update has been missed.
+On Tuesday, 12 December 2017 23:50:23 EET Dan Murphy wrote:
+> Update the DT binding to remove the device name from
+> the DT parent node as well as removing the device
+> name from the label.  The LED label will be generated
+> based off the id name stored in the local driver so
+> the LED function can be indicated in the label DT
+> entry.
 > 
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> Also removed the indentation on the example.
 
-Reviewed-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+This makes the patch a bit harder to review and seems to be a matter of style.
 
-Thanks and regards,
-Lokesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/leds/ams,as3645a.txt       | 36 ++++++++++---------
+>  1 file changed, 18 insertions(+), 18 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> b/Documentation/devicetree/bindings/leds/ams,as3645a.txt index
+> fc7f5f9f234c..122aa7165cf3 100644
+> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> @@ -58,22 +58,22 @@ label		: The label of the indicator LED.
+
+I believe you should expand the documentation of the label property to detail 
+how it should be formed. It's nice to update the example, but the bindings 
+should be understandable without it.
+
+>  Example
+>  =======
+> 
+> -	as3645a@30 {
+> -		compatible = "ams,as3645a";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -		reg = <0x30>;
+> -		flash@0 {
+> -			reg = <0x0>;
+> -			flash-timeout-us = <150000>;
+> -			flash-max-microamp = <320000>;
+> -			led-max-microamp = <60000>;
+> -			ams,input-max-microamp = <1750000>;
+> -			label = "as3645a:flash";
+> -		};
+> -		indicator@1 {
+> -			reg = <0x1>;
+> -			led-max-microamp = <10000>;
+> -			label = "as3645a:indicator";
+> -		};
+> +led-controller@30 {
+
+This change looks fine to me.
+
+> +	compatible = "ams,as3645a";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0x30>;
+> +	led@0 {
+
+What's the rationale for changing the node name here ? It should be explained 
+in the commit message, and in the DT bindings documentation.
+
+> +		reg = <0x0>;
+> +		flash-timeout-us = <150000>;
+> +		flash-max-microamp = <320000>;
+> +		led-max-microamp = <60000>;
+> +		ams,input-max-microamp = <1750000>;
+> +		label = "flash";
+>  	};
+> +	led@1 {
+> +		reg = <0x1>;
+> +		led-max-microamp = <10000>;
+> +		label = "indicator";
+> +	};
+> +};
+
+-- 
+Regards,
+
+Laurent Pinchart
