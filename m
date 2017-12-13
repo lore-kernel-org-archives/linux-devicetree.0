@@ -1,60 +1,61 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v2 00/11] Add remaining clocks for QCOM IPQ8074
-Date: Wed, 13 Dec 2017 19:55:31 +0530
-Message-ID: <1513175142-3702-1-git-send-email-absahu@codeaurora.org>
+From: hao_zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/4] pwm support for allwinner sun8i R40/V40/T3 SOCs.
+Date: Wed, 13 Dec 2017 22:38:40 +0800
+Message-ID: <20171213143840.GA17754@arx-s1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[v2]
+This patchset add pwm support for allwinner sun8i R40/V40/T3 SOCs.
 
-- Rebased and tested the patches over clk-next branch
-- Changed the PLL’s to use register offset from PLL node
+all has been teat on T3 board.
 
-[v1]
-
-This patch series adds following IPQ8074 clocks
-
-- Remaining General PLL’s, NSS UBI PLL and NSS Crypto PLL.
-- 2 instances of PCIE, USB, SDCC.
-- 2 NSS UBI core and common NSS clocks. NSS is network.
-  switching subsystem which accelerates the ethernet traffic.
-  IPQ8074 has two UBI cores and each core uses some separate
-  core clocks and remaining common clocks.
-- NSS Crypto Engine clocks
-- NSS ethernet port clocks. IPQ8074 has 6 Ethernet ports and each
-  port uses different clocks
-- Crypto engine clocks
-- PCIE and NSS MISC resets.
+Some features
+	8 PWM channels outputs(4 PWM pairs) 
+	Supports capturing input 
+	Supports three kinds of output waveforms: continuous waveform, pulse
+	waveform and complementarity pair 
+	Programmable deadzone generator and controllable dead-time 
+	0% to 100% adjustable duty cycle 
+	Up to 24/100MHz output frequency 
+	Minimum resolution is 1/65536 
+	Supports interrupt for PWM output and capturing input
 
 
-Abhishek Sahu (11):
-  clk: qcom: add read-only divider operations
-  clk: qcom: add parent map for regmap mux
-  clk: qcom: ipq8074: fix missing GPLL0 divider width
-  dt-bindings: clock: qcom: add remaining clocks for IPQ8074
-  clk: qcom: ipq8074: add remaining PLL’s
-  clk: qcom: ipq8074: add PCIE, USB and SDCC clocks
-  clk: qcom: ipq8074: add NSS clocks
-  clk: qcom: ipq8074: add NSS ethernet port clocks
-  clk: qcom: ipq8074: add GP and Crypto clocks
-  dt-bindings: clock: qcom: add misc resets for PCIE and NSS
-  clk: qcom: ipq8074: add misc resets for PCIE and NSS
+DOC:
+https://github.com/tinalinux/docs/blob/r40-v1.y/Allwinner_R40_User_Manual_V1.0.pdf
+https://github.com/tinalinux/docs/blob/r40-v1.y/R40_Datasheet_V1.0.pdf
 
- drivers/clk/qcom/clk-rcg.h                   |   10 -
- drivers/clk/qcom/clk-regmap-divider.c        |   29 +
- drivers/clk/qcom/clk-regmap-divider.h        |    1 +
- drivers/clk/qcom/clk-regmap-mux.c            |    6 +
- drivers/clk/qcom/clk-regmap-mux.h            |    2 +
- drivers/clk/qcom/common.h                    |   11 +-
- drivers/clk/qcom/gcc-ipq8074.c               | 3750 +++++++++++++++++++++++++-
- include/dt-bindings/clock/qcom,gcc-ipq8074.h |  222 ++
- 8 files changed, 4019 insertions(+), 12 deletions(-)
+Regards;-)
+Hao Zhang
+
+hao_zhang (4):
+  dt-bindings: pwm: binding allwinner R40, V40, T3
+  ARM: PWM: add allwinner sun8i R40/V40/T3 pwm support.
+  ARM: dts: add pwm node for r40.
+  ARM: pinctrl: sunxi-pinctrl: fix pin funtion can not be match
+    correctly.
+
+ .../devicetree/bindings/pwm/pwm-sun8i.txt          |  18 +
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |   6 +
+ arch/arm/boot/dts/sun8i-r40.dtsi                   |  13 +
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c              |   6 +-
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sun8i-r40.c                        | 449 +++++++++++++++++++++
+ 7 files changed, 501 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
+ create mode 100644 drivers/pwm/pwm-sun8i-r40.c
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
