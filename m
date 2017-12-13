@@ -1,55 +1,58 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/3] clocksource/drivers: introduce DT based selection
-Date: Wed, 13 Dec 2017 19:53:10 +0100
-Message-ID: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: [PATCH 3/3] clocksource/drivers: integrator-ap: parse the chosen node
+Date: Wed, 13 Dec 2017 19:53:13 +0100
+Message-ID: <20171213185313.20017-4-alexandre.belloni@free-electrons.com>
+References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The driver currently uses aliases to know whether the timer is the
+clocksource or the clockevent. Add the /chosen/linux,clocksource and
+/chosen/linux,clockevent parsing while keeping backward compatibility.
 
-Currently, many drivers implement their own strategy when trying to find
-which timer to use as the clocksource or the clockevent.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+ drivers/clocksource/Kconfig               |  1 +
+ drivers/clocksource/timer-integrator-ap.c | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
-The main issue is that this selection is happen early in the boot
-process and the kernel doesn't always have all the information to take
-that decision.
-
-So we end up with suboptimal solutions, especially in a multiplatform
-kernel setting, as the MXC_USE_EPIT or ATMEL_TCB_CLKSRC_BLOCK kernel
-config option.
-
-There is also the clocksource kernel parameter only implemented in
-mach-omap2.
-
-Other drivers are registering the first seen timer as a clockevent, the
-other one as a clocksource.
-
-Also, this will help in the goal of separating clocksource and
-clockevent drivers (see 376bc27150f180d9f5eddec6a14117780177589d)
-
-Patch 1 documents the binding, patch 2 implements the parsing of the
-chosen node and finally, patch 3 makes use of the parsing in a driver to
-give an overview of how it is working.
-
-Alexandre Belloni (3):
-  dt-bindings: chosen: Add clocksource and clockevent selection
-  clocksource/drivers: timer-of: parse the chosen node
-  clocksource/drivers: integrator-ap: parse the chosen node
-
- Documentation/devicetree/bindings/chosen.txt | 20 ++++++++++++++++++++
- drivers/clocksource/Kconfig                  |  1 +
- drivers/clocksource/timer-integrator-ap.c    | 11 +++++++++++
- drivers/clocksource/timer-of.c               | 22 ++++++++++++++++++++++
- drivers/clocksource/timer-of.h               |  3 +++
- 5 files changed, 57 insertions(+)
-
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 9a22d1048fcf..053aca99caf7 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -212,6 +212,7 @@ config KEYSTONE_TIMER
+ config INTEGRATOR_AP_TIMER
+ 	bool "Integrator-ap timer driver" if COMPILE_TEST
+ 	select CLKSRC_MMIO
++	select TIMER_OF
+ 	help
+ 	  Enables support for the Integrator-ap timer.
+ 
+diff --git a/drivers/clocksource/timer-integrator-ap.c b/drivers/clocksource/timer-integrator-ap.c
+index 62d24690ba02..8f38be724aff 100644
+--- a/drivers/clocksource/timer-integrator-ap.c
++++ b/drivers/clocksource/timer-integrator-ap.c
+@@ -197,6 +197,17 @@ static int __init integrator_ap_timer_init_of(struct device_node *node)
+ 	rate = clk_get_rate(clk);
+ 	writel(0, base + TIMER_CTRL);
+ 
++	if (timer_of_is_clocksource(node))
++		/* The primary timer lacks IRQ, use as clocksource */
++		return integrator_clocksource_init(rate, base);
++
++	if (timer_of_is_clockevent(node)) {
++		/* The secondary timer will drive the clock event */
++		irq = irq_of_parse_and_map(node, 0);
++		return integrator_clockevent_init(rate, base, irq);
++	}
++
++	/* DT ABI compatibility below */
+ 	err = of_property_read_string(of_aliases,
+ 				"arm,timer-primary", &path);
+ 	if (err) {
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
