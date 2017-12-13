@@ -1,126 +1,186 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 1/2] dt: bindings: as3645a: Update dt node example with standard
-Date: Wed, 13 Dec 2017 18:29:29 +0200
-Message-ID: <2178454.bfcIRroSfr@avalon>
-References: <20171212215024.30116-1-dmurphy@ti.com> <4192002.yKJgEXTVKE@avalon> <90a1c908-3170-6956-8983-f9d88234cc07@ti.com>
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: Re: [PATCH 3/5] PCI: cadence: Add host driver for Cadence PCIe
+ controller
+Date: Wed, 13 Dec 2017 17:42:59 +0100
+Message-ID: <12e8cff4-3e4f-866b-6dac-27316ff4f1bc@free-electrons.com>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <20171129173426.GB31205@red-moon>
+ <f870ad14-0bd5-9d7b-78f2-1e7f663d1127@free-electrons.com>
+ <20171204182013.GA7343@red-moon>
+ <CAKv+Gu_1XZmsKJ_7ay7D74xSAhDW0y++7-CC3YfG7LOUcNZSqA@mail.gmail.com>
+ <20171206113214.GA27582@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <90a1c908-3170-6956-8983-f9d88234cc07@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20171206113214.GA27582@red-moon>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, kishon@ti.com, linux-pci <linux-pci@vger.kernel.org>, adouglas@cadence.com, Scott Telford <stelford@cadence.com>, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, sureshp@cadence.com, nsekhar@ti.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+Hi all,
 
-On Wednesday, 13 December 2017 14:55:03 EET Dan Murphy wrote:
-> On 12/13/2017 02:09 AM, Laurent Pinchart wrote:
-> > On Tuesday, 12 December 2017 23:50:23 EET Dan Murphy wrote:
-> >> Update the DT binding to remove the device name from
-> >> the DT parent node as well as removing the device
-> >> name from the label.  The LED label will be generated
-> >> based off the id name stored in the local driver so
-> >> the LED function can be indicated in the label DT
-> >> entry.
-> >> 
-> >> Also removed the indentation on the example.
-> > 
-> > This makes the patch a bit harder to review and seems to be a matter of
-> > style.
+Le 06/12/2017 à 12:32, Lorenzo Pieralisi a écrit :
+> On Mon, Dec 04, 2017 at 06:49:12PM +0000, Ard Biesheuvel wrote:
 > 
-> I debated whether to remove the extra tabs.  The changes below came from
-> comments from a recent LED driver I submitted.
+> [...]
 > 
-> >> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/leds/ams,as3645a.txt       | 36 +++++++++-------
-> >>  1 file changed, 18 insertions(+), 18 deletions(-)
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> >> b/Documentation/devicetree/bindings/leds/ams,as3645a.txt index
-> >> fc7f5f9f234c..122aa7165cf3 100644
-> >> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> >> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> >> @@ -58,22 +58,22 @@ label		: The label of the indicator LED.
-> > 
-> > I believe you should expand the documentation of the label property to
-> > detail how it should be formed. It's nice to update the example, but the
-> > bindings should be understandable without it.
+>>>>>> +static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
+>>>>>> +{
+>>>>>> +     const struct cdns_pcie_rc_data *data = rc->data;
+>>>>>> +     struct cdns_pcie *pcie = &rc->pcie;
+>>>>>> +     u8 pbn, sbn, subn;
+>>>>>> +     u32 value, ctrl;
+>>>>>> +
+>>>>>> +     /*
+>>>>>> +      * Set the root complex BAR configuration register:
+>>>>>> +      * - disable both BAR0 and BAR1.
+>>>>>> +      * - enable Prefetchable Memory Base and Limit registers in type 1
+>>>>>> +      *   config space (64 bits).
+>>>>>> +      * - enable IO Base and Limit registers in type 1 config
+>>>>>> +      *   space (32 bits).
+>>>>>> +      */
+>>>>>> +     ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
+>>>>>> +     value = CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
+>>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
+>>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE |
+>>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
+>>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE |
+>>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS;
+>>>>>> +     cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
+>>>>>> +
+>>>>>> +     /* Set root port configuration space */
+>>>>>> +     if (data->vendor_id != 0xffff)
+>>>>>> +             cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, data->vendor_id);
+>>>>>> +     if (data->device_id != 0xffff)
+>>>>>> +             cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, data->device_id);
+>>>>>> +
+>>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
+>>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
+>>>>>> +     cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, PCI_CLASS_BRIDGE_PCI);
+>>>>>> +
+>>>>>> +     pbn = rc->bus_range->start;
+>>>>>> +     sbn = pbn + 1; /* Single root port. */
+>>>>>> +     subn = rc->bus_range->end;
+>>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_PRIMARY_BUS, pbn);
+>>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_SECONDARY_BUS, sbn);
+>>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_SUBORDINATE_BUS, subn);
+>>>>>
+>>>>> Again - I do not have the datasheet for this device therefore I would
+>>>>> kindly ask you how this works; it seems to me that what you are doing
+>>>>> here is done through normal configuration cycles in an ECAM compliant
+>>>>> system to program the RP PRIMARY/SECONDARY/SUBORDINATE bus - I would
+>>>>> like to understand why this code is needed.
+>>>>>
+>>>>
+>>>> I will test without those lines to test whether I can remove them.
+>>>>
+>>>> At first, the PCIe controller was tested by Cadence team: there was code
+>>>> in their bootloader to initialize the hardware (building the AXI <-> PCIe
+>>>> mappings, ...): the bootloader used to set the primary, secondary and
+>>>> subordinate bus numbers in the root port PCI config space.
+>>>>
+>>>> Also there was a hardware trick to redirect accesses of the lowest
+>>>> addresses in the AXI bus to the APB bus so the PCI configuration space of
+>>>> the root port could have been accessed from the AXI bus too.
+>>>>
+>>>> The AXI <-> PCIe mapping being done by the bootloader and the root port
+>>>> config space being accessible from the AXI bus, it was possible to use
+>>>> the pci-host-generic driver.
+>>>
+>>> That's what I was getting at. Ard (CC'ed) implemented a firmware set-up
+>>> (even though it was for a different IP but maybe it applies here) that
+>>> allows the kernel to use the pci-host-generic driver to initialize the
+>>> PCI controller:
+>>>
+>>> https://marc.info/?l=linux-pci&m=150360022626351&w=2
+>>>
+>>> I want to understand if there is an IP initialization sequence whereby
+>>> this IP can be made to work in an ECAM compliant way and therefore
+>>> reuse (most of) the pci-host-generic driver code.
+>>>
+>>
+>> I think the Synopsys case is probably very similar. There are some
+>> registers that look like the config space of a root port, but in
+>> reality, every memory access that hits a live host bridge window is
+>> forwarded onto the link, regardless of the values of the bridge BARs.
+>> That is why in the quoted case, we can get away with ignoring the root
+>> port altogether, rather than jumping through hoops to make the IP
+>> block's PCI config space registers appear at B/D/F 0/0/0, while still
+>> having to filter type 0 config TLPs going onto the link (which is
+>> arguably the job of the root port to begin with)
+>>
+>> So if this IP does implement a proper root port (i.e., one where the
+>> bridge BARs are actually taken into account, and where type 0 config
+>> TLPs are in fact filtered), I strongly recommend mapping its config
+>> space registers in an ECAM compliant matter, which implies no
+>> accessors in the OS.
+>>
+>> However, given the observation above, this IP does not appear to
+>> filter type 0 config TLPs to devfn > 0 downstream of the root port
+>> either.
 > 
-> OK. I will add a reference to
-> Documentation/devicetree/bindings/leds/common.txt
+> Unfortunately that matches my understanding too, let's wait for
+> Cyrille's reply on my query.
 > 
-> label formation will be undergoing some changes.  I wanted to make sure
-> there were some good examples in the LED tree for other developers to
-> reference.
-> 
-> >>  Example
-> >>  =======
-> >> 
-> >> -	as3645a@30 {
-> >> -		compatible = "ams,as3645a";
-> >> -		#address-cells = <1>;
-> >> -		#size-cells = <0>;
-> >> -		reg = <0x30>;
-> >> -		flash@0 {
-> >> -			reg = <0x0>;
-> >> -			flash-timeout-us = <150000>;
-> >> -			flash-max-microamp = <320000>;
-> >> -			led-max-microamp = <60000>;
-> >> -			ams,input-max-microamp = <1750000>;
-> >> -			label = "as3645a:flash";
-> >> -		};
-> >> -		indicator@1 {
-> >> -			reg = <0x1>;
-> >> -			led-max-microamp = <10000>;
-> >> -			label = "as3645a:indicator";
-> >> -		};
-> >> +led-controller@30 {
-> > 
-> > This change looks fine to me.
-> > 
-> >> +	compatible = "ams,as3645a";
-> >> +	#address-cells = <1>;
-> >> +	#size-cells = <0>;
-> >> +	reg = <0x30>;
-> >> +	led@0 {
-> > 
-> > What's the rationale for changing the node name here ? It should be
-> > explained in the commit message, and in the DT bindings documentation.
-> 
-> In my patch to the DT maintainers Rob H indicated
-> 
-> "Actually, it should be led-controller and led or leds be used for the
-> LED child nodes (and gpio-led or pwd-led bindings)"
-> 
-> Here is the patch that the node naming conventions took place
-> 
-> https://patchwork.kernel.org/patch/10093757
+>>>> However, the hardware trick won't be included in the final design since
+>>>> Cadence now wants to perform all PCI configuration space accesses through
+>>>> a small 4KB window at a fixed address on the AXI bus.
+>>>
+>>> I would like to understand what the HW "trick" (if you can disclose it)
+>>> was, because if there is a chance to reuse the pci-host-generic driver
+>>> for this IP I want to take it (yes it may entail some firmware set-up in
+>>> the bootloader) - was it a HW trick or a specific IP SW configuration ?
+>>>
 
-OK, that makes sense to me.
+I will have to ask for details to Cadence designers if needed but when I
+asked them about it, they explained me that AXI bus accesses in a small
+window (I guess 4KB width) were redirected to the APB bus where lay the
+registers for the root port PCI configuration space.
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+I was some hardware trick which won't be included in the final design, so
+we can't enable or disable it by software.
 
-> >> +		reg = <0x0>;
-> >> +		flash-timeout-us = <150000>;
-> >> +		flash-max-microamp = <320000>;
-> >> +		led-max-microamp = <60000>;
-> >> +		ams,input-max-microamp = <1750000>;
-> >> +		label = "flash";
-> >> 
-> >>  	};
-> >> 
-> >> +	led@1 {
-> >> +		reg = <0x1>;
-> >> +		led-max-microamp = <10000>;
-> >> +		label = "indicator";
-> >> +	};
-> >> +};
+Actually, this is requirement from the Cadence's customer that the host
+driver can access the PCI config space of any device in sub ordinates
+buses through a small memory area on the AXI bus. For some reason, they
+don't want an ECAM compliant controller.
+
+I don't know the reason but my guess is that they don't want to waste to
+much space allocated to the PCIe controller on the AXI bus, likely on a
+32-bit platform. As I said, this is such an assumption.
+
+>>>> Also, we now want all initialisations to be done by the linux driver
+>>>> instead of the bootloader.
+>>>
+>>> That's a choice, I do not necessarily agree with it and I think we
+>>> should aim for more standardization on the PCI host bridge set-up
+>>> at firmware->kernel handover on DT platforms.
+>>>
+
+It was another requirement of Cadence's customer that the PCIe host
+controller initialization is done by the Linux driver rather than by
+some boot loader.
+
+Best regards,
+
+Cyrille
+
+>>
+>> Well, for one, it means this IP will never be supported by ACPI, which
+>> seems like a huge downside to me.
+> 
+> Yes it is - that's exactly where my comments were heading.
+> 
+> Thanks,
+> Lorenzo
+> 
+
 
 -- 
-Regards,
-
-Laurent Pinchart
+Cyrille Pitchen, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
