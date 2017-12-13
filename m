@@ -1,62 +1,221 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/4] spi: sh-msiof: Multi-slave enhancements
-Date: Wed, 13 Dec 2017 20:05:09 +0100
-Message-ID: <1513191913-10612-1-git-send-email-geert+renesas@glider.be>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Subject: Re: [PATCH v4 06/12] [media] cxd2880: Add integration layer for the
+ driver
+Date: Wed, 13 Dec 2017 17:13:19 -0200
+Message-ID: <20171213171319.675b39a6@vento.lan>
+References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
+        <20171013060834.21526-1-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20171013060834.21526-1-Yasunari.Takiguchi@sony.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Yasunari.Takiguchi@sony.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, tbird20d@gmail.com, frowand.list@gmail.com, Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>, Hideki Nozawa <Hideki.Nozawa@sony.com>, Kota Yonezawa <Kota.Yonezawa@sony.com>, Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>, Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Mark², Rob,
+Em Fri, 13 Oct 2017 15:08:34 +0900
+<Yasunari.Takiguchi@sony.com> escreveu:
 
-This patch series enhances the Renesas MSIOF SPI controller driver for
-multiple SPI slave devices.
+> From: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+> 
+> These functions monitor the driver and watch for task completion.
+> This is part of the Sony CXD2880 DVB-T2/T tuner + demodulator driver.
 
-The first patch fixes the classical pitfall of writing to configuration
-registers from the spi_master.setup() callback, where possible.
-The second patch extends support from 1 to 3 native chip selects,
-The third patch fixes the use of GPIOs as chip selects on modern
-platform using DT instead of board code.
-The last patch documents hardware limitations related to chip selects,
-to guide board designers and DTS writers.
+If I understand well, the goal here is to have thread that would
+be waking up from time to time, right? Just use the infrastructure
+that the Kernel has for it, like a kthread, or timer_setup() & friends.
 
-This has been tested with:
-  - Three 25LC040 SPI EEPROMs, using GPIO chip selects due to MSIOF
-    hardware limitations (verified with a logic analyzer),
-  - Multiple 74HC595 shift registers feeding lots of blinkenlights,
-    using only native chipselects, only GPIO chip selects, and a healthy
-    mix of both.
+Take a look at include/linux/timer.h, and just use what's already
+defined.
 
-Thanks for your comments!
 
-Geert Uytterhoeven (4):
-  spi: sh-msiof: Avoid writing to registers from spi_master.setup()
-  spi: sh-msiof: Extend support to 3 native chip selects
-  spi: sh-msiof: Implement cs-gpios configuration
-  spi: sh-msiof: Document hardware limitations related to chip selects
+> 
+> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto@sony.com>
+> Signed-off-by: Hideki Nozawa <Hideki.Nozawa@sony.com>
+> Signed-off-by: Kota Yonezawa <Kota.Yonezawa@sony.com>
+> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto@sony.com>
+> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe@sony.com>
+> ---
+> 
+> [Change list]
+> Changes in V4   
+>    drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
+>       -removed unnecessary initialization at variable declaration
+> 
+> Changes in V3
+>    drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
+>       -changed cxd2880_atomic_read to atomic_read
+>       -changed cxd2880_atomic_set to atomic_set
+>       -modified return code
+>       -modified coding style of if() 
+>    drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h
+>       -modified return code
+> 
+>  .../media/dvb-frontends/cxd2880/cxd2880_integ.c    | 98 ++++++++++++++++++++++
+>  .../media/dvb-frontends/cxd2880/cxd2880_integ.h    | 44 ++++++++++
+>  2 files changed, 142 insertions(+)
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h
+> 
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
+> new file mode 100644
+> index 000000000000..7264fc355d6b
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.c
+> @@ -0,0 +1,98 @@
+> +/*
+> + * cxd2880_integ.c
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * integration layer common functions
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include "cxd2880_tnrdmd.h"
+> +#include "cxd2880_tnrdmd_mon.h"
+> +#include "cxd2880_integ.h"
+> +
+> +int cxd2880_integ_init(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	int ret;
+> +	struct cxd2880_stopwatch timer;
+> +	unsigned int elapsed_time = 0;
+> +	u8 cpu_task_completed = 0;
+> +
+> +	if (!tnr_dmd)
+> +		return -EINVAL;
+> +
+> +	ret = cxd2880_tnrdmd_init1(tnr_dmd);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = cxd2880_stopwatch_start(&timer);
+> +	if (ret)
+> +		return ret;
+> +
+> +	while (1) {
+> +		ret = cxd2880_stopwatch_elapsed(&timer, &elapsed_time);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_check_internal_cpu_status(tnr_dmd,
+> +						     &cpu_task_completed);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (cpu_task_completed)
+> +			break;
+> +
+> +		if (elapsed_time > CXD2880_TNRDMD_WAIT_INIT_TIMEOUT)
+> +			return -ETIME;
+> +		ret =
+> +		    cxd2880_stopwatch_sleep(&timer,
+> +					    CXD2880_TNRDMD_WAIT_INIT_INTVL);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	ret = cxd2880_tnrdmd_init2(tnr_dmd);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +int cxd2880_integ_cancel(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	if (!tnr_dmd)
+> +		return -EINVAL;
+> +
+> +	atomic_set(&tnr_dmd->cancel, 1);
+> +
+> +	return 0;
+> +}
+> +
+> +int cxd2880_integ_check_cancellation(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	if (!tnr_dmd)
+> +		return -EINVAL;
+> +
+> +	if (atomic_read(&tnr_dmd->cancel) != 0)
+> +		return -ECANCELED;
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h
+> new file mode 100644
+> index 000000000000..2b4fe5c3743b
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_integ.h
+> @@ -0,0 +1,44 @@
+> +/*
+> + * cxd2880_integ.h
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * integration layer common interface
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef CXD2880_INTEG_H
+> +#define CXD2880_INTEG_H
+> +
+> +#include "cxd2880_tnrdmd.h"
+> +
+> +#define CXD2880_TNRDMD_WAIT_INIT_TIMEOUT	500
+> +#define CXD2880_TNRDMD_WAIT_INIT_INTVL	10
+> +
+> +#define CXD2880_TNRDMD_WAIT_AGC_STABLE		100
+> +
+> +int cxd2880_integ_init(struct cxd2880_tnrdmd *tnr_dmd);
+> +
+> +int cxd2880_integ_cancel(struct cxd2880_tnrdmd *tnr_dmd);
+> +
+> +int cxd2880_integ_check_cancellation(struct cxd2880_tnrdmd
+> +				     *tnr_dmd);
+> +
+> +#endif
 
- Documentation/devicetree/bindings/spi/sh-msiof.txt |  16 ++-
- drivers/spi/spi-sh-msiof.c                         | 111 +++++++++++++++++----
- 2 files changed, 107 insertions(+), 20 deletions(-)
 
--- 
-2.7.4
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mauro
