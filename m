@@ -1,52 +1,61 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH 1/2] media: dt-bindings: coda: Add compatible for CodaHx4
- on i.MX51
-Date: Wed, 13 Dec 2017 16:21:52 +0200
-Message-ID: <20171213142152.7vcludcs7ohjeaqb@sapphire.tkos.co.il>
-References: <20171213140918.22500-1-p.zabel@pengutronix.de>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH v6 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Wed, 13 Dec 2017 16:22:39 +0200
+Message-ID: <1513174959.2879.32.camel@nxp.com>
+References: <20171206072402.11694-1-o.rempel@pengutronix.de>
+         <20171206072402.11694-4-o.rempel@pengutronix.de>
+         <20171206231130.GA6235@infradead.org>
+         <b39d3ae2-5a93-854f-a0ff-aefd405da78b@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171213140918.22500-1-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Chris Healy <Chris.Healy-c8ZVq/bFV1I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <b39d3ae2-5a93-854f-a0ff-aefd405da78b@pengutronix.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Christoph Hellwig <hch@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-
-On Wed, Dec 13, 2017 at 03:09:17PM +0100, Philipp Zabel wrote:
-> Add a compatible for the CodaHx4 VPU used on i.MX51.
+On Thu, 2017-12-07 at 06:36 +0100, Oleksij Rempel wrote:
 > 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/media/coda.txt | 1 +
->  1 file changed, 1 insertion(+)
+> On 07.12.2017 00:11, Christoph Hellwig wrote:
+> > 
+> > > 
+> > >  void (*pm_power_off_prepare)(void);
+> > > +EXPORT_SYMBOL(pm_power_off_prepare);
+> > EXPORT_SYMBOL_GPL for something this deeply internal, please.
+> Ok,
+> probably all other symbols should be converted in this file in to
+> EXPORT_SYMBOL_GPL as well?
 > 
-> diff --git a/Documentation/devicetree/bindings/media/coda.txt b/Documentation/devicetree/bindings/media/coda.txt
-> index 2865d04e40305..660f5ecf2a23b 100644
-> --- a/Documentation/devicetree/bindings/media/coda.txt
-> +++ b/Documentation/devicetree/bindings/media/coda.txt
-> @@ -7,6 +7,7 @@ called VPU (Video Processing Unit).
->  Required properties:
->  - compatible : should be "fsl,<chip>-src" for i.MX SoCs:
->    (a) "fsl,imx27-vpu" for CodaDx6 present in i.MX27
-> +  (a) "fsl,imx51-vpu" for CodaHx4 present in i.MX51
+> grep EXPORT_SYMBOL kernel/reboot.c
+> EXPORT_SYMBOL(cad_pid);
+> EXPORT_SYMBOL(pm_power_off_prepare);
+> EXPORT_SYMBOL_GPL(emergency_restart);
+> EXPORT_SYMBOL(register_reboot_notifier);
+> EXPORT_SYMBOL(unregister_reboot_notifier);
+> EXPORT_SYMBOL(devm_register_reboot_notifier);
+> EXPORT_SYMBOL(register_restart_handler);
+> EXPORT_SYMBOL(unregister_restart_handler);
+> EXPORT_SYMBOL_GPL(kernel_restart);
+> EXPORT_SYMBOL_GPL(kernel_halt);
+> EXPORT_SYMBOL_GPL(kernel_power_off);
+> EXPORT_SYMBOL_GPL(orderly_poweroff);
+> EXPORT_SYMBOL_GPL(orderly_reboot);
 
-Renumbering the strings might be useful.
+This call looks much more deeply internal than those other functions,
+it's not like reboot_notifier and restart_handler.
 
->    (b) "fsl,imx53-vpu" for CODA7541 present in i.MX53
->    (c) "fsl,imx6q-vpu" for CODA960 present in i.MX6q
->  - reg: should be register base and length as documented in the
+It seems that the only user of pm_power_off_prepare right now is the
+ACPI core and your patch uses it in a regulator driver. This looks
+extremely strange. Maybe this is why imx maintainers are stalling on
+this patch?
 
-baruch
+It might help if the ACPI/PM maintainers ack/review this part
+explicitly, and the usage in part 5:
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+https://patchwork.kernel.org/patch/9799615/
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Leonard
