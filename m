@@ -1,58 +1,62 @@
-From: Guo Ren <ren_guo-Y+KPrCd2zL4AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 09/33] nds32: Cache and TLB routines
-Date: Wed, 13 Dec 2017 16:53:36 +0800
-Message-ID: <20171213085334.GA21382@gary-OptiPlex-3050>
-References: <cover.1512723245.git.green.hu@gmail.com>
- <9d0e976c3e60bf6834dffb6ef798ad2a03e1c9ac.1512723245.git.green.hu@gmail.com>
- <20171213021619.GA6254@gary-OptiPlex-3050>
- <CAEbi=3dtcnUNbd4SoueUnoYvRWot9fA1n62t0b4PWx1UYs2jZA@mail.gmail.com>
- <20171213081949.GA18840@gary-OptiPlex-3050>
- <CAEbi=3eKH5JESwtadq4LKF3ZvmBi1QwUWpCTb0btierBST_cRQ@mail.gmail.com>
+From: Miquel RAYNAL <miquel.raynal@free-electrons.com>
+Subject: Re: [PATCH v2 3/4] thermal: armada: add support for CP110
+Date: Wed, 13 Dec 2017 09:55:01 +0100
+Message-ID: <20171213095501.1988749d@xps13>
+References: <f8c589337a4fb78852eadf15058e8f8d132d4dc0.1512299484.git.baruch@tkos.co.il>
+        <d48c916a2502f9c75e9ea4ba41300e2ffbb254d8.1512299484.git.baruch@tkos.co.il>
+        <20171211160932.692ba8be@xps13>
+        <20171211152731.glkkes5errcxmsvz@sapphire.tkos.co.il>
+        <87y3m9qjt2.fsf@free-electrons.com>
+        <20171213083848.j5het742yavxvkkw@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAEbi=3eKH5JESwtadq4LKF3ZvmBi1QwUWpCTb0btierBST_cRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171213083848.j5het742yavxvkkw@sapphire.tkos.co.il>
+Sender: linux-pm-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 13, 2017 at 04:30:41PM +0800, Greentime Hu wrote:
-> 2017-12-13 16:19 GMT+08:00 Guo Ren <ren_guo-Y+KPrCd2zL4AvxtiuMwx3w@public.gmane.org>:
-> > On Wed, Dec 13, 2017 at 01:45:02PM +0800, Greentime Hu wrote:
-> >
-> >> I think it should be fine if an interruption between mtsr_dsb and
-> >> tlbop_rwr because this is a optimization by sw.
-> >
-> > Fine? When there is an unexpected vaddr in SR_TLB_VPN, tlbop_rwr(*pte) will
-> > break that vaddr's pfn in the CPU tlb-buffer entry. When linux access the
-> > vaddr, it will get wrong data unless the entry has been replaced out.
-> 
-> Hi, Guo Ren:
-> 
-> Thanks. I get your point.
-> It is needed to be protected.
-> I will fix it in the next version patch.
-> 
-> if (vma->vm_mm == current->active_mm) {
->         local_irq_save(flags);
->         __nds32__mtsr_dsb(addr, NDS32_SR_TLB_VPN);
->         __nds32__tlbop_rwr(*pte);
->         __nds32__isb();
->         local_irq_restore(flags);
-> }
+Hello Baruch,
 
-If hardware tlbop_rwr could invalid NDS32_SR_TLB_VPN, then you needn't
-protect.
-I mean:
-mtsr addr1 NDS32_SR_TLB_VPN
-mtsr addr2 NDS32_SR_TLB_VPN
-tlbop_rwr(*pte) // OK, and it will hit a hardware invalid bit internal.
-tlbop_rwr(*pte) // SR_TLB_VPN invalided, then it will not cause problem.
 
-:) How my idea?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > How would a separate init_sensor routine improve things?
+> > 
+> > So yes please do it, thanks to this you won't have to add the
+> > control_msb_offset member and can use a clean function. Moreover if
+> > in the future we see some usefulness for this LSB register then we
+> > could use the new compatible for the Armada 38x.
+> 
+> There are two separate issues here:
+> 
+>   1. DT binding
+> 
+>   2. init_sensor callback implementation
+> 
+> We both agree on #1. The A38x and CP110 need separate compatible
+> strings. In case we want to access the LSB control register on Armada
+> 38x, we will need yet another compatible string
+> (marvell,armada380-v2-thermal maybe?).
+> 
+> As for #2, I'm all for sharing as much code as possible. I find the
+> vendor kernel approach of duplicating the init routines[1] unhelpful
+> as it violates the DRY principle. The differences between
+> armada380_init_sensor() and cp110_init_sensor() are minor. In my
+> opinion, these differences should be expressed explicitly in the
+> armada_thermal_data, in a similar way to my suggested
+> control_msb_offset field. The vendor code hides these differences in
+> slight variations of duplicated code.
+> 
+> What is the advantage of a separate init routine?
+
+The advantage is that is the very near future I plan to add the
+overheat interrupt only on CP110 (not on 38x) and this needs some
+initialization. So if we don't make different routines now, I will
+have to do it right after.
+
+What would be fine is to have the shared code in a separate function,
+like it is done in Marvell kernel. What do you think about that?
+
+Thanks,
+Miquèl
