@@ -1,79 +1,108 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] thermal: armada: add support for CP110
-Date: Wed, 13 Dec 2017 11:42:31 +0200
-Message-ID: <20171213094231.sk5fj6fxvpvik3i2@sapphire.tkos.co.il>
-References: <f8c589337a4fb78852eadf15058e8f8d132d4dc0.1512299484.git.baruch@tkos.co.il>
- <d48c916a2502f9c75e9ea4ba41300e2ffbb254d8.1512299484.git.baruch@tkos.co.il>
- <20171211160932.692ba8be@xps13>
- <20171211152731.glkkes5errcxmsvz@sapphire.tkos.co.il>
- <87y3m9qjt2.fsf@free-electrons.com>
- <20171213083848.j5het742yavxvkkw@sapphire.tkos.co.il>
- <874lovq9cx.fsf@free-electrons.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 2/3] ARM: dts: r8a7743: Add CMT SoC specific support
+Date: Wed, 13 Dec 2017 09:42:54 +0000
+Message-ID: <TY1PR06MB0895B34EFC2A48F49AFF0694C0350@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1513104579-6333-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1513104579-6333-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20171213083829.ptdeggbon3szmko4@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <874lovq9cx.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171213083829.ptdeggbon3szmko4@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
+Hello Simon,
 
-On Wed, Dec 13, 2017 at 10:13:02AM +0100, Gregory CLEMENT wrote:
->  On mer., déc. 13 2017, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+thank you for your feedback.
 
-[...]
-
-> > There are two separate issues here:
+> On Tue, Dec 12, 2017 at 06:49:38PM +0000, Fabrizio Castro wrote:
+> > Add CMT[01] support to SoC DT.
 > >
-> >   1. DT binding
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> >  arch/arm/boot/dts/r8a7743.dtsi | 30 ++++++++++++++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+>
+> I was expecting the cmt nodes to be "disabled" in the SoC file
+> and then enabled selectively in board files. Am I missing something?
+
+Since this component is just a compare and match timer, I  thought there wa=
+s no harm in enabling it by default in the SoC specific DT. The system will=
+ park it and leave its clock disabled until actually needed for something.
+The user can still disable it in the board specific DT if he/she doesn't me=
+an to even have the option to use it. Do you prefer I left it disabled by d=
+efault?
+
+Thanks,
+Fab
+
+>
+> Otherwise this patch looks good to me.
+>
+> > diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743=
+.dtsi
+> > index 59860c8..0e2834a 100644
+> > --- a/arch/arm/boot/dts/r8a7743.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7743.dtsi
+> > @@ -262,6 +262,36 @@
+> >    IRQ_TYPE_LEVEL_LOW)>;
+> >  };
 > >
-> >   2. init_sensor callback implementation
+> > +cmt0: timer@ffca0000 {
+> > +compatible =3D "renesas,r8a7743-cmt0",
+> > +     "renesas,rcar-gen2-cmt0";
+> > +reg =3D <0 0xffca0000 0 0x1004>;
+> > +interrupts =3D <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
+> > +     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+> > +clocks =3D <&cpg CPG_MOD 124>;
+> > +clock-names =3D "fck";
+> > +power-domains =3D <&sysc R8A7743_PD_ALWAYS_ON>;
+> > +resets =3D <&cpg 124>;
+> > +};
+> > +
+> > +cmt1: timer@e6130000 {
+> > +compatible =3D "renesas,r8a7743-cmt1",
+> > +     "renesas,rcar-gen2-cmt1";
+> > +reg =3D <0 0xe6130000 0 0x1004>;
+> > +interrupts =3D <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+> > +     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
+> > +     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
+> > +     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+> > +     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
+> > +     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
+> > +     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
+> > +     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+> > +clocks =3D <&cpg CPG_MOD 329>;
+> > +clock-names =3D "fck";
+> > +power-domains =3D <&sysc R8A7743_PD_ALWAYS_ON>;
+> > +resets =3D <&cpg 329>;
+> > +};
+> > +
+> >  cpg: clock-controller@e6150000 {
+> >  compatible =3D "renesas,r8a7743-cpg-mssr";
+> >  reg =3D <0 0xe6150000 0 0x1000>;
+> > --
+> > 2.7.4
 > >
-> > We both agree on #1. The A38x and CP110 need separate compatible strings. In 
-> > case we want to access the LSB control register on Armada 38x, we will need 
-> > yet another compatible string (marvell,armada380-v2-thermal maybe?).
-> 
-> Actually, if it is _compatible_ then we will use the same compatible, ie
-> "marvell,armadacp110-thermal"
 
-Reusing the same compatible string for the same hardware peripheral in 
-different SoCs is not a good idea. You often find out later that they are not 
-actually the same.
 
-But this point is moot. The A38x and CP110 thermal sensors are not the same. 
-The overheat interrupt registers are in different offsets.
+[https://www2.renesas.eu/media/email/unicef_2017.jpg]
 
-> > As for #2, I'm all for sharing as much code as possible. I find the vendor 
-> > kernel approach of duplicating the init routines[1] unhelpful as it violates 
-> > the DRY principle. The differences between armada380_init_sensor() and 
-> > cp110_init_sensor() are minor. In my opinion, these differences should be 
-> > expressed explicitly in the armada_thermal_data, in a similar way to my 
-> > suggested control_msb_offset field. The vendor code hides these differences in 
-> > slight variations of duplicated code.
-> >
-> > What is the advantage of a separate init routine?
-> 
-> The main advantage is to be able keep the armada380_init_sensor as the
-> legacy init, and then being able to use the new armadacp110_init_sensor
-> for the new binding.
+This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
+ve decided to support Unicef with a donation. For further details click her=
+e<https://www.unicef.org/> to find out about the valuable work they do, hel=
+ping children all over the world.
+We would like to take this opportunity to wish you a Merry Christmas and a =
+prosperous New Year.
 
-I disagree, sorry. I don't think I can make my point any more clear than I 
-did.
 
-I am fine with you or Miquel making the code changes that you think are 
-necessary. I'll comment on the code when I see it.
 
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
