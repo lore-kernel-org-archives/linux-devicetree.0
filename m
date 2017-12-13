@@ -1,68 +1,63 @@
-From: Dhaval Rajeshbhai Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v2 1/2] Documentation: devicetree: Add DT bindings to
- xlnx_vcu driver
-Date: Wed, 13 Dec 2017 05:12:23 +0000
-Message-ID: <BY2PR0201MB1879663CDB18630B31A00F2AC1350@BY2PR0201MB1879.namprd02.prod.outlook.com>
-References: <20171207104757.GA27343@kroah.com>
- <1512682276-6082-1-git-send-email-dshah@xilinx.com>
- <1512682276-6082-2-git-send-email-dshah@xilinx.com>
- <20171212200703.nxabyfcjbswwbp4v@rob-hp-laptop>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v3 09/33] nds32: Cache and TLB routines
+Date: Wed, 13 Dec 2017 13:45:02 +0800
+Message-ID: <CAEbi=3dtcnUNbd4SoueUnoYvRWot9fA1n62t0b4PWx1UYs2jZA@mail.gmail.com>
+References: <cover.1512723245.git.green.hu@gmail.com> <9d0e976c3e60bf6834dffb6ef798ad2a03e1c9ac.1512723245.git.green.hu@gmail.com>
+ <20171213021619.GA6254@gary-OptiPlex-3050>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171212200703.nxabyfcjbswwbp4v@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "pombredanne-od1rfyK75/E@public.gmane.org" <pombredanne-od1rfyK75/E@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20171213021619.GA6254@gary-OptiPlex-3050>
+Sender: linux-arch-owner@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+2017-12-13 10:16 GMT+08:00 Guo Ren <ren_guo@c-sky.com>:
+> On Fri, Dec 08, 2017 at 05:11:52PM +0800, Greentime Hu wrote:
+>> From: Greentime Hu <greentime@andestech.com>
+>  [...]
+>> diff --git a/arch/nds32/mm/cacheflush.c b/arch/nds32/mm/cacheflush.c
+>  [...]
+>> +#ifndef CONFIG_CPU_CACHE_ALIASING
+>> +void update_mmu_cache(struct vm_area_struct *vma, unsigned long addr,
+>> +                   pte_t * pte)
+>  [...]
+>> +     if (vma->vm_mm == current->active_mm) {
+>> +
+>> +             __nds32__mtsr_dsb(addr, NDS32_SR_TLB_VPN);
+>> +             __nds32__tlbop_rwr(*pte);
+>> +             __nds32__isb();
+> If there is an interruption between "mtsr_dsb" and "tlbop_rwr" and a
+> update_mmu_cache() is invoked again, then an error page mapping is
+> set up in your tlb-buffer when tlbop_rwr is excuted from interrupt.
+> Because it's another addr in NDS32_SR_TLB_VPN.
+>
+> It seems that tlb-hardrefill can help build tlb-buffer mapping, why you
+> update it in this software way?
+>
 
-Thanks a lot for the review.
+Hi, Guo Ren:
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Tuesday, December 12, 2017 12:07 PM
-> To: Dhaval Rajeshbhai Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: arnd-r2nGTMty4D4@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org;
-> pombredanne-od1rfyK75/E@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org; Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Dhaval
-> Rajeshbhai Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Subject: Re: [PATCH v2 1/2] Documentation: devicetree: Add DT bindings to
-> xlnx_vcu driver
->=20
-> On Thu, Dec 07, 2017 at 01:31:15PM -0800, Dhaval Shah wrote:
-> > Add Device Tree binding document for logicoreIP. This logicoreIP
-> > provides the isolation between the processing system and programmable
-> > logic. Also provides the clock related information.
-> >
-> > Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > Changes since v2:
-> >  * Describe the h/w
-> >  * compatible string is updated to make it more specific
-> >    based on the logicoreIP version.
-> >  * Removed that encoder and decoder child nodes and relatd properties a=
-s
-> that
-> >    will be a separate driver and dts nodes. other team is working on th=
-at.
-> >  * Updated to use as a single driver.
-> >
-> >  .../devicetree/bindings/misc/xlnx,vcu.txt          | 31
-> ++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/misc/xlnx,vcu.txt
->=20
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->=20
-> One nit. Use "dt-bindings: misc: ..." for the subject.
-I will update subject line and send you v3 patch set.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think it should be fine if an interruption between mtsr_dsb and
+tlbop_rwr because this is a optimization by sw.
+The page mapping has been created and it is just not in TLB yet.
+What we did is to insert this mapping to TLB by SW thus it can prevent
+TLB miss one time.
+It will be fine even if TLB miss. HW will walk through page table and
+insert this mapping to TLB anyway.
+
+Based on Documentation/cachetlb.txt
+5) ``void update_mmu_cache(struct vm_area_struct *vma,
+   unsigned long address, pte_t *ptep)``
+
+        At the end of every page fault, this routine is invoked to
+        tell the architecture specific code that a translation
+        now exists at virtual address "address" for address space
+        "vma->vm_mm", in the software page tables.
+
+        A port may use this information in any way it so chooses.
+        For example, it could use this event to pre-load TLB
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        translations for software managed TLB configurations.
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
