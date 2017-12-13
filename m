@@ -1,75 +1,32 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v4 0/6] Updated LP8860 driver series
-Date: Wed, 13 Dec 2017 20:55:45 +0100
-Message-ID: <5aabfe2b-d643-6439-dd0f-f391b6ce521d@gmail.com>
-References: <20171212220143.31210-1-dmurphy@ti.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] net: dsa: allow XAUI phy interface mode
+Date: Wed, 13 Dec 2017 14:59:34 -0500 (EST)
+Message-ID: <20171213.145934.2221372837492956535.davem@davemloft.net>
+References: <E1eOgsk-0001AU-5z@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171212220143.31210-1-dmurphy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1eOgsk-0001AU-5z-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dan,
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Date: Tue, 12 Dec 2017 09:29:46 +0000
 
-Patch set applied, thanks.
+> XGMII is a 32-bit bus plus two clock signals per direction.  XAUI is
+> four serial lanes per direction.  The 88e6190 supports XAUI but not
+> XGMII as it doesn't have enough pins.  The same is true of 88e6176.
+> 
+> Match on PHY_INTERFACE_MODE_XAUI for the XAUI port type, but keep
+> accepting XGMII for backwards compatibility.
+> 
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 
--- 
-Best regards,
-Jacek Anaszewski
-
-On 12/12/2017 11:01 PM, Dan Murphy wrote:
-> All
-> 
-> v4 - Fix checkpatch warning for code indentation on the
-> leds: lp8860: Update the dt parsing for LED labeling patch.
-> 
-> v3 - Made changes to the patch set to address concerns on DT node naming conventions
-> based on discussion in the RFC patch https://patchwork.kernel.org/patch/10089047/
-> also made requested changes to the DT and driver based on feedback.  Patchworks
-> links in each patch.
-> 
-> v2 - Added an initial patch to bring the DT binding up to standard prior to adding
-> the changes for the label and triggers.
-> 
-> v1 Cover letter repeat below
-> 
-> After creating a new LED driver for the LM3692x device I went back to the
-> LP8860 driver that I authored and found some updates that need to be applied.
-> 
-> First the way the LP8860 retrieved the label from the DT was incorrect as the
-> label should have been from a child node as opposed to the parent.  This is now
-> fixed with this series.
-> 
-> Second, since that device can be used to as either a backlight driver or as a
-> string agnostic driver a trigger to the backlight needed to be added.
-> 
-> Finally there are changes to the driver that need to be made as either
-> unnoticed bugs or updates to the driver to align with the current LED
-> framework.  For instance moving to the devm LED class registration, destroying
-> the mutex upon driver removal and removing the in driver dependency on CONFIG_OF
-> and moving it to the Kconfig.
-> 
-> With these changes this should at least bring the driver into a better shape.
-> 
-> There are additional changes coming for this driver but I wanted to get the
-> driver up to snuff before adding a feature to it.
-> 
-> Dan
-> 
-> Dan Murphy (6):
->   dt: bindings: lp8860: Update bindings for lp8860
->   dt: bindings: lp8860: Update DT label binding
->   leds: lp8860: Update the dt parsing for LED labeling
->   dt: bindings: lp8860: Add trigger binding to the lp8860
->   leds: lp8860: Add DT parsing to retrieve the trigger node
->   leds: lp8860: Various fixes to align with LED framework
-> 
->  .../devicetree/bindings/leds/leds-lp8860.txt       | 32 ++++++++++++-----
->  drivers/leds/Kconfig                               |  2 +-
->  drivers/leds/leds-lp8860.c                         | 40 ++++++++++++----------
->  3 files changed, 46 insertions(+), 28 deletions(-)
-> 
+Applied.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
