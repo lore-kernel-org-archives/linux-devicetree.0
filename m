@@ -1,61 +1,29 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH 1/2] dt-bindings: net: add TI CC2560 Bluetooth chip
-Date: Tue, 12 Dec 2017 18:29:30 -0600
-Message-ID: <1513124971-23717-2-git-send-email-david@lechnology.com>
-References: <1513124971-23717-1-git-send-email-david@lechnology.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 06/13] dt-bindings: mips: Add bindings for Microsemi
+ SoCs
+Date: Tue, 12 Dec 2017 18:44:15 -0600
+Message-ID: <20171213004415.l7cz5b2jj3vwzvsw@rob-hp-laptop>
+References: <20171208154618.20105-1-alexandre.belloni@free-electrons.com>
+ <20171208154618.20105-7-alexandre.belloni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1513124971-23717-1-git-send-email-david@lechnology.com>
+Content-Disposition: inline
+In-Reply-To: <20171208154618.20105-7-alexandre.belloni@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
-Cc: David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a compatible string for the Texas Instruments CC2560 Bluetooth
-chip to the existing TI WiLink shared transport bindings. These chips are
-similar enough that the same bindings work for both. The file is renamed
-to ti-bluetooth.txt to make it more generic.
+On Fri, Dec 08, 2017 at 04:46:11PM +0100, Alexandre Belloni wrote:
+> Add bindings for Microsemi SoCs. Currently only Ocelot is supported.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/mips/mscc.txt | 46 +++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/mscc.txt
 
-Signed-off-by: David Lechner <david@lechnology.com>
----
- .../bindings/net/{ti,wilink-st.txt => ti-bluetooth.txt}     | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/net/{ti,wilink-st.txt => ti-bluetooth.txt} (78%)
-
-diff --git a/Documentation/devicetree/bindings/net/ti,wilink-st.txt b/Documentation/devicetree/bindings/net/ti-bluetooth.txt
-similarity index 78%
-rename from Documentation/devicetree/bindings/net/ti,wilink-st.txt
-rename to Documentation/devicetree/bindings/net/ti-bluetooth.txt
-index a45a508..6d03ff8 100644
---- a/Documentation/devicetree/bindings/net/ti,wilink-st.txt
-+++ b/Documentation/devicetree/bindings/net/ti-bluetooth.txt
-@@ -1,10 +1,18 @@
--TI WiLink 7/8 (wl12xx/wl18xx) Shared Transport BT/FM/GPS devices
-+Texas Instruments Bluetooth Chips
-+---------------------------------
-+
-+This documents the binding structure and common properties for serial
-+attached TI Bluetooth devices. The following chips are included in this
-+binding:
-+
-+* TI CC256x Bluetooth devices
-+* TI WiLink 7/8 (wl12xx/wl18xx) Shared Transport BT/FM/GPS devices
- 
- TI WiLink devices have a UART interface for providing Bluetooth, FM radio,
- and GPS over what's called "shared transport". The shared transport is
- standard BT HCI protocol with additional channels for the other functions.
- 
--These devices also have a separate WiFi interface as described in
-+TI WiLink devices also have a separate WiFi interface as described in
- wireless/ti,wlcore.txt.
- 
- This bindings follows the UART slave device binding in
-@@ -12,6 +20,7 @@ This bindings follows the UART slave device binding in
- 
- Required properties:
-  - compatible: should be one of the following:
-+    "ti,cc2560"
-     "ti,wl1271-st"
-     "ti,wl1273-st"
-     "ti,wl1281-st"
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
