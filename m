@@ -1,60 +1,115 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: allwinner: a64: a64-olinuxino: add
- usb otg
-Date: Wed, 13 Dec 2017 11:42:21 +0100
-Message-ID: <20171213104221.zrpwlayahzd7m4fh@flea.lan>
-References: <1513058169-25516-1-git-send-email-jagan@amarulasolutions.com>
- <20171212081335.3qkqcofdbcfuu5zh@flea.lan>
- <CAMty3ZDEhXjHTE4WsJK8=yAayuR=qvJQaZEjGq=LDS6Y4V7RFw@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 2/4] arm: dts: sun8i: a83t: Add registers needed for MCPM
+Date: Wed, 13 Dec 2017 11:50:04 +0100
+Message-ID: <20171213105004.k2hlnl3dzvs2plhh@flea.lan>
+References: <20171211075001.6100-1-mylene.josserand@free-electrons.com>
+ <20171211075001.6100-3-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="66nrxg6x7bqp4gia"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBGEIYTIQKGQEE2VHZVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="qky5j3yljc4piko5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZDEhXjHTE4WsJK8=yAayuR=qvJQaZEjGq=LDS6Y4V7RFw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20171211075001.6100-3-mylene.josserand@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>
+Cc: wens@csie.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
 
---66nrxg6x7bqp4gia
-Content-Type: text/plain; charset="UTF-8"
+--qky5j3yljc4piko5
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2017 at 02:57:01PM +0530, Jagan Teki wrote:
-> On Tue, Dec 12, 2017 at 1:43 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Tue, Dec 12, 2017 at 11:26:09AM +0530, Jagan Teki wrote:
-> >> Add usb otg support for a64-olinuxino board,
-> >> - USB0-ID connected with PH9
-> >> - USB0-VBUSDET connected with PH6
-> >> - USB-DRVVBUS controlled by N_VBUSEN pin from PMIC
-> >>
-> >> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> >
-> > How was this tested? Did you test the OTG part, or only the peripheral
-> > part?
-> 
-> Yes peripheral.
+Hi,
 
-Please test the switching between host and peripheral then, and the
-same comment applies to your bananapi-m64.
+On Mon, Dec 11, 2017 at 08:49:59AM +0100, Myl=E8ne Josserand wrote:
+> Add 3 registers needed for MCPM (ie SMP): prcm, cpucfg and r_cpucfg.
+> prcm and cpucfg are identical with sun9i-a80. The only difference
+> is the r_cpucfg that does not exist on sun9i.
+>=20
+> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@free-electrons.com>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-=
+a83t.dtsi
+> index a384b766f3dc..eeb2e7d0d6dc 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -323,6 +323,16 @@
+>  			#reset-cells =3D <1>;
+>  		};
 
-Thanks!
+
+> +		cpucfg@01700000 {
+
+Please drop the leading zero here, it generates a warning in dtc.
+
+> +			compatible =3D "allwinner,sun9i-a80-cpucfg";
+
+There's some significant differences between the A83t and the A80 IPs,
+you should use a different compatible.
+
+> +			reg =3D <0x01700000 0x100>;
+
+the size is 1k (0x400)
+
+> +		};
+> +
+> +		r_cpucfg@1f01c00 {
+> +			compatible =3D "allwinner,sun8i-a83t-r-cpucfg";
+> +			reg =3D <0x1f01c00 0x100>;
+
+You should order the nodes by physical address
+
+> +		};
+> +
+>  		pio: pinctrl@1c20800 {
+>  			compatible =3D "allwinner,sun8i-a83t-pinctrl";
+>  			interrupts =3D <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+> @@ -493,6 +503,11 @@
+>  			interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+> =20
+> +		prcm@1f01400 {
+> +			compatible =3D "allwinner,sun9i-a80-prcm";
+
+That block is significantly different on the A83t. Please use a
+different compatible.
+
+> +			reg =3D <0x1f01400 0x200>;
+> +		};
+> +
+
+The size is 1k, again.
+
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---66nrxg6x7bqp4gia--
+
+--qky5j3yljc4piko5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAloxBdgACgkQ0rTAlCFN
+r3SW2Q/6A3zAlrNQzGCNx4Kr2LN1zZqjmoZWG2VcwsNtBmWws4nuBdNmwYvJO3qn
+q/j6NGrX6FbzBFLjVCO6oA0WZ/DCX4ff+AADyuxskFR0bHb2POeuW2AyM06Bb0q7
+jk2G7wicW5cj59dpcM2S2H5tI1FaUsa95mqMBTogrADlfK7kAxLans9fF/TDfoEj
+cTkqJ+8gldlXifRgZd2gjiDQU1X/W7MDOltifxnEodcgHf8VmVrgEN4sbuh7ThYB
+8/XYMFK3jeJEB/O5dK8D5hK5zqb18ffaVb7o3d4FpEP1iu1gmq1zl0Rb78K/OW4g
+CdyCPFOxnVzcduay+Z5Km9e2WHA00cQA0No5DHrAqvOAK4HO/m8YhRIg6ALslMgH
+02WLnxafPJZmh2N9/GqoJZz8QUEZSFwW2DY5x5RRcfvvM0gqcAck2bnrOjTUFJ7q
+gCebitdfVoSY76Fsc+7T0tqTYkdTjPQiY81ZDTcLnMVNH86dyTHDjiyAg2+gB5+Y
+IQP6xKYbMAoCuVfatV7eUY54dn91aVhpXBH7kkTn7ZMOIN+c/CZJ48yt22Wb8yfT
+5It7fU472y9uzigeDUy3eqryFANhT5ExPhBNZiQ79utUFl3fMtqJRPehQcD+dLFp
+zZsuCd6XN3nsBl7zzWYIHSwSBPYflgfbKcYXIr7ySPL2eS9BjU4=
+=9T72
+-----END PGP SIGNATURE-----
+
+--qky5j3yljc4piko5--
