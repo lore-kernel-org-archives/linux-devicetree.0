@@ -1,127 +1,41 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [RFC PATCH 1/2] dt: bindings: as3645a: Update dt node example
- with standard
-Date: Wed, 13 Dec 2017 06:55:03 -0600
-Message-ID: <90a1c908-3170-6956-8983-f9d88234cc07@ti.com>
-References: <20171212215024.30116-1-dmurphy@ti.com>
- <4192002.yKJgEXTVKE@avalon>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: rcar: Add device tree support
+ for r8a7743
+Date: Wed, 13 Dec 2017 14:34:00 +0100
+Message-ID: <CAMuHMdVWvWsTdTga8uqv5qt3EUMJUk+Mm-YTqZsX8kFaWN9G2A@mail.gmail.com>
+References: <1513162673-31531-1-git-send-email-biju.das@bp.renesas.com> <1513162673-31531-2-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <4192002.yKJgEXTVKE@avalon>
-Content-Language: en-US
-Sender: linux-leds-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513162673-31531-2-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Laurent
+On Wed, Dec 13, 2017 at 11:57 AM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+> Add thermal sensor support for r8a7743 SoC. The Renesas RZ/G1M
+> (r8a7743) thermal sensor module is identical to the R-Car Gen2 family.
+>
+> No driver change is needed due to the fallback compatible value
+> "renesas,rcar-gen2-thermal".
+>
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
-On 12/13/2017 02:09 AM, Laurent Pinchart wrote:
-> Hi Dan,
-> 
-> Thank you for the patch.
-> 
-> On Tuesday, 12 December 2017 23:50:23 EET Dan Murphy wrote:
->> Update the DT binding to remove the device name from
->> the DT parent node as well as removing the device
->> name from the label.  The LED label will be generated
->> based off the id name stored in the local driver so
->> the LED function can be indicated in the label DT
->> entry.
->>
->> Also removed the indentation on the example.
-> 
-> This makes the patch a bit harder to review and seems to be a matter of style.
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-I debated whether to remove the extra tabs.  The changes below came from comments
-from a recent LED driver I submitted.
+Gr{oetje,eeting}s,
 
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>  .../devicetree/bindings/leds/ams,as3645a.txt       | 36 ++++++++++---------
->>  1 file changed, 18 insertions(+), 18 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
->> b/Documentation/devicetree/bindings/leds/ams,as3645a.txt index
->> fc7f5f9f234c..122aa7165cf3 100644
->> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
->> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
->> @@ -58,22 +58,22 @@ label		: The label of the indicator LED.
-> 
-> I believe you should expand the documentation of the label property to detail 
-> how it should be formed. It's nice to update the example, but the bindings 
-> should be understandable without it.
+                        Geert
 
-OK. I will add a reference to Documentation/devicetree/bindings/leds/common.txt
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-label formation will be undergoing some changes.  I wanted to make sure there were
-some good examples in the LED tree for other developers to reference.
-
-> 
->>  Example
->>  =======
->>
->> -	as3645a@30 {
->> -		compatible = "ams,as3645a";
->> -		#address-cells = <1>;
->> -		#size-cells = <0>;
->> -		reg = <0x30>;
->> -		flash@0 {
->> -			reg = <0x0>;
->> -			flash-timeout-us = <150000>;
->> -			flash-max-microamp = <320000>;
->> -			led-max-microamp = <60000>;
->> -			ams,input-max-microamp = <1750000>;
->> -			label = "as3645a:flash";
->> -		};
->> -		indicator@1 {
->> -			reg = <0x1>;
->> -			led-max-microamp = <10000>;
->> -			label = "as3645a:indicator";
->> -		};
->> +led-controller@30 {
-> 
-> This change looks fine to me.
-> 
->> +	compatible = "ams,as3645a";
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	reg = <0x30>;
->> +	led@0 {
-> 
-> What's the rationale for changing the node name here ? It should be explained 
-> in the commit message, and in the DT bindings documentation.
-
-In my patch to the DT maintainers Rob H indicated 
-
-"Actually, it should be led-controller and led or leds be used for the
-LED child nodes (and gpio-led or pwd-led bindings)"
-
-Here is the patch that the node naming conventions took place
-
-https://patchwork.kernel.org/patch/10093757
-
-
-> 
->> +		reg = <0x0>;
->> +		flash-timeout-us = <150000>;
->> +		flash-max-microamp = <320000>;
->> +		led-max-microamp = <60000>;
->> +		ams,input-max-microamp = <1750000>;
->> +		label = "flash";
->>  	};
->> +	led@1 {
->> +		reg = <0x1>;
->> +		led-max-microamp = <10000>;
->> +		label = "indicator";
->> +	};
->> +};
-> 
-
-
--- 
-------------------
-Dan Murphy
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
