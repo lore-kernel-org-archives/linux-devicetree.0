@@ -1,71 +1,33 @@
-From: hao_zhang <hao5781286@gmail.com>
-Subject: [PATCH v4 3/4] ARM: dts: add pwm node for r40.
-Date: Wed, 13 Dec 2017 22:46:28 +0800
-Message-ID: <20171213144628.GA18246@arx-s1>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH 4/4] [v4] pinctrl: qcom: qdf2xxx: add support for new ACPI
+ HID QCOM8002
+Date: Wed, 13 Dec 2017 08:47:50 -0600
+Message-ID: <fb9ca35d-4794-d528-03ae-73c4c0bd2219@codeaurora.org>
+References: <1512170904-4749-1-git-send-email-timur@codeaurora.org>
+ <1512170904-4749-5-git-send-email-timur@codeaurora.org>
+ <CACRpkdYer_Q5R4XhWTX3=jwshcKZRSDY9=gOvSeUPsQHbUw6vw@mail.gmail.com>
+ <1513076836.25007.641.camel@linux.intel.com>
+ <88349f2e-5243-8061-cc72-d01fa70e6f2e@codeaurora.org>
+ <1513175798.7000.15.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, linus.walleij@linaro.org, maxime.ripard@free-electrons.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org, hao5781286@gmail.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1513175798.7000.15.camel@linux.intel.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-gpio@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, David Brown <david.brown@linaro.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Varadarajan Narayanan <varada@codeaurora.org>, Archit Taneja <architt@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add pwm node for r40.
+On 12/13/2017 08:36 AM, Andy Shevchenko wrote:
+> Wait, runtime muxing is a matter of requesting another function (usually
+> GPIO) and putting it back afterwards. Do you really need anything like
+> this at*runtime*?
 
-Signed-off-by: hao_zhang <hao5781286@gmail.com>
----
- arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts |  6 ++++++
- arch/arm/boot/dts/sun8i-r40.dtsi                  | 13 +++++++++++++
- 2 files changed, 19 insertions(+)
+No, there is no runtime muxing on ACPI platforms.
 
-diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-index 8c5efe2..6cf6273 100644
---- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-+++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-@@ -196,6 +196,12 @@
- 	status = "okay";
- };
- 
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm_pins>;
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 173dcc1..6628b17 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -295,6 +295,11 @@
- 				bias-pull-up;
- 			};
- 
-+			pwm_pins: pwm0-pin {
-+				pins = "PB2", "PB3";
-+				function = "pwm";
-+			};
-+
- 			uart0_pb_pins: uart0-pb-pins {
- 				pins = "PB22", "PB23";
- 				function = "uart0";
-@@ -306,6 +311,14 @@
- 			reg = <0x01c20c90 0x10>;
- 		};
- 
-+		pwm: pwm@1c23400 {
-+			     compatible = "allwinner,sun8i-r40-pwm";
-+			     reg = <0x01c23400 0x154>;
-+			     clocks = <&osc24M>;
-+			     #pwm-cells = <3>;
-+			     status = "disabled";
-+		};
-+
- 		uart0: serial@1c28000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01c28000 0x400>;
 -- 
-2.7.4
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
