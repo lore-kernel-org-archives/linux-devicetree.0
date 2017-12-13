@@ -1,195 +1,154 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 5/5] phy: renesas: rcar-gen3-usb2: add gpio handling
-Date: Wed, 13 Dec 2017 15:27:40 +0900
-Message-ID: <1513146460-20326-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 4/5] phy: renesas: rcar-gen3-usb2: add rcar_gen3_role_swap_ops
+Date: Wed, 13 Dec 2017 15:27:39 +0900
+Message-ID: <1513146460-20326-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1513146460-20326-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1513146460-20326-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513146460-20326-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some R-Car SoCs (e.g. R-Car D3) doesn't have dedicated pins of VBUS
-and ID. So, they may be connected to gpio pins. To handle the gpio
-pins, this patch adds the handling of VBUS and ID pins instead of
-dedicated pins.
+This patch add rcar_gen3_role_swap_ops to support other feature
+(e.g. gpio handling) easily.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
- drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 77 ++++++++++++++++++++--
- 2 files changed, 72 insertions(+), 7 deletions(-)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 51 +++++++++++++++++++++++++++-----
+ 1 file changed, 43 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index 99b651b..851582f 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -27,6 +27,8 @@ channel as USB OTG:
- - interrupts: interrupt specifier for the PHY.
- - vbus-supply: Phandle to a regulator that provides power to the VBUS. This
- 	       regulator will be managed during the PHY power on/off sequence.
-+- renesas,vbus-gpios: use gpio to control vbus instead of dedicated pin.
-+- renesas,id-gpios: use gpio to detect id instead of dedicated pin.
- 
- Example (R-Car H3):
- 
 diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 5e509a9..0b6333d 100644
+index 6d6f3eb..5e509a9 100644
 --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
 +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -13,6 +13,7 @@
-  */
+@@ -83,11 +83,23 @@
  
- #include <linux/extcon-provider.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-@@ -100,9 +101,12 @@ struct rcar_gen3_chan {
+ #define RCAR_GEN3_PHY_HAS_DEDICATED_PINS	1
+ 
++struct rcar_gen3_chan;
++struct rcar_gen3_role_swap_ops {
++	void (*init)(struct rcar_gen3_chan *ch);
++	void (*set_host)(struct rcar_gen3_chan *ch, int host);
++	bool (*is_host)(struct rcar_gen3_chan *ch);
++	void (*enable_vbus)(struct rcar_gen3_chan *ch, int vbus);
++	bool (*check_id)(struct rcar_gen3_chan *ch);
++	void (*enable_irq)(struct rcar_gen3_chan *ch, int enable);
++	irqreturn_t (*irq_handler)(struct rcar_gen3_chan *ch);
++};
++
+ struct rcar_gen3_chan {
+ 	void __iomem *base;
+ 	struct extcon_dev *extcon;
  	struct phy *phy;
  	struct regulator *vbus;
- 	const struct rcar_gen3_role_swap_ops *rs_ops;
-+	struct gpio_desc *gpio_vbus;
-+	struct gpio_desc *gpio_id;
++	const struct rcar_gen3_role_swap_ops *rs_ops;
  	struct work_struct work;
  	bool extcon_host;
  	bool has_otg_pins;
-+	bool has_gpio;
- };
+@@ -203,17 +215,20 @@ static void rcar_gen3_phy_usb2_work(struct work_struct *work)
  
- static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
-@@ -199,6 +203,36 @@ static void has_otg_pins_init(struct rcar_gen3_chan *ch)
- 	       usb2_base + USB2_LINECTRL1);
+ static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
+ {
+-	has_otg_pins_set_host(ch, host);
++	if (ch->rs_ops && ch->rs_ops->set_host)
++		ch->rs_ops->set_host(ch, host);
  }
  
-+static void gpio_enable_vbus(struct rcar_gen3_chan *ch, int vbus)
-+{
-+	gpiod_set_value(ch->gpio_vbus, vbus);
-+}
-+
-+static bool gpio_check_id(struct rcar_gen3_chan *ch)
-+{
-+	return gpiod_get_value(ch->gpio_id);
-+}
-+
-+static void gpio_set_host(struct rcar_gen3_chan *ch, int host)
-+{
-+	/* In gpio ops, this driver will modify the extcon_host by sysfs */
-+	if (ch->extcon_host != !!host) {
-+		ch->extcon_host = !!host;
-+		schedule_work(&ch->work);
-+	}
-+}
-+
-+static bool gpio_is_host(struct rcar_gen3_chan *ch)
-+{
-+	return ch->extcon_host;
-+}
-+
-+static irqreturn_t gpio_irq_handler(struct rcar_gen3_chan *ch)
-+{
-+	/* Nop because the driver will get gpio value after exited */
-+	return IRQ_HANDLED;
-+}
-+
- static void rcar_gen3_phy_usb2_work(struct work_struct *work)
+ static void rcar_gen3_enable_vbus_ctrl(struct rcar_gen3_chan *ch, int vbus)
  {
- 	struct rcar_gen3_chan *ch = container_of(work, struct rcar_gen3_chan,
-@@ -323,7 +357,7 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
- 	bool is_b_device;
- 	enum phy_mode cur_mode, new_mode;
+-	has_otg_pins_enable_vbus(ch, vbus);
++	if (ch->rs_ops && ch->rs_ops->enable_vbus)
++		ch->rs_ops->enable_vbus(ch, vbus);
+ }
  
--	if (!ch->has_otg_pins || !ch->phy->init_count)
-+	if (!(ch->has_otg_pins || ch->has_gpio) || !ch->phy->init_count)
- 		return -EIO;
- 
- 	if (!strncmp(buf, "host", strlen("host")))
-@@ -361,7 +395,7 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
+ static void rcar_gen3_enable_otg_irq(struct rcar_gen3_chan *ch, int enable)
  {
- 	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
+-	has_otg_pins_enable_irq(ch, enable);
++	if (ch->rs_ops && ch->rs_ops->enable_irq)
++		ch->rs_ops->enable_irq(ch, enable);
+ }
  
--	if (!ch->has_otg_pins || !ch->phy->init_count)
-+	if (!(ch->has_otg_pins || ch->has_gpio) || !ch->phy->init_count)
- 		return -EIO;
+ static void rcar_gen3_init_for_host(struct rcar_gen3_chan *ch)
+@@ -271,7 +286,10 @@ static void rcar_gen3_init_from_a_peri_to_a_host(struct rcar_gen3_chan *ch)
  
- 	return sprintf(buf, "%s\n", rcar_gen3_is_host(ch) ? "host" :
-@@ -388,7 +422,7 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
+ static bool rcar_gen3_check_id(struct rcar_gen3_chan *ch)
+ {
+-	return has_otg_pins_check_id(ch);
++	if (ch->rs_ops && ch->rs_ops->check_id)
++		return ch->rs_ops->check_id(ch);
++
++	return false;
+ }
  
- 	/* Initialize otg part */
--	if (channel->has_otg_pins)
-+	if (channel->has_otg_pins || channel->has_gpio)
- 		rcar_gen3_init_otg(channel);
+ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
+@@ -284,7 +302,10 @@ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
  
- 	return 0;
-@@ -489,6 +523,14 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
- 	.irq_handler	= has_otg_pins_irq_handler,
+ static bool rcar_gen3_is_host(struct rcar_gen3_chan *ch)
+ {
+-	return has_otg_pins_is_host(ch);
++	if (ch->rs_ops && ch->rs_ops->is_host)
++		return ch->rs_ops->is_host(ch);
++
++	return false;
+ }
+ 
+ static enum phy_mode rcar_gen3_get_phy_mode(struct rcar_gen3_chan *ch)
+@@ -350,7 +371,8 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
+ 
+ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ {
+-	has_otg_pins_init(ch);
++	if (ch->rs_ops && ch->rs_ops->init)
++		ch->rs_ops->init(ch);
+ 
+ 	rcar_gen3_device_recognition(ch);
+ }
+@@ -425,9 +447,10 @@ static int rcar_gen3_phy_usb2_power_off(struct phy *p)
+ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+ {
+ 	struct rcar_gen3_chan *ch = _ch;
+-	irqreturn_t ret;
++	irqreturn_t ret = IRQ_NONE;
+ 
+-	ret = has_otg_pins_irq_handler(ch);
++	if (ch->rs_ops && ch->rs_ops->irq_handler)
++		ret = ch->rs_ops->irq_handler(ch);
+ 	if (ret == IRQ_HANDLED)
+ 		rcar_gen3_device_recognition(ch);
+ 
+@@ -456,6 +479,16 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+ 	EXTCON_NONE,
  };
  
-+static const struct rcar_gen3_role_swap_ops gpio_ops = {
-+	.set_host	= gpio_set_host,
-+	.is_host	= gpio_is_host,
-+	.enable_vbus	= gpio_enable_vbus,
-+	.check_id	= gpio_check_id,
-+	.irq_handler	= gpio_irq_handler,
++static const struct rcar_gen3_role_swap_ops has_otg_pins_ops = {
++	.init		= has_otg_pins_init,
++	.set_host	= has_otg_pins_set_host,
++	.is_host	= has_otg_pins_is_host,
++	.enable_vbus	= has_otg_pins_enable_vbus,
++	.check_id	= has_otg_pins_check_id,
++	.enable_irq	= has_otg_pins_enable_irq,
++	.irq_handler	= has_otg_pins_irq_handler,
 +};
 +
  static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
  {
  	struct device *dev = &pdev->dev;
-@@ -513,9 +555,30 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 
- 	INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
- 
--	/* call request_irq for OTG */
-+	channel->gpio_vbus = devm_gpiod_get(dev, "renesas,vbus", GPIOD_OUT_LOW);
-+	if (IS_ERR(channel->gpio_vbus) &&
-+	    PTR_ERR(channel->gpio_vbus) == -EPROBE_DEFER)
-+		return PTR_ERR(channel->gpio_vbus);
-+
-+	channel->gpio_id = devm_gpiod_get(dev, "renesas,id", GPIOD_IN);
-+	if (!IS_ERR(channel->gpio_vbus) && !IS_ERR(channel->gpio_id)) {
-+		irq = gpiod_to_irq(channel->gpio_id);
-+		if (irq > 0) {
-+			ret = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
-+				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-+				dev_name(dev), channel);
-+			if (ret < 0) {
-+				dev_err(dev, "No gpio irq handler (%d)\n", irq);
-+			} else {
-+				channel->has_gpio = true;
-+				channel->rs_ops = &gpio_ops;
-+			}
-+		}
-+	}
-+
-+	/* call request_irq for OTG if doesn't have gpio */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq >= 0) {
-+	if (!channel->has_gpio && irq >= 0) {
- 		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
- 				       IRQF_SHARED, dev_name(dev), channel);
- 		if (irq < 0)
-@@ -569,7 +632,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 		dev_err(dev, "Failed to register PHY provider\n");
- 		ret = PTR_ERR(provider);
- 		goto error;
--	} else if (channel->has_otg_pins) {
-+	} else if (channel->has_otg_pins || channel->has_gpio) {
+@@ -493,6 +526,8 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
  		int ret;
  
- 		ret = device_create_file(dev, &dev_attr_role);
-@@ -589,7 +652,7 @@ static int rcar_gen3_phy_usb2_remove(struct platform_device *pdev)
- {
- 	struct rcar_gen3_chan *channel = platform_get_drvdata(pdev);
- 
--	if (channel->has_otg_pins)
-+	if (channel->has_otg_pins || channel->has_gpio)
- 		device_remove_file(&pdev->dev, &dev_attr_role);
- 
- 	pm_runtime_disable(&pdev->dev);
+ 		channel->has_otg_pins = (uintptr_t)of_device_get_match_data(dev);
++		if (channel->has_otg_pins)
++			channel->rs_ops = &has_otg_pins_ops;
+ 		channel->extcon = devm_extcon_dev_allocate(dev,
+ 							rcar_gen3_phy_cable);
+ 		if (IS_ERR(channel->extcon))
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
