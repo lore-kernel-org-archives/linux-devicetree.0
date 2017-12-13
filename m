@@ -1,31 +1,38 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH V4 00/12] drivers: Boot Constraints core
-Date: Wed, 13 Dec 2017 10:55:29 +0100
-Message-ID: <20171213095529.GK13194@kroah.com>
-References: <cover.1509284255.git.viresh.kumar@linaro.org>
- <20171128041818.GE11413@vireshk-i7>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/3] dt-bindings: timer: renesas, cmt: Document r8a774[35]
+ CMT support
+Date: Wed, 13 Dec 2017 10:59:01 +0100
+Message-ID: <CAMuHMdW5yCnq2wuetj4EtUM=obxpCoXprOk02Uo4LM60sMrqXQ@mail.gmail.com>
+References: <1513104579-6333-1-git-send-email-fabrizio.castro@bp.renesas.com> <1513104579-6333-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171128041818.GE11413@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robdclark@gmail.com, s.hauer@pengutronix.de, l.stach@pengutronix.de, shawnguo@kernel.org, fabio.estevam@nxp.com, nm@ti.com, xuwei5@hisilicon.com, robh+dt@kernel.org, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1513104579-6333-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 28, 2017 at 09:48:18AM +0530, Viresh Kumar wrote:
-> On 29-10-17, 19:18, Viresh Kumar wrote:
-> > Here is V4 of the boot constraints core based on your feedback from V3.
-> > We now have support for three platforms (as you suggested) included in
-> > this series: Hisilicon, IMX and Qualcomm.
-> 
-> Hi Greg,
-> 
-> I was waiting for rc1 to come out before sending a reminder for this
-> series and so here is one :)
+Hi Fabrizio,
+On Tue, Dec 12, 2017 at 7:49 PM, Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Document SoC specific compatible strings for r8a7743 and r8a7745.
+> No driver change is needed as the fallback strings will activate
+> the right code.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
-I've reviewed it enough for now, needs a tiny bit of work, but looking
-much better, nice job!
+With the issues pointed out by Simon fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-gre gk-h
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
