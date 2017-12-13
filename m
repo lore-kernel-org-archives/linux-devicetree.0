@@ -1,186 +1,75 @@
-From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Subject: Re: [PATCH 3/5] PCI: cadence: Add host driver for Cadence PCIe
- controller
-Date: Wed, 13 Dec 2017 17:42:59 +0100
-Message-ID: <12e8cff4-3e4f-866b-6dac-27316ff4f1bc@free-electrons.com>
-References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
- <2670f7ddf59e708beb9d32bef1353e15bd4e1ecf.1511439189.git.cyrille.pitchen@free-electrons.com>
- <20171129173426.GB31205@red-moon>
- <f870ad14-0bd5-9d7b-78f2-1e7f663d1127@free-electrons.com>
- <20171204182013.GA7343@red-moon>
- <CAKv+Gu_1XZmsKJ_7ay7D74xSAhDW0y++7-CC3YfG7LOUcNZSqA@mail.gmail.com>
- <20171206113214.GA27582@red-moon>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 6/7] cpufreq: Add DVFS support for Armada 37xx
+Date: Wed, 13 Dec 2017 17:45:05 +0100
+Message-ID: <87vahapofi.fsf@free-electrons.com>
+References: <20171207135616.23670-1-gregory.clement@free-electrons.com>
+        <20171207135616.23670-7-gregory.clement@free-electrons.com>
+        <20171212072426.GK25177@vireshk-i7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171206113214.GA27582@red-moon>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, kishon@ti.com, linux-pci <linux-pci@vger.kernel.org>, adouglas@cadence.com, Scott Telford <stelford@cadence.com>, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, sureshp@cadence.com, nsekhar@ti.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171212072426.GK25177@vireshk-i7> (Viresh Kumar's message of
+        "Tue, 12 Dec 2017 12:54:26 +0530")
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Evan Wang <xswang@marvell.com>, Andre Heider <a.heider@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Viresh,
+ 
+ On mar., déc. 12 2017, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 
-Le 06/12/2017 à 12:32, Lorenzo Pieralisi a écrit :
-> On Mon, Dec 04, 2017 at 06:49:12PM +0000, Ard Biesheuvel wrote:
-> 
-> [...]
-> 
->>>>>> +static int cdns_pcie_host_init_root_port(struct cdns_pcie_rc *rc)
->>>>>> +{
->>>>>> +     const struct cdns_pcie_rc_data *data = rc->data;
->>>>>> +     struct cdns_pcie *pcie = &rc->pcie;
->>>>>> +     u8 pbn, sbn, subn;
->>>>>> +     u32 value, ctrl;
->>>>>> +
->>>>>> +     /*
->>>>>> +      * Set the root complex BAR configuration register:
->>>>>> +      * - disable both BAR0 and BAR1.
->>>>>> +      * - enable Prefetchable Memory Base and Limit registers in type 1
->>>>>> +      *   config space (64 bits).
->>>>>> +      * - enable IO Base and Limit registers in type 1 config
->>>>>> +      *   space (32 bits).
->>>>>> +      */
->>>>>> +     ctrl = CDNS_PCIE_LM_BAR_CFG_CTRL_DISABLED;
->>>>>> +     value = CDNS_PCIE_LM_RC_BAR_CFG_BAR0_CTRL(ctrl) |
->>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_BAR1_CTRL(ctrl) |
->>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_ENABLE |
->>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_PREFETCH_MEM_64BITS |
->>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_IO_ENABLE |
->>>>>> +             CDNS_PCIE_LM_RC_BAR_CFG_IO_32BITS;
->>>>>> +     cdns_pcie_writel(pcie, CDNS_PCIE_LM_RC_BAR_CFG, value);
->>>>>> +
->>>>>> +     /* Set root port configuration space */
->>>>>> +     if (data->vendor_id != 0xffff)
->>>>>> +             cdns_pcie_rp_writew(pcie, PCI_VENDOR_ID, data->vendor_id);
->>>>>> +     if (data->device_id != 0xffff)
->>>>>> +             cdns_pcie_rp_writew(pcie, PCI_DEVICE_ID, data->device_id);
->>>>>> +
->>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_CLASS_REVISION, 0);
->>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_CLASS_PROG, 0);
->>>>>> +     cdns_pcie_rp_writew(pcie, PCI_CLASS_DEVICE, PCI_CLASS_BRIDGE_PCI);
->>>>>> +
->>>>>> +     pbn = rc->bus_range->start;
->>>>>> +     sbn = pbn + 1; /* Single root port. */
->>>>>> +     subn = rc->bus_range->end;
->>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_PRIMARY_BUS, pbn);
->>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_SECONDARY_BUS, sbn);
->>>>>> +     cdns_pcie_rp_writeb(pcie, PCI_SUBORDINATE_BUS, subn);
->>>>>
->>>>> Again - I do not have the datasheet for this device therefore I would
->>>>> kindly ask you how this works; it seems to me that what you are doing
->>>>> here is done through normal configuration cycles in an ECAM compliant
->>>>> system to program the RP PRIMARY/SECONDARY/SUBORDINATE bus - I would
->>>>> like to understand why this code is needed.
->>>>>
->>>>
->>>> I will test without those lines to test whether I can remove them.
->>>>
->>>> At first, the PCIe controller was tested by Cadence team: there was code
->>>> in their bootloader to initialize the hardware (building the AXI <-> PCIe
->>>> mappings, ...): the bootloader used to set the primary, secondary and
->>>> subordinate bus numbers in the root port PCI config space.
->>>>
->>>> Also there was a hardware trick to redirect accesses of the lowest
->>>> addresses in the AXI bus to the APB bus so the PCI configuration space of
->>>> the root port could have been accessed from the AXI bus too.
->>>>
->>>> The AXI <-> PCIe mapping being done by the bootloader and the root port
->>>> config space being accessible from the AXI bus, it was possible to use
->>>> the pci-host-generic driver.
->>>
->>> That's what I was getting at. Ard (CC'ed) implemented a firmware set-up
->>> (even though it was for a different IP but maybe it applies here) that
->>> allows the kernel to use the pci-host-generic driver to initialize the
->>> PCI controller:
->>>
->>> https://marc.info/?l=linux-pci&m=150360022626351&w=2
->>>
->>> I want to understand if there is an IP initialization sequence whereby
->>> this IP can be made to work in an ECAM compliant way and therefore
->>> reuse (most of) the pci-host-generic driver code.
->>>
->>
->> I think the Synopsys case is probably very similar. There are some
->> registers that look like the config space of a root port, but in
->> reality, every memory access that hits a live host bridge window is
->> forwarded onto the link, regardless of the values of the bridge BARs.
->> That is why in the quoted case, we can get away with ignoring the root
->> port altogether, rather than jumping through hoops to make the IP
->> block's PCI config space registers appear at B/D/F 0/0/0, while still
->> having to filter type 0 config TLPs going onto the link (which is
->> arguably the job of the root port to begin with)
->>
->> So if this IP does implement a proper root port (i.e., one where the
->> bridge BARs are actually taken into account, and where type 0 config
->> TLPs are in fact filtered), I strongly recommend mapping its config
->> space registers in an ECAM compliant matter, which implies no
->> accessors in the OS.
->>
->> However, given the observation above, this IP does not appear to
->> filter type 0 config TLPs to devfn > 0 downstream of the root port
->> either.
-> 
-> Unfortunately that matches my understanding too, let's wait for
-> Cyrille's reply on my query.
-> 
->>>> However, the hardware trick won't be included in the final design since
->>>> Cadence now wants to perform all PCI configuration space accesses through
->>>> a small 4KB window at a fixed address on the AXI bus.
->>>
->>> I would like to understand what the HW "trick" (if you can disclose it)
->>> was, because if there is a chance to reuse the pci-host-generic driver
->>> for this IP I want to take it (yes it may entail some firmware set-up in
->>> the bootloader) - was it a HW trick or a specific IP SW configuration ?
->>>
+> On 07-12-17, 14:56, Gregory CLEMENT wrote:
+>> +/* Power management in North Bridge register set */
+>> +#define ARMADA_37XX_NB_L0L1	0x18
+>> +#define ARMADA_37XX_NB_L2L3	0x1C
+>> +#define	ARMADA_37XX_NB_TBG_DIV_OFF	13
+>> +#define	ARMADA_37XX_NB_TBG_DIV_MASK	0x7
+>> +#define	 ARMADA_37XX_NB_CLK_SEL_OFF	11
+>> +#define	 ARMADA_37XX_NB_CLK_SEL_MASK	0x1
+>> +#define	 ARMADA_37XX_NB_CLK_SEL_TBG      0x1
+>> +#define	 ARMADA_37XX_NB_TBG_SEL_OFF	9
+>> +#define	 ARMADA_37XX_NB_TBG_SEL_MASK	0x3
+>> +#define	 ARMADA_37XX_NB_VDD_SEL_OFF	6
+>> +#define	 ARMADA_37XX_NB_VDD_SEL_MASK	0x3
+>> +#define	 ARMADA_37XX_NB_CONFIG_SHIFT	16
+>> +#define ARMADA_37XX_NB_DYN_MOD	0x24
+>> +#define	 ARMADA_37XX_NB_CLK_SEL_EN	BIT(26)
+>> +#define	 ARMADA_37XX_NB_TBG_EN		BIT(28)
+>> +#define	 ARMADA_37XX_NB_DIV_EN		BIT(29)
+>> +#define	 ARMADA_37XX_NB_VDD_EN		BIT(30)
+>> +#define	 ARMADA_37XX_NB_DFS_EN		BIT(31)
+>> +#define ARMADA_37XX_NB_CPU_LOAD	0x30
+>> +#define	 ARMADA_37XX_NB_CPU_LOAD_MASK	0x3
+>> +#define	 ARMADA_37XX_DVFS_LOAD_0		0
+>> +#define	 ARMADA_37XX_DVFS_LOAD_1		1
+>> +#define	 ARMADA_37XX_DVFS_LOAD_2		2
+>> +#define	 ARMADA_37XX_DVFS_LOAD_3		3
+>
+> I thought you agreed to using space instead of tab after #define ?
 
-I will have to ask for details to Cadence designers if needed but when I
-asked them about it, they explained me that AXI bus accesses in a small
-window (I guess 4KB width) were redirected to the APB bus where lay the
-registers for the root port PCI configuration space.
+Me too! Actually I did it, and I don't know what happened with this
+patch.
 
-I was some hardware trick which won't be included in the final design, so
-we can't enable or disable it by software.
+However it will be part of the next version and I will double check it.
 
-Actually, this is requirement from the Cadence's customer that the host
-driver can access the PCI config space of any device in sub ordinates
-buses through a small memory area on the AXI bus. For some reason, they
-don't want an ECAM compliant controller.
+>
+> Looks fine otherwise. You can add below after fixing above tab/space thing:
+>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-I don't know the reason but my guess is that they don't want to waste to
-much space allocated to the PCIe controller on the AXI bus, likely on a
-32-bit platform. As I said, this is such an assumption.
 
->>>> Also, we now want all initialisations to be done by the linux driver
->>>> instead of the bootloader.
->>>
->>> That's a choice, I do not necessarily agree with it and I think we
->>> should aim for more standardization on the PCI host bridge set-up
->>> at firmware->kernel handover on DT platforms.
->>>
+Thanks,
 
-It was another requirement of Cadence's customer that the PCIe host
-controller initialization is done by the Linux driver rather than by
-some boot loader.
+Gregory
 
-Best regards,
-
-Cyrille
-
->>
->> Well, for one, it means this IP will never be supported by ACPI, which
->> seems like a huge downside to me.
-> 
-> Yes it is - that's exactly where my comments were heading.
-> 
-> Thanks,
-> Lorenzo
-> 
-
+>
+> -- 
+> viresh
 
 -- 
-Cyrille Pitchen, Free Electrons
-Embedded Linux and Kernel engineering
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
 http://free-electrons.com
