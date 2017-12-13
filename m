@@ -1,58 +1,71 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v10 00/13] Introduce framework for SLIMbus device driver
-Date: Wed, 13 Dec 2017 10:25:02 +0100
-Message-ID: <20171213092502.GA12631@kroah.com>
-References: <20171211234307.14465-1-srinivas.kandagatla@linaro.org>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: Re: [PATCH v3 4/4] regulator: core: Balance coupled regulators
+ voltages
+Date: Wed, 13 Dec 2017 10:25:00 +0100
+Message-ID: <0bca0d20-1ca8-be4c-a60e-bbc0c640ae41@samsung.com>
+References: <1512639975-22241-1-git-send-email-m.purski@samsung.com>
+        <CGME20171207094754eucas1p1528c6c30135124430a5c703eb81de8d2@eucas1p1.samsung.com>
+        <1512639975-22241-5-git-send-email-m.purski@samsung.com>
+        <20171212115427.GG16323@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171211234307.14465-1-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, pombredanne-od1rfyK75/E@public.gmane.org, j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20171212115427.GG16323@sirena.org.uk>
+Content-language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 11:42:54PM +0000, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
-> developed by MIPI (Mobile Industry Processor Interface) alliance.
-> SLIMbus is a 2-wire implementation, which is used to communicate with
-> peripheral components like audio-codec.
-> SLIMbus uses Time-Division-Multiplexing to accommodate multiple data
-> channels, and control channel. Control channel has messages to do
-> device-enumeration, messages to send/receive control-data to/from
-> SLIMbus devices, messages for port/channel management, and messages to
-> do bandwidth allocation.
-> Framework is introduced to support  multiple instances of the bus
-> (1 controller per bus), and multiple slave devices per controller.
-> SPI and I2C frameworks, and comments from last time when I submitted
-> the patches were referred-to while working on this framework.
-> 
-> These patchsets introduce device-management, OF helpers, and messaging
-> APIs, controller driver for Qualcomm's SLIMbus controller, and
-> clock-pause feature for entering/exiting low-power mode for SLIMbus.
-> Framework patches to do channel, port and bandwidth
-> management are work-in-progress and will be sent out once these
-> initial patches are accepted.
-> 
-> These patchsets were tested on IFC6410 board with Qualcomm APQ8064
-> processor using the controller driver, and a WCD9310 codec.
-> 
-> v9: https://lkml.org/lkml/2017/12/7/289
-> 
-> Changes from v9 to v10:
-> * Added kernel-doc reference into slimbus driver api doc suggested by
->  Jonathan Corbet
 
-These all look good to me.  I can take this through my tree if I get the
-ack from Mark for the regmap changes.
 
-thanks,
+On 12/12/2017 12:54 PM, Mark Brown wrote:
+> On Thu, Dec 07, 2017 at 10:46:15AM +0100, Maciej Purski wrote:
+> 
+>> @@ -2447,10 +2482,9 @@ static int _regulator_is_enabled(struct regulator_dev *rdev)
+>>   	return rdev->desc->ops->is_enabled(rdev);
+>>   }
+>>   
+>> -static int _regulator_list_voltage(struct regulator *regulator,
+>> -				    unsigned selector, int lock)
+>> +static int _regulator_list_voltage(struct regulator_dev *rdev,
+>> +				   unsigned selector, int lock)
+>>   {
+> 
+> Please split this refactoring of _list_voltage() into a separate patch
+> for ease of review.  It can go in separately which will make this change
+> smaller and easier to review.
+> 
+>> @@ -2928,6 +2961,35 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+>>   	if (ret < 0)
+>>   		goto out2;
+>>   
+>> +	/*
+>> +	 * If the regulator is not coupled just set voltage normally, else
+>> +	 * return after changing consumer demands without changing voltage.
+>> +	 * This will be handled outside the function
+>> +	 * by regulator_balance_coupled()
+>> +	 */
+>> +	if (!rdev->coupling_desc) {
+>> +		ret = regulator_set_voltage_rdev(regulator->rdev,
+>> +						 min_uV, max_uV);
+>> +		if (ret < 0)
+>> +			goto out2;
+>> +	}
+> 
+> As I think I said on the previous version I'm not enthusiastic about
+> having two separate code paths for setting the voltage, it makes it much
+> more likely that things will break especially given how rare coupled
+> regulators are.  It would be cleaner to make uncoupled regulators just
+> be a special case of coupled regulators, that way more of the code is
+> shared.  To that end I'd adjust the code so that we always have a
+> coupling descriptor and then handle the case where there's only one
+> regulator described in there.
+> 
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Do you have any suggestion, how should I implement that path? The thing which
+makes it more complicated is locking, because set_voltage_unlocked is done under 
+one regulator's mutex and its suppliers, while balance procedure locks every 
+coupled regulator without its suppliers. The suppliers for a single regulator 
+are locked when setting a single regulator's voltage takes place.
