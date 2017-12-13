@@ -1,59 +1,47 @@
-From: hao_zhang <hao5781286@gmail.com>
-Subject: [PATCH v4 4/4] ARM: pinctrl: sunxi-pinctrl: fix pin funtion can not
- be match correctly.
-Date: Wed, 13 Dec 2017 22:47:48 +0800
-Message-ID: <20171213144748.GA18267@arx-s1>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/2] media: dt-bindings: coda: Add compatible for
+ CodaHx4 on i.MX51
+Date: Wed, 13 Dec 2017 15:52:15 +0100
+Message-ID: <1513176735.9445.1.camel@pengutronix.de>
+References: <20171213140918.22500-1-p.zabel@pengutronix.de>
+         <20171213142152.7vcludcs7ohjeaqb@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, linus.walleij@linaro.org, maxime.ripard@free-electrons.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org, hao5781286@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20171213142152.7vcludcs7ohjeaqb@sapphire.tkos.co.il>
+Sender: linux-media-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <Chris.Healy@zii.aero>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Pin function can not be match correctly when SUNXI_PIN describe with
-mutiple variant and same function.
+Hi Baruch,
 
-such as:
-on pinctrl-sun4i-a10.c
+On Wed, 2017-12-13 at 16:21 +0200, Baruch Siach wrote:
+> Hi Philipp,
+> 
+> On Wed, Dec 13, 2017 at 03:09:17PM +0100, Philipp Zabel wrote:
+> > Add a compatible for the CodaHx4 VPU used on i.MX51.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> >  Documentation/devicetree/bindings/media/coda.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/coda.txt b/Documentation/devicetree/bindings/media/coda.txt
+> > index 2865d04e40305..660f5ecf2a23b 100644
+> > --- a/Documentation/devicetree/bindings/media/coda.txt
+> > +++ b/Documentation/devicetree/bindings/media/coda.txt
+> > @@ -7,6 +7,7 @@ called VPU (Video Processing Unit).
+> >  Required properties:
+> >  - compatible : should be "fsl,<chip>-src" for i.MX SoCs:
+> >    (a) "fsl,imx27-vpu" for CodaDx6 present in i.MX27
+> > +  (a) "fsl,imx51-vpu" for CodaHx4 present in i.MX51
+> 
+> Renumbering the strings might be useful.
 
-SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 2),
-		SUNXI_FUNCTION(0x0, "gpio_in"),
-		SUNXI_FUNCTION(0x1, "gpio_out"),
-		SUNXI_FUNCTION_VARIANT(0x2, "pwm",    /* PWM0 */
-			PINCTRL_SUN4I_A10 |
-			PINCTRL_SUN7I_A20),
-		SUNXI_FUNCTION_VARIANT(0x3, "pwm",    /* PWM0 */
-			PINCTRL_SUN8I_R40)),
+yes, thank you. I should probably add the generic "cnm,coda<variant>"
+compatibles as well. I'll send a fixed version.
 
-it would always match to the first variant function
-(PINCTRL_SUN4I_A10, PINCTRL_SUN7I_A20)
-
-so we should add variant compare on it.
-
-Signed-off-by: hao_zhang <hao5781286@gmail.com>
----
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 4b6cb25..f23e74e 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -83,9 +83,11 @@ sunxi_pinctrl_desc_find_function_by_name(struct sunxi_pinctrl *pctl,
- 			struct sunxi_desc_function *func = pin->functions;
- 
- 			while (func->name) {
--				if (!strcmp(func->name, func_name))
-+				if (!strcmp(func->name, func_name)) {
-+					if (!(func->variant) ||
-+					   (func->variant & pctl->variant))
- 					return func;
--
-+				}
- 				func++;
- 			}
- 		}
--- 
-2.7.4
+regards
+Philipp
