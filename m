@@ -1,99 +1,29 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 1/2] dt: bindings: as3645a: Update dt node example with standard
-Date: Wed, 13 Dec 2017 10:09:04 +0200
-Message-ID: <4192002.yKJgEXTVKE@avalon>
-References: <20171212215024.30116-1-dmurphy@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: stm32: fix copyright and adopt SPDX identifier
+Date: Wed, 13 Dec 2017 09:16:23 +0100
+Message-ID: <CACRpkdbhPcsvA21TB9mwy_o6tOr-HZXJkMr4rVcVhAoZgYeoZQ@mail.gmail.com>
+References: <1512748391-22004-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171212215024.30116-1-dmurphy@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, sakari.ailus@iki.fi, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1512748391-22004-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+On Fri, Dec 8, 2017 at 4:53 PM, Alexandre Torgue
+<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
 
-Thank you for the patch.
+> Add missing copyright and add SPDX identifier.
+>
+> Signed-off-by: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 
-On Tuesday, 12 December 2017 23:50:23 EET Dan Murphy wrote:
-> Update the DT binding to remove the device name from
-> the DT parent node as well as removing the device
-> name from the label.  The LED label will be generated
-> based off the id name stored in the local driver so
-> the LED function can be indicated in the label DT
-> entry.
-> 
-> Also removed the indentation on the example.
+Patch applied.
 
-This makes the patch a bit harder to review and seems to be a matter of style.
-
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/leds/ams,as3645a.txt       | 36 ++++++++++---------
->  1 file changed, 18 insertions(+), 18 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> b/Documentation/devicetree/bindings/leds/ams,as3645a.txt index
-> fc7f5f9f234c..122aa7165cf3 100644
-> --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
-> @@ -58,22 +58,22 @@ label		: The label of the indicator LED.
-
-I believe you should expand the documentation of the label property to detail 
-how it should be formed. It's nice to update the example, but the bindings 
-should be understandable without it.
-
->  Example
->  =======
-> 
-> -	as3645a@30 {
-> -		compatible = "ams,as3645a";
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		reg = <0x30>;
-> -		flash@0 {
-> -			reg = <0x0>;
-> -			flash-timeout-us = <150000>;
-> -			flash-max-microamp = <320000>;
-> -			led-max-microamp = <60000>;
-> -			ams,input-max-microamp = <1750000>;
-> -			label = "as3645a:flash";
-> -		};
-> -		indicator@1 {
-> -			reg = <0x1>;
-> -			led-max-microamp = <10000>;
-> -			label = "as3645a:indicator";
-> -		};
-> +led-controller@30 {
-
-This change looks fine to me.
-
-> +	compatible = "ams,as3645a";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x30>;
-> +	led@0 {
-
-What's the rationale for changing the node name here ? It should be explained 
-in the commit message, and in the DT bindings documentation.
-
-> +		reg = <0x0>;
-> +		flash-timeout-us = <150000>;
-> +		flash-max-microamp = <320000>;
-> +		led-max-microamp = <60000>;
-> +		ams,input-max-microamp = <1750000>;
-> +		label = "flash";
->  	};
-> +	led@1 {
-> +		reg = <0x1>;
-> +		led-max-microamp = <10000>;
-> +		label = "indicator";
-> +	};
-> +};
-
--- 
-Regards,
-
-Laurent Pinchart
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
