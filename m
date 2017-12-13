@@ -1,67 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v10 08/13] regmap: add SLIMbus support
-Date: Wed, 13 Dec 2017 12:24:36 +0000
-Message-ID: <20171213122436.GH6416@sirena.org.uk>
-References: <20171211234307.14465-1-srinivas.kandagatla@linaro.org>
- <20171211234307.14465-9-srinivas.kandagatla@linaro.org>
- <20171213092537.GB12631@kroah.com>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+        <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/2] sunxi: Add Capture support for sun8i-a33
+Date: Wed, 13 Dec 2017 13:34:06 +0100
+Message-ID: <20171213123408.10422-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3757735183459821737=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20171213092537.GB12631@kroah.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Jonathan Corbet <corbet@lwn.net>, linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org, j.neuschaefer@gmx.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, srinivas.kandagatla@linaro.org, pombredanne@nexb.com, sdharia@codeaurora.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello everyone,
 
---===============3757735183459821737==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LZFKeWUZP29EKQNE"
-Content-Disposition: inline
+Here is a first series to add support for the capture for
+Allwinner Sun8I-A33 SoC (sun8i-codec).
+These patches have been tested on Sun8i-r16 parrot board and
+the two microphones are working well.
 
+Noticed that the DAPM route is not correct: "Right/Left Digital
+ADC Mixer" widgets should be after the "Right ADC" (according to what I
+understood from the datasheet). This is currently not the case but when
+I tried to update it, I got an error about "failing to add routes".
+I will investigate why in next weeks (and send a V2) but as it
+can take time, I think it is better to send a V1 and got reviews
+(because it is the first time I am implementing such features).
 
---LZFKeWUZP29EKQNE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you in advance,
+Best regards,
+Mylène
 
-On Wed, Dec 13, 2017 at 10:25:37AM +0100, Greg Kroah-Hartman wrote:
+Mylène Josserand (2):
+  ASoC: sun8i-codec: Add ADC support for a33
+  ARM: dts: sun8i: Add ADC routing
 
-> Mark, can I get an Ack for this patch so I can take it through my tree
-> with the other patches in this series?
+ arch/arm/boot/dts/sun8i-a33.dtsi | 10 ++++-
+ sound/soc/sunxi/sun8i-codec.c    | 82 +++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 89 insertions(+), 3 deletions(-)
 
-Not until I've reviewed it (and the rest of the series).
+-- 
+2.11.0
 
---LZFKeWUZP29EKQNE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloxHAMACgkQJNaLcl1U
-h9AmXwf+PwCdIulTGv7x0ckDufiHhkEmZlrI5ZwLzkqFWIE/oZeqBpWB9bfUv0w4
-sozGK05MLkVN3p7eUREIWkxsxeK1D7y4Ioc+lcwrFX7JM09jXq9GpDzUDPX7Wv2I
-TXMD3q2iikbe1sopJB6Tvx2ZJpsoHUyjE2rKKHofeWha9AzKbYKEr+AFwNLdnKa6
-V3Tbn+9QfbwXkzst5Fzi0hvokl7SUqtr4PsV0uGa27mjwO1CCyNjtXSGVmyMXO3Z
-WrkUXcTGtZksZR15TUjygDQiTjNMDdWj9QJriXxaLpbmWv+Pm0/vk0IOMALUzZKE
-hSvG/GBxXnlaTdmw7DvMpdpyRfCERw==
-=P0O9
------END PGP SIGNATURE-----
-
---LZFKeWUZP29EKQNE--
-
---===============3757735183459821737==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3757735183459821737==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
