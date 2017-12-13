@@ -1,254 +1,122 @@
-From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2 05/11] =?UTF-8?q?clk:=20qcom:=20ipq8074:=20add=20remain?= =?UTF-8?q?ing=20PLL=E2=80=99s?=
-Date: Wed, 13 Dec 2017 19:55:36 +0530
-Message-ID: <1513175142-3702-6-git-send-email-absahu@codeaurora.org>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: [PATCH v2 02/11] clk: qcom: add parent map for regmap mux
+Date: Wed, 13 Dec 2017 19:55:33 +0530
+Message-ID: <1513175142-3702-3-git-send-email-absahu@codeaurora.org>
 References: <1513175142-3702-1-git-send-email-absahu@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513175142-3702-1-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1513175142-3702-1-git-send-email-absahu@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-- GPLL2, GPLL4 and GPLL6 are general PLL clocks and parent
-  for all core peripherals.
-- UBI PLL is mainly used by NSS (Network Switching System).
-  IPQ8074 has 2 instances of NSS UBI cores and UBI PLL will
-  be used to control the core frequency.
-- NSS Crypto PLL is mainly used by NSS Crypto Engine which
-  supports the multiple cryptographic algorithm used in
-  Ethernet.
-- IPQ8074 frequency plan does not require change in PLL post
-  dividers so marked the same as read-only.
+Currently the driver assumes the register configuration value
+is identical to its index in the parent map. This patch adds
+the parent map field in regmap mux clock node which contains
+the mapping of parent index with actual register configuration
+value. If regmap node contains this parent map then the
+configuration value will be taken from this
+parent map instead of simply writing the index value.
 
-Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- drivers/clk/qcom/gcc-ipq8074.c | 192 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 191 insertions(+), 1 deletion(-)
+ drivers/clk/qcom/clk-rcg.h        | 10 ----------
+ drivers/clk/qcom/clk-regmap-mux.c |  6 ++++++
+ drivers/clk/qcom/clk-regmap-mux.h |  2 ++
+ drivers/clk/qcom/common.h         | 11 ++++++++++-
+ 4 files changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-ipq8074.c b/drivers/clk/qcom/gcc-ipq8074.c
-index 99906f6..ad9c920 100644
---- a/drivers/clk/qcom/gcc-ipq8074.c
-+++ b/drivers/clk/qcom/gcc-ipq8074.c
-@@ -91,7 +91,186 @@ enum {
- 			"gpll0_main"
- 		},
- 		.num_parents = 1,
--		.ops = &clk_alpha_pll_postdiv_ops,
-+		.ops = &clk_alpha_pll_postdiv_ro_ops,
-+	},
-+};
-+
-+static struct clk_alpha_pll gpll2_main = {
-+	.offset = 0x4a000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-+	.clkr = {
-+		.enable_reg = 0x0b000,
-+		.enable_mask = BIT(2),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpll2_main",
-+			.parent_names = (const char *[]){
-+				"xo"
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_ops,
-+			.flags = CLK_IS_CRITICAL,
-+		},
-+	},
-+};
-+
-+static struct clk_alpha_pll_postdiv gpll2 = {
-+	.offset = 0x4a000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-+	.width = 4,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "gpll2",
-+		.parent_names = (const char *[]){
-+			"gpll2_main"
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_alpha_pll_postdiv_ro_ops,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_alpha_pll gpll4_main = {
-+	.offset = 0x24000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-+	.clkr = {
-+		.enable_reg = 0x0b000,
-+		.enable_mask = BIT(5),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpll4_main",
-+			.parent_names = (const char *[]){
-+				"xo"
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_ops,
-+			.flags = CLK_IS_CRITICAL,
-+		},
-+	},
-+};
-+
-+static struct clk_alpha_pll_postdiv gpll4 = {
-+	.offset = 0x24000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-+	.width = 4,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "gpll4",
-+		.parent_names = (const char *[]){
-+			"gpll4_main"
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_alpha_pll_postdiv_ro_ops,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_alpha_pll gpll6_main = {
-+	.offset = 0x37000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_BRAMMO],
-+	.flags = SUPPORTS_DYNAMIC_UPDATE,
-+	.clkr = {
-+		.enable_reg = 0x0b000,
-+		.enable_mask = BIT(7),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gpll6_main",
-+			.parent_names = (const char *[]){
-+				"xo"
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_ops,
-+			.flags = CLK_IS_CRITICAL,
-+		},
-+	},
-+};
-+
-+static struct clk_alpha_pll_postdiv gpll6 = {
-+	.offset = 0x37000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_BRAMMO],
-+	.width = 2,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "gpll6",
-+		.parent_names = (const char *[]){
-+			"gpll6_main"
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_alpha_pll_postdiv_ro_ops,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_fixed_factor gpll6_out_main_div2 = {
-+	.mult = 1,
-+	.div = 2,
-+	.hw.init = &(struct clk_init_data){
-+		.name = "gpll6_out_main_div2",
-+		.parent_names = (const char *[]){
-+			"gpll6_main"
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_fixed_factor_ops,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_alpha_pll ubi32_pll_main = {
-+	.offset = 0x25000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_HUAYRA],
-+	.flags = SUPPORTS_DYNAMIC_UPDATE,
-+	.clkr = {
-+		.enable_reg = 0x0b000,
-+		.enable_mask = BIT(6),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "ubi32_pll_main",
-+			.parent_names = (const char *[]){
-+				"xo"
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_huayra_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_alpha_pll_postdiv ubi32_pll = {
-+	.offset = 0x25000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_HUAYRA],
-+	.width = 2,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "ubi32_pll",
-+		.parent_names = (const char *[]){
-+			"ubi32_pll_main"
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_alpha_pll_postdiv_ro_ops,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_alpha_pll nss_crypto_pll_main = {
-+	.offset = 0x22000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-+	.clkr = {
-+		.enable_reg = 0x0b000,
-+		.enable_mask = BIT(4),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "nss_crypto_pll_main",
-+			.parent_names = (const char *[]){
-+				"xo"
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_alpha_pll_postdiv nss_crypto_pll = {
-+	.offset = 0x22000,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-+	.width = 4,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "nss_crypto_pll",
-+		.parent_names = (const char *[]){
-+			"nss_crypto_pll_main"
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_alpha_pll_postdiv_ro_ops,
-+		.flags = CLK_SET_RATE_PARENT,
- 	},
+diff --git a/drivers/clk/qcom/clk-rcg.h b/drivers/clk/qcom/clk-rcg.h
+index a249545..2a7489a 100644
+--- a/drivers/clk/qcom/clk-rcg.h
++++ b/drivers/clk/qcom/clk-rcg.h
+@@ -26,16 +26,6 @@ struct freq_tbl {
  };
  
-@@ -808,12 +987,23 @@ enum {
+ /**
+- * struct parent_map - map table for PLL source select configuration values
+- * @src: source PLL
+- * @cfg: configuration value
+- */
+-struct parent_map {
+-	u8 src;
+-	u8 cfg;
+-};
+-
+-/**
+  * struct mn - M/N:D counter
+  * @mnctr_en_bit: bit to enable mn counter
+  * @mnctr_reset_bit: bit to assert mn counter reset
+diff --git a/drivers/clk/qcom/clk-regmap-mux.c b/drivers/clk/qcom/clk-regmap-mux.c
+index cae3071..0f3a1bd 100644
+--- a/drivers/clk/qcom/clk-regmap-mux.c
++++ b/drivers/clk/qcom/clk-regmap-mux.c
+@@ -35,6 +35,9 @@ static u8 mux_get_parent(struct clk_hw *hw)
+ 	val >>= mux->shift;
+ 	val &= mask;
  
- static struct clk_hw *gcc_ipq8074_hws[] = {
- 	&gpll0_out_main_div2.hw,
-+	&gpll6_out_main_div2.hw,
- 	&pcnoc_clk_src.hw,
++	if (mux->parent_map)
++		return qcom_find_src_index(hw, mux->parent_map, val);
++
+ 	return val;
+ }
+ 
+@@ -45,6 +48,9 @@ static int mux_set_parent(struct clk_hw *hw, u8 index)
+ 	unsigned int mask = GENMASK(mux->width + mux->shift - 1, mux->shift);
+ 	unsigned int val;
+ 
++	if (mux->parent_map)
++		index = mux->parent_map[index].cfg;
++
+ 	val = index;
+ 	val <<= mux->shift;
+ 
+diff --git a/drivers/clk/qcom/clk-regmap-mux.h b/drivers/clk/qcom/clk-regmap-mux.h
+index 5cec761..7797cdd 100644
+--- a/drivers/clk/qcom/clk-regmap-mux.h
++++ b/drivers/clk/qcom/clk-regmap-mux.h
+@@ -16,11 +16,13 @@
+ 
+ #include <linux/clk-provider.h>
+ #include "clk-regmap.h"
++#include "common.h"
+ 
+ struct clk_regmap_mux {
+ 	u32			reg;
+ 	u32			shift;
+ 	u32			width;
++	const struct parent_map	*parent_map;
+ 	struct clk_regmap	clkr;
  };
  
- static struct clk_regmap *gcc_ipq8074_clks[] = {
- 	[GPLL0_MAIN] = &gpll0_main.clkr,
- 	[GPLL0] = &gpll0.clkr,
-+	[GPLL2_MAIN] = &gpll2_main.clkr,
-+	[GPLL2] = &gpll2.clkr,
-+	[GPLL4_MAIN] = &gpll4_main.clkr,
-+	[GPLL4] = &gpll4.clkr,
-+	[GPLL6_MAIN] = &gpll6_main.clkr,
-+	[GPLL6] = &gpll6.clkr,
-+	[UBI32_PLL_MAIN] = &ubi32_pll_main.clkr,
-+	[UBI32_PLL] = &ubi32_pll.clkr,
-+	[NSS_CRYPTO_PLL_MAIN] = &nss_crypto_pll_main.clkr,
-+	[NSS_CRYPTO_PLL] = &nss_crypto_pll.clkr,
- 	[PCNOC_BFDCD_CLK_SRC] = &pcnoc_bfdcd_clk_src.clkr,
- 	[GCC_SLEEP_CLK_SRC] = &gcc_sleep_clk_src.clkr,
- 	[BLSP1_QUP1_I2C_APPS_CLK_SRC] = &blsp1_qup1_i2c_apps_clk_src.clkr,
+diff --git a/drivers/clk/qcom/common.h b/drivers/clk/qcom/common.h
+index 23c1927..00196ee 100644
+--- a/drivers/clk/qcom/common.h
++++ b/drivers/clk/qcom/common.h
+@@ -20,7 +20,6 @@
+ struct regmap;
+ struct freq_tbl;
+ struct clk_hw;
+-struct parent_map;
+ 
+ #define PLL_LOCK_COUNT_SHIFT	8
+ #define PLL_LOCK_COUNT_MASK	0x3f
+@@ -39,6 +38,16 @@ struct qcom_cc_desc {
+ 	size_t num_gdscs;
+ };
+ 
++/**
++ * struct parent_map - map table for source select configuration values
++ * @src: source
++ * @cfg: configuration value
++ */
++struct parent_map {
++	u8 src;
++	u8 cfg;
++};
++
+ extern const struct freq_tbl *qcom_find_freq(const struct freq_tbl *f,
+ 					     unsigned long rate);
+ extern const struct freq_tbl *qcom_find_freq_floor(const struct freq_tbl *f,
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
