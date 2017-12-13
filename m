@@ -1,62 +1,59 @@
-From: Miquel RAYNAL <miquel.raynal@free-electrons.com>
-Subject: Re: [PATCH v2 3/4] thermal: armada: add support for CP110
-Date: Wed, 13 Dec 2017 09:55:01 +0100
-Message-ID: <20171213095501.1988749d@xps13>
-References: <f8c589337a4fb78852eadf15058e8f8d132d4dc0.1512299484.git.baruch@tkos.co.il>
-        <d48c916a2502f9c75e9ea4ba41300e2ffbb254d8.1512299484.git.baruch@tkos.co.il>
-        <20171211160932.692ba8be@xps13>
-        <20171211152731.glkkes5errcxmsvz@sapphire.tkos.co.il>
-        <87y3m9qjt2.fsf@free-electrons.com>
-        <20171213083848.j5het742yavxvkkw@sapphire.tkos.co.il>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 5/5] phy: renesas: rcar-gen3-usb2: add gpio handling
+Date: Wed, 13 Dec 2017 09:55:16 +0100
+Message-ID: <CAMuHMdU2YhLC3VPV8=KDw7U2=eudk35TmW7VfLYBDXrooQbx-g@mail.gmail.com>
+References: <1513146460-20326-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1513146460-20326-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171213083848.j5het742yavxvkkw@sapphire.tkos.co.il>
-Sender: linux-pm-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513146460-20326-6-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Baruch,
+Hi Shimoda-san,
 
+On Wed, Dec 13, 2017 at 7:27 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> Some R-Car SoCs (e.g. R-Car D3) doesn't have dedicated pins of VBUS
+> and ID. So, they may be connected to gpio pins. To handle the gpio
+> pins, this patch adds the handling of VBUS and ID pins instead of
+> dedicated pins.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 77 ++++++++++++++++++++--
+>  2 files changed, 72 insertions(+), 7 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> index 99b651b..851582f 100644
+> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> @@ -27,6 +27,8 @@ channel as USB OTG:
+>  - interrupts: interrupt specifier for the PHY.
+>  - vbus-supply: Phandle to a regulator that provides power to the VBUS. This
+>                regulator will be managed during the PHY power on/off sequence.
+> +- renesas,vbus-gpios: use gpio to control vbus instead of dedicated pin.
+> +- renesas,id-gpios: use gpio to detect id instead of dedicated pin.
 
-> > > How would a separate init_sensor routine improve things?
-> > 
-> > So yes please do it, thanks to this you won't have to add the
-> > control_msb_offset member and can use a clean function. Moreover if
-> > in the future we see some usefulness for this LSB register then we
-> > could use the new compatible for the Armada 38x.
-> 
-> There are two separate issues here:
-> 
->   1. DT binding
-> 
->   2. init_sensor callback implementation
-> 
-> We both agree on #1. The A38x and CP110 need separate compatible
-> strings. In case we want to access the LSB control register on Armada
-> 38x, we will need yet another compatible string
-> (marvell,armada380-v2-thermal maybe?).
-> 
-> As for #2, I'm all for sharing as much code as possible. I find the
-> vendor kernel approach of duplicating the init routines[1] unhelpful
-> as it violates the DRY principle. The differences between
-> armada380_init_sensor() and cp110_init_sensor() are minor. In my
-> opinion, these differences should be expressed explicitly in the
-> armada_thermal_data, in a similar way to my suggested
-> control_msb_offset field. The vendor code hides these differences in
-> slight variations of duplicated code.
-> 
-> What is the advantage of a separate init routine?
+Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt already uses
+"vbus-gpios" and "id-gpios" without vendor-specific prefixes, so perhaps
+the "renesas," can be dropped?
 
-The advantage is that is the very near future I plan to add the
-overheat interrupt only on CP110 (not on 38x) and this needs some
-initialization. So if we don't make different routines now, I will
-have to do it right after.
+Gr{oetje,eeting}s,
 
-What would be fine is to have the shared code in a separate function,
-like it is done in Marvell kernel. What do you think about that?
+                        Geert
 
-Thanks,
-Miquèl
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
