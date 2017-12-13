@@ -1,110 +1,94 @@
-From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add extcon nodes and enable tcphy.
-Date: Wed, 13 Dec 2017 11:28:35 +0100
-Message-ID: <CAFqH_53drWwMJ0g=ouuhMRaircGM_ccga8Cconff-LESzQBfwQ@mail.gmail.com>
-References: <20171206111008.3079-1-enric.balletbo@collabora.com>
- <20171206111008.3079-3-enric.balletbo@collabora.com> <20171206172919.GA87458@google.com>
+From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: RE: [PATCH 1/3] ARM: dts: stm32: add DMA memory pool on MCU which
+ embed a cortex-M7
+Date: Wed, 13 Dec 2017 10:28:23 +0000
+Message-ID: <d34a0843c1ee4e44b5349ba4c34c1448@SFHDAG3NODE2.st.com>
+References: <1513101746-18030-1-git-send-email-alexandre.torgue@st.com>
+ <1513101746-18030-2-git-send-email-alexandre.torgue@st.com>
+ <ab9a2ef4-4944-c935-af6e-12503b477879@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171206172919.GA87458-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <ab9a2ef4-4944-c935-af6e-12503b477879-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
-2017-12-06 18:29 GMT+01:00 Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
-> + Alex, Jeffy, Frank Wang
->
-> Hi,
->
-> On Wed, Dec 06, 2017 at 12:10:08PM +0100, Enric Balletbo i Serra wrote:
->> Enable tcphy and create the cros-ec's extcon node for the USB Type-C port.
->>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 26 ++++++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
->> index 470105d..03f1950 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
->> @@ -855,6 +855,20 @@ ap_i2c_audio: &i2c8 {
->>                       compatible = "google,cros-ec-pwm";
->>                       #pwm-cells = <1>;
->>               };
->> +
->> +             usbc_extcon0: extcon@0 {
->> +                     compatible = "google,extcon-usbc-cros-ec";
->> +                     google,usb-port-id = <0>;
->> +
->> +                     #extcon-cells = <0>;
->> +             };
->> +
->> +             usbc_extcon1: extcon@1 {
->> +                     compatible = "google,extcon-usbc-cros-ec";
->> +                     google,usb-port-id = <1>;
->> +
->> +                     #extcon-cells = <0>;
->> +             };
->>       };
->>  };
->>
->> @@ -865,6 +879,16 @@ ap_i2c_audio: &i2c8 {
->>       rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
->>  };
->>
->> +&tcphy0 {
->> +     status = "okay";
->> +     extcon = <&usbc_extcon0>;
->> +};
->> +
->> +&tcphy1 {
->> +     status = "okay";
->> +     extcon = <&usbc_extcon1>;
->> +};
->> +
->>  &u2phy0 {
->>       status = "okay";
->>  };
->> @@ -911,6 +935,7 @@ ap_i2c_audio: &i2c8 {
->>
->>  &usbdrd3_0 {
->>       status = "okay";
->> +     extcon = <&usbc_extcon0>;
->>  };
->>
->>  &usbdrd_dwc3_0 {
->> @@ -920,6 +945,7 @@ ap_i2c_audio: &i2c8 {
->>
->>  &usbdrd3_1 {
->>       status = "okay";
->> +     extcon = <&usbc_extcon1>;
->>  };
->>
->>  &usbdrd_dwc3_1 {
->
-> Seems OK.
->
-> Also, IIUC, I think if we ever want to support dual-role/OTG, we need an
-> extcon reference in the USB2/OTG PHY that serves these ports too. i.e.,
-> u2phy0 and u2phy1? Notably, the PHY driver supports the extcon
-> properties, but it's not documented in
-> Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt yet (we
-> should probably get that fixed).
->
-
-I'll take a look at this and send a separate patchset. Thanks.
-
-  Enric
-
-> So, anyway, maybe the above isn't a blocker for this patch. Just noticed
-> it while reading. Assuming the driver stuff falls into place:
->
-> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+DQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogVmxhZGltaXIgTXVyemluIFttYWls
+dG86dmxhZGltaXIubXVyemluQGFybS5jb21dIA0KU2VudDogbWVyY3JlZGkgMTMgZMOpY2VtYnJl
+IDIwMTcgMTE6MDcNClRvOiBBbGV4YW5kcmUgVE9SR1VFIDxhbGV4YW5kcmUudG9yZ3VlQHN0LmNv
+bT47IE1heGltZSBDb3F1ZWxpbiA8bWNvcXVlbGluLnN0bTMyQGdtYWlsLmNvbT47IGFybmRAYXJu
+ZGIuZGU7IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4QGFy
+bWxpbnV4Lm9yZy51azsgUGF0cmljZSBDSE9UQVJEIDxwYXRyaWNlLmNob3RhcmRAc3QuY29tPjsg
+bGVlLmpvbmVzQGxpbmFyby5vcmcNCkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQpTdWJqZWN0OiBSZTogW1BBVENIIDEv
+M10gQVJNOiBkdHM6IHN0bTMyOiBhZGQgRE1BIG1lbW9yeSBwb29sIG9uIE1DVSB3aGljaCBlbWJl
+ZCBhIGNvcnRleC1NNw0KDQpPbiAxMi8xMi8xNyAxODowMiwgQWxleGFuZHJlIFRvcmd1ZSB3cm90
+ZToNCj4gT24gY29ydGV4LU03IE1DVSwgRE1BIGhhdmUgdG8gdXNlIGEgbm9uIGNhY2hlLWFibGUg
+bWVtb3J5IGFyZWEuIEZvciANCj4gdGhpcyByZWFzb24gYSBkZWRpY2F0ZWQgbWVtb3J5IHBvb2wg
+aXMgY3JlYXRlZCBmb3IgRE1BLg0KPiBUaGlzIHBhdGNoIGNyZWF0ZXMgYSBETUEgbWVtb3J5IHBv
+b2wgb2YgMU1CIG9mIGVhY2ggU1RNMzIgTUNVIHdoaWNoIA0KPiBlbWJlZHMgYSBjb3J0ZXgtTTcg
+ZXhwZWN0IHN0bTMyZjc0Ni1kaXNjby4gSW5kZWVkLCBhcyBzdG0zMmY3NDYtZGlzY28gDQo+IGhh
+cw0KICAgICAgICAgICAgICAgICAgICAgXl5eXl5eDQogICAgICAgICAgICAgICAgICAgICBleGNl
+cHQ/DQpTb3JyeSwgSXMgdGhlcmUgYSB0eXBvIGlzc3VlIChvciBqdXN0IHdvcmRpbmcgaXNzdWUp
+ID8NCiANCj4gb25seSBhIDhNQiBTRFJBTSBhbmQgaXQncyB0cmlja3kgdG8gcmVkdWNlIG1lbW9y
+eSB1c2VkIGJ5IEtlcm5lbC4NCg0KSSBndWVzcyB0aGF0IDFNQiBpcyBhIGtpbmQgb2YgInNob3Vs
+ZCBiZSBlbm91Z2giIGVzdGltYXRlLCBwcm9iYWJseSBzb21ldGhpbmcgYWxvbmcgd2l0aCBbMV0g
+d291bGQgZ2l2ZSB5b3UgZXhhY3QgbnVtYmVycy4uLg0KDQpFeGFjdGx5LCAxTUIgaXMgIGEga2lu
+ZCAic2hvdWxkIGJlIGVub3VnaCIgYW5kIGNvZGUgaXMgaGVyZSB0byBzaG93IHRoYXQgd2UgbmVl
+ZCBhIGRlZGljYXRlZCBtZW1vcnkgYXJlYSBmb3IgRE1BLiBCdXQgdGhpcyB2YWx1ZSBoYXMNCnRv
+IGJlIGFkYXB0IHJlZ2FyZGluZyB0byB1c2UgY2FzZSBuZWVkZWQgYnkgdXNlcnMuIFRoYW5rcyBm
+b3IgdGhlIGxrbWwgbGluay4gSXQgd2lsbCBoZWxwIHVzZXJzIHRvIGFkYXB0IERNQSBhcmVhIGFu
+ZCB0aGFua3MgZm9yIHJldmlld2luZy4NCg0KUmVnYXJkcw0KQWxleA0KDQo+IA0KPiBTaWduZWQt
+b2ZmLWJ5OiBBbGV4YW5kcmUgVG9yZ3VlIDxhbGV4YW5kcmUudG9yZ3VlQHN0LmNvbT4NCj4gDQo+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMjc0NmctZXZhbC5kdHMgDQo+IGIv
+YXJjaC9hcm0vYm9vdC9kdHMvc3RtMzI3NDZnLWV2YWwuZHRzDQo+IGluZGV4IDJkNGU3MTcuLjNm
+NTJhN2IgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyNzQ2Zy1ldmFsLmR0
+cw0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMjc0NmctZXZhbC5kdHMNCj4gQEAgLTU3
+LDYgKzU3LDE5IEBADQo+ICAJCXJlZyA9IDwweGMwMDAwMDAwIDB4MjAwMDAwMD47DQo+ICAJfTsN
+Cj4gIA0KPiArCXJlc2VydmVkLW1lbW9yeSB7DQo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0K
+PiArCQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4gKwkJcmFuZ2VzOw0KPiArDQo+ICsJCWxpbnV4LGRt
+YSB7DQo+ICsJCQljb21wYXRpYmxlID0gInNoYXJlZC1kbWEtcG9vbCI7DQo+ICsJCQlsaW51eCxk
+bWEtZGVmYXVsdDsNCj4gKwkJCW5vLW1hcDsNCj4gKwkJCXJlZyA9IDwweGMxZjAwMDAwIDB4MTAw
+MDAwPjsNCj4gKwkJfTsNCj4gKwl9Ow0KPiArDQo+ICAJYWxpYXNlcyB7DQo+ICAJCXNlcmlhbDAg
+PSAmdXNhcnQxOw0KPiAgCX07DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0z
+MmY3NjktZGlzY28uZHRzIA0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjc2OS1kaXNjby5k
+dHMNCj4gaW5kZXggNDQ2M2NhMS4uMDg2OTlhMiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9v
+dC9kdHMvc3RtMzJmNzY5LWRpc2NvLmR0cw0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdG0z
+MmY3NjktZGlzY28uZHRzDQo+IEBAIC01Nyw2ICs1NywxOSBAQA0KPiAgCQlyZWcgPSA8MHhDMDAw
+MDAwMCAweDEwMDAwMDA+Ow0KPiAgCX07DQo+ICANCj4gKwlyZXNlcnZlZC1tZW1vcnkgew0KPiAr
+CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICsJCXJh
+bmdlczsNCj4gKw0KPiArCQlsaW51eCxkbWEgew0KPiArCQkJY29tcGF0aWJsZSA9ICJzaGFyZWQt
+ZG1hLXBvb2wiOw0KPiArCQkJbGludXgsZG1hLWRlZmF1bHQ7DQo+ICsJCQluby1tYXA7DQo+ICsJ
+CQlyZWcgPSA8MHhjMGYwMDAwMCAweDEwMDAwMD47DQo+ICsJCX07DQo+ICsJfTsNCj4gKw0KPiAg
+CWFsaWFzZXMgew0KPiAgCQlzZXJpYWwwID0gJnVzYXJ0MTsNCj4gIAl9Ow0KPiBkaWZmIC0tZ2l0
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJoNzQzaS1kaXNjby5kdHMgDQo+IGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvc3RtMzJoNzQzaS1kaXNjby5kdHMNCj4gaW5kZXggNzllODQxZC4uMTA0NTQ1YSAx
+MDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJoNzQzaS1kaXNjby5kdHMNCj4g
+KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJoNzQzaS1kaXNjby5kdHMNCj4gQEAgLTU3LDYg
+KzU3LDE5IEBADQo+ICAJCXJlZyA9IDwweGQwMDAwMDAwIDB4MjAwMDAwMD47DQo+ICAJfTsNCj4g
+IA0KPiArCXJlc2VydmVkLW1lbW9yeSB7DQo+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiAr
+CQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4gKwkJcmFuZ2VzOw0KPiArDQo+ICsJCWxpbnV4LGRtYSB7
+DQo+ICsJCQljb21wYXRpYmxlID0gInNoYXJlZC1kbWEtcG9vbCI7DQo+ICsJCQlsaW51eCxkbWEt
+ZGVmYXVsdDsNCj4gKwkJCW5vLW1hcDsNCj4gKwkJCXJlZyA9IDwweGMxZjAwMDAwIDB4MTAwMDAw
+PjsNCj4gKwkJfTsNCj4gKwl9Ow0KPiArDQo+ICAJYWxpYXNlcyB7DQo+ICAJCXNlcmlhbDAgPSAm
+dXNhcnQyOw0KPiAgCX07DQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMmg3
+NDNpLWV2YWwuZHRzIA0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyaDc0M2ktZXZhbC5kdHMN
+Cj4gaW5kZXggOWYwZTcyYy4uNWJkNGIxNiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9k
+dHMvc3RtMzJoNzQzaS1ldmFsLmR0cw0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMmg3
+NDNpLWV2YWwuZHRzDQo+IEBAIC01Nyw2ICs1NywxOSBAQA0KPiAgCQlyZWcgPSA8MHhkMDAwMDAw
+MCAweDIwMDAwMDA+Ow0KPiAgCX07DQo+ICANCj4gKwlyZXNlcnZlZC1tZW1vcnkgew0KPiArCQkj
+YWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gKwkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICsJCXJhbmdl
+czsNCj4gKw0KPiArCQlsaW51eCxkbWEgew0KPiArCQkJY29tcGF0aWJsZSA9ICJzaGFyZWQtZG1h
+LXBvb2wiOw0KPiArCQkJbGludXgsZG1hLWRlZmF1bHQ7DQo+ICsJCQluby1tYXA7DQo+ICsJCQly
+ZWcgPSA8MHhjMWYwMDAwMCAweDEwMDAwMD47DQo+ICsJCX07DQo+ICsJfTsNCj4gKw0KPiAgCWFs
+aWFzZXMgew0KPiAgCQlzZXJpYWwwID0gJnVzYXJ0MTsNCj4gIAl9Ow0KPiANCg0KVXNhZ2Ugb2Yg
+ZG1hLWRlZmF1bHQgbG9va3MgY29ycmVjdCB0byBtZSwgc28gRldJVw0KDQpSZXZpZXdlZC1ieTog
+VmxhZGltaXIgTXVyemluIDx2bGFkaW1pci5tdXJ6aW5AYXJtLmNvbT4NCg0KWzFdIGh0dHBzOi8v
+bGttbC5vcmcvbGttbC8yMDE3LzcvNy8yOTYNCg0KVmxhZGltaXINCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
