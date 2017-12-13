@@ -1,126 +1,65 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH v2 2/5] i2c: meson: add configurable divider factors
-Date: Wed, 13 Dec 2017 21:52:50 +0800
-Message-ID: <eb304da4-a9e7-154c-6198-c195c04849d5@amlogic.com>
-References: <20171120145415.6581-1-yixun.lan@amlogic.com>
- <20171120145415.6581-3-yixun.lan@amlogic.com>
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: [PATCH] drm/panel: Add support for AUO G104SN02 V2 panel
+Date: Wed, 13 Dec 2017 15:00:56 +0100
+Message-ID: <1513173656.2322.16.camel@googlemail.com>
+Reply-To: chf.fritz@googlemail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20171120145415.6581-3-yixun.lan@amlogic.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
-Cc: yixun.lan@amlogic.com, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dri-devel@lists.freedesktop.org, Stefan =?ISO-8859-1?Q?Riedm=FCller?= <S.Riedmueller@phytec.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram
-
-On 11/20/2017 10:54 PM, Yixun Lan wrote:
-> From: Jian Hu <jian.hu@amlogic.com>
-> 
-> This patch try to add support for I2C controller in Meson-AXG SoC,
-> Due to the IP changes between I2C controller, we need to introduce
-> a compatible data to make the divider factor configurable.
-> 
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  drivers/i2c/busses/i2c-meson.c | 32 ++++++++++++++++++++++++++++----
->  1 file changed, 28 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-meson.c b/drivers/i2c/busses/i2c-meson.c
-> index 88d15b92ec35..37c4aa76f37a 100644
-> --- a/drivers/i2c/busses/i2c-meson.c
-> +++ b/drivers/i2c/busses/i2c-meson.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/types.h>
->  
-> @@ -57,6 +58,10 @@ enum {
->  	STATE_WRITE,
->  };
->  
-> +struct meson_i2c_data {
-> +	unsigned char div_factor;
-> +};
-> +
->  /**
->   * struct meson_i2c - Meson I2C device private data
->   *
-> @@ -93,6 +98,8 @@ struct meson_i2c {
->  	struct completion	done;
->  	u32			tokens[2];
->  	int			num_tokens;
-> +
-> +	const struct meson_i2c_data *data;
->  };
->  
->  static void meson_i2c_set_mask(struct meson_i2c *i2c, int reg, u32 mask,
-> @@ -128,7 +135,7 @@ static void meson_i2c_set_clk_div(struct meson_i2c *i2c, unsigned int freq)
->  	unsigned long clk_rate = clk_get_rate(i2c->clk);
->  	unsigned int div;
->  
-> -	div = DIV_ROUND_UP(clk_rate, freq * 4);
-> +	div = DIV_ROUND_UP(clk_rate, freq * i2c->data->div_factor);
->  
->  	/* clock divider has 12 bits */
->  	if (div >= (1 << 12)) {
-> @@ -376,6 +383,9 @@ static int meson_i2c_probe(struct platform_device *pdev)
->  	spin_lock_init(&i2c->lock);
->  	init_completion(&i2c->done);
->  
-> +	i2c->data = (const struct meson_i2c_data *)
-> +		of_device_get_match_data(&pdev->dev);
-> +
->  	i2c->clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(i2c->clk)) {
->  		dev_err(&pdev->dev, "can't get device clock\n");
-> @@ -440,11 +450,25 @@ static int meson_i2c_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct meson_i2c_data i2c_meson6_data = {
-> +	.div_factor = 4,
-> +};
-> +
-> +static const struct meson_i2c_data i2c_gxbb_data = {
-> +	.div_factor = 4,
-> +};
-> +
-> +static const struct meson_i2c_data i2c_axg_data = {
-> +	.div_factor = 3,
-> +};
-> +
->  static const struct of_device_id meson_i2c_match[] = {
-> -	{ .compatible = "amlogic,meson6-i2c" },
-> -	{ .compatible = "amlogic,meson-gxbb-i2c" },
-> -	{ },
-> +	{ .compatible = "amlogic,meson6-i2c", .data = &i2c_meson6_data },
-> +	{ .compatible = "amlogic,meson-gxbb-i2c", .data = &i2c_gxbb_data },
-> +	{ .compatible = "amlogic,meson-axg-i2c", .data = &i2c_axg_data },
-> +	{},
->  };
-> +
->  MODULE_DEVICE_TABLE(of, meson_i2c_match);
->  
->  static struct platform_driver meson_i2c_driver = {
-> 
-
-
-this is merely a ping, do you have any comment on this patch?
-or could you take this patch along with patch 1 [1](with Rob's Ack) if
-you think it's ready/good?
-
-thanks
-
-[1]
-http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005405.html
-http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005417.html
-
-Yixun
+VGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIEFVTyBHMTA0U04wMiBWMiA4MDB4NjAwIDEwLjQi
+IHBhbmVsIHRvIERSTQpzaW1wbGUgcGFuZWwgZHJpdmVyLgoKU2lnbmVkLW9mZi1ieTogQ2hyaXN0
+b3BoIEZyaXR6IDxjaGYuZnJpdHpAZ29vZ2xlbWFpbC5jb20+ClNpZ25lZC1vZmYtYnk6IFN0ZWZh
+biBSaWVkbXVlbGxlciA8cy5yaWVkbXVlbGxlckBwaHl0ZWMuZGU+Ci0tLQogLi4uL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvYXVvLGcxMDRzbjAyLnR4dCAgICAgICAgfCAgNyArKysrKysKIGRyaXZl
+cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAgICAgICAgICAgICAgIHwgMjYgKysrKysr
+KysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAzMyBpbnNlcnRpb25zKCspCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvYXVvLGcxMDRzbjAyLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1byxnMTA0c24wMi50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8sZzEwNHNuMDIudHh0Cm5l
+dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjA1MGFjOTAKLS0tIC9kZXYvbnVsbAor
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8s
+ZzEwNHNuMDIudHh0CkBAIC0wLDAgKzEsNyBAQAorQVUgT3B0cm9uaWNzIENvcnBvcmF0aW9uIDEw
+LjQiICg4MDB4NjAwKSBjb2xvciBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6
+CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiYXVvLGcxMDRzbjAyIgorCitUaGlzIGJpbmRpbmcg
+aXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3Bl
+Y2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jIGIvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jCmluZGV4IDIzNGFmODEuLmY0Y2M4NzYgMTAwNjQ0Ci0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTU4Miw2ICs1ODIsMjkgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBwYW5lbF9kZXNjIGF1b19iMTMzaHRuMDEgPSB7CiAJfSwKIH07CiAKK3N0YXRpYyBj
+b25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBhdW9fZzEwNHNuMDJfbW9kZSA9IHsKKwkuY2xv
+Y2sgPSA0MDAwMCwKKwkuaGRpc3BsYXkgICAgPSA4MDAsCisJLmhzeW5jX3N0YXJ0ID0gODAwICsg
+NDAsCisJLmhzeW5jX2VuZCAgID0gODAwICsgNDAgKyAyMTYsCisJLmh0b3RhbCAgICAgID0gODAw
+ICsgNDAgKyAyMTYgKyAxMjgsCisJLnZkaXNwbGF5ID0gNjAwLAorCS52c3luY19zdGFydCA9IDYw
+MCArIDEwLAorCS52c3luY19lbmQgICA9IDYwMCArIDEwICsgMzUsCisJLnZ0b3RhbCAgICAgID0g
+NjAwICsgMTAgKyAzNSArIDIsCisJLnZyZWZyZXNoID0gNjAsCit9OworCitzdGF0aWMgY29uc3Qg
+c3RydWN0IHBhbmVsX2Rlc2MgYXVvX2cxMDRzbjAyID0geworCS5tb2RlcyA9ICZhdW9fZzEwNHNu
+MDJfbW9kZSwKKwkubnVtX21vZGVzID0gMSwKKwkuYnBjID0gOCwKKwkuc2l6ZSA9IHsKKwkJLndp
+ZHRoID0gMjExLAorCQkuaGVpZ2h0ID0gMTU4LAorCX0sCit9OworCiBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IGRpc3BsYXlfdGltaW5nIGF1b19nMTMzaGFuMDFfdGltaW5ncyA9IHsKIAkucGl4ZWxjbG9j
+ayA9IHsgMTM0MDAwMDAwLCAxNDEyMDAwMDAsIDE0OTAwMDAwMCB9LAogCS5oYWN0aXZlID0geyAx
+OTIwLCAxOTIwLCAxOTIwIH0sCkBAIC0xOTY1LDYgKzE5ODgsOSBAQCBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCQkuY29tcGF0aWJsZSA9
+ICJhdW8sYjEzM3h0bjAxIiwKIAkJLmRhdGEgPSAmYXVvX2IxMzN4dG4wMSwKIAl9LCB7CisJCS5j
+b21wYXRpYmxlID0gImF1byxnMTA0c24wMiIsCisJCS5kYXRhID0gJmF1b19nMTA0c24wMiwKKwl9
+LCB7CiAJCS5jb21wYXRpYmxlID0gImF1byxnMTMzaGFuMDEiLAogCQkuZGF0YSA9ICZhdW9fZzEz
+M2hhbjAxLAogCX0sIHsKLS0gCjIuMS40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
