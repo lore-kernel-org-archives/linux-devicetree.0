@@ -1,60 +1,67 @@
-From: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH v11 2/3] iommu/dma: Add HW MSI(GICv3 ITS) address regions reservation
-Date: Wed, 13 Dec 2017 11:58:29 +0000
-Message-ID: <20171213115830.61872-3-shameerali.kolothum.thodi@huawei.com>
-References: <20171213115830.61872-1-shameerali.kolothum.thodi@huawei.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v10 08/13] regmap: add SLIMbus support
+Date: Wed, 13 Dec 2017 12:24:36 +0000
+Message-ID: <20171213122436.GH6416@sirena.org.uk>
+References: <20171211234307.14465-1-srinivas.kandagatla@linaro.org>
+ <20171211234307.14465-9-srinivas.kandagatla@linaro.org>
+ <20171213092537.GB12631@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20171213115830.61872-1-shameerali.kolothum.thodi@huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, robin.murphy@arm.com, marc.zyngier@arm.com, will.deacon@arm.com
-Cc: joro@8bytes.org, john.garry@huawei.com, xuwei5@hisilicon.com, guohanjun@huawei.com, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+Content-Type: multipart/mixed; boundary="===============3757735183459821737=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171213092537.GB12631@kroah.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Jonathan Corbet <corbet@lwn.net>, linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org, j.neuschaefer@gmx.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, srinivas.kandagatla@linaro.org, pombredanne@nexb.com, sdharia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Modified iommu_dma_get_resv_regions() to include GICv3 ITS
-region on ACPI based ARM platfiorms which may require HW MSI
-reservations.
 
-Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/iommu/dma-iommu.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 25914d3..f05f3cf 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -19,6 +19,7 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
-+#include <linux/acpi_iort.h>
- #include <linux/device.h>
- #include <linux/dma-iommu.h>
- #include <linux/gfp.h>
-@@ -167,13 +168,18 @@ void iommu_put_dma_cookie(struct iommu_domain *domain)
-  *
-  * IOMMU drivers can use this to implement their .get_resv_regions callback
-  * for general non-IOMMU-specific reservations. Currently, this covers host
-- * bridge windows for PCI devices.
-+ * bridge windows for PCI devices and GICv3 ITS region reservation on ACPI
-+ * based ARM platforms that may require HW MSI reservation.
-  */
- void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
- {
- 	struct pci_host_bridge *bridge;
- 	struct resource_entry *window;
- 
-+	if (!is_of_node(dev->iommu_fwspec->iommu_fwnode) &&
-+		iort_iommu_msi_get_resv_regions(dev, list) < 0)
-+		return;
-+
- 	if (!dev_is_pci(dev))
- 		return;
- 
--- 
-1.9.1
+--===============3757735183459821737==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="LZFKeWUZP29EKQNE"
+Content-Disposition: inline
 
 
+--LZFKeWUZP29EKQNE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Dec 13, 2017 at 10:25:37AM +0100, Greg Kroah-Hartman wrote:
+
+> Mark, can I get an Ack for this patch so I can take it through my tree
+> with the other patches in this series?
+
+Not until I've reviewed it (and the rest of the series).
+
+--LZFKeWUZP29EKQNE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloxHAMACgkQJNaLcl1U
+h9AmXwf+PwCdIulTGv7x0ckDufiHhkEmZlrI5ZwLzkqFWIE/oZeqBpWB9bfUv0w4
+sozGK05MLkVN3p7eUREIWkxsxeK1D7y4Ioc+lcwrFX7JM09jXq9GpDzUDPX7Wv2I
+TXMD3q2iikbe1sopJB6Tvx2ZJpsoHUyjE2rKKHofeWha9AzKbYKEr+AFwNLdnKa6
+V3Tbn+9QfbwXkzst5Fzi0hvokl7SUqtr4PsV0uGa27mjwO1CCyNjtXSGVmyMXO3Z
+WrkUXcTGtZksZR15TUjygDQiTjNMDdWj9QJriXxaLpbmWv+Pm0/vk0IOMALUzZKE
+hSvG/GBxXnlaTdmw7DvMpdpyRfCERw==
+=P0O9
+-----END PGP SIGNATURE-----
+
+--LZFKeWUZP29EKQNE--
+
+--===============3757735183459821737==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3757735183459821737==--
