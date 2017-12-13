@@ -1,135 +1,67 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH 2/6] ARM: stm32: add initial support for STM32MP157
-Date: Wed, 13 Dec 2017 10:02:43 +0100
-Message-ID: <b0e989fa-3490-0697-0954-1f15f4dfd3ab@st.com>
-References: <1512742277-28205-1-git-send-email-ludovic.Barre@st.com>
- <1512742277-28205-3-git-send-email-ludovic.Barre@st.com>
- <20171212232425.shf56g2uivl57fdp@rob-hp-laptop>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: Re: [PATCH v3 09/33] nds32: Cache and TLB routines
+Date: Wed, 13 Dec 2017 17:03:33 +0800
+Message-ID: <CAEbi=3fvdWMExreVsSu3TJqXUr5Zpt4k_q=cXXB3miJCvY-+1g@mail.gmail.com>
+References: <cover.1512723245.git.green.hu@gmail.com> <9d0e976c3e60bf6834dffb6ef798ad2a03e1c9ac.1512723245.git.green.hu@gmail.com>
+ <20171213021619.GA6254@gary-OptiPlex-3050> <CAEbi=3dtcnUNbd4SoueUnoYvRWot9fA1n62t0b4PWx1UYs2jZA@mail.gmail.com>
+ <20171213081949.GA18840@gary-OptiPlex-3050> <CAEbi=3eKH5JESwtadq4LKF3ZvmBi1QwUWpCTb0btierBST_cRQ@mail.gmail.com>
+ <20171213085334.GA21382@gary-OptiPlex-3050>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171212232425.shf56g2uivl57fdp@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <20171213085334.GA21382@gary-OptiPlex-3050>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/13/2017 12:24 AM, Rob Herring wrote:
-> On Fri, Dec 08, 2017 at 03:11:13PM +0100, Ludovic Barre wrote:
->> From: Ludovic Barre <ludovic.barre@st.com>
+2017-12-13 16:53 GMT+08:00 Guo Ren <ren_guo@c-sky.com>:
+> On Wed, Dec 13, 2017 at 04:30:41PM +0800, Greentime Hu wrote:
+>> 2017-12-13 16:19 GMT+08:00 Guo Ren <ren_guo@c-sky.com>:
+>> > On Wed, Dec 13, 2017 at 01:45:02PM +0800, Greentime Hu wrote:
+>> >
+>> >> I think it should be fine if an interruption between mtsr_dsb and
+>> >> tlbop_rwr because this is a optimization by sw.
+>> >
+>> > Fine? When there is an unexpected vaddr in SR_TLB_VPN, tlbop_rwr(*pte) will
+>> > break that vaddr's pfn in the CPU tlb-buffer entry. When linux access the
+>> > vaddr, it will get wrong data unless the entry has been replaced out.
 >>
->> This patch adds initial support of STM32MP157 microprocessor (MPU)
->> based on Arm Cortex-A7. Under new ARCH_STM32_MPU flag we select the
->> needed Cortex-A infrastructure (like gic, timer,...)
+>> Hi, Guo Ren:
 >>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   Documentation/arm/stm32/stm32mp157-overview.txt | 12 ++++++++++++
->>   Documentation/devicetree/bindings/arm/stm32.txt |  1 +
-> 
-> Please split bindings to separate patches.
-OK, I will split stm32.txt in separate commit
-> 
->>   arch/arm/mach-stm32/Kconfig                     | 22 ++++++++++++++++++++--
->>   arch/arm/mach-stm32/Makefile                    |  1 +
->>   arch/arm/mach-stm32/board-mpu-dt.c              | 16 ++++++++++++++++
->>   5 files changed, 50 insertions(+), 2 deletions(-)
->>   create mode 100644 Documentation/arm/stm32/stm32mp157-overview.txt
->>   create mode 100644 arch/arm/mach-stm32/board-mpu-dt.c
+>> Thanks. I get your point.
+>> It is needed to be protected.
+>> I will fix it in the next version patch.
 >>
->> diff --git a/Documentation/arm/stm32/stm32mp157-overview.txt b/Documentation/arm/stm32/stm32mp157-overview.txt
->> new file mode 100644
->> index 0000000..8a3e7cb
->> --- /dev/null
->> +++ b/Documentation/arm/stm32/stm32mp157-overview.txt
-> 
-> I think new documentation files should be rst format and fit into the
-> built documentation. We don't have an SoC description doc for most SoCs.
-the existing documentation of stm32 are txt format
--overview.txt
--stm32f429-overwiew.txt
--stm32f746-overview.txt
--stm32h743-overview.txt
+>> if (vma->vm_mm == current->active_mm) {
+>>         local_irq_save(flags);
+>>         __nds32__mtsr_dsb(addr, NDS32_SR_TLB_VPN);
+>>         __nds32__tlbop_rwr(*pte);
+>>         __nds32__isb();
+>>         local_irq_restore(flags);
+>> }
+>
+> If hardware tlbop_rwr could invalid NDS32_SR_TLB_VPN, then you needn't
+> protect.
+> I mean:
+> mtsr addr1 NDS32_SR_TLB_VPN
+> mtsr addr2 NDS32_SR_TLB_VPN
+> tlbop_rwr(*pte) // OK, and it will hit a hardware invalid bit internal.
+> tlbop_rwr(*pte) // SR_TLB_VPN invalided, then it will not cause problem.
+>
+> :) How my idea?
 
-what do you prefer:
--omit stm32mp157-overview.txt of this serie and change all in next commit.
--write only this file in rst format
--change all in this serie?
+Hi, Guo Ren:
 
-> 
->> @@ -0,0 +1,12 @@
->> +			STM32MP157 Overview
->> +			===================
->> +
->> +  Introduction
->> +  ------------
->> +	The STM32MP157 is a Cortex-A MPU aimed at various applications.
->> +	It features:
->> +	- Dual core Cortex-A7 application core
->> +	- 2D/3D image composition with GPU
->> +	- Standard memories interface support
->> +	- Standard connectivity, widely inherited from the STM32 MCU family
->> +	- Comprehensive security support
-> 
-> Perhaps make this part of the kconfig entry help.
-yes, I could add some details in MACH_STM32MP157 kconfig entry
-> 
->> diff --git a/Documentation/devicetree/bindings/arm/stm32.txt b/Documentation/devicetree/bindings/arm/stm32.txt
->> index 05762b0..6808ed9 100644
->> --- a/Documentation/devicetree/bindings/arm/stm32.txt
->> +++ b/Documentation/devicetree/bindings/arm/stm32.txt
->> @@ -7,3 +7,4 @@ using one of the following compatible strings:
->>     st,stm32f469
->>     st,stm32f746
->>     st,stm32h743
->> +  st,stm32mp157
->> diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
->> index c8059ea..2b227c7 100644
->> --- a/arch/arm/mach-stm32/Kconfig
->> +++ b/arch/arm/mach-stm32/Kconfig
->> @@ -1,12 +1,12 @@
->>   menuconfig ARCH_STM32
->> -	bool "STMicrolectronics STM32 family" if ARM_SINGLE_ARMV7M
->> +	bool "STMicrolectronics STM32 family" if ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
->>   	select ARCH_HAS_RESET_CONTROLLER
->>   	select CLKSRC_STM32
->>   	select PINCTRL
->>   	select RESET_CONTROLLER
->>   	select STM32_EXTI
->>   	help
->> -	  Support for STMicroelectronics STM32 MCU family
->> +	  Support for STMicroelectronics STM32 MCU/MPU family
->>   
->>   if ARCH_STM32
->>   
->> @@ -40,4 +40,22 @@ config MACH_STM32H743
->>   
->>   endif
->>   
->> +if ARCH_MULTI_V7
->> +
->> +config ARCH_STM32_MPU
->> +	bool "STMicrolectronics STM32 MPU"
->> +	default y
->> +	select ARM_GIC
->> +	select HAVE_ARM_ARCH_TIMER
->> +	select ARM_PSCI
->> +	help
->> +	  Support for STMicroelectronics STM32 Microprocessors.
->> +
->> +config MACH_STM32MP157
-> 
-> Is this actually used?
-Yes, it's used in pinctrl driver.
-> 
->> +	bool "STMicrolectronics STM32MP157"
->> +	depends on ARCH_STM32_MPU
->> +	default y
->> +
->> +endif
->> +
->>   endif
+The reason I think it might have problem is that
+
+mtsr addr1 NDS32_SR_TLB_VPN
+    interrupt coming
+        mtsr addr2 NDS32_SR_TLB_VPN <- TLB_VPN has been set to addr2
+        tlbop_rwr(*pte);
+    interrupt finish
+tlbop_rwr(*pte); <- it will use the wrong TLB_VPN
+
+I think all these TLB operations should be protected because tlbop
+will operate with TLB_VPN.
+Thanks :)
