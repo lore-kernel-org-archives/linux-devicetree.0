@@ -1,39 +1,110 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 00/12] drivers: Boot Constraints core
-Date: Wed, 13 Dec 2017 15:57:36 +0530
-Message-ID: <20171213102736.GE3322@vireshk-i7>
-References: <cover.1509284255.git.viresh.kumar@linaro.org>
- <20171128041818.GE11413@vireshk-i7>
- <20171213095529.GK13194@kroah.com>
+From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: add extcon nodes and enable tcphy.
+Date: Wed, 13 Dec 2017 11:28:35 +0100
+Message-ID: <CAFqH_53drWwMJ0g=ouuhMRaircGM_ccga8Cconff-LESzQBfwQ@mail.gmail.com>
+References: <20171206111008.3079-1-enric.balletbo@collabora.com>
+ <20171206111008.3079-3-enric.balletbo@collabora.com> <20171206172919.GA87458@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171213095529.GK13194-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20171206172919.GA87458-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13-12-17, 10:55, Greg Kroah-Hartman wrote:
-> On Tue, Nov 28, 2017 at 09:48:18AM +0530, Viresh Kumar wrote:
-> > On 29-10-17, 19:18, Viresh Kumar wrote:
-> > > Here is V4 of the boot constraints core based on your feedback from V3.
-> > > We now have support for three platforms (as you suggested) included in
-> > > this series: Hisilicon, IMX and Qualcomm.
-> > 
-> > Hi Greg,
-> > 
-> > I was waiting for rc1 to come out before sending a reminder for this
-> > series and so here is one :)
-> 
-> I've reviewed it enough for now, needs a tiny bit of work, but looking
-> much better, nice job!
+Hi Brian,
 
-Thanks a lot for finding time to get this reviewed. Really appreciate that.
+2017-12-06 18:29 GMT+01:00 Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
+> + Alex, Jeffy, Frank Wang
+>
+> Hi,
+>
+> On Wed, Dec 06, 2017 at 12:10:08PM +0100, Enric Balletbo i Serra wrote:
+>> Enable tcphy and create the cros-ec's extcon node for the USB Type-C port.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 26 ++++++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+>> index 470105d..03f1950 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+>> @@ -855,6 +855,20 @@ ap_i2c_audio: &i2c8 {
+>>                       compatible = "google,cros-ec-pwm";
+>>                       #pwm-cells = <1>;
+>>               };
+>> +
+>> +             usbc_extcon0: extcon@0 {
+>> +                     compatible = "google,extcon-usbc-cros-ec";
+>> +                     google,usb-port-id = <0>;
+>> +
+>> +                     #extcon-cells = <0>;
+>> +             };
+>> +
+>> +             usbc_extcon1: extcon@1 {
+>> +                     compatible = "google,extcon-usbc-cros-ec";
+>> +                     google,usb-port-id = <1>;
+>> +
+>> +                     #extcon-cells = <0>;
+>> +             };
+>>       };
+>>  };
+>>
+>> @@ -865,6 +879,16 @@ ap_i2c_audio: &i2c8 {
+>>       rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
+>>  };
+>>
+>> +&tcphy0 {
+>> +     status = "okay";
+>> +     extcon = <&usbc_extcon0>;
+>> +};
+>> +
+>> +&tcphy1 {
+>> +     status = "okay";
+>> +     extcon = <&usbc_extcon1>;
+>> +};
+>> +
+>>  &u2phy0 {
+>>       status = "okay";
+>>  };
+>> @@ -911,6 +935,7 @@ ap_i2c_audio: &i2c8 {
+>>
+>>  &usbdrd3_0 {
+>>       status = "okay";
+>> +     extcon = <&usbc_extcon0>;
+>>  };
+>>
+>>  &usbdrd_dwc3_0 {
+>> @@ -920,6 +945,7 @@ ap_i2c_audio: &i2c8 {
+>>
+>>  &usbdrd3_1 {
+>>       status = "okay";
+>> +     extcon = <&usbc_extcon1>;
+>>  };
+>>
+>>  &usbdrd_dwc3_1 {
+>
+> Seems OK.
+>
+> Also, IIUC, I think if we ever want to support dual-role/OTG, we need an
+> extcon reference in the USB2/OTG PHY that serves these ports too. i.e.,
+> u2phy0 and u2phy1? Notably, the PHY driver supports the extcon
+> properties, but it's not documented in
+> Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt yet (we
+> should probably get that fixed).
+>
 
--- 
-viresh
+I'll take a look at this and send a separate patchset. Thanks.
+
+  Enric
+
+> So, anyway, maybe the above isn't a blocker for this patch. Just noticed
+> it while reading. Assuming the driver stuff falls into place:
+>
+> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
