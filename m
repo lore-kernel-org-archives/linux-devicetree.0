@@ -1,63 +1,56 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] dt-bindings: timer: renesas, cmt: Document
- r8a774[35] CMT support
-Date: Wed, 13 Dec 2017 09:40:48 +0100
-Message-ID: <20171213084048.jxofa3hinb6gm2ax@verge.net.au>
-References: <1513104579-6333-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513104579-6333-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 1/1] dt-bindings: arm: document supported STM32 SoC family
+Date: Wed, 13 Dec 2017 09:40:50 +0100
+Message-ID: <16700917-a53a-c319-d27d-f447c6ed3dce@st.com>
+References: <1512741394-27341-1-git-send-email-ludovic.Barre@st.com>
+ <20171212210348.proilmqmxf4yl5jn@rob-hp-laptop>
+ <20171212231744.u4wtadrpaq3wp4sq@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1513104579-6333-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171212231744.u4wtadrpaq3wp4sq@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gwenael Treuveur <gwenael.treuveur-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 06:49:37PM +0000, Fabrizio Castro wrote:
-> Document SoC specific compatible strings for r8a7743 and r8a7745.
-> No driver change is needed as the fallback strings will activate
-> the right code.
+hi Rob
+
+Today there was no bindings documentation for STM32 SoC
+already upstreamed. This patch adds initial list of STM32
+existing in kernel.
+The next serie adds just new soc and one compatible on STM32 list.
+So, I think you could apply this patch.
+
+BR
+Ludo
+
+On 12/13/2017 12:17 AM, Rob Herring wrote:
+> On Tue, Dec 12, 2017 at 03:03:48PM -0600, Rob Herring wrote:
+>> On Fri, Dec 08, 2017 at 02:56:34PM +0100, Ludovic Barre wrote:
+>>> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>>>
+>>> This adds a list of supported STM32 SoC bindings.
+>>>
+>>> Signed-off-by: Gwenael Treuveur <gwenael.treuveur-qxv4g6HH51o@public.gmane.org>
+>>> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/arm/stm32.txt | 9 +++++++++
+>>>   1 file changed, 9 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/arm/stm32.txt
+>>
+>> Applied, thanks.
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
+> Now dropped as this will conflict with your other series. Send this with
+> the other series or indicate who should apply.
 > 
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> index d740989..1e4fe98 100644
-> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> @@ -22,6 +22,10 @@ Required Properties:
->  
->      - "renesas,r8a73a4-cmt0" for the 32-bit CMT0 device included in r8a73a4.
->      - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
-> +    - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7743.
-> +    - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7743.
-> +    - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8a7745.
-> +    - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7745.
->      - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
->      - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
->      - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
-> @@ -31,9 +35,11 @@ Required Properties:
->      - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
->      - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
->  
-> -    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2.
-> -    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2.
-> -		These are fallbacks for r8a73a4 and all the R-Car Gen2
-> +    - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2 or
-
-nit: or -> and ?
-
-> +		RZ/G1.
-> +    - "renesas,rcar-gen2-cmt1" for 48-bit CMT1 devices included in R-Car Gen2 or
-> +		RZ/G1.
-> +		These are fallbacks for r8a73a4, all the R-Car Gen2 and RZ/G1
->  		entries	listed above.
-
-nit: all the R-Car -> R-Car
-
->    - reg: base address and length of the registers block for the timer module.
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> Rob
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
