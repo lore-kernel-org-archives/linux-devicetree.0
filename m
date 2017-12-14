@@ -1,79 +1,143 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: hisilicon: Add hi3660 cpu capacity-dmips-mhz
- information
-Date: Thu, 14 Dec 2017 09:07:54 +0800
-Message-ID: <20171214010754.GC30419@leoy-linaro>
-References: <1513174866-6678-1-git-send-email-valentin.schneider@arm.com>
- <20171213145311.GA30463@leoy-ThinkPad-T440>
- <cddaf386-5688-a064-7cb0-1e75485330c4@arm.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v2] ARM64: dts: meson-axg: add ethernet mac controller
+Date: Thu, 14 Dec 2017 11:02:42 +0800
+Message-ID: <20171214030242.113152-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cddaf386-5688-a064-7cb0-1e75485330c4-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Valentin Schneider <valentin.schneider-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Dietmar Eggemann <dietmar.eggemann-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 13, 2017 at 03:16:13PM +0000, Valentin Schneider wrote:
-> Hi Leo,
-> 
-> 
-> On 12/13/2017 02:53 PM, Leo Yan wrote:
-> >Hi Valentin,
-> >
-> >On Wed, Dec 13, 2017 at 02:21:06PM +0000, Valentin Schneider wrote:
-> >>The following dt entries are added:
-> >>  cpus [0-3] (Cortex A53):
-> >>    - capacity-dmips-mhz = <592>;
-> >>
-> >>  cpus [4-7] (Cortex A73):
-> >>    - capacity-dmips-mhz = <1024>;
-> >>
-> >>Those values were obtained by running dhrystone 2.1 on a
-> >>HiKey960 with the following procedure:
-> >>- Offline all CPUs but CPU0 (A53)
-> >>- Set CPU0 frequency to maximum
-> >>- Run Dhrystone 2.1 for 20 seconds
-> >>
-> >>- Offline all CPUs but CPU4 (A73)
-> >>- set CPU4 frequency to maximum
-> >>- Run Dhrystone 2.1 for 20 seconds
-> >>
-> >>The results are as follows:
-> >>A53: 129633887 loops
-> >>A73: 287034147 loops
-> >Seems to me the capacity-dmips-mhz should be:
-> >
-> >CA53: 129633887 / 20 / 1844 = 3515
-> >CA73: 287034147 / 20 / 2362 = 6076
-> >
-> >After normalized to range [0..1024], we could get:
-> >
-> >CA53:  592
-> >CA73: 1024
-> 
-> Yes, that's the "direct approach". I wanted to underline the fact that there
-> are two different max frequencies so what I followed would be:
-> 
-> 1) Computing the performance ratio:
-> (129633887 / 287034147) * 1024 = 462.47
-> 
-> 2) Scaling that to the same frequency scale:
-> 462.47 * (2362/1844) = 592.38
-> 
-> Which gives the same end result (it's the same equation but split in two
-> steps). Also it makes it easy to check that the cpu_capacity sysfs entry for
-> the A53s gets correctly set (to 462).
+Add DT info for the stmmac ethernet MAC which found in
+the Amlogic's Meson-AXG SoC, also describe the ethernet
+pinctrl & clock information here.
 
-Yeah, thanks for clear explanation.
+This is tested in the S400 dev board which use a RTL8211F PHY,
+and the pins connect to the 'eth_rgmii_y_pins' group.
 
-[...]
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 
-Thanks,
-Leo Yan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+Changes in v2 since [1]:
+ - rebase to kevin's v4.16/dt64 branch
+ - add Neil's Reviewed-by
+ - move clock info to board.dts instead of in soc.dtsi
+ - drop "meson-axg-dwmac" compatible string, since we didn't use this
+   we could re-add it later when we really need.
+ - note: to make ethernet work properly,it depend on clock & pinctrl[2],
+   to compile the DTS, the patch [3] is required.
+   the code part will be taken via clock & pinctrl subsystem tree.
+
+[1]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005301.html
+
+[2]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005735.html
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005694.html
+
+[3]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005738.html
+---
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 11 ++++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 50 ++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 70eca1f8736a..138de3bc7cc8 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -20,3 +20,14 @@
+ &uart_AO {
+ 	status = "okay";
+ };
++
++&ethmac {
++	status = "okay";
++	clocks = <&clkc CLKID_ETH>,
++		 <&clkc CLKID_FCLK_DIV2>,
++		 <&clkc CLKID_MPLL2>;
++	clock-names = "stmmaceth", "clkin0", "clkin1";
++	phy-mode = "rgmii";
++	pinctrl-0 = <&eth_rgmii_y_pins>;
++	pinctrl-names = "default";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index d356ce74ad89..106234fda765 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/axg-clkc.h>
+ 
+ / {
+ 	compatible = "amlogic,meson-axg";
+@@ -148,6 +149,15 @@
+ 			#address-cells = <0>;
+ 		};
+ 
++		ethmac: ethernet@ff3f0000 {
++			compatible = "amlogic,meson-gxbb-dwmac", "snps,dwmac";
++			reg = <0x0 0xff3f0000 0x0 0x10000
++				0x0 0xff634540 0x0 0x8>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "macirq";
++			status = "disabled";
++		};
++
+ 		hiubus: bus@ff63c000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xff63c000 0x0 0x1c00>;
+@@ -194,6 +204,46 @@
+ 					#gpio-cells = <2>;
+ 					gpio-ranges = <&pinctrl_periphs 0 0 86>;
+ 				};
++
++				eth_rgmii_x_pins: eth-x-rgmii {
++					mux {
++						groups = "eth_mdio_x",
++						       "eth_mdc_x",
++						       "eth_rgmii_rx_clk_x",
++						       "eth_rx_dv_x",
++						       "eth_rxd0_x",
++						       "eth_rxd1_x",
++						       "eth_rxd2_rgmii",
++						       "eth_rxd3_rgmii",
++						       "eth_rgmii_tx_clk",
++						       "eth_txen_x",
++						       "eth_txd0_x",
++						       "eth_txd1_x",
++						       "eth_txd2_rgmii",
++						       "eth_txd3_rgmii";
++						function = "eth";
++					};
++				};
++
++				eth_rgmii_y_pins: eth-y-rgmii {
++					mux {
++						groups = "eth_mdio_y",
++						       "eth_mdc_y",
++						       "eth_rgmii_rx_clk_y",
++						       "eth_rx_dv_y",
++						       "eth_rxd0_y",
++						       "eth_rxd1_y",
++						       "eth_rxd2_rgmii",
++						       "eth_rxd3_rgmii",
++						       "eth_rgmii_tx_clk",
++						       "eth_txen_y",
++						       "eth_txd0_y",
++						       "eth_txd1_y",
++						       "eth_txd2_rgmii",
++						       "eth_txd3_rgmii";
++						function = "eth";
++					};
++				};
+ 			};
+ 		};
+ 
+-- 
+2.15.1
