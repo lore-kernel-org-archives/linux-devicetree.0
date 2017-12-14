@@ -1,59 +1,36 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 1/2] leds: as3645a: Fix quoted string split warning
-Date: Thu, 14 Dec 2017 22:11:03 +0100
-Message-ID: <df3a8f78-fec9-d75e-cc13-b1ed30009d0e@gmail.com>
-References: <20171214173727.10070-1-dmurphy@ti.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: DT dtc warnings
+Date: Thu, 14 Dec 2017 19:13:04 -0200
+Message-ID: <CAOMZO5BGX1U90bGrff42rZKKOSQK3NB=-k_4BX04Tsi=yX0Odg@mail.gmail.com>
+References: <CAL_JsqJKCzjx3zNigu_0T=Ku=_P2SQEjTx=uVbvr_QxJQR7kYg@mail.gmail.com>
+ <CAJKOXPc7M3jeV_hNBBRJKGs3vtNzdrGbW_YETw2n0fXxhqjZ_g@mail.gmail.com> <CAJKOXPfCDT+7wPkz3g6AiKgLvFp4rnicYQgYn8A_yaPe4YhD5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171214173727.10070-1-dmurphy@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, pavel@ucw.cz, sakari.ailus@iki.fi, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJKOXPfCDT+7wPkz3g6AiKgLvFp4rnicYQgYn8A_yaPe4YhD5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+On Thu, Dec 14, 2017 at 7:01 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Thanks for the patch set.
-Bot patches applied to the for-next branch.
+> Can anyone help why this W=1 triggers warning like these:
+> arch/arm/boot/dts/exynos3250-artik5-eval.dtb: Warning
+> (simple_bus_reg): Node /soc/syscon-poweroff missing or empty
+> reg/ranges property
+> arch/arm/boot/dts/exynos3250-artik5-eval.dtb: Warning
+> (simple_bus_reg): Node /soc/syscon-reboot missing or empty reg/ranges
+> property
+>
+> For a node without unit address?
+> http://elixir.free-electrons.com/linux/v4.15-rc3/source/arch/arm/boot/dts/exynos-syscon-restart.dtsi
+>
+> AFAIR, if node does not have unit-address then it should not have
+> reg/ranges property. Or maybe it is coming from parent's simple-bus?
 
--- 
-Best regards,
-Jacek Anaszewski
-
-On 12/14/2017 06:37 PM, Dan Murphy wrote:
-> Fix a warning for a split quoted string across
-> lines.
-> 
-> WARNING: quoted string split across lines
-> 459: FILE: drivers/leds/leds-as3645a.c:459:
-> 		dev_err(dev, "AS3645A not detected "
-> 			"(model %d rfu %d)\n", model, rfu);
-> 
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v2 - Split the warning fixes into 2 patches and fixed commit message -
-> https://patchwork.kernel.org/patch/10108325/
-> 
->  drivers/leds/leds-as3645a.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/leds/leds-as3645a.c b/drivers/leds/leds-as3645a.c
-> index 9a257f969300..49fdd7c0a6f6 100644
-> --- a/drivers/leds/leds-as3645a.c
-> +++ b/drivers/leds/leds-as3645a.c
-> @@ -455,8 +455,8 @@ static int as3645a_detect(struct as3645a *flash)
->  
->  	/* Verify the chip model and version. */
->  	if (model != 0x01 || rfu != 0x00) {
-> -		dev_err(dev, "AS3645A not detected "
-> -			"(model %d rfu %d)\n", model, rfu);
-> +		dev_err(dev, "AS3645A not detected (model %d rfu %d)\n",
-> +			model, rfu);
->  		return -ENODEV;
->  	}
->  
-> 
+syscon-poweroff and syscon-reboot should be outside the soc bus.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
