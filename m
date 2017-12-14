@@ -1,47 +1,29 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/3] ARM: dts: r8a7793: Correct critical CPU temperature
-Date: Thu, 14 Dec 2017 11:25:04 +0100
-Message-ID: <CAMuHMdX-7SFmGhRThvd5b64mBi9vXGR=nQbRiwEEiYYciJVwnA@mail.gmail.com>
-References: <1513242521-11236-1-git-send-email-chris.paterson2@renesas.com> <1513242521-11236-4-git-send-email-chris.paterson2@renesas.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: [PATCH 0/2] Add SFF module support
+Date: Thu, 14 Dec 2017 10:27:13 +0000
+Message-ID: <20171214102712.GP10595@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513242521-11236-4-git-send-email-chris.paterson2@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Paterson <chris.paterson2@renesas.com>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 14, 2017 at 10:08 AM, Chris Paterson
-<chris.paterson2@renesas.com> wrote:
-> The R-Car M2N hardware manual states that Tc =3D =E2=80=9340=C2=B0C to +1=
-05=C2=B0C. The
+Add support for SFF modules.  SFF modules are similar to SFP modules,
+but they have fewer control signals, and are soldered down rather than
+pluggable.
 
-M2-N
+They also have different IDs in the EEPROM to identify as soldered down
+SFF modules.
 
-> thermal sensor has an accuracy of =C2=B15=C2=B0C and there can be a tempe=
-rature
-> difference of 1 or 2 degrees between Tjmax and the thermal sensor due
-> to the location of the latter.
->
-> This means that 95=C2=B0C is a safer value to use.
->
-> Fixes: 57f9156bc620ac56 ("ARM: dts: r8a7793: enable to use thermal-zone")
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+ Documentation/devicetree/bindings/net/sff,sfp.txt | 10 ++-
+ drivers/net/phy/sfp.c                             | 78 +++++++++++++++++++----
+ include/linux/sfp.h                               |  1 +
+ 3 files changed, 72 insertions(+), 17 deletions(-)
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
