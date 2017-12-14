@@ -1,67 +1,144 @@
-From: "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>
-Subject: RE: [PATCH v4 00/12] [dt-bindings] [media] Add document file and
- driver for Sony CXD2880 DVB-T2/T tuner + demodulator
-Date: Thu, 14 Dec 2017 17:32:34 +0000
-Message-ID: <ECADFF3FD767C149AD96A924E7EA6EAF40AE4BB5@USCULXMSG01.am.sony.com>
-References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
- <20171213173633.57edca85@vento.lan>
- <02699364973B424C83A42A84B04FDA85431742@JPYOKXMS113.jp.sony.com>
- <20171214085503.289f06f8@vento.lan>
- <CAOFm3uEYfMH8Zj8uEx-D9yYrTyDMTG_j02619esHu-j0brQKaA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOFm3uEYfMH8Zj8uEx-D9yYrTyDMTG_j02619esHu-j0brQKaA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Cc: "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yamamoto, Masayuki" <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, "Yonezawa, Kota" <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+From: srinivas.kandagatla@linaro.org
+Subject: [RESEND PATCH v2 00/15] ASoC: qcom: Add support to QDSP6 based audio
+Date: Thu, 14 Dec 2017 17:33:47 +0000
+Message-ID: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGhpbGlwcGUgb24gVGh1
-cnNkYXksIERlY2VtYmVyIDE0LCAyMDE3IDY6MjUgQU0NCj4gRGVhciBNYXVybywNCj4gDQo+IE9u
-IFRodSwgRGVjIDE0LCAyMDE3IGF0IDExOjU1IEFNLCBNYXVybyBDYXJ2YWxobyBDaGVoYWINCj4g
-PG1jaGVoYWJAcy1vcGVuc291cmNlLmNvbT4gd3JvdGU6DQo+IA0KPiA+IFNQRFggaXMgYSBuZXcg
-cmVxdWlyZW1lbnQgdGhhdCBzdGFydGVkIGxhdGUgb24gS2VybmVsIDQuMTQgZGV2ZWxvcG1lbnQN
-Cj4gPiBjeWNsZSAoYW5kIHdob3NlIGluaXRpYWwgY2hhbmdlcyB3ZXJlIG1lcmdlZCBkaXJlY3Rs
-eSBhdCBMaW51cyB0cmVlKS4NCj4gPiBOb3QgYWxsIGV4aXN0aW5nIGZpbGVzIGhhdmUgaXQgeWV0
-LCBhcyBpZGVudGlmeWluZyB0aGUgcmlnaHQgbGljZW5zZQ0KPiA+IG9uIGV4aXN0aW5nIGZpbGVz
-IGlzIGEgY29tcGxleCB0YXNrLCBidXQgaWYgeW91IGRvIGE6DQo+ID4NCj4gPiAgICAgICAgICQg
-Z2l0IGdyZXAgU1BEWCAkKGZpbmQgLiAtbmFtZSBNYWtlZmlsZSkgJChmaW5kIC4gLW5hbWUgS2Nv
-bmZpZykNCj4gPg0KPiA+IFlvdSdsbCBzZWUgdGhhdCBsb3Qgb2Ygc3VjaCBmaWxlcyBoYXZlIGl0
-IGFscmVhZHkuDQo+IA0KPiBGV0lXLCBzaG9ydCBvZiBoYXZpbmcgU1BEWCB0YWdzLCBpZGVudGlm
-eWluZyB0aGUgcmlnaHQgbGljZW5zZSBvbg0KPiBleGlzdGluZyBmaWxlcyBpcyBub3QgYSBzdXBl
-ciBjb21wbGV4IHRhc2s6IGlmIGJvaWxzIGRvd24gdG8gcnVubmluZw0KPiBtYW55IGRpZmZzLg0K
-PiANCj4gVGFrZSB0aGUgfjYwSyBmaWxlcyBpbiBrZXJuZWwsIGFuZCBhYm91dCA2SyBsaWNlbnNl
-IGFuZCBub3RpY2VzDQo+IHJlZmVyZW5jZSB0ZXh0cy4gVGhlbiBjb21wdXRlIGEgcGFpcndpc2Ug
-ZGlmZiBvZiBlYWNoIG9mIHRoZSA2MEsgZmlsZQ0KPiBhZ2FpbnN0IHRoZSA2SyByZWZlcmVuY2Ug
-dGV4dHMuIFJlcGVhdCB0aGUgcGFpcndpc2UgZGlmZiBhIGZldyBtb3JlDQo+IHRpbWVzLCBzYXkg
-MTAgdGltZXMsIGFzIG11bHRpcGxlIGxpY2Vuc2VzIG1heSBhcHBlYXIgaW4gYW55IGdpdmVuDQo+
-IGtlcm5lbCBmaWxlLiBBbmQga2VlcCB0aGUgZGlmZnMgdGhhdCBoYXZlIHRoZSBmZXdlc3QNCj4g
-ZGlmZmVyZW5jZS9oaWdoZXN0IHNpbWlsYXJpdHkgd2l0aCB0aGUgcmVmZXJlbmNlIHRleHRzIGFz
-IHRoZSBkZXRlY3RlZA0KPiBsaWNlbnNlLiBEb25lIQ0KDQpZb3UgY2FuJ3QgZG8gbGljZW5zZSBk
-ZXRlY3Rpb24gYW5kIGFzc2lnbm1lbnQgaW4gdGhpcyBhdXRvbWF0ZWQgZmFzaGlvbiAtIA0KYXQg
-bGVhc3Qgbm90IGdlbmVyYWxseS4NCg0KRXZlbiBhIHNpbmdsZSB3b3JkIG9mIGRpZmZlcmVuY2Ug
-YmV0d2VlbiB0aGUgbm90aWNlIGluIHRoZSBzb3VyY2UNCmNvZGUgYW5kIHRoZSByZWZlcmVuY2Ug
-bGljZW5zZSBub3RpY2Ugb3IgdGV4dCBtYXkgaGF2ZSBsZWdhbCBpbXBsaWNhdGlvbnMNCnRoYXQg
-YXJlIG5vdCBjb252ZXllZCBieSB0aGUgc2ltcGxpZmllZCBTUERYIHRhZy4gIFdoZW4gZGlmZmVy
-ZW5jZXMgYXJlDQpmb3VuZCwgd2UncmUgZ29pbmcgdG8gaGF2ZSB0byBraWNrIHRoZSBkaXNjcmVw
-YW5jaWVzIHRvIGEgaHVtYW4gZm9yIHJldmlldy4NClRoaXMgaXMgZXNwZWNpYWxseSB0cnVlIGZv
-ciBmaWxlcyB3aXRoIG11bHRpcGxlIGxpY2Vuc2VzLg0KDQpGb3IgYSB3b3JrIG9mIG9yaWdpbmFs
-IGF1dGhvcnNoaXAsIG9yIGEgc2luZ2xlIGNvcHlyaWdodCBob2xkZXIsIHRoZSBhdXRob3INCm9y
-IGNvcHlyaWdodCBob2xkZXIgbWF5IGJlIGFibGUgdG8gY2hhbmdlIHRoZSBub3RpY2Ugb3IgdGV4
-dCwgb3IgZ2xvc3MNCm92ZXIgYW55IGRpZmZlcmVuY2UgZnJvbSB0aGUgcmVmZXJlbmNlIHRleHQs
-IGFuZCBtYWtlIHRoZSBTUERYICBhc3NpZ25tZW50DQoob3IgZXZlbiBjaGFuZ2UgdGhlIGxpY2Vu
-c2UsIGlmIHRoZXkgd2FudCkuICBUaGlzIHdvdWxkIGFwcGx5IHRvIHNvbWV0aGluZw0KbmV3IGxp
-a2UgdGhpcyBTb255IGRyaXZlci4gIEhvd2V2ZXIsIGZvciBjb2RlIHRoYXQgaXMgYWxyZWFkeSBp
-biB0aGUga2VybmVsDQp0cmVlLCB3aXRoIGxpa2VseSBtdWx0aXBsZSBjb250cmlidXRvcnMsIHRo
-ZSBsZWdhbCBzaXR1YXRpb24gZ2V0cyBhIGxpdHRsZQ0KbW9yZSBtdXJreS4NCg0KSSBzdXNwZWN0
-IHRoZSB2YXN0IG1ham9yaXR5IG9mIHRoZSB+NjBrIGZpbGVzIHdpbGwgcHJvYmFibHkgZmFsbCBu
-ZWF0bHkgaW50byBhbg0KU1BEWCBjYXRlZ29yeSwgYnV0IEknbSBndWVzc2luZyBhIGZhaXIgbnVt
-YmVyIChtYXliZSBodW5kcmVkcykgd2lsbCByZXF1aXJlDQpzb21lIHJldmlldyBhbmQgZGlzY3Vz
-c2lvbi4NCg0KIC0tIFRpbQ0KDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+This patchset aims to provide a very basic version of QCOM DSP based
+audio support which is available in downstream andriod kernels.
+This patchset only support Digital audio based for HDMI-RX and will
+add support to other features as we move on.
+
+QDSP has both static and dynamic modules. static modules like AFE
+(Audio FrontEnd), ADM (Audio Device Manager), ASM(Audio Stream Manager)
+and CORE to provide this audio services.
+All these services use APR (Asynchronous Packet Router) protocol
+via smd/glink transport to communicate with Application processor.
+More details on each module is availble in there respective patch.
+
+This patchset is tested on DB820c, with HDMI audio playback
+on top of mainline, also tested slimbus analog audio using wcd9355
+with an additional small patch.
+
+Here is block diagram to give a quick overview of the components
+
+
+  +---------+          +---------+         +---------+   
+  |  q6asm  |          |q6routing|         | q6afe   | 
+  |  fedai  | <------> |  mixers | <-----> | bedai   |  
+  +---------+          +---------+         +---------+   
+      ^                     ^                   ^
+      |                     |                   |
+      |  +------------------+----------------+  |       
+      |  |                  |                |  |       
+      v  v                  v                v  v       
+  +---------+          +---------+         +---------+ 
+  |   q6ASM |          |  q6ADM  |         |   q6AFE |  
+  +---------+          +---------+         +---------+  
+      ^                     ^                   ^          ^
+      |                     |                   | CPU Side |
+------+---------------------+-------------------+--------
+      |                     |                   |
+      |                     |APR(smd/glink)     | 
+      |                     |                   |
+      |  +------------------+----------------+  |
+      |  |                  |                |  |
++-----+--+-----------------------------------+--+-------
+      |  |                  |                |  | QDSP Side |
+      v  v                  v                v  v           v
+ +---------+          +---------+         +---------+
+ |   ASM   | <------> |   ADM   | <-----> |   AFE   |
+ +---------+          +---------+         +---------+
+                                               ^
+                                               | 
+                           +-------------------+
+                           |
+---------------------------+--------------------------
+                           |            Audio I/O |
+                           v                      v
+    +--------------------------------------------------+
+    |                Audio devices                     |
+    | CODEC | HDMI-TX | PCM  | SLIMBUS | I2S |MI2S |...|
+    |                                                  |
+    +--------------------------------------------------+
+
+Changes since RFC:
+- Converted APR driver to proper bus driver 
+- Added API version info to apr devices
+- Added q6core driver.
+- Fixed various issues spotted by Banajit and Kasam.
+- Added kernel doc to exported symbols.
+- renamed qdsp6v2 to qdsp6 as api version info can be
+	 used from apr device.
+- removed unnecessary dt bindings for apr devices.
+
+Srinivas Kandagatla (15):
+  dt-bindings: soc: qcom: Add bindings for APR bus
+  soc: qcom: add support to APR bus driver
+  ASoC: qcom: qdsp6: Add common qdsp6 helper functions
+  ASoC: qcom: qdsp6: Add support to Q6AFE
+  ASoC: qcom: qdsp6: Add support to Q6ADM
+  ASoC: qcom: qdsp6: Add support to Q6ASM
+  ASoC: qcom: q6asm: Add support to memory map and unmap
+  ASoC: qcom: q6asm: add support to audio stream apis
+  ASoC: qcom: qdsp6: Add support to Q6CORE
+  ASoC: qcom: qdsp6: Add support to q6routing driver
+  ASoC: qcom: qdsp6: Add support to q6afe dai driver
+  ASoC: qcom: qdsp6: Add support to q6asm dai driver
+  dt-bindings: sound: qcom: Add devicetree bindings for apq8096
+  ASoC: qcom: apq8096: Add db820c machine driver
+  arm64: dts: msm8996: db820c: Add sound card support
+
+ .../devicetree/bindings/soc/qcom/qcom,apr.txt      |   28 +
+ .../devicetree/bindings/sound/qcom,apq8096.txt     |   22 +
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |    5 +
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              |   33 +
+ drivers/soc/qcom/Kconfig                           |    8 +
+ drivers/soc/qcom/Makefile                          |    1 +
+ drivers/soc/qcom/apr.c                             |  395 +++++++
+ include/linux/mod_devicetable.h                    |   13 +
+ include/linux/soc/qcom/apr.h                       |  174 +++
+ sound/soc/qcom/Kconfig                             |   51 +
+ sound/soc/qcom/Makefile                            |    5 +
+ sound/soc/qcom/apq8096.c                           |  124 +++
+ sound/soc/qcom/qdsp6/Makefile                      |    7 +
+ sound/soc/qcom/qdsp6/common.h                      |  225 ++++
+ sound/soc/qcom/qdsp6/q6adm.c                       |  602 +++++++++++
+ sound/soc/qcom/qdsp6/q6adm.h                       |   24 +
+ sound/soc/qcom/qdsp6/q6afe-dai.c                   |  241 +++++
+ sound/soc/qcom/qdsp6/q6afe.c                       |  503 +++++++++
+ sound/soc/qcom/qdsp6/q6afe.h                       |   30 +
+ sound/soc/qcom/qdsp6/q6asm-dai.c                   |  534 ++++++++++
+ sound/soc/qcom/qdsp6/q6asm.c                       | 1119 ++++++++++++++++++++
+ sound/soc/qcom/qdsp6/q6asm.h                       |   61 ++
+ sound/soc/qcom/qdsp6/q6core.c                      |  227 ++++
+ sound/soc/qcom/qdsp6/q6routing.c                   |  386 +++++++
+ sound/soc/qcom/qdsp6/q6routing.h                   |    9 +
+ 25 files changed, 4827 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+ create mode 100644 drivers/soc/qcom/apr.c
+ create mode 100644 include/linux/soc/qcom/apr.h
+ create mode 100644 sound/soc/qcom/apq8096.c
+ create mode 100644 sound/soc/qcom/qdsp6/Makefile
+ create mode 100644 sound/soc/qcom/qdsp6/common.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6adm.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6adm.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe-dai.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm-dai.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6core.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6routing.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6routing.h
+
+-- 
+2.15.0
