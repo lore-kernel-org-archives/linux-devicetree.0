@@ -1,36 +1,107 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 6/7] i3c: master: Add driver for Cadence IP
-Date: Thu, 14 Dec 2017 12:25:14 -0800
-Message-ID: <8245f2de-eb0a-319b-8f45-d8d5dac36239@infradead.org>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
- <20171214151610.19153-7-boris.brezillon@free-electrons.com>
- <d0685c1d-a3ed-b3c1-7e3f-b69b02e8a7be@infradead.org>
- <20171214211722.1c2f269d@bbrezillon>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: chosen: Add clocksource and clockevent
+ selection
+Date: Thu, 14 Dec 2017 21:37:15 +0100
+Message-ID: <20171214213715.4e0bdb44@bbrezillon>
+References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
+        <20171213185313.20017-2-alexandre.belloni@free-electrons.com>
+        <CAL_JsqLm5n6s=cr2hBZp4H9pDPKHUOPWs94JMWYFYJ3hsMMxZQ@mail.gmail.com>
+        <20171214210120.6b436e0d@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20171214211722.1c2f269d@bbrezillon>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@co>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171214210120.6b436e0d@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/2017 12:17 PM, Boris Brezillon wrote:
->>> +	events.events = I3C_CCC_EVENT_HJ | I3C_CCC_EVENT_MR;
->>> +	ret = i3c_master_enec_locked(m, I3C_BROADCAST_ADDR, &events);
->>> +	if (ret)
->>> +		pr_info("Failed to re-enable H-J");  
->> 		Not very good info...
-> What do you mean? Is it the H-J that bothers you (I can replace it by
-> 'Hot-Join'), or is it something else?
+On Thu, 14 Dec 2017 21:01:20 +0100
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Who is the message for?  If it's for developers, you could use
-pr_debug().  If it's for users, it needs more clarity.
+> Hi Rob,
+> 
+> On Wed, 13 Dec 2017 16:57:50 -0600
+> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+> > On Wed, Dec 13, 2017 at 12:53 PM, Alexandre Belloni
+> > <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:  
+> > > The clocksource and clockevent timer are probed early in the boot process.
+> > > At that time it is difficult for linux to know whether a particular timer
+> > > can be used as the clocksource or the clockevent or by another driver,
+> > > especially when they are all identical or have similar features.    
+> > 
+> > If all identical, then it shouldn't matter. "similar" means some
+> > difference. Describe those differences.  
+> 
+> We had this discussion already. Those timers might be connected to
+> external pins and may serve the role of PWM generators or capture
+> devices. We can also chain timers and provide a clocksource with a
+> better resolution or one that wraps less often. In the end it's all
+> about how the user plans to use its system, and this has to be
+> described somehow. Assuming that the software can decide by itself
+> which timer should be used or how many of them should be chained is
+> just an utopia.
+> 
+> >   
+> > > Until now, multiple strategies have been used to solve that:
+> > >  - use Kconfig option as MXC_USE_EPIT or ATMEL_TCB_CLKSRC_BLOCK    
+> > 
+> > Compile time probably means only one option is really used.  
+> 
+> Compile time selection prevents using the same kernel for different
+> boards (in other words, no multi-v7), so not really an option here.
+> 
+> >   
+> > >  - use a kernel parameter as the "clocksource" early_param in mach-omap2    
+> > 
+> > Yeah, OMAP was one of the previous times this came up and also
+> > attempted something like this. This parameter predates selecting
+> > timers based on features described in DT. Look at commit
+> > 2eb03937df3ebc (ARM: OMAP3: Update clocksource timer selection).  
+> 
+> Then, would you accept to have a property saying that a specific timer
+> is a free-running timer (suitable for clocksource) or a programmable
+> timer (suitable for clkevent)? Or are you saying that you don't like the
+> way timers are differentiated on omap?
+> 
+> >   
+> > >  - registering the first seen timer as a clockevent and the second one as
+> > >  a clocksource as in rk_timer_init or dw_apb_timer_init
+> > >
+> > > Add a linux,clocksource and a linux,clockevent node in chosen with a timer
+> > > property pointing to the timer to use. Other properties, like the targeted
+> > > precision may be added later.    
+> > 
+> > Open ended expansion of this does not help convince me it is needed.  
+> 
+> It's not an open ended expansion, we're just trying to find a way to
+> describe which timer blocks should be used as free running timers
+> (clksource) and which one should be used as programmable timers
+> (clkevent). Automatically selecting timer blocks to assign to the
+> clkevent or clocksource is not so easy (as has been explained earlier)
+> because at the time the system registers its clksource/clkevent devices
+> we might not have all the necessary information to know which timer
+> blocks will be reserved for other usage later on. The use case I have
+> in mind is DT overlays, where one of the overlay is using a timer as a
+> PWM generator. If the clkevent or clksource has already claimed the
+> timer connected to the pins the overlay is using, then we're screwed,
+> and there's no way the system can know that ahead of time except by
+> pre-assigning a timer to the clksource or clkevent feature.
+> 
+> So really, we need a way to assign a specific timer to a specific
+> feature. You've refused the different proposals we made so far, so
+> what's your alternative? I mean a real alternative that solve the "an
+> auto-selected timer might be claimed by another driver at some point"
+> problem.
 
-Does it print the source of the message? (module name e.g.)
-and yes, Hot-Join would be better IMO.
+Okay, it seems I was wrong, you already agreed on a generic
+atmel,tcb-timer compatible [1], so it seems the only thing we're missing
+is a way to assign a timer to a clocksource or a clkevent.
 
--- 
-~Randy
+[1]https://patchwork.kernel.org/patch/9755341/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
