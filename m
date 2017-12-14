@@ -1,11 +1,11 @@
 From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH] arc: dts: Remove leading 0x and 0s from bindings notation
-Date: Thu, 14 Dec 2017 17:53:43 +0100
-Message-ID: <20171214165344.27795-1-malat@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH] arm64: dts: Remove leading 0x and 0s from bindings notation
+Date: Thu, 14 Dec 2017 17:53:52 +0100
+Message-ID: <20171214165352.27902-1-malat@debian.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>, Vineet Gupta <vgupta@synopsys.com>, Alexey Brodkin <abrodkin@synopsys.com>, devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mathieu Malaterre <malat@debian.org>, Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Improve the DTS files by removing all the leading "0x" and zeros to fix the
@@ -35,338 +35,92 @@ Reported-by: David Daney <ddaney@caviumnetworks.com>
 Suggested-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/arc/boot/dts/abilis_tb10x.dtsi   |  4 ++--
- arch/arc/boot/dts/axc001.dtsi         |  6 +++---
- arch/arc/boot/dts/axc003.dtsi         |  6 +++---
- arch/arc/boot/dts/axc003_idu.dtsi     |  6 +++---
- arch/arc/boot/dts/axs10x_mb.dtsi      | 22 +++++++++++-----------
- arch/arc/boot/dts/vdk_axc003.dtsi     |  4 ++--
- arch/arc/boot/dts/vdk_axc003_idu.dtsi |  4 ++--
- arch/arc/boot/dts/vdk_axs10x_mb.dtsi  | 14 +++++++-------
- 8 files changed, 33 insertions(+), 33 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 2 +-
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi       | 2 +-
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi   | 6 +++---
+ arch/arm64/boot/dts/qcom/msm8996.dtsi          | 6 +++---
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arc/boot/dts/abilis_tb10x.dtsi b/arch/arc/boot/dts/abilis_tb10x.dtsi
-index 3121536b25a3..593cdd96535d 100644
---- a/arch/arc/boot/dts/abilis_tb10x.dtsi
-+++ b/arch/arc/boot/dts/abilis_tb10x.dtsi
-@@ -178,7 +178,7 @@
- 			clocks = <&ahb_clk>;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 3aee6123d161..3f5ff76109be 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -51,7 +51,7 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
+-		ramoops@0x21f00000 {
++		ramoops@21f00000 {
+ 			compatible = "ramoops";
+ 			reg = <0x0 0x21f00000 0x0 0x00100000>;
+ 			record-size	= <0x00020000>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 26396ef53bde..0446b122a6e2 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -249,7 +249,7 @@
+ 			reg = <0 0x10005000 0 0x1000>;
  		};
  
--		spi0: spi@0xFE010000 {
-+		spi0: spi@fe010000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			cell-index = <0>;
-@@ -189,7 +189,7 @@
- 			interrupts = <26 8>;
- 			clocks = <&ahb_clk>;
- 		};
--		spi1: spi@0xFE011000 {
-+		spi1: spi@fe011000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			cell-index = <1>;
-diff --git a/arch/arc/boot/dts/axc001.dtsi b/arch/arc/boot/dts/axc001.dtsi
-index fdc266504ada..37be3bf03ad6 100644
---- a/arch/arc/boot/dts/axc001.dtsi
-+++ b/arch/arc/boot/dts/axc001.dtsi
-@@ -41,7 +41,7 @@
- 		 * this GPIO block ORs all interrupts on CPU card (creg,..)
- 		 * to uplink only 1 IRQ to ARC core intc
- 		 */
--		dw-apb-gpio@0x2000 {
-+		dw-apb-gpio@2000 {
- 			compatible = "snps,dw-apb-gpio";
- 			reg = < 0x2000 0x80 >;
- 			#address-cells = <1>;
-@@ -60,7 +60,7 @@
- 			};
+-		pio: pinctrl@0x10005000 {
++		pio: pinctrl@10005000 {
+ 			compatible = "mediatek,mt8173-pinctrl";
+ 			reg = <0 0x1000b000 0 0x1000>;
+ 			mediatek,pctl-regmap = <&syscfg_pctl_a>;
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 492a011f14f6..1c8f1b86472d 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -140,16 +140,16 @@
  		};
  
--		debug_uart: dw-apb-uart@0x5000 {
-+		debug_uart: dw-apb-uart@5000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x5000 0x100>;
- 			clock-frequency = <33333000>;
-@@ -88,7 +88,7 @@
- 	 * avoid duplicating the MB dtsi file given that IRQ from
- 	 * this intc to cpu intc are different for axs101 and axs103
- 	 */
--	mb_intc: dw-apb-ictl@0xe0012000 {
-+	mb_intc: dw-apb-ictl@e0012000 {
- 		#interrupt-cells = <1>;
- 		compatible = "snps,dw-apb-ictl";
- 		reg = < 0x0 0xe0012000 0x0 0x200 >;
-diff --git a/arch/arc/boot/dts/axc003.dtsi b/arch/arc/boot/dts/axc003.dtsi
-index 4e6e9f57e790..f33694d08e1f 100644
---- a/arch/arc/boot/dts/axc003.dtsi
-+++ b/arch/arc/boot/dts/axc003.dtsi
-@@ -47,7 +47,7 @@
- 		 * this GPIO block ORs all interrupts on CPU card (creg,..)
- 		 * to uplink only 1 IRQ to ARC core intc
- 		 */
--		dw-apb-gpio@0x2000 {
-+		dw-apb-gpio@2000 {
- 			compatible = "snps,dw-apb-gpio";
- 			reg = < 0x2000 0x80 >;
- 			#address-cells = <1>;
-@@ -66,7 +66,7 @@
- 			};
- 		};
- 
--		debug_uart: dw-apb-uart@0x5000 {
-+		debug_uart: dw-apb-uart@5000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x5000 0x100>;
- 			clock-frequency = <33333000>;
-@@ -98,7 +98,7 @@
- 	 * avoid duplicating the MB dtsi file given that IRQ from
- 	 * this intc to cpu intc are different for axs101 and axs103
- 	 */
--	mb_intc: dw-apb-ictl@0xe0012000 {
-+	mb_intc: dw-apb-ictl@e0012000 {
- 		#interrupt-cells = <1>;
- 		compatible = "snps,dw-apb-ictl";
- 		reg = < 0x0 0xe0012000 0x0 0x200 >;
-diff --git a/arch/arc/boot/dts/axc003_idu.dtsi b/arch/arc/boot/dts/axc003_idu.dtsi
-index 63954a8b0100..256790bbd4a0 100644
---- a/arch/arc/boot/dts/axc003_idu.dtsi
-+++ b/arch/arc/boot/dts/axc003_idu.dtsi
-@@ -54,7 +54,7 @@
- 		 * this GPIO block ORs all interrupts on CPU card (creg,..)
- 		 * to uplink only 1 IRQ to ARC core intc
- 		 */
--		dw-apb-gpio@0x2000 {
-+		dw-apb-gpio@2000 {
- 			compatible = "snps,dw-apb-gpio";
- 			reg = < 0x2000 0x80 >;
- 			#address-cells = <1>;
-@@ -73,7 +73,7 @@
- 			};
- 		};
- 
--		debug_uart: dw-apb-uart@0x5000 {
-+		debug_uart: dw-apb-uart@5000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x5000 0x100>;
- 			clock-frequency = <33333000>;
-@@ -104,7 +104,7 @@
- 	 * avoid duplicating the MB dtsi file given that IRQ from
- 	 * this intc to cpu intc are different for axs101 and axs103
- 	 */
--	mb_intc: dw-apb-ictl@0xe0012000 {
-+	mb_intc: dw-apb-ictl@e0012000 {
- 		#interrupt-cells = <1>;
- 		compatible = "snps,dw-apb-ictl";
- 		reg = < 0x0 0xe0012000 0x0 0x200 >;
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index 74d070cd3c13..e4c64c05e32f 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -68,7 +68,7 @@
- 			};
- 		};
- 
--		ethernet@0x18000 {
-+		ethernet@18000 {
- 			#interrupt-cells = <1>;
- 			compatible = "snps,dwmac";
- 			reg = < 0x18000 0x2000 >;
-@@ -83,13 +83,13 @@
- 			reset-names = "stmmaceth";
- 		};
- 
--		ehci@0x40000 {
-+		ehci@40000 {
- 			compatible = "generic-ehci";
- 			reg = < 0x40000 0x100 >;
- 			interrupts = < 8 >;
- 		};
- 
--		ohci@0x60000 {
-+		ohci@60000 {
- 			compatible = "generic-ohci";
- 			reg = < 0x60000 0x100 >;
- 			interrupts = < 8 >;
-@@ -113,7 +113,7 @@
- 		 * dw_mci_pltfm_prepare_command() is used in generic platform
- 		 * code.
- 		 */
--		mmc@0x15000 {
-+		mmc@15000 {
- 			compatible = "altr,socfpga-dw-mshc";
- 			reg = < 0x15000 0x400 >;
- 			fifo-depth = < 16 >;
-@@ -124,7 +124,7 @@
- 			bus-width = < 4 >;
- 		};
- 
--		uart@0x20000 {
-+		uart@20000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x20000 0x100>;
- 			clock-frequency = <33333333>;
-@@ -134,7 +134,7 @@
- 			reg-io-width = <4>;
- 		};
- 
--		uart@0x21000 {
-+		uart@21000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x21000 0x100>;
- 			clock-frequency = <33333333>;
-@@ -145,7 +145,7 @@
- 		};
- 
- 		/* UART muxed with USB data port (ttyS3) */
--		uart@0x22000 {
-+		uart@22000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x22000 0x100>;
- 			clock-frequency = <33333333>;
-@@ -155,7 +155,7 @@
- 			reg-io-width = <4>;
- 		};
- 
--		i2c@0x1d000 {
-+		i2c@1d000 {
- 			compatible = "snps,designware-i2c";
- 			reg = <0x1d000 0x100>;
- 			clock-frequency = <400000>;
-@@ -172,7 +172,7 @@
- 			#sound-dai-cells = <0>;
- 		};
- 
--		i2c@0x1f000 {
-+		i2c@1f000 {
- 			compatible = "snps,designware-i2c";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -213,13 +213,13 @@
- 				};
+ 		agnoc@0 {
+-			qcom,pcie@00600000 {
++			qcom,pcie@600000 {
+ 				perst-gpio = <&msmgpio 35 GPIO_ACTIVE_LOW>;
  			};
  
--			eeprom@0x54{
-+			eeprom@54 {
- 				compatible = "24c01";
- 				reg = <0x54>;
- 				pagesize = <0x8>;
+-			qcom,pcie@00608000 {
++			qcom,pcie@608000 {
+ 				status = "okay";
+ 				perst-gpio = <&msmgpio 130 GPIO_ACTIVE_LOW>;
  			};
  
--			eeprom@0x57{
-+			eeprom@57 {
- 				compatible = "24c04";
- 				reg = <0x57>;
- 				pagesize = <0x8>;
-diff --git a/arch/arc/boot/dts/vdk_axc003.dtsi b/arch/arc/boot/dts/vdk_axc003.dtsi
-index 0fd6ba985b16..84e8766c8ca2 100644
---- a/arch/arc/boot/dts/vdk_axc003.dtsi
-+++ b/arch/arc/boot/dts/vdk_axc003.dtsi
-@@ -36,7 +36,7 @@
- 			#interrupt-cells = <1>;
- 		};
- 
--		debug_uart: dw-apb-uart@0x5000 {
-+		debug_uart: dw-apb-uart@5000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x5000 0x100>;
- 			clock-frequency = <2403200>;
-@@ -49,7 +49,7 @@
- 
- 	};
- 
--	mb_intc: dw-apb-ictl@0xe0012000 {
-+	mb_intc: dw-apb-ictl@e0012000 {
- 		#interrupt-cells = <1>;
- 		compatible = "snps,dw-apb-ictl";
- 		reg = < 0xe0012000 0x200 >;
-diff --git a/arch/arc/boot/dts/vdk_axc003_idu.dtsi b/arch/arc/boot/dts/vdk_axc003_idu.dtsi
-index 28956f9a9f3d..eb7e705e8a27 100644
---- a/arch/arc/boot/dts/vdk_axc003_idu.dtsi
-+++ b/arch/arc/boot/dts/vdk_axc003_idu.dtsi
-@@ -44,7 +44,7 @@
- 			#interrupt-cells = <1>;
- 		};
- 
--		debug_uart: dw-apb-uart@0x5000 {
-+		debug_uart: dw-apb-uart@5000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x5000 0x100>;
- 			clock-frequency = <2403200>;
-@@ -57,7 +57,7 @@
- 
- 	};
- 
--	mb_intc: dw-apb-ictl@0xe0012000 {
-+	mb_intc: dw-apb-ictl@e0012000 {
- 		#interrupt-cells = <1>;
- 		compatible = "snps,dw-apb-ictl";
- 		reg = < 0xe0012000 0x200 >;
-diff --git a/arch/arc/boot/dts/vdk_axs10x_mb.dtsi b/arch/arc/boot/dts/vdk_axs10x_mb.dtsi
-index 48bb4b4cd234..f21ade2931eb 100644
---- a/arch/arc/boot/dts/vdk_axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/vdk_axs10x_mb.dtsi
-@@ -36,7 +36,7 @@
+-			qcom,pcie@00610000 {
++			qcom,pcie@610000 {
+ 				status = "okay";
+ 				perst-gpio = <&msmgpio 114 GPIO_ACTIVE_LOW>;
  			};
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 4b2afcc4fdf4..0a6f7952bbb1 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -840,7 +840,7 @@
+ 			#size-cells = <1>;
+ 			ranges;
  
--		ethernet@0x18000 {
-+		ethernet@18000 {
- 			#interrupt-cells = <1>;
- 			compatible = "snps,dwmac";
- 			reg = < 0x18000 0x2000 >;
-@@ -49,13 +49,13 @@
- 			clock-names = "stmmaceth";
- 		};
+-			pcie0: qcom,pcie@00600000 {
++			pcie0: qcom,pcie@600000 {
+ 				compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
+ 				status = "disabled";
+ 				power-domains = <&gcc PCIE0_GDSC>;
+@@ -893,7 +893,7 @@
  
--		ehci@0x40000 {
-+		ehci@40000 {
- 			compatible = "generic-ehci";
- 			reg = < 0x40000 0x100 >;
- 			interrupts = < 8 >;
- 		};
+ 			};
  
--		uart@0x20000 {
-+		uart@20000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x20000 0x100>;
- 			clock-frequency = <2403200>;
-@@ -65,7 +65,7 @@
- 			reg-io-width = <4>;
- 		};
+-			pcie1: qcom,pcie@00608000 {
++			pcie1: qcom,pcie@608000 {
+ 				compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
+ 				power-domains = <&gcc PCIE1_GDSC>;
+ 				bus-range = <0x00 0xff>;
+@@ -946,7 +946,7 @@
+ 						"bus_slave";
+ 			};
  
--		uart@0x21000 {
-+		uart@21000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x21000 0x100>;
- 			clock-frequency = <2403200>;
-@@ -75,7 +75,7 @@
- 			reg-io-width = <4>;
- 		};
- 
--		uart@0x22000 {
-+		uart@22000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x22000 0x100>;
- 			clock-frequency = <2403200>;
-@@ -101,7 +101,7 @@
- 			interrupt-names = "arc_ps2_irq";
- 		};
- 
--		mmc@0x15000 {
-+		mmc@15000 {
- 			compatible = "snps,dw-mshc";
- 			reg = <0x15000 0x400>;
- 			fifo-depth = <1024>;
-@@ -119,7 +119,7 @@
- 	 * This node is intentionally put outside of MB above becase
- 	 * it maps areas outside of MB's 0xEz-0xFz.
- 	 */
--	uio_ev: uio@0xD0000000 {
-+	uio_ev: uio@d0000000 {
- 		compatible = "generic-uio";
- 		reg = <0xD0000000 0x2000 0xD1000000 0x2000 0x90000000 0x10000000 0xC0000000 0x10000000>;
- 		reg-names = "ev_gsa", "ev_ctrl", "ev_shared_mem", "ev_code_mem";
+-			pcie2: qcom,pcie@00610000 {
++			pcie2: qcom,pcie@610000 {
+ 				compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
+ 				power-domains = <&gcc PCIE2_GDSC>;
+ 				bus-range = <0x00 0xff>;
 -- 
 2.11.0
