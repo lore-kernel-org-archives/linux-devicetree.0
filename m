@@ -1,61 +1,53 @@
-From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 07/11] thermal: armada: Update Kconfig and module
- description
-Date: Thu, 14 Dec 2017 12:17:06 +0100
-Message-ID: <20171214121706.529f9652@xps13>
-References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
-        <20171214103011.24713-8-miquel.raynal@free-electrons.com>
-        <87po7ho93k.fsf@free-electrons.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/3] arm: dts: mt2701: Add reset-cells
+Date: Thu, 14 Dec 2017 12:17:26 +0100
+Message-ID: <96d7a821-9de0-2e6d-55fd-bcc894d9f991@gmail.com>
+References: <20171201120708.30129-1-matthias.bgg@gmail.com>
+ <20171201120708.30129-3-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87po7ho93k.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171201120708.30129-3-matthias.bgg@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: sboyd@codeaurora.org, sean.wang@mediatek.com, chen.zhong@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
 
-On Thu, 14 Dec 2017 12:13:51 +0100
-Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> Hi Miquel,
->  
->  On jeu., déc. 14 2017, Miquel Raynal
-> <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On 12/01/2017 01:07 PM, Matthias Brugger wrote:
+> The hifsys and ethsys needs the definition of the reset-cells
+> property. Fix this.
 > 
-> > Update Armada thermal driver Kconfig entry as well as the driver's
-> > MODULE_DESCRIPTION content, now that 64-bit SoCs are also supported,
-> > eg. Armada 7K and Armada 8K.
-> >
-> > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  drivers/thermal/Kconfig          | 4 ++--
-> >  drivers/thermal/armada_thermal.c | 2 +-
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> > index 315ae2926e20..44cad046f272 100644
-> > --- a/drivers/thermal/Kconfig
-> > +++ b/drivers/thermal/Kconfig
-> > @@ -301,13 +301,13 @@ config DB8500_THERMAL
-> >  	  thermal zone if trip points reached.
-> >  
-> >  config ARMADA_THERMAL
-> > -	tristate "Armada 370/XP thermal management"
-> > +	tristate "Armada 370/XP/7K/8K thermal management"  
-> if you want to be exhaustive you should also add Armada 375 and 38x.
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> ---
+>  arch/arm/boot/dts/mt2701.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index 965ddfbc9953..05557fce0f1d 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -604,6 +604,7 @@
+>  		compatible = "mediatek,mt2701-hifsys", "syscon";
+>  		reg = <0 0x1a000000 0 0x1000>;
+>  		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+>  	};
+>  
+>  	usb0: usb@1a1c0000 {
+> @@ -688,6 +689,7 @@
+>  		compatible = "mediatek,mt2701-ethsys", "syscon";
+>  		reg = <0 0x1b000000 0 0x1000>;
+>  		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+>  	};
+>  
+>  	eth: ethernet@1b100000 {
+> 
 
-That is right, both are missing from the description, but wouldn't it
-be better to just state "Armada SoCs" instead of patching that file
-everythime a new SoC reuses this IP?
+2 and 3 pushed to v4.15-next/dts32
 
-Thanks,
-Miquèl
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
