@@ -1,148 +1,124 @@
-From: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
-Subject: [PATCH v5] i2c: Add support for NXP PCA984x family.
-Date: Thu, 14 Dec 2017 12:20:03 +0100
-Message-ID: <20171214112003.13701-1-adrian.fiergolski@cern.ch>
-References: <990e4a1f-a9ac-c899-0075-ae3211ff9475@axentia.se>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v3 09/11] thermal: armada: Wait sensors validity before exiting the init callback
+Date: Thu, 14 Dec 2017 12:23:11 +0100
+Message-ID: <87ind9o8o0.fsf@free-electrons.com>
+References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
+        <20171214103011.24713-10-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <990e4a1f-a9ac-c899-0075-ae3211ff9475-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171214103011.24713-10-miquel.raynal@free-electrons.com>
+        (Miquel Raynal's message of "Thu, 14 Dec 2017 11:30:09 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@free-electrons.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch extends the current i2c-mux-pca954x driver and adds support for
-a newer PCA984x family of the I2C switches and multiplexers from NXP.
+Hi Miquel,
+ 
+ On jeu., déc. 14 2017, Miquel Raynal <miquel.raynal@free-electrons.com> wrote:
 
-Signed-off-by: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
----
-I have applied recent Peter's comments.
-I am waiting for comments from device-tree folks regarding compatibles.
+> The thermal core will check for sensors validity right after the
+> initialization callback has returned. As the initialization routine make
+> a reset, the sensors are not ready immediately and the core spawns an
+> error in the dmesg. Avoid this annoying situation by polling on the
+> validity bit before exiting from these routines. This also avoid the use
+> of blind sleeps.
 
-.../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |  5 ++-
- drivers/i2c/muxes/Kconfig                          |  6 ++--
- drivers/i2c/muxes/i2c-mux-pca954x.c                | 36 +++++++++++++++++++---
- 3 files changed, 39 insertions(+), 8 deletions(-)
+You only modified the armada 380 and ap806 init function. Does it means
+that this feature is not supported on the other variant?
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-index aa097045a10e..b428bc0d81b1 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-@@ -1,10 +1,13 @@
- * NXP PCA954x I2C bus switch
- 
-+The driver supports NXP PCA954x and PCA984x I2C mux/switch devices.
-+
- Required Properties:
- 
-   - compatible: Must contain one of the following.
-     "nxp,pca9540", "nxp,pca9542", "nxp,pca9543", "nxp,pca9544",
--    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548"
-+    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548",
-+    "nxp,pca9846", "nxp,pca9847", "nxp,pca9848", "nxp,pca9849"
- 
-   - reg: The I2C address of the device.
- 
-diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
-index 0f5c8fc36625..52a4a922e7e6 100644
---- a/drivers/i2c/muxes/Kconfig
-+++ b/drivers/i2c/muxes/Kconfig
-@@ -64,11 +64,11 @@ config I2C_MUX_PCA9541
- 	  will be called i2c-mux-pca9541.
- 
- config I2C_MUX_PCA954x
--	tristate "Philips PCA954x I2C Mux/switches"
-+	tristate "NXP PCA954x and PCA984x I2C Mux/switches"
- 	depends on GPIOLIB || COMPILE_TEST
- 	help
--	  If you say yes here you get support for the Philips PCA954x
--	  I2C mux/switch devices.
-+	  If you say yes here you get support for the NXP PCA954x
-+	  and PCA984x I2C mux/switch devices.
- 
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-mux-pca954x.
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index 2ca068d8b92d..9796bd7d61d5 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -4,11 +4,11 @@
-  * Copyright (c) 2008-2009 Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>
-  * Copyright (c) 2008-2009 Eurotech S.p.A. <info-ymFC7zkAqBI1GQ1Ptb7lUw@public.gmane.org>
-  *
-- * This module supports the PCA954x series of I2C multiplexer/switch chips
-- * made by Philips Semiconductors.
-+ * This module supports the PCA954x and PCA954x series of I2C multiplexer/switch
-+ * chips made by NXP Semiconductors.
-  * This includes the:
-- *	 PCA9540, PCA9542, PCA9543, PCA9544, PCA9545, PCA9546, PCA9547
-- *	 and PCA9548.
-+ *	 PCA9540, PCA9542, PCA9543, PCA9544, PCA9545, PCA9546, PCA9547,
-+ *	 PCA9548, PCA9846, PCA9847, PCA9848 and PCA9849.
-  *
-  * These chips are all controlled via the I2C bus itself, and all have a
-  * single 8-bit register. The upstream "parent" bus fans out to two,
-@@ -63,6 +63,10 @@ enum pca_type {
- 	pca_9546,
- 	pca_9547,
- 	pca_9548,
-+	pca_9846,
-+	pca_9847,
-+	pca_9848,
-+	pca_9849,
- };
- 
- struct chip_desc {
-@@ -129,6 +133,22 @@ static const struct chip_desc chips[] = {
- 		.nchans = 8,
- 		.muxtype = pca954x_isswi,
- 	},
-+	[pca_9846] = {
-+		.nchans = 4,
-+		.muxtype = pca954x_isswi,
-+	},
-+	[pca_9847] = {
-+		.nchans = 8,
-+		.muxtype = pca954x_ismux,
-+	},
-+	[pca_9848] = {
-+		.nchans = 8,
-+		.muxtype = pca954x_isswi,
-+	},
-+	[pca_9849] = {
-+		.nchans = 4,
-+		.muxtype = pca954x_ismux,
-+	},
- };
- 
- static const struct i2c_device_id pca954x_id[] = {
-@@ -140,6 +160,10 @@ static const struct i2c_device_id pca954x_id[] = {
- 	{ "pca9546", pca_9546 },
- 	{ "pca9547", pca_9547 },
- 	{ "pca9548", pca_9548 },
-+	{ "pca9846", pca_9846 },
-+	{ "pca9847", pca_9847 },
-+	{ "pca9848", pca_9848 },
-+	{ "pca9849", pca_9849 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, pca954x_id);
-@@ -154,6 +178,10 @@ static const struct of_device_id pca954x_of_match[] = {
- 	{ .compatible = "nxp,pca9546", .data = &chips[pca_9546] },
- 	{ .compatible = "nxp,pca9547", .data = &chips[pca_9547] },
- 	{ .compatible = "nxp,pca9548", .data = &chips[pca_9548] },
-+	{ .compatible = "nxp,pca9846", .data = &chips[pca_9846] },
-+	{ .compatible = "nxp,pca9847", .data = &chips[pca_9847] },
-+	{ .compatible = "nxp,pca9848", .data = &chips[pca_9848] },
-+	{ .compatible = "nxp,pca9849", .data = &chips[pca_9849] },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, pca954x_of_match);
+Gregory
+
+>
+> Suggested-by: David Sniatkiwicz <davidsn@marvell.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
+> ---
+>  drivers/thermal/armada_thermal.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
+> index be141ca53e83..1c4122f7377c 100644
+> --- a/drivers/thermal/armada_thermal.c
+> +++ b/drivers/thermal/armada_thermal.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/of_device.h>
+>  #include <linux/thermal.h>
+> +#include <linux/iopoll.h>
+>  
+>  /* Thermal Manager Control and Status Register */
+>  #define PMU_TDC0_SW_RST_MASK		(0x1 << 1)
+> @@ -59,6 +60,9 @@
+>  #define CONTROL1_EXT_TSEN_SW_RESET	BIT(7)
+>  #define CONTROL1_EXT_TSEN_HW_RESETn	BIT(8)
+>  
+> +#define STATUS_POLL_PERIOD_US		1000
+> +#define STATUS_POLL_TIMEOUT_US		100000
+> +
+>  struct armada_thermal_data;
+>  
+>  /* Marvell EBU Thermal Sensor Dev Structure */
+> @@ -154,6 +158,16 @@ static void armada375_init_sensor(struct platform_device *pdev,
+>  	msleep(50);
+>  }
+>  
+> +static void armada_wait_sensor_validity(struct armada_thermal_priv *priv)
+> +{
+> +	u32 reg;
+> +
+> +	readl_relaxed_poll_timeout(priv->status, reg,
+> +				   reg & priv->data->is_valid_bit,
+> +				   STATUS_POLL_PERIOD_US,
+> +				   STATUS_POLL_TIMEOUT_US);
+> +}
+> +
+>  static void armada380_init_sensor(struct platform_device *pdev,
+>  				  struct armada_thermal_priv *priv)
+>  {
+> @@ -163,7 +177,6 @@ static void armada380_init_sensor(struct platform_device *pdev,
+>  	reg |= CONTROL1_EXT_TSEN_HW_RESETn;
+>  	reg &= ~CONTROL1_EXT_TSEN_SW_RESET;
+>  	writel(reg, priv->control1);
+> -	msleep(10);
+>  
+>  	/* Set Tsen Tc Trim to correct default value (errata #132698) */
+>  	if (priv->control0) {
+> @@ -171,8 +184,10 @@ static void armada380_init_sensor(struct platform_device *pdev,
+>  		reg &= ~CONTROL0_TSEN_TC_TRIM_MASK;
+>  		reg |= CONTROL0_TSEN_TC_TRIM_VAL;
+>  		writel(reg, priv->control0);
+> -		msleep(10);
+>  	}
+> +
+> +	/* Wait the sensors to be valid or the core will warn the user */
+> +	armada_wait_sensor_validity(priv);
+>  }
+>  
+>  static void armada_ap806_init_sensor(struct platform_device *pdev,
+> @@ -190,7 +205,9 @@ static void armada_ap806_init_sensor(struct platform_device *pdev,
+>  	reg &= ~CONTROL0_TSEN_RESET;
+>  	reg |= CONTROL0_TSEN_START | CONTROL0_TSEN_ENABLE;
+>  	writel(reg, priv->control0);
+> -	msleep(10);
+> +
+> +	/* Wait the sensors to be valid or the core will warn the user */
+> +	armada_wait_sensor_validity(priv);
+>  }
+>  
+>  static bool armada_is_valid(struct armada_thermal_priv *priv)
+> -- 
+> 2.11.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 -- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
