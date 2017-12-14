@@ -1,7 +1,7 @@
 From: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: r8a7791: Correct critical CPU temperature
-Date: Thu, 14 Dec 2017 09:08:40 +0000
-Message-ID: <1513242521-11236-3-git-send-email-chris.paterson2@renesas.com>
+Subject: [PATCH 1/3] ARM: dts: r8a7790: Correct critical CPU temperature
+Date: Thu, 14 Dec 2017 09:08:39 +0000
+Message-ID: <1513242521-11236-2-git-send-email-chris.paterson2@renesas.com>
 References: <1513242521-11236-1-git-send-email-chris.paterson2@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,24 +13,24 @@ To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.
 Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The R-Car M2W hardware manual states that Tc = –40°C to +105°C. The
+The R-Car H2 hardware manual states that Tc = –40°C to +105°C. The
 thermal sensor has an accuracy of ±5°C and there can be a temperature
 difference of 1 or 2 degrees between Tjmax and the thermal sensor due
 to the location of the latter.
 
 This means that 95°C is a safer value to use.
 
-Fixes: cac68a56e34b9810 ("ARM: dts: r8a7791: enable to use thermal-zone")
+Fixes: a8b805f3606f7af7 ("ARM: dts: r8a7790: enable to use thermal-zone")
 Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7791.dtsi | 2 +-
+ arch/arm/boot/dts/r8a7790.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index dfc1c406179fbf3a..008a260f86a565c6 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -92,7 +92,7 @@
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 450bfc0e9796a557..ed9a68538a554001 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -168,7 +168,7 @@
  
  			trips {
  				cpu-crit {
