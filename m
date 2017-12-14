@@ -1,52 +1,108 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v7 0/6] add clk controller driver for Meson-AXG SoC
-Date: Thu, 14 Dec 2017 11:03:46 +0100
-Message-ID: <1513245826.32163.7.camel@baylibre.com>
-References: <20171211141348.22048-1-yixun.lan@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171211141348.22048-1-yixun.lan@amlogic.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH net-next v6 0/2] add UniPhier AVE ethernet support
+Date: Thu, 14 Dec 2017 19:05:08 +0900
+Message-ID: <1513245910-15961-1-git-send-email-hayashi.kunihiko@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-12-11 at 22:13 +0800, Yixun Lan wrote:
-> Qiufang Dai (3):
->   clk: meson-axg: add clocks dt-bindings required header
->   clk: meson-axg: add clock controller drivers
->   arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
-> 
-> Yixun Lan (3):
->   clk: meson: make the spinlock naming more specific
->   dt-bindings: clock: add compatible variant for the Meson-AXG
->   arm64: dts: meson-axg: switch uart_ao clock to CLK81
-> 
->  .../bindings/clock/amlogic,gxbb-clkc.txt           |   7 +-
->  arch/arm64/Kconfig.platforms                       |   1 +
->  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts     |   2 +
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi         |  19 +-
->  drivers/clk/meson/Kconfig                          |   8 +
->  drivers/clk/meson/Makefile                         |   1 +
->  drivers/clk/meson/axg.c                            | 936 +++++++++++++++++++++
->  drivers/clk/meson/axg.h                            | 126 +++
->  drivers/clk/meson/clkc.h                           |   2 +-
->  drivers/clk/meson/gxbb.c                           | 112 +--
->  drivers/clk/meson/meson8b.c                        |  24 +-
->  include/dt-bindings/clock/axg-clkc.h               |  71 ++
->  12 files changed, 1234 insertions(+), 75 deletions(-)
->  create mode 100644 drivers/clk/meson/axg.c
->  create mode 100644 drivers/clk/meson/axg.h
->  create mode 100644 include/dt-bindings/clock/axg-clkc.h
+This series adds support for Socionext AVE ethernet controller implemented
+on UniPhier SoCs. This driver supports RGMII/RMII modes.
 
-Kevin, 
+v5: https://www.spinics.net/lists/netdev/msg471330.html
 
-I took the first 4 patches through clk-meson. I left the last 2 for you.
+The PHY patch included in v1 has already separated in:
+http://www.spinics.net/lists/netdev/msg454595.html
 
-I have applied the DT bindings update separately.
-Let me know if you have dependency on these new bindings and need a tag.
+Changes since v5:
+- replace license boilerplate with SPDX Identifier
+- remove inline directives and an unused function
 
-Cheers
-Jerome
+Changes since v4:
+- fix larger integer warning on AVE_PFMBYTE_MASK0
+
+Changes since v3:
+- remove checking dma address and use dma_set_mask() to restirct address
+- replace ave_mdio_busywait() with read_poll_timeout()
+- replace functions to access to registers with readl/writel() directly
+- replace a function to access to macaddr with ave_hw_write_macaddr()
+- change return value of ave_dma_map() to error value
+- move mdiobus_unregister() from ave_remove() to ave_uninit()
+- eliminate else block at the end of ave_dma_map()
+- add mask definitions for packet filter
+- sort bitmap definitions in descending order
+- add error check to some functions
+- rename and sort functions to clear sub-categories
+- fix error value consistency
+- remove unneeded initializers
+- change type of constant arrays
+
+Changes since v2:
+- replace clk_get() with devm_clk_get()
+- replace reset_control_get() with devm_reset_control_get_optional_shared()
+- add error return when the error occurs on the above *_get functions
+- sort soc data and compatible strings
+- remove clearly obvious comments
+- modify dt-bindings document consistent with these modifications
+
+Changes since v1:
+- add/remove devicetree properties and sub-node
+  - remove "internal-phy-interrupt" and "desc-bits" property
+  - add SoC data structures based on compatible strings
+  - add node operation to apply "mdio" sub-node
+- add support for features
+  - add support for {get,set}_pauseparam and pause frame operations
+  - add support for ndo_get_stats64 instead of ndo_get_stats
+- replace with desiable functions
+  - replace check for valid phy_mode with phy_interface{_mode}_is_rgmii()
+  - replace phy attach message with phy_attached_info()
+  - replace 32bit operation with {upper,lower}_32_bits() on ave_wdesc_addr()
+  - replace nway_reset and get_link with generic functions
+- move operations to proper functions
+  - move phy_start_aneg() to ndo_open,
+    and remove unnecessary PHY interrupt operations
+    See http://www.spinics.net/lists/netdev/msg454590.html
+  - move irq initialization and descriptor memory allocation to ndo_open
+  - move initialization of reset and clock and mdiobus to ndo_init
+- fix skbuffer operations
+  - fix skb alignment operations and add Rx buffer adjustment for descriptor
+    See http://www.spinics.net/lists/netdev/msg456014.html
+  - add error returns when dma_map_single() failed 
+- clean up code structures
+  - clean up wait-loop and wake-queue conditions
+  - add ave_wdesc_addr() and offset definitions
+  - add ave_macaddr_init() to clean up mac-address operation
+  - fix checking whether Tx entry is not enough
+  - fix supported features of phydev
+  - add necessary free/disable operations
+  - add phydev check on ave_{get,set}_wol()
+  - remove netif_carrier functions, phydev initializer, and Tx budget check
+- change obsolate codes
+  - replace ndev->{base_addr,irq} with the members of ave_private
+- rename goto labels and mask definitions, and remove unused codes
+
+Kunihiko Hayashi (2):
+  dt-bindings: net: add DT bindings for Socionext UniPhier AVE
+  net: ethernet: socionext: add AVE ethernet driver
+
+ .../bindings/net/socionext,uniphier-ave4.txt       |   48 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/socionext/Kconfig             |   22 +
+ drivers/net/ethernet/socionext/Makefile            |    5 +
+ drivers/net/ethernet/socionext/sni_ave.c           | 1727 ++++++++++++++++++++
+ 6 files changed, 1804 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
+ create mode 100644 drivers/net/ethernet/socionext/Kconfig
+ create mode 100644 drivers/net/ethernet/socionext/Makefile
+ create mode 100644 drivers/net/ethernet/socionext/sni_ave.c
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
