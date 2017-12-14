@@ -1,126 +1,39 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH v2 4/7] i3c: Add sysfs ABI spec
-Date: Thu, 14 Dec 2017 16:16:07 +0100
-Message-ID: <20171214151610.19153-5-boris.brezillon@free-electrons.com>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>
+From: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: Re: [v2,
+ 1/2] dt: bindings: add new dt entry for ath10k calibration variant
+Date: Thu, 14 Dec 2017 16:28:24 +0100
+Message-ID: <c17f0a577bcd41569831c4eb556d376e@euamsexm01a.eu.qualcomm.com>
+References: <20171208103742.3181-2-sven.eckelmann@openmesh.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171208103742.3181-2-sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ext.waldemar.rymarkiewicz-++hxYGjEMp0AvxtiuMwx3w@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document sysfs files/directories/symlinks exposed by the I3C subsystem.
+Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org> wrote:
 
-Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
----
-Changes in v2:
-- new patch
----
- Documentation/ABI/testing/sysfs-bus-i3c | 95 +++++++++++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-i3c
+> The bus + bmi-chip-id + bmi-board-id is not enough to identify the correct
+> board data file on QCA4019 based devices. Multiple different boards share
+> the same values. Only the original reference designs can currently be
+> identified and loaded from the board-2.bin. But these will not result in
+> the correct calibration data when combined with the pre-calibration data
+> from the device.
+> 
+> An additional "variant" information has to be provided (via SMBIOS or DT)
+> to select the correct board data for a design which was modified by an ODM.
+> 
+> Signed-off-by: Sven Eckelmann <sven.eckelmann-lv6y7wLVQPlWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Kalle Valo <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-i3c b/Documentation/ABI/testing/sysfs-bus-i3c
-new file mode 100644
-index 000000000000..5e88cc093e0e
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-i3c
-@@ -0,0 +1,95 @@
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		An I3C bus. This directory will contain one sub-directory per
-+		I3C device present on the bus.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/current_master
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		Expose the master that owns the bus (<bus-id>-<master-pid>) at
-+		the time this file is read. Note that bus ownership can change
-+		overtime, so there's no guarantee that when the read() call
-+		returns, the value returned is still valid.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/mode
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		I3C bus mode. Can be "pure", "mixed-fast" or "mixed-slow". See
-+		the I3C specification for a detailed description of what each
-+		of these modes implies.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/i3c_scl_frequency
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		The frequency (expressed in Hz) of the SCL signal when
-+		operating in I3C SDR mode.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/i2c_scl_frequency
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		The frequency (expressed in Hz) of the SCL signal when
-+		operating in I2C mode.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		An I3C device present on I3C bus identified by <bus-id>. Note
-+		that all devices are represented including the master driving
-+		the bus.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/address
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		Dynamic address assigned to device <bus-id>-<device-pid>. This
-+		address may change if the bus is re-initialized.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/bcr
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		BCR stands for Bus Characteristics Register and express the
-+		device capabilities in term of speed, maximum read/write
-+		length, etc. See the I3C specification for more details.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/dcr
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		DCR stands for Device Characteristics Register and express the
-+		device capabilities in term of exposed features. See the I3C
-+		specification for more details.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/pid
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		PID stands for Provisional ID and is used to uniquely identify
-+		a device on a bus. This PID contains information about the
-+		vendor, the part and an instance ID so that several devices of
-+		the same type can be connected on the same bus.
-+		See the I3C specification for more details.
-+
-+What:		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>/hdrcap
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		Expose the HDR (High Data Rate) capabilities of a device.
-+		Returns a list of supported HDR mode, each element is separated
-+		by space. Modes can be "hdr-ddr", "hdr-tsp" and "hdr-tsl".
-+		See the I3C specification for more details about these HDR
-+		modes.
-+
-+What:		/sys/bus/i3c/devices/<bus-id>-<device-pid>
-+KernelVersion:  4.16
-+Contact:	linux-i3c@vger.kernel.org
-+Description:
-+		These directories are just symbolic links to
-+		/sys/bus/i3c/devices/i3c-<bus-id>/<bus-id>-<device-pid>.
+2 patches applied to ath-next branch of ath.git, thanks.
+
+40fb0eab30ba dt: bindings: add new dt entry for ath10k calibration variant
+d06f26c5c8a4 ath10k: search DT for qcom,ath10k-calibration-variant
+
 -- 
-2.11.0
+https://patchwork.kernel.org/patch/10102249/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
