@@ -1,312 +1,72 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v4 3/4] cpufreq: Add DVFS support for Armada 37xx
-Date: Thu, 14 Dec 2017 16:00:05 +0100
-Message-ID: <20171214150006.25438-4-gregory.clement@free-electrons.com>
-References: <20171214150006.25438-1-gregory.clement@free-electrons.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171214150006.25438-1-gregory.clement@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Evan Wang <xswang@marvell.com>, Andre Heider <a.heider@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 06/12] mmc: sdhci_omap: Add support to set IODELAY values
+Date: Thu, 14 Dec 2017 07:04:57 -0800
+Message-ID: <20171214150457.GH14441@atomide.com>
+References: <20171214130941.26666-1-kishon@ti.com>
+ <20171214130941.26666-7-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171214130941.26666-7-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DVFS support for the Armada 37xx SoCs
+Hi,
 
-There are up to four CPU frequency loads for Armada 37xx controlled by
-the hardware.
+* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [171214 13:13]:
+> The data manual of J6/J6 Eco recommends to set different IODELAY values
+> depending on the mode in which the MMC/SD is enumerated in order to
+> ensure IO timings are met.
+> 
+> Add support to set the IODELAY values depending on the various MMC
+> modes using the pinctrl APIs.
+...
 
-This driver associates the CPU load level to a frequency, then the
-hardware will switch while selecting a load level.
+> --- a/drivers/mmc/host/sdhci-omap.c
+> +++ b/drivers/mmc/host/sdhci-omap.c
+> @@ -105,6 +109,20 @@ struct sdhci_omap_host {
+>  	struct sdhci_host	*host;
+>  	u8			bus_mode;
+>  	u8			power_mode;
+> +	u8			timing;
+> +	u8			flags;
+> +
+> +	struct pinctrl		*pinctrl;
+> +	struct pinctrl_state	*pinctrl_state;
+> +	struct pinctrl_state	*default_pinctrl_state;
+> +	struct pinctrl_state	*sdr104_pinctrl_state;
+> +	struct pinctrl_state	*hs200_1_8v_pinctrl_state;
+> +	struct pinctrl_state	*ddr50_pinctrl_state;
+> +	struct pinctrl_state	*sdr50_pinctrl_state;
+> +	struct pinctrl_state	*sdr25_pinctrl_state;
+> +	struct pinctrl_state	*sdr12_pinctrl_state;
+> +	struct pinctrl_state	*hs_pinctrl_state;
+> +	struct pinctrl_state	*ddr_1_8v_pinctrl_state;
+>  };
 
-The hardware also can associate a voltage for each level (AVS support)
-but it is not yet supported
 
-Tested-by: Andre Heider <a.heider@gmail.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/cpufreq/Kconfig.arm           |   7 +
- drivers/cpufreq/Makefile              |   1 +
- drivers/cpufreq/armada-37xx-cpufreq.c | 241 ++++++++++++++++++++++++++++++++++
- 3 files changed, 249 insertions(+)
- create mode 100644 drivers/cpufreq/armada-37xx-cpufreq.c
+You can make the pinctrl code more generic by allocating an array
+of states and have just:
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index beb8826afbb1..3a88e33b0cfe 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -18,6 +18,13 @@ config ACPI_CPPC_CPUFREQ
- 
- 	  If in doubt, say N.
- 
-+config ARM_ARMADA_37XX_CPUFREQ
-+	tristate "Armada 37xx CPUFreq support"
-+	depends on ARCH_MVEBU
-+	help
-+	  This adds the CPUFreq driver support for Marvell Armada 37xx SoCs.
-+	  The Armada 37xx PMU supports 4 frequency and VDD levels.
-+
- # big LITTLE core layer and glue drivers
- config ARM_BIG_LITTLE_CPUFREQ
- 	tristate "Generic ARM big LITTLE CPUfreq driver"
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index d762e76887e7..e07715ce8844 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -52,6 +52,7 @@ obj-$(CONFIG_ARM_BIG_LITTLE_CPUFREQ)	+= arm_big_little.o
- # LITTLE drivers, so that it is probed last.
- obj-$(CONFIG_ARM_DT_BL_CPUFREQ)		+= arm_big_little_dt.o
- 
-+obj-$(CONFIG_ARM_ARMADA_37XX_CPUFREQ)	+= armada-37xx-cpufreq.o
- obj-$(CONFIG_ARM_BRCMSTB_AVS_CPUFREQ)	+= brcmstb-avs-cpufreq.o
- obj-$(CONFIG_ACPI_CPPC_CPUFREQ)		+= cppc_cpufreq.o
- obj-$(CONFIG_ARCH_DAVINCI)		+= davinci-cpufreq.o
-diff --git a/drivers/cpufreq/armada-37xx-cpufreq.c b/drivers/cpufreq/armada-37xx-cpufreq.c
-new file mode 100644
-index 000000000000..c6ebc88a7d8d
---- /dev/null
-+++ b/drivers/cpufreq/armada-37xx-cpufreq.c
-@@ -0,0 +1,241 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * CPU frequency scaling support for Armada 37xx platform.
-+ *
-+ * Copyright (C) 2017 Marvell
-+ *
-+ * Gregory CLEMENT <gregory.clement@free-electrons.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/cpu.h>
-+#include <linux/cpufreq.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+/* Power management in North Bridge register set */
-+#define ARMADA_37XX_NB_L0L1	0x18
-+#define ARMADA_37XX_NB_L2L3	0x1C
-+#define  ARMADA_37XX_NB_TBG_DIV_OFF	13
-+#define  ARMADA_37XX_NB_TBG_DIV_MASK	0x7
-+#define  ARMADA_37XX_NB_CLK_SEL_OFF	11
-+#define  ARMADA_37XX_NB_CLK_SEL_MASK	0x1
-+#define  ARMADA_37XX_NB_CLK_SEL_TBG	0x1
-+#define  ARMADA_37XX_NB_TBG_SEL_OFF	9
-+#define  ARMADA_37XX_NB_TBG_SEL_MASK	0x3
-+#define  ARMADA_37XX_NB_VDD_SEL_OFF	6
-+#define  ARMADA_37XX_NB_VDD_SEL_MASK	0x3
-+#define  ARMADA_37XX_NB_CONFIG_SHIFT	16
-+#define ARMADA_37XX_NB_DYN_MOD	0x24
-+#define  ARMADA_37XX_NB_CLK_SEL_EN	BIT(26)
-+#define  ARMADA_37XX_NB_TBG_EN		BIT(28)
-+#define  ARMADA_37XX_NB_DIV_EN		BIT(29)
-+#define  ARMADA_37XX_NB_VDD_EN		BIT(30)
-+#define  ARMADA_37XX_NB_DFS_EN		BIT(31)
-+#define ARMADA_37XX_NB_CPU_LOAD 0x30
-+#define  ARMADA_37XX_NB_CPU_LOAD_MASK	0x3
-+#define  ARMADA_37XX_DVFS_LOAD_0	0
-+#define  ARMADA_37XX_DVFS_LOAD_1	1
-+#define  ARMADA_37XX_DVFS_LOAD_2	2
-+#define  ARMADA_37XX_DVFS_LOAD_3	3
-+
-+/*
-+ * On Armada 37xx the Power management manages 4 level of CPU load,
-+ * each level can be associated with a CPU clock source, a CPU
-+ * divider, a VDD level, etc...
-+ */
-+#define LOAD_LEVEL_NR	4
-+
-+struct armada_37xx_dvfs {
-+	u32 cpu_freq_max;
-+	u8 divider[LOAD_LEVEL_NR];
-+};
-+
-+static struct armada_37xx_dvfs armada_37xx_dvfs[] = {
-+	{.cpu_freq_max = 1200*1000*1000, .divider = {1, 2, 4, 6} },
-+	{.cpu_freq_max = 1000*1000*1000, .divider = {1, 2, 4, 5} },
-+	{.cpu_freq_max = 800*1000*1000,  .divider = {1, 2, 3, 4} },
-+	{.cpu_freq_max = 600*1000*1000,  .divider = {2, 4, 5, 6} },
-+};
-+
-+static struct armada_37xx_dvfs *armada_37xx_cpu_freq_info_get(u32 freq)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(armada_37xx_dvfs); i++) {
-+		if (freq == armada_37xx_dvfs[i].cpu_freq_max)
-+			return &armada_37xx_dvfs[i];
-+	}
-+
-+	pr_err("Unsupported CPU frequency %d MHz\n", freq/1000000);
-+	return NULL;
-+}
-+
-+/*
-+ * Setup the four level managed by the hardware. Once the four level
-+ * will be configured then the DVFS will be enabled.
-+ */
-+static void __init armada37xx_cpufreq_dvfs_setup(struct regmap *base,
-+						 struct clk *clk, u8 *divider)
-+{
-+	int load_lvl;
-+	struct clk *parent;
-+
-+	for (load_lvl = 0; load_lvl < LOAD_LEVEL_NR; load_lvl++) {
-+		unsigned int reg, mask, val, offset = 0;
-+
-+		if (load_lvl <= ARMADA_37XX_DVFS_LOAD_1)
-+			reg = ARMADA_37XX_NB_L0L1;
-+		else
-+			reg = ARMADA_37XX_NB_L2L3;
-+
-+		if (load_lvl == ARMADA_37XX_DVFS_LOAD_0 ||
-+		    load_lvl == ARMADA_37XX_DVFS_LOAD_2)
-+			offset += ARMADA_37XX_NB_CONFIG_SHIFT;
-+
-+		/* Set cpu clock source, for all the level we use TBG */
-+		val = ARMADA_37XX_NB_CLK_SEL_TBG << ARMADA_37XX_NB_CLK_SEL_OFF;
-+		mask = (ARMADA_37XX_NB_CLK_SEL_MASK
-+			<< ARMADA_37XX_NB_CLK_SEL_OFF);
-+
-+		/*
-+		 * Set cpu divider based on the pre-computed array in
-+		 * order to have balanced step.
-+		 */
-+		val |= divider[load_lvl] << ARMADA_37XX_NB_TBG_DIV_OFF;
-+		mask |= (ARMADA_37XX_NB_TBG_DIV_MASK
-+			<< ARMADA_37XX_NB_TBG_DIV_OFF);
-+
-+		/* Set VDD divider which is actually the load level. */
-+		val |= load_lvl << ARMADA_37XX_NB_VDD_SEL_OFF;
-+		mask |= (ARMADA_37XX_NB_VDD_SEL_MASK
-+			<< ARMADA_37XX_NB_VDD_SEL_OFF);
-+
-+		val <<= offset;
-+		mask <<= offset;
-+
-+		regmap_update_bits(base, reg, mask, val);
-+	}
-+
-+	/*
-+	 * Set cpu clock source, for all the level we keep the same
-+	 * clock source that the one already configured. For this one
-+	 * we need to use the clock framework
-+	 */
-+	parent = clk_get_parent(clk);
-+	clk_set_parent(clk, parent);
-+}
-+
-+static void __init armada37xx_cpufreq_disable_dvfs(struct regmap *base)
-+{
-+	unsigned int reg = ARMADA_37XX_NB_DYN_MOD,
-+		mask = ARMADA_37XX_NB_DFS_EN;
-+
-+	regmap_update_bits(base, reg, mask, 0);
-+}
-+
-+static void __init armada37xx_cpufreq_enable_dvfs(struct regmap *base)
-+{
-+	unsigned int val, reg = ARMADA_37XX_NB_CPU_LOAD,
-+		mask = ARMADA_37XX_NB_CPU_LOAD_MASK;
-+
-+	/* Start with the highest load (0) */
-+	val = ARMADA_37XX_DVFS_LOAD_0;
-+	regmap_update_bits(base, reg, mask, val);
-+
-+	/* Now enable DVFS for the CPUs */
-+	reg = ARMADA_37XX_NB_DYN_MOD;
-+	mask =	ARMADA_37XX_NB_CLK_SEL_EN | ARMADA_37XX_NB_TBG_EN |
-+		ARMADA_37XX_NB_DIV_EN | ARMADA_37XX_NB_VDD_EN |
-+		ARMADA_37XX_NB_DFS_EN;
-+
-+	regmap_update_bits(base, reg, mask, mask);
-+}
-+
-+static int __init armada37xx_cpufreq_driver_init(void)
-+{
-+	struct armada_37xx_dvfs *dvfs;
-+	struct platform_device *pdev;
-+	unsigned int cur_frequency;
-+	struct regmap *nb_pm_base;
-+	struct device *cpu_dev;
-+	int load_lvl, ret;
-+	struct clk *clk;
-+
-+	nb_pm_base =
-+		syscon_regmap_lookup_by_compatible("marvell,armada-3700-nb-pm");
-+
-+	if (IS_ERR(nb_pm_base))
-+		return -ENODEV;
-+
-+	/* Before doing any configuration on the DVFS first, disable it */
-+	armada37xx_cpufreq_disable_dvfs(nb_pm_base);
-+
-+	/*
-+	 * On CPU 0 register the operating points supported (which are
-+	 * the nominal CPU frequency and full integer divisions of
-+	 * it).
-+	 */
-+	cpu_dev = get_cpu_device(0);
-+	if (!cpu_dev) {
-+		dev_err(cpu_dev, "Cannot get CPU\n");
-+		return -ENODEV;
-+	}
-+
-+	clk = clk_get(cpu_dev, 0);
-+	if (IS_ERR(clk)) {
-+		dev_err(cpu_dev, "Cannot get clock for CPU0\n");
-+		return PTR_ERR(clk);
-+	}
-+
-+	/* Get nominal (current) CPU frequency */
-+	cur_frequency = clk_get_rate(clk);
-+	if (!cur_frequency) {
-+		dev_err(cpu_dev, "Failed to get clock rate for CPU\n");
-+		return -EINVAL;
-+	}
-+
-+	dvfs = armada_37xx_cpu_freq_info_get(cur_frequency);
-+	if (!dvfs)
-+		return -EINVAL;
-+
-+	armada37xx_cpufreq_dvfs_setup(nb_pm_base, clk, dvfs->divider);
-+
-+	for (load_lvl = ARMADA_37XX_DVFS_LOAD_0; load_lvl < LOAD_LEVEL_NR;
-+	     load_lvl++) {
-+		unsigned long freq = cur_frequency / dvfs->divider[load_lvl];
-+
-+		ret = dev_pm_opp_add(cpu_dev, freq, 0);
-+		if (ret) {
-+			/* clean-up the already added opp before leaving */
-+			while (load_lvl-- > ARMADA_37XX_DVFS_LOAD_0) {
-+				freq = cur_frequency / dvfs->divider[load_lvl];
-+				dev_pm_opp_remove(cpu_dev, freq);
-+			}
-+			return ret;
-+		}
-+	}
-+
-+	/* Now that everything is setup, enable the DVFS at hardware level */
-+	armada37xx_cpufreq_enable_dvfs(nb_pm_base);
-+
-+	pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-+
-+	return PTR_ERR_OR_ZERO(pdev);
-+}
-+/* late_initcall, to guarantee the driver is loaded after A37xx clock driver */
-+late_initcall(armada37xx_cpufreq_driver_init);
-+
-+MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@free-electrons.com>");
-+MODULE_DESCRIPTION("Armada 37xx cpufreq driver");
-+MODULE_LICENSE("GPL");
--- 
-2.15.1
+	struct pinctrl_state **pinctrl_state;
+
+Then access it with omap_host->pinctrl_state[MMC_TIMING_MMC_HS200]
+and so on.
+
+This way the code gets simplified and you can do a generic function
+to initialize things and call it from a for loop etc.
+
+Just remember that pinctrl use can be optional as the pins can be
+set up in the bootloader alone. Then you can just continue with the
+default iodelay state like we are currently doing.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
