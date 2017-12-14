@@ -1,61 +1,71 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 2/7] PCI: tegra: Use bus->sysdata to store and get
- host private data
-Date: Thu, 14 Dec 2017 15:05:03 +0100
-Message-ID: <20171214140503.GB13733@ulmo>
-References: <1512723493-865-1-git-send-email-mmaddireddy@nvidia.com>
- <1512723493-865-3-git-send-email-mmaddireddy@nvidia.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH 08/12] mmc: sdhci-omap: Add support to override f_max and
+ iodelay from pdata
+Date: Thu, 14 Dec 2017 15:04:22 +0100
+Message-ID: <CAOFm3uH0qvwE6fqkMoNAz9Qf_2VaaBvf78tPVTsyfGPRMz7TkA@mail.gmail.com>
+References: <20171214130941.26666-1-kishon@ti.com> <20171214130941.26666-9-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1512723493-865-3-git-send-email-mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: cyndis-/1wQRMveznE@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171214130941.26666-9-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
+Kishon,
 
---A6N2fC+uXW/VQSAv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Dec 14, 2017 at 2:09 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> DRA74x EVM Rev H EVM comes with revision 2.0 silicon. However, earlier
+> versions of EVM can come with either revision 1.1 or revision 1.0 of
+> silicon.
+>
+> The device-tree file is written to support rev 2.0 of silicon.
+> pdata-quirks are used to then override the settings needed for
+> PG 1.1 silicon.
+>
+> PG 1.1 silicon has limitations w.r.t frequencies at which MMC1/2/3
+> can operate as well as different IOdelay numbers.
+>
+> Add support in sdhci-omap driver to get platform data if available
+> (added using pdata quirks) and override the data (max-frequency and
+> iodelay data) obtained from device tree.
+>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-On Fri, Dec 08, 2017 at 02:28:08PM +0530, Manikanta Maddireddy wrote:
-> Tegra host driver is using pci_find_host_bridge() to get private data,
-> however pci_find_host_bridge() is causing module build failure because
-> it is not exported. pci_find_host_bridge() can be avoided by using
-> bus->sysdata to store and get private data.
->=20
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> V4:
-> * new patch in V4
->=20
->  drivers/pci/host/pci-tegra.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
+<snip>
 
-Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> --- /dev/null
+> +++ b/include/linux/platform_data/sdhci-omap.h
+> @@ -0,0 +1,35 @@
+> +/**
+> + * SDHCI Controller Platform Data for TI's OMAP SoCs
+> + *
+> + * Copyright (C) 2017 Texas Instruments
+> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> + *
+> + * This program is free software: you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 of
+> + * the License as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
 
---A6N2fC+uXW/VQSAv
-Content-Type: application/pgp-signature; name="signature.asc"
+Could you use the new SPDX tags instead of this fine and long boilerplate? See
+Thomas doc for details [1]
 
------BEGIN PGP SIGNATURE-----
+[1] https://lkml.org/lkml/2017/12/4/934
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAloyhQ8ACgkQ3SOs138+
-s6ElJhAAiEQCEKBp1Z0BYGO9V+vTORnsJ39ocNeUtwhcROH56OPJQLQBHKKRmXaf
-Aqjd5tyHbhLuIAoXeyngrn6EfuhNHA1JfUOWDmKFauCYoP5ei9M0cJilXNTLxDGh
-RjtcNM1AA9ajsmkIMeNYUs32OIkwNBvOaPjeiMWodKLvi9JFEZFRZbFAZnyKpnS2
-coVFK2l0FSoUPCn2uSoeth6udbTkH7kGD2FYPZ3vPLpFBbl4lgZW+I+4UjnIG6Is
-0Z6wU/ssElSg7zpDmVKWZi/A1llFYZbs72pmqKBpGEhm1440hKU1W5sdGfIY9T/K
-eFDI/A/DwIuwP2Tn0olRiFw+8Rxm24lQaSnX4u4ZcgVJTWCig9u0py71lJ1MGw+y
-GAdUPnLCFv6rQfAVNklmGkb2p/6lzwQvDOyVAAbWIwFyk2QKOU75rIBxnwL/o3v1
-jE3nFQ4lyz+UxqYXlfnx709UoxIxSb/Vx23iG8LGPqxxBxczK6XnYYugyy8RQ6nw
-6IslmGgu20QqBKLFZFHZFUGo46/wjB7tGrHQSbsHJNA8GkZbcdp0tKEgoRCizoCT
-uPf0Appm+uMUKG2bKPBOL269J6NIhg6Xz/sSeKZkVbzYc327whyJVsWiyFUzk5Ai
-QXlYMyyGk5b56Hdx8d55sEUSKA0JmgxTzuqF6ywu1nJBtyL7wu4=
-=LwAw
------END PGP SIGNATURE-----
+Thanks!
+PS: if you could spread the word out in your team too, this would be
+much welcomed!
 
---A6N2fC+uXW/VQSAv--
+-- 
+Cordially
+Philippe Ombredanne
