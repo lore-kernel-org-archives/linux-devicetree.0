@@ -1,70 +1,41 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: add Samsung's exynos4412-based midas
- boards
-Date: Thu, 14 Dec 2017 10:04:45 +0100
-Message-ID: <d20f09ee-e41c-7f90-86ed-d201e2a48407@samsung.com>
-References: <20171212140815.28257-1-simon@lineageos.org>
-        <20171212140815.28257-3-simon@lineageos.org>
-        <CGME20171214084826epcas4p16bd7d4fb803b4120444003da38ed843a@epcas4p1.samsung.com>
-        <CAJKOXPfkQvo09r6WpZG-E+EgUk+p32dVycxWi6L07kHzv1EsWQ@mail.gmail.com>
+From: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/3] Correct R-Car Gen2 critical CPU temperature
+Date: Thu, 14 Dec 2017 09:08:38 +0000
+Message-ID: <1513242521-11236-1-git-send-email-chris.paterson2@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAJKOXPfkQvo09r6WpZG-E+EgUk+p32dVycxWi6L07kHzv1EsWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+The current R-Car Gen2 device trees define the CPU critical
+temperature as 115°C.
 
+The R-Car hardware manuals state that Tc = –40°C to +105°C. The
+thermal sensor has an accuracy of ±5°C and there can be a temperature
+difference of 1 or 2 degrees between Tjmax and the thermal sensor due
+to the location of the latter.
 
-On 2017-12-14 09:48, Krzysztof Kozlowski wrote:
-> Hi Simon,
->
-> Thanks for new boards!
->
-> +Cc Marek, Bartlomiej,
->
-> On Tue, Dec 12, 2017 at 3:08 PM, Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org> wrote:
->> "midas" is the codename for a family of smartphones released by Samsung
->> Mobile. It includes the Galaxy S3 (GT-I9300/I9305) and the Galaxy
->> Note 2 (GT-N7100/N7105). The boards largely have the same peripherals:
->> the main differences are touchscreen, display panel and cellular modem.
->>
->> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi |  144 +++
->>   arch/arm/boot/dts/exynos4412-m0.dts         |   14 +
->>   arch/arm/boot/dts/exynos4412-m3.dts         |   19 +
->>   arch/arm/boot/dts/exynos4412-midas.dtsi     | 1291 +++++++++++++++++++++++++++
-> M0 is essentially Trats2. You are duplicating here almost entire
-> Trats2 which means:
-> 1. A lot of duplicated code thus it will require more maintenance to
-> keep DTS synced,
-> 2. It is very difficult to spot the changes and possible errors
-> between Trats2 and Midas DTSI/M0.
->
-> Please make a generic family of devices based on Midas, including
-> Trats2. You might make it in steps for easier review:
-> 1. Split common Trats2 part,
-> 2. Add new boards.
+This means that 95°C is a safer value to use.
 
-Krzysztof is right. Trats2 should also be based on midas.dtsi (it is very
-similar to gt-i9300, the difference in mainly in the casing). We also used
-gt-i9300 with modified bootloader with Trats2 dts.
+This value should also apply to r8a7792 but thermal sensor support has
+not been added yet.
 
-It should not be hard to adapt it for common midas.dtsi base (hind: use
-scripts/dtc/dtx_diff for checking if the final dts is correct).
+Chris Paterson (3):
+  ARM: dts: r8a7790: Correct critical CPU temperature
+  ARM: dts: r8a7791: Correct critical CPU temperature
+  ARM: dts: r8a7793: Correct critical CPU temperature
 
- > ...
+ arch/arm/boot/dts/r8a7790.dtsi | 2 +-
+ arch/arm/boot/dts/r8a7791.dtsi | 2 +-
+ arch/arm/boot/dts/r8a7793.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Best regards
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
