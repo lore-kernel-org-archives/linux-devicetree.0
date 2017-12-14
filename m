@@ -1,7 +1,7 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: DT dtc warnings
-Date: Thu, 14 Dec 2017 22:01:10 +0100
-Message-ID: <CAJKOXPfCDT+7wPkz3g6AiKgLvFp4rnicYQgYn8A_yaPe4YhD5A@mail.gmail.com>
+Date: Thu, 14 Dec 2017 15:02:19 -0600
+Message-ID: <CAL_JsqJBpDce=ZTOuY+3_kwPEj+2-yOCrX6GDgMMLKbd9Z3hFw@mail.gmail.com>
 References: <CAL_JsqJKCzjx3zNigu_0T=Ku=_P2SQEjTx=uVbvr_QxJQR7kYg@mail.gmail.com>
  <CAJKOXPc7M3jeV_hNBBRJKGs3vtNzdrGbW_YETw2n0fXxhqjZ_g@mail.gmail.com>
 Mime-Version: 1.0
@@ -9,11 +9,11 @@ Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <CAJKOXPc7M3jeV_hNBBRJKGs3vtNzdrGbW_YETw2n0fXxhqjZ_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 14, 2017 at 9:40 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Thu, Dec 14, 2017 at 2:40 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 > On Thu, Dec 14, 2017 at 7:21 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 >> Hi all,
 >>
@@ -23,16 +23,6 @@ On Thu, Dec 14, 2017 at 9:40 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0
 >> grouped by maintainer. AT91, Exynos, and Allwinner continue to be at
 >> the top of the list and have been for some time (though having
 >> multiple boards for an SoC can cause lots of duplicated warnings).
->>
->> Please help fix these. More checks are being added[2].
->>
->> Rob
->>
->> [1] https://patchwork.kernel.org/patch/10112725/
->> [2] https://www.spinics.net/lists/devicetree-compiler/msg01620.html
->>
->>
->> 77 - arch/arm/boot/dts/prima2-evb.dts
 >>
 >> 50 - arch/arm/boot/dts/exynos5250-arndale.dts
 >> 50 - arch/arm/boot/dts/exynos5250-smdk5250.dts
@@ -56,22 +46,15 @@ On Thu, Dec 14, 2017 at 9:40 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0
 >
 > Different topic - why not enabling these warnings by default?
 
-Can anyone help why this W=1 triggers warning like these:
-arch/arm/boot/dts/exynos3250-artik5-eval.dtb: Warning
-(simple_bus_reg): Node /soc/syscon-poweroff missing or empty
-reg/ranges property
-arch/arm/boot/dts/exynos3250-artik5-eval.dtb: Warning
-(simple_bus_reg): Node /soc/syscon-reboot missing or empty reg/ranges
-property
+Because the warning police don't like lots of warnings. Neither did
+Linus, but he only sees the unittest ones[1]. The ones that are actual
+binding errors rather than best practice are on by default.
 
-For a node without unit address?
-http://elixir.free-electrons.com/linux/v4.15-rc3/source/arch/arm/boot/dts/exynos-syscon-restart.dtsi
+The plan is to enable once the warnings are all gone.
 
-AFAIR, if node does not have unit-address then it should not have
-reg/ranges property. Or maybe it is coming from parent's simple-bus?
+Rob
 
-Best regards,
-Krzysztof
+[1] https://www.spinics.net/lists/devicetree/msg202057.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
