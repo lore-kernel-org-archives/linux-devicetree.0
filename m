@@ -1,36 +1,42 @@
-From: Simon Shields <simon@lineageos.org>
-Subject: [PATCH v2 4/4] ARM: exynos: extend cpuidle support to midas boards
-Date: Thu, 14 Dec 2017 23:50:15 +1100
-Message-ID: <20171214125015.2611-5-simon@lineageos.org>
-References: <20171214125015.2611-1-simon@lineageos.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20171214125015.2611-1-simon@lineageos.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?q?Bart=C5=82omiej=20=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Simon Shields <simon@lineageos.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v3 07/11] thermal: armada: Update Kconfig and module
+ description
+Date: Thu, 14 Dec 2017 14:10:18 +0100
+Message-ID: <20171214141018.62ff61c3@windsurf>
+References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
+        <20171214103011.24713-8-miquel.raynal@free-electrons.com>
+        <87po7ho93k.fsf@free-electrons.com>
+        <20171214121706.529f9652@xps13>
+        <87efnxo8cf.fsf@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <87efnxo8cf.fsf@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Miquel RAYNAL <miquel.raynal@free-electrons.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Exynos4412 can only use cpuidle when running under a compatible
-bootloader/firmware. The midas family of boards, including trats2,
-have such a firmware, so allow them to use cpuidle.
+Hello,
 
-Signed-off-by: Simon Shields <simon@lineageos.org>
----
- arch/arm/mach-exynos/exynos.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, 14 Dec 2017 12:30:08 +0100, Gregory CLEMENT wrote:
 
-diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-index 9a9caac1125a..bfd119d7b63f 100644
---- a/arch/arm/mach-exynos/exynos.c
-+++ b/arch/arm/mach-exynos/exynos.c
-@@ -196,7 +196,7 @@ static void __init exynos_dt_machine_init(void)
- #endif
- 	if (of_machine_is_compatible("samsung,exynos4210") ||
- 	    (of_machine_is_compatible("samsung,exynos4412") &&
--	     of_machine_is_compatible("samsung,trats2")) ||
-+	     of_machine_is_compatible("samsung,midas")) ||
- 	    of_machine_is_compatible("samsung,exynos3250") ||
- 	    of_machine_is_compatible("samsung,exynos5250"))
- 		platform_device_register(&exynos_cpuidle);
+> Unfortunately Armada SoCs is more that just these SoC!
+> 
+> Have a look on Documentation/arm/Marvell/README to see how the Marvell
+> marketing guys had been creative :)
+> 
+> Some kirkwood are called Armada 300 and Armada 310.
+> The Dove is also called Armada 510.
+> Some PXA are called Armada too such as Armada 168 or Armada 610.
+> And finally the Berlin also use Aramda as code name: Armada 1000 or
+> Aramda 1500
+
+However: "Marvell EBU Armada" should be distinctive enough.
+
+Thomas
 -- 
-2.15.1
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
