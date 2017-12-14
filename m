@@ -1,57 +1,60 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mmc: dt-bindings: add mmc support to MT7623 SoC
-Date: Thu, 14 Dec 2017 12:16:04 +0100
-Message-ID: <86e53802-9bb4-35eb-66e1-f9a401e31863@gmail.com>
-References: <cover.1512628593.git.sean.wang@mediatek.com>
- <4f06b509e1e3d4cf5578841cfcf7ec966afd2d48.1512628593.git.sean.wang@mediatek.com>
+From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 07/11] thermal: armada: Update Kconfig and module
+ description
+Date: Thu, 14 Dec 2017 12:17:06 +0100
+Message-ID: <20171214121706.529f9652@xps13>
+References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
+        <20171214103011.24713-8-miquel.raynal@free-electrons.com>
+        <87po7ho93k.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4f06b509e1e3d4cf5578841cfcf7ec966afd2d48.1512628593.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <87po7ho93k.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hi Gregory,
 
-On 12/07/2017 07:43 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Add the devicetree binding for MT7623 SoC using MT2701 as the fallback.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index 72d2a73..9b80176 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -12,6 +12,8 @@ Required properties:
->  	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
->  	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
->  	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
-> +	"mediatek,mt7623-mmc", "mediatek,mt2701-mmc": for MT7623 SoC
-> +
->  - reg: physical base address of the controller and length
->  - interrupts: Should contain MSDC interrupt number
->  - clocks: Should contain phandle for the clock feeding the MMC controller
-> 
+On Thu, 14 Dec 2017 12:13:51 +0100
+Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Are you fine to take this patch through your branch, or shall I take it through
-mine?
+> Hi Miquel,
+>  
+>  On jeu., déc. 14 2017, Miquel Raynal
+> <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > Update Armada thermal driver Kconfig entry as well as the driver's
+> > MODULE_DESCRIPTION content, now that 64-bit SoCs are also supported,
+> > eg. Armada 7K and Armada 8K.
+> >
+> > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/thermal/Kconfig          | 4 ++--
+> >  drivers/thermal/armada_thermal.c | 2 +-
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> > index 315ae2926e20..44cad046f272 100644
+> > --- a/drivers/thermal/Kconfig
+> > +++ b/drivers/thermal/Kconfig
+> > @@ -301,13 +301,13 @@ config DB8500_THERMAL
+> >  	  thermal zone if trip points reached.
+> >  
+> >  config ARMADA_THERMAL
+> > -	tristate "Armada 370/XP thermal management"
+> > +	tristate "Armada 370/XP/7K/8K thermal management"  
+> if you want to be exhaustive you should also add Armada 375 and 38x.
 
-@Sean it seems you forgot to send this patch to Ulf as well. In the future
-please take care to send the patch to all relevant people and mailinglist.
+That is right, both are missing from the description, but wouldn't it
+be better to just state "Armada SoCs" instead of patching that file
+everythime a new SoC reuses this IP?
 
 Thanks,
-Matthias
+Miquèl
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
