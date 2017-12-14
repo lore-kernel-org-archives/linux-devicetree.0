@@ -1,83 +1,94 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 3/3] [DO NOT MERGE] ARM: dts: sun8i: a83t: bpi-m3: Enable PCM5122 codec with I2S1
-Date: Thu, 14 Dec 2017 12:23:50 +0800
-Message-ID: <20171214042350.29469-4-wens@csie.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v2 1/3] ARM: dts: sun8i: a83t: Add I2S controller device nodes
+Date: Thu, 14 Dec 2017 12:23:48 +0800
+Message-ID: <20171214042350.29469-2-wens@csie.org>
 References: <20171214042350.29469-1-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171214042350.29469-1-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171214042350.29469-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables a PiFi DAC+ V2.0, which is a PCM5122-based audio
-output DAC add-on board for the Raspberry Pi B+ and later, connected
-to the GPIO header of the Bananapi M3 via jumper cables. The power,
-ground, and I2C pins are in the same position, but the I2S ones are
-not.
+The A83T has 3 I2S controllers. The first is multiplexed with the TDM
+controller. The pins are generally connected to the codec side of the
+AXP81x PMIC/codec/RTC chip. The second is free for other uses. The
+third only supports output, and is connected internally to the HDMI
+controller for HDMI audio output.
 
-The I2C controller used is I2C2, while the I2S controller is I2S1.
+This patch adds device nodes for the controllers, and a default pinmux
+setting for the second controller.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 33 ++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 47 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-index 6550bf0e594b..a9a208ebda12 100644
---- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-@@ -70,6 +70,23 @@
- 		gpio = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
- 	};
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index a384b766f3dc..354cb4b48f47 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -348,6 +348,12 @@
+ 				drive-strength = <40>;
+ 			};
  
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "PiFi DAC+ v2.0";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,mclk-fs = <512>;
-+		simple-audio-card,frame-master = <&link_cpu>;
-+		simple-audio-card,bitclock-master = <&link_cpu>;
++			i2s1_pins: i2s1-pins {
++				/* I2S1 does not have external MCLK pin */
++				pins = "PG10", "PG11", "PG12", "PG13";
++				function = "i2s1";
++			};
 +
-+		link_cpu: simple-audio-card,cpu {
-+			sound-dai = <&i2s1>;
+ 			mmc0_pins: mmc0-pins {
+ 				pins = "PF0", "PF1", "PF2",
+ 				       "PF3", "PF4", "PF5";
+@@ -430,6 +436,47 @@
+ 			status = "disabled";
+ 		};
+ 
++		i2s0: i2s@1c22000 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun8i-a83t-i2s";
++			reg = <0x01c22000 0x400>;
++			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2S0>, <&ccu CLK_I2S0>;
++			clock-names = "apb", "mod";
++			dmas = <&dma 3>, <&dma 3>;
++			resets = <&ccu RST_BUS_I2S0>;
++			dma-names = "rx", "tx";
++			status = "disabled";
 +		};
 +
-+		simple-audio-card,codec {
-+			sound-dai = <&pcm5122>;
++		i2s1: i2s@1c22400 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun8i-a83t-i2s";
++			reg = <0x01c22400 0x400>;
++			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2S1>, <&ccu CLK_I2S1>;
++			clock-names = "apb", "mod";
++			dmas = <&dma 4>, <&dma 4>;
++			resets = <&ccu RST_BUS_I2S1>;
++			dma-names = "rx", "tx";
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2s1_pins>;
++			status = "disabled";
 +		};
-+	};
 +
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		clocks = <&ac100_rtc 1>;
-@@ -100,6 +117,22 @@
- 	status = "okay";
- };
- 
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_ph_pins>;
-+	status = "okay";
++		i2s2: i2s@1c22800 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun8i-a83t-i2s";
++			reg = <0x01c22800 0x400>;
++			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_I2S2>, <&ccu CLK_I2S2>;
++			clock-names = "apb", "mod";
++			dmas = <&dma 27>;
++			resets = <&ccu RST_BUS_I2S2>;
++			dma-names = "tx";
++			status = "disabled";
++		};
 +
-+	pcm5122: pcm5122@4d {
-+		#sound-dai-cells = <0>;
-+		compatible = "ti,pcm5122";
-+		reg = <0x4d>;
-+	};
-+};
-+
-+&i2s1 {
-+	status = "okay";
-+};
-+
- &mdio {
- 	rgmii_phy: ethernet-phy@1 {
- 		compatible = "ethernet-phy-ieee802.3-c22";
+ 		uart0: serial@1c28000 {
+ 			compatible = "snps,dw-apb-uart";
+ 			reg = <0x01c28000 0x400>;
 -- 
 2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
