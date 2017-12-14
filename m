@@ -1,124 +1,144 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Subject: RE: [PATCH v11 1/3] ACPI/IORT: Add msi address regions reservation
- helper
-Date: Thu, 14 Dec 2017 12:17:50 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA838628CDD@FRAEML521-MBX.china.huawei.com>
-References: <20171213115830.61872-1-shameerali.kolothum.thodi@huawei.com>
- <20171213115830.61872-2-shameerali.kolothum.thodi@huawei.com>
- <20171214114759.GA27117@e107981-ln.cambridge.arm.com>
+From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 06/11] thermal: armada: Add support for Armada CP110
+Date: Thu, 14 Dec 2017 13:24:20 +0100
+Message-ID: <20171214132420.20de4c64@xps13>
+References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
+        <20171214103011.24713-7-miquel.raynal@free-electrons.com>
+        <87tvwto96y.fsf@free-electrons.com>
+        <20171214123301.1729df4f@xps13>
+        <87a7ylo803.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20171214114759.GA27117@e107981-ln.cambridge.arm.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "robin.murphy@arm.com" <robin.murphy@arm.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "joro@8bytes.org" <joro@8bytes.org>, John Garry <john.garry@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87a7ylo803.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+On Thu, 14 Dec 2017 12:37:32 +0100
+Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> -----Original Message-----
-> From: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
-> Sent: Thursday, December 14, 2017 11:48 AM
-> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-> Cc: robin.murphy@arm.com; marc.zyngier@arm.com; will.deacon@arm.com;
-> joro@8bytes.org; John Garry <john.garry@huawei.com>; xuwei (O)
-> <xuwei5@hisilicon.com>; Guohanjun (Hanjun Guo) <guohanjun@huawei.com>;
-> iommu@lists.linux-foundation.org; linux-arm-kernel@lists.infradead.org; linux-
-> acpi@vger.kernel.org; devicetree@vger.kernel.org; Linuxarm
-> <linuxarm@huawei.com>
-> Subject: Re: [PATCH v11 1/3] ACPI/IORT: Add msi address regions reservation
-> helper
+> Hi Miquel,
+>  
+>  On jeu., déc. 14 2017, Miquel RAYNAL
+> <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 > 
-> On Wed, Dec 13, 2017 at 11:58:28AM +0000, Shameer Kolothum wrote:
-> > On some platforms msi parent address regions have to be excluded from
-> > normal IOVA allocation in that they are detected and decoded in a HW
-> > specific way by system components and so they cannot be considered normal
-> > IOVA address space.
+> > On Thu, 14 Dec 2017 12:11:49 +0100
+> > Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >  
+> >> Hi Miquel,
+> >>  
+> >>  On jeu., déc. 14 2017, Miquel Raynal
+> >> <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >>   
+> >> > From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> >> >
+> >> > The CP110 component is integrated in the Armada 8k and 7k lines
+> >> > of processors.
+> >> >
+> >> > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> >> > [<miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>: renamed the register
+> >> > pointers]    
+> >> 
+> >> Actually you did more thant this see below
+> >> 
+> >>   
+> >> > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >> > ---
+> >> >  drivers/thermal/armada_thermal.c | 30
+> >> > ++++++++++++++++++++++++------ 1 file changed, 24 insertions(+),
+> >> > 6 deletions(-)
+> >> >
+> >> > diff --git a/drivers/thermal/armada_thermal.c
+> >> > b/drivers/thermal/armada_thermal.c index
+> >> > 279d01937bb8..f5c911524656 100644 ---
+> >> > a/drivers/thermal/armada_thermal.c +++
+> >> > b/drivers/thermal/armada_thermal.c @@ -37,7 +37,6 @@
+> >> >  #define A375_UNIT_CONTROL_MASK		0x7
+> >> >  #define A375_READOUT_INVERT		BIT(15)
+> >> >  #define A375_HW_RESETn			BIT(8)
+> >> > -#define A380_HW_RESET			BIT(8)
+> >> >  
+> >> >  /* Legacy bindings */
+> >> >  #define LEGACY_CONTROL_MEM_LEN		0x4
+> >> > @@ -52,6 +51,10 @@
+> >> >  #define CONTROL0_TSEN_RESET		BIT(1)
+> >> >  #define CONTROL0_TSEN_ENABLE		BIT(2)
+> >> >  
+> >> > +/* EXT_TSEN refers to the external temperature sensors, out of
+> >> > the AP */ +#define CONTROL1_EXT_TSEN_SW_RESET	BIT(7)
+> >> > +#define CONTROL1_EXT_TSEN_HW_RESETn	BIT(8)    
+> >> You added or rename these values
+> >>   
+> >> > +
+> >> >  struct armada_thermal_data;
+> >> >  
+> >> >  /* Marvell EBU Thermal Sensor Dev Structure */
+> >> > @@ -153,11 +156,10 @@ static void armada380_init_sensor(struct
+> >> > platform_device *pdev, u32 reg = readl_relaxed(priv->control1);
+> >> >  
+> >> >  	/* Reset hardware once */
+> >> > -	if (!(reg & A380_HW_RESET)) {
+> >> > -		reg |= A380_HW_RESET;
+> >> > -		writel(reg, priv->control1);
+> >> > -		msleep(10);
+> >> > -	}
+> >> > +	reg |= CONTROL1_EXT_TSEN_HW_RESETn;
+> >> > +	reg &= ~CONTROL1_EXT_TSEN_SW_RESET;
+> >> > +	writel(reg, priv->control1);    
+> >> 
+> >> And here you modified the behavior of this function.
+> >> Did you checked that it is valid for Armada 38x?  
 > >
-> > Add a helper function that retrieves ITS address regions - the msi
-> > parent - through IORT device <-> ITS mappings and reserves it so that
-> > these regions will not be translated by IOMMU and will be excluded from
-> > IOVA allocations. The function checks for the smmu model number and
-> > only applies the msi reservation if the platform requires it.
+> > There is nothing about it the documentation and anyway this register
+> > can be accessed later, so writing it is harmless ayway.
+> >  
+> >> 
+> >> Given the comment we had, I thought we should not do anything if
+> >> CONTROL1_EXT_TSEN_HW_RESETn was not set.  
 > >
-> > Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> > ---
-> >  drivers/acpi/arm64/iort.c        | 112
-> +++++++++++++++++++++++++++++++++++++--
-> >  drivers/irqchip/irq-gic-v3-its.c |   3 +-
-> >  include/linux/acpi_iort.h        |   7 ++-
-> >  3 files changed, 117 insertions(+), 5 deletions(-)
+> > That is the opposite, if it is not set (ie. reset is active), you
+> > have to set it (reset is then disabled).  
 > 
-> You need this additional hunk to make it compile on !CONFIG_IOMMU_API:
+> Actually I was concerned by the "once" for me it means "only one
+> time", but maybe it just meant it was useless to reset it again but
+> not harmful.
 
-Oops..Sorry, missed that. If you are happy with the rest, I will make the below
-change and sent out the v12(hopefully final).
+This:
 
-Please let me know.
+    reg |= CONTROL1_EXT_TSEN_HW_RESETn;
 
-Thanks,
-Shameer
+does not reset the IP, instead it cancels the reset, if one is
+happening. So no, doing it unconditionally is not harmful.
+
+Miquèl
+
 
 > 
-> -- >8 --
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index 3e0ce652c3e8..e2f7bddf5522 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -762,25 +762,6 @@ static int __maybe_unused __get_pci_rid(struct
-> pci_dev *pdev, u16 alias,
->  	return 0;
->  }
+> Gregory
 > 
-> -static __maybe_unused struct acpi_iort_node *iort_get_msi_resv_iommu(
-> -						struct device *dev)
-> -{
-> -	struct acpi_iort_node *iommu;
-> -	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-> -
-> -	iommu = iort_get_iort_node(fwspec->iommu_fwnode);
-> -
-> -	if (iommu && (iommu->type == ACPI_IORT_NODE_SMMU_V3)) {
-> -		struct acpi_iort_smmu_v3 *smmu;
-> -
-> -		smmu = (struct acpi_iort_smmu_v3 *)iommu->node_data;
-> -		if (smmu->model ==
-> ACPI_IORT_SMMU_V3_HISILICON_HI161X)
-> -			return iommu;
-> -	}
-> -
-> -	return NULL;
-> -}
-> -
->  static int arm_smmu_iort_xlate(struct device *dev, u32 streamid,
->  			       struct fwnode_handle *fwnode,
->  			       const struct iommu_ops *ops)
-> @@ -807,6 +788,24 @@ static inline bool iort_iommu_driver_enabled(u8 type)
->  }
+> >  
+> >> 
+> >> By the way, if the new sequence is valid, this comment should be
+> >> removed or at least updated.  
+> >
+> > That's right, I will in v4.
+> >
+> > Thanks for reviewing,
+> > Miquèl
+> >
+> >  
 > 
->  #ifdef CONFIG_IOMMU_API
-> +static struct acpi_iort_node *iort_get_msi_resv_iommu(struct device *dev)
-> +{
-> +	struct acpi_iort_node *iommu;
-> +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-> +
-> +	iommu = iort_get_iort_node(fwspec->iommu_fwnode);
-> +
-> +	if (iommu && (iommu->type == ACPI_IORT_NODE_SMMU_V3)) {
-> +		struct acpi_iort_smmu_v3 *smmu;
-> +
-> +		smmu = (struct acpi_iort_smmu_v3 *)iommu->node_data;
-> +		if (smmu->model ==
-> ACPI_IORT_SMMU_V3_HISILICON_HI161X)
-> +			return iommu;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  static inline const struct iommu_ops *iort_fwspec_iommu_ops(
->  				struct iommu_fwspec *fwspec)
->  {
+
+
+
+-- 
+Miquel Raynal, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
