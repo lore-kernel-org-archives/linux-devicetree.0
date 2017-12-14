@@ -1,48 +1,62 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 2/5] phy: renesas: rcar-gen3-usb2: unify OBINTEN handling
-Date: Thu, 14 Dec 2017 09:48:08 +0000
-Message-ID: <TY1PR06MB099253E9C9DA5B47130609D5D80A0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1513146460-20326-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1513146460-20326-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <7e7953b2-e94d-ded8-2278-6259a1457881@cogentembedded.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm: dts: sun8i: a83t: remove leading
+ zero from cpucfg node address
+Date: Thu, 14 Dec 2017 10:53:50 +0100
+Message-ID: <20171214095350.ymwkmshinveij7of@flea.lan>
+References: <20171213193715.31039-1-clabbe.montjoie@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <7e7953b2-e94d-ded8-2278-6259a1457881@cogentembedded.com>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "kishon@ti.com" <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tukvwp34pbf4de5d"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLUUZHIQKGQEVTJOGUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20171213193715.31039-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8hDQoNCj4gRnJvbTogU2VyZ2VpIFNodHlseW92LCBTZW50OiBXZWRuZXNkYXksIERlY2Vt
-YmVyIDEzLCAyMDE3IDY6MTAgUE0NCj4gDQo+IEhlbGxvIQ0KPiANCj4gT24gMTIvMTMvMjAxNyA5
-OjI3IEFNLCBZb3NoaWhpcm8gU2hpbW9kYSB3cm90ZToNCj4gDQo+ID4gVGhpcyBwYXRjaCB1bmlm
-aWVzIHRoZSBPQklOVEVOIGhhbmRsaW5nIHRvIGNsZWFuLXVwIHRoZSBjb2RlLg0KPiA+DQo+ID4g
-U2lnbmVkLW9mZi1ieTogWW9zaGloaXJvIFNoaW1vZGEgPHlvc2hpaGlyby5zaGltb2RhLnVoQHJl
-bmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9waHkvcmVuZXNhcy9waHktcmNhci1n
-ZW4zLXVzYjIuYyB8IDIzICsrKysrKysrKysrKysrKy0tLS0tLS0tDQo+ID4gICAxIGZpbGUgY2hh
-bmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL3BoeS9yZW5lc2FzL3BoeS1yY2FyLWdlbjMtdXNiMi5jIGIvZHJpdmVycy9w
-aHkvcmVuZXNhcy9waHktcmNhci1nZW4zLXVzYjIuYw0KPiA+IGluZGV4IGMyMmQ2NWEuLmJlZWFh
-MzAgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9waHkvcmVuZXNhcy9waHktcmNhci1nZW4zLXVz
-YjIuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGh5L3JlbmVzYXMvcGh5LXJjYXItZ2VuMy11c2IyLmMN
-Cj4gPiBAQCAtMTQ3LDYgKzE0NywxOCBAQCBzdGF0aWMgdm9pZCByY2FyX2dlbjNfZW5hYmxlX3Zi
-dXNfY3RybChzdHJ1Y3QgcmNhcl9nZW4zX2NoYW4gKmNoLCBpbnQgdmJ1cykNCj4gPiAgIAl3cml0
-ZWwodmFsLCB1c2IyX2Jhc2UgKyBVU0IyX0FEUENUUkwpOw0KPiA+ICAgfQ0KPiA+DQo+ID4gK3N0
-YXRpYyB2b2lkIHJjYXJfZ2VuM19lbmFibGVfb3RnX2lycShzdHJ1Y3QgcmNhcl9nZW4zX2NoYW4g
-KmNoLCBpbnQgZW5hYmxlKQ0KPiANCj4gICAgIElmIGl0IGJvdGggZW5hYmxlcyBhbmQgZGlzYWJs
-ZXMsIHJjYXJfZ2VuM19jb250cm9sX290Z19pcnEoKSB3b3VsZCBzZWVtIGENCj4gYmV0dGVyIG5h
-bWUuLi4NCg0KVGhhbmsgeW91IGZvciB0aGUgY29tbWVudCEgSSB0aGluayBzby4gU28sIEknbGwg
-Y2hhbmdlIHRoZSBuYW1lIGluIHYyLg0KSSdsbCBhbHNvIGNoYW5nZSB0aGUgbmFtZXMgb2YgImVu
-YWJsZV92YnVzX2N0cmwiIGFuZCBtZW1iZXJzIG9mDQpyY2FyX2dlbjNfcm9sZV9zd2FwX29wcyBp
-biB0aGUgcGF0Y2ggNA0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+ID4g
-K3sNCj4gPiArCXZvaWQgX19pb21lbSAqdXNiMl9iYXNlID0gY2gtPmJhc2U7DQo+ID4gKwl1MzIg
-dmFsID0gcmVhZGwodXNiMl9iYXNlICsgVVNCMl9PQklOVEVOKTsNCj4gPiArDQo+ID4gKwlpZiAo
-ZW5hYmxlKQ0KPiA+ICsJCXZhbCB8PSBVU0IyX09CSU5UX0JJVFM7DQo+ID4gKwllbHNlDQo+ID4g
-KwkJdmFsICY9IH5VU0IyX09CSU5UX0JJVFM7DQo+ID4gKwl3cml0ZWwodmFsLCB1c2IyX2Jhc2Ug
-KyBVU0IyX09CSU5URU4pOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICAgc3RhdGljIHZvaWQgcmNhcl9n
-ZW4zX2luaXRfZm9yX2hvc3Qoc3RydWN0IHJjYXJfZ2VuM19jaGFuICpjaCkNCj4gPiAgIHsNCj4g
-PiAgIAlyY2FyX2dlbjNfc2V0X2xpbmVjdHJsKGNoLCAxLCAxKTsNCj4gWy4uLl0NCj4gDQo+IE1C
-UiwgU2VyZ2VpDQo=
+
+--tukvwp34pbf4de5d
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Hi,
+
+On Wed, Dec 13, 2017 at 08:37:14PM +0100, Corentin Labbe wrote:
+> This will fix the following warning:
+> Warning (simple_bus_reg): Node /soc/cpucfg@01700000 simple-bus unit address format error, expected "1700000"
+> 
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> index 7b372acf4bf6..715719f9ea2e 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -377,7 +377,7 @@
+>  			#reset-cells = <1>;
+>  		};
+>  
+> -		cpucfg@01700000 {
+> +		cpucfg@1700000 {
+>  			compatible = "allwinner,sun9i-a80-cpucfg";
+>  			reg = <0x01700000 0x100>;
+
+That node isn't upstream.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--tukvwp34pbf4de5d--
