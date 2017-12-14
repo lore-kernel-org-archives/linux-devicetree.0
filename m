@@ -1,85 +1,125 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH] leds: as3645a: Fix checkpatch warnings
-Date: Thu, 14 Dec 2017 23:50:41 +0100
-Message-ID: <20171214225041.GB10957@amd>
-References: <20171212215011.30066-1-dmurphy@ti.com>
- <ac821766-4bb8-d5d4-feaf-6750e8ceb894@gmail.com>
- <bf955d16-9af0-7776-354a-dc2a71b525f1@ti.com>
- <98df06ef-9ee4-02b1-6d6b-f10b911a8d71@gmail.com>
- <799ae164-701a-87ce-fadf-8278f01c10d6@ti.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/8] PCI: brcmstb: Add Broadcom STB PCIe host
+ controller driver
+Date: Thu, 14 Dec 2017 16:51:33 -0600
+Message-ID: <20171214225133.GM30595@bhelgaas-glaptop.roam.corp.google.com>
+References: <1510697532-32828-1-git-send-email-jim2101024@gmail.com>
+ <1510697532-32828-4-git-send-email-jim2101024@gmail.com>
+ <20171212221642.GB95453@bhelgaas-glaptop.roam.corp.google.com>
+ <CANCKTBvtqNWZYXpLdUnEWwA2=14XhJ6adR5muOAYubY_1SxZWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <799ae164-701a-87ce-fadf-8278f01c10d6-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CANCKTBvtqNWZYXpLdUnEWwA2=14XhJ6adR5muOAYubY_1SxZWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel@lists.
 List-Id: devicetree@vger.kernel.org
 
-
---9zSXsLTf0vkW971A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed 2017-12-13 14:49:38, Dan Murphy wrote:
-> Pavel and Laurent
->=20
-> On 12/13/2017 02:43 PM, Jacek Anaszewski wrote:
-> > Dan,
-> >=20
-> > On 12/13/2017 09:41 PM, Dan Murphy wrote:
-> >> Jacek
+On Wed, Dec 13, 2017 at 06:53:53PM -0500, Jim Quinlan wrote:
+> On Tue, Dec 12, 2017 at 5:16 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, Nov 14, 2017 at 05:12:07PM -0500, Jim Quinlan wrote:
+> >> This commit adds the basic Broadcom STB PCIe controller.  Missing is
+> >> the ability to process MSI and also handle dma-ranges for inbound
+> >> memory accesses.  These two functionalities are added in subsequent
+> >> commits.
 > >>
-> >> On 12/13/2017 02:29 PM, Jacek Anaszewski wrote:
-> >>> Hi Dan,
-> >>>
-> >>> checkpatch.pl doesn't want to be mentioned in the patch subject :-)
-> >>>
-> >>
-> >> Ack
-> >>
-> >>> "WARNING: A patch subject line should describe the change not the tool
-> >>> that found it"
-> >>>
-> >>> Preferably I'd see two separate patches.
-> >>>
-> >>
-> >> So you want me to split them up? I have no issue with that.
-> >=20
-> > Yeah, it will be easier to come up with concise but meaningful
-> > subjects.
-> >=20
->=20
-> When I split these up can I add your Acked-by to each patch or would you =
-prefer to resend your
-> Acked-by for each patch?
+> >> The PCIe block contains an MDIO interface.  This is a local interface
+> >> only accessible by the PCIe controller.  It cannot be used or shared
+> >> by any other HW.  As such, the small amount of code for this
+> >> controller is included in this driver as there is little upside to put
+> >> it elsewhere.
+> ...
 
-You can keep the ack...
+> >> +static bool brcm_pcie_valid_device(struct brcm_pcie *pcie, struct pci_bus *bus,
+> >> +                                int dev)
+> >> +{
+> >> +     if (pci_is_root_bus(bus)) {
+> >> +             if (dev > 0)
+> >> +                     return false;
+> >> +     } else {
+> >> +             /* If there is no link, then there is no device */
+> >> +             if (!brcm_pcie_link_up(pcie))
+> >> +                     return false;
+> >
+> > This is racy, since the link can go down after you check but before
+> > you do the config access.  I assume your hardware can deal with a
+> > config access that targets a link that is down?
+> 
+> Yes, that can happen but there is really nothing that can be done if
+> the link goes down in that vulnerability window.  What do you suggest
+> doing?
 
-=2E..and my preference would be for trivial fixes like these to be just
-applied. No need to resend 3 versions etc...
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Most hardware drops writes and returns ~0 on reads if the link is
+down.  I assume your hardware does something similar, and that should
+be enough.  You shouldn't have to check whether the link is up.
 
---9zSXsLTf0vkW971A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The hardware might report errors, e.g., via AER, if the link is down.
+And we might not not handle those nicely.  If we have issues there, we
+should find out and fix them.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I see that dwc, altera, rockchip, and xilinx all do check for link up
+there, too.  I can't remember if they had a legitimate reason, or if I
+just missed it.
 
-iEYEARECAAYFAlozAEEACgkQMOfwapXb+vIyXACfSVhVugYRzHhyzMBXcA6WlABY
-MDgAn0FvwoID66vSlMQicT+pXtejyZOA
-=7s17
------END PGP SIGNATURE-----
+> >> +static void brcm_pcie_remove_controller(struct brcm_pcie *pcie)
+> >> +{
+> >> +     struct list_head *pos, *q;
+> >> +     struct brcm_pcie *tmp;
+> >> +
+> >> +     mutex_lock(&brcm_pcie_lock);
+> >> +     list_for_each_safe(pos, q, &brcm_pcie) {
+> >> +             tmp = list_entry(pos, struct brcm_pcie, list);
+> >> +             if (tmp == pcie) {
+> >> +                     list_del(pos);
+> >> +                     if (list_empty(&brcm_pcie))
+> >> +                             num_memc = 0;
+> >> +                     break;
+> >> +             }
+> >> +     }
+> >> +     mutex_unlock(&brcm_pcie_lock);
+> >
+> > I'm missing something.  I don't see that num_memc is ever set to
+> > anything *other* than zero.
+> The num_memc is set and used in the dma commit.  I will remove its
+> declaration from this commit.
 
---9zSXsLTf0vkW971A--
+Thanks, that will make the patches much easier to read.
+
+> >> +     pcie->id = of_get_pci_domain_nr(dn);
+> >
+> > Why do you call of_get_pci_domain_nr() directly?  No other driver
+> > does.
+> 
+> We use the domain as the controller number (id).  We use the id to
+> identify and fix a HW bug that only affects the 2nd controller; see
+> the clause
+> " } else if (of_machine_is_compatible("brcm,bcm7278a0")) {".
+
+pci_register_host_bridge() already sets bus->domain_nr for every host
+bridge.  That path calls of_get_pci_domain_nr() eventually.   But I
+guess that's too late for your use case, because you have this:
+
+  brcm_pcie_probe
+    brcm_pcie_setup
+      brcm_pcie_bridge_sw_init_set
+        if (of_machine_is_compatible("brcm,bcm7278a0")) {
+          offset = pcie->id ? ...                    <--- use
+    pci_scan_root_bus_bridge
+      pci_register_host_bridge
+        bus->domain_nr = pci_bus_find_domain_nr      <--- available
+
+I guess you haven't added a binding for brcm,bcm7278a0 yet?
+
+I'm not really sure that using the linux,pci-domain DT property is the
+best way to distinguish the two controllers.  Maybe Rob has an
+opinion?
+
+> >> +     if (pcie->id < 0)
+> >> +             return pcie->id;
+
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
