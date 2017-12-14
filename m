@@ -1,71 +1,59 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH 08/12] mmc: sdhci-omap: Add support to override f_max and
- iodelay from pdata
-Date: Thu, 14 Dec 2017 15:04:22 +0100
-Message-ID: <CAOFm3uH0qvwE6fqkMoNAz9Qf_2VaaBvf78tPVTsyfGPRMz7TkA@mail.gmail.com>
-References: <20171214130941.26666-1-kishon@ti.com> <20171214130941.26666-9-kishon@ti.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 1/3] mmc: dt-bindings: add mmc support to MT7623 SoC
+Date: Thu, 14 Dec 2017 22:20:29 +0800
+Message-ID: <1513261229.28444.33.camel@mtkswgap22>
+References: <cover.1512628593.git.sean.wang@mediatek.com>
+         <4f06b509e1e3d4cf5578841cfcf7ec966afd2d48.1512628593.git.sean.wang@mediatek.com>
+         <86e53802-9bb4-35eb-66e1-f9a401e31863@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171214130941.26666-9-kishon@ti.com>
+In-Reply-To: <86e53802-9bb4-35eb-66e1-f9a401e31863@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-omap@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, nsekhar@ti.com
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Kishon,
+On Thu, 2017-12-14 at 12:16 +0100, Matthias Brugger wrote:
+> Hi Ulf,
+> 
+> On 12/07/2017 07:43 AM, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > Add the devicetree binding for MT7623 SoC using MT2701 as the fallback.
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > index 72d2a73..9b80176 100644
+> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> > @@ -12,6 +12,8 @@ Required properties:
+> >  	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+> >  	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+> >  	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+> > +	"mediatek,mt7623-mmc", "mediatek,mt2701-mmc": for MT7623 SoC
+> > +
+> >  - reg: physical base address of the controller and length
+> >  - interrupts: Should contain MSDC interrupt number
+> >  - clocks: Should contain phandle for the clock feeding the MMC controller
+> > 
+> 
+> Are you fine to take this patch through your branch, or shall I take it through
+> mine?
+> 
+> @Sean it seems you forgot to send this patch to Ulf as well. In the future
+> please take care to send the patch to all relevant people and mailinglist.
+> 
 
-On Thu, Dec 14, 2017 at 2:09 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> DRA74x EVM Rev H EVM comes with revision 2.0 silicon. However, earlier
-> versions of EVM can come with either revision 1.1 or revision 1.0 of
-> silicon.
->
-> The device-tree file is written to support rev 2.0 of silicon.
-> pdata-quirks are used to then override the settings needed for
-> PG 1.1 silicon.
->
-> PG 1.1 silicon has limitations w.r.t frequencies at which MMC1/2/3
-> can operate as well as different IOdelay numbers.
->
-> Add support in sdhci-omap driver to get platform data if available
-> (added using pdata quirks) and override the data (max-frequency and
-> iodelay data) obtained from device tree.
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Okay. I'll be. really sorry for the inconvenience
 
-<snip>
-
-> --- /dev/null
-> +++ b/include/linux/platform_data/sdhci-omap.h
-> @@ -0,0 +1,35 @@
-> +/**
-> + * SDHCI Controller Platform Data for TI's OMAP SoCs
-> + *
-> + * Copyright (C) 2017 Texas Instruments
-> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 of
-> + * the License as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-
-Could you use the new SPDX tags instead of this fine and long boilerplate? See
-Thomas doc for details [1]
-
-[1] https://lkml.org/lkml/2017/12/4/934
-
-Thanks!
-PS: if you could spread the word out in your team too, this would be
-much welcomed!
-
--- 
-Cordially
-Philippe Ombredanne
+> Thanks,
+> Matthias
+> 
