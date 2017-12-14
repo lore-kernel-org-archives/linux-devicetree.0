@@ -1,39 +1,35 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v7 4/6] clk: meson-axg: add clock controller drivers
-Date: Thu, 14 Dec 2017 10:59:09 +0100
-Message-ID: <1513245549.32163.3.camel@baylibre.com>
-References: <20171211141348.22048-1-yixun.lan@amlogic.com>
-         <20171211141348.22048-5-yixun.lan@amlogic.com>
+From: "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+Subject: RE: [PATCH v4 00/12] [dt-bindings] [media] Add document file and
+ driver for Sony CXD2880 DVB-T2/T tuner + demodulator
+Date: Thu, 14 Dec 2017 09:59:32 +0000
+Message-ID: <02699364973B424C83A42A84B04FDA85431742@JPYOKXMS113.jp.sony.com>
+References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
+ <20171213173633.57edca85@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20171211141348.22048-5-yixun.lan@amlogic.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171213173633.57edca85-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Content-Language: ja-JP
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yamamoto, Masayuki" <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, "Yonezawa, Kota" <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>, "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>, "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-12-11 at 22:13 +0800, Yixun Lan wrote:
-> From: Qiufang Dai <qiufang.dai@amlogic.com>
-> 
-> Add clock controller drivers for Amlogic Meson-AXG SoC.
-> 
-> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+Dear Mauro
 
-Applied to next/drivers
+Thanks for your review.
 
-Thx
+We will refer to your comments and consider how to respond for them.
+I want to confirm one thing about  SPDX license text
 
-> ---
->  arch/arm64/Kconfig.platforms |   1 +
->  drivers/clk/meson/Kconfig    |   8 +
->  drivers/clk/meson/Makefile   |   1 +
->  drivers/clk/meson/axg.c      | 936 +++++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/axg.h      | 126 ++++++
->  5 files changed, 1072 insertions(+)
->  create mode 100644 drivers/clk/meson/axg.c
->  create mode 100644 drivers/clk/meson/axg.h
+We will add SPDX license text to our files, 
+Is it necessary to add SPDX not only .c .h Makefile but also Kconfig?
+When I checked current files in driver/media, there is no Kconfig file which has SPDX.
 
+Best Regards,
+Takiguchi
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
