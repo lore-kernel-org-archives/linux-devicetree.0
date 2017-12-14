@@ -1,87 +1,76 @@
-From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] metag: dts: Remove leading 0x and 0s from bindings notation
-Date: Thu, 14 Dec 2017 17:53:55 +0100
-Message-ID: <20171214165355.28006-1-malat@debian.org>
-Return-path: <linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-metag-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, James Hogan <jhogan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-metag-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v10 00/13] Introduce framework for SLIMbus
+	device driver
+Date: Thu, 14 Dec 2017 17:25:49 +0000
+Message-ID: <20171214172549.GJ9788@sirena.org.uk>
+References: <20171211234307.14465-1-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============9035778121517833051=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171211234307.14465-1-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org, j.neuschaefer@gmx.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, pombredanne@nexb.com, sdharia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Improve the DTS files by removing all the leading "0x" and zeros to fix the
-following dtc warnings:
 
-Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+--===============9035778121517833051==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="j+MD90OnwjQyWNYt"
+Content-Disposition: inline
 
-and
 
-Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+--j+MD90OnwjQyWNYt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Converted using the following command:
+On Mon, Dec 11, 2017 at 11:42:54PM +0000, srinivas.kandagatla@linaro.org wr=
+ote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>=20
+> SLIMbus (Serial Low Power Interchip Media Bus) is a specification
+> developed by MIPI (Mobile Industry Processor Interface) alliance.
+> SLIMbus is a 2-wire implementation, which is used to communicate with
+> peripheral components like audio-codec.
 
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -E -i -e "s/@0x([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" -e "s/@0+([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" {} +
+Reviwed-by: Mark Brown <broonie@kernel.org>
 
-For simplicity, two sed expressions were used to solve each warnings separately.
+This all looks pretty good to me, I might've missed some stuff as this
+is a fairly large series but I can't see there would be anything major
+and re-reading it again definitely isn't going to help with that so
+let's get it merged!
 
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before the
-the opening curly brace:
+--j+MD90OnwjQyWNYt
+Content-Type: application/pgp-signature; name="signature.asc"
 
-https://elinux.org/Device_Tree_Linux#Linux_conventions
+-----BEGIN PGP SIGNATURE-----
 
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloytBwACgkQJNaLcl1U
+h9CcaQgAghpHRKy9ciUCNXadKvvOgQZ7QZf0D+VwM8n2B4NYKIGunXzmee6i5iN+
+kSBkIVL+7y1APnKqAQCEqLUb9ZgxCnLkUGTkR3RYRI9+n7ttvkwMDUYJ771vnDCb
+oU0is8SxIQuVVsr7J1tMvxjppq45UyLpKaw0tS9Bt40U+ImfTQUy3gjDHI1LqTdD
+I2gFoLqq4/novmhhPvUKpn2kd7kl9WZDefiLZG7/LDlze2mwaZiAZ+DpB2hVjBjM
+vDFKzeyX1cFeuYdBYH6jSb2Sgl/sfbQZS3WHK78UNNPoH1HJvq3po7GJ4E0jPEns
+ntqvncKWk+vzJoSrrpy/TZjmv2GT8w==
+=mqpg
+-----END PGP SIGNATURE-----
 
-Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
----
- arch/metag/boot/dts/tz1090.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+--j+MD90OnwjQyWNYt--
 
-diff --git a/arch/metag/boot/dts/tz1090.dtsi b/arch/metag/boot/dts/tz1090.dtsi
-index 24ea7d2e9138..a3a3be7796f1 100644
---- a/arch/metag/boot/dts/tz1090.dtsi
-+++ b/arch/metag/boot/dts/tz1090.dtsi
-@@ -28,7 +28,7 @@
- 		#size-cells = <1>;
- 		ranges;
- 
--		pdc: pdc@0x02006000 {
-+		pdc: pdc@2006000 {
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 
-@@ -44,19 +44,19 @@
- 			             <31 IRQ_TYPE_LEVEL_HIGH>; /* Perip 2 (WDT) */
- 		};
- 
--		pinctrl: pinctrl@02005800 {
-+		pinctrl: pinctrl@2005800 {
- 			#gpio-range-cells = <3>;
- 			compatible = "img,tz1090-pinctrl";
- 			reg = <0x02005800 0xe4>;
- 		};
- 
--		pdc_pinctrl: pinctrl@02006500 {
-+		pdc_pinctrl: pinctrl@2006500 {
- 			#gpio-range-cells = <3>;
- 			compatible = "img,tz1090-pdc-pinctrl";
- 			reg = <0x02006500 0x100>;
- 		};
- 
--		gpios: gpios@02005800 {
-+		gpios: gpios@2005800 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			compatible = "img,tz1090-gpio";
-@@ -91,7 +91,7 @@
- 			};
- 		};
- 
--		pdc_gpios: gpios@02006500 {
-+		pdc_gpios: gpios@2006500 {
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 
--- 
-2.11.0
+--===============9035778121517833051==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============9035778121517833051==--
