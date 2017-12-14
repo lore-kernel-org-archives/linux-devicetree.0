@@ -1,63 +1,63 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 00/12] mmc: sdhci-omap: Add UHS/HS200 mode support
-Date: Thu, 14 Dec 2017 18:39:29 +0530
-Message-ID: <20171214130941.26666-1-kishon@ti.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [alsa-devel] [PATCH v10 08/13] regmap: add SLIMbus support
+Date: Thu, 14 Dec 2017 13:16:13 +0000
+Message-ID: <682e689d-d196-fe38-fc6f-e51a981ee18e@linaro.org>
+References: <20171211234307.14465-1-srinivas.kandagatla@linaro.org>
+ <20171211234307.14465-9-srinivas.kandagatla@linaro.org>
+ <20171213092537.GB12631@kroah.com> <20171213160611.GO6416@sirena.org.uk>
+ <20171214051739.GV18649@localhost> <s5h6099yb4p.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <s5h6099yb4p.wl-tiwai@suse.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, kishon@ti.com
+To: Takashi Iwai <tiwai@suse.de>, Vinod Koul <vinod.koul@intel.com>
+Cc: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Jonathan Corbet <corbet@lwn.net>, linux-arm-msm@vger.kernel.org, linux-doc@vger.kernel.org, j.neuschaefer@gmx.net, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, pombredanne@nexb.com, sdharia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add UHS/HS200 mode support in sdhci-omap. The programming sequence
-for voltage switching, tuning is followed from AM572x TRM
-http://www.ti.com/lit/ug/spruhz6i/spruhz6i.pdf
-(Similar to all AM57x/DRA7x SoCs). The patch series also implements
-workaround for errata published in
-http://www.ti.com/lit/er/sprz429k/sprz429k.pdf.
 
-While most of this series is specific to sdhci-omap, it also
-patches sdhci to use software timer when the requested timeout
-is greater than hardware capablility. This re-uses the SW data timer
-already implemented in sdhci while disabling the HW timeout (so that
-spurious timeout is not observed). The patch for sdhci.c is based on
-an earlier patch that was done specific to omap_hsmmc.c
-(https://patchwork.kernel.org/patch/9791449/)
 
-It also includes a pdata-quirk patch since both pdata-quirks and
-sdhci-omap uses struct sdhci_omap_platform_data.
+On 14/12/17 08:19, Takashi Iwai wrote:
+> On Thu, 14 Dec 2017 06:17:39 +0100,
+> Vinod Koul wrote:
+>>
+>> On Wed, Dec 13, 2017 at 04:06:11PM +0000, Mark Brown wrote:
+>>>> On Mon, Dec 11, 2017 at 11:43:02PM +0000, srinivas.kandagatla@linaro.org wrote:
+>>>
+>>>> Mark, can I get an Ack for this patch so I can take it through my tree
+>>>> with the other patches in this series?
+>>>
+>>> I'm actually not seeing a direct dependency here (there's a depends in
+>>> place stopping the regmap code building if the Slimbus core isn't
+>>> enabled) so if you want you can go ahead and apply the main stuff and I
+>>> can apply the regmap change separately, it'll avoid Makefile/Kconfig
+>>> conflicts anyway.
+>>
+>> + Takashi
+>>
+>> FWIW, since this is another MIPI Audio specfic bus, would it make sense for
+>> this series to go thru sound/ tree? I have discussed with Takashi and Greg
+>> for soundwire and we are taking sound path.
+>>
+>> Would that be okay here too? Either ways I dont mind :)
+> 
+> Me too, I don't mind who takes what.
+> Just let me know.
+> 
 
-The dt patches enabling UHS/HS200 will be follow this patch series.
+It was implied early that Greg would pick up the main stuff and Mark can 
+apply regmap separately to avoid Makefile/Kconfig conflicts.
 
-This series is created on
-git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git next
+Lets keep it that way to avoid anymore confusion.
 
-Kishon Vijay Abraham I (12):
-  mmc: sdhci-omap: Update 'power_mode' outside sdhci_omap_init_74_clocks
-  mmc: sdhci-omap: Add card_busy host ops
-  mmc: sdhci-omap: Add custom set_uhs_signaling sdhci_host ops
-  mmc: sdhci-omap: Add tuning support
-  mmc: sdhci-omap: Workaround for Errata i802
-  mmc: sdhci_omap: Add support to set IODELAY values
-  mmc: sdhci_omap: Fix sdhci-omap quirks
-  mmc: sdhci-omap: Add support to override f_max and iodelay from pdata
-  mmc: sdhci: Use software timer when timeout greater than hardware
-    capablility
-  dt-bindings: sdhci-omap: Add K2G specific binding
-  mmc: sdhci-omap: Add support for MMC/SD controller in k2g SoC
-  ARM: OMAP2+: Use sdhci-omap specific pdata-quirks for MMC/SD on DRA74x
-    EVM
+Thanks,
+srini
 
- .../devicetree/bindings/mmc/sdhci-omap.txt         |   2 +
- arch/arm/mach-omap2/pdata-quirks.c                 |  34 +-
- drivers/mmc/host/sdhci-omap.c                      | 446 ++++++++++++++++++++-
- drivers/mmc/host/sdhci.c                           |  41 +-
- drivers/mmc/host/sdhci.h                           |  11 +
- include/linux/platform_data/sdhci-omap.h           |  35 ++
- 6 files changed, 544 insertions(+), 25 deletions(-)
- create mode 100644 include/linux/platform_data/sdhci-omap.h
 
--- 
-2.11.0
+> 
+> thanks,
+> 
+> Takashi
+> 
