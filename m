@@ -1,173 +1,98 @@
-Return-Path: <SRS0=kKXI=DL=macbookpro.malat.net=mathieu@kernel.org>
-From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH 02/25] arm: at91/sama: dts: Remove leading 0x and 0s from bindings notation
-Date: Fri, 15 Dec 2017 12:15:52 +0100
-Message-Id: <20171215111620.20379-2-malat@debian.org>
-In-Reply-To: <20171215111620.20379-1-malat@debian.org>
-References: <20171214165350.27850-1-malat@debian.org>
- <20171215111620.20379-1-malat@debian.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Jesper Nilsson <jesper.nilsson@axis.com>, Lars Persson <lars.persson@axis.com>, Niklas Cassel <niklas.cassel@axis.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Barry Song <baohua@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Dinh Nguyen <dinguyen@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jun Nie <jun.nie@linaro.org>, Baoyou Xie <baoyou.xie@linaro.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-samsung-soc@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org
+MIME-Version: 1.0
+In-Reply-To: <20171214210120.6b436e0d@bbrezillon>
+References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
+	<20171213185313.20017-2-alexandre.belloni@free-electrons.com>
+	<CAL_JsqLm5n6s=cr2hBZp4H9pDPKHUOPWs94JMWYFYJ3hsMMxZQ@mail.gmail.com>
+	<20171214210120.6b436e0d@bbrezillon>
+Date: Thu, 14 Dec 2017 14:24:09 -0600
+Message-ID: <CAL_JsqKsfX31R-Hm46v94zme-fBxukaw--=MDdOhtmqH7V06rQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: chosen: Add clocksource and clockevent selection
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Improve the DTS files by removing all the leading "0x" and zeros to fix the
-following dtc warnings:
+On Thu, Dec 14, 2017 at 2:01 PM, Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+> Hi Rob,
+>
+> On Wed, 13 Dec 2017 16:57:50 -0600
+> Rob Herring <robh+dt@kernel.org> wrote:
+>
+>> On Wed, Dec 13, 2017 at 12:53 PM, Alexandre Belloni
+>> <alexandre.belloni@free-electrons.com> wrote:
+>> > The clocksource and clockevent timer are probed early in the boot process.
+>> > At that time it is difficult for linux to know whether a particular timer
+>> > can be used as the clocksource or the clockevent or by another driver,
+>> > especially when they are all identical or have similar features.
+>>
+>> If all identical, then it shouldn't matter. "similar" means some
+>> difference. Describe those differences.
+>
+> We had this discussion already. Those timers might be connected to
+> external pins and may serve the role of PWM generators or capture
+> devices. We can also chain timers and provide a clocksource with a
+> better resolution or one that wraps less often. In the end it's all
+> about how the user plans to use its system, and this has to be
+> described somehow. Assuming that the software can decide by itself
+> which timer should be used or how many of them should be chained is
+> just an utopia.
 
-Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+Anything that an end-user has to tweak shouldn't be in DT. A board should be able to ship with a dtb and a user should be able to change settings without changing the dtb.
 
-and
+>> > Until now, multiple strategies have been used to solve that:
+>> >  - use Kconfig option as MXC_USE_EPIT or ATMEL_TCB_CLKSRC_BLOCK
+>>
+>> Compile time probably means only one option is really used.
+>
+> Compile time selection prevents using the same kernel for different
+> boards (in other words, no multi-v7), so not really an option here.
 
-Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+Agreed. I'm saying because of that, that's not really a strong argument that those platforms also need your proposal.
 
-Converted using the following command:
+>> >  - use a kernel parameter as the "clocksource" early_param in mach-omap2
+>>
+>> Yeah, OMAP was one of the previous times this came up and also
+>> attempted something like this. This parameter predates selecting
+>> timers based on features described in DT. Look at commit
+>> 2eb03937df3ebc (ARM: OMAP3: Update clocksource timer selection).
+>
+> Then, would you accept to have a property saying that a specific timer
+> is a free-running timer (suitable for clocksource) or a programmable
+> timer (suitable for clkevent)? Or are you saying that you don't like the
+> way timers are differentiated on omap?
 
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
+No, I like the OMAP way. However, their properties are properties of the h/w, not how you want to use them.
 
-For simplicity, two sed expressions were used to solve each warnings separately.
+>> >  - registering the first seen timer as a clockevent and the second one as
+>> >  a clocksource as in rk_timer_init or dw_apb_timer_init
+>> >
+>> > Add a linux,clocksource and a linux,clockevent node in chosen with a timer
+>> > property pointing to the timer to use. Other properties, like the targeted
+>> > precision may be added later.
+>>
+>> Open ended expansion of this does not help convince me it is needed.
+>
+> It's not an open ended expansion, we're just trying to find a way to
+> describe which timer blocks should be used as free running timers
+> (clksource) and which one should be used as programmable timers
+> (clkevent). Automatically selecting timer blocks to assign to the
+> clkevent or clocksource is not so easy (as has been explained earlier)
+> because at the time the system registers its clksource/clkevent devices
+> we might not have all the necessary information to know which timer
+> blocks will be reserved for other usage later on. The use case I have
+> in mind is DT overlays, where one of the overlay is using a timer as a
+> PWM generator. If the clkevent or clksource has already claimed the
+> timer connected to the pins the overlay is using, then we're screwed,
+> and there's no way the system can know that ahead of time except by
+> pre-assigning a timer to the clksource or clkevent feature.
 
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before the
-the opening curly brace:
+If the timer can be a pwm, then it should have a #pwm-cells property. Then don't use timers with #pwm-cells property.
 
-https://elinux.org/Device_Tree_Linux#Linux_conventions
+> So really, we need a way to assign a specific timer to a specific
+> feature. You've refused the different proposals we made so far, so
+> what's your alternative? I mean a real alternative that solve the "an
+> auto-selected timer might be claimed by another driver at some point"
+> problem.
 
-This will solve as a side effect warning:
-
-Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-
-Reported-by: David Daney <ddaney@caviumnetworks.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
----
- arch/arm/boot/dts/at91sam9261.dtsi     | 2 +-
- arch/arm/boot/dts/at91sam9261ek.dts    | 2 +-
- arch/arm/boot/dts/at91sam9263.dtsi     | 2 +-
- arch/arm/boot/dts/at91sam9263ek.dts    | 2 +-
- arch/arm/boot/dts/at91sam9g25ek.dts    | 2 +-
- arch/arm/boot/dts/at91sam9g45.dtsi     | 2 +-
- arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 +-
- arch/arm/boot/dts/sama5d3xmb.dtsi      | 2 +-
- arch/arm/boot/dts/sama5d3xmb_cmp.dtsi  | 2 +-
- 9 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
-index 66876019101d..eb186245fb4c 100644
---- a/arch/arm/boot/dts/at91sam9261.dtsi
-+++ b/arch/arm/boot/dts/at91sam9261.dtsi
-@@ -80,7 +80,7 @@
- 			status = "disabled";
- 		};
- 
--		fb0: fb@0x00600000 {
-+		fb0: fb@600000 {
- 			compatible = "atmel,at91sam9261-lcdc";
- 			reg = <0x00600000 0x1000>;
- 			interrupts = <21 IRQ_TYPE_LEVEL_HIGH 3>;
-diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
-index 960d6940ebf6..9733db3f739b 100644
---- a/arch/arm/boot/dts/at91sam9261ek.dts
-+++ b/arch/arm/boot/dts/at91sam9261ek.dts
-@@ -36,7 +36,7 @@
- 			status = "okay";
- 		};
- 
--		fb0: fb@0x00600000 {
-+		fb0: fb@600000 {
- 			display = <&display0>;
- 			atmel,power-control-gpio = <&pioA 12 GPIO_ACTIVE_LOW>;
- 			status = "okay";
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index e54f14d36b6f..a26f7ada429d 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -999,7 +999,7 @@
- 			};
- 		};
- 
--		fb0: fb@0x00700000 {
-+		fb0: fb@700000 {
- 			compatible = "atmel,at91sam9263-lcdc";
- 			reg = <0x00700000 0x1000>;
- 			interrupts = <26 IRQ_TYPE_LEVEL_HIGH 3>;
-diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
-index 5a2e1af793f5..f095b5d4d410 100644
---- a/arch/arm/boot/dts/at91sam9263ek.dts
-+++ b/arch/arm/boot/dts/at91sam9263ek.dts
-@@ -95,7 +95,7 @@
- 			};
- 		};
- 
--		fb0: fb@0x00700000 {
-+		fb0: fb@700000 {
- 			display = <&display0>;
- 			status = "okay";
- 
-diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-index 91a71774472e..31fecc2cdaf9 100644
---- a/arch/arm/boot/dts/at91sam9g25ek.dts
-+++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-@@ -25,7 +25,7 @@
- 			};
- 
- 			i2c0: i2c@f8010000 {
--				ov2640: camera@0x30 {
-+				ov2640: camera@30 {
- 					compatible = "ovti,ov2640";
- 					reg = <0x30>;
- 					pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 2b127ca7aaa0..98348ebd6488 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -1302,7 +1302,7 @@
- 			};
- 		};
- 
--		fb0: fb@0x00500000 {
-+		fb0: fb@500000 {
- 			compatible = "atmel,at91sam9g45-lcdc";
- 			reg = <0x00500000 0x1000>;
- 			interrupts = <23 IRQ_TYPE_LEVEL_HIGH 3>;
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index e922552a04cb..d793451ee04c 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -220,7 +220,7 @@
- 			};
- 		};
- 
--		fb0: fb@0x00500000 {
-+		fb0: fb@500000 {
- 			display = <&display0>;
- 			status = "okay";
- 
-diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
-index 7f55050dd405..ef0f2d049e15 100644
---- a/arch/arm/boot/dts/sama5d3xmb.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
-@@ -53,7 +53,7 @@
- 			};
- 
- 			i2c1: i2c@f0018000 {
--				ov2640: camera@0x30 {
-+				ov2640: camera@30 {
- 					compatible = "ovti,ov2640";
- 					reg = <0x30>;
- 					pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
-index 83e3d3e08fd4..97e171db5970 100644
---- a/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
-@@ -88,7 +88,7 @@
- 			};
- 
- 			i2c1: i2c@f0018000 {
--				ov2640: camera@0x30 {
-+				ov2640: camera@30 {
- 					compatible = "ovti,ov2640";
- 					reg = <0x30>;
- 					pinctrl-names = "default";
--- 
-2.11.0
+Kernel command line is fine for me.
