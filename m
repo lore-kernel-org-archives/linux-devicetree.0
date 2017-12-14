@@ -1,122 +1,76 @@
-From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] nios2: dts: Remove leading 0x and 0s from bindings notation
-Date: Thu, 14 Dec 2017 17:53:59 +0100
-Message-ID: <20171214165359.28112-1-malat@debian.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nios2-dev-g9ZBwUv/Ih/yUk5EbOjzuce+I+R0W71w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Subject: Re: [PATCH 5/5] PCI: cadence: add EndPoint Controller driver for
+ Cadence PCIe controller
+Date: Thu, 14 Dec 2017 18:03:00 +0100
+Message-ID: <e43929c8-e283-f774-eca3-3b0ffcdfb49d@free-electrons.com>
+References: <cover.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <297fa17e12cf0f2fb223c05eeb18570707ff5bf1.1511439189.git.cyrille.pitchen@free-electrons.com>
+ <20171201122048.GB25010@red-moon>
+ <ed6d811e-608e-e6aa-7b07-2f2d2d68adbd@ti.com>
+ <c2e9fd2b-e576-49bb-31e1-c65ff92cf9d3@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c2e9fd2b-e576-49bb-31e1-c65ff92cf9d3@free-electrons.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Improve the DTS files by removing all the leading "0x" and zeros to fix the
-following dtc warnings:
+Le 13/12/2017 à 17:50, Cyrille Pitchen a écrit :
+> Hi Kishon,
+> 
+> Le 05/12/2017 à 10:19, Kishon Vijay Abraham I a écrit :
+>> Hi,
+>>
+>> On Friday 01 December 2017 05:50 PM, Lorenzo Pieralisi wrote:
+>>> On Thu, Nov 23, 2017 at 04:01:50PM +0100, Cyrille Pitchen wrote:
+>>>> This patch adds support to the Cadence PCIe controller in endpoint mode.
+>>>
+>>> Please add a brief description to the log to describe the most salient
+>>> features.
+>>>
+>>>> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+>>>> ---
+>>>>  drivers/pci/cadence/Kconfig           |   9 +
+>>>>  drivers/pci/cadence/Makefile          |   1 +
+>>>>  drivers/pci/cadence/pcie-cadence-ep.c | 553 ++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 563 insertions(+)
+>>>>  create mode 100644 drivers/pci/cadence/pcie-cadence-ep.c
+[...]
+>>>> +static int cdns_pcie_ep_write_header(struct pci_epc *epc,
+>>>> +				     struct pci_epf_header *hdr)
+>>>> +{
+>>>> +	struct cdns_pcie_ep *ep = epc_get_drvdata(epc);
+>>>> +	struct cdns_pcie *pcie = &ep->pcie;
+>>>> +	u8 fn = 0;
+>>>> +
+>>>> +	if (fn == 0) {
+>>>
+>>> I think there is some code to retrieve fn missing here.
+>>
+>> hmm.. the endpoint core has to send the function number which right now it's
+>> not doing though it has the function number info in pci_epf.
+> 
+> Would it be OK if I add a new patch in the next series adding a
+> 'struct pcie_epf *epf' as a 2nd argument to all handlers in the
+> 'struct pcie_epc_ops'? This way I could have access to epf->func_no as needed.
+>
 
-Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+Except for pci_epc_start() and pci_epc_stop(), both only called from
+pci_epc_start_store(), I don't have trouble getting the epf value to be passed
+as a 2nd argument to all other handlers in 'struct pcie_epc_ops'.
 
-and
+Now my next question is: is it better to keep the 'struct pci_epc *epc' as
+the 1st argument of all those handlers or do you prefer me to remove it as
+the value can always be retrieved from epf->epc, since now we provide epf as
+a new argument ?
 
-Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-
-Converted using the following command:
-
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -E -i -e "s/@0x([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" -e "s/@0+([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" {} +
-
-For simplicity, two sed expressions were used to solve each warnings separately.
-
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before the
-the opening curly brace:
-
-https://elinux.org/Device_Tree_Linux#Linux_conventions
-
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-
-Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
----
- arch/nios2/boot/dts/3c120_devboard.dts | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/nios2/boot/dts/3c120_devboard.dts b/arch/nios2/boot/dts/3c120_devboard.dts
-index 36ccdf05837d..56f4b5df6d65 100644
---- a/arch/nios2/boot/dts/3c120_devboard.dts
-+++ b/arch/nios2/boot/dts/3c120_devboard.dts
-@@ -29,7 +29,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+I have no personal preference. Please let me know your choice :)
  
--		cpu: cpu@0x0 {
-+		cpu: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "altr,nios2-1.0";
- 			reg = <0x00000000>;
-@@ -69,7 +69,7 @@
- 		compatible = "altr,avalon", "simple-bus";
- 		bus-frequency = <125000000>;
- 
--		pb_cpu_to_io: bridge@0x8000000 {
-+		pb_cpu_to_io: bridge@8000000 {
- 			compatible = "simple-bus";
- 			reg = <0x08000000 0x00800000>;
- 			#address-cells = <1>;
-@@ -83,7 +83,7 @@
- 				<0x00008000 0x08008000 0x00000020>,
- 				<0x00400000 0x08400000 0x00000020>;
- 
--			timer_1ms: timer@0x400000 {
-+			timer_1ms: timer@400000 {
- 				compatible = "altr,timer-1.0";
- 				reg = <0x00400000 0x00000020>;
- 				interrupt-parent = <&cpu>;
-@@ -91,7 +91,7 @@
- 				clock-frequency = <125000000>;
- 			};
- 
--			timer_0: timer@0x8000 {
-+			timer_0: timer@8000 {
- 				compatible = "altr,timer-1.0";
- 				reg = < 0x00008000 0x00000020 >;
- 				interrupt-parent = < &cpu >;
-@@ -99,14 +99,14 @@
- 				clock-frequency = < 125000000 >;
- 			};
- 
--			jtag_uart: serial@0x4d50 {
-+			jtag_uart: serial@4d50 {
- 				compatible = "altr,juart-1.0";
- 				reg = <0x00004d50 0x00000008>;
- 				interrupt-parent = <&cpu>;
- 				interrupts = <1>;
- 			};
- 
--			tse_mac: ethernet@0x4000 {
-+			tse_mac: ethernet@4000 {
- 				compatible = "altr,tse-1.0";
- 				reg = <0x00004000 0x00000400>,
- 					<0x00004400 0x00000040>,
-@@ -133,7 +133,7 @@
- 				};
- 			};
- 
--			uart: serial@0x4c80 {
-+			uart: serial@4c80 {
- 				compatible = "altr,uart-1.0";
- 				reg = <0x00004c80 0x00000020>;
- 				interrupt-parent = <&cpu>;
-@@ -143,7 +143,7 @@
- 			};
- 		};
- 
--		cfi_flash_64m: flash@0x0 {
-+		cfi_flash_64m: flash@0 {
- 			compatible = "cfi-flash";
- 			reg = <0x00000000 0x04000000>;
- 			bank-width = <2>;
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Best regards,
+> 
+> Cyrille
+> 
