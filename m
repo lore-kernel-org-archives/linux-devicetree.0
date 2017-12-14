@@ -1,105 +1,78 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 2/3] ARM: dts: sun8i: a83t: Add I2C device nodes and pinmux settings
-Date: Thu, 14 Dec 2017 12:23:49 +0800
-Message-ID: <20171214042350.29469-3-wens@csie.org>
-References: <20171214042350.29469-1-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171214042350.29469-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 1/4] cpufreq: ti-cpufreq: Convert to
+ module_platform_driver
+Date: Thu, 14 Dec 2017 09:59:46 +0530
+Message-ID: <20171214042946.GR3322@vireshk-i7>
+References: <20171213203358.20839-1-d-gerlach@ti.com>
+ <20171213203358.20839-2-d-gerlach@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171213203358.20839-2-d-gerlach@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The A83T has 3 I2C controllers under the standard bus. There is one
-more in the R_ block section. The pin functions for the 3 controllers
-are on PH 0~6. I2C2 can also be used on pins PE14 and PE15, but these
-pins can also mux the CSI (camera sensor interface) controller's
-embedded I2C controller. The latter seems to be preferred in the
-reference designs for I2C camera sensor access, freeing I2C2 for other
-uses.
+On 13-12-17, 14:33, Dave Gerlach wrote:
+> ti-cpufreq will be responsible for calling dev_pm_opp_set_regulators on
+> platforms that require AVS and ABB regulator support so we must be
+> able to defer probe if regulators are not yet available, so change
+> ti-cpufreq to be a module_platform_driver to allow for probe defer.
+> 
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> ---
+>  drivers/cpufreq/ti-cpufreq.c | 23 +++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+> index 923317f03b4b..b1c230a1e2aa 100644
+> --- a/drivers/cpufreq/ti-cpufreq.c
+> +++ b/drivers/cpufreq/ti-cpufreq.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/io.h>
+>  #include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+> @@ -195,7 +196,7 @@ static const struct of_device_id ti_cpufreq_of_match[] = {
+>  	{},
+>  };
+>  
+> -static int ti_cpufreq_init(void)
+> +static int ti_cpufreq_probe(struct platform_device *pdev)
+>  {
+>  	u32 version[VERSION_COUNT];
+>  	struct device_node *np;
+> @@ -269,4 +270,22 @@ static int ti_cpufreq_init(void)
+>  
+>  	return ret;
+>  }
+> -device_initcall(ti_cpufreq_init);
+> +
+> +static int ti_cpufreq_init(void)
+> +{
+> +	platform_device_register_simple("ti-cpufreq", -1, NULL, 0);
+> +	return 0;
+> +}
+> +module_init(ti_cpufreq_init);
+> +
+> +static struct platform_driver ti_cpufreq_driver = {
+> +	.probe = ti_cpufreq_probe,
+> +	.driver = {
+> +		.name = "ti-cpufreq",
+> +	},
+> +};
+> +module_platform_driver(ti_cpufreq_driver);
+> +
+> +MODULE_DESCRIPTION("TI CPUFreq/OPP hw-supported driver");
+> +MODULE_AUTHOR("Dave Gerlach <d-gerlach@ti.com>");
+> +MODULE_LICENSE("GPL v2");
 
-This patch adds device nodes for the three standard I2C controllers,
-as well as pinmux settings for the PH pins. For I2C0 and I2C1, since
-they only have one possible setting, just set them by default.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 55 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 354cb4b48f47..de5119a2a91c 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -348,6 +348,21 @@
- 				drive-strength = <40>;
- 			};
- 
-+			i2c0_pins: i2c0-pins {
-+				pins = "PH0", "PH1";
-+				function = "i2c0";
-+			};
-+
-+			i2c1_pins: i2c1-pins {
-+				pins = "PH2", "PH3";
-+				function = "i2c1";
-+			};
-+
-+			i2c2_ph_pins: i2c2-ph-pins {
-+				pins = "PH4", "PH5";
-+				function = "i2c2";
-+			};
-+
- 			i2s1_pins: i2s1-pins {
- 				/* I2S1 does not have external MCLK pin */
- 				pins = "PG10", "PG11", "PG12", "PG13";
-@@ -499,6 +514,46 @@
- 			status = "disabled";
- 		};
- 
-+		i2c0: i2c@1c2ac00 {
-+			compatible = "allwinner,sun8i-a83t-i2c",
-+				     "allwinner,sun6i-a31-i2c";
-+			reg = <0x01c2ac00 0x400>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C0>;
-+			resets = <&ccu RST_BUS_I2C0>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c1: i2c@1c2b000 {
-+			compatible = "allwinner,sun8i-a83t-i2c",
-+				     "allwinner,sun6i-a31-i2c";
-+			reg = <0x01c2b000 0x400>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C1>;
-+			resets = <&ccu RST_BUS_I2C1>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pins>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c2: i2c@1c2b400 {
-+			compatible = "allwinner,sun8i-a83t-i2c",
-+				     "allwinner,sun6i-a31-i2c";
-+			reg = <0x01c2b400 0x400>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_I2C2>;
-+			resets = <&ccu RST_BUS_I2C2>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		emac: ethernet@1c30000 {
- 			compatible = "allwinner,sun8i-a83t-emac";
- 			syscon = <&syscon>;
 -- 
-2.15.0
+viresh
