@@ -1,125 +1,34 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/8] PCI: brcmstb: Add Broadcom STB PCIe host
- controller driver
-Date: Thu, 14 Dec 2017 16:51:33 -0600
-Message-ID: <20171214225133.GM30595@bhelgaas-glaptop.roam.corp.google.com>
-References: <1510697532-32828-1-git-send-email-jim2101024@gmail.com>
- <1510697532-32828-4-git-send-email-jim2101024@gmail.com>
- <20171212221642.GB95453@bhelgaas-glaptop.roam.corp.google.com>
- <CANCKTBvtqNWZYXpLdUnEWwA2=14XhJ6adR5muOAYubY_1SxZWw@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: DT dtc warnings
+Date: Thu, 14 Dec 2017 21:02:57 -0200
+Message-ID: <CAOMZO5CKPhQwdkYBeu74k=RYBxGhVf13nnrzHXUhq8LWk8yBSg@mail.gmail.com>
+References: <CAL_JsqJKCzjx3zNigu_0T=Ku=_P2SQEjTx=uVbvr_QxJQR7kYg@mail.gmail.com>
+ <CAJKOXPc7M3jeV_hNBBRJKGs3vtNzdrGbW_YETw2n0fXxhqjZ_g@mail.gmail.com>
+ <CAJKOXPfCDT+7wPkz3g6AiKgLvFp4rnicYQgYn8A_yaPe4YhD5A@mail.gmail.com>
+ <CAOMZO5BGX1U90bGrff42rZKKOSQK3NB=-k_4BX04Tsi=yX0Odg@mail.gmail.com> <CAJKOXPea5nx+i+vWJcMGqct1=gP5OHbDSAzqTCBYr1RvFW-1gw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CANCKTBvtqNWZYXpLdUnEWwA2=14XhJ6adR5muOAYubY_1SxZWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAJKOXPea5nx+i+vWJcMGqct1=gP5OHbDSAzqTCBYr1RvFW-1gw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Christoph Hellwig <hch-jcswGhMUV9g@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel@lists.
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 13, 2017 at 06:53:53PM -0500, Jim Quinlan wrote:
-> On Tue, Dec 12, 2017 at 5:16 PM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Tue, Nov 14, 2017 at 05:12:07PM -0500, Jim Quinlan wrote:
-> >> This commit adds the basic Broadcom STB PCIe controller.  Missing is
-> >> the ability to process MSI and also handle dma-ranges for inbound
-> >> memory accesses.  These two functionalities are added in subsequent
-> >> commits.
-> >>
-> >> The PCIe block contains an MDIO interface.  This is a local interface
-> >> only accessible by the PCIe controller.  It cannot be used or shared
-> >> by any other HW.  As such, the small amount of code for this
-> >> controller is included in this driver as there is little upside to put
-> >> it elsewhere.
-> ...
+On Thu, Dec 14, 2017 at 7:19 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-> >> +static bool brcm_pcie_valid_device(struct brcm_pcie *pcie, struct pci_bus *bus,
-> >> +                                int dev)
-> >> +{
-> >> +     if (pci_is_root_bus(bus)) {
-> >> +             if (dev > 0)
-> >> +                     return false;
-> >> +     } else {
-> >> +             /* If there is no link, then there is no device */
-> >> +             if (!brcm_pcie_link_up(pcie))
-> >> +                     return false;
-> >
-> > This is racy, since the link can go down after you check but before
-> > you do the config access.  I assume your hardware can deal with a
-> > config access that targets a link that is down?
-> 
-> Yes, that can happen but there is really nothing that can be done if
-> the link goes down in that vulnerability window.  What do you suggest
-> doing?
+> Thanks for reply!
+>
+> Isn't this property of a SoC? The registers used by
+> syscon-poweroff/reboot are part of SoC power management unit. It does
+> not refer to any externals. Why then it should be put outside of soc?
 
-Most hardware drops writes and returns ~0 on reads if the link is
-down.  I assume your hardware does something similar, and that should
-be enough.  You shouldn't have to check whether the link is up.
+If these nodes have registers, then they should have a unit address
+and reg property.
 
-The hardware might report errors, e.g., via AER, if the link is down.
-And we might not not handle those nicely.  If we have issues there, we
-should find out and fix them.
+Regards,
 
-I see that dwc, altera, rockchip, and xilinx all do check for link up
-there, too.  I can't remember if they had a legitimate reason, or if I
-just missed it.
-
-> >> +static void brcm_pcie_remove_controller(struct brcm_pcie *pcie)
-> >> +{
-> >> +     struct list_head *pos, *q;
-> >> +     struct brcm_pcie *tmp;
-> >> +
-> >> +     mutex_lock(&brcm_pcie_lock);
-> >> +     list_for_each_safe(pos, q, &brcm_pcie) {
-> >> +             tmp = list_entry(pos, struct brcm_pcie, list);
-> >> +             if (tmp == pcie) {
-> >> +                     list_del(pos);
-> >> +                     if (list_empty(&brcm_pcie))
-> >> +                             num_memc = 0;
-> >> +                     break;
-> >> +             }
-> >> +     }
-> >> +     mutex_unlock(&brcm_pcie_lock);
-> >
-> > I'm missing something.  I don't see that num_memc is ever set to
-> > anything *other* than zero.
-> The num_memc is set and used in the dma commit.  I will remove its
-> declaration from this commit.
-
-Thanks, that will make the patches much easier to read.
-
-> >> +     pcie->id = of_get_pci_domain_nr(dn);
-> >
-> > Why do you call of_get_pci_domain_nr() directly?  No other driver
-> > does.
-> 
-> We use the domain as the controller number (id).  We use the id to
-> identify and fix a HW bug that only affects the 2nd controller; see
-> the clause
-> " } else if (of_machine_is_compatible("brcm,bcm7278a0")) {".
-
-pci_register_host_bridge() already sets bus->domain_nr for every host
-bridge.  That path calls of_get_pci_domain_nr() eventually.   But I
-guess that's too late for your use case, because you have this:
-
-  brcm_pcie_probe
-    brcm_pcie_setup
-      brcm_pcie_bridge_sw_init_set
-        if (of_machine_is_compatible("brcm,bcm7278a0")) {
-          offset = pcie->id ? ...                    <--- use
-    pci_scan_root_bus_bridge
-      pci_register_host_bridge
-        bus->domain_nr = pci_bus_find_domain_nr      <--- available
-
-I guess you haven't added a binding for brcm,bcm7278a0 yet?
-
-I'm not really sure that using the linux,pci-domain DT property is the
-best way to distinguish the two controllers.  Maybe Rob has an
-opinion?
-
-> >> +     if (pcie->id < 0)
-> >> +             return pcie->id;
-
-Bjorn
+Fabio Estevam
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
