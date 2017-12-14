@@ -1,47 +1,135 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] cpufreq: Add DVFS support for Armada 37xx
-Date: Thu, 14 Dec 2017 21:06:31 +0530
-Message-ID: <20171214153631.GZ3322@vireshk-i7>
-References: <20171214150006.25438-1-gregory.clement@free-electrons.com>
- <20171214150006.25438-4-gregory.clement@free-electrons.com>
+From: Shameer Kolothum <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon 161010801
+	erratum(reserve HW MSI)
+Date: Thu, 14 Dec 2017 16:09:54 +0000
+Message-ID: <20171214160957.13716-1-shameerali.kolothum.thodi@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171214150006.25438-4-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Evan Wang <xswang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andre Heider <a.heider-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Shameer Kolothum <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14-12-17, 16:00, Gregory CLEMENT wrote:
-> This patch adds DVFS support for the Armada 37xx SoCs
-> 
-> There are up to four CPU frequency loads for Armada 37xx controlled by
-> the hardware.
-> 
-> This driver associates the CPU load level to a frequency, then the
-> hardware will switch while selecting a load level.
-> 
-> The hardware also can associate a voltage for each level (AVS support)
-> but it is not yet supported
-> 
-> Tested-by: Andre Heider <a.heider-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/cpufreq/Kconfig.arm           |   7 +
->  drivers/cpufreq/Makefile              |   1 +
->  drivers/cpufreq/armada-37xx-cpufreq.c | 241 ++++++++++++++++++++++++++++++++++
->  3 files changed, 249 insertions(+)
->  create mode 100644 drivers/cpufreq/armada-37xx-cpufreq.c
+On certain HiSilicon platforms (hip06/hip07) the GIC ITS and PCIe RC
+deviates from the standard implementation and this breaks PCIe MSI
+functionality when SMMU is enabled.
 
-Thanks for taking care of very minor review comments I had. All the
-patches look good now to me :)
+The HiSilicon erratum 161010801 describes this limitation of certain
+HiSilicon platforms to support the SMMU mappings for MSI transactions.
+On these platforms GICv3 ITS translator is presented with the deviceID
+by extending the MSI payload data to 64 bits to include the deviceID.
+Hence, the PCIe controller on this platforms has to differentiate the MSI
+payload against other DMA payload and has to modify the MSI payload.
+This basically makes it difficult for this platforms to have a SMMU
+translation for MSI.
+
+This patch implements an ACPI based quirk to reserve the hw msi regions
+in the smmu-v3 driver which means these address regions will not be
+translated and will be excluded from iova allocations.
+
+To implement this quirk, the following changes are incorporated:
+1. Added a generic helper function to IORT code to retrieve and reserve
+   the associated ITS base address from a device IORT node. The function
+   has a check for smmu model to determine whether the platform requires
+   the HW MSI reservation or not.
+2. Added smmu node entries and explicitly disabled them in hip06/hip07
+    dts files so that users are warned about the non-DT support for this
+    erratum.
+
+Changelog:
+
+v11--> v12
+-Thanks to Lorenzo, Fixed !CONFIG_IOMMU_API compile error(patch #1).
+
+v10 --> v11
+-Addressed comments from Lorenzo(patch#1)
+-Added Robin's Reviewed-by to patch #2
+
+v9 --> v10
+Addressed comments:
+-Moved smmu model check to iort helper function to selectively apply
+ the msi reservation which will make the fn call generic from iommu-dma.
+-Removed PCI blacklisting patch, instead added smmu nodes(disabled)
+ with comments to hip06/hip07 dts file.
+
+v8 --> v9
+-Thanks to Marc, fixed IORT helper function to reserve the ITS
+ translater region only.
+-Removed the DT support for MSI reservation and blacklisted
+ HiSilicon PCIe controllers on DT based systems when SMMUv3 is
+ enabled.
+
+v7 --> v8
+Addressed comments from Rob and Lorenzo:
+ -Modified to use DT compatible string for errata.
+ -Changed logic to retrieve the msi-parent for DT case.
+
+v6 --> v7
+Addressed request from Will to add DT support for the erratum:
+ - added bt binding
+ - add of_iommu_msi_get_resv_regions()
+New arm64 silicon errata entry
+Rename iort_iommu_{its->msi}_get_resv_regions
+
+v5 --> v6
+Addressed comments from Robin and Lorenzo:
+-No change to patch#1 .
+-Reverted v5 patch#2 as this might break the platforms where this quirk
+  is not applicable. Provided a generic function in iommu code and added
+  back the quirk implementation in SMMU v3 driver(patch#3)
+
+v4 --> v5
+Addressed comments from Robin and Lorenzo:
+-Added a comment to make it clear that, for now, only straightforward
+  HW topologies are handled while reserving ITS regions(patch #1).
+
+v3 --> v4
+Rebased on 4.13-rc1.
+Addressed comments from Robin, Will and Lorenzo:
+-As suggested by Robin, moved the ITS msi reservation into
+  iommu_dma_get_resv_regions().
+-Added its_count != resv region failure case(patch #1).
+
+v2 --> v3
+Addressed comments from Lorenzo and Robin:
+-Removed dev_is_pci() check in smmuV3 driver.
+-Don't treat device not having an ITS mapping as an error in
+  iort helper function.
+
+v1 --> v2
+-patch 2/2: Invoke iort helper fn based on fwnode type(acpi).
+
+RFCv2 -->PATCH
+-Incorporated Lorenzo's review comments.
+
+RFC v1 --> RFC v2
+Based on Robin's review comments,
+-Removed  the generic erratum framework.
+-Using IORT/MADT tables to retrieve the ITS base addr instead
+ of vendor specific CSRT table.
+
+Shameer Kolothum (3):
+  ACPI/IORT: Add msi address regions reservation helper
+  iommu/dma: Add HW MSI(GICv3 ITS) address regions reservation
+  arm64:dts:hisilicon Disable hisilicon smmu node on hip06/hip07
+
+ arch/arm64/boot/dts/hisilicon/hip06.dtsi |  56 ++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hip07.dtsi |  25 +++++++
+ drivers/acpi/arm64/iort.c                | 111 ++++++++++++++++++++++++++++++-
+ drivers/iommu/dma-iommu.c                |   8 ++-
+ drivers/irqchip/irq-gic-v3-its.c         |   3 +-
+ include/linux/acpi_iort.h                |   7 +-
+ 6 files changed, 204 insertions(+), 6 deletions(-)
 
 -- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
