@@ -1,83 +1,50 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM64: dts: meson-axg: add ethernet mac controller
-Date: Thu, 14 Dec 2017 15:52:56 +0100
-Message-ID: <1513263176.32163.12.camel@baylibre.com>
-References: <20171214030242.113152-1-yixun.lan@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171214030242.113152-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v4 1/4] dt-bindings: marvell: Add documentation for the North Bridge PM on Armada 37xx
+Date: Thu, 14 Dec 2017 16:00:03 +0100
+Message-ID: <20171214150006.25438-2-gregory.clement@free-electrons.com>
+References: <20171214150006.25438-1-gregory.clement@free-electrons.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171214150006.25438-1-gregory.clement@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Evan Wang <xswang@marvell.com>, Andre Heider <a.heider@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-12-14 at 11:02 +0800, Yixun Lan wrote:
-> Add DT info for the stmmac ethernet MAC which found in
-> the Amlogic's Meson-AXG SoC, also describe the ethernet
-> pinctrl & clock information here.
-> 
-> This is tested in the S400 dev board which use a RTL8211F PHY,
-> and the pins connect to the 'eth_rgmii_y_pins' group.
-> 
-> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Extend the documentation of the Armada 37xx SoC with the the North
+Bridge Power Management component.
 
-I think it would have been better to split this into 2 patches.
-One adding the controller for axg, the other using it in the s400, but maybe
-Kevin is OK with it...
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ .../devicetree/bindings/arm/marvell/armada-37xx.txt   | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> 
-> ---
-> Changes in v2 since [1]:
->  - rebase to kevin's v4.16/dt64 branch
->  - add Neil's Reviewed-by
->  - move clock info to board.dts instead of in soc.dtsi
->  - drop "meson-axg-dwmac" compatible string, since we didn't use this
->    we could re-add it later when we really need.
->  - note: to make ethernet work properly,it depend on clock & pinctrl[2],
->    to compile the DTS, the patch [3] is required.
->    the code part will be taken via clock & pinctrl subsystem tree.
-> 
-> [1]
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005301.html
-> 
-> [2]
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005735.html
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005694.html
-> 
-> [3]
-> http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005738.html
-> ---
->  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 11 ++++++
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 50 ++++++++++++++++++++++++++
->  2 files changed, 61 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> index 70eca1f8736a..138de3bc7cc8 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> @@ -20,3 +20,14 @@
->  &uart_AO {
->  	status = "okay";
->  };
-> +
-> +&ethmac {
-
-We try to keep nodes alphabetically ordered.
-Please put ethmac before uart_A0
-
-thx
-
-> 
-> 
-
-With all the dependencies sorted out, it works
-
-Tested-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+index 51336e5fc761..35c3c3460d17 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/armada-37xx.txt
+@@ -14,3 +14,22 @@ following property before the previous one:
+ Example:
+ 
+ compatible = "marvell,armada-3720-db", "marvell,armada3720", "marvell,armada3710";
++
++
++Power management
++----------------
++
++For power management (particularly DVFS and AVS), the North Bridge
++Power Management component is needed:
++
++Required properties:
++- compatible     : should contain "marvell,armada-3700-nb-pm", "syscon";
++- reg            : the register start and length for the North Bridge
++		    Power Management
++
++Example:
++
++nb_pm: syscon@14000 {
++	compatible = "marvell,armada-3700-nb-pm", "syscon";
++	reg = <0x14000 0x60>;
++}
+-- 
+2.15.1
