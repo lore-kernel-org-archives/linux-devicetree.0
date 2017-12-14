@@ -1,130 +1,58 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v11 1/3] ACPI/IORT: Add msi address regions reservation
- helper
-Date: Thu, 14 Dec 2017 12:43:36 +0000
-Message-ID: <20171214124336.GC27348@e107981-ln.cambridge.arm.com>
-References: <20171213115830.61872-1-shameerali.kolothum.thodi@huawei.com>
- <20171213115830.61872-2-shameerali.kolothum.thodi@huawei.com>
- <20171214114759.GA27117@e107981-ln.cambridge.arm.com>
- <5FC3163CFD30C246ABAA99954A238FA838628CDD@FRAEML521-MBX.china.huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5FC3163CFD30C246ABAA99954A238FA838628CDD@FRAEML521-MBX.china.huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Cc: "robin.murphy@arm.com" <robin.murphy@arm.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "joro@8bytes.org" <joro@8bytes.org>, John Garry <john.garry@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>
+From: Simon Shields <simon@lineageos.org>
+Subject: [PATCH v2 0/4] Add Exynos4412-based midas boards support
+Date: Thu, 14 Dec 2017 23:50:11 +1100
+Message-ID: <20171214125015.2611-1-simon@lineageos.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?q?Bart=C5=82omiej=20=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 14, 2017 at 12:17:50PM +0000, Shameerali Kolothum Thodi wrote:
-> Hi Lorenzo,
-> 
-> > -----Original Message-----
-> > From: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
-> > Sent: Thursday, December 14, 2017 11:48 AM
-> > To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-> > Cc: robin.murphy@arm.com; marc.zyngier@arm.com; will.deacon@arm.com;
-> > joro@8bytes.org; John Garry <john.garry@huawei.com>; xuwei (O)
-> > <xuwei5@hisilicon.com>; Guohanjun (Hanjun Guo) <guohanjun@huawei.com>;
-> > iommu@lists.linux-foundation.org; linux-arm-kernel@lists.infradead.org; linux-
-> > acpi@vger.kernel.org; devicetree@vger.kernel.org; Linuxarm
-> > <linuxarm@huawei.com>
-> > Subject: Re: [PATCH v11 1/3] ACPI/IORT: Add msi address regions reservation
-> > helper
-> > 
-> > On Wed, Dec 13, 2017 at 11:58:28AM +0000, Shameer Kolothum wrote:
-> > > On some platforms msi parent address regions have to be excluded from
-> > > normal IOVA allocation in that they are detected and decoded in a HW
-> > > specific way by system components and so they cannot be considered normal
-> > > IOVA address space.
-> > >
-> > > Add a helper function that retrieves ITS address regions - the msi
-> > > parent - through IORT device <-> ITS mappings and reserves it so that
-> > > these regions will not be translated by IOMMU and will be excluded from
-> > > IOVA allocations. The function checks for the smmu model number and
-> > > only applies the msi reservation if the platform requires it.
-> > >
-> > > Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> > > ---
-> > >  drivers/acpi/arm64/iort.c        | 112
-> > +++++++++++++++++++++++++++++++++++++--
-> > >  drivers/irqchip/irq-gic-v3-its.c |   3 +-
-> > >  include/linux/acpi_iort.h        |   7 ++-
-> > >  3 files changed, 117 insertions(+), 5 deletions(-)
-> > 
-> > You need this additional hunk to make it compile on !CONFIG_IOMMU_API:
-> 
-> Oops..Sorry, missed that. If you are happy with the rest, I will make the below
-> change and sent out the v12(hopefully final).
+Hi,
 
-I am ok with it, yes.
+This patch series adds support for a new set of boards, codenamed
+"midas". These are the Galaxy S3 (m0/m3) and the Galaxy Note 2 (t0).
+These boards are closely related to trats2 - m0 is a trats2 but with a
+bootloader geared towards booting Android rather than a traditional Linux
+distribution - and because of this, the dts files are largely based off
+what is already in-place for trats2. Trats2 is modified to use
+the dts files added by this series.
 
-Thanks,
-Lorenzo
+Patch #1 adds documentation for the bindings used by the boards.
+Patch #2 splits the existing trats2 DTS into the common midas,
+m0/m3/trats2-specific, and trats2-specific parts.
+Patch #3 adds the device-tree files for the other boards.
+Patch #4 enables cpuidle support for all added boards.
 
-> Please let me know.
-> 
-> Thanks,
-> Shameer
-> 
-> > 
-> > -- >8 --
-> > diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> > index 3e0ce652c3e8..e2f7bddf5522 100644
-> > --- a/drivers/acpi/arm64/iort.c
-> > +++ b/drivers/acpi/arm64/iort.c
-> > @@ -762,25 +762,6 @@ static int __maybe_unused __get_pci_rid(struct
-> > pci_dev *pdev, u16 alias,
-> >  	return 0;
-> >  }
-> > 
-> > -static __maybe_unused struct acpi_iort_node *iort_get_msi_resv_iommu(
-> > -						struct device *dev)
-> > -{
-> > -	struct acpi_iort_node *iommu;
-> > -	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-> > -
-> > -	iommu = iort_get_iort_node(fwspec->iommu_fwnode);
-> > -
-> > -	if (iommu && (iommu->type == ACPI_IORT_NODE_SMMU_V3)) {
-> > -		struct acpi_iort_smmu_v3 *smmu;
-> > -
-> > -		smmu = (struct acpi_iort_smmu_v3 *)iommu->node_data;
-> > -		if (smmu->model ==
-> > ACPI_IORT_SMMU_V3_HISILICON_HI161X)
-> > -			return iommu;
-> > -	}
-> > -
-> > -	return NULL;
-> > -}
-> > -
-> >  static int arm_smmu_iort_xlate(struct device *dev, u32 streamid,
-> >  			       struct fwnode_handle *fwnode,
-> >  			       const struct iommu_ops *ops)
-> > @@ -807,6 +788,24 @@ static inline bool iort_iommu_driver_enabled(u8 type)
-> >  }
-> > 
-> >  #ifdef CONFIG_IOMMU_API
-> > +static struct acpi_iort_node *iort_get_msi_resv_iommu(struct device *dev)
-> > +{
-> > +	struct acpi_iort_node *iommu;
-> > +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
-> > +
-> > +	iommu = iort_get_iort_node(fwspec->iommu_fwnode);
-> > +
-> > +	if (iommu && (iommu->type == ACPI_IORT_NODE_SMMU_V3)) {
-> > +		struct acpi_iort_smmu_v3 *smmu;
-> > +
-> > +		smmu = (struct acpi_iort_smmu_v3 *)iommu->node_data;
-> > +		if (smmu->model ==
-> > ACPI_IORT_SMMU_V3_HISILICON_HI161X)
-> > +			return iommu;
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
-> > +
-> >  static inline const struct iommu_ops *iort_fwspec_iommu_ops(
-> >  				struct iommu_fwspec *fwspec)
-> >  {
+Changes since v1:
+* Include trats2 in inheritance
+* Add the new dtbs to the makefile
+* Cleanup style per Krzysztof's comments
+
+Cheers,
+Simon
+
+Simon Shields (4):
+  dt-bindings: samsung: document bindings for Midas family boards
+  ARM: dts: split trats2 dts in preparation for midas boards
+  ARM: dts: add Samsung's exynos4412-based midas boards
+  ARM: exynos: extend cpuidle support to midas boards
+
+ .../bindings/arm/samsung/samsung-boards.txt        |    4 +
+ arch/arm/boot/dts/Makefile                         |    3 +
+ arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi        |  144 +++
+ arch/arm/boot/dts/exynos4412-m0.dts                |   14 +
+ arch/arm/boot/dts/exynos4412-m3.dts                |   19 +
+ arch/arm/boot/dts/exynos4412-midas.dtsi            | 1291 ++++++++++++++++++
+ arch/arm/boot/dts/exynos4412-t0.dts                |   50 +
+ arch/arm/boot/dts/exynos4412-trats2.dts            | 1364 +-------------------
+ arch/arm/mach-exynos/exynos.c                      |    2 +-
+ 9 files changed, 1532 insertions(+), 1359 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos4412-m0.dts
+ create mode 100644 arch/arm/boot/dts/exynos4412-m3.dts
+ create mode 100644 arch/arm/boot/dts/exynos4412-midas.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos4412-t0.dts
+
+-- 
+2.15.1
