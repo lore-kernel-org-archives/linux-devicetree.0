@@ -1,88 +1,43 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v4 00/12] [dt-bindings] [media] Add document file and
- driver for Sony CXD2880 DVB-T2/T tuner + demodulator
-Date: Thu, 14 Dec 2017 19:22:31 +0100
-Message-ID: <CAOFm3uEk2yD0hsusOtHRpVW6rMigNUpLyqe4T3DaKqAnP5dQWw@mail.gmail.com>
-References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
- <20171213173633.57edca85@vento.lan> <02699364973B424C83A42A84B04FDA85431742@JPYOKXMS113.jp.sony.com>
- <20171214085503.289f06f8@vento.lan> <CAOFm3uEYfMH8Zj8uEx-D9yYrTyDMTG_j02619esHu-j0brQKaA@mail.gmail.com>
- <ECADFF3FD767C149AD96A924E7EA6EAF40AE4BB5@USCULXMSG01.am.sony.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] arm64: dts: Remove leading 0x and 0s from bindings
+ notation
+Date: Thu, 14 Dec 2017 10:29:59 -0800
+Message-ID: <1513276199.27409.75.camel@perches.com>
+References: <20171214165352.27902-1-malat@debian.org>
+         <98a7dc30-e736-eaf8-204f-2ac2b3ea79b9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF40AE4BB5@USCULXMSG01.am.sony.com>
+In-Reply-To: <98a7dc30-e736-eaf8-204f-2ac2b3ea79b9@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Bird, Timothy" <Tim.Bird@sony.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>, "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mathieu Malaterre <malat@debian.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Tim,
+On Thu, 2017-12-14 at 19:03 +0100, Matthias Brugger wrote:
+> 
+> On 12/14/2017 05:53 PM, Mathieu Malaterre wrote:
+> [...]
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > index 26396ef53bde..0446b122a6e2 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> > @@ -249,7 +249,7 @@
+> >  			reg = <0 0x10005000 0 0x1000>;
+> >  		};
+> >  
+> > -		pio: pinctrl@0x10005000 {
+> > +		pio: pinctrl@10005000 {
+> >  			compatible = "mediatek,mt8173-pinctrl";
+> >  			reg = <0 0x1000b000 0 0x1000>;
+> >  			mediatek,pctl-regmap = <&syscfg_pctl_a>;
+> 
+> Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-On Thu, Dec 14, 2017 at 6:32 PM, Bird, Timothy <Tim.Bird@sony.com> wrote:
->
->
->> -----Original Message-----
->> From: Philippe on Thursday, December 14, 2017 6:25 AM
->> Dear Mauro,
->>
->> On Thu, Dec 14, 2017 at 11:55 AM, Mauro Carvalho Chehab
->> <mchehab@s-opensource.com> wrote:
->>
->> > SPDX is a new requirement that started late on Kernel 4.14 development
->> > cycle (and whose initial changes were merged directly at Linus tree).
->> > Not all existing files have it yet, as identifying the right license
->> > on existing files is a complex task, but if you do a:
->> >
->> >         $ git grep SPDX $(find . -name Makefile) $(find . -name Kconfig)
->> >
->> > You'll see that lot of such files have it already.
->>
->> FWIW, short of having SPDX tags, identifying the right license on
->> existing files is not a super complex task: if boils down to running
->> many diffs.
->>
->> Take the ~60K files in kernel, and about 6K license and notices
->> reference texts. Then compute a pairwise diff of each of the 60K file
->> against the 6K reference texts. Repeat the pairwise diff a few more
->> times, say 10 times, as multiple licenses may appear in any given
->> kernel file. And keep the diffs that have the fewest
->> difference/highest similarity with the reference texts as the detected
->> license. Done!
->
-> You can't do license detection and assignment in this automated fashion -
-> at least not generally.
->
-> Even a single word of difference between the notice in the source
-> code and the reference license notice or text may have legal implications
-> that are not conveyed by the simplified SPDX tag.  When differences are
-> found, we're going to have to kick the discrepancies to a human for review.
-> This is especially true for files with multiple licenses.
->
-> For a work of original authorship, or a single copyright holder, the author
-> or copyright holder may be able to change the notice or text, or gloss
-> over any difference from the reference text, and make the SPDX  assignment
-> (or even change the license, if they want).  This would apply to something
-> new like this Sony driver.  However, for code that is already in the kernel
-> tree, with likely multiple contributors, the legal situation gets a little
-> more murky.
->
-> I suspect the vast majority of the ~60k files will probably fall neatly into an
-> SPDX category, but I'm guessing a fair number (maybe hundreds) will require
-> some review and discussion.
+Should all of these be fixed?
 
-You are completely and 100% right. I was just describing the mechanics
-of the license detection side. The actual process has been and always
-will be scan then review carefully and then discuss. There is no sane
-automated tool that could do it all for sure.
+$ git grep -P "^\s*\w+:\s*[\w\-]+@0[xX]" -- "*.dts*" | wc -l
+69
 
-As a funny side note, there are over 80+ licenses in the kernel and
-there is (or rather was before starting adding SPDX tags) 1000+
-different license notices and over 700+ variations of "this file in
-under the GPL"... This starts to diminish a bit with the addition of
-SPDX tags and eventually most or all boilerplate could be removed over
-time with reviews and discussions, IMHO for the better: I will then be
-able to trash my tool and use a good ole grep instead ;)
-
--- 
-Cordially
-Philippe Ombredanne
+Is this a pattern that should be added to checkpatch?
