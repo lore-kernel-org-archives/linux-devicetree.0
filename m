@@ -1,78 +1,83 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 3/5] media: i2c: Add TDA1997x HDMI
-	receiver driver
-Date: Thu, 14 Dec 2017 15:26:57 +0100
-Message-ID: <bce9c2cb-060a-afc2-4ce5-1e2c90c241a5@xs4all.nl>
-References: <1511990397-27647-1-git-send-email-tharvey@gateworks.com>
- <1511990397-27647-4-git-send-email-tharvey@gateworks.com>
- <1a1be5d7-caed-6cba-c97a-dbb70e119fa3@xs4all.nl>
- <CAJ+vNU0NKZizung9+1zsd1RZBrDbBgk+A8mVJ76bQysjCUoaKw@mail.gmail.com>
- <CAJ+vNU1L5MkP0DuiwjKXY75id3Brzq+9M9DfcZOXbvzVgaUdXQ@mail.gmail.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM64: dts: meson-axg: add ethernet mac controller
+Date: Thu, 14 Dec 2017 15:52:56 +0100
+Message-ID: <1513263176.32163.12.camel@baylibre.com>
+References: <20171214030242.113152-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAJ+vNU1L5MkP0DuiwjKXY75id3Brzq+9M9DfcZOXbvzVgaUdXQ@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171214030242.113152-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/12/17 00:35, Tim Harvey wrote:
->>> Close. What is missing is a check of the AVI InfoFrame: if it has an explicit
->>> colorimetry then use that. E.g. check for HDMI_COLORIMETRY_ITU_601 or ITU_709
->>> and set the colorspace accordingly. Otherwise fall back to what you have here.
->>>
->>
->> This function currently matches adv7604/adv7842 where they don't look
->> at colorimetry (but I do see a TODO in adv748x_hdmi_fill_format to
->> look at this) so I don't have an example and may not understand.
->>
->> Do you mean:
->>
->>        format->colorspace = V4L2_COLORSPACE_SRGB;
->>        if (bt->flags & V4L2_DV_FL_IS_CE_VIDEO) {
->>                 if ((state->colorimetry == HDMI_COLORIMETRY_ITU_601) ||
->>                     (state->colorimetry == HDMI_COLORIMETRY_ITU_709))
->>                         format->colorspace = state->colorspace;
->>                 else
->>                         format->colorspace = is_sd(bt->height) ?
->>                                 V4L2_COLORSPACE_SMPTE170M :
->> V4L2_COLORSPACE_REC709;
->>         }
->>
->> Also during more testing I've found that I'm not capturing interlaced
->> properly and know I at least need:
->>
->> -        format->field = V4L2_FIELD_NONE;
->> +        format->field = (bt->interlaced) ?
->> +                V4L2_FIELD_ALTERNATE : V4L2_FIELD_NONE;
->>
->> I'm still not quite capturing interlaced yet but I think its an issue
->> of setting up the media pipeline improperly.
->>
+On Thu, 2017-12-14 at 11:02 +0800, Yixun Lan wrote:
+> Add DT info for the stmmac ethernet MAC which found in
+> the Amlogic's Meson-AXG SoC, also describe the ethernet
+> pinctrl & clock information here.
 > 
-> Hans,
+> This is tested in the S400 dev board which use a RTL8211F PHY,
+> and the pins connect to the 'eth_rgmii_y_pins' group.
 > 
-> Did you see this question above? I'm not quite understanding what you
-> want me to do for filling in colorspace and don't see any examples in
-> the existing drivers that appear to look at colorimetry for this.
+> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 
-Yeah, I missed that question. I started answering that yesterday, but then
-I realized that it would be better if I would make a helper function for
-v4l2-dv-timings. The rules are complex so coding that in a single place
-that everyone can use is the smart thing to do.
+I think it would have been better to split this into 2 patches.
+One adding the controller for axg, the other using it in the s400, but maybe
+Kevin is OK with it...
 
-I hope to finish it tomorrow (too many interruptions today).
+> 
+> ---
+> Changes in v2 since [1]:
+>  - rebase to kevin's v4.16/dt64 branch
+>  - add Neil's Reviewed-by
+>  - move clock info to board.dts instead of in soc.dtsi
+>  - drop "meson-axg-dwmac" compatible string, since we didn't use this
+>    we could re-add it later when we really need.
+>  - note: to make ethernet work properly,it depend on clock & pinctrl[2],
+>    to compile the DTS, the patch [3] is required.
+>    the code part will be taken via clock & pinctrl subsystem tree.
+> 
+> [1]
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005301.html
+> 
+> [2]
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005735.html
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005694.html
+> 
+> [3]
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005738.html
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 11 ++++++
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 50 ++++++++++++++++++++++++++
+>  2 files changed, 61 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> index 70eca1f8736a..138de3bc7cc8 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> @@ -20,3 +20,14 @@
+>  &uart_AO {
+>  	status = "okay";
+>  };
+> +
+> +&ethmac {
 
-Regards,
+We try to keep nodes alphabetically ordered.
+Please put ethmac before uart_A0
 
-	Hans
+thx
+
+> 
+> 
+
+With all the dependencies sorted out, it works
+
+Tested-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
