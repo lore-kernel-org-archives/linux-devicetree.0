@@ -1,86 +1,68 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH v4 00/12] [dt-bindings] [media] Add document file and
- driver for Sony CXD2880 DVB-T2/T tuner + demodulator
-Date: Thu, 14 Dec 2017 16:04:11 -0200
-Message-ID: <20171214160411.32f23456@vento.lan>
-References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
-        <20171213173633.57edca85@vento.lan>
-        <02699364973B424C83A42A84B04FDA85431742@JPYOKXMS113.jp.sony.com>
-        <20171214085503.289f06f8@vento.lan>
-        <CAOFm3uEYfMH8Zj8uEx-D9yYrTyDMTG_j02619esHu-j0brQKaA@mail.gmail.com>
-        <ECADFF3FD767C149AD96A924E7EA6EAF40AE4BB5@USCULXMSG01.am.sony.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [patch v14 1/4] drivers: jtag: Add JTAG core driver
+Date: Thu, 14 Dec 2017 19:13:06 +0100
+Message-ID: <CAOFm3uHd7VJWRiYPSuTbEmeh1YohUC_9Gr2AiP8qdpUPcY83nQ@mail.gmail.com>
+References: <1513268971-13518-1-git-send-email-oleksandrs@mellanox.com> <1513268971-13518-2-git-send-email-oleksandrs@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ECADFF3FD767C149AD96A924E7EA6EAF40AE4BB5@USCULXMSG01.am.sony.com>
+In-Reply-To: <1513268971-13518-2-git-send-email-oleksandrs@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Bird, Timothy" <Tim.Bird@sony.com>
-Cc: Philippe Ombredanne <pombredanne@nexb.com>, "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>
+To: Oleksandr Shamray <oleksandrs@mellanox.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, joel@jms.id.au, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri@resnulli.us>, Tobias Klauser <tklauser@distanz.ch>, linux-serial@vger.kernel.org, vadimp@mellanox.com, system-sw-low-level@mellanox.com, Rob Herring <robh+dt@kernel.org>, openocd-devel-owner@lists.sourceforge.net, linux-api@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab@kernel.org>, Jiri Pirko <jiri@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-Em Thu, 14 Dec 2017 17:32:34 +0000
-"Bird, Timothy" <Tim.Bird@sony.com> escreveu:
+Oleksandr,
 
-> > -----Original Message-----
-> > From: Philippe on Thursday, December 14, 2017 6:25 AM
-> > Dear Mauro,
-> > 
-> > On Thu, Dec 14, 2017 at 11:55 AM, Mauro Carvalho Chehab
-> > <mchehab@s-opensource.com> wrote:
-> >   
-> > > SPDX is a new requirement that started late on Kernel 4.14 development
-> > > cycle (and whose initial changes were merged directly at Linus tree).
-> > > Not all existing files have it yet, as identifying the right license
-> > > on existing files is a complex task, but if you do a:
-> > >
-> > >         $ git grep SPDX $(find . -name Makefile) $(find . -name Kconfig)
-> > >
-> > > You'll see that lot of such files have it already.  
-> > 
-> > FWIW, short of having SPDX tags, identifying the right license on
-> > existing files is not a super complex task: if boils down to running
-> > many diffs.
-> > 
-> > Take the ~60K files in kernel, and about 6K license and notices
-> > reference texts. Then compute a pairwise diff of each of the 60K file
-> > against the 6K reference texts. Repeat the pairwise diff a few more
-> > times, say 10 times, as multiple licenses may appear in any given
-> > kernel file. And keep the diffs that have the fewest
-> > difference/highest similarity with the reference texts as the detected
-> > license. Done!  
-> 
-> You can't do license detection and assignment in this automated fashion - 
-> at least not generally.
-> 
-> Even a single word of difference between the notice in the source
-> code and the reference license notice or text may have legal implications
-> that are not conveyed by the simplified SPDX tag.  When differences are
-> found, we're going to have to kick the discrepancies to a human for review.
-> This is especially true for files with multiple licenses.
-> 
-> For a work of original authorship, or a single copyright holder, the author
-> or copyright holder may be able to change the notice or text, or gloss
-> over any difference from the reference text, and make the SPDX  assignment
-> (or even change the license, if they want).  This would apply to something
-> new like this Sony driver.  However, for code that is already in the kernel
-> tree, with likely multiple contributors, the legal situation gets a little
-> more murky.
+On Thu, Dec 14, 2017 at 5:29 PM, Oleksandr Shamray
+<oleksandrs@mellanox.com> wrote:
+> Initial patch for JTAG driver
+> JTAG class driver provide infrastructure to support hardware/software
+> JTAG platform drivers. It provide user layer API interface for flashing
+> and debugging external devices which equipped with JTAG interface
+> using standard transactions.
+>
+> Driver exposes set of IOCTL to user space for:
+> - XFER:
+> - SIR (Scan Instruction Register, IEEE 1149.1 Data Register scan);
+> - SDR (Scan Data Register, IEEE 1149.1 Instruction Register scan);
+> - RUNTEST (Forces the IEEE 1149.1 bus to a run state for a specified
+>   number of clocks).
+> - SIOCFREQ/GIOCFREQ for setting and reading JTAG frequency.
+>
+> Driver core provides set of internal APIs for allocation and
+> registration:
+> - jtag_register;
+> - jtag_unregister;
+> - jtag_alloc;
+> - jtag_free;
+>
+> Platform driver on registration with jtag-core creates the next
+> entry in dev folder:
+> /dev/jtagX
+>
+> Signed-off-by: Oleksandr Shamray <oleksandrs@mellanox.com>
+> Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+> ---
+> v13->v14
+> Comments pointed by Philippe Ombredanne <pombredanne@nexb.com>
+> - Change style of head block comment from /**/ to //
+>
+> v12->v13
+> Comments pointed by Philippe Ombredanne <pombredanne@nexb.com>
+> - Change jtag.c licence type to
+>   SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+>   and reorder line with license in description
+> v11->v12
+> Comments pointed by Greg KH <gregkh@linuxfoundation.org>
+> - Change jtag.h licence type to
+>   SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+>   and reorder line with license in description
 
-Precisely. This is easily fixable when the code author changes the
-license text, or when someone from the Company that holds copyrights sends
-the SPDX markups (as emails @company can be seen as official e-mails, except
-if explicitly noticed otherwise). So, from my side, I'm now requiring
-SPDX for new drivers.
+Thanks for the SPDX bits: for this part you have my ack:
 
-However, if someone else is doing the changes, it can be tricky and risky
-to pick up the patch, adding my SOB, if not endorsed by the copyright
-owners, or by LF legal counseling. So, I prefer to not pick those myself,
-except from people I trust.
+Acked-by: Philippe Ombredanne <pombredanne@nexB.com?
 
-> I suspect the vast majority of the ~60k files will probably fall neatly into an
-> SPDX category, but I'm guessing a fair number (maybe hundreds) will require
-> some review and discussion.
-
-Thanks,
-Mauro
+-- 
+Cordially
+Philippe Ombredanne
