@@ -1,59 +1,59 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 1/3] mmc: dt-bindings: add mmc support to MT7623 SoC
-Date: Thu, 14 Dec 2017 22:20:29 +0800
-Message-ID: <1513261229.28444.33.camel@mtkswgap22>
-References: <cover.1512628593.git.sean.wang@mediatek.com>
-         <4f06b509e1e3d4cf5578841cfcf7ec966afd2d48.1512628593.git.sean.wang@mediatek.com>
-         <86e53802-9bb4-35eb-66e1-f9a401e31863@gmail.com>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH v4 00/12] [dt-bindings] [media] Add document file and
+ driver for Sony CXD2880 DVB-T2/T tuner + demodulator
+Date: Thu, 14 Dec 2017 15:25:13 +0100
+Message-ID: <CAOFm3uEYfMH8Zj8uEx-D9yYrTyDMTG_j02619esHu-j0brQKaA@mail.gmail.com>
+References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
+ <20171213173633.57edca85@vento.lan> <02699364973B424C83A42A84B04FDA85431742@JPYOKXMS113.jp.sony.com>
+ <20171214085503.289f06f8@vento.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <86e53802-9bb4-35eb-66e1-f9a401e31863@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171214085503.289f06f8-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yamamoto, Masayuki" <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, "Yonezawa, Kota" <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>, "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-12-14 at 12:16 +0100, Matthias Brugger wrote:
-> Hi Ulf,
-> 
-> On 12/07/2017 07:43 AM, sean.wang@mediatek.com wrote:
-> > From: Sean Wang <sean.wang@mediatek.com>
-> > 
-> > Add the devicetree binding for MT7623 SoC using MT2701 as the fallback.
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > index 72d2a73..9b80176 100644
-> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > @@ -12,6 +12,8 @@ Required properties:
-> >  	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
-> >  	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
-> >  	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
-> > +	"mediatek,mt7623-mmc", "mediatek,mt2701-mmc": for MT7623 SoC
-> > +
-> >  - reg: physical base address of the controller and length
-> >  - interrupts: Should contain MSDC interrupt number
-> >  - clocks: Should contain phandle for the clock feeding the MMC controller
-> > 
-> 
-> Are you fine to take this patch through your branch, or shall I take it through
-> mine?
-> 
-> @Sean it seems you forgot to send this patch to Ulf as well. In the future
-> please take care to send the patch to all relevant people and mailinglist.
-> 
+Dear Mauro,
 
-Okay. I'll be. really sorry for the inconvenience
+On Thu, Dec 14, 2017 at 11:55 AM, Mauro Carvalho Chehab
+<mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org> wrote:
 
-> Thanks,
-> Matthias
-> 
+> SPDX is a new requirement that started late on Kernel 4.14 development
+> cycle (and whose initial changes were merged directly at Linus tree).
+> Not all existing files have it yet, as identifying the right license
+> on existing files is a complex task, but if you do a:
+>
+>         $ git grep SPDX $(find . -name Makefile) $(find . -name Kconfig)
+>
+> You'll see that lot of such files have it already.
+
+FWIW, short of having SPDX tags, identifying the right license on
+existing files is not a super complex task: if boils down to running
+many diffs.
+
+Take the ~60K files in kernel, and about 6K license and notices
+reference texts. Then compute a pairwise diff of each of the 60K file
+against the 6K reference texts. Repeat the pairwise diff a few more
+times, say 10 times, as multiple licenses may appear in any given
+kernel file. And keep the diffs that have the fewest
+difference/highest similarity with the reference texts as the detected
+license. Done!
+
+The only complex thing is that if you have a fast diff that runs at
+0.1 millisec end-to-end per diff, you still have 3.6B diffs to do and
+this would take about 250 days on one thread. Even with a beefy 250
+core CPU, that would still be a day (and quite few kilo watts) . So
+the whole trick is to avoid doing a diffs if not really needed. This
+is what I do in my scancode-toolkit (that I used/use to help Greg and
+Thomas with kernel license scans). Net effect is that on a laptop on 8
+threads it takes ~20 minutes to scan a whole kernel using this
+diff-based approach and obtain a fairly accurate license detection.
+-- 
+Cordially
+Philippe Ombredanne
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
