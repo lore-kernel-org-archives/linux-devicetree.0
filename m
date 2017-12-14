@@ -1,78 +1,61 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 08/15] drm/sun4i: Add LVDS support
-Date: Thu, 14 Dec 2017 10:37:17 +0100
-Message-ID: <20171214093717.nosble24bl5mngub@flea.lan>
-References: <cover.825a49a4c1c565a548f3de0375e7537e7e8fd3a4.1512486553.git-series.maxime.ripard@free-electrons.com>
- <b900e5963180c94ca02bde178b6674622a127787.1512486553.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v65Voua-AjHDnCLgDOKqUeSG-yD4wuSO5-BJ230FCp4OuQ@mail.gmail.com>
- <20171207122521.frv5zgaay3sgol6f@flea.lan>
- <CAGb2v67CrZA0WXtQNwrAEvyPuAFa7yJuYdX4GgSoNtBYv2NJ4g@mail.gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 5/5] phy: renesas: rcar-gen3-usb2: add gpio handling
+Date: Thu, 14 Dec 2017 09:44:57 +0000
+Message-ID: <TY1PR06MB099286FD9833ED7F7F259B5BD80A0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1513146460-20326-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1513146460-20326-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdU2YhLC3VPV8=KDw7U2=eudk35TmW7VfLYBDXrooQbx-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hmldfe2flkfifmdm"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67CrZA0WXtQNwrAEvyPuAFa7yJuYdX4GgSoNtBYv2NJ4g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Priit Laes <plaes@plaes.org>, Icenowy Zheng <icenowy@aosc.io>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jernej Skrabec <jernej.skrabec@siol.net>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdU2YhLC3VPV8=KDw7U2=eudk35TmW7VfLYBDXrooQbx-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: ja-JP
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---hmldfe2flkfifmdm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Dec 14, 2017 at 11:30:21AM +0800, Chen-Yu Tsai wrote:
-> >> > +       /* Map output pins to channel 0 */
-> >> > +       regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
-> >> > +                          SUN4I_TCON_GCTL_IOMAP_MASK,
-> >> > +                          SUN4I_TCON_GCTL_IOMAP_TCON0);
-> >> > +
-> >> > +       /* Enable the output on the pins */
-> >> > +       regmap_write(tcon->regs, SUN4I_TCON0_IO_TRI_REG, 0xe0000000);
-> >>
-> >> Is this still needed? You are no longer using the TCON LCD pins
-> >> with LVDS.
-> >
-> > We do. It's a separate function of the pins, but it's the same pins.
->=20
-> OK. I assume you've tried it without setting it and it failed?
-> I just assume that these refer to the TCON LCD output, whereas
-> LVDS looks like a separate module and function, and shouldn't
-> need it.
-
-Argh, I forgot to test that. I'll test it for real this time and will
-update that part with a comment if that's needed.
-
-Sorry :/
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---hmldfe2flkfifmdm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAloyRkkACgkQ0rTAlCFN
-r3Sfkg/+O6vvYZTZYXh3jtRSR42DaCOWCdv8QeQv5srvK2jZ7mqfhIm1g8Bf+jvL
-cTMAAyqYLO1hjvgZCxSxR/40pJ0RNM2ElQF230/yhVKeQ1NnIpB6pVJDqMMIqePK
-iPnVWf+livJt76+BQtFcYnp5dMum1x3CpO3cS1DWf6LfJ9QH2gkhNBLKFG3Y5qUX
-fF5LKjgYov/TRbUaC8xYnflXB1v3V03Q6pmqNBzYt6z6rStzudPkVx4ZYGGg7grj
-v/jQG4K47752StemEdZV52yzvhZulA02qATFPfsBtFXujYhy1BBSMOr4SZZFGQ8M
-rd/RMoUb1/9a/cjVP7O3q7Fne8pXnmfm2GskJWMrjGobhe3+XNwqdB2s+ZBEwHXZ
-9ZlkpHiSeolkDCL1zhqOtqoqpDw/LIdhiXzLEl/oGFFvN2P4o+yGBpb1Fe5BZmE8
-xDH2C14BhZMQNeLoTiEShyPzcBpPsKi6TKrEDPdVZ8bydG96EN9kjdTQFpAfZUbH
-zDpxi1m4lxK/G70FmlBgk36cDohAJ/40tsgnq1nmlWWj/Z7P0OT4t3Y9wRowa+dS
-UmfWoeAlRUzcYgkkJQbaoHYQkuL99BbPdSpOm8SzNXRp3XQNLGUpQlhamEWVHOJY
-+2FNI1SMj00sbSIe36JNtQKZHwga1WzPvlVE9VP3QMiG1Zs2TJA=
-=GJOS
------END PGP SIGNATURE-----
-
---hmldfe2flkfifmdm--
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVz
+ZGF5LCBEZWNlbWJlciAxMywgMjAxNyA1OjU1IFBNDQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4g
+DQo+IE9uIFdlZCwgRGVjIDEzLCAyMDE3IGF0IDc6MjcgQU0sIFlvc2hpaGlybyBTaGltb2RhDQo+
+IDx5b3NoaWhpcm8uc2hpbW9kYS51aEByZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gU29tZSBSLUNh
+ciBTb0NzIChlLmcuIFItQ2FyIEQzKSBkb2Vzbid0IGhhdmUgZGVkaWNhdGVkIHBpbnMgb2YgVkJV
+Uw0KPiA+IGFuZCBJRC4gU28sIHRoZXkgbWF5IGJlIGNvbm5lY3RlZCB0byBncGlvIHBpbnMuIFRv
+IGhhbmRsZSB0aGUgZ3Bpbw0KPiA+IHBpbnMsIHRoaXMgcGF0Y2ggYWRkcyB0aGUgaGFuZGxpbmcg
+b2YgVkJVUyBhbmQgSUQgcGlucyBpbnN0ZWFkIG9mDQo+ID4gZGVkaWNhdGVkIHBpbnMuDQo+ID4N
+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBZb3NoaWhpcm8gU2hpbW9kYSA8eW9zaGloaXJvLnNoaW1vZGEu
+dWhAcmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bo
+eS9yY2FyLWdlbjMtcGh5LXVzYjIudHh0IHwgIDIgKw0KPiA+ICBkcml2ZXJzL3BoeS9yZW5lc2Fz
+L3BoeS1yY2FyLWdlbjMtdXNiMi5jICAgICAgICAgICB8IDc3ICsrKysrKysrKysrKysrKysrKysr
+LS0NCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA3MiBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygt
+KQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9waHkvcmNhci1nZW4zLXBoeS11c2IyLnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9waHkvcmNhci1nZW4zLXBoeS11c2IyLnR4dA0KPiA+IGluZGV4IDk5YjY1MWIu
+Ljg1MTU4MmYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BoeS9yY2FyLWdlbjMtcGh5LXVzYjIudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9yY2FyLWdlbjMtcGh5LXVzYjIudHh0DQo+ID4gQEAgLTI3
+LDYgKzI3LDggQEAgY2hhbm5lbCBhcyBVU0IgT1RHOg0KPiA+ICAtIGludGVycnVwdHM6IGludGVy
+cnVwdCBzcGVjaWZpZXIgZm9yIHRoZSBQSFkuDQo+ID4gIC0gdmJ1cy1zdXBwbHk6IFBoYW5kbGUg
+dG8gYSByZWd1bGF0b3IgdGhhdCBwcm92aWRlcyBwb3dlciB0byB0aGUgVkJVUy4gVGhpcw0KPiA+
+ICAgICAgICAgICAgICAgIHJlZ3VsYXRvciB3aWxsIGJlIG1hbmFnZWQgZHVyaW5nIHRoZSBQSFkg
+cG93ZXIgb24vb2ZmIHNlcXVlbmNlLg0KPiA+ICstIHJlbmVzYXMsdmJ1cy1ncGlvczogdXNlIGdw
+aW8gdG8gY29udHJvbCB2YnVzIGluc3RlYWQgb2YgZGVkaWNhdGVkIHBpbi4NCj4gPiArLSByZW5l
+c2FzLGlkLWdwaW9zOiB1c2UgZ3BpbyB0byBkZXRlY3QgaWQgaW5zdGVhZCBvZiBkZWRpY2F0ZWQg
+cGluLg0KPiANCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9icmNtLG5z
+Mi1kcmQtcGh5LnR4dCBhbHJlYWR5IHVzZXMNCj4gInZidXMtZ3Bpb3MiIGFuZCAiaWQtZ3Bpb3Mi
+IHdpdGhvdXQgdmVuZG9yLXNwZWNpZmljIHByZWZpeGVzLCBzbyBwZXJoYXBzDQo+IHRoZSAicmVu
+ZXNhcywiIGNhbiBiZSBkcm9wcGVkPw0KDQpUaGFuayB5b3UgZm9yIHRoZSBjb21tZW50cy4gSSBh
+Z3JlZSB3aXRoIHlvdS4gU28sIEknbGwgZHJvcCAicmVuZXNhcywiIGluIHYyLg0KDQpCZXN0IHJl
+Z2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhv
+ZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgt
+bTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwg
+cGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0
+byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0
+aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRz
+DQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
