@@ -1,133 +1,148 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH] PCI: qcom: add missing supplies required for msm8996
-Date: Thu, 14 Dec 2017 11:19:39 +0000
-Message-ID: <978c8df1-9077-e36d-90d6-896e29a0fc1d@linaro.org>
-References: <20171208092053.4417-1-srinivas.kandagatla@linaro.org>
- <4fd5f3e7-73f6-ad63-c961-47f1f0fac149@mm-sol.com>
+From: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+Subject: [PATCH v5] i2c: Add support for NXP PCA984x family.
+Date: Thu, 14 Dec 2017 12:20:03 +0100
+Message-ID: <20171214112003.13701-1-adrian.fiergolski@cern.ch>
+References: <990e4a1f-a9ac-c899-0075-ae3211ff9475@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4fd5f3e7-73f6-ad63-c961-47f1f0fac149@mm-sol.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, stanimir.varbanov@linaro.org, linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <990e4a1f-a9ac-c899-0075-ae3211ff9475-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch extends the current i2c-mux-pca954x driver and adds support for
+a newer PCA984x family of the I2C switches and multiplexers from NXP.
 
+Signed-off-by: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+---
+I have applied recent Peter's comments.
+I am waiting for comments from device-tree folks regarding compatibles.
 
-On 14/12/17 10:06, Stanimir Varbanov wrote:
-> Hi Srini,
-> 
-> On 12/08/2017 11:20 AM, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> This patch adds supplies that are required for msm8996. Two of them vdda
->> and vdda-1p8 are analog supplies that go in to controller, and the rest
-> 
-> According to the msm8996 device specification there are two pins related
-> to the PCIe power: VDD_PCIE_CORE (power for PCIe core circuitry) and
-> VDD_PCIE_1P8 (power for PCIe I/O circuitry). Thus I think it is clear
-> that VDD_PCIE_CORE is vdda and VDD_PCIE_1P8 should be part of PCIe phy
-> driver DT binding (and this is the case currently [1]). So I don't think
-> we need vdda-1p8 regulator DT binding for that in pcie-qcom.
-Sure I will remove it.
-> 
->> of the two vddpe's are supplies to PCIe endpoints.
-> 
-> For this part I'm still not sure. On first sight it looks that these
-> vdd's should be part of endpoint drivers, on the other hand we have
-> mPCIe connector (on db820c) which has two power rails 3p3v and 1p5v
-> which should be controlled/enabled as well.
-> 
-Yes, these would be populated in DT as part of vddpe supplies for that lane.
+.../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |  5 ++-
+ drivers/i2c/muxes/Kconfig                          |  6 ++--
+ drivers/i2c/muxes/i2c-mux-pca954x.c                | 36 +++++++++++++++++++---
+ 3 files changed, 39 insertions(+), 8 deletions(-)
 
-> So I'd like to hear more opinions on that, i.e. how this is solved by
-> the other PCIe bridge drivers.
-I would be keen on knowing more options to solve this neatly too!!
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+index aa097045a10e..b428bc0d81b1 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+@@ -1,10 +1,13 @@
+ * NXP PCA954x I2C bus switch
+ 
++The driver supports NXP PCA954x and PCA984x I2C mux/switch devices.
++
+ Required Properties:
+ 
+   - compatible: Must contain one of the following.
+     "nxp,pca9540", "nxp,pca9542", "nxp,pca9543", "nxp,pca9544",
+-    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548"
++    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548",
++    "nxp,pca9846", "nxp,pca9847", "nxp,pca9848", "nxp,pca9849"
+ 
+   - reg: The I2C address of the device.
+ 
+diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
+index 0f5c8fc36625..52a4a922e7e6 100644
+--- a/drivers/i2c/muxes/Kconfig
++++ b/drivers/i2c/muxes/Kconfig
+@@ -64,11 +64,11 @@ config I2C_MUX_PCA9541
+ 	  will be called i2c-mux-pca9541.
+ 
+ config I2C_MUX_PCA954x
+-	tristate "Philips PCA954x I2C Mux/switches"
++	tristate "NXP PCA954x and PCA984x I2C Mux/switches"
+ 	depends on GPIOLIB || COMPILE_TEST
+ 	help
+-	  If you say yes here you get support for the Philips PCA954x
+-	  I2C mux/switch devices.
++	  If you say yes here you get support for the NXP PCA954x
++	  and PCA984x I2C mux/switch devices.
+ 
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-mux-pca954x.
+diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+index 2ca068d8b92d..9796bd7d61d5 100644
+--- a/drivers/i2c/muxes/i2c-mux-pca954x.c
++++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+@@ -4,11 +4,11 @@
+  * Copyright (c) 2008-2009 Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>
+  * Copyright (c) 2008-2009 Eurotech S.p.A. <info-ymFC7zkAqBI1GQ1Ptb7lUw@public.gmane.org>
+  *
+- * This module supports the PCA954x series of I2C multiplexer/switch chips
+- * made by Philips Semiconductors.
++ * This module supports the PCA954x and PCA954x series of I2C multiplexer/switch
++ * chips made by NXP Semiconductors.
+  * This includes the:
+- *	 PCA9540, PCA9542, PCA9543, PCA9544, PCA9545, PCA9546, PCA9547
+- *	 and PCA9548.
++ *	 PCA9540, PCA9542, PCA9543, PCA9544, PCA9545, PCA9546, PCA9547,
++ *	 PCA9548, PCA9846, PCA9847, PCA9848 and PCA9849.
+  *
+  * These chips are all controlled via the I2C bus itself, and all have a
+  * single 8-bit register. The upstream "parent" bus fans out to two,
+@@ -63,6 +63,10 @@ enum pca_type {
+ 	pca_9546,
+ 	pca_9547,
+ 	pca_9548,
++	pca_9846,
++	pca_9847,
++	pca_9848,
++	pca_9849,
+ };
+ 
+ struct chip_desc {
+@@ -129,6 +133,22 @@ static const struct chip_desc chips[] = {
+ 		.nchans = 8,
+ 		.muxtype = pca954x_isswi,
+ 	},
++	[pca_9846] = {
++		.nchans = 4,
++		.muxtype = pca954x_isswi,
++	},
++	[pca_9847] = {
++		.nchans = 8,
++		.muxtype = pca954x_ismux,
++	},
++	[pca_9848] = {
++		.nchans = 8,
++		.muxtype = pca954x_isswi,
++	},
++	[pca_9849] = {
++		.nchans = 4,
++		.muxtype = pca954x_ismux,
++	},
+ };
+ 
+ static const struct i2c_device_id pca954x_id[] = {
+@@ -140,6 +160,10 @@ static const struct i2c_device_id pca954x_id[] = {
+ 	{ "pca9546", pca_9546 },
+ 	{ "pca9547", pca_9547 },
+ 	{ "pca9548", pca_9548 },
++	{ "pca9846", pca_9846 },
++	{ "pca9847", pca_9847 },
++	{ "pca9848", pca_9848 },
++	{ "pca9849", pca_9849 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, pca954x_id);
+@@ -154,6 +178,10 @@ static const struct of_device_id pca954x_of_match[] = {
+ 	{ .compatible = "nxp,pca9546", .data = &chips[pca_9546] },
+ 	{ .compatible = "nxp,pca9547", .data = &chips[pca_9547] },
+ 	{ .compatible = "nxp,pca9548", .data = &chips[pca_9548] },
++	{ .compatible = "nxp,pca9846", .data = &chips[pca_9846] },
++	{ .compatible = "nxp,pca9847", .data = &chips[pca_9847] },
++	{ .compatible = "nxp,pca9848", .data = &chips[pca_9848] },
++	{ .compatible = "nxp,pca9849", .data = &chips[pca_9849] },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, pca954x_of_match);
+-- 
+2.14.1
 
-This is only problem with DT and PCIE device discovery to start with!!
-
-We are in catch 22 situation, where in we can not enumerate device 
-without it actually powering up.
-
-All the other controllers like SDIO, MMC use something similar to enable 
-these regulators. SDIO actually uses pwrseq to do this.
-There was attempt to generalize pwrseq to other subsystems, not sure 
-where it landed.
-
-As of today, the only way to power up endpoint in sync with reset is via 
-controller driver, all other ways we would end up doing reset out of 
-sync with power which are error prone.
-
-> 
-
->>   - phys:
->>   	Usage: required for apq8084
->> @@ -205,6 +219,8 @@
->>   	Value type: <prop-encoded-array>
->>   	Definition: List of phandle and GPIO specifier pairs. Should contain
->>   			- "perst-gpios"	PCIe endpoint reset signal line
->> +			- "pe_en-gpios"	PCIe endpoint enable signal line
->> +			- "pe_en1-gpios" PCIe endpoint enable1 signal line
-> 
-> those two shouldn't be here, instead they should be part of regulator DT
-> node, so please drop them.
-
-Yes, I can drop them for now!
-
-> 
->>   			- "wake-gpios"	PCIe endpoint wake signal line
->>   
->>   * Example for ipq/apq8064
->> diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
->> index 952a4fc4bf3c..01488f90da31 100644
->> --- a/drivers/pci/dwc/pcie-qcom.c
->> +++ b/drivers/pci/dwc/pcie-qcom.c
->> @@ -109,13 +109,15 @@ struct qcom_pcie_resources_1_0_0 {
->>   	struct reset_control *core;
->>   	struct regulator *vdda;
->>   };
->> -
->> +#define QCOM_PCIE_MAX_SUPPLY	4
->>   struct qcom_pcie_resources_2_3_2 {
->>   	struct clk *aux_clk;
->>   	struct clk *master_clk;
->>   	struct clk *slave_clk;
->>   	struct clk *cfg_clk;
->>   	struct clk *pipe_clk;
->> +	int num_supplies;
->> +	struct regulator_bulk_data supplies[QCOM_PCIE_MAX_SUPPLY];
->>   };
->>   
->>   struct qcom_pcie_resources_2_4_0 {
->> @@ -529,6 +531,17 @@ static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
->>   	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
->>   	struct dw_pcie *pci = pcie->pci;
->>   	struct device *dev = pci->dev;
->> +	int ret;
->> +
->> +	res->supplies[0].supply = "vdda";
->> +	res->supplies[1].supply = "vdda-1p8";
->> +	res->supplies[2].supply = "vddpe";
->> +	res->supplies[3].supply = "vddpe1";
->> +	res->num_supplies = QCOM_PCIE_MAX_SUPPLY;
->> +	ret = devm_regulator_bulk_get(dev, QCOM_PCIE_MAX_SUPPLY,
->> +				      res->supplies);
-> 
-> If we decide to go on this direction we need to replace this with
-> devm_regulator_bulk_get_optional (yes I know there is no such regulator
-> API yet) because they are optional in the DT binding.
-
-I think the api name is misleading here, actually 
-devm_regulator_bulk_get() will return dummy regulators if the regulators 
-are not present, so code as it is Okay. On the other hand *_optonal api 
-would fail.
-
-
-thanks,
-srini
-> 
-> <snip>
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
