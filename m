@@ -1,59 +1,78 @@
-From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Subject: Re: [PATCH v4 00/12] [dt-bindings] [media] Add document file and
- driver for Sony CXD2880 DVB-T2/T tuner + demodulator
-Date: Thu, 14 Dec 2017 15:25:13 +0100
-Message-ID: <CAOFm3uEYfMH8Zj8uEx-D9yYrTyDMTG_j02619esHu-j0brQKaA@mail.gmail.com>
-References: <20171013054635.20946-1-Yasunari.Takiguchi@sony.com>
- <20171213173633.57edca85@vento.lan> <02699364973B424C83A42A84B04FDA85431742@JPYOKXMS113.jp.sony.com>
- <20171214085503.289f06f8@vento.lan>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v4 3/5] media: i2c: Add TDA1997x HDMI
+	receiver driver
+Date: Thu, 14 Dec 2017 15:26:57 +0100
+Message-ID: <bce9c2cb-060a-afc2-4ce5-1e2c90c241a5@xs4all.nl>
+References: <1511990397-27647-1-git-send-email-tharvey@gateworks.com>
+ <1511990397-27647-4-git-send-email-tharvey@gateworks.com>
+ <1a1be5d7-caed-6cba-c97a-dbb70e119fa3@xs4all.nl>
+ <CAJ+vNU0NKZizung9+1zsd1RZBrDbBgk+A8mVJ76bQysjCUoaKw@mail.gmail.com>
+ <CAJ+vNU1L5MkP0DuiwjKXY75id3Brzq+9M9DfcZOXbvzVgaUdXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171214085503.289f06f8-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Cc: "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yamamoto, Masayuki" <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, "Yonezawa, Kota" <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>, "Bird, Timothy" <Tim.Bird-7U/KSKJipcs@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAJ+vNU1L5MkP0DuiwjKXY75id3Brzq+9M9DfcZOXbvzVgaUdXQ@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Mauro,
+On 14/12/17 00:35, Tim Harvey wrote:
+>>> Close. What is missing is a check of the AVI InfoFrame: if it has an explicit
+>>> colorimetry then use that. E.g. check for HDMI_COLORIMETRY_ITU_601 or ITU_709
+>>> and set the colorspace accordingly. Otherwise fall back to what you have here.
+>>>
+>>
+>> This function currently matches adv7604/adv7842 where they don't look
+>> at colorimetry (but I do see a TODO in adv748x_hdmi_fill_format to
+>> look at this) so I don't have an example and may not understand.
+>>
+>> Do you mean:
+>>
+>>        format->colorspace = V4L2_COLORSPACE_SRGB;
+>>        if (bt->flags & V4L2_DV_FL_IS_CE_VIDEO) {
+>>                 if ((state->colorimetry == HDMI_COLORIMETRY_ITU_601) ||
+>>                     (state->colorimetry == HDMI_COLORIMETRY_ITU_709))
+>>                         format->colorspace = state->colorspace;
+>>                 else
+>>                         format->colorspace = is_sd(bt->height) ?
+>>                                 V4L2_COLORSPACE_SMPTE170M :
+>> V4L2_COLORSPACE_REC709;
+>>         }
+>>
+>> Also during more testing I've found that I'm not capturing interlaced
+>> properly and know I at least need:
+>>
+>> -        format->field = V4L2_FIELD_NONE;
+>> +        format->field = (bt->interlaced) ?
+>> +                V4L2_FIELD_ALTERNATE : V4L2_FIELD_NONE;
+>>
+>> I'm still not quite capturing interlaced yet but I think its an issue
+>> of setting up the media pipeline improperly.
+>>
+> 
+> Hans,
+> 
+> Did you see this question above? I'm not quite understanding what you
+> want me to do for filling in colorspace and don't see any examples in
+> the existing drivers that appear to look at colorimetry for this.
 
-On Thu, Dec 14, 2017 at 11:55 AM, Mauro Carvalho Chehab
-<mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org> wrote:
+Yeah, I missed that question. I started answering that yesterday, but then
+I realized that it would be better if I would make a helper function for
+v4l2-dv-timings. The rules are complex so coding that in a single place
+that everyone can use is the smart thing to do.
 
-> SPDX is a new requirement that started late on Kernel 4.14 development
-> cycle (and whose initial changes were merged directly at Linus tree).
-> Not all existing files have it yet, as identifying the right license
-> on existing files is a complex task, but if you do a:
->
->         $ git grep SPDX $(find . -name Makefile) $(find . -name Kconfig)
->
-> You'll see that lot of such files have it already.
+I hope to finish it tomorrow (too many interruptions today).
 
-FWIW, short of having SPDX tags, identifying the right license on
-existing files is not a super complex task: if boils down to running
-many diffs.
+Regards,
 
-Take the ~60K files in kernel, and about 6K license and notices
-reference texts. Then compute a pairwise diff of each of the 60K file
-against the 6K reference texts. Repeat the pairwise diff a few more
-times, say 10 times, as multiple licenses may appear in any given
-kernel file. And keep the diffs that have the fewest
-difference/highest similarity with the reference texts as the detected
-license. Done!
-
-The only complex thing is that if you have a fast diff that runs at
-0.1 millisec end-to-end per diff, you still have 3.6B diffs to do and
-this would take about 250 days on one thread. Even with a beefy 250
-core CPU, that would still be a day (and quite few kilo watts) . So
-the whole trick is to avoid doing a diffs if not really needed. This
-is what I do in my scancode-toolkit (that I used/use to help Greg and
-Thomas with kernel license scans). Net effect is that on a laptop on 8
-threads it takes ~20 minutes to scan a whole kernel using this
-diff-based approach and obtain a fairly accurate license detection.
--- 
-Cordially
-Philippe Ombredanne
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hans
