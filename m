@@ -1,35 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] dt-bindings: arm: document supported STM32 SoC family
-Date: Thu, 14 Dec 2017 09:05:57 -0600
-Message-ID: <CAL_JsqJ8+NrOOpg1VcC8ZVVtm3tFTL2qvj8GSkrPU91CWDqzDA@mail.gmail.com>
-References: <1512741394-27341-1-git-send-email-ludovic.Barre@st.com>
- <20171212210348.proilmqmxf4yl5jn@rob-hp-laptop> <20171212231744.u4wtadrpaq3wp4sq@rob-hp-laptop>
- <16700917-a53a-c319-d27d-f447c6ed3dce@st.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 04/14] ARM: dts: dra76x: Create a common file with MMC/SD
+ IOdelay data
+Date: Thu, 14 Dec 2017 07:15:31 -0800
+Message-ID: <20171214151531.GI14441@atomide.com>
+References: <20171214134054.7749-1-kishon@ti.com>
+ <20171214134054.7749-5-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <16700917-a53a-c319-d27d-f447c6ed3dce-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gwenael Treuveur <gwenael.treuveur-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171214134054.7749-5-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: bcousson@baylibre.com, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 13, 2017 at 2:40 AM, Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org> wrote:
-> hi Rob
->
-> Today there was no bindings documentation for STM32 SoC
-> already upstreamed. This patch adds initial list of STM32
-> existing in kernel.
-> The next serie adds just new soc and one compatible on STM32 list.
+* Kishon Vijay Abraham I <kishon@ti.com> [171214 13:44]:
+> +&dra7_pmx_core {
+> +	mmc1_pins_default: mmc1_pins_default {
+> +		pinctrl-single,pins = <
+> +			DRA7XX_CORE_IOPAD(0x3754, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_clk.clk */
+> +			DRA7XX_CORE_IOPAD(0x3758, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_cmd.cmd */
+> +			DRA7XX_CORE_IOPAD(0x375c, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat0.dat0 */
+> +			DRA7XX_CORE_IOPAD(0x3760, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat1.dat1 */
+> +			DRA7XX_CORE_IOPAD(0x3764, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat2.dat2 */
+> +			DRA7XX_CORE_IOPAD(0x3768, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat3.dat3 */
+> +		>;
+> +	};
+> +
+> +	mmc1_pins_sdr12: mmc1_pins_sdr12 {
+> +		pinctrl-single,pins = <
+> +			DRA7XX_CORE_IOPAD(0x3754, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_clk.clk */
+> +			DRA7XX_CORE_IOPAD(0x3758, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_cmd.cmd */
+> +			DRA7XX_CORE_IOPAD(0x375c, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat0.dat0 */
+> +			DRA7XX_CORE_IOPAD(0x3760, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat1.dat1 */
+> +			DRA7XX_CORE_IOPAD(0x3764, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat2.dat2 */
+> +			DRA7XX_CORE_IOPAD(0x3768, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc1_dat3.dat3 */
+> +		>;
+> +	};
 
-Yes, and that series will go thru arm-soc tree so this patch needs to too.
+Can't you just do:
 
-> So, I think you could apply this patch.
+pinctrl-0 = <&mmc1_pins_default>;
+pinctrl-1 = <&mmc1_pins_default>;
+pinctrl-2 = <&mmc1_pins_hs>;
+pinctrl-names = "default", "sdr12", "sdr25";
 
-If your series is not going into 4.16, then I can take this one.
+And avoid defining duplicate pinctrl groups that way?
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Tony
