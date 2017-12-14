@@ -1,62 +1,49 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: DT dtc warnings
-Date: Thu, 14 Dec 2017 21:40:15 +0100
-Message-ID: <CAJKOXPc7M3jeV_hNBBRJKGs3vtNzdrGbW_YETw2n0fXxhqjZ_g@mail.gmail.com>
-References: <CAL_JsqJKCzjx3zNigu_0T=Ku=_P2SQEjTx=uVbvr_QxJQR7kYg@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 6/7] i3c: master: Add driver for Cadence IP
+Date: Thu, 14 Dec 2017 21:44:42 +0100
+Message-ID: <20171214214442.55902041@bbrezillon>
+References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
+        <20171214151610.19153-7-boris.brezillon@free-electrons.com>
+        <d0685c1d-a3ed-b3c1-7e3f-b69b02e8a7be@infradead.org>
+        <20171214211722.1c2f269d@bbrezillon>
+        <8245f2de-eb0a-319b-8f45-d8d5dac36239@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJKCzjx3zNigu_0T=Ku=_P2SQEjTx=uVbvr_QxJQR7kYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <8245f2de-eb0a-319b-8f45-d8d5dac36239@infradead.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@co>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 14, 2017 at 7:21 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Hi all,
->
-> Below is a current list of ARM boards with more than 40 dtc warnings
-> when building with W=1. There's a treewide patch in flight to fix some
-> unit-address warnings[1], so those aren't included here. The list is
-> grouped by maintainer. AT91, Exynos, and Allwinner continue to be at
-> the top of the list and have been for some time (though having
-> multiple boards for an SoC can cause lots of duplicated warnings).
->
-> Please help fix these. More checks are being added[2].
->
-> Rob
->
-> [1] https://patchwork.kernel.org/patch/10112725/
-> [2] https://www.spinics.net/lists/devicetree-compiler/msg01620.html
->
->
-> 77 - arch/arm/boot/dts/prima2-evb.dts
->
-> 50 - arch/arm/boot/dts/exynos5250-arndale.dts
-> 50 - arch/arm/boot/dts/exynos5250-smdk5250.dts
-> 50 - arch/arm/boot/dts/exynos5250-snow.dts
-> 50 - arch/arm/boot/dts/exynos5250-snow-rev5.dts
-> 50 - arch/arm/boot/dts/exynos5250-spring.dts
-> 71 - arch/arm/boot/dts/exynos5420-arndale-octa.dts
-> 71 - arch/arm/boot/dts/exynos5420-peach-pit.dts
-> 71 - arch/arm/boot/dts/exynos5420-smdk5420.dts
-> 71 - arch/arm/boot/dts/exynos5422-odroidhc1.dts
-> 71 - arch/arm/boot/dts/exynos5422-odroidxu3.dts
-> 71 - arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
-> 71 - arch/arm/boot/dts/exynos5422-odroidxu4.dts
-> 71 - arch/arm/boot/dts/exynos5800-peach-pi.dts
->
+On Thu, 14 Dec 2017 12:25:14 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Sure, I can take care of this but in such case it would be better if
-Mathieu's (+Cc) patch would be split per-subarch maintainer. I can
-base my patch on top of his... but there might be conflicts when
-applying to my tree.
+> On 12/14/2017 12:17 PM, Boris Brezillon wrote:
+> >>> +	events.events = I3C_CCC_EVENT_HJ | I3C_CCC_EVENT_MR;
+> >>> +	ret = i3c_master_enec_locked(m, I3C_BROADCAST_ADDR, &events);
+> >>> +	if (ret)
+> >>> +		pr_info("Failed to re-enable H-J");    
+> >> 		Not very good info...  
+> > What do you mean? Is it the H-J that bothers you (I can replace it by
+> > 'Hot-Join'), or is it something else?  
+> 
+> Who is the message for?  If it's for developers, you could use
+> pr_debug().  If it's for users, it needs more clarity.
 
-Different topic - why not enabling these warnings by default?
+I think it's of interest to anyone including users. If we fail to
+re-enable Hot-Join that means hotplug is no longer working which is
+a bad news.
 
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Does it print the source of the message? (module name e.g.)
+
+I could replace it by
+
+	dev_err(m->parent, "Failed to re-enable Hot-Join");
+
+
+
+> and yes, Hot-Join would be better IMO.
+> 
