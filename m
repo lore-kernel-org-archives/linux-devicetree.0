@@ -1,52 +1,139 @@
-From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Subject: Re: [patch v14 2/4] drivers: jtag: Add Aspeed SoC 24xx and 25xx
- families JTAG master driver
-Date: Thu, 14 Dec 2017 19:14:47 +0100
-Message-ID: <CAOFm3uHohuaoBYWCxnwzDgGATrt8Zf1B-JaOtQ0sZgf+=sSovw@mail.gmail.com>
-References: <1513268971-13518-1-git-send-email-oleksandrs@mellanox.com> <1513268971-13518-3-git-send-email-oleksandrs@mellanox.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: DT dtc warnings
+Date: Thu, 14 Dec 2017 12:21:06 -0600
+Message-ID: <CAL_JsqJKCzjx3zNigu_0T=Ku=_P2SQEjTx=uVbvr_QxJQR7kYg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513268971-13518-3-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, =?UTF-8?B?SmnFmcOtIFDDrXJrbw==?= <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Oleksandr,
+Hi all,
 
-On Thu, Dec 14, 2017 at 5:29 PM, Oleksandr Shamray
-<oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org> wrote:
-> Driver adds support of Aspeed 2500/2400 series SOC JTAG master controller.
->
-> Driver implements the following jtag ops:
-> - freq_get;
-> - freq_set;
-> - status_get;
-> - idle;
-> - xfer;
->
-> It has been tested on Mellanox system with BMC equipped with
-> Aspeed 2520 SoC for programming CPLD devices.
->
-> Signed-off-by: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Jiri Pirko <jiri-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> ---
-> v13->v14
-> Comments pointed by Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-> - Change style of head block comment from /**/ to //
->
-> v12->v13
-> Comments pointed by Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-> - Change jtag-aspeed.c licence type to
->   SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
->   and reorder line with license in description
+Below is a current list of ARM boards with more than 40 dtc warnings
+when building with W=1. There's a treewide patch in flight to fix some
+unit-address warnings[1], so those aren't included here. The list is
+grouped by maintainer. AT91, Exynos, and Allwinner continue to be at
+the top of the list and have been for some time (though having
+multiple boards for an SoC can cause lots of duplicated warnings).
 
-Thanks for the SPDX tags! for this part you have my ack:
+Please help fix these. More checks are being added[2].
 
-Acked-by: Philippe Ombredanne <pombredanne-kIH2VFuay/A@public.gmane.org?
+Rob
 
+[1] https://patchwork.kernel.org/patch/10112725/
+[2] https://www.spinics.net/lists/devicetree-compiler/msg01620.html
+
+
+77 - arch/arm/boot/dts/prima2-evb.dts
+
+50 - arch/arm/boot/dts/exynos5250-arndale.dts
+50 - arch/arm/boot/dts/exynos5250-smdk5250.dts
+50 - arch/arm/boot/dts/exynos5250-snow.dts
+50 - arch/arm/boot/dts/exynos5250-snow-rev5.dts
+50 - arch/arm/boot/dts/exynos5250-spring.dts
+71 - arch/arm/boot/dts/exynos5420-arndale-octa.dts
+71 - arch/arm/boot/dts/exynos5420-peach-pit.dts
+71 - arch/arm/boot/dts/exynos5420-smdk5420.dts
+71 - arch/arm/boot/dts/exynos5422-odroidhc1.dts
+71 - arch/arm/boot/dts/exynos5422-odroidxu3.dts
+71 - arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts
+71 - arch/arm/boot/dts/exynos5422-odroidxu4.dts
+71 - arch/arm/boot/dts/exynos5800-peach-pi.dts
+
+42 - arch/arm/boot/dts/sun5i-gr8-evb.dts
+44 - arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts
+49 - arch/arm/boot/dts/sun7i-a20-icnova-swac.dts
+50 - arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+50 - arch/arm/boot/dts/sun7i-a20-m3.dts
+51 - arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+51 - arch/arm/boot/dts/sun7i-a20-mk808c.dts
+51 - arch/arm/boot/dts/sun7i-a20-wits-pro-a20-dkt.dts
+53 - arch/arm/boot/dts/sun7i-a20-bananapi.dts
+53 - arch/arm/boot/dts/sun7i-a20-bananapi-m1-plus.dts
+53 - arch/arm/boot/dts/sun7i-a20-hummingbird.dts
+53 - arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts
+53 - arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+53 - arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts
+53 - arch/arm/boot/dts/sun7i-a20-pcduino3-nano.dts
+54 - arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts
+54 - arch/arm/boot/dts/sun7i-a20-olinuxino-lime2-emmc.dts
+55 - arch/arm/boot/dts/sun7i-a20-bananapro.dts
+55 - arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+55 - arch/arm/boot/dts/sun7i-a20-orangepi.dts
+55 - arch/arm/boot/dts/sun7i-a20-pcduino3.dts
+55 - arch/arm/boot/dts/sun7i-a20-wexler-tab7200.dts
+56 - arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
+61 - arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+61 - arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
+61 - arch/arm/boot/dts/sun7i-a20-olinuxino-micro-emmc.dts
+
+46 - arch/arm/boot/dts/at91sam9rlek.dts
+48 - arch/arm/boot/dts/at91sam9261ek.dts
+50 - arch/arm/boot/dts/at91-kizbox.dts
+50 - arch/arm/boot/dts/at91-qil_a9260.dts
+51 - arch/arm/boot/dts/at91rm9200ek.dts
+52 - arch/arm/boot/dts/at91sam9g20ek.dts
+52 - arch/arm/boot/dts/at91-sam9_l9260.dts
+53 - arch/arm/boot/dts/at91-foxg20.dts
+53 - arch/arm/boot/dts/at91sam9260ek.dts
+53 - arch/arm/boot/dts/at91sam9g20ek_2mmc.dts
+54 - arch/arm/boot/dts/at91sam9263ek.dts
+56 - arch/arm/boot/dts/at91sam9n12ek.dts
+61 - arch/arm/boot/dts/at91-cosino_mega2560.dts
+61 - arch/arm/boot/dts/at91sam9m10g45ek.dts
+62 - arch/arm/boot/dts/at91-ariettag25.dts
+63 - arch/arm/boot/dts/at91-ariag25.dts
+64 - arch/arm/boot/dts/at91-kizboxmini.dts
+64 - arch/arm/boot/dts/at91sam9g15ek.dts
+65 - arch/arm/boot/dts/at91sam9g25ek.dts
+66 - arch/arm/boot/dts/at91sam9g35ek.dts
+69 - arch/arm/boot/dts/at91sam9x25ek.dts
+70 - arch/arm/boot/dts/at91sam9x35ek.dts
+74 - arch/arm/boot/dts/sama5d33ek.dts
+75 - arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+75 - arch/arm/boot/dts/at91-sama5d2_xplained.dts
+76 - arch/arm/boot/dts/at91-kizbox2.dts
+77 - arch/arm/boot/dts/sama5d31ek.dts
+80 - arch/arm/boot/dts/sama5d34ek.dts
+81 - arch/arm/boot/dts/sama5d35ek.dts
+84 - arch/arm/boot/dts/at91-sama5d3_xplained.dts
+84 - arch/arm/boot/dts/sama5d36ek_cmp.dts
+84 - arch/arm/boot/dts/sama5d36ek.dts
+93 - arch/arm/boot/dts/at91-sama5d4ek.dts
+93 - arch/arm/boot/dts/at91-sama5d4_xplained.dts
+93 - arch/arm/boot/dts/at91-vinco.dts
+94 - arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts
+77 - arch/arm/boot/dts/at91-tse850-3.dts
+
+40 - arch/arm/boot/dts/stih410-b2260.dts
+43 - arch/arm/boot/dts/stih410-b2120.dts
+
+52 - arch/arm/boot/dts/keystone-k2e-evm.dts
+73 - arch/arm/boot/dts/keystone-k2l-evm.dts
+97 - arch/arm/boot/dts/keystone-k2hk-evm.dts
+
+Boards with no maintainer:
+192 - arch/arm/boot/dts/atlas7-evb.dts
+50 - arch/arm/boot/dts/aks-cdu.dts
+50 - arch/arm/boot/dts/animeo_ip.dts
+50 - arch/arm/boot/dts/ethernut5.dts
+50 - arch/arm/boot/dts/evk-pro3.dts
+50 - arch/arm/boot/dts/tny_a9260.dts
+50 - arch/arm/boot/dts/tny_a9g20.dts
+50 - arch/arm/boot/dts/usb_a9260.dts
+50 - arch/arm/boot/dts/usb_a9g20.dts
+50 - arch/arm/boot/dts/usb_a9g20_lpw.dts
+51 - arch/arm/boot/dts/mpa1600.dts
+54 - arch/arm/boot/dts/tny_a9263.dts
+54 - arch/arm/boot/dts/usb_a9263.dts
+60 - arch/arm/boot/dts/pm9g45.dts
+75 - arch/arm/boot/dts/ste-nomadik-nhk15.dts
+75 - arch/arm/boot/dts/ste-nomadik-s8815.dts
+77 - arch/arm/boot/dts/atlas6-evb.dts
 --
-Cordially
-Philippe Ombredanne
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
