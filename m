@@ -1,130 +1,124 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: sh-msiof: Avoid writing to registers from spi_master.setup()" to the spi tree
-Date: Thu, 14 Dec 2017 11:50:19 +0000
-Message-ID: <E1ePS1r-0005XK-Bd@debutante>
-References: <1513191913-10612-2-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513191913-10612-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.orglinux-spi@vger.kernel.org
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Subject: RE: [PATCH v11 1/3] ACPI/IORT: Add msi address regions reservation
+ helper
+Date: Thu, 14 Dec 2017 12:17:50 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA838628CDD@FRAEML521-MBX.china.huawei.com>
+References: <20171213115830.61872-1-shameerali.kolothum.thodi@huawei.com>
+ <20171213115830.61872-2-shameerali.kolothum.thodi@huawei.com>
+ <20171214114759.GA27117@e107981-ln.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20171214114759.GA27117@e107981-ln.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "robin.murphy@arm.com" <robin.murphy@arm.com>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "joro@8bytes.org" <joro@8bytes.org>, John Garry <john.garry@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Lorenzo,
 
-   spi: sh-msiof: Avoid writing to registers from spi_master.setup()
+> -----Original Message-----
+> From: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
+> Sent: Thursday, December 14, 2017 11:48 AM
+> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+> Cc: robin.murphy@arm.com; marc.zyngier@arm.com; will.deacon@arm.com;
+> joro@8bytes.org; John Garry <john.garry@huawei.com>; xuwei (O)
+> <xuwei5@hisilicon.com>; Guohanjun (Hanjun Guo) <guohanjun@huawei.com>;
+> iommu@lists.linux-foundation.org; linux-arm-kernel@lists.infradead.org; linux-
+> acpi@vger.kernel.org; devicetree@vger.kernel.org; Linuxarm
+> <linuxarm@huawei.com>
+> Subject: Re: [PATCH v11 1/3] ACPI/IORT: Add msi address regions reservation
+> helper
+> 
+> On Wed, Dec 13, 2017 at 11:58:28AM +0000, Shameer Kolothum wrote:
+> > On some platforms msi parent address regions have to be excluded from
+> > normal IOVA allocation in that they are detected and decoded in a HW
+> > specific way by system components and so they cannot be considered normal
+> > IOVA address space.
+> >
+> > Add a helper function that retrieves ITS address regions - the msi
+> > parent - through IORT device <-> ITS mappings and reserves it so that
+> > these regions will not be translated by IOMMU and will be excluded from
+> > IOVA allocations. The function checks for the smmu model number and
+> > only applies the msi reservation if the platform requires it.
+> >
+> > Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+> > ---
+> >  drivers/acpi/arm64/iort.c        | 112
+> +++++++++++++++++++++++++++++++++++++--
+> >  drivers/irqchip/irq-gic-v3-its.c |   3 +-
+> >  include/linux/acpi_iort.h        |   7 ++-
+> >  3 files changed, 117 insertions(+), 5 deletions(-)
+> 
+> You need this additional hunk to make it compile on !CONFIG_IOMMU_API:
 
-has been applied to the spi tree at
+Oops..Sorry, missed that. If you are happy with the rest, I will make the below
+change and sent out the v12(hopefully final).
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Please let me know.
 
 Thanks,
-Mark
+Shameer
 
->From 7ff0b53c4051145d1cf992d2f60987e6447eed4f Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Wed, 13 Dec 2017 20:05:10 +0100
-Subject: [PATCH] spi: sh-msiof: Avoid writing to registers from
- spi_master.setup()
-
-The spi_master.setup() callback must not change configuration registers,
-as that could corrupt I/O that is in progress for other SPI slaves.
-
-The only exception is the configuration of the native chip select
-polarity in SPI master mode, as a wrong chip select polarity will cause
-havoc during all future transfers to any other SPI slave.
-
-Hence stop writing to registers in sh_msiof_spi_setup(), unless it is
-the first call for a controller using a native chip select, or unless
-native chip select polarity has changed (note that you'll loose anyway
-if I/O is in progress).  Even then, only do what is strictly necessary,
-instead of calling sh_msiof_spi_set_pin_regs().
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-sh-msiof.c | 35 ++++++++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 81a9144f5442..2704abb11ea4 100644
---- a/drivers/spi/spi-sh-msiof.c
-+++ b/drivers/spi/spi-sh-msiof.c
-@@ -55,6 +55,8 @@ struct sh_msiof_spi_priv {
- 	void *rx_dma_page;
- 	dma_addr_t tx_dma_addr;
- 	dma_addr_t rx_dma_addr;
-+	bool native_cs_inited;
-+	bool native_cs_high;
- 	bool slave_aborted;
- };
- 
-@@ -528,8 +530,7 @@ static int sh_msiof_spi_setup(struct spi_device *spi)
- {
- 	struct device_node	*np = spi->master->dev.of_node;
- 	struct sh_msiof_spi_priv *p = spi_master_get_devdata(spi->master);
--
--	pm_runtime_get_sync(&p->pdev->dev);
-+	u32 clr, set, tmp;
- 
- 	if (!np) {
- 		/*
-@@ -539,19 +540,31 @@ static int sh_msiof_spi_setup(struct spi_device *spi)
- 		spi->cs_gpio = (uintptr_t)spi->controller_data;
- 	}
- 
--	/* Configure pins before deasserting CS */
--	sh_msiof_spi_set_pin_regs(p, !!(spi->mode & SPI_CPOL),
--				  !!(spi->mode & SPI_CPHA),
--				  !!(spi->mode & SPI_3WIRE),
--				  !!(spi->mode & SPI_LSB_FIRST),
--				  !!(spi->mode & SPI_CS_HIGH));
--
--	if (spi->cs_gpio >= 0)
-+	if (spi->cs_gpio >= 0) {
- 		gpio_set_value(spi->cs_gpio, !(spi->mode & SPI_CS_HIGH));
-+		return 0;
-+	}
- 
-+	if (spi_controller_is_slave(p->master))
-+		return 0;
- 
--	pm_runtime_put(&p->pdev->dev);
-+	if (p->native_cs_inited &&
-+	    (p->native_cs_high == !!(spi->mode & SPI_CS_HIGH)))
-+		return 0;
- 
-+	/* Configure native chip select mode/polarity early */
-+	clr = MDR1_SYNCMD_MASK;
-+	set = MDR1_TRMD | TMDR1_PCON | MDR1_SYNCMD_SPI;
-+	if (spi->mode & SPI_CS_HIGH)
-+		clr |= BIT(MDR1_SYNCAC_SHIFT);
-+	else
-+		set |= BIT(MDR1_SYNCAC_SHIFT);
-+	pm_runtime_get_sync(&p->pdev->dev);
-+	tmp = sh_msiof_read(p, TMDR1) & ~clr;
-+	sh_msiof_write(p, TMDR1, tmp | set);
-+	pm_runtime_put(&p->pdev->dev);
-+	p->native_cs_high = spi->mode & SPI_CS_HIGH;
-+	p->native_cs_inited = true;
- 	return 0;
- }
- 
--- 
-2.15.1
+> 
+> -- >8 --
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 3e0ce652c3e8..e2f7bddf5522 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -762,25 +762,6 @@ static int __maybe_unused __get_pci_rid(struct
+> pci_dev *pdev, u16 alias,
+>  	return 0;
+>  }
+> 
+> -static __maybe_unused struct acpi_iort_node *iort_get_msi_resv_iommu(
+> -						struct device *dev)
+> -{
+> -	struct acpi_iort_node *iommu;
+> -	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
+> -
+> -	iommu = iort_get_iort_node(fwspec->iommu_fwnode);
+> -
+> -	if (iommu && (iommu->type == ACPI_IORT_NODE_SMMU_V3)) {
+> -		struct acpi_iort_smmu_v3 *smmu;
+> -
+> -		smmu = (struct acpi_iort_smmu_v3 *)iommu->node_data;
+> -		if (smmu->model ==
+> ACPI_IORT_SMMU_V3_HISILICON_HI161X)
+> -			return iommu;
+> -	}
+> -
+> -	return NULL;
+> -}
+> -
+>  static int arm_smmu_iort_xlate(struct device *dev, u32 streamid,
+>  			       struct fwnode_handle *fwnode,
+>  			       const struct iommu_ops *ops)
+> @@ -807,6 +788,24 @@ static inline bool iort_iommu_driver_enabled(u8 type)
+>  }
+> 
+>  #ifdef CONFIG_IOMMU_API
+> +static struct acpi_iort_node *iort_get_msi_resv_iommu(struct device *dev)
+> +{
+> +	struct acpi_iort_node *iommu;
+> +	struct iommu_fwspec *fwspec = dev->iommu_fwspec;
+> +
+> +	iommu = iort_get_iort_node(fwspec->iommu_fwnode);
+> +
+> +	if (iommu && (iommu->type == ACPI_IORT_NODE_SMMU_V3)) {
+> +		struct acpi_iort_smmu_v3 *smmu;
+> +
+> +		smmu = (struct acpi_iort_smmu_v3 *)iommu->node_data;
+> +		if (smmu->model ==
+> ACPI_IORT_SMMU_V3_HISILICON_HI161X)
+> +			return iommu;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  static inline const struct iommu_ops *iort_fwspec_iommu_ops(
+>  				struct iommu_fwspec *fwspec)
+>  {
