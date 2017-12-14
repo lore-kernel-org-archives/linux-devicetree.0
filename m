@@ -1,49 +1,46 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 6/7] i3c: master: Add driver for Cadence IP
-Date: Thu, 14 Dec 2017 21:44:42 +0100
-Message-ID: <20171214214442.55902041@bbrezillon>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
-        <20171214151610.19153-7-boris.brezillon@free-electrons.com>
-        <d0685c1d-a3ed-b3c1-7e3f-b69b02e8a7be@infradead.org>
-        <20171214211722.1c2f269d@bbrezillon>
-        <8245f2de-eb0a-319b-8f45-d8d5dac36239@infradead.org>
+From: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: DT dtc warnings
+Date: Thu, 14 Dec 2017 12:50:03 -0800
+Message-ID: <1dbad435-269f-48e1-c4b1-a6ac6d81eee1@oracle.com>
+References: <CAL_JsqJKCzjx3zNigu_0T=Ku=_P2SQEjTx=uVbvr_QxJQR7kYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <8245f2de-eb0a-319b-8f45-d8d5dac36239@infradead.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@co>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJKCzjx3zNigu_0T=Ku=_P2SQEjTx=uVbvr_QxJQR7kYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Dec 2017 12:25:14 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+Hui Rob,
 
-> On 12/14/2017 12:17 PM, Boris Brezillon wrote:
-> >>> +	events.events = I3C_CCC_EVENT_HJ | I3C_CCC_EVENT_MR;
-> >>> +	ret = i3c_master_enec_locked(m, I3C_BROADCAST_ADDR, &events);
-> >>> +	if (ret)
-> >>> +		pr_info("Failed to re-enable H-J");    
-> >> 		Not very good info...  
-> > What do you mean? Is it the H-J that bothers you (I can replace it by
-> > 'Hot-Join'), or is it something else?  
+12/14/2017 10:21 AM, Rob Herring wrote:
+> Hi all,
 > 
-> Who is the message for?  If it's for developers, you could use
-> pr_debug().  If it's for users, it needs more clarity.
+> Below is a current list of ARM boards with more than 40 dtc warnings
+> when building with W=1. There's a treewide patch in flight to fix some
+> unit-address warnings[1], so those aren't included here. The list is
+> grouped by maintainer. AT91, Exynos, and Allwinner continue to be at
+> the top of the list and have been for some time (though having
+> multiple boards for an SoC can cause lots of duplicated warnings).
+> 
+> Please help fix these. More checks are being added[2].
+> 
 
-I think it's of interest to anyone including users. If we fail to
-re-enable Hot-Join that means hotplug is no longer working which is
-a bad news.
+[...]
 
 > 
-> Does it print the source of the message? (module name e.g.)
-
-I could replace it by
-
-	dev_err(m->parent, "Failed to re-enable Hot-Join");
-
-
-
-> and yes, Hot-Join would be better IMO.
+> 52 - arch/arm/boot/dts/keystone-k2e-evm.dts
+> 73 - arch/arm/boot/dts/keystone-k2l-evm.dts
+> 97 - arch/arm/boot/dts/keystone-k2hk-evm.dts
 > 
+Nishant is going to help me to address keystone ones.
+
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
