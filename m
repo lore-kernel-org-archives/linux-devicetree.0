@@ -1,11 +1,23 @@
-From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 17/25] arm: rk3: dts: Remove leading 0x and 0s from bindings notation
-Date: Fri, 15 Dec 2017 13:46:50 +0100
-Message-ID: <20171215124650.30742-1-malat@debian.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mathieu Malaterre <malat@debian.org>
+Subject: [PATCH 15/25] arm: versatile: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Fri, 15 Dec 2017 13:46:47 +0100
+Message-ID: <20171215124648.30641-1-malat@debian.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Improve the DTS files by removing all the leading "0x" and zeros to fix the
@@ -35,57 +47,119 @@ Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error
 
 This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
 
-Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Reported-by: David Daney <ddaney@caviumnetworks.com>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/versatile-ab.dts | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cd24894ee5c6..3d81281be280 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -744,7 +744,7 @@
- 			 *	*_HDMI		HDMI
- 			 *	*_MIPI_*	MIPI
- 			 */
--			pd_vio@RK3288_PD_VIO {
-+			pd_vio@rk3288_pd_vio {
- 				reg = <RK3288_PD_VIO>;
- 				clocks = <&cru ACLK_IEP>,
- 					 <&cru ACLK_ISP>,
-@@ -786,7 +786,7 @@
- 			 * Note: The following 3 are HEVC(H.265) clocks,
- 			 * and on the ACLK_HEVC_NIU (NOC).
- 			 */
--			pd_hevc@RK3288_PD_HEVC {
-+			pd_hevc@rk3288_pd_hevc {
- 				reg = <RK3288_PD_HEVC>;
- 				clocks = <&cru ACLK_HEVC>,
- 					 <&cru SCLK_HEVC_CABAC>,
-@@ -800,7 +800,7 @@
- 			 * (video endecoder & decoder) clocks that on the
- 			 * ACLK_VCODEC_NIU and HCLK_VCODEC_NIU (NOC).
- 			 */
--			pd_video@RK3288_PD_VIDEO {
-+			pd_video@rk3288_pd_video {
- 				reg = <RK3288_PD_VIDEO>;
- 				clocks = <&cru ACLK_VCODEC>,
- 					 <&cru HCLK_VCODEC>;
-@@ -811,7 +811,7 @@
- 			 * Note: ACLK_GPU is the GPU clock,
- 			 * and on the ACLK_GPU_NIU (NOC).
- 			 */
--			pd_gpu@RK3288_PD_GPU {
-+			pd_gpu@rk3288_pd_gpu {
- 				reg = <RK3288_PD_GPU>;
- 				clocks = <&cru ACLK_GPU>;
- 				pm_qos = <&qos_gpu_r>,
+diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+index 4a51612996bc..2f60ecd7741e 100644
+--- a/arch/arm/boot/dts/versatile-ab.dts
++++ b/arch/arm/boot/dts/versatile-ab.dts
+@@ -24,7 +24,7 @@
+ 		reg = <0x0 0x08000000>;
+ 	};
+ 
+-	xtal24mhz: xtal24mhz@24M {
++	xtal24mhz: xtal24mhz@24m {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <24000000>;
+@@ -34,7 +34,7 @@
+ 		compatible = "arm,core-module-versatile", "syscon", "simple-mfd";
+ 		reg = <0x10000000 0x200>;
+ 
+-		led@08.0 {
++		led@8.0 {
+ 			compatible = "register-bit-led";
+ 			offset = <0x08>;
+ 			mask = <0x01>;
+@@ -42,7 +42,7 @@
+ 			linux,default-trigger = "heartbeat";
+ 			default-state = "on";
+ 		};
+-		led@08.1 {
++		led@8.1 {
+ 			compatible = "register-bit-led";
+ 			offset = <0x08>;
+ 			mask = <0x02>;
+@@ -50,7 +50,7 @@
+ 			linux,default-trigger = "mmc0";
+ 			default-state = "off";
+ 		};
+-		led@08.2 {
++		led@8.2 {
+ 			compatible = "register-bit-led";
+ 			offset = <0x08>;
+ 			mask = <0x04>;
+@@ -58,35 +58,35 @@
+ 			linux,default-trigger = "cpu0";
+ 			default-state = "off";
+ 		};
+-		led@08.3 {
++		led@8.3 {
+ 			compatible = "register-bit-led";
+ 			offset = <0x08>;
+ 			mask = <0x08>;
+ 			label = "versatile:3";
+ 			default-state = "off";
+ 		};
+-		led@08.4 {
++		led@8.4 {
+ 			compatible = "register-bit-led";
+ 			offset = <0x08>;
+ 			mask = <0x10>;
+ 			label = "versatile:4";
+ 			default-state = "off";
+ 		};
+-		led@08.5 {
++		led@8.5 {
+ 			compatible = "register-bit-led";
+ 			offset = <0x08>;
+ 			mask = <0x20>;
+ 			label = "versatile:5";
+ 			default-state = "off";
+ 		};
+-		led@08.6 {
++		led@8.6 {
+ 			compatible = "register-bit-led";
+ 			offset = <0x08>;
+ 			mask = <0x40>;
+ 			label = "versatile:6";
+ 			default-state = "off";
+ 		};
+-		led@08.7 {
++		led@8.7 {
+ 			compatible = "register-bit-led";
+ 			offset = <0x08>;
+ 			mask = <0x80>;
+@@ -95,14 +95,14 @@
+ 		};
+ 
+ 		/* OSC1 on AB, OSC4 on PB */
+-		osc1: cm_aux_osc@24M {
++		osc1: cm_aux_osc@24m {
+ 			#clock-cells = <0>;
+ 			compatible = "arm,versatile-cm-auxosc";
+ 			clocks = <&xtal24mhz>;
+ 		};
+ 
+ 		/* The timer clock is the 24 MHz oscillator divided to 1MHz */
+-		timclk: timclk@1M {
++		timclk: timclk@1m {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-factor-clock";
+ 			clock-div = <24>;
+@@ -110,7 +110,7 @@
+ 			clocks = <&xtal24mhz>;
+ 		};
+ 
+-		pclk: pclk@24M {
++		pclk: pclk@24m {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-factor-clock";
+ 			clock-div = <1>;
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
