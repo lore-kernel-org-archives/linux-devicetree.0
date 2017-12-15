@@ -1,68 +1,63 @@
-From: <Wenyou.Yang@microchip.com>
-Subject: RE: [PATCH v9 0/2] media: ov7740: Add a V4L2 sensor-level driver
-Date: Fri, 15 Dec 2017 13:26:18 +0000
-Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB8D2D46@CHN-SV-EXMX07.mchp-main.com>
-References: <20171211013146.2497-1-wenyou.yang@microchip.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 07/25] arm: keystone: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Fri, 15 Dec 2017 07:33:21 -0600
+Message-ID: <5354cf25-ed77-db10-d55f-93ab4514da3e@ti.com>
+References: <20171215124638.30233-1-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171211013146.2497-1-wenyou.yang@microchip.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171215124638.30233-1-malat@debian.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou.Yang@microchip.com, mchehab@s-opensource.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com, devicetree@vger.kernel.org, sakari.ailus@iki.fi, corbet@lwn.net, hverkuil@xs4all.nl, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathieu Malaterre <malat@debian.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FrYXJpLA0KDQpEbyB5b3UgaGF2ZSBzb21lIGNvbW1lbnRzIG9uIHRoaXMgdmVyc2lvbj8N
-Cg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+IEZyb206IGxpbnV4LW1lZGlhLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRv
-OmxpbnV4LW1lZGlhLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBXZW55
-b3UgWWFuZw0KPiBTZW50OiAyMDE3xOoxMtTCMTHI1SA5OjMyDQo+IFRvOiBNYXVybyBDYXJ2YWxo
-byBDaGVoYWIgPG1jaGVoYWJAcy1vcGVuc291cmNlLmNvbT47IFJvYiBIZXJyaW5nDQo+IDxyb2Jo
-K2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPg0KPiBD
-YzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgTmljb2xhcyBGZXJyZSAtIE00MzIzOA0K
-PiA8Tmljb2xhcy5GZXJyZUBtaWNyb2NoaXAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IFNha2FyaSBBaWx1cw0KPiA8c2FrYXJpLmFpbHVzQGlraS5maT47IEpvbmF0aGFuIENvcmJl
-dCA8Y29yYmV0QGx3bi5uZXQ+OyBIYW5zIFZlcmt1aWwNCj4gPGh2ZXJrdWlsQHhzNGFsbC5ubD47
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgTGludXggTWVkaWEgTWFpbGlu
-ZyBMaXN0DQo+IDxsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmc+OyBXZW55b3UgWWFuZyAtIEE0
-MTUzNQ0KPiA8V2VueW91LllhbmdAbWljcm9jaGlwLmNvbT4NCj4gU3ViamVjdDogW1BBVENIIHY5
-IDAvMl0gbWVkaWE6IG92Nzc0MDogQWRkIGEgVjRMMiBzZW5zb3ItbGV2ZWwgZHJpdmVyDQo+IA0K
-PiBBZGQgYSBWaWRlbzRMaW51eDIgc2Vuc29yLWxldmVsIGRyaXZlciBmb3IgdGhlIE9tbmlWaXNp
-b24gT1Y3NzQwIFZHQSBjYW1lcmENCj4gaW1hZ2Ugc2Vuc29yLg0KPiANCj4gQ2hhbmdlcyBpbiB2
-OToNCj4gIC0gVXNlIHRoZSBuZXcgU1BEWCBpZHMuDQo+IA0KPiBDaGFuZ2VzIGluIHY4Og0KPiAg
-LSBBcyB0aGUgcmVnaXN0ZXJzIGFyZSB3cml0dGVuIGF0IHN0cmVhbSBzdGFydCwgcmVtb3ZlIHRo
-ZSB3cml0dGVuDQo+ICAgIGNvZGUgZnJvbSB0aGUgc2V0IGZtdCBmdW5jdGlvbi4NCj4gDQo+IENo
-YW5nZXMgaW4gdjc6DQo+ICAtIEFkZCBBY2tlZC1ieSB0YWcuDQo+ICAtIEZpeCB0aGUgd3Jvbmcg
-aGFuZGxlIG9mIGRlZmF1bHQgcmVnaXN0ZXIgY29uZmlndXJhdGlvbi4NCj4gIC0gQWRkIHRoZSBt
-aXNzZWQgYXNzaWdubWVudCBvZiBvdjc3NDAtPmZybXNpemUuDQo+IA0KPiBDaGFuZ2VzIGluIHY2
-Og0KPiAgLSBSZW1vdmUgdW5uZWNlc3NhcnkgI2luY2x1ZGUgPGxpbnV4L2luaXQ+Lg0KPiAgLSBS
-ZW1vdmUgdW5uZWNlc3NhcnkgY29tbWVudHMgYW5kIGV4dHJhIG5ld2xpbmUuDQo+ICAtIEFkZCBj
-b25zdCBmb3Igc29tZSBzdHJ1Y3R1cmVzLg0KPiAgLSBBZGQgdGhlIGNoZWNrIG9mIHRoZSByZXR1
-cm4gdmFsdWUgZnJvbSByZWdtYXBfd3JpdGUoKS4NCj4gIC0gU2ltcGxpZnkgdGhlIGNhbGxpbmcg
-b2YgX192NGwyX2N0cmxfaGFuZGxlcl9zZXR1cCgpLg0KPiAgLSBBZGQgdGhlIGRlZmF1bHQgZm9y
-bWF0IGluaXRpYWxpemF0aW9uIGZ1bmN0aW9uLg0KPiAgLSBJbnRlZ3JhdGUgdGhlIHNldF9wb3dl
-cigpIGFuZCBlbmFibGUvZGlzYWJsZSB0aGUgY2xvY2sgaW50bw0KPiAgICBvbmUgZnVuY3Rpb24u
-DQo+IA0KPiBDaGFuZ2VzIGluIHY1Og0KPiAgLSBTcXVhc2ggdGhlIGRyaXZlciBhbmQgTUFJTlRB
-SU5FUlMgZW50cnkgcGF0Y2hlcyB0byBvbmUuDQo+ICAtIFByZWNlZGUgdGhlIGRyaXZlciBwYXRj
-aCB3aXRoIHRoZSBiaW5kaW5ncyBwYXRjaC4NCj4gDQo+IENoYW5nZXMgaW4gdjQ6DQo+ICAtIEFz
-c2lnbiAndmFsJyBhIGluaXRpYWwgdmFsdWUgdG8gYXZvaWQgd2FybmluZzogJ3ZhbCcgbWF5IGJl
-DQo+ICAgIHVzZWQgdW5pbml0aWFsaXplZC4NCj4gIC0gUmVuYW1lIFJFR19SRUcxNSB0byBhdm9p
-ZCB3YXJuaW5nOiAiUkVHX1JFRzE1IiByZWRlZmluZWQuDQo+IA0KPiBDaGFuZ2VzIGluIHYzOg0K
-PiAgLSBFeHBsaWNpdGx5IGRvY3VtZW50IHRoZSAicmVtb3RlLWVuZHBvaW50IiBwcm9wZXJ0eS4N
-Cj4gIC0gUHV0IHRoZSBNQUlOVEFJTkVSUyBjaGFuZ2UgdG8gYSBzZXBhcmF0ZSBwYXRjaC4NCj4g
-DQo+IENoYW5nZXMgaW4gdjI6DQo+ICAtIFNwbGl0IG9mZiB0aGUgYmluZGluZ3MgaW50byBhIHNl
-cGFyYXRlIHBhdGNoLg0KPiAgLSBBZGQgYSBuZXcgZW50cnkgdG8gdGhlIE1BSU5UQUlORVJTIGZp
-bGUuDQo+IA0KPiBXZW55b3UgWWFuZyAoMik6DQo+ICAgbWVkaWE6IG92Nzc0MDogRG9jdW1lbnQg
-ZGV2aWNlIHRyZWUgYmluZGluZ3MNCj4gICBtZWRpYTogaTJjOiBBZGQgdGhlIG92Nzc0MCBpbWFn
-ZSBzZW5zb3IgZHJpdmVyDQo+IA0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJj
-L292Nzc0MC50eHQgICAgICAgfCAgIDQ3ICsNCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgOCArDQo+ICBkcml2ZXJzL21lZGlhL2kyYy9L
-Y29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDggKw0KPiAgZHJpdmVycy9tZWRp
-YS9pMmMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gIGRyaXZl
-cnMvbWVkaWEvaTJjL292Nzc0MC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTIxNiArKysr
-KysrKysrKysrKysrKysrKw0KPiAgNSBmaWxlcyBjaGFuZ2VkLCAxMjgwIGluc2VydGlvbnMoKykN
-Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bWVkaWEvaTJjL292Nzc0MC50eHQNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlh
-L2kyYy9vdjc3NDAuYw0KPiANCj4gLS0NCj4gMi4xNS4wDQoNCg==
+On 12/15/2017 06:46 AM, Mathieu Malaterre wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> 
+> and
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+> 
+> Converted using the following command:
+> 
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
+> 
+> For simplicity, two sed expressions were used to solve each warnings separately.
+> 
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+> 
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+> 
+> This will solve as a side effect warning:
+> 
+> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+> 
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+> 
+> Reported-by: David Daney <ddaney@caviumnetworks.com>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+
+Acked-by: Nishanth Menon <nm@ti.com>
+
+
+-- 
+Regards,
+Nishanth Menon
