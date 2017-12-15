@@ -1,102 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] dt-bindings: thermal: Describe Armada AP806 and
- CP110
-Date: Fri, 15 Dec 2017 17:28:54 -0600
-Message-ID: <20171215232854.n23biqelqoqjsevm@rob-hp-laptop>
-References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
- <20171214103011.24713-2-miquel.raynal@free-electrons.com>
- <20171215082759.7t24ka3lpkulcb7r@tarshish>
- <20171215093203.74b7a59c@xps13>
- <87po7gmlcs.fsf@free-electrons.com>
- <20171215115230.6fb83cb6@xps13>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/6] dt-bindings: pwm: rcar: Document r8a774[35] PWM
+ bindings
+Date: Fri, 15 Dec 2017 17:30:16 -0600
+Message-ID: <20171215233016.s6bych6qlg7baquu@rob-hp-laptop>
+References: <1513248976-26700-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1513248976-26700-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171215115230.6fb83cb6@xps13>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1513248976-26700-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 15, 2017 at 11:52:30AM +0100, Miquel RAYNAL wrote:
-> Hello Baruch and Gregory,
+On Thu, Dec 14, 2017 at 10:56:12AM +0000, Fabrizio Castro wrote:
+> This patch adds compatible strings specific to r8a774[35], no driver
+> change is needed as the fallback compatible string will activate the
+> right code. Also, this patch replaces the example with a DT snippet used
+> for adding PWM0 support to an r8a7743 based platform.
 > 
-> On Fri, 15 Dec 2017 09:44:19 +0100
-> Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> Dear All,
 > 
-> > Hi Miquel,
-> >  
-> >  On ven., déc. 15 2017, Miquel RAYNAL
-> > <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > 
-> > > Hello Baruch,
-> > >
-> > > On Fri, 15 Dec 2017 10:27:59 +0200
-> > > Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-> > >  
-> > >> Hi Miquel
-> > >> 
-> > >> On Thu, Dec 14, 2017 at 11:30:01AM +0100, Miquel Raynal wrote:  
-> > >> > +- marvell,thermal-zone-name: The name to identify the thermal
-> > >> > zone
-> > >> > +                             within the sysfs, useful when
-> > >> > multiple
-> > >> > +                             thermal zones are registered (AP,
-> > >> > CPx...).    
-> > >> 
-> > >> I don't think that would be acceptable. DT is about describing the
-> > >> hardware. sysfs is a Linux implementation detail which is not tied
-> > >> to any specific hardware. If this is accepted, the property should
-> > >> be named 'linux,thermal-zone-name'.  
-> > >
-> > > You are right the sysfs mention should not appear in the
-> > > description.
+> the reason for replacing the example with one of a different SoC is that
+> the new example refers to recent code from a real use case. I hope that's ok.
 > 
-> Actually, you are right for all of it, this property should not
-> exist, sorry for my too quick answer.
+> Thanks,
+> Fabrizio
 > 
-> > >
-> > > Otherwise for the naming I'm not sure "linux," is a valid prefix in
-> > > that case.  
-> 
-> Thank you both for your explanations, I was also wrong about the prefix.
-> 
-> > 
-> > Actually the choice between linux or marvell make me realize that
-> > there is something wrong. Having a name associated to a device is
-> > something pretty usual with the device tree, however it is as the
-> > class device level, such as clock-names, line-name, or
-> > regulator-name. So in my opinion if we want to support naming from
-> > device tree it would be done for all the thermal device not just for
-> > the Marvell one.
-> > 
-> > However I don't think we need it. For example for the clocks we
-> > created the name dynamically using of the base address of the
-> > register to keep them unique.
-> 
-> I was convinced that dev_name's would be the same but after trying it on
-> a 8040-DB, using dev_name(&pdev->dev) gives:
-> 
->     f06f808c.thermal
->     f2400078.thermal
->     f4400078.thermal
-> 
-> which I found meaningful enough.
-> 
-> I will drop the property and use dev_name instead. I still need your
-> help to solve one problem though: how to make the distinction between
-> using "armada_thermal" (the previous name) and dev_name() ? If I don't
-> it kind of breaks userspace, doesn't it ?
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 
-No. The /sys/devices/... or /sys/bus/platform/... paths and names are 
-not guaranteed to be stable. These changed for every platform converted 
-to DT for example. Userspace should be accessing things through 
-/sys/class/... (or deal with changes).
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
