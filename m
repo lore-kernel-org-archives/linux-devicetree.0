@@ -1,125 +1,50 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ARM64: dts: meson-axg: add ethernet mac controller
-Date: Fri, 15 Dec 2017 11:29:31 -0800
-Message-ID: <7ho9mz94dg.fsf@baylibre.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v3 2/2] ARM64: dts: meson-axg: enable ethernet for A113D S400 board
+Date: Fri, 15 Dec 2017 11:31:36 -0800
+Message-ID: <7hind7949z.fsf@baylibre.com>
 References: <20171215021014.231308-1-yixun.lan@amlogic.com>
-        <20171215021014.231308-2-yixun.lan@amlogic.com>
+        <20171215021014.231308-3-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215021014.231308-2-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> (Yixun Lan's
-        message of "Fri, 15 Dec 2017 10:10:13 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171215021014.231308-3-yixun.lan@amlogic.com> (Yixun Lan's
+        message of "Fri, 15 Dec 2017 10:10:14 +0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> writes:
+Yixun Lan <yixun.lan@amlogic.com> writes:
 
-> Add DT info for the stmmac ethernet MAC which found in
-> the Amlogic's Meson-AXG SoC, also describe the ethernet
-> pinctrl & clock information here.
+> This is tested in the S400 dev board which use a RTL8211F PHY,
+> and the pins connect to the 'eth_rgmii_y_pins' group.
 >
-> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-
-This patch does not apply, and dependencies are not described.
-
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 54 ++++++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
+>  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> index d356ce74ad89..94c4972222b7 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> @@ -7,6 +7,7 @@
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/axg-clkc.h>
->  
->  / {
->  	compatible = "amlogic,meson-axg";
-> @@ -148,6 +149,19 @@
->  			#address-cells = <0>;
->  		};
->  
-> +		ethmac: ethernet@ff3f0000 {
-> +			compatible = "amlogic,meson-gxbb-dwmac", "snps,dwmac";
-> +			reg = <0x0 0xff3f0000 0x0 0x10000
-> +				0x0 0xff634540 0x0 0x8>;
-> +			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-> +			interrupt-names = "macirq";
-> +			clocks = <&clkc CLKID_ETH>,
-> +				 <&clkc CLKID_FCLK_DIV2>,
-> +				 <&clkc CLKID_MPLL2>;
-> +			clock-names = "stmmaceth", "clkin0", "clkin1";
-> +			status = "disabled";
-> +		};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> index 70eca1f8736a..b8c4f1913d28 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+> @@ -20,3 +20,10 @@
+>  &uart_AO {
+>  	status = "okay";
+>  };
 > +
->  		hiubus: bus@ff63c000 {
->  			compatible = "simple-bus";
->  			reg = <0x0 0xff63c000 0x0 0x1c00>;
+> +&ethmac {
+> +	status = "okay";
+> +	phy-mode = "rgmii";
+> +	pinctrl-0 = <&eth_rgmii_y_pins>;
+> +	pinctrl-names = "default";
+> +};
 
-Based on the hiubus node, presumably this depends on the patch from the
-clock series.
+Minor nit: we try to keep these sorted alphabetically.  Can you move
+this above the uart_A0 one?
 
-> @@ -194,6 +208,46 @@
->  					#gpio-cells = <2>;
->  					gpio-ranges = <&pinctrl_periphs 0 0 86>;
->  				};
-
-I'm not sure where this part is coming from, but it causes the rest of
-it to not apply.
-
-Please be sure to describe all dependencies.
+Note: if PATCH 1/1 had applied cleanly, I would have fixed this up
+myself and not required a respin.
 
 Kevin
-
-> +
-> +				eth_rgmii_x_pins: eth-x-rgmii {
-> +					mux {
-> +						groups = "eth_mdio_x",
-> +						       "eth_mdc_x",
-> +						       "eth_rgmii_rx_clk_x",
-> +						       "eth_rx_dv_x",
-> +						       "eth_rxd0_x",
-> +						       "eth_rxd1_x",
-> +						       "eth_rxd2_rgmii",
-> +						       "eth_rxd3_rgmii",
-> +						       "eth_rgmii_tx_clk",
-> +						       "eth_txen_x",
-> +						       "eth_txd0_x",
-> +						       "eth_txd1_x",
-> +						       "eth_txd2_rgmii",
-> +						       "eth_txd3_rgmii";
-> +						function = "eth";
-> +					};
-> +				};
-> +
-> +				eth_rgmii_y_pins: eth-y-rgmii {
-> +					mux {
-> +						groups = "eth_mdio_y",
-> +						       "eth_mdc_y",
-> +						       "eth_rgmii_rx_clk_y",
-> +						       "eth_rx_dv_y",
-> +						       "eth_rxd0_y",
-> +						       "eth_rxd1_y",
-> +						       "eth_rxd2_rgmii",
-> +						       "eth_rxd3_rgmii",
-> +						       "eth_rgmii_tx_clk",
-> +						       "eth_txen_y",
-> +						       "eth_txd0_y",
-> +						       "eth_txd1_y",
-> +						       "eth_txd2_rgmii",
-> +						       "eth_txd3_rgmii";
-> +						function = "eth";
-> +					};
-> +				};
->  			};
->  		};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
