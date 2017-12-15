@@ -1,38 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: pwm: rcar: Document r8a774[35] PWM
- bindings
-Date: Fri, 15 Dec 2017 17:30:16 -0600
-Message-ID: <20171215233016.s6bych6qlg7baquu@rob-hp-laptop>
-References: <1513248976-26700-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513248976-26700-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: samsung: document bindings for Midas
+ family boards
+Date: Fri, 15 Dec 2017 17:32:57 -0600
+Message-ID: <20171215233257.bt2cx7rj557kl23z@rob-hp-laptop>
+References: <20171214125015.2611-1-simon@lineageos.org>
+ <20171214125015.2611-2-simon@lineageos.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1513248976-26700-3-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20171214125015.2611-2-simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 14, 2017 at 10:56:12AM +0000, Fabrizio Castro wrote:
-> This patch adds compatible strings specific to r8a774[35], no driver
-> change is needed as the fallback compatible string will activate the
-> right code. Also, this patch replaces the example with a DT snippet used
-> for adding PWM0 support to an r8a7743 based platform.
+On Thu, Dec 14, 2017 at 11:50:12PM +1100, Simon Shields wrote:
+> Document GT-I9300, GT-I9305, GT-N7100, and GT-N7105 bindings, along
+> with the shared "midas" binding.
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
 > ---
-> Dear All,
+>  Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> the reason for replacing the example with one of a different SoC is that
-> the new example refers to recent code from a real use case. I hope that's ok.
-> 
-> Thanks,
-> Fabrizio
-> 
->  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+> index e13459618581..e6765af5cf48 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+> @@ -9,7 +9,11 @@ Required root node properties:
+>  	- "samsung,smdkv310"	- for Exynos4210-based Samsung SMDKV310 eval board.
+>  	- "samsung,trats"	- for Exynos4210-based Tizen Reference board.
+>  	- "samsung,universal_c210" - for Exynos4210-based Samsung board.
+> +	- "samsung,m0"          - for Exynos4412-based Samsung GT-I9300 board.
+> +	- "samsung,m3"          - for Exynos4412-based Samsung GT-I9305 board.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Kind of short and it is not clear how "m3" relates to GT-I9305
+
+> +	- "samsung,midas"       - for Exynos4412-based Samsung Midas board.
+>  	- "samsung,smdk4412",	- for Exynos4412-based Samsung SMDK4412 eval board.
+> +	- "samsung,t0"          - for Exynos4412-based Samsung GT-N7100/GT-N7105 board.
+>  	- "samsung,trats2"	- for Exynos4412-based Tizen Reference board.
+>  	- "samsung,smdk5250"	- for Exynos5250-based Samsung SMDK5250 eval board.
+>  	- "samsung,xyref5260"	- for Exynos5260-based Samsung board.
+> -- 
+> 2.15.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
