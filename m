@@ -1,226 +1,272 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 8/8] ARM: dts: keystone-k2l-clocks: Add missing unit name to clock nodes that have regs
-Date: Fri, 15 Dec 2017 07:21:02 -0600
-Message-ID: <20171215132102.435-9-nm@ti.com>
+Subject: [PATCH 5/8] ARM: dts: keystone-clocks: Add missing unit name to clock
+ nodes that have regs
+Date: Fri, 15 Dec 2017 07:20:59 -0600
+Message-ID: <20171215132102.435-6-nm@ti.com>
 References: <20171215132102.435-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20171215132102.435-1-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Add the control register as the base for the clock nodes which are
-missing them.  This squashes some 22 warnings of the effect when built
+missing them. This squashes some 78 warnings of the effect when built
 with W=1.
 
 Reported-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2l-clocks.dtsi | 44 +++++++++++++++---------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ arch/arm/boot/dts/keystone-clocks.dtsi | 52 +++++++++++++++++-----------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2l-clocks.dtsi b/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
-index fc986909d70e..f85289e2431c 100644
---- a/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
-@@ -41,7 +41,7 @@ clocks {
- 		reg-names = "control";
+diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/keystone-clocks.dtsi
+index 2391e3e4d234..0d735e0288db 100644
+--- a/arch/arm/boot/dts/keystone-clocks.dtsi
++++ b/arch/arm/boot/dts/keystone-clocks.dtsi
+@@ -48,7 +48,7 @@ clocks {
+ 		clock-output-names = "gemtraceclk";
  	};
  
--	clkdfeiqnsys: clkdfeiqnsys {
-+	clkdfeiqnsys: clkdfeiqnsys@2350004 {
+-	chipstmxptclk: chipstmxptclk {
++	chipstmxptclk: chipstmxptclk@2310164 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,pll-divider-clock";
+ 		clocks = <&mainmuxclk>;
+@@ -157,7 +157,7 @@ clocks {
+ 		clock-output-names = "chipclk1rstiso112";
+ 	};
+ 
+-	clkmodrst0: clkmodrst0 {
++	clkmodrst0: clkmodrst0@2350000 {
  		#clock-cells = <0>;
  		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk12>;
-@@ -51,7 +51,7 @@ clocks {
+ 		clocks = <&chipclk16>;
+@@ -168,7 +168,7 @@ clocks {
+ 	};
+ 
+ 
+-	clkusb: clkusb {
++	clkusb: clkusb@2350008 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk16>;
+@@ -178,7 +178,7 @@ clocks {
  		domain-id = <0>;
  	};
  
--	clkpcie1: clkpcie1 {
-+	clkpcie1: clkpcie1@235002c {
+-	clkaemifspi: clkaemifspi {
++	clkaemifspi: clkaemifspi@235000c {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk16>;
+@@ -189,7 +189,7 @@ clocks {
+ 	};
+ 
+ 
+-	clkdebugsstrc: clkdebugsstrc {
++	clkdebugsstrc: clkdebugsstrc@2350014 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -199,7 +199,7 @@ clocks {
+ 		domain-id = <1>;
+ 	};
+ 
+-	clktetbtrc: clktetbtrc {
++	clktetbtrc: clktetbtrc@2350018 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -209,7 +209,7 @@ clocks {
+ 		domain-id = <1>;
+ 	};
+ 
+-	clkpa: clkpa {
++	clkpa: clkpa@235001c {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&paclk13>;
+@@ -219,7 +219,7 @@ clocks {
+ 		domain-id = <2>;
+ 	};
+ 
+-	clkcpgmac: clkcpgmac {
++	clkcpgmac: clkcpgmac@2350020 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkpa>;
+@@ -229,7 +229,7 @@ clocks {
+ 		domain-id = <2>;
+ 	};
+ 
+-	clksa: clksa {
++	clksa: clksa@2350024 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkpa>;
+@@ -239,7 +239,7 @@ clocks {
+ 		domain-id = <2>;
+ 	};
+ 
+-	clkpcie: clkpcie {
++	clkpcie: clkpcie@2350028 {
  		#clock-cells = <0>;
  		compatible = "ti,keystone,psc-clock";
  		clocks = <&chipclk12>;
-@@ -61,7 +61,7 @@ clocks {
- 		domain-id = <4>;
+@@ -249,7 +249,7 @@ clocks {
+ 		domain-id = <3>;
  	};
  
--	clkgem1: clkgem1 {
-+	clkgem1: clkgem1@2350040 {
+-	clksr: clksr {
++	clksr: clksr@2350034 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk1rstiso112>;
+@@ -259,7 +259,7 @@ clocks {
+ 		domain-id = <6>;
+ 	};
+ 
+-	clkgem0: clkgem0 {
++	clkgem0: clkgem0@235003c {
  		#clock-cells = <0>;
  		compatible = "ti,keystone,psc-clock";
  		clocks = <&chipclk1>;
-@@ -71,7 +71,7 @@ clocks {
- 		domain-id = <9>;
+@@ -269,7 +269,7 @@ clocks {
+ 		domain-id = <8>;
  	};
  
--	clkgem2: clkgem2 {
-+	clkgem2: clkgem2@2350044 {
+-	clkddr30: clkddr30 {
++	clkddr30: clkddr30@235005c {
  		#clock-cells = <0>;
  		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk1>;
-@@ -81,7 +81,7 @@ clocks {
- 		domain-id = <10>;
+ 		clocks = <&chipclk12>;
+@@ -279,7 +279,7 @@ clocks {
+ 		domain-id = <16>;
  	};
  
--	clkgem3: clkgem3 {
-+	clkgem3: clkgem3@2350048 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk1>;
-@@ -91,7 +91,7 @@ clocks {
- 		domain-id = <11>;
- 	};
- 
--	clktac: clktac {
-+	clktac: clktac@2350064 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -101,7 +101,7 @@ clocks {
- 		domain-id = <17>;
- 	};
- 
--	clkrac: clkrac {
-+	clkrac: clkrac@2350068 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -111,7 +111,7 @@ clocks {
- 		domain-id = <17>;
- 	};
- 
--	clkdfepd0: clkdfepd0 {
-+	clkdfepd0: clkdfepd0@235006c {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -121,7 +121,7 @@ clocks {
- 		domain-id = <18>;
- 	};
- 
--	clkfftc0: clkfftc0 {
-+	clkfftc0: clkfftc0@2350070 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -131,7 +131,7 @@ clocks {
- 		domain-id = <19>;
- 	};
- 
--	clkosr: clkosr {
-+	clkosr: clkosr@2350088 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -141,7 +141,7 @@ clocks {
- 		domain-id = <21>;
- 	};
- 
--	clktcp3d0: clktcp3d0 {
-+	clktcp3d0: clktcp3d0@235008c {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -151,7 +151,7 @@ clocks {
- 		domain-id = <22>;
- 	};
- 
--	clktcp3d1: clktcp3d1 {
-+	clktcp3d1: clktcp3d1@2350094 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -161,7 +161,7 @@ clocks {
- 		domain-id = <23>;
- 	};
- 
--	clkvcp0: clkvcp0 {
-+	clkvcp0: clkvcp0@235009c {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -171,7 +171,7 @@ clocks {
- 		domain-id = <24>;
- 	};
- 
--	clkvcp1: clkvcp1 {
-+	clkvcp1: clkvcp1@23500a0 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -181,7 +181,7 @@ clocks {
- 		domain-id = <24>;
- 	};
- 
--	clkvcp2: clkvcp2 {
-+	clkvcp2: clkvcp2@23500a4 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -191,7 +191,7 @@ clocks {
- 		domain-id = <24>;
- 	};
- 
--	clkvcp3: clkvcp3 {
-+	clkvcp3: clkvcp3@23500a8 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -201,7 +201,7 @@ clocks {
- 		domain-id = <24>;
- 	};
- 
--	clkbcp: clkbcp {
-+	clkbcp: clkbcp@23500bc {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -211,7 +211,7 @@ clocks {
- 		domain-id = <26>;
- 	};
- 
--	clkdfepd1: clkdfepd1 {
-+	clkdfepd1: clkdfepd1@23500c0 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -221,7 +221,7 @@ clocks {
- 		domain-id = <27>;
- 	};
- 
--	clkfftc1: clkfftc1 {
-+	clkfftc1: clkfftc1@23500c4 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -231,7 +231,7 @@ clocks {
- 		domain-id = <28>;
- 	};
- 
--	clkiqnail: clkiqnail {
-+	clkiqnail: clkiqnail@23500c8 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -241,7 +241,7 @@ clocks {
- 		domain-id = <29>;
- 	};
- 
--	clkuart2: clkuart2 {
-+	clkuart2: clkuart2@2350000 {
+-	clkwdtimer0: clkwdtimer0 {
++	clkwdtimer0: clkwdtimer0@2350000 {
  		#clock-cells = <0>;
  		compatible = "ti,keystone,psc-clock";
  		clocks = <&clkmodrst0>;
-@@ -251,7 +251,7 @@ clocks {
+@@ -289,7 +289,7 @@ clocks {
  		domain-id = <0>;
  	};
  
--	clkuart3: clkuart3 {
-+	clkuart3: clkuart3@2350000 {
+-	clkwdtimer1: clkwdtimer1 {
++	clkwdtimer1: clkwdtimer1@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -299,7 +299,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkwdtimer2: clkwdtimer2 {
++	clkwdtimer2: clkwdtimer2@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -309,7 +309,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkwdtimer3: clkwdtimer3 {
++	clkwdtimer3: clkwdtimer3@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -319,7 +319,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clktimer15: clktimer15 {
++	clktimer15: clktimer15@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -329,7 +329,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkuart0: clkuart0 {
++	clkuart0: clkuart0@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -339,7 +339,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkuart1: clkuart1 {
++	clkuart1: clkuart1@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -349,7 +349,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkaemif: clkaemif {
++	clkaemif: clkaemif@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkaemifspi>;
+@@ -359,7 +359,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkusim: clkusim {
++	clkusim: clkusim@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -369,7 +369,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clki2c: clki2c {
++	clki2c: clki2c@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -379,7 +379,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkspi: clkspi {
++	clkspi: clkspi@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkaemifspi>;
+@@ -389,7 +389,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkgpio: clkgpio {
++	clkgpio: clkgpio@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -399,7 +399,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkkeymgr: clkkeymgr {
++	clkkeymgr: clkkeymgr@2350000 {
  		#clock-cells = <0>;
  		compatible = "ti,keystone,psc-clock";
  		clocks = <&clkmodrst0>;
