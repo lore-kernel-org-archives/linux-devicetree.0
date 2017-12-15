@@ -1,11 +1,11 @@
 From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH 05/25] arm: imx: dts: Remove leading 0x and 0s from bindings notation
-Date: Fri, 15 Dec 2017 13:46:31 +0100
-Message-ID: <20171215124631.30132-1-malat@debian.org>
+Subject: [PATCH 06/25] arm: integrator: dts: Remove leading 0x and 0s from bindings notation
+Date: Fri, 15 Dec 2017 13:46:33 +0100
+Message-ID: <20171215124633.30182-1-malat@debian.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Improve the DTS files by removing all the leading "0x" and zeros to fix the
@@ -39,49 +39,166 @@ Reported-by: David Daney <ddaney@caviumnetworks.com>
 Suggested-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/arm/boot/dts/imx6q-display5.dtsi | 2 +-
- arch/arm/boot/dts/imx7d.dtsi          | 2 +-
- arch/arm/boot/dts/imx7s.dtsi          | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/integratorap.dts | 14 +++++++-------
+ arch/arm/boot/dts/integratorcp.dts | 20 ++++++++++----------
+ 2 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6q-display5.dtsi b/arch/arm/boot/dts/imx6q-display5.dtsi
-index 4084de43d4d9..09085fde3341 100644
---- a/arch/arm/boot/dts/imx6q-display5.dtsi
-+++ b/arch/arm/boot/dts/imx6q-display5.dtsi
-@@ -255,7 +255,7 @@
- 	pinctrl-0 = <&pinctrl_i2c1>;
- 	status = "okay";
- 
--	codec: tfa9879@6C {
-+	codec: tfa9879@6c {
- 		#sound-dai-cells = <0>;
- 		compatible = "nxp,tfa9879";
- 		reg = <0x6C>;
-diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-index 4d308d17f040..369d5a166b3e 100644
---- a/arch/arm/boot/dts/imx7d.dtsi
-+++ b/arch/arm/boot/dts/imx7d.dtsi
-@@ -129,7 +129,7 @@
- 		status = "disabled";
+diff --git a/arch/arm/boot/dts/integratorap.dts b/arch/arm/boot/dts/integratorap.dts
+index 94d2ff9836d0..9efc753acb6d 100644
+--- a/arch/arm/boot/dts/integratorap.dts
++++ b/arch/arm/boot/dts/integratorap.dts
+@@ -56,7 +56,7 @@
  	};
  
--	pcie: pcie@0x33800000 {
-+	pcie: pcie@33800000 {
- 		compatible = "fsl,imx7d-pcie", "snps,dw-pcie";
- 		reg = <0x33800000 0x4000>,
- 		      <0x4ff00000 0x80000>;
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 82ad26e766eb..a00ba897e58d 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -583,7 +583,7 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
+ 	/* 24 MHz chrystal on the Integrator/AP development board */
+-	xtal24mhz: xtal24mhz@24M {
++	xtal24mhz: xtal24mhz@24m {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <24000000>;
+@@ -71,7 +71,7 @@
+ 	};
  
--					pgc_pcie_phy: pgc-power-domain@IMX7_POWER_DOMAIN_PCIE_PHY {
-+					pgc_pcie_phy: pgc-power-domain@imx7_power_domain_pcie_phy {
- 						#power-domain-cells = <0>;
- 						reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
- 						power-supply = <&reg_1p0d>;
+ 	/* The UART clock is 14.74 MHz divided by an ICS525 */
+-	uartclk: uartclk@14.74M {
++	uartclk: uartclk@14.74m {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <14745600>;
+@@ -80,14 +80,14 @@
+ 
+ 	core-module@10000000 {
+ 		/* 24 MHz chrystal on the core module */
+-		cm24mhz: cm24mhz@24M {
++		cm24mhz: cm24mhz@24m {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <24000000>;
+ 		};
+ 
+ 		/* Oscillator on the core module, clocks the CPU core */
+-		cmosc: cmosc@24M {
++		cmosc: cmosc@24m {
+ 			compatible = "arm,syscon-icst525-integratorap-cm";
+ 			#clock-cells = <0>;
+ 			lock-offset = <0x14>;
+@@ -96,7 +96,7 @@
+ 		};
+ 
+ 		/* Auxilary oscillator on the core module, 32.369MHz at boot */
+-		auxosc: auxosc@24M {
++		auxosc: auxosc@24m {
+ 			compatible = "arm,syscon-icst525";
+ 			#clock-cells = <0>;
+ 			lock-offset = <0x14>;
+@@ -116,7 +116,7 @@
+ 		 * SYSCLK clocks PCIv3 bridge, system controller and the
+ 		 * logic modules.
+ 		 */
+-		sysclk: apsys@24M {
++		sysclk: apsys@24m {
+ 			compatible = "arm,syscon-icst525-integratorap-sys";
+ 			#clock-cells = <0>;
+ 			lock-offset = <0x1c>;
+@@ -125,7 +125,7 @@
+ 		};
+ 
+ 		/* One-bit control for the PCI bus clock (33 or 25 MHz) */
+-		pciclk: pciclk@24M {
++		pciclk: pciclk@24m {
+ 			compatible = "arm,syscon-icst525-integratorap-pci";
+ 			#clock-cells = <0>;
+ 			lock-offset = <0x1c>;
+diff --git a/arch/arm/boot/dts/integratorcp.dts b/arch/arm/boot/dts/integratorcp.dts
+index a185ab8759fa..76c41a04e8a0 100644
+--- a/arch/arm/boot/dts/integratorcp.dts
++++ b/arch/arm/boot/dts/integratorcp.dts
+@@ -47,14 +47,14 @@
+ 	 */
+ 
+ 	/* The codec chrystal operates at 24.576 MHz */
+-	xtal_codec: xtal24.576@24.576M {
++	xtal_codec: xtal24.576@24.576m {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <24576000>;
+ 	};
+ 
+ 	/* The chrystal is divided by 2 by the codec for the AACI bit clock */
+-	aaci_bitclk: aaci_bitclk@12.288M {
++	aaci_bitclk: aaci_bitclk@12.288m {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-factor-clock";
+ 		clock-div = <2>;
+@@ -63,14 +63,14 @@
+ 	};
+ 
+ 	/* This is a 25MHz chrystal on the base board */
+-	xtal25mhz: xtal25mhz@25M {
++	xtal25mhz: xtal25mhz@25m {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <25000000>;
+ 	};
+ 
+ 	/* The UART clock is 14.74 MHz divided from 25MHz by an ICS525 */
+-	uartclk: uartclk@14.74M {
++	uartclk: uartclk@14.74m {
+ 		#clock-cells = <0>;
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <14745600>;
+@@ -85,14 +85,14 @@
+ 
+ 	core-module@10000000 {
+ 		/* 24 MHz chrystal on the core module */
+-		cm24mhz: cm24mhz@24M {
++		cm24mhz: cm24mhz@24m {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <24000000>;
+ 		};
+ 
+ 		/* Oscillator on the core module, clocks the CPU core */
+-		cmcore: cmosc@24M {
++		cmcore: cmosc@24m {
+ 			compatible = "arm,syscon-icst525-integratorcp-cm-core";
+ 			#clock-cells = <0>;
+ 			lock-offset = <0x14>;
+@@ -101,7 +101,7 @@
+ 		};
+ 
+ 		/* Oscillator on the core module, clocks the memory bus */
+-		cmmem: cmosc@24M {
++		cmmem: cmosc@24m {
+ 			compatible = "arm,syscon-icst525-integratorcp-cm-mem";
+ 			#clock-cells = <0>;
+ 			lock-offset = <0x14>;
+@@ -110,7 +110,7 @@
+ 		};
+ 
+ 		/* Auxilary oscillator on the core module, clocks the CLCD */
+-		auxosc: auxosc@24M {
++		auxosc: auxosc@24m {
+ 			compatible = "arm,syscon-icst525";
+ 			#clock-cells = <0>;
+ 			lock-offset = <0x14>;
+@@ -119,7 +119,7 @@
+ 		};
+ 
+ 		/* The KMI clock is the 24 MHz oscillator divided to 8MHz */
+-		kmiclk: kmiclk@1M {
++		kmiclk: kmiclk@1m {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-factor-clock";
+ 			clock-div = <3>;
+@@ -128,7 +128,7 @@
+ 		};
+ 
+ 		/* The timer clock is the 24 MHz oscillator divided to 1MHz */
+-		timclk: timclk@1M {
++		timclk: timclk@1m {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-factor-clock";
+ 			clock-div = <24>;
 -- 
 2.11.0
