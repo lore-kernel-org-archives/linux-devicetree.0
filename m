@@ -1,29 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 1/2] dt: bindings: lm3692x: Add bindings for lm3692x
- LED driver
-Date: Fri, 15 Dec 2017 16:50:03 -0600
-Message-ID: <20171215225003.v2cwj4pmiqqvrehc@rob-hp-laptop>
-References: <20171212181550.22677-1-dmurphy@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: timer: renesas, cmt: Document
+ r8a774[35] CMT support
+Date: Fri, 15 Dec 2017 16:51:55 -0600
+Message-ID: <20171215225155.4li2rwxxkkmudvpy@rob-hp-laptop>
+References: <1513104579-6333-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1513104579-6333-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171212181550.22677-1-dmurphy-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1513104579-6333-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 12:15:49PM -0600, Dan Murphy wrote:
-> This adds the devicetree bindings for the LM3692x
-> I2C LED string driver.
+On Tue, Dec 12, 2017 at 06:49:37PM +0000, Fabrizio Castro wrote:
+> Document SoC specific compatible strings for r8a7743 and r8a7745.
+> No driver change is needed as the fallback strings will activate
+> the right code.
 > 
-> Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 > ---
+>  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
