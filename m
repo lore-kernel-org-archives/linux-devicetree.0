@@ -1,59 +1,52 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 07/13] dt-bindings: power: reset: Document
- ocelot-reset binding
-Date: Fri, 15 Dec 2017 14:23:32 -0600
-Message-ID: <20171215202332.bn47da3fpkynusno@rob-hp-laptop>
-References: <20171208154618.20105-1-alexandre.belloni@free-electrons.com>
- <20171208154618.20105-8-alexandre.belloni@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v2] dt: bindings: as3645a: Fix the example node
+Date: Fri, 15 Dec 2017 14:26:46 -0600
+Message-ID: <20171215202646.4l2swy4h7ruhqu3m@rob-hp-laptop>
+References: <20171208155514.7696-1-dmurphy@ti.com>
+ <50214549-63d1-f92e-d4e7-dc6533477d83@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171208154618.20105-8-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <50214549-63d1-f92e-d4e7-dc6533477d83@ti.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 08, 2017 at 04:46:12PM +0100, Alexandre Belloni wrote:
-> Add binding documentation for the Microsemi Ocelot reset block.
+On Fri, Dec 08, 2017 at 09:56:18AM -0600, Dan Murphy wrote:
+> Resent to include DT maintainers
 > 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/power/reset/ocelot-reset.txt    | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> On 12/08/2017 09:55 AM, Dan Murphy wrote:
+> > Fix the address-cells and size-cells example node
+> > to reflect to the correct representation.
+> > 
+> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > ---
+> > 
+> > v2 - Moved compatible to be first in the node - https://patchwork.kernel.org/patch/10092937/
+> > 
+> >  Documentation/devicetree/bindings/leds/ams,as3645a.txt | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/leds/ams,as3645a.txt b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> > index fdc40e354a64..fc7f5f9f234c 100644
+> > --- a/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> > +++ b/Documentation/devicetree/bindings/leds/ams,as3645a.txt
+> > @@ -59,10 +59,10 @@ Example
+> >  =======
+> >  
+> >  	as3645a@30 {
 > 
-> diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> new file mode 100644
-> index 000000000000..1bcf276b04cb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> @@ -0,0 +1,17 @@
-> +Microsemi Ocelot reset controller
-> +
-> +The DEVCPU_GCB:CHIP_REGS have a SOFT_RST register that can be used to reset the
-> +SoC MIPS core.
-> +
-> +Required Properties:
-> + - compatible: "mscc,ocelot-chip-reset"
-> +
-> +Example:
-> +	syscon@71070000 {
-> +		compatible = "mscc,ocelot-chip-regs", "simple-mfd", "syscon";
-> +		reg = <0x71070000 0x1c>;
-> +
-> +		reset {
-> +			compatible = "mscc,ocelot-chip-reset";
+> Rob
+> 
+> Here is an example of the device name being part of the node name.
+> 
+> Should this be changed as well to leds@30?
 
-Why do you need a subnode here other than as a way to instantiate a 
-driver? Can you describe the SOFT_RST register in reg property here 
-(without having overlapping regions)?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, but I misspoke earlier and it should be "led-controller@30"
+
+That can be a separate patch though, so for this one:
+
+Reviewed-by: Rob Herring <robh@kernel.org>
