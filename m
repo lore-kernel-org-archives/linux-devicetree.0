@@ -1,11 +1,23 @@
 From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH 13/25] arm: spear: dts: Remove leading 0x and 0s from bindings notation
-Date: Fri, 15 Dec 2017 13:46:45 +0100
-Message-ID: <20171215124645.30535-1-malat@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 09/25] arm: nspire: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Fri, 15 Dec 2017 13:46:40 +0100
+Message-ID: <20171215124641.30333-1-malat@debian.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Improve the DTS files by removing all the leading "0x" and zeros to fix the
@@ -39,95 +51,144 @@ Reported-by: David Daney <ddaney@caviumnetworks.com>
 Suggested-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/arm/boot/dts/spear1310-evb.dts | 4 ++--
- arch/arm/boot/dts/spear300.dtsi     | 2 +-
- arch/arm/boot/dts/spear310.dtsi     | 2 +-
- arch/arm/boot/dts/spear320-hmi.dts  | 4 ++--
- arch/arm/boot/dts/spear320.dtsi     | 2 +-
- 5 files changed, 7 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/nspire-classic.dtsi |  2 +-
+ arch/arm/boot/dts/nspire-cx.dts       |  2 +-
+ arch/arm/boot/dts/nspire.dtsi         | 28 ++++++++++++++--------------
+ 3 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/spear1310-evb.dts b/arch/arm/boot/dts/spear1310-evb.dts
-index 84101e4eebbf..438e3e16aeda 100644
---- a/arch/arm/boot/dts/spear1310-evb.dts
-+++ b/arch/arm/boot/dts/spear1310-evb.dts
-@@ -133,7 +133,7 @@
- 				label = "u-boot";
- 				reg = <0x80000 0x140000>;
- 			};
--			partition@1C0000 {
-+			partition@1c0000 {
- 				label = "environment";
- 				reg = <0x1C0000 0x40000>;
- 			};
-@@ -145,7 +145,7 @@
- 				label = "linux";
- 				reg = <0x240000 0xC00000>;
- 			};
--			partition@E40000 {
-+			partition@e40000 {
- 				label = "rootfs";
- 				reg = <0xE40000 0x0>;
- 			};
-diff --git a/arch/arm/boot/dts/spear300.dtsi b/arch/arm/boot/dts/spear300.dtsi
-index f4e92e599729..266fefa67223 100644
---- a/arch/arm/boot/dts/spear300.dtsi
-+++ b/arch/arm/boot/dts/spear300.dtsi
-@@ -52,7 +52,7 @@
+diff --git a/arch/arm/boot/dts/nspire-classic.dtsi b/arch/arm/boot/dts/nspire-classic.dtsi
+index 4907c5085d4b..84db1986001c 100644
+--- a/arch/arm/boot/dts/nspire-classic.dtsi
++++ b/arch/arm/boot/dts/nspire-classic.dtsi
+@@ -66,7 +66,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		intc: interrupt-controller@DC000000 {
++		intc: interrupt-controller@dc000000 {
+ 			compatible = "lsi,zevio-intc";
+ 			interrupt-controller;
+ 			reg = <0xDC000000 0x1000>;
+diff --git a/arch/arm/boot/dts/nspire-cx.dts b/arch/arm/boot/dts/nspire-cx.dts
+index 08e0b81b3385..bf58fe095f19 100644
+--- a/arch/arm/boot/dts/nspire-cx.dts
++++ b/arch/arm/boot/dts/nspire-cx.dts
+@@ -92,7 +92,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		intc: interrupt-controller@DC000000 {
++		intc: interrupt-controller@dc000000 {
+ 			compatible = "arm,pl190-vic";
+ 			interrupt-controller;
+ 			reg = <0xDC000000 0x1000>;
+diff --git a/arch/arm/boot/dts/nspire.dtsi b/arch/arm/boot/dts/nspire.dtsi
+index 1a5ae4cd107f..88b9126fad9f 100644
+--- a/arch/arm/boot/dts/nspire.dtsi
++++ b/arch/arm/boot/dts/nspire.dtsi
+@@ -24,7 +24,7 @@
+ 		reg = <0x00000000 0x80000>;
+ 	};
+ 
+-	sram: sram@A4000000 {
++	sram: sram@a4000000 {
+ 		device = "memory";
+ 		reg = <0xA4000000 0x20000>;
+ 	};
+@@ -75,11 +75,11 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
+-		spi: spi@A9000000 {
++		spi: spi@a9000000 {
+ 			reg = <0xA9000000 0x1000>;
+ 		};
+ 
+-		usb0: usb@B0000000 {
++		usb0: usb@b0000000 {
+ 			compatible = "lsi,zevio-usb";
+ 			reg = <0xB0000000 0x1000>;
+ 			interrupts = <8>;
+@@ -88,13 +88,13 @@
+ 			vbus-supply = <&vbus_reg>;
+ 		};
+ 
+-		usb1: usb@B4000000 {
++		usb1: usb@b4000000 {
+ 			reg = <0xB4000000 0x1000>;
+ 			interrupts = <9>;
  			status = "disabled";
  		};
  
--		shirq: interrupt-controller@0x50000000 {
-+		shirq: interrupt-controller@50000000 {
- 			compatible = "st,spear300-shirq";
- 			reg = <0x50000000 0x1000>;
- 			interrupts = <28>;
-diff --git a/arch/arm/boot/dts/spear310.dtsi b/arch/arm/boot/dts/spear310.dtsi
-index da210b454753..f995ecf09acf 100644
---- a/arch/arm/boot/dts/spear310.dtsi
-+++ b/arch/arm/boot/dts/spear310.dtsi
-@@ -40,7 +40,7 @@
- 			status = "disabled";
+-		lcd: lcd@C0000000 {
++		lcd: lcd@c0000000 {
+ 			compatible = "arm,pl111", "arm,primecell";
+ 			reg = <0xC0000000 0x1000>;
+ 			interrupts = <21>;
+@@ -103,16 +103,16 @@
+ 			clock-names = "apb_pclk";
  		};
  
--		shirq: interrupt-controller@0xb4000000 {
-+		shirq: interrupt-controller@b4000000 {
- 			compatible = "st,spear310-shirq";
- 			reg = <0xb4000000 0x1000>;
- 			interrupts = <28 29 30 1>;
-diff --git a/arch/arm/boot/dts/spear320-hmi.dts b/arch/arm/boot/dts/spear320-hmi.dts
-index 0d0da1f65f0e..6591cd616d0e 100644
---- a/arch/arm/boot/dts/spear320-hmi.dts
-+++ b/arch/arm/boot/dts/spear320-hmi.dts
-@@ -113,7 +113,7 @@
- 				label = "u-boot";
- 				reg = <0x80000 0x140000>;
- 			};
--			partition@1C0000 {
-+			partition@1c0000 {
- 				label = "environment";
- 				reg = <0x1C0000 0x40000>;
- 			};
-@@ -125,7 +125,7 @@
- 				label = "linux";
- 				reg = <0x240000 0xC00000>;
- 			};
--			partition@E40000 {
-+			partition@e40000 {
- 				label = "rootfs";
- 				reg = <0xE40000 0x0>;
- 			};
-diff --git a/arch/arm/boot/dts/spear320.dtsi b/arch/arm/boot/dts/spear320.dtsi
-index 22be6e5edaac..2a062a3ee139 100644
---- a/arch/arm/boot/dts/spear320.dtsi
-+++ b/arch/arm/boot/dts/spear320.dtsi
-@@ -55,7 +55,7 @@
- 			status = "disabled";
+-		adc: adc@C4000000 {
++		adc: adc@c4000000 {
+ 			reg = <0xC4000000 0x1000>;
+ 			interrupts = <11>;
  		};
  
--		shirq: interrupt-controller@0xb3000000 {
-+		shirq: interrupt-controller@b3000000 {
- 			compatible = "st,spear320-shirq";
- 			reg = <0xb3000000 0x1000>;
- 			interrupts = <30 28 29 1>;
+-		tdes: crypto@C8010000 {
++		tdes: crypto@c8010000 {
+ 			reg = <0xC8010000 0x1000>;
+ 		};
+ 
+-		sha256: crypto@CC000000 {
++		sha256: crypto@cc000000 {
+ 			reg = <0xCC000000 0x1000>;
+ 		};
+ 
+@@ -141,13 +141,13 @@
+ 				interrupts = <1>;
+ 			};
+ 
+-			timer0: timer@900C0000 {
++			timer0: timer@900c0000 {
+ 				reg = <0x900C0000 0x1000>;
+ 
+ 				clocks = <&timer_clk>;
+ 			};
+ 
+-			timer1: timer@900D0000 {
++			timer1: timer@900d0000 {
+ 				reg = <0x900D0000 0x1000>;
+ 				interrupts = <19>;
+ 
+@@ -165,16 +165,16 @@
+ 				interrupts = <4>;
+ 			};
+ 
+-			misc: misc@900A0000 {
++			misc: misc@900a0000 {
+ 				reg = <0x900A0000 0x1000>;
+ 			};
+ 
+-			pwr: pwr@900B0000 {
++			pwr: pwr@900b0000 {
+ 				reg = <0x900B0000 0x1000>;
+ 				interrupts = <15>;
+ 			};
+ 
+-			keypad: input@900E0000 {
++			keypad: input@900e0000 {
+ 				compatible = "ti,nspire-keypad";
+ 				reg = <0x900E0000 0x1000>;
+ 				interrupts = <16>;
+@@ -185,7 +185,7 @@
+ 				clocks = <&apb_pclk>;
+ 			};
+ 
+-			contrast: contrast@900F0000 {
++			contrast: contrast@900f0000 {
+ 				reg = <0x900F0000 0x1000>;
+ 			};
+ 
 -- 
 2.11.0
