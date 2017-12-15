@@ -1,11 +1,11 @@
 From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 01/25] arm: artpec: dts: Remove leading 0x and 0s from bindings notation
-Date: Fri, 15 Dec 2017 13:46:21 +0100
-Message-ID: <20171215124621.29928-1-malat@debian.org>
+Subject: [PATCH 02/25] arm: at91/sama: dts: Remove leading 0x and 0s from bindings notation
+Date: Fri, 15 Dec 2017 13:46:26 +0100
+Message-ID: <20171215124627.29979-1-malat@debian.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Jesper Nilsson <jesper.nilsson-VrBV9hrLPhE@public.gmane.org>, Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>, Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Improve the DTS files by removing all the leading "0x" and zeros to fix the
@@ -39,22 +39,134 @@ Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.o
 Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/artpec6.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/at91sam9261.dtsi     | 2 +-
+ arch/arm/boot/dts/at91sam9261ek.dts    | 2 +-
+ arch/arm/boot/dts/at91sam9263.dtsi     | 2 +-
+ arch/arm/boot/dts/at91sam9263ek.dts    | 2 +-
+ arch/arm/boot/dts/at91sam9g25ek.dts    | 2 +-
+ arch/arm/boot/dts/at91sam9g45.dtsi     | 2 +-
+ arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 +-
+ arch/arm/boot/dts/sama5d3xmb.dtsi      | 2 +-
+ arch/arm/boot/dts/sama5d3xmb_cmp.dtsi  | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
-index 2ed11773048d..71e0e75e986b 100644
---- a/arch/arm/boot/dts/artpec6.dtsi
-+++ b/arch/arm/boot/dts/artpec6.dtsi
-@@ -98,7 +98,7 @@
- 		clock-frequency = <125000000>;
- 	};
+diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
+index 66876019101d..eb186245fb4c 100644
+--- a/arch/arm/boot/dts/at91sam9261.dtsi
++++ b/arch/arm/boot/dts/at91sam9261.dtsi
+@@ -80,7 +80,7 @@
+ 			status = "disabled";
+ 		};
  
--	clkctrl: clkctrl@0xf8000000 {
-+	clkctrl: clkctrl@f8000000 {
- 		#clock-cells = <1>;
- 		compatible = "axis,artpec6-clkctrl";
- 		reg = <0xf8000000 0x48>;
+-		fb0: fb@0x00600000 {
++		fb0: fb@600000 {
+ 			compatible = "atmel,at91sam9261-lcdc";
+ 			reg = <0x00600000 0x1000>;
+ 			interrupts = <21 IRQ_TYPE_LEVEL_HIGH 3>;
+diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
+index 960d6940ebf6..9733db3f739b 100644
+--- a/arch/arm/boot/dts/at91sam9261ek.dts
++++ b/arch/arm/boot/dts/at91sam9261ek.dts
+@@ -36,7 +36,7 @@
+ 			status = "okay";
+ 		};
+ 
+-		fb0: fb@0x00600000 {
++		fb0: fb@600000 {
+ 			display = <&display0>;
+ 			atmel,power-control-gpio = <&pioA 12 GPIO_ACTIVE_LOW>;
+ 			status = "okay";
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index e54f14d36b6f..a26f7ada429d 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -999,7 +999,7 @@
+ 			};
+ 		};
+ 
+-		fb0: fb@0x00700000 {
++		fb0: fb@700000 {
+ 			compatible = "atmel,at91sam9263-lcdc";
+ 			reg = <0x00700000 0x1000>;
+ 			interrupts = <26 IRQ_TYPE_LEVEL_HIGH 3>;
+diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
+index 5a2e1af793f5..f095b5d4d410 100644
+--- a/arch/arm/boot/dts/at91sam9263ek.dts
++++ b/arch/arm/boot/dts/at91sam9263ek.dts
+@@ -95,7 +95,7 @@
+ 			};
+ 		};
+ 
+-		fb0: fb@0x00700000 {
++		fb0: fb@700000 {
+ 			display = <&display0>;
+ 			status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
+index 91a71774472e..31fecc2cdaf9 100644
+--- a/arch/arm/boot/dts/at91sam9g25ek.dts
++++ b/arch/arm/boot/dts/at91sam9g25ek.dts
+@@ -25,7 +25,7 @@
+ 			};
+ 
+ 			i2c0: i2c@f8010000 {
+-				ov2640: camera@0x30 {
++				ov2640: camera@30 {
+ 					compatible = "ovti,ov2640";
+ 					reg = <0x30>;
+ 					pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 2b127ca7aaa0..98348ebd6488 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -1302,7 +1302,7 @@
+ 			};
+ 		};
+ 
+-		fb0: fb@0x00500000 {
++		fb0: fb@500000 {
+ 			compatible = "atmel,at91sam9g45-lcdc";
+ 			reg = <0x00500000 0x1000>;
+ 			interrupts = <23 IRQ_TYPE_LEVEL_HIGH 3>;
+diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+index e922552a04cb..d793451ee04c 100644
+--- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
++++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+@@ -220,7 +220,7 @@
+ 			};
+ 		};
+ 
+-		fb0: fb@0x00500000 {
++		fb0: fb@500000 {
+ 			display = <&display0>;
+ 			status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
+index 7f55050dd405..ef0f2d049e15 100644
+--- a/arch/arm/boot/dts/sama5d3xmb.dtsi
++++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+@@ -53,7 +53,7 @@
+ 			};
+ 
+ 			i2c1: i2c@f0018000 {
+-				ov2640: camera@0x30 {
++				ov2640: camera@30 {
+ 					compatible = "ovti,ov2640";
+ 					reg = <0x30>;
+ 					pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
+index 83e3d3e08fd4..97e171db5970 100644
+--- a/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
++++ b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
+@@ -88,7 +88,7 @@
+ 			};
+ 
+ 			i2c1: i2c@f0018000 {
+-				ov2640: camera@0x30 {
++				ov2640: camera@30 {
+ 					compatible = "ovti,ov2640";
+ 					reg = <0x30>;
+ 					pinctrl-names = "default";
 -- 
 2.11.0
 
