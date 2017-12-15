@@ -1,68 +1,81 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/5] extcon: usbc-cros-ec: add support to notify USB
- type cables.
-Date: Fri, 15 Dec 2017 11:38:00 +0000
-Message-ID: <20171215113800.36vomqjngea5p4dr@dell>
-References: <CGME20171213103241epcas2p412031074459fa3893388ffca4f894abc@epcas2p4.samsung.com>
- <20171213103219.1464-1-enric.balletbo@collabora.com>
- <5A33702D.60004@samsung.com>
- <20171215081453.6jwjdetwe655imqo@dell>
- <5A3385D0.2050308@samsung.com>
- <5A3388E5.9030100@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: chosen: Add clocksource and clockevent
+ selection
+Date: Fri, 15 Dec 2017 11:40:04 +0000
+Message-ID: <20171215114004.l4lbqa6xibliwjyh@lakrids.cambridge.arm.com>
+References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
+ <20171213185313.20017-2-alexandre.belloni@free-electrons.com>
+ <CAL_JsqLm5n6s=cr2hBZp4H9pDPKHUOPWs94JMWYFYJ3hsMMxZQ@mail.gmail.com>
+ <20171214210120.6b436e0d@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5A3388E5.9030100@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, groeck@chromium.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
+In-Reply-To: <20171214210120.6b436e0d@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Dec 2017, Chanwoo Choi wrote:
+Hi,
 
-> On 2017년 12월 15일 17:20, Chanwoo Choi wrote:
-> > On 2017년 12월 15일 17:14, Lee Jones wrote:
-> >>> On 2017년 12월 13일 19:32, Enric Balletbo i Serra wrote:
-> >>>> From: Benson Leung <bleung@chromium.org>
-> >>>>
-> >>>> Extend the driver to notify host and device type cables and the presence
-> >>>> of power.
-> >>>>
-> >>>> Signed-off-by: Benson Leung <bleung@chromium.org>
-> >>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >>>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> >>>> ---
-> >>>> Changes since v1:
-> >>>>  - Use the BIT macro. Requested by Lee Jones.
-> >>>>  - Add the Reviewed-by: Chanwoo Choi.
-> >>>>
-> >>>>  drivers/extcon/extcon-usbc-cros-ec.c | 142 ++++++++++++++++++++++++++++++++++-
-> >>>>  include/linux/mfd/cros_ec_commands.h |  17 +++++
-> >>>>  2 files changed, 155 insertions(+), 4 deletions(-)
-> >>
-> >>> Looks good to me. After reviewing the Lee Jones,
-> >>> I'll take it on next branch.
-> >>
-> >> If you take it, you need to send me a pull-request to an immutable
-> >> branch.
-> >>
-> >> Acked-by: Lee Jones <lee.jones@linaro.org>
-> >>
+On Thu, Dec 14, 2017 at 09:01:20PM +0100, Boris Brezillon wrote:
+> On Wed, 13 Dec 2017 16:57:50 -0600
+> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, Dec 13, 2017 at 12:53 PM, Alexandre Belloni
+> > <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> > > The clocksource and clockevent timer are probed early in the boot process.
+> > > At that time it is difficult for linux to know whether a particular timer
+> > > can be used as the clocksource or the clockevent or by another driver,
+> > > especially when they are all identical or have similar features.  
 > > 
-> > Sure. I'll send the immutable branch. Thanks.
+> > If all identical, then it shouldn't matter. "similar" means some
+> > difference. Describe those differences.
+> 
+> We had this discussion already. Those timers might be connected to
+> external pins and may serve the role of PWM generators or capture
+> devices. We can also chain timers and provide a clocksource with a
+> better resolution or one that wraps less often. 
+
+Could you elaborate on the chaining case? I haven't encountered that,
+and at the moment I'm not sure I follow how that works.
+
+> > >  - registering the first seen timer as a clockevent and the second one as
+> > >  a clocksource as in rk_timer_init or dw_apb_timer_init
+> > >
+> > > Add a linux,clocksource and a linux,clockevent node in chosen with a timer
+> > > property pointing to the timer to use. Other properties, like the targeted
+> > > precision may be added later.  
 > > 
+> > Open ended expansion of this does not help convince me it is needed.
 > 
-> Dear Lee,
-> 
-> I make the immutable branch (ib-extcon-mfd-4.16)
-> and send the following pull request.
+> It's not an open ended expansion, we're just trying to find a way to
+> describe which timer blocks should be used as free running timers
+> (clksource) and which one should be used as programmable timers
+> (clkevent). Automatically selecting timer blocks to assign to the
+> clkevent or clocksource is not so easy (as has been explained earlier)
+> because at the time the system registers its clksource/clkevent devices
+> we might not have all the necessary information to know which timer
+> blocks will be reserved for other usage later on. The use case I have
+> in mind is DT overlays, where one of the overlay is using a timer as a
+> PWM generator. If the clkevent or clksource has already claimed the
+> timer connected to the pins the overlay is using, then we're screwed,
+> and there's no way the system can know that ahead of time except by
+> pre-assigning a timer to the clksource or clkevent feature.
 
-Nicely done.  Pulled, thanks.
+I guess that might work for the boot-time overlay case, where the user
+knows ahead-of-time that there will be a conflict for resources, but
+that doesn't help with the dynamic overlay case, since the user can't
+know what conflicts there will be.
 
--- 
-Lee Jones
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Can we attempt to unregister the clock device in that case, when the PWM
+is requested? If the timekeeping core can select another device, then
+we're free to use this one as a PWM. If not, then we're stuck anyway.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
