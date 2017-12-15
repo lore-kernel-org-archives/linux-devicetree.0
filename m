@@ -1,165 +1,53 @@
-From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH 15/25] arm: versatile: dts: Remove leading 0x and 0s from
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 05/25] arm: imx: dts: Remove leading 0x and 0s from
  bindings notation
-Date: Fri, 15 Dec 2017 13:46:47 +0100
-Message-ID: <20171215124648.30641-1-malat@debian.org>
+Date: Fri, 15 Dec 2017 10:51:05 -0200
+Message-ID: <CAOMZO5BrxG6RZWa0_LOUyjN2VyhiyKGiRXCPiOBNHQ-Fb4kCgQ@mail.gmail.com>
+References: <20171215124631.30132-1-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171215124631.30132-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Improve the DTS files by removing all the leading "0x" and zeros to fix the
-following dtc warnings:
+Hi Mathieu,
 
-Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+On Fri, Dec 15, 2017 at 10:46 AM, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+                 reg = <0x6C>;
+> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+> index 4d308d17f040..369d5a166b3e 100644
+> --- a/arch/arm/boot/dts/imx7d.dtsi
+> +++ b/arch/arm/boot/dts/imx7d.dtsi
+> @@ -129,7 +129,7 @@
+>                 status = "disabled";
+>         };
+>
+> -       pcie: pcie@0x33800000 {
+> +       pcie: pcie@33800000 {
 
-and
+I have already sent a fix for this one.
 
-Warning (unit_address_format): Node /XXX unit name should not have leading 0s
 
-Converted using the following command:
+>                 compatible = "fsl,imx7d-pcie", "snps,dw-pcie";
+>                 reg = <0x33800000 0x4000>,
+>                       <0x4ff00000 0x80000>;
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index 82ad26e766eb..a00ba897e58d 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -583,7 +583,7 @@
+>                                         #address-cells = <1>;
+>                                         #size-cells = <0>;
+>
+> -                                       pgc_pcie_phy: pgc-power-domain@IMX7_POWER_DOMAIN_PCIE_PHY {
+> +                                       pgc_pcie_phy: pgc-power-domain@imx7_power_domain_pcie_phy {
 
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
 
-For simplicity, two sed expressions were used to solve each warnings separately.
-
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before the
-the opening curly brace:
-
-https://elinux.org/Device_Tree_Linux#Linux_conventions
-
-This will solve as a side effect warning:
-
-Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-
-Reported-by: David Daney <ddaney@caviumnetworks.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
----
- arch/arm/boot/dts/versatile-ab.dts | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index 4a51612996bc..2f60ecd7741e 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -24,7 +24,7 @@
- 		reg = <0x0 0x08000000>;
- 	};
- 
--	xtal24mhz: xtal24mhz@24M {
-+	xtal24mhz: xtal24mhz@24m {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
- 		clock-frequency = <24000000>;
-@@ -34,7 +34,7 @@
- 		compatible = "arm,core-module-versatile", "syscon", "simple-mfd";
- 		reg = <0x10000000 0x200>;
- 
--		led@08.0 {
-+		led@8.0 {
- 			compatible = "register-bit-led";
- 			offset = <0x08>;
- 			mask = <0x01>;
-@@ -42,7 +42,7 @@
- 			linux,default-trigger = "heartbeat";
- 			default-state = "on";
- 		};
--		led@08.1 {
-+		led@8.1 {
- 			compatible = "register-bit-led";
- 			offset = <0x08>;
- 			mask = <0x02>;
-@@ -50,7 +50,7 @@
- 			linux,default-trigger = "mmc0";
- 			default-state = "off";
- 		};
--		led@08.2 {
-+		led@8.2 {
- 			compatible = "register-bit-led";
- 			offset = <0x08>;
- 			mask = <0x04>;
-@@ -58,35 +58,35 @@
- 			linux,default-trigger = "cpu0";
- 			default-state = "off";
- 		};
--		led@08.3 {
-+		led@8.3 {
- 			compatible = "register-bit-led";
- 			offset = <0x08>;
- 			mask = <0x08>;
- 			label = "versatile:3";
- 			default-state = "off";
- 		};
--		led@08.4 {
-+		led@8.4 {
- 			compatible = "register-bit-led";
- 			offset = <0x08>;
- 			mask = <0x10>;
- 			label = "versatile:4";
- 			default-state = "off";
- 		};
--		led@08.5 {
-+		led@8.5 {
- 			compatible = "register-bit-led";
- 			offset = <0x08>;
- 			mask = <0x20>;
- 			label = "versatile:5";
- 			default-state = "off";
- 		};
--		led@08.6 {
-+		led@8.6 {
- 			compatible = "register-bit-led";
- 			offset = <0x08>;
- 			mask = <0x40>;
- 			label = "versatile:6";
- 			default-state = "off";
- 		};
--		led@08.7 {
-+		led@8.7 {
- 			compatible = "register-bit-led";
- 			offset = <0x08>;
- 			mask = <0x80>;
-@@ -95,14 +95,14 @@
- 		};
- 
- 		/* OSC1 on AB, OSC4 on PB */
--		osc1: cm_aux_osc@24M {
-+		osc1: cm_aux_osc@24m {
- 			#clock-cells = <0>;
- 			compatible = "arm,versatile-cm-auxosc";
- 			clocks = <&xtal24mhz>;
- 		};
- 
- 		/* The timer clock is the 24 MHz oscillator divided to 1MHz */
--		timclk: timclk@1M {
-+		timclk: timclk@1m {
- 			#clock-cells = <0>;
- 			compatible = "fixed-factor-clock";
- 			clock-div = <24>;
-@@ -110,7 +110,7 @@
- 			clocks = <&xtal24mhz>;
- 		};
- 
--		pclk: pclk@24M {
-+		pclk: pclk@24m {
- 			#clock-cells = <0>;
- 			compatible = "fixed-factor-clock";
- 			clock-div = <1>;
--- 
-2.11.0
+Original code was correct.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
