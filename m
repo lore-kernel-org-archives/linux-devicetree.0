@@ -1,174 +1,156 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [RFC v2 1/2] backlight: pwm_bl: linear interpolation between
- values of brightness-levels
-Date: Fri, 15 Dec 2017 14:40:52 +0000
-Message-ID: <20171215144052.3b62gd3bkiqtuvk7@oak.lan>
-References: <20171116141151.21171-1-enric.balletbo@collabora.com>
- <20171116141151.21171-2-enric.balletbo@collabora.com>
+From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2] ARM64: dts: meson-axg: add the SPICC controller
+Date: Fri, 15 Dec 2017 22:42:17 +0800
+Message-ID: <20171215144217.223593-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171116141151.21171-2-enric.balletbo@collabora.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Doug Anderson <dianders@google.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Sunny Luo <sunny.luo-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 16, 2017 at 03:11:50PM +0100, Enric Balletbo i Serra wrote:
-> 
-> Setting use-linear-interpolation in the dts will allow you to have linear
-> interpolation between values of brightness-levels.
-> 
-> There are now 256 between each of the values of brightness-levels. If
-> something is requested halfway between 2 values, we'll use linear
-> interpolation.
+From: Sunny Luo <sunny.luo-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 
-Why 256?
-> 
-> This way a high resolution pwm duty cycle can be used without having to
-> list out every possible value in the dts. This system also allows for
-> gamma corrected values (eg: "brightness-levels = <0 2 4 8 16 32>;").
-> 
-> Patch based on the Alexandru M Stan work done for ChromeOS kernels.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
->  .../bindings/leds/backlight/pwm-backlight.txt      |  2 +
->  drivers/video/backlight/pwm_bl.c                   | 55 +++++++++++++++++-----
->  include/linux/pwm_backlight.h                      |  2 +
->  3 files changed, 47 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> index 764db86..7c48f20 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> @@ -17,6 +17,8 @@ Optional properties:
->                 "pwms" property (see PWM binding[0])
->    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
->                    and disables the backlight (see GPIO binding[1])
-> +  - use-linear-interpolation: set this propriety to enable linear interpolation
-> +                              between each of the values of brightness-levels.
+Add DT info for the SPICC controller which found in
+the Amlogic's Meson-AXG SoC.
 
-Deciding whether or not this deployment of interpolation is a property
-of the hardware is a finely balanced judgement. On the whole I conclude
-that since the lookup table is a property of the hardware so too is the
-deployment of interpolation.
+Signed-off-by: Sunny Luo <sunny.luo-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 
-Following up on the "why 256?" comment. IMHO either the number of
-interpolated steps should be calculated from the underlying PWM
-resolution or it could simply be specified in the DT (e.g. replace
-use-linear-interpolation with num-interpolated-steps).
+---
+Changes int v2 since [1]
+ - rebase to Kevin's tree, branch v4.16/dt64
+ - this patch depend on clock & pinctrl DT patch
 
+[1]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005495.html
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 93 ++++++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
->  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
->  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
-> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-> index 9bd1768..59b1bfb 100644
-> --- a/drivers/video/backlight/pwm_bl.c
-> +++ b/drivers/video/backlight/pwm_bl.c
-> @@ -24,6 +24,8 @@
->  #include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
->  
-> +#define NSTEPS	256
-> +
->  struct pwm_bl_data {
->  	struct pwm_device	*pwm;
->  	struct device		*dev;
-> @@ -35,6 +37,7 @@ struct pwm_bl_data {
->  	struct gpio_desc	*enable_gpio;
->  	unsigned int		scale;
->  	bool			legacy;
-> +	bool			piecewise;
->  	int			(*notify)(struct device *,
->  					  int brightness);
->  	void			(*notify_after)(struct device *,
-> @@ -76,17 +79,36 @@ static void pwm_backlight_power_off(struct pwm_bl_data *pb)
->  	pb->enabled = false;
->  }
->  
-> -static int compute_duty_cycle(struct pwm_bl_data *pb, int brightness)
-> +static int scale(struct pwm_bl_data *pb, int x)
->  {
->  	unsigned int lth = pb->lth_brightness;
-> +
-> +	return (x * (pb->period - lth) / pb->scale) + lth;
-> +}
-> +
-> +static int compute_duty_cycle(struct pwm_bl_data *pb, int brightness)
-> +{
-> +	int coarse = brightness / NSTEPS;
-> +	int fine = brightness % NSTEPS;
->  	int duty_cycle;
->  
-> -	if (pb->levels)
-> -		duty_cycle = pb->levels[brightness];
-> -	else
-> -		duty_cycle = brightness;
-> +	if (pb->levels) {
-> +		if (pb->piecewise) {
-> +			duty_cycle = scale(pb, pb->levels[coarse]);
-> +			if (fine > 0)
-> +				duty_cycle += (scale(pb, pb->levels[coarse + 1])
-> +					       - scale(pb, pb->levels[coarse]))
-> +					       * fine / NSTEPS;
-> +			dev_dbg(pb->dev, "brightness=%d coarse=%d fine=%d\n",
-> +				brightness, coarse, fine);
-> +		} else {
-> +			duty_cycle = scale(pb, pb->levels[brightness]);
-> +		}
-> +	} else {
-> +		duty_cycle = scale(pb, brightness);
-> +	}
->  
-> -	return (duty_cycle * (pb->period - lth) / pb->scale) + lth;
-> +	return duty_cycle;
->  }
->  
->  static int pwm_backlight_update_status(struct backlight_device *bl)
-> @@ -149,11 +171,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  	if (!prop)
->  		return -EINVAL;
->  
-> -	data->max_brightness = length / sizeof(u32);
-> +	data->levels_count = length / sizeof(u32);
->  
->  	/* read brightness levels from DT property */
-> -	if (data->max_brightness > 0) {
-> -		size_t size = sizeof(*data->levels) * data->max_brightness;
-> +	if (data->levels_count > 0) {
-> +		size_t size = sizeof(*data->levels) * data->levels_count;
->  
->  		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
->  		if (!data->levels)
-> @@ -161,7 +183,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  
->  		ret = of_property_read_u32_array(node, "brightness-levels",
->  						 data->levels,
-> -						 data->max_brightness);
-> +						 data->levels_count);
->  		if (ret < 0)
->  			return ret;
->  
-> @@ -170,10 +192,18 @@ static int pwm_backlight_parse_dt(struct device *dev,
->  		if (ret < 0)
->  			return ret;
->  
-> +		data->piecewise = of_property_read_bool(node,
-> +						    "use-linear-interpolation");
-> +
->  		data->dft_brightness = value;
-> -		data->max_brightness--;
-> +		data->levels_count--;
->  	}
->  
-> +	if (data->piecewise)
-> +		data->max_brightness = data->levels_count * NSTEPS;
-> +	else
-> +		data->max_brightness = data->levels_count;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index d356ce74ad89..d33721005748 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/axg-clkc.h>
+ 
+ / {
+ 	compatible = "amlogic,meson-axg";
+@@ -120,6 +121,28 @@
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
+ 
++			spicc0: spi@13000 {
++				compatible = "amlogic,meson-axg-spicc";
++				reg = <0x0 0x13000 0x0 0x3c>;
++				interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clkc CLKID_SPICC0>;
++				clock-names = "core";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
++			spicc1: spi@15000 {
++				compatible = "amlogic,meson-axg-spicc";
++				reg = <0x0 0x15000 0x0 0x3c>;
++				interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clkc CLKID_SPICC1>;
++				clock-names = "core";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				status = "disabled";
++			};
++
+ 			uart_A: serial@24000 {
+ 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
+ 				reg = <0x0 0x24000 0x0 0x14>;
+@@ -194,6 +217,76 @@
+ 					#gpio-cells = <2>;
+ 					gpio-ranges = <&pinctrl_periphs 0 0 86>;
+ 				};
++
++				spi0_pins: spi0 {
++					mux {
++						groups = "spi0_miso",
++							"spi0_mosi",
++							"spi0_clk";
++						function = "spi0";
++					};
++				};
++
++				spi0_ss0_pins: spi0_ss0 {
++					mux {
++						groups = "spi0_ss0";
++						function = "spi0";
++					};
++				};
++
++				spi0_ss1_pins: spi0_ss1 {
++					mux {
++						groups = "spi0_ss1";
++						function = "spi0";
++					};
++				};
++
++				spi0_ss2_pins: spi0_ss2 {
++					mux {
++						groups = "spi0_ss2";
++						function = "spi0";
++					};
++				};
++
++
++				spi1_a_pins: spi1_a {
++					mux {
++						groups = "spi1_miso_a",
++							"spi1_mosi_a",
++							"spi1_clk_a";
++						function = "spi1";
++					};
++				};
++
++				spi1_ss0_a_pins: spi1_ss0_a {
++					mux {
++						groups = "spi1_ss0_a";
++						function = "spi1";
++					};
++				};
++
++				spi1_ss1_pins: spi1_ss1 {
++					mux {
++						groups = "spi1_ss1";
++						function = "spi1";
++					};
++				};
++
++				spi1_x_pins: spi1_x {
++					mux {
++						groups = "spi1_miso_x",
++							"spi1_mosi_x",
++							"spi1_clk_x";
++						function = "spi1";
++					};
++				};
++
++				spi1_ss0_x_pins: spi1_ss0_x {
++					mux {
++						groups = "spi1_ss0_x";
++						function = "spi1";
++					};
++				};
+ 			};
+ 		};
+ 
+-- 
+2.15.1
 
-I think we lost a -1 here?
-
-
-Daniel.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
