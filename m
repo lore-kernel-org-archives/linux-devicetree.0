@@ -1,61 +1,51 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm: sunxi: Add alternative pins for spi0
-Date: Fri, 15 Dec 2017 16:08:23 +0100
-Message-ID: <20171215150823.jplgknururmkvp2t@flea.lan>
-References: <1513151074-6888-1-git-send-email-stefan@olimex.com>
- <20171213154035.qc655iahjoeflftq@flea.lan>
- <5f518e4b-e624-17c2-7e72-24ba930a1c15@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [v7, 3/3] ARM: dts: imx6qdl.dtsi/imx6ul.dtsi: add "fsl,
+ imx6q-snvs-lpgpr" node
+Date: Fri, 15 Dec 2017 16:07:54 +0100
+Message-ID: <f5e42526-fa17-a689-2c0b-f4b57dbfcda9@i2se.com>
+References: <20170620070932.10353-4-o.rempel@pengutronix.de>
+ <cfd53377-437a-98d3-1a0e-1123495a35ee@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3wgdg4avcqzhyqgn"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB46KZ7IQKGQEF553YVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <5f518e4b-e624-17c2-7e72-24ba930a1c15-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cfd53377-437a-98d3-1a0e-1123495a35ee-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Maciej,
 
---3wgdg4avcqzhyqgn
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
 
-Hi,
-
-On Thu, Dec 14, 2017 at 08:24:54AM +0200, Stefan Mavrodiev wrote:
-> On 12/13/2017 05:40 PM, Maxime Ripard wrote:
-> > Hi,
-> > 
-> > On Wed, Dec 13, 2017 at 09:44:34AM +0200, Stefan Mavrodiev wrote:
-> > > Allwinner A10/A13/A20 SoCs have pinmux for spi0
-> > > on port C. The patch adds these pins in the respective
-> > > dts includes.
-> > > 
-> > > Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-> > Do you have any boards that are using these?
-> > 
-> > We won't merge that patch if there's no users for it.
+Am 11.12.2017 um 23:31 schrieb Maciej S. Szmigiero:
+> On 20.06.2017 09:09, Oleksij Rempel wrote:
+>> This node is for Low Power General Purpose Register which can
+>> be used as Non-Volatile Storage.
+>>
+>> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/imx6qdl.dtsi | 4 ++++
+>>   arch/arm/boot/dts/imx6ul.dtsi  | 4 ++++
+>>   2 files changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+>> index e426faa9c243..94e992558238 100644
+> (..)
 >
-> A20-OLinuXino-Lime/Lime2 and A10-OLinuXino-Lime with spi flash.
-> For A13 we still doesn't have that option.
+> FYI: It looks to me that while the driver itself from this series was
+> picked up and eventually reached Linus' tree this DT change was
+> forgotten, since I can't find in any tree (or am I not looking at the
+> right place?).
 
-If this bus is exposed on the headers, you can add those to the DT but
-leave them disabled if you want. Buf if there's no users of those
-nodes, our policy is not to merge them.
+thanks for the reminder. It's possible that this patch won't apply 
+anymore and needs a resend.
 
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---3wgdg4avcqzhyqgn--
+>
+> Maciej
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
