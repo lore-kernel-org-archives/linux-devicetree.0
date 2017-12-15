@@ -1,105 +1,41 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3 1/2] ARM64: dts: meson-axg: add ethernet mac controller
-Date: Fri, 15 Dec 2017 10:10:13 +0800
-Message-ID: <20171215021014.231308-2-yixun.lan@amlogic.com>
-References: <20171215021014.231308-1-yixun.lan@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171215021014.231308-1-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] dt-bindings: fsl,imx-gpcv2: Fix the unit address
+Date: Fri, 15 Dec 2017 00:51:36 -0200
+Message-ID: <1513306296-17667-1-git-send-email-festevam@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT info for the stmmac ethernet MAC which found in
-the Amlogic's Meson-AXG SoC, also describe the ethernet
-pinctrl & clock information here.
+From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+In the provided example the unit address does not match the 'reg' value.
+
+Fix the unit address.
+
+Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 54 ++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+ Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index d356ce74ad89..94c4972222b7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/axg-clkc.h>
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+index 02f45c6..19e1819 100644
+--- a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+@@ -44,7 +44,7 @@ Example:
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
  
- / {
- 	compatible = "amlogic,meson-axg";
-@@ -148,6 +149,19 @@
- 			#address-cells = <0>;
- 		};
+-			pgc_pcie_phy: power-domain@3 {
++			pgc_pcie_phy: power-domain@IMX7_POWER_DOMAIN_PCIE_PHY {
+ 				#power-domain-cells = <0>;
  
-+		ethmac: ethernet@ff3f0000 {
-+			compatible = "amlogic,meson-gxbb-dwmac", "snps,dwmac";
-+			reg = <0x0 0xff3f0000 0x0 0x10000
-+				0x0 0xff634540 0x0 0x8>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "macirq";
-+			clocks = <&clkc CLKID_ETH>,
-+				 <&clkc CLKID_FCLK_DIV2>,
-+				 <&clkc CLKID_MPLL2>;
-+			clock-names = "stmmaceth", "clkin0", "clkin1";
-+			status = "disabled";
-+		};
-+
- 		hiubus: bus@ff63c000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xff63c000 0x0 0x1c00>;
-@@ -194,6 +208,46 @@
- 					#gpio-cells = <2>;
- 					gpio-ranges = <&pinctrl_periphs 0 0 86>;
- 				};
-+
-+				eth_rgmii_x_pins: eth-x-rgmii {
-+					mux {
-+						groups = "eth_mdio_x",
-+						       "eth_mdc_x",
-+						       "eth_rgmii_rx_clk_x",
-+						       "eth_rx_dv_x",
-+						       "eth_rxd0_x",
-+						       "eth_rxd1_x",
-+						       "eth_rxd2_rgmii",
-+						       "eth_rxd3_rgmii",
-+						       "eth_rgmii_tx_clk",
-+						       "eth_txen_x",
-+						       "eth_txd0_x",
-+						       "eth_txd1_x",
-+						       "eth_txd2_rgmii",
-+						       "eth_txd3_rgmii";
-+						function = "eth";
-+					};
-+				};
-+
-+				eth_rgmii_y_pins: eth-y-rgmii {
-+					mux {
-+						groups = "eth_mdio_y",
-+						       "eth_mdc_y",
-+						       "eth_rgmii_rx_clk_y",
-+						       "eth_rx_dv_y",
-+						       "eth_rxd0_y",
-+						       "eth_rxd1_y",
-+						       "eth_rxd2_rgmii",
-+						       "eth_rxd3_rgmii",
-+						       "eth_rgmii_tx_clk",
-+						       "eth_txen_y",
-+						       "eth_txd0_y",
-+						       "eth_txd1_y",
-+						       "eth_txd2_rgmii",
-+						       "eth_txd3_rgmii";
-+						function = "eth";
-+					};
-+				};
- 			};
- 		};
- 
+ 				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
 -- 
-2.15.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
