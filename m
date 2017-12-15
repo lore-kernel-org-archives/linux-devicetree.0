@@ -1,23 +1,11 @@
 From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH 08/25] arm: lpc32: dts: Remove leading 0x and 0s from bindings
- notation
-Date: Fri, 15 Dec 2017 13:46:39 +0100
-Message-ID: <20171215124639.30283-1-malat@debian.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 13/25] arm: spear: dts: Remove leading 0x and 0s from bindings notation
+Date: Fri, 15 Dec 2017 13:46:45 +0100
+Message-ID: <20171215124645.30535-1-malat@debian.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mathieu Malaterre <malat@debian.org>, Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Improve the DTS files by removing all the leading "0x" and zeros to fix the
@@ -51,93 +39,95 @@ Reported-by: David Daney <ddaney@caviumnetworks.com>
 Suggested-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/spear1310-evb.dts | 4 ++--
+ arch/arm/boot/dts/spear300.dtsi     | 2 +-
+ arch/arm/boot/dts/spear310.dtsi     | 2 +-
+ arch/arm/boot/dts/spear320-hmi.dts  | 4 ++--
+ arch/arm/boot/dts/spear320.dtsi     | 2 +-
+ 5 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index abff7ef7c9cd..4981741377f3 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -230,7 +230,7 @@
- 				status = "disabled";
+diff --git a/arch/arm/boot/dts/spear1310-evb.dts b/arch/arm/boot/dts/spear1310-evb.dts
+index 84101e4eebbf..438e3e16aeda 100644
+--- a/arch/arm/boot/dts/spear1310-evb.dts
++++ b/arch/arm/boot/dts/spear1310-evb.dts
+@@ -133,7 +133,7 @@
+ 				label = "u-boot";
+ 				reg = <0x80000 0x140000>;
  			};
+-			partition@1C0000 {
++			partition@1c0000 {
+ 				label = "environment";
+ 				reg = <0x1C0000 0x40000>;
+ 			};
+@@ -145,7 +145,7 @@
+ 				label = "linux";
+ 				reg = <0x240000 0xC00000>;
+ 			};
+-			partition@E40000 {
++			partition@e40000 {
+ 				label = "rootfs";
+ 				reg = <0xE40000 0x0>;
+ 			};
+diff --git a/arch/arm/boot/dts/spear300.dtsi b/arch/arm/boot/dts/spear300.dtsi
+index f4e92e599729..266fefa67223 100644
+--- a/arch/arm/boot/dts/spear300.dtsi
++++ b/arch/arm/boot/dts/spear300.dtsi
+@@ -52,7 +52,7 @@
+ 			status = "disabled";
+ 		};
  
--			i2s1: i2s@2009C000 {
-+			i2s1: i2s@2009c000 {
- 				compatible = "nxp,lpc3220-i2s";
- 				reg = <0x2009C000 0x1000>;
- 			};
-@@ -273,7 +273,7 @@
- 				status = "disabled";
- 			};
+-		shirq: interrupt-controller@0x50000000 {
++		shirq: interrupt-controller@50000000 {
+ 			compatible = "st,spear300-shirq";
+ 			reg = <0x50000000 0x1000>;
+ 			interrupts = <28>;
+diff --git a/arch/arm/boot/dts/spear310.dtsi b/arch/arm/boot/dts/spear310.dtsi
+index da210b454753..f995ecf09acf 100644
+--- a/arch/arm/boot/dts/spear310.dtsi
++++ b/arch/arm/boot/dts/spear310.dtsi
+@@ -40,7 +40,7 @@
+ 			status = "disabled";
+ 		};
  
--			i2c1: i2c@400A0000 {
-+			i2c1: i2c@400a0000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A0000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -284,7 +284,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C1>;
+-		shirq: interrupt-controller@0xb4000000 {
++		shirq: interrupt-controller@b4000000 {
+ 			compatible = "st,spear310-shirq";
+ 			reg = <0xb4000000 0x1000>;
+ 			interrupts = <28 29 30 1>;
+diff --git a/arch/arm/boot/dts/spear320-hmi.dts b/arch/arm/boot/dts/spear320-hmi.dts
+index 0d0da1f65f0e..6591cd616d0e 100644
+--- a/arch/arm/boot/dts/spear320-hmi.dts
++++ b/arch/arm/boot/dts/spear320-hmi.dts
+@@ -113,7 +113,7 @@
+ 				label = "u-boot";
+ 				reg = <0x80000 0x140000>;
  			};
- 
--			i2c2: i2c@400A8000 {
-+			i2c2: i2c@400a8000 {
- 				compatible = "nxp,pnx-i2c";
- 				reg = <0x400A8000 0x100>;
- 				interrupt-parent = <&sic1>;
-@@ -295,7 +295,7 @@
- 				clocks = <&clk LPC32XX_CLK_I2C2>;
+-			partition@1C0000 {
++			partition@1c0000 {
+ 				label = "environment";
+ 				reg = <0x1C0000 0x40000>;
  			};
- 
--			mpwm: mpwm@400E8000 {
-+			mpwm: mpwm@400e8000 {
- 				compatible = "nxp,lpc3220-motor-pwm";
- 				reg = <0x400E8000 0x78>;
- 				status = "disabled";
-@@ -394,7 +394,7 @@
- 				#gpio-cells = <3>; /* bank, pin, flags */
+@@ -125,7 +125,7 @@
+ 				label = "linux";
+ 				reg = <0x240000 0xC00000>;
  			};
- 
--			timer4: timer@4002C000 {
-+			timer4: timer@4002c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4002C000 0x1000>;
- 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-@@ -412,7 +412,7 @@
- 				status = "disabled";
+-			partition@E40000 {
++			partition@e40000 {
+ 				label = "rootfs";
+ 				reg = <0xE40000 0x0>;
  			};
+diff --git a/arch/arm/boot/dts/spear320.dtsi b/arch/arm/boot/dts/spear320.dtsi
+index 22be6e5edaac..2a062a3ee139 100644
+--- a/arch/arm/boot/dts/spear320.dtsi
++++ b/arch/arm/boot/dts/spear320.dtsi
+@@ -55,7 +55,7 @@
+ 			status = "disabled";
+ 		};
  
--			watchdog: watchdog@4003C000 {
-+			watchdog: watchdog@4003c000 {
- 				compatible = "nxp,pnx4008-wdt";
- 				reg = <0x4003C000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_WDOG>;
-@@ -451,7 +451,7 @@
- 				status = "disabled";
- 			};
- 
--			timer1: timer@4004C000 {
-+			timer1: timer@4004c000 {
- 				compatible = "nxp,lpc3220-timer";
- 				reg = <0x4004C000 0x1000>;
- 				interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-@@ -475,7 +475,7 @@
- 				status = "disabled";
- 			};
- 
--			pwm1: pwm@4005C000 {
-+			pwm1: pwm@4005c000 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C000 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM1>;
-@@ -484,7 +484,7 @@
- 				status = "disabled";
- 			};
- 
--			pwm2: pwm@4005C004 {
-+			pwm2: pwm@4005c004 {
- 				compatible = "nxp,lpc3220-pwm";
- 				reg = <0x4005C004 0x4>;
- 				clocks = <&clk LPC32XX_CLK_PWM2>;
+-		shirq: interrupt-controller@0xb3000000 {
++		shirq: interrupt-controller@b3000000 {
+ 			compatible = "st,spear320-shirq";
+ 			reg = <0xb3000000 0x1000>;
+ 			interrupts = <30 28 29 1>;
 -- 
 2.11.0
