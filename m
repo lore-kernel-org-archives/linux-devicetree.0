@@ -1,55 +1,38 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] extcon: usbc-cros-ec: add support to notify USB
- type cables.
-Date: Fri, 15 Dec 2017 17:20:32 +0900
-Message-ID: <5A3385D0.2050308@samsung.com>
-References: <CGME20171213103241epcas2p412031074459fa3893388ffca4f894abc@epcas2p4.samsung.com>
-        <20171213103219.1464-1-enric.balletbo@collabora.com>
-        <5A33702D.60004@samsung.com> <20171215081453.6jwjdetwe655imqo@dell>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v3 01/11] dt-bindings: thermal: Describe Armada AP806 and
+ CP110
+Date: Fri, 15 Dec 2017 10:27:59 +0200
+Message-ID: <20171215082759.7t24ka3lpkulcb7r@tarshish>
+References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
+ <20171214103011.24713-2-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20171215081453.6jwjdetwe655imqo@dell>
+Content-Disposition: inline
+In-Reply-To: <20171214103011.24713-2-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017년 12월 15일 17:14, Lee Jones wrote:
->> On 2017년 12월 13일 19:32, Enric Balletbo i Serra wrote:
->>> From: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>
->>> Extend the driver to notify host and device type cables and the presence
->>> of power.
->>>
->>> Signed-off-by: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>> Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> ---
->>> Changes since v1:
->>>  - Use the BIT macro. Requested by Lee Jones.
->>>  - Add the Reviewed-by: Chanwoo Choi.
->>>
->>>  drivers/extcon/extcon-usbc-cros-ec.c | 142 ++++++++++++++++++++++++++++++++++-
->>>  include/linux/mfd/cros_ec_commands.h |  17 +++++
->>>  2 files changed, 155 insertions(+), 4 deletions(-)
-> 
->> Looks good to me. After reviewing the Lee Jones,
->> I'll take it on next branch.
-> 
-> If you take it, you need to send me a pull-request to an immutable
-> branch.
-> 
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
+Hi Miquel
 
-Sure. I'll send the immutable branch. Thanks.
+On Thu, Dec 14, 2017 at 11:30:01AM +0100, Miquel Raynal wrote:
+> +- marvell,thermal-zone-name: The name to identify the thermal zone
+> +                             within the sysfs, useful when multiple
+> +                             thermal zones are registered (AP, CPx...).
+
+I don't think that would be acceptable. DT is about describing the hardware. 
+sysfs is a Linux implementation detail which is not tied to any specific 
+hardware. If this is accepted, the property should be named 
+'linux,thermal-zone-name'.
+
+baruch
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
