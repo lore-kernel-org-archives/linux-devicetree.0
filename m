@@ -1,77 +1,51 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 14/25] arm: stm32: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Fri, 15 Dec 2017 14:42:53 +0100
-Message-ID: <ff37e4b4-8a28-ce9e-93af-40b2f10ed2dc@st.com>
-References: <20171215124646.30591-1-malat@debian.org>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH 0/2] Use SPDX-License-Identifier for rockchip devicetree files
+Date: Fri, 15 Dec 2017 14:45:34 +0100
+Message-ID: <CAOFm3uHba4kBD81thpxSpDBsDS4Y5m7cN2jfYt_uT5atdSDmqg@mail.gmail.com>
+References: <20171215114427.32059-1-klaus.goger@theobroma-systems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215124646.30591-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171215114427.32059-1-klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard@free->
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathieu
+Klaus,
 
-On 12/15/2017 01:46 PM, Mathieu Malaterre wrote:
-> Improve the DTS files by removing all the leading "0x" and zeros to fix the
-> following dtc warnings:
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
-> 
-> and
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-> 
-> Converted using the following command:
-> 
-> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
-> 
-> For simplicity, two sed expressions were used to solve each warnings separately.
-> 
-> To make the regex expression more robust a few other issues were resolved,
-> namely setting unit-address to lower case, and adding a whitespace before the
-> the opening curly brace:
-> 
-> https://elinux.org/Device_Tree_Linux#Linux_conventions
-> 
-> This will solve as a side effect warning:
-> 
-> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-> 
-> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-> 
-> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> ---
+On Fri, Dec 15, 2017 at 12:44 PM, Klaus Goger
+<klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org> wrote:
+> This patch series replaces all the license text in rockchip devicetree
+> files text with a proper SPDX-License-Identifier.
+> It follows the guidelines submitted[1] by Thomas Gleixner that are not
+> yet merged.
+>
+> These series also fixes the issue with contradicting statements in most
+> licenses. The introduction text claims to be GPL or X11[2] but the
+> following verbatim copy of the license is actually a MIT[3] license.
+> The X11 license includes a advertise clause and trademark information
+> related to the X Consortium. As these X Consortium specfic points are
+> irrelevant for us we stick with the actuall license text.
+>
+> [1] https://patchwork.kernel.org/patch/10091607/
+> [2] https://spdx.org/licenses/X11.html
+> [3] https://spdx.org/licenses/MIT.html
 
-I will merge it in my next pull request for 4.16.
+FWIW, the X11 license name was not always something clearly defined.
+SPDX calls it clearly MIT which is the most widely accepted name for
+the corresponding text. And this is also what we have in Thomas doc
+patches that should be the kernel reference.
 
-Thanks
-Alex
+Also, as a general note, you want to make sure that such as patch set
+is not merged by mistake until you have collected an explicit review
+or ack from all the copyright holders involved.
 
->   arch/arm/boot/dts/stm32h743.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-> index bbfcbaca0b36..a559d8b6a4a3 100644
-> --- a/arch/arm/boot/dts/stm32h743.dtsi
-> +++ b/arch/arm/boot/dts/stm32h743.dtsi
-> @@ -304,7 +304,7 @@
->   			};
->   		};
->   
-> -		vrefbuf: regulator@58003C00 {
-> +		vrefbuf: regulator@58003c00 {
->   			compatible = "st,stm32-vrefbuf";
->   			reg = <0x58003C00 0x8>;
->   			clocks = <&rcc VREF_CK>;
-> 
+May be calling it an "RFC" could be best until you have these acks?
+
+-- 
+Cordially
+Philippe Ombredanne
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
