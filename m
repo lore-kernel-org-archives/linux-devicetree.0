@@ -1,50 +1,61 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v3 2/2] ARM64: dts: meson-axg: enable ethernet for A113D S400 board
-Date: Fri, 15 Dec 2017 11:31:36 -0800
-Message-ID: <7hind7949z.fsf@baylibre.com>
-References: <20171215021014.231308-1-yixun.lan@amlogic.com>
-        <20171215021014.231308-3-yixun.lan@amlogic.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] dt: add pinctrl driver for Meson-AXG SoC
+Date: Fri, 15 Dec 2017 11:48:29 -0800
+Message-ID: <7ha7yj93hu.fsf@baylibre.com>
+References: <20171208015418.9632-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171215021014.231308-3-yixun.lan@amlogic.com> (Yixun Lan's
-        message of "Fri, 15 Dec 2017 10:10:14 +0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yixun Lan <yixun.lan@amlogic.com>
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171208015418.9632-1-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> (Yixun Lan's
+        message of "Fri, 8 Dec 2017 09:54:16 +0800")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Xingyu Chen <xingyu.chen-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Yixun Lan <yixun.lan@amlogic.com> writes:
+Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> writes:
 
-> This is tested in the S400 dev board which use a RTL8211F PHY,
-> and the pins connect to the 'eth_rgmii_y_pins' group.
+> This is DT part patchset for adding pinctrl support for
+> the Amlogic's Meson-AXG SoC.
+>   
+> Changes since v3 at [3]
+>   -- rebase to khilman's v4.16/dt64 branch and re-send
+>   -- add Rob's Ack
 >
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
+> Changes since v2 at [2]:
+>   -- Resend this patch series due to fail to send patch [2/2]
 >
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> index 70eca1f8736a..b8c4f1913d28 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-> @@ -20,3 +20,10 @@
->  &uart_AO {
->  	status = "okay";
->  };
-> +
-> +&ethmac {
-> +	status = "okay";
-> +	phy-mode = "rgmii";
-> +	pinctrl-0 = <&eth_rgmii_y_pins>;
-> +	pinctrl-names = "default";
-> +};
+> Changes since v1 at [1]:
+>   -- Separate DT part patches
+>   -- Add Neil Armstrong's Ack
+>
+> [3]
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005392.html
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005393.html
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005394.html
+>
+> [2]
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005390.html
+>
+> [1] 
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005270.html
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005271.html
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005272.html
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005273.html
+> http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005274.html
+>
+> Xingyu Chen (2):
+>   documentation: Add compatibles for Amlogic Meson AXG pin controllers
+>   ARM64: dts: meson-axg: add pinctrl DT info for Meson-AXG SoC
 
-Minor nit: we try to keep these sorted alphabetically.  Can you move
-this above the uart_A0 one?
+Applied both to v4.14/dt64
 
-Note: if PATCH 1/1 had applied cleanly, I would have fixed this up
-myself and not required a respin.
+Normally, the documentation patch should go with the driver, but since
+Linus has already merged the driver, this time I'll take it with the DT
+itself.
 
 Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
