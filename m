@@ -1,73 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: rtc: add bindings for i.MX53 SRTC
-Date: Fri, 15 Dec 2017 15:58:07 -0600
-Message-ID: <CAL_JsqL7N8V_=zokbSUm74BdxkMsSCNwU1+dCzcxW=gdUC61eA@mail.gmail.com>
-References: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
- <20171205140646.30367-2-linux-kernel-dev@beckhoff.com> <20171206215436.lwttn445wjilh3wo@rob-hp-laptop>
- <3BB206AB2B1BD448954845CE6FF69A8E01CB53233C@NT-Mail07.beckhoff.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 07/13] dt-bindings: power: reset: Document
+ ocelot-reset binding
+Date: Fri, 15 Dec 2017 23:07:41 +0100
+Message-ID: <20171215220741.GE7022@piout.net>
+References: <20171208154618.20105-1-alexandre.belloni@free-electrons.com>
+ <20171208154618.20105-8-alexandre.belloni@free-electrons.com>
+ <20171215202332.bn47da3fpkynusno@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3BB206AB2B1BD448954845CE6FF69A8E01CB53233C@NT-Mail07.beckhoff.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Patrick_Br=C3=BCnn?= <P.Bruenn@beckhoff.com>
-Cc: linux-kernel-dev <linux-kernel-dev@beckhoff.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Patrick Bruenn <p.bruenn@beckhoff.compaste>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infra>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171215202332.bn47da3fpkynusno@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 11, 2017 at 1:08 AM, Patrick Brünn <P.Bruenn@beckhoff.com> wrote:
->>From: Rob Herring [mailto:robh@kernel.org]
->>Sent: Mittwoch, 6. Dezember 2017 22:55
->>On Tue, Dec 05, 2017 at 03:06:42PM +0100, linux-kernel-dev@beckhoff.com
->>wrote:
->>> From: Patrick Bruenn <p.bruenn@beckhoff.com>
->>>
->>> +++ b/Documentation/devicetree/bindings/rtc/rtc-mxc_v2.txt
->>> @@ -0,0 +1,17 @@
->>> +* i.MX53 Real Time Clock controller
->>> +
->>> +Required properties:
->>> +- compatible: should be: "fsl,imx53-rtc"
->>> +- reg: physical base address of the controller and length of memory
->>mapped
->>> +  region.
->>> +- clocks: should contain the phandle for the rtc clock
->>
->>Shouldn't there be more than 1 here. From what I remember, the ipg clock
->>and the 32k clock?
-> Yes, you are right. But if I am reading the original  Freescale driver and the
-> reference manual correctly, the second clock is always active.
-> Section "72.3.1.1 Clocks" from the reference manual [1] reads:
-> "SRTC runs on two clock sources, high frequency peripherals clock and low frequency
-> timers clock. The high frequency peripheral IP clock is used by the SRTC peripheral bus
-> interface, control and status registers. The low frequency 32.768 kHz clock is the
-> always-active clock used by the SRTC timers..."
->
-> That's why I would only include one clock . Should I change this?
+On 15/12/2017 at 14:23:32 -0600, Rob Herring wrote:
+> On Fri, Dec 08, 2017 at 04:46:12PM +0100, Alexandre Belloni wrote:
+> > Add binding documentation for the Microsemi Ocelot reset block.
+> > 
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/power/reset/ocelot-reset.txt    | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> > new file mode 100644
+> > index 000000000000..1bcf276b04cb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> > @@ -0,0 +1,17 @@
+> > +Microsemi Ocelot reset controller
+> > +
+> > +The DEVCPU_GCB:CHIP_REGS have a SOFT_RST register that can be used to reset the
+> > +SoC MIPS core.
+> > +
+> > +Required Properties:
+> > + - compatible: "mscc,ocelot-chip-reset"
+> > +
+> > +Example:
+> > +	syscon@71070000 {
+> > +		compatible = "mscc,ocelot-chip-regs", "simple-mfd", "syscon";
+> > +		reg = <0x71070000 0x1c>;
+> > +
+> > +		reset {
+> > +			compatible = "mscc,ocelot-chip-reset";
+> 
+> Why do you need a subnode here other than as a way to instantiate a 
+> driver? Can you describe the SOFT_RST register in reg property here 
+> (without having overlapping regions)?
 
-Some chips supported 32.0kHz and 32.768kHz low freq clocks, so you'd
-need to be able to query what the frequency is even if you don't need
-to enable the clock, but maybe that may be gone in MX53. I don't
-remember.
+You mean like:
 
->>> +- interrupts: rtc alarm interrupt
->>> +
->>> +Example:
->>> +
->>> +srtc@53fa4000 {
->>
->>rtc@...
->>
-> The rtc for which this series adds support is embedded within a function block called
-> "Secure Real Time Clock". This driver doesn't utilize all of the hardware features by
-> now. But maybe someone else wants to extend the functionalities, later.
-> For that possibility I wanted to name the node "srtc". Should I still change this?
->
-> I believe you have a much better understanding of what should be done here. I don't
-> want to argue with you, just thought you might not had that information. So if I am
-> wrong just tell me and I will change it without further "complaining".
+reset@7107001c {
+	compatible = "mscc,ocelot-chip-reset";
+	reg = <0x7107001c 0x4>;
+};
 
-Node names should be generic for the class of h/w they are. So yes, it
-should be "rtc".
+I guess that could work.
 
-Rob
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
