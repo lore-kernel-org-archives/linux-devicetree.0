@@ -1,41 +1,60 @@
-From: Nuno Goncalves <nunojpg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: sunxi: add H3/H5 uart2 rts/cts bindings
-Date: Fri, 15 Dec 2017 15:05:00 +0100
-Message-ID: <20171215140500.4394-1-nunojpg@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-e9dOc8Je5ARAfugRpC6u6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Nuno Goncalves <nunojpg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v8] arm64: dts: meson-axg: switch uart_ao clock to CLK81
+Date: Fri, 15 Dec 2017 22:17:41 +0800
+Message-ID: <20171215141741.175985-1-yixun.lan@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Currently there are already bindings for uart1 and uart3 but uart2 was
-lacking.
+Switch the uart_ao pclk to CLK81 since the clock driver is ready.
 
-Signed-off-by: Nuno Goncalves <nunojpg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+This is a fixup for the previous version
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 8d40c00d64bb..e0e0551b3f05 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -377,6 +377,11 @@
- 				function = "uart2";
- 			};
+Changes in v8 since [1]
+ - move clock DT info into soc.dtsi
+
+[1]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005741.html
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index 01beb211f442..d1f8043be426 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/axg-clkc.h>
  
-+			uart2_rts_cts_pins: uart2_rts_cts {
-+				pins = "PA2", "PA3";
-+				function = "uart2";
-+			};
-+
- 			uart3_pins: uart3 {
- 				pins = "PA13", "PA14";
- 				function = "uart3";
+ / {
+ 	compatible = "amlogic,meson-axg";
+@@ -200,7 +201,7 @@
+ 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
+ 				reg = <0x0 0x3000 0x0 0x18>;
+ 				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
+-				clocks = <&xtal>, <&xtal>, <&xtal>;
++				clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+ 				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
+@@ -209,7 +210,7 @@
+ 				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
+ 				reg = <0x0 0x4000 0x0 0x18>;
+ 				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
+-				clocks = <&xtal>, <&xtal>, <&xtal>;
++				clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
+ 				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.15.1
