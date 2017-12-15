@@ -1,77 +1,79 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: sun8i: a83t: Add support for I2S and I2C
-Date: Fri, 15 Dec 2017 15:43:07 +0100
-Message-ID: <20171215144307.t7fyb3fzc7rqwthr@flea.lan>
-References: <20171214042350.29469-1-wens@csie.org>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH 0/2] Use SPDX-License-Identifier for rockchip devicetree
+ files
+Date: Fri, 15 Dec 2017 15:42:48 +0100
+Message-ID: <CAOFm3uHuwmU1nCcU1MQ9qgGZ0A70ycuoo8XpWcDzgPQFzFRnRA@mail.gmail.com>
+References: <20171215114427.32059-1-klaus.goger@theobroma-systems.com>
+ <CAOFm3uHba4kBD81thpxSpDBsDS4Y5m7cN2jfYt_uT5atdSDmqg@mail.gmail.com>
+ <21020918.S4038j3A1a@diego>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vsamr53qqb6ui4zm"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171214042350.29469-1-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <21020918.S4038j3A1a@diego>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, Huibin Hong <huibin.hong@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Joseph Chen <chenjh@rock-chips.com>, Romain Perier <romain.perier@collabora.com>, Matthias Kaehlcke <mka@chromium.org>, Sugar Zhang <sugar.zhang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Brian Norris <briannorris@chromium.org>, Russell King <linux@armlinux.org.uk>, Jaehoon Chung <jh80.chung@samsung.com>, linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Jacob Chen <jacob-chen@iotwrt.com>, Jianqun Xu <jay.xu@rock-chips.com>, Shawn Lin <shawn.lin@rock>
 List-Id: devicetree@vger.kernel.org
 
-
---vsamr53qqb6ui4zm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Dec 14, 2017 at 12:23:47PM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
->=20
-> This is v2 of my A83T I2S and I2C support series.
->=20
-> Changes since v1:
->=20
->   - Dropped ASoC patch that was merged
->   - Added SoC-specific compatible strings for I2C controllers
->   - Added Maxime's Acked-by
->=20
-> This series adds support for I2S and I2C on the Allwinner A83T SoC.
-> The I2S controllers are similar to the ones found on the A31. However
-> the TX FIFO and interrupt status registers were swapped around. This
-> seems to be a recurring theme for the audio related hardware blocks.
->=20
-> Patch 1 adds device nodes and default pinmux settings for the I2S
-> controllers.
->=20
-> Patch 2 adds device nodes and default pinmux settings for the I2C
-> controllers.
-
-Applied both, thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---vsamr53qqb6ui4zm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAloz33cACgkQ0rTAlCFN
-r3T+pxAAiJHTL8nduMU58qUP0Mci/S0qrvxPO+Fn+B5I/HD73YuZMVvHMUCrs1WX
-voKmJ1YREqnSxa4gOiARGkXIE30GQOjJ5rwiI5c/zRXe5talVA/szEppbNsLNFeG
-w2WpRMXzKZtXUC+Whxs+KnSgzdwLP1/QWoIolipUiGIXT6hGBlKpyQcuY9JM67MR
-jQ6a9lwTnufk6RZTUHPULPeEOusip3aOT0XSBC3BEvgGYxdEz+kh8pbLDDmB4VxE
-SsxJ5PrauqPUWWqtNIAhmVSfUGJ+7hJMfkhxKvZYfuCVed2oWBmI8tbCFQU5Pl4f
-horPZ+nqUOz3w/D8ZJ95ResodjHPcdJdYGj5ak1Pz+kK+Ti484tE9AiXe6VXNJsw
-5oWTwWm8g/XpMaiXvyTUMqVuUpVwecOK3gA4Z2eAO6jghsQjIUqcSukazDA1TeOk
-jqFI8fDUjB9acZutBws2Rhy+g2BzYE3Rj5gCj/ybQDAPE2GbfVDuj7pKg66hOmKT
-KM/Puqu/Rz9jWKxeTUPArmlIIZkGicKW7ih54XKhINF6CGl6/dBLua9mJI9NmS4+
-jc5hP8v5qmnytg7SlJ5TBcAs2/4f6VlOY1S1PSxokCVWtxeqeR2swxobhIhh9jl6
-666UztbkdaihTcbZUCStFjz0sulMvgMSFVfYg8+VZfBT7bIRl38=
-=R/z7
------END PGP SIGNATURE-----
-
---vsamr53qqb6ui4zm--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBEZWMgMTUsIDIwMTcgYXQgMzoyOCBQTSwgSGVpa28gU3TDvGJuZXIgPGhlaWtvQHNu
+dGVjaC5kZT4gd3JvdGU6Cj4gQW0gRnJlaXRhZywgMTUuIERlemVtYmVyIDIwMTcsIDE0OjQ1OjM0
+IENFVCBzY2hyaWViIFBoaWxpcHBlIE9tYnJlZGFubmU6Cj4+IEtsYXVzLAo+Pgo+PiBPbiBGcmks
+IERlYyAxNSwgMjAxNyBhdCAxMjo0NCBQTSwgS2xhdXMgR29nZXIKPj4KPj4gPGtsYXVzLmdvZ2Vy
+QHRoZW9icm9tYS1zeXN0ZW1zLmNvbT4gd3JvdGU6Cj4+ID4gVGhpcyBwYXRjaCBzZXJpZXMgcmVw
+bGFjZXMgYWxsIHRoZSBsaWNlbnNlIHRleHQgaW4gcm9ja2NoaXAgZGV2aWNldHJlZQo+PiA+IGZp
+bGVzIHRleHQgd2l0aCBhIHByb3BlciBTUERYLUxpY2Vuc2UtSWRlbnRpZmllci4KPj4gPiBJdCBm
+b2xsb3dzIHRoZSBndWlkZWxpbmVzIHN1Ym1pdHRlZFsxXSBieSBUaG9tYXMgR2xlaXhuZXIgdGhh
+dCBhcmUgbm90Cj4+ID4geWV0IG1lcmdlZC4KPj4gPgo+PiA+IFRoZXNlIHNlcmllcyBhbHNvIGZp
+eGVzIHRoZSBpc3N1ZSB3aXRoIGNvbnRyYWRpY3Rpbmcgc3RhdGVtZW50cyBpbiBtb3N0Cj4+ID4g
+bGljZW5zZXMuIFRoZSBpbnRyb2R1Y3Rpb24gdGV4dCBjbGFpbXMgdG8gYmUgR1BMIG9yIFgxMVsy
+XSBidXQgdGhlCj4+ID4gZm9sbG93aW5nIHZlcmJhdGltIGNvcHkgb2YgdGhlIGxpY2Vuc2UgaXMg
+YWN0dWFsbHkgYSBNSVRbM10gbGljZW5zZS4KPj4gPiBUaGUgWDExIGxpY2Vuc2UgaW5jbHVkZXMg
+YSBhZHZlcnRpc2UgY2xhdXNlIGFuZCB0cmFkZW1hcmsgaW5mb3JtYXRpb24KPj4gPiByZWxhdGVk
+IHRvIHRoZSBYIENvbnNvcnRpdW0uIEFzIHRoZXNlIFggQ29uc29ydGl1bSBzcGVjZmljIHBvaW50
+cyBhcmUKPj4gPiBpcnJlbGV2YW50IGZvciB1cyB3ZSBzdGljayB3aXRoIHRoZSBhY3R1YWxsIGxp
+Y2Vuc2UgdGV4dC4KPj4gPgo+PiA+IFsxXSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
+dGNoLzEwMDkxNjA3Lwo+PiA+IFsyXSBodHRwczovL3NwZHgub3JnL2xpY2Vuc2VzL1gxMS5odG1s
+Cj4+ID4gWzNdIGh0dHBzOi8vc3BkeC5vcmcvbGljZW5zZXMvTUlULmh0bWwKPj4KPj4gRldJVywg
+dGhlIFgxMSBsaWNlbnNlIG5hbWUgd2FzIG5vdCBhbHdheXMgc29tZXRoaW5nIGNsZWFybHkgZGVm
+aW5lZC4KPj4gU1BEWCBjYWxscyBpdCBjbGVhcmx5IE1JVCB3aGljaCBpcyB0aGUgbW9zdCB3aWRl
+bHkgYWNjZXB0ZWQgbmFtZSBmb3IKPj4gdGhlIGNvcnJlc3BvbmRpbmcgdGV4dC4gQW5kIHRoaXMg
+aXMgYWxzbyB3aGF0IHdlIGhhdmUgaW4gVGhvbWFzIGRvYwo+PiBwYXRjaGVzIHRoYXQgc2hvdWxk
+IGJlIHRoZSBrZXJuZWwgcmVmZXJlbmNlLgo+Pgo+PiBBbHNvLCBhcyBhIGdlbmVyYWwgbm90ZSwg
+eW91IHdhbnQgdG8gbWFrZSBzdXJlIHRoYXQgc3VjaCBhcyBwYXRjaCBzZXQKPj4gaXMgbm90IG1l
+cmdlZCBieSBtaXN0YWtlIHVudGlsIHlvdSBoYXZlIGNvbGxlY3RlZCBhbiBleHBsaWNpdCByZXZp
+ZXcKPj4gb3IgYWNrIGZyb20gYWxsIHRoZSBjb3B5cmlnaHQgaG9sZGVycyBpbnZvbHZlZC4KPgo+
+IEp1c3QgZm9yIG15IHVuZGVyc3RhbmRpbmcsIGlzIGl0IHJlYWxseSBuZWNlc3NhcnkgdG8gZ2V0
+IEFja3MgZnJvbSBfYWxsXwo+IHByZXZpb3VzIGNvbnRyaWJ1dG9ycz8KPgo+IEkgc2VlIHRoYXQg
+VGhvbWFzIHBhdGNoZXMgbW92aW5nIGxpY2Vuc2UgdGV4dHMgaW50byB0aGUga2VybmVsIGl0c2Vs
+ZiBkbyBub3QKPiBzZWVtIHRvIGhhdmUgbGFuZGVkIHlldCwgYnV0IHdoZW4gdGhlIGFjdHVhbCBs
+aWNlbnNlIHRleHQgZG9lcyBfbm90XyBjaGFuZ2UKPiBhbmQgb25seSBpdHMgbG9jYXRpb24gdG8g
+YSBjb21tb24gcGxhY2UgaW5zaWRlIHRoZSBrZXJuZWwgc291cmNlcywgaXQgZmVlbHMKPiBhIGJp
+dCBvdmVya2lsbCB0cnlpbmcgdG8gZ2V0IEFja3MgZnJvbSBfZXZlcnlib2R5XyB0aGF0IGNvbnRy
+aWJ1dGVkIHRvCj4gUm9ja2NoaXAgZGV2aWNldHJlZXMgZm9yIHRoZSBsYXN0IDQgeWVhcnMuCj4K
+PiBJZiB3ZSB3b3VsZCBhY3R1YWxseSB3YW50IHRvIGNoYW5nZSB0aGUgbGljZW5zZSBJIHdvdWxk
+IGRlZmluaXRseSBmZWVsCj4gZGlmZmVyZW50bHksIGJ1dCB0aGUgbGljZW5zZSB0ZXh0IGRvZXMg
+bm90IGNoYW5nZS4KCldlbGwgeW91IGFyZSB0ZWNobmljYWxseSByaWdodC4gQnV0IHRoZXJlIGlz
+IGEgc29jaWFsIGFuZCBwb2xpdGVuZXNzCmFuZ2xlIHRvIHRoaXMgdG9vLiBTbyBtYXkgYmUgZ2V0
+dGluZyB0aGUgYWNrIG9mIGFsbCBjb250cmlidXRvcnMgaXMKbm90IGFsd2F5cyBuZWVkZWQsIGJ1
+dCBnZXR0aW5nIGl0IGlzIGJlc3QgYW5kIHRoZSByaWdodCB0byBkbyBhbmQgYXQKbGVhc3QgZ2V0
+dGluZyBmb3IgdGhlIG5hbWVkIGNvcHlyaWdodCBob2xkZXJzIHNob3VsZCBiZSB0aGVyZS4KClRo
+YXQncyBvbmx5IG9ubHkgbXkgdGFrZTogbGVhdmluZyBhc2lkZSBhbnkgdGVjaG5pY2FsIGxlZ2Fs
+IGlzc3VlLCBzYXkKSSB3b3VsZCBiZSBvbiB0aGUgcmVjZWl2aW5nIGVuZCBhcyBvbmUgb2YgdGhl
+IGhvbGRlciBvciBjb250cmlidXRvcnM6Ckkgd291bGQgZmluZCBpdCByZWFsbHkgZ3JlYXQgYW5k
+IG5pY2UgdG8gaGF2ZSBteSBhY2sgcmVxdWVzdGVkLiBBbmQgSQp3b3VsZCBiZSBhIGRvcmsgbm90
+IHRvIGdpdmUgaXQuIFNvIEkgbGlrZSB0byBkbyB0byBvdGhlcnMgdGhlIHNhbWUgSQp3b3VsZCBh
+cHByZWNpYXRlIGRvbmUgdG8gbWUgKHdpdGhpbiByZWFzb24sIGFzIEkgc29tZXRpbWVzIHNob290
+Cm15c2VsZiBpbiB0aGUgZm9vdCA7KSApCgotLSAKQ29yZGlhbGx5ClBoaWxpcHBlIE9tYnJlZGFu
+bmUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
