@@ -1,34 +1,60 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] arm: imx: dts: Remove leading 0x and 0s from bindings notation
-Date: Fri, 15 Dec 2017 15:20:29 -0200
-Message-ID: <CAOMZO5D4R0o5ViiT7Z=wFro-=WxS1rwpMbZmjvMZF3A0SzSB6A@mail.gmail.com>
-References: <20171215124631.30132-1-malat@debian.org> <20171215171327.8513-1-malat@debian.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 4/6] dt: bindings: lp8860: Add trigger binding to the
+ lp8860
+Date: Fri, 15 Dec 2017 11:22:24 -0600
+Message-ID: <76329432-f96e-93ab-ed9b-ade22c8735c9@ti.com>
+References: <20171212220143.31210-1-dmurphy@ti.com>
+ <20171212220143.31210-5-dmurphy@ti.com> <20171215090903.GC8221@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215171327.8513-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20171215090903.GC8221@amd>
+Content-Language: en-US
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-HI Mathieu,
+Pavel
 
-On Fri, Dec 15, 2017 at 3:13 PM, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+On 12/15/2017 03:09 AM, Pavel Machek wrote:
+> Hi!
+> 
+>> @@ -35,6 +37,7 @@ led-controller@2d {
+>>  	led@0 {
+>>  		reg = <0>;
+>>  		label = "white:display_cluster";
+>> +		linux,default-trigger = "backlight";
+>>  	};
+>>  }
+> 
+> What is "display_cluster"? Is it display backlight?
+> 
 
-> diff --git a/arch/arm/boot/dts/imx6q-display5.dtsi b/arch/arm/boot/dts/imx6q-display5.dtsi
-> index 4084de43d4d9..09085fde3341 100644
-> --- a/arch/arm/boot/dts/imx6q-display5.dtsi
-> +++ b/arch/arm/boot/dts/imx6q-display5.dtsi
-> @@ -255,7 +255,7 @@
->         pinctrl-0 = <&pinctrl_i2c1>;
->         status = "okay";
->
-> -       codec: tfa9879@6C {
-> +       codec: tfa9879@6c {
+This device can be configured to drive all 4 LED strings in display mode
+so that all 4 strings have the same brightness controlled either through PWM or
+through the brightness register 
 
-This change is fine, but it no longer matches the Subject and commit log.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+or
+
+As cluster string where the brightness of individual strings or clustered strings
+can be controlled via independent brightness control registers.  I am currently working
+on adding this support to the driver.
+
+Dan
+
+> Could we use ":backlight" and perhaps start documentation file listing
+> "common" LED descriptions so they are shared across machines?
+> 
+> For the record, I'd prefer this to be
+> "/sys/class/leds/display:white:backlight" in the end... so that we
+> have nice naming for userspace, consistent between different machines.
+> 
+> 									Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
