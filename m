@@ -1,60 +1,76 @@
-From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3] arm: imx: dts: Use lower case for bindings notation
-Date: Fri, 15 Dec 2017 20:19:30 +0100
-Message-ID: <20171215191930.11410-1-malat@debian.org>
-References: <20171215124631.30132-1-malat@debian.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215124631.30132-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 0/2] Use SPDX-License-Identifier for rockchip devicetree
+ files
+Date: Fri, 15 Dec 2017 11:19:54 -0800
+Message-ID: <20171215191953.GA50973@google.com>
+References: <20171215114427.32059-1-klaus.goger@theobroma-systems.com>
+ <21020918.S4038j3A1a@diego>
+ <CAOFm3uHuwmU1nCcU1MQ9qgGZ0A70ycuoo8XpWcDzgPQFzFRnRA@mail.gmail.com>
+ <63058496.Aj9cacRib9@diego>
+ <24788EB1-9868-41E9-B97C-7D85D8C3761D@theobroma-systems.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <24788EB1-9868-41E9-B97C-7D85D8C3761D@theobroma-systems.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: klaus.goger@theobroma-systems.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Huibin Hong <huibin.hong@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, Finley Xiao <finley.xiao@rock-chips.com>, Joseph Chen <chenjh@rock-chips.com>, Romain Perier <romain.perier@collabora.com>, Randy Li <ayaka@soulik.info>, Matthias Kaehlcke <mka@chromium.org>, Emil Renner Berthing <kernel@esmil.dk>, Sugar Zhang <sugar.zhang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Russell King <linux@armlinux.org.uk>, FUKAUMI Naoki <naobsd@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Jacob Chen <jacob-chen@iotwrt>
 List-Id: devicetree@vger.kernel.org
 
-Improve the DTS files using lower case to fix the following dtc warnings:
+On Fri, Dec 15, 2017 at 05:27:52PM +0100, klaus.goger@theobroma-systems.com=
+ wrote:
+> > On 15.12.2017, at 16:20, Heiko St=FCbner <heiko@sntech.de> wrote:
+> > Am Freitag, 15. Dezember 2017, 15:42:48 CET schrieb Philippe Ombredanne:
+> >> On Fri, Dec 15, 2017 at 3:28 PM, Heiko St=FCbner <heiko@sntech.de> wro=
+te:
+> >>> Am Freitag, 15. Dezember 2017, 14:45:34 CET schrieb Philippe Ombredan=
+ne:
+> >>>> On Fri, Dec 15, 2017 at 12:44 PM, Klaus Goger
+> >>>> <klaus.goger@theobroma-systems.com> wrote:
+> >>>>> This patch series replaces all the license text in rockchip devicet=
+ree
+> >>>>> files text with a proper SPDX-License-Identifier.
+> >>>>> It follows the guidelines submitted[1] by Thomas Gleixner that are =
+not
+> >>>>> yet merged.
 
-Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+[...]
 
-Converted using the following command:
+> I added the full list from the get_maintainers script. Some of the origin=
+al authors
+> got dropped as the current contribution level dropped below the scripts l=
+imit.
+> I added the missing email addresses from the copyright headers to the CC =
+list. =
 
-find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
+> =
 
-For simplicity, two sed expressions were used to solve each warnings separately.
+> Convenience links to the original patches for the added people:
+> =
 
-To make the regex expression more robust a few other issues were resolved,
-namely setting unit-address to lower case, and adding a whitespace before the
-the opening curly brace:
+> https://patchwork.kernel.org/patch/10114845/
+> https://patchwork.kernel.org/patch/10114843/
 
-https://elinux.org/Device_Tree_Linux#Linux_conventions
+I can't possibly miss my chance to spam dozens of people! I don't really
+care at all about this change, so pick whichever of the following will
+get these patches out of my mailbox quicker (choice is at the
+maintainers' discretion):
 
-This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+Acked-by: Brian Norris <briannorris@chromium.org>
+Nacked-by: Brian Norris <briannorris@chromium.org>
+Viewed-with-strong-indifference-by: Brian Norris <briannorris@chromium.org>
 
-Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
----
-v2: Remove invalid patch for imx7s.dtsi, remove duplicate patch for imx7d.dtsi
-v3: Clarify the commit message
+for both patches. (I was CC'd only on 1, but I contributed to both
+sets.)
 
- arch/arm/boot/dts/imx6q-display5.dtsi | 2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6q-display5.dtsi b/arch/arm/boot/dts/imx6q-display5.dtsi
-index 4084de43d4d9..09085fde3341 100644
---- a/arch/arm/boot/dts/imx6q-display5.dtsi
-+++ b/arch/arm/boot/dts/imx6q-display5.dtsi
-@@ -255,7 +255,7 @@
- 	pinctrl-0 = <&pinctrl_i2c1>;
- 	status = "okay";
- 
--	codec: tfa9879@6C {
-+	codec: tfa9879@6c {
- 		#sound-dai-cells = <0>;
- 		compatible = "nxp,tfa9879";
- 		reg = <0x6C>;
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Brian
