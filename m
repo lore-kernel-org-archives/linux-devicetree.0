@@ -1,56 +1,53 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V4 3/7] PCI: tegra: Remove PCI_REASSIGN_ALL_BUS flag for
- Tegra PCIe
-Date: Fri, 15 Dec 2017 17:36:43 +0000
-Message-ID: <20171215173643.GA1050@red-moon>
-References: <1512723493-865-1-git-send-email-mmaddireddy@nvidia.com>
- <1512723493-865-4-git-send-email-mmaddireddy@nvidia.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH net-next v6 2/2] net: ethernet: socionext: add AVE
+ ethernet driver
+Date: Fri, 15 Dec 2017 12:57:49 -0500 (EST)
+Message-ID: <20171215.125749.1752831437819486183.davem@davemloft.net>
+References: <1513245910-15961-1-git-send-email-hayashi.kunihiko@socionext.com>
+        <1513245910-15961-3-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1512723493-865-4-git-send-email-mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: cyndis-/1wQRMveznE@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, vidyas-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513245910-15961-3-git-send-email-hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 08, 2017 at 02:28:09PM +0530, Manikanta Maddireddy wrote:
-> Primary, secondary and subordinate default bus numbers are 0 in Tegra and
-> it is expecting SW to program these numbers in configration space.
-> 
-> pci_scan_bridge_extend() function programs these numbers in configuration
-> space if secondary & subordinate bus numbers are 0 or PCI_REASSIGN_ALL_BUS
-> flag is set. Since secondary & subordinate default bus numbers are 0,
-> PCI_REASSIGN_ALL_BUS flag can be removed for Tegra PCIe.
-> 
-> Signed-off-by: Manikanta Maddireddy <mmaddireddy-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> V3:
-> * new patch in V3
-> V4:
-> * no change in this patch
-> 
->  drivers/pci/host/pci-tegra.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-> index a549c5899e26..0d91f1a3a6b4 100644
-> --- a/drivers/pci/host/pci-tegra.c
-> +++ b/drivers/pci/host/pci-tegra.c
-> @@ -2604,7 +2604,6 @@ static int tegra_pcie_probe(struct platform_device *pdev)
->  
->  	tegra_pcie_enable_ports(pcie);
->  
-> -	pci_add_flags(PCI_REASSIGN_ALL_BUS);
+From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Date: Thu, 14 Dec 2017 19:05:10 +0900
 
-This looks obviously OK to me but I need Thierry's ACK to queue it.
+> +static void ave_desc_write(struct net_device *ndev, enum desc_id id,
+> +			   int entry, int offset, u32 val)
+> +{
+> +	struct ave_private *priv = netdev_priv(ndev);
+> +	u32 addr = (id == AVE_DESCID_TX) ? priv->tx.daddr : priv->rx.daddr;
 
-Lorenzo
+Please always order local variables from longest to shortest line.
 
->  	host->busnr = pcie->busn.start;
->  	host->dev.parent = &pdev->dev;
->  	host->ops = &tegra_pcie_ops;
-> -- 
-> 2.1.4
-> 
+Audit your entire submission for this issue, thank you.
+
+> +	ret = register_netdev(ndev);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register netdevice\n");
+> +		goto out_del_napi;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, ndev);
+
+You must make all software state settings before reigster_netdev() is
+invoked.
+
+At the exact moment you call register_netdev(), your device can be
+brought up, interrupts processed, PHY state changes made, etc.
+
+So you must put this platform_set_drvdata() before the
+register_netdev() call.
+
+Generally speaking, register_netdev() must always be the last state
+modification done by your probe routine.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
