@@ -1,84 +1,120 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v5] i2c: Add support for NXP PCA984x family.
-Date: Fri, 15 Dec 2017 11:40:52 +0100
-Message-ID: <034bb221-d96d-a380-6389-00ad283dbb23@axentia.se>
-References: <990e4a1f-a9ac-c899-0075-ae3211ff9475@axentia.se>
- <20171214112003.13701-1-adrian.fiergolski@cern.ch>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6] mfd: syscon: Add hardware spinlock support
+Date: Fri, 15 Dec 2017 10:42:04 +0000
+Message-ID: <20171215104204.p7i27sen77ohbmzi@dell>
+References: <87ec50c846bbc7afc09ba0855aba1cdea6473308.1512048582.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171214112003.13701-1-adrian.fiergolski-vJEk5272eHo@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <87ec50c846bbc7afc09ba0855aba1cdea6473308.1512048582.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[It occurred to me that the DT people might skip the v4 discussion now
-that there is a v5. So, in order to spare someone the effort of digging
-that up, I'm re-sending the comments]
+Arnd,
 
-On 2017-12-14 12:20, Adrian Fiergolski wrote:
-> This patch extends the current i2c-mux-pca954x driver and adds support for
-> a newer PCA984x family of the I2C switches and multiplexers from NXP.
+> Some system control registers need hardware spinlock to synchronize
+> between the multiple subsystems, so we should add hardware spinlock
+> support for syscon.
 > 
-> Signed-off-by: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+> Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
-> I have applied recent Peter's comments.
-> I am waiting for comments from device-tree folks regarding compatibles.
+> Changes since v5:
+>  - Fix the case that hwspinlock is not enabled.
 > 
-> .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |  5 ++-
->  drivers/i2c/muxes/Kconfig                          |  6 ++--
->  drivers/i2c/muxes/i2c-mux-pca954x.c                | 36 +++++++++++++++++++---
->  3 files changed, 39 insertions(+), 8 deletions(-)
+> Changes since v4:
+>  - Add one exapmle to show how to add hwlock.
+>  - Fix the coding style issue.
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> index aa097045a10e..b428bc0d81b1 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> @@ -1,10 +1,13 @@
->  * NXP PCA954x I2C bus switch
+> Changes since v3:
+>  - Add error handling for of_hwspin_lock_get_id()
+> 
+> Changes since v2:
+>  - Add acked tag from Rob.
+> 
+> Changes since v1:
+>  - Remove timeout configuration.
+>  - Modify the binding file to add hwlocks.
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt |    8 +++++++
+>  drivers/mfd/syscon.c                             |   25 ++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> index 8b92d45..25d9e9c 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -16,9 +16,17 @@ Required properties:
+>  Optional property:
+>  - reg-io-width: the size (in bytes) of the IO accesses that should be
+>    performed on the device.
+> +- hwlocks: reference to a phandle of a hardware spinlock provider node.
 >  
-> +The driver supports NXP PCA954x and PCA984x I2C mux/switch devices.
+>  Examples:
+>  gpr: iomuxc-gpr@20e0000 {
+>  	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+>  	reg = <0x020e0000 0x38>;
+> +	hwlocks = <&hwlock1 1>;
+> +};
 > +
->  Required Properties:
+> +hwlock1: hwspinlock@40500000 {
+> +	...
+> +	reg = <0x40500000 0x1000>;
+> +	#hwlock-cells = <1>;
+>  };
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index b93fe4c..a7ae391 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -13,6 +13,7 @@
+>   */
 >  
->    - compatible: Must contain one of the following.
->      "nxp,pca9540", "nxp,pca9542", "nxp,pca9543", "nxp,pca9544",
-> -    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548"
-> +    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548",
-> +    "nxp,pca9846", "nxp,pca9847", "nxp,pca9848", "nxp,pca9849"
-
-I think that perhaps the new chips should have compatibles like:
-
-	compatible = "nxp,pca9846", "nxp,pca9546";
-	compatible = "nxp,pca9847", "nxp,pca9547";
-	compatible = "nxp,pca9848", "nxp,pca9548";
-
-since they are extremely similar to the older chips (the only
-difference is the device id support and other esoteric stuff that
-you don't need to use). That way the device-tree will work even
-with an older OS that only supports pca954x chips. And when you
-add the device id check for the pca984x family, you are set up
-to differentiate.
-
-(pca9849 isn't really compatible with any of the pca954x chips since
-it lacks interrupt handling)
-
-So, what is best practice in this situation?
-
-Come to think of it, this is closely related to
-	https://lkml.org/lkml/2017/8/3/226
-which did not get a satisfactory answer IMHO.
-
->    - reg: The I2C address of the device.
+>  #include <linux/err.h>
+> +#include <linux/hwspinlock.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/list.h>
+> @@ -87,6 +88,30 @@ static struct syscon *of_syscon_register(struct device_node *np)
+>  	if (ret)
+>  		reg_io_width = 4;
 >  
+> +	ret = of_hwspin_lock_get_id(np, 0);
+> +	if (ret > 0) {
+> +		syscon_config.hwlock_id = ret;
+> +		syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
+> +	} else {
+> +		switch (ret) {
+> +		case -ENOENT:
+> +			/* Ignore missing hwlock, it's optional. */
+> +			break;
+> +		case 0:
+> +			/* In case of the HWSPINLOCK is not enabled. */
+> +			if (!IS_ENABLED(CONFIG_HWSPINLOCK))
+> +				break;
+> +
+> +			ret = -EINVAL;
+> +			/* fall-through */
+> +		default:
+> +			pr_err("Failed to retrieve valid hwlock: %d\n", ret);
+> +			/* fall-through */
+> +		case -EPROBE_DEFER:
+> +			goto err_regmap;
+> +		}
+> +	}
+> +
+>  	syscon_config.reg_stride = reg_io_width;
+>  	syscon_config.val_bits = reg_io_width * 8;
+>  	syscon_config.max_register = resource_size(&res) - reg_io_width;
 
-*snip*
-
-Cheers,
-Peter
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
