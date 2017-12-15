@@ -1,7 +1,7 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v3 4/5] arm64: dts: rockchip: add pd_usb3 power-domain node for rk3399.
-Date: Fri, 15 Dec 2017 12:00:04 +0100
-Message-ID: <20171215110005.7564-4-enric.balletbo@collabora.com>
+Subject: [PATCH v3 5/5] arm64: dts: rockchip: add reset property for dwc3 controllers on rk3399.
+Date: Fri, 15 Dec 2017 12:00:05 +0100
+Message-ID: <20171215110005.7564-5-enric.balletbo@collabora.com>
 References: <20171215110005.7564-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171215110005.7564-1-enric.balletbo@collabora.com>
@@ -10,51 +10,47 @@ To: Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
 Cc: dianders@google.com, groeck@chromium.org, briannorris@google.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the usb3 power-domain, its qos area and assign it to the usb device
-node.
+After commit '06c47e6286d usb: dwc3: of-simple: Add support to get resets
+for the device' you can add the reset property to the dwc3 node, the reset
+is required for the controller to work properly, otherwise bind / unbind
+stress testing of the USB controller on rk3399 we'd often end up with lots
+of failures that looked like this:
+
+  phy phy-ff800000.phy.9: phy poweron failed --> -110
+  dwc3 fe900000.dwc3: failed to initialize core
+  dwc3: probe of fe900000.dwc3 failed with error -110
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 Changes since v1:
- - Split the original patch in different commits
+ - This patch did not exists in the series.
 Changes since v2:
- - None
+ - Introduced this patch
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index ea91f25..c18ff88 100644
+index c18ff88..83f0f71 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -417,6 +417,7 @@
- 			snps,dis_u2_susphy_quirk;
- 			snps,dis-del-phy-power-chg-quirk;
- 			snps,dis-tx-ipgap-linecheck-quirk;
-+			power-domains = <&power RK3399_PD_USB3>;
- 			status = "disabled";
- 		};
- 	};
-@@ -447,6 +448,7 @@
- 			snps,dis_u2_susphy_quirk;
- 			snps,dis-del-phy-power-chg-quirk;
- 			snps,dis-tx-ipgap-linecheck-quirk;
-+			power-domains = <&power RK3399_PD_USB3>;
- 			status = "disabled";
- 		};
- 	};
-@@ -995,6 +997,12 @@
- 				clocks = <&cru HCLK_SDIO>;
- 				pm_qos = <&qos_sdioaudio>;
- 			};
-+			pd_usb3@RK3399_PD_USB3 {
-+				reg = <RK3399_PD_USB3>;
-+				clocks = <&cru ACLK_USB3>;
-+				pm_qos = <&qos_usb_otg0>,
-+					 <&qos_usb_otg1>;
-+			};
- 			pd_vio@RK3399_PD_VIO {
- 				reg = <RK3399_PD_VIO>;
- 				#address-cells = <1>;
+@@ -402,6 +402,8 @@
+ 		clock-names = "ref_clk", "suspend_clk",
+ 			      "bus_clk", "aclk_usb3_rksoc_axi_perf",
+ 			      "aclk_usb3", "grf_clk";
++		resets = <&cru SRST_A_USB3_OTG0>;
++		reset-names = "usb3-otg";
+ 		status = "disabled";
+ 
+ 		usbdrd_dwc3_0: dwc3 {
+@@ -433,6 +435,8 @@
+ 		clock-names = "ref_clk", "suspend_clk",
+ 			      "bus_clk", "aclk_usb3_rksoc_axi_perf",
+ 			      "aclk_usb3", "grf_clk";
++		resets = <&cru SRST_A_USB3_OTG1>;
++		reset-names = "usb3-otg";
+ 		status = "disabled";
+ 
+ 		usbdrd_dwc3_1: dwc3 {
 -- 
 2.9.3
