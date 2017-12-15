@@ -1,74 +1,81 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 2/2] media: coda: Add i.MX51 (CodaHx4) support
-Date: Fri, 15 Dec 2017 15:59:05 +0100
-Message-ID: <1513349945.7518.10.camel@pengutronix.de>
-References: <20171213140918.22500-1-p.zabel@pengutronix.de>
-         <20171213140918.22500-2-p.zabel@pengutronix.de>
-         <e26f7f6a-afa6-c55c-d94e-095df27c19ae@xs4all.nl>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 4/4] arm64: dts: marvell: armada-37xx: add nodes allowing cpufreq support
+Date: Fri, 15 Dec 2017 16:00:24 +0100
+Message-ID: <876098kpdj.fsf@free-electrons.com>
+References: <20171214150006.25438-1-gregory.clement@free-electrons.com>
+        <20171214150006.25438-5-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <e26f7f6a-afa6-c55c-d94e-095df27c19ae@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <Chris.Healy@zii.aero>, devicetree@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171214150006.25438-5-gregory.clement@free-electrons.com>
+        (Gregory CLEMENT's message of "Thu, 14 Dec 2017 16:00:06 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Evan Wang <xswang@marvell.com>, Andre Heider <a.heider@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi,
+ 
+ On jeu., déc. 14 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
 
-On Fri, 2017-12-15 at 15:22 +0100, Hans Verkuil wrote:
-> Hi Philipp,
-> 
-> On 13/12/17 15:09, Philipp Zabel wrote:
-> > Add support for the CodaHx4 VPU used on i.MX51.
-> > 
-> > Decoding h.264, MPEG-4, and MPEG-2 video works, as well as encoding
-> > h.264. MPEG-4 encoding is not enabled, it currently produces visual
-> > artifacts.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> >  drivers/media/platform/coda/coda-bit.c    | 45 ++++++++++++++++++++++---------
-> >  drivers/media/platform/coda/coda-common.c | 44 +++++++++++++++++++++++++++---
-> >  drivers/media/platform/coda/coda.h        |  1 +
-> >  3 files changed, 74 insertions(+), 16 deletions(-)
-> > 
-> 
-> <snip>
-> 
-> > +	[CODA_IMX51] = {
-> > +		.firmware     = {
-> > +			"vpu_fw_imx51.bin",
-> > +			"vpu/vpu_fw_imx51.bin",
-> > +			"v4l-codahx4-imx51.bin"
-> > +		},
-> > +		.product      = CODA_HX4,
-> > +		.codecs       = codahx4_codecs,
-> > +		.num_codecs   = ARRAY_SIZE(codahx4_codecs),
-> > +		.vdevs        = codahx4_video_devices,
-> > +		.num_vdevs    = ARRAY_SIZE(codahx4_video_devices),
-> > +		.workbuf_size = 128 * 1024,
-> > +		.tempbuf_size = 304 * 1024,
-> > +		.iram_size    = 0x14000,
-> > +	},
-> 
-> What's the status of the firmware? Is it going to be available in some firmware
-> repository? I remember when testing other imx devices that it was a bit tricky
-> to get hold of the firmware. And googling v4l-codahx4-imx51.bin doesn't find
-> anything other than this patch.
+> In order to be able to use cpu freq, we need to associate a clock to each
+> CPU and to expose the power management registers.
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-As far as I am aware, so far all efforts to get these firmware binaries
-relicensed in a way that makes them redistributable in linux-firmware
-have not succeeded.
+Applied on mvebu/dt64
 
-They are distributed by NXP directly in the firmware-imx package.
-The http://git.yoctoproject.org/cgit/cgit.cgi/meta-fsl-arm/ repository
-contains links to the latest version:
+Gregory
 
-  wget http://www.nxp.com/lgfiles/NMG/MAD/YOCTO/firmware-imx-5.4.bin
-  dd if=firmware-imx-5.4.bin bs=34087 skip=1 | tar xj
-  cat firmware-imx-5.4/COPYING
+> ---
+>  arch/arm64/boot/dts/marvell/armada-372x.dtsi | 1 +
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 7 +++++++
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-372x.dtsi b/arch/arm64/boot/dts/marvell/armada-372x.dtsi
+> index 59d7557d3b1b..2554e0baea6b 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-372x.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-372x.dtsi
+> @@ -56,6 +56,7 @@
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a53","arm,armv8";
+>  			reg = <0x1>;
+> +			clocks = <&nb_periph_clk 16>;
+>  			enable-method = "psci";
+>  		};
+>  	};
+> diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> index 90c26d616a54..3056d7168e0b 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+> @@ -65,6 +65,7 @@
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a53", "arm,armv8";
+>  			reg = <0>;
+> +			clocks = <&nb_periph_clk 16>;
+>  			enable-method = "psci";
+>  		};
+>  	};
+> @@ -234,6 +235,12 @@
+>  				};
+>  			};
+>  
+> +			nb_pm: syscon@14000 {
+> +				compatible = "marvell,armada-3700-nb-pm",
+> +					     "syscon";
+> +				reg = <0x14000 0x60>;
+> +			};
+> +
+>  			pinctrl_sb: pinctrl@18800 {
+>  				compatible = "marvell,armada3710-sb-pinctrl",
+>  					     "syscon", "simple-mfd";
+> -- 
+> 2.15.1
+>
 
-regards
-Philipp
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
