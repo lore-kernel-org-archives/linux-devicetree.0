@@ -1,109 +1,61 @@
-From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] ARM64: dts: meson-axg: enable IR controller
-Date: Fri, 15 Dec 2017 23:06:51 +0800
-Message-ID: <144d12a5-f5d4-dfe0-ea28-83362c58afdd@amlogic.com>
-References: <20171215145906.1494-1-yixun.lan@amlogic.com>
- <1513350088.2261.62.camel@baylibre.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/1] arm: sunxi: Add alternative pins for spi0
+Date: Fri, 15 Dec 2017 16:08:23 +0100
+Message-ID: <20171215150823.jplgknururmkvp2t@flea.lan>
+References: <1513151074-6888-1-git-send-email-stefan@olimex.com>
+ <20171213154035.qc655iahjoeflftq@flea.lan>
+ <5f518e4b-e624-17c2-7e72-24ba930a1c15@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513350088.2261.62.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3wgdg4avcqzhyqgn"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB46KZ7IQKGQEF553YVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <5f518e4b-e624-17c2-7e72-24ba930a1c15-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome
 
+--3wgdg4avcqzhyqgn
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-On 12/15/2017 11:01 PM, Jerome Brunet wrote:
-> On Fri, 2017-12-15 at 22:59 +0800, Yixun Lan wrote:
->> Enable IR remote controller which found in Amlogic's Meson-AXG SoCs.
->>
->> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
->>
->> ---
->>
->> Changes since v2 at [2]
->>  - rebase to Kevin's v4.16/dt64 branch
->>  - this patch depend on pinctrl DT driver
->>
->> Changes since v1 at [1]:
->>  - drop the compatbile 'amlogic,meson-gx-ir'
->>
->> [2]
->> http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005574.html
->>
->> [1]
->>  http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005527.html
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  6 ++++++
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 14 ++++++++++++++
->>  2 files changed, 20 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
->> index 70eca1f8736a..e85fb665f12e 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
->> @@ -20,3 +20,9 @@
->>  &uart_AO {
->>  	status = "okay";
->>  };
->> +
->> +&ir {
->> +	status = "okay";
->> +	pinctrl-0 = <&remote_input_ao_pins>;
->> +	pinctrl-names = "default";
->> +};
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> index a0d7b10da512..1cd34141a5c1 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> @@ -223,6 +223,13 @@
->>  					#gpio-cells = <2>;
->>  					gpio-ranges = <&pinctrl_aobus 0 0 15>;
->>  				};
->> +
->> +				remote_input_ao_pins: remote_input_ao {
->> +					mux {
->> +						groups = "remote_input_ao";
->> +						function = "remote_input_ao";
->> +					};
->> +				};
->>  			};
->>  
->>  			uart_AO: serial@3000 {
->> @@ -242,6 +249,13 @@
->>  				clock-names = "xtal", "pclk", "baud";
->>  				status = "disabled";
->>  			};
->> +
->> +			ir: ir@8000 {
->> +				compatible = "amlogic,meson-gxbb-ir";
-> 
-> compatible = "amlogic,meson-axg-ir", "amlogic,meson-gxbb-ir";
-> 
-> please (and the binding doc patch)
+Hi,
 
-what's the policy for adding new compatible string?
+On Thu, Dec 14, 2017 at 08:24:54AM +0200, Stefan Mavrodiev wrote:
+> On 12/13/2017 05:40 PM, Maxime Ripard wrote:
+> > Hi,
+> > 
+> > On Wed, Dec 13, 2017 at 09:44:34AM +0200, Stefan Mavrodiev wrote:
+> > > Allwinner A10/A13/A20 SoCs have pinmux for spi0
+> > > on port C. The patch adds these pins in the respective
+> > > dts includes.
+> > > 
+> > > Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+> > Do you have any boards that are using these?
+> > 
+> > We won't merge that patch if there's no users for it.
+>
+> A20-OLinuXino-Lime/Lime2 and A10-OLinuXino-Lime with spi flash.
+> For A13 we still doesn't have that option.
 
-is this a must even we don't use it for now?
-or what's the problem if adding it when we really need it
+If this bus is exposed on the headers, you can add those to the DT but
+leave them disabled if you want. Buf if there's no users of those
+nodes, our policy is not to merge them.
 
-> 
->> +				reg = <0x0 0x8000 0x0 0x20>;
->> +				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
->> +				status = "disabled";
->> +			};
->>  		};
->>  	};
->>  };
-> 
-> .
-> 
+Thanks!
+Maxime
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--3wgdg4avcqzhyqgn--
