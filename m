@@ -1,47 +1,77 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/8] ARM: dts: keystone*: Use a single soc0 instance
-Date: Fri, 15 Dec 2017 07:38:00 -0600
-Message-ID: <1fce818d-f1a2-818d-7db8-d15a345f4c1e@ti.com>
-References: <20171215132102.435-1-nm@ti.com> <20171215132102.435-3-nm@ti.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 14/25] arm: stm32: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Fri, 15 Dec 2017 14:42:53 +0100
+Message-ID: <ff37e4b4-8a28-ce9e-93af-40b2f10ed2dc@st.com>
+References: <20171215124646.30591-1-malat@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215132102.435-3-nm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20171215124646.30591-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Crap.. couple of typos crept in. Apologies - Santosh, if you dont want 
-to manualy change, I can rebase and repost if you like to any branch 
-of your choice.
+Hi Mathieu
 
-On 12/15/2017 07:20 AM, Nishanth Menon wrote:
-> Provide and soc0 node and reference the same to simplify dts. This also
-            ^^ - should have been a
-> resolves the following warnings when built with W=1:
-> arch/arm/boot/dts/keystone-k2hk-evm.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
-> arch/arm/boot/dts/keystone-k2l-evm.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
-> arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
-> arch/arm/boot/dts/keystone-k2g-evm.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
-> arch/arm/boot/dts/keystone-k2g-ice.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
+On 12/15/2017 01:46 PM, Mathieu Malaterre wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
 > 
-> NOTE: Though we can reformat files by reducing 1 level of indent due to
-> the use of soc0 phandle, we ommit that change to prevent un-necessary
-                               ^^ -> omit
-> churn in code base.
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 > 
-> Reported-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> and
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+> 
+> Converted using the following command:
+> 
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
+> 
+> For simplicity, two sed expressions were used to solve each warnings separately.
+> 
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+> 
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+> 
+> This will solve as a side effect warning:
+> 
+> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+> 
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+> 
+> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> ---
 
+I will merge it in my next pull request for 4.16.
 
-Apologies once again on my oversight.
+Thanks
+Alex
 
--- 
-Regards,
-Nishanth Menon
+>   arch/arm/boot/dts/stm32h743.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+> index bbfcbaca0b36..a559d8b6a4a3 100644
+> --- a/arch/arm/boot/dts/stm32h743.dtsi
+> +++ b/arch/arm/boot/dts/stm32h743.dtsi
+> @@ -304,7 +304,7 @@
+>   			};
+>   		};
+>   
+> -		vrefbuf: regulator@58003C00 {
+> +		vrefbuf: regulator@58003c00 {
+>   			compatible = "st,stm32-vrefbuf";
+>   			reg = <0x58003C00 0x8>;
+>   			clocks = <&rcc VREF_CK>;
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
