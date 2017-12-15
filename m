@@ -1,149 +1,66 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 5/6] phy: renesas: rcar-gen3-usb2: add rcar_gen3_role_swap_ops
-Date: Fri, 15 Dec 2017 14:45:25 +0900
-Message-ID: <1513316726-14387-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1513316726-14387-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Weiyi Lu <weiyi.lu@mediatek.com>
+Subject: Re: [PATCH v7 0/6] Mediatek MT2712 clock and scpsys support
+Date: Fri, 15 Dec 2017 13:50:52 +0800
+Message-ID: <1513317052.30745.1.camel@mtksdaap41>
+References: <1511854102-23195-1-git-send-email-weiyi.lu@mediatek.com>
+         <1511854102-23195-2-git-send-email-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513316726-14387-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1511854102-23195-2-git-send-email-weiyi.lu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add rcar_gen3_role_swap_ops to support other feature
-(e.g. gpio handling) easily.
+On Tue, 2017-11-28 at 15:28 +0800, Weiyi Lu wrote:
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/phy/renesas/phy-rcar-gen3-usb2.c | 51 +++++++++++++++++++++++++++-----
- 1 file changed, 43 insertions(+), 8 deletions(-)
+Hi Matthias,
+Just gentle ping. Many thanks.
 
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index b121f07..f470fb3 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -83,11 +83,23 @@
- 
- #define RCAR_GEN3_PHY_HAS_DEDICATED_PINS	1
- 
-+struct rcar_gen3_chan;
-+struct rcar_gen3_role_swap_ops {
-+	void (*init)(struct rcar_gen3_chan *ch);
-+	void (*set_host)(struct rcar_gen3_chan *ch, int host);
-+	bool (*is_host)(struct rcar_gen3_chan *ch);
-+	void (*set_vbus_ctrl)(struct rcar_gen3_chan *ch, int enable);
-+	bool (*check_id)(struct rcar_gen3_chan *ch);
-+	void (*control_irq)(struct rcar_gen3_chan *ch, int enable);
-+	irqreturn_t (*irq_handler)(struct rcar_gen3_chan *ch);
-+};
-+
- struct rcar_gen3_chan {
- 	void __iomem *base;
- 	struct extcon_dev *extcon;
- 	struct phy *phy;
- 	struct regulator *vbus;
-+	const struct rcar_gen3_role_swap_ops *rs_ops;
- 	struct work_struct work;
- 	bool extcon_host;
- 	bool has_otg_pins;
-@@ -203,17 +215,20 @@ static void rcar_gen3_phy_usb2_work(struct work_struct *work)
- 
- static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
- {
--	has_otg_pins_set_host(ch, host);
-+	if (ch->rs_ops && ch->rs_ops->set_host)
-+		ch->rs_ops->set_host(ch, host);
- }
- 
- static void rcar_gen3_set_vbus_ctrl(struct rcar_gen3_chan *ch, int enable)
- {
--	has_otg_pins_set_vbus_ctrl(ch, enable);
-+	if (ch->rs_ops && ch->rs_ops->set_vbus_ctrl)
-+		ch->rs_ops->set_vbus_ctrl(ch, enable);
- }
- 
- static void rcar_gen3_control_otg_irq(struct rcar_gen3_chan *ch, int enable)
- {
--	has_otg_pins_control_irq(ch, enable);
-+	if (ch->rs_ops && ch->rs_ops->control_irq)
-+		ch->rs_ops->control_irq(ch, enable);
- }
- 
- static void rcar_gen3_init_for_host(struct rcar_gen3_chan *ch)
-@@ -271,7 +286,10 @@ static void rcar_gen3_init_from_a_peri_to_a_host(struct rcar_gen3_chan *ch)
- 
- static bool rcar_gen3_check_id(struct rcar_gen3_chan *ch)
- {
--	return has_otg_pins_check_id(ch);
-+	if (ch->rs_ops && ch->rs_ops->check_id)
-+		return ch->rs_ops->check_id(ch);
-+
-+	return false;
- }
- 
- static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
-@@ -284,7 +302,10 @@ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
- 
- static bool rcar_gen3_is_host(struct rcar_gen3_chan *ch)
- {
--	return has_otg_pins_is_host(ch);
-+	if (ch->rs_ops && ch->rs_ops->is_host)
-+		return ch->rs_ops->is_host(ch);
-+
-+	return false;
- }
- 
- static enum phy_mode rcar_gen3_get_phy_mode(struct rcar_gen3_chan *ch)
-@@ -350,7 +371,8 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
- 
- static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
- {
--	has_otg_pins_init(ch);
-+	if (ch->rs_ops && ch->rs_ops->init)
-+		ch->rs_ops->init(ch);
- 
- 	rcar_gen3_device_recognition(ch);
- }
-@@ -425,9 +447,10 @@ static int rcar_gen3_phy_usb2_power_off(struct phy *p)
- static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
- {
- 	struct rcar_gen3_chan *ch = _ch;
--	irqreturn_t ret;
-+	irqreturn_t ret = IRQ_NONE;
- 
--	ret = has_otg_pins_irq_handler(ch);
-+	if (ch->rs_ops && ch->rs_ops->irq_handler)
-+		ret = ch->rs_ops->irq_handler(ch);
- 	if (ret == IRQ_HANDLED)
- 		rcar_gen3_device_recognition(ch);
- 
-@@ -456,6 +479,16 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
- 	EXTCON_NONE,
- };
- 
-+static const struct rcar_gen3_role_swap_ops has_otg_pins_ops = {
-+	.init		= has_otg_pins_init,
-+	.set_host	= has_otg_pins_set_host,
-+	.is_host	= has_otg_pins_is_host,
-+	.set_vbus_ctrl	= has_otg_pins_set_vbus_ctrl,
-+	.check_id	= has_otg_pins_check_id,
-+	.control_irq	= has_otg_pins_control_irq,
-+	.irq_handler	= has_otg_pins_irq_handler,
-+};
-+
- static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -493,6 +526,8 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 		int ret;
- 
- 		channel->has_otg_pins = (uintptr_t)of_device_get_match_data(dev);
-+		if (channel->has_otg_pins)
-+			channel->rs_ops = &has_otg_pins_ops;
- 		channel->extcon = devm_extcon_dev_allocate(dev,
- 							rcar_gen3_phy_cable);
- 		if (IS_ERR(channel->extcon))
--- 
-1.9.1
+> This series is based on v4.15-rc1 and composed of
+> scpsys control (PATCH 1-4) and device tree (PATCH 5-6)
+> 
+> changes since v6:
+> - Rebase to v4.15-rc1.
+> 
+> changes since v5:
+> - Refine bus protection with proper variable name
+>   and better implementation for the if statement.
+> 
+> changes since v4:
+> - Refine scpsys and infracfg for bus protection by passing
+>   a boolean flag to determine the register update method
+> 
+> changes since v3:
+> - Rebase to v4.14-rc1.
+> 
+> changes since v2:
+> - ensure the clocks used by clocksource driver are registered
+>   before clocksource init() by using CLK_OF_DECLARE()
+> - correct the frequency of clk32k/clkrtc_ext/clkrtc_int
+> 
+> changes since v1:
+> - Rebase to v4.13-next-soc.
+> - Refine scpsys and infracfg for bus protection.
+> 
+> *** BLURB HERE ***
+> 
+> Weiyi Lu (6):
+>   dt-bindings: soc: add MT2712 power dt-bindings
+>   soc: mediatek: extend bus protection API
+>   soc: mediatek: add dependent clock jpgdec/audio for scpsys
+>   soc: mediatek: add MT2712 scpsys support
+>   arm: dts: mt2712: Add clock controller device nodes
+>   arm: dts: Add power controller device node of MT2712
+> 
+>  .../devicetree/bindings/soc/mediatek/scpsys.txt    |   3 +
+>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi          | 131 +++++++++++++++++++
+>  drivers/soc/mediatek/mtk-infracfg.c                |  26 +++-
+>  drivers/soc/mediatek/mtk-scpsys.c                  | 140 ++++++++++++++++++---
+>  include/dt-bindings/power/mt2712-power.h           |  26 ++++
+>  include/linux/soc/mediatek/infracfg.h              |   7 +-
+>  6 files changed, 311 insertions(+), 22 deletions(-)
+>  create mode 100644 include/dt-bindings/power/mt2712-power.h
+> 
