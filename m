@@ -1,78 +1,42 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 12/19] ARM: dts: aspeed: Update license headers
-Date: Fri, 15 Dec 2017 16:54:36 +1030
-Message-ID: <20171215062443.23059-13-joel@jms.id.au>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH v2 14/19] ARM: dts: aspeed: Sort ASPEED entries in makefile
+Date: Fri, 15 Dec 2017 16:54:38 +1030
+Message-ID: <20171215062443.23059-15-joel@jms.id.au>
 References: <20171215062443.23059-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171215062443.23059-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
-Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171215062443.23059-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In b24413180f56 ("License cleanup: add SPDX GPL-2.0 license identifier
-to files with no license") these files had the GPL-2.0 licence added
-automatically. Update them to be GPL 2.0+ in line with other IBM kernel
-contributions.
+In preperation for adding more boards.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 ---
- arch/arm/boot/dts/aspeed-ast2500-evb.dts      | 2 +-
- arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 2 +-
- arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts  | 2 +-
- arch/arm/boot/dts/aspeed-g4.dtsi              | 2 +-
- arch/arm/boot/dts/aspeed-g5.dtsi              | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/Makefile | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-index 602bc10fdaf4..3e6f38e5d5d0 100644
---- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-+++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0+
- /dts-v1/;
- 
- #include "aspeed-g5.dtsi"
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-index c786bc2f2919..a8f0c046e83e 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0+
- /dts-v1/;
- 
- #include "aspeed-g4.dtsi"
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-index 8067793129ea..a7a9386f964d 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0+
- /dts-v1/;
- 
- #include "aspeed-g5.dtsi"
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 2d7ac577d6b5..9c175832babc 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0+
- #include <dt-bindings/clock/aspeed-clock.h>
- #include <dt-bindings/gpio/aspeed-gpio.h>
- 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 030a760696fd..360329eab7c3 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0+
- #include <dt-bindings/clock/aspeed-clock.h>
- #include <dt-bindings/gpio/aspeed-gpio.h>
- 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d0381e9caf21..5d1e9d37bf3a 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1101,7 +1101,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+ 	mt8127-moose.dtb \
+ 	mt8135-evbp1.dtb
+ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
+-dtb-$(CONFIG_ARCH_ASPEED) += aspeed-bmc-opp-palmetto.dtb \
+-	aspeed-bmc-opp-romulus.dtb \
+-	aspeed-ast2500-evb.dtb
++dtb-$(CONFIG_ARCH_ASPEED) += \
++	aspeed-ast2500-evb.dtb \
++	aspeed-bmc-opp-palmetto.dtb \
++	aspeed-bmc-opp-romulus.dtb
+ endif
 -- 
 2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
