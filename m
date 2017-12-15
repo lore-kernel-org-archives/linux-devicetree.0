@@ -1,232 +1,173 @@
-Return-Path: <SRS0=dopm=DS=gmail.com=zongbox@kernel.org>
-Date: Fri, 22 Dec 2017 05:07:47 -0800 (PST)
-From: zongbox@gmail.com
-Message-Id: <bfc6ad4a-a028-4121-bc8e-3d24d845a97a@groups.riscv.org>
-In-Reply-To: <mhng-40be3873-485c-4cb6-9990-1137745f5425@palmer-si-x1c4>
-References: <CAK8P3a2TVbrnjN00iZe2R_FNzLB+82BkiekPOwqtt6WDgFw30w@mail.gmail.com>
- <mhng-40be3873-485c-4cb6-9990-1137745f5425@palmer-si-x1c4>
-Subject: Re: [patches] [PATCH] RISC-V: Support built-in dtb
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----=_Part_8301_1113229977.1513948067766"
-To: RISC-V Patches <patches@groups.riscv.org>
-Cc: arnd@arndb.de, zongbox@gmail.com, olof@lixom.net, albert@sifive.com, robh+dt@kernel.org, mark.rutland@arm.com, wesley@sifive.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, zong@andestech.com, palmer@sifive.com
+Return-Path: <SRS0=kKXI=DL=macbookpro.malat.net=mathieu@kernel.org>
+From: Mathieu Malaterre <malat@debian.org>
+Subject: [PATCH 02/25] arm: at91/sama: dts: Remove leading 0x and 0s from bindings notation
+Date: Fri, 15 Dec 2017 12:15:52 +0100
+Message-Id: <20171215111620.20379-2-malat@debian.org>
+In-Reply-To: <20171215111620.20379-1-malat@debian.org>
+References: <20171214165350.27850-1-malat@debian.org>
+ <20171215111620.20379-1-malat@debian.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mathieu Malaterre <malat@debian.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Jesper Nilsson <jesper.nilsson@axis.com>, Lars Persson <lars.persson@axis.com>, Niklas Cassel <niklas.cassel@axis.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Barry Song <baohua@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Dinh Nguyen <dinguyen@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jun Nie <jun.nie@linaro.org>, Baoyou Xie <baoyou.xie@linaro.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-samsung-soc@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-------=_Part_8301_1113229977.1513948067766
-Content-Type: multipart/alternative;
-	boundary="----=_Part_8302_538841906.1513948067767"
+Improve the DTS files by removing all the leading "0x" and zeros to fix the
+following dtc warnings:
 
-------=_Part_8302_538841906.1513948067767
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 
+and
 
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
 
-Palmer Dabbelt=E6=96=BC 2017=E5=B9=B412=E6=9C=8822=E6=97=A5=E6=98=9F=E6=9C=
-=9F=E4=BA=94 UTC+8=E4=B8=8A=E5=8D=884=E6=99=8248=E5=88=8606=E7=A7=92=E5=AF=
-=AB=E9=81=93=EF=BC=9A
->
-> On Thu, 21 Dec 2017 12:43:20 PST (-0800), Arnd Bergmann wrote:=20
-> > On Thu, Dec 21, 2017 at 9:32 PM, Palmer Dabbelt <pal...@sifive.com=20
-> <javascript:>> wrote:=20
-> >> On Wed, 20 Dec 2017 01:14:31 PST (-0800), zon...@gmail.com=20
-> <javascript:> wrote:=20
-> >=20
-> >> I've added Arnd and Olof, in case they have a bit more perspective=20
-> here.  If=20
-> >> I'm reading this correctly, there isn't an arm or arm64 option to do=
-=20
-> this.=20
-> >> There is an option to built in many DTBs, which makes a lot more sense=
-=20
-> to me=20
-> >> as it doesn't tie the kernel to any one particular implementation.=20
->  We'd=20
-> >> need a mechanism for picking the DTB that Linux should use.  We've=20
-> kicked=20
-> >> around the idea of:=20
-> >>=20
-> >> * Having the bootloader always provide a DTB.=20
-> >> * Taking a hash of that DTB when booting Linux.=20
-> >> * Using that hash to look up DTBs that are built in to Linux.=20
-> >>=20
-> >> This would allow us to support replacing broken DTBs if they escape=20
-> into the=20
-> >> wild, but would still allow us to have a portable kernel.=20
-> >=20
-> > Having an embedded DTB is only necessary for platforms with a legacy=20
-> bootloader=20
-> > that doesn't understand DT at all, you should never need that here.=20
-> >=20
-> > I would suggest to require each bootloader to provide a way to replace=
-=20
-> the DTB=20
-> > with one that gets installed alongside the kernel.=20
->
-> Sounds good to me.=20
->
+Converted using the following command:
 
-Palmer Dabbelt=E6=96=BC 2017=E5=B9=B412=E6=9C=8822=E6=97=A5=E6=98=9F=E6=9C=
-=9F=E4=BA=94 UTC+8=E4=B8=8A=E5=8D=884=E6=99=8248=E5=88=8606=E7=A7=92=E5=AF=
-=AB=E9=81=93=EF=BC=9A
->
-> On Thu, 21 Dec 2017 12:43:20 PST (-0800), Arnd Bergmann wrote:=20
-> > On Thu, Dec 21, 2017 at 9:32 PM, Palmer Dabbelt <pal...@sifive.com=20
-> <javascript:>> wrote:=20
-> >> On Wed, 20 Dec 2017 01:14:31 PST (-0800), zon...@gmail.com=20
-> <javascript:> wrote:=20
-> >=20
-> >> I've added Arnd and Olof, in case they have a bit more perspective=20
-> here.  If=20
-> >> I'm reading this correctly, there isn't an arm or arm64 option to do=
-=20
-> this.=20
-> >> There is an option to built in many DTBs, which makes a lot more sense=
-=20
-> to me=20
-> >> as it doesn't tie the kernel to any one particular implementation.=20
->  We'd=20
-> >> need a mechanism for picking the DTB that Linux should use.  We've=20
-> kicked=20
-> >> around the idea of:=20
-> >>=20
-> >> * Having the bootloader always provide a DTB.=20
-> >> * Taking a hash of that DTB when booting Linux.=20
-> >> * Using that hash to look up DTBs that are built in to Linux.=20
-> >>=20
-> >> This would allow us to support replacing broken DTBs if they escape=20
-> into the=20
-> >> wild, but would still allow us to have a portable kernel.=20
-> >=20
-> > Having an embedded DTB is only necessary for platforms with a legacy=20
-> bootloader=20
-> > that doesn't understand DT at all, you should never need that here.=20
-> >=20
-> > I would suggest to require each bootloader to provide a way to replace=
-=20
-> the DTB=20
-> > with one that gets installed alongside the kernel.=20
->
-> Sounds good to me.=20
->
+find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
 
-It's exactly. The portability is the thing that first priority to consider=
-=20
-in the furture.
-The built in DTB function can be found on many architectures, but it seem=
-=20
-out of date.
-I think this is the reason that I can't find any dts file in the kernel=20
-source.
-I usually use the built in DTB for quick and conveniet development on=20
-specific platform.
-Thanks a lot.
+For simplicity, two sed expressions were used to solve each warnings separately.
 
-------=_Part_8302_538841906.1513948067767
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+To make the regex expression more robust a few other issues were resolved,
+namely setting unit-address to lower case, and adding a whitespace before the
+the opening curly brace:
 
-<div dir=3D"ltr"><br><br>Palmer Dabbelt=E6=96=BC 2017=E5=B9=B412=E6=9C=8822=
-=E6=97=A5=E6=98=9F=E6=9C=9F=E4=BA=94 UTC+8=E4=B8=8A=E5=8D=884=E6=99=8248=E5=
-=88=8606=E7=A7=92=E5=AF=AB=E9=81=93=EF=BC=9A<blockquote class=3D"gmail_quot=
-e" style=3D"margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;paddin=
-g-left: 1ex;">On Thu, 21 Dec 2017 12:43:20 PST (-0800), Arnd Bergmann wrote=
-:
-<br>&gt; On Thu, Dec 21, 2017 at 9:32 PM, Palmer Dabbelt &lt;<a href=3D"jav=
-ascript:" target=3D"_blank" gdf-obfuscated-mailto=3D"YR5ZPO4bDQAJ" rel=3D"n=
-ofollow" onmousedown=3D"this.href=3D&#39;javascript:&#39;;return true;" onc=
-lick=3D"this.href=3D&#39;javascript:&#39;;return true;">pal...@sifive.com</=
-a>&gt; wrote:
-<br>&gt;&gt; On Wed, 20 Dec 2017 01:14:31 PST (-0800), <a href=3D"javascrip=
-t:" target=3D"_blank" gdf-obfuscated-mailto=3D"YR5ZPO4bDQAJ" rel=3D"nofollo=
-w" onmousedown=3D"this.href=3D&#39;javascript:&#39;;return true;" onclick=
-=3D"this.href=3D&#39;javascript:&#39;;return true;">zon...@gmail.com</a> wr=
-ote:
-<br>&gt;
-<br>&gt;&gt; I&#39;ve added Arnd and Olof, in case they have a bit more per=
-spective here. =C2=A0If
-<br>&gt;&gt; I&#39;m reading this correctly, there isn&#39;t an arm or arm6=
-4 option to do this.
-<br>&gt;&gt; There is an option to built in many DTBs, which makes a lot mo=
-re sense to me
-<br>&gt;&gt; as it doesn&#39;t tie the kernel to any one particular impleme=
-ntation. =C2=A0We&#39;d
-<br>&gt;&gt; need a mechanism for picking the DTB that Linux should use. =
-=C2=A0We&#39;ve kicked
-<br>&gt;&gt; around the idea of:
-<br>&gt;&gt;
-<br>&gt;&gt; * Having the bootloader always provide a DTB.
-<br>&gt;&gt; * Taking a hash of that DTB when booting Linux.
-<br>&gt;&gt; * Using that hash to look up DTBs that are built in to Linux.
-<br>&gt;&gt;
-<br>&gt;&gt; This would allow us to support replacing broken DTBs if they e=
-scape into the
-<br>&gt;&gt; wild, but would still allow us to have a portable kernel.
-<br>&gt;
-<br>&gt; Having an embedded DTB is only necessary for platforms with a lega=
-cy bootloader
-<br>&gt; that doesn&#39;t understand DT at all, you should never need that =
-here.
-<br>&gt;
-<br>&gt; I would suggest to require each bootloader to provide a way to rep=
-lace the DTB
-<br>&gt; with one that gets installed alongside the kernel.
-<br>
-<br>Sounds good to me.
-<br></blockquote><br>Palmer Dabbelt=E6=96=BC 2017=E5=B9=B412=E6=9C=8822=E6=
-=97=A5=E6=98=9F=E6=9C=9F=E4=BA=94 UTC+8=E4=B8=8A=E5=8D=884=E6=99=8248=E5=88=
-=8606=E7=A7=92=E5=AF=AB=E9=81=93=EF=BC=9A<blockquote class=3D"gmail_quote" =
-style=3D"margin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-l=
-eft: 1ex;">On Thu, 21 Dec 2017 12:43:20 PST (-0800), Arnd Bergmann wrote:
-<br>&gt; On Thu, Dec 21, 2017 at 9:32 PM, Palmer Dabbelt &lt;<a href=3D"jav=
-ascript:" target=3D"_blank" gdf-obfuscated-mailto=3D"YR5ZPO4bDQAJ" rel=3D"n=
-ofollow" onmousedown=3D"this.href=3D&#39;javascript:&#39;;return true;" onc=
-lick=3D"this.href=3D&#39;javascript:&#39;;return true;">pal...@sifive.com</=
-a>&gt; wrote:
-<br>&gt;&gt; On Wed, 20 Dec 2017 01:14:31 PST (-0800), <a href=3D"javascrip=
-t:" target=3D"_blank" gdf-obfuscated-mailto=3D"YR5ZPO4bDQAJ" rel=3D"nofollo=
-w" onmousedown=3D"this.href=3D&#39;javascript:&#39;;return true;" onclick=
-=3D"this.href=3D&#39;javascript:&#39;;return true;">zon...@gmail.com</a> wr=
-ote:
-<br>&gt;
-<br>&gt;&gt; I&#39;ve added Arnd and Olof, in case they have a bit more per=
-spective here. =C2=A0If
-<br>&gt;&gt; I&#39;m reading this correctly, there isn&#39;t an arm or arm6=
-4 option to do this.
-<br>&gt;&gt; There is an option to built in many DTBs, which makes a lot mo=
-re sense to me
-<br>&gt;&gt; as it doesn&#39;t tie the kernel to any one particular impleme=
-ntation. =C2=A0We&#39;d
-<br>&gt;&gt; need a mechanism for picking the DTB that Linux should use. =
-=C2=A0We&#39;ve kicked
-<br>&gt;&gt; around the idea of:
-<br>&gt;&gt;
-<br>&gt;&gt; * Having the bootloader always provide a DTB.
-<br>&gt;&gt; * Taking a hash of that DTB when booting Linux.
-<br>&gt;&gt; * Using that hash to look up DTBs that are built in to Linux.
-<br>&gt;&gt;
-<br>&gt;&gt; This would allow us to support replacing broken DTBs if they e=
-scape into the
-<br>&gt;&gt; wild, but would still allow us to have a portable kernel.
-<br>&gt;
-<br>&gt; Having an embedded DTB is only necessary for platforms with a lega=
-cy bootloader
-<br>&gt; that doesn&#39;t understand DT at all, you should never need that =
-here.
-<br>&gt;
-<br>&gt; I would suggest to require each bootloader to provide a way to rep=
-lace the DTB
-<br>&gt; with one that gets installed alongside the kernel.
-<br>
-<br>Sounds good to me.
-<br></blockquote><div><br></div><div>It&#39;s exactly. The portability is t=
-he thing that first priority to consider in the furture.</div><div>The buil=
-t in DTB function can be found on many architectures, but it seem out of da=
-te.</div><div>I think this is the reason that I can&#39;t find any dts file=
- in the kernel source.</div><div>I usually use the built in DTB for quick a=
-nd conveniet development on specific platform.</div><div>Thanks a lot.</div=
-></div>
-------=_Part_8302_538841906.1513948067767--
+https://elinux.org/Device_Tree_Linux#Linux_conventions
 
-------=_Part_8301_1113229977.1513948067766--
+This will solve as a side effect warning:
+
+Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+
+This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+
+Reported-by: David Daney <ddaney@caviumnetworks.com>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+ arch/arm/boot/dts/at91sam9261.dtsi     | 2 +-
+ arch/arm/boot/dts/at91sam9261ek.dts    | 2 +-
+ arch/arm/boot/dts/at91sam9263.dtsi     | 2 +-
+ arch/arm/boot/dts/at91sam9263ek.dts    | 2 +-
+ arch/arm/boot/dts/at91sam9g25ek.dts    | 2 +-
+ arch/arm/boot/dts/at91sam9g45.dtsi     | 2 +-
+ arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 +-
+ arch/arm/boot/dts/sama5d3xmb.dtsi      | 2 +-
+ arch/arm/boot/dts/sama5d3xmb_cmp.dtsi  | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
+index 66876019101d..eb186245fb4c 100644
+--- a/arch/arm/boot/dts/at91sam9261.dtsi
++++ b/arch/arm/boot/dts/at91sam9261.dtsi
+@@ -80,7 +80,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		fb0: fb@0x00600000 {
++		fb0: fb@600000 {
+ 			compatible = "atmel,at91sam9261-lcdc";
+ 			reg = <0x00600000 0x1000>;
+ 			interrupts = <21 IRQ_TYPE_LEVEL_HIGH 3>;
+diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
+index 960d6940ebf6..9733db3f739b 100644
+--- a/arch/arm/boot/dts/at91sam9261ek.dts
++++ b/arch/arm/boot/dts/at91sam9261ek.dts
+@@ -36,7 +36,7 @@
+ 			status = "okay";
+ 		};
+ 
+-		fb0: fb@0x00600000 {
++		fb0: fb@600000 {
+ 			display = <&display0>;
+ 			atmel,power-control-gpio = <&pioA 12 GPIO_ACTIVE_LOW>;
+ 			status = "okay";
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index e54f14d36b6f..a26f7ada429d 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -999,7 +999,7 @@
+ 			};
+ 		};
+ 
+-		fb0: fb@0x00700000 {
++		fb0: fb@700000 {
+ 			compatible = "atmel,at91sam9263-lcdc";
+ 			reg = <0x00700000 0x1000>;
+ 			interrupts = <26 IRQ_TYPE_LEVEL_HIGH 3>;
+diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
+index 5a2e1af793f5..f095b5d4d410 100644
+--- a/arch/arm/boot/dts/at91sam9263ek.dts
++++ b/arch/arm/boot/dts/at91sam9263ek.dts
+@@ -95,7 +95,7 @@
+ 			};
+ 		};
+ 
+-		fb0: fb@0x00700000 {
++		fb0: fb@700000 {
+ 			display = <&display0>;
+ 			status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
+index 91a71774472e..31fecc2cdaf9 100644
+--- a/arch/arm/boot/dts/at91sam9g25ek.dts
++++ b/arch/arm/boot/dts/at91sam9g25ek.dts
+@@ -25,7 +25,7 @@
+ 			};
+ 
+ 			i2c0: i2c@f8010000 {
+-				ov2640: camera@0x30 {
++				ov2640: camera@30 {
+ 					compatible = "ovti,ov2640";
+ 					reg = <0x30>;
+ 					pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 2b127ca7aaa0..98348ebd6488 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -1302,7 +1302,7 @@
+ 			};
+ 		};
+ 
+-		fb0: fb@0x00500000 {
++		fb0: fb@500000 {
+ 			compatible = "atmel,at91sam9g45-lcdc";
+ 			reg = <0x00500000 0x1000>;
+ 			interrupts = <23 IRQ_TYPE_LEVEL_HIGH 3>;
+diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+index e922552a04cb..d793451ee04c 100644
+--- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
++++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
+@@ -220,7 +220,7 @@
+ 			};
+ 		};
+ 
+-		fb0: fb@0x00500000 {
++		fb0: fb@500000 {
+ 			display = <&display0>;
+ 			status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
+index 7f55050dd405..ef0f2d049e15 100644
+--- a/arch/arm/boot/dts/sama5d3xmb.dtsi
++++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+@@ -53,7 +53,7 @@
+ 			};
+ 
+ 			i2c1: i2c@f0018000 {
+-				ov2640: camera@0x30 {
++				ov2640: camera@30 {
+ 					compatible = "ovti,ov2640";
+ 					reg = <0x30>;
+ 					pinctrl-names = "default";
+diff --git a/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
+index 83e3d3e08fd4..97e171db5970 100644
+--- a/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
++++ b/arch/arm/boot/dts/sama5d3xmb_cmp.dtsi
+@@ -88,7 +88,7 @@
+ 			};
+ 
+ 			i2c1: i2c@f0018000 {
+-				ov2640: camera@0x30 {
++				ov2640: camera@30 {
+ 					compatible = "ovti,ov2640";
+ 					reg = <0x30>;
+ 					pinctrl-names = "default";
+-- 
+2.11.0
