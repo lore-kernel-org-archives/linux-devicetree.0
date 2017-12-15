@@ -1,99 +1,107 @@
-From: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: [PATCH v5 01/16] dt-bindings: mtd: gpmc-onenand: Update
- properties description
-Date: Fri, 15 Dec 2017 13:24:22 +0100
-Message-ID: <20171215122422.GA17105@lenoch>
-References: <20171115162306.2o2w2yrf7wucroxd@lenoch>
- <20171115162458.rtompijrsaobdemk@lenoch>
- <20171130112544.5509ca1b@bbrezillon>
- <20171130130907.GA16809@lenoch>
- <23d7ad3c-e6cd-3ba6-269a-1788371d13c3@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: chosen: Add clocksource and clockevent
+ selection
+Date: Fri, 15 Dec 2017 13:30:11 +0100
+Message-ID: <20171215133011.24f68193@bbrezillon>
+References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
+        <20171213185313.20017-2-alexandre.belloni@free-electrons.com>
+        <CAL_JsqLm5n6s=cr2hBZp4H9pDPKHUOPWs94JMWYFYJ3hsMMxZQ@mail.gmail.com>
+        <20171214210120.6b436e0d@bbrezillon>
+        <20171215114004.l4lbqa6xibliwjyh@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <23d7ad3c-e6cd-3ba6-269a-1788371d13c3-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20171215114004.l4lbqa6xibliwjyh-agMKViyK24J5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Roger,
+On Fri, 15 Dec 2017 11:40:04 +0000
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
 
-On Fri, Dec 15, 2017 at 12:18:59PM +0200, Roger Quadros wrote:
-> Ladislav,
+> Hi,
 > 
-> On 30/11/17 15:09, Ladislav Michl wrote:
-> > On Thu, Nov 30, 2017 at 11:25:44AM +0100, Boris Brezillon wrote:
-> >> +Rob and the DT ML
-> >>
-> >> On Wed, 15 Nov 2017 17:24:58 +0100
-> >> Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org> wrote:
-> >>
-> >>> Compatible property is required for OMAP2+ mtd driver. Also
-> >>> add INT pin gpio description and delete unused dma-channel
-> >>> property.
-> >>>
-> >>> Signed-off-by: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> >>> Reviewed-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> >>> Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> >>> ---
-> >>>
-> >>> Changes in v5:
-> >>> - renamed R/B pin to INT pin
-> >>>
-> >>> Changes in v4:
-> >>> - new patch
-> >>>
-> >>> Changes in v3: None
-> >>> Changes in v2: None
-> >>>
-> >>>  Documentation/devicetree/bindings/mtd/gpmc-onenand.txt | 6 ++++--
-> >>>  1 file changed, 4 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
-> >>> index b6e8bfd024f4..e9f01a963a0a 100644
-> >>> --- a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
-> >>> +++ b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
-> >>> @@ -9,13 +9,14 @@ Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
-> >>>  
-> >>>  Required properties:
-> >>>  
-> >>> + - compatible:		"ti,omap2-onenand"
-> >>
-> >> Don't you break backward compat by adding this new requirement?
-> > 
-> > I was told it is okay in this case as OneNAND conversion to DT is unfinished.
-> > There was compat fixup code in earlier versions of patchset and it was dropped
-> > later. If others see it opposite way I can add it back.
-> > 
+> On Thu, Dec 14, 2017 at 09:01:20PM +0100, Boris Brezillon wrote:
+> > On Wed, 13 Dec 2017 16:57:50 -0600
+> > Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:  
+> > > On Wed, Dec 13, 2017 at 12:53 PM, Alexandre Belloni
+> > > <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:  
 > 
-> If it is possible not to break backward compatibility then we shouldn't.
-> Only if things are getting real messy because of the poor way the earlier DT
-> implementation was done we can consider it as an exception.
+> > > > The clocksource and clockevent timer are probed early in the boot process.
+> > > > At that time it is difficult for linux to know whether a particular timer
+> > > > can be used as the clocksource or the clockevent or by another driver,
+> > > > especially when they are all identical or have similar features.    
+> > > 
+> > > If all identical, then it shouldn't matter. "similar" means some
+> > > difference. Describe those differences.  
+> > 
+> > We had this discussion already. Those timers might be connected to
+> > external pins and may serve the role of PWM generators or capture
+> > devices. We can also chain timers and provide a clocksource with a
+> > better resolution or one that wraps less often.   
+> 
+> Could you elaborate on the chaining case? I haven't encountered that,
+> and at the moment I'm not sure I follow how that works.
 
-Well, it is possible to reintroduce fixup. Based on other posts on linux-omap
-mailing list, it seems that n900, etc. support is still under heavy development,
-so people are updating both kernel and dtb. That's why I happily agreed on
-removing fixup.
+In a TCB (Timer Counter Block) you have 3 TC (Timer Counters). Each
+timer can take a regular clock (+a divider) as a source, but it can
+also take the output of the previous channel (so channel 1 can take
+the output of channel 0, channel 2 the output of channel 1, and channel
+0 the output of channel 2). A TC output can be configured to toggle
+every time the counter overflows. So when you chain 2 channels, you
+double the number of bits of your counter. This is particularly
+interesting if you want to create a precise timer that has an
+acceptable wraparound period, otherwise, you'll have to choose between
+a timer with a poor precision and an acceptable wraparound period, and
+a timer with a good precision and a small wraparound.
 
-Of course I'd like to hear opinion from n8x0 and n900 people and also would be
-very happy if someone could finally test on OMAP2 device.
+> 
+> > > >  - registering the first seen timer as a clockevent and the second one as
+> > > >  a clocksource as in rk_timer_init or dw_apb_timer_init
+> > > >
+> > > > Add a linux,clocksource and a linux,clockevent node in chosen with a timer
+> > > > property pointing to the timer to use. Other properties, like the targeted
+> > > > precision may be added later.    
+> > > 
+> > > Open ended expansion of this does not help convince me it is needed.  
+> > 
+> > It's not an open ended expansion, we're just trying to find a way to
+> > describe which timer blocks should be used as free running timers
+> > (clksource) and which one should be used as programmable timers
+> > (clkevent). Automatically selecting timer blocks to assign to the
+> > clkevent or clocksource is not so easy (as has been explained earlier)
+> > because at the time the system registers its clksource/clkevent devices
+> > we might not have all the necessary information to know which timer
+> > blocks will be reserved for other usage later on. The use case I have
+> > in mind is DT overlays, where one of the overlay is using a timer as a
+> > PWM generator. If the clkevent or clksource has already claimed the
+> > timer connected to the pins the overlay is using, then we're screwed,
+> > and there's no way the system can know that ahead of time except by
+> > pre-assigning a timer to the clksource or clkevent feature.  
+> 
+> I guess that might work for the boot-time overlay case, where the user
+> knows ahead-of-time that there will be a conflict for resources, but
+> that doesn't help with the dynamic overlay case, since the user can't
+> know what conflicts there will be.
+> 
+> Can we attempt to unregister the clock device in that case, when the PWM
+> is requested? If the timekeeping core can select another device, then
+> we're free to use this one as a PWM. If not, then we're stuck anyway.
 
-> I thought we rely on GPMC timings entirely from the DT now and so things don't
-> work with older DT nodes?
+Actually, the problem had already been solved with the "atmel,tcb-timer"
+compatible. When this compatible is used we know the TC(s) can be used
+as generic timers. If you want to reserve TC(s) for other usage (like a
+PWM), you just leave the TC undefined in the device tree and an overlay
+can add a new node reserving this TC afterwards. This approach has
+already been accepted by Rob [1].
 
-Well, they do work as long as DT contains correct timings. Mainline driver just
-ignores them a does calculations on its own, so it works even with wrong DT
-timings as long as bootloader configured something reasonable (otherwise it
-doe not work at all).
+So right now, the problem we have is how to assign a specific timer to
+a clockevent or clocksource 'device'.
 
-This is no longer the case. Now, driver is expecting reasonable timings, enough
-good to get device probed. Driver then calculates optimized timings based on
-actual OneNAND chip ised.
+[1]https://patchwork.kernel.org/patch/9755341/
 
-Thank you,
-	ladis
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
