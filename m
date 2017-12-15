@@ -1,8 +1,8 @@
 From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH 03/25] arm: bcm: dts: Remove leading 0x and 0s from bindings
- notation
-Date: Fri, 15 Dec 2017 13:46:28 +0100
-Message-ID: <20171215124628.30029-1-malat@debian.org>
+Subject: [PATCH 07/25] arm: keystone: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Fri, 15 Dec 2017 13:46:38 +0100
+Message-ID: <20171215124638.30233-1-malat@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,7 +17,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Mathieu Malaterre <malat@debian.org>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Improve the DTS files by removing all the leading "0x" and zeros to fix the
@@ -51,49 +51,63 @@ Reported-by: David Daney <ddaney@caviumnetworks.com>
 Suggested-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/arm/boot/dts/bcm11351.dtsi | 2 +-
- arch/arm/boot/dts/bcm21664.dtsi | 2 +-
- arch/arm/boot/dts/bcm283x.dtsi  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/keystone-k2e-netcp.dtsi  | 2 +-
+ arch/arm/boot/dts/keystone-k2hk-netcp.dtsi | 2 +-
+ arch/arm/boot/dts/keystone-k2l-netcp.dtsi  | 2 +-
+ arch/arm/boot/dts/keystone.dtsi            | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 18045c38bcf1..db7cded1b7ad 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -55,7 +55,7 @@
- 		      <0x3ff00100 0x100>;
- 	};
- 
--	smc@0x3404c000 {
-+	smc@3404c000 {
- 		compatible = "brcm,bcm11351-smc", "brcm,kona-smc";
- 		reg = <0x3404c000 0x400>; /* 1 KiB in SRAM */
- 	};
-diff --git a/arch/arm/boot/dts/bcm21664.dtsi b/arch/arm/boot/dts/bcm21664.dtsi
-index 6dde95f21cef..266f2611dc22 100644
---- a/arch/arm/boot/dts/bcm21664.dtsi
-+++ b/arch/arm/boot/dts/bcm21664.dtsi
-@@ -55,7 +55,7 @@
- 		      <0x3ff00100 0x100>;
- 	};
- 
--	smc@0x3404e000 {
-+	smc@3404e000 {
- 		compatible = "brcm,bcm21664-smc", "brcm,kona-smc";
- 		reg = <0x3404e000 0x400>; /* 1 KiB in SRAM */
- 	};
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index dcde93c85c2d..2ee4f04ea9d4 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -464,7 +464,7 @@
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
+index ba828cb59587..940b64935bde 100644
+--- a/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
+@@ -98,7 +98,7 @@ qmss: qmss@2a40000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
+-		pdsp0@0x2a10000 {
++		pdsp0@2a10000 {
+ 			reg = <0x2a10000 0x1000    /*iram */
+ 			       0x2a0f000 0x100     /*reg*/
+ 			       0x2a0c000 0x3c8	   /*intd */
+diff --git a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
+index a5ac845464bf..ed7287a274a0 100644
+--- a/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
++++ b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
+@@ -115,7 +115,7 @@ qmss: qmss@2a40000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
+-		pdsp0@0x2a10000 {
++		pdsp0@2a10000 {
+ 			reg = <0x2a10000 0x1000    /*iram */
+ 			       0x2a0f000 0x100     /*reg*/
+ 			       0x2a0c000 0x3c8	   /*intd */
+diff --git a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+index 66f615a74118..b6af5f78e498 100644
+--- a/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+@@ -97,7 +97,7 @@ qmss: qmss@2a40000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
+-		pdsp0@0x2a10000 {
++		pdsp0@2a10000 {
+ 			reg = <0x2a10000 0x1000    /*iram */
+ 			       0x2a0f000 0x100     /*reg*/
+ 			       0x2a0c000 0x3c8	   /*intd */
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 06e10544f9b1..f8ecbe504182 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -271,7 +271,7 @@
+ 			ti,davinci-gpio-unbanked = <32>;
  		};
  
--		aux: aux@0x7e215000 {
-+		aux: aux@7e215000 {
- 			compatible = "brcm,bcm2835-aux";
- 			#clock-cells = <1>;
- 			reg = <0x7e215000 0x8>;
+-		aemif: aemif@21000A00 {
++		aemif: aemif@21000a00 {
+ 			compatible = "ti,keystone-aemif", "ti,davinci-aemif";
+ 			#address-cells = <2>;
+ 			#size-cells = <1>;
 -- 
 2.11.0
