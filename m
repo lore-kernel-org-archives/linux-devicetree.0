@@ -1,55 +1,55 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH net-next] net: dsa: bcm_sf2: Update compatible string for 7278B0
-Date: Thu, 14 Dec 2017 17:59:40 -0800
-Message-ID: <20171215015941.32443-1-f.fainelli@gmail.com>
+From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/2] Add ethernet support for Meson-AXG SoC
+Date: Fri, 15 Dec 2017 10:10:12 +0800
+Message-ID: <20171215021014.231308-1-yixun.lan@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update the compatible string and Device Tree binding document for
-7278B0.
+This series try to add support for the ethernet MAC controller
+found in Meson-AXG SoC, and also enable it in the S400 board.
 
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt | 5 ++++-
- drivers/net/dsa/bcm_sf2.c                                          | 3 +++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+Changes in v3 since [4]:
+ - put clock DT info in soc.dtsi
+ - separate DT for 'add support for the controller' vs 'enable in board'
 
-diff --git a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-index 9a734d808aa7..b7336b9d6a3c 100644
---- a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-+++ b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-@@ -2,7 +2,10 @@
- 
- Required properties:
- 
--- compatible: should be "brcm,bcm7445-switch-v4.0" or "brcm,bcm7278-switch-v4.0"
-+- compatible: should be one of
-+	"brcm,bcm7445-switch-v4.0"
-+	"brcm,bcm7278-switch-v4.0"
-+	"brcm,bcm7278-switch-v4.8"
- - reg: addresses and length of the register sets for the device, must be 6
-   pairs of register addresses and lengths
- - interrupts: interrupts for the devices, must be two interrupts
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 8ea0cd494ea0..0378eded31f2 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -948,6 +948,9 @@ static const struct of_device_id bcm_sf2_of_match[] = {
- 	{ .compatible = "brcm,bcm7278-switch-v4.0",
- 	  .data = &bcm_sf2_7278_data
- 	},
-+	{ .compatible = "brcm,bcm7278-switch-v4.8",
-+	  .data = &bcm_sf2_7278_data
-+	},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, bcm_sf2_of_match);
+Changes in v2 since [1]:
+ - rebase to kevin's v4.16/dt64 branch
+ - add Neil's Reviewed-by
+ - move clock info to board.dts instead of in soc.dtsi
+ - drop "meson-axg-dwmac" compatible string, since we didn't use this
+   we could re-add it later when we really need.
+ - note: to make ethernet work properly,it depend on clock & pinctrl[2],
+   to compile the DTS, the patch [3] is required.
+   the code part will be taken via clock & pinctrl subsystem tree.
+
+[1]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005301.html
+
+[4]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005768.html
+
+[2]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005735.html
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005694.html
+
+[3]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005738.html
+
+Yixun Lan (2):
+  ARM64: dts: meson-axg: add ethernet mac controller
+  ARM64: dts: meson-axg: enable ethernet for A113D S400 board
+
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  7 ++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 54 ++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+
 -- 
-2.14.1
+2.15.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
