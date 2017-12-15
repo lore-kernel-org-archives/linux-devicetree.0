@@ -1,73 +1,83 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 5/5] ARM: dts: iwg20d-q7-common: Sound DMA support via DVC on DTS
-Date: Fri, 15 Dec 2017 14:50:53 +0000
-Message-ID: <1513349453-54689-6-git-send-email-biju.das@bp.renesas.com>
-References: <1513349453-54689-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513349453-54689-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v3] ARM64: dts: meson-axg: enable IR controller
+Date: Fri, 15 Dec 2017 22:59:06 +0800
+Message-ID: <20171215145906.1494-1-yixun.lan@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DMA transfer uses DVC
+Enable IR remote controller which found in Amlogic's Meson-AXG SoCs.
 
-     DMA               DMApp
-[MEM] -> [SRC] -> [DVC] -> [SSIU] -> [SSI]
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 
-     DMA               DMApp
-[MEM] <- [DVC] <- [SRC] <- [SSIU] <- [SSI]
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 ---
- arch/arm/boot/dts/iwg20d-q7-common.dtsi | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-index 9f6ec25..ccbdf5a 100644
---- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-+++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
-@@ -8,6 +8,29 @@
-  * kind, whether express or implied.
-  */
- 
-+/*
-+ * SSI-SGTL5000
-+ *
-+ * This command is required when Playback/Capture
-+ *
-+ *      amixer set "DVC Out" 100%
-+ *      amixer set "DVC In" 100%
-+ *
-+ * You can use Mute
-+ *
-+ *      amixer set "DVC Out Mute" on
-+ *      amixer set "DVC In Mute" on
-+ *
-+ * You can use Volume Ramp
-+ *
-+ *      amixer set "DVC Out Ramp Up Rate"   "0.125 dB/64 steps"
-+ *      amixer set "DVC Out Ramp Down Rate" "0.125 dB/512 steps"
-+ *      amixer set "DVC Out Ramp" on
-+ *      aplay xxx.wav &
-+ *      amixer set "DVC Out"  80%  // Volume Down
-+ *      amixer set "DVC Out" 100%  // Volume Up
-+ */
+Changes since v2 at [2]
+ - rebase to Kevin's v4.16/dt64 branch
+ - this patch depend on pinctrl DT driver
+
+Changes since v1 at [1]:
+ - drop the compatbile 'amlogic,meson-gx-ir'
+
+[2]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005574.html
+
+[1]
+ http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005527.html
+---
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  6 ++++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 14 ++++++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 70eca1f8736a..e85fb665f12e 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -20,3 +20,9 @@
+ &uart_AO {
+ 	status = "okay";
+ };
 +
- / {
- 	aliases {
- 		serial0 = &scif0;
-@@ -240,8 +263,8 @@
++&ir {
++	status = "okay";
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index a0d7b10da512..1cd34141a5c1 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -223,6 +223,13 @@
+ 					#gpio-cells = <2>;
+ 					gpio-ranges = <&pinctrl_aobus 0 0 15>;
+ 				};
++
++				remote_input_ao_pins: remote_input_ao {
++					mux {
++						groups = "remote_input_ao";
++						function = "remote_input_ao";
++					};
++				};
+ 			};
  
- 	rcar_sound,dai {
- 		dai0 {
--			playback = <&ssi1 &src3>;
--			capture = <&ssi0 &src2>;
-+			playback = <&ssi1 &src3 &dvc1>;
-+			capture = <&ssi0 &src2 &dvc0>;
+ 			uart_AO: serial@3000 {
+@@ -242,6 +249,13 @@
+ 				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
++
++			ir: ir@8000 {
++				compatible = "amlogic,meson-gxbb-ir";
++				reg = <0x0 0x8000 0x0 0x20>;
++				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
++				status = "disabled";
++			};
  		};
  	};
  };
 -- 
-1.9.1
+2.15.1
