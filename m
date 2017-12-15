@@ -1,74 +1,95 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] media: V3s: Add support for Allwinner CSI.
-Date: Fri, 15 Dec 2017 11:50:47 +0100
-Message-ID: <20171215105047.ist7epuida2uao74@flea.lan>
-References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
- <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
- <20171121154827.5a35xa6zlqrrvkxx@flea.lan>
- <20171122093306.d30fe641f269d62daa1f66b4@magewell.com>
- <20171122094526.nqxfy2e5jzxw7nl4@flea.lan>
- <20171123091444.4bed66dffeb36ecea8dfa706@magewell.com>
- <20171125160233.skefdpkjy4peh7et@flea.lan>
- <20171204174511.a5be3b521e9a7c7004d32d0d@magewell.com>
+From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 01/11] dt-bindings: thermal: Describe Armada AP806
+ and CP110
+Date: Fri, 15 Dec 2017 11:52:30 +0100
+Message-ID: <20171215115230.6fb83cb6@xps13>
+References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
+        <20171214103011.24713-2-miquel.raynal@free-electrons.com>
+        <20171215082759.7t24ka3lpkulcb7r@tarshish>
+        <20171215093203.74b7a59c@xps13>
+        <87po7gmlcs.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qmbbh5qnbgzrxgdy"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171204174511.a5be3b521e9a7c7004d32d0d-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <87po7gmlcs.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, lin
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Baruch and Gregory,
 
---qmbbh5qnbgzrxgdy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 15 Dec 2017 09:44:19 +0100
+Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Hi Yong,
+> Hi Miquel,
+>  
+>  On ven., déc. 15 2017, Miquel RAYNAL
+> <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > Hello Baruch,
+> >
+> > On Fri, 15 Dec 2017 10:27:59 +0200
+> > Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+> >  
+> >> Hi Miquel
+> >> 
+> >> On Thu, Dec 14, 2017 at 11:30:01AM +0100, Miquel Raynal wrote:  
+> >> > +- marvell,thermal-zone-name: The name to identify the thermal
+> >> > zone
+> >> > +                             within the sysfs, useful when
+> >> > multiple
+> >> > +                             thermal zones are registered (AP,
+> >> > CPx...).    
+> >> 
+> >> I don't think that would be acceptable. DT is about describing the
+> >> hardware. sysfs is a Linux implementation detail which is not tied
+> >> to any specific hardware. If this is accepted, the property should
+> >> be named 'linux,thermal-zone-name'.  
+> >
+> > You are right the sysfs mention should not appear in the
+> > description.
 
-On Mon, Dec 04, 2017 at 05:45:11PM +0800, Yong wrote:
-> I just noticed that you are using the second iteration?
-> Have you received my third iteration?
+Actually, you are right for all of it, this property should not
+exist, sorry for my too quick answer.
 
-Sorry for the late reply, and for not coming back to you yet about
-that test. No, this is still in your v2. I've definitely received your
-v3, I just didn't have time to update to it yet.
+> >
+> > Otherwise for the naming I'm not sure "linux," is a valid prefix in
+> > that case.  
 
-But don't worry, my mail was mostly to know if you had tested that
-setup on your side to try to nail down the issue on my end, not really
-a review or comment that would prevent your patch from going in.
+Thank you both for your explanations, I was also wrong about the prefix.
 
-Maxime
+> 
+> Actually the choice between linux or marvell make me realize that
+> there is something wrong. Having a name associated to a device is
+> something pretty usual with the device tree, however it is as the
+> class device level, such as clock-names, line-name, or
+> regulator-name. So in my opinion if we want to support naming from
+> device tree it would be done for all the thermal device not just for
+> the Marvell one.
+> 
+> However I don't think we need it. For example for the clocks we
+> created the name dynamically using of the base address of the
+> register to keep them unique.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+I was convinced that dev_name's would be the same but after trying it on
+a 8040-DB, using dev_name(&pdev->dev) gives:
 
---qmbbh5qnbgzrxgdy
-Content-Type: application/pgp-signature; name="signature.asc"
+    f06f808c.thermal
+    f2400078.thermal
+    f4400078.thermal
 
------BEGIN PGP SIGNATURE-----
+which I found meaningful enough.
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlozqQMACgkQ0rTAlCFN
-r3S5cA//dpYxk9jrpAC3W9fK+1dgEg70Fh1dOzOLnKddsyGVnMF0HekUbXzt47dk
-bgjGxJC0dAdVgDwZ6D+VQUzQ+yGR0aFsUItRNnfTBpUiZ82MtVb9qBesRIxUb1ci
-lrAyIauaY1wZhUCU9oFplEeOzojtCOU5mrYr0kF0qoiG/txocOMUszTD8ZlW5wZp
-9bqX0wC/svEga8vtyjqHLevlkVZt0uGDZR4PDSDAMfE7VU1iOiKLR+sHes6PcxA/
-EO1EA25SCqtjn9CMjFNdiIJLpGlu+5qj/7WZoSv/CAOmbCVvmZ/p/NHGVyf0gr2e
-yhTBjrG+j4jQMxIwlfH39ejz/rIAuRke7NngOI8NNwJbWTm1usFesjsv5FUX6TeV
-sQ8amBDRdayp33bg9VVDMHB9kINvA4TxgHJwBx1uX87IXSKDETTPfEA0XTaRdWZO
-UkJVXnHW8r4kBEBot71TLAi1vuLC2T1X55wsMzhni3Qq0e0feHoH9aqABBDRaoUN
-UUki1DeWIwV0n2CavZn3l2P2eXpj5NZZmuL1glzZemRXCmixnzE4RUGWQp7S7p64
-R7b7l0+2nvtKqoQXlWjQ40t2wXvX9Xp+bV17+Wma2vh/aA8CYi6zH1Gbu7F179nZ
-E7huH6X5dcmeZDYn7zCE3ipOoSFW/CYAgy4kRHxOC112u/x+ZdY=
-=HKDT
------END PGP SIGNATURE-----
+I will drop the property and use dev_name instead. I still need your
+help to solve one problem though: how to make the distinction between
+using "armada_thermal" (the previous name) and dev_name() ? If I don't
+it kind of breaks userspace, doesn't it ?
 
---qmbbh5qnbgzrxgdy--
+Thank you,
+Miquèl
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
