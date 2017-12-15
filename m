@@ -1,83 +1,32 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] dt: bindings: lp8860: Update DT label binding
-Date: Fri, 15 Dec 2017 16:59:14 -0600
-Message-ID: <20171215225914.62lqxhcmwajf4hpy@rob-hp-laptop>
-References: <20171212220143.31210-1-dmurphy@ti.com>
- <20171212220143.31210-3-dmurphy@ti.com>
+Subject: Re: [PATCH 1/2] dt-bindings: net: add TI CC2560 Bluetooth chip
+Date: Fri, 15 Dec 2017 17:05:58 -0600
+Message-ID: <20171215230558.7vngwc66y2smvdrq@rob-hp-laptop>
+References: <1513124971-23717-1-git-send-email-david@lechnology.com>
+ <1513124971-23717-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171212220143.31210-3-dmurphy-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1513124971-23717-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 04:01:39PM -0600, Dan Murphy wrote:
-> Update the lp8860 label binding to the LED
-> standard as documented in
+On Tue, Dec 12, 2017 at 06:29:30PM -0600, David Lechner wrote:
+> This adds a compatible string for the Texas Instruments CC2560 Bluetooth
+> chip to the existing TI WiLink shared transport bindings. These chips are
+> similar enough that the same bindings work for both. The file is renamed
+> to ti-bluetooth.txt to make it more generic.
 > 
-> Documentation/devicetree/bindings/leds/common.txt
-> 
-> Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 > ---
-> 
-> v4 - No changes
-> 
-> v3 - Added address and size cells, updated label with color and inserted spaces
-> around the reg node - https://patchwork.kernel.org/patch/10093749/
-> v2 - Added reg to child node and made it required
-> 
->  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-> index b9d09acbaa73..c3d64ade1e26 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-> +++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-> @@ -9,20 +9,33 @@ Required properties:
->  	- compatible :
->  		"ti,lp8860"
->  	- reg : I2C slave address
-> -	- label : Used for naming LEDs
-> +	- #address-cells : 1
-> +	- #size-cells : 0
->  
->  Optional properties:
->  	- enable-gpios : gpio pin to enable (active high)/disable the device.
->  	- vled-supply : LED supply
->  
-> +Required child properties:
-> +	- reg : 0
-> +
+>  .../bindings/net/{ti,wilink-st.txt => ti-bluetooth.txt}     | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>  rename Documentation/devicetree/bindings/net/{ti,wilink-st.txt => ti-bluetooth.txt} (78%)
 
-This should be in previous patch?
-
-> +Optional child properties:
-> +	- label : see Documentation/devicetree/bindings/leds/common.txt
-> +
->  Example:
->  
->  led-controller@2d {
->  	compatible = "ti,lp8860";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
->  	reg = <0x2d>;
-> -	label = "display_cluster";
->  	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->  	vled-supply = <&vbatt>;
-> +
-> +	led@0 {
-> +		reg = <0>;
-> +		label = "white:display_cluster";
-> +	};
->  }
->  
->  For more product information please see the link below:
-> -- 
-> 2.15.0.124.g7668cbc60
-> 
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
