@@ -1,51 +1,73 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: bcm2836-l1-intc: add interrupt polarity support
-Date: Fri, 15 Dec 2017 13:53:17 -0800
-Message-ID: <87y3m3mzea.fsf@anholt.net>
-References: <1513024752-11246-1-git-send-email-stefan.wahren@i2se.com> <1513024752-11246-2-git-send-email-stefan.wahren@i2se.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: rtc: add bindings for i.MX53 SRTC
+Date: Fri, 15 Dec 2017 15:58:07 -0600
+Message-ID: <CAL_JsqL7N8V_=zokbSUm74BdxkMsSCNwU1+dCzcxW=gdUC61eA@mail.gmail.com>
+References: <20171205140646.30367-1-linux-kernel-dev@beckhoff.com>
+ <20171205140646.30367-2-linux-kernel-dev@beckhoff.com> <20171206215436.lwttn445wjilh3wo@rob-hp-laptop>
+ <3BB206AB2B1BD448954845CE6FF69A8E01CB53233C@NT-Mail07.beckhoff.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513024752-11246-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3BB206AB2B1BD448954845CE6FF69A8E01CB53233C@NT-Mail07.beckhoff.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Patrick_Br=C3=BCnn?= <P.Bruenn@beckhoff.com>
+Cc: linux-kernel-dev <linux-kernel-dev@beckhoff.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Patrick Bruenn <p.bruenn@beckhoff.compaste>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infra>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
-
-> This increases the interrupt cells for the 1st level interrupt controller
-> binding in order to describe the polarity like on the other ARM platforms.
+On Mon, Dec 11, 2017 at 1:08 AM, Patrick Brünn <P.Bruenn@beckhoff.com> wrote:
+>>From: Rob Herring [mailto:robh@kernel.org]
+>>Sent: Mittwoch, 6. Dezember 2017 22:55
+>>On Tue, Dec 05, 2017 at 03:06:42PM +0100, linux-kernel-dev@beckhoff.com
+>>wrote:
+>>> From: Patrick Bruenn <p.bruenn@beckhoff.com>
+>>>
+>>> +++ b/Documentation/devicetree/bindings/rtc/rtc-mxc_v2.txt
+>>> @@ -0,0 +1,17 @@
+>>> +* i.MX53 Real Time Clock controller
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be: "fsl,imx53-rtc"
+>>> +- reg: physical base address of the controller and length of memory
+>>mapped
+>>> +  region.
+>>> +- clocks: should contain the phandle for the rtc clock
+>>
+>>Shouldn't there be more than 1 here. From what I remember, the ipg clock
+>>and the 32k clock?
+> Yes, you are right. But if I am reading the original  Freescale driver and the
+> reference manual correctly, the second clock is always active.
+> Section "72.3.1.1 Clocks" from the reference manual [1] reads:
+> "SRTC runs on two clock sources, high frequency peripherals clock and low frequency
+> timers clock. The high frequency peripheral IP clock is used by the SRTC peripheral bus
+> interface, control and status registers. The low frequency 32.768 kHz clock is the
+> always-active clock used by the SRTC timers..."
 >
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> That's why I would only include one clock . Should I change this?
 
-I'm happy with this.  Any DT maintainer concerns?
+Some chips supported 32.0kHz and 32.768kHz low freq clocks, so you'd
+need to be able to query what the frequency is even if you don't need
+to enable the clock, but maybe that may be gone in MX53. I don't
+remember.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+>>> +- interrupts: rtc alarm interrupt
+>>> +
+>>> +Example:
+>>> +
+>>> +srtc@53fa4000 {
+>>
+>>rtc@...
+>>
+> The rtc for which this series adds support is embedded within a function block called
+> "Secure Real Time Clock". This driver doesn't utilize all of the hardware features by
+> now. But maybe someone else wants to extend the functionalities, later.
+> For that possibility I wanted to name the node "srtc". Should I still change this?
+>
+> I believe you have a much better understanding of what should be done here. I don't
+> want to argue with you, just thought you might not had that information. So if I am
+> wrong just tell me and I will change it without further "complaining".
 
------BEGIN PGP SIGNATURE-----
+Node names should be generic for the class of h/w they are. So yes, it
+should be "rtc".
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlo0RE0ACgkQtdYpNtH8
-nug0AQ//U+shV+t1a59TVB1VaEQFPyxTqudLSOQRlEhh9kqLQgIOeHmhlPKtm2A1
-RN/+fgF3caqdA2JmkRG40vwRgwyMTwcJzA7Tj4x6ayl7RYvUoTLYms+EFNrkqDsY
-0dOrhSWRD5N4f9ZLMbQRcftwSeZBUS2KOg0ORCCHvJE/l2yBpyh3VzBRIiw0/lIz
-0LfAktQGlGYYwSvZZSWZD0N20A8sTSZEd81hJ9Vh7ZEnguIQeagp587rFLF3204F
-cmFHakzMzGZJx8+Yic5osc64xkL2WPQm/inCHqGuolgnvpvrxFmkHX3XCbcmEbKJ
-0StsBi7oOokAIwEd/77Oudr8++1Kf+Uac0GooIBAIjSshNrPWhCdgG1pqa7ybg6v
-Cz9KXmV3dA+n/RJlZf2ZN0jj9NMzBOY2De3Y3VexhHHUj7ic9yw5SkG4wa837YrZ
-aUgCkDJpHj0uw7+d4JklX34KT3K4cctdCKOzJRDhvhRyhpHaMFc6eAxUynNP+0vV
-cSu4sWLGf+hQ0uGFyEN2zjkxWkc+sVhkngmOCt+DseW6eMEyqUOvlB/+txa03CSD
-ytZsyO1Rs6e+3uG8jEfFwFIaSKpztf+hT2uhi/rJyQxftlrFUNM8yQ1gB8ObU0qE
-YKrLPMgtHzreIg4Ftmq1GJUbcSov7/q3UWCvWwzkjmyy4JIOr6w=
-=ZD6q
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
