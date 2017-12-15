@@ -1,195 +1,225 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 6/6] phy: renesas: rcar-gen3-usb2: add gpio handling
-Date: Fri, 15 Dec 2017 14:45:26 +0900
-Message-ID: <1513316726-14387-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 4/6] phy: renesas: rcar-gen3-usb2: use prefix "has_otg_pins_" for dedicated pins handling
+Date: Fri, 15 Dec 2017 14:45:24 +0900
+Message-ID: <1513316726-14387-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1513316726-14387-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1513316726-14387-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Some R-Car SoCs (e.g. R-Car D3) doesn't have dedicated pins of VBUS
-and ID. So, they may be connected to gpio pins. To handle the gpio
-pins, this patch adds the handling of VBUS and ID pins instead of
-dedicated pins.
+To support gpio handling in the future, this patch clean-ups the code
+to use prefix "has_otg_pins_" functions.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
- drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 77 ++++++++++++++++++++--
- 2 files changed, 72 insertions(+), 7 deletions(-)
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 130 ++++++++++++++++++++-----------
+ 1 file changed, 85 insertions(+), 45 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-index 99b651b..999a6ef 100644
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-@@ -27,6 +27,8 @@ channel as USB OTG:
- - interrupts: interrupt specifier for the PHY.
- - vbus-supply: Phandle to a regulator that provides power to the VBUS. This
- 	       regulator will be managed during the PHY power on/off sequence.
-+- vbus-gpios: use gpio to control vbus instead of dedicated pin.
-+- id-gpios: use gpio to detect id instead of dedicated pin.
- 
- Example (R-Car H3):
- 
 diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index f470fb3..ea76973 100644
+index bca6162..b121f07 100644
 --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
 +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -13,6 +13,7 @@
-  */
- 
- #include <linux/extcon-provider.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-@@ -100,9 +101,12 @@ struct rcar_gen3_chan {
- 	struct phy *phy;
- 	struct regulator *vbus;
- 	const struct rcar_gen3_role_swap_ops *rs_ops;
-+	struct gpio_desc *gpio_vbus;
-+	struct gpio_desc *gpio_id;
- 	struct work_struct work;
- 	bool extcon_host;
+@@ -93,21 +93,21 @@ struct rcar_gen3_chan {
  	bool has_otg_pins;
-+	bool has_gpio;
  };
  
- static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
-@@ -199,6 +203,36 @@ static void has_otg_pins_init(struct rcar_gen3_chan *ch)
- 	       usb2_base + USB2_LINECTRL1);
+-static void rcar_gen3_phy_usb2_work(struct work_struct *work)
++static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
+ {
+-	struct rcar_gen3_chan *ch = container_of(work, struct rcar_gen3_chan,
+-						 work);
++	void __iomem *usb2_base = ch->base;
++	u32 val = readl(usb2_base + USB2_LINECTRL1);
+ 
+-	if (ch->extcon_host) {
+-		extcon_set_state_sync(ch->extcon, EXTCON_USB_HOST, true);
+-		extcon_set_state_sync(ch->extcon, EXTCON_USB, false);
+-	} else {
+-		extcon_set_state_sync(ch->extcon, EXTCON_USB_HOST, false);
+-		extcon_set_state_sync(ch->extcon, EXTCON_USB, true);
+-	}
++	dev_vdbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
++	val &= ~(USB2_LINECTRL1_DP_RPD | USB2_LINECTRL1_DM_RPD);
++	if (dp)
++		val |= USB2_LINECTRL1_DP_RPD;
++	if (dm)
++		val |= USB2_LINECTRL1_DM_RPD;
++	writel(val, usb2_base + USB2_LINECTRL1);
  }
  
-+static void gpio_set_vbus_ctrl(struct rcar_gen3_chan *ch, int enable)
+-static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
++static void has_otg_pins_set_host(struct rcar_gen3_chan *ch, int host)
+ {
+ 	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_COMMCTRL);
+@@ -120,21 +120,27 @@ static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
+ 	writel(val, usb2_base + USB2_COMMCTRL);
+ }
+ 
+-static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
++static bool has_otg_pins_is_host(struct rcar_gen3_chan *ch)
 +{
-+	gpiod_set_value(ch->gpio_vbus, enable);
++	return !(readl(ch->base + USB2_COMMCTRL) & USB2_COMMCTRL_OTG_PERI);
 +}
 +
-+static bool gpio_check_id(struct rcar_gen3_chan *ch)
++static irqreturn_t has_otg_pins_irq_handler(struct rcar_gen3_chan *ch)
+ {
+ 	void __iomem *usb2_base = ch->base;
+-	u32 val = readl(usb2_base + USB2_LINECTRL1);
++	u32 status = readl(usb2_base + USB2_OBINTSTA);
++	irqreturn_t ret = IRQ_NONE;
+ 
+-	dev_vdbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
+-	val &= ~(USB2_LINECTRL1_DP_RPD | USB2_LINECTRL1_DM_RPD);
+-	if (dp)
+-		val |= USB2_LINECTRL1_DP_RPD;
+-	if (dm)
+-		val |= USB2_LINECTRL1_DM_RPD;
+-	writel(val, usb2_base + USB2_LINECTRL1);
++	if (status & USB2_OBINT_BITS) {
++		dev_vdbg(&ch->phy->dev, "%s: %08x\n", __func__, status);
++		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
++		ret = IRQ_HANDLED;
++	}
++
++	return ret;
+ }
+ 
+-static void rcar_gen3_set_vbus_ctrl(struct rcar_gen3_chan *ch, int enable)
++static void has_otg_pins_set_vbus_ctrl(struct rcar_gen3_chan *ch, int enable)
+ {
+ 	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_ADPCTRL);
+@@ -147,7 +153,7 @@ static void rcar_gen3_set_vbus_ctrl(struct rcar_gen3_chan *ch, int enable)
+ 	writel(val, usb2_base + USB2_ADPCTRL);
+ }
+ 
+-static void rcar_gen3_control_otg_irq(struct rcar_gen3_chan *ch, int enable)
++static void has_otg_pins_control_irq(struct rcar_gen3_chan *ch, int enable)
+ {
+ 	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_OBINTEN);
+@@ -159,6 +165,57 @@ static void rcar_gen3_control_otg_irq(struct rcar_gen3_chan *ch, int enable)
+ 	writel(val, usb2_base + USB2_OBINTEN);
+ }
+ 
++static bool has_otg_pins_check_id(struct rcar_gen3_chan *ch)
 +{
-+	return gpiod_get_value(ch->gpio_id);
++	return !!(readl(ch->base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
 +}
 +
-+static void gpio_set_host(struct rcar_gen3_chan *ch, int host)
++static void has_otg_pins_init(struct rcar_gen3_chan *ch)
 +{
-+	/* In gpio ops, this driver will modify the extcon_host by sysfs */
-+	if (ch->extcon_host != !!host) {
-+		ch->extcon_host = !!host;
-+		schedule_work(&ch->work);
++	void __iomem *usb2_base = ch->base;
++	u32 val;
++
++	val = readl(usb2_base + USB2_VBCTRL);
++	writel(val | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
++	writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
++	has_otg_pins_control_irq(ch, 1);
++	val = readl(usb2_base + USB2_ADPCTRL);
++	writel(val | USB2_ADPCTRL_IDPULLUP, usb2_base + USB2_ADPCTRL);
++	val = readl(usb2_base + USB2_LINECTRL1);
++	rcar_gen3_set_linectrl(ch, 0, 0);
++	writel(val | USB2_LINECTRL1_DPRPD_EN | USB2_LINECTRL1_DMRPD_EN,
++	       usb2_base + USB2_LINECTRL1);
++}
++
++static void rcar_gen3_phy_usb2_work(struct work_struct *work)
++{
++	struct rcar_gen3_chan *ch = container_of(work, struct rcar_gen3_chan,
++						 work);
++
++	if (ch->extcon_host) {
++		extcon_set_state_sync(ch->extcon, EXTCON_USB_HOST, true);
++		extcon_set_state_sync(ch->extcon, EXTCON_USB, false);
++	} else {
++		extcon_set_state_sync(ch->extcon, EXTCON_USB_HOST, false);
++		extcon_set_state_sync(ch->extcon, EXTCON_USB, true);
 +	}
 +}
 +
-+static bool gpio_is_host(struct rcar_gen3_chan *ch)
++static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
 +{
-+	return ch->extcon_host;
++	has_otg_pins_set_host(ch, host);
 +}
 +
-+static irqreturn_t gpio_irq_handler(struct rcar_gen3_chan *ch)
++static void rcar_gen3_set_vbus_ctrl(struct rcar_gen3_chan *ch, int enable)
 +{
-+	/* Nop because the driver will get gpio value after exited */
-+	return IRQ_HANDLED;
++	has_otg_pins_set_vbus_ctrl(ch, enable);
 +}
 +
- static void rcar_gen3_phy_usb2_work(struct work_struct *work)
- {
- 	struct rcar_gen3_chan *ch = container_of(work, struct rcar_gen3_chan,
-@@ -323,7 +357,7 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
- 	bool is_b_device;
- 	enum phy_mode cur_mode, new_mode;
- 
--	if (!ch->has_otg_pins || !ch->phy->init_count)
-+	if (!(ch->has_otg_pins || ch->has_gpio) || !ch->phy->init_count)
- 		return -EIO;
- 
- 	if (!strncmp(buf, "host", strlen("host")))
-@@ -361,7 +395,7 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
- 
--	if (!ch->has_otg_pins || !ch->phy->init_count)
-+	if (!(ch->has_otg_pins || ch->has_gpio) || !ch->phy->init_count)
- 		return -EIO;
- 
- 	return sprintf(buf, "%s\n", rcar_gen3_is_host(ch) ? "host" :
-@@ -388,7 +422,7 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
- 	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
- 
- 	/* Initialize otg part */
--	if (channel->has_otg_pins)
-+	if (channel->has_otg_pins || channel->has_gpio)
- 		rcar_gen3_init_otg(channel);
- 
- 	return 0;
-@@ -489,6 +523,14 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
- 	.irq_handler	= has_otg_pins_irq_handler,
- };
- 
-+static const struct rcar_gen3_role_swap_ops gpio_ops = {
-+	.set_host	= gpio_set_host,
-+	.is_host	= gpio_is_host,
-+	.set_vbus_ctrl	= gpio_set_vbus_ctrl,
-+	.check_id	= gpio_check_id,
-+	.irq_handler	= gpio_irq_handler,
-+};
++static void rcar_gen3_control_otg_irq(struct rcar_gen3_chan *ch, int enable)
++{
++	has_otg_pins_control_irq(ch, enable);
++}
 +
- static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ static void rcar_gen3_init_for_host(struct rcar_gen3_chan *ch)
  {
- 	struct device *dev = &pdev->dev;
-@@ -513,9 +555,30 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 	rcar_gen3_set_linectrl(ch, 1, 1);
+@@ -214,7 +271,7 @@ static void rcar_gen3_init_from_a_peri_to_a_host(struct rcar_gen3_chan *ch)
  
- 	INIT_WORK(&channel->work, rcar_gen3_phy_usb2_work);
- 
--	/* call request_irq for OTG */
-+	channel->gpio_vbus = devm_gpiod_get(dev, "vbus", GPIOD_OUT_LOW);
-+	if (IS_ERR(channel->gpio_vbus) &&
-+	    PTR_ERR(channel->gpio_vbus) == -EPROBE_DEFER)
-+		return PTR_ERR(channel->gpio_vbus);
-+
-+	channel->gpio_id = devm_gpiod_get(dev, "id", GPIOD_IN);
-+	if (!IS_ERR(channel->gpio_vbus) && !IS_ERR(channel->gpio_id)) {
-+		irq = gpiod_to_irq(channel->gpio_id);
-+		if (irq > 0) {
-+			ret = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
-+				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-+				dev_name(dev), channel);
-+			if (ret < 0) {
-+				dev_err(dev, "No gpio irq handler (%d)\n", irq);
-+			} else {
-+				channel->has_gpio = true;
-+				channel->rs_ops = &gpio_ops;
-+			}
-+		}
-+	}
-+
-+	/* call request_irq for OTG if doesn't have gpio */
- 	irq = platform_get_irq(pdev, 0);
--	if (irq >= 0) {
-+	if (!channel->has_gpio && irq >= 0) {
- 		irq = devm_request_irq(dev, irq, rcar_gen3_phy_usb2_irq,
- 				       IRQF_SHARED, dev_name(dev), channel);
- 		if (irq < 0)
-@@ -569,7 +632,7 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
- 		dev_err(dev, "Failed to register PHY provider\n");
- 		ret = PTR_ERR(provider);
- 		goto error;
--	} else if (channel->has_otg_pins) {
-+	} else if (channel->has_otg_pins || channel->has_gpio) {
- 		int ret;
- 
- 		ret = device_create_file(dev, &dev_attr_role);
-@@ -589,7 +652,7 @@ static int rcar_gen3_phy_usb2_remove(struct platform_device *pdev)
+ static bool rcar_gen3_check_id(struct rcar_gen3_chan *ch)
  {
- 	struct rcar_gen3_chan *channel = platform_get_drvdata(pdev);
+-	return !!(readl(ch->base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
++	return has_otg_pins_check_id(ch);
+ }
  
--	if (channel->has_otg_pins)
-+	if (channel->has_otg_pins || channel->has_gpio)
- 		device_remove_file(&pdev->dev, &dev_attr_role);
+ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
+@@ -227,7 +284,7 @@ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
  
- 	pm_runtime_disable(&pdev->dev);
+ static bool rcar_gen3_is_host(struct rcar_gen3_chan *ch)
+ {
+-	return !(readl(ch->base + USB2_COMMCTRL) & USB2_COMMCTRL_OTG_PERI);
++	return has_otg_pins_is_host(ch);
+ }
+ 
+ static enum phy_mode rcar_gen3_get_phy_mode(struct rcar_gen3_chan *ch)
+@@ -293,19 +350,7 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
+ 
+ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ {
+-	void __iomem *usb2_base = ch->base;
+-	u32 val;
+-
+-	val = readl(usb2_base + USB2_VBCTRL);
+-	writel(val | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
+-	writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+-	rcar_gen3_control_otg_irq(ch, 1);
+-	val = readl(usb2_base + USB2_ADPCTRL);
+-	writel(val | USB2_ADPCTRL_IDPULLUP, usb2_base + USB2_ADPCTRL);
+-	val = readl(usb2_base + USB2_LINECTRL1);
+-	rcar_gen3_set_linectrl(ch, 0, 0);
+-	writel(val | USB2_LINECTRL1_DPRPD_EN | USB2_LINECTRL1_DMRPD_EN,
+-	       usb2_base + USB2_LINECTRL1);
++	has_otg_pins_init(ch);
+ 
+ 	rcar_gen3_device_recognition(ch);
+ }
+@@ -380,16 +425,11 @@ static int rcar_gen3_phy_usb2_power_off(struct phy *p)
+ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+ {
+ 	struct rcar_gen3_chan *ch = _ch;
+-	void __iomem *usb2_base = ch->base;
+-	u32 status = readl(usb2_base + USB2_OBINTSTA);
+-	irqreturn_t ret = IRQ_NONE;
++	irqreturn_t ret;
+ 
+-	if (status & USB2_OBINT_BITS) {
+-		dev_vdbg(&ch->phy->dev, "%s: %08x\n", __func__, status);
+-		writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
++	ret = has_otg_pins_irq_handler(ch);
++	if (ret == IRQ_HANDLED)
+ 		rcar_gen3_device_recognition(ch);
+-		ret = IRQ_HANDLED;
+-	}
+ 
+ 	return ret;
+ }
 -- 
 1.9.1
