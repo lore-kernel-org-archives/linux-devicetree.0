@@ -1,119 +1,37 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH V1 1/4] qcom: spmi-wled: Add support for qcom wled driver
-Date: Fri, 15 Dec 2017 21:30:26 +0100
-Message-ID: <20171215203026.GA19442@amd>
-References: <1510834717-21765-1-git-send-email-kgunda@codeaurora.org>
- <1510834717-21765-2-git-send-email-kgunda@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: gpu: mali-utgard: add
+ rockchip,rk3328-mali compatible
+Date: Fri, 15 Dec 2017 14:30:41 -0600
+Message-ID: <20171215203041.lm22qrdt2dojoae3@rob-hp-laptop>
+References: <20171209000738.32187-1-heiko@sntech.de>
+ <20171209000738.32187-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1510834717-21765-2-git-send-email-kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20171209000738.32187-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu 2017-11-16 17:48:34, Kiran Gunda wrote:
-> WLED driver provides the interface to the display driver to
-> adjust the brightness of the display backlight.
->=20
-> Signed-off-by: Kiran Gunda <kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On Sat, Dec 09, 2017 at 01:07:36AM +0100, Heiko Stuebner wrote:
+> The rk3328 quad-core Cortex A53 uses a Mali-450MP2 with 2 PPs, so
+> add a compatible for it.
+> 
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 > ---
->  .../bindings/leds/backlight/qcom-spmi-wled.txt     |  90 ++++
->  drivers/video/backlight/Kconfig                    |   9 +
->  drivers/video/backlight/Makefile                   |   1 +
->  drivers/video/backlight/qcom-spmi-wled.c           | 504 +++++++++++++++=
-++++++
->  4 files changed, 604 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom=
--spmi-wled.txt
->  create mode 100644 drivers/video/backlight/qcom-spmi-wled.c
->=20
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-w=
-led.txt b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.t=
-xt
-> new file mode 100644
-> index 0000000..f1ea25b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-spmi-wled.txt
-> @@ -0,0 +1,90 @@
-> +Binding for Qualcomm WLED driver
-> +
-> +WLED (White Light Emitting Diode) driver is used for controlling display
-> +backlight that is part of PMIC on Qualcomm Technologies reference platfo=
-rms.
-> +The PMIC is connected to the host processor via SPMI bus.
-> +
-> +- compatible
-> +	Usage:      required
-> +	Value type: <string>
-> +	Definition: should be "qcom,pm8998-spmi-wled".
-> +
-> +- reg
-> +	Usage:      required
-> +	Value type: <prop-encoded-array>
-> +	Definition:  Base address and size of the WLED modules.
-> +
-> +- reg-names
-> +	Usage:      required
-> +	Value type: <string>
-> +	Definition:  Names associated with base addresses. should be
-> +		     "qcom-wled-ctrl-base", "qcom-wled-sink-base".
-> +
-> +- label
-> +	Usage:      required
-> +	Value type: <string>
-> +	Definition: The name of the backlight device.
-> +
-> +- default-brightness
-> +	Usage:      optional
-> +	Value type: <u32>
-> +	Definition: brightness value on boot, value from: 0-4095
-> +		    default: 2048
-> +
-> +- qcom,fs-current-limit
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-I'd add "-uA" suffix here.
+For the series,
 
-> +	Usage:      optional
-> +	Value type: <u32>
-> +	Definition: per-string full scale current limit in uA. value from
-> +		    0 to 30000 with 5000 uA resolution. default: 25000 uA
-> +
-> +- qcom,current-boost-limit
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-And -mA suffix here. Similar for other units.
+Though I don't think it's really necessary to enable the gpu per board 
+as it has no pinout. Default enabled would be better IMO.
 
-Thanks,
-								Pavel
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlo0MOIACgkQMOfwapXb+vJhwACfR1k70Lve5If7KoLwAZfAlQ2V
-6z4AoI/uaT+pl3chUKAcZqRd9ytgPGt1
-=wLJn
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
