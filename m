@@ -1,75 +1,72 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 07/13] dt-bindings: power: reset: Document
- ocelot-reset binding
-Date: Fri, 15 Dec 2017 23:07:41 +0100
-Message-ID: <20171215220741.GE7022@piout.net>
-References: <20171208154618.20105-1-alexandre.belloni@free-electrons.com>
- <20171208154618.20105-8-alexandre.belloni@free-electrons.com>
- <20171215202332.bn47da3fpkynusno@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] media: V3s: Add support for
+ Allwinner CSI.
+Date: Fri, 15 Dec 2017 23:14:30 +0100
+Message-ID: <20171215221430.di72fzaszgnvuzmp@flea.lan>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+ <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
+ <20171121154827.5a35xa6zlqrrvkxx@flea.lan>
+ <20171122093306.d30fe641f269d62daa1f66b4@magewell.com>
+ <20171122094526.nqxfy2e5jzxw7nl4@flea.lan>
+ <20171123091444.4bed66dffeb36ecea8dfa706@magewell.com>
+ <20171125160233.skefdpkjy4peh7et@flea.lan>
+ <20171204174511.a5be3b521e9a7c7004d32d0d@magewell.com>
+ <20171215105047.ist7epuida2uao74@flea.lan>
+ <20171215190140.d4df71b202b9803baa6a1e10@magewell.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBR4S2HIQKGQEDZKKLTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20171215202332.bn47da3fpkynusno@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20171215190140.d4df71b202b9803baa6a1e10-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinu
 List-Id: devicetree@vger.kernel.org
 
-On 15/12/2017 at 14:23:32 -0600, Rob Herring wrote:
-> On Fri, Dec 08, 2017 at 04:46:12PM +0100, Alexandre Belloni wrote:
-> > Add binding documentation for the Microsemi Ocelot reset block.
-> > 
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/power/reset/ocelot-reset.txt    | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> > new file mode 100644
-> > index 000000000000..1bcf276b04cb
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> > @@ -0,0 +1,17 @@
-> > +Microsemi Ocelot reset controller
-> > +
-> > +The DEVCPU_GCB:CHIP_REGS have a SOFT_RST register that can be used to reset the
-> > +SoC MIPS core.
-> > +
-> > +Required Properties:
-> > + - compatible: "mscc,ocelot-chip-reset"
-> > +
-> > +Example:
-> > +	syscon@71070000 {
-> > +		compatible = "mscc,ocelot-chip-regs", "simple-mfd", "syscon";
-> > +		reg = <0x71070000 0x1c>;
-> > +
-> > +		reset {
-> > +			compatible = "mscc,ocelot-chip-reset";
+Hi,
+
+On Fri, Dec 15, 2017 at 07:01:40PM +0800, Yong wrote:
+> Hi Maxime,
 > 
-> Why do you need a subnode here other than as a way to instantiate a 
-> driver? Can you describe the SOFT_RST register in reg property here 
-> (without having overlapping regions)?
+> On Fri, 15 Dec 2017 11:50:47 +0100
+> Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > Hi Yong,
+> > 
+> > On Mon, Dec 04, 2017 at 05:45:11PM +0800, Yong wrote:
+> > > I just noticed that you are using the second iteration?
+> > > Have you received my third iteration?
+> > 
+> > Sorry for the late reply, and for not coming back to you yet about
+> > that test. No, this is still in your v2. I've definitely received your
+> > v3, I just didn't have time to update to it yet.
+> > 
+> > But don't worry, my mail was mostly to know if you had tested that
+> > setup on your side to try to nail down the issue on my end, not really
+> > a review or comment that would prevent your patch from going in.
+> 
+> I mean,
+> The v2 exactly has a bug which may cause the CSI writing frame to 
+> a wrong memory address.
 
-You mean like:
+Ah, sorry I misunderstood you then. I'll definitely test your v3..
 
-reset@7107001c {
-	compatible = "mscc,ocelot-chip-reset";
-	reg = <0x7107001c 0x4>;
-};
+> BTW, should I send a new version. I have made some improve sine v3.
 
-I guess that could work.
+.. or your v4 :)
+
+Yes, please send a new version.
+
+Maxime
 
 -- 
-Alexandre Belloni, Free Electrons
+Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
