@@ -1,8 +1,8 @@
 Return-Path: <SRS0=kKXI=DL=macbookpro.malat.net=mathieu@kernel.org>
 From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH 03/25] arm: bcm: dts: Remove leading 0x and 0s from bindings notation
-Date: Fri, 15 Dec 2017 12:15:53 +0100
-Message-Id: <20171215111620.20379-3-malat@debian.org>
+Subject: [PATCH 12/25] arm: socfpga: dts: Remove leading 0x and 0s from bindings notation
+Date: Fri, 15 Dec 2017 12:16:02 +0100
+Message-Id: <20171215111620.20379-12-malat@debian.org>
 In-Reply-To: <20171215111620.20379-1-malat@debian.org>
 References: <20171214165350.27850-1-malat@debian.org>
  <20171215111620.20379-1-malat@debian.org>
@@ -41,49 +41,21 @@ Reported-by: David Daney <ddaney@caviumnetworks.com>
 Suggested-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/arm/boot/dts/bcm11351.dtsi | 2 +-
- arch/arm/boot/dts/bcm21664.dtsi | 2 +-
- arch/arm/boot/dts/bcm283x.dtsi  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/socfpga.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 18045c38bcf1..db7cded1b7ad 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -55,7 +55,7 @@
- 		      <0x3ff00100 0x100>;
- 	};
- 
--	smc@0x3404c000 {
-+	smc@3404c000 {
- 		compatible = "brcm,bcm11351-smc", "brcm,kona-smc";
- 		reg = <0x3404c000 0x400>; /* 1 KiB in SRAM */
- 	};
-diff --git a/arch/arm/boot/dts/bcm21664.dtsi b/arch/arm/boot/dts/bcm21664.dtsi
-index 6dde95f21cef..266f2611dc22 100644
---- a/arch/arm/boot/dts/bcm21664.dtsi
-+++ b/arch/arm/boot/dts/bcm21664.dtsi
-@@ -55,7 +55,7 @@
- 		      <0x3ff00100 0x100>;
- 	};
- 
--	smc@0x3404e000 {
-+	smc@3404e000 {
- 		compatible = "brcm,bcm21664-smc", "brcm,kona-smc";
- 		reg = <0x3404e000 0x400>; /* 1 KiB in SRAM */
- 	};
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index dcde93c85c2d..2ee4f04ea9d4 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -464,7 +464,7 @@
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 7e24dc8e82d4..36f87eb389b1 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -724,7 +724,7 @@
+ 			arm,prefetch-offset = <7>;
  		};
  
--		aux: aux@0x7e215000 {
-+		aux: aux@7e215000 {
- 			compatible = "brcm,bcm2835-aux";
- 			#clock-cells = <1>;
- 			reg = <0x7e215000 0x8>;
+-		l3regs@0xff800000 {
++		l3regs@ff800000 {
+ 			compatible = "altr,l3regs", "syscon";
+ 			reg = <0xff800000 0x1000>;
+ 		};
 -- 
 2.11.0
