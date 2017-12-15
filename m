@@ -1,35 +1,68 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP
- init driver
-Date: Fri, 15 Dec 2017 14:26:09 +0100
-Message-ID: <CAK8P3a0nm_-pxGWXHx_FAXgXt1msE2bK0D4paBMWgryPyeS9xA@mail.gmail.com>
-References: <29198c0a-783e-8aa0-00e4-44b1fa1acef7@infradead.org>
- <1513322656-4571-1-git-send-email-dshah@xilinx.com> <1513322656-4571-3-git-send-email-dshah@xilinx.com>
+From: <Wenyou.Yang@microchip.com>
+Subject: RE: [PATCH v9 0/2] media: ov7740: Add a V4L2 sensor-level driver
+Date: Fri, 15 Dec 2017 13:26:18 +0000
+Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB8D2D46@CHN-SV-EXMX07.mchp-main.com>
+References: <20171211013146.2497-1-wenyou.yang@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513322656-4571-3-git-send-email-dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171211013146.2497-1-wenyou.yang@microchip.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou.Yang@microchip.com, mchehab@s-opensource.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com, devicetree@vger.kernel.org, sakari.ailus@iki.fi, corbet@lwn.net, hverkuil@xs4all.nl, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In Fri, Dec 15, 2017 at 8:24 AM, Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> Xilinx ZYNQMP logicoreIP Init driver is based on the new
-> LogiCoreIP design created. This driver provides the processing system
-> and programmable logic isolation. Set the frequency based on the clock
-> information get from the logicoreIP register set.
->
-> It is put in drivers/misc as there is no subsystem for this logicoreIP.
->
-> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-
-After giving this some more thought, I'd suggest you move the driver to
-drivers/soc/xilinx or drivers/soc/zynq instead of drivers/misc/, and have
-it merged by Michal Simek as a driver patch that will go through arm-soc.
-
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU2FrYXJpLA0KDQpEbyB5b3UgaGF2ZSBzb21lIGNvbW1lbnRzIG9uIHRoaXMgdmVyc2lvbj8N
+Cg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQo+IEZyb206IGxpbnV4LW1lZGlhLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRv
+OmxpbnV4LW1lZGlhLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBXZW55
+b3UgWWFuZw0KPiBTZW50OiAyMDE3xOoxMtTCMTHI1SA5OjMyDQo+IFRvOiBNYXVybyBDYXJ2YWxo
+byBDaGVoYWIgPG1jaGVoYWJAcy1vcGVuc291cmNlLmNvbT47IFJvYiBIZXJyaW5nDQo+IDxyb2Jo
+K2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPg0KPiBD
+YzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgTmljb2xhcyBGZXJyZSAtIE00MzIzOA0K
+PiA8Tmljb2xhcy5GZXJyZUBtaWNyb2NoaXAuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7IFNha2FyaSBBaWx1cw0KPiA8c2FrYXJpLmFpbHVzQGlraS5maT47IEpvbmF0aGFuIENvcmJl
+dCA8Y29yYmV0QGx3bi5uZXQ+OyBIYW5zIFZlcmt1aWwNCj4gPGh2ZXJrdWlsQHhzNGFsbC5ubD47
+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgTGludXggTWVkaWEgTWFpbGlu
+ZyBMaXN0DQo+IDxsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmc+OyBXZW55b3UgWWFuZyAtIEE0
+MTUzNQ0KPiA8V2VueW91LllhbmdAbWljcm9jaGlwLmNvbT4NCj4gU3ViamVjdDogW1BBVENIIHY5
+IDAvMl0gbWVkaWE6IG92Nzc0MDogQWRkIGEgVjRMMiBzZW5zb3ItbGV2ZWwgZHJpdmVyDQo+IA0K
+PiBBZGQgYSBWaWRlbzRMaW51eDIgc2Vuc29yLWxldmVsIGRyaXZlciBmb3IgdGhlIE9tbmlWaXNp
+b24gT1Y3NzQwIFZHQSBjYW1lcmENCj4gaW1hZ2Ugc2Vuc29yLg0KPiANCj4gQ2hhbmdlcyBpbiB2
+OToNCj4gIC0gVXNlIHRoZSBuZXcgU1BEWCBpZHMuDQo+IA0KPiBDaGFuZ2VzIGluIHY4Og0KPiAg
+LSBBcyB0aGUgcmVnaXN0ZXJzIGFyZSB3cml0dGVuIGF0IHN0cmVhbSBzdGFydCwgcmVtb3ZlIHRo
+ZSB3cml0dGVuDQo+ICAgIGNvZGUgZnJvbSB0aGUgc2V0IGZtdCBmdW5jdGlvbi4NCj4gDQo+IENo
+YW5nZXMgaW4gdjc6DQo+ICAtIEFkZCBBY2tlZC1ieSB0YWcuDQo+ICAtIEZpeCB0aGUgd3Jvbmcg
+aGFuZGxlIG9mIGRlZmF1bHQgcmVnaXN0ZXIgY29uZmlndXJhdGlvbi4NCj4gIC0gQWRkIHRoZSBt
+aXNzZWQgYXNzaWdubWVudCBvZiBvdjc3NDAtPmZybXNpemUuDQo+IA0KPiBDaGFuZ2VzIGluIHY2
+Og0KPiAgLSBSZW1vdmUgdW5uZWNlc3NhcnkgI2luY2x1ZGUgPGxpbnV4L2luaXQ+Lg0KPiAgLSBS
+ZW1vdmUgdW5uZWNlc3NhcnkgY29tbWVudHMgYW5kIGV4dHJhIG5ld2xpbmUuDQo+ICAtIEFkZCBj
+b25zdCBmb3Igc29tZSBzdHJ1Y3R1cmVzLg0KPiAgLSBBZGQgdGhlIGNoZWNrIG9mIHRoZSByZXR1
+cm4gdmFsdWUgZnJvbSByZWdtYXBfd3JpdGUoKS4NCj4gIC0gU2ltcGxpZnkgdGhlIGNhbGxpbmcg
+b2YgX192NGwyX2N0cmxfaGFuZGxlcl9zZXR1cCgpLg0KPiAgLSBBZGQgdGhlIGRlZmF1bHQgZm9y
+bWF0IGluaXRpYWxpemF0aW9uIGZ1bmN0aW9uLg0KPiAgLSBJbnRlZ3JhdGUgdGhlIHNldF9wb3dl
+cigpIGFuZCBlbmFibGUvZGlzYWJsZSB0aGUgY2xvY2sgaW50bw0KPiAgICBvbmUgZnVuY3Rpb24u
+DQo+IA0KPiBDaGFuZ2VzIGluIHY1Og0KPiAgLSBTcXVhc2ggdGhlIGRyaXZlciBhbmQgTUFJTlRB
+SU5FUlMgZW50cnkgcGF0Y2hlcyB0byBvbmUuDQo+ICAtIFByZWNlZGUgdGhlIGRyaXZlciBwYXRj
+aCB3aXRoIHRoZSBiaW5kaW5ncyBwYXRjaC4NCj4gDQo+IENoYW5nZXMgaW4gdjQ6DQo+ICAtIEFz
+c2lnbiAndmFsJyBhIGluaXRpYWwgdmFsdWUgdG8gYXZvaWQgd2FybmluZzogJ3ZhbCcgbWF5IGJl
+DQo+ICAgIHVzZWQgdW5pbml0aWFsaXplZC4NCj4gIC0gUmVuYW1lIFJFR19SRUcxNSB0byBhdm9p
+ZCB3YXJuaW5nOiAiUkVHX1JFRzE1IiByZWRlZmluZWQuDQo+IA0KPiBDaGFuZ2VzIGluIHYzOg0K
+PiAgLSBFeHBsaWNpdGx5IGRvY3VtZW50IHRoZSAicmVtb3RlLWVuZHBvaW50IiBwcm9wZXJ0eS4N
+Cj4gIC0gUHV0IHRoZSBNQUlOVEFJTkVSUyBjaGFuZ2UgdG8gYSBzZXBhcmF0ZSBwYXRjaC4NCj4g
+DQo+IENoYW5nZXMgaW4gdjI6DQo+ICAtIFNwbGl0IG9mZiB0aGUgYmluZGluZ3MgaW50byBhIHNl
+cGFyYXRlIHBhdGNoLg0KPiAgLSBBZGQgYSBuZXcgZW50cnkgdG8gdGhlIE1BSU5UQUlORVJTIGZp
+bGUuDQo+IA0KPiBXZW55b3UgWWFuZyAoMik6DQo+ICAgbWVkaWE6IG92Nzc0MDogRG9jdW1lbnQg
+ZGV2aWNlIHRyZWUgYmluZGluZ3MNCj4gICBtZWRpYTogaTJjOiBBZGQgdGhlIG92Nzc0MCBpbWFn
+ZSBzZW5zb3IgZHJpdmVyDQo+IA0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJj
+L292Nzc0MC50eHQgICAgICAgfCAgIDQ3ICsNCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgOCArDQo+ICBkcml2ZXJzL21lZGlhL2kyYy9L
+Y29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDggKw0KPiAgZHJpdmVycy9tZWRp
+YS9pMmMvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gIGRyaXZl
+cnMvbWVkaWEvaTJjL292Nzc0MC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTIxNiArKysr
+KysrKysrKysrKysrKysrKw0KPiAgNSBmaWxlcyBjaGFuZ2VkLCAxMjgwIGluc2VydGlvbnMoKykN
+Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bWVkaWEvaTJjL292Nzc0MC50eHQNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21lZGlh
+L2kyYy9vdjc3NDAuYw0KPiANCj4gLS0NCj4gMi4xNS4wDQoNCg==
