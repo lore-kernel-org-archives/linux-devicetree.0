@@ -1,18 +1,23 @@
 From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] arm: kirkwood: dts: Use lower case for bindings notation
-Date: Fri, 15 Dec 2017 18:07:11 +0100
-Message-ID: <20171215170711.8212-1-malat@debian.org>
-References: <20171215124653.30902-1-malat@debian.org>
+Subject: [PATCH v2] arm: imx: dts: Remove leading 0x and 0s from bindings notation
+Date: Fri, 15 Dec 2017 18:13:27 +0100
+Message-ID: <20171215171327.8513-1-malat@debian.org>
+References: <20171215124631.30132-1-malat@debian.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215124653.30902-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20171215124631.30132-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Improve the DTS files using lower case to fix the following dtc warnings:
+Improve the DTS files by removing all the leading "0x" and zeros to fix the
+following dtc warnings:
 
-Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+
+and
+
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
 
 Converted using the following command:
 
@@ -26,60 +31,34 @@ the opening curly brace:
 
 https://elinux.org/Device_Tree_Linux#Linux_conventions
 
+This will solve as a side effect warning:
+
+Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+
 This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
 
 Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 ---
-v2: Fix the original template message since it was completely misleading for kirkwood subarch.
+v2: Remove invalid patch for imx7s.dtsi, remove duplicate patch for imx7d.dtsi
 
- arch/arm/boot/dts/kirkwood-linksys-viper.dts | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/imx6q-display5.dtsi | 2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/arch/arm/boot/dts/kirkwood-linksys-viper.dts b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-index df7851820507..f21a50dd9869 100644
---- a/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-+++ b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-@@ -157,7 +157,7 @@
- 			reg = <0x80000 0x20000>;
- 		};
+diff --git a/arch/arm/boot/dts/imx6q-display5.dtsi b/arch/arm/boot/dts/imx6q-display5.dtsi
+index 4084de43d4d9..09085fde3341 100644
+--- a/arch/arm/boot/dts/imx6q-display5.dtsi
++++ b/arch/arm/boot/dts/imx6q-display5.dtsi
+@@ -255,7 +255,7 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
  
--		partition@A0000 {
-+		partition@a0000 {
- 			label = "s_env";
- 			reg = <0xA0000 0x20000>;
- 		};
-@@ -167,17 +167,17 @@
- 			reg = <0x200000 0x2A0000>;
- 		};
- 
--		partition@4A0000 {
-+		partition@4a0000 {
- 			label = "rootfs";
- 			reg = <0x4A0000 0x1760000>;
- 		};
- 
--		partition@1C00000 {
-+		partition@1c00000 {
- 			label = "alt_kernel";
- 			reg = <0x1C00000 0x2A0000>;
- 		};
- 
--		partition@1EA0000 {
-+		partition@1ea0000 {
- 			label = "alt_rootfs";
- 			reg = <0x1EA0000 0x1760000>;
- 		};
-@@ -187,7 +187,7 @@
- 			reg = <0x3600000 0x4A00000>;
- 		};
- 
--		partition@C0000 {
-+		partition@c0000 {
- 			label = "unused";
- 			reg = <0xC0000 0x140000>;
- 		};
+-	codec: tfa9879@6C {
++	codec: tfa9879@6c {
+ 		#sound-dai-cells = <0>;
+ 		compatible = "nxp,tfa9879";
+ 		reg = <0x6C>;
 -- 
 2.11.0
 
