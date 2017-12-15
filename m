@@ -1,53 +1,71 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 05/25] arm: imx: dts: Remove leading 0x and 0s from
+From: Mathieu Malaterre <malat@debian.org>
+Subject: [PATCH 12/25] arm: socfpga: dts: Remove leading 0x and 0s from
  bindings notation
-Date: Fri, 15 Dec 2017 10:51:05 -0200
-Message-ID: <CAOMZO5BrxG6RZWa0_LOUyjN2VyhiyKGiRXCPiOBNHQ-Fb4kCgQ@mail.gmail.com>
-References: <20171215124631.30132-1-malat@debian.org>
+Date: Fri, 15 Dec 2017 13:46:44 +0100
+Message-ID: <20171215124644.30484-1-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215124631.30132-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Malaterre <malat@debian.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathieu,
+Improve the DTS files by removing all the leading "0x" and zeros to fix the
+following dtc warnings:
 
-On Fri, Dec 15, 2017 at 10:46 AM, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
-                 reg = <0x6C>;
-> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-> index 4d308d17f040..369d5a166b3e 100644
-> --- a/arch/arm/boot/dts/imx7d.dtsi
-> +++ b/arch/arm/boot/dts/imx7d.dtsi
-> @@ -129,7 +129,7 @@
->                 status = "disabled";
->         };
->
-> -       pcie: pcie@0x33800000 {
-> +       pcie: pcie@33800000 {
+Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 
-I have already sent a fix for this one.
+and
 
+Warning (unit_address_format): Node /XXX unit name should not have leading 0s
 
->                 compatible = "fsl,imx7d-pcie", "snps,dw-pcie";
->                 reg = <0x33800000 0x4000>,
->                       <0x4ff00000 0x80000>;
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index 82ad26e766eb..a00ba897e58d 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -583,7 +583,7 @@
->                                         #address-cells = <1>;
->                                         #size-cells = <0>;
->
-> -                                       pgc_pcie_phy: pgc-power-domain@IMX7_POWER_DOMAIN_PCIE_PHY {
-> +                                       pgc_pcie_phy: pgc-power-domain@imx7_power_domain_pcie_phy {
+Converted using the following command:
 
+find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
 
-Original code was correct.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For simplicity, two sed expressions were used to solve each warnings separately.
+
+To make the regex expression more robust a few other issues were resolved,
+namely setting unit-address to lower case, and adding a whitespace before the
+the opening curly brace:
+
+https://elinux.org/Device_Tree_Linux#Linux_conventions
+
+This will solve as a side effect warning:
+
+Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+
+This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+
+Reported-by: David Daney <ddaney@caviumnetworks.com>
+Suggested-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+ arch/arm/boot/dts/socfpga.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 7e24dc8e82d4..36f87eb389b1 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -724,7 +724,7 @@
+ 			arm,prefetch-offset = <7>;
+ 		};
+ 
+-		l3regs@0xff800000 {
++		l3regs@ff800000 {
+ 			compatible = "altr,l3regs", "syscon";
+ 			reg = <0xff800000 0x1000>;
+ 		};
+-- 
+2.11.0
