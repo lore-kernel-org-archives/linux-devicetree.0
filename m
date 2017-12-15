@@ -1,67 +1,62 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: DT dtc warnings
-Date: Fri, 15 Dec 2017 12:52:37 -0600
-Message-ID: <CAL_Jsq+hOLV=92558k+M9UcBk-0bMXEgYQkAw7Pvk4KAys04Tg@mail.gmail.com>
-References: <CAL_JsqJKCzjx3zNigu_0T=Ku=_P2SQEjTx=uVbvr_QxJQR7kYg@mail.gmail.com>
- <CAJKOXPc7M3jeV_hNBBRJKGs3vtNzdrGbW_YETw2n0fXxhqjZ_g@mail.gmail.com>
- <CAJKOXPfCDT+7wPkz3g6AiKgLvFp4rnicYQgYn8A_yaPe4YhD5A@mail.gmail.com>
- <CAOMZO5BGX1U90bGrff42rZKKOSQK3NB=-k_4BX04Tsi=yX0Odg@mail.gmail.com>
- <CAJKOXPea5nx+i+vWJcMGqct1=gP5OHbDSAzqTCBYr1RvFW-1gw@mail.gmail.com>
- <CAOMZO5CKPhQwdkYBeu74k=RYBxGhVf13nnrzHXUhq8LWk8yBSg@mail.gmail.com>
- <CAJKOXPeqm-KRnuc7uUena=iH+rYLzSVSCb-uSbLB4SdRGqLRtw@mail.gmail.com>
- <20171215072921.GJ2559@piout.net> <CAJKOXPcf_zf3X8i9xVpK_BSvnR-78otwmaiOERDYTT2tC3VC2A@mail.gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v7 5/6] arm64: dts: meson-axg: add clock DT info for Meson AXG SoC
+Date: Fri, 15 Dec 2017 10:58:51 -0800
+Message-ID: <7h7etnakd0.fsf@baylibre.com>
+References: <20171211141348.22048-1-yixun.lan@amlogic.com>
+        <20171211141348.22048-6-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPcf_zf3X8i9xVpK_BSvnR-78otwmaiOERDYTT2tC3VC2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20171211141348.22048-6-yixun.lan@amlogic.com> (Yixun Lan's
+        message of "Mon, 11 Dec 2017 22:13:47 +0800")
+Sender: linux-clk-owner@vger.kernel.org
+To: Yixun Lan <yixun.lan@amlogic.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 15, 2017 at 1:34 AM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Dec 15, 2017 at 8:29 AM, Alexandre Belloni
-> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On 15/12/2017 at 08:23:39 +0100, Krzysztof Kozlowski wrote:
->>> On Fri, Dec 15, 2017 at 12:02 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> > On Thu, Dec 14, 2017 at 7:19 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> >
->>> >> Thanks for reply!
->>> >>
->>> >> Isn't this property of a SoC? The registers used by
->>> >> syscon-poweroff/reboot are part of SoC power management unit. It does
->>> >> not refer to any externals. Why then it should be put outside of soc?
->>> >
->>> > If these nodes have registers, then they should have a unit address
->>> > and reg property.
->>>
->>> That's the point - they do not have unit address.
->>>
->>
->> Should they be put under the syscon they are using?
+Yixun Lan <yixun.lan@amlogic.com> writes:
 
-+1
+> From: Qiufang Dai <qiufang.dai@amlogic.com>
+>
+> Try to add Hiubus DT info, and also enable clock DT info
+> for the Amlogic's Meson-AXG SoC.
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Qiufang Dai <qiufang.dai@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
 
-> They are not using syscon but regmap provided by such external IP
-> block (for example this:
-> http://elixir.free-electrons.com/linux/v4.15-rc3/source/arch/arm/boot/dts/exynos3250.dtsi#L153).
-> I guess you are proposing something like on imx7s:
-> http://elixir.free-electrons.com/linux/v4.15-rc3/source/arch/arm/boot/dts/imx7s.dtsi#L539
+Applied to v4.16/dt64,
 
-Yes, but the regmap property is pointless. It's the parent!
+Thanks,
 
-> That makes sense... I am not sure how this would be related to the
-> warning itself but anyway it looks logically.
+Kevin
 
-They just have to be under a node that is not a simple-bus.
-
-"soc" nodes with a simple-bus compatible don't really mean everything
-in the SoC, but just all (or some part of) the memory mapped space.
-There's many board specific settings within those nodes. We don't
-really split up top-level things into board and soc levels.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index b932a784b02a..6fe5ee0c144e 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -148,6 +148,20 @@
+>  			#address-cells = <0>;
+>  		};
+>  
+> +		hiubus: bus@ff63c000 {
+> +			compatible = "simple-bus";
+> +			reg = <0x0 0xff63c000 0x0 0x1c00>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges = <0x0 0x0 0x0 0xff63c000 0x0 0x1c00>;
+> +
+> +			clkc: clock-controller@0 {
+> +				compatible = "amlogic,axg-clkc";
+> +				#clock-cells = <1>;
+> +				reg = <0x0 0x0 0x0 0x320>;
+> +			};
+> +		};
+> +
+>  		mailbox: mailbox@ff63dc00 {
+>  			compatible = "amlogic,meson-gx-mhu", "amlogic,meson-gxbb-mhu";
+>  			reg = <0 0xff63dc00 0 0x400>;
