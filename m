@@ -1,83 +1,74 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v3] ARM64: dts: meson-axg: enable IR controller
-Date: Fri, 15 Dec 2017 22:59:06 +0800
-Message-ID: <20171215145906.1494-1-yixun.lan@amlogic.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/2] media: coda: Add i.MX51 (CodaHx4) support
+Date: Fri, 15 Dec 2017 15:59:05 +0100
+Message-ID: <1513349945.7518.10.camel@pengutronix.de>
+References: <20171213140918.22500-1-p.zabel@pengutronix.de>
+         <20171213140918.22500-2-p.zabel@pengutronix.de>
+         <e26f7f6a-afa6-c55c-d94e-095df27c19ae@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <e26f7f6a-afa6-c55c-d94e-095df27c19ae@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <Chris.Healy@zii.aero>, devicetree@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Enable IR remote controller which found in Amlogic's Meson-AXG SoCs.
+Hi Hans,
 
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+On Fri, 2017-12-15 at 15:22 +0100, Hans Verkuil wrote:
+> Hi Philipp,
+> 
+> On 13/12/17 15:09, Philipp Zabel wrote:
+> > Add support for the CodaHx4 VPU used on i.MX51.
+> > 
+> > Decoding h.264, MPEG-4, and MPEG-2 video works, as well as encoding
+> > h.264. MPEG-4 encoding is not enabled, it currently produces visual
+> > artifacts.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> >  drivers/media/platform/coda/coda-bit.c    | 45 ++++++++++++++++++++++---------
+> >  drivers/media/platform/coda/coda-common.c | 44 +++++++++++++++++++++++++++---
+> >  drivers/media/platform/coda/coda.h        |  1 +
+> >  3 files changed, 74 insertions(+), 16 deletions(-)
+> > 
+> 
+> <snip>
+> 
+> > +	[CODA_IMX51] = {
+> > +		.firmware     = {
+> > +			"vpu_fw_imx51.bin",
+> > +			"vpu/vpu_fw_imx51.bin",
+> > +			"v4l-codahx4-imx51.bin"
+> > +		},
+> > +		.product      = CODA_HX4,
+> > +		.codecs       = codahx4_codecs,
+> > +		.num_codecs   = ARRAY_SIZE(codahx4_codecs),
+> > +		.vdevs        = codahx4_video_devices,
+> > +		.num_vdevs    = ARRAY_SIZE(codahx4_video_devices),
+> > +		.workbuf_size = 128 * 1024,
+> > +		.tempbuf_size = 304 * 1024,
+> > +		.iram_size    = 0x14000,
+> > +	},
+> 
+> What's the status of the firmware? Is it going to be available in some firmware
+> repository? I remember when testing other imx devices that it was a bit tricky
+> to get hold of the firmware. And googling v4l-codahx4-imx51.bin doesn't find
+> anything other than this patch.
 
----
+As far as I am aware, so far all efforts to get these firmware binaries
+relicensed in a way that makes them redistributable in linux-firmware
+have not succeeded.
 
-Changes since v2 at [2]
- - rebase to Kevin's v4.16/dt64 branch
- - this patch depend on pinctrl DT driver
+They are distributed by NXP directly in the firmware-imx package.
+The http://git.yoctoproject.org/cgit/cgit.cgi/meta-fsl-arm/ repository
+contains links to the latest version:
 
-Changes since v1 at [1]:
- - drop the compatbile 'amlogic,meson-gx-ir'
+  wget http://www.nxp.com/lgfiles/NMG/MAD/YOCTO/firmware-imx-5.4.bin
+  dd if=firmware-imx-5.4.bin bs=34087 skip=1 | tar xj
+  cat firmware-imx-5.4/COPYING
 
-[2]
-http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005574.html
-
-[1]
- http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005527.html
----
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  6 ++++++
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 14 ++++++++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-index 70eca1f8736a..e85fb665f12e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
-@@ -20,3 +20,9 @@
- &uart_AO {
- 	status = "okay";
- };
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index a0d7b10da512..1cd34141a5c1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -223,6 +223,13 @@
- 					#gpio-cells = <2>;
- 					gpio-ranges = <&pinctrl_aobus 0 0 15>;
- 				};
-+
-+				remote_input_ao_pins: remote_input_ao {
-+					mux {
-+						groups = "remote_input_ao";
-+						function = "remote_input_ao";
-+					};
-+				};
- 			};
- 
- 			uart_AO: serial@3000 {
-@@ -242,6 +249,13 @@
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
-+
-+			ir: ir@8000 {
-+				compatible = "amlogic,meson-gxbb-ir";
-+				reg = <0x0 0x8000 0x0 0x20>;
-+				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
-+				status = "disabled";
-+			};
- 		};
- 	};
- };
--- 
-2.15.1
+regards
+Philipp
