@@ -1,111 +1,141 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v5 01/16] dt-bindings: mtd: gpmc-onenand: Update
- properties description
-Date: Fri, 15 Dec 2017 12:18:59 +0200
-Message-ID: <23d7ad3c-e6cd-3ba6-269a-1788371d13c3@ti.com>
-References: <20171115162306.2o2w2yrf7wucroxd@lenoch>
- <20171115162458.rtompijrsaobdemk@lenoch> <20171130112544.5509ca1b@bbrezillon>
- <20171130130907.GA16809@lenoch>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: marvell: add NAND support on the 8040-DB board
+Date: Fri, 15 Dec 2017 11:24:36 +0100
+Message-ID: <87d13gmgpn.fsf@free-electrons.com>
+References: <20171106222823.3442-1-miquel.raynal@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20171130130907.GA16809@lenoch>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Ladislav Michl <ladis@linux-mips.org>, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Tony Lindgren <tony@atomide.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171106222823.3442-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> (Miquel
+        Raynal's message of "Mon, 6 Nov 2017 23:28:23 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ladislav,
+Hi Miquel,
+ 
+ On lun., nov. 06 2017, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On 30/11/17 15:09, Ladislav Michl wrote:
-> On Thu, Nov 30, 2017 at 11:25:44AM +0100, Boris Brezillon wrote:
->> +Rob and the DT ML
->>
->> On Wed, 15 Nov 2017 17:24:58 +0100
->> Ladislav Michl <ladis@linux-mips.org> wrote:
->>
->>> Compatible property is required for OMAP2+ mtd driver. Also
->>> add INT pin gpio description and delete unused dma-channel
->>> property.
->>>
->>> Signed-off-by: Ladislav Michl <ladis@linux-mips.org>
->>> Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>> Acked-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>>
->>> Changes in v5:
->>> - renamed R/B pin to INT pin
->>>
->>> Changes in v4:
->>> - new patch
->>>
->>> Changes in v3: None
->>> Changes in v2: None
->>>
->>>  Documentation/devicetree/bindings/mtd/gpmc-onenand.txt | 6 ++++--
->>>  1 file changed, 4 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
->>> index b6e8bfd024f4..e9f01a963a0a 100644
->>> --- a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
->>> +++ b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
->>> @@ -9,13 +9,14 @@ Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
->>>  
->>>  Required properties:
->>>  
->>> + - compatible:		"ti,omap2-onenand"
->>
->> Don't you break backward compat by adding this new requirement?
-> 
-> I was told it is okay in this case as OneNAND conversion to DT is unfinished.
-> There was compat fixup code in earlier versions of patchset and it was dropped
-> later. If others see it opposite way I can add it back.
-> 
+> Add NAND support on the Armada-8040-DB by adding the same tree as for
+> the Armada-7040-DB by using the same compatible string
+> "marvell,armada-8k-nand".
+>
+> Do not enable the NAND node as enabling it (and changing manually the
+> proper DPR-76 switch) would disable MDIO from CP1 (and thus disable CPS
+> Ethernet PHY).
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-If it is possible not to break backward compatibility then we shouldn't.
-Only if things are getting real messy because of the poor way the earlier DT
-implementation was done we can consider it as an exception.
 
-I thought we rely on GPMC timings entirely from the DT now and so things don't
-work with older DT nodes?
+Applied on mvebu/dt64
 
->>>   - reg:			The CS line the peripheral is connected to
->>> - - gpmc,device-width	Width of the ONENAND device connected to the GPMC
->>> + - gpmc,device-width:	Width of the ONENAND device connected to the GPMC
->>>  			in bytes. Must be 1 or 2.
->>>  
->>>  Optional properties:
->>>  
->>> - - dma-channel:		DMA Channel index
->>> + - int-gpios:		GPIO specifier for the INT pin.
->>>  
->>>  For inline partition table parsing (optional):
->>>  
->>> @@ -35,6 +36,7 @@ Example for an OMAP3430 board:
->>>  		#size-cells = <1>;
->>>  
->>>  		onenand@0 {
->>> +			compatible = "ti,omap2-onenand";
->>>  			reg = <0 0 0>; /* CS0, offset 0 */
->>>  			gpmc,device-width = <2>;
->>>  
+Thanks,
+
+Gregory
+
+
+> ---
+>  arch/arm64/boot/dts/marvell/armada-8040-db.dts     | 28 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/marvell/armada-80x0.dtsi       | 17 +++++++++++++
+>  .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi |  3 ++-
+>  3 files changed, 47 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+> index 0d7b2ae46610..1c4b4e9137e8 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+> @@ -216,6 +216,34 @@
+>  	clock-frequency = <100000>;
+>  };
+>  
+> +/*
+> + * Proper NAND usage will require DPR-76 to be in position 1-2, which disables
+> + * MDIO signal of CP1.
+> + */
+> +&cps_nand {
+> +	num-cs = <1>;
+> +	pinctrl-0 = <&nand_pins>, <&nand_rb>;
+> +	pinctrl-names = "default";
+> +	nand-ecc-strength = <4>;
+> +	nand-ecc-step-size = <512>;
+> +	marvell,nand-enable-arbiter;
+> +	marvell,system-controller = <&cps_syscon0>;
+> +	nand-on-flash-bbt;
+> +
+> +	partition@0 {
+> +		label = "U-Boot";
+> +		reg = <0 0x200000>;
+> +	};
+> +	partition@200000 {
+> +		label = "Linux";
+> +		reg = <0x200000 0xe00000>;
+> +	};
+> +	partition@1000000 {
+> +		label = "Filesystem";
+> +		reg = <0x1000000 0x3f000000>;
+> +	};
+> +};
+> +
+>  /* CON4 on CP1 expansion */
+>  &cps_sata0 {
+>  	status = "okay";
+> diff --git a/arch/arm64/boot/dts/marvell/armada-80x0.dtsi b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
+> index 666ebe96ba0d..b280ddd3c397 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
+> @@ -72,5 +72,22 @@
+>  &cps_syscon0 {
+>  	cps_pinctrl: pinctrl {
+>  		compatible = "marvell,armada-8k-cps-pinctrl";
+> +
+> +		nand_pins: nand-pins {
+> +			marvell,pins =
+> +			"mpp0", "mpp1", "mpp2", "mpp3",
+> +			"mpp4", "mpp5", "mpp6", "mpp7",
+> +			"mpp8", "mpp9", "mpp10", "mpp11",
+> +			"mpp15", "mpp16", "mpp17", "mpp18",
+> +			"mpp19", "mpp20", "mpp21", "mpp22",
+> +			"mpp23", "mpp24", "mpp25", "mpp26",
+> +			"mpp27";
+> +			marvell,function = "dev";
+> +		};
+> +
+> +		nand_rb: nand-rb {
+> +			marvell,pins = "mpp13", "mpp12";
+> +			marvell,function = "nf";
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+> index b71ee6c83668..64663f3f4dfe 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+> @@ -275,12 +275,13 @@
+>  				 * this controller is only usable on the CPM
+>  				 * for A7K and on the CPS for A8K.
+>  				 */
+> -				compatible = "marvell,armada370-nand";
+> +				compatible = "marvell,armada-8k-nand";
+>  				reg = <0x720000 0x54>;
+>  				#address-cells = <1>;
+>  				#size-cells = <1>;
+>  				interrupts = <ICU_GRP_NSR 115 IRQ_TYPE_LEVEL_HIGH>;
+>  				clocks = <&cps_clk 1 2>;
+> +				marvell,system-controller = <&cpm_syscon0>;
+>  				status = "disabled";
+>  			};
+>  
+> -- 
+> 2.11.0
+>
 
 -- 
-cheers,
--roger
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
