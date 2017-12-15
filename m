@@ -1,82 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 04/10] clk: qcom: Add CPU clock driver for msm8996
-Date: Fri, 15 Dec 2017 16:35:25 -0600
-Message-ID: <20171215223525.tzcycllxsl72hway@rob-hp-laptop>
-References: <1513081897-31612-1-git-send-email-ilialin@codeaurora.org>
- <1513081897-31612-5-git-send-email-ilialin@codeaurora.org>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] Ethernet for the Nanopi M1 & M1 plus
+Date: Fri, 15 Dec 2017 23:38:59 +0100
+Message-ID: <20171215223901.14500-1-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1513081897-31612-5-git-send-email-ilialin@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Ilia Lin <ilialin@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, devicetree@vger.kernel.org, mark.rutland@arm.com, will.deacon@arm.com, rnayak@codeaurora.org, qualcomm-lt@lists.linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD257DPK24NRBB462HIQKGQEFYSVHTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 02:31:31PM +0200, Ilia Lin wrote:
-> From: Rajendra Nayak <rnayak@codeaurora.org>
-> 
-> Each of the CPU clusters (Power and Perf) on msm8996 are
-> clocked via 2 PLLs, a primary and alternate. There are also
-> 2 Mux'es, a primary and secondary all connected together
-> as shown below
-> 
->                              +-------+
->               XO             |       |
->           +------------------>0      |
->                              |       |
->                    PLL/2     | SMUX  +----+
->                      +------->1      |    |
->                      |       |       |    |
->                      |       +-------+    |    +-------+
->                      |                    +---->0      |
->                      |                         |       |
-> +---------------+    |             +----------->1      | CPU clk
-> |Primary PLL    +----+ PLL_EARLY   |           |       +------>
-> |               +------+-----------+    +------>2 PMUX |
-> +---------------+      |                |      |       |
->                        |   +------+     |   +-->3      |
->                        +--^+  ACD +-----+   |  +-------+
-> +---------------+          +------+         |
-> |Alt PLL        |                           |
-> |               +---------------------------+
-> +---------------+         PLL_EARLY
-> 
-> The primary PLL is what drives the CPU clk, except for times
-> when we are reprogramming the PLL itself (for rate changes) when
-> we temporarily switch to an alternate PLL. A subsequent patch adds
-> support to switch between primary and alternate PLL during rate
-> changes.
-> 
-> The primary PLL operates on a single VCO range, between 600Mhz
-> and 3Ghz. However the CPUs do support OPPs with frequencies
-> between 300Mhz and 600Mhz. In order to support running the CPUs
-> at those frequencies we end up having to lock the PLL at twice
-> the rate and drive the CPU clk via the PLL/2 output and SMUX.
-> 
-> So for frequencies above 600Mhz we follow the following path
->  Primary PLL --> PLL_EARLY --> PMUX(1) --> CPU clk
-> and for frequencies between 300Mhz and 600Mhz we follow
->  Primary PLL --> PLL/2 --> SMUX(1) --> PMUX(0) --> CPU clk
-> Support for this is added in a subsequent patch as well.
-> 
-> ACD stands for Adaptive Clock Distribution and is used to
-> detect voltage droops. We do not add support for ACD as yet.
-> This can be added at a later point as needed.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
+The first patch of this patch series, fixes a missing alias 
+on the nanopi m1 plus. The second patch enables the dwmac-sun8i 
+ethernet driver on the Nanopi M1.
 
-If you respin, please make bindings a separate patch. In any case,
+Philipp Rossak (2):
+  ARM: dts: sun8i: h3: nanopi-m1-plus: fix missing ethernet 0 in aliases
+  ARM: dts: sun8i: h3: Enable dwmac-sun8i on the Nanopi M1
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+ arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts |  1 +
+ arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts      | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
->  drivers/clk/qcom/Kconfig                           |   8 +
->  drivers/clk/qcom/Makefile                          |   1 +
->  drivers/clk/qcom/clk-cpu-8996.c                    | 388 +++++++++++++++++++++
->  4 files changed, 414 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
->  create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
+-- 
+2.11.0
