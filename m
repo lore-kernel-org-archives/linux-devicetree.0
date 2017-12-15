@@ -1,95 +1,42 @@
-From: Jim Quinlan <jim2101024@gmail.com>
-Subject: Re: [PATCH v3 1/8] SOC: brcmstb: add memory API
-Date: Fri, 15 Dec 2017 14:50:41 -0500
-Message-ID: <CANCKTBsFQ7iTeaJ9GjELhYrY-e1C12-+b=EMy=p7npZutFVvvQ@mail.gmail.com>
-References: <1510697532-32828-1-git-send-email-jim2101024@gmail.com>
- <1510697532-32828-2-git-send-email-jim2101024@gmail.com> <20171205205926.GJ23510@bhelgaas-glaptop.roam.corp.google.com>
- <CANCKTBvoXpF-H8Pck5TsH+7tNM=di1-uoedqACE+kjNEAUodYg@mail.gmail.com>
- <20171212211404.GA95453@bhelgaas-glaptop.roam.corp.google.com> <20171215171440.GB32131@red-moon>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] arm: imx: dts: Use lower case for bindings notation
+Date: Fri, 15 Dec 2017 17:53:13 -0200
+Message-ID: <CAOMZO5BYU5E7g5DZDOCHjjkkcEMFvQefHfRU+x7eg6u_8e0U8w@mail.gmail.com>
+References: <20171215124631.30132-1-malat@debian.org> <20171215191930.11410-1-malat@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20171215171440.GB32131@red-moon>
-Sender: linux-pci-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jonas.gorski@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-MIPS <linux-mips@linux-mips.org>, linux-pci <linux-pci@vger.kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171215191930.11410-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 15, 2017 at 12:14 PM, Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-> On Tue, Dec 12, 2017 at 03:14:04PM -0600, Bjorn Helgaas wrote:
->> [+cc Lorenzo]
->>
->> On Tue, Dec 12, 2017 at 03:53:28PM -0500, Jim Quinlan wrote:
->> > On Tue, Dec 5, 2017 at 3:59 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
->> > > On Tue, Nov 14, 2017 at 05:12:05PM -0500, Jim Quinlan wrote:
->> > >> From: Florian Fainelli <f.fainelli@gmail.com>
->> > >>
->> > >> This commit adds a memory API suitable for ascertaining the sizes of
->> > >> each of the N memory controllers in a Broadcom STB chip.  Its first
->> > >> user will be the Broadcom STB PCIe root complex driver, which needs
->> > >> to know these sizes to properly set up DMA mappings for inbound
->> > >> regions.
->> > >>
->> > >> We cannot use memblock here or anything like what Linux provides
->> > >> because it collapses adjacent regions within a larger block, and here
->> > >> we actually need per-memory controller addresses and sizes, which is
->> > >> why we resort to manual DT parsing.
->> > >>
->> > >> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
->> > >> ---
->> > >>  drivers/soc/bcm/brcmstb/Makefile |   2 +-
->> > >>  drivers/soc/bcm/brcmstb/memory.c | 172 +++++++++++++++++++++++++++++++++++++++
->> > >>  include/soc/brcmstb/memory_api.h |  25 ++++++
->> > >>  3 files changed, 198 insertions(+), 1 deletion(-)
->> > >>  create mode 100644 drivers/soc/bcm/brcmstb/memory.c
->> > >>  create mode 100644 include/soc/brcmstb/memory_api.h
->> > >>
->> > >> diff --git a/drivers/soc/bcm/brcmstb/Makefile b/drivers/soc/bcm/brcmstb/Makefile
->> > >> index 9120b27..4cea7b6 100644
->> > >> --- a/drivers/soc/bcm/brcmstb/Makefile
->> > >> +++ b/drivers/soc/bcm/brcmstb/Makefile
->> > >> @@ -1 +1 @@
->> > >> -obj-y                                += common.o biuctrl.o
->> > >> +obj-y                                += common.o biuctrl.o memory.o
->> > >> diff --git a/drivers/soc/bcm/brcmstb/memory.c b/drivers/soc/bcm/brcmstb/memory.c
->> > >> new file mode 100644
->> > >> index 0000000..eb647ad9
->> > >> --- /dev/null
->> > >> +++ b/drivers/soc/bcm/brcmstb/memory.c
->> > >
->> > > I sort of assume based on [1] that every new file should have an SPDX
->> > > identifier ("The Linux kernel requires the precise SPDX identifier in
->> > > all source files") and that the actual text of the GPL can be omitted.
->> > >
->> > > Only a few files in drivers/pci currently have an SPDX identifier.  I
->> > > don't know if that's oversight or work-in-progress or what.
->> > >
->> > > [1] https://lkml.kernel.org/r/20171204212120.484179273@linutronix.de
->> > >
->> >
->> > Bjorn, Did you get a chance to review the other commits of this
->> > submission (V3)?  I would like any additional feedback before I send
->> > out a V4 with SPDX fixes.  Thanks, JimQ
->>
->> Lorenzo is taking over drivers/pci/host/* and he'll no doubt have some
->> comments when he gets to this.  I'll point out a few quick formatting
->> things in the meantime.
+On Fri, Dec 15, 2017 at 5:19 PM, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+> Improve the DTS files using lower case to fix the following dtc warnings:
 >
-> I need some time to review the code but overall I am quite worried about
-> patches 1 and 4 in particular, it is ok to have platform host bridge
-> drivers but we can't rewrite a DMA layer for a specific host bridge, I
-> really do not like that - it is just not manageable from a maintenance
-> perspective for the mainline kernel.
+> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
 >
-> Lorenzo
-Hi Lorenzo,
-First I note that the file drivers/pci/host/vmd.c appears to do the
-same thing -- rewrite a layer over the DMA ops.  Secondly, there seems
-to be no other way to accomplish what we need to do, especially that
-will work with ARM, ARM64, and MIPs.  Someone raised the same point
-you did and suggested I involve ARM/ARM64 maintainers, so I expanded
-my "--to" list to include Russell.  I'm open to ideas.  I've asked the
-HW PCIe folks to redesign the controller to accommodate an
-identity-map for inbound memory, but it will be a while if that
-happens, if ever. --Jim
+> Converted using the following command:
+>
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
+>
+> For simplicity, two sed expressions were used to solve each warnings separately.
+>
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+>
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+>
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+>
+> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
