@@ -1,42 +1,61 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH v2 14/19] ARM: dts: aspeed: Sort ASPEED entries in makefile
-Date: Fri, 15 Dec 2017 16:54:38 +1030
-Message-ID: <20171215062443.23059-15-joel@jms.id.au>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 13/19] ARM: dts: Add OpenBMC flash layout
+Date: Fri, 15 Dec 2017 16:54:37 +1030
+Message-ID: <20171215062443.23059-14-joel@jms.id.au>
 References: <20171215062443.23059-1-joel@jms.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215062443.23059-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171215062443.23059-1-joel@jms.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
+Cc: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-In preperation for adding more boards.
+This is a layout used by OpenBMC systems. It describes the fixed flash
+layout of a 32MB mtd device.
 
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- arch/arm/boot/dts/Makefile | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/openbmc-flash-layout.dtsi | 32 +++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 arch/arm/boot/dts/openbmc-flash-layout.dtsi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d0381e9caf21..5d1e9d37bf3a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1101,7 +1101,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
- 	mt8127-moose.dtb \
- 	mt8135-evbp1.dtb
- dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
--dtb-$(CONFIG_ARCH_ASPEED) += aspeed-bmc-opp-palmetto.dtb \
--	aspeed-bmc-opp-romulus.dtb \
--	aspeed-ast2500-evb.dtb
-+dtb-$(CONFIG_ARCH_ASPEED) += \
-+	aspeed-ast2500-evb.dtb \
-+	aspeed-bmc-opp-palmetto.dtb \
-+	aspeed-bmc-opp-romulus.dtb
- endif
+diff --git a/arch/arm/boot/dts/openbmc-flash-layout.dtsi b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
+new file mode 100644
+index 000000000000..63ad8db7a431
+--- /dev/null
++++ b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++partitions {
++	compatible = "fixed-partitions";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	u-boot@0 {
++		reg = <0x0 0x60000>;
++		label = "u-boot";
++	};
++
++	u-boot-env@60000 {
++		reg = <0x60000 0x20000>;
++		label = "u-boot-env";
++	};
++
++	kernel@80000 {
++		reg = <0x80000 0x440000>;
++		label = "kernel";
++	};
++
++	rofs@0c0000 {
++		reg = <0x4c0000 0x1740000>;
++		label = "rofs";
++	};
++
++	rwfs@1c00000 {
++		reg = <0x1c00000 0x400000>;
++		label = "rwfs";
++	};
++};
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
