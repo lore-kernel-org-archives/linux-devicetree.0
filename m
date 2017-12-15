@@ -1,71 +1,101 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 0/2] Use SPDX-License-Identifier for rockchip devicetree
- files
-Date: Fri, 15 Dec 2017 15:28:34 +0100
-Message-ID: <21020918.S4038j3A1a@diego>
-References: <20171215114427.32059-1-klaus.goger@theobroma-systems.com>
- <CAOFm3uHba4kBD81thpxSpDBsDS4Y5m7cN2jfYt_uT5atdSDmqg@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2 3/4] dt-bindings: opp: Introduce ti-opp-supply bindings
+Date: Fri, 15 Dec 2017 15:29:47 +0100
+Message-ID: <CAJZ5v0iaYAodhiQm3=7OMhtqP3JXoX_RTrYMRDxVwO=3hTL7Bg@mail.gmail.com>
+References: <20171215042528.28715-1-d-gerlach@ti.com> <20171215042528.28715-4-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOFm3uHba4kBD81thpxSpDBsDS4Y5m7cN2jfYt_uT5atdSDmqg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, Huibin Hong <huibin.hong@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Joseph Chen <chenjh@rock-chips.com>, Romain Perier <romain.perier@collabora.com>, Matthias Kaehlcke <mka@chromium.org>, Sugar Zhang <sugar.zhang@rock-chips.com>, Simon Xue <xxm@rock-chips.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Brian Norris <briannorris@chromium.org>, Russell King <linux@armlinux.org.uk>, Jaehoon Chung <jh80.chung@samsung.com>, linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Jacob Chen <jacob-chen@iotwrt.com>, Jianqun Xu <jay.xu@rock-chips.com>, Shawn Lin <shawn.lin@rock>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171215042528.28715-4-d-gerlach@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 15. Dezember 2017, 14:45:34 CET schrieb Philippe Ombredanne:
-> Klaus,
-> 
-> On Fri, Dec 15, 2017 at 12:44 PM, Klaus Goger
-> 
-> <klaus.goger@theobroma-systems.com> wrote:
-> > This patch series replaces all the license text in rockchip devicetree
-> > files text with a proper SPDX-License-Identifier.
-> > It follows the guidelines submitted[1] by Thomas Gleixner that are not
-> > yet merged.
-> > 
-> > These series also fixes the issue with contradicting statements in most
-> > licenses. The introduction text claims to be GPL or X11[2] but the
-> > following verbatim copy of the license is actually a MIT[3] license.
-> > The X11 license includes a advertise clause and trademark information
-> > related to the X Consortium. As these X Consortium specfic points are
-> > irrelevant for us we stick with the actuall license text.
-> > 
-> > [1] https://patchwork.kernel.org/patch/10091607/
-> > [2] https://spdx.org/licenses/X11.html
-> > [3] https://spdx.org/licenses/MIT.html
-> 
-> FWIW, the X11 license name was not always something clearly defined.
-> SPDX calls it clearly MIT which is the most widely accepted name for
-> the corresponding text. And this is also what we have in Thomas doc
-> patches that should be the kernel reference.
-> 
-> Also, as a general note, you want to make sure that such as patch set
-> is not merged by mistake until you have collected an explicit review
-> or ack from all the copyright holders involved.
+On Fri, Dec 15, 2017 at 5:25 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
+> Document the devicetree bindings that describe Texas Instruments
+> opp-supply which allow a platform to describe multiple regulators and
+> additional information, such as registers containing data needed to
+> program aforementioned regulators.
+>
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
 
-Just for my understanding, is it really necessary to get Acks from _all_
-previous contributors?
+I need an ACK from Rob on this one.
 
-I see that Thomas patches moving license texts into the kernel itself do not 
-seem to have landed yet, but when the actual license text does _not_ change
-and only its location to a common place inside the kernel sources, it feels
-a bit overkill trying to get Acks from _everybody_ that contributed to
-Rockchip devicetrees for the last 4 years.
-
-If we would actually want to change the license I would definitly feel 
-differently, but the license text does not change.
-
-
-Thanks
-Heiko
+> ---
+>  .../bindings/opp/ti-omap5-opp-supply.txt           | 63 ++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/ti-omap5-opp-supply.txt
+>
+> diff --git a/Documentation/devicetree/bindings/opp/ti-omap5-opp-supply.txt b/Documentation/devicetree/bindings/opp/ti-omap5-opp-supply.txt
+> new file mode 100644
+> index 000000000000..832346e489a3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/opp/ti-omap5-opp-supply.txt
+> @@ -0,0 +1,63 @@
+> +Texas Instruments OMAP compatible OPP supply description
+> +
+> +OMAP5, DRA7, and AM57 family of SoCs have Class0 AVS eFuse registers which
+> +contain data that can be used to adjust voltages programmed for some of their
+> +supplies for more efficient operation. This binding provides the information
+> +needed to read these values and use them to program the main regulator during
+> +an OPP transitions.
+> +
+> +Also, some supplies may have an associated vbb-supply which is an Adaptive Body
+> +Bias regulator which much be transitioned in a specific sequence with regards
+> +to the vdd-supply and clk when making an OPP transition. By supplying two
+> +regulators to the device that will undergo OPP transitions we can make use
+> +of the multi regulator binding that is part of the OPP core described here [1]
+> +to describe both regulators needed by the platform.
+> +
+> +[1] Documentation/devicetree/bindings/opp/opp.txt
+> +
+> +Required Properties for Device Node:
+> +- vdd-supply: phandle to regulator controlling VDD supply
+> +- vbb-supply: phandle to regulator controlling Body Bias supply
+> +             (Usually Adaptive Body Bias regulator)
+> +
+> +Required Properties for opp-supply node:
+> +- compatible: Should be one of:
+> +       "ti,omap-opp-supply" - basic OPP supply controlling VDD and VBB
+> +       "ti,omap5-opp-supply" - OMAP5+ optimized voltages in efuse(class0)VDD
+> +                           along with VBB
+> +       "ti,omap5-core-opp-supply" - OMAP5+ optimized voltages in efuse(class0) VDD
+> +                           but no VBB.
+> +- reg: Address and length of the efuse register set for the device (mandatory
+> +       only for "ti,omap5-opp-supply")
+> +- ti,efuse-settings: An array of u32 tuple items providing information about
+> +       optimized efuse configuration. Each item consists of the following:
+> +       volt: voltage in uV - reference voltage (OPP voltage)
+> +       efuse_offseet: efuse offset from reg where the optimized voltage is stored.
+> +- ti,absolute-max-voltage-uv: absolute maximum voltage for the OPP supply.
+> +
+> +Example:
+> +
+> +/* Device Node (CPU)  */
+> +cpus {
+> +       cpu0: cpu@0 {
+> +               device_type = "cpu";
+> +
+> +               ...
+> +
+> +               vdd-supply = <&vcc>;
+> +               vbb-supply = <&abb_mpu>;
+> +       };
+> +};
+> +
+> +/* OMAP OPP Supply with Class0 registers */
+> +opp_supply_mpu: opp_supply@4a003b20 {
+> +       compatible = "ti,omap5-opp-supply";
+> +       reg = <0x4a003b20 0x8>;
+> +       ti,efuse-settings = <
+> +       /* uV   offset */
+> +       1060000 0x0
+> +       1160000 0x4
+> +       1210000 0x8
+> +       >;
+> +       ti,absolute-max-voltage-uv = <1500000>;
+> +};
+> --
+> 2.15.1
+>
