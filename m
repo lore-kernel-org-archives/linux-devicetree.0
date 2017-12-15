@@ -1,75 +1,228 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 7/8] ARM: dts: keystone-k2e-clocks: Add missing unit name to  clock nodes that have regs
-Date: Fri, 15 Dec 2017 07:21:01 -0600
-Message-ID: <20171215132102.435-8-nm@ti.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH 8/8] ARM: dts: keystone-k2l-clocks: Add missing unit name to clock nodes that have regs
+Date: Fri, 15 Dec 2017 07:21:02 -0600
+Message-ID: <20171215132102.435-9-nm@ti.com>
 References: <20171215132102.435-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215132102.435-1-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171215132102.435-1-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
 Add the control register as the base for the clock nodes which are
-missing them. This squashes the following warnings of the effect when built
-with W=1:
-arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc@0/clocks/clkusb1 has a reg or ranges property, but no unit name
-arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc@0/clocks/clkhyperlink0 has a reg or ranges property, but no unit name
-arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc@0/clocks/clkpcie1 has a reg or ranges property, but no unit name
-arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc@0/clocks/clkxge has a reg or ranges property, but no unit name
+missing them.  This squashes some 22 warnings of the effect when built
+with W=1.
 
-Reported-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Reported-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2e-clocks.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/keystone-k2l-clocks.dtsi | 44 +++++++++++++++---------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
-index a0fe6eccca8d..e4a01211d9a1 100644
---- a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
-@@ -32,7 +32,7 @@ clocks {
+diff --git a/arch/arm/boot/dts/keystone-k2l-clocks.dtsi b/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
+index fc986909d70e..f85289e2431c 100644
+--- a/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
+@@ -41,7 +41,7 @@ clocks {
  		reg-names = "control";
  	};
  
--	clkusb1: clkusb1 {
-+	clkusb1: clkusb1@2350004 {
+-	clkdfeiqnsys: clkdfeiqnsys {
++	clkdfeiqnsys: clkdfeiqnsys@2350004 {
  		#clock-cells = <0>;
  		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk16>;
-@@ -42,7 +42,7 @@ clocks {
+ 		clocks = <&chipclk12>;
+@@ -51,7 +51,7 @@ clocks {
  		domain-id = <0>;
  	};
  
--	clkhyperlink0: clkhyperlink0 {
-+	clkhyperlink0: clkhyperlink02350030 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk12>;
-@@ -52,7 +52,7 @@ clocks {
- 		domain-id = <5>;
- 	};
- 
 -	clkpcie1: clkpcie1 {
-+	clkpcie1: clkpcie1@235006c {
++	clkpcie1: clkpcie1@235002c {
  		#clock-cells = <0>;
  		compatible = "ti,keystone,psc-clock";
  		clocks = <&chipclk12>;
-@@ -62,7 +62,7 @@ clocks {
- 		domain-id = <18>;
+@@ -61,7 +61,7 @@ clocks {
+ 		domain-id = <4>;
  	};
  
--	clkxge: clkxge {
-+	clkxge: clkxge@23500c8 {
+-	clkgem1: clkgem1 {
++	clkgem1: clkgem1@2350040 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk1>;
+@@ -71,7 +71,7 @@ clocks {
+ 		domain-id = <9>;
+ 	};
+ 
+-	clkgem2: clkgem2 {
++	clkgem2: clkgem2@2350044 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk1>;
+@@ -81,7 +81,7 @@ clocks {
+ 		domain-id = <10>;
+ 	};
+ 
+-	clkgem3: clkgem3 {
++	clkgem3: clkgem3@2350048 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk1>;
+@@ -91,7 +91,7 @@ clocks {
+ 		domain-id = <11>;
+ 	};
+ 
+-	clktac: clktac {
++	clktac: clktac@2350064 {
  		#clock-cells = <0>;
  		compatible = "ti,keystone,psc-clock";
  		clocks = <&chipclk13>;
+@@ -101,7 +101,7 @@ clocks {
+ 		domain-id = <17>;
+ 	};
+ 
+-	clkrac: clkrac {
++	clkrac: clkrac@2350068 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -111,7 +111,7 @@ clocks {
+ 		domain-id = <17>;
+ 	};
+ 
+-	clkdfepd0: clkdfepd0 {
++	clkdfepd0: clkdfepd0@235006c {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -121,7 +121,7 @@ clocks {
+ 		domain-id = <18>;
+ 	};
+ 
+-	clkfftc0: clkfftc0 {
++	clkfftc0: clkfftc0@2350070 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -131,7 +131,7 @@ clocks {
+ 		domain-id = <19>;
+ 	};
+ 
+-	clkosr: clkosr {
++	clkosr: clkosr@2350088 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -141,7 +141,7 @@ clocks {
+ 		domain-id = <21>;
+ 	};
+ 
+-	clktcp3d0: clktcp3d0 {
++	clktcp3d0: clktcp3d0@235008c {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -151,7 +151,7 @@ clocks {
+ 		domain-id = <22>;
+ 	};
+ 
+-	clktcp3d1: clktcp3d1 {
++	clktcp3d1: clktcp3d1@2350094 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -161,7 +161,7 @@ clocks {
+ 		domain-id = <23>;
+ 	};
+ 
+-	clkvcp0: clkvcp0 {
++	clkvcp0: clkvcp0@235009c {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -171,7 +171,7 @@ clocks {
+ 		domain-id = <24>;
+ 	};
+ 
+-	clkvcp1: clkvcp1 {
++	clkvcp1: clkvcp1@23500a0 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -181,7 +181,7 @@ clocks {
+ 		domain-id = <24>;
+ 	};
+ 
+-	clkvcp2: clkvcp2 {
++	clkvcp2: clkvcp2@23500a4 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -191,7 +191,7 @@ clocks {
+ 		domain-id = <24>;
+ 	};
+ 
+-	clkvcp3: clkvcp3 {
++	clkvcp3: clkvcp3@23500a8 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -201,7 +201,7 @@ clocks {
+ 		domain-id = <24>;
+ 	};
+ 
+-	clkbcp: clkbcp {
++	clkbcp: clkbcp@23500bc {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -211,7 +211,7 @@ clocks {
+ 		domain-id = <26>;
+ 	};
+ 
+-	clkdfepd1: clkdfepd1 {
++	clkdfepd1: clkdfepd1@23500c0 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -221,7 +221,7 @@ clocks {
+ 		domain-id = <27>;
+ 	};
+ 
+-	clkfftc1: clkfftc1 {
++	clkfftc1: clkfftc1@23500c4 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -231,7 +231,7 @@ clocks {
+ 		domain-id = <28>;
+ 	};
+ 
+-	clkiqnail: clkiqnail {
++	clkiqnail: clkiqnail@23500c8 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
+@@ -241,7 +241,7 @@ clocks {
+ 		domain-id = <29>;
+ 	};
+ 
+-	clkuart2: clkuart2 {
++	clkuart2: clkuart2@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
+@@ -251,7 +251,7 @@ clocks {
+ 		domain-id = <0>;
+ 	};
+ 
+-	clkuart3: clkuart3 {
++	clkuart3: clkuart3@2350000 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&clkmodrst0>;
 -- 
 2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
