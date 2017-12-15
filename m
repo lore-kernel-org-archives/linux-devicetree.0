@@ -1,61 +1,116 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 4/4] regulator: core: Balance coupled regulators
- voltages
-Date: Fri, 15 Dec 2017 15:19:58 +0000
-Message-ID: <20171215151958.GH1827@finisterre>
-References: <1512639975-22241-1-git-send-email-m.purski@samsung.com>
- <CGME20171207094754eucas1p1528c6c30135124430a5c703eb81de8d2@eucas1p1.samsung.com>
- <1512639975-22241-5-git-send-email-m.purski@samsung.com>
- <20171212115427.GG16323@sirena.org.uk>
- <0bca0d20-1ca8-be4c-a60e-bbc0c640ae41@samsung.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] Use SPDX-License-Identifier for rockchip devicetree
+ files
+Date: Fri, 15 Dec 2017 16:20:41 +0100
+Message-ID: <63058496.Aj9cacRib9@diego>
+References: <20171215114427.32059-1-klaus.goger@theobroma-systems.com>
+ <21020918.S4038j3A1a@diego>
+ <CAOFm3uHuwmU1nCcU1MQ9qgGZ0A70ycuoo8XpWcDzgPQFzFRnRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4LFBTxd4L5NLO6ly"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0bca0d20-1ca8-be4c-a60e-bbc0c640ae41@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAOFm3uHuwmU1nCcU1MQ9qgGZ0A70ycuoo8XpWcDzgPQFzFRnRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Emil Renner Berthing <kernel-sKpHZLTYfq0@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin@rock>
 List-Id: devicetree@vger.kernel.org
 
+Am Freitag, 15. Dezember 2017, 15:42:48 CET schrieb Philippe Ombredanne:
+> On Fri, Dec 15, 2017 at 3:28 PM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> > Am Freitag, 15. Dezember 2017, 14:45:34 CET schrieb Philippe Ombredanne:
+> >> Klaus,
+> >> =
 
---4LFBTxd4L5NLO6ly
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> >> On Fri, Dec 15, 2017 at 12:44 PM, Klaus Goger
+> >> =
 
-On Wed, Dec 13, 2017 at 10:25:00AM +0100, Maciej Purski wrote:
+> >> <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org> wrote:
+> >> > This patch series replaces all the license text in rockchip devicetr=
+ee
+> >> > files text with a proper SPDX-License-Identifier.
+> >> > It follows the guidelines submitted[1] by Thomas Gleixner that are n=
+ot
+> >> > yet merged.
+> >> > =
 
-> > shared.  To that end I'd adjust the code so that we always have a
-> > coupling descriptor and then handle the case where there's only one
-> > regulator described in there.
+> >> > These series also fixes the issue with contradicting statements in m=
+ost
+> >> > licenses. The introduction text claims to be GPL or X11[2] but the
+> >> > following verbatim copy of the license is actually a MIT[3] license.
+> >> > The X11 license includes a advertise clause and trademark information
+> >> > related to the X Consortium. As these X Consortium specfic points are
+> >> > irrelevant for us we stick with the actuall license text.
+> >> > =
 
-> Do you have any suggestion, how should I implement that path? The thing which
-> makes it more complicated is locking, because set_voltage_unlocked is done
-> under one regulator's mutex and its suppliers, while balance procedure locks
-> every coupled regulator without its suppliers. The suppliers for a single
-> regulator are locked when setting a single regulator's voltage takes place.
+> >> > [1] https://patchwork.kernel.org/patch/10091607/
+> >> > [2] https://spdx.org/licenses/X11.html
+> >> > [3] https://spdx.org/licenses/MIT.html
+> >> =
 
-We only really need to lock the supplies when doing the actual mechanics
-of voltage changes so I'm not sure I see a big issue here - if we always
-go through balancing first then voltage setting it should be fine.  If
-everything is always balancing (even uncoupled regulators) then part of
-the transition should be moving some if not all of the data updates to
-balancing.
+> >> FWIW, the X11 license name was not always something clearly defined.
+> >> SPDX calls it clearly MIT which is the most widely accepted name for
+> >> the corresponding text. And this is also what we have in Thomas doc
+> >> patches that should be the kernel reference.
+> >> =
 
---4LFBTxd4L5NLO6ly
-Content-Type: application/pgp-signature; name="signature.asc"
+> >> Also, as a general note, you want to make sure that such as patch set
+> >> is not merged by mistake until you have collected an explicit review
+> >> or ack from all the copyright holders involved.
+> > =
 
------BEGIN PGP SIGNATURE-----
+> > Just for my understanding, is it really necessary to get Acks from _all_
+> > previous contributors?
+> > =
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAloz6B4ACgkQJNaLcl1U
-h9CsVgf/dTktVvRl2r58h6mNhkqDuihv9tHvH3uXpSncIc/gYpF0VhuREaL1hSTI
-mLR3GnlGEpC/6PzuxZ01tfUJVa4c38a44rEax3rsRGJsxiRgB2PMqWo6EB+myDfD
-lJnQluf12wLbE0gGk2tJ3AYu87XHQA3Zmx+MsIIjYRHTFMtI4kaIsbV4TygFQV2r
-qFoKKyivjW4SPryzx5JK6NGZHweuEld58nICAWkedQcPTep63+xaAaQQPN2uUp/X
-6X4FdeBpTeta/WiwwHPKOqP3/6VHjzvxJfaOzOwkOt1pX43JkO8KMv8Z0E11u+gY
-4Qz0QuA+X5BHpPV7nIQA52lW656rpQ==
-=05kB
------END PGP SIGNATURE-----
+> > I see that Thomas patches moving license texts into the kernel itself do
+> > not seem to have landed yet, but when the actual license text does _not_
+> > change and only its location to a common place inside the kernel source=
+s,
+> > it feels a bit overkill trying to get Acks from _everybody_ that
+> > contributed to Rockchip devicetrees for the last 4 years.
+> > =
 
---4LFBTxd4L5NLO6ly--
+> > If we would actually want to change the license I would definitly feel
+> > differently, but the license text does not change.
+> =
+
+> Well you are technically right. But there is a social and politeness
+> angle to this too. So may be getting the ack of all contributors is
+> not always needed, but getting it is best and the right to do and at
+> least getting for the named copyright holders should be there.
+> =
+
+> That's only only my take: leaving aside any technical legal issue, say
+> I would be on the receiving end as one of the holder or contributors:
+> I would find it really great and nice to have my ack requested. And I
+> would be a dork not to give it. So I like to do to others the same I
+> would appreciate done to me (within reason, as I sometimes shoot
+> myself in the foot ;) )
+
+Hehe ... I didn't plan on merging this without ample time for people
+to either ACK or NAK the change, so was planning on keeping to social
+protocol ;-) . Just the "all" threw me for a loop.
+
+And having that as PATCH without RFC also communicates that people
+should take a look, as RFC patches are often overlooked.
+
+As Klaus seems to have included most people that have contributed in the
+past, I would guess we should receive any existing complaints about that
+change :-) .
+
+So I'll definitly let this simmer for quite a bit and do a best-effort Ack =
+
+collection.
+
+
+Thanks
+Heiko
