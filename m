@@ -1,7 +1,7 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v3 2/5] arm64: dts: rockchip: add the aclk_usb3 clocks for USB3.
-Date: Fri, 15 Dec 2017 12:00:02 +0100
-Message-ID: <20171215110005.7564-2-enric.balletbo@collabora.com>
+Subject: [PATCH v3 3/5] arm64: dts: rockchip: add usb3-phy otg-port support for rk3399.
+Date: Fri, 15 Dec 2017 12:00:03 +0100
+Message-ID: <20171215110005.7564-3-enric.balletbo@collabora.com>
 References: <20171215110005.7564-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171215110005.7564-1-enric.balletbo@collabora.com>
@@ -10,7 +10,7 @@ To: Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
 Cc: dianders@google.com, groeck@chromium.org, briannorris@google.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The aclk_usb3 must be enabled to support USB3 for rk3399.
+Add the usb3 phyter for the USB3.0 OTG controller.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
@@ -19,40 +19,34 @@ Changes since v1:
 Changes since v2:
  - None
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 17e5e1a..f32e9c4 100644
+index f32e9c4..ea91f25 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -397,9 +397,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
--			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
-+			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_RKSOC_AXI_PERF>,
-+			 <&cru ACLK_USB3>, <&cru ACLK_USB3_GRF>;
- 		clock-names = "ref_clk", "suspend_clk",
--			      "bus_clk", "grf_clk";
-+			      "bus_clk", "aclk_usb3_rksoc_axi_perf",
-+			      "aclk_usb3", "grf_clk";
- 		status = "disabled";
- 
- 		usbdrd_dwc3_0: dwc3 {
-@@ -425,9 +427,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 		clocks = <&cru SCLK_USB3OTG1_REF>, <&cru SCLK_USB3OTG1_SUSPEND>,
--			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_GRF>;
-+			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_RKSOC_AXI_PERF>,
-+			 <&cru ACLK_USB3>, <&cru ACLK_USB3_GRF>;
- 		clock-names = "ref_clk", "suspend_clk",
--			      "bus_clk", "grf_clk";
-+			      "bus_clk", "aclk_usb3_rksoc_axi_perf",
-+			      "aclk_usb3", "grf_clk";
- 		status = "disabled";
- 
- 		usbdrd_dwc3_1: dwc3 {
+@@ -409,8 +409,8 @@
+ 			reg = <0x0 0xfe800000 0x0 0x100000>;
+ 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			dr_mode = "otg";
+-			phys = <&u2phy0_otg>;
+-			phy-names = "usb2-phy";
++			phys = <&u2phy0_otg>, <&tcphy0_usb3>;
++			phy-names = "usb2-phy", "usb3-phy";
+ 			phy_type = "utmi_wide";
+ 			snps,dis_enblslpm_quirk;
+ 			snps,dis-u2-freeclk-exists-quirk;
+@@ -439,8 +439,8 @@
+ 			reg = <0x0 0xfe900000 0x0 0x100000>;
+ 			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			dr_mode = "otg";
+-			phys = <&u2phy1_otg>;
+-			phy-names = "usb2-phy";
++			phys = <&u2phy1_otg>, <&tcphy1_usb3>;
++			phy-names = "usb2-phy", "usb3-phy";
+ 			phy_type = "utmi_wide";
+ 			snps,dis_enblslpm_quirk;
+ 			snps,dis-u2-freeclk-exists-quirk;
 -- 
 2.9.3
