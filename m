@@ -1,35 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/6] dt: bindings: lp8860: Update bindings for lp8860
-Date: Fri, 15 Dec 2017 16:56:43 -0600
-Message-ID: <20171215225643.areokv4hpa2r5wkl@rob-hp-laptop>
-References: <20171212220143.31210-1-dmurphy@ti.com>
- <20171212220143.31210-2-dmurphy@ti.com>
+From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [RFC] irqchip: add support for LS1021A external interrupt lines
+Date: Fri, 15 Dec 2017 23:55:34 +0100
+Message-ID: <62c4af0c-ffe5-23c9-9ef6-2e4b8ab90050@prevas.dk>
+References: <48d2d08c-c57a-ce49-5958-0fd5ad4a2dc7@arm.com>
+ <1512743580-15358-1-git-send-email-rasmus.villemoes@prevas.dk>
+ <20171212232839.yy3jtn6amktqjo4g@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171212220143.31210-2-dmurphy@ti.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171212232839.yy3jtn6amktqjo4g@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 12, 2017 at 04:01:38PM -0600, Dan Murphy wrote:
-> Update the lp8860 bindings to fix various issues
-> found.  Add address-cells and size-cells, rename
-> enable-gpio to enable-gpios, update the node name
-> to the device name and indent the node example.
+On 2017-12-13 00:28, Rob Herring wrote:
+> On Fri, Dec 08, 2017 at 03:33:00PM +0100, Rasmus Villemoes wrote:
+>>
+>>  .../interrupt-controller/fsl,ls1021a-extirq.txt    |  19 +++
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v4 - No changes
-> 
-> v3 - Indicatd enable-gpios is active high, moved address and size cells to child
-> node patch and updated parent DT node name - https://patchwork.kernel.org/patch/10093745/
-> v2 - New patch
-> 
->  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+> Please split to separate patch.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Will do.
+
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls1021a-extirq.txt
+>> @@ -0,0 +1,19 @@
+>> +* Freescale LS1021A external IRQs
+>> +
+>> +The LS1021A supports inverting the polarity of six external interrupt lines.
+>> +
+>> +Required properties:
+>> +- compatible: should be "fsl,ls1021a-extirq"
+>> +- interrupt-controller: Identifies the node as an interrupt controller
+>> +- #interrupt-cells: Use the same format as specified by GIC in arm,gic.txt.
+>> +- interrupt-parent: phandle of GIC.
+>> +- syscon: phandle of Supplemental Configuration Unit (scfg).
+> 
+> Can this be a child of that node instead?
+
+I suppose it could, but I don't think it would make much sense. In any
+case, I did it this way because that seemed to be the way the syscon
+driver is used in lots of other cases, cf. all the occurrences of
+syscon_regmap_lookup_by_phandle() and the corresponding bindings - I
+don't think I've seen any of those cases represent the syscon-using node
+as a child of the syscon node.
+
+>> +
+>> +Example:
+>> +		extirq: interrupt-controller@15701ac {
+> 
+> Unit-address without reg is not valid. Building with W=1 will tell you 
+> this.
+
+Thanks, that was actually a leftover from an earlier version.
+
+Rasmus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
