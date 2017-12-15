@@ -1,68 +1,69 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] soc: mediatek: Add USB wakeup driver
-Date: Fri, 15 Dec 2017 14:55:50 -0600
-Message-ID: <20171215205550.dkiymkok6arheidg@rob-hp-laptop>
-References: <1512809136-2779-1-git-send-email-chunfeng.yun@mediatek.com>
- <1512809136-2779-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC v2 2/2] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Fri, 15 Dec 2017 21:57:35 +0100
+Message-ID: <20171215205735.GB19442@amd>
+References: <20171116141151.21171-1-enric.balletbo@collabora.com>
+ <20171116141151.21171-3-enric.balletbo@collabora.com>
+ <CAD=FV=WY-2MmjRxGGaJrQjyeWt+k4_k7j12M4LxAnnZxJF7sXw@mail.gmail.com>
+ <c6450f50-5c12-dc52-4340-b068c0b38c54@linaro.org>
+ <CAFqH_50qgvntzwvZ_n3qhpw+BA2SpYqiJgsxfCMt1piNWzgDmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1512809136-2779-2-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CAFqH_50qgvntzwvZ_n3qhpw+BA2SpYqiJgsxfCMt1piNWzgDmA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 09, 2017 at 04:45:30PM +0800, Chunfeng Yun wrote:
-> This driver is used to support usb wakeup which is controlled by
-> the glue layer between SSUSB and SPM. Usually the glue layer is put
-> into a system controller, such as pericfg module, which is
-> represented by a syscon node in DTS.
-> Due to the glue layer may vary on different SoCs, it's useful to
-> extract a separated driver to simplify usb controller drivers.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/soc/mediatek/Kconfig                  |   8 +
->  drivers/soc/mediatek/Makefile                 |   1 +
->  drivers/soc/mediatek/mtk-usb-wakeup.c         | 519 ++++++++++++++++++++++++++
->  include/dt-bindings/soc/mediatek,usb-wakeup.h |  15 +
 
-This belongs in the binding patch and that should come first.
+--neYutvxvOLaeuPCA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  include/linux/soc/mediatek/usb-wakeup.h       |  88 +++++
->  5 files changed, 631 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-usb-wakeup.c
->  create mode 100644 include/dt-bindings/soc/mediatek,usb-wakeup.h
->  create mode 100644 include/linux/soc/mediatek/usb-wakeup.h
+Hi!
 
-> +++ b/drivers/soc/mediatek/mtk-usb-wakeup.c
-> @@ -0,0 +1,519 @@
-> +/*
-> + * Copyright (c) 2017 MediaTek Inc.
-> + * Author: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
+> Yes, I think that how you describe luminance and lightness is right,
+> and sounds good improve the doc.
+>=20
+> To be clear the correction table for PWM values can be calculated with
+> this code.
+>=20
+> OUTPUT_SIZE =3D 65535      # Output integer size
+> INPUT_SIZE =3D 2047
+>=20
+> def cie1931(L):
+>     L =3D L*100.0
+>     if L <=3D 8:
+>         return (L/902.3)
+>     else:
+>         return ((L+16.0)/116.0)**3
+>=20
+> x =3D range(0,int(INPUT_SIZE+1))
+> y =3D [int(round(cie1931(float(L)/INPUT_SIZE)*(OUTPUT_SIZE))) for L in x]
 
-This should be the first line of the file and use a // style comment.
+Can we just generate the table on the fly? Should not be hard to do in
+fixed point, right?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-[...]
+--neYutvxvOLaeuPCA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> diff --git a/include/dt-bindings/soc/mediatek,usb-wakeup.h b/include/dt-bindings/soc/mediatek,usb-wakeup.h
-> new file mode 100644
-> index 0000000..2461795
-> --- /dev/null
-> +++ b/include/dt-bindings/soc/mediatek,usb-wakeup.h
-> @@ -0,0 +1,15 @@
-> +/*
-> + * Copyright (c) 2017 MediaTek Inc.
-> + * Author: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-ditto. Except headers use /* */ comments...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iEYEARECAAYFAlo0Nz8ACgkQMOfwapXb+vLmAQCfZ/eCnsMCbiLrCZ2klKjeLoF1
+1TgAnjhGLjdHwXQiirMX6DAAK4tef9Ut
+=LWQK
+-----END PGP SIGNATURE-----
+
+--neYutvxvOLaeuPCA--
