@@ -1,11 +1,11 @@
-From: Mathieu Malaterre <malat@debian.org>
-Subject: [PATCH 19/25] arm: mt7: dts: Remove leading 0x and 0s from bindings notation
-Date: Fri, 15 Dec 2017 13:46:52 +0100
-Message-ID: <20171215124652.30852-1-malat@debian.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 17/25] arm: rk3: dts: Remove leading 0x and 0s from bindings notation
+Date: Fri, 15 Dec 2017 13:46:50 +0100
+Message-ID: <20171215124650.30742-1-malat@debian.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Improve the DTS files by removing all the leading "0x" and zeros to fix the
@@ -35,25 +35,57 @@ Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error
 
 This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
 
-Reported-by: David Daney <ddaney@caviumnetworks.com>
-Suggested-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
+Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/mt7623n-rfb-nand.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3288.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt7623n-rfb-nand.dts b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-index 17c578f0d261..e66de8611650 100644
---- a/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-+++ b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-@@ -51,7 +51,7 @@
- 				reg = <0x40000 0x80000>;
- 			};
- 
--			partition@C0000 {
-+			partition@c0000 {
- 				label = "uboot-env";
- 				reg = <0xC0000 0x40000>;
- 			};
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index cd24894ee5c6..3d81281be280 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -744,7 +744,7 @@
+ 			 *	*_HDMI		HDMI
+ 			 *	*_MIPI_*	MIPI
+ 			 */
+-			pd_vio@RK3288_PD_VIO {
++			pd_vio@rk3288_pd_vio {
+ 				reg = <RK3288_PD_VIO>;
+ 				clocks = <&cru ACLK_IEP>,
+ 					 <&cru ACLK_ISP>,
+@@ -786,7 +786,7 @@
+ 			 * Note: The following 3 are HEVC(H.265) clocks,
+ 			 * and on the ACLK_HEVC_NIU (NOC).
+ 			 */
+-			pd_hevc@RK3288_PD_HEVC {
++			pd_hevc@rk3288_pd_hevc {
+ 				reg = <RK3288_PD_HEVC>;
+ 				clocks = <&cru ACLK_HEVC>,
+ 					 <&cru SCLK_HEVC_CABAC>,
+@@ -800,7 +800,7 @@
+ 			 * (video endecoder & decoder) clocks that on the
+ 			 * ACLK_VCODEC_NIU and HCLK_VCODEC_NIU (NOC).
+ 			 */
+-			pd_video@RK3288_PD_VIDEO {
++			pd_video@rk3288_pd_video {
+ 				reg = <RK3288_PD_VIDEO>;
+ 				clocks = <&cru ACLK_VCODEC>,
+ 					 <&cru HCLK_VCODEC>;
+@@ -811,7 +811,7 @@
+ 			 * Note: ACLK_GPU is the GPU clock,
+ 			 * and on the ACLK_GPU_NIU (NOC).
+ 			 */
+-			pd_gpu@RK3288_PD_GPU {
++			pd_gpu@rk3288_pd_gpu {
+ 				reg = <RK3288_PD_GPU>;
+ 				clocks = <&cru ACLK_GPU>;
+ 				pm_qos = <&qos_gpu_r>,
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
