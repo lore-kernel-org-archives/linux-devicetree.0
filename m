@@ -1,71 +1,87 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 0/8] ARM: dts: keystone*: Stage 1 cleanup for W=1
-Date: Sat, 16 Dec 2017 14:40:32 -0600
-Message-ID: <20171216204040.18017-1-nm@ti.com>
-References: <20171215132102.435-1-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171215132102.435-1-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, afd@ti.com, Nishanth Menon <nm@ti.com>
+From: Mark Kettenis <kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun9i: Enable USB support on Cubieboard4
+Date: Sat, 16 Dec 2017 21:58:09 +0100
+Message-ID: <20171216205809.5485-1-kettenis@openbsd.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Kettenis <kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-The following changes have been done in the updated series:
-* Updates for couple few typo errors in commit messages
-* copyrights are now always behind description
-* rebased to maintainer branch (was previously against master)
+On the Cubieboard4 HCI0 is directly connected to a USB connector,
+and HCI2 is connected to a USB hub on the board.  HCI1 is available
+with HSIC throug 2 pins on the GPIO expansion header, but left
+disabled just like on the Optimus board.
 
-Rebased to:
- git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git 
- for_4.16/keystone-dts : 7fbec17465fc ARM: dts: k2g-evm: Enable UART 2
+This patch also adds the VBUS regulators.
 
-Warnings in the baseline: http://pastebin.ubuntu.com/26196712/ (247)
-After this series: http://pastebin.ubuntu.com/26196713/ (96)
+Signed-off-by: Mark Kettenis <kettenis-7YlrpqBBQ3VAfugRpC6u6w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 36 +++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Other related patches:
-https://patchwork.kernel.org/patch/10114913/ from Mathieu
-
-NOTE: There is yet another follow on series squashing another 33 or so warnings
-from Andrew Davis which is pending some internal reviews - hopefully
-should be out around early next week.
-
-V1: https://marc.info/?l=devicetree&m=151334424726964&w=2
-
-Nishanth Menon (8):
-  ARM: dts: keystone*: Standardize license with SPDX tag
-  ARM: dts: keystone*: Use a single soc0 instance
-  ARM: dts: keystone: Get rid of usage of skeleton.dtsi
-  ARM: dts: keystone: Add missing unit name to interrupt controller
-  ARM: dts: keystone-clocks: Add missing unit name to clock nodes that
-    have regs
-  ARM: dts: keystone-hk-clocks: Add missing unit name to clock nodes
-    that have regs
-  ARM: dts: keystone-k2e-clocks: Add missing unit name to clock nodes
-    that have regs
-  ARM: dts: keystone-k2l-clocks: Add missing unit name to clock nodes
-    that have regs
-
- arch/arm/boot/dts/keystone-clocks.dtsi      | 59 ++++++++++-----------
- arch/arm/boot/dts/keystone-k2e-clocks.dtsi  | 15 +++---
- arch/arm/boot/dts/keystone-k2e-evm.dts      | 11 ++--
- arch/arm/boot/dts/keystone-k2e-netcp.dtsi   |  7 +--
- arch/arm/boot/dts/keystone-k2e.dtsi         | 11 ++--
- arch/arm/boot/dts/keystone-k2g-evm.dts      | 12 +----
- arch/arm/boot/dts/keystone-k2g-ice.dts      |  3 +-
- arch/arm/boot/dts/keystone-k2g.dtsi         | 14 ++---
- arch/arm/boot/dts/keystone-k2hk-clocks.dtsi | 81 ++++++++++++++---------------
- arch/arm/boot/dts/keystone-k2hk-evm.dts     | 57 ++++++++++----------
- arch/arm/boot/dts/keystone-k2hk-netcp.dtsi  |  7 +--
- arch/arm/boot/dts/keystone-k2hk.dtsi        | 11 ++--
- arch/arm/boot/dts/keystone-k2l-clocks.dtsi  | 51 +++++++++---------
- arch/arm/boot/dts/keystone-k2l-evm.dts      | 11 ++--
- arch/arm/boot/dts/keystone-k2l-netcp.dtsi   |  7 +--
- arch/arm/boot/dts/keystone-k2l.dtsi         | 11 ++--
- arch/arm/boot/dts/keystone.dtsi             | 18 +++----
- 17 files changed, 164 insertions(+), 222 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+index 4024639aa005..e38623265695 100644
+--- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
++++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+@@ -74,6 +74,24 @@
+ 		};
+ 	};
+ 
++	reg_usb1_vbus: usb1-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb2-drvbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>; /* PH15 */
++	};
++
++	reg_usb3_vbus: usb3-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb1-drvbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		enable-active-high;
++		gpio = <&pio 7 14 GPIO_ACTIVE_HIGH>; /* PH14 */
++	};
++
+ 	wifi_pwrseq: wifi-pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		clocks = <&ac100_rtc 1>;
+@@ -83,6 +101,14 @@
+ 	};
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
++&ehci2 {
++	status = "okay";
++};
++
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
+@@ -408,3 +434,13 @@
+ 	pinctrl-0 = <&uart0_ph_pins>;
+ 	status = "okay";
+ };
++
++&usbphy1 {
++	phy-supply = <&reg_usb1_vbus>;
++	status = "okay";
++};
++
++&usbphy3 {
++	phy-supply = <&reg_usb3_vbus>;
++	status = "okay";
++};
 -- 
-2.14.1
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
