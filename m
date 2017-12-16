@@ -1,126 +1,56 @@
-From: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 1/5] [media] rc: update sunxi-ir driver to get base
- frequency from devicetree
-Date: Sat, 16 Dec 2017 07:18:55 -0200
-Message-ID: <20171216071855.0ef43f7b@recife.lan>
-References: <20171216024914.7550-1-embed3d@gmail.com>
-        <20171216024914.7550-2-embed3d@gmail.com>
+From: "Mr.Mohamed Akram" <mrakram.mo01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Waiting For Your Urgent Replay.........
+Date: Sat, 16 Dec 2017 09:25:40 +0000
+Message-ID: <CAAPRCMFZzt3UjAodozwOor7vZV-yDr-LyLh-VQF3C3EGnVZEkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171216024914.7550-2-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Em Sat, 16 Dec 2017 03:49:10 +0100
-Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> escreveu:
+My Dear,
 
-Hi Phillip,
+How are you together with your family? I hope all is well. Considering
+the fact, I did not know you in person or even have seen you before
+but due to the true revelation that I should share this lucrative
+opportunity with you, I have no choice other than to contact you. So,
+kindly consider this message essential and confidential.
 
-This is not a full review of this patchset. I just want to point you
-that you should keep supporting existing DT files.
+first and foremost I have to introduce myself to you I am Mr.Akram
+Mohamed, from Burkina Faso in west Africa, the Audit and Account
+Manager BANK OF AFRICA (BOA) in Ouagadougou Burkina Faso west Africa.
 
-> This patch updates the sunxi-ir driver to set the ir base clock from
-> devicetree.
-> 
-> This is neccessary since there are different ir recievers on the
-> market, that operate with different frequencys. So this value needs to
-> be set depending on the attached receiver.
+I had the intent to contact you over transfer of fund worth the sum of
+Six million two hundred thousand u.s dollars. (Us$6.2m) for the
+betterment of our life, I agree that 40% of the total amount will be
+for you and 60% for me.
 
-Please don't break backward compatibility with old DT files. In this
-specific case, it seems simple enough to be backward-compatible.
+I need your urgent response on assurance of trust that you will not
+deny my share when once the fund is transfer to your personal bank
+account.
 
-> 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/media/rc/sunxi-cir.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-> index 97f367b446c4..55b53d6463e9 100644
-> --- a/drivers/media/rc/sunxi-cir.c
-> +++ b/drivers/media/rc/sunxi-cir.c
-> @@ -72,12 +72,6 @@
->  /* CIR_REG register idle threshold */
->  #define REG_CIR_ITHR(val)    (((val) << 8) & (GENMASK(15, 8)))
->  
-> -/* Required frequency for IR0 or IR1 clock in CIR mode */
-> -#define SUNXI_IR_BASE_CLK     8000000
-> -/* Frequency after IR internal divider  */
-> -#define SUNXI_IR_CLK          (SUNXI_IR_BASE_CLK / 64)
+Your urgently responses is needed through this email
+address:mrakram.mo01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org reply with your information as I stated
+it bellow once I receive your information I will give you more details
+as application and how you will apply to our bank on how to transfer
+the fund into your bank account.
 
-Keep those to definitions...
+(1) Full names:
 
-> -/* Sample period in ns */
-> -#define SUNXI_IR_SAMPLE       (1000000000ul / SUNXI_IR_CLK)
->  /* Noise threshold in samples  */
->  #define SUNXI_IR_RXNOISE      1
->  /* Idle Threshold in samples */
-> @@ -122,7 +116,7 @@ static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id)
->  			/* for each bit in fifo */
->  			dt = readb(ir->base + SUNXI_IR_RXFIFO_REG);
->  			rawir.pulse = (dt & 0x80) != 0;
-> -			rawir.duration = ((dt & 0x7f) + 1) * SUNXI_IR_SAMPLE;
-> +			rawir.duration = ((dt & 0x7f) + 1) * ir->rc->rx_resolution;
->  			ir_raw_event_store_with_filter(ir->rc, &rawir);
->  		}
->  	}
-> @@ -148,6 +142,7 @@ static int sunxi_ir_probe(struct platform_device *pdev)
->  	struct device_node *dn = dev->of_node;
->  	struct resource *res;
->  	struct sunxi_ir *ir;
-> +	u32 b_clk_freq;
->  
->  	ir = devm_kzalloc(dev, sizeof(struct sunxi_ir), GFP_KERNEL);
->  	if (!ir)
-> @@ -172,6 +167,12 @@ static int sunxi_ir_probe(struct platform_device *pdev)
->  		return PTR_ERR(ir->clk);
->  	}
->  
-> +	/* Required frequency for IR0 or IR1 clock in CIR mode */
-> +	if (of_property_read_u32(dn, "base-clk-frequency", &b_clk_freq)) {
-> +		dev_err(dev, "failed to get ir base clock frequency.\n");
-> +		return -ENODATA;
-> +	}
-> +
+(2) private phone number:
 
-And here, instead of returning an error, if the property can't be read, 
-it means it is an older DT file. Just default to SUNXI_IR_BASE_CLK. 
-This will make it backward-compatible with old DT files that don't have
-such property.
+(3) occupation:
 
-Regards,
-Mauro
+Make sure you keep this transaction as top secret and make it
+confidential till we receive the fund into your bank account that you
+will provide to our bank. Don't disclose it to anybody, because the
+secret of this transaction is as well as the success of it.
 
+I look forward to hear from you call me immediately as soon as you
+receive this message or email me urgent.
 
->  	/* Reset (optional) */
->  	ir->rst = devm_reset_control_get_optional_exclusive(dev, NULL);
->  	if (IS_ERR(ir->rst))
-> @@ -180,7 +181,7 @@ static int sunxi_ir_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> -	ret = clk_set_rate(ir->clk, SUNXI_IR_BASE_CLK);
-> +	ret = clk_set_rate(ir->clk, b_clk_freq);
->  	if (ret) {
->  		dev_err(dev, "set ir base clock failed!\n");
->  		goto exit_reset_assert;
-> @@ -225,7 +226,8 @@ static int sunxi_ir_probe(struct platform_device *pdev)
->  	ir->rc->map_name = ir->map_name ?: RC_MAP_EMPTY;
->  	ir->rc->dev.parent = dev;
->  	ir->rc->allowed_protocols = RC_PROTO_BIT_ALL_IR_DECODER;
-> -	ir->rc->rx_resolution = SUNXI_IR_SAMPLE;
-> +	/* Frequency after IR internal divider with sample period in ns */
-> +	ir->rc->rx_resolution = (1000000000ul / (b_clk_freq / 64));
->  	ir->rc->timeout = MS_TO_NS(SUNXI_IR_TIMEOUT);
->  	ir->rc->driver_name = SUNXI_IR_DEV;
->  
-
-Thanks,
-Mauro
+In sincerity,
+Mr.Akram Mohamed
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
