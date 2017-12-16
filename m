@@ -1,85 +1,56 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4 v5] drm/bridge: Add bindings for TI THS8134
-Date: Sat, 16 Dec 2017 12:23:04 -0600
-Message-ID: <20171216182304.3nty7nco6ilketat@rob-hp-laptop>
-References: <20171215121047.3650-1-linus.walleij@linaro.org>
- <20171215121047.3650-2-linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document mti,mips-cpc binding
+Date: Sat, 16 Dec 2017 12:26:38 -0600
+Message-ID: <20171216182638.3vd2rbkyos74e4jo@rob-hp-laptop>
+References: <1513356723-7393-1-git-send-email-aleksandar.markovic@rt-rk.com>
+ <1513356723-7393-2-git-send-email-aleksandar.markovic@rt-rk.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171215121047.3650-2-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1513356723-7393-2-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Leung <douglas.leung-8NJIiSa5LzA@public.gmane.org>, Goran Ferenc <goran.ferenc-8NJIiSa5LzA@public.gmane.org>, James Hogan <james.hogan-8NJIiSa5LzA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Miodrag Dinic <miodrag.dinic-8NJIiSa5LzA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-8NJIiSa5LzA@public.gmane.org>, Raghu Gandham <raghu.gandham-8NJIiSa5LzA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 15, 2017 at 01:10:44PM +0100, Linus Walleij wrote:
-> This adds device tree bindings for the Texas Instruments
-> THS8134, THS8134A and THS8134B VGA DACs by extending and
-> renaming the existing bindings for THS8135.
+On Fri, Dec 15, 2017 at 05:51:59PM +0100, Aleksandar Markovic wrote:
+> From: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
 > 
-> These DACs are used for the VGA outputs on the ARM reference
-> designs such as Integrator, Versatile and RealView.
+> Document a binding for the MIPS Cluster Power Controller (CPC) which
+> simply allows the device tree to specify where the CPC registers should
+> be mapped.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Paul Burton <paul.burton-8NJIiSa5LzA@public.gmane.org>
+> Signed-off-by: Aleksandar Markovic <aleksandar.markovic-8NJIiSa5LzA@public.gmane.org>
 > ---
-> ChangeLog v2->v5:
-> - Dropped the "ti,ths813x" as it turns out we need precise info
->   about the sub-variant anyways as they all very in timings.
-> - Refine the THS8134 variants, it turns out ths8134, ths8134a
->   and ths8134b are three different variants of ths8134.
-> ChangeLog v1->v2:
-> - Introduce specific-to-general compatible string:
->   compatible = "ti,ths8134a", "ti,ths813x";
->   so drivers can handle the whole family the same way.
-> - Collected Rob's ACK.
-> ---
->  .../display/bridge/{ti,ths8135.txt => ti,ths813x.txt}       | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
->  rename Documentation/devicetree/bindings/display/bridge/{ti,ths8135.txt => ti,ths813x.txt} (69%)
+>  Documentation/devicetree/bindings/misc/mti,mips-cpc.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
-> similarity index 69%
-> rename from Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
-> rename to Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
-> index 6ec1a880ac18..49f155467f00 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
-> @@ -1,11 +1,16 @@
-> -THS8135 Video DAC
-> ------------------
-> +THS8134 and THS8135 Video DAC
-> +-----------------------------
->  
-> -This is the binding for Texas Instruments THS8135 Video DAC bridge.
-> +This is the binding for Texas Instruments THS8134, THS8134A, THS8134B and
-> +THS8135 Video DAC bridge.
->  
->  Required properties:
->  
-> -- compatible: Must be "ti,ths8135"
-> +- compatible: Must be one of
-> +  "ti,ths8134"
-> +  "ti,ths8134", "ti,ths8134a"
-> +  "ti,ths8134", "ti,ths8134b"
+> diff --git a/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
+> new file mode 100644
+> index 0000000..92eb08f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
+> @@ -0,0 +1,8 @@
+> +Binding for MIPS Cluster Power Controller (CPC).
+> +
+> +This binding allows a system to specify where the CPC registers should be
+> +mapped using device tree.
 
-These should be the opposite order.
+Not really where you map registers, but where they are located.
 
-> +  "ti,ths8135"
->  
->  Required nodes:
->  
+> +
+> +Required properties:
+> +compatible : Should be "mti,mips-cpc".
+
+Only one version of the block?
+
+> +regs: Should describe the address & size of the CPC register region.
 > -- 
-> 2.14.3
+> 2.7.4
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
