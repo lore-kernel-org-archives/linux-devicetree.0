@@ -1,91 +1,75 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: Re: [PATCH v3 1/2] ARM64: dts: meson-axg: add ethernet mac controller
-Date: Sat, 16 Dec 2017 11:38:40 +0800
-Message-ID: <9bc81e9f-492c-a93f-9f50-67891a92a64a@amlogic.com>
-References: <20171215021014.231308-1-yixun.lan@amlogic.com>
- <20171215021014.231308-2-yixun.lan@amlogic.com> <7ho9mz94dg.fsf@baylibre.com>
+From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 0/2] Add ethernet support for Meson-AXG SoC
+Date: Sat, 16 Dec 2017 11:55:25 +0800
+Message-ID: <20171216035527.96952-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7ho9mz94dg.fsf@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: yixun.lan@amlogic.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-HI Kevin
+This series try to add support for the ethernet MAC controller
+found in Meson-AXG SoC, and also enable it in the S400 board.
+
+Hi Kevin:
+  You still need to at least merge the clock patch[3] in order to
+compile the DTS, or just merge the tag from meson-clock's tree[6]
+- the tag is 'meson-clk-for-v4.16-2', since the clock part already
+taken there.
 
 
-On 12/16/2017 03:29 AM, Kevin Hilman wrote:
-> Yixun Lan <yixun.lan@amlogic.com> writes:
-> 
->> Add DT info for the stmmac ethernet MAC which found in
->> the Amlogic's Meson-AXG SoC, also describe the ethernet
->> pinctrl & clock information here.
->>
->> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-> 
-> This patch does not apply, and dependencies are not described.
-> 
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 54 ++++++++++++++++++++++++++++++
->>  1 file changed, 54 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> index d356ce74ad89..94c4972222b7 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> @@ -7,6 +7,7 @@
->>  #include <dt-bindings/gpio/gpio.h>
->>  #include <dt-bindings/interrupt-controller/irq.h>
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/clock/axg-clkc.h>
->>  
->>  / {
->>  	compatible = "amlogic,meson-axg";
->> @@ -148,6 +149,19 @@
->>  			#address-cells = <0>;
->>  		};
->>  
->> +		ethmac: ethernet@ff3f0000 {
->> +			compatible = "amlogic,meson-gxbb-dwmac", "snps,dwmac";
->> +			reg = <0x0 0xff3f0000 0x0 0x10000
->> +				0x0 0xff634540 0x0 0x8>;
->> +			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
->> +			interrupt-names = "macirq";
->> +			clocks = <&clkc CLKID_ETH>,
->> +				 <&clkc CLKID_FCLK_DIV2>,
->> +				 <&clkc CLKID_MPLL2>;
->> +			clock-names = "stmmaceth", "clkin0", "clkin1";
->> +			status = "disabled";
->> +		};
->> +
->>  		hiubus: bus@ff63c000 {
->>  			compatible = "simple-bus";
->>  			reg = <0x0 0xff63c000 0x0 0x1c00>;
-> 
-> Based on the hiubus node, presumably this depends on the patch from the
-> clock series.
-> 
-yes, it depend on clock, also the pinctrl patch
+Changes in v4 since [5]:
+ - rebase to kevin's v4.16/dt64
+ - fix order
 
->> @@ -194,6 +208,46 @@
->>  					#gpio-cells = <2>;
->>  					gpio-ranges = <&pinctrl_periphs 0 0 86>;
->>  				};
-> 
-> I'm not sure where this part is coming from, but it causes the rest of
-> it to not apply.
-> 
-> Please be sure to describe all dependencies.
-> 
-.
-exactly, it depend on pinctrl
+Changes in v3 since [4]:
+ - put clock DT info in soc.dtsi
+ - separate DT for 'add support for the controller' vs 'enable in board'
 
-actually, once you apply the clock & pinctrl DT patch, this one should
-go fine. I will send another v4 which base on your recent v4.16/dt64
-branch for your convenience.
+Changes in v2 since [1]:
+ - rebase to kevin's v4.16/dt64 branch
+ - add Neil's Reviewed-by
+ - move clock info to board.dts instead of in soc.dtsi
+ - drop "meson-axg-dwmac" compatible string, since we didn't use this
+   we could re-add it later when we really need.
+ - note: to make ethernet work properly,it depend on clock & pinctrl[2],
+   to compile the DTS, the patch [3] is required.
+   the code part will be taken via clock & pinctrl subsystem tree.
 
-Yixun
+[5]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005783.html
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005784.html
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005785.html
+
+[4]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005768.html
+
+[1]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005301.html
+
+[2]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005735.html
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005694.html
+
+[3]
+http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005738.html
+
+[6] git://github.com/BayLibre/clk-meson.git
+
+Yixun Lan (2):
+  ARM64: dts: meson-axg: add ethernet mac controller
+  ARM64: dts: meson-axg: enable ethernet for A113D S400 board
+
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  7 ++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 54 ++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+
+-- 
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
