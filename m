@@ -1,48 +1,85 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: misc: Add DT bindings to xlnx_vcu
- driver
-Date: Sat, 16 Dec 2017 12:20:40 -0600
-Message-ID: <20171216182040.7negu2om6buxvykp@rob-hp-laptop>
-References: <29198c0a-783e-8aa0-00e4-44b1fa1acef7@infradead.org>
- <1513322656-4571-1-git-send-email-dshah@xilinx.com>
- <1513322656-4571-2-git-send-email-dshah@xilinx.com>
+Subject: Re: [PATCH 1/4 v5] drm/bridge: Add bindings for TI THS8134
+Date: Sat, 16 Dec 2017 12:23:04 -0600
+Message-ID: <20171216182304.3nty7nco6ilketat@rob-hp-laptop>
+References: <20171215121047.3650-1-linus.walleij@linaro.org>
+ <20171215121047.3650-2-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1513322656-4571-2-git-send-email-dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20171215121047.3650-2-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 14, 2017 at 11:24:15PM -0800, Dhaval Shah wrote:
-> From: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+On Fri, Dec 15, 2017 at 01:10:44PM +0100, Linus Walleij wrote:
+> This adds device tree bindings for the Texas Instruments
+> THS8134, THS8134A and THS8134B VGA DACs by extending and
+> renaming the existing bindings for THS8135.
 > 
-> Add Device Tree binding document for logicoreIP. This logicoreIP
-> provides the isolation between the processing system and
-> programmable logic. Also provides the clock related information.
+> These DACs are used for the VGA outputs on the ARM reference
+> designs such as Integrator, Versatile and RealView.
 > 
-> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
-> Chnages since v3:
->  No Changes.	
-> Chnages since v3:
->  * Use "dt-bindings: misc: ..." for the subject.
-> Changes since v2:
->  * Describe the h/w
->  * compatible string is updated to make it more specific
->    based on the logicoreIP version.
->  * Removed that encoder and decoder child nodes and relatd properties as that
->    will be a separate driver and dts nodes. other team is working on that.
->  * Updated to use as a single driver.
+> ChangeLog v2->v5:
+> - Dropped the "ti,ths813x" as it turns out we need precise info
+>   about the sub-variant anyways as they all very in timings.
+> - Refine the THS8134 variants, it turns out ths8134, ths8134a
+>   and ths8134b are three different variants of ths8134.
+> ChangeLog v1->v2:
+> - Introduce specific-to-general compatible string:
+>   compatible = "ti,ths8134a", "ti,ths813x";
+>   so drivers can handle the whole family the same way.
+> - Collected Rob's ACK.
+> ---
+>  .../display/bridge/{ti,ths8135.txt => ti,ths813x.txt}       | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+>  rename Documentation/devicetree/bindings/display/bridge/{ti,ths8135.txt => ti,ths813x.txt} (69%)
 > 
->  .../devicetree/bindings/misc/xlnx,vcu.txt          | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,vcu.txt
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+> similarity index 69%
+> rename from Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+> rename to Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+> index 6ec1a880ac18..49f155467f00 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/ti,ths8135.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/ti,ths813x.txt
+> @@ -1,11 +1,16 @@
+> -THS8135 Video DAC
+> ------------------
+> +THS8134 and THS8135 Video DAC
+> +-----------------------------
+>  
+> -This is the binding for Texas Instruments THS8135 Video DAC bridge.
+> +This is the binding for Texas Instruments THS8134, THS8134A, THS8134B and
+> +THS8135 Video DAC bridge.
+>  
+>  Required properties:
+>  
+> -- compatible: Must be "ti,ths8135"
+> +- compatible: Must be one of
+> +  "ti,ths8134"
+> +  "ti,ths8134", "ti,ths8134a"
+> +  "ti,ths8134", "ti,ths8134b"
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+These should be the opposite order.
 
+> +  "ti,ths8135"
+>  
+>  Required nodes:
+>  
+> -- 
+> 2.14.3
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
