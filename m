@@ -1,75 +1,43 @@
-From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 0/2] Add ethernet support for Meson-AXG SoC
-Date: Sat, 16 Dec 2017 11:55:25 +0800
-Message-ID: <20171216035527.96952-1-yixun.lan@amlogic.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH v4 2/2] ARM64: dts: meson-axg: enable ethernet for A113D S400 board
+Date: Sat, 16 Dec 2017 11:55:27 +0800
+Message-ID: <20171216035527.96952-3-yixun.lan@amlogic.com>
+References: <20171216035527.96952-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171216035527.96952-1-yixun.lan@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series try to add support for the ethernet MAC controller
-found in Meson-AXG SoC, and also enable it in the S400 board.
+This is tested in the S400 dev board which use a RTL8211F PHY,
+and the pins connect to the 'eth_rgmii_y_pins' group.
 
-Hi Kevin:
-  You still need to at least merge the clock patch[3] in order to
-compile the DTS, or just merge the tag from meson-clock's tree[6]
-- the tag is 'meson-clk-for-v4.16-2', since the clock part already
-taken there.
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-
-Changes in v4 since [5]:
- - rebase to kevin's v4.16/dt64
- - fix order
-
-Changes in v3 since [4]:
- - put clock DT info in soc.dtsi
- - separate DT for 'add support for the controller' vs 'enable in board'
-
-Changes in v2 since [1]:
- - rebase to kevin's v4.16/dt64 branch
- - add Neil's Reviewed-by
- - move clock info to board.dts instead of in soc.dtsi
- - drop "meson-axg-dwmac" compatible string, since we didn't use this
-   we could re-add it later when we really need.
- - note: to make ethernet work properly,it depend on clock & pinctrl[2],
-   to compile the DTS, the patch [3] is required.
-   the code part will be taken via clock & pinctrl subsystem tree.
-
-[5]
-http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005783.html
-http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005784.html
-http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005785.html
-
-[4]
-http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005768.html
-
-[1]
-http://lists.infradead.org/pipermail/linux-amlogic/2017-November/005301.html
-
-[2]
-http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005735.html
-http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005694.html
-
-[3]
-http://lists.infradead.org/pipermail/linux-amlogic/2017-December/005738.html
-
-[6] git://github.com/BayLibre/clk-meson.git
-
-Yixun Lan (2):
-  ARM64: dts: meson-axg: add ethernet mac controller
-  ARM64: dts: meson-axg: enable ethernet for A113D S400 board
-
- arch/arm64/boot/dts/amlogic/meson-axg-s400.dts |  7 ++++
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi     | 54 ++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 70eca1f8736a..8932654f5090 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -17,6 +17,13 @@
+ 	};
+ };
+ 
++&ethmac {
++	status = "okay";
++	phy-mode = "rgmii";
++	pinctrl-0 = <&eth_rgmii_y_pins>;
++	pinctrl-names = "default";
++};
++
+ &uart_AO {
+ 	status = "okay";
+ };
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
