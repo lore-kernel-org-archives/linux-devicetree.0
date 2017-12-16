@@ -1,55 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: samsung: document bindings for Midas
- family boards
-Date: Fri, 15 Dec 2017 17:32:57 -0600
-Message-ID: <20171215233257.bt2cx7rj557kl23z@rob-hp-laptop>
-References: <20171214125015.2611-1-simon@lineageos.org>
- <20171214125015.2611-2-simon@lineageos.org>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3] arm64: dts: meson-axg: add new reset DT node
+Date: Fri, 15 Dec 2017 16:17:48 -0800
+Message-ID: <7hind77cgj.fsf@baylibre.com>
+References: <20171110084659.31641-1-yixun.lan@amlogic.com>
+        <04b96767-2412-7242-780c-f3e1e610a62b@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171214125015.2611-2-simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
+In-Reply-To: <04b96767-2412-7242-780c-f3e1e610a62b-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Fri, 17 Nov 2017 14:08:35 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 14, 2017 at 11:50:12PM +1100, Simon Shields wrote:
-> Document GT-I9300, GT-I9305, GT-N7100, and GT-N7105 bindings, along
-> with the shared "midas" binding.
-> 
-> Signed-off-by: Simon Shields <simon-WP75azK+jQYgsBAKwltoeQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> index e13459618581..e6765af5cf48 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> @@ -9,7 +9,11 @@ Required root node properties:
->  	- "samsung,smdkv310"	- for Exynos4210-based Samsung SMDKV310 eval board.
->  	- "samsung,trats"	- for Exynos4210-based Tizen Reference board.
->  	- "samsung,universal_c210" - for Exynos4210-based Samsung board.
-> +	- "samsung,m0"          - for Exynos4412-based Samsung GT-I9300 board.
-> +	- "samsung,m3"          - for Exynos4412-based Samsung GT-I9305 board.
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-Kind of short and it is not clear how "m3" relates to GT-I9305
+> On 10/11/2017 09:46, Yixun Lan wrote:
+>> Add reset DT node for Amlogic's Meson-AXG SoC.
+>> 
+>> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> index e0fb860e12c5..65945c6c8b65 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+>> @@ -123,6 +123,12 @@
+>>  			#size-cells = <2>;
+>>  			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
+>>  
+>> +			reset: reset-controller@1004 {
+>> +				compatible = "amlogic,meson-axg-reset";
+>> +				reg = <0x0 0x01004 0x0 0x9c>;
+>> +				#reset-cells = <1>;
+>> +			};
+>> +
+>>  			uart_A: serial@24000 {
+>>  				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
+>>  				reg = <0x0 0x24000 0x0 0x14>;
+>> 
+>
+> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-> +	- "samsung,midas"       - for Exynos4412-based Samsung Midas board.
->  	- "samsung,smdk4412",	- for Exynos4412-based Samsung SMDK4412 eval board.
-> +	- "samsung,t0"          - for Exynos4412-based Samsung GT-N7100/GT-N7105 board.
->  	- "samsung,trats2"	- for Exynos4412-based Tizen Reference board.
->  	- "samsung,smdk5250"	- for Exynos5250-based Samsung SMDK5250 eval board.
->  	- "samsung,xyref5260"	- for Exynos5260-based Samsung board.
-> -- 
-> 2.15.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied to v4.16/dt64,
+
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
