@@ -1,59 +1,127 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 07/25] arm: keystone: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Sat, 16 Dec 2017 00:36:12 -0800
-Message-ID: <822c5d90-07b8-cde0-95a9-f56e5d219328@oracle.com>
-References: <20171215124638.30233-1-malat@debian.org>
+From: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 1/5] [media] rc: update sunxi-ir driver to get base
+ frequency from devicetree
+Date: Sat, 16 Dec 2017 07:18:55 -0200
+Message-ID: <20171216071855.0ef43f7b@recife.lan>
+References: <20171216024914.7550-1-embed3d@gmail.com>
+        <20171216024914.7550-2-embed3d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171215124638.30233-1-malat@debian.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathieu Malaterre <malat@debian.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171216024914.7550-2-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/15/17 4:46 AM, Mathieu Malaterre wrote:
-> Improve the DTS files by removing all the leading "0x" and zeros to fix the
-> following dtc warnings:
+Em Sat, 16 Dec 2017 03:49:10 +0100
+Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> escreveu:
+
+Hi Phillip,
+
+This is not a full review of this patchset. I just want to point you
+that you should keep supporting existing DT files.
+
+> This patch updates the sunxi-ir driver to set the ir base clock from
+> devicetree.
 > 
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> This is neccessary since there are different ir recievers on the
+> market, that operate with different frequencys. So this value needs to
+> be set depending on the attached receiver.
+
+Please don't break backward compatibility with old DT files. In this
+specific case, it seems simple enough to be backward-compatible.
+
 > 
-> and
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-> 
-> Converted using the following command:
-> 
-> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
-> 
-> For simplicity, two sed expressions were used to solve each warnings separately.
-> 
-> To make the regex expression more robust a few other issues were resolved,
-> namely setting unit-address to lower case, and adding a whitespace before the
-> the opening curly brace:
-> 
-> https://urldefense.proofpoint.com/v2/url?u=https-3A__elinux.org_Device-5FTree-5FLinux-23Linux-5Fconventions&d=DwIBAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=hWpFvp_cTkkwMMULcvbV65orOO9Gv3OUaY0ATWhQwak&m=4zPLm6aGenI9keAZLborgvk3tLzaGsH_T4xXnh1mN3c&s=nCTYz6lbODdmoNqNYOTb6wm8nNYWW-AZlwiaUp7gpmM&e=
-> 
-> This will solve as a side effect warning:
-> 
-> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-> 
-> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-> 
-> Reported-by: David Daney <ddaney@caviumnetworks.com>
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-Looks good.
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+>  drivers/media/rc/sunxi-cir.c | 20 +++++++++++---------
+>  1 file changed, 11 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+> index 97f367b446c4..55b53d6463e9 100644
+> --- a/drivers/media/rc/sunxi-cir.c
+> +++ b/drivers/media/rc/sunxi-cir.c
+> @@ -72,12 +72,6 @@
+>  /* CIR_REG register idle threshold */
+>  #define REG_CIR_ITHR(val)    (((val) << 8) & (GENMASK(15, 8)))
+>  
+> -/* Required frequency for IR0 or IR1 clock in CIR mode */
+> -#define SUNXI_IR_BASE_CLK     8000000
+> -/* Frequency after IR internal divider  */
+> -#define SUNXI_IR_CLK          (SUNXI_IR_BASE_CLK / 64)
+
+Keep those to definitions...
+
+> -/* Sample period in ns */
+> -#define SUNXI_IR_SAMPLE       (1000000000ul / SUNXI_IR_CLK)
+>  /* Noise threshold in samples  */
+>  #define SUNXI_IR_RXNOISE      1
+>  /* Idle Threshold in samples */
+> @@ -122,7 +116,7 @@ static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id)
+>  			/* for each bit in fifo */
+>  			dt = readb(ir->base + SUNXI_IR_RXFIFO_REG);
+>  			rawir.pulse = (dt & 0x80) != 0;
+> -			rawir.duration = ((dt & 0x7f) + 1) * SUNXI_IR_SAMPLE;
+> +			rawir.duration = ((dt & 0x7f) + 1) * ir->rc->rx_resolution;
+>  			ir_raw_event_store_with_filter(ir->rc, &rawir);
+>  		}
+>  	}
+> @@ -148,6 +142,7 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+>  	struct device_node *dn = dev->of_node;
+>  	struct resource *res;
+>  	struct sunxi_ir *ir;
+> +	u32 b_clk_freq;
+>  
+>  	ir = devm_kzalloc(dev, sizeof(struct sunxi_ir), GFP_KERNEL);
+>  	if (!ir)
+> @@ -172,6 +167,12 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+>  		return PTR_ERR(ir->clk);
+>  	}
+>  
+> +	/* Required frequency for IR0 or IR1 clock in CIR mode */
+> +	if (of_property_read_u32(dn, "base-clk-frequency", &b_clk_freq)) {
+> +		dev_err(dev, "failed to get ir base clock frequency.\n");
+> +		return -ENODATA;
+> +	}
+> +
+
+And here, instead of returning an error, if the property can't be read, 
+it means it is an older DT file. Just default to SUNXI_IR_BASE_CLK. 
+This will make it backward-compatible with old DT files that don't have
+such property.
+
+Regards,
+Mauro
+
+
+>  	/* Reset (optional) */
+>  	ir->rst = devm_reset_control_get_optional_exclusive(dev, NULL);
+>  	if (IS_ERR(ir->rst))
+> @@ -180,7 +181,7 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = clk_set_rate(ir->clk, SUNXI_IR_BASE_CLK);
+> +	ret = clk_set_rate(ir->clk, b_clk_freq);
+>  	if (ret) {
+>  		dev_err(dev, "set ir base clock failed!\n");
+>  		goto exit_reset_assert;
+> @@ -225,7 +226,8 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+>  	ir->rc->map_name = ir->map_name ?: RC_MAP_EMPTY;
+>  	ir->rc->dev.parent = dev;
+>  	ir->rc->allowed_protocols = RC_PROTO_BIT_ALL_IR_DECODER;
+> -	ir->rc->rx_resolution = SUNXI_IR_SAMPLE;
+> +	/* Frequency after IR internal divider with sample period in ns */
+> +	ir->rc->rx_resolution = (1000000000ul / (b_clk_freq / 64));
+>  	ir->rc->timeout = MS_TO_NS(SUNXI_IR_TIMEOUT);
+>  	ir->rc->driver_name = SUNXI_IR_DEV;
+>  
+
+Thanks,
+Mauro
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
