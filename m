@@ -1,43 +1,48 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 02/19] dt-bindings: gpio: Add ASPEED constants
-Date: Sat, 16 Dec 2017 12:17:33 -0600
-Message-ID: <20171216181733.r5kkxqjgyh4maymp@rob-hp-laptop>
-References: <20171215062443.23059-1-joel@jms.id.au>
- <20171215062443.23059-3-joel@jms.id.au>
+Subject: Re: [PATCH v4 1/2] dt-bindings: misc: Add DT bindings to xlnx_vcu
+ driver
+Date: Sat, 16 Dec 2017 12:20:40 -0600
+Message-ID: <20171216182040.7negu2om6buxvykp@rob-hp-laptop>
+References: <29198c0a-783e-8aa0-00e4-44b1fa1acef7@infradead.org>
+ <1513322656-4571-1-git-send-email-dshah@xilinx.com>
+ <1513322656-4571-2-git-send-email-dshah@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171215062443.23059-3-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <1513322656-4571-2-git-send-email-dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 15, 2017 at 04:54:26PM +1030, Joel Stanley wrote:
-> These are used to by the device tree to map pin numbers to constants
-> required by the GPIO bindings.
+On Thu, Dec 14, 2017 at 11:24:15PM -0800, Dhaval Shah wrote:
+> From: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > 
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> Add Device Tree binding document for logicoreIP. This logicoreIP
+> provides the isolation between the processing system and
+> programmable logic. Also provides the clock related information.
+> 
+> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  arch/arm/boot/dts/aspeed-g4.dtsi       |  1 +
->  arch/arm/boot/dts/aspeed-g5.dtsi       |  1 +
->  include/dt-bindings/gpio/aspeed-gpio.h | 49 ++++++++++++++++++++++++++++++++++
->  3 files changed, 51 insertions(+)
->  create mode 100644 include/dt-bindings/gpio/aspeed-gpio.h
+> Chnages since v3:
+>  No Changes.	
+> Chnages since v3:
+>  * Use "dt-bindings: misc: ..." for the subject.
+> Changes since v2:
+>  * Describe the h/w
+>  * compatible string is updated to make it more specific
+>    based on the logicoreIP version.
+>  * Removed that encoder and decoder child nodes and relatd properties as that
+>    will be a separate driver and dts nodes. other team is working on that.
+>  * Updated to use as a single driver.
 > 
-> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-> index 45d815a86d42..100d092e6c07 100644
-> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-> @@ -1,5 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include "skeleton.dtsi"
-> +#include <dt-bindings/gpio/aspeed-gpio.h>
+>  .../devicetree/bindings/misc/xlnx,vcu.txt          | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,vcu.txt
 
-Don't you need to use the defines? Probably should be a separate patch.
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
