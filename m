@@ -1,269 +1,71 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 5/8] ARM: dts: keystone-clocks: Add missing unit name to clock nodes that have regs
-Date: Sat, 16 Dec 2017 14:40:37 -0600
-Message-ID: <20171216204040.18017-6-nm@ti.com>
+Subject: [PATCH V2 0/8] ARM: dts: keystone*: Stage 1 cleanup for W=1
+Date: Sat, 16 Dec 2017 14:40:32 -0600
+Message-ID: <20171216204040.18017-1-nm@ti.com>
 References: <20171215132102.435-1-nm@ti.com>
- <20171216204040.18017-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171216204040.18017-1-nm@ti.com>
+In-Reply-To: <20171215132102.435-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, afd@ti.com, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the control register as the base for the clock nodes which are
-missing them. This squashes some 78 warnings of the effect when built
-with W=1.
+Hi,
+The following changes have been done in the updated series:
+* Updates for couple few typo errors in commit messages
+* copyrights are now always behind description
+* rebased to maintainer branch (was previously against master)
 
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-Changes since V1: rebase
+Rebased to:
+ git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git 
+ for_4.16/keystone-dts : 7fbec17465fc ARM: dts: k2g-evm: Enable UART 2
 
-V1: https://patchwork.kernel.org/patch/10115129/
+Warnings in the baseline: http://pastebin.ubuntu.com/26196712/ (247)
+After this series: http://pastebin.ubuntu.com/26196713/ (96)
 
- arch/arm/boot/dts/keystone-clocks.dtsi | 52 +++++++++++++++++-----------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
+Other related patches:
+https://patchwork.kernel.org/patch/10114913/ from Mathieu
 
-diff --git a/arch/arm/boot/dts/keystone-clocks.dtsi b/arch/arm/boot/dts/keystone-clocks.dtsi
-index f23147093fd8..457515b0736a 100644
---- a/arch/arm/boot/dts/keystone-clocks.dtsi
-+++ b/arch/arm/boot/dts/keystone-clocks.dtsi
-@@ -48,7 +48,7 @@ clocks {
- 		clock-output-names = "gemtraceclk";
- 	};
- 
--	chipstmxptclk: chipstmxptclk {
-+	chipstmxptclk: chipstmxptclk@2310164 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,pll-divider-clock";
- 		clocks = <&mainmuxclk>;
-@@ -157,7 +157,7 @@ clocks {
- 		clock-output-names = "chipclk1rstiso112";
- 	};
- 
--	clkmodrst0: clkmodrst0 {
-+	clkmodrst0: clkmodrst0@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk16>;
-@@ -168,7 +168,7 @@ clocks {
- 	};
- 
- 
--	clkusb: clkusb {
-+	clkusb: clkusb@2350008 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk16>;
-@@ -178,7 +178,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkaemifspi: clkaemifspi {
-+	clkaemifspi: clkaemifspi@235000c {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk16>;
-@@ -189,7 +189,7 @@ clocks {
- 	};
- 
- 
--	clkdebugsstrc: clkdebugsstrc {
-+	clkdebugsstrc: clkdebugsstrc@2350014 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -199,7 +199,7 @@ clocks {
- 		domain-id = <1>;
- 	};
- 
--	clktetbtrc: clktetbtrc {
-+	clktetbtrc: clktetbtrc@2350018 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk13>;
-@@ -209,7 +209,7 @@ clocks {
- 		domain-id = <1>;
- 	};
- 
--	clkpa: clkpa {
-+	clkpa: clkpa@235001c {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&paclk13>;
-@@ -219,7 +219,7 @@ clocks {
- 		domain-id = <2>;
- 	};
- 
--	clkcpgmac: clkcpgmac {
-+	clkcpgmac: clkcpgmac@2350020 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkpa>;
-@@ -229,7 +229,7 @@ clocks {
- 		domain-id = <2>;
- 	};
- 
--	clksa: clksa {
-+	clksa: clksa@2350024 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkpa>;
-@@ -239,7 +239,7 @@ clocks {
- 		domain-id = <2>;
- 	};
- 
--	clkpcie: clkpcie {
-+	clkpcie: clkpcie@2350028 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk12>;
-@@ -249,7 +249,7 @@ clocks {
- 		domain-id = <3>;
- 	};
- 
--	clksr: clksr {
-+	clksr: clksr@2350034 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk1rstiso112>;
-@@ -259,7 +259,7 @@ clocks {
- 		domain-id = <6>;
- 	};
- 
--	clkgem0: clkgem0 {
-+	clkgem0: clkgem0@235003c {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk1>;
-@@ -269,7 +269,7 @@ clocks {
- 		domain-id = <8>;
- 	};
- 
--	clkddr30: clkddr30 {
-+	clkddr30: clkddr30@235005c {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&chipclk12>;
-@@ -279,7 +279,7 @@ clocks {
- 		domain-id = <16>;
- 	};
- 
--	clkwdtimer0: clkwdtimer0 {
-+	clkwdtimer0: clkwdtimer0@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -289,7 +289,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkwdtimer1: clkwdtimer1 {
-+	clkwdtimer1: clkwdtimer1@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -299,7 +299,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkwdtimer2: clkwdtimer2 {
-+	clkwdtimer2: clkwdtimer2@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -309,7 +309,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkwdtimer3: clkwdtimer3 {
-+	clkwdtimer3: clkwdtimer3@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -319,7 +319,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clktimer15: clktimer15 {
-+	clktimer15: clktimer15@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -329,7 +329,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkuart0: clkuart0 {
-+	clkuart0: clkuart0@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -339,7 +339,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkuart1: clkuart1 {
-+	clkuart1: clkuart1@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -349,7 +349,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkaemif: clkaemif {
-+	clkaemif: clkaemif@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkaemifspi>;
-@@ -359,7 +359,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkusim: clkusim {
-+	clkusim: clkusim@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -369,7 +369,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clki2c: clki2c {
-+	clki2c: clki2c@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -379,7 +379,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkspi: clkspi {
-+	clkspi: clkspi@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkaemifspi>;
-@@ -389,7 +389,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkgpio: clkgpio {
-+	clkgpio: clkgpio@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
-@@ -399,7 +399,7 @@ clocks {
- 		domain-id = <0>;
- 	};
- 
--	clkkeymgr: clkkeymgr {
-+	clkkeymgr: clkkeymgr@2350000 {
- 		#clock-cells = <0>;
- 		compatible = "ti,keystone,psc-clock";
- 		clocks = <&clkmodrst0>;
+NOTE: There is yet another follow on series squashing another 33 or so warnings
+from Andrew Davis which is pending some internal reviews - hopefully
+should be out around early next week.
+
+V1: https://marc.info/?l=devicetree&m=151334424726964&w=2
+
+Nishanth Menon (8):
+  ARM: dts: keystone*: Standardize license with SPDX tag
+  ARM: dts: keystone*: Use a single soc0 instance
+  ARM: dts: keystone: Get rid of usage of skeleton.dtsi
+  ARM: dts: keystone: Add missing unit name to interrupt controller
+  ARM: dts: keystone-clocks: Add missing unit name to clock nodes that
+    have regs
+  ARM: dts: keystone-hk-clocks: Add missing unit name to clock nodes
+    that have regs
+  ARM: dts: keystone-k2e-clocks: Add missing unit name to clock nodes
+    that have regs
+  ARM: dts: keystone-k2l-clocks: Add missing unit name to clock nodes
+    that have regs
+
+ arch/arm/boot/dts/keystone-clocks.dtsi      | 59 ++++++++++-----------
+ arch/arm/boot/dts/keystone-k2e-clocks.dtsi  | 15 +++---
+ arch/arm/boot/dts/keystone-k2e-evm.dts      | 11 ++--
+ arch/arm/boot/dts/keystone-k2e-netcp.dtsi   |  7 +--
+ arch/arm/boot/dts/keystone-k2e.dtsi         | 11 ++--
+ arch/arm/boot/dts/keystone-k2g-evm.dts      | 12 +----
+ arch/arm/boot/dts/keystone-k2g-ice.dts      |  3 +-
+ arch/arm/boot/dts/keystone-k2g.dtsi         | 14 ++---
+ arch/arm/boot/dts/keystone-k2hk-clocks.dtsi | 81 ++++++++++++++---------------
+ arch/arm/boot/dts/keystone-k2hk-evm.dts     | 57 ++++++++++----------
+ arch/arm/boot/dts/keystone-k2hk-netcp.dtsi  |  7 +--
+ arch/arm/boot/dts/keystone-k2hk.dtsi        | 11 ++--
+ arch/arm/boot/dts/keystone-k2l-clocks.dtsi  | 51 +++++++++---------
+ arch/arm/boot/dts/keystone-k2l-evm.dts      | 11 ++--
+ arch/arm/boot/dts/keystone-k2l-netcp.dtsi   |  7 +--
+ arch/arm/boot/dts/keystone-k2l.dtsi         | 11 ++--
+ arch/arm/boot/dts/keystone.dtsi             | 18 +++----
+ 17 files changed, 164 insertions(+), 222 deletions(-)
+
 -- 
 2.14.1
