@@ -1,61 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v2 13/15] dt-bindings: sound: qcom: Add devicetree
- bindings for apq8096
-Date: Sat, 16 Dec 2017 11:44:33 -0600
-Message-ID: <20171216174433.dzjftpz6zcyyq4ph@rob-hp-laptop>
-References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
- <20171214173402.19074-14-srinivas.kandagatla@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: fsl,imx-gpcv2: Fix the unit address
+Date: Sat, 16 Dec 2017 11:53:21 -0600
+Message-ID: <20171216175321.rijgqg2upcz552ig@rob-hp-laptop>
+References: <1513306296-17667-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171214173402.19074-14-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org
-Cc: Andy Gross <andy.gross@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Patrick Lai <plai@codeaurora.org>, Banajit Goswami <bgoswami@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org
+In-Reply-To: <1513306296-17667-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 14, 2017 at 05:34:00PM +0000, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Fri, Dec 15, 2017 at 12:51:36AM -0200, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 > 
-> Add devicetree bindings documentation file for Qualcomm apq8096 sound card.
+> In the provided example the unit address does not match the 'reg' value.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Fix the unit address.
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 > ---
->  .../devicetree/bindings/sound/qcom,apq8096.txt     | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+>  Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-> new file mode 100644
-> index 000000000000..27b511dab533
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
-> @@ -0,0 +1,22 @@
-> +* Qualcomm Technologies APQ8096 ASoC sound card driver
-> +
-> +This binding describes the APQ8096 sound card, which uses qdsp for audio.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "qcom,apq8096-sndcard"
-> +
-> +- qcom,audio-routing:
-> +	Usage: Optional
-> +	Value type: <stringlist>
-> +	Definition:  A list of the connections between audio components.
-> +		  Each entry is a pair of strings, the first being the
-> +		  connection's sink, the second being the connection's
-> +		  source. Valid names could be power supplies, MicBias
-> +		  of codec and the jacks on the board:
-> +Example:
-> +	sound {
-> +		compatible	= "qcom,snd-apq8096";
-> +		qcom,model = "DB820c";
+> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+> index 02f45c6..19e1819 100644
+> --- a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+> @@ -44,7 +44,7 @@ Example:
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  
+> -			pgc_pcie_phy: power-domain@3 {
+> +			pgc_pcie_phy: power-domain@IMX7_POWER_DOMAIN_PCIE_PHY {
 
-Not documented, but just use "model".
+That's ugly.
 
-This doesn't look complete. No codec, etc.?
+Defines in reg is not something we should use generally, IMO. There are 
+a few exceptions for flags.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
