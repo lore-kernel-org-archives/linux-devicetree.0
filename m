@@ -1,88 +1,52 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: chosen: Add clocksource and clockevent
- selection
-Date: Fri, 15 Dec 2017 19:57:15 -0600
-Message-ID: <8fe1dce0-3fd2-d740-8456-bf3b734e571a@ti.com>
-References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
- <20171213185313.20017-2-alexandre.belloni@free-electrons.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC 0/5] IR support for A83T - sunxi-ir driver update
+Date: Sat, 16 Dec 2017 03:49:09 +0100
+Message-ID: <20171216024914.7550-1-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171213185313.20017-2-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD257DPK24NRBLMT2LIQKGQENENPZ2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds support for the sunxi A83T ir module and enhances the sunxi-ir driver.
+Right now the base clock frequency for the ir driver is a hard coded define and is set to 8 MHz.
+This works for the most common ir receivers. On the Sinovoip Bananapi M3 the ir receiver needs,
+a 3 MHz base clock frequency to work without problems with this driver (like in the legacy kernel).
+
+To fix this issue I reworked the driver that this value could be set over the devicetree.
+
+About 37 devices would have a devicetree change if this patch series would be applied.
+Therfore I would like to ask you to give me some feedback about the patch series, before I finialize it.
 
 
-On 12/13/2017 12:53 PM, Alexandre Belloni wrote:
-> The clocksource and clockevent timer are probed early in the boot process.
-> At that time it is difficult for linux to know whether a particular timer
-> can be used as the clocksource or the clockevent or by another driver,
-> especially when they are all identical or have similar features.
-> 
-> Until now, multiple strategies have been used to solve that:
->   - use Kconfig option as MXC_USE_EPIT or ATMEL_TCB_CLKSRC_BLOCK
->   - use a kernel parameter as the "clocksource" early_param in mach-omap2
->   - registering the first seen timer as a clockevent and the second one as
->   a clocksource as in rk_timer_init or dw_apb_timer_init
-> 
-> Add a linux,clocksource and a linux,clockevent node in chosen with a timer
-> property pointing to the timer to use. Other properties, like the targeted
-> precision may be added later.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/chosen.txt | 20 ++++++++++++++++++++
->   1 file changed, 20 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> index e3b13ea7d2ae..c7ee3ecb5276 100644
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -120,3 +120,23 @@ e.g.
->   While this property does not represent a real hardware, the address
->   and the size are expressed in #address-cells and #size-cells,
->   respectively, of the root node.
-> +
-> +linux,clocksource and linux,clockevent
-> +--------------------------------------
-> +
-> +Those nodes have a timer property. This property is a phandle to the timer to be
-> +chosen as the clocksource or clockevent. This is only useful when the platform
-> +has multiple identical timers and it is not possible to let linux make the
-> +correct choice.
-> +
-> +/ {
-> +	chosen {
-> +		linux,clocksource {
-> +			timer = <&timer0>;
-> +		};
-> +
-> +		linux,clockevent {
-> +			timer = <&timer1>;
-> +		};
-> +	};
-> +};
-> 
+Thanks in advance!
 
-It'd be nice if smth. like this will actually happen, as on some OMAP
-platforms can be up to 3-4 alternatives for each clocksource/clockevent and
-different combination need to be selected depending on SoC and platform
-(and sometime - use case) which is pain in multi-platform environment now.
+Philipp
 
-But more important note from my side is clocksource and clockevent selections seems 
-not enough :( There are also sched clock (sched_clock_register()) and delay_timer
- (register_current_timer_delay() at least on ARM).
-Both above can't be unregistered (at least last time I've checked).
+
+Philipp Rossak (5):
+  [media] rc: update sunxi-ir driver to get base frequency from
+    devicetree
+  [media] dt: bindings: Update binding documentation for sunxi IR
+    controller
+  ARM: dts: sun8i: a83t: Add the ir pin for the A83T
+  ARM: dts: sun8i: a83t: Add support for the ir interface
+  ARM: dts: sun8i: a83t: bananapi-m3: Enable IR controller
+
+ Documentation/devicetree/bindings/media/sunxi-ir.txt | 14 ++++++++------
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  7 +++++++
+ arch/arm/boot/dts/sun8i-a83t.dtsi                    | 15 +++++++++++++++
+ drivers/media/rc/sunxi-cir.c                         | 20 +++++++++++---------
+ 4 files changed, 41 insertions(+), 15 deletions(-)
 
 -- 
-regards,
--grygorii
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
