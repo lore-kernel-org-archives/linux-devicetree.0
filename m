@@ -1,62 +1,36 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v3 05/11] thermal: armada: Add support for Armada AP806
-Date: Sun, 17 Dec 2017 00:22:34 +0200
-Message-ID: <20171216222234.xp5gybcbfymouvvd@tarshish>
-References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
- <20171214103011.24713-6-miquel.raynal@free-electrons.com>
+From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 0/8] ARM: dts: keystone*: Stage 1 cleanup for W=1
+Date: Sat, 16 Dec 2017 14:39:14 -0800
+Message-ID: <3ad62d53-7d21-dd2a-c24a-98706b42a3fe@oracle.com>
+References: <20171215132102.435-1-nm@ti.com>
+ <20171216204040.18017-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171214103011.24713-6-miquel.raynal@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@free-electrons.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171216204040.18017-1-nm-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, afd-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquèl,
-
-On Thu, Dec 14, 2017 at 11:30:05AM +0100, Miquel Raynal wrote:
-> From: Baruch Siach <baruch@tkos.co.il>
+On 12/16/17 12:40 PM, Nishanth Menon wrote:
+> Hi,
+> The following changes have been done in the updated series:
+> * Updates for couple few typo errors in commit messages
+> * copyrights are now always behind description
+> * rebased to maintainer branch (was previously against master)
 > 
-> The AP806 component is integrated in the Armada 8k and 7k lines of
-> processors.
+> Rebased to:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+>   for_4.16/keystone-dts : 7fbec17465fc ARM: dts: k2g-evm: Enable UART 2
 > 
-> The thermal sensor sample field on the status register is a signed
-> value. Extend armada_get_temp() to handle signed values.
-> 
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
-> ---
+Thanks Nishant. Applied and should show up in next soon.
 
-[...]
-
-> +static void armada_ap806_init_sensor(struct platform_device *pdev,
-> +				     struct armada_thermal_priv *priv)
-> +{
-> +	u32 reg;
-> +
-> +	if (!priv->control0) {
-> +		dev_err(&pdev->dev,
-> +			"Cannot access to control0 (control LSB) register\n");
-> +		return;
-> +	}
-
-With the probe time control area size validation this check would not be 
-needed.
-
-baruch
-
-> +
-> +	reg = readl_relaxed(priv->control0);
-> +	reg &= ~CONTROL0_TSEN_RESET;
-> +	reg |= CONTROL0_TSEN_START | CONTROL0_TSEN_ENABLE;
-> +	writel(reg, priv->control0);
-> +	msleep(10);
-> +}
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
