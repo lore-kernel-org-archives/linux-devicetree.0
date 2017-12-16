@@ -1,252 +1,80 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 2/8] ARM: dts: keystone*: Use a single soc0 instance
-Date: Sat, 16 Dec 2017 14:40:34 -0600
-Message-ID: <20171216204040.18017-3-nm@ti.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH V2 7/8] ARM: dts: keystone-k2e-clocks: Add missing unit name to clock nodes that have regs
+Date: Sat, 16 Dec 2017 14:40:39 -0600
+Message-ID: <20171216204040.18017-8-nm@ti.com>
 References: <20171215132102.435-1-nm@ti.com>
  <20171216204040.18017-1-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171216204040.18017-1-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, afd@ti.com, Nishanth Menon <nm@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171216204040.18017-1-nm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, afd-l0cyMroinI0@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Provide a soc0 node and reference the same to simplify dts. This also
-resolves the following warnings when built with W=1:
-arch/arm/boot/dts/keystone-k2hk-evm.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
-arch/arm/boot/dts/keystone-k2l-evm.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
-arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
-arch/arm/boot/dts/keystone-k2g-evm.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
-arch/arm/boot/dts/keystone-k2g-ice.dtb: Warning (unit_address_vs_reg): Node /soc has a reg or ranges property, but no unit name
+Add the control register as the base for the clock nodes which are
+missing them. This squashes the following warnings of the effect when built
+with W=1:
+arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc@0/clocks/clkusb1 has a reg or ranges property, but no unit name
+arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc@0/clocks/clkhyperlink0 has a reg or ranges property, but no unit name
+arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc@0/clocks/clkpcie1 has a reg or ranges property, but no unit name
+arch/arm/boot/dts/keystone-k2e-evm.dtb: Warning (unit_address_vs_reg): Node /soc@0/clocks/clkxge has a reg or ranges property, but no unit name
 
-NOTE: Though we can reformat files by reducing 1 level of indent due to
-the use of soc0 phandle, we omit that change to prevent un-necessary
-churn in code base.
-
-Reported-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Nishanth Menon <nm@ti.com>
+Reported-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 ---
+Changes since V1: rebase
 
-Changes since V1: typo fixes in commit message.
+V1: https://patchwork.kernel.org/patch/10115125/
 
-v1: https://patchwork.kernel.org/patch/10115101/
+ arch/arm/boot/dts/keystone-k2e-clocks.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- arch/arm/boot/dts/keystone-k2e-evm.dts  |  4 +--
- arch/arm/boot/dts/keystone-k2e.dtsi     |  4 +--
- arch/arm/boot/dts/keystone-k2g.dtsi     |  2 +-
- arch/arm/boot/dts/keystone-k2hk-evm.dts | 50 ++++++++++++++++-----------------
- arch/arm/boot/dts/keystone-k2hk.dtsi    |  4 +--
- arch/arm/boot/dts/keystone-k2l-evm.dts  |  4 +--
- arch/arm/boot/dts/keystone-k2l.dtsi     |  4 +--
- arch/arm/boot/dts/keystone.dtsi         |  2 +-
- 8 files changed, 37 insertions(+), 37 deletions(-)
-
-diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
-index 5378b858fb6f..66fec5f5d081 100644
---- a/arch/arm/boot/dts/keystone-k2e-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
-@@ -25,8 +25,9 @@
- 			status = "okay";
- 		};
- 	};
-+};
- 
--	soc {
-+&soc0 {
- 
- 		clocks {
- 			refclksys: refclksys {
-@@ -50,7 +51,6 @@
- 				clock-output-names = "refclk-ddr3a";
- 			};
- 		};
--	};
- };
- 
- &usb_phy {
-diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
-index db4560b929f1..0bcd3f8a9c45 100644
---- a/arch/arm/boot/dts/keystone-k2e.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e.dtsi
-@@ -45,8 +45,9 @@
- 	aliases {
- 		rproc0 = &dsp0;
- 	};
-+};
- 
--	soc {
-+&soc0 {
- 		/include/ "keystone-k2e-clocks.dtsi"
- 
- 		usb: usb@2680000 {
-@@ -191,5 +192,4 @@
- 			bus_freq	= <2500000>;
- 		};
- 		/include/ "keystone-k2e-netcp.dtsi"
--	};
- };
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 8b04652b703f..fd061718dc0a 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -69,7 +69,7 @@
- 		interrupts = <GIC_SPI 4 IRQ_TYPE_EDGE_RISING>;
+diff --git a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
+index 915a99d5bc5e..5e0e7d232161 100644
+--- a/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
+@@ -32,7 +32,7 @@ clocks {
+ 		reg-names = "control";
  	};
  
--	soc {
-+	soc0: soc@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		#pinctrl-cells = <1>;
-diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-index 8ea5a584e828..ad4e22afe133 100644
---- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-@@ -26,7 +26,31 @@
- 		};
+-	clkusb1: clkusb1 {
++	clkusb1: clkusb1@2350004 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk16>;
+@@ -42,7 +42,7 @@ clocks {
+ 		domain-id = <0>;
  	};
  
--	soc {
-+	leds {
-+		compatible = "gpio-leds";
-+		debug1_1 {
-+			label = "keystone:green:debug1";
-+			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>; /* 12 */
-+		};
-+
-+		debug1_2 {
-+			label = "keystone:red:debug1";
-+			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>; /* 13 */
-+		};
-+
-+		debug2 {
-+			label = "keystone:blue:debug2";
-+			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>; /* 14 */
-+		};
-+
-+		debug3 {
-+			label = "keystone:blue:debug3";
-+			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>; /* 15 */
-+		};
-+	};
-+};
-+
-+&soc0 {
- 		clocks {
- 			refclksys: refclksys {
- 				#clock-cells = <0>;
-@@ -63,30 +87,6 @@
- 				clock-output-names = "refclk-ddr3b";
- 			};
- 		};
--	};
--
--	leds {
--		compatible = "gpio-leds";
--		debug1_1 {
--			label = "keystone:green:debug1";
--			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>; /* 12 */
--		};
--
--		debug1_2 {
--			label = "keystone:red:debug1";
--			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>; /* 13 */
--		};
--
--		debug2 {
--			label = "keystone:blue:debug2";
--			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>; /* 14 */
--		};
--
--		debug3 {
--			label = "keystone:blue:debug3";
--			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>; /* 15 */
--		};
--	};
- };
- 
- &usb_phy {
-diff --git a/arch/arm/boot/dts/keystone-k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
-index 71c1dcf4159f..ed59474522cb 100644
---- a/arch/arm/boot/dts/keystone-k2hk.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
-@@ -52,8 +52,9 @@
- 		rproc6 = &dsp6;
- 		rproc7 = &dsp7;
- 	};
-+};
- 
--	soc {
-+&soc0 {
- 		/include/ "keystone-k2hk-clocks.dtsi"
- 
- 		msm_ram: msmram@c000000 {
-@@ -281,5 +282,4 @@
- 			bus_freq	= <2500000>;
- 		};
- 		/include/ "keystone-k2hk-netcp.dtsi"
--	};
- };
-diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
-index 61f63437b886..e200533d26a4 100644
---- a/arch/arm/boot/dts/keystone-k2l-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
-@@ -25,8 +25,9 @@
- 			status = "okay";
- 		};
- 	};
-+};
- 
--	soc {
-+&soc0 {
- 		clocks {
- 			refclksys: refclksys {
- 				#clock-cells = <0>;
-@@ -35,7 +36,6 @@
- 				clock-output-names = "refclk-sys";
- 			};
- 		};
--	};
- };
- 
- &usb_phy {
-diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
-index 85b5481213d0..b61a830f4a4d 100644
---- a/arch/arm/boot/dts/keystone-k2l.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l.dtsi
-@@ -36,8 +36,9 @@
- 		rproc2 = &dsp2;
- 		rproc3 = &dsp3;
- 	};
-+};
- 
--	soc {
-+&soc0 {
- 		/include/ "keystone-k2l-clocks.dtsi"
- 
- 		uart2: serial@2348400 {
-@@ -391,7 +392,6 @@
- 			bus_freq	= <2500000>;
- 		};
- 		/include/ "keystone-k2l-netcp.dtsi"
--	};
- };
- 
- &spi0 {
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index ca2cc5d8e3b5..0e8d094515cc 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -67,7 +67,7 @@
- 		cpu_on		= <0x84000003>;
+-	clkhyperlink0: clkhyperlink0 {
++	clkhyperlink0: clkhyperlink02350030 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk12>;
+@@ -52,7 +52,7 @@ clocks {
+ 		domain-id = <5>;
  	};
  
--	soc {
-+	soc0: soc@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "ti,keystone","simple-bus";
+-	clkpcie1: clkpcie1 {
++	clkpcie1: clkpcie1@235006c {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk12>;
+@@ -62,7 +62,7 @@ clocks {
+ 		domain-id = <18>;
+ 	};
+ 
+-	clkxge: clkxge {
++	clkxge: clkxge@23500c8 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,keystone,psc-clock";
+ 		clocks = <&chipclk13>;
 -- 
 2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
