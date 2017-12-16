@@ -1,112 +1,100 @@
-From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] dt-bindings: thermal: Describe Armada AP806
- and CP110
-Date: Sat, 16 Dec 2017 13:50:59 +0100
-Message-ID: <20171216135059.059bc00a@xps13>
-References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
-        <20171214103011.24713-2-miquel.raynal@free-electrons.com>
-        <20171215082759.7t24ka3lpkulcb7r@tarshish>
-        <20171215093203.74b7a59c@xps13>
-        <87po7gmlcs.fsf@free-electrons.com>
-        <20171215115230.6fb83cb6@xps13>
-        <20171215232854.n23biqelqoqjsevm@rob-hp-laptop>
+From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v2] drm/panel: Add support for AUO G104SN02 V2 panel
+Date: Sat, 16 Dec 2017 14:13:36 +0100
+Message-ID: <1513430016.1930.4.camel@googlemail.com>
+References: <1513173656.2322.16.camel@googlemail.com>
+         <20171215230754.cnepbs34t5gp2rsf@rob-hp-laptop>
+Reply-To: chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215232854.n23biqelqoqjsevm@rob-hp-laptop>
+In-Reply-To: <20171215230754.cnepbs34t5gp2rsf@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stefan =?ISO-8859-1?Q?Riedm=FCller?= <S.Riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+This patch adds support for AUO G104SN02 V2 800x600 10.4" panel to DRM
+simple panel driver.
 
-On Fri, 15 Dec 2017 17:28:54 -0600
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Signed-off-by: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+---
+Changes since v1:
+ - be explicit as to which properties apply
+ - adapt indenting
 
-> On Fri, Dec 15, 2017 at 11:52:30AM +0100, Miquel RAYNAL wrote:
-> > Hello Baruch and Gregory,
-> > 
-> > On Fri, 15 Dec 2017 09:44:19 +0100
-> > Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >   
-> > > Hi Miquel,
-> > >  
-> > >  On ven., déc. 15 2017, Miquel RAYNAL
-> > > <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > >   
-> > > > Hello Baruch,
-> > > >
-> > > > On Fri, 15 Dec 2017 10:27:59 +0200
-> > > > Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-> > > >    
-> > > >> Hi Miquel
-> > > >> 
-> > > >> On Thu, Dec 14, 2017 at 11:30:01AM +0100, Miquel Raynal
-> > > >> wrote:    
-> > > >> > +- marvell,thermal-zone-name: The name to identify the
-> > > >> > thermal zone
-> > > >> > +                             within the sysfs, useful when
-> > > >> > multiple
-> > > >> > +                             thermal zones are registered
-> > > >> > (AP, CPx...).      
-> > > >> 
-> > > >> I don't think that would be acceptable. DT is about describing
-> > > >> the hardware. sysfs is a Linux implementation detail which is
-> > > >> not tied to any specific hardware. If this is accepted, the
-> > > >> property should be named 'linux,thermal-zone-name'.    
-> > > >
-> > > > You are right the sysfs mention should not appear in the
-> > > > description.  
-> > 
-> > Actually, you are right for all of it, this property should not
-> > exist, sorry for my too quick answer.
-> >   
-> > > >
-> > > > Otherwise for the naming I'm not sure "linux," is a valid
-> > > > prefix in that case.    
-> > 
-> > Thank you both for your explanations, I was also wrong about the
-> > prefix. 
-> > > 
-> > > Actually the choice between linux or marvell make me realize that
-> > > there is something wrong. Having a name associated to a device is
-> > > something pretty usual with the device tree, however it is as the
-> > > class device level, such as clock-names, line-name, or
-> > > regulator-name. So in my opinion if we want to support naming from
-> > > device tree it would be done for all the thermal device not just
-> > > for the Marvell one.
-> > > 
-> > > However I don't think we need it. For example for the clocks we
-> > > created the name dynamically using of the base address of the
-> > > register to keep them unique.  
-> > 
-> > I was convinced that dev_name's would be the same but after trying
-> > it on a 8040-DB, using dev_name(&pdev->dev) gives:
-> > 
-> >     f06f808c.thermal
-> >     f2400078.thermal
-> >     f4400078.thermal
-> > 
-> > which I found meaningful enough.
-> > 
-> > I will drop the property and use dev_name instead. I still need your
-> > help to solve one problem though: how to make the distinction
-> > between using "armada_thermal" (the previous name) and dev_name() ?
-> > If I don't it kind of breaks userspace, doesn't it ?  
-> 
-> No. The /sys/devices/... or /sys/bus/platform/... paths and names are 
-> not guaranteed to be stable. These changed for every platform
-> converted to DT for example. Userspace should be accessing things
-> through /sys/class/... (or deal with changes).
+ .../bindings/display/panel/auo,g104sn02.txt        | 12 ++++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,g104sn02.txt
 
-Ok, thanks for the explanation.
+diff --git a/Documentation/devicetree/bindings/display/panel/auo,g104sn02.txt b/Documentation/devicetree/bindings/display/panel/auo,g104sn02.txt
+new file mode 100644
+index 0000000..85626ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/auo,g104sn02.txt
+@@ -0,0 +1,12 @@
++AU Optronics Corporation 10.4" (800x600) color TFT LCD panel
++
++Required properties:
++- compatible: should be "auo,g104sn02"
++- power-supply: as specified in the base binding
++
++Optional properties:
++- backlight: as specified in the base binding
++- enable-gpios: as specified in the base binding
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index b7c4709..8599905 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -581,6 +581,29 @@ static const struct panel_desc auo_b133htn01 = {
+ 	},
+ };
+ 
++static const struct drm_display_mode auo_g104sn02_mode = {
++	.clock = 40000,
++	.hdisplay = 800,
++	.hsync_start = 800 + 40,
++	.hsync_end = 800 + 40 + 216,
++	.htotal = 800 + 40 + 216 + 128,
++	.vdisplay = 600,
++	.vsync_start = 600 + 10,
++	.vsync_end = 600 + 10 + 35,
++	.vtotal = 600 + 10 + 35 + 2,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc auo_g104sn02 = {
++	.modes = &auo_g104sn02_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 211,
++		.height = 158,
++	},
++};
++
+ static const struct display_timing auo_g133han01_timings = {
+ 	.pixelclock = { 134000000, 141200000, 149000000 },
+ 	.hactive = { 1920, 1920, 1920 },
+@@ -1993,6 +2016,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "auo,b133xtn01",
+ 		.data = &auo_b133xtn01,
+ 	}, {
++		.compatible = "auo,g104sn02",
++		.data = &auo_g104sn02,
++	}, {
+ 		.compatible = "auo,g133han01",
+ 		.data = &auo_g133han01,
+ 	}, {
+-- 
+2.1.4
 
-I will sent a v4 early next week about all the changes requested.
-
-Thank you all for reviewing.
-Miquèl
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
