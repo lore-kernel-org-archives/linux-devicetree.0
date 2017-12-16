@@ -1,53 +1,87 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: dts: meson-axg: add new reset DT node
-Date: Fri, 15 Dec 2017 16:17:48 -0800
-Message-ID: <7hind77cgj.fsf@baylibre.com>
-References: <20171110084659.31641-1-yixun.lan@amlogic.com>
-        <04b96767-2412-7242-780c-f3e1e610a62b@baylibre.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: chosen: Add clocksource and clockevent
+ selection
+Date: Fri, 15 Dec 2017 19:57:15 -0600
+Message-ID: <8fe1dce0-3fd2-d740-8456-bf3b734e571a@ti.com>
+References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
+ <20171213185313.20017-2-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <04b96767-2412-7242-780c-f3e1e610a62b-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
-        Armstrong's message of "Fri, 17 Nov 2017 14:08:35 +0100")
+In-Reply-To: <20171213185313.20017-2-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-> On 10/11/2017 09:46, Yixun Lan wrote:
->> Add reset DT node for Amlogic's Meson-AXG SoC.
->> 
->> Signed-off-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 6 ++++++
->>  1 file changed, 6 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> index e0fb860e12c5..65945c6c8b65 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
->> @@ -123,6 +123,12 @@
->>  			#size-cells = <2>;
->>  			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
->>  
->> +			reset: reset-controller@1004 {
->> +				compatible = "amlogic,meson-axg-reset";
->> +				reg = <0x0 0x01004 0x0 0x9c>;
->> +				#reset-cells = <1>;
->> +			};
->> +
->>  			uart_A: serial@24000 {
->>  				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
->>  				reg = <0x0 0x24000 0x0 0x14>;
->> 
->
-> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Applied to v4.16/dt64,
+On 12/13/2017 12:53 PM, Alexandre Belloni wrote:
+> The clocksource and clockevent timer are probed early in the boot process.
+> At that time it is difficult for linux to know whether a particular timer
+> can be used as the clocksource or the clockevent or by another driver,
+> especially when they are all identical or have similar features.
+> 
+> Until now, multiple strategies have been used to solve that:
+>   - use Kconfig option as MXC_USE_EPIT or ATMEL_TCB_CLKSRC_BLOCK
+>   - use a kernel parameter as the "clocksource" early_param in mach-omap2
+>   - registering the first seen timer as a clockevent and the second one as
+>   a clocksource as in rk_timer_init or dw_apb_timer_init
+> 
+> Add a linux,clocksource and a linux,clockevent node in chosen with a timer
+> property pointing to the timer to use. Other properties, like the targeted
+> precision may be added later.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>   Documentation/devicetree/bindings/chosen.txt | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index e3b13ea7d2ae..c7ee3ecb5276 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -120,3 +120,23 @@ e.g.
+>   While this property does not represent a real hardware, the address
+>   and the size are expressed in #address-cells and #size-cells,
+>   respectively, of the root node.
+> +
+> +linux,clocksource and linux,clockevent
+> +--------------------------------------
+> +
+> +Those nodes have a timer property. This property is a phandle to the timer to be
+> +chosen as the clocksource or clockevent. This is only useful when the platform
+> +has multiple identical timers and it is not possible to let linux make the
+> +correct choice.
+> +
+> +/ {
+> +	chosen {
+> +		linux,clocksource {
+> +			timer = <&timer0>;
+> +		};
+> +
+> +		linux,clockevent {
+> +			timer = <&timer1>;
+> +		};
+> +	};
+> +};
+> 
 
-Kevin
+It'd be nice if smth. like this will actually happen, as on some OMAP
+platforms can be up to 3-4 alternatives for each clocksource/clockevent and
+different combination need to be selected depending on SoC and platform
+(and sometime - use case) which is pain in multi-platform environment now.
+
+But more important note from my side is clocksource and clockevent selections seems 
+not enough :( There are also sched clock (sched_clock_register()) and delay_timer
+ (register_current_timer_delay() at least on ARM).
+Both above can't be unregistered (at least last time I've checked).
+
+-- 
+regards,
+-grygorii
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
