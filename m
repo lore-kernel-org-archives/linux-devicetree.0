@@ -1,105 +1,35 @@
-From: Yixun Lan <yixun.lan@amlogic.com>
-Subject: [PATCH v4 1/2] ARM64: dts: meson-axg: add ethernet mac controller
-Date: Sat, 16 Dec 2017 11:55:26 +0800
-Message-ID: <20171216035527.96952-2-yixun.lan@amlogic.com>
-References: <20171216035527.96952-1-yixun.lan@amlogic.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 04/10] arm64: dts: qcom: msm8916: drop unused
+ board-specific nodes
+Date: Fri, 15 Dec 2017 21:12:50 -0800
+Message-ID: <20171216051250.GA4281@tuxbook>
+References: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
+ <20171207151942.5805-5-damien.riegel@savoirfairelinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171216035527.96952-1-yixun.lan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Carlo Caione <carlo@caione.org>, Yixun Lan <yixun.lan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171207151942.5805-5-damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT info for the stmmac ethernet MAC which found in
-the Amlogic's Meson-AXG SoC, also describe the ethernet
-pinctrl & clock information here.
+On Thu 07 Dec 07:19 PST 2017, Damien Riegel wrote:
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 54 ++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+> These nodes reserve and configure some pins as GPIOs. They are not
+> generic pinctrls, they actually belong to board files but they are not
+> used by any other node, so just drop them altogether.
+> 
+> Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index d288d4724ae3..dea1bc31b4de 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/axg-clkc.h>
- 
- / {
- 	compatible = "amlogic,meson-axg";
-@@ -155,6 +156,19 @@
- 			};
- 		};
- 
-+		ethmac: ethernet@ff3f0000 {
-+			compatible = "amlogic,meson-gxbb-dwmac", "snps,dwmac";
-+			reg = <0x0 0xff3f0000 0x0 0x10000
-+				0x0 0xff634540 0x0 0x8>;
-+			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "macirq";
-+			clocks = <&clkc CLKID_ETH>,
-+				 <&clkc CLKID_FCLK_DIV2>,
-+				 <&clkc CLKID_MPLL2>;
-+			clock-names = "stmmaceth", "clkin0", "clkin1";
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@ffc01000 {
- 			compatible = "arm,gic-400";
- 			reg = <0x0 0xffc01000 0 0x1000>,
-@@ -215,6 +229,46 @@
- 					gpio-ranges = <&pinctrl_periphs 0 0 86>;
- 				};
- 
-+				eth_rgmii_x_pins: eth-x-rgmii {
-+					mux {
-+						groups = "eth_mdio_x",
-+						       "eth_mdc_x",
-+						       "eth_rgmii_rx_clk_x",
-+						       "eth_rx_dv_x",
-+						       "eth_rxd0_x",
-+						       "eth_rxd1_x",
-+						       "eth_rxd2_rgmii",
-+						       "eth_rxd3_rgmii",
-+						       "eth_rgmii_tx_clk",
-+						       "eth_txen_x",
-+						       "eth_txd0_x",
-+						       "eth_txd1_x",
-+						       "eth_txd2_rgmii",
-+						       "eth_txd3_rgmii";
-+						function = "eth";
-+					};
-+				};
-+
-+				eth_rgmii_y_pins: eth-y-rgmii {
-+					mux {
-+						groups = "eth_mdio_y",
-+						       "eth_mdc_y",
-+						       "eth_rgmii_rx_clk_y",
-+						       "eth_rx_dv_y",
-+						       "eth_rxd0_y",
-+						       "eth_rxd1_y",
-+						       "eth_rxd2_rgmii",
-+						       "eth_rxd3_rgmii",
-+						       "eth_rgmii_tx_clk",
-+						       "eth_txen_y",
-+						       "eth_txd0_y",
-+						       "eth_txd1_y",
-+						       "eth_txd2_rgmii",
-+						       "eth_txd3_rgmii";
-+						function = "eth";
-+					};
-+				};
-+
- 				pwm_a_a_pins: pwm_a_a {
- 					mux {
- 						groups = "pwm_a_a";
--- 
-2.15.1
+Reviewed-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Let's introduce them back into the db410c when we define a client.
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
