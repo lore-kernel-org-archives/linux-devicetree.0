@@ -1,253 +1,75 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 10/10] arm64: dts: qcom: msm8916: add nodes for i2c1,
- i2c3, i2c5
-Date: Fri, 15 Dec 2017 21:23:36 -0800
-Message-ID: <20171216052336.GG4281@tuxbook>
-References: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
- <20171207151942.5805-11-damien.riegel@savoirfairelinux.com>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: chosen: Document linux,initrd-{start,end}
+Date: Sat, 16 Dec 2017 06:41:39 +0100
+Message-ID: <20171216054139.d6hkbasex3p7h3qo@latitude>
+References: <20171209153305.11012-1-j.neuschaefer@gmx.net>
+ <20171215210147.w3xqs3di2vbbvv5p@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="zneft6tu6oj7qer3"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171207151942.5805-11-damien.riegel@savoirfairelinux.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Damien Riegel <damien.riegel@savoirfairelinux.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kernel@savoirfairelinux.com
+In-Reply-To: <20171215210147.w3xqs3di2vbbvv5p@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 07 Dec 07:19 PST 2017, Damien Riegel wrote:
 
-> Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+--zneft6tu6oj7qer3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please move pinconf settings into the structure in
-apq8016-sbc-soc-pins.dtsi (didn't see this when commenting on the
-previous patch).
+On Fri, Dec 15, 2017 at 03:01:47PM -0600, Rob Herring wrote:
+> On Sat, Dec 09, 2017 at 04:33:02PM +0100, Jonathan Neusch=C3=A4fer wrote:
+> > These properties have been in use for a very long time (at least since
+> > 2005), but were never documented in chosen.txt.
+> >=20
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/chosen.txt | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+>=20
+> Applied.
 
-Apart from this, the patch looks good.
+Thanks.
 
-Regards,
-Bjorn
+> I'm inclined to say to document these in the DT spec, but I'm assuming=20
+> there was some reason why they weren't put into the spec (ePAPR at the=20
+> time) originally.
 
-> ---
-> Changes in v2:
->  - Reworded commit title
->  - Changed size to 0x500
-> 
->  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi  | 48 ++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 42 ++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/msm8916.dtsi      | 45 ++++++++++++++++++++++++++++
->  3 files changed, 135 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> index 53c1ddd281a4..11305015ba0b 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> @@ -630,6 +630,22 @@
->  	};
->  };
->  
-> +&i2c1_default {
-> +	pinconf {
-> +		pins = "gpio2", "gpio3";
-> +		drive-strength = <16>;
-> +		bias-disable;
-> +	};
-> +};
-> +
-> +&i2c1_sleep {
-> +	pinconf {
-> +		pins = "gpio2", "gpio3";
-> +		drive-strength = <2>;
-> +		bias-disable;
-> +	};
-> +};
-> +
->  &i2c2_default {
->  	pinconf {
->  		pins = "gpio6", "gpio7";
-> @@ -646,6 +662,22 @@
->  	};
->  };
->  
-> +&i2c3_default {
-> +	pinconf {
-> +		pins = "gpio10", "gpio11";
-> +		drive-strength = <16>;
-> +		bias-disable;
-> +	};
-> +};
-> +
-> +&i2c3_sleep {
-> +	pinconf {
-> +		pins = "gpio10", "gpio11";
-> +		drive-strength = <2>;
-> +		bias-disable;
-> +	};
-> +};
-> +
->  &i2c4_default {
->  	pinconf {
->  		pins = "gpio14", "gpio15";
-> @@ -662,6 +694,22 @@
->  	};
->  };
->  
-> +&i2c5_default {
-> +	pinconf {
-> +		pins = "gpio18", "gpio19";
-> +		drive-strength = <16>;
-> +		bias-disable;
-> +	};
-> +};
-> +
-> +&i2c5_sleep {
-> +	pinconf {
-> +		pins = "gpio18", "gpio19";
-> +		drive-strength = <2>;
-> +		bias-disable;
-> +	};
-> +};
-> +
->  &i2c6_default {
->  	pinconf {
->  		pins = "gpio22", "gpio23";
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-> index 7704ddecb6c4..44e68860fc8c 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-> @@ -152,6 +152,20 @@
->  		};
->  	};
->  
-> +	i2c1_default: i2c1_default {
-> +		pinmux {
-> +			function = "blsp_i2c1";
-> +			pins = "gpio2", "gpio3";
-> +		};
-> +	};
-> +
-> +	i2c1_sleep: i2c1_sleep {
-> +		pinmux {
-> +			function = "gpio";
-> +			pins = "gpio2", "gpio3";
-> +		};
-> +	};
-> +
->  	i2c2_default: i2c2_default {
->  		pinmux {
->  			function = "blsp_i2c2";
-> @@ -166,6 +180,20 @@
->  		};
->  	};
->  
-> +	i2c3_default: i2c3_default {
-> +		pinmux {
-> +			function = "blsp_i2c3";
-> +			pins = "gpio10", "gpio11";
-> +		};
-> +	};
-> +
-> +	i2c3_sleep: i2c3_sleep {
-> +		pinmux {
-> +			function = "gpio";
-> +			pins = "gpio10", "gpio11";
-> +		};
-> +	};
-> +
->  	i2c4_default: i2c4_default {
->  		pinmux {
->  			function = "blsp_i2c4";
-> @@ -180,6 +208,20 @@
->  		};
->  	};
->  
-> +	i2c5_default: i2c5_default {
-> +		pinmux {
-> +			function = "blsp_i2c5";
-> +			pins = "gpio18", "gpio19";
-> +		};
-> +	};
-> +
-> +	i2c5_sleep: i2c5_sleep {
-> +		pinmux {
-> +			function = "gpio";
-> +			pins = "gpio18", "gpio19";
-> +		};
-> +	};
-> +
->  	i2c6_default: i2c6_default {
->  		pinmux {
->  			function = "blsp_i2c6";
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index ac440f287633..7478c7337995 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -455,6 +455,21 @@
->  			status = "disabled";
->  		};
->  
-> +		blsp_i2c1: i2c@78b5000 {
-> +			compatible = "qcom,i2c-qup-v2.2.1";
-> +			reg = <0x078b5000 0x500>;
-> +			interrupts = <GIC_SPI 95 0>;
-> +			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-> +				 <&gcc GCC_BLSP1_QUP1_I2C_APPS_CLK>;
-> +			clock-names = "iface", "core";
-> +			pinctrl-names = "default", "sleep";
-> +			pinctrl-0 = <&i2c1_default>;
-> +			pinctrl-1 = <&i2c1_sleep>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->  		blsp_i2c2: i2c@78b6000 {
->  			compatible = "qcom,i2c-qup-v2.2.1";
->  			reg = <0x078b6000 0x500>;
-> @@ -470,6 +485,21 @@
->  			status = "disabled";
->  		};
->  
-> +		blsp_i2c3: i2c@78b7000 {
-> +			compatible = "qcom,i2c-qup-v2.2.1";
-> +			reg = <0x078b7000 0x500>;
-> +			interrupts = <GIC_SPI 97 0>;
-> +			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-> +				 <&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
-> +			clock-names = "iface", "core";
-> +			pinctrl-names = "default", "sleep";
-> +			pinctrl-0 = <&i2c3_default>;
-> +			pinctrl-1 = <&i2c3_sleep>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->  		blsp_i2c4: i2c@78b8000 {
->  			compatible = "qcom,i2c-qup-v2.2.1";
->  			reg = <0x078b8000 0x500>;
-> @@ -485,6 +515,21 @@
->  			status = "disabled";
->  		};
->  
-> +		blsp_i2c5: i2c@78b9000 {
-> +			compatible = "qcom,i2c-qup-v2.2.1";
-> +			reg = <0x078b9000 0x500>;
-> +			interrupts = <GIC_SPI 99 0>;
-> +			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-> +				 <&gcc GCC_BLSP1_QUP5_I2C_APPS_CLK>;
-> +			clock-names = "iface", "core";
-> +			pinctrl-names = "default", "sleep";
-> +			pinctrl-0 = <&i2c5_default>;
-> +			pinctrl-1 = <&i2c5_sleep>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->  		blsp_i2c6: i2c@78ba000 {
->  			compatible = "qcom,i2c-qup-v2.2.1";
->  			reg = <0x078ba000 0x500>;
-> -- 
-> 2.15.0
-> 
+I don't know about the history of this, but I think if and when these
+properties were specified in DTSpec, they should get a non-linux-specific
+name, such as initrd-start/initrd-end, and a compatibility fallback to
+linux,initrd-* (similar to stdout-path and phandle).
+
+
+Jonathan Neusch=C3=A4fer
+
+--zneft6tu6oj7qer3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJaNLIKAAoJEAgwRJqO81/bRQgP/3V44Q3S2KSMezCncquc9Zgu
+DEjT1XpaSznO81X3Y3y3pNv9SB8MxMkD5MX9qLpfGPDeE8YSTg7lCkH5V559QLAM
+cHLTDxlGZISaVKhT0FYeohqW9yqKvEDRaJ+C6ys5rR0/3H1cXtLoLvMz1/4MkeF0
+GZAqq9CEXclcf5XapLQHFmC+7b+ouRAeRrZqx2T1fd2nAfVeC/lWsn8zCOiJypb7
+tFIeIOFVq6yl+HCZrIy6SUpGRkrr+LMTjrTyJgzBR0ZH4MgIwAHvc24SXi6Nmodz
+ZqaSH9N82csgaS0YLwZVW3QjAeQ3AdOgbKwN/3dTzqpAbwdfRw7z42y/TmFiK4hS
+iTx9sXl4+ZXwJpfjhokbJUveulpb+Y37RT3NF5mflmPYd1MncuDJoqybgwm6016s
+WxiO9gGnho1MYgslVdJA5AgYOtXgNH0XC2m/Popxi8juvSZMneC0RSWWfLPMdJJ2
+Ef34dDm+wGAjnjdiaUU/wq67KQuFJUxBG7IsVd7n3ajmS7WyMLXyuXq+YFYePawP
+6zmDMfCqFsa/Cj4nk1VX1TwqyaRJ+pnxEDBG4L363jAM13HNjZi4TYYqBmlejc5+
+A811asi48yZI/Pvz42vrbgqjIIP6RmG2B9GAJWS7W2s1BOF5ObexhDlvH0x4NQH9
+q1gCvde7NLOMRNQhDJ61
+=UVav
+-----END PGP SIGNATURE-----
+
+--zneft6tu6oj7qer3--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
