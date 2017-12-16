@@ -1,44 +1,37 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 05/10] arm64: dts: qcom: apq8016-sbc: sort nodes
- alphabetically
-Date: Fri, 15 Dec 2017 21:17:04 -0800
-Message-ID: <20171216051704.GB4281@tuxbook>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 06/10] arm64: dts: qcom: msm8916: move pinconfs to
+ board files
+Date: Fri, 15 Dec 2017 21:18:33 -0800
+Message-ID: <20171216051833.GC4281@tuxbook>
 References: <20171207151942.5805-1-damien.riegel@savoirfairelinux.com>
- <20171207151942.5805-6-damien.riegel@savoirfairelinux.com>
+ <20171207151942.5805-7-damien.riegel@savoirfairelinux.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20171207151942.5805-6-damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+In-Reply-To: <20171207151942.5805-7-damien.riegel@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Damien Riegel <damien.riegel@savoirfairelinux.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kernel@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
 On Thu 07 Dec 07:19 PST 2017, Damien Riegel wrote:
 
-> Also, it was using whitespaces for indentation on some lines, fix that
-> while moving it.
+> Following a suggestion from Bjorn Andersson [1], this commit moves
+> electrical specifications which were defined in mms8916-pins.dtsi to
+> board files, where they actually belong.
 > 
-> Signed-off-by: Damien Riegel <damien.riegel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> Pinmuxing is kept in the platform file because there are no alternative
+> pins on which all these functions could be routed, so this part is
+> indeed common to all boards using this SoC.
+> 
+> [1] https://www.spinics.net/lists/devicetree/msg201764.html
+> 
+> Signed-off-by: Damien Riegel <damien.riegel@savoirfairelinux.com>
+> Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Rather than extending single nodes like this I would prefer that we
-bring in the associated pmic node, by this we avoid just having a huge
-flat list of nodes. I.e. that we make this:
-
-&pm8916_1 {
-	codec@f000 {
-		status = "okay";
-		clocks = <&gcc GCC_CODEC_DIGCODEC_CLK>;
-		clock-names = "mclk";
-		qcom,mbhc-vthreshold-low = <75 150 237 450 500>;
-		qcom,mbhc-vthreshold-high = <75 150 237 450 500>;
-	};
-};
+I like the move, but I would prefer that you mimic the base structure,
+rather than just appending properties based on labels.
 
 Regards,
 Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
