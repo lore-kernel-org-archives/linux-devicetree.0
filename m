@@ -1,52 +1,33 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] cpufreq: Add DVFS support for Armada 37xx
-Date: Sun, 17 Dec 2017 19:12:16 +0100
-Message-ID: <2935509.m6SLZgyEsF@aspire.rjw.lan>
-References: <20171214150006.25438-1-gregory.clement@free-electrons.com> <20171214153631.GZ3322@vireshk-i7> <2201504.Sp2n0UgIp2@aspire.rjw.lan>
+From: "Sandra Younes" <mamg7610885-FCtXpw6BxjFdvEbG9P4ZtA@public.gmane.org>
+Subject: Re: Distress Call Please don't ignore
+Date: Sun, 17 Dec 2017 19:46:34 +0200
+Message-ID: <201712171746.vBHHkThC040601@mf-smf-ucb011.ocn.ad.jp>
+Reply-To: <tdavalvse-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2201504.Sp2n0UgIp2-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?ISO-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Evan Wang <xswang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andre Heider <a.heider-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday, December 17, 2017 7:08:53 PM CET Rafael J. Wysocki wrote:
-> On Thursday, December 14, 2017 4:36:31 PM CET Viresh Kumar wrote:
-> > On 14-12-17, 16:00, Gregory CLEMENT wrote:
-> > > This patch adds DVFS support for the Armada 37xx SoCs
-> > > 
-> > > There are up to four CPU frequency loads for Armada 37xx controlled by
-> > > the hardware.
-> > > 
-> > > This driver associates the CPU load level to a frequency, then the
-> > > hardware will switch while selecting a load level.
-> > > 
-> > > The hardware also can associate a voltage for each level (AVS support)
-> > > but it is not yet supported
-> > > 
-> > > Tested-by: Andre Heider <a.heider-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > ---
-> > >  drivers/cpufreq/Kconfig.arm           |   7 +
-> > >  drivers/cpufreq/Makefile              |   1 +
-> > >  drivers/cpufreq/armada-37xx-cpufreq.c | 241 ++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 249 insertions(+)
-> > >  create mode 100644 drivers/cpufreq/armada-37xx-cpufreq.c
-> > 
-> > Thanks for taking care of very minor review comments I had. All the
-> > patches look good now to me :)
-> 
-> All applied, thanks!
-> 
+Good Day,
 
-Actually, all except for the [4/4] as you applied it earlier.
+Forgive my indignation if this message comes to you as a surprise and may offend your personality for contacting you without your prior consent and writing through this channel.
 
-Thanks!
+I came across your name and contact on the course of my personal searching when i was searching for a foreign reliable partner. I was assured of your capability and reliability after going true your profile.
 
+I'm (Miss. Sandra) from Benghazi libya, My father of blessed memory by name late General Abdel Fattah Younes who was shot death by Islamist-linked militia within the anti-Gaddafi forces on 28th July, 2011 and after two days later my mother with my two brothers was killed one early morning by the rebels as result of civil war that is going on in my country Libya, then after the burial of my parents, my uncles conspired and sold my father's properties and left nothing for me. On a faithful morning, I opened my father's briefcase and discover a document which he has deposited ($6.250M USD) in a bank in a Turkish Bank which has a small branch in Canada with my name as the legitimate/next of kin. Meanwhile i have located the bank,and have also discussed the possiblity of transfering the fund. M
+ y father left a clause to the bank that i must introduce a trusted foreign partner who would be my trustee to help me invest this fund; hence the need for your assistance,i request that you be my t
+rustee and assist me in e
+
+You will also be responsible for the investment and management of the fund for me and also you will help me get a good school where i will further my education.
+I agreed to give you 40% of the $6.250M once the transfer is done. this is my true life story, I will be glad to receive your respond soonest for more details to enable us start and champion the transfer less than 14 banking days as i was informed by the bank manager.
+
+Thanks for giving me your attention,
+
+Yours sincerely,
+Miss. Sandra Younes
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
