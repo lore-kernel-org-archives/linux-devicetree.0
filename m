@@ -1,117 +1,223 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: Re: [PATCH v2 00/13] MIPS: add support for the Microsemi MIPS SoCs
-Date: Sun, 17 Dec 2017 22:29:30 +0530
-Message-ID: <CANc+2y5t8RRvuSsVvAJRNtfFx_T0wCGsSVd7Vb03boiX8AnbUw@mail.gmail.com>
-References: <20171208154618.20105-1-alexandre.belloni@free-electrons.com>
+From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP
+ init driver
+Date: Sun, 17 Dec 2017 09:40:25 -0800
+Message-ID: <6758f505-2940-feb9-a14a-9d5e3962f7f2@infradead.org>
+References: <29198c0a-783e-8aa0-00e4-44b1fa1acef7@infradead.org>
+ <1513322656-4571-1-git-send-email-dshah@xilinx.com>
+ <1513322656-4571-3-git-send-email-dshah@xilinx.com>
+ <d9e263f9-827c-656d-77fd-bbbb2b172040@infradead.org>
+ <BY2PR0201MB1879AFE10931133E229C0849C1090@BY2PR0201MB1879.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20171208154618.20105-1-alexandre.belloni@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <BY2PR0201MB1879AFE10931133E229C0849C1090-xQ6P1Lmehamr4PZSg9VoqRrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dhaval Rajeshbhai Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+On 12/16/2017 10:07 PM, Dhaval Rajeshbhai Shah wrote:
+> Hi Randy,
+> 
+> Thanks a lot for the review.
+> 
+>> -----Original Message-----
+>> From: Randy Dunlap [mailto:rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org]
+>> Sent: Saturday, December 16, 2017 2:18 PM
+>> To: Dhaval Rajeshbhai Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; arnd-r2nGTMty4D4@public.gmane.org;
+>> gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+>> michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org; Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Dhaval Rajeshbhai
+>> Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> Subject: Re: [PATCH v4 2/2] misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP
+>> init driver
+>>
+>> On 12/14/2017 11:24 PM, Dhaval Shah wrote:
+>>> Xilinx ZYNQMP logicoreIP Init driver is based on the new LogiCoreIP
+>>> design created. This driver provides the processing system and
+>>> programmable logic isolation. Set the frequency based on the clock
+>>> information get from the logicoreIP register set.
+>>>
+>>> It is put in drivers/misc as there is no subsystem for this logicoreIP.
+>>>
+>>> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>
+>>>  drivers/misc/Kconfig    |  15 ++
+>>>  drivers/misc/Makefile   |   1 +
+>>>  drivers/misc/xlnx_vcu.c | 631
+>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 647 insertions(+)
+>>>  create mode 100644 drivers/misc/xlnx_vcu.c
+>>
+>>> diff --git a/drivers/misc/xlnx_vcu.c b/drivers/misc/xlnx_vcu.c new
+>>> file mode 100644 index 0000000..f489d34
+>>> --- /dev/null
+>>> +++ b/drivers/misc/xlnx_vcu.c
+>>> @@ -0,0 +1,631 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * Xilinx VCU Init
+>>> + *
+>>> + * Copyright (C) 2016 - 2017 Xilinx, Inc.
+>>> + *
+>>> + * Contacts   Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> + */
+>>> +#include <linux/clk.h>
+>>> +#include <linux/device.h>
+>>> +#include <linux/errno.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of_platform.h>
+>>> +#include <linux/platform_device.h>
+>>
+>> [snip]
+>>
+>>
+>>> +/**
+>>> + * xvcu_set_vcu_pll_info - Set the VCU PLL info
+>>> + * @xvcu:	Pointer to the xvcu_device structure
+>>> + *
+>>> + * Programming the VCU PLL based on the user configuration
+>>> + * (ref clock freq, core clock freq, mcu clock freq).
+>>> + * Core clock frequency has higher priority than mcu clock frequency
+>>> + * Errors in following cases
+>>> + *    - When mcu or clock clock get from logicoreIP is 0
+>>> + *    - When VCU PLL DIV related bits value other than 1
+>>> + *    - When proper data not found for given data
+>>> + *    - When sis570_1 clocksource related operation failed
+>>> + *
+>>> + * Return:	Returns status, either success or error+reason
+>>> + */
+>>> +static int xvcu_set_vcu_pll_info(struct xvcu_device *xvcu) {
+>>> +	u32 refclk, coreclk, mcuclk, inte, deci;
+>>> +	u32 divisor_mcu, divisor_core, fvco;
+>>> +	u32 clkoutdiv, vcu_pll_ctrl, pll_clk;
+>>> +	u32 cfg_val, mod, ctrl;
+>>> +	int ret;
+>>> +	unsigned int i;
+>>> +	const struct xvcu_pll_cfg *found = NULL;
+>>> +
+>>> +	inte = xvcu_read(xvcu->logicore_reg_ba, VCU_PLL_CLK);
+>>> +	deci = xvcu_read(xvcu->logicore_reg_ba, VCU_PLL_CLK_DEC);
+>>> +	coreclk = xvcu_read(xvcu->logicore_reg_ba, VCU_CORE_CLK) * MHZ;
+>>> +	mcuclk = xvcu_read(xvcu->logicore_reg_ba, VCU_MCU_CLK) * MHZ;
+>>> +	if (!mcuclk || !coreclk) {
+>>> +		dev_err(xvcu->dev, "Invalid mcu and core clock data\n");
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	refclk = (inte * MHZ) + (deci * (MHZ / FRAC));
+>>> +	dev_dbg(xvcu->dev, "Ref clock from logicoreIP is %uHz\n", refclk);
+>>> +	dev_dbg(xvcu->dev, "Core clock from logicoreIP is %uHz\n", coreclk);
+>>> +	dev_dbg(xvcu->dev, "Mcu clock from logicoreIP is %uHz\n", mcuclk);
+>>> +
+>>> +	clk_disable_unprepare(xvcu->pll_ref);
+>>> +	ret = clk_set_rate(xvcu->pll_ref, refclk);
+>>> +	if (ret)
+>>> +		dev_warn(xvcu->dev, "failed to set logicoreIP refclk rate\n");
+>>> +
+>>> +	ret = clk_prepare_enable(xvcu->pll_ref);
+>>> +	if (ret) {
+>>> +		dev_err(xvcu->dev, "failed to enable pll_ref clock source\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	refclk = clk_get_rate(xvcu->pll_ref);
+>>> +
+>>> +	/*
+>>> +	 * The divide-by-2 should be always enabled (==1)
+>>> +	 * to meet the timing in the design.
+>>> +	 * Otherwise, it's an error
+>>> +	 */
+>>> +	vcu_pll_ctrl = xvcu_read(xvcu->vcu_slcr_ba, VCU_PLL_CTRL);
+>>> +	clkoutdiv = vcu_pll_ctrl >> VCU_PLL_CTRL_CLKOUTDIV_SHIFT;
+>>> +	clkoutdiv = clkoutdiv && VCU_PLL_CTRL_CLKOUTDIV_MASK;
+>>> +	if (clkoutdiv != 1) {
+>>> +		dev_err(xvcu->dev, "clkoutdiv value is invalid\n");
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	for (i = ARRAY_SIZE(xvcu_pll_cfg) - 1; i > 0; i--) {
+>>
+>> When does that for loop terminate?
+>>
+> This loop will terminate either it reach to i =0 and one other case is when it find the proper expected value.  Break statement is used to exit in that case. 
 
-With very small amount of code in arch/mips this series looks really nice.
+Hm, well, I did mis-read it, but I think that there is still an off-by-one problem.
 
-On 8 December 2017 at 21:16, Alexandre Belloni
-<alexandre.belloni@free-electrons.com> wrote:
-> Hi,
->
-> This patch series adds initial support for the Microsemi MIPS SoCs. It
-> is currently focusing on the Microsemi Ocelot (VSC7513, VSC7514).
->
-> It adds support for the IRQ controller, pinmux and gpio controller and
-> reset control.
->
-> This produces a kernel that can boot to the console.
->
-> This is a single series for reference but it can also be taken
-> separately by each maintainer as each drivers are independant.
->
-> Changes in v2:
->  - removed the wildcard in MAINAINERS
->  - corrected the Cc list
->  - added proper documentation for both syscons
->  - removed the mscc,cpucontrol property
->  - updated the ranges property in the ocelot dtsi
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: linux-pm@vger.kernel.org
->
->
-> Alexandre Belloni (13):
->   dt-bindings: Add vendor prefix for Microsemi Corporation
->   dt-bindings: interrupt-controller: Add binding for the Microsemi
->     Ocelot interrupt controller
->   irqchip: Add a driver for the Microsemi Ocelot controller
->   dt-bindings: pinctrl: Add bindings for Microsemi Ocelot
->   pinctrl: Add Microsemi Ocelot SoC driver
->   dt-bindings: mips: Add bindings for Microsemi SoCs
->   dt-bindings: power: reset: Document ocelot-reset binding
->   power: reset: Add a driver for the Microsemi Ocelot reset
->   MIPS: mscc: Add initial support for Microsemi MIPS SoCs
->   MIPS: mscc: add ocelot dtsi
->   MIPS: mscc: add ocelot PCB123 device tree
->   MIPS: defconfigs: add a defconfig for Microsemi SoCs
->   MAINTAINERS: Add entry for Microsemi MIPS SoCs
->
->  .../interrupt-controller/mscc,ocelot-icpu-intr.txt |  22 +
->  Documentation/devicetree/bindings/mips/mscc.txt    |  46 ++
->  .../bindings/pinctrl/mscc,ocelot-pinctrl.txt       |  39 ++
->  .../bindings/power/reset/ocelot-reset.txt          |  17 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->  MAINTAINERS                                        |   7 +
->  arch/mips/Kbuild.platforms                         |   1 +
->  arch/mips/Kconfig                                  |  24 +
->  arch/mips/boot/dts/Makefile                        |   1 +
->  arch/mips/boot/dts/mscc/Makefile                   |   6 +
->  arch/mips/boot/dts/mscc/ocelot.dtsi                | 115 +++++
->  arch/mips/boot/dts/mscc/ocelot_pcb123.dts          |  27 ++
->  arch/mips/configs/mscc_defconfig                   |  84 ++++
->  arch/mips/mscc/Makefile                            |  11 +
->  arch/mips/mscc/Platform                            |  12 +
->  arch/mips/mscc/setup.c                             | 106 +++++
->  drivers/irqchip/Kconfig                            |   5 +
->  drivers/irqchip/Makefile                           |   1 +
->  drivers/irqchip/irq-mscc-ocelot.c                  | 109 +++++
->  drivers/pinctrl/Kconfig                            |  10 +
->  drivers/pinctrl/Makefile                           |   1 +
->  drivers/pinctrl/pinctrl-ocelot.c                   | 505 +++++++++++++++++++++
->  drivers/power/reset/Kconfig                        |   7 +
->  drivers/power/reset/Makefile                       |   1 +
->  drivers/power/reset/ocelot-reset.c                 |  86 ++++
->  25 files changed, 1244 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mscc,ocelot-icpu-intr.txt
->  create mode 100644 Documentation/devicetree/bindings/mips/mscc.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
->  create mode 100644 arch/mips/boot/dts/mscc/Makefile
->  create mode 100644 arch/mips/boot/dts/mscc/ocelot.dtsi
->  create mode 100644 arch/mips/boot/dts/mscc/ocelot_pcb123.dts
->  create mode 100644 arch/mips/configs/mscc_defconfig
->  create mode 100644 arch/mips/mscc/Makefile
->  create mode 100644 arch/mips/mscc/Platform
->  create mode 100644 arch/mips/mscc/setup.c
->  create mode 100644 drivers/irqchip/irq-mscc-ocelot.c
->  create mode 100644 drivers/pinctrl/pinctrl-ocelot.c
->  create mode 100644 drivers/power/reset/ocelot-reset.c
->
-> --
-> 2.15.1
->
->
+Consider the case of the value is not found in the array.
 
-Except for irqchip driver and pinctrl driver other parts of the series is
-Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+If ARRAY_SIZE(xvcu_pll_cfg) is 5:
 
-Regards,
-PrasannaKumar
+	for (i = ARRAY_SIZE(xvcu_pll_cfg) - 1; i > 0; i--) {
+
+		i == 4:
+		check xvcu_pll_cfg[4]
+		i--;
+
+		i == 3:
+		check xvcu_pll_cfg[3]
+		i--;
+
+		i == 2;
+		check xvcu_pll_cfg[2]
+		i--;
+
+		i == 1:
+		check xvcu_pll_cfg[1]
+		i--;
+
+		i == 0;
+		terminate for-loop;
+		xvcu_pll_cfg[0] is never checked;
+
+Is this clear?
+
+
+>>> +		const struct xvcu_pll_cfg *cfg = &xvcu_pll_cfg[i];
+>>> +
+>>> +		fvco = cfg->fbdiv * refclk;
+>>> +		if (fvco >= FVCO_MIN && fvco <= FVCO_MAX) {
+>>> +			pll_clk = fvco / VCU_PLL_DIV2;
+>>> +			if (fvco % VCU_PLL_DIV2 != 0)
+>>> +				pll_clk++;
+>>> +			mod = pll_clk % coreclk;
+>>> +			if (mod < LIMIT) {
+>>> +				divisor_core = pll_clk / coreclk;
+>>> +			} else if (coreclk - mod < LIMIT) {
+>>> +				divisor_core = pll_clk / coreclk;
+>>> +				divisor_core++;
+>>> +			} else {
+>>> +				continue;
+>>> +			}
+>>> +			if (divisor_core >= DIVISOR_MIN &&
+>>> +			    divisor_core <= DIVISOR_MAX) {
+>>> +				found = cfg;
+>>> +				divisor_mcu = pll_clk / mcuclk;
+>>> +				mod = pll_clk % mcuclk;
+>>> +				if (mcuclk - mod < LIMIT)
+>>> +					divisor_mcu++;
+>>> +				break;
+> This is the break statement to exit when proper value is find.
+>>> +			}
+>>> +		}
+>>> +	}
+>>> +
+>>> +	if (!found) {
+>>> +		dev_err(xvcu->dev, "Invalid clock combination.\n");
+>>> +		return -EINVAL;
+>>> +	}
+>>
+>> [snip]
+
+
+-- 
+~Randy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
