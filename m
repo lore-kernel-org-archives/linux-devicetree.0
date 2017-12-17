@@ -1,425 +1,105 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 13/13] ASoC: stm32: add DFSDM DAI support
-Date: Sun, 17 Dec 2017 12:59:01 +0000
-Message-ID: <20171217125901.5afd65c6@archlinux>
-References: <1513241885-32079-1-git-send-email-arnaud.pouliquen@st.com>
-        <1513241885-32079-14-git-send-email-arnaud.pouliquen@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513241885-32079-14-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Subject: Re: [PATCH 1/2] dt-binding: can: mcp2517fd: document device tree bindings
+Date: Sun, 17 Dec 2017 15:34:28 +0100
+Message-ID: <4E2DB518-A148-46CE-8267-73D292991BD2@martin.sperl.org>
+References: <20171124183509.12810-1-kernel@martin.sperl.org> <20171124183509.12810-2-kernel@martin.sperl.org> <20171126222528.i6quueqdmuj6le6g@rob-hp-laptop> <6EBDD798-8632-4F42-A138-369BCD36DF68@martin.sperl.org> <0a7e4416-332a-5c23-bda3-8c7561410314@posteo.de> <612BB6CD-5330-40B8-A854-FD065E0A3331@martin.sperl.org> <6aea8071-dc21-4ba7-2b2f-5af41b5755a5@posteo.de> <F6036A58-9E98-4A62-950E-3396C9EE636E@martin.sperl.org> <1ac487f7-17e3-c8a0-0f99-8138fe867373@posteo.de> <f83be38e-1a44-79cc-4cdb-f26d8c8a5c61@martin.sperl.org> <d79ee9eb-8b36-0086-8d76-ec6bca224fe5@posteo.de>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d79ee9eb-8b36-0086-8d76-ec6bca224fe5-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Patrick Menschel <menschel.p-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Dec 2017 09:58:05 +0100
-Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org> wrote:
+Hi Patrick!
 
-> Add driver to handle DAI interface for PDM microphones connected
-> to Digital Filter for Sigma Delta Modulators IP.
+So I started implementing the GPIO_LIB implementation but
+I have hit an issue where I would like to get some feedback.
+
+So in principle the gpiolib works, but only if the device is
+not asleep and the clock is enabled, which at this very moment means
+that the can interface has to be up and running.
+
+So at this very moment the only option that I see would be to
+disable the sleep mode which the device enters after probing until
+the can-network interface is enabled (which enables the clock and
+start the oscillator) - with SLEEP enabled when GPIOLIB support
+is disabled.
+
+This is obviously not optimal from the power perspective…
+
+The other option would be starting the clock and oscillator
+as soon as a set_direction* (or reques/free) function is called.
+(where I would need to start using locks to avoid race conditions
+as well as clock usage counters...).
+
+Which of the above is the preferred solution? Are there other ideas
+how I could solve this dilemma?
+
+
+Martin
+
+> On 05.12.2017, at 19:28, Patrick Menschel <menschel.p-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org> wrote:
 > 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-
-For the IIO parts (I'm not knowledgeable enough about the sound side to
-offer a proper review!)
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-
-So Mark, over to you.  I'm happy if you want to do the immutable branch
-once any issue you find are fixed, or I can do it.  I'm just looking
-for acks or a pull request now.
-
-Jonathan
-
-> ---
->  sound/soc/stm/Kconfig        |  11 ++
->  sound/soc/stm/Makefile       |   3 +
->  sound/soc/stm/stm32_adfsdm.c | 347 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 361 insertions(+)
->  create mode 100644 sound/soc/stm/stm32_adfsdm.c
+> Hi Martin,
 > 
-> diff --git a/sound/soc/stm/Kconfig b/sound/soc/stm/Kconfig
-> index 3398e6c..a78f770 100644
-> --- a/sound/soc/stm/Kconfig
-> +++ b/sound/soc/stm/Kconfig
-> @@ -28,4 +28,15 @@ config SND_SOC_STM32_SPDIFRX
->  	help
->  	  Say Y if you want to enable S/PDIF capture for STM32
->  
-> +config SND_SOC_STM32_DFSDM
-> +	tristate "SoC Audio support for STM32 DFSDM"
-> +	depends on (ARCH_STM32 && OF && STM32_DFSDM_ADC) || COMPILE_TEST
-> +	depends on SND_SOC
-> +	select SND_SOC_GENERIC_DMAENGINE_PCM
-> +	select SND_SOC_DMIC
-> +	select IIO_BUFFER_CB
-> +	help
-> +	  Select this option to enable the STM32 Digital Filter
-> +	  for Sigma Delta Modulators (DFSDM) driver used
-> +	  in various STM32 series for digital microphone capture.
->  endmenu
-> diff --git a/sound/soc/stm/Makefile b/sound/soc/stm/Makefile
-> index 4ed22e6..53e90e6 100644
-> --- a/sound/soc/stm/Makefile
-> +++ b/sound/soc/stm/Makefile
-> @@ -12,3 +12,6 @@ obj-$(CONFIG_SND_SOC_STM32_I2S) += snd-soc-stm32-i2s.o
->  # SPDIFRX
->  snd-soc-stm32-spdifrx-objs := stm32_spdifrx.o
->  obj-$(CONFIG_SND_SOC_STM32_SPDIFRX) += snd-soc-stm32-spdifrx.o
-> +
-> +#DFSDM
-> +obj-$(CONFIG_SND_SOC_STM32_DFSDM) += stm32_adfsdm.o
-> diff --git a/sound/soc/stm/stm32_adfsdm.c b/sound/soc/stm/stm32_adfsdm.c
-> new file mode 100644
-> index 0000000..af50891
-> --- /dev/null
-> +++ b/sound/soc/stm/stm32_adfsdm.c
-> @@ -0,0 +1,347 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * This file is part of STM32 DFSDM ASoC DAI driver
-> + *
-> + * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
-> + * Authors: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-> + *          Olivier Moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/consumer.h>
-> +#include <linux/iio/adc/stm32-dfsdm-adc.h>
-> +
-> +#include <sound/pcm.h>
-> +#include <sound/soc.h>
-> +
-> +#define STM32_ADFSDM_DRV_NAME "stm32-adfsdm"
-> +
-> +#define DFSDM_MAX_PERIOD_SIZE	(PAGE_SIZE / 2)
-> +#define DFSDM_MAX_PERIODS	6
-> +
-> +struct stm32_adfsdm_priv {
-> +	struct snd_soc_dai_driver dai_drv;
-> +	struct snd_pcm_substream *substream;
-> +	struct device *dev;
-> +
-> +	/* IIO */
-> +	struct iio_channel *iio_ch;
-> +	struct iio_cb_buffer *iio_cb;
-> +	bool iio_active;
-> +
-> +	/* PCM buffer */
-> +	unsigned char *pcm_buff;
-> +	unsigned int pos;
-> +};
-> +
-> +static const struct snd_pcm_hardware stm32_adfsdm_pcm_hw = {
-> +	.info = SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_BLOCK_TRANSFER |
-> +	    SNDRV_PCM_INFO_PAUSE,
-> +	.formats = SNDRV_PCM_FMTBIT_S32_LE,
-> +
-> +	.rate_min = 8000,
-> +	.rate_max = 32000,
-> +
-> +	.channels_min = 1,
-> +	.channels_max = 1,
-> +
-> +	.periods_min = 2,
-> +	.periods_max = DFSDM_MAX_PERIODS,
-> +
-> +	.period_bytes_max = DFSDM_MAX_PERIOD_SIZE,
-> +	.buffer_bytes_max = DFSDM_MAX_PERIODS * DFSDM_MAX_PERIOD_SIZE
-> +};
-> +
-> +static void stm32_adfsdm_shutdown(struct snd_pcm_substream *substream,
-> +				  struct snd_soc_dai *dai)
-> +{
-> +	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai);
-> +
-> +	if (priv->iio_active) {
-> +		iio_channel_stop_all_cb(priv->iio_cb);
-> +		priv->iio_active = false;
-> +	}
-> +}
-> +
-> +static int stm32_adfsdm_dai_prepare(struct snd_pcm_substream *substream,
-> +				    struct snd_soc_dai *dai)
-> +{
-> +	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai);
-> +	int ret;
-> +
-> +	ret = iio_write_channel_attribute(priv->iio_ch,
-> +					  substream->runtime->rate, 0,
-> +					  IIO_CHAN_INFO_SAMP_FREQ);
-> +	if (ret < 0) {
-> +		dev_err(dai->dev, "%s: Failed to set %d sampling rate\n",
-> +			__func__, substream->runtime->rate);
-> +		return ret;
-> +	}
-> +
-> +	if (!priv->iio_active) {
-> +		ret = iio_channel_start_all_cb(priv->iio_cb);
-> +		if (!ret)
-> +			priv->iio_active = true;
-> +		else
-> +			dev_err(dai->dev, "%s: IIO channel start failed (%d)\n",
-> +				__func__, ret);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int stm32_adfsdm_set_sysclk(struct snd_soc_dai *dai, int clk_id,
-> +				   unsigned int freq, int dir)
-> +{
-> +	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai);
-> +	ssize_t size;
-> +	char str_freq[10];
-> +
-> +	dev_dbg(dai->dev, "%s: Enter for freq %d\n", __func__, freq);
-> +
-> +	/* Set IIO frequency if CODEC is master as clock comes from SPI_IN */
-> +
-> +	snprintf(str_freq, sizeof(str_freq), "%d\n", freq);
-> +	size = iio_write_channel_ext_info(priv->iio_ch, "spi_clk_freq",
-> +					  str_freq, sizeof(str_freq));
-> +	if (size != sizeof(str_freq)) {
-> +		dev_err(dai->dev, "%s: Failed to set SPI clock\n",
-> +			__func__);
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct snd_soc_dai_ops stm32_adfsdm_dai_ops = {
-> +	.shutdown = stm32_adfsdm_shutdown,
-> +	.prepare = stm32_adfsdm_dai_prepare,
-> +	.set_sysclk = stm32_adfsdm_set_sysclk,
-> +};
-> +
-> +static const struct snd_soc_dai_driver stm32_adfsdm_dai = {
-> +	.capture = {
-> +		    .channels_min = 1,
-> +		    .channels_max = 1,
-> +		    .formats = SNDRV_PCM_FMTBIT_S32_LE,
-> +		    .rates = (SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000 |
-> +			      SNDRV_PCM_RATE_32000),
-> +		    },
-> +	.ops = &stm32_adfsdm_dai_ops,
-> +};
-> +
-> +static const struct snd_soc_component_driver stm32_adfsdm_dai_component = {
-> +	.name = "stm32_dfsdm_audio",
-> +};
-> +
-> +static int stm32_afsdm_pcm_cb(const void *data, size_t size, void *private)
-> +{
-> +	struct stm32_adfsdm_priv *priv = private;
-> +	struct snd_soc_pcm_runtime *rtd = priv->substream->private_data;
-> +	u8 *pcm_buff = priv->pcm_buff;
-> +	u8 *src_buff = (u8 *)data;
-> +	unsigned int buff_size = snd_pcm_lib_buffer_bytes(priv->substream);
-> +	unsigned int period_size = snd_pcm_lib_period_bytes(priv->substream);
-> +	unsigned int old_pos = priv->pos;
-> +	unsigned int cur_size = size;
-> +
-> +	dev_dbg(rtd->dev, "%s: buff_add :%p, pos = %d, size = %zu\n",
-> +		__func__, &pcm_buff[priv->pos], priv->pos, size);
-> +
-> +	if ((priv->pos + size) > buff_size) {
-> +		memcpy(&pcm_buff[priv->pos], src_buff, buff_size - priv->pos);
-> +		cur_size -= buff_size - priv->pos;
-> +		priv->pos = 0;
-> +	}
-> +
-> +	memcpy(&pcm_buff[priv->pos], &src_buff[size - cur_size], cur_size);
-> +	priv->pos = (priv->pos + cur_size) % buff_size;
-> +
-> +	if (cur_size != size || (old_pos && (old_pos % period_size < size)))
-> +		snd_pcm_period_elapsed(priv->substream);
-> +
-> +	return 0;
-> +}
-> +
-> +static int stm32_adfsdm_trigger(struct snd_pcm_substream *substream, int cmd)
-> +{
-> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +	struct stm32_adfsdm_priv *priv =
-> +		snd_soc_dai_get_drvdata(rtd->cpu_dai);
-> +
-> +	switch (cmd) {
-> +	case SNDRV_PCM_TRIGGER_START:
-> +	case SNDRV_PCM_TRIGGER_RESUME:
-> +		priv->pos = 0;
-> +		return stm32_dfsdm_get_buff_cb(priv->iio_ch->indio_dev,
-> +					       stm32_afsdm_pcm_cb, priv);
-> +	case SNDRV_PCM_TRIGGER_SUSPEND:
-> +	case SNDRV_PCM_TRIGGER_STOP:
-> +		return stm32_dfsdm_release_buff_cb(priv->iio_ch->indio_dev);
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int stm32_adfsdm_pcm_open(struct snd_pcm_substream *substream)
-> +{
-> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +	struct stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(rtd->cpu_dai);
-> +	int ret;
-> +
-> +	ret =  snd_soc_set_runtime_hwparams(substream, &stm32_adfsdm_pcm_hw);
-> +	if (!ret)
-> +		priv->substream = substream;
-> +
-> +	return ret;
-> +}
-> +
-> +static int stm32_adfsdm_pcm_close(struct snd_pcm_substream *substream)
-> +{
-> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +	struct stm32_adfsdm_priv *priv =
-> +		snd_soc_dai_get_drvdata(rtd->cpu_dai);
-> +
-> +	snd_pcm_lib_free_pages(substream);
-> +	priv->substream = NULL;
-> +
-> +	return 0;
-> +}
-> +
-> +static snd_pcm_uframes_t stm32_adfsdm_pcm_pointer(
-> +					    struct snd_pcm_substream *substream)
-> +{
-> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +	struct stm32_adfsdm_priv *priv =
-> +		snd_soc_dai_get_drvdata(rtd->cpu_dai);
-> +
-> +	return bytes_to_frames(substream->runtime, priv->pos);
-> +}
-> +
-> +static int stm32_adfsdm_pcm_hw_params(struct snd_pcm_substream *substream,
-> +				      struct snd_pcm_hw_params *params)
-> +{
-> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-> +	struct stm32_adfsdm_priv *priv =
-> +		snd_soc_dai_get_drvdata(rtd->cpu_dai);
-> +	int ret;
-> +
-> +	ret =  snd_pcm_lib_malloc_pages(substream, params_buffer_bytes(params));
-> +	if (ret < 0)
-> +		return ret;
-> +	priv->pcm_buff = substream->runtime->dma_area;
-> +
-> +	return iio_channel_cb_set_buffer_watermark(priv->iio_cb,
-> +						   params_period_size(params));
-> +}
-> +
-> +static int stm32_adfsdm_pcm_hw_free(struct snd_pcm_substream *substream)
-> +{
-> +	snd_pcm_lib_free_pages(substream);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct snd_pcm_ops stm32_adfsdm_pcm_ops = {
-> +	.open		= stm32_adfsdm_pcm_open,
-> +	.close		= stm32_adfsdm_pcm_close,
-> +	.hw_params	= stm32_adfsdm_pcm_hw_params,
-> +	.hw_free	= stm32_adfsdm_pcm_hw_free,
-> +	.trigger	= stm32_adfsdm_trigger,
-> +	.pointer	= stm32_adfsdm_pcm_pointer,
-> +};
-> +
-> +static int stm32_adfsdm_pcm_new(struct snd_soc_pcm_runtime *rtd)
-> +{
-> +	struct snd_pcm *pcm = rtd->pcm;
-> +	struct stm32_adfsdm_priv *priv =
-> +		snd_soc_dai_get_drvdata(rtd->cpu_dai);
-> +	unsigned int size = DFSDM_MAX_PERIODS * DFSDM_MAX_PERIOD_SIZE;
-> +
-> +	return snd_pcm_lib_preallocate_pages_for_all(pcm, SNDRV_DMA_TYPE_DEV,
-> +						     priv->dev, size, size);
-> +}
-> +
-> +static void stm32_adfsdm_pcm_free(struct snd_pcm *pcm)
-> +{
-> +	struct snd_pcm_substream *substream;
-> +	struct snd_soc_pcm_runtime *rtd;
-> +	struct stm32_adfsdm_priv *priv;
-> +
-> +	substream = pcm->streams[SNDRV_PCM_STREAM_CAPTURE].substream;
-> +	if (substream) {
-> +		rtd = substream->private_data;
-> +		priv = snd_soc_dai_get_drvdata(rtd->cpu_dai);
-> +
-> +		snd_pcm_lib_preallocate_free_for_all(pcm);
-> +	}
-> +}
-> +
-> +static struct snd_soc_platform_driver stm32_adfsdm_soc_platform = {
-> +	.ops		= &stm32_adfsdm_pcm_ops,
-> +	.pcm_new	= stm32_adfsdm_pcm_new,
-> +	.pcm_free	= stm32_adfsdm_pcm_free,
-> +};
-> +
-> +static const struct of_device_id stm32_adfsdm_of_match[] = {
-> +	{.compatible = "st,stm32h7-dfsdm-dai"},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, stm32_adfsdm_of_match);
-> +
-> +static int stm32_adfsdm_probe(struct platform_device *pdev)
-> +{
-> +	struct stm32_adfsdm_priv *priv;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->dev = &pdev->dev;
-> +	priv->dai_drv = stm32_adfsdm_dai;
-> +
-> +	dev_set_drvdata(&pdev->dev, priv);
-> +
-> +	ret = devm_snd_soc_register_component(&pdev->dev,
-> +					      &stm32_adfsdm_dai_component,
-> +					      &priv->dai_drv, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Associate iio channel */
-> +	priv->iio_ch  = devm_iio_channel_get_all(&pdev->dev);
-> +	if (IS_ERR(priv->iio_ch))
-> +		return PTR_ERR(priv->iio_ch);
-> +
-> +	priv->iio_cb = iio_channel_get_all_cb(&pdev->dev, NULL, NULL);
-> +	if (IS_ERR(priv->iio_cb))
-> +		return PTR_ERR(priv->iio_ch);
-> +
-> +	ret = devm_snd_soc_register_platform(&pdev->dev,
-> +					     &stm32_adfsdm_soc_platform);
-> +	if (ret < 0)
-> +		dev_err(&pdev->dev, "%s: Failed to register PCM platform\n",
-> +			__func__);
-> +
-> +	return ret;
-> +}
-> +
-> +static struct platform_driver stm32_adfsdm_driver = {
-> +	.driver = {
-> +		   .name = STM32_ADFSDM_DRV_NAME,
-> +		   .of_match_table = stm32_adfsdm_of_match,
-> +		   },
-> +	.probe = stm32_adfsdm_probe,
-> +};
-> +
-> +module_platform_driver(stm32_adfsdm_driver);
-> +
-> +MODULE_DESCRIPTION("stm32 DFSDM DAI driver");
-> +MODULE_AUTHOR("Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:" STM32_ADFSDM_DRV_NAME);
+> it depends on the daily usage of those alternate functions.
+> I just took a quick glimpse on the datasheet and if you check appendix B table 9-1 , you'll see that some functions are optional because ISO suggested them, not because there is a practical reason for it.
+> 
+> CLKO/SOF does make little to no sense with a higher grade embedded system. CLKO is meant to share the osc with the microcontroller.
+>> The CLKO pin provides the clock to the
+>> microcontroller.
+> SOF makes sense for testing in lab configuration, not for regular operation.
+> 
+> TXCAN also does make little sense as you can only use it in the lab.
+>> TXCANOD: TXCAN can be configured as Push-
+>> Pull or as Open Drain out
+>> put. Open Drain outputs
+>> allows the user to connect multiple controllers
+>> together to build a CAN network without using a
+>> transceiver.
+> 
+> INTOD is initialized as Push/Pull. Configuring it open drain would be processor specific when the microcontroller has limited options for pin-ctrl, e.g. some PICs.
+>> INTOD:
+>> Interrupt pins Open Drain Mode
+>> 1
+>> = Open Drain Output
+>> 0
+>> = Push/Pull Output
+> 
+> To sum it up, I would drop:
+> - CLKO/SOF
+> - TXCAN
+> - INTOD
+> 
+> I would implement higher level functions in a second step for INT0/GPIO0/XSTBY and INT1/GPIO1.
+> Such functions can be:
+> - power saving via XSTBY
+> - RX / TX LEDs via INT0 / INT1
+> 
+> Actually this second step would wait until a request for feature arises.
+> 
+> Regards,
+> Patrick
+> 
+> Am 05.12.2017 um 11:26 schrieb Martin Sperl:
+>> Hi Patrick! 
+>> 
+>> 
+>> I had a quick look starting to implement gpiolib, 
+>> 
+>> but I believe I would need to implement pin-ctrl on top to 
+>> 
+>> make the Alternate functions work propperly. 
+>> 
+>> I wonder if this effort is really worth it. 
+>> 
+>> Martin 
+>> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
