@@ -1,29 +1,55 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/4] NVIDIA Tegra video decoder driver
-Date: Sun, 17 Dec 2017 21:03:33 +0300
-Message-ID: <e011cbc3-c41c-0aef-99ec-c897e57214a7@gmail.com>
-References: <cover.1513038011.git.digetx@gmail.com>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v1 4/4] arm64: dts: mediatek: add mt2712 cpufreq related device nodes
+Date: Sun, 17 Dec 2017 19:05:55 +0100
+Message-ID: <7730089.t6jDuHQEn5@aspire.rjw.lan>
+References: <1512713278-17807-1-git-send-email-andrew-sh.cheng@mediatek.com> <20171212072625.GL25177@vireshk-i7> <a68c5382-2a9c-6c3c-ea67-99db46bdff1a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1513038011.git.digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a68c5382-2a9c-6c3c-ea67-99db46bdff1a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew-sh Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12.12.2017 03:26, Dmitry Osipenko wrote:
-> VDE driver provides accelerated video decoding to NVIDIA Tegra SoC's,
-> it is a result of reverse-engineering efforts. Driver has been tested on
-> Toshiba AC100 and Acer A500, it should work on any Tegra20 device.
+On Tuesday, December 12, 2017 10:34:42 AM CET Matthias Brugger wrote:
+> Hi,
 > 
-> In userspace this driver is utilized by libvdpau-tegra [0] that implements
-> VDPAU interface, so any video player that supports VDPAU can provide
-> accelerated video decoding on Tegra20 on Linux.
+> On 12/12/2017 08:26 AM, Viresh Kumar wrote:
+> > On 12-12-17, 02:17, Rafael J. Wysocki wrote:
+> >> On Monday, December 11, 2017 8:57:19 AM CET Viresh Kumar wrote:
+> >>> On 08-12-17, 14:07, Andrew-sh Cheng wrote:
+> >>>> Add opp v2 information,
+> >>>> and also add clocks, regulators and opp information into cpu nodes
+> >>>>
+> >>>> Signed-off-by: Andrew-sh Cheng <andrew-sh.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>>> ---
+> >>>>  arch/arm64/boot/dts/mediatek/mt2712-evb.dts | 27 ++++++++++++++
+> >>>>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 57 +++++++++++++++++++++++++++++
+> >>>>  2 files changed, 84 insertions(+)
+> >>>
+> >>> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>
+> >> Of course, DT bindings require ACKs from DT maintainers to be applied.
+> > 
+> > I didn't knew that we need Acks from DT maintainers for dts files as well? Yeah,
+> > its very much required while defining new bindings for sure.
+> > 
 > 
-> [0] https://github.com/grate-driver/libvdpau-tegra
+> I will take the dts parts through the Mediatek SoC tree, so you don't have to
+> worry about them.
+> 
+> Please let me know when you take patch 1 and 2.
 
-Thierry, driver has been approved by media maintainers and should appear in 4.16
-(it is already in -next). Please schedule the DT patches for 4.16, thanks.
+Applied now, thanks!
+
+Do you need the branch containing them to be exposed?
+
+Thanks,
+Rafael
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
