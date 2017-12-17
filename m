@@ -1,50 +1,56 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/5] arm: sunxi: IR support for A83T
-Date: Sun, 17 Dec 2017 23:45:42 +0100
-Message-ID: <20171217224547.21481-1-embed3d@gmail.com>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH v2 9/9] ARM: dts: imx7: add Toradex Colibri iMX7D 1GB
+ (eMMC) support
+Date: Sun, 17 Dec 2017 23:55:36 +0100
+Message-ID: <CAOFm3uHFcHnh-CHLfJwgeB1M8niWBtdpVv-f+Dr7b43f70zwbw@mail.gmail.com>
+References: <20171217203723.15896-1-stefan@agner.ch> <20171217203723.15896-9-stefan@agner.ch>
+ <CAOMZO5BXEj9AKeQEVNhDYMCydpe+PVnXjchvTAuuwdM7Yp6d2w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5BXEj9AKeQEVNhDYMCydpe+PVnXjchvTAuuwdM7Yp6d2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for the sunxi A83T ir module and enhances the sunxi-ir driver.
-Right now the base clock frequency for the ir driver is a hard coded define and is set to 8 MHz.
-This works for the most common ir receivers. On the Sinovoip Bananapi M3 the ir receiver needs,
-a 3 MHz base clock frequency to work without problems with this driver.
+Fabio,
 
-This patch series adds support for an optinal property that makes it able to override the default
-base clock frequency and enables the ir interface on the a83t and the Bananapi M3.
+On Sun, Dec 17, 2017 at 10:59 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Stefan,
+>
+> On Sun, Dec 17, 2017 at 6:37 PM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
+>
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/imx7d-colibri-emmc-eval-v3.dts
+>> @@ -0,0 +1,20 @@
+>> +/*
+>> + * Copyright 2017 Toradex AG
+>> + *
+>> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> + */
+>
+> In the previous patch you used GPL-2.0 text, instead of GPL-2.0+.
+>
+> The SPDX line should be the first one and start with a // style comment:
+>
+> // SPDX-License-Identifier: (GPL-2.0 OR MIT)
 
-changes since rfc:
-* The property is now optinal. If the property is not available in the dtb the driver 
-  uses the default base clock frequency.
-* the driver prints out the the selected base clock frequency.
-* changed devicetree property from base-clk-frequency to clock-frequency
+Yes this line as the top line is the correct way as explained in
+Thomas doc patches [1]
+I cannot comment of whether the author wants GPL 2 or 2+ though KISS is best.
 
-Regards,
-Philipp
+[1] https://lkml.org/lkml/2017/12/4/934
 
-rfc: https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg123359.html 
-
-Philipp Rossak (5):
-  media: rc: update sunxi-ir driver to get base clock frequency from
-    devicetree
-  media: dt: bindings: Update binding documentation for sunxi IR
-    controller
-  arm: dts: sun8i: a83t: Add the ir pin for the A83T
-  arm: dts: sun8i: a83t: Add support for the ir interface
-  arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
-
- Documentation/devicetree/bindings/media/sunxi-ir.txt |  2 ++
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  7 +++++++
- arch/arm/boot/dts/sun8i-a83t.dtsi                    | 15 +++++++++++++++
- drivers/media/rc/sunxi-cir.c                         | 20 ++++++++++++--------
- 4 files changed, 36 insertions(+), 8 deletions(-)
+> Philippe, please confirm this is the correct way.
+>
+> With this fixed you can add:
+>
+> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
 -- 
-2.11.0
-
+Cordially
+Philippe Ombredanne
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
