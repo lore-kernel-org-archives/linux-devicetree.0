@@ -1,366 +1,108 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
-Date: Sun, 17 Dec 2017 14:32:04 -0800
-Message-ID: <63546906-2fab-300a-b952-a0a7e8eb8bb5@infradead.org>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
- <20171214151610.19153-3-boris.brezillon@free-electrons.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/5] media: rc: update sunxi-ir driver to get
+ base clock frequency from devicetree
+Date: Sun, 17 Dec 2017 23:45:43 +0100
+Message-ID: <20171217224547.21481-2-embed3d@gmail.com>
+References: <20171217224547.21481-1-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20171214151610.19153-3-boris.brezillon@free-electrons.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD257DPK24NRBIHH3PIQKGQESJOOVSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171217224547.21481-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/14/17 07:16, Boris Brezillon wrote:
-> Add core infrastructure to support I3C in Linux and document it.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> ---
->  drivers/Kconfig                 |    2 +
->  drivers/Makefile                |    2 +-
->  drivers/i3c/Kconfig             |   24 +
->  drivers/i3c/Makefile            |    4 +
->  drivers/i3c/core.c              |  573 ++++++++++++++++
->  drivers/i3c/device.c            |  344 ++++++++++
->  drivers/i3c/internals.h         |   34 +
->  drivers/i3c/master.c            | 1433 +++++++++++++++++++++++++++++++++++++++
->  drivers/i3c/master/Kconfig      |    0
->  drivers/i3c/master/Makefile     |    0
->  include/linux/i3c/ccc.h         |  380 +++++++++++
->  include/linux/i3c/device.h      |  321 +++++++++
->  include/linux/i3c/master.h      |  564 +++++++++++++++
->  include/linux/mod_devicetable.h |   17 +
->  14 files changed, 3697 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/i3c/Kconfig
->  create mode 100644 drivers/i3c/Makefile
->  create mode 100644 drivers/i3c/core.c
->  create mode 100644 drivers/i3c/device.c
->  create mode 100644 drivers/i3c/internals.h
->  create mode 100644 drivers/i3c/master.c
->  create mode 100644 drivers/i3c/master/Kconfig
->  create mode 100644 drivers/i3c/master/Makefile
->  create mode 100644 include/linux/i3c/ccc.h
->  create mode 100644 include/linux/i3c/device.h
->  create mode 100644 include/linux/i3c/master.h
-> 
-> diff --git a/drivers/i3c/Kconfig b/drivers/i3c/Kconfig
-> new file mode 100644
-> index 000000000000..cf3752412ae9
-> --- /dev/null
-> +++ b/drivers/i3c/Kconfig
-> @@ -0,0 +1,24 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +menuconfig I3C
-> +	tristate "I3C support"
-> +	select I2C
-> +	help
-> +	  I3C is a serial protocol standardized by the MIPI alliance.
-> +
-> +	  It's supposed to be backward compatible with I2C while providing
-> +	  support for high speed transfers and native interrupt support
-> +	  without the need for extra pins.
-> +
-> +	  The I3C protocol also standardizes the slave device types and is
-> +	  mainly design to communicate with sensors.
-> +
-> +	  If you want I3C support, you should say Y here and also to the
-> +	  specific driver for your bus adapter(s) below.
-> +
-> +	  This I3C support can also be built as a module.  If so, the module
-> +	  will be called i3c.
-> +
-> +if I3C
-> +source "drivers/i3c/master/Kconfig"
-> +endif # I3C
+This patch updates the sunxi-ir driver to set the base clock frequency from
+devicetree.
 
-> diff --git a/drivers/i3c/core.c b/drivers/i3c/core.c
-> new file mode 100644
-> index 000000000000..7eb8e84acd33
-> --- /dev/null
-> +++ b/drivers/i3c/core.c
-> @@ -0,0 +1,573 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2017 Cadence Design Systems Inc.
-> + *
-> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
-> + */
-> +
-> +#include <linux/idr.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/slab.h>
+This is neccessary since there are different ir recievers on the
+market, that operate with different frequencys. So this value could be
+set if the attached ir receiver needs an other base clock frequency,
+than the default 8 MHz.
 
-#include <linux/device.h>
-#include <linux/init.h>
-#include <linux/list.h>
-#include <linux/mutex.h>
-#include <linux/rwsem.h>
+Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/media/rc/sunxi-cir.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-
-> +#include "internals.h"
-> +
-> +static DEFINE_IDR(i3c_bus_idr);
-> +static DEFINE_MUTEX(i3c_core_lock);
-> +
-
-> +/**
-> + * i3c_bus_maintenance_lock - Release the bus lock after a maintenance
-
-                          unlock
-
-> + *			      operation
-> + * @bus: I3C bus to release the lock on
-> + *
-> + * Should be called when the bus maintenance operation is done. See
-> + * i3c_bus_maintenance_lock() for more details on what these maintenance
-> + * operations are.
-> + */
-> +void i3c_bus_maintenance_unlock(struct i3c_bus *bus)
-> +{
-> +	up_write(&bus->lock);
-> +}
-> +EXPORT_SYMBOL_GPL(i3c_bus_maintenance_unlock);
-> +
-
-> +/**
-> + * i3c_bus_normaluse_lock - Release the bus lock after a normal operation
-
-                        unlock
-
-> + * @bus: I3C bus to release the lock on
-> + *
-> + * Should be called when a normal operation is done. See
-> + * i3c_bus_normaluse_lock() for more details on what these normal operations
-> + * are.
-> + */
-> +void i3c_bus_normaluse_unlock(struct i3c_bus *bus)
-> +{
-> +	up_read(&bus->lock);
-> +}
-> +EXPORT_SYMBOL_GPL(i3c_bus_normaluse_unlock);
-
-
-
-> +static int i3c_device_match(struct device *dev, struct device_driver *drv)
-
-bool?
-
-> +{
-> +	struct i3c_device *i3cdev;
-> +	struct i3c_driver *i3cdrv;
-> +
-> +	if (dev->type != &i3c_device_type)
-> +		return 0;
-> +
-> +	i3cdev = dev_to_i3cdev(dev);
-> +	i3cdrv = drv_to_i3cdrv(drv);
-> +	if (i3c_device_match_id(i3cdev, i3cdrv->id_table))
-> +		return 1;
-> +
-> +	return 0;
-> +}
-
-
-> diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
-> new file mode 100644
-> index 000000000000..dcf51150b7cb
-> --- /dev/null
-> +++ b/drivers/i3c/device.c
-> @@ -0,0 +1,344 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2017 Cadence Design Systems Inc.
-> + *
-> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
-> + */
-> +
-> +#include <linux/slab.h>
-
-#include <linux/atomic.h>
-#include <linux/bug.h>
-#include <linux/completion.h>
-#include <linux/device.h>
-#include <linux/mutex.h>
-
-> +#include "internals.h"
-
-
-
-> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> new file mode 100644
-> index 000000000000..1c85abac08d5
-> --- /dev/null
-> +++ b/drivers/i3c/master.c
-> @@ -0,0 +1,1433 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2017 Cadence Design Systems Inc.
-> + *
-> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
-> + */
-
-#include <linux/atomic.h>
-#include <linux/device.h>
-#include <linux/err.h>
-#include <linux/export.h>
-#include <linux/kernel.h>
-#include <linux/list.h>
-#include <linux/of.h>
-
-> +#include <linux/slab.h>
-
-#include <linux/spinlock.h>
-#include <linux/workqueue.h>
-
-#include <asm-generic/bug.h>
-
-> +#include "internals.h"
-
-
-and I probably missed a few.
-
-
-
-
-> diff --git a/include/linux/i3c/ccc.h b/include/linux/i3c/ccc.h
-> new file mode 100644
-> index 000000000000..ff3e1a3e2c4c
-> --- /dev/null
-> +++ b/include/linux/i3c/ccc.h
-> @@ -0,0 +1,380 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2017 Cadence Design Systems Inc.
-> + *
-> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
-> + */
-
-> +/**
-> + * struct i3c_ccc_dev_desc - I3C/I3C device descriptor used for DEFSLVS
-
-Is one of those I3C above supposed to be I2C?
-
-> + *
-> + * @dyn_addr: dynamic address assigned to the I3C slave or 0 if the entry is
-> + *	      describing an I2C slave.
-> + * @dcr: DCR value (not applicable to entries describing I2C devices)
-> + * @lvr: LVR value (not applicable to entries describing I3C devices)
-> + * @bcr: BCR value or 0 if this entry is describing an I2C slave
-> + * @static_addr: static address or 0 if the device does not have a static
-> + *		 address
-> + *
-> + * The DEFSLVS command should be passed an array of i3c_ccc_dev_desc
-> + * descriptors (one entry per I3C/I2C dev controlled by the master).
-> + */
-> +struct i3c_ccc_dev_desc {
-> +	u8 dyn_addr;
-> +	union {
-> +		u8 dcr;
-> +		u8 lvr;
-> +	};
-> +	u8 bcr;
-> +	u8 static_addr;
-> +} __packed;
-
-
-Needs bitops.h
-
-> diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
-> new file mode 100644
-> index 000000000000..83958d3a02e2
-> --- /dev/null
-> +++ b/include/linux/i3c/device.h
-> @@ -0,0 +1,321 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2017 Cadence Design Systems Inc.
-> + *
-> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
-> + */
-> +
-> +#ifndef I3C_DEV_H
-> +#define I3C_DEV_H
-> +
-> +#include <linux/device.h>
-> +#include <linux/i2c.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-
-
-Needs bitops.h, kconfig.h.
-
-
-> diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
-> new file mode 100644
-> index 000000000000..7ec9a4821bac
-> --- /dev/null
-> +++ b/include/linux/i3c/master.h
-> @@ -0,0 +1,564 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2017 Cadence Design Systems Inc.
-> + *
-> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
-> + */
-> +
-> +#ifndef I3C_MASTER_H
-> +#define I3C_MASTER_H
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/i3c/ccc.h>
-> +#include <linux/i3c/device.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define I3C_HOT_JOIN_ADDR		0x2
-> +#define I3C_BROADCAST_ADDR		0x7e
-> +#define I3C_MAX_ADDR			GENMASK(6, 0)
-> +
-
-Needs bitops.h, workqueue.h, rwsem.h
-
-
-Needs <asm-generic/bitsperlong.h>
-
-
-
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> index abb6dc2ebbf8..e59da92d8ac9 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -442,6 +442,23 @@ struct pci_epf_device_id {
->  	kernel_ulong_t driver_data;
->  };
->  
-> +/* i3c */
-> +
-> +#define I3C_MATCH_DCR			BIT(0)
-> +#define I3C_MATCH_MANUF			BIT(1)
-> +#define I3C_MATCH_PART			BIT(2)
-> +#define I3C_MATCH_EXTRA_INFO		BIT(3)
-
-Needs bitops.h.
-
-> +struct i3c_device_id {
-> +	__u8 match_flags;
-> +	__u8 dcr;
-> +	__u16 manuf_id;
-> +	__u16 part_id;
-> +	__u16 extra_info;
-> +
-> +	const void *data;
-> +};
-> +
->  /* spi */
->  
->  #define SPI_NAME_SIZE	32
-> 
-
-
+diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
+index 97f367b446c4..9bbe55a76860 100644
+--- a/drivers/media/rc/sunxi-cir.c
++++ b/drivers/media/rc/sunxi-cir.c
+@@ -72,12 +72,8 @@
+ /* CIR_REG register idle threshold */
+ #define REG_CIR_ITHR(val)    (((val) << 8) & (GENMASK(15, 8)))
+ 
+-/* Required frequency for IR0 or IR1 clock in CIR mode */
++/* Required frequency for IR0 or IR1 clock in CIR mode (default) */
+ #define SUNXI_IR_BASE_CLK     8000000
+-/* Frequency after IR internal divider  */
+-#define SUNXI_IR_CLK          (SUNXI_IR_BASE_CLK / 64)
+-/* Sample period in ns */
+-#define SUNXI_IR_SAMPLE       (1000000000ul / SUNXI_IR_CLK)
+ /* Noise threshold in samples  */
+ #define SUNXI_IR_RXNOISE      1
+ /* Idle Threshold in samples */
+@@ -122,7 +118,7 @@ static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id)
+ 			/* for each bit in fifo */
+ 			dt = readb(ir->base + SUNXI_IR_RXFIFO_REG);
+ 			rawir.pulse = (dt & 0x80) != 0;
+-			rawir.duration = ((dt & 0x7f) + 1) * SUNXI_IR_SAMPLE;
++			rawir.duration = ((dt & 0x7f) + 1) * ir->rc->rx_resolution;
+ 			ir_raw_event_store_with_filter(ir->rc, &rawir);
+ 		}
+ 	}
+@@ -148,6 +144,7 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+ 	struct device_node *dn = dev->of_node;
+ 	struct resource *res;
+ 	struct sunxi_ir *ir;
++	u32 b_clk_freq;
+ 
+ 	ir = devm_kzalloc(dev, sizeof(struct sunxi_ir), GFP_KERNEL);
+ 	if (!ir)
+@@ -172,6 +169,11 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+ 		return PTR_ERR(ir->clk);
+ 	}
+ 
++	/* Base clock frequency (optional) */
++	if (of_property_read_u32(dn, "clock-frequency", &b_clk_freq)) {
++		b_clk_freq = SUNXI_IR_BASE_CLK;
++	}
++
+ 	/* Reset (optional) */
+ 	ir->rst = devm_reset_control_get_optional_exclusive(dev, NULL);
+ 	if (IS_ERR(ir->rst))
+@@ -180,11 +182,12 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = clk_set_rate(ir->clk, SUNXI_IR_BASE_CLK);
++	ret = clk_set_rate(ir->clk, b_clk_freq);
+ 	if (ret) {
+ 		dev_err(dev, "set ir base clock failed!\n");
+ 		goto exit_reset_assert;
+ 	}
++	dev_info(dev, "set base clock frequency to %d Hz.\n", b_clk_freq);
+ 
+ 	if (clk_prepare_enable(ir->apb_clk)) {
+ 		dev_err(dev, "try to enable apb_ir_clk failed\n");
+@@ -225,7 +228,8 @@ static int sunxi_ir_probe(struct platform_device *pdev)
+ 	ir->rc->map_name = ir->map_name ?: RC_MAP_EMPTY;
+ 	ir->rc->dev.parent = dev;
+ 	ir->rc->allowed_protocols = RC_PROTO_BIT_ALL_IR_DECODER;
+-	ir->rc->rx_resolution = SUNXI_IR_SAMPLE;
++	/* Frequency after IR internal divider with sample period in ns */
++	ir->rc->rx_resolution = (1000000000ul / (b_clk_freq / 64));
+ 	ir->rc->timeout = MS_TO_NS(SUNXI_IR_TIMEOUT);
+ 	ir->rc->driver_name = SUNXI_IR_DEV;
+ 
 -- 
-~Randy
+2.11.0
