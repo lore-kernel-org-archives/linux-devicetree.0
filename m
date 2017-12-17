@@ -1,70 +1,366 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v3 04/11] thermal: armada: Rationalize register accesses
-Date: Mon, 18 Dec 2017 00:02:35 +0200
-Message-ID: <20171217220235.4uwy4nw77gf3kvfp@tarshish>
-References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
- <20171214103011.24713-5-miquel.raynal@free-electrons.com>
- <20171216221838.v6gtaoqy2xhozapp@tarshish>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
+Date: Sun, 17 Dec 2017 14:32:04 -0800
+Message-ID: <63546906-2fab-300a-b952-a0a7e8eb8bb5@infradead.org>
+References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
+ <20171214151610.19153-3-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171216221838.v6gtaoqy2xhozapp@tarshish>
-Sender: linux-pm-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, linux-pm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Will Deacon <will.deacon@arm.com>, David Sniatkiwicz <davidsn@marvell.com>, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Zhang Rui <rui.zhang@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20171214151610.19153-3-boris.brezillon@free-electrons.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquèl,
-
-On Sun, Dec 17, 2017 at 12:18:38AM +0200, Baruch Siach wrote:
-> On Thu, Dec 14, 2017 at 11:30:04AM +0100, Miquel Raynal wrote:
-> > Bindings were incomplete for a long time by only exposing one of the two
-> > available control registers. To ease the migration to the full bindings
-> > (already in use for the Armada 375 SoC), rename the pointers for
-> > clarification. This way, it will only be needed to add another pointer
-> > to access the other control register when the time comes.
-> > 
-> > This avoids dangerous situations where the offset 0 of the control
-> > area can be either one register or the other depending on the bindings
-> > used. After this change, device trees of other SoCs could be migrated to
-> > the "full" bindings if they may benefit from features from the
-> > unaccessible register, without any change in the driver.
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
-> > ---
+On 12/14/17 07:16, Boris Brezillon wrote:
+> Add core infrastructure to support I3C in Linux and document it.
 > 
-> [...]
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> ---
+>  drivers/Kconfig                 |    2 +
+>  drivers/Makefile                |    2 +-
+>  drivers/i3c/Kconfig             |   24 +
+>  drivers/i3c/Makefile            |    4 +
+>  drivers/i3c/core.c              |  573 ++++++++++++++++
+>  drivers/i3c/device.c            |  344 ++++++++++
+>  drivers/i3c/internals.h         |   34 +
+>  drivers/i3c/master.c            | 1433 +++++++++++++++++++++++++++++++++++++++
+>  drivers/i3c/master/Kconfig      |    0
+>  drivers/i3c/master/Makefile     |    0
+>  include/linux/i3c/ccc.h         |  380 +++++++++++
+>  include/linux/i3c/device.h      |  321 +++++++++
+>  include/linux/i3c/master.h      |  564 +++++++++++++++
+>  include/linux/mod_devicetable.h |   17 +
+>  14 files changed, 3697 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/i3c/Kconfig
+>  create mode 100644 drivers/i3c/Makefile
+>  create mode 100644 drivers/i3c/core.c
+>  create mode 100644 drivers/i3c/device.c
+>  create mode 100644 drivers/i3c/internals.h
+>  create mode 100644 drivers/i3c/master.c
+>  create mode 100644 drivers/i3c/master/Kconfig
+>  create mode 100644 drivers/i3c/master/Makefile
+>  create mode 100644 include/linux/i3c/ccc.h
+>  create mode 100644 include/linux/i3c/device.h
+>  create mode 100644 include/linux/i3c/master.h
 > 
-> > +	/*
-> > +	 * Legacy DT bindings only described "control1" register (also referred
-> > +	 * as "control MSB" on old documentation). New bindings cover
-> > +	 * "control0/control LSB" and "control1/control MSB" registers within
-> > +	 * the same resource, which is then of size 8 instead of 4.
-> > +	 */
-> > +	if ((res->end - res->start) == LEGACY_CONTROL_MEM_LEN) {
-> > +		/* ->control0 unavailable in this configuration */
-> > +		priv->control1 = control + LEGACY_CONTROL1_OFFSET;
-> > +	} else {
-> > +		priv->control0 = control + CONTROL0_OFFSET;
-> > +		priv->control1 = control + CONTROL1_OFFSET;
-> > +	}
+> diff --git a/drivers/i3c/Kconfig b/drivers/i3c/Kconfig
+> new file mode 100644
+> index 000000000000..cf3752412ae9
+> --- /dev/null
+> +++ b/drivers/i3c/Kconfig
+> @@ -0,0 +1,24 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +menuconfig I3C
+> +	tristate "I3C support"
+> +	select I2C
+> +	help
+> +	  I3C is a serial protocol standardized by the MIPI alliance.
+> +
+> +	  It's supposed to be backward compatible with I2C while providing
+> +	  support for high speed transfers and native interrupt support
+> +	  without the need for extra pins.
+> +
+> +	  The I3C protocol also standardizes the slave device types and is
+> +	  mainly design to communicate with sensors.
+> +
+> +	  If you want I3C support, you should say Y here and also to the
+> +	  specific driver for your bus adapter(s) below.
+> +
+> +	  This I3C support can also be built as a module.  If so, the module
+> +	  will be called i3c.
+> +
+> +if I3C
+> +source "drivers/i3c/master/Kconfig"
+> +endif # I3C
+
+> diff --git a/drivers/i3c/core.c b/drivers/i3c/core.c
+> new file mode 100644
+> index 000000000000..7eb8e84acd33
+> --- /dev/null
+> +++ b/drivers/i3c/core.c
+> @@ -0,0 +1,573 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 Cadence Design Systems Inc.
+> + *
+> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> + */
+> +
+> +#include <linux/idr.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/slab.h>
+
+#include <linux/device.h>
+#include <linux/init.h>
+#include <linux/list.h>
+#include <linux/mutex.h>
+#include <linux/rwsem.h>
+
+
+> +#include "internals.h"
+> +
+> +static DEFINE_IDR(i3c_bus_idr);
+> +static DEFINE_MUTEX(i3c_core_lock);
+> +
+
+> +/**
+> + * i3c_bus_maintenance_lock - Release the bus lock after a maintenance
+
+                          unlock
+
+> + *			      operation
+> + * @bus: I3C bus to release the lock on
+> + *
+> + * Should be called when the bus maintenance operation is done. See
+> + * i3c_bus_maintenance_lock() for more details on what these maintenance
+> + * operations are.
+> + */
+> +void i3c_bus_maintenance_unlock(struct i3c_bus *bus)
+> +{
+> +	up_write(&bus->lock);
+> +}
+> +EXPORT_SYMBOL_GPL(i3c_bus_maintenance_unlock);
+> +
+
+> +/**
+> + * i3c_bus_normaluse_lock - Release the bus lock after a normal operation
+
+                        unlock
+
+> + * @bus: I3C bus to release the lock on
+> + *
+> + * Should be called when a normal operation is done. See
+> + * i3c_bus_normaluse_lock() for more details on what these normal operations
+> + * are.
+> + */
+> +void i3c_bus_normaluse_unlock(struct i3c_bus *bus)
+> +{
+> +	up_read(&bus->lock);
+> +}
+> +EXPORT_SYMBOL_GPL(i3c_bus_normaluse_unlock);
+
+
+
+> +static int i3c_device_match(struct device *dev, struct device_driver *drv)
+
+bool?
+
+> +{
+> +	struct i3c_device *i3cdev;
+> +	struct i3c_driver *i3cdrv;
+> +
+> +	if (dev->type != &i3c_device_type)
+> +		return 0;
+> +
+> +	i3cdev = dev_to_i3cdev(dev);
+> +	i3cdrv = drv_to_i3cdrv(drv);
+> +	if (i3c_device_match_id(i3cdev, i3cdrv->id_table))
+> +		return 1;
+> +
+> +	return 0;
+> +}
+
+
+> diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
+> new file mode 100644
+> index 000000000000..dcf51150b7cb
+> --- /dev/null
+> +++ b/drivers/i3c/device.c
+> @@ -0,0 +1,344 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 Cadence Design Systems Inc.
+> + *
+> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> + */
+> +
+> +#include <linux/slab.h>
+
+#include <linux/atomic.h>
+#include <linux/bug.h>
+#include <linux/completion.h>
+#include <linux/device.h>
+#include <linux/mutex.h>
+
+> +#include "internals.h"
+
+
+
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> new file mode 100644
+> index 000000000000..1c85abac08d5
+> --- /dev/null
+> +++ b/drivers/i3c/master.c
+> @@ -0,0 +1,1433 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 Cadence Design Systems Inc.
+> + *
+> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> + */
+
+#include <linux/atomic.h>
+#include <linux/device.h>
+#include <linux/err.h>
+#include <linux/export.h>
+#include <linux/kernel.h>
+#include <linux/list.h>
+#include <linux/of.h>
+
+> +#include <linux/slab.h>
+
+#include <linux/spinlock.h>
+#include <linux/workqueue.h>
+
+#include <asm-generic/bug.h>
+
+> +#include "internals.h"
+
+
+and I probably missed a few.
+
+
+
+
+> diff --git a/include/linux/i3c/ccc.h b/include/linux/i3c/ccc.h
+> new file mode 100644
+> index 000000000000..ff3e1a3e2c4c
+> --- /dev/null
+> +++ b/include/linux/i3c/ccc.h
+> @@ -0,0 +1,380 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2017 Cadence Design Systems Inc.
+> + *
+> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> + */
+
+> +/**
+> + * struct i3c_ccc_dev_desc - I3C/I3C device descriptor used for DEFSLVS
+
+Is one of those I3C above supposed to be I2C?
+
+> + *
+> + * @dyn_addr: dynamic address assigned to the I3C slave or 0 if the entry is
+> + *	      describing an I2C slave.
+> + * @dcr: DCR value (not applicable to entries describing I2C devices)
+> + * @lvr: LVR value (not applicable to entries describing I3C devices)
+> + * @bcr: BCR value or 0 if this entry is describing an I2C slave
+> + * @static_addr: static address or 0 if the device does not have a static
+> + *		 address
+> + *
+> + * The DEFSLVS command should be passed an array of i3c_ccc_dev_desc
+> + * descriptors (one entry per I3C/I2C dev controlled by the master).
+> + */
+> +struct i3c_ccc_dev_desc {
+> +	u8 dyn_addr;
+> +	union {
+> +		u8 dcr;
+> +		u8 lvr;
+> +	};
+> +	u8 bcr;
+> +	u8 static_addr;
+> +} __packed;
+
+
+Needs bitops.h
+
+> diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
+> new file mode 100644
+> index 000000000000..83958d3a02e2
+> --- /dev/null
+> +++ b/include/linux/i3c/device.h
+> @@ -0,0 +1,321 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2017 Cadence Design Systems Inc.
+> + *
+> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> + */
+> +
+> +#ifndef I3C_DEV_H
+> +#define I3C_DEV_H
+> +
+> +#include <linux/device.h>
+> +#include <linux/i2c.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+
+
+Needs bitops.h, kconfig.h.
+
+
+> diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+> new file mode 100644
+> index 000000000000..7ec9a4821bac
+> --- /dev/null
+> +++ b/include/linux/i3c/master.h
+> @@ -0,0 +1,564 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2017 Cadence Design Systems Inc.
+> + *
+> + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> + */
+> +
+> +#ifndef I3C_MASTER_H
+> +#define I3C_MASTER_H
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/i3c/ccc.h>
+> +#include <linux/i3c/device.h>
+> +#include <linux/spinlock.h>
+> +
+> +#define I3C_HOT_JOIN_ADDR		0x2
+> +#define I3C_BROADCAST_ADDR		0x7e
+> +#define I3C_MAX_ADDR			GENMASK(6, 0)
+> +
+
+Needs bitops.h, workqueue.h, rwsem.h
+
+
+Needs <asm-generic/bitsperlong.h>
+
+
+
+> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+> index abb6dc2ebbf8..e59da92d8ac9 100644
+> --- a/include/linux/mod_devicetable.h
+> +++ b/include/linux/mod_devicetable.h
+> @@ -442,6 +442,23 @@ struct pci_epf_device_id {
+>  	kernel_ulong_t driver_data;
+>  };
+>  
+> +/* i3c */
+> +
+> +#define I3C_MATCH_DCR			BIT(0)
+> +#define I3C_MATCH_MANUF			BIT(1)
+> +#define I3C_MATCH_PART			BIT(2)
+> +#define I3C_MATCH_EXTRA_INFO		BIT(3)
+
+Needs bitops.h.
+
+> +struct i3c_device_id {
+> +	__u8 match_flags;
+> +	__u8 dcr;
+> +	__u16 manuf_id;
+> +	__u16 part_id;
+> +	__u16 extra_info;
+> +
+> +	const void *data;
+> +};
+> +
+>  /* spi */
+>  
+>  #define SPI_NAME_SIZE	32
 > 
-> I think we need to add a check here that the control registers area size 
-> matches the expected value given the compatible string. In case of mismatch 
-> probe should fail.
 
-One more thing. You should probably use resource_size() instead of open coding 
-it. resource_size() does "res->end - res->start + 1". Are you sure your code 
-is correct?
-
-> >  	priv->data = (struct armada_thermal_data *)match->data;
-> >  	priv->data->init_sensor(pdev, priv);
-
-baruch
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+~Randy
