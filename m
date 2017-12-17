@@ -1,126 +1,121 @@
-From: Dhaval Rajeshbhai Shah <DSHAH-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v4 2/2] misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP
- init driver
-Date: Sun, 17 Dec 2017 06:07:59 +0000
-Message-ID: <BY2PR0201MB1879AFE10931133E229C0849C1090@BY2PR0201MB1879.namprd02.prod.outlook.com>
-References: <29198c0a-783e-8aa0-00e4-44b1fa1acef7@infradead.org>
- <1513322656-4571-1-git-send-email-dshah@xilinx.com>
- <1513322656-4571-3-git-send-email-dshah@xilinx.com>
- <d9e263f9-827c-656d-77fd-bbbb2b172040@infradead.org>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH/RFC] DT: leds: Fix 'label' property description and add
+ 'colour' property
+Date: Sun, 17 Dec 2017 13:49:45 +0100
+Message-ID: <b7d60158-35e7-3121-185e-24c6c4d02eee@gmail.com>
+References: <1512251410-6084-1-git-send-email-jacek.anaszewski@gmail.com>
+ <20171204104351.GA6611@amd>
+ <CAL_JsqL=aN6YSH30HSuUKS86Bsb2KPMdT0dyheYjs9Z=w3hH0Q@mail.gmail.com>
+ <82dc0ed3-f4fe-d8a2-65ea-4212770b78e7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d9e263f9-827c-656d-77fd-bbbb2b172040-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <82dc0ed3-f4fe-d8a2-65ea-4212770b78e7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUmFuZHksDQoNClRoYW5rcyBhIGxvdCBmb3IgdGhlIHJldmlldy4NCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYW5keSBEdW5sYXAgW21haWx0bzpyZHVubGFwQGlu
-ZnJhZGVhZC5vcmddDQo+IFNlbnQ6IFNhdHVyZGF5LCBEZWNlbWJlciAxNiwgMjAxNyAyOjE4IFBN
-DQo+IFRvOiBEaGF2YWwgUmFqZXNoYmhhaSBTaGFoIDxEU0hBSEB4aWxpbnguY29tPjsgYXJuZEBh
-cm5kYi5kZTsNCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJvYmgrZHRAa2VybmVsLm9y
-ZzsgbWFyay5ydXRsYW5kQGFybS5jb20NCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBtaWNoYWwuc2ltZWtAeGlsaW54LmNv
-bTsgSHl1biBLd29uIDxoeXVua0B4aWxpbnguY29tPjsgRGhhdmFsIFJhamVzaGJoYWkNCj4gU2hh
-aCA8RFNIQUhAeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NCAyLzJdIG1pc2M6
-IHhsbnhfdmN1OiBBZGQgWGlsaW54IFpZTlFNUCBWQ1UgbG9naWNvcmVJUA0KPiBpbml0IGRyaXZl
-cg0KPiANCj4gT24gMTIvMTQvMjAxNyAxMToyNCBQTSwgRGhhdmFsIFNoYWggd3JvdGU6DQo+ID4g
-WGlsaW54IFpZTlFNUCBsb2dpY29yZUlQIEluaXQgZHJpdmVyIGlzIGJhc2VkIG9uIHRoZSBuZXcg
-TG9naUNvcmVJUA0KPiA+IGRlc2lnbiBjcmVhdGVkLiBUaGlzIGRyaXZlciBwcm92aWRlcyB0aGUg
-cHJvY2Vzc2luZyBzeXN0ZW0gYW5kDQo+ID4gcHJvZ3JhbW1hYmxlIGxvZ2ljIGlzb2xhdGlvbi4g
-U2V0IHRoZSBmcmVxdWVuY3kgYmFzZWQgb24gdGhlIGNsb2NrDQo+ID4gaW5mb3JtYXRpb24gZ2V0
-IGZyb20gdGhlIGxvZ2ljb3JlSVAgcmVnaXN0ZXIgc2V0Lg0KPiA+DQo+ID4gSXQgaXMgcHV0IGlu
-IGRyaXZlcnMvbWlzYyBhcyB0aGVyZSBpcyBubyBzdWJzeXN0ZW0gZm9yIHRoaXMgbG9naWNvcmVJ
-UC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IERoYXZhbCBTaGFoIDxkc2hhaEB4aWxpbnguY29t
-Pg0KPiA+IC0tLQ0KPiA+DQo+ID4gIGRyaXZlcnMvbWlzYy9LY29uZmlnICAgIHwgIDE1ICsrDQo+
-ID4gIGRyaXZlcnMvbWlzYy9NYWtlZmlsZSAgIHwgICAxICsNCj4gPiAgZHJpdmVycy9taXNjL3hs
-bnhfdmN1LmMgfCA2MzENCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA2NDcgaW5zZXJ0aW9ucygrKQ0KPiA+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9taXNjL3hsbnhfdmN1LmMNCj4gDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy94bG54X3ZjdS5jIGIvZHJpdmVycy9taXNjL3hsbnhfdmN1
-LmMgbmV3DQo+ID4gZmlsZSBtb2RlIDEwMDY0NCBpbmRleCAwMDAwMDAwLi5mNDg5ZDM0DQo+ID4g
-LS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvbWlzYy94bG54X3ZjdS5jDQo+ID4gQEAg
-LTAsMCArMSw2MzEgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAN
-Cj4gPiArLyoNCj4gPiArICogWGlsaW54IFZDVSBJbml0DQo+ID4gKyAqDQo+ID4gKyAqIENvcHly
-aWdodCAoQykgMjAxNiAtIDIwMTcgWGlsaW54LCBJbmMuDQo+ID4gKyAqDQo+ID4gKyAqIENvbnRh
-Y3RzICAgRGhhdmFsIFNoYWggPGRzaGFoQHhpbGlueC5jb20+DQo+ID4gKyAqLw0KPiA+ICsjaW5j
-bHVkZSA8bGludXgvY2xrLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L2Vycm5vLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+
-ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9wbGF0
-Zm9ybS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+IA0KPiBb
-c25pcF0NCj4gDQo+IA0KPiA+ICsvKioNCj4gPiArICogeHZjdV9zZXRfdmN1X3BsbF9pbmZvIC0g
-U2V0IHRoZSBWQ1UgUExMIGluZm8NCj4gPiArICogQHh2Y3U6CVBvaW50ZXIgdG8gdGhlIHh2Y3Vf
-ZGV2aWNlIHN0cnVjdHVyZQ0KPiA+ICsgKg0KPiA+ICsgKiBQcm9ncmFtbWluZyB0aGUgVkNVIFBM
-TCBiYXNlZCBvbiB0aGUgdXNlciBjb25maWd1cmF0aW9uDQo+ID4gKyAqIChyZWYgY2xvY2sgZnJl
-cSwgY29yZSBjbG9jayBmcmVxLCBtY3UgY2xvY2sgZnJlcSkuDQo+ID4gKyAqIENvcmUgY2xvY2sg
-ZnJlcXVlbmN5IGhhcyBoaWdoZXIgcHJpb3JpdHkgdGhhbiBtY3UgY2xvY2sgZnJlcXVlbmN5DQo+
-ID4gKyAqIEVycm9ycyBpbiBmb2xsb3dpbmcgY2FzZXMNCj4gPiArICogICAgLSBXaGVuIG1jdSBv
-ciBjbG9jayBjbG9jayBnZXQgZnJvbSBsb2dpY29yZUlQIGlzIDANCj4gPiArICogICAgLSBXaGVu
-IFZDVSBQTEwgRElWIHJlbGF0ZWQgYml0cyB2YWx1ZSBvdGhlciB0aGFuIDENCj4gPiArICogICAg
-LSBXaGVuIHByb3BlciBkYXRhIG5vdCBmb3VuZCBmb3IgZ2l2ZW4gZGF0YQ0KPiA+ICsgKiAgICAt
-IFdoZW4gc2lzNTcwXzEgY2xvY2tzb3VyY2UgcmVsYXRlZCBvcGVyYXRpb24gZmFpbGVkDQo+ID4g
-KyAqDQo+ID4gKyAqIFJldHVybjoJUmV0dXJucyBzdGF0dXMsIGVpdGhlciBzdWNjZXNzIG9yIGVy
-cm9yK3JlYXNvbg0KPiA+ICsgKi8NCj4gPiArc3RhdGljIGludCB4dmN1X3NldF92Y3VfcGxsX2lu
-Zm8oc3RydWN0IHh2Y3VfZGV2aWNlICp4dmN1KSB7DQo+ID4gKwl1MzIgcmVmY2xrLCBjb3JlY2xr
-LCBtY3VjbGssIGludGUsIGRlY2k7DQo+ID4gKwl1MzIgZGl2aXNvcl9tY3UsIGRpdmlzb3JfY29y
-ZSwgZnZjbzsNCj4gPiArCXUzMiBjbGtvdXRkaXYsIHZjdV9wbGxfY3RybCwgcGxsX2NsazsNCj4g
-PiArCXUzMiBjZmdfdmFsLCBtb2QsIGN0cmw7DQo+ID4gKwlpbnQgcmV0Ow0KPiA+ICsJdW5zaWdu
-ZWQgaW50IGk7DQo+ID4gKwljb25zdCBzdHJ1Y3QgeHZjdV9wbGxfY2ZnICpmb3VuZCA9IE5VTEw7
-DQo+ID4gKw0KPiA+ICsJaW50ZSA9IHh2Y3VfcmVhZCh4dmN1LT5sb2dpY29yZV9yZWdfYmEsIFZD
-VV9QTExfQ0xLKTsNCj4gPiArCWRlY2kgPSB4dmN1X3JlYWQoeHZjdS0+bG9naWNvcmVfcmVnX2Jh
-LCBWQ1VfUExMX0NMS19ERUMpOw0KPiA+ICsJY29yZWNsayA9IHh2Y3VfcmVhZCh4dmN1LT5sb2dp
-Y29yZV9yZWdfYmEsIFZDVV9DT1JFX0NMSykgKiBNSFo7DQo+ID4gKwltY3VjbGsgPSB4dmN1X3Jl
-YWQoeHZjdS0+bG9naWNvcmVfcmVnX2JhLCBWQ1VfTUNVX0NMSykgKiBNSFo7DQo+ID4gKwlpZiAo
-IW1jdWNsayB8fCAhY29yZWNsaykgew0KPiA+ICsJCWRldl9lcnIoeHZjdS0+ZGV2LCAiSW52YWxp
-ZCBtY3UgYW5kIGNvcmUgY2xvY2sgZGF0YVxuIik7DQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+
-ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmVmY2xrID0gKGludGUgKiBNSFopICsgKGRlY2kgKiAoTUha
-IC8gRlJBQykpOw0KPiA+ICsJZGV2X2RiZyh4dmN1LT5kZXYsICJSZWYgY2xvY2sgZnJvbSBsb2dp
-Y29yZUlQIGlzICV1SHpcbiIsIHJlZmNsayk7DQo+ID4gKwlkZXZfZGJnKHh2Y3UtPmRldiwgIkNv
-cmUgY2xvY2sgZnJvbSBsb2dpY29yZUlQIGlzICV1SHpcbiIsIGNvcmVjbGspOw0KPiA+ICsJZGV2
-X2RiZyh4dmN1LT5kZXYsICJNY3UgY2xvY2sgZnJvbSBsb2dpY29yZUlQIGlzICV1SHpcbiIsIG1j
-dWNsayk7DQo+ID4gKw0KPiA+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHh2Y3UtPnBsbF9yZWYp
-Ow0KPiA+ICsJcmV0ID0gY2xrX3NldF9yYXRlKHh2Y3UtPnBsbF9yZWYsIHJlZmNsayk7DQo+ID4g
-KwlpZiAocmV0KQ0KPiA+ICsJCWRldl93YXJuKHh2Y3UtPmRldiwgImZhaWxlZCB0byBzZXQgbG9n
-aWNvcmVJUCByZWZjbGsgcmF0ZVxuIik7DQo+ID4gKw0KPiA+ICsJcmV0ID0gY2xrX3ByZXBhcmVf
-ZW5hYmxlKHh2Y3UtPnBsbF9yZWYpOw0KPiA+ICsJaWYgKHJldCkgew0KPiA+ICsJCWRldl9lcnIo
-eHZjdS0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBwbGxfcmVmIGNsb2NrIHNvdXJjZVxuIik7DQo+
-ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZWZjbGsgPSBjbGtfZ2V0
-X3JhdGUoeHZjdS0+cGxsX3JlZik7DQo+ID4gKw0KPiA+ICsJLyoNCj4gPiArCSAqIFRoZSBkaXZp
-ZGUtYnktMiBzaG91bGQgYmUgYWx3YXlzIGVuYWJsZWQgKD09MSkNCj4gPiArCSAqIHRvIG1lZXQg
-dGhlIHRpbWluZyBpbiB0aGUgZGVzaWduLg0KPiA+ICsJICogT3RoZXJ3aXNlLCBpdCdzIGFuIGVy
-cm9yDQo+ID4gKwkgKi8NCj4gPiArCXZjdV9wbGxfY3RybCA9IHh2Y3VfcmVhZCh4dmN1LT52Y3Vf
-c2xjcl9iYSwgVkNVX1BMTF9DVFJMKTsNCj4gPiArCWNsa291dGRpdiA9IHZjdV9wbGxfY3RybCA+
-PiBWQ1VfUExMX0NUUkxfQ0xLT1VURElWX1NISUZUOw0KPiA+ICsJY2xrb3V0ZGl2ID0gY2xrb3V0
-ZGl2ICYmIFZDVV9QTExfQ1RSTF9DTEtPVVRESVZfTUFTSzsNCj4gPiArCWlmIChjbGtvdXRkaXYg
-IT0gMSkgew0KPiA+ICsJCWRldl9lcnIoeHZjdS0+ZGV2LCAiY2xrb3V0ZGl2IHZhbHVlIGlzIGlu
-dmFsaWRcbiIpOw0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAr
-CWZvciAoaSA9IEFSUkFZX1NJWkUoeHZjdV9wbGxfY2ZnKSAtIDE7IGkgPiAwOyBpLS0pIHsNCj4g
-DQo+IFdoZW4gZG9lcyB0aGF0IGZvciBsb29wIHRlcm1pbmF0ZT8NCj4gDQpUaGlzIGxvb3Agd2ls
-bCB0ZXJtaW5hdGUgZWl0aGVyIGl0IHJlYWNoIHRvIGkgPTAgYW5kIG9uZSBvdGhlciBjYXNlIGlz
-IHdoZW4gaXQgZmluZCB0aGUgcHJvcGVyIGV4cGVjdGVkIHZhbHVlLiAgQnJlYWsgc3RhdGVtZW50
-IGlzIHVzZWQgdG8gZXhpdCBpbiB0aGF0IGNhc2UuIA0KPiA+ICsJCWNvbnN0IHN0cnVjdCB4dmN1
-X3BsbF9jZmcgKmNmZyA9ICZ4dmN1X3BsbF9jZmdbaV07DQo+ID4gKw0KPiA+ICsJCWZ2Y28gPSBj
-ZmctPmZiZGl2ICogcmVmY2xrOw0KPiA+ICsJCWlmIChmdmNvID49IEZWQ09fTUlOICYmIGZ2Y28g
-PD0gRlZDT19NQVgpIHsNCj4gPiArCQkJcGxsX2NsayA9IGZ2Y28gLyBWQ1VfUExMX0RJVjI7DQo+
-ID4gKwkJCWlmIChmdmNvICUgVkNVX1BMTF9ESVYyICE9IDApDQo+ID4gKwkJCQlwbGxfY2xrKys7
-DQo+ID4gKwkJCW1vZCA9IHBsbF9jbGsgJSBjb3JlY2xrOw0KPiA+ICsJCQlpZiAobW9kIDwgTElN
-SVQpIHsNCj4gPiArCQkJCWRpdmlzb3JfY29yZSA9IHBsbF9jbGsgLyBjb3JlY2xrOw0KPiA+ICsJ
-CQl9IGVsc2UgaWYgKGNvcmVjbGsgLSBtb2QgPCBMSU1JVCkgew0KPiA+ICsJCQkJZGl2aXNvcl9j
-b3JlID0gcGxsX2NsayAvIGNvcmVjbGs7DQo+ID4gKwkJCQlkaXZpc29yX2NvcmUrKzsNCj4gPiAr
-CQkJfSBlbHNlIHsNCj4gPiArCQkJCWNvbnRpbnVlOw0KPiA+ICsJCQl9DQo+ID4gKwkJCWlmIChk
-aXZpc29yX2NvcmUgPj0gRElWSVNPUl9NSU4gJiYNCj4gPiArCQkJICAgIGRpdmlzb3JfY29yZSA8
-PSBESVZJU09SX01BWCkgew0KPiA+ICsJCQkJZm91bmQgPSBjZmc7DQo+ID4gKwkJCQlkaXZpc29y
-X21jdSA9IHBsbF9jbGsgLyBtY3VjbGs7DQo+ID4gKwkJCQltb2QgPSBwbGxfY2xrICUgbWN1Y2xr
-Ow0KPiA+ICsJCQkJaWYgKG1jdWNsayAtIG1vZCA8IExJTUlUKQ0KPiA+ICsJCQkJCWRpdmlzb3Jf
-bWN1Kys7DQo+ID4gKwkJCQlicmVhazsNClRoaXMgaXMgdGhlIGJyZWFrIHN0YXRlbWVudCB0byBl
-eGl0IHdoZW4gcHJvcGVyIHZhbHVlIGlzIGZpbmQuDQo+ID4gKwkJCX0NCj4gPiArCQl9DQo+ID4g
-Kwl9DQo+ID4gKw0KPiA+ICsJaWYgKCFmb3VuZCkgew0KPiA+ICsJCWRldl9lcnIoeHZjdS0+ZGV2
-LCAiSW52YWxpZCBjbG9jayBjb21iaW5hdGlvbi5cbiIpOw0KPiA+ICsJCXJldHVybiAtRUlOVkFM
-Ow0KPiA+ICsJfQ0KPiANCj4gW3NuaXBdDQo+IA0KPiAtLQ0KPiB+UmFuZHkNCg==
+cc devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+On 12/14/2017 10:35 PM, Jacek Anaszewski wrote:
+> On 12/11/2017 05:27 PM, Rob Herring wrote:
+>> On Mon, Dec 4, 2017 at 4:43 AM, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> wrote:
+>>> Hi!
+>>>
+>>>> Label property was imposed a uniqueness requirement, which was erroneous,
+>>>> since ePAPR defines it to "a human readable string describing a device".
+>>
+>> But it still needs to be unique to be useful. It's just unique from a
+> 
+> This patch is a follow-up of your following statement from [0]:
+> 
+>>>>>>>>
+> I really dislike how this naming convention is used for label. label is
+> supposed to be the phyically identifiable name. Having the devicename
+> defeats that. Perhaps color, too. We'd be better off with a color
+> property. It seems we're overloading the naming with too many things.
+> Now we're adding device association.
+> <<<<<<<
+> 
+> 
+> In effect, I intended to remove the uniqueness requirement for the
+> label since the label alone doesn't make a LED class device name
+> in case of many current LED class drivers.
+> 
+> Instead I inferred from your message that label should contain only
+> LED function. Therefore I'm splitting colour (maybe color would fit
+> better here, but adopted the spelling from
+> Documentation/leds/leds-class.txt, to be decided which one fits better.)
+> 
+> But see below.
+> 
+>> different perspective. Ideally, if you had a block diagram level
+>> drawing of a device or board showing LEDs (and displays with
+>> backlights), you would simply take the labels from that drawing.
+>>
+>>>> Also the binding description misleadingly suggested direct usage of label
+>>>> for LED class device name, whereas it should only define a LED function.
+>>>>
+>>>> Therefore an additional 'colour' property is being introduced, which together
+>>>> with the parent DT node name used for devicename shall be used for naming LED
+>>>> class device according to the patterh
+>>>> <devicename>:<colour>:<function>.
+>>>
+>>>
+>>>> -- label : The label for this LED. If omitted, the label is taken from the node
+>>>> -       name (excluding the unit address). It has to uniquely identify
+>>>> -       a device, i.e. no other LED class device can be assigned the same
+>>>> -       label.
+>>>> +- label : The label for this LED. It should describe its function. If omitted,
+>>>> +          the label is taken from the node name (excluding the unit address).
+>>>
+>>> So the label contains "as1235:green:capslock"? I guess it might be
+>>> nice to mention that. Or just the "capslock" part?
+>>>
+>>> Also.. it would be good to start pushing for more consistency in the
+>>> labels: I have these on the thinkpad:
+>>>
+>>> input5::scrolllock/   tpacpi::dock_status2/ tpacpi::unknown_led/
+>>> mmc0::/               tpacpi:green:batt/    tpacpi::unknown_led2/
+>>> phy0-led/             tpacpi:orange:batt/   tpacpi::unknown_led3/
+>>> tpacpi::bay_active/   tpacpi::power/
+>>>
+>>> On embedded system, I'd like to see <devicename> to corespond
+>>> to.. device the led belongs to, as opposed to name of the chip that
+>>> drives the led. Maybe we should do 'main_camera:white:flash' instead of
+>>> 'as4132:white:flash' because userspace already has information on what
+>>> chip it is (sysfs paths), but can not easily figure out to which
+>>> device the flash belongs.
+>>
+>> A couple of points:
+>>
+>> I already mentioned DT node naming policies in the lm3692x thread, so
+>> I won't repeat here.
+>>
+>> Using the node name is not going to guarantee uniqueness in the names.
+>> Even if you added the unit address it would still not. I can easily
+>> have 2 or more LED driver chips at the same I2C address on different
+>> buses. The only guaranteed unique name is the full DT path. Once
+>> you've added some OS specific numbering to make device names unique,
+>> then I'm not sure there's a lot of value in naming things after what
+>> drives them. You can walk the sysfs hierarchy to determine that
+>> anyway.
+>>
+>> A case I care about is I have a family of boards that all have a
+>> common defined set of 4 LEDs. They could be driven by anything, but I
+>> want the same interface presented to userspace across boards.
+> 
+> In effect it looks like we should drop devicename section from
+> the LED class devicename pattern, label should describe only
+> LED function and additional color property could be introduced,
+> to be concatenated with LED function as a final LED class device
+> name.
+> 
+> 
+> [0] https://www.mail-archive.com/linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg119473.html
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
