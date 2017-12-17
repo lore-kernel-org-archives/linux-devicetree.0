@@ -1,55 +1,28 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 4/9] ARM: dts: imx7-colibri: use NAND_CE1 as GPIO
-Date: Sun, 17 Dec 2017 21:37:18 +0100
-Message-ID: <20171217203723.15896-4-stefan@agner.ch>
-References: <20171217203723.15896-1-stefan@agner.ch>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 8/9] ARM: dts: imx7-colibri: add MCP2515 CAN controller
+Date: Sun, 17 Dec 2017 19:52:50 -0200
+Message-ID: <CAOMZO5CPeY3dwRsTaw9Z-sfgvsYKceU1SaaY_pw=nis=Q8OFrg@mail.gmail.com>
+References: <20171217203723.15896-1-stefan@agner.ch> <20171217203723.15896-8-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171217203723.15896-1-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171217203723.15896-8-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-All Colibri iMX7 SKUs use either single-die NAND or eMMC, hence
-NAND_CE1 is not used on the module and can be used as a GPIO by
-carrier boards.
+On Sun, Dec 17, 2017 at 6:37 PM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
+> The Colibri Evaluation Carrier Board provides a MCP2515 CAN
+> controller connected via SPI. Note that the i.MX 7 provides
+> an internal CAN controller which is much better suited for CAN
+> operations. Using the MCP2515 with a Colibri iMX7 module is
+> mainly useful to test the SPI interface.
+>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
----
- arch/arm/boot/dts/imx7-colibri.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index e4e32aa786f4..f61041af026a 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -329,6 +329,7 @@
- 			MX7D_PAD_EPDC_SDCE2__GPIO2_IO22		0x14 /* SODIMM 127 */
- 			MX7D_PAD_UART3_RTS_B__GPIO4_IO6		0x14 /* SODIMM 131 */
- 			MX7D_PAD_EPDC_GDRL__GPIO2_IO26		0x14 /* SODIMM 133 */
-+			MX7D_PAD_SAI1_RX_DATA__GPIO6_IO12	0x14 /* SODIMM 169 */
- 			MX7D_PAD_SAI1_RX_BCLK__GPIO6_IO17	0x14 /* SODIMM 24 */
- 			MX7D_PAD_SD2_DATA2__GPIO5_IO16		0x14 /* SODIMM 100 */
- 			MX7D_PAD_SD2_DATA3__GPIO5_IO17		0x14 /* SODIMM 102 */
-@@ -439,7 +440,6 @@
- 			MX7D_PAD_SD3_CLK__NAND_CLE		0x71
- 			MX7D_PAD_SD3_CMD__NAND_ALE		0x71
- 			MX7D_PAD_SAI1_TX_BCLK__NAND_CE0_B	0x71
--			MX7D_PAD_SAI1_RX_DATA__NAND_CE1_B	0x71
- 			MX7D_PAD_SAI1_TX_DATA__NAND_READY_B	0x74
- 			MX7D_PAD_SD3_STROBE__NAND_RE_B		0x71
- 			MX7D_PAD_SD3_RESET_B__NAND_WE_B		0x71
--- 
-2.15.1
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
