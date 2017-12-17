@@ -1,60 +1,55 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 7/9] ARM: dts: imx7-colibri: specify backlight GPIO
-Date: Sun, 17 Dec 2017 21:37:21 +0100
-Message-ID: <20171217203723.15896-7-stefan@agner.ch>
+Subject: [PATCH v2 4/9] ARM: dts: imx7-colibri: use NAND_CE1 as GPIO
+Date: Sun, 17 Dec 2017 21:37:18 +0100
+Message-ID: <20171217203723.15896-4-stefan@agner.ch>
 References: <20171217203723.15896-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20171217203723.15896-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Colibri standard defines SODIMM 71 as backlight enable
-GPIO. Assign the GPIO to the backlight node in the module
-level device tree.
+All Colibri iMX7 SKUs use either single-die NAND or eMMC, hence
+NAND_CE1 is not used on the module and can be used as a GPIO by
+carrier boards.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- arch/arm/boot/dts/imx7-colibri.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index d623ef0f6e3e..689ff6822634 100644
+index e4e32aa786f4..f61041af026a 100644
 --- a/arch/arm/boot/dts/imx7-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -43,7 +43,10 @@
- / {
- 	bl: backlight {
- 		compatible = "pwm-backlight";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_bl_on>;
- 		pwms = <&pwm1 0 5000000 0>;
-+		enable-gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
- 	};
- 
- 	reg_module_3v3: regulator-module-3v3 {
-@@ -360,7 +363,6 @@
- 		fsl,pins = <
- 			MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x14 /* SODIMM 65 */
- 			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x74 /* SODIMM 69 */
--			MX7D_PAD_SD1_WP__GPIO5_IO1		0x14 /* SODIMM 71 */
- 			MX7D_PAD_I2C4_SDA__GPIO4_IO15		0x14 /* SODIMM 75 */
- 			MX7D_PAD_ECSPI1_MISO__GPIO4_IO18	0x14 /* SODIMM 79 */
- 			MX7D_PAD_I2C3_SCL__GPIO4_IO12		0x14 /* SODIMM 81 */
-@@ -436,6 +438,12 @@
- 		>;
- 	};
- 
-+	pinctrl_gpio_bl_on: gpio-bl-on {
-+		fsl,pins = <
-+			MX7D_PAD_SD1_WP__GPIO5_IO1		0x14 /* SODIMM 71 */
-+		>;
-+	};
-+
- 	pinctrl_gpmi_nand: gpmi-nand-grp {
- 		fsl,pins = <
+@@ -329,6 +329,7 @@
+ 			MX7D_PAD_EPDC_SDCE2__GPIO2_IO22		0x14 /* SODIMM 127 */
+ 			MX7D_PAD_UART3_RTS_B__GPIO4_IO6		0x14 /* SODIMM 131 */
+ 			MX7D_PAD_EPDC_GDRL__GPIO2_IO26		0x14 /* SODIMM 133 */
++			MX7D_PAD_SAI1_RX_DATA__GPIO6_IO12	0x14 /* SODIMM 169 */
+ 			MX7D_PAD_SAI1_RX_BCLK__GPIO6_IO17	0x14 /* SODIMM 24 */
+ 			MX7D_PAD_SD2_DATA2__GPIO5_IO16		0x14 /* SODIMM 100 */
+ 			MX7D_PAD_SD2_DATA3__GPIO5_IO17		0x14 /* SODIMM 102 */
+@@ -439,7 +440,6 @@
  			MX7D_PAD_SD3_CLK__NAND_CLE		0x71
+ 			MX7D_PAD_SD3_CMD__NAND_ALE		0x71
+ 			MX7D_PAD_SAI1_TX_BCLK__NAND_CE0_B	0x71
+-			MX7D_PAD_SAI1_RX_DATA__NAND_CE1_B	0x71
+ 			MX7D_PAD_SAI1_TX_DATA__NAND_READY_B	0x74
+ 			MX7D_PAD_SD3_STROBE__NAND_RE_B		0x71
+ 			MX7D_PAD_SD3_RESET_B__NAND_WE_B		0x71
 -- 
 2.15.1
