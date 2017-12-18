@@ -1,69 +1,56 @@
-From: "Y.b. Lu" <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [v2] arm: dts: ls1021a: fix the value of TMR_FIPER1
-Date: Mon, 18 Dec 2017 02:51:06 +0000
-Message-ID: <DB6PR0401MB2536CAFE776097EDEBE82C49F80E0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-References: <20171129065458.4235-1-yangbo.lu@nxp.com>
- <20171130002905.GA22908@dragon>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 3/5] arm: dts: sun8i: a83t: Add the ir pin
+ for the A83T
+Date: Mon, 18 Dec 2017 11:21:04 +0800
+Message-ID: <CAGb2v65Dcd=g+_Vv9b7q+eoEBhem7tzkrG8h1AeS7mF9bESNZQ@mail.gmail.com>
+References: <20171217224547.21481-1-embed3d@gmail.com> <20171217224547.21481-4-embed3d@gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171130002905.GA22908@dragon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBOXI3TIQKGQE5N5GP4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171217224547.21481-4-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, sean-hENCXIMQXOg@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2hhd24sDQoNClNvcnJ5IGZvciBib3RoZXIuIEkganVzdCBjb3VsZG6hr3QgZmluZCB0aGlz
-IHBhdGNoIG9uIHlvdXIgZ2l0IHRyZWUuDQpDb3VsZCB5b3UgaGVscCB0byBjaGVjaz8NClRoYW5r
-cyBhIGxvdC4NCg0KQmVzdCByZWdhcmRzLA0KWWFuZ2JvIEx1DQoNCj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9y
-Z10NCj4gU2VudDogMjAxN8TqMTHUwjMwyNUgODoyOQ0KPiBUbzogWS5iLiBMdSA8eWFuZ2JvLmx1
-QG54cC5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gUm9iIEhlcnJpbmcgPHJv
-YmgrZHRAa2VybmVsLm9yZz47IFJ1c3NlbGwgS2luZyA8bGludXhAYXJtbGludXgub3JnLnVrPg0K
-PiBTdWJqZWN0OiBSZTogW3YyXSBhcm06IGR0czogbHMxMDIxYTogZml4IHRoZSB2YWx1ZSBvZiBU
-TVJfRklQRVIxDQo+IA0KPiBPbiBXZWQsIE5vdiAyOSwgMjAxNyBhdCAwMjo1NDo1OFBNICswODAw
-LCBZYW5nYm8gTHUgd3JvdGU6DQo+ID4gVGhlIHRpbWVyIGZpeGVkIGludGVydmFsIHBlcmlvZCBw
-dWxzZSBnZW5lcmF0b3IgcmVnaXN0ZXIgaXMgdXNlZCB0bw0KPiA+IGdlbmVyYXRlIHBlcmlvZGlj
-IHB1bHNlcy4gVGhlIGRvd24gY291bnQgcmVnaXN0ZXIgbG9hZHMgdGhlIHZhbHVlDQo+ID4gcHJv
-Z3JhbW1lZCBpbiB0aGUgZml4ZWQgcGVyaW9kIGludGVydmFsIChGSVBFUikuIEF0IGV2ZXJ5IHRp
-Y2sgb2YgdGhlDQo+ID4gdGltZXIgYWNjdW11bGF0b3Igb3ZlcmZsb3csIHRoZSBjb3VudGVyIGRl
-Y3JlbWVudHMgYnkgdGhlIHZhbHVlIG9mDQo+ID4gVE1SX0NUUkxbVENMS19QRVJJT0RdLiBJdCBn
-ZW5lcmF0ZXMgYSBwdWxzZSB3aGVuIHRoZSBkb3duIGNvdW50ZXINCj4gPiB2YWx1ZSByZWFjaGVz
-IHplcm8uIEl0IHJlbG9hZHMgdGhlIGRvd24gY291bnRlciBpbiB0aGUgY3ljbGUgZm9sbG93aW5n
-DQo+ID4gYSBwdWxzZS4gVG8gdXNlIHRoZSBUTVJfRklQRVIxIHJlZ2lzdGVyIHRvIGdlbmVyYXRl
-IGEgMSBQUFMgZXZlbnQsIHRoZQ0KPiA+IHZhbHVlDQo+ID4gKDEwXjkgbmFub3NlY29uZHMpIC0g
-VENMS19QRVJJT0Qgc2hvdWxkIGJlIHByb2dyYW1tZWQuDQo+ID4gSXQgc2hvdWxkIGJlIDk5OTk5
-OTk5NSBub3QgOTk5OTk5OTkwIHNpbmNlIFRDTEtfUEVSSU9EIGlzIDUuDQo+ID4NCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBZYW5nYm8gTHUgPHlhbmdiby5sdUBueHAuY29tPg0KPiANCj4gDQo+IEFnYWlu
-LCBmb3IgYXJtIGR0cywgd2UgdXN1YWxseSB1c2UgcHJlZml4IGxpa2UgJ0FSTTogZHRzOiAuLi4n
-DQo+IA0KPiBJIGZpeGVkIGl0IHVwIGFuZCBhcHBsaWVkIHRoZSBwYXRjaC4NCj4gDQo+IFNoYXdu
-DQo+IA0KPiA+IC0tLQ0KPiA+IENoYW5nZXMgZm9yIHYyOg0KPiA+IAktIEFkZGVkIFNoYXduIGlu
-dG8gY2MgbGlzdC4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvbHMxMDIxYS5kdHNp
-IHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24o
-LSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9sczEwMjFhLmR0c2kN
-Cj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaSBpbmRleCA2NDI0OTcyNmIzY2Iu
-LmE4NjFhNGI5ZTMxOQ0KPiA+IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xz
-MTAyMWEuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xzMTAyMWEuZHRzaQ0KPiA+
-IEBAIC01ODksNyArNTg5LDcgQEANCj4gPiAgCQkJZnNsLHRjbGstcGVyaW9kID0gPDU+Ow0KPiA+
-ICAJCQlmc2wsdG1yLXByc2MgICAgPSA8Mj47DQo+ID4gIAkJCWZzbCx0bXItYWRkICAgICA9IDww
-eGFhYWFhYWFiPjsNCj4gPiAtCQkJZnNsLHRtci1maXBlcjEgID0gPDk5OTk5OTk5MD47DQo+ID4g
-KwkJCWZzbCx0bXItZmlwZXIxICA9IDw5OTk5OTk5OTU+Ow0KPiA+ICAJCQlmc2wsdG1yLWZpcGVy
-MiAgPSA8OTk5OTA+Ow0KPiA+ICAJCQlmc2wsbWF4LWFkaiAgICAgPSA8NDk5OTk5OTk5PjsNCj4g
-PiAgCQl9Ow0KPiA+IC0tDQo+ID4gMi4xNC4xDQo+ID4NCj4gPg0KPiA+IF9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4gbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QNCj4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4g
-PiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0
-dHAlM0ElMkYlMkZsaXN0DQo+ID4NCj4gcy5pbmZyYWRlYWQub3JnJTJGbWFpbG1hbiUyRmxpc3Rp
-bmZvJTJGbGludXgtYXJtLWtlcm5lbCZkYXRhPTAyJTdDMDElDQo+IDcNCj4gPg0KPiBDeWFuZ2Jv
-Lmx1JTQwbnhwLmNvbSU3QzcwM2E3ZjhjNDkwNzQ1Y2FjM2Q3MDhkNTM3ODk2YTYzJTdDNjg2ZWEN
-Cj4gMWQzYmMyYg0KPiA+DQo+IDRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY0NzU5
-ODU2OTQ5NDUwOTQmc2RhdGE9WEx3NmxKDQo+IE9OQ29vMmpxDQo+ID4gSG9peGIlMkJ0bFlURGNM
-QzR0UGJLV1QzZVE3Ukk3YyUzRCZyZXNlcnZlZD0wDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Dec 18, 2017 at 6:45 AM, Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> The CIR Pin of the A83T is located at PL12.
+>
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> index a384b766f3dc..954c2393325f 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -521,6 +521,11 @@
+>                                 drive-strength = <20>;
+>                                 bias-pull-up;
+>                         };
+> +
+> +                       ir_pins_a: ir@0 {
+
+ir_pins: ir-pins
+
+And it really should be cir, to distinguish it from IrDA.
+
+ChenYu
+
+> +                               pins = "PL12";
+> +                               function = "s_cir_rx";
+> +                       };
+>                 };
+>
+>                 r_rsb: rsb@1f03400 {
+> --
+> 2.11.0
+>
