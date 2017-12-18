@@ -1,141 +1,87 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v2 03/19] ARM: dts: aspeed: Add LPC and child devices
-Date: Mon, 18 Dec 2017 10:25:31 +0100
-Message-ID: <f08188a0-a6dd-a445-340c-eee1ca335865@kaod.org>
-References: <20171215062443.23059-1-joel@jms.id.au>
- <20171215062443.23059-4-joel@jms.id.au>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/1] arm: sunxi: Add alternative pins for spi0
+Date: Mon, 18 Dec 2017 10:28:14 +0100
+Message-ID: <20171218092814.n5ptd5mhvo4nkjgq@flea.lan>
+References: <1513151074-6888-1-git-send-email-stefan@olimex.com>
+ <20171213154035.qc655iahjoeflftq@flea.lan>
+ <5f518e4b-e624-17c2-7e72-24ba930a1c15@gmail.com>
+ <20171215150823.jplgknururmkvp2t@flea.lan>
+ <ca648552-cefb-e19d-72cf-8b56e97b013d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171215062443.23059-4-joel@jms.id.au>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mjcs2jtp6xcpyfff"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ca648552-cefb-e19d-72cf-8b56e97b013d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/15/2017 07:24 AM, Joel Stanley wrote:
-> From: Andrew Jeffery <andrew@aj.id.au>
-> 
-> Ensure the ordering is correct and add all of the children in the SoC
-> device trees for the ast2400 and ast2500.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->  arch/arm/boot/dts/aspeed-g4.dtsi | 35 +++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/aspeed-g5.dtsi | 27 +++++++++++++++++----------
->  2 files changed, 52 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-> index 100d092e6c07..a3bc5da7d42c 100644
-> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-> @@ -226,6 +226,41 @@
->  				status = "disabled";
->  			};
->  
-> +			lpc: lpc@1e789000 {
-> +				compatible = "aspeed,ast2400-lpc", "simple-mfd";
-> +				reg = <0x1e789000 0x1000>;
-> +
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +				ranges = <0x0 0x1e789000 0x1000>;
-> +
-> +				lpc_bmc: lpc-bmc@0 {
-> +					compatible = "aspeed,ast2400-lpc-bmc";
-> +					reg = <0x0 0x80>;
-> +				};
-> +
-> +				lpc_host: lpc-host@80 {
-> +					compatible = "aspeed,ast2400-lpc-host", "simple-mfd", "syscon";
-> +					reg = <0x80 0x1e0>;
-> +					reg-io-width = <4>;
-> +
-> +					#address-cells = <1>;
-> +					#size-cells = <1>;
-> +					ranges = <0x0 0x80 0x1e0>;
-> +
-> +					lpc_ctrl: lpc-ctrl@0 {
-> +						compatible = "aspeed,ast2400-lpc-ctrl";
-> +						reg = <0x0 0x80>;
-> +						status = "disabled";
-> +					};
-> +
-> +					lhc: lhc@20 {
-> +						compatible = "aspeed,ast2500-lhc";
 
-aspeed,ast2400-lhc
+--mjcs2jtp6xcpyfff
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The layout of the registers are the same but there a couple of differences
-in the bit definitions between the two SoCs.
+On Mon, Dec 18, 2017 at 08:24:21AM +0200, Stefan Mavrodiev wrote:
+> On 12/15/2017 05:08 PM, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > On Thu, Dec 14, 2017 at 08:24:54AM +0200, Stefan Mavrodiev wrote:
+> > > On 12/13/2017 05:40 PM, Maxime Ripard wrote:
+> > > > Hi,
+> > > >=20
+> > > > On Wed, Dec 13, 2017 at 09:44:34AM +0200, Stefan Mavrodiev wrote:
+> > > > > Allwinner A10/A13/A20 SoCs have pinmux for spi0
+> > > > > on port C. The patch adds these pins in the respective
+> > > > > dts includes.
+> > > > >=20
+> > > > > Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+> > > > Do you have any boards that are using these?
+> > > >=20
+> > > > We won't merge that patch if there's no users for it.
+> > > A20-OLinuXino-Lime/Lime2 and A10-OLinuXino-Lime with spi flash.
+> > > For A13 we still doesn't have that option.
+> > If this bus is exposed on the headers, you can add those to the DT but
+> > leave them disabled if you want. Buf if there's no users of those
+> > nodes, our policy is not to merge them.
+>
+> So basically I should resend the patch, enabling the those pins only for
+> sun4i and sun7i platform?
 
-a part from that :
+I'm not quite sure what you mean, but you should do something like
+77df9d66b0b1ad01c685fd6341ce501493899658
 
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Maxime
 
-C. 
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> +						reg = <0x20 0x24 0x48 0x8>;
-> +					};
-> +				};
-> +			};
-> +
->  			uart2: serial@1e78d000 {
->  				compatible = "ns16550a";
->  				reg = <0x1e78d000 0x20>;
-> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-> index 1f9d28313f82..7861631940fe 100644
-> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -266,6 +266,16 @@
->  				status = "disabled";
->  			};
->  
-> +			vuart: serial@1e787000 {
-> +				compatible = "aspeed,ast2500-vuart";
-> +				reg = <0x1e787000 0x40>;
-> +				reg-shift = <2>;
-> +				interrupts = <10>;
-> +				clocks = <&clk_uart>;
-> +				no-loopback-test;
-> +				status = "disabled";
-> +			};
-> +
->  			lpc: lpc@1e789000 {
->  				compatible = "aspeed,ast2500-lpc", "simple-mfd";
->  				reg = <0x1e789000 0x1000>;
-> @@ -289,6 +299,13 @@
->  
->  					reg-io-width = <4>;
->  
-> +					lpc_ctrl: lpc-ctrl@0 {
-> +						compatible = "aspeed,ast2500-lpc-ctrl";
-> +						reg = <0x0 0x80>;
-> +						status = "disabled";
-> +					};
-> +
-> +
->  					lhc: lhc@20 {
->  						compatible = "aspeed,ast2500-lhc";
->  						reg = <0x20 0x24 0x48 0x8>;
-> @@ -296,16 +313,6 @@
->  				};
->  			};
->  
-> -			vuart: serial@1e787000 {
-> -				compatible = "aspeed,ast2500-vuart";
-> -				reg = <0x1e787000 0x40>;
-> -				reg-shift = <2>;
-> -				interrupts = <10>;
-> -				clocks = <&clk_uart>;
-> -				no-loopback-test;
-> -				status = "disabled";
-> -			};
-> -
->  			uart2: serial@1e78d000 {
->  				compatible = "ns16550a";
->  				reg = <0x1e78d000 0x20>;
-> 
+--mjcs2jtp6xcpyfff
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlo3iisACgkQ0rTAlCFN
+r3Rj+g/7BUR1GesICXIZ7GSDZGsagxHJGPfU+SeDs9b5MfANsc9Pbn6HNUqa4te7
+5f8jYrMUjQJ5tsNagpOAXuNMW2b2Mgbdj+cnuvuPSYsudK2+1TeOzPbxbjkIbP8I
+sxgTixHy/C423UqX7AsSysjzXeP9LV41YxgBKJVeUZqWRsfiHJt9dnUVv595zK/r
+zBUg6xLNVOpHhhLOmP91c9NchCqL50A8KKmQSx6NPux+f2e/BSs+KG1MOJxWsofE
+goHVbRVw6e//Zm+28MwP4iZI/TCH1t6LldTUHmZAHakgUyvAfYmMKTZgwfwlieSk
+If4ZGqS9UZ3fJ2/GUV20MLt3hEFhnzBQpXk0cE3mreFQ0ae76WIbmMibLcWqIzQk
+ETC20P1bBVaqQA7sJt7XNiobkxpLl1z+sjas3K40ZHhUXEeodrWLoPjpnFq4Wdvb
+a3XbzK9RS9RGl9jvZiHfSOeVJbAVnM/A9DZSt5RgwPn+iJTlE+emGyqg6YPfgrpu
+v+djUfNm4dyIpCa3CTtHVElqg3QsvT1lJxoSebERzjxJOgNTbU3L+oVNxJUSAuQa
+b5UqOzjGYAFaTPBXeDkmzxjWyqMzhhgprGVhUnbrO+sfDWt+KqXxtSUosmuEFocC
+OJOGpDYRC7YvEQp5F7MUftG+xk1aafT7xsWLlA+FXW1yRnEed/4=
+=z8p5
+-----END PGP SIGNATURE-----
+
+--mjcs2jtp6xcpyfff--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
