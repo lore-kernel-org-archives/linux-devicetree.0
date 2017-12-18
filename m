@@ -1,103 +1,387 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: media: Add Allwinner
- V3s Camera Sensor Interface (CSI)
-Date: Mon, 18 Dec 2017 16:35:51 +0800
-Message-ID: <CAGb2v67JhMfba8Ao7WyrYikkxvTxX8WaBRqu3GkrhOCWndresg@mail.gmail.com>
-References: <1510558344-45402-1-git-send-email-yong.deng@magewell.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
+Date: Mon, 18 Dec 2017 09:37:40 +0100
+Message-ID: <20171218093740.52eed20d@bbrezillon>
+References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
+        <20171214151610.19153-3-boris.brezillon@free-electrons.com>
+        <63546906-2fab-300a-b952-a0a7e8eb8bb5@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBA743XIQKGQEDNOTL4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1510558344-45402-1-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree@v>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <63546906-2fab-300a-b952-a0a7e8eb8bb5@infradead.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@co>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 13, 2017 at 3:32 PM, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org> wrote:
-> Add binding documentation for Allwinner V3s CSI.
->
-> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/sun6i-csi.txt        | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> new file mode 100644
-> index 0000000..f3916a2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> @@ -0,0 +1,51 @@
-> +Allwinner V3s Camera Sensor Interface
-> +------------------------------
-> +
-> +Required properties:
-> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> +  - reg: base address and size of the memory-mapped region.
-> +  - interrupts: interrupt associated to this IP
-> +  - clocks: phandles to the clocks feeding the CSI
-> +    * bus: the CSI interface clock
-> +    * mod: the CSI module clock
-> +    * ram: the CSI DRAM clock
-> +  - clock-names: the clock names mentioned above
-> +  - resets: phandles to the reset line driving the CSI
-> +
-> +- ports: A ports node with endpoint definitions as defined in
-> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +  Currently, the driver only support the parallel interface. So, a single port
-> +  node with one endpoint and parallel bus is supported.
-> +
-> +Example:
-> +
-> +       csi1: csi@01cb4000 {
+On Sun, 17 Dec 2017 14:32:04 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Drop the leading zero in the address part.
+> On 12/14/17 07:16, Boris Brezillon wrote:
+> > Add core infrastructure to support I3C in Linux and document it.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > ---
+> >  drivers/Kconfig                 |    2 +
+> >  drivers/Makefile                |    2 +-
+> >  drivers/i3c/Kconfig             |   24 +
+> >  drivers/i3c/Makefile            |    4 +
+> >  drivers/i3c/core.c              |  573 ++++++++++++++++
+> >  drivers/i3c/device.c            |  344 ++++++++++
+> >  drivers/i3c/internals.h         |   34 +
+> >  drivers/i3c/master.c            | 1433 +++++++++++++++++++++++++++++++++++++++
+> >  drivers/i3c/master/Kconfig      |    0
+> >  drivers/i3c/master/Makefile     |    0
+> >  include/linux/i3c/ccc.h         |  380 +++++++++++
+> >  include/linux/i3c/device.h      |  321 +++++++++
+> >  include/linux/i3c/master.h      |  564 +++++++++++++++
+> >  include/linux/mod_devicetable.h |   17 +
+> >  14 files changed, 3697 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/i3c/Kconfig
+> >  create mode 100644 drivers/i3c/Makefile
+> >  create mode 100644 drivers/i3c/core.c
+> >  create mode 100644 drivers/i3c/device.c
+> >  create mode 100644 drivers/i3c/internals.h
+> >  create mode 100644 drivers/i3c/master.c
+> >  create mode 100644 drivers/i3c/master/Kconfig
+> >  create mode 100644 drivers/i3c/master/Makefile
+> >  create mode 100644 include/linux/i3c/ccc.h
+> >  create mode 100644 include/linux/i3c/device.h
+> >  create mode 100644 include/linux/i3c/master.h
+> > 
+> > diff --git a/drivers/i3c/Kconfig b/drivers/i3c/Kconfig
+> > new file mode 100644
+> > index 000000000000..cf3752412ae9
+> > --- /dev/null
+> > +++ b/drivers/i3c/Kconfig
+> > @@ -0,0 +1,24 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +menuconfig I3C
+> > +	tristate "I3C support"
+> > +	select I2C
+> > +	help
+> > +	  I3C is a serial protocol standardized by the MIPI alliance.
+> > +
+> > +	  It's supposed to be backward compatible with I2C while providing
+> > +	  support for high speed transfers and native interrupt support
+> > +	  without the need for extra pins.
+> > +
+> > +	  The I3C protocol also standardizes the slave device types and is
+> > +	  mainly design to communicate with sensors.
+> > +
+> > +	  If you want I3C support, you should say Y here and also to the
+> > +	  specific driver for your bus adapter(s) below.
+> > +
+> > +	  This I3C support can also be built as a module.  If so, the module
+> > +	  will be called i3c.
+> > +
+> > +if I3C
+> > +source "drivers/i3c/master/Kconfig"
+> > +endif # I3C  
+> 
+> > diff --git a/drivers/i3c/core.c b/drivers/i3c/core.c
+> > new file mode 100644
+> > index 000000000000..7eb8e84acd33
+> > --- /dev/null
+> > +++ b/drivers/i3c/core.c
+> > @@ -0,0 +1,573 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2017 Cadence Design Systems Inc.
+> > + *
+> > + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > + */
+> > +
+> > +#include <linux/idr.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/slab.h>  
+> 
+> #include <linux/device.h>
+> #include <linux/init.h>
+> #include <linux/list.h>
+> #include <linux/mutex.h>
+> #include <linux/rwsem.h>
 
-> +               compatible = "allwinner,sun8i-v3s-csi";
-> +               reg = <0x01cb4000 0x1000>;
-> +               interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +               clocks = <&ccu CLK_BUS_CSI>,
-> +                        <&ccu CLK_CSI1_SCLK>,
+Do you have a tool to detect those missing inclusions?
 
-CSI also has an MCLK. Do you need that one?
+> 
+> 
+> > +#include "internals.h"
+> > +
+> > +static DEFINE_IDR(i3c_bus_idr);
+> > +static DEFINE_MUTEX(i3c_core_lock);
+> > +  
+> 
+> > +/**
+> > + * i3c_bus_maintenance_lock - Release the bus lock after a maintenance  
+> 
+>                           unlock
+> 
 
-ChenYu
+Will fix that.
 
-> +                        <&ccu CLK_DRAM_CSI>;
-> +               clock-names = "bus", "mod", "ram";
-> +               resets = <&ccu RST_BUS_CSI>;
-> +
-> +               port {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       /* Parallel bus endpoint */
-> +                       csi1_ep: endpoint {
-> +                               remote-endpoint = <&adv7611_ep>;
-> +                               bus-width = <16>;
-> +                               data-shift = <0>;
-> +
-> +                               /* If hsync-active/vsync-active are missing,
-> +                                  embedded BT.656 sync is used */
-> +                               hsync-active = <0>; /* Active low */
-> +                               vsync-active = <0>; /* Active low */
-> +                               data-active = <1>;  /* Active high */
-> +                               pclk-sample = <1>;  /* Rising */
-> +                       };
-> +               };
-> +       };
-> +
-> --
-> 1.8.3.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+> > + *			      operation
+> > + * @bus: I3C bus to release the lock on
+> > + *
+> > + * Should be called when the bus maintenance operation is done. See
+> > + * i3c_bus_maintenance_lock() for more details on what these maintenance
+> > + * operations are.
+> > + */
+> > +void i3c_bus_maintenance_unlock(struct i3c_bus *bus)
+> > +{
+> > +	up_write(&bus->lock);
+> > +}
+> > +EXPORT_SYMBOL_GPL(i3c_bus_maintenance_unlock);
+> > +  
+> 
+> > +/**
+> > + * i3c_bus_normaluse_lock - Release the bus lock after a normal operation  
+> 
+>                         unlock
+
+Ditto.
+
+> 
+> > + * @bus: I3C bus to release the lock on
+> > + *
+> > + * Should be called when a normal operation is done. See
+> > + * i3c_bus_normaluse_lock() for more details on what these normal operations
+> > + * are.
+> > + */
+> > +void i3c_bus_normaluse_unlock(struct i3c_bus *bus)
+> > +{
+> > +	up_read(&bus->lock);
+> > +}
+> > +EXPORT_SYMBOL_GPL(i3c_bus_normaluse_unlock);  
+> 
+> 
+> 
+> > +static int i3c_device_match(struct device *dev, struct device_driver *drv)  
+> 
+> bool?
+> 
+> > +{
+> > +	struct i3c_device *i3cdev;
+> > +	struct i3c_driver *i3cdrv;
+> > +
+> > +	if (dev->type != &i3c_device_type)
+> > +		return 0;
+> > +
+> > +	i3cdev = dev_to_i3cdev(dev);
+> > +	i3cdrv = drv_to_i3cdrv(drv);
+> > +	if (i3c_device_match_id(i3cdev, i3cdrv->id_table))
+> > +		return 1;
+> > +
+> > +	return 0;
+> > +}  
+> 
+> 
+> > diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
+> > new file mode 100644
+> > index 000000000000..dcf51150b7cb
+> > --- /dev/null
+> > +++ b/drivers/i3c/device.c
+> > @@ -0,0 +1,344 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2017 Cadence Design Systems Inc.
+> > + *
+> > + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > + */
+> > +
+> > +#include <linux/slab.h>  
+> 
+> #include <linux/atomic.h>
+> #include <linux/bug.h>
+> #include <linux/completion.h>
+> #include <linux/device.h>
+> #include <linux/mutex.h>
+> 
+> > +#include "internals.h"  
+> 
+> 
+> 
+> > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> > new file mode 100644
+> > index 000000000000..1c85abac08d5
+> > --- /dev/null
+> > +++ b/drivers/i3c/master.c
+> > @@ -0,0 +1,1433 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2017 Cadence Design Systems Inc.
+> > + *
+> > + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > + */  
+> 
+> #include <linux/atomic.h>
+> #include <linux/device.h>
+> #include <linux/err.h>
+> #include <linux/export.h>
+> #include <linux/kernel.h>
+> #include <linux/list.h>
+> #include <linux/of.h>
+> 
+> > +#include <linux/slab.h>  
+> 
+> #include <linux/spinlock.h>
+> #include <linux/workqueue.h>
+> 
+> #include <asm-generic/bug.h>
+> 
+> > +#include "internals.h"  
+> 
+> 
+> and I probably missed a few.
+> 
+> 
+> 
+> 
+> > diff --git a/include/linux/i3c/ccc.h b/include/linux/i3c/ccc.h
+> > new file mode 100644
+> > index 000000000000..ff3e1a3e2c4c
+> > --- /dev/null
+> > +++ b/include/linux/i3c/ccc.h
+> > @@ -0,0 +1,380 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2017 Cadence Design Systems Inc.
+> > + *
+> > + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > + */  
+> 
+> > +/**
+> > + * struct i3c_ccc_dev_desc - I3C/I3C device descriptor used for DEFSLVS  
+> 
+> Is one of those I3C above supposed to be I2C?
+
+Indeed, should be I2C/I3C.
+
+> 
+> > + *
+> > + * @dyn_addr: dynamic address assigned to the I3C slave or 0 if the entry is
+> > + *	      describing an I2C slave.
+> > + * @dcr: DCR value (not applicable to entries describing I2C devices)
+> > + * @lvr: LVR value (not applicable to entries describing I3C devices)
+> > + * @bcr: BCR value or 0 if this entry is describing an I2C slave
+> > + * @static_addr: static address or 0 if the device does not have a static
+> > + *		 address
+> > + *
+> > + * The DEFSLVS command should be passed an array of i3c_ccc_dev_desc
+> > + * descriptors (one entry per I3C/I2C dev controlled by the master).
+> > + */
+> > +struct i3c_ccc_dev_desc {
+> > +	u8 dyn_addr;
+> > +	union {
+> > +		u8 dcr;
+> > +		u8 lvr;
+> > +	};
+> > +	u8 bcr;
+> > +	u8 static_addr;
+> > +} __packed;  
+> 
+> 
+> Needs bitops.h
+> 
+> > diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
+> > new file mode 100644
+> > index 000000000000..83958d3a02e2
+> > --- /dev/null
+> > +++ b/include/linux/i3c/device.h
+> > @@ -0,0 +1,321 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2017 Cadence Design Systems Inc.
+> > + *
+> > + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > + */
+> > +
+> > +#ifndef I3C_DEV_H
+> > +#define I3C_DEV_H
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/mod_devicetable.h>
+> > +#include <linux/module.h>  
+> 
+> 
+> Needs bitops.h, kconfig.h.
+> 
+> 
+> > diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+> > new file mode 100644
+> > index 000000000000..7ec9a4821bac
+> > --- /dev/null
+> > +++ b/include/linux/i3c/master.h
+> > @@ -0,0 +1,564 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2017 Cadence Design Systems Inc.
+> > + *
+> > + * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > + */
+> > +
+> > +#ifndef I3C_MASTER_H
+> > +#define I3C_MASTER_H
+> > +
+> > +#include <linux/i2c.h>
+> > +#include <linux/i3c/ccc.h>
+> > +#include <linux/i3c/device.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +#define I3C_HOT_JOIN_ADDR		0x2
+> > +#define I3C_BROADCAST_ADDR		0x7e
+> > +#define I3C_MAX_ADDR			GENMASK(6, 0)
+> > +  
+> 
+> Needs bitops.h, workqueue.h, rwsem.h
+> 
+> 
+> Needs <asm-generic/bitsperlong.h>
+
+Okay, that's really weird to directly include a header from the
+asm-generic directory, are you sure this is the right thing to do here?
+
+> 
+> 
+> 
+> > diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+> > index abb6dc2ebbf8..e59da92d8ac9 100644
+> > --- a/include/linux/mod_devicetable.h
+> > +++ b/include/linux/mod_devicetable.h
+> > @@ -442,6 +442,23 @@ struct pci_epf_device_id {
+> >  	kernel_ulong_t driver_data;
+> >  };
+> >  
+> > +/* i3c */
+> > +
+> > +#define I3C_MATCH_DCR			BIT(0)
+> > +#define I3C_MATCH_MANUF			BIT(1)
+> > +#define I3C_MATCH_PART			BIT(2)
+> > +#define I3C_MATCH_EXTRA_INFO		BIT(3)
+> 
+> Needs bitops.h.
+
+I think I'll just avoid using BIT() here, as done for other definitions
+in this file.
+
+> 
+> > +struct i3c_device_id {
+> > +	__u8 match_flags;
+> > +	__u8 dcr;
+> > +	__u16 manuf_id;
+> > +	__u16 part_id;
+> > +	__u16 extra_info;
+> > +
+> > +	const void *data;
+> > +};
+> > +
+> >  /* spi */
+> >  
+> >  #define SPI_NAME_SIZE	32
+> >   
+> 
+> 
