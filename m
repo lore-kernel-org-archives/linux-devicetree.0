@@ -1,53 +1,105 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM64: meson-axg: enable hardware rng
-Date: Mon, 18 Dec 2017 12:35:46 +0100
-Message-ID: <20171218113546.13116-1-jbrunet@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
+Subject: Re: [PATCH 0/2] Use SPDX-License-Identifier for rockchip devicetree
+ files
+Date: Mon, 18 Dec 2017 12:43:30 +0100
+Message-ID: <75deea05-b819-c6b9-6e97-860644f907a5@suse.com>
+References: <20171215114427.32059-1-klaus.goger@theobroma-systems.com>
+ <21020918.S4038j3A1a@diego>
+ <CAOFm3uHuwmU1nCcU1MQ9qgGZ0A70ycuoo8XpWcDzgPQFzFRnRA@mail.gmail.com>
+ <63058496.Aj9cacRib9@diego>
+ <24788EB1-9868-41E9-B97C-7D85D8C3761D@theobroma-systems.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <24788EB1-9868-41E9-B97C-7D85D8C3761D-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Emil Renner Berthing <kernel-sKpHZLTYfq0@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heinrich Schuchardt <xypron.glpk-Mmb7MZpHnFY@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, FUKAUMI Naoki <naobsd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Jagan
 List-Id: devicetree@vger.kernel.org
 
-Enable the hardware random generator
-
-Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
-Hi Kevin,
-
-This patch depends on the changes adding the ethernet controller [0],
-for including the axg clock binding header.
-
-Cheers
-Jerome
-
-[0]: https://lkml.kernel.org/r/20171216035527.96952-2-yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org
-
-
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index dea1bc31b4de..c741fc16486f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -212,6 +212,13 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xff634000 0x0 0x2000>;
- 
-+			hwrng: rng {
-+				compatible = "amlogic,meson-rng";
-+				reg = <0x0 0x18 0x0 0x4>;
-+				clocks = <&clkc CLKID_RNG0>;
-+				clock-names = "core";
-+			};
-+
- 			pinctrl_periphs: pinctrl@480 {
- 				compatible = "amlogic,meson-axg-periphs-pinctrl";
- 				#address-cells = <2>;
--- 
-2.14.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiAxMi8xNS8yMDE3IDA1OjI3IFBNLCBrbGF1cy5nb2dlckB0aGVvYnJvbWEtc3lzdGVtcy5j
+b20gd3JvdGU6Cj4+IE9uIDE1LjEyLjIwMTcsIGF0IDE2OjIwLCBIZWlrbyBTdMO8Ym5lciA8aGVp
+a29Ac250ZWNoLmRlPiB3cm90ZToKPj4KPj4gQW0gRnJlaXRhZywgMTUuIERlemVtYmVyIDIwMTcs
+IDE1OjQyOjQ4IENFVCBzY2hyaWViIFBoaWxpcHBlIE9tYnJlZGFubmU6Cj4+PiBPbiBGcmksIERl
+YyAxNSwgMjAxNyBhdCAzOjI4IFBNLCBIZWlrbyBTdMO8Ym5lciA8aGVpa29Ac250ZWNoLmRlPiB3
+cm90ZToKPj4+PiBBbSBGcmVpdGFnLCAxNS4gRGV6ZW1iZXIgMjAxNywgMTQ6NDU6MzQgQ0VUIHNj
+aHJpZWIgUGhpbGlwcGUgT21icmVkYW5uZToKPj4+Pj4gS2xhdXMsCj4+Pj4+Cj4+Pj4+IE9uIEZy
+aSwgRGVjIDE1LCAyMDE3IGF0IDEyOjQ0IFBNLCBLbGF1cyBHb2dlcgo+Pj4+Pgo+Pj4+PiA8a2xh
+dXMuZ29nZXJAdGhlb2Jyb21hLXN5c3RlbXMuY29tPiB3cm90ZToKPj4+Pj4+IFRoaXMgcGF0Y2gg
+c2VyaWVzIHJlcGxhY2VzIGFsbCB0aGUgbGljZW5zZSB0ZXh0IGluIHJvY2tjaGlwIGRldmljZXRy
+ZWUKPj4+Pj4+IGZpbGVzIHRleHQgd2l0aCBhIHByb3BlciBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
+ci4KPj4+Pj4+IEl0IGZvbGxvd3MgdGhlIGd1aWRlbGluZXMgc3VibWl0dGVkWzFdIGJ5IFRob21h
+cyBHbGVpeG5lciB0aGF0IGFyZSBub3QKPj4+Pj4+IHlldCBtZXJnZWQuCj4+Pj4+Pgo+Pj4+Pj4g
+VGhlc2Ugc2VyaWVzIGFsc28gZml4ZXMgdGhlIGlzc3VlIHdpdGggY29udHJhZGljdGluZyBzdGF0
+ZW1lbnRzIGluIG1vc3QKPj4+Pj4+IGxpY2Vuc2VzLiBUaGUgaW50cm9kdWN0aW9uIHRleHQgY2xh
+aW1zIHRvIGJlIEdQTCBvciBYMTFbMl0gYnV0IHRoZQo+Pj4+Pj4gZm9sbG93aW5nIHZlcmJhdGlt
+IGNvcHkgb2YgdGhlIGxpY2Vuc2UgaXMgYWN0dWFsbHkgYSBNSVRbM10gbGljZW5zZS4KPj4+Pj4+
+IFRoZSBYMTEgbGljZW5zZSBpbmNsdWRlcyBhIGFkdmVydGlzZSBjbGF1c2UgYW5kIHRyYWRlbWFy
+ayBpbmZvcm1hdGlvbgo+Pj4+Pj4gcmVsYXRlZCB0byB0aGUgWCBDb25zb3J0aXVtLiBBcyB0aGVz
+ZSBYIENvbnNvcnRpdW0gc3BlY2ZpYyBwb2ludHMgYXJlCj4+Pj4+PiBpcnJlbGV2YW50IGZvciB1
+cyB3ZSBzdGljayB3aXRoIHRoZSBhY3R1YWxsIGxpY2Vuc2UgdGV4dC4KPj4+Pj4+Cj4+Pj4+PiBb
+MV0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDA5MTYwNy8KPj4+Pj4+IFsy
+XSBodHRwczovL3NwZHgub3JnL2xpY2Vuc2VzL1gxMS5odG1sCj4+Pj4+PiBbM10gaHR0cHM6Ly9z
+cGR4Lm9yZy9saWNlbnNlcy9NSVQuaHRtbAo+Pj4+Pgo+Pj4+PiBGV0lXLCB0aGUgWDExIGxpY2Vu
+c2UgbmFtZSB3YXMgbm90IGFsd2F5cyBzb21ldGhpbmcgY2xlYXJseSBkZWZpbmVkLgo+Pj4+PiBT
+UERYIGNhbGxzIGl0IGNsZWFybHkgTUlUIHdoaWNoIGlzIHRoZSBtb3N0IHdpZGVseSBhY2NlcHRl
+ZCBuYW1lIGZvcgo+Pj4+PiB0aGUgY29ycmVzcG9uZGluZyB0ZXh0LiBBbmQgdGhpcyBpcyBhbHNv
+IHdoYXQgd2UgaGF2ZSBpbiBUaG9tYXMgZG9jCj4+Pj4+IHBhdGNoZXMgdGhhdCBzaG91bGQgYmUg
+dGhlIGtlcm5lbCByZWZlcmVuY2UuCj4+Pj4+Cj4+Pj4+IEFsc28sIGFzIGEgZ2VuZXJhbCBub3Rl
+LCB5b3Ugd2FudCB0byBtYWtlIHN1cmUgdGhhdCBzdWNoIGFzIHBhdGNoIHNldAo+Pj4+PiBpcyBu
+b3QgbWVyZ2VkIGJ5IG1pc3Rha2UgdW50aWwgeW91IGhhdmUgY29sbGVjdGVkIGFuIGV4cGxpY2l0
+IHJldmlldwo+Pj4+PiBvciBhY2sgZnJvbSBhbGwgdGhlIGNvcHlyaWdodCBob2xkZXJzIGludm9s
+dmVkLgo+Pj4+Cj4+Pj4gSnVzdCBmb3IgbXkgdW5kZXJzdGFuZGluZywgaXMgaXQgcmVhbGx5IG5l
+Y2Vzc2FyeSB0byBnZXQgQWNrcyBmcm9tIF9hbGxfCj4+Pj4gcHJldmlvdXMgY29udHJpYnV0b3Jz
+Pwo+Pj4+Cj4+Pj4gSSBzZWUgdGhhdCBUaG9tYXMgcGF0Y2hlcyBtb3ZpbmcgbGljZW5zZSB0ZXh0
+cyBpbnRvIHRoZSBrZXJuZWwgaXRzZWxmIGRvCj4+Pj4gbm90IHNlZW0gdG8gaGF2ZSBsYW5kZWQg
+eWV0LCBidXQgd2hlbiB0aGUgYWN0dWFsIGxpY2Vuc2UgdGV4dCBkb2VzIF9ub3RfCj4+Pj4gY2hh
+bmdlIGFuZCBvbmx5IGl0cyBsb2NhdGlvbiB0byBhIGNvbW1vbiBwbGFjZSBpbnNpZGUgdGhlIGtl
+cm5lbCBzb3VyY2VzLAo+Pj4+IGl0IGZlZWxzIGEgYml0IG92ZXJraWxsIHRyeWluZyB0byBnZXQg
+QWNrcyBmcm9tIF9ldmVyeWJvZHlfIHRoYXQKPj4+PiBjb250cmlidXRlZCB0byBSb2NrY2hpcCBk
+ZXZpY2V0cmVlcyBmb3IgdGhlIGxhc3QgNCB5ZWFycy4KPj4+Pgo+Pj4+IElmIHdlIHdvdWxkIGFj
+dHVhbGx5IHdhbnQgdG8gY2hhbmdlIHRoZSBsaWNlbnNlIEkgd291bGQgZGVmaW5pdGx5IGZlZWwK
+Pj4+PiBkaWZmZXJlbnRseSwgYnV0IHRoZSBsaWNlbnNlIHRleHQgZG9lcyBub3QgY2hhbmdlLgo+
+Pj4KPj4+IFdlbGwgeW91IGFyZSB0ZWNobmljYWxseSByaWdodC4gQnV0IHRoZXJlIGlzIGEgc29j
+aWFsIGFuZCBwb2xpdGVuZXNzCj4+PiBhbmdsZSB0byB0aGlzIHRvby4gU28gbWF5IGJlIGdldHRp
+bmcgdGhlIGFjayBvZiBhbGwgY29udHJpYnV0b3JzIGlzCj4+PiBub3QgYWx3YXlzIG5lZWRlZCwg
+YnV0IGdldHRpbmcgaXQgaXMgYmVzdCBhbmQgdGhlIHJpZ2h0IHRvIGRvIGFuZCBhdAo+Pj4gbGVh
+c3QgZ2V0dGluZyBmb3IgdGhlIG5hbWVkIGNvcHlyaWdodCBob2xkZXJzIHNob3VsZCBiZSB0aGVy
+ZS4KPj4+Cj4+PiBUaGF0J3Mgb25seSBvbmx5IG15IHRha2U6IGxlYXZpbmcgYXNpZGUgYW55IHRl
+Y2huaWNhbCBsZWdhbCBpc3N1ZSwgc2F5Cj4+PiBJIHdvdWxkIGJlIG9uIHRoZSByZWNlaXZpbmcg
+ZW5kIGFzIG9uZSBvZiB0aGUgaG9sZGVyIG9yIGNvbnRyaWJ1dG9yczoKPj4+IEkgd291bGQgZmlu
+ZCBpdCByZWFsbHkgZ3JlYXQgYW5kIG5pY2UgdG8gaGF2ZSBteSBhY2sgcmVxdWVzdGVkLiBBbmQg
+SQo+Pj4gd291bGQgYmUgYSBkb3JrIG5vdCB0byBnaXZlIGl0LiBTbyBJIGxpa2UgdG8gZG8gdG8g
+b3RoZXJzIHRoZSBzYW1lIEkKPj4+IHdvdWxkIGFwcHJlY2lhdGUgZG9uZSB0byBtZSAod2l0aGlu
+IHJlYXNvbiwgYXMgSSBzb21ldGltZXMgc2hvb3QKPj4+IG15c2VsZiBpbiB0aGUgZm9vdCA7KSAp
+Cj4+Cj4+IEhlaGUgLi4uIEkgZGlkbid0IHBsYW4gb24gbWVyZ2luZyB0aGlzIHdpdGhvdXQgYW1w
+bGUgdGltZSBmb3IgcGVvcGxlCj4+IHRvIGVpdGhlciBBQ0sgb3IgTkFLIHRoZSBjaGFuZ2UsIHNv
+IHdhcyBwbGFubmluZyBvbiBrZWVwaW5nIHRvIHNvY2lhbAo+PiBwcm90b2NvbCA7LSkgLiBKdXN0
+IHRoZSAiYWxsIiB0aHJldyBtZSBmb3IgYSBsb29wLgo+Pgo+PiBBbmQgaGF2aW5nIHRoYXQgYXMg
+UEFUQ0ggd2l0aG91dCBSRkMgYWxzbyBjb21tdW5pY2F0ZXMgdGhhdCBwZW9wbGUKPj4gc2hvdWxk
+IHRha2UgYSBsb29rLCBhcyBSRkMgcGF0Y2hlcyBhcmUgb2Z0ZW4gb3Zlcmxvb2tlZC4KPj4KPj4g
+QXMgS2xhdXMgc2VlbXMgdG8gaGF2ZSBpbmNsdWRlZCBtb3N0IHBlb3BsZSB0aGF0IGhhdmUgY29u
+dHJpYnV0ZWQgaW4gdGhlCj4+IHBhc3QsIEkgd291bGQgZ3Vlc3Mgd2Ugc2hvdWxkIHJlY2VpdmUg
+YW55IGV4aXN0aW5nIGNvbXBsYWludHMgYWJvdXQgdGhhdAo+PiBjaGFuZ2UgOi0pIC4KPiAKPiBJ
+IGFkZGVkIHRoZSBmdWxsIGxpc3QgZnJvbSB0aGUgZ2V0X21haW50YWluZXJzIHNjcmlwdC4gU29t
+ZSBvZiB0aGUgb3JpZ2luYWwgYXV0aG9ycwo+IGdvdCBkcm9wcGVkIGFzIHRoZSBjdXJyZW50IGNv
+bnRyaWJ1dGlvbiBsZXZlbCBkcm9wcGVkIGJlbG93IHRoZSBzY3JpcHRzIGxpbWl0Lgo+IEkgYWRk
+ZWQgdGhlIG1pc3NpbmcgZW1haWwgYWRkcmVzc2VzIGZyb20gdGhlIGNvcHlyaWdodCBoZWFkZXJz
+IHRvIHRoZSBDQyBsaXN0LiAKPiAKPiBDb252ZW5pZW5jZSBsaW5rcyB0byB0aGUgb3JpZ2luYWwg
+cGF0Y2hlcyBmb3IgdGhlIGFkZGVkIHBlb3BsZToKPiAKPiBodHRwczovL3BhdGNod29yay5rZXJu
+ZWwub3JnL3BhdGNoLzEwMTE0ODQ1Lwo+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
+Y2gvMTAxMTQ4NDMvCj4gCgpGb3IgYm90aCBwYXRjaGVzOgpBY2tlZC1ieTogTWF0dGhpYXMgQnJ1
+Z2dlciA8bWJydWdnZXJAc3VzZS5jb20+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2No
+aXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
