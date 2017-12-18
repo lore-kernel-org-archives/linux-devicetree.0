@@ -1,87 +1,246 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm: sunxi: Add alternative pins for spi0
-Date: Mon, 18 Dec 2017 10:28:14 +0100
-Message-ID: <20171218092814.n5ptd5mhvo4nkjgq@flea.lan>
-References: <1513151074-6888-1-git-send-email-stefan@olimex.com>
- <20171213154035.qc655iahjoeflftq@flea.lan>
- <5f518e4b-e624-17c2-7e72-24ba930a1c15@gmail.com>
- <20171215150823.jplgknururmkvp2t@flea.lan>
- <ca648552-cefb-e19d-72cf-8b56e97b013d@gmail.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v2 18/19] ARM: dts: aspeed-romulus: Update Romulus system
+Date: Mon, 18 Dec 2017 10:32:36 +0100
+Message-ID: <b8e80861-88c4-da87-a201-ca2eefaa5a94@kaod.org>
+References: <20171215062443.23059-1-joel@jms.id.au>
+ <20171215062443.23059-19-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mjcs2jtp6xcpyfff"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ca648552-cefb-e19d-72cf-8b56e97b013d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171215062443.23059-19-joel@jms.id.au>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Some comments below,
 
---mjcs2jtp6xcpyfff
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/15/2017 07:24 AM, Joel Stanley wrote:
+>  - Fix incorrect RAM size
+>  - Remove alias; these are now specified in the dtsi
+>  - Add newly upstreamed devices
+>  - Include OpenBMC flash layout
+> 
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts | 153 ++++++++++++++++++++++++++-
+>  1 file changed, 148 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+> index a7a9386f964d..bfdf643584df 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+> @@ -7,17 +7,13 @@
+>  	model = "Romulus BMC";
+>  	compatible = "ibm,romulus-bmc", "aspeed,ast2500";
+>  
+> -	aliases {
+> -		serial4 = &uart5;
+> -	};
+> -
+>  	chosen {
+>  		stdout-path = &uart5;
+>  		bootargs = "console=ttyS4,115200 earlyprintk";
+>  	};
+>  
+>  	memory {
+> -		reg = <0x80000000 0x40000000>;
+> +		reg = <0x80000000 0x20000000>;
+>  	};
+>  
+>  	reserved-memory {
+> @@ -29,6 +25,73 @@
+>  			no-map;
+>  			reg = <0xbf000000 0x01000000>; /* 16M */
+>  		};
+> +
+> +		flash_memory: region@98000000 {
+> +			no-map;
+> +			reg = <0x98000000 0x04000000>; /* 64M */
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		fault {
+> +			gpios = <&gpio ASPEED_GPIO(N, 2) GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		identify {
+> +			gpios = <&gpio ASPEED_GPIO(N, 4) GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		power {
+> +			gpios = <&gpio ASPEED_GPIO(R, 5) GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	fsi: gpio-fsi {
+> +		compatible = "fsi-master-gpio", "fsi-master";
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		clock-gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_HIGH>;
+> +		data-gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_HIGH>;
+> +		mux-gpios = <&gpio ASPEED_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
+> +		enable-gpios = <&gpio ASPEED_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
+> +		trans-gpios = <&gpio ASPEED_GPIO(R, 2) GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		checkstop {
+> +			label = "checkstop";
+> +			gpios = <&gpio ASPEED_GPIO(J, 2) GPIO_ACTIVE_LOW>;
+> +			linux,code = <ASPEED_GPIO(J, 2)>;
+> +		};
+> +	};
+> +};
+> +
+> +&fmc {
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		status = "okay";
+> +		label = "pnor";
+> +		m25p,fast-read;
+> +#include "openbmc-flash-layout.dtsi"
+> +	};
+> +};
+> +
+> +&spi1 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_spi1_default>;
+> +
+> +	flash@0 {
+> +		status = "okay";
+> +		label = "pnor";
+> +		m25p,fast-read;
+>  	};
+>  };
 
-On Mon, Dec 18, 2017 at 08:24:21AM +0200, Stefan Mavrodiev wrote:
-> On 12/15/2017 05:08 PM, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > On Thu, Dec 14, 2017 at 08:24:54AM +0200, Stefan Mavrodiev wrote:
-> > > On 12/13/2017 05:40 PM, Maxime Ripard wrote:
-> > > > Hi,
-> > > >=20
-> > > > On Wed, Dec 13, 2017 at 09:44:34AM +0200, Stefan Mavrodiev wrote:
-> > > > > Allwinner A10/A13/A20 SoCs have pinmux for spi0
-> > > > > on port C. The patch adds these pins in the respective
-> > > > > dts includes.
-> > > > >=20
-> > > > > Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
-> > > > Do you have any boards that are using these?
-> > > >=20
-> > > > We won't merge that patch if there's no users for it.
-> > > A20-OLinuXino-Lime/Lime2 and A10-OLinuXino-Lime with spi flash.
-> > > For A13 we still doesn't have that option.
-> > If this bus is exposed on the headers, you can add those to the DT but
-> > leave them disabled if you want. Buf if there's no users of those
-> > nodes, our policy is not to merge them.
->
-> So basically I should resend the patch, enabling the those pins only for
-> sun4i and sun7i platform?
 
-I'm not quite sure what you mean, but you should do something like
-77df9d66b0b1ad01c685fd6341ce501493899658
+hmm, the fmc and spi1 bindings were already added in commit 1142aea9ff9d.
 
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> @@ -38,6 +101,7 @@
+>  		status = "okay";
+>  		m25p,fast-read;
+>  		label = "bmc";
+> +#include "openbmc-flash-layout.dtsi"
 
---mjcs2jtp6xcpyfff
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+This looks like an extra "fmc" node ? 
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlo3iisACgkQ0rTAlCFN
-r3Rj+g/7BUR1GesICXIZ7GSDZGsagxHJGPfU+SeDs9b5MfANsc9Pbn6HNUqa4te7
-5f8jYrMUjQJ5tsNagpOAXuNMW2b2Mgbdj+cnuvuPSYsudK2+1TeOzPbxbjkIbP8I
-sxgTixHy/C423UqX7AsSysjzXeP9LV41YxgBKJVeUZqWRsfiHJt9dnUVv595zK/r
-zBUg6xLNVOpHhhLOmP91c9NchCqL50A8KKmQSx6NPux+f2e/BSs+KG1MOJxWsofE
-goHVbRVw6e//Zm+28MwP4iZI/TCH1t6LldTUHmZAHakgUyvAfYmMKTZgwfwlieSk
-If4ZGqS9UZ3fJ2/GUV20MLt3hEFhnzBQpXk0cE3mreFQ0ae76WIbmMibLcWqIzQk
-ETC20P1bBVaqQA7sJt7XNiobkxpLl1z+sjas3K40ZHhUXEeodrWLoPjpnFq4Wdvb
-a3XbzK9RS9RGl9jvZiHfSOeVJbAVnM/A9DZSt5RgwPn+iJTlE+emGyqg6YPfgrpu
-v+djUfNm4dyIpCa3CTtHVElqg3QsvT1lJxoSebERzjxJOgNTbU3L+oVNxJUSAuQa
-b5UqOzjGYAFaTPBXeDkmzxjWyqMzhhgprGVhUnbrO+sfDWt+KqXxtSUosmuEFocC
-OJOGpDYRC7YvEQp5F7MUftG+xk1aafT7xsWLlA+FXW1yRnEed/4=
-=z8p5
------END PGP SIGNATURE-----
-
---mjcs2jtp6xcpyfff--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  	};
+>  };
+>  
+> @@ -53,6 +117,12 @@
+>  	};
+>  };
+>  
+> +&lpc_ctrl {
+> +	status = "okay";
+> +	memory-region = <&flash_memory>;
+> +	flash = <&spi1>;
+> +};
+> +
+>  &uart1 {
+>  	/* Rear RS-232 connector */
+>  	status = "okay";
+> @@ -81,6 +151,10 @@
+>  	pinctrl-0 = <&pinctrl_rmii1_default>;
+>  };
+>  
+> +&i2c1 {
+> +	status = "okay";
+> +};
+> +
+>  &i2c2 {
+>  	status = "okay";
+>  };
+> @@ -133,8 +207,77 @@
+>  
+>  &i2c12 {
+>  	status = "okay";
+> +
+> +	max31785@52 {
+> +		compatible = "maxim,max31785";
+> +		reg = <0x52>;
+> +	};
+> +};
+> +
+> +&gpio {
+> +	nic_func_mode0 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		line-name = "nic_func_mode0";
+> +	};
+> +	nic_func_mode1 {
+> +		gpio-hog;
+> +		gpios = <ASPEED_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
+> +		output-low;
+> +		line-name = "nic_func_mode1";
+> +	};
+>  };
+>  
+>  &vuart {
+>  	status = "okay";
+>  };
+> +
+> +&gfx {
+> +	status = "okay";
+> +};
+> +
+> +&pinctrl {
+> +	aspeed,external-nodes = <&gfx &lhc>;
+> +};
+> +
+> +&pwm_tacho {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+> +
+> +	fan@0 {
+> +		reg = <0x00>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x08>;
+> +	};
+> +
+> +	fan@1 {
+> +		reg = <0x00>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x09>;
+> +	};
+> +
+> +	fan@2 {
+> +		reg = <0x01>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x0a>;
+> +	};
+> +
+> +	fan@3 {
+> +		reg = <0x01>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x0b>;
+> +	};
+> +
+> +	fan@4 {
+> +		reg = <0x00>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x0c>;
+> +	};
+> +
+> +	fan@5 {
+> +		reg = <0x00>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x0d>;
+> +	};
+> +
+> +	fan@6 {
+> +		reg = <0x01>;
+> +		aspeed,fan-tach-ch = /bits/ 8 <0x0e>;
+> +	};
+> +};
+> 
