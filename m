@@ -1,49 +1,173 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: display: panel: Fix compatible string for
- Toshiba LT089AC29000
-Date: Mon, 18 Dec 2017 12:53:43 +0100
-Message-ID: <1513598023.2890.0.camel@pengutronix.de>
-References: <20171217023433.11542-1-j.neuschaefer@gmx.net>
+From: Jacob Chen <jacob-chen@iotwrt.com>
+Subject: Re: [PATCH v3 07/12] dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+Date: Mon, 18 Dec 2017 20:02:30 +0800
+Message-ID: <CAFLEztQ+SbCsEDdqZNp9SCPZaushegHc7=P9mTe2tsBZNKiX-A@mail.gmail.com>
+References: <20171206111939.1153-1-jacob-chen@iotwrt.com> <20171206111939.1153-8-jacob-chen@iotwrt.com>
+ <2576683.vP2aWnt5jG@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171217023433.11542-1-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan =?ISO-8859-1?Q?Neusch=E4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <2576683.vP2aWnt5jG@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Tomasz Figa <tfiga@chromium.org>, Shunqian Zheng <zhengsq@rock-chips.com>, =?UTF-8?B?6ZKf5Lul5bSH?= <zyc@rock-chips.com>, Eddie Cai <eddie.cai.linux@gmail.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Allon Huang <allon.huang@rock-chips.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, den 17.12.2017, 03:34 +0100 schrieb Jonathan Neuschäfer:
-> The compatible string for this panel was specified as
-> toshiba,lt089ac29000.txt. I believe this is a mistake.
-> 
-> Fixes: 06e733e41f87 ("drm/panel: simple: add Toshiba LT089AC19000")
-> > Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Hi all,
 
-Yes, this is an obvious copy-and-paste issue. 
+2017-12-12 0:45 GMT+08:00 Laurent Pinchart <laurent.pinchart@ideasonboard.com>:
+> Hello Jacob,
+>
+> Thank you for the patch.
+>
+> On Wednesday, 6 December 2017 13:19:34 EET Jacob Chen wrote:
+>> From: Jacob Chen <jacob2.chen@rock-chips.com>
+>>
+>> Add DT bindings documentation for Rockchip MIPI D-PHY RX
+>>
+>> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+>> ---
+>>  .../bindings/media/rockchip-mipi-dphy.txt          | 71 +++++++++++++++++++
+>>  1 file changed, 71 insertions(+)
+>>  create mode 100644
+>> Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+>> b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt new file
+>> mode 100644
+>> index 000000000000..cef9450db051
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+>> @@ -0,0 +1,71 @@
+>> +Rockchip SoC MIPI RX D-PHY
+>> +-------------------------------------------------------------
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: value should be one of the following
+>> +    "rockchip,rk3288-mipi-dphy";
+>> +    "rockchip,rk3399-mipi-dphy";
+>> +- rockchip,grf: GRF regs.
+>> +- bus-width : maximum number of data lanes supported (SoC specific);
+>
+> Bus width isn't a standard property, should this be rockchip,data-lanes or
+> rockchip,#data-lanes ?
 
-Acked-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+I forgot to remove it, it's no unnecessary now.
 
-> ---
->  .../devicetree/bindings/display/panel/toshiba,lt089ac29000.txt          | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-> index 4c0caaf246c9..89826116628c 100644
-> --- a/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/toshiba,lt089ac29000.txt
-> @@ -1,7 +1,7 @@
->  Toshiba 8.9" WXGA (1280x768) TFT LCD panel
->  
->  Required properties:
-> -- compatible: should be "toshiba,lt089ac29000.txt"
-> +- compatible: should be "toshiba,lt089ac29000"
->  - power-supply: as specified in the base binding
->  
->  This binding is compatible with the simple-panel binding, which is specified
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +- clocks : list of clock specifiers, corresponding to entries in
+>> +                 clock-names property;
+>> +- clock-names: required clock name.
+>> +
+>> +The device node should contain two 'port' child node, according to the
+>
+> s/child node/child nodes/
+>
+>> bindings
+>> +defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> +The first port should be connected to sensor nodes, and the second port
+>> should be
+>> +connected to isp node. The following are properties specific to those
+>> nodes.
+>> +
+>> +endpoint node
+>> +-------------
+>> +
+>> +- data-lanes : (required) an array specifying active physical MIPI-CSI2
+>> +             data input lanes and their mapping to logical lanes; the
+>> +             array's content is unused, only its length is meaningful;
+>
+> I assume this means that the D-PHY can't reroute lanes. I would mention that
+> explicitly, and require that the data-lanes values start at one at are
+> consecutive instead of ignoring them.
+>
+>> +Device node example
+>> +-------------------
+>> +
+>> +    mipi_dphy_rx0: mipi-dphy-rx0 {
+>> +        compatible = "rockchip,rk3399-mipi-dphy";
+>> +        clocks = <&cru SCLK_MIPIDPHY_REF>,
+>> +            <&cru SCLK_DPHY_RX0_CFG>,
+>> +            <&cru PCLK_VIO_GRF>;
+>> +        clock-names = "dphy-ref", "dphy-cfg", "grf";
+>> +        power-domains = <&power RK3399_PD_VIO>;
+>> +        bus-width = <4>;
+>> +
+>> +        ports {
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +
+>> +            port@0 {
+>> +                reg = <0>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +
+>> +                mipi_in_wcam: endpoint@0 {
+>> +                    reg = <0>;
+>> +                    remote-endpoint = <&wcam_out>;
+>> +                    data-lanes = <1 2>;
+>> +                };
+>> +                mipi_in_ucam: endpoint@1 {
+>> +                    reg = <1>;
+>> +                    remote-endpoint = <&ucam_out>;
+>> +                    data-lanes = <1>;
+>> +                };
+>
+> What do those two camera correspond to ? Can they be active at the same time,
+> or do they use the same data lanes ? If they use the same data lanes, how does
+> this work, is there a multiplexer on the board ?
+>
+
+They can not be active at the same time, and there is no multiplexer.
+If they use the same mipi phy, then only one sensor is allowed to be actived.
+
+See "MIPI Details" chapter
+http://opensource.rock-chips.com/wiki_Rockchip-isp1
+
+Let me enumerates soime hardware connections that is common in
+rockchip tablet desgin.
+
+rk3288:
+-
+  ISP0 --> mipi TX1/RX1 --> front sensor
+           --> mipi RX0 --> rear sensor
+
+-
+  ISP0 --> parallel --> front sensor
+           --> mipi RX0 --> rear sensor
+
+rk3399
+-
+  mipi TX1/RX1 , mipi TX0 --> dual-mipi screen
+  ISP0 --> mipi RX0 --> front sensor
+                                --> rear sensor
+-
+  ISP1 --> mipi TX1/RX1 --> front sensor
+  ISP0 --> mipi RX0 --> rear sensor
+
+
+Only the last connection allow two sensor work at same time.
+
+
+>> +            };
+>> +
+>> +            port@1 {
+>> +                reg = <1>;
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +
+>> +                dphy_rx0_out: endpoint@0 {
+>> +                    reg = <0>;
+>> +                    remote-endpoint = <&isp0_mipi_in>;
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> \ No newline at end of file
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
