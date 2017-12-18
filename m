@@ -1,74 +1,62 @@
-From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH net-next v5 1/4] phylib: Add device reset delay support
-Date: Mon, 18 Dec 2017 08:30:45 +0100
-Message-ID: <1b230e6b-8e8c-28a4-7524-6ce60aa71591@skidata.com>
-References: <20171211121700.10200-1-dev@g0hl1n.net>
- <20171211121700.10200-2-dev@g0hl1n.net>
- <20171215221752.42sz53izxeebkfuq@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/5] media: dt: bindings: Update binding
+ documentation for sunxi IR controller
+Date: Mon, 18 Dec 2017 08:46:19 +0100
+Message-ID: <20171218074619.36urdgt6wnhshadf@flea.lan>
+References: <20171217224547.21481-1-embed3d@gmail.com>
+ <20171217224547.21481-3-embed3d@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215221752.42sz53izxeebkfuq@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, fugang.duan-3arQi8VN3Tc@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lukma-ynQEQJNshbs@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mrtqlcsyttby52cw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVXE3XIQKGQEKS674OI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20171217224547.21481-3-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 12/15/2017 11:17 PM, Rob Herring wrote:
-> On Mon, Dec 11, 2017 at 01:16:57PM +0100, Richard Leitner wrote:
->> From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
->>
->> Some PHYs need a minimum time after the reset gpio was asserted and/or
->> deasserted. To ensure we meet these timing requirements add two new
->> optional devicetree parameters for the phy: reset-delay-us and
->> reset-post-delay-us.
->>
->> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/net/phy.txt | 10 ++++++++++
->>  drivers/net/phy/mdio_device.c                 | 13 +++++++++++--
->>  drivers/of/of_mdio.c                          |  4 ++++
->>  include/linux/mdio.h                          |  2 ++
->>  4 files changed, 27 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
->> index c05479f5ac7c..72860ce7f610 100644
->> --- a/Documentation/devicetree/bindings/net/phy.txt
->> +++ b/Documentation/devicetree/bindings/net/phy.txt
->> @@ -55,6 +55,12 @@ Optional Properties:
->>  
->>  - reset-gpios: The GPIO phandle and specifier for the PHY reset signal.
->>  
->> +- reset-delay-us: Delay after the reset was asserted in microseconds.
->> +  If this property is missing the delay will be skipped.
->> +
->> +- reset-post-delay-us: Delay after the reset was deasserted in microseconds.
->> +  If this property is missing the delay will be skipped.
+--mrtqlcsyttby52cw
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Hi,
+
+On Sun, Dec 17, 2017 at 11:45:44PM +0100, Philipp Rossak wrote:
+> This patch updates documentation for Device-Tree bindings for sunxi IR
+> controller and adds the new optional property for the base clock
+> frequency.
 > 
-> I think these names could be clearer as to exactly what they mean. 
-> Looking at existing properties with "reset-delay" there's a mixture of 
-> definitions whether it is the assert time or the time after deassert.
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/media/sunxi-ir.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> So I'd call these "reset-assert-us" and "reset-deassert-us".
+> diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt b/Documentation/devicetree/bindings/media/sunxi-ir.txt
+> index 91648c569b1e..9f45bab07d6e 100644
+> --- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
+> +++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>  Optional properties:
+>  - linux,rc-map-name: see rc.txt file in the same directory.
+>  - resets : phandle + reset specifier pair
+> +- clock-frequency  : overrides the default base clock frequency (8 MHz)
 
-Ok, that would be fine with me, but are you sure that we should omit the
-"-delay" term completely?
+You're at least missing the unit one needs to use, but something like:
+IR Receiver clock frequency, in Hertz. Defaults to 8MHz if missing.
 
-What would be the best approach to post this change (as the patchset was
-already merged to net-next)? A separate patch or a v6 of the complete
-patchset?
+Maxime
 
-> 
-> Rob
-> 
-
-regards;Richard.L
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--mrtqlcsyttby52cw--
