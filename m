@@ -1,50 +1,56 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH 3/5] media: i2c: Add TDA1997x HDMI receiver
-	driver
-Date: Mon, 18 Dec 2017 14:21:40 -0800
-Message-ID: <CAJ+vNU2F-3t9CqO8daeTWBarxepB7ZJKvj3LQR-nLEkspK+6nw@mail.gmail.com>
-References: <1510253136-14153-1-git-send-email-tharvey@gateworks.com>
- <1510253136-14153-4-git-send-email-tharvey@gateworks.com>
- <CAOMZO5BUyF_E3aQByD2=4CxB-+DP189QAXMUA=AgOnq99wzmRg@mail.gmail.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 4/6] rpmsg: glink: Expose rpmsg name attr for glink
+Date: Mon, 18 Dec 2017 14:48:28 -0800
+Message-ID: <1d29f603-b113-9931-d7b6-980c959b8b6b@codeaurora.org>
+References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
+ <1513634534-22861-5-git-send-email-clew@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAOMZO5BUyF_E3aQByD2=4CxB-+DP189QAXMUA=AgOnq99wzmRg@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Shawn Guo <shawnguo@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513634534-22861-5-git-send-email-clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: aneela-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 16, 2017 at 11:32 AM, Fabio Estevam <festevam@gmail.com> wrote:
-> Hi Tim,
+On 12/18/2017 02:02 PM, Chris Lew wrote:
+> Expose the name field as an attr so clients listening to uevents for
+> rpmsg can identify the edge the events correspond to.
 >
-> On Thu, Nov 9, 2017 at 4:45 PM, Tim Harvey <tharvey@gateworks.com> wrote:
+> Signed-off-by: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/rpmsg/qcom_glink_native.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 >
->> +static int tda1997x_set_power(struct tda1997x_state *state, bool on)
->> +{
->> +       int ret = 0;
->> +
->> +       if (on) {
->> +               ret = regulator_bulk_enable(TDA1997X_NUM_SUPPLIES,
->> +                                            state->supplies);
->> +               msleep(300);
->
-> Didn't you miss a 'return ret' here?
->
-> Otherwise regulator_bulk_disable() will always be called below.
->
+> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+> index 786f2eca01f1..a897ccea3098 100644
+> --- a/drivers/rpmsg/qcom_glink_native.c
+> +++ b/drivers/rpmsg/qcom_glink_native.c
+> @@ -1558,6 +1558,22 @@ static void qcom_glink_work(struct work_struct *work)
+>  	}
+>  }
+>  
+> +static ssize_t rpmsg_name_show(struct device *dev,
+> +			       struct device_attribute *attr, char *buf)
+> +{
+> +	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
+> +	struct qcom_glink_device *gdev = to_glink_device(rpdev);
+> +
+> +	return snprintf(buf, RPMSG_NAME_SIZE, "%s\n", gdev->glink->name);
+> +}
+> +static DEVICE_ATTR_RO(rpmsg_name);
+> +
+> +static struct attribute *qcom_glink_attrs[] = {
 
-Fabio,
+const?
 
-Yes thanks for catching that. I'll fix in the next revision.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Tim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
