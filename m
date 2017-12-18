@@ -1,77 +1,55 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Subject: Re: [PATCH v2 10/19] ARM: dts: aspeed: Add LPC Snoop device
-Date: Mon, 18 Dec 2017 10:16:19 +0100
-Message-ID: <c5ef27de-34c1-f5e9-e4ae-e2709b004677@kaod.org>
-References: <20171215062443.23059-1-joel@jms.id.au>
- <20171215062443.23059-11-joel@jms.id.au>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: media: Add Allwinner
+ V3s Camera Sensor Interface (CSI)
+Date: Mon, 18 Dec 2017 10:24:37 +0100
+Message-ID: <20171218092437.ksczam5h7hirmpcv@flea.lan>
+References: <1510558344-45402-1-git-send-email-yong.deng@magewell.com>
+ <CAGb2v67JhMfba8Ao7WyrYikkxvTxX8WaBRqu3GkrhOCWndresg@mail.gmail.com>
+ <20171218164921.227b82349c778283f5e5eba8@magewell.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215062443.23059-11-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ttyz7lvubhfzshpr"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYMS33IQKGQEOCXJF2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20171218164921.227b82349c778283f5e5eba8-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/15/2017 07:24 AM, Joel Stanley wrote:
-> LPC snoop hardware on the ASPEED BMC, used for monitoring
-> host I/O port activity.
+
+--ttyz7lvubhfzshpr
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Hi,
+
+On Mon, Dec 18, 2017 at 04:49:21PM +0800, Yong wrote:
+> > > +               compatible = "allwinner,sun8i-v3s-csi";
+> > > +               reg = <0x01cb4000 0x1000>;
+> > > +               interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> > > +               clocks = <&ccu CLK_BUS_CSI>,
+> > > +                        <&ccu CLK_CSI1_SCLK>,
+> > 
+> > CSI also has an MCLK. Do you need that one?
 > 
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/aspeed-g4.dtsi | 7 +++++++
->  arch/arm/boot/dts/aspeed-g5.dtsi | 6 ++++++
->  2 files changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-> index f6fee40c04c0..b3580f37f507 100644
-> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-> @@ -236,6 +236,13 @@
->  						status = "disabled";
->  					};
->  
-> +					lpc_snoop: lpc-snoop@0 {
-> +						compatible = "aspeed,ast2500-lpc-snoop";
+> MCLK is not needed if the front end is not a sensor (like adv7611).
+> I will add it as an option.
 
-it should be :
+I guess this should always be needed then. And the driver will make
+the decision to enable it or not.
 
-	aspeed,ast2400-lpc-snoop
+Maxime
 
-a part from that :
-
-Reviewed-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-
-> +						reg = <0x0 0x80>;
-> +						interrupts = <8>;
-> +						status = "disabled";
-> +					};
-> +
->  					lhc: lhc@20 {
->  						compatible = "aspeed,ast2500-lhc";
->  						reg = <0x20 0x24 0x48 0x8>;
-> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-> index 96a9d2fe3f0d..50766f0629f8 100644
-> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -287,6 +287,12 @@
->  						status = "disabled";
->  					};
->  
-> +					lpc_snoop: lpc-snoop@0 {
-> +						compatible = "aspeed,ast2500-lpc-snoop";
-> +						reg = <0x0 0x80>;
-> +						interrupts = <8>;
-> +						status = "disabled";
-> +					};
->  
->  					lhc: lhc@20 {
->  						compatible = "aspeed,ast2500-lhc";
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--ttyz7lvubhfzshpr--
