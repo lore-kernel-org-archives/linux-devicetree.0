@@ -1,68 +1,62 @@
-From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH net-next v6 2/2] net: ethernet: socionext: add AVE ethernet driver
-Date: Mon, 18 Dec 2017 12:51:06 +0900
-Message-ID: <20171218125105.962D.4A936039@socionext.com>
-References: <1513245910-15961-3-git-send-email-hayashi.kunihiko@socionext.com> <20171215.125749.1752831437819486183.davem@davemloft.net>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 13/25] arm: spear: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Mon, 18 Dec 2017 09:47:55 +0530
+Message-ID: <20171218041755.GA19815@vireshk-i7>
+References: <20171215124645.30535-1-malat@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215.125749.1752831437819486183.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171215124645.30535-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shiraz Hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello David,
-
-On Fri, 15 Dec 2017 12:57:49 -0500 David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
-
-> From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> Date: Thu, 14 Dec 2017 19:05:10 +0900
+On 15-12-17, 13:46, Mathieu Malaterre wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
 > 
-> > +static void ave_desc_write(struct net_device *ndev, enum desc_id id,
-> > +			   int entry, int offset, u32 val)
-> > +{
-> > +	struct ave_private *priv = netdev_priv(ndev);
-> > +	u32 addr = (id == AVE_DESCID_TX) ? priv->tx.daddr : priv->rx.daddr;
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
 > 
-> Please always order local variables from longest to shortest line.
+> and
 > 
-> Audit your entire submission for this issue, thank you.
-
-I see. I'll fix the order of local variables.
-
-> > +	ret = register_netdev(ndev);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to register netdevice\n");
-> > +		goto out_del_napi;
-> > +	}
-> > +
-> > +	platform_set_drvdata(pdev, ndev);
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
 > 
-> You must make all software state settings before reigster_netdev() is
-> invoked.
+> Converted using the following command:
 > 
-> At the exact moment you call register_netdev(), your device can be
-> brought up, interrupts processed, PHY state changes made, etc.
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
 > 
-> So you must put this platform_set_drvdata() before the
-> register_netdev() call.
+> For simplicity, two sed expressions were used to solve each warnings separately.
 > 
-> Generally speaking, register_netdev() must always be the last state
-> modification done by your probe routine.
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+> 
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+> 
+> This will solve as a side effect warning:
+> 
+> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+> 
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+> 
+> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/spear1310-evb.dts | 4 ++--
+>  arch/arm/boot/dts/spear300.dtsi     | 2 +-
+>  arch/arm/boot/dts/spear310.dtsi     | 2 +-
+>  arch/arm/boot/dts/spear320-hmi.dts  | 4 ++--
+>  arch/arm/boot/dts/spear320.dtsi     | 2 +-
+>  5 files changed, 7 insertions(+), 7 deletions(-)
 
-Indeed. It's not good to invoke register_netdev() with all software
-initialization not completed. I'll move register_netdev() after
-all initialization.
+Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
-
-
+-- 
+viresh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
