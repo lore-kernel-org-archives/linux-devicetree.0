@@ -1,97 +1,53 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4 2/6] dt: bindings: lp8860: Update DT label binding
-Date: Mon, 18 Dec 2017 07:08:28 -0600
-Message-ID: <d4224a4c-95c8-e263-63a9-3dc1f633e5a9@ti.com>
-References: <20171212220143.31210-1-dmurphy@ti.com>
- <20171212220143.31210-3-dmurphy@ti.com>
- <20171215225914.62lqxhcmwajf4hpy@rob-hp-laptop>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP
+ init driver
+Date: Mon, 18 Dec 2017 14:13:26 +0100
+Message-ID: <b3b41b04-7f93-1c20-2e62-817b4c743b89@xilinx.com>
+References: <29198c0a-783e-8aa0-00e4-44b1fa1acef7@infradead.org>
+ <1513322656-4571-1-git-send-email-dshah@xilinx.com>
+ <1513322656-4571-3-git-send-email-dshah@xilinx.com>
+ <CAK8P3a0nm_-pxGWXHx_FAXgXt1msE2bK0D4paBMWgryPyeS9xA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20171215225914.62lqxhcmwajf4hpy@rob-hp-laptop>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a0nm_-pxGWXHx_FAXgXt1msE2bK0D4paBMWgryPyeS9xA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob
-
-On 12/15/2017 04:59 PM, Rob Herring wrote:
-> On Tue, Dec 12, 2017 at 04:01:39PM -0600, Dan Murphy wrote:
->> Update the lp8860 label binding to the LED
->> standard as documented in
+On 15.12.2017 14:26, Arnd Bergmann wrote:
+> In Fri, Dec 15, 2017 at 8:24 AM, Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>> Xilinx ZYNQMP logicoreIP Init driver is based on the new
+>> LogiCoreIP design created. This driver provides the processing system
+>> and programmable logic isolation. Set the frequency based on the clock
+>> information get from the logicoreIP register set.
 >>
->> Documentation/devicetree/bindings/leds/common.txt
+>> It is put in drivers/misc as there is no subsystem for this logicoreIP.
 >>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>
->> v4 - No changes
->>
->> v3 - Added address and size cells, updated label with color and inserted spaces
->> around the reg node - https://patchwork.kernel.org/patch/10093749/
->> v2 - Added reg to child node and made it required
->>
->>  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 17 +++++++++++++++--
->>  1 file changed, 15 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
->> index b9d09acbaa73..c3d64ade1e26 100644
->> --- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
->> +++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
->> @@ -9,20 +9,33 @@ Required properties:
->>  	- compatible :
->>  		"ti,lp8860"
->>  	- reg : I2C slave address
->> -	- label : Used for naming LEDs
->> +	- #address-cells : 1
->> +	- #size-cells : 0
->>  
->>  Optional properties:
->>  	- enable-gpios : gpio pin to enable (active high)/disable the device.
->>  	- vled-supply : LED supply
->>  
->> +Required child properties:
->> +	- reg : 0
->> +
+>> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > 
-> This should be in previous patch?
+> After giving this some more thought, I'd suggest you move the driver to
+> drivers/soc/xilinx or drivers/soc/zynq instead of drivers/misc/, and have
+> it merged by Michal Simek as a driver patch that will go through arm-soc.
 
+I have not a problem of creating drivers/soc/xilinx/ location for this
+driver. It is not zynq (arm32) but zynqmp(arm64) device where this
+driver can be used. As far as I understand it is memory mapped soft IP
+which could be also accessed by soft core CPU.
+It means drivers/soc/xilinx could be shared by all xilinx platforms anyway.
+We have been discussing that openrisc cases and for sure if someone
+wants to enable this driver there using misc location would be one
+option but I also think that using drivers/soc/xilinx location is not a
+bad option because it is very unlikely that anybody tries it.
 
-No this is the reg node for the child property.  The child property is
-introduced in this patch.  So this should be correct
+Arnd: misc or drivers/soc/xilinx?
 
-Dan
-
-> 
->> +Optional child properties:
->> +	- label : see Documentation/devicetree/bindings/leds/common.txt
->> +
->>  Example:
->>  
->>  led-controller@2d {
->>  	compatible = "ti,lp8860";
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->>  	reg = <0x2d>;
->> -	label = "display_cluster";
->>  	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->>  	vled-supply = <&vbatt>;
->> +
->> +	led@0 {
->> +		reg = <0>;
->> +		label = "white:display_cluster";
->> +	};
->>  }
->>  
->>  For more product information please see the link below:
->> -- 
->> 2.15.0.124.g7668cbc60
->>
-
-
--- 
-------------------
-Dan Murphy
+Thanks,
+Michal
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
