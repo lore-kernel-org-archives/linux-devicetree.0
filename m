@@ -1,55 +1,141 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: media: Add Allwinner
- V3s Camera Sensor Interface (CSI)
-Date: Mon, 18 Dec 2017 10:24:37 +0100
-Message-ID: <20171218092437.ksczam5h7hirmpcv@flea.lan>
-References: <1510558344-45402-1-git-send-email-yong.deng@magewell.com>
- <CAGb2v67JhMfba8Ao7WyrYikkxvTxX8WaBRqu3GkrhOCWndresg@mail.gmail.com>
- <20171218164921.227b82349c778283f5e5eba8@magewell.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v2 03/19] ARM: dts: aspeed: Add LPC and child devices
+Date: Mon, 18 Dec 2017 10:25:31 +0100
+Message-ID: <f08188a0-a6dd-a445-340c-eee1ca335865@kaod.org>
+References: <20171215062443.23059-1-joel@jms.id.au>
+ <20171215062443.23059-4-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ttyz7lvubhfzshpr"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYMS33IQKGQEOCXJF2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20171218164921.227b82349c778283f5e5eba8-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171215062443.23059-4-joel@jms.id.au>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-
---ttyz7lvubhfzshpr
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-On Mon, Dec 18, 2017 at 04:49:21PM +0800, Yong wrote:
-> > > +               compatible = "allwinner,sun8i-v3s-csi";
-> > > +               reg = <0x01cb4000 0x1000>;
-> > > +               interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > > +               clocks = <&ccu CLK_BUS_CSI>,
-> > > +                        <&ccu CLK_CSI1_SCLK>,
-> > 
-> > CSI also has an MCLK. Do you need that one?
+On 12/15/2017 07:24 AM, Joel Stanley wrote:
+> From: Andrew Jeffery <andrew@aj.id.au>
 > 
-> MCLK is not needed if the front end is not a sensor (like adv7611).
-> I will add it as an option.
+> Ensure the ordering is correct and add all of the children in the SoC
+> device trees for the ast2400 and ast2500.
+> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  arch/arm/boot/dts/aspeed-g4.dtsi | 35 +++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/aspeed-g5.dtsi | 27 +++++++++++++++++----------
+>  2 files changed, 52 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+> index 100d092e6c07..a3bc5da7d42c 100644
+> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+> @@ -226,6 +226,41 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			lpc: lpc@1e789000 {
+> +				compatible = "aspeed,ast2400-lpc", "simple-mfd";
+> +				reg = <0x1e789000 0x1000>;
+> +
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				ranges = <0x0 0x1e789000 0x1000>;
+> +
+> +				lpc_bmc: lpc-bmc@0 {
+> +					compatible = "aspeed,ast2400-lpc-bmc";
+> +					reg = <0x0 0x80>;
+> +				};
+> +
+> +				lpc_host: lpc-host@80 {
+> +					compatible = "aspeed,ast2400-lpc-host", "simple-mfd", "syscon";
+> +					reg = <0x80 0x1e0>;
+> +					reg-io-width = <4>;
+> +
+> +					#address-cells = <1>;
+> +					#size-cells = <1>;
+> +					ranges = <0x0 0x80 0x1e0>;
+> +
+> +					lpc_ctrl: lpc-ctrl@0 {
+> +						compatible = "aspeed,ast2400-lpc-ctrl";
+> +						reg = <0x0 0x80>;
+> +						status = "disabled";
+> +					};
+> +
+> +					lhc: lhc@20 {
+> +						compatible = "aspeed,ast2500-lhc";
 
-I guess this should always be needed then. And the driver will make
-the decision to enable it or not.
+aspeed,ast2400-lhc
 
-Maxime
+The layout of the registers are the same but there a couple of differences
+in the bit definitions between the two SoCs.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---ttyz7lvubhfzshpr--
+a part from that :
+
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+
+C. 
+
+> +						reg = <0x20 0x24 0x48 0x8>;
+> +					};
+> +				};
+> +			};
+> +
+>  			uart2: serial@1e78d000 {
+>  				compatible = "ns16550a";
+>  				reg = <0x1e78d000 0x20>;
+> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+> index 1f9d28313f82..7861631940fe 100644
+> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+> @@ -266,6 +266,16 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			vuart: serial@1e787000 {
+> +				compatible = "aspeed,ast2500-vuart";
+> +				reg = <0x1e787000 0x40>;
+> +				reg-shift = <2>;
+> +				interrupts = <10>;
+> +				clocks = <&clk_uart>;
+> +				no-loopback-test;
+> +				status = "disabled";
+> +			};
+> +
+>  			lpc: lpc@1e789000 {
+>  				compatible = "aspeed,ast2500-lpc", "simple-mfd";
+>  				reg = <0x1e789000 0x1000>;
+> @@ -289,6 +299,13 @@
+>  
+>  					reg-io-width = <4>;
+>  
+> +					lpc_ctrl: lpc-ctrl@0 {
+> +						compatible = "aspeed,ast2500-lpc-ctrl";
+> +						reg = <0x0 0x80>;
+> +						status = "disabled";
+> +					};
+> +
+> +
+>  					lhc: lhc@20 {
+>  						compatible = "aspeed,ast2500-lhc";
+>  						reg = <0x20 0x24 0x48 0x8>;
+> @@ -296,16 +313,6 @@
+>  				};
+>  			};
+>  
+> -			vuart: serial@1e787000 {
+> -				compatible = "aspeed,ast2500-vuart";
+> -				reg = <0x1e787000 0x40>;
+> -				reg-shift = <2>;
+> -				interrupts = <10>;
+> -				clocks = <&clk_uart>;
+> -				no-loopback-test;
+> -				status = "disabled";
+> -			};
+> -
+>  			uart2: serial@1e78d000 {
+>  				compatible = "ns16550a";
+>  				reg = <0x1e78d000 0x20>;
+> 
