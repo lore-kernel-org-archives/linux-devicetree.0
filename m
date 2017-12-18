@@ -1,62 +1,118 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 2/6] dt-bindings: pwm: rcar: Document r8a774[35] PWM bindings
-Date: Mon, 18 Dec 2017 17:52:04 +0000
-Message-ID: <1513619528-12060-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH v2 3/6] ARM: dts: r8a7743: Add PWM SoC support
+Date: Mon, 18 Dec 2017 17:52:05 +0000
+Message-ID: <1513619528-12060-4-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1513619528-12060-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1513619528-12060-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513619528-12060-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds compatible strings specific to r8a774[35], no driver
-change is needed as the fallback compatible string will activate the
-right code. Also, this patch replaces the example with a DT snippet used
-for adding PWM0 support to an r8a7743 based platform.
+Add the definitions for pwm[0123456] to the SoC .dtsi.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Reviewed-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 ---
 v1->v2
 * No change
 
- Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/r8a7743.dtsi | 77 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-index 74c1180..f3bba59 100644
---- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-+++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.txt
-@@ -2,6 +2,8 @@
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index c65d8f4..d73617a 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -1082,6 +1082,83 @@
+ 			status = "disabled";
+ 		};
  
- Required Properties:
- - compatible: should be "renesas,pwm-rcar" and one of the following.
-+ - "renesas,pwm-r8a7743": for RZ/G1M
-+ - "renesas,pwm-r8a7745": for RZ/G1E
-  - "renesas,pwm-r8a7778": for R-Car M1A
-  - "renesas,pwm-r8a7779": for R-Car H1
-  - "renesas,pwm-r8a7790": for R-Car H2
-@@ -17,13 +19,15 @@ Required Properties:
- - pinctrl-0: phandle, referring to a default pin configuration node.
- - pinctrl-names: Set to "default".
- 
--Example: R8A7790 (R-Car H2) PWM Timer node
-+Example: R8A7743 (RZ/G1M) PWM Timer node
- 
- 	pwm0: pwm@e6e30000 {
--		compatible = "renesas,pwm-r8a7790", "renesas,pwm-rcar";
-+		compatible = "renesas,pwm-r8a7743", "renesas,pwm-rcar";
- 		reg = <0 0xe6e30000 0 0x8>;
-+		clocks = <&cpg CPG_MOD 523>;
-+		power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+		resets = <&cpg 523>;
- 		#pwm-cells = <2>;
--		clocks = <&mstp5_clks R8A7790_CLK_PWM>;
- 		pinctrl-0 = <&pwm0_pins>;
- 		pinctrl-names = "default";
- 	};
++		pwm0: pwm@e6e30000 {
++			compatible = "renesas,pwm-r8a7743",
++				     "renesas,pwm-rcar";
++			reg = <0 0xe6e30000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm1: pwm@e6e31000 {
++			compatible = "renesas,pwm-r8a7743",
++				     "renesas,pwm-rcar";
++			reg = <0 0xe6e31000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm2: pwm@e6e32000 {
++			compatible = "renesas,pwm-r8a7743",
++				     "renesas,pwm-rcar";
++			reg = <0 0xe6e32000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm3: pwm@e6e33000 {
++			compatible = "renesas,pwm-r8a7743",
++				     "renesas,pwm-rcar";
++			reg = <0 0xe6e33000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm4: pwm@e6e34000 {
++			compatible = "renesas,pwm-r8a7743",
++				     "renesas,pwm-rcar";
++			reg = <0 0xe6e34000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm5: pwm@e6e35000 {
++			compatible = "renesas,pwm-r8a7743",
++				     "renesas,pwm-rcar";
++			reg = <0 0xe6e35000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		pwm6: pwm@e6e36000 {
++			compatible = "renesas,pwm-r8a7743",
++				     "renesas,pwm-rcar";
++			reg = <0 0xe6e36000 0 0x8>;
++			clocks = <&cpg CPG_MOD 523>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 523>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
+ 		sdhi0: sd@ee100000 {
+ 			compatible = "renesas,sdhi-r8a7743",
+ 				     "renesas,rcar-gen2-sdhi";
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
