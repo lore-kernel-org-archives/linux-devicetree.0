@@ -1,115 +1,55 @@
-From: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH V2 5/9] ARM: stm32: add initial support for STM32MP157
-Date: Mon, 18 Dec 2017 16:17:48 +0100
-Message-ID: <1513610272-7824-6-git-send-email-ludovic.Barre@st.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V2 7/9] ARM: configs: multi_v7: add stm32 support
+Date: Mon, 18 Dec 2017 16:17:50 +0100
+Message-ID: <1513610272-7824-8-git-send-email-ludovic.Barre@st.com>
 References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513610272-7824-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+From: Ludovic Barre <ludovic.barre@st.com>
 
-This patch adds initial support of STM32MP157 microprocessor (MPU)
-based on Arm Cortex-A7. New Cortex-A infrastructure (gic, timer,...)
-are selected if ARCH_MULTI_V7 is defined.
+This patch adds stm32 support to multi_v7_defconfig
 
-Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- Documentation/arm/stm32/stm32mp157-overview.rst | 19 +++++++++++++++++++
- arch/arm/mach-stm32/Kconfig                     |  8 ++++++++
- arch/arm/mach-stm32/Makefile                    |  1 +
- arch/arm/mach-stm32/board-mpu-dt.c              | 16 ++++++++++++++++
- 4 files changed, 44 insertions(+)
- create mode 100644 Documentation/arm/stm32/stm32mp157-overview.rst
- create mode 100644 arch/arm/mach-stm32/board-mpu-dt.c
+ arch/arm/configs/multi_v7_defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/arm/stm32/stm32mp157-overview.rst b/Documentation/arm/stm32/stm32mp157-overview.rst
-new file mode 100644
-index 0000000..62e176d
---- /dev/null
-+++ b/Documentation/arm/stm32/stm32mp157-overview.rst
-@@ -0,0 +1,19 @@
-+STM32MP157 Overview
-+===================
-+
-+Introduction
-+------------
-+
-+The STM32MP157 is a Cortex-A MPU aimed at various applications.
-+It features:
-+
-+- Dual core Cortex-A7 application core
-+- 2D/3D image composition with GPU
-+- Standard memories interface support
-+- Standard connectivity, widely inherited from the STM32 MCU family
-+- Comprehensive security support
-+
-+:Authors:
-+
-+- Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-+- Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
-diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
-index e0f744b..146e22f 100644
---- a/arch/arm/mach-stm32/Kconfig
-+++ b/arch/arm/mach-stm32/Kconfig
-@@ -1,6 +1,9 @@
- menuconfig ARCH_STM32
- 	bool "STMicroelectronics STM32 family" if ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
- 	select ARMV7M_SYSTICK if ARM_SINGLE_ARMV7M
-+	select HAVE_ARM_ARCH_TIMER if ARCH_MULTI_V7
-+	select ARM_GIC if ARCH_MULTI_V7
-+	select ARM_PSCI if ARCH_MULTI_V7
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select CLKSRC_STM32
- 	select PINCTRL
-@@ -31,4 +34,9 @@ config MACH_STM32H743
- 	depends on ARM_SINGLE_ARMV7M
- 	default y
- 
-+config MACH_STM32MP157
-+	bool "STMicroelectronics STM32MP157"
-+	depends on ARCH_MULTI_V7
-+	default y
-+
- endif
-diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
-index 5940af1..2cc3542 100644
---- a/arch/arm/mach-stm32/Makefile
-+++ b/arch/arm/mach-stm32/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_ARM_SINGLE_ARMV7M) += board-mcu-dt.o
-+obj-$(CONFIG_ARCH_MULTI_V7) += board-mpu-dt.o
-diff --git a/arch/arm/mach-stm32/board-mpu-dt.c b/arch/arm/mach-stm32/board-mpu-dt.c
-new file mode 100644
-index 0000000..9e18405
---- /dev/null
-+++ b/arch/arm/mach-stm32/board-mpu-dt.c
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
-+ * Author: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
-+ */
-+#include <asm/mach/arch.h>
-+#include <linux/of_platform.h>
-+
-+static const char *const stm32mp_compat[] __initconst = {
-+	"st,stm32mp157",
-+	NULL
-+};
-+
-+DT_MACHINE_START(STM32MPDT, "STM32 MP (Device Tree Support)")
-+	.dt_compat = stm32mp_compat,
-+MACHINE_END
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 11e648a..a0163e7 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -77,6 +77,7 @@ CONFIG_ARCH_SPEAR13XX=y
+ CONFIG_MACH_SPEAR1310=y
+ CONFIG_MACH_SPEAR1340=y
+ CONFIG_ARCH_STI=y
++CONFIG_ARCH_STM32=y
+ CONFIG_ARCH_EXYNOS=y
+ CONFIG_EXYNOS5420_MCPM=y
+ CONFIG_ARCH_RENESAS=y
+@@ -324,6 +325,8 @@ CONFIG_SERIAL_CONEXANT_DIGICOLOR=y
+ CONFIG_SERIAL_CONEXANT_DIGICOLOR_CONSOLE=y
+ CONFIG_SERIAL_ST_ASC=y
+ CONFIG_SERIAL_ST_ASC_CONSOLE=y
++CONFIG_SERIAL_STM32=y
++CONFIG_SERIAL_STM32_CONSOLE=y
+ CONFIG_VIRTIO_CONSOLE=y
+ CONFIG_HW_RANDOM=y
+ CONFIG_HW_RANDOM_ST=y
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
