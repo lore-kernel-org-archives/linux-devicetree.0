@@ -1,95 +1,55 @@
-From: Chris Lew <clew@codeaurora.org>
-Subject: [PATCH 3/6] rpmsg: glink: Add support for rpmsg glink chrdev
-Date: Mon, 18 Dec 2017 14:02:11 -0800
-Message-ID: <1513634534-22861-4-git-send-email-clew@codeaurora.org>
+From: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 6/6] rpmsg: glink: Add get_rproc_name device op
+Date: Mon, 18 Dec 2017 14:02:14 -0800
+Message-ID: <1513634534-22861-7-git-send-email-clew@codeaurora.org>
 References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org
-Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1513634534-22861-1-git-send-email-clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: aneela-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RPMSG provides a char device interface to userspace. Probe the rpmsg
-chrdev channel to enable the rpmsg_ctrl device creation on glink
-transports.
+Add support for clients to query the edge name for the glink device
+their channel is registered for.
 
-Signed-off-by: Chris Lew <clew@codeaurora.org>
+Signed-off-by: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- drivers/rpmsg/qcom_glink_native.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/rpmsg/qcom_glink_native.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index 179132226dc2..786f2eca01f1 100644
+index a897ccea3098..4748dea0748e 100644
 --- a/drivers/rpmsg/qcom_glink_native.c
 +++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -132,6 +132,13 @@ enum {
- 	GLINK_STATE_CLOSING,
- };
- 
-+struct qcom_glink_device {
-+	struct rpmsg_device rpdev;
-+	struct qcom_glink *glink;
-+};
-+
-+#define to_glink_device(_x) container_of(_x, struct qcom_glink_device, rpdev)
-+
- /**
-  * struct glink_channel - internal representation of a channel
-  * @rpdev:	rpdev reference, only used for primary endpoints
-@@ -1339,6 +1346,10 @@ static struct device_node *qcom_glink_match_channel(struct device_node *node,
+@@ -1346,6 +1346,14 @@ static struct device_node *qcom_glink_match_channel(struct device_node *node,
  	return NULL;
  }
  
-+static const struct rpmsg_device_ops glink_chrdev_ops = {
-+	.create_ept = qcom_glink_create_ept,
-+};
++static const char *qcom_glink_get_rproc_name(struct rpmsg_device *rpdev)
++{
++	struct glink_channel *channel = to_glink_channel(rpdev->ept);
++	struct qcom_glink *glink = channel->glink;
 +
++	return glink->name;
++}
++
+ static const struct rpmsg_device_ops glink_chrdev_ops = {
+ 	.create_ept = qcom_glink_create_ept,
+ };
+@@ -1353,6 +1361,7 @@ static struct device_node *qcom_glink_match_channel(struct device_node *node,
  static const struct rpmsg_device_ops glink_device_ops = {
  	.create_ept = qcom_glink_create_ept,
  	.announce_create = qcom_glink_announce_create,
-@@ -1547,6 +1558,30 @@ static void qcom_glink_work(struct work_struct *work)
- 	}
- }
++	.get_rproc_name = qcom_glink_get_rproc_name,
+ };
  
-+static void qcom_glink_device_release(struct device *dev)
-+{
-+	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
-+	struct qcom_glink_device *gdev = to_glink_device(rpdev);
-+
-+	kfree(gdev);
-+}
-+
-+static int qcom_glink_create_chrdev(struct qcom_glink *glink)
-+{
-+	struct qcom_glink_device *gdev;
-+
-+	gdev = kzalloc(sizeof(*gdev), GFP_KERNEL);
-+	if (!gdev)
-+		return -ENOMEM;
-+
-+	gdev->glink = glink;
-+	gdev->rpdev.ops = &glink_chrdev_ops;
-+	gdev->rpdev.dev.parent = glink->dev;
-+	gdev->rpdev.dev.release = qcom_glink_device_release;
-+
-+	return rpmsg_chrdev_register_device(&gdev->rpdev);
-+}
-+
- struct qcom_glink *qcom_glink_native_probe(struct device *dev,
- 					   unsigned long features,
- 					   struct qcom_glink_pipe *rx,
-@@ -1605,6 +1640,10 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
- 	if (ret)
- 		return ERR_PTR(ret);
- 
-+	ret = qcom_glink_create_chrdev(glink);
-+	if (ret)
-+		dev_err(glink->dev, "failed to register chrdev\n");
-+
- 	return glink;
- }
- EXPORT_SYMBOL_GPL(qcom_glink_native_probe);
+ static const struct rpmsg_endpoint_ops glink_endpoint_ops = {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
