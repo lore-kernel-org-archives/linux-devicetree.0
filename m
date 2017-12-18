@@ -1,27 +1,24 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/5] ARM: dts: iwg20d-q7-common: Sound PIO support
-Date: Mon, 18 Dec 2017 12:22:21 +0100
-Message-ID: <20171218112221.krf6bh6sya56du5u@verge.net.au>
-References: <1513349453-54689-1-git-send-email-biju.das@bp.renesas.com>
- <1513349453-54689-2-git-send-email-biju.das@bp.renesas.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 13/36] nds32: Device specific operations
+Date: Mon, 18 Dec 2017 12:26:23 +0100
+Message-ID: <CAK8P3a0xQ4mYnkxjWTTEcvpJg6SfcA4WZKNkopa93_6Mz_YOGw@mail.gmail.com>
+References: <cover.1513577007.git.green.hu@gmail.com> <ec54d5ac8067e2ff542f69fc2967182922870b83.1513577007.git.green.hu@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1513349453-54689-2-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <ec54d5ac8067e2ff542f69fc2967182922870b83.1513577007.git.green.hu@gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, ren_guo@c-sky.com, Philip
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 15, 2017 at 02:50:49PM +0000, Biju Das wrote:
-> Enable sound PIO support on carrier board.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> ---
->  arch/arm/boot/dts/iwg20d-q7-common.dtsi | 46 +++++++++++++++++++++++++++++++++
+On Mon, Dec 18, 2017 at 7:46 AM, Greentime Hu <green.hu@gmail.com> wrote:
 
-It appears that the nodes in this file are in (or close to in) alphabetical
-order. Please add new nodes in a manner that preserves that. If necessary
-please provide a clean-up patch to shift nodes into alphabetical order.
+> +#define __ASM_NDS32_IO_H
+> +
+> +extern void iounmap(void __iomem *addr);
+
+The prototype here should probably include 'volatile' to avoid warnings in an
+allmodconfig build.
+
+      Arnd
