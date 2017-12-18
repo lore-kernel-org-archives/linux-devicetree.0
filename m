@@ -1,28 +1,71 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] media: coda: Add i.MX51 (CodaHx4) support
-Date: Mon, 18 Dec 2017 09:03:39 -0200
-Message-ID: <CAOMZO5BucRG0zo0YsnEsCpGPT+PKQNM1vLPxFrm5cK0PeD3LgQ@mail.gmail.com>
-References: <20171218101629.31395-1-p.zabel@pengutronix.de> <20171218101629.31395-2-p.zabel@pengutronix.de>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v3 05/11] thermal: armada: Add support for Armada AP806
+Date: Mon, 18 Dec 2017 13:11:56 +0200
+Message-ID: <20171218111156.76a66q5kwh3advs7@sapphire.tkos.co.il>
+References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
+ <20171214103011.24713-6-miquel.raynal@free-electrons.com>
+ <87y3m5o9h4.fsf@free-electrons.com>
+ <20171218104127.65017555@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171218101629.31395-2-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Chris Healy <Chris.Healy-c8ZVq/bFV1I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171218104127.65017555@xps13>
+Sender: linux-pm-owner@vger.kernel.org
+To: Miquel RAYNAL <miquel.raynal@free-electrons.com>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 8:16 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Add support for the CodaHx4 VPU used on i.MX51.
->
-> Decoding h.264, MPEG-4, and MPEG-2 video works, as well as encoding
-> h.264. MPEG-4 encoding is not enabled, it currently produces visual
-> artifacts.
->
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Hi Miquèl,
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Dec 18, 2017 at 10:41:27AM +0100, Miquel RAYNAL wrote:
+> Hello Gregory & Baruch,
+> 
+> On Thu, 14 Dec 2017 12:05:43 +0100
+> Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+> 
+> > > @@ -184,9 +214,9 @@ static int armada_get_temp(struct
+> > > thermal_zone_device *thermal, div = priv->data->coef_div;
+> > >  
+> > >  	if (priv->data->inverted)
+> > > -		*temp = ((m * reg) - b) / div;
+> > > +		*temp = ((m * sample) - b) / div;
+> > >  	else
+> > > -		*temp = (b - (m * reg)) / div;
+> > > +		*temp = (b - (m * sample)) / div;
+> > >  	return 0;
+> > >  }
+> > >  
+> > > @@ -237,6 +267,19 @@ static const struct armada_thermal_data
+> > > armada380_data = { .inverted = true,
+> > >  };
+> > >  
+> > > +static const struct armada_thermal_data armada_ap806_data = {
+> > > +	.is_valid = armada_is_valid,
+> > > +	.init_sensor = armada_ap806_init_sensor,
+> > > +	.is_valid_bit = BIT(16),
+> > > +	.temp_shift = 0,
+> > > +	.temp_mask = 0x3ff,
+> > > +	.coef_b = -150000,  
+> > 
+> > Don't you expect any side effect by storing a negative value in a
+> > unsigned variable?
+> 
+> That is a fair question, I did not spot that.
+> 
+> As other values are really close to 2^32 I don't know what is the best
+> option for us in this case. Should I:
+> - don't care?
+> - use signed values? (dangerous IMHO)
+> - use a union with a signed and an unsigned value? (problem moved to
+>   ->get_temp())
+
+Another option is to use s64 type.
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
