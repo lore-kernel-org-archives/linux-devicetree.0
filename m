@@ -1,112 +1,95 @@
-From: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 5/6] rpmsg: Introduce rpmsg_get_rproc_name
-Date: Mon, 18 Dec 2017 14:02:13 -0800
-Message-ID: <1513634534-22861-6-git-send-email-clew@codeaurora.org>
+From: Chris Lew <clew@codeaurora.org>
+Subject: [PATCH 3/6] rpmsg: glink: Add support for rpmsg glink chrdev
+Date: Mon, 18 Dec 2017 14:02:11 -0800
+Message-ID: <1513634534-22861-4-git-send-email-clew@codeaurora.org>
 References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513634534-22861-1-git-send-email-clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: aneela-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org
+Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for client's to query the edge name their channel is
-registered for. This is useful for clients who share the same channel
-identifier across different remote procs.
+RPMSG provides a char device interface to userspace. Probe the rpmsg
+chrdev channel to enable the rpmsg_ctrl device creation on glink
+transports.
 
-Signed-off-by: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Chris Lew <clew@codeaurora.org>
 ---
- drivers/rpmsg/rpmsg_core.c     | 21 +++++++++++++++++++++
- drivers/rpmsg/rpmsg_internal.h |  3 +++
- include/linux/rpmsg.h          | 10 ++++++++++
- 3 files changed, 34 insertions(+)
+ drivers/rpmsg/qcom_glink_native.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-index dffa3aab7178..d6ebd678b089 100644
---- a/drivers/rpmsg/rpmsg_core.c
-+++ b/drivers/rpmsg/rpmsg_core.c
-@@ -78,6 +78,27 @@ struct rpmsg_endpoint *rpmsg_create_ept(struct rpmsg_device *rpdev,
- }
- EXPORT_SYMBOL(rpmsg_create_ept);
- 
-+
-+/**
-+ * rpmsg_get_rproc_name() - Return the name of the rproc for this device
-+ * @rpdev: rpmsg channel device
-+ *
-+ * Expose the rproc name for clients who open the same channel across different
-+ * rprocs and need to differentiate during their probe.
-+ *
-+ * Returns char string on success and NULL on failure.
-+ */
-+const char *rpmsg_get_rproc_name(struct rpmsg_device *rpdev)
-+{
-+	if (WARN_ON(!rpdev))
-+		return NULL;
-+
-+	if (!rpdev->ops->get_rproc_name)
-+		return NULL;
-+
-+	return rpdev->ops->get_rproc_name(rpdev);
-+}
-+
- /**
-  * rpmsg_destroy_ept() - destroy an existing rpmsg endpoint
-  * @ept: endpoing to destroy
-diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
-index 0cf9c7e2ee83..83a028b6883f 100644
---- a/drivers/rpmsg/rpmsg_internal.h
-+++ b/drivers/rpmsg/rpmsg_internal.h
-@@ -31,6 +31,7 @@
-  * @create_ept:		create backend-specific endpoint, requried
-  * @announce_create:	announce presence of new channel, optional
-  * @announce_destroy:	announce destruction of channel, optional
-+ * @get_rproc_name:	return name of the rproc for this device, optional
-  *
-  * Indirection table for the operations that a rpmsg backend should implement.
-  * @announce_create and @announce_destroy are optional as the backend might
-@@ -43,6 +44,8 @@ struct rpmsg_device_ops {
- 
- 	int (*announce_create)(struct rpmsg_device *ept);
- 	int (*announce_destroy)(struct rpmsg_device *ept);
-+
-+	const char *(*get_rproc_name)(struct rpmsg_device *rpdev);
+diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+index 179132226dc2..786f2eca01f1 100644
+--- a/drivers/rpmsg/qcom_glink_native.c
++++ b/drivers/rpmsg/qcom_glink_native.c
+@@ -132,6 +132,13 @@ enum {
+ 	GLINK_STATE_CLOSING,
  };
  
- /**
-diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-index 10d6ae8bbb7d..167982dc5b4f 100644
---- a/include/linux/rpmsg.h
-+++ b/include/linux/rpmsg.h
-@@ -160,6 +160,8 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
- unsigned int rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
- 			poll_table *wait);
- 
-+const char *rpmsg_get_rproc_name(struct rpmsg_device *dev);
++struct qcom_glink_device {
++	struct rpmsg_device rpdev;
++	struct qcom_glink *glink;
++};
 +
- #else
- 
- static inline int register_rpmsg_device(struct rpmsg_device *dev)
-@@ -267,6 +269,14 @@ static inline unsigned int rpmsg_poll(struct rpmsg_endpoint *ept,
- 	return 0;
++#define to_glink_device(_x) container_of(_x, struct qcom_glink_device, rpdev)
++
+ /**
+  * struct glink_channel - internal representation of a channel
+  * @rpdev:	rpdev reference, only used for primary endpoints
+@@ -1339,6 +1346,10 @@ static struct device_node *qcom_glink_match_channel(struct device_node *node,
+ 	return NULL;
  }
  
-+static inline const char *rpmsg_get_rproc_name(struct rpmsg_device *rpdev)
-+{
-+	/* This shouldn't be possible */
-+	WARN_ON(1);
++static const struct rpmsg_device_ops glink_chrdev_ops = {
++	.create_ept = qcom_glink_create_ept,
++};
 +
-+	return NULL;
+ static const struct rpmsg_device_ops glink_device_ops = {
+ 	.create_ept = qcom_glink_create_ept,
+ 	.announce_create = qcom_glink_announce_create,
+@@ -1547,6 +1558,30 @@ static void qcom_glink_work(struct work_struct *work)
+ 	}
+ }
+ 
++static void qcom_glink_device_release(struct device *dev)
++{
++	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
++	struct qcom_glink_device *gdev = to_glink_device(rpdev);
++
++	kfree(gdev);
 +}
 +
- #endif /* IS_ENABLED(CONFIG_RPMSG) */
++static int qcom_glink_create_chrdev(struct qcom_glink *glink)
++{
++	struct qcom_glink_device *gdev;
++
++	gdev = kzalloc(sizeof(*gdev), GFP_KERNEL);
++	if (!gdev)
++		return -ENOMEM;
++
++	gdev->glink = glink;
++	gdev->rpdev.ops = &glink_chrdev_ops;
++	gdev->rpdev.dev.parent = glink->dev;
++	gdev->rpdev.dev.release = qcom_glink_device_release;
++
++	return rpmsg_chrdev_register_device(&gdev->rpdev);
++}
++
+ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+ 					   unsigned long features,
+ 					   struct qcom_glink_pipe *rx,
+@@ -1605,6 +1640,10 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+ 	if (ret)
+ 		return ERR_PTR(ret);
  
- /* use a macro to avoid include chaining to get THIS_MODULE */
++	ret = qcom_glink_create_chrdev(glink);
++	if (ret)
++		dev_err(glink->dev, "failed to register chrdev\n");
++
+ 	return glink;
+ }
+ EXPORT_SYMBOL_GPL(qcom_glink_native_probe);
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
