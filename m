@@ -1,69 +1,50 @@
-From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 00/12] Marvell NAND controller rework with ->exec_op()
-Date: Mon, 18 Dec 2017 09:25:35 +0100
-Message-ID: <20171218092535.2ca1fe13@xps13>
-References: <20171207201814.30411-1-miquel.raynal@free-electrons.com>
-        <20171214070930.0b885f6d@bbrezillon>
-        <877etkecig.fsf@belgarion.home>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH 1/2] serial: stm32: add default console
+Date: Mon, 18 Dec 2017 09:31:25 +0100
+Message-ID: <625c8e7a-f6b0-3997-527d-408cfe9b5730@st.com>
+References: <1512146211-29086-1-git-send-email-ludovic.Barre@st.com>
+ <1512146211-29086-2-git-send-email-ludovic.Barre@st.com>
+ <20171215192517.GA27395@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <877etkecig.fsf-4ty26DBLk+jEm7gnYqmdkQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>Ezequiel Garcia <ez>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20171215192517.GA27395@kroah.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Robert,
+hi Greg
 
-On Mon, 18 Dec 2017 08:11:35 +0100
-Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+Yes, the machine could be boot without console. but our
+boards has a console by default. it is just to simplified the
+configuration.
+you can abandoned this patch, if you prefer.
 
-> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+BR
+Ludo
+
+On 12/15/2017 08:25 PM, Greg Kroah-Hartman wrote:
+> On Fri, Dec 01, 2017 at 05:36:50PM +0100, Ludovic Barre wrote:
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch adds by default the console support
+>> on stm32.
 > 
-> >> Robert, it would be great if you could also do more testing on PXA
-> >> and validate this driver. If needed, a branch ready to be tested is
-> >> available at [3]. It is based on nand/next and has all the changes
-> >> brought by the previously mentionned series as well as this one.  
-> >
-> > Robert, do you think you'll have some time to test Miquel's branch
-> > on your PXA boards? Miquel already tested on one of these boards
-> > (CM-X300), but we'd like to have other testers. Also feel free to
-> > review the driver if have the time.
-> >
-> > Thanks,
-> >
-> > Boris  
+> Why?  'default y' should only mean "machine will not boot without this".
+> And I think your machine will boot without the console, right?  :)
 > 
-> Hi Boris and Miquel,
+> thanks,
 > 
-> I have applied the whole serie to linux-next yesterday.
+> greg k-h
 > 
-> A boot attempt on my zylonite with my old defconfig (with the new
-> Marvell NAND config activated) yields to :
->  - this message
-> [    3.136818] marvell-nfc pxa3xx-nand: could not identify the nand
-> chip [    3.143874] marvell-nfc: probe of pxa3xx-nand failed with
-> error -22
->  - then my board hangs
-> 
-> Is there something to be done to improve the trace level so that you
-> can guess what's happening ?
-
-Thank you very much for testing this.
-
-Could you please try this branch [1] instead of linux-next + the
-patches?
-
-Also, can you please add #define DEBUG in marvell_nand.c + nand_base.c,
-it should help us figuring out what is wrong.
-
-Thank you,
-Miquèl
-
-[1] https://github.com/miquelraynal/linux/tree/marvell/nand-next/nfc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
