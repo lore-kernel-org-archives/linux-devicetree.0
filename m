@@ -1,72 +1,61 @@
-From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v5 1/6] dt: bindings: lp8860: Update bindings for lp8860
-Date: Mon, 18 Dec 2017 14:23:02 -0600
-Message-ID: <20171218202307.4913-1-dmurphy@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 3/9] ARM: stm32: prepare stm32 family to welcome armv7 architecture
+Date: Mon, 18 Dec 2017 21:24:45 +0100
+Message-ID: <CAK8P3a1WzkVQ3591XjVQPLCqP0_zZ4ksqJqWvm7de_OnkE3oaQ@mail.gmail.com>
+References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com> <1513610272-7824-4-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1513610272-7824-4-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the lp8860 bindings to fix various issues
-found.  Rename enable-gpio to enable-gpios,
-update the node name to the device name and
-indent the node example.
+On Mon, Dec 18, 2017 at 4:17 PM, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch prepares the STM32 machine for the integration of Cortex-A
+> based microprocessor (MPU), on top of the existing Cortex-M
+> microcontroller family (MCU). Since both MCUs and MPUs are sharing
+> common hardware blocks we can keep using ARCH_STM32 flag for most of
+> them. If a hardware block is specific to one family we can use either
+> ARM_SINGLE_ARMV7M or ARCH_MULTI_V7 flag.
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
----
+Looks good overall. Two more small comments:
 
-v5 - Update commit message to remove address and size cells - https://patchwork.kernel.org/patch/10108357/
 
-v4 - No changes
-v3 - Indicatd enable-gpios is active high, moved address and size cells to child
-node patch and updated parent DT node name - https://patchwork.kernel.org/patch/10093745/
-v2 - New patch
+>
+> +if ARCH_STM32
+> +
+>  config MACH_STM32F429
+> -       bool "STMicrolectronics STM32F429"
+> -       depends on ARCH_STM32
+> +       bool "STMicroelectronics STM32F429"
+> +       depends on ARM_SINGLE_ARMV7M
+>         default y
 
- Documentation/devicetree/bindings/leds/leds-lp8860.txt | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Instead of the explicit dependency for each board, I'd leave the surrounding
+'if ARM_SINGLE_ARMV7M'. I think you had in v1.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-index aad38dd94d4b..b9d09acbaa73 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
-@@ -6,22 +6,22 @@ current sinks that can be controlled by a PWM input
- signal, a SPI/I2C master, or both.
- 
- Required properties:
--	- compatible:
-+	- compatible :
- 		"ti,lp8860"
--	- reg -  I2C slave address
--	- label - Used for naming LEDs
-+	- reg : I2C slave address
-+	- label : Used for naming LEDs
- 
- Optional properties:
--	- enable-gpio - gpio pin to enable/disable the device.
--	- supply - "vled" - LED supply
-+	- enable-gpios : gpio pin to enable (active high)/disable the device.
-+	- vled-supply : LED supply
- 
- Example:
- 
--leds: leds@6 {
-+led-controller@2d {
- 	compatible = "ti,lp8860";
- 	reg = <0x2d>;
- 	label = "display_cluster";
--	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-+	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
- 	vled-supply = <&vbatt>;
- }
- 
--- 
-2.15.0.124.g7668cbc60
+> diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
+> index bd0b7b5..5940af1 100644
+> --- a/arch/arm/mach-stm32/Makefile
+> +++ b/arch/arm/mach-stm32/Makefile
+> @@ -1 +1 @@
+> -obj-y += board-dt.o
+> +obj-$(CONFIG_ARM_SINGLE_ARMV7M) += board-mcu-dt.o
+> diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-mcu-dt.c
+> similarity index 100%
+> rename from arch/arm/mach-stm32/board-dt.c
+> rename to arch/arm/mach-stm32/board-mcu-dt.c
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Why the rename? I don't expect the new machines to have any notable
+contents in a board file, if any at all, so just use one file for both.
+I see the board-dt.c file refers to armv7m_restart, we can either put
+that in an #ifdef, or find a way to make it the default for all armv7-m
+platforms that don't provide any other restart method.
+
+     Arnd
