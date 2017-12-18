@@ -1,41 +1,87 @@
 From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v2 19/19] ARM: dts: aspeed-plametto: Add flash layout
-Date: Mon, 18 Dec 2017 10:09:17 +0100
-Message-ID: <4c112b91-f2db-79b6-ca4c-f5b290c74773@kaod.org>
+Subject: Re: [PATCH v2 12/19] ARM: dts: aspeed: Update license headers
+Date: Mon, 18 Dec 2017 10:05:08 +0100
+Message-ID: <f0ddb533-4b7c-3cf9-ed57-17c8aec05f1a@kaod.org>
 References: <20171215062443.23059-1-joel@jms.id.au>
- <20171215062443.23059-20-joel@jms.id.au>
+ <20171215062443.23059-13-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171215062443.23059-20-joel@jms.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171215062443.23059-13-joel@jms.id.au>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, linux-arm-kernel@lists.infradead.org
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTIvMTUvMjAxNyAwNzoyNCBBTSwgSm9lbCBTdGFubGV5IHdyb3RlOgo+IFRoZSBPcGVuQk1D
-IGZsYXNoIGxheW91dCBpcyB1c2VkIGJ5IFBhbG1ldHRvIHN5c3RlbXMuCj4gCj4gU2lnbmVkLW9m
-Zi1ieTogSm9lbCBTdGFubGV5IDxqb2VsQGptcy5pZC5hdT4KCgoKUmV2aWV3ZWQtYnk6IEPDqWRy
-aWMgTGUgR29hdGVyIDxjbGdAa2FvZC5vcmc+Cgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9h
-c3BlZWQtYm1jLW9wcC1wYWxtZXR0by5kdHMgfCAxICsKPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMt
-b3BwLXBhbG1ldHRvLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXBhbG1l
-dHRvLmR0cwo+IGluZGV4IGE4ZjBjMDQ2ZTgzZS4uY2MxODEzNzM4NmYyIDEwMDY0NAo+IC0tLSBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXBhbG1ldHRvLmR0cwo+ICsrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXBhbG1ldHRvLmR0cwo+IEBAIC0zNCw2ICsz
-NCw3IEBACj4gIAkJc3RhdHVzID0gIm9rYXkiOwo+ICAJCW0yNXAsZmFzdC1yZWFkOwo+ICAJCWxh
-YmVsID0gImJtYyI7Cj4gKyNpbmNsdWRlICJvcGVuYm1jLWZsYXNoLWxheW91dC5kdHNpIgo+ICAJ
-fTsKPiAgfTsKPiAgCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 12/15/2017 07:24 AM, Joel Stanley wrote:
+> In b24413180f56 ("License cleanup: add SPDX GPL-2.0 license identifier
+> to files with no license") these files had the GPL-2.0 licence added
+> automatically. Update them to be GPL 2.0+ in line with other IBM kernel
+> contributions.
+> 
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+
+
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+
+> ---
+>  arch/arm/boot/dts/aspeed-ast2500-evb.dts      | 2 +-
+>  arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 2 +-
+>  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts  | 2 +-
+>  arch/arm/boot/dts/aspeed-g4.dtsi              | 2 +-
+>  arch/arm/boot/dts/aspeed-g5.dtsi              | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+> index 602bc10fdaf4..3e6f38e5d5d0 100644
+> --- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+> +++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +// SPDX-License-Identifier: GPL-2.0+
+>  /dts-v1/;
+>  
+>  #include "aspeed-g5.dtsi"
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+> index c786bc2f2919..a8f0c046e83e 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +// SPDX-License-Identifier: GPL-2.0+
+>  /dts-v1/;
+>  
+>  #include "aspeed-g4.dtsi"
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+> index 8067793129ea..a7a9386f964d 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +// SPDX-License-Identifier: GPL-2.0+
+>  /dts-v1/;
+>  
+>  #include "aspeed-g5.dtsi"
+> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+> index 2d7ac577d6b5..9c175832babc 100644
+> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +// SPDX-License-Identifier: GPL-2.0+
+>  #include <dt-bindings/clock/aspeed-clock.h>
+>  #include <dt-bindings/gpio/aspeed-gpio.h>
+>  
+> diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+> index 030a760696fd..360329eab7c3 100644
+> --- a/arch/arm/boot/dts/aspeed-g5.dtsi
+> +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +// SPDX-License-Identifier: GPL-2.0+
+>  #include <dt-bindings/clock/aspeed-clock.h>
+>  #include <dt-bindings/gpio/aspeed-gpio.h>
+>  
+> 
