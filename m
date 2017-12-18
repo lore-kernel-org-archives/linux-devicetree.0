@@ -1,71 +1,97 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] ARM: dts: imx7: add Toradex Colibri iMX7D 1GB
- (eMMC) support
-Date: Mon, 18 Dec 2017 13:58:52 +0100
-Message-ID: <1f30292a9736919af79be87c21de5e33@agner.ch>
-References: <20171217203723.15896-1-stefan@agner.ch>
- <20171217203723.15896-9-stefan@agner.ch>
- <CAOMZO5BXEj9AKeQEVNhDYMCydpe+PVnXjchvTAuuwdM7Yp6d2w@mail.gmail.com>
- <CAOFm3uHFcHnh-CHLfJwgeB1M8niWBtdpVv-f+Dr7b43f70zwbw@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4 2/6] dt: bindings: lp8860: Update DT label binding
+Date: Mon, 18 Dec 2017 07:08:28 -0600
+Message-ID: <d4224a4c-95c8-e263-63a9-3dc1f633e5a9@ti.com>
+References: <20171212220143.31210-1-dmurphy@ti.com>
+ <20171212220143.31210-3-dmurphy@ti.com>
+ <20171215225914.62lqxhcmwajf4hpy@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOFm3uHFcHnh-CHLfJwgeB1M8niWBtdpVv-f+Dr7b43f70zwbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20171215225914.62lqxhcmwajf4hpy@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-12-17 23:55, Philippe Ombredanne wrote:
-> Fabio,
+Rob
+
+On 12/15/2017 04:59 PM, Rob Herring wrote:
+> On Tue, Dec 12, 2017 at 04:01:39PM -0600, Dan Murphy wrote:
+>> Update the lp8860 label binding to the LED
+>> standard as documented in
+>>
+>> Documentation/devicetree/bindings/leds/common.txt
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>
+>> v4 - No changes
+>>
+>> v3 - Added address and size cells, updated label with color and inserted spaces
+>> around the reg node - https://patchwork.kernel.org/patch/10093749/
+>> v2 - Added reg to child node and made it required
+>>
+>>  Documentation/devicetree/bindings/leds/leds-lp8860.txt | 17 +++++++++++++++--
+>>  1 file changed, 15 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp8860.txt b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+>> index b9d09acbaa73..c3d64ade1e26 100644
+>> --- a/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+>> +++ b/Documentation/devicetree/bindings/leds/leds-lp8860.txt
+>> @@ -9,20 +9,33 @@ Required properties:
+>>  	- compatible :
+>>  		"ti,lp8860"
+>>  	- reg : I2C slave address
+>> -	- label : Used for naming LEDs
+>> +	- #address-cells : 1
+>> +	- #size-cells : 0
+>>  
+>>  Optional properties:
+>>  	- enable-gpios : gpio pin to enable (active high)/disable the device.
+>>  	- vled-supply : LED supply
+>>  
+>> +Required child properties:
+>> +	- reg : 0
+>> +
 > 
-> On Sun, Dec 17, 2017 at 10:59 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Stefan,
->>
->> On Sun, Dec 17, 2017 at 6:37 PM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
->>
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/imx7d-colibri-emmc-eval-v3.dts
->>> @@ -0,0 +1,20 @@
->>> +/*
->>> + * Copyright 2017 Toradex AG
->>> + *
->>> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>> + */
->>
->> In the previous patch you used GPL-2.0 text, instead of GPL-2.0+.
->>
->> The SPDX line should be the first one and start with a // style comment:
->>
->> // SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> This should be in previous patch?
 
-Hm, good catch, I copied the above from some uniphier device tree. Will
-fix.
+
+No this is the reg node for the child property.  The child property is
+introduced in this patch.  So this should be correct
+
+Dan
 
 > 
-> Yes this line as the top line is the correct way as explained in
-> Thomas doc patches [1]
-> I cannot comment of whether the author wants GPL 2 or 2+ though KISS is best.
-> 
-> [1] https://lkml.org/lkml/2017/12/4/934
-> 
-
-Oh, I see now, you refer to that patch in particular:
-https://lkml.org/lkml/2017/12/4/942
-
-
->> Philippe, please confirm this is the correct way.
+>> +Optional child properties:
+>> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+>> +
+>>  Example:
+>>  
+>>  led-controller@2d {
+>>  	compatible = "ti,lp8860";
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>>  	reg = <0x2d>;
+>> -	label = "display_cluster";
+>>  	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>>  	vled-supply = <&vbatt>;
+>> +
+>> +	led@0 {
+>> +		reg = <0>;
+>> +		label = "white:display_cluster";
+>> +	};
+>>  }
+>>  
+>>  For more product information please see the link below:
+>> -- 
+>> 2.15.0.124.g7668cbc60
 >>
->> With this fixed you can add:
->>
->> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-Thank!
 
---
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+------------------
+Dan Murphy
