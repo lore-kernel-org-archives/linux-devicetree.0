@@ -1,87 +1,77 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v2 12/19] ARM: dts: aspeed: Update license headers
-Date: Mon, 18 Dec 2017 10:05:08 +0100
-Message-ID: <f0ddb533-4b7c-3cf9-ed57-17c8aec05f1a@kaod.org>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Subject: Re: [PATCH v2 10/19] ARM: dts: aspeed: Add LPC Snoop device
+Date: Mon, 18 Dec 2017 10:16:19 +0100
+Message-ID: <c5ef27de-34c1-f5e9-e4ae-e2709b004677@kaod.org>
 References: <20171215062443.23059-1-joel@jms.id.au>
- <20171215062443.23059-13-joel@jms.id.au>
+ <20171215062443.23059-11-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171215062443.23059-13-joel@jms.id.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171215062443.23059-11-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Jeffery <andrew@aj.id.au>, Patrick Venture <venture@google.com>, Xo Wang <xow@google.com>, Lei YU <mine260309@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 12/15/2017 07:24 AM, Joel Stanley wrote:
-> In b24413180f56 ("License cleanup: add SPDX GPL-2.0 license identifier
-> to files with no license") these files had the GPL-2.0 licence added
-> automatically. Update them to be GPL 2.0+ in line with other IBM kernel
-> contributions.
+> LPC snoop hardware on the ASPEED BMC, used for monitoring
+> host I/O port activity.
 > 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-
-
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 > ---
->  arch/arm/boot/dts/aspeed-ast2500-evb.dts      | 2 +-
->  arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 2 +-
->  arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts  | 2 +-
->  arch/arm/boot/dts/aspeed-g4.dtsi              | 2 +-
->  arch/arm/boot/dts/aspeed-g5.dtsi              | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
+>  arch/arm/boot/dts/aspeed-g4.dtsi | 7 +++++++
+>  arch/arm/boot/dts/aspeed-g5.dtsi | 6 ++++++
+>  2 files changed, 13 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/aspeed-ast2500-evb.dts b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> index 602bc10fdaf4..3e6f38e5d5d0 100644
-> --- a/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> +++ b/arch/arm/boot/dts/aspeed-ast2500-evb.dts
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-License-Identifier: GPL-2.0+
->  /dts-v1/;
->  
->  #include "aspeed-g5.dtsi"
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-> index c786bc2f2919..a8f0c046e83e 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-License-Identifier: GPL-2.0+
->  /dts-v1/;
->  
->  #include "aspeed-g4.dtsi"
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-> index 8067793129ea..a7a9386f964d 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-romulus.dts
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-License-Identifier: GPL-2.0+
->  /dts-v1/;
->  
->  #include "aspeed-g5.dtsi"
 > diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-> index 2d7ac577d6b5..9c175832babc 100644
+> index f6fee40c04c0..b3580f37f507 100644
 > --- a/arch/arm/boot/dts/aspeed-g4.dtsi
 > +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-License-Identifier: GPL-2.0+
->  #include <dt-bindings/clock/aspeed-clock.h>
->  #include <dt-bindings/gpio/aspeed-gpio.h>
+> @@ -236,6 +236,13 @@
+>  						status = "disabled";
+>  					};
 >  
+> +					lpc_snoop: lpc-snoop@0 {
+> +						compatible = "aspeed,ast2500-lpc-snoop";
+
+it should be :
+
+	aspeed,ast2400-lpc-snoop
+
+a part from that :
+
+Reviewed-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+
+> +						reg = <0x0 0x80>;
+> +						interrupts = <8>;
+> +						status = "disabled";
+> +					};
+> +
+>  					lhc: lhc@20 {
+>  						compatible = "aspeed,ast2500-lhc";
+>  						reg = <0x20 0x24 0x48 0x8>;
 > diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-> index 030a760696fd..360329eab7c3 100644
+> index 96a9d2fe3f0d..50766f0629f8 100644
 > --- a/arch/arm/boot/dts/aspeed-g5.dtsi
 > +++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-License-Identifier: GPL-2.0+
->  #include <dt-bindings/clock/aspeed-clock.h>
->  #include <dt-bindings/gpio/aspeed-gpio.h>
+> @@ -287,6 +287,12 @@
+>  						status = "disabled";
+>  					};
 >  
+> +					lpc_snoop: lpc-snoop@0 {
+> +						compatible = "aspeed,ast2500-lpc-snoop";
+> +						reg = <0x0 0x80>;
+> +						interrupts = <8>;
+> +						status = "disabled";
+> +					};
+>  
+>  					lhc: lhc@20 {
+>  						compatible = "aspeed,ast2500-lhc";
 > 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
