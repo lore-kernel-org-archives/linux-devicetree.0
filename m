@@ -1,86 +1,42 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC v2 2/2] backlight: pwm_bl: compute brightness of LED
- linearly to human eye.
-Date: Mon, 18 Dec 2017 13:33:45 +0100
-Message-ID: <20171218123344.GA29353@amd>
-References: <20171116141151.21171-1-enric.balletbo@collabora.com>
- <20171116141151.21171-3-enric.balletbo@collabora.com>
- <CAD=FV=WY-2MmjRxGGaJrQjyeWt+k4_k7j12M4LxAnnZxJF7sXw@mail.gmail.com>
- <c6450f50-5c12-dc52-4340-b068c0b38c54@linaro.org>
- <CAFqH_50qgvntzwvZ_n3qhpw+BA2SpYqiJgsxfCMt1piNWzgDmA@mail.gmail.com>
- <20171215205735.GB19442@amd>
- <CAFqH_52z9O+0ZVB-rMTCNzw+55m26fDGKeaj-Fz-ccO74+j_MA@mail.gmail.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: sun8i: h3: nanopi-m1-plus: fix
+ missing ethernet 0 in aliases
+Date: Mon, 18 Dec 2017 13:35:48 +0100
+Message-ID: <20171218123548.32511-1-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFqH_52z9O+0ZVB-rMTCNzw+55m26fDGKeaj-Fz-ccO74+j_MA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD257DPK24NRBJ7M33IQKGQE72I5GOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch fixes a missing ethernet 0 alisas in the devicetree on the
+Nanopi M1 Plus.
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Mon 2017-12-18 11:40:59, Enric Balletbo Serra wrote:
-> Hi Pavel,
->=20
-> 2017-12-15 21:57 GMT+01:00 Pavel Machek <pavel@ucw.cz>:
-> > Hi!
-> >
-> >> Yes, I think that how you describe luminance and lightness is right,
-> >> and sounds good improve the doc.
-> >>
-> >> To be clear the correction table for PWM values can be calculated with
-> >> this code.
-> >>
-> >> OUTPUT_SIZE =3D 65535      # Output integer size
-> >> INPUT_SIZE =3D 2047
-> >>
-> >> def cie1931(L):
-> >>     L =3D L*100.0
-> >>     if L <=3D 8:
-> >>         return (L/902.3)
-> >>     else:
-> >>         return ((L+16.0)/116.0)**3
-> >>
-> >> x =3D range(0,int(INPUT_SIZE+1))
-> >> y =3D [int(round(cie1931(float(L)/INPUT_SIZE)*(OUTPUT_SIZE))) for L in=
- x]
-> >
-> > Can we just generate the table on the fly? Should not be hard to do in
-> > fixed point, right?
->=20
-> This was discussed a bit in previous RFC which had the code to
-> generate the table on the fly, see [1]. The use of a fixed table or an
-> on the fly table is something that I'll let the maintainers to decide.
-> I've no strong opinion on use the on the fly table if someone takes
-> care to review deeply the fixed point maths :)
-
-You are free to pre-compute the table at boot. And you can even
-compare the built-in and pre-computed table at boot, to make sure you
-made no mistakes :-).
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlo3tagACgkQMOfwapXb+vI/aACgqrcr0ogwRL9AgqTUUt1qDjaW
-cSMAn33yo6Hss+zyASKcqUg3/UGp63OX
-=ywjS
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
+diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+index 0a8b79cf5954..87509a3e6aba 100644
+--- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+@@ -48,6 +48,7 @@
+ 
+ 	aliases {
+ 		serial1 = &uart3;
++		ethernet0 = &emac;
+ 		ethernet1 = &sdio_wifi;
+ 	};
+ 
+-- 
+2.11.0
