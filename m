@@ -1,75 +1,45 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v5 0/5] misc serdev: new serdev based driver for Wi2Wi
- w2sg00x4 GPS module
-Date: Mon, 18 Dec 2017 09:52:07 +0100
-Message-ID: <01C0DAA8-A2E5-4E42-8726-80937541E231@goldelico.com>
-References: <cover.1512114576.git.hns@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1512114576.git.hns@goldelico.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nikolaus Schaller <hns@goldelico.com>, Kevin Hilman <khilman@baylibre.com>, =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, "Andrew F. Davis" <afd@ti.com>
-Cc: DTML <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@pyra-handheld.com, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: usb: add DT binding for RK3328 dwc3 controller
+Date: Mon, 18 Dec 2017 11:00:41 +0200
+Message-ID: <87fu88jtqe.fsf@linux.intel.com>
+References: <20171204094041.25439-1-heiko@sntech.de> <1863083.H0I2rMmhUr@phil>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1863083.H0I2rMmhUr@phil>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCnVuZm9ydHVuYXRlbHkgSSBoYWQgbG9zdCB0byBpbmNsdWRlIEFuZHJldyBEYXZpcycgYWRk
-cmVzcyB3aG8gaGFkIHByb3ZpZGVkCnZlcnkgdmFsdWFibGUgY29tbWVudHMgZm9yIHY1LiBTb3Jy
-eSwgQW5kcmV3IQoKVGhlcmUgaGFzIG9ubHkgYmVlbiBvbmUgbW9yZSBjb21tZW50IGJ5IEFuZHJl
-YXMgRsOkcmJlciBpbiB0aGUgcGFzdCAxNCBkYXlzLgoKU28gaG93IHRvIHByb2NlZWQ/IFdobyBp
-cyB0YWtpbmcgY2FyZSBvZiBkZWNpZGluZy9tZXJnaW5nIHRvd2FyZHMgbGludXgtbmV4dD8KCkJS
-IGFuZCB0aGFua3MsCk5pa29sYXVzCgo+IEFtIDAxLjEyLjIwMTcgdW0gMDg6NDkgc2NocmllYiBI
-LiBOaWtvbGF1cyBTY2hhbGxlciA8aG5zQGdvbGRlbGljby5jb20+Ogo+IAo+IENoYW5nZXMgVjU6
-Cj4gKiBjbGFyaWZpZWQgdG8ga2VlcCBpdCBpbiBkcml2ZXJzL21pc2MgYW5kIG5vdCBjcmVhdGUg
-YSBuZXcgZ3JvdXAgZHJpdmVycy9ncHMKPiAqIGZpeCBmb3JtYXR0aW5nIG9mIG5ldyBlbnRyeSBp
-biBvbWFwMy1ndGEwNC5kdHNpIChzdWdnZXN0ZWQgYnkgVG9ueSBMaW5kZ3JlbikKPiAqIHJlbW92
-ZWQgTU9EVUxFX0FMSUFTIChzdWdnZXN0ZWQgYnkgQW5kcmV3IEYuIERhdmlzKQo+ICogc29tZSBt
-b3JlIGZvcm1hdHRpbmcsIGNvZGUmc3R5bGUgZml4ZXMgKHN1Z2dlc3RlZCBieSBBbmRyZXcgRi4g
-RGF2aXMpCj4gKiBhcHBseSBfX21heWJlX3VudXNlZCBmb3IgUE0gKHN1Z2dlc3RlZCBieSBBbmRy
-ZXcgRi4gRGF2aXMpCj4gKiBmaXhlZCBjb3B5cmlnaHQgYW5kIGF1dGhvciByZWNvcmRzIChzdWdn
-ZXN0ZWQgYnkgQW5kcmV3IEYuIERhdmlzKQo+IAo+IDIwMTctMTEtMTUgMjI6Mzg6MDE6IENoYW5n
-ZXMgVjQ6Cj4gKiByZW1vdmVkIGFsbCBwZGF0YSByZW1haW5zIChzdWdnZXN0ZWQgYnkgQXJuZCBC
-ZXJnbWFubiBhbmQgUm9iIEhlcnJpbmcpCj4gKiBmaXhlZCBtaW5vciBpc3N1ZXMgYW5kIHN1Ympl
-Y3QvY29tbWl0IG1lc3NhZ2VzIChzdWdnZXN0ZWQgYnkgUm9iIEhlcnJpbmcpCj4gKiBhZGRlZCBv
-bmUgbWlzc2luZyBTaWduZWQtb2ZmLUJ5OiAoc3VnZ2VzdGVkIGJ5IEFuZHJlYXMgRsOkcmJlcikK
-PiAqIGFkZGVkIFNQRFggaGVhZGVyIChzdWdnZXN0ZWQgYnkgUm9iIEhlcnJpbmcpCj4gCj4gMjAx
-Ny0xMS0xNSAxNjoxOToxNzogQ2hhbmdlcyBWMzoKPiAqIHdvcmtlZCBpbiBzdWdnZXN0aW9ucyBi
-eSBrYnVpbGQgdGVzdCByb2JvdAo+ICogYWRkZWQgbWlzYytzZXJkZXYgdG8gdGhlIHN1YmplY3QK
-PiAKPiAyMDE3LTExLTEyIDIyOjAwOjAyOiBDaGFuZ2VzIFYyOgo+ICogcmVkdWNlZCB0byBzdWJt
-aXQgb25seSB3MnNnMDB4NCBHUFMgZHJpdmVyIGNvZGUKPiAqIGFkZCBEVCBub2RlIGZvciBHVEEw
-NCBkZXZpY2UgdG8gbWFrZSB1c2Ugb2YgdGhlIGRyaXZlcgo+ICogc3BsaXQgaW50byBiYXNlIGNv
-ZGUgYW5kIGEgZGVidWdnaW5nIEtjb25maWcgb3B0aW9uIChicmluZ3MgZGV2aWNlIGludG8gZmFs
-c2UgcG93ZXIgc3RhdGUgYWZ0ZXIgYm9vdCkKPiAqIHdvcmtlZCBpbiBjb21tZW50cyBieSBrYnVp
-bGQgcm9ib3QgYW5kIFJvYiBIZXJyaW5nCj4gCj4gMjAxNy0wNS0yMSAxMjo0NDowNzogUkZDIFYx
-Cj4gKiBSRkMgY29uY2VybmluZyBuZXcgc2VyZGV2IGJhc2VkIGRyaXZlcnMgZm9yIFdpMldpIHcy
-c2cwMHg0IEdQUyBtb2R1bGUgYW5kIHcyY2J3MDAzIGJsdWV0b290aAo+IAo+IFllYXJzIGxvbmcg
-aGlzdG9yeSBvZiBnZXR0aW5nIHRoaXMgZGV2aWNlcyBzdXBwb3J0ZWQgKG9yaWdpbmFsIHdvcmsg
-YnkgTmVpbCBCcm93bikuCj4gCj4gSC4gTmlrb2xhdXMgU2NoYWxsZXIgKDUpOgo+ICBkdC1iaW5k
-aW5nczogZGVmaW5lIHZlbmRvciBwcmVmaXggZm9yIFdpMldpLCBJbmMuCj4gIGR0LWJpbmRpbmdz
-OiBncHM6IGFkZCB3MnNnMDB4NCBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIChHUFMgbW9kdWxlIHdp
-dGgKPiAgICBVQVJUKSkKPiAgbWlzYyBzZXJkZXY6IEFkZCB3MnNnMDAwNCAoZ3BzIHJlY2VpdmVy
-KSBwb3dlciBjb250cm9sIGRyaXZlcgo+ICBEVFM6IGd0YTA0OiBhZGQgdWFydDIgY2hpbGQgbm9k
-ZSBmb3IgdzJzZzAweDQKPiAgbWlzYyBzZXJkZXY6IHcyc2cwMDA0OiBhZGQgZGVidWdnaW5nIGNv
-ZGUgYW5kIEtjb25maWcKPiAKPiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHMvd2kyd2ksdzJz
-ZzAwMDQudHh0ICAgICB8ICAyNCArCj4gLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXBy
-ZWZpeGVzLnR4dCAgICAgICAgfCAgIDEgKwo+IGFyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWd0YTA0
-LmR0c2kgICAgICAgICAgICAgICAgIHwgICA3ICsKPiBkcml2ZXJzL21pc2MvS2NvbmZpZyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxOCArCj4gZHJpdmVycy9taXNjL01ha2VmaWxl
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+IGRyaXZlcnMvbWlzYy93MnNn
-MDAwNC5jICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgNTkwICsrKysrKysrKysrKysrKysr
-KysrKwo+IDYgZmlsZXMgY2hhbmdlZCwgNjQxIGluc2VydGlvbnMoKykKPiBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwcy93aTJ3aSx3MnNnMDAw
-NC50eHQKPiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9taXNjL3cyc2cwMDA0LmMKPiAKPiAt
-LSAKPiAyLjEyLjIKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+Hi,
+
+Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> writes:
+
+> Hi Greg, Felipe,
+>
+> Am Montag, 4. Dezember 2017, 10:40:38 CET schrieb Heiko Stuebner:
+>> From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> 
+>> Adds the device tree bindings description for RK3328 and
+>> compatible USB DWC3 controller.
+>> 
+>> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>
+> do you want to pick this patch with only the small dt-binding
+> change or Ack it for me to pick up together with the actual
+> devicetree changes in the other patches?
+
+it seems best if you carry this one:
+
+Acked-by: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+
+-- 
+balbi
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
