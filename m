@@ -1,76 +1,63 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v4 12/12] ARM64: dts: marvell: Add thermal support for
- A7K/A8K
-Date: Mon, 18 Dec 2017 17:13:57 +0100
-Message-ID: <878te0hv3u.fsf@free-electrons.com>
-References: <20171218143643.7714-1-miquel.raynal@free-electrons.com>
- <20171218143643.7714-13-miquel.raynal@free-electrons.com>
+Subject: Re: [PATCH v2] arm: kirkwood: dts: Use lower case for bindings notation
+Date: Mon, 18 Dec 2017 17:45:56 +0100
+Message-ID: <871sjshtmj.fsf@free-electrons.com>
+References: <20171215124653.30902-1-malat@debian.org>
+        <20171215170711.8212-1-malat@debian.org>
+        <20171215214354.GA31157@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171218143643.7714-13-miquel.raynal@free-electrons.com> (Miquel
- Raynal's message of "Mon, 18 Dec 2017 15:36:43 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, linux-pm@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Will Deacon <will.deacon@arm.com>, David Sniatkiwicz <davidsn@marvell.com>, Eduardo Valentin <edubezval@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171215214354.GA31157@lunn.ch> (Andrew Lunn's message of "Fri,
+        15 Dec 2017 22:43:54 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlxdWVsLAogCiBPbiBsdW4uLCBkw6ljLiAxOCAyMDE3LCBNaXF1ZWwgUmF5bmFsIDxtaXF1
-ZWwucmF5bmFsQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cgo+IEFkZCB0aGVybWFsIERUIG5v
-ZGVzIGluIEFQODA2IGFuZCBDUDExMCBtYXN0ZXIvc2xhdmUgRFRTSSBmaWxlcy4KPgo+IFN1Z2dl
-c3RlZC1ieTogRGF2aWQgU25pYXRraXdpY3ogPGRhdmlkc25AbWFydmVsbC5jb20+Cj4gU2lnbmVk
-LW9mZi1ieTogTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBmcmVlLWVsZWN0cm9ucy5jb20+
-CgpBcHBsaWVkIG9uIG12ZWJ1L2R0NjQgKGJ1dCBub3QgeWV0IGluIGxpbnV4LW5leHQpCgpUaGFu
-a3MsCgpHcmVnb3J5Cgo+IC0tLQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRh
-LWFwODA2LmR0c2kgICAgICAgIHwgNiArKysrKysKPiAgYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2
-ZWxsL2FybWFkYS1jcDExMC1tYXN0ZXIuZHRzaSB8IDYgKysrKysrCj4gIGFyY2gvYXJtNjQvYm9v
-dC9kdHMvbWFydmVsbC9hcm1hZGEtY3AxMTAtc2xhdmUuZHRzaSAgfCA2ICsrKysrKwo+ICAzIGZp
-bGVzIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0
-L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWFwODA2LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
-L21hcnZlbGwvYXJtYWRhLWFwODA2LmR0c2kKPiBpbmRleCAxYzRkZDhhYjlhZDUuLmJiYzVhNGQz
-YWNhYyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWFw
-ODA2LmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWFwODA2
-LmR0c2kKPiBAQCAtMjg1LDYgKzI4NSwxMiBAQAo+ICAJCQkJCWdwaW8tcmFuZ2VzID0gPCZhcF9w
-aW5jdHJsIDAgMCAyMD47Cj4gIAkJCQl9Owo+ICAJCQl9Owo+ICsKPiArCQkJYXBfdGhlcm1hbDog
-dGhlcm1hbEA2ZjgwOEMgewo+ICsJCQkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGFybWFkYS1hcDgw
-Ni10aGVybWFsIjsKPiArCQkJCXJlZyA9IDwweDZmODA4QyAweDQ+LAo+ICsJCQkJICAgICAgPDB4
-NmY4MDg0IDB4OD47Cj4gKwkJCX07Cj4gIAkJfTsKPiAgCX07Cj4gIH07Cj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtY3AxMTAtbWFzdGVyLmR0c2kgYi9h
-cmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWNwMTEwLW1hc3Rlci5kdHNpCj4gaW5k
-ZXggZTNiNjRkMDNmYmQ4Li5lY2JjNzZkMjZkZmYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9i
-b290L2R0cy9tYXJ2ZWxsL2FybWFkYS1jcDExMC1tYXN0ZXIuZHRzaQo+ICsrKyBiL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtY3AxMTAtbWFzdGVyLmR0c2kKPiBAQCAtMTgyLDYg
-KzE4MiwxMiBAQAo+ICAJCQkJaW50ZXJydXB0cyA9IDxJQ1VfR1JQX05TUiA3NyBJUlFfVFlQRV9M
-RVZFTF9ISUdIPjsKPiAgCQkJfTsKPiAgCj4gKwkJCWNwbV90aGVybWFsOiB0aGVybWFsQDQwMDA3
-OCB7Cj4gKwkJCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLWNwMTEwLXRoZXJtYWwiOwo+
-ICsJCQkJcmVnID0gPDB4NDAwMDc4IDB4ND4sCj4gKwkJCQkgICAgICA8MHg0MDAwNzAgMHg4PjsK
-PiArCQkJfTsKPiArCj4gIAkJCWNwbV9zeXNjb24wOiBzeXN0ZW0tY29udHJvbGxlckA0NDAwMDAg
-ewo+ICAJCQkJY29tcGF0aWJsZSA9ICJzeXNjb24iLCAic2ltcGxlLW1mZCI7Cj4gIAkJCQlyZWcg
-PSA8MHg0NDAwMDAgMHgyMDAwPjsKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9t
-YXJ2ZWxsL2FybWFkYS1jcDExMC1zbGF2ZS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2
-ZWxsL2FybWFkYS1jcDExMC1zbGF2ZS5kdHNpCj4gaW5kZXggMGQ1MTA5NmM2OWY4Li4yOWJhMzJj
-Njg4NzAgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1j
-cDExMC1zbGF2ZS5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFk
-YS1jcDExMC1zbGF2ZS5kdHNpCj4gQEAgLTE4Miw2ICsxODIsMTIgQEAKPiAgCQkJCWludGVycnVw
-dHMgPSA8SUNVX0dSUF9OU1IgNzcgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gIAkJCX07Cj4gIAo+
-ICsJCQljcHNfdGhlcm1hbDogdGhlcm1hbEA0MDAwNzggewo+ICsJCQkJY29tcGF0aWJsZSA9ICJt
-YXJ2ZWxsLGFybWFkYS1jcDExMC10aGVybWFsIjsKPiArCQkJCXJlZyA9IDwweDQwMDA3OCAweDQ+
-LAo+ICsJCQkJICAgICAgPDB4NDAwMDcwIDB4OD47Cj4gKwkJCX07Cj4gKwo+ICAJCQljcHNfc3lz
-Y29uMDogc3lzdGVtLWNvbnRyb2xsZXJANDQwMDAwIHsKPiAgCQkJCWNvbXBhdGlibGUgPSAic3lz
-Y29uIiwgInNpbXBsZS1tZmQiOwo+ICAJCQkJcmVnID0gPDB4NDQwMDAwIDB4MjAwMD47Cj4gLS0g
-Cj4gMi4xMS4wCj4KCi0tIApHcmVnb3J5IENsZW1lbnQsIEZyZWUgRWxlY3Ryb25zCktlcm5lbCwg
-ZHJpdmVycywgcmVhbC10aW1lIGFuZCBlbWJlZGRlZCBMaW51eApkZXZlbG9wbWVudCwgY29uc3Vs
-dGluZywgdHJhaW5pbmcgYW5kIHN1cHBvcnQuCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwK
+Hi Mathieu,
+ 
+ On ven., déc. 15 2017, Andrew Lunn <andrew@lunn.ch> wrote:
+
+> On Fri, Dec 15, 2017 at 06:07:11PM +0100, Mathieu Malaterre wrote:
+>> Improve the DTS files using lower case to fix the following dtc warnings:
+>> 
+>> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+>> 
+>> Converted using the following command:
+>> 
+>> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
+>> 
+>> For simplicity, two sed expressions were used to solve each warnings separately.
+>> 
+>> To make the regex expression more robust a few other issues were resolved,
+>> namely setting unit-address to lower case, and adding a whitespace before the
+>> the opening curly brace:
+>> 
+>> https://elinux.org/Device_Tree_Linux#Linux_conventions
+>> 
+>> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+>> 
+>> Reported-by: David Daney <ddaney@caviumnetworks.com>
+>> Suggested-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>
+> Thanks for fixing up the commit message.
+>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+Applied on mvebu/dt
+
+Thanks,
+
+Gregory
+
+>
+>     Andrew
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
