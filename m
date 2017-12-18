@@ -1,60 +1,150 @@
-From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v6 2/3] dt-bindings: iio: temperature: add MLX90632 device bindings
-Date: Mon, 18 Dec 2017 16:05:59 +0100
-Message-ID: <20171218150559.8061-1-cmo@melexis.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V2 3/9] ARM: stm32: prepare stm32 family to welcome armv7
+ architecture
+Date: Mon, 18 Dec 2017 16:17:46 +0100
+Message-ID: <1513610272-7824-4-git-send-email-ludovic.Barre@st.com>
+References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for MLX90632 IR temperature sensor.
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This patch prepares the STM32 machine for the integration of Cortex-A
+based microprocessor (MPU), on top of the existing Cortex-M
+microcontroller family (MCU). Since both MCUs and MPUs are sharing
+common hardware blocks we can keep using ARCH_STM32 flag for most of
+them. If a hardware block is specific to one family we can use either
+ARM_SINGLE_ARMV7M or ARCH_MULTI_V7 flag.
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+ Documentation/arm/stm32/overview.rst               | 21 +++++++++--------
+ arch/arm/mach-stm32/Kconfig                        | 27 ++++++++++++----------
+ arch/arm/mach-stm32/Makefile                       |  2 +-
+ arch/arm/mach-stm32/{board-dt.c => board-mcu-dt.c} |  0
+ 4 files changed, 28 insertions(+), 22 deletions(-)
+ rename arch/arm/mach-stm32/{board-dt.c => board-mcu-dt.c} (100%)
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
-new file mode 100644
-index 000000000000..0b05812001f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
-@@ -0,0 +1,28 @@
-+* Melexis MLX90632 contactless Infra Red temperature sensor
+diff --git a/Documentation/arm/stm32/overview.rst b/Documentation/arm/stm32/overview.rst
+index 6be6059..3da6a8e 100644
+--- a/Documentation/arm/stm32/overview.rst
++++ b/Documentation/arm/stm32/overview.rst
+@@ -5,16 +5,17 @@ STM32 ARM Linux Overview
+ Introduction
+ ------------
+ 
+-The STMicroelectronics family of Cortex-M based MCUs are supported by the
+-'STM32' platform of ARM Linux. Currently only the STM32F429 (Cortex-M4)
+-and STM32F746 (Cortex-M7) are supported.
++The STMicroelectronics STM32 family of Cortex-A microprocessors (MPUs) and
++Cortex-M microcontrollers (MCUs) are supported by the 'STM32' platform of
++ARM Linux.
+ 
+ Configuration
+ -------------
+ 
+-A generic configuration is provided for STM32 family, and can be used as the
+-default by
++For MCUs, use the provided default configuration:
+         make stm32_defconfig
++For MPUs, use multi_v7 configuration:
++        make multi_v7_defconfig
+ 
+ Layout
+ ------
+@@ -22,10 +23,12 @@ Layout
+ All the files for multiple machine families are located in the platform code
+ contained in arch/arm/mach-stm32
+ 
+-There is a generic board board-dt.c in the mach folder which support
+-Flattened Device Tree, which means, it works with any compatible board with
+-Device Trees.
++There are generic boards board-mcu-dt.c and board-mpu-dt.c files in the mach
++folder which support Flattened Device Tree, which means, they work with any
++compatible board with Device Trees.
+ 
+ :Authors:
+ 
+-Maxime Coquelin <mcoquelin.stm32@gmail.com>
++- Maxime Coquelin <mcoquelin.stm32@gmail.com>
++- Ludovic Barre <ludovic.barre@st.com>
++- Gerald Baeza <gerald.baeza@st.com>
+diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
+index 0d1889b..e0f744b 100644
+--- a/arch/arm/mach-stm32/Kconfig
++++ b/arch/arm/mach-stm32/Kconfig
+@@ -1,8 +1,7 @@
+-config ARCH_STM32
+-	bool "STMicrolectronics STM32"
+-	depends on ARM_SINGLE_ARMV7M
++menuconfig ARCH_STM32
++	bool "STMicroelectronics STM32 family" if ARM_SINGLE_ARMV7M || ARCH_MULTI_V7
++	select ARMV7M_SYSTICK if ARM_SINGLE_ARMV7M
+ 	select ARCH_HAS_RESET_CONTROLLER
+-	select ARMV7M_SYSTICK
+ 	select CLKSRC_STM32
+ 	select PINCTRL
+ 	select RESET_CONTROLLER
+@@ -10,22 +9,26 @@ config ARCH_STM32
+ 	help
+ 	  Support for STMicroelectronics STM32 processors.
+ 
++if ARCH_STM32
 +
-+Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
+ config MACH_STM32F429
+-	bool "STMicrolectronics STM32F429"
+-	depends on ARCH_STM32
++	bool "STMicroelectronics STM32F429"
++	depends on ARM_SINGLE_ARMV7M
+ 	default y
+ 
+ config MACH_STM32F469
+-	bool "STMicrolectronics STM32F469"
+-	depends on ARCH_STM32
++	bool "STMicroelectronics STM32F469"
++	depends on ARM_SINGLE_ARMV7M
+ 	default y
+ 
+ config MACH_STM32F746
+-	bool "STMicrolectronics STM32F746"
+-	depends on ARCH_STM32
++	bool "STMicroelectronics STM32F746"
++	depends on ARM_SINGLE_ARMV7M
+ 	default y
+ 
+ config MACH_STM32H743
+-	bool "STMicrolectronics STM32H743"
+-	depends on ARCH_STM32
++	bool "STMicroelectronics STM32H743"
++	depends on ARM_SINGLE_ARMV7M
+ 	default y
 +
-+There are various applications for the Infra Red contactless temperature sensor
-+and MLX90632 is most suitable for consumer applications where measured object
-+temperature is in range between -20 to 200 degrees Celsius with relative error
-+of measurement below 1 degree Celsius in object temperature range for
-+industrial applications. Since it can operate and measure ambient temperature
-+in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
-+
-+Be aware that electronics surrounding the sensor can increase ambient
-+temperature. MLX90632 can be calibrated to reduce the housing effect via
-+already existing EEPROM parameters.
-+
-+Since measured object emissivity effects Infra Red energy emitted, emissivity
-+should be set before requesting the object temperature.
-+
-+Required properties:
-+  - compatible: should be "melexis,mlx90632"
-+  - reg: the I2C address of the sensor (default 0x3a)
-+
-+Example:
-+
-+mlx90632@3a {
-+	compatible = "melexis,mlx90632";
-+	reg = <0x3a>;
-+};
++endif
+diff --git a/arch/arm/mach-stm32/Makefile b/arch/arm/mach-stm32/Makefile
+index bd0b7b5..5940af1 100644
+--- a/arch/arm/mach-stm32/Makefile
++++ b/arch/arm/mach-stm32/Makefile
+@@ -1 +1 @@
+-obj-y += board-dt.o
++obj-$(CONFIG_ARM_SINGLE_ARMV7M) += board-mcu-dt.o
+diff --git a/arch/arm/mach-stm32/board-dt.c b/arch/arm/mach-stm32/board-mcu-dt.c
+similarity index 100%
+rename from arch/arm/mach-stm32/board-dt.c
+rename to arch/arm/mach-stm32/board-mcu-dt.c
 -- 
-2.15.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
