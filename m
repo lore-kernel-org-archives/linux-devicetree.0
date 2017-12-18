@@ -1,62 +1,67 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5] media: rc: update sunxi-ir driver to
- get base clock frequency from devicetree
-Date: Mon, 18 Dec 2017 13:43:40 +0100
-Message-ID: <887632f1-6e43-c9d0-c298-0d02b99d2781@gmail.com>
-References: <20171217224547.21481-1-embed3d@gmail.com>
- <CGME20171217224555epcas5p3eb77a28e9f3ba4b189c5f275e2d2a679@epcas5p3.samsung.com>
- <20171217224547.21481-2-embed3d@gmail.com>
- <20171218024444.GA9140@gangnam.samsung>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6] mfd: syscon: Add hardware spinlock support
+Date: Mon, 18 Dec 2017 13:44:10 +0100
+Message-ID: <CAK8P3a3JTV0z0ua_xbbf8eJFGsgOEai4RC9Ny5-JL80MPuKFSA@mail.gmail.com>
+References: <87ec50c846bbc7afc09ba0855aba1cdea6473308.1512048582.git.baolin.wang@linaro.org>
+ <20171215104204.p7i27sen77ohbmzi@dell> <CAK8P3a0Eu4zaVrSEMps06ZZmFs=6026WZ7ze5V2k=nu0zL0bxQ@mail.gmail.com>
+ <CAMz4ku+KfQRoLTO-T3ciS-1Z9oD=y0LJ25n-YDUMr+aYetbt9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBD257DPK24NRB77P33IQKGQEZLMX5QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171218024444.GA9140-8vUhnHFVuGn35fTxX1Dczw@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMz4ku+KfQRoLTO-T3ciS-1Z9oD=y0LJ25n-YDUMr+aYetbt9A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Andi,
+On Mon, Dec 18, 2017 at 7:54 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+> On 15 December 2017 at 21:13, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Fri, Dec 15, 2017 at 11:42 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>>
+>>>> @@ -87,6 +88,30 @@ static struct syscon *of_syscon_register(struct device_node *np)
+>>>>       if (ret)
+>>>>               reg_io_width = 4;
+>>>>
+>>>> +     ret = of_hwspin_lock_get_id(np, 0);
+>>>> +     if (ret > 0) {
+>>>> +             syscon_config.hwlock_id = ret;
+>>>> +             syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
+>>>> +     } else {
+>>>> +             switch (ret) {
+>>>> +             case -ENOENT:
+>>>> +                     /* Ignore missing hwlock, it's optional. */
+>>>> +                     break;
+>>>> +             case 0:
+>>>> +                     /* In case of the HWSPINLOCK is not enabled. */
+>>>> +                     if (!IS_ENABLED(CONFIG_HWSPINLOCK))
+>>>> +                             break;
+>>>> +
+>>>> +                     ret = -EINVAL;
+>>>> +                     /* fall-through */
+>>>> +             default:
+>>>> +                     pr_err("Failed to retrieve valid hwlock: %d\n", ret);
+>>>> +                     /* fall-through */
+>>>> +             case -EPROBE_DEFER:
+>>>> +                     goto err_regmap;
+>>>> +             }
+>>
+>> The 'case 0' seems odd here, are we sure that this is always a failure?
+>> From the of_hwspin_lock_get_id() definition it looks like zero might
+>> be valid, and the !CONFIG_HWSPINLOCK implementation appears
+>> to be written so that we should consider '0' valid but unused and
+>> silently continue with that. If that is generally not the intended
+>> use, it should probably return -EINVAL or something like that.
+>
+> Yes, 0 is valid for of_hwspin_lock_get_id(), but if we pass 'hwlock id
+> = 0' to regmap, the regmap core will not regard it as a valid hwlock
+> id to request the hwlock and will use default mutex lock instead of
+> hwlock, which will cause problems. Meanwhile if we silently continue
+> with case 0, users will not realize that they set one invalid hwlock
+> id to regmap core, so here we regarded case 0 as one invalid id to
+> print error messages for users.
 
-thanks for the feedback. I will fix that in the next version of this 
-patch series!
+Something else still seems wrong then: If regmap doesn't accept a zero
+lock-id, then of_hwspin_lock_get_id() should never return that as a
+valid ID, right?
 
-On 18.12.2017 03:44, Andi Shyti wrote:
-> Hi Philipp,
-> 
-> just a couple of small nitpicks.
-> 
->> +	u32 b_clk_freq;
-> 
-> [...]
-> 
->> +	/* Base clock frequency (optional) */
->> +	if (of_property_read_u32(dn, "clock-frequency", &b_clk_freq)) {
->> +		b_clk_freq = SUNXI_IR_BASE_CLK;
->> +	}
->> +
-> 
-> how about you intialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' and
-> just call 'of_property_read_u32' without if statement.
-> 'b_clk_freq' value should not be changed if "clock-frequency"
-> is not present in the DTS.
-> 
-> This might avoid misinterpretation from static analyzers that
-> might think that 'b_clk_freq' is used uninitialized.
-> 
->> +	dev_info(dev, "set base clock frequency to %d Hz.\n", b_clk_freq);
-> 
-> Please use dev_dbg().
-> 
-> Andi
-> 
---
-Philipp
+        Arnd
