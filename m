@@ -1,52 +1,54 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v9 2/2] media: i2c: Add the ov7740 image sensor driver
-Date: Wed, 13 Dec 2017 22:06:29 +0200
-Message-ID: <1641aa67-b05e-47e2-600c-70b77571b450@iki.fi>
-References: <20171211013146.2497-1-wenyou.yang@microchip.com>
- <20171211013146.2497-3-wenyou.yang@microchip.com>
+From: Stefan Mavrodiev <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] arm: sunxi: Add alternative pins for spi0
+Date: Mon, 18 Dec 2017 08:24:21 +0200
+Message-ID: <ca648552-cefb-e19d-72cf-8b56e97b013d@gmail.com>
+References: <1513151074-6888-1-git-send-email-stefan@olimex.com>
+ <20171213154035.qc655iahjoeflftq@flea.lan>
+ <5f518e4b-e624-17c2-7e72-24ba930a1c15@gmail.com>
+ <20171215150823.jplgknururmkvp2t@flea.lan>
+Reply-To: stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171211013146.2497-3-wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBCSP3JM3Y4JBBGN63XIQKGQEWOHHSBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171215150823.jplgknururmkvp2t-ZC1Zs529Oq4@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wenyou,
-
-Wenyou Yang wrote:
-...
-> +static int ov7740_start_streaming(struct ov7740 *ov7740)
-> +{
-> +	int ret;
-> +
-> +	if (ov7740->fmt) {
-> +		ret = regmap_multi_reg_write(ov7740->regmap,
-> +					     ov7740->fmt->regs,
-> +					     ov7740->fmt->reg_num);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	if (ov7740->frmsize) {
-> +		ret = regmap_multi_reg_write(ov7740->regmap,
-> +					     ov7740->frmsize->regs,
-> +					     ov7740->frmsize->reg_num);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return __v4l2_ctrl_handler_setup(ov7740->subdev.ctrl_handler);
-
-I believe you're still setting the controls after starting streaming.
-
--- 
-Sakari Ailus
-sakari.ailus-X3B1VOXEql0@public.gmane.org
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 12/15/2017 05:08 PM, Maxime Ripard wrote:
+> Hi,
+>
+> On Thu, Dec 14, 2017 at 08:24:54AM +0200, Stefan Mavrodiev wrote:
+>> On 12/13/2017 05:40 PM, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Wed, Dec 13, 2017 at 09:44:34AM +0200, Stefan Mavrodiev wrote:
+>>>> Allwinner A10/A13/A20 SoCs have pinmux for spi0
+>>>> on port C. The patch adds these pins in the respective
+>>>> dts includes.
+>>>>
+>>>> Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+>>> Do you have any boards that are using these?
+>>>
+>>> We won't merge that patch if there's no users for it.
+>> A20-OLinuXino-Lime/Lime2 and A10-OLinuXino-Lime with spi flash.
+>> For A13 we still doesn't have that option.
+> If this bus is exposed on the headers, you can add those to the DT but
+> leave them disabled if you want. Buf if there's no users of those
+> nodes, our policy is not to merge them.
+So basically I should resend the patch, enabling the those pins only for
+sun4i and sun7i platform?
+>
+> Thanks!
+> Maxime
+>
+Regards,
+Stefan Mavrodiev
