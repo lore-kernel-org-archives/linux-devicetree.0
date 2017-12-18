@@ -1,84 +1,33 @@
-From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 00/12] Armada thermal: improvements and A7K/A8K SoCs support
-Date: Mon, 18 Dec 2017 15:36:31 +0100
-Message-ID: <20171218143643.7714-1-miquel.raynal@free-electrons.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 0/5] misc serdev: new serdev based driver for Wi2Wi
+ w2sg00x4 GPS module
+Date: Mon, 18 Dec 2017 15:48:16 +0100
+Message-ID: <20171218144816.GA31130@kroah.com>
+References: <cover.1512114576.git.hns@goldelico.com>
+ <01C0DAA8-A2E5-4E42-8726-80937541E231@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <01C0DAA8-A2E5-4E42-8726-80937541E231@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@baylibre.com>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, "Andrew F. Davis" <afd@ti.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Dec 18, 2017 at 09:52:07AM +0100, H. Nikolaus Schaller wrote:
+> Hi,
+> unfortunately I had lost to include Andrew Davis' address who had provided
+> very valuable comments for v5. Sorry, Andrew!
+> 
+> There has only been one more comment by Andreas F‰rber in the past 14 days.
+> 
+> So how to proceed? Who is taking care of deciding/merging towards linux-next?
 
-This series takes over Baruch's series by integrating his patches about
-supporting thermal on Armada 7K and 8K SoCs within a larger series with
-several improvements on the armada_thermal.c driver.
+I already have the serdev patches in my tty tree, right?  If I have no
+objections, I can take the rest through that tree as well...
 
-For now, Armada 380 and CP110 compatibles share the same initialization
-routine but this will probably change in the near future when adding
-support for overheat interrupts.
+thanks,
 
-DT bindings documentation is updated to match existing code.
-
-Armada AP806 and CP110 DT are also updated with thermal nodes.
-
-Thank you,
-Miqu√®l
-
-
-Changes since v3:
-  - Added Gregory's Reviewed-by tags
-  - Detailed what I have changed over Baruch's series in the commit logs
-  - Removed the list of every supported SoC, used "Marvell EBU Armada
-  SoCs" instead as suggested by Thomas (unless for the Kconfig
-  description, where having the list is useful).
-  - Changed the comment about the Armada 380 reset section in the
-  armada380_init() callback.
-  - Removed the freshly introduced marvell,thermal-zone-name property in
-  favor of the use of dev_name(dev) to name the thermal zone.
-  - Introduced the needs_control0 capability and removed checks in the
-  init routines (probe will fail if the bindings used are not
-  appropriate).
-  - Changed coefficients type to s64 to handle signed values, as well as
-  some local variables around in the get_temp() callback
-  - Used a do_div() instead of the traditionnal "/" to handle 64-bit
-  values.
-  - Split the patch renaiming the registers to do the "status" renaiming
-  aside.
-
-
-Baruch Siach (4):
-  dt-bindings: thermal: Describe Armada AP806 and CP110
-  thermal: armada: Use msleep for long delays
-  thermal: armada: Add support for Armada AP806
-  thermal: armada: Add support for Armada CP110
-
-Miquel Raynal (8):
-  thermal: armada: Simplify the check of the validity bit
-  thermal: armada: Clarify control registers accesses
-  thermal: armada: Use real status register name
-  thermal: armada: Update Kconfig and module description
-  thermal: armada: Change sensors trim default value
-  thermal: armada: Wait sensors validity before exiting the init
-    callback
-  thermal: armada: Give meaningful names to the thermal zones
-  ARM64: dts: marvell: Add thermal support for A7K/A8K
-
- .../devicetree/bindings/thermal/armada-thermal.txt |  24 +-
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |   6 +
- .../boot/dts/marvell/armada-cp110-master.dtsi      |   6 +
- .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi |   6 +
- drivers/thermal/Kconfig                            |   4 +-
- drivers/thermal/armada_thermal.c                   | 252 +++++++++++++++------
- 6 files changed, 226 insertions(+), 72 deletions(-)
-
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
