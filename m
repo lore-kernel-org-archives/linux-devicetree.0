@@ -1,283 +1,189 @@
-From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] eeprom: at24: convert magic numbers to structs.
-Date: Mon, 18 Dec 2017 15:29:05 +0100
-Message-ID: <CAMRc=Mdx9HiLp=81cyCiYZArks8C7MS+DgxMyr47U4mD3cXgpw@mail.gmail.com>
-References: <1512768306-14816-1-git-send-email-svendev@arcx.com> <1512768306-14816-2-git-send-email-svendev@arcx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1512768306-14816-2-git-send-email-svendev-fuHqz3Nb1YI@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Divagar Mohandass <divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Miquel Raynal <miquel.raynal@free-electrons.com>
+Subject: [PATCH v4 04/12] thermal: armada: Clarify control registers accesses
+Date: Mon, 18 Dec 2017 15:36:35 +0100
+Message-ID: <20171218143643.7714-5-miquel.raynal@free-electrons.com>
+References: <20171218143643.7714-1-miquel.raynal@free-electrons.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20171218143643.7714-1-miquel.raynal@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@free-electrons.com>, Baruch Siach <baruch@tkos.co.il>, David Sniatkiwicz <davidsn@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-2017-12-08 22:25 GMT+01:00 Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>:
-> Fundamental properties such as capacity and page size differ
-> among at24-type chips. But these chips do not have an id register,
-> so this can't be discovered at runtime.
->
-> Traditionally, at24-type eeprom properties were determined in two ways:
-> - by passing a 'struct at24_platform_data' via platform_data, or
-> - by naming the chip type in the devicetree, which passes a
->         'magic number' to probe(), which is then converted to
->         a 'struct at24_platform_data'.
->
-> Recently a bug was discovered because the magic number rounds down
-> all chip sizes to the lowest power of two. This was addressed by
-> a work-around, with the wish that magic numbers should over time
-> be converted to structs.
->
-> This patch replaces the magic numbers with 'struct at24_chip_data'.
->
-> Signed-off-by: Sven Van Asbroeck <svendev-fuHqz3Nb1YI@public.gmane.org>
-> ---
->  drivers/misc/eeprom/at24.c | 230 ++++++++++++++++++++++-----------------------
->  1 file changed, 110 insertions(+), 120 deletions(-)
->
-> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> index 06ffa11..c3759cb 100644
-> --- a/drivers/misc/eeprom/at24.c
-> +++ b/drivers/misc/eeprom/at24.c
-> @@ -105,16 +105,6 @@ struct at24_data {
->  module_param(write_timeout, uint, 0);
->  MODULE_PARM_DESC(write_timeout, "Time (in ms) to try writes (default 25)");
->
-> -#define AT24_SIZE_BYTELEN 5
-> -#define AT24_SIZE_FLAGS 8
-> -
-> -#define AT24_BITMASK(x) (BIT(x) - 1)
-> -
-> -/* create non-zero magic value for given eeprom parameters */
-> -#define AT24_DEVICE_MAGIC(_len, _flags)                \
-> -       ((1 << AT24_SIZE_FLAGS | (_flags))              \
-> -           << AT24_SIZE_BYTELEN | ilog2(_len))
-> -
->  /*
->   * Both reads and writes fail if the previous write didn't complete yet. This
->   * macro loops a few times waiting at least long enough for one entire page
-> @@ -131,113 +121,119 @@ struct at24_data {
->              op_time ? time_before(op_time, tout) : true;               \
->              usleep_range(1000, 1500), op_time = jiffies)
->
-> +struct at24_chip_data {
-> +       /*
-> +        * these fields mirror their equivalents in
-> +        * struct at24_platform_data
-> +        */
-> +       u32 byte_len;
-> +       u8 flags;
-> +};
-> +
-> +#define AT24_CHIP_DATA(_name, _len, _flags) \
-> +       static const struct at24_chip_data at24_data_##_name = { \
-> +               .byte_len = _len, .flags = _flags, \
-> +       }
-> +
-> +#define AT24_I2C_DEVICE_ID(_name) \
-> +       { #_name, (kernel_ulong_t)&at24_data_##_name }
-> +
-> +#define AT24_ACPI_DEVICE_ID(_name) \
-> +       { #_name, (kernel_ulong_t)&at24_data_##_name }
-> +
-> +#define AT24_OF_DEVICE_ID(_of_compat, _name) \
-> +       { .compatible = _of_compat, .data = &at24_data_##_name }
-> +
-> +/* needs 8 addresses as A0-A2 are ignored */
-> +AT24_CHIP_DATA(24c00, 128 / 8, AT24_FLAG_TAKE8ADDR);
-> +/* old variants can't be handled with this generic entry! */
-> +AT24_CHIP_DATA(24c01, 1024 / 8, 0);
-> +AT24_CHIP_DATA(24cs01, 16, AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
-> +AT24_CHIP_DATA(24c02, 2048 / 8,        0);
-> +AT24_CHIP_DATA(24cs02, 16, AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
-> +AT24_CHIP_DATA(24mac402, 48 / 8,
-> +       AT24_FLAG_MAC | AT24_FLAG_READONLY);
-> +AT24_CHIP_DATA(24mac602, 64 / 8,
-> +       AT24_FLAG_MAC | AT24_FLAG_READONLY);
-> +/* spd is a 24c02 in memory DIMMs */
-> +AT24_CHIP_DATA(spd, 2048 / 8,
-> +       AT24_FLAG_READONLY | AT24_FLAG_IRUGO);
-> +AT24_CHIP_DATA(24c04, 4096 / 8,        0);
-> +AT24_CHIP_DATA(24cs04, 16,
-> +       AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
-> +/* 24rf08 quirk is handled at i2c-core */
-> +AT24_CHIP_DATA(24c08, 8192 / 8,        0);
-> +AT24_CHIP_DATA(24cs08, 16,
-> +       AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
-> +AT24_CHIP_DATA(24c16, 16384 / 8, 0);
-> +AT24_CHIP_DATA(24cs16, 16,
-> +       AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
-> +AT24_CHIP_DATA(24c32, 32768 / 8,       AT24_FLAG_ADDR16);
-> +AT24_CHIP_DATA(24cs32, 16,
-> +       AT24_FLAG_ADDR16 |
-> +       AT24_FLAG_SERIAL |
-> +       AT24_FLAG_READONLY);
-> +AT24_CHIP_DATA(24c64, 65536 / 8,       AT24_FLAG_ADDR16);
-> +AT24_CHIP_DATA(24cs64, 16,
-> +       AT24_FLAG_ADDR16 |
-> +       AT24_FLAG_SERIAL |
-> +       AT24_FLAG_READONLY);
-> +AT24_CHIP_DATA(24c128, 131072 / 8,     AT24_FLAG_ADDR16);
-> +AT24_CHIP_DATA(24c256, 262144 / 8,     AT24_FLAG_ADDR16);
-> +AT24_CHIP_DATA(24c512, 524288 / 8,     AT24_FLAG_ADDR16);
-> +AT24_CHIP_DATA(24c1024, 1048576 / 8,   AT24_FLAG_ADDR16);
-> +/* identical to 24c08 ? */
-> +AT24_CHIP_DATA(INT3499, 8192 / 8, 0);
-> +
->  static const struct i2c_device_id at24_ids[] = {
-> -       /* needs 8 addresses as A0-A2 are ignored */
-> -       { "24c00",      AT24_DEVICE_MAGIC(128 / 8,      AT24_FLAG_TAKE8ADDR) },
-> -       /* old variants can't be handled with this generic entry! */
-> -       { "24c01",      AT24_DEVICE_MAGIC(1024 / 8,     0) },
-> -       { "24cs01",     AT24_DEVICE_MAGIC(16,
-> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
-> -       { "24c02",      AT24_DEVICE_MAGIC(2048 / 8,     0) },
-> -       { "24cs02",     AT24_DEVICE_MAGIC(16,
-> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
-> -       { "24mac402",   AT24_DEVICE_MAGIC(48 / 8,
-> -                               AT24_FLAG_MAC | AT24_FLAG_READONLY) },
-> -       { "24mac602",   AT24_DEVICE_MAGIC(64 / 8,
-> -                               AT24_FLAG_MAC | AT24_FLAG_READONLY) },
-> -       /* spd is a 24c02 in memory DIMMs */
-> -       { "spd",        AT24_DEVICE_MAGIC(2048 / 8,
-> -                               AT24_FLAG_READONLY | AT24_FLAG_IRUGO) },
-> -       { "24c04",      AT24_DEVICE_MAGIC(4096 / 8,     0) },
-> -       { "24cs04",     AT24_DEVICE_MAGIC(16,
-> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
-> -       /* 24rf08 quirk is handled at i2c-core */
-> -       { "24c08",      AT24_DEVICE_MAGIC(8192 / 8,     0) },
-> -       { "24cs08",     AT24_DEVICE_MAGIC(16,
-> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
-> -       { "24c16",      AT24_DEVICE_MAGIC(16384 / 8,    0) },
-> -       { "24cs16",     AT24_DEVICE_MAGIC(16,
-> -                               AT24_FLAG_SERIAL | AT24_FLAG_READONLY) },
-> -       { "24c32",      AT24_DEVICE_MAGIC(32768 / 8,    AT24_FLAG_ADDR16) },
-> -       { "24cs32",     AT24_DEVICE_MAGIC(16,
-> -                               AT24_FLAG_ADDR16 |
-> -                               AT24_FLAG_SERIAL |
-> -                               AT24_FLAG_READONLY) },
-> -       { "24c64",      AT24_DEVICE_MAGIC(65536 / 8,    AT24_FLAG_ADDR16) },
-> -       { "24cs64",     AT24_DEVICE_MAGIC(16,
-> -                               AT24_FLAG_ADDR16 |
-> -                               AT24_FLAG_SERIAL |
-> -                               AT24_FLAG_READONLY) },
-> -       { "24c128",     AT24_DEVICE_MAGIC(131072 / 8,   AT24_FLAG_ADDR16) },
-> -       { "24c256",     AT24_DEVICE_MAGIC(262144 / 8,   AT24_FLAG_ADDR16) },
-> -       { "24c512",     AT24_DEVICE_MAGIC(524288 / 8,   AT24_FLAG_ADDR16) },
-> -       { "24c1024",    AT24_DEVICE_MAGIC(1048576 / 8,  AT24_FLAG_ADDR16) },
-> +       AT24_I2C_DEVICE_ID(24c00),
-> +       AT24_I2C_DEVICE_ID(24c01),
-> +       AT24_I2C_DEVICE_ID(24cs01),
-> +       AT24_I2C_DEVICE_ID(24c02),
-> +       AT24_I2C_DEVICE_ID(24cs02),
-> +       AT24_I2C_DEVICE_ID(24mac402),
-> +       AT24_I2C_DEVICE_ID(24mac602),
-> +       AT24_I2C_DEVICE_ID(spd),
-> +       AT24_I2C_DEVICE_ID(24c04),
-> +       AT24_I2C_DEVICE_ID(24cs04),
-> +       AT24_I2C_DEVICE_ID(24c08),
-> +       AT24_I2C_DEVICE_ID(24cs08),
-> +       AT24_I2C_DEVICE_ID(24c16),
-> +       AT24_I2C_DEVICE_ID(24cs16),
-> +       AT24_I2C_DEVICE_ID(24c32),
-> +       AT24_I2C_DEVICE_ID(24cs32),
-> +       AT24_I2C_DEVICE_ID(24c64),
-> +       AT24_I2C_DEVICE_ID(24cs64),
-> +       AT24_I2C_DEVICE_ID(24c128),
-> +       AT24_I2C_DEVICE_ID(24c256),
-> +       AT24_I2C_DEVICE_ID(24c512),
-> +       AT24_I2C_DEVICE_ID(24c1024),
->         { "at24", 0 },
->         { /* END OF LIST */ }
->  };
->  MODULE_DEVICE_TABLE(i2c, at24_ids);
->
->  static const struct of_device_id at24_of_match[] = {
-> -       {
-> -               .compatible = "atmel,24c00",
-> -               .data = (void *)AT24_DEVICE_MAGIC(128 / 8, AT24_FLAG_TAKE8ADDR)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c01",
-> -               .data = (void *)AT24_DEVICE_MAGIC(1024 / 8, 0)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c02",
-> -               .data = (void *)AT24_DEVICE_MAGIC(2048 / 8, 0)
-> -       },
-> -       {
-> -               .compatible = "atmel,spd",
-> -               .data = (void *)AT24_DEVICE_MAGIC(2048 / 8,
-> -                               AT24_FLAG_READONLY | AT24_FLAG_IRUGO)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c04",
-> -               .data = (void *)AT24_DEVICE_MAGIC(4096 / 8, 0)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c08",
-> -               .data = (void *)AT24_DEVICE_MAGIC(8192 / 8, 0)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c16",
-> -               .data = (void *)AT24_DEVICE_MAGIC(16384 / 8, 0)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c32",
-> -               .data = (void *)AT24_DEVICE_MAGIC(32768 / 8, AT24_FLAG_ADDR16)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c64",
-> -               .data = (void *)AT24_DEVICE_MAGIC(65536 / 8, AT24_FLAG_ADDR16)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c128",
-> -               .data = (void *)AT24_DEVICE_MAGIC(131072 / 8, AT24_FLAG_ADDR16)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c256",
-> -               .data = (void *)AT24_DEVICE_MAGIC(262144 / 8, AT24_FLAG_ADDR16)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c512",
-> -               .data = (void *)AT24_DEVICE_MAGIC(524288 / 8, AT24_FLAG_ADDR16)
-> -       },
-> -       {
-> -               .compatible = "atmel,24c1024",
-> -               .data = (void *)AT24_DEVICE_MAGIC(1048576 / 8, AT24_FLAG_ADDR16)
-> -       },
-> -       { },
-> +       AT24_OF_DEVICE_ID("atmel,24c00", 24c00),
-> +       AT24_OF_DEVICE_ID("atmel,24c01", 24c01),
-> +       AT24_OF_DEVICE_ID("atmel,24c02", 24c02),
-> +       AT24_OF_DEVICE_ID("atmel,spd", spd),
-> +       AT24_OF_DEVICE_ID("atmel,24c04", 24c04),
-> +       AT24_OF_DEVICE_ID("atmel,24c08", 24c08),
-> +       AT24_OF_DEVICE_ID("atmel,24c16", 24c16),
-> +       AT24_OF_DEVICE_ID("atmel,24c32", 24c32),
-> +       AT24_OF_DEVICE_ID("atmel,24c64", 24c64),
-> +       AT24_OF_DEVICE_ID("atmel,24c128", 24c128),
-> +       AT24_OF_DEVICE_ID("atmel,24c256", 24c256),
-> +       AT24_OF_DEVICE_ID("atmel,24c512", 24c512),
-> +       AT24_OF_DEVICE_ID("atmel,24c1024", 24c1024),
-> +       { /* END OF LIST */ },
->  };
->  MODULE_DEVICE_TABLE(of, at24_of_match);
+Bindings were incomplete for a long time by only exposing one of the two
+available control registers. To ease the migration to the full bindings
+(already in use for the Armada 375 SoC), rename the pointers for
+clarification. This way, it will only be needed to add another pointer
+to access the other control register when the time comes.
 
-Hi Sven,
+This avoids dangerous situations where the offset 0 of the control
+area can be either one register or the other depending on the bindings
+used. After this change, device trees of other SoCs could be migrated to
+the "full" bindings if they may benefit from features from the
+unaccessible register, without any change in the driver.
 
-I have given this patch a thought over the weekend and decided that we
-should not hide everything behind macros. We're decreasing the
-readability while not winning anything.
+Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
+Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ drivers/thermal/armada_thermal.c | 69 +++++++++++++++++++++++++++-------------
+ 1 file changed, 47 insertions(+), 22 deletions(-)
 
-Let's leave the macros defining the chip data in place (for code
-brevity), but for everything else let's just use designated struct
-initializers ( .compatible = "vendor,device" etc.), so drop the
-AT24_OF_DEVICE_ID macros etc. in the next version.
-
-Thanks,
-Bartosz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
+index f350d7efd35a..f422563e617c 100644
+--- a/drivers/thermal/armada_thermal.c
++++ b/drivers/thermal/armada_thermal.c
+@@ -39,12 +39,21 @@
+ #define A375_HW_RESETn			BIT(8)
+ #define A380_HW_RESET			BIT(8)
+ 
++/* Legacy bindings */
++#define LEGACY_CONTROL_MEM_LEN		0x4
++
++/* Current bindings with the 2 control registers under the same memory area */
++#define LEGACY_CONTROL1_OFFSET		0x0
++#define CONTROL0_OFFSET			0x0
++#define CONTROL1_OFFSET			0x4
++
+ struct armada_thermal_data;
+ 
+ /* Marvell EBU Thermal Sensor Dev Structure */
+ struct armada_thermal_priv {
+ 	void __iomem *sensor;
+-	void __iomem *control;
++	void __iomem *control0;
++	void __iomem *control1;
+ 	struct armada_thermal_data *data;
+ };
+ 
+@@ -71,22 +80,22 @@ struct armada_thermal_data {
+ static void armadaxp_init_sensor(struct platform_device *pdev,
+ 				 struct armada_thermal_priv *priv)
+ {
+-	unsigned long reg;
++	u32 reg;
+ 
+-	reg = readl_relaxed(priv->control);
++	reg = readl_relaxed(priv->control1);
+ 	reg |= PMU_TDC0_OTF_CAL_MASK;
+-	writel(reg, priv->control);
++	writel(reg, priv->control1);
+ 
+ 	/* Reference calibration value */
+ 	reg &= ~PMU_TDC0_REF_CAL_CNT_MASK;
+ 	reg |= (0xf1 << PMU_TDC0_REF_CAL_CNT_OFFS);
+-	writel(reg, priv->control);
++	writel(reg, priv->control1);
+ 
+ 	/* Reset the sensor */
+-	reg = readl_relaxed(priv->control);
+-	writel((reg | PMU_TDC0_SW_RST_MASK), priv->control);
++	reg = readl_relaxed(priv->control1);
++	writel((reg | PMU_TDC0_SW_RST_MASK), priv->control1);
+ 
+-	writel(reg, priv->control);
++	writel(reg, priv->control1);
+ 
+ 	/* Enable the sensor */
+ 	reg = readl_relaxed(priv->sensor);
+@@ -97,19 +106,19 @@ static void armadaxp_init_sensor(struct platform_device *pdev,
+ static void armada370_init_sensor(struct platform_device *pdev,
+ 				  struct armada_thermal_priv *priv)
+ {
+-	unsigned long reg;
++	u32 reg;
+ 
+-	reg = readl_relaxed(priv->control);
++	reg = readl_relaxed(priv->control1);
+ 	reg |= PMU_TDC0_OTF_CAL_MASK;
+-	writel(reg, priv->control);
++	writel(reg, priv->control1);
+ 
+ 	/* Reference calibration value */
+ 	reg &= ~PMU_TDC0_REF_CAL_CNT_MASK;
+ 	reg |= (0xf1 << PMU_TDC0_REF_CAL_CNT_OFFS);
+-	writel(reg, priv->control);
++	writel(reg, priv->control1);
+ 
+ 	reg &= ~PMU_TDC0_START_CAL_MASK;
+-	writel(reg, priv->control);
++	writel(reg, priv->control1);
+ 
+ 	msleep(10);
+ }
+@@ -117,30 +126,30 @@ static void armada370_init_sensor(struct platform_device *pdev,
+ static void armada375_init_sensor(struct platform_device *pdev,
+ 				  struct armada_thermal_priv *priv)
+ {
+-	unsigned long reg;
++	u32 reg;
+ 
+-	reg = readl(priv->control + 4);
++	reg = readl(priv->control1);
+ 	reg &= ~(A375_UNIT_CONTROL_MASK << A375_UNIT_CONTROL_SHIFT);
+ 	reg &= ~A375_READOUT_INVERT;
+ 	reg &= ~A375_HW_RESETn;
+ 
+-	writel(reg, priv->control + 4);
++	writel(reg, priv->control1);
+ 	msleep(20);
+ 
+ 	reg |= A375_HW_RESETn;
+-	writel(reg, priv->control + 4);
++	writel(reg, priv->control1);
+ 	msleep(50);
+ }
+ 
+ static void armada380_init_sensor(struct platform_device *pdev,
+ 				  struct armada_thermal_priv *priv)
+ {
+-	unsigned long reg = readl_relaxed(priv->control);
++	u32 reg = readl_relaxed(priv->control1);
+ 
+ 	/* Reset hardware once */
+ 	if (!(reg & A380_HW_RESET)) {
+ 		reg |= A380_HW_RESET;
+-		writel(reg, priv->control);
++		writel(reg, priv->control1);
+ 		msleep(10);
+ 	}
+ }
+@@ -253,6 +262,7 @@ MODULE_DEVICE_TABLE(of, armada_thermal_id_table);
+ 
+ static int armada_thermal_probe(struct platform_device *pdev)
+ {
++	void __iomem *control = NULL;
+ 	struct thermal_zone_device *thermal;
+ 	const struct of_device_id *match;
+ 	struct armada_thermal_priv *priv;
+@@ -272,11 +282,26 @@ static int armada_thermal_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->sensor);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	priv->control = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(priv->control))
+-		return PTR_ERR(priv->control);
++	control = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(control))
++		return PTR_ERR(control);
+ 
+ 	priv->data = (struct armada_thermal_data *)match->data;
++
++	/*
++	 * Legacy DT bindings only described "control1" register (also referred
++	 * as "control MSB" on old documentation). New bindings cover
++	 * "control0/control LSB" and "control1/control MSB" registers within
++	 * the same resource, which is then of size 8 instead of 4.
++	 */
++	if (resource_size(res) == LEGACY_CONTROL_MEM_LEN) {
++		/* ->control0 unavailable in this configuration */
++		priv->control1 = control + LEGACY_CONTROL1_OFFSET;
++	} else {
++		priv->control0 = control + CONTROL0_OFFSET;
++		priv->control1 = control + CONTROL1_OFFSET;
++	}
++
+ 	priv->data->init_sensor(pdev, priv);
+ 
+ 	thermal = thermal_zone_device_register("armada_thermal", 0, 0,
+-- 
+2.11.0
