@@ -1,69 +1,36 @@
-From: <linux-kernel-dev@beckhoff.com>
-Subject: [PATCH v4 2/4] ARM: dts: imx53: add srtc node
-Date: Mon, 18 Dec 2017 12:51:31 +0100
-Message-ID: <20171218115133.16371-3-linux-kernel-dev@beckhoff.com>
-References: <20171218115133.16371-1-linux-kernel-dev@beckhoff.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun8i: h3: nanopi-m1-plus:
+ fix missing ethernet 0 in aliases
+Date: Mon, 18 Dec 2017 12:52:32 +0100
+Message-ID: <b210dae5-5721-a280-3675-ec236cc1ae12@gmail.com>
+References: <20171215223901.14500-1-embed3d@gmail.com>
+ <20171215223901.14500-2-embed3d@gmail.com>
+ <20171218064508.iyi4cyjkwesoezf5@flea.lan>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171218115133.16371-1-linux-kernel-dev@beckhoff.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Patrick Bruenn <p.bruenn@beckhoff.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Juergen Borleis <jbe@pengutronix.de>, Noel Vellemans <Noel.Vellemans@visionbms.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Ph
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBD257DPK24NRBA6Y33IQKGQELE4NBGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20171218064508.iyi4cyjkwesoezf5-ZC1Zs529Oq4@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrick Bruenn <p.bruenn@beckhoff.com>
+Sorry!
+I will fix it!
 
-rtc-mxc_v2 driver will add support for the i.MX53 SRTC
-
-Note: we keep the 'srtc' label to avoid duplicate with imx53-m53.dtsi
-
-Signed-off-by: Patrick Bruenn <p.bruenn@beckhoff.com>
-
----
-
-v4:
-- replace "srtc" node name with generic "rtc"
-
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de> (maintainer:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
-
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-Cc: linux-rtc@vger.kernel.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM)
-Cc: devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-Cc: linux-kernel@vger.kernel.org (open list)
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Juergen Borleis <jbe@pengutronix.de>
-Cc: Noel Vellemans <Noel.Vellemans@visionbms.com>
-Cc: Russell King <linux@armlinux.org.uk> (maintainer:ARM PORT)
-Cc: linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE)
-
-Cc: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Lothar Waßmann <LW@KARO-electronics.de>
----
- arch/arm/boot/dts/imx53.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 84f17f7abb71..beca1c830623 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -433,6 +433,13 @@
- 				clock-names = "ipg", "per";
- 			};
- 
-+			srtc: rtc@53fa4000 {
-+				compatible = "fsl,imx53-rtc";
-+				reg = <0x53fa4000 0x4000>;
-+				interrupts = <24>;
-+				clocks = <&clks IMX5_CLK_SRTC_GATE>;
-+			};
-+
- 			iomuxc: iomuxc@53fa8000 {
- 				compatible = "fsl,imx53-iomuxc";
- 				reg = <0x53fa8000 0x4000>;
--- 
-2.11.0
+On 18.12.2017 07:45, Maxime Ripard wrote:
+> Hi,
+> 
+> On Fri, Dec 15, 2017 at 11:39:00PM +0100, Philipp Rossak wrote:
+>> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Please add a commit log here.
+> 
