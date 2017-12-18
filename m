@@ -1,85 +1,57 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [RFC v2 2/2] backlight: pwm_bl: compute brightness of LED
- linearly to human eye.
-Date: Mon, 18 Dec 2017 13:53:24 +0000
-Message-ID: <20171218135324.ulvacip55md4g73n@oak.lan>
-References: <20171116141151.21171-1-enric.balletbo@collabora.com>
- <20171116141151.21171-3-enric.balletbo@collabora.com>
- <CAD=FV=WY-2MmjRxGGaJrQjyeWt+k4_k7j12M4LxAnnZxJF7sXw@mail.gmail.com>
- <c6450f50-5c12-dc52-4340-b068c0b38c54@linaro.org>
- <CAFqH_50qgvntzwvZ_n3qhpw+BA2SpYqiJgsxfCMt1piNWzgDmA@mail.gmail.com>
- <20171215205735.GB19442@amd>
- <CAFqH_52z9O+0ZVB-rMTCNzw+55m26fDGKeaj-Fz-ccO74+j_MA@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP
+ init driver
+Date: Mon, 18 Dec 2017 15:05:15 +0100
+Message-ID: <CAK8P3a0z6HF8Rg08HUj7_T+7ZxxnHoReiu68bNzF6CnEooQSdA@mail.gmail.com>
+References: <29198c0a-783e-8aa0-00e4-44b1fa1acef7@infradead.org>
+ <1513322656-4571-1-git-send-email-dshah@xilinx.com> <1513322656-4571-3-git-send-email-dshah@xilinx.com>
+ <CAK8P3a0nm_-pxGWXHx_FAXgXt1msE2bK0D4paBMWgryPyeS9xA@mail.gmail.com> <b3b41b04-7f93-1c20-2e62-817b4c743b89@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFqH_52z9O+0ZVB-rMTCNzw+55m26fDGKeaj-Fz-ccO74+j_MA@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Doug Anderson <dianders@google.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b3b41b04-7f93-1c20-2e62-817b4c743b89-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 11:40:59AM +0100, Enric Balletbo Serra wrote:
-> Hi Pavel,
-> 
-> 2017-12-15 21:57 GMT+01:00 Pavel Machek <pavel@ucw.cz>:
-> > Hi!
-> >
-> >> Yes, I think that how you describe luminance and lightness is right,
-> >> and sounds good improve the doc.
-> >>
-> >> To be clear the correction table for PWM values can be calculated with
-> >> this code.
-> >>
-> >> OUTPUT_SIZE = 65535      # Output integer size
-> >> INPUT_SIZE = 2047
-> >>
-> >> def cie1931(L):
-> >>     L = L*100.0
-> >>     if L <= 8:
-> >>         return (L/902.3)
-> >>     else:
-> >>         return ((L+16.0)/116.0)**3
-> >>
-> >> x = range(0,int(INPUT_SIZE+1))
-> >> y = [int(round(cie1931(float(L)/INPUT_SIZE)*(OUTPUT_SIZE))) for L in x]
-> >
-> > Can we just generate the table on the fly? Should not be hard to do in
-> > fixed point, right?
-> 
-> This was discussed a bit in previous RFC which had the code to
-> generate the table on the fly, see [1]. The use of a fixed table or an
-> on the fly table is something that I'll let the maintainers to decide.
-> I've no strong opinion on use the on the fly table if someone takes
-> care to review deeply the fixed point maths :)
+On Mon, Dec 18, 2017 at 2:13 PM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> On 15.12.2017 14:26, Arnd Bergmann wrote:
+>> In Fri, Dec 15, 2017 at 8:24 AM, Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>>> Xilinx ZYNQMP logicoreIP Init driver is based on the new
+>>> LogiCoreIP design created. This driver provides the processing system
+>>> and programmable logic isolation. Set the frequency based on the clock
+>>> information get from the logicoreIP register set.
+>>>
+>>> It is put in drivers/misc as there is no subsystem for this logicoreIP.
+>>>
+>>> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>
+>> After giving this some more thought, I'd suggest you move the driver to
+>> drivers/soc/xilinx or drivers/soc/zynq instead of drivers/misc/, and have
+>> it merged by Michal Simek as a driver patch that will go through arm-soc.
+>
+> I have not a problem of creating drivers/soc/xilinx/ location for this
+> driver. It is not zynq (arm32) but zynqmp(arm64) device where this
+> driver can be used. As far as I understand it is memory mapped soft IP
+> which could be also accessed by soft core CPU.
 
-The last time we discussed this we concluded we would introduce linear
-interpolation to make it easier enlarge the small tables we typically 
-see in devicetree.
+Ok. I wouldn't be worried about having a zynq directory for stuff that
+is common between zynq and zynqmp, but the soft code CPU case
+wouldn't make that ideal.
 
-Having done that it seemed attractive (at least to me) to reuse any
-interpolation code we get and then simply provide a "sane" default look 
-up table for use by DT authors who don't really know how to map PWM on/
-off times to luminance.
+> It means drivers/soc/xilinx could be shared by all xilinx platforms anyway.
+> We have been discussing that openrisc cases and for sure if someone
+> wants to enable this driver there using misc location would be one
+> option but I also think that using drivers/soc/xilinx location is not a
+> bad option because it is very unlikely that anybody tries it.
+>
+> Arnd: misc or drivers/soc/xilinx?
 
-I did review the original fixed point code for the first RFC. IIRC some 
-of the low level functions *looked* they could overflow but, on closer 
-inspection, were never actually overflowed in practice due to the 
-number ranges used by the callers. To be honest part of the attraction
-of a LUT instead was that I wouldn't have to closely review nor ensure
-all the fixed point code was properly commented ;-) .
+drivers/soc/xilinx please, thanks for the clarification.
 
-The other item in favour of LUT was that (as Doug A. pointed out) PWM 
-duty-cycle to luminance is not strictly linear. Whilst at the moment I 
-am OK to discount this effect it is possible we might want to combined
-the luminance to human perception values with values read out from
-graphs in a datasheet.
-
-Enric: Having said all that I don't want to give you a really heavy
-       handed steer here. If you think the code was cleaner or clearer
-       when using the formulae then I'd be happy to review the fixed
-       point code.
-
-
-Daniel.
+       Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
