@@ -1,61 +1,86 @@
-From: Miquel RAYNAL <miquel.raynal@free-electrons.com>
-Subject: Re: [PATCH v3 05/11] thermal: armada: Add support for Armada AP806
-Date: Mon, 18 Dec 2017 13:25:00 +0100
-Message-ID: <20171218132500.7f7225e9@xps13>
-References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
- <20171214103011.24713-6-miquel.raynal@free-electrons.com>
- <87y3m5o9h4.fsf@free-electrons.com> <20171218104127.65017555@xps13>
- <20171218111156.76a66q5kwh3advs7@sapphire.tkos.co.il>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC v2 2/2] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Date: Mon, 18 Dec 2017 13:33:45 +0100
+Message-ID: <20171218123344.GA29353@amd>
+References: <20171116141151.21171-1-enric.balletbo@collabora.com>
+ <20171116141151.21171-3-enric.balletbo@collabora.com>
+ <CAD=FV=WY-2MmjRxGGaJrQjyeWt+k4_k7j12M4LxAnnZxJF7sXw@mail.gmail.com>
+ <c6450f50-5c12-dc52-4340-b068c0b38c54@linaro.org>
+ <CAFqH_50qgvntzwvZ_n3qhpw+BA2SpYqiJgsxfCMt1piNWzgDmA@mail.gmail.com>
+ <20171215205735.GB19442@amd>
+ <CAFqH_52z9O+0ZVB-rMTCNzw+55m26fDGKeaj-Fz-ccO74+j_MA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171218111156.76a66q5kwh3advs7@sapphire.tkos.co.il>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-pm@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Eduardo Valentin <edubezval@gmail.com>, David Sniatkiwicz <davidsn@marvell.com>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Zhang Rui <rui.zhang@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFqH_52z9O+0ZVB-rMTCNzw+55m26fDGKeaj-Fz-ccO74+j_MA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmFydWNoLAoKT24gTW9uLCAxOCBEZWMgMjAxNyAxMzoxMTo1NiArMDIwMApCYXJ1Y2ggU2lh
-Y2ggPGJhcnVjaEB0a29zLmNvLmlsPiB3cm90ZToKCj4gSGkgTWlxdcOobCwKPiAKPiBPbiBNb24s
-IERlYyAxOCwgMjAxNyBhdCAxMDo0MToyN0FNICswMTAwLCBNaXF1ZWwgUkFZTkFMIHdyb3RlOgo+
-ID4gSGVsbG8gR3JlZ29yeSAmIEJhcnVjaCwKPiA+IAo+ID4gT24gVGh1LCAxNCBEZWMgMjAxNyAx
-MjowNTo0MyArMDEwMAo+ID4gR3JlZ29yeSBDTEVNRU5UIDxncmVnb3J5LmNsZW1lbnRAZnJlZS1l
-bGVjdHJvbnMuY29tPiB3cm90ZToKPiA+ICAgCj4gPiA+ID4gQEAgLTE4NCw5ICsyMTQsOSBAQCBz
-dGF0aWMgaW50IGFybWFkYV9nZXRfdGVtcChzdHJ1Y3QKPiA+ID4gPiB0aGVybWFsX3pvbmVfZGV2
-aWNlICp0aGVybWFsLCBkaXYgPSBwcml2LT5kYXRhLT5jb2VmX2RpdjsKPiA+ID4gPiAgCj4gPiA+
-ID4gIAlpZiAocHJpdi0+ZGF0YS0+aW52ZXJ0ZWQpCj4gPiA+ID4gLQkJKnRlbXAgPSAoKG0gKiBy
-ZWcpIC0gYikgLyBkaXY7Cj4gPiA+ID4gKwkJKnRlbXAgPSAoKG0gKiBzYW1wbGUpIC0gYikgLyBk
-aXY7Cj4gPiA+ID4gIAllbHNlCj4gPiA+ID4gLQkJKnRlbXAgPSAoYiAtIChtICogcmVnKSkgLyBk
-aXY7Cj4gPiA+ID4gKwkJKnRlbXAgPSAoYiAtIChtICogc2FtcGxlKSkgLyBkaXY7Cj4gPiA+ID4g
-IAlyZXR1cm4gMDsKPiA+ID4gPiAgfQo+ID4gPiA+ICAKPiA+ID4gPiBAQCAtMjM3LDYgKzI2Nywx
-OSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGFybWFkYV90aGVybWFsX2RhdGEKPiA+ID4gPiBhcm1h
-ZGEzODBfZGF0YSA9IHsgLmludmVydGVkID0gdHJ1ZSwKPiA+ID4gPiAgfTsKPiA+ID4gPiAgCj4g
-PiA+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYXJtYWRhX3RoZXJtYWxfZGF0YSBhcm1hZGFfYXA4
-MDZfZGF0YSA9IHsKPiA+ID4gPiArCS5pc192YWxpZCA9IGFybWFkYV9pc192YWxpZCwKPiA+ID4g
-PiArCS5pbml0X3NlbnNvciA9IGFybWFkYV9hcDgwNl9pbml0X3NlbnNvciwKPiA+ID4gPiArCS5p
-c192YWxpZF9iaXQgPSBCSVQoMTYpLAo+ID4gPiA+ICsJLnRlbXBfc2hpZnQgPSAwLAo+ID4gPiA+
-ICsJLnRlbXBfbWFzayA9IDB4M2ZmLAo+ID4gPiA+ICsJLmNvZWZfYiA9IC0xNTAwMDAsICAgIAo+
-ID4gPiAKPiA+ID4gRG9uJ3QgeW91IGV4cGVjdCBhbnkgc2lkZSBlZmZlY3QgYnkgc3RvcmluZyBh
-IG5lZ2F0aXZlIHZhbHVlIGluIGEKPiA+ID4gdW5zaWduZWQgdmFyaWFibGU/ICAKPiA+IAo+ID4g
-VGhhdCBpcyBhIGZhaXIgcXVlc3Rpb24sIEkgZGlkIG5vdCBzcG90IHRoYXQuCj4gPiAKPiA+IEFz
-IG90aGVyIHZhbHVlcyBhcmUgcmVhbGx5IGNsb3NlIHRvIDJeMzIgSSBkb24ndCBrbm93IHdoYXQg
-aXMgdGhlCj4gPiBiZXN0IG9wdGlvbiBmb3IgdXMgaW4gdGhpcyBjYXNlLiBTaG91bGQgSToKPiA+
-IC0gZG9uJ3QgY2FyZT8KPiA+IC0gdXNlIHNpZ25lZCB2YWx1ZXM/IChkYW5nZXJvdXMgSU1ITykK
-PiA+IC0gdXNlIGEgdW5pb24gd2l0aCBhIHNpZ25lZCBhbmQgYW4gdW5zaWduZWQgdmFsdWU/IChw
-cm9ibGVtIG1vdmVkCj4gPiB0byAtPmdldF90ZW1wKCkpICAKPiAKPiBBbm90aGVyIG9wdGlvbiBp
-cyB0byB1c2UgczY0IHR5cGUuCgpJIHByZWZlciB0aGlzIG9uZSEKClRoYW5rIHlvdSwKTWlxdcOo
-bAoKPiAKPiBiYXJ1Y2gKPiAKCgoKLS0gCk1pcXVlbCBSYXluYWwsIEZyZWUgRWxlY3Ryb25zCkVt
-YmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25z
-LmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+
+--GvXjxJ+pjyke8COw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon 2017-12-18 11:40:59, Enric Balletbo Serra wrote:
+> Hi Pavel,
+>=20
+> 2017-12-15 21:57 GMT+01:00 Pavel Machek <pavel@ucw.cz>:
+> > Hi!
+> >
+> >> Yes, I think that how you describe luminance and lightness is right,
+> >> and sounds good improve the doc.
+> >>
+> >> To be clear the correction table for PWM values can be calculated with
+> >> this code.
+> >>
+> >> OUTPUT_SIZE =3D 65535      # Output integer size
+> >> INPUT_SIZE =3D 2047
+> >>
+> >> def cie1931(L):
+> >>     L =3D L*100.0
+> >>     if L <=3D 8:
+> >>         return (L/902.3)
+> >>     else:
+> >>         return ((L+16.0)/116.0)**3
+> >>
+> >> x =3D range(0,int(INPUT_SIZE+1))
+> >> y =3D [int(round(cie1931(float(L)/INPUT_SIZE)*(OUTPUT_SIZE))) for L in=
+ x]
+> >
+> > Can we just generate the table on the fly? Should not be hard to do in
+> > fixed point, right?
+>=20
+> This was discussed a bit in previous RFC which had the code to
+> generate the table on the fly, see [1]. The use of a fixed table or an
+> on the fly table is something that I'll let the maintainers to decide.
+> I've no strong opinion on use the on the fly table if someone takes
+> care to review deeply the fixed point maths :)
+
+You are free to pre-compute the table at boot. And you can even
+compare the built-in and pre-computed table at boot, to make sure you
+made no mistakes :-).
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--GvXjxJ+pjyke8COw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlo3tagACgkQMOfwapXb+vI/aACgqrcr0ogwRL9AgqTUUt1qDjaW
+cSMAn33yo6Hss+zyASKcqUg3/UGp63OX
+=ywjS
+-----END PGP SIGNATURE-----
+
+--GvXjxJ+pjyke8COw--
