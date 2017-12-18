@@ -1,15 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/5] arm: dts: sun8i: a83t: Add the ir pin
- for the A83T
-Date: Mon, 18 Dec 2017 11:21:04 +0800
-Message-ID: <CAGb2v65Dcd=g+_Vv9b7q+eoEBhem7tzkrG8h1AeS7mF9bESNZQ@mail.gmail.com>
-References: <20171217224547.21481-1-embed3d@gmail.com> <20171217224547.21481-4-embed3d@gmail.com>
+Subject: Re: [PATCH 5/5] arm: dts: sun8i: a83t: bananapi-m3:
+ Enable IR controller
+Date: Mon, 18 Dec 2017 11:30:23 +0800
+Message-ID: <CAGb2v67js9XCLUYd+zJBTp-cPG0s3YsWR-=KDfdCR23NkUQheg@mail.gmail.com>
+References: <20171217224547.21481-1-embed3d@gmail.com> <20171217224547.21481-6-embed3d@gmail.com>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBOXI3TIQKGQE5N5GP4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB2PM3TIQKGQEZXJQUBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171217224547.21481-4-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20171217224547.21481-6-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,36 +21,44 @@ Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Dec 18, 2017 at 6:45 AM, Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The CIR Pin of the A83T is located at PL12.
+> The Bananapi M3 has an onboard IR receiver.
+> This enables the onboard IR receiver subnode.
+> Other than the other IR receivers this one needs a base clock frequency
+
+Unlike the other...
+
+> of 3000000 Hz (3 MHz), to be able to work.
 >
 > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
+>  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
 >
-> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> index a384b766f3dc..954c2393325f 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -521,6 +521,11 @@
->                                 drive-strength = <20>;
->                                 bias-pull-up;
->                         };
+> diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+> index 6550bf0e594b..2bf25ca64133 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+> +++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+> @@ -100,6 +100,13 @@
+>         status = "okay";
+>  };
+>
+> +&ir {
+
+See my other reply about the name.
+
+Otherwise,
+
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&ir_pins_a>;
+> +       clock-frequency = <3000000>;
+> +       status = "okay";
+> +};
 > +
-> +                       ir_pins_a: ir@0 {
-
-ir_pins: ir-pins
-
-And it really should be cir, to distinguish it from IrDA.
-
-ChenYu
-
-> +                               pins = "PL12";
-> +                               function = "s_cir_rx";
-> +                       };
->                 };
->
->                 r_rsb: rsb@1f03400 {
+>  &mdio {
+>         rgmii_phy: ethernet-phy@1 {
+>                 compatible = "ethernet-phy-ieee802.3-c22";
 > --
 > 2.11.0
 >
