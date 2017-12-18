@@ -1,89 +1,61 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 04/25] arm: exynos/s3c: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Mon, 18 Dec 2017 10:40:18 +0100
-Message-ID: <CAJKOXPdkYLisej5965rh2SbOjbFms-RK2VnXt=L==MW_JcA+OA@mail.gmail.com>
-References: <20171215124630.30082-1-malat@debian.org>
+From: Miquel RAYNAL <miquel.raynal@free-electrons.com>
+Subject: Re: [PATCH v3 05/11] thermal: armada: Add support for Armada AP806
+Date: Mon, 18 Dec 2017 10:41:27 +0100
+Message-ID: <20171218104127.65017555@xps13>
+References: <20171214103011.24713-1-miquel.raynal@free-electrons.com>
+        <20171214103011.24713-6-miquel.raynal@free-electrons.com>
+        <87y3m5o9h4.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215124630.30082-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <87y3m5o9h4.fsf@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-pm@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 15, 2017 at 1:46 PM, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
-> Improve the DTS files by removing all the leading "0x" and zeros to fix the
-> following dtc warnings:
->
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
->
-> and
->
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
->
-> Converted using the following command:
->
-> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
->
-> For simplicity, two sed expressions were used to solve each warnings separately.
->
-> To make the regex expression more robust a few other issues were resolved,
-> namely setting unit-address to lower case, and adding a whitespace before the
-> the opening curly brace:
->
-> https://elinux.org/Device_Tree_Linux#Linux_conventions
->
-> This will solve as a side effect warning:
->
-> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
->
-> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
->
-> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hello Gregory & Baruch,
 
-Ack was for different patchset, touching only three files...
+On Thu, 14 Dec 2017 12:05:43 +0100
+Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
 
-> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos3250.dtsi             | 34 ++++++------
->  arch/arm/boot/dts/exynos4.dtsi                | 56 +++++++++----------
->  arch/arm/boot/dts/exynos4210.dtsi             |  8 +--
->  arch/arm/boot/dts/exynos4412-pinctrl.dtsi     |  2 +-
->  arch/arm/boot/dts/exynos4412.dtsi             | 22 ++++----
->  arch/arm/boot/dts/exynos5.dtsi                | 22 ++++----
->  arch/arm/boot/dts/exynos5250.dtsi             | 64 +++++++++++-----------
->  arch/arm/boot/dts/exynos5260.dtsi             | 26 ++++-----
->  arch/arm/boot/dts/exynos5420.dtsi             | 78 +++++++++++++--------------
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  2 +-
->  arch/arm/boot/dts/exynos5440.dtsi             | 14 ++---
->  arch/arm/boot/dts/s3c2416.dtsi                |  8 +--
->  12 files changed, 168 insertions(+), 168 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index 2bd3872221a1..8d47571b3984 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -164,31 +164,31 @@
->                         syscon = <&pmu_system_controller>;
->                 };
->
-> -               pd_cam: cam-power-domain@10023C00 {
-> +               pd_cam: cam-power-domain@10023c00 {
 
-This is not related to this patch and it was not present in the
-version I acked. I also already fixed this here:
-https://patchwork.kernel.org/patch/10113323/
+> > @@ -184,9 +214,9 @@ static int armada_get_temp(struct
+> > thermal_zone_device *thermal, div = priv->data->coef_div;
+> >  
+> >  	if (priv->data->inverted)
+> > -		*temp = ((m * reg) - b) / div;
+> > +		*temp = ((m * sample) - b) / div;
+> >  	else
+> > -		*temp = (b - (m * reg)) / div;
+> > +		*temp = (b - (m * sample)) / div;
+> >  	return 0;
+> >  }
+> >  
+> > @@ -237,6 +267,19 @@ static const struct armada_thermal_data
+> > armada380_data = { .inverted = true,
+> >  };
+> >  
+> > +static const struct armada_thermal_data armada_ap806_data = {
+> > +	.is_valid = armada_is_valid,
+> > +	.init_sensor = armada_ap806_init_sensor,
+> > +	.is_valid_bit = BIT(16),
+> > +	.temp_shift = 0,
+> > +	.temp_mask = 0x3ff,
+> > +	.coef_b = -150000,  
+> 
+> Don't you expect any side effect by storing a negative value in a
+> unsigned variable?
 
-There is no changelog explaining the difference in patches. Original
-patch was okay, why changing it?
+That is a fair question, I did not spot that.
 
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As other values are really close to 2^32 I don't know what is the best
+option for us in this case. Should I:
+- don't care?
+- use signed values? (dangerous IMHO)
+- use a union with a signed and an unsigned value? (problem moved to
+  ->get_temp())
+
+Thanks for your input.
+Miquèl
