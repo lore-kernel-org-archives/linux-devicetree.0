@@ -1,63 +1,71 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 13/25] arm: spear: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Mon, 18 Dec 2017 09:47:55 +0530
-Message-ID: <20171218041755.GA19815@vireshk-i7>
-References: <20171215124645.30535-1-malat@debian.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2 6/6] phy: renesas: rcar-gen3-usb2: add gpio handling
+Date: Mon, 18 Dec 2017 05:16:10 +0000
+Message-ID: <SG2PR06MB0981CC4061F538B7ADFE48FDD80E0@SG2PR06MB0981.apcprd06.prod.outlook.com>
+References: <1513316726-14387-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1513316726-14387-7-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20171216180510.qh5uiu5kwz5mx7zi@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171215124645.30535-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shiraz Hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20171216180510.qh5uiu5kwz5mx7zi@rob-hp-laptop>
+Content-Language: ja-JP
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "kishon@ti.com" <kishon@ti.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15-12-17, 13:46, Mathieu Malaterre wrote:
-> Improve the DTS files by removing all the leading "0x" and zeros to fix the
-> following dtc warnings:
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
-> 
-> and
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-> 
-> Converted using the following command:
-> 
-> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
-> 
-> For simplicity, two sed expressions were used to solve each warnings separately.
-> 
-> To make the regex expression more robust a few other issues were resolved,
-> namely setting unit-address to lower case, and adding a whitespace before the
-> the opening curly brace:
-> 
-> https://elinux.org/Device_Tree_Linux#Linux_conventions
-> 
-> This will solve as a side effect warning:
-> 
-> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-> 
-> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-> 
-> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/spear1310-evb.dts | 4 ++--
->  arch/arm/boot/dts/spear300.dtsi     | 2 +-
->  arch/arm/boot/dts/spear310.dtsi     | 2 +-
->  arch/arm/boot/dts/spear320-hmi.dts  | 4 ++--
->  arch/arm/boot/dts/spear320.dtsi     | 2 +-
->  5 files changed, 7 insertions(+), 7 deletions(-)
+Hi Rob,
 
-Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Thank you for your comments!
 
--- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -----Original Message-----
+> From: Rob Herring, Sent: Sunday, December 17, 2017 3:05 AM
+>=20
+> On Fri, Dec 15, 2017 at 02:45:26PM +0900, Yoshihiro Shimoda wrote:
+> > Some R-Car SoCs (e.g. R-Car D3) doesn't have dedicated pins of VBUS
+> > and ID. So, they may be connected to gpio pins. To handle the gpio
+> > pins, this patch adds the handling of VBUS and ID pins instead of
+> > dedicated pins.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
+> >  drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 77 ++++++++++++++=
+++++++--
+> >  2 files changed, 72 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.t=
+xt
+> b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > index 99b651b..999a6ef 100644
+> > --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+> > @@ -27,6 +27,8 @@ channel as USB OTG:
+> >  - interrupts: interrupt specifier for the PHY.
+> >  - vbus-supply: Phandle to a regulator that provides power to the VBUS.=
+ This
+> >  	       regulator will be managed during the PHY power on/off sequence=
+.
+> > +- vbus-gpios: use gpio to control vbus instead of dedicated pin.
+>=20
+> How does this relate to vbus-supply? A gpio-regulator doesn't work here?
+
+Thank you for the pointed out. You're correct. A gpio-regulator can work in=
+tead of "vbus-gpios".
+So, I will drop this.
+
+> > +- id-gpios: use gpio to detect id instead of dedicated pin.
+>=20
+> These aren't part of the phy, but really belong in a connector node.
+
+I'm afraid but I don't understand "a connector node" mean.
+Is it an extcon device for instance?
+If so, I'll try to use extcon-usb-gpio.c instead of own gpio handling on th=
+e driver.
+
+Best regards,
+Yoshihiro Shimoda
+
+> Rob
