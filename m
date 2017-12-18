@@ -1,68 +1,142 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 3/3] ARM: dts: r8a7745: Add CMT SoC specific support
-Date: Mon, 18 Dec 2017 17:39:03 +0000
-Message-ID: <1513618743-4773-4-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513618743-4773-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+From: Adrian Fiergolski <adrian.fiergolski@cern.ch>
+Subject: [PATCH v6] i2c: Add support for NXP PCA984x family.
+Date: Mon, 18 Dec 2017 18:45:06 +0100
+Message-ID: <20171218174506.20543-1-adrian.fiergolski@cern.ch>
+References: <07bf7aae-59ab-cb2b-dcb0-95ec2de66633@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <07bf7aae-59ab-cb2b-dcb0-95ec2de66633@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: peda@axentia.se, devicetree@vger.kernel.org, robh+dt@kernel.org, Adrian Fiergolski <adrian.fiergolski@cern.ch>
 List-Id: devicetree@vger.kernel.org
 
-Add CMT[01] support to SoC DT.
+This patch extends the current i2c-mux-pca954x driver and adds support for
+a newer PCA984x family of the I2C switches and multiplexers from NXP.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Adrian Fiergolski <adrian.fiergolski@cern.ch>
 ---
-v1->v2:
-* status "okay"->"disabled"
+ .../devicetree/bindings/i2c/i2c-mux-pca954x.txt    |  5 ++-
+ drivers/i2c/muxes/Kconfig                          |  6 ++--
+ drivers/i2c/muxes/i2c-mux-pca954x.c                | 38 +++++++++++++++++++---
+ 3 files changed, 41 insertions(+), 8 deletions(-)
 
- arch/arm/boot/dts/r8a7745.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index 0fa7861..0b67ee5 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -235,6 +235,38 @@
- 						  IRQ_TYPE_LEVEL_LOW)>;
- 		};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+index aa097045a10e..b428bc0d81b1 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
+@@ -1,10 +1,13 @@
+ * NXP PCA954x I2C bus switch
  
-+		cmt0: timer@ffca0000 {
-+			compatible = "renesas,r8a7745-cmt0",
-+				     "renesas,rcar-gen2-cmt0";
-+			reg = <0 0xffca0000 0 0x1004>;
-+			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 124>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 124>;
-+			status = "disabled";
-+		};
++The driver supports NXP PCA954x and PCA984x I2C mux/switch devices.
 +
-+		cmt1: timer@e6130000 {
-+			compatible = "renesas,r8a7745-cmt1",
-+				     "renesas,rcar-gen2-cmt1";
-+			reg = <0 0xe6130000 0 0x1004>;
-+			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 329>;
-+			clock-names = "fck";
-+			power-domains = <&sysc R8A7745_PD_ALWAYS_ON>;
-+			resets = <&cpg 329>;
-+			status = "disabled";
-+		};
-+
- 		cpg: clock-controller@e6150000 {
- 			compatible = "renesas,r8a7745-cpg-mssr";
- 			reg = <0 0xe6150000 0 0x1000>;
+ Required Properties:
+ 
+   - compatible: Must contain one of the following.
+     "nxp,pca9540", "nxp,pca9542", "nxp,pca9543", "nxp,pca9544",
+-    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548"
++    "nxp,pca9545", "nxp,pca9546", "nxp,pca9547", "nxp,pca9548",
++    "nxp,pca9846", "nxp,pca9847", "nxp,pca9848", "nxp,pca9849"
+ 
+   - reg: The I2C address of the device.
+ 
+diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
+index 0f5c8fc36625..52a4a922e7e6 100644
+--- a/drivers/i2c/muxes/Kconfig
++++ b/drivers/i2c/muxes/Kconfig
+@@ -64,11 +64,11 @@ config I2C_MUX_PCA9541
+ 	  will be called i2c-mux-pca9541.
+ 
+ config I2C_MUX_PCA954x
+-	tristate "Philips PCA954x I2C Mux/switches"
++	tristate "NXP PCA954x and PCA984x I2C Mux/switches"
+ 	depends on GPIOLIB || COMPILE_TEST
+ 	help
+-	  If you say yes here you get support for the Philips PCA954x
+-	  I2C mux/switch devices.
++	  If you say yes here you get support for the NXP PCA954x
++	  and PCA984x I2C mux/switch devices.
+ 
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-mux-pca954x.
+diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+index 2ca068d8b92d..fbb84c7ef282 100644
+--- a/drivers/i2c/muxes/i2c-mux-pca954x.c
++++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+@@ -4,11 +4,11 @@
+  * Copyright (c) 2008-2009 Rodolfo Giometti <giometti@linux.it>
+  * Copyright (c) 2008-2009 Eurotech S.p.A. <info@eurotech.it>
+  *
+- * This module supports the PCA954x series of I2C multiplexer/switch chips
+- * made by Philips Semiconductors.
++ * This module supports the PCA954x and PCA954x series of I2C multiplexer/switch
++ * chips made by NXP Semiconductors.
+  * This includes the:
+- *	 PCA9540, PCA9542, PCA9543, PCA9544, PCA9545, PCA9546, PCA9547
+- *	 and PCA9548.
++ *	 PCA9540, PCA9542, PCA9543, PCA9544, PCA9545, PCA9546, PCA9547,
++ *	 PCA9548, PCA9846, PCA9847, PCA9848 and PCA9849.
+  *
+  * These chips are all controlled via the I2C bus itself, and all have a
+  * single 8-bit register. The upstream "parent" bus fans out to two,
+@@ -63,6 +63,10 @@ enum pca_type {
+ 	pca_9546,
+ 	pca_9547,
+ 	pca_9548,
++	pca_9846,
++	pca_9847,
++	pca_9848,
++	pca_9849,
+ };
+ 
+ struct chip_desc {
+@@ -129,6 +133,24 @@ static const struct chip_desc chips[] = {
+ 		.nchans = 8,
+ 		.muxtype = pca954x_isswi,
+ 	},
++	[pca_9846] = {
++		.nchans = 4,
++		.muxtype = pca954x_isswi,
++	},
++	[pca_9847] = {
++		.nchans = 8,
++		.enable = 0x8,
++		.muxtype = pca954x_ismux,
++	},
++	[pca_9848] = {
++		.nchans = 8,
++		.muxtype = pca954x_isswi,
++	},
++	[pca_9849] = {
++		.nchans = 4,
++		.enable = 0x4,
++		.muxtype = pca954x_ismux,
++	},
+ };
+ 
+ static const struct i2c_device_id pca954x_id[] = {
+@@ -140,6 +162,10 @@ static const struct i2c_device_id pca954x_id[] = {
+ 	{ "pca9546", pca_9546 },
+ 	{ "pca9547", pca_9547 },
+ 	{ "pca9548", pca_9548 },
++	{ "pca9846", pca_9846 },
++	{ "pca9847", pca_9847 },
++	{ "pca9848", pca_9848 },
++	{ "pca9849", pca_9849 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, pca954x_id);
+@@ -154,6 +180,10 @@ static const struct of_device_id pca954x_of_match[] = {
+ 	{ .compatible = "nxp,pca9546", .data = &chips[pca_9546] },
+ 	{ .compatible = "nxp,pca9547", .data = &chips[pca_9547] },
+ 	{ .compatible = "nxp,pca9548", .data = &chips[pca_9548] },
++	{ .compatible = "nxp,pca9846", .data = &chips[pca_9846] },
++	{ .compatible = "nxp,pca9847", .data = &chips[pca_9847] },
++	{ .compatible = "nxp,pca9848", .data = &chips[pca_9848] },
++	{ .compatible = "nxp,pca9849", .data = &chips[pca_9849] },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, pca954x_of_match);
 -- 
-2.7.4
+2.14.1
