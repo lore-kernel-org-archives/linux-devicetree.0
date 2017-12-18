@@ -1,102 +1,57 @@
-From: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 04/25] arm: exynos/s3c: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Mon, 18 Dec 2017 11:17:24 +0100
-Message-ID: <CA+7wUsxp_n6V--PE9PQSsT1xu3b0HJn5gWBhnp=ngRNqBSVvFg@mail.gmail.com>
-References: <20171215124630.30082-1-malat@debian.org> <CAJKOXPdkYLisej5965rh2SbOjbFms-RK2VnXt=L==MW_JcA+OA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH V8 0/3] OPP: Allow OPP table to be used for power-domains
+Date: Mon, 18 Dec 2017 15:51:27 +0530
+Message-ID: <cover.1513591822.git.viresh.kumar@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJKOXPdkYLisej5965rh2SbOjbFms-RK2VnXt=L==MW_JcA+OA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 10:40 AM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Dec 15, 2017 at 1:46 PM, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
->> Improve the DTS files by removing all the leading "0x" and zeros to fix the
->> following dtc warnings:
->>
->> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
->>
->> and
->>
->> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
->>
->> Converted using the following command:
->>
->> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
->>
->> For simplicity, two sed expressions were used to solve each warnings separately.
->>
->> To make the regex expression more robust a few other issues were resolved,
->> namely setting unit-address to lower case, and adding a whitespace before the
->> the opening curly brace:
->>
->> https://elinux.org/Device_Tree_Linux#Linux_conventions
->>
->> This will solve as a side effect warning:
->>
->> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
->>
->> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
->>
->> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Acked-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Ack was for different patchset, touching only three files...
+Hi,
 
-So sorry, when I read your email:
+Now that the performance state of PM domains are supported by the kernel
+(merged in linux-next), I am trying once again to define the bindings
+which we dropped until the code is merged first.
 
-https://lkml.org/lkml/2017/12/15/152
+Summary:
 
-I assumed you meant for all the Exynos* and S3C* DTS files, but I did
-not check carefully which files were touched originally.
+Power-domains can also have their active states and this patchset
+enhances the OPP binding to define those.
 
->> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/exynos3250.dtsi             | 34 ++++++------
->>  arch/arm/boot/dts/exynos4.dtsi                | 56 +++++++++----------
->>  arch/arm/boot/dts/exynos4210.dtsi             |  8 +--
->>  arch/arm/boot/dts/exynos4412-pinctrl.dtsi     |  2 +-
->>  arch/arm/boot/dts/exynos4412.dtsi             | 22 ++++----
->>  arch/arm/boot/dts/exynos5.dtsi                | 22 ++++----
->>  arch/arm/boot/dts/exynos5250.dtsi             | 64 +++++++++++-----------
->>  arch/arm/boot/dts/exynos5260.dtsi             | 26 ++++-----
->>  arch/arm/boot/dts/exynos5420.dtsi             | 78 +++++++++++++--------------
->>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |  2 +-
->>  arch/arm/boot/dts/exynos5440.dtsi             | 14 ++---
->>  arch/arm/boot/dts/s3c2416.dtsi                |  8 +--
->>  12 files changed, 168 insertions(+), 168 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
->> index 2bd3872221a1..8d47571b3984 100644
->> --- a/arch/arm/boot/dts/exynos3250.dtsi
->> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->> @@ -164,31 +164,31 @@
->>                         syscon = <&pmu_system_controller>;
->>                 };
->>
->> -               pd_cam: cam-power-domain@10023C00 {
->> +               pd_cam: cam-power-domain@10023c00 {
->
-> This is not related to this patch and it was not present in the
-> version I acked. I also already fixed this here:
-> https://patchwork.kernel.org/patch/10113323/
->
-> There is no changelog explaining the difference in patches. Original
-> patch was okay, why changing it?
+The power domains can use the OPP bindings mostly as is. Though there
+are some changes required to support special cases:
 
-Accept my sincere apologizes I really messed this series. I discover
-my original ARM patch did not apply lower case to all unit-address
-equally, so I added at last minute a sed expression to make all
-unit-address lower case.
+- Allow "operating-points-v2" to contain multiple phandles for power
+  domain providers providing multiple domains.
 
-I guess you can just drop this one for now.
+- A new property "required-opp" is added for the devices to specify the
+  minimum required OPP of the master domain or any other type of device.
 
--M
+- Allow some of the OPP properties to accept magic values (firmware
+  dependent) as the OS doesn't know the real freq/voltage values.
+
+V7->V8:
+- V7 1/2 divided into two patches. 1/3 is unchanged from V7.
+- 2/3 renamed the property from "power-domain-opp" to "required-opp", as
+  suggested by Rob.
+- Added Ulf's reviewed-by for 1/3 and 3/3.
+
+--
+viresh
+
+Viresh Kumar (3):
+  OPP: Allow OPP table to be used for power-domains
+  OPP: Introduce "required-opp" property
+  OPP: Allow "opp-hz" and "opp-microvolt" to contain magic values
+
+ Documentation/devicetree/bindings/opp/opp.txt      | 19 +++++++
+ .../devicetree/bindings/power/power_domain.txt     | 65 ++++++++++++++++++++++
+ 2 files changed, 84 insertions(+)
+
+-- 
+2.15.0.194.g9af6a3dea062
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
