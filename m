@@ -1,53 +1,85 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP
- init driver
-Date: Mon, 18 Dec 2017 14:13:26 +0100
-Message-ID: <b3b41b04-7f93-1c20-2e62-817b4c743b89@xilinx.com>
-References: <29198c0a-783e-8aa0-00e4-44b1fa1acef7@infradead.org>
- <1513322656-4571-1-git-send-email-dshah@xilinx.com>
- <1513322656-4571-3-git-send-email-dshah@xilinx.com>
- <CAK8P3a0nm_-pxGWXHx_FAXgXt1msE2bK0D4paBMWgryPyeS9xA@mail.gmail.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [RFC v2 1/2] backlight: pwm_bl: linear interpolation between
+ values of brightness-levels
+Date: Mon, 18 Dec 2017 13:15:07 +0000
+Message-ID: <20171218131507.7td6z6aqmpzs5qvr@oak.lan>
+References: <20171116141151.21171-1-enric.balletbo@collabora.com>
+ <20171116141151.21171-2-enric.balletbo@collabora.com>
+ <20171215144052.3b62gd3bkiqtuvk7@oak.lan>
+ <CAFqH_51O5zqDUJiRp5nktM-ks=URkgCwMSy9fhbZG6D0qarJrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a0nm_-pxGWXHx_FAXgXt1msE2bK0D4paBMWgryPyeS9xA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFqH_51O5zqDUJiRp5nktM-ks=URkgCwMSy9fhbZG6D0qarJrg@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Doug Anderson <dianders@google.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15.12.2017 14:26, Arnd Bergmann wrote:
-> In Fri, Dec 15, 2017 at 8:24 AM, Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->> Xilinx ZYNQMP logicoreIP Init driver is based on the new
->> LogiCoreIP design created. This driver provides the processing system
->> and programmable logic isolation. Set the frequency based on the clock
->> information get from the logicoreIP register set.
->>
->> It is put in drivers/misc as there is no subsystem for this logicoreIP.
->>
->> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+On Mon, Dec 18, 2017 at 10:47:24AM +0100, Enric Balletbo Serra wrote:
+> Hi Daniel,
 > 
-> After giving this some more thought, I'd suggest you move the driver to
-> drivers/soc/xilinx or drivers/soc/zynq instead of drivers/misc/, and have
-> it merged by Michal Simek as a driver patch that will go through arm-soc.
+> 2017-12-15 15:40 GMT+01:00 Daniel Thompson <daniel.thompson@linaro.org>:
+> > On Thu, Nov 16, 2017 at 03:11:50PM +0100, Enric Balletbo i Serra wrote:
+> >>
+> >> Setting use-linear-interpolation in the dts will allow you to have linear
+> >> interpolation between values of brightness-levels.
+> >>
+> >> There are now 256 between each of the values of brightness-levels. If
+> >> something is requested halfway between 2 values, we'll use linear
+> >> interpolation.
+> >
+> > Why 256?
+> 
+> To be honest there isn't a strong reason, I thought that 256 was a
+> good value because is the minimum number of steps possible (8 bits
+> pwm). But yeah, guess the discussion is more if this value should be
+> calculated, or specified in the the DT more than the value itself.
+> 
+> >>
+> >> This way a high resolution pwm duty cycle can be used without having to
+> >> list out every possible value in the dts. This system also allows for
+> >> gamma corrected values (eg: "brightness-levels = <0 2 4 8 16 32>;").
+> >>
+> >> Patch based on the Alexandru M Stan work done for ChromeOS kernels.
+> >>
+> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >> ---
+> >>  .../bindings/leds/backlight/pwm-backlight.txt      |  2 +
+> >>  drivers/video/backlight/pwm_bl.c                   | 55 +++++++++++++++++-----
+> >>  include/linux/pwm_backlight.h                      |  2 +
+> >>  3 files changed, 47 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> >> index 764db86..7c48f20 100644
+> >> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> >> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> >> @@ -17,6 +17,8 @@ Optional properties:
+> >>                 "pwms" property (see PWM binding[0])
+> >>    - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+> >>                    and disables the backlight (see GPIO binding[1])
+> >> +  - use-linear-interpolation: set this propriety to enable linear interpolation
+> >> +                              between each of the values of brightness-levels.
+> >
+> > Deciding whether or not this deployment of interpolation is a property
+> > of the hardware is a finely balanced judgement. On the whole I conclude
+> > that since the lookup table is a property of the hardware so too is the
+> > deployment of interpolation.
+> >
+> > Following up on the "why 256?" comment. IMHO either the number of
+> > interpolated steps should be calculated from the underlying PWM
+> > resolution or it could simply be specified in the DT (e.g. replace
+> > use-linear-interpolation with num-interpolated-steps).
+> >
+> 
+> Personally I like the idea to have the possibility to specify the
+> number of interpolated steps in the DT, I think that will be more
+> flexible for the user. If it's ok let me send a first version using
+> num-interpolated-steps, and continue the discussion about if makes
+> sense to have that in the DT or not.
 
-I have not a problem of creating drivers/soc/xilinx/ location for this
-driver. It is not zynq (arm32) but zynqmp(arm64) device where this
-driver can be used. As far as I understand it is memory mapped soft IP
-which could be also accessed by soft core CPU.
-It means drivers/soc/xilinx could be shared by all xilinx platforms anyway.
-We have been discussing that openrisc cases and for sure if someone
-wants to enable this driver there using misc location would be one
-option but I also think that using drivers/soc/xilinx location is not a
-bad option because it is very unlikely that anybody tries it.
+It's ok from my side.
 
-Arnd: misc or drivers/soc/xilinx?
 
-Thanks,
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Daniel.
