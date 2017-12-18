@@ -1,61 +1,166 @@
-From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: media: Add Allwinner
- V3s Camera Sensor Interface (CSI)
-Date: Mon, 18 Dec 2017 17:43:09 +0800
-Message-ID: <20171218174309.9170c971c5acac0d14dd782d@magewell.com>
-References: <1510558344-45402-1-git-send-email-yong.deng@magewell.com>
-	<CAGb2v67JhMfba8Ao7WyrYikkxvTxX8WaBRqu3GkrhOCWndresg@mail.gmail.com>
-	<20171218164921.227b82349c778283f5e5eba8@magewell.com>
-	<20171218092437.ksczam5h7hirmpcv@flea.lan>
-Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH V7 00/12] add clock driver for Spreadtrum platforms
+Date: Mon, 18 Dec 2017 17:46:29 +0800
+Message-ID: <CAAfSe-uh60=k+vkBsQdfLBOZJT_pCfsgt-KRLRvs-bwGVLQqpA@mail.gmail.com>
+References: <20171207125715.16160-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD2JNYHK4MEBBOM333IQKGQEG6KLCAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171218092437.ksczam5h7hirmpcv-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171207125715.16160-1-chunyan.zhang@spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-clk <linux-clk@vger.kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Mon, 18 Dec 2017 10:24:37 +0100
-Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Since holidays are comming for many people, and then the next merge
+window will come soon after holidays?
+If you have any comments, please let me know, I hope this patchset can
+be merged into the following merge window.
 
-> Hi,
-> 
-> On Mon, Dec 18, 2017 at 04:49:21PM +0800, Yong wrote:
-> > > > +               compatible = "allwinner,sun8i-v3s-csi";
-> > > > +               reg = <0x01cb4000 0x1000>;
-> > > > +               interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +               clocks = <&ccu CLK_BUS_CSI>,
-> > > > +                        <&ccu CLK_CSI1_SCLK>,
-> > > 
-> > > CSI also has an MCLK. Do you need that one?
-> > 
-> > MCLK is not needed if the front end is not a sensor (like adv7611).
-> > I will add it as an option.
-> 
-> I guess this should always be needed then. And the driver will make
-> the decision to enable it or not.
-
-But how the driver to know if it should be enabled?
-I think MCLK should be added in DT just if the subdev need it.
-
-> 
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
+Wish you all a Merry Christmas and Happy New Year!
 
 Thanks,
-Yong
+Chunyan
+
+On 7 December 2017 at 20:57, Chunyan Zhang <chunyan.zhang@spreadtrum.com> wrote:
+> From: Chunyan Zhang <zhang.chunyan@linaro.org>
+>
+> This series adds Spreadtrum clock support together with its binding
+> documentation and devicetree data.
+>
+> Any comments would be greatly appreciated.
+>
+> Thanks,
+> Chunyan
+>
+> Changes from V6: (https://lkml.org/lkml/2017/11/27/217)
+> * Changed to use "//" format for the file header
+> * Addressed Stephen's comments:
+>   - Put the common macros in clk-provider.h instead of clk_common.h, also removed
+>     the same macros from sunxi-ng/ccu_common.h and zte/clk.h;
+>   - Removed CLK_FIXED_RATE(), and moved the fixed rate clocks from driver to DT;
+>   - Use devm_of_clk_add_hw_provider() instead;
+>   - Removed sprd_regmap_{read|write}(), use regmap API directly;
+>   - Removed all full stop on error messages.
+> * Use IS_ERR_OR_NULL() instead of IS_ERR() for checking regmap pointers;
+>
+> Changes from V5: (https://lkml.org/lkml/2017/11/20/21)
+> * Rebased the whole patch-set to 4.15-rc1;
+> * Fixed kbuild-test warnings;
+> * Switched to use devm_clk_hw_register() instead of clk_hw_register();
+> * Removed useless debug information from sc9860-clk.c.
+>
+> Changes from V4: (https://lkml.org/lkml/2017/11/10/30)
+> * Added acked-by of Rob Herring;
+> * Removed spin lock from Spreadtrum's gate, mux, div drivers, since we have
+>   switched to use regmap.
+>
+> Changes from V3: (https://lkml.org/lkml/2017/11/2/61)
+> * Addressed comments from Julien Thierry:
+>   - Clean the if branch of sprd_mux_helper_get_parent()
+>   - Have the Gate clock macros and ops for both mode (i.e. sc_gate and gate) separate;
+>   - Have the Mux clock macros with/without table separate, and same changes
+>     for the composite clock.
+> * Switched the function name from _endisable to _toggle;
+> * Fixed Kbuild test error:
+>   - Added exporting sprd_clk_regmap_init() which would be used in other module(s);
+> * Change the function sprd_clk_set_regmap() to the static one, and removed the
+>   declear from the include file;
+> * Addressed comments from Rob:
+>   - Separate the dt-binding include file from the driver patch;
+>   - Documented more for the property "clocks"
+> * Changed the syscon device names;
+> * Changed the name of 'sprd_mux_internal' to 'sprd_mux_ssel'
+>
+>
+> Changes from V2: (http://lkml.iu.edu/hypermail/linux/kernel/1707.1/01504.html)
+> * Switch to use regmap to access registers;
+> * Splited all clocks into 16 separated nodes, for each belongs to a single address area;
+> * Rearranged the order of clock declaration in sc9860-clk.c, sorted them upon the address area;
+> * Added syscon device tree nodes which will be quoted by the node of clocks which are in
+>   the same address area with the syscon device;
+> * Revised the binding documentation according to the dt modification.
+>
+> Changes from V1: (https://lkml.org/lkml/2017/6/17/356)
+> * Address Stephen's comments:
+>   - Switch to use platform device driver instead of the DT probing mechanism.
+>   - Move the common clock macro out from vendor directory, but need to remove those
+>     overlap code from other vendors (such as sunxi-ng) once this get merged.
+>   - Add support to be built as a module.
+>   - Add 'sprd_' prefix for all spin locks used in these drivers.
+>   - Mark input parameter of sprd_x with const.
+>   - Remove unreasonable dependencies to CONFIG_64BIT.
+>   - Add readl() after writing the same register.
+>   - Remove CLK_IS_BASIC which is no longer used.
+>   - Remove unnecessery CLK_IGNORE_UNUSED when defining a clock.
+>   - Change to expose all clock index.
+>   - Use clk_ instead of ccu.
+>   - Add Kconfig for sprd clocks.
+>   - Move the fixed clocks out from the soc node.
+>   - Switch to use 64-bit math in pll driver instead of 32-bit math.
+> * Revise binding documentation according to dt modification.
+> * Rename sc9860.c to sc9860-clk.c
+>
+>
+> Chunyan Zhang (12):
+>   drivers: move clock common macros out from vendor directories
+>   clk: sprd: Add common infrastructure
+>   clk: sprd: add gate clock support
+>   clk: sprd: add mux clock support
+>   clk: sprd: add divider clock support
+>   clk: sprd: add composite clock support
+>   clk: sprd: add adjustable pll support
+>   dt-bindings: Add Spreadtrum clock binding documentation
+>   clk: sprd: Add dt-bindings include file for SC9860
+>   clk: sprd: add clocks support for SC9860
+>   arm64: dts: add syscon for whale2 platform
+>   arm64: dts: add clocks for SC9860
+>
+>  Documentation/devicetree/bindings/clock/sprd.txt |   63 +
+>  arch/arm64/boot/dts/sprd/sc9860.dtsi             |  115 ++
+>  arch/arm64/boot/dts/sprd/whale2.dtsi             |   62 +-
+>  drivers/clk/Kconfig                              |    1 +
+>  drivers/clk/Makefile                             |    1 +
+>  drivers/clk/sprd/Kconfig                         |   14 +
+>  drivers/clk/sprd/Makefile                        |   11 +
+>  drivers/clk/sprd/common.c                        |   96 ++
+>  drivers/clk/sprd/common.h                        |   38 +
+>  drivers/clk/sprd/composite.c                     |   60 +
+>  drivers/clk/sprd/composite.h                     |   51 +
+>  drivers/clk/sprd/div.c                           |   90 +
+>  drivers/clk/sprd/div.h                           |   75 +
+>  drivers/clk/sprd/gate.c                          |  111 ++
+>  drivers/clk/sprd/gate.h                          |   59 +
+>  drivers/clk/sprd/mux.c                           |   76 +
+>  drivers/clk/sprd/mux.h                           |   74 +
+>  drivers/clk/sprd/pll.c                           |  266 +++
+>  drivers/clk/sprd/pll.h                           |  108 ++
+>  drivers/clk/sprd/sc9860-clk.c                    | 1974 ++++++++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu_common.h                |   29 -
+>  drivers/clk/zte/clk.h                            |   18 -
+>  include/dt-bindings/clock/sprd,sc9860-clk.h      |  404 +++++
+>  include/linux/clk-provider.h                     |   38 +
+>  24 files changed, 3785 insertions(+), 49 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd.txt
+>  create mode 100644 drivers/clk/sprd/Kconfig
+>  create mode 100644 drivers/clk/sprd/Makefile
+>  create mode 100644 drivers/clk/sprd/common.c
+>  create mode 100644 drivers/clk/sprd/common.h
+>  create mode 100644 drivers/clk/sprd/composite.c
+>  create mode 100644 drivers/clk/sprd/composite.h
+>  create mode 100644 drivers/clk/sprd/div.c
+>  create mode 100644 drivers/clk/sprd/div.h
+>  create mode 100644 drivers/clk/sprd/gate.c
+>  create mode 100644 drivers/clk/sprd/gate.h
+>  create mode 100644 drivers/clk/sprd/mux.c
+>  create mode 100644 drivers/clk/sprd/mux.h
+>  create mode 100644 drivers/clk/sprd/pll.c
+>  create mode 100644 drivers/clk/sprd/pll.h
+>  create mode 100644 drivers/clk/sprd/sc9860-clk.c
+>  create mode 100644 include/dt-bindings/clock/sprd,sc9860-clk.h
+>
+> --
+> 2.7.4
+>
