@@ -1,55 +1,59 @@
-From: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 6/6] rpmsg: glink: Add get_rproc_name device op
-Date: Mon, 18 Dec 2017 14:02:14 -0800
-Message-ID: <1513634534-22861-7-git-send-email-clew@codeaurora.org>
+From: Chris Lew <clew@codeaurora.org>
+Subject: [PATCH 4/6] rpmsg: glink: Expose rpmsg name attr for glink
+Date: Mon, 18 Dec 2017 14:02:12 -0800
+Message-ID: <1513634534-22861-5-git-send-email-clew@codeaurora.org>
 References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513634534-22861-1-git-send-email-clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: aneela-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org
+Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for clients to query the edge name for the glink device
-their channel is registered for.
+Expose the name field as an attr so clients listening to uevents for
+rpmsg can identify the edge the events correspond to.
 
-Signed-off-by: Chris Lew <clew-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Chris Lew <clew@codeaurora.org>
 ---
- drivers/rpmsg/qcom_glink_native.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/rpmsg/qcom_glink_native.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index a897ccea3098..4748dea0748e 100644
+index 786f2eca01f1..a897ccea3098 100644
 --- a/drivers/rpmsg/qcom_glink_native.c
 +++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1346,6 +1346,14 @@ static struct device_node *qcom_glink_match_channel(struct device_node *node,
- 	return NULL;
+@@ -1558,6 +1558,22 @@ static void qcom_glink_work(struct work_struct *work)
+ 	}
  }
  
-+static const char *qcom_glink_get_rproc_name(struct rpmsg_device *rpdev)
++static ssize_t rpmsg_name_show(struct device *dev,
++			       struct device_attribute *attr, char *buf)
 +{
-+	struct glink_channel *channel = to_glink_channel(rpdev->ept);
-+	struct qcom_glink *glink = channel->glink;
++	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
++	struct qcom_glink_device *gdev = to_glink_device(rpdev);
 +
-+	return glink->name;
++	return snprintf(buf, RPMSG_NAME_SIZE, "%s\n", gdev->glink->name);
 +}
++static DEVICE_ATTR_RO(rpmsg_name);
 +
- static const struct rpmsg_device_ops glink_chrdev_ops = {
- 	.create_ept = qcom_glink_create_ept,
- };
-@@ -1353,6 +1361,7 @@ static struct device_node *qcom_glink_match_channel(struct device_node *node,
- static const struct rpmsg_device_ops glink_device_ops = {
- 	.create_ept = qcom_glink_create_ept,
- 	.announce_create = qcom_glink_announce_create,
-+	.get_rproc_name = qcom_glink_get_rproc_name,
- };
++static struct attribute *qcom_glink_attrs[] = {
++	&dev_attr_rpmsg_name.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(qcom_glink);
++
+ static void qcom_glink_device_release(struct device *dev)
+ {
+ 	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
+@@ -1597,6 +1613,8 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+ 		return ERR_PTR(-ENOMEM);
  
- static const struct rpmsg_endpoint_ops glink_endpoint_ops = {
+ 	glink->dev = dev;
++	glink->dev->groups = qcom_glink_groups;
++
+ 	glink->tx_pipe = tx;
+ 	glink->rx_pipe = rx;
+ 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
