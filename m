@@ -1,59 +1,50 @@
-From: Chris Lew <clew@codeaurora.org>
-Subject: [PATCH 4/6] rpmsg: glink: Expose rpmsg name attr for glink
-Date: Mon, 18 Dec 2017 14:02:12 -0800
-Message-ID: <1513634534-22861-5-git-send-email-clew@codeaurora.org>
-References: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1513634534-22861-1-git-send-email-clew@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org
-Cc: aneela@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, clew@codeaurora.org
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH 3/5] media: i2c: Add TDA1997x HDMI receiver
+	driver
+Date: Mon, 18 Dec 2017 14:21:40 -0800
+Message-ID: <CAJ+vNU2F-3t9CqO8daeTWBarxepB7ZJKvj3LQR-nLEkspK+6nw@mail.gmail.com>
+References: <1510253136-14153-1-git-send-email-tharvey@gateworks.com>
+ <1510253136-14153-4-git-send-email-tharvey@gateworks.com>
+ <CAOMZO5BUyF_E3aQByD2=4CxB-+DP189QAXMUA=AgOnq99wzmRg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAOMZO5BUyF_E3aQByD2=4CxB-+DP189QAXMUA=AgOnq99wzmRg@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Shawn Guo <shawnguo@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Expose the name field as an attr so clients listening to uevents for
-rpmsg can identify the edge the events correspond to.
+On Sat, Dec 16, 2017 at 11:32 AM, Fabio Estevam <festevam@gmail.com> wrote:
+> Hi Tim,
+>
+> On Thu, Nov 9, 2017 at 4:45 PM, Tim Harvey <tharvey@gateworks.com> wrote:
+>
+>> +static int tda1997x_set_power(struct tda1997x_state *state, bool on)
+>> +{
+>> +       int ret = 0;
+>> +
+>> +       if (on) {
+>> +               ret = regulator_bulk_enable(TDA1997X_NUM_SUPPLIES,
+>> +                                            state->supplies);
+>> +               msleep(300);
+>
+> Didn't you miss a 'return ret' here?
+>
+> Otherwise regulator_bulk_disable() will always be called below.
+>
 
-Signed-off-by: Chris Lew <clew@codeaurora.org>
----
- drivers/rpmsg/qcom_glink_native.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Fabio,
 
-diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index 786f2eca01f1..a897ccea3098 100644
---- a/drivers/rpmsg/qcom_glink_native.c
-+++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1558,6 +1558,22 @@ static void qcom_glink_work(struct work_struct *work)
- 	}
- }
- 
-+static ssize_t rpmsg_name_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
-+	struct qcom_glink_device *gdev = to_glink_device(rpdev);
-+
-+	return snprintf(buf, RPMSG_NAME_SIZE, "%s\n", gdev->glink->name);
-+}
-+static DEVICE_ATTR_RO(rpmsg_name);
-+
-+static struct attribute *qcom_glink_attrs[] = {
-+	&dev_attr_rpmsg_name.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(qcom_glink);
-+
- static void qcom_glink_device_release(struct device *dev)
- {
- 	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
-@@ -1597,6 +1613,8 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
- 		return ERR_PTR(-ENOMEM);
- 
- 	glink->dev = dev;
-+	glink->dev->groups = qcom_glink_groups;
-+
- 	glink->tx_pipe = tx;
- 	glink->rx_pipe = rx;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Yes thanks for catching that. I'll fix in the next revision.
+
+Tim
