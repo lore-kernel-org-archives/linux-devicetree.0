@@ -1,61 +1,68 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] ARM: dts: r8a7743: Add CMT SoC specific support
-Date: Mon, 18 Dec 2017 12:18:20 +0100
-Message-ID: <20171218111819.nsu4dd6wacdud3lc@verge.net.au>
-References: <1513104579-6333-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1513104579-6333-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20171213083829.ptdeggbon3szmko4@verge.net.au>
- <TY1PR06MB0895B34EFC2A48F49AFF0694C0350@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <CAMuHMdWEFttz_Shve+D1Ku2NoUYX-AomzXY9JFGRjzzM=hOc_A@mail.gmail.com>
- <TY1PR06MB08954C04D41BDA8EFA04E1DFC0350@TY1PR06MB0895.apcprd06.prod.outlook.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 16/36] nds32: System calls handling
+Date: Mon, 18 Dec 2017 12:19:46 +0100
+Message-ID: <CAK8P3a2Yas3rWdx_qYx48PECundOzRSKOsqkJnUTzGW86OjJVg@mail.gmail.com>
+References: <cover.1513577007.git.green.hu@gmail.com> <9663cb7c21011cdb4f278c1fad081d1df296daa8.1513577007.git.green.hu@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <TY1PR06MB08954C04D41BDA8EFA04E1DFC0350@TY1PR06MB0895.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9663cb7c21011cdb4f278c1fad081d1df296daa8.1513577007.git.green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, ren_guo-Y+KPrCd2zL4AvxtiuMwx3w@public.gmane.org, Philip
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 13, 2017 at 10:15:39AM +0000, Fabrizio Castro wrote:
-> Hello Geert,
-> 
-> thank you for your feedback.
-> 
-> > Hi Fabrizio,
-> >
-> > On Wed, Dec 13, 2017 at 10:42 AM, Fabrizio Castro
-> > <fabrizio.castro@bp.renesas.com> wrote:
-> > >> On Tue, Dec 12, 2017 at 06:49:38PM +0000, Fabrizio Castro wrote:
-> > >> > Add CMT[01] support to SoC DT.
-> > >> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > >> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> > >> > ---
-> > >> >  arch/arm/boot/dts/r8a7743.dtsi | 30 ++++++++++++++++++++++++++++++
-> > >> >  1 file changed, 30 insertions(+)
-> > >>
-> > >> I was expecting the cmt nodes to be "disabled" in the SoC file
-> > >> and then enabled selectively in board files. Am I missing something?
-> > >
-> > > Since this component is just a compare and match timer, I  thought there was no harm in enabling it by default in the SoC specific DT.
-> > > The system will park it and leave its clock disabled until actually needed for something.
-> > > The user can still disable it in the board specific DT if he/she doesn't mean to even have the option to use it. Do you prefer I left it
-> > disabled by default?
-> >
-> > It's debatable (thus up to Simon the maintainer ;-).
-> > For I/O devices, we disable them in the SoC .dtsi file.
-> > For core infrastructure like interrupt, DMA, and GPIO controllers, we keep
-> > them enabled.
-> >
-> > Timers are core functionality, but who's actually using these timers?
-> 
-> I don't have a use case in mind unfortunately, but it's still core
-> functionality and pretty harmless as far as I can tell. Let's see what
-> Simon thinks about this.
+On Mon, Dec 18, 2017 at 7:46 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On Renesas SoCs we have a bit more flexibility with timers than might
-be the case on other SoCs. Thus I'd like to keep with the scheme of
-disabling them in .dtsi and enabling them when they are needed.
 
-Please update the patches.
+> new file mode 100644
+> index 0000000..90da745
+> --- /dev/null
+> +++ b/arch/nds32/include/uapi/asm/unistd.h
+> @@ -0,0 +1,12 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2005-2017 Andes Technology Corporation
+> +
+> +#define __ARCH_WANT_SYNC_FILE_RANGE2
+> +
+> +/* Use the standard ABI for syscalls */
+> +#include <asm-generic/unistd.h>
+> +
+> +/* Additional NDS32 specific syscalls. */
+> +#define __NR_cacheflush                (__NR_arch_specific_syscall)
+> +#define __NR__llseek             __NR_llseek
+> +__SYSCALL(__NR_cacheflush, sys_cacheflush)
+
+I'm still confused by __NR__llseek here, why do you need that one?
+
+> +SYSCALL_DEFINE6(mmap2, unsigned long, addr, unsigned long, len,
+> +              unsigned long, prot, unsigned long, flags,
+> +              unsigned long, fd, unsigned long, pgoff)
+> +{
+> +       if (pgoff & (~PAGE_MASK >> 12))
+> +               return -EINVAL;
+> +
+> +       return sys_mmap_pgoff(addr, len, prot, flags, fd,
+> +                             pgoff >> (PAGE_SHIFT - 12));
+> +}
+> +
+> +SYSCALL_DEFINE6(mmap, unsigned long, addr, unsigned long, len,
+> +              unsigned long, prot, unsigned long, flags,
+> +              unsigned long, fd, unsigned long, pgoff)
+> +{
+> +       if (unlikely(pgoff & ~PAGE_MASK))
+> +               return -EINVAL;
+> +
+> +       return sys_mmap_pgoff(addr, len, prot, flags, fd,
+> +                             pgoff >> PAGE_SHIFT);
+> +}
+
+And I don't see why you define sys_mmap() in addition to sys_mmap2().
+
+The rest of the syscall handling looks good now.
+
+         Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
