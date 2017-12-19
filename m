@@ -1,62 +1,85 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: Re: [PATCH v3 07/33] nds32: MMU initialization
-Date: Tue, 19 Dec 2017 14:56:48 +0800
-Message-ID: <CAEbi=3e+KpAvS1fTbwou=hGKE_zoXx=DVntCAB_Fbj5KVuib7w@mail.gmail.com>
-References: <cover.1512723245.git.green.hu@gmail.com> <0964714c3dcac46ac700085717b0f414b7978112.1512723245.git.green.hu@gmail.com>
- <20171218090848.GA5823@gary-OptiPlex-3050> <CAEbi=3dy+KGgftWOrbBpVPDZURiYVYwAyGWzd9z4T7RQYAk2FA@mail.gmail.com>
- <20171218122253.GA19382@gary-OptiPlex-3050>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V3 1/2] dt-bindings: bcm283x: Fix register
+ ranges of bcm2835-i2s
+Date: Tue, 19 Dec 2017 07:58:32 +0100
+Message-ID: <47138b75-1d6a-1692-636b-e37a87d68842@i2se.com>
+References: <1512818795-1441-1-git-send-email-stefan.wahren@i2se.com>
+ <1512818795-1441-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20171218122253.GA19382@gary-OptiPlex-3050>
-Sender: linux-arch-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, netdev <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1512818795-1441-2-git-send-email-stefan.wahren@i2se.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kernel@martin.sperl.org, Matthias Reichl <hias@horus.com>, phil@raspberrypi.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Guo Ren:
-
-2017-12-18 20:22 GMT+08:00 Guo Ren <ren_guo@c-sky.com>:
-> On Mon, Dec 18, 2017 at 07:21:30PM +0800, Greentime Hu wrote:
->> Hi, Guo Ren:
->>
->> 2017-12-18 17:08 GMT+08:00 Guo Ren <ren_guo@c-sky.com>:
->> > Hi Greentime,
->> >
->> > On Fri, Dec 08, 2017 at 05:11:50PM +0800, Greentime Hu wrote:
->> > [...]
->> >>
->> >> diff --git a/arch/nds32/mm/highmem.c b/arch/nds32/mm/highmem.c
->> > [...]
->> >> +void *kmap(struct page *page)
->> >> +{
->> >> +     unsigned long vaddr;
->> >> +     might_sleep();
->> >> +     if (!PageHighMem(page))
->> >> +             return page_address(page);
->> >> +     vaddr = (unsigned long)kmap_high(page);
->> > Here should invalid the cpu_mmu_tlb's entry, Or invalid it in the
->> > set_pte().
->> >
->> > eg:
->> > vaddr0 = kmap(page0)
->> > *vaddr0 = val0 //It will cause tlb-miss, and hard-refill to MMU-tlb
->> > kunmap(page0)
->> > vaddr1 = kmap(page1) // Mostly vaddr1 = vaddr0
->> > val = vaddr1; //No tlb-miss and it will get page0's val not page1, because
->> >                 last expired vaddr0's entry is left in CPU-MMU-tlb.
->> >
->>
->> Thanks.
->> I will add __nds32__tlbop_inv(vaddr); to invalidate this mapping
->> before retrun vaddr.
+Am 09.12.2017 um 12:26 schrieb Stefan Wahren:
+> Since 517e7a1537a ("ASoC: bcm2835: move to use the clock framework")
+> the bcm2835-i2s requires a clock as DT property. Unfortunately
+> the necessary DT change has never been applied. While we are at it
+> also fix the first PCM register range to cover the PCM_GRAY register.
 >
-> Sorry, perhaps I'm wrong. See
-> kmap->kmap_high->map_new_virtual->get_next_pkmap_nr(color).
+> This patch only fixes the affected dt-bindings.
 >
-> Seems pkmap will return the vaddr by vaddr + 1 until
-> no_more_pkmaps(), and then flush_all_zero_pkmaps.
-> Just kmap_atomic need it, and you've done.
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Reviewed-by: Eric Anholt <eric@anholt.net>
+> ---
+>   Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt   | 4 ++--
+>   Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt | 9 ++++-----
+>   2 files changed, 6 insertions(+), 7 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+> index baf9b34..b6a8cc0 100644
+> --- a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+> @@ -74,8 +74,8 @@ Example:
+>   
+>   bcm2835_i2s: i2s@7e203000 {
+>   	compatible = "brcm,bcm2835-i2s";
+> -	reg = <	0x7e203000 0x20>,
+> -	      < 0x7e101098 0x02>;
+> +	reg = <	0x7e203000 0x24>;
+> +	clocks = <&clocks BCM2835_CLOCK_PCM>;
+>   
+>   	dmas = <&dma 2>,
+>   	       <&dma 3>;
+> diff --git a/Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt b/Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt
+> index 65783de..7bb0362 100644
+> --- a/Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt
+> +++ b/Documentation/devicetree/bindings/sound/brcm,bcm2835-i2s.txt
+> @@ -2,9 +2,8 @@
+>   
+>   Required properties:
+>   - compatible: "brcm,bcm2835-i2s"
+> -- reg: A list of base address and size entries:
+> -	* The first entry should cover the PCM registers
+> -	* The second entry should cover the PCM clock registers
+> +- reg: Should contain PCM registers location and length.
+> +- clocks: the (PCM) clock to use
+>   - dmas: List of DMA controller phandle and DMA request line ordered pairs.
+>   - dma-names: Identifier string for each DMA request line in the dmas property.
+>     These strings correspond 1:1 with the ordered pairs in dmas.
+> @@ -16,8 +15,8 @@ Example:
+>   
+>   bcm2835_i2s: i2s@7e203000 {
+>   	compatible = "brcm,bcm2835-i2s";
+> -	reg = <0x7e203000 0x20>,
+> -	      <0x7e101098 0x02>;
+> +	reg = <0x7e203000 0x24>;
+> +	clocks = <&clocks BCM2835_CLOCK_PCM>;
+>   
+>   	dmas = <&dma 2>,
+>   	       <&dma 3>;
 
-Thanks for double checking this case. :)
-As you said, it will flush tlb in the generic code flow.
+gentle ping ...
