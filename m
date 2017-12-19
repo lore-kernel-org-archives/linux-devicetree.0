@@ -1,90 +1,31 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: chosen: Add clocksource and clockevent selection
-Date: Tue, 19 Dec 2017 17:20:14 -0600
-Message-ID: <CAL_Jsq+NLfzLnEPxXQyyE2hg9wYeBtOyT307+oTUUdTKXmUUuQ@mail.gmail.com>
-References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
- <20171213185313.20017-2-alexandre.belloni@free-electrons.com> <8fe1dce0-3fd2-d740-8456-bf3b734e571a@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/9] dt-bindings: PCI: cadence: Add DT bindings for
+ Cadence PCIe host controller
+Date: Tue, 19 Dec 2017 17:28:26 -0600
+Message-ID: <20171219232826.odhkybf2xostfei2@rob-hp-laptop>
+References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
+ <ee768eb717027e335d51313ef95bdd0399e54468.1513620412.git.cyrille.pitchen@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8fe1dce0-3fd2-d740-8456-bf3b734e571a@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ee768eb717027e335d51313ef95bdd0399e54468.1513620412.git.cyrille.pitchen@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+Cc: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 15, 2017 at 7:57 PM, Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
->
->
-> On 12/13/2017 12:53 PM, Alexandre Belloni wrote:
->> The clocksource and clockevent timer are probed early in the boot process.
->> At that time it is difficult for linux to know whether a particular timer
->> can be used as the clocksource or the clockevent or by another driver,
->> especially when they are all identical or have similar features.
->>
->> Until now, multiple strategies have been used to solve that:
->>   - use Kconfig option as MXC_USE_EPIT or ATMEL_TCB_CLKSRC_BLOCK
->>   - use a kernel parameter as the "clocksource" early_param in mach-omap2
->>   - registering the first seen timer as a clockevent and the second one as
->>   a clocksource as in rk_timer_init or dw_apb_timer_init
->>
->> Add a linux,clocksource and a linux,clockevent node in chosen with a timer
->> property pointing to the timer to use. Other properties, like the targeted
->> precision may be added later.
->>
->> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
->> ---
->>   Documentation/devicetree/bindings/chosen.txt | 20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
->> index e3b13ea7d2ae..c7ee3ecb5276 100644
->> --- a/Documentation/devicetree/bindings/chosen.txt
->> +++ b/Documentation/devicetree/bindings/chosen.txt
->> @@ -120,3 +120,23 @@ e.g.
->>   While this property does not represent a real hardware, the address
->>   and the size are expressed in #address-cells and #size-cells,
->>   respectively, of the root node.
->> +
->> +linux,clocksource and linux,clockevent
->> +--------------------------------------
->> +
->> +Those nodes have a timer property. This property is a phandle to the timer to be
->> +chosen as the clocksource or clockevent. This is only useful when the platform
->> +has multiple identical timers and it is not possible to let linux make the
->> +correct choice.
->> +
->> +/ {
->> +     chosen {
->> +             linux,clocksource {
->> +                     timer = <&timer0>;
->> +             };
->> +
->> +             linux,clockevent {
->> +                     timer = <&timer1>;
->> +             };
->> +     };
->> +};
->>
->
-> It'd be nice if smth. like this will actually happen, as on some OMAP
-> platforms can be up to 3-4 alternatives for each clocksource/clockevent and
-> different combination need to be selected depending on SoC and platform
-> (and sometime - use case) which is pain in multi-platform environment now.
+On Mon, Dec 18, 2017 at 07:16:05PM +0100, Cyrille Pitchen wrote:
+> From: Scott Telford <stelford@cadence.com>
+> 
+> This patch adds documentation for the DT bindings of the Cadence PCIe
+> controller when configured in host (Root Complex) mode.
+> 
+> Signed-off-by: Scott Telford <stelford@cadence.com>
+> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+> ---
+>  .../bindings/pci/cdns,cdns-pcie-host.txt           | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
 
-Can we have some concrete examples with why the current selection
-logic is broken.
-
-For use-cases, if a board maker can't make that decision, then I think
-those should be kernel command-line options (if boot time) or sysfs
-controlled.
-
-> But more important note from my side is clocksource and clockevent selections seems
-> not enough :( There are also sched clock (sched_clock_register()) and delay_timer
->  (register_current_timer_delay() at least on ARM).
-> Both above can't be unregistered (at least last time I've checked).
-
-Sounds like an OS problem...
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
