@@ -1,67 +1,111 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 23/25] arm: da8: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Tue, 19 Dec 2017 13:41:38 +0530
-Message-ID: <708e10a7-5c92-661b-a0ba-0eb7476f2980@ti.com>
-References: <20171215124657.31052-1-malat@debian.org>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v4 04/12] thermal: armada: Clarify control registers
+ accesses
+Date: Tue, 19 Dec 2017 10:19:41 +0200
+Message-ID: <20171219081941.utke7dh5bmmlub6h@sapphire.tkos.co.il>
+References: <20171218143643.7714-1-miquel.raynal@free-electrons.com>
+ <20171218143643.7714-5-miquel.raynal@free-electrons.com>
+ <20171218203542.msnswjqeyuudyusz@tarshish>
+ <20171219013233.319365c4@xps13>
+ <20171219055154.f23leaob3zndmmqo@sapphire.tkos.co.il>
+ <20171219090814.3a53ec3d@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171215124657.31052-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171219090814.3a53ec3d@xps13>
+Sender: linux-pm-owner@vger.kernel.org
+To: Miquel RAYNAL <miquel.raynal@free-electrons.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, David Sniatkiwicz <davidsn@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 December 2017 06:16 PM, Mathieu Malaterre wrote:
-> Improve the DTS files by removing all the leading "0x" and zeros to fix the
-> following dtc warnings:
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
-> 
-> and
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-> 
-> Converted using the following command:
-> 
-> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
-> 
-> For simplicity, two sed expressions were used to solve each warnings separately.
-> 
-> To make the regex expression more robust a few other issues were resolved,
-> namely setting unit-address to lower case, and adding a whitespace before the
-> the opening curly brace:
-> 
-> https://elinux.org/Device_Tree_Linux#Linux_conventions
-> 
-> This will solve as a side effect warning:
-> 
-> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-> 
-> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-> 
-> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Hi Miquèl,
 
-Applied to v4.16/fixes-non-critical with some headline adjustments.
+On Tue, Dec 19, 2017 at 09:08:14AM +0100, Miquel RAYNAL wrote:
+> On Tue, 19 Dec 2017 07:51:54 +0200
+> Baruch Siach <baruch@tkos.co.il> wrote:
+> > On Tue, Dec 19, 2017 at 01:32:33AM +0100, Miquel RAYNAL wrote:
+> > > On Mon, 18 Dec 2017 22:35:42 +0200
+> > > Baruch Siach <baruch@tkos.co.il> wrote:  
+> > > > On Mon, Dec 18, 2017 at 03:36:35PM +0100, Miquel Raynal wrote:  
+> > > > > Bindings were incomplete for a long time by only exposing one of
+> > > > > the two available control registers. To ease the migration to
+> > > > > the full bindings (already in use for the Armada 375 SoC),
+> > > > > rename the pointers for clarification. This way, it will only
+> > > > > be needed to add another pointer to access the other control
+> > > > > register when the time comes.
+> > > > > 
+> > > > > This avoids dangerous situations where the offset 0 of the
+> > > > > control area can be either one register or the other depending
+> > > > > on the bindings used. After this change, device trees of other
+> > > > > SoCs could be migrated to the "full" bindings if they may
+> > > > > benefit from features from the unaccessible register, without
+> > > > > any change in the driver.
+> > > > > 
+> > > > > Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
+> > > > > Reviewed-by: Gregory CLEMENT
+> > > > > <gregory.clement@free-electrons.com> ---    
+> > > > 
+> > > > [...]
+> > > >   
+> > > > > +	/*
+> > > > > +	 * Legacy DT bindings only described "control1"
+> > > > > register (also referred
+> > > > > +	 * as "control MSB" on old documentation). New bindings
+> > > > > cover
+> > > > > +	 * "control0/control LSB" and "control1/control MSB"
+> > > > > registers within
+> > > > > +	 * the same resource, which is then of size 8 instead
+> > > > > of 4.
+> > > > > +	 */
+> > > > > +	if (resource_size(res) == LEGACY_CONTROL_MEM_LEN) {
+> > > > > +		/* ->control0 unavailable in this
+> > > > > configuration */
+> > > > > +		priv->control1 = control +
+> > > > > LEGACY_CONTROL1_OFFSET;
+> > > > > +	} else {
+> > > > > +		priv->control0 = control + CONTROL0_OFFSET;
+> > > > > +		priv->control1 = control + CONTROL1_OFFSET;
+> > > > > +	}    
+> > > > 
+> > > > The needs_control0 field that you mentioned in the cover page is
+> > > > missing here.  
+> > > 
+> > > Yes, at this point nobody actually *needs* control0 so the
+> > > limitation is added with the patch that introduce ap806 support as
+> > > it is the first compatible that needs both control0 and control1 to
+> > > work correctly. Does this bother you?  
+> > 
+> > No. It is just that we agreed to have a verification here that the
+> > size of the control registers resource matches the binding. I thought
+> > that the needs_control0 field that you mention in the cover page is
+> > meant to implement that.
+> 
+> That is absolutely right, but at this point in the series, the supported
+> compatible strings are "marvell,armada[370|375|38x|xp]-thermal". All of
+> them can use both bindings so I don't see the point to have a
+> needs_control0 field in this patch. It is introduced in the next patch
+> that adds support for ap806 by only supporting the new bindings
+> though.
 
-The subject prefix we use for this file is "ARM: dts: da850-lcdk:". You
-can check that with 'git log --oneline'
+OK. Makes sense.
 
-Also, you are not fixing bindings notation here, but the actual device
-tree source itself. So:
+> > necessary. It would just make sure that no one introduces a DT with
+> > the wrong resource size.
+> 
+> Not sure I understand what exactly you wanna check, can you
+> give me an example?
 
-"
-ARM: dts: da850-lcdk: Remove leading 0x and 0s from unit address
-"
+I wrote that before it occurred to me that we can use the control registers 
+size the distinguish between the old binding and the new one.
 
-Thanks for the patch!
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I still think it would be nice to add needs_control0=true to armada375_data, 
+for consistency with the ap806 and cp110.
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
