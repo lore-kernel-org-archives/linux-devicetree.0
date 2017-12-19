@@ -1,112 +1,53 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
-Date: Tue, 19 Dec 2017 10:13:36 +0100
-Message-ID: <20171219101336.337d0afc@bbrezillon>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
-        <20171214151610.19153-3-boris.brezillon@free-electrons.com>
-        <20171219085250.GC15010@kroah.com>
-        <20171219100900.35c0f66e@bbrezillon>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH V2 9/9] ARM: dts: stm32: add initial support of
+ stm32mp157c eval board
+Date: Tue, 19 Dec 2017 10:17:13 +0100
+Message-ID: <42407e75-7e27-2c68-9993-37865c57a9fd@st.com>
+References: <1513610272-7824-1-git-send-email-ludovic.Barre@st.com>
+ <1513610272-7824-10-git-send-email-ludovic.Barre@st.com>
+ <CAK8P3a14KzxGK8j75UUBfWgexg2fdzrtdgcqUT=uHfjWrVaWbA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20171219100900.35c0f66e@bbrezillon>
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.orglinux-
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a14KzxGK8j75UUBfWgexg2fdzrtdgcqUT=uHfjWrVaWbA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Dec 2017 10:09:00 +0100
-Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+Hi,
 
-> On Tue, 19 Dec 2017 09:52:50 +0100
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+On 12/18/2017 09:20 PM, Arnd Bergmann wrote:
+> On Mon, Dec 18, 2017 at 4:17 PM, Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org> wrote:
+> =
+>> +
+>> +/ {
+>> +       model = "STMicroelectronics STM32MP157C eval daughter";
+>> +       compatible = "st,stm32mp157c-ed1", "st,stm32mp157";
+>> +
+>> +       chosen {
+>> +               bootargs = "earlyprintk console=ttySTM3,115200 root=/dev/ram";
+>> +               stdout-path = "serial3:115200n8";
+>> +       };
 > 
-> > On Thu, Dec 14, 2017 at 04:16:05PM +0100, Boris Brezillon wrote:  
-> > > +/**
-> > > + * i3c_device_match_id() - Find the I3C device ID entry matching an I3C dev
-> > > + * @i3cdev: the I3C device we're searching a match for
-> > > + * @id_table: the I3C device ID table
-> > > + *
-> > > + * Return: a pointer to the first entry matching @i3cdev, or NULL if there's
-> > > + *	   no match.
-> > > + */
-> > > +const struct i3c_device_id *
-> > > +i3c_device_match_id(struct i3c_device *i3cdev,
-> > > +		    const struct i3c_device_id *id_table)
-> > > +{
-> > > +	const struct i3c_device_id *id;
-> > > +
-> > > +	/*
-> > > +	 * The lower 32bits of the provisional ID is just filled with a random
-> > > +	 * value, try to match using DCR info.
-> > > +	 */
-> > > +	if (!I3C_PID_RND_LOWER_32BITS(i3cdev->info.pid)) {
-> > > +		u16 manuf = I3C_PID_MANUF_ID(i3cdev->info.pid);
-> > > +		u16 part = I3C_PID_PART_ID(i3cdev->info.pid);
-> > > +		u16 ext_info = I3C_PID_EXTRA_INFO(i3cdev->info.pid);
-> > > +
-> > > +		/* First try to match by manufacturer/part ID. */
-> > > +		for (id = id_table; id->match_flags != 0; id++) {
-> > > +			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
-> > > +			    I3C_MATCH_MANUF_AND_PART)
-> > > +				continue;
-> > > +
-> > > +			if (manuf != id->manuf_id || part != id->part_id)
-> > > +				continue;
-> > > +
-> > > +			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
-> > > +			    ext_info != id->extra_info)
-> > > +				continue;
-> > > +
-> > > +			return id;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	/* Fallback to DCR match. */
-> > > +	for (id = id_table; id->match_flags != 0; id++) {
-> > > +		if ((id->match_flags & I3C_MATCH_DCR) &&
-> > > +		    id->dcr == i3cdev->info.dcr)
-> > > +			return id;
-> > > +	}
-> > > +
-> > > +	return NULL;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(i3c_device_match_id);    
-> > 
-> > I just picked one random export here, but it feels like you are
-> > exporting a bunch of symbols you don't need to.  Why would something
-> > outside of the i3c "core" need to call this function?  
-> 
-> Because I'm not passing the i3c_device_id to the ->probe() method, and
-> if the driver is supporting different variants of the device, it may
-> want to know which one is being probed.
-> 
-> I considered retrieving this information in the core just before probing
-> the driver and passing it to the ->probe() function, but it means
-> having an extra i3c_device_match_id() call for everyone even those who
-> don't care about the device_id information, so I thought exporting this
-> function was a good alternative (device drivers can use it when they
-> actually need to retrieve the device_id).
-> 
-> Anyway, that's something I can change if you think passing the
-> i3c_device_id to the ->probe() method is preferable.
-> 
-> > Have you looked
-> > to see if you really have callers for everything you are exporting?  
-> 
-> Yes, I tried to only export functions that I think will be needed by
-> I3C device drivers and I3C master drivers. Note that I didn't post the
-> dummy device driver I developed to test the framework (partly because
-> this is 
+> I'd remove the bootargs here and let the boot loader take care of
+> that, in particular
+> since all three arguments are rather old-school: earlycon is preferred over
+> earlyprintk, console= should not be needed if you set stdout-path, and
+> /dev/ram is obsoleted by initramfs.
 
-Sorry, I hit the send button before finishing my sentence :-).
+In this case I will modify also stm32 mcu devicetree in this way.
 
-"
-Note that I didn't post the dummy device driver [1] I developed to test
-the framework (partly because the quality of the code does not meet
-mainline standards and I was ashamed of posting it publicly :-)), but
-this driver is using some of the exported functions.
-"
+Thanks
+Alex
 
-[1]https://github.com/bbrezillon/linux-0day/commit/10054caf3493524b6ae352a1bdcb71e82c885a6e
+
+> 
+>          Arnd
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
