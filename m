@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 1/9] dt-bindings: arm: Add entry for Broadcom Brahma-B53
-Date: Tue, 19 Dec 2017 11:22:39 -0800
-Message-ID: <20171219192247.29799-2-f.fainelli@gmail.com>
+Subject: [PATCH v2 6/9] soc: brcmstb: biuctrl: Wire-up new registers
+Date: Tue, 19 Dec 2017 11:22:44 -0800
+Message-ID: <20171219192247.29799-7-f.fainelli@gmail.com>
 References: <20171219192247.29799-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171219192247.29799-1-f.fainelli@gmail.com>
@@ -12,26 +12,43 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, M
         ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Broadcom's Brahma-B53 CPU is an ARMv8A processor used on a number of
-DSL, Cable Modem and Set-top-box SoCs.
+Add definitions for B53 systems register: CPU_MCP_FLOW_REG and
+CPU_WRITEBACK_CTRL_REG. These register will be saved and restored
+accordingly.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/cpus.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/bcm/brcmstb/biuctrl.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index a0009b72e9be..f4a777039f03 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -169,6 +169,7 @@ described below.
- 			    "arm,cortex-r5"
- 			    "arm,cortex-r7"
- 			    "brcm,brahma-b15"
-+			    "brcm,brahma-b53"
- 			    "brcm,vulcan"
- 			    "cavium,thunder"
- 			    "cavium,thunder2"
+diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
+index 16cbfc2e953a..d498f9db01ab 100644
+--- a/drivers/soc/bcm/brcmstb/biuctrl.c
++++ b/drivers/soc/bcm/brcmstb/biuctrl.c
+@@ -49,17 +49,23 @@ static inline void cbc_writel(u32 val, int reg)
+ 
+ enum cpubiuctrl_regs {
+ 	CPU_CREDIT_REG = 0,
++	CPU_MCP_FLOW_REG,
++	CPU_WRITEBACK_CTRL_REG
+ };
+ 
+ static const int b15_cpubiuctrl_regs[] = {
+ 	[CPU_CREDIT_REG] = 0x184,
++	[CPU_MCP_FLOW_REG] = -1,
++	[CPU_WRITEBACK_CTRL_REG] = -1,
+ };
+ 
+ static const int b53_cpubiuctrl_regs[] = {
+ 	[CPU_CREDIT_REG] = 0x0b0,
++	[CPU_MCP_FLOW_REG] = 0x0b4,
++	[CPU_WRITEBACK_CTRL_REG] = 0x22c,
+ };
+ 
+-#define NUM_CPU_BIUCTRL_REGS	1
++#define NUM_CPU_BIUCTRL_REGS	3
+ 
+ static int __init mcp_write_pairing_set(void)
+ {
 -- 
 2.9.3
