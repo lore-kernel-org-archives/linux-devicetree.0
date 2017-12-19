@@ -1,69 +1,158 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] misc: xlnx_vcu: Add Xilinx ZYNQMP VCU logicoreIP
- init driver
-Date: Tue, 19 Dec 2017 14:24:55 +0100
-Message-ID: <f11d2f97-3eda-d43d-2cbd-96d2c331fd47@xilinx.com>
-References: <29198c0a-783e-8aa0-00e4-44b1fa1acef7@infradead.org>
- <1513322656-4571-1-git-send-email-dshah@xilinx.com>
- <1513322656-4571-3-git-send-email-dshah@xilinx.com>
- <CAK8P3a0nm_-pxGWXHx_FAXgXt1msE2bK0D4paBMWgryPyeS9xA@mail.gmail.com>
- <b3b41b04-7f93-1c20-2e62-817b4c743b89@xilinx.com>
- <CAK8P3a0z6HF8Rg08HUj7_T+7ZxxnHoReiu68bNzF6CnEooQSdA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 1/5] dt-bindings: mtd: add Marvell NAND controller documentation
+Date: Tue, 19 Dec 2017 14:29:38 +0100
+Message-ID: <20171219132942.27433-2-miquel.raynal@free-electrons.com>
+References: <20171219132942.27433-1-miquel.raynal@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a0z6HF8Rg08HUj7_T+7ZxxnHoReiu68bNzF6CnEooQSdA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20171219132942.27433-1-miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, gregkh <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hyun Kwon <hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ofer Heifetz <oferh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Willy Tarreau <w@1wt.eu>, =?UTF-8?q?Sean=20Nyekj=C3=A6r?= <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18.12.2017 15:05, Arnd Bergmann wrote:
-> On Mon, Dec 18, 2017 at 2:13 PM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->> On 15.12.2017 14:26, Arnd Bergmann wrote:
->>> In Fri, Dec 15, 2017 at 8:24 AM, Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
->>>> Xilinx ZYNQMP logicoreIP Init driver is based on the new
->>>> LogiCoreIP design created. This driver provides the processing system
->>>> and programmable logic isolation. Set the frequency based on the clock
->>>> information get from the logicoreIP register set.
->>>>
->>>> It is put in drivers/misc as there is no subsystem for this logicoreIP.
->>>>
->>>> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>>
->>> After giving this some more thought, I'd suggest you move the driver to
->>> drivers/soc/xilinx or drivers/soc/zynq instead of drivers/misc/, and have
->>> it merged by Michal Simek as a driver patch that will go through arm-soc.
->>
->> I have not a problem of creating drivers/soc/xilinx/ location for this
->> driver. It is not zynq (arm32) but zynqmp(arm64) device where this
->> driver can be used. As far as I understand it is memory mapped soft IP
->> which could be also accessed by soft core CPU.
-> 
-> Ok. I wouldn't be worried about having a zynq directory for stuff that
-> is common between zynq and zynqmp, but the soft code CPU case
-> wouldn't make that ideal.
-> 
->> It means drivers/soc/xilinx could be shared by all xilinx platforms anyway.
->> We have been discussing that openrisc cases and for sure if someone
->> wants to enable this driver there using misc location would be one
->> option but I also think that using drivers/soc/xilinx location is not a
->> bad option because it is very unlikely that anybody tries it.
->>
->> Arnd: misc or drivers/soc/xilinx?
-> 
-> drivers/soc/xilinx please, thanks for the clarification.
-> 
+Document the legacy and the new bindings for Marvell NAND controller.
 
-ok. I have sent patch which prepare structures in drivers/soc/xilinx.
+The pxa3xx_nand.c driver does only support legacy bindings, which are
+incomplete and inaccurate. A rework of this controller (called
+marvell_nand.c) does support both.
 
-Dhaval: Please rebase your patch based on this and put driver to this
-location.
+Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../devicetree/bindings/mtd/marvell-nand.txt       | 123 +++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/marvell-nand.txt
 
-Thanks,
-Michal
+diff --git a/Documentation/devicetree/bindings/mtd/marvell-nand.txt b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+new file mode 100644
+index 000000000000..aa6a1ed045b2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/marvell-nand.txt
+@@ -0,0 +1,123 @@
++Marvell NAND Flash Controller (NFC)
++
++Required properties:
++- compatible: can be one of the following:
++    * "marvell,armada-8k-nand-controller"
++    * "marvell,armada370-nand-controller"
++    * "marvell,pxa3xx-nand-controller"
++    * "marvell,armada-8k-nand" (deprecated)
++    * "marvell,armada370-nand" (deprecated)
++    * "marvell,pxa3xx-nand" (deprecated)
++  Compatibles marked deprecated support only the old bindings described
++  at the bottom.
++- reg: NAND flash controller memory area.
++- #address-cells: shall be set to 1. Encode the NAND CS.
++- #size-cells: shall be set to 0.
++- interrupts: shall define the NAND controller interrupt.
++- clocks: shall reference the NAND controller clock.
++- marvell,system-controller: Set to retrieve the syscon node that handles
++  NAND controller related registers (only required with the
++  "marvell,armada-8k-nand[-controller]" compatibles).
++
++Optional properties:
++- label: see partition.txt. New platforms shall omit this property.
++- dmas: shall reference DMA channel associated to the NAND controller.
++  This property is only used with "marvell,pxa3xx-nand[-controller]"
++  compatible strings.
++- dma-names: shall be "rxtx".
++  This property is only used with "marvell,pxa3xx-nand[-controller]"
++  compatible strings.
++
++Optional children nodes:
++Children nodes represent the available NAND chips.
++
++Required properties:
++- reg: shall contain the native Chip Select ids (0-3)
++- marvell,rb: shall contain the native Ready/Busy ids (0-1)
++
++Optional properties:
++- marvell,nand-keep-config: orders the driver not to take the timings
++  from the core and leaving them completely untouched. Bootloader
++  timings will then be used.
++- label: MTD name.
++- nand-on-flash-bbt: see nand.txt.
++- nand-ecc-mode: see nand.txt. Will use hardware ECC if not specified.
++- nand-ecc-algo: see nand.txt. This property may be added when using
++  hardware ECC for clarification but will be ignored by the driver
++  because ECC mode is chosen depending on the page size and the strength
++  required by the NAND chip. This value may be overwritten with
++  nand-ecc-strength property.
++- nand-ecc-strength: see nand.txt.
++- nand-ecc-step-size: see nand.txt. This has no effect and will be
++  ignored by the driver when using hardware ECC because Marvell's NAND
++  flash controller does use fixed strength (1-bit for Hamming, 16-bit
++  for BCH), so the step size will shrink or grow in order to fit the
++  required strength. Step sizes are not completely random for all and
++  follow certain patterns described in AN-379, "Marvell SoC NFC ECC".
++
++See Documentation/devicetree/bindings/mtd/nand.txt for more details on
++generic bindings.
++
++
++Example:
++nand_controller: nand-controller@d0000 {
++	compatible = "marvell,armada370-nand-controller";
++	reg = <0xd0000 0x54>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&coredivclk 0>;
++
++	nand@0 {
++		reg = <0>;
++		label = "main-storage";
++		marvell,rb = <0>;
++		nand-ecc-mode = "hw";
++		marvell,nand-keep-config;
++		nand-on-flash-bbt;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "Rootfs";
++				reg = <0x00000000 0x40000000>;
++			};
++		};
++	};
++};
++
++
++Note on legacy bindings: One can find, in not-updated device trees,
++bindings slightly differents than described above with other properties
++described below as well as the partitions node at the root of a so
++called "nand" node (without clear controller/chip separation).
++
++Legacy properties:
++- marvell,nand-enable-arbiter: To enable the arbiter, all boards blindly
++  used it, this bit was set by the bootloader for many boards and even if
++  it is marked reserved in several datasheets, it might be needed to set
++  it (otherwise it is harmless) so whether or not this property is set,
++  the bit is selected by the driver.
++- num-cs: Number of chip-select lines to use, all boards blindly set 1
++  to this and for a reason, other values would have failed. The value of
++  this property is ignored.
++
++Example:
++
++	nand0: nand@43100000 {
++		compatible = "marvell,pxa3xx-nand";
++		reg = <0x43100000 90>;
++		interrupts = <45>;
++		dmas = <&pdma 97 0>;
++		dma-names = "rxtx";
++		#address-cells = <1>;
++		marvell,nand-keep-config;
++		marvell,nand-enable-arbiter;
++		num-cs = <1>;
++		/* Partitions (optional) */
++       };
+-- 
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
