@@ -1,92 +1,180 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4 05/15] drm/sun4i: Fix error path handling
-Date: Tue, 19 Dec 2017 09:59:50 +0100
-Message-ID: <20171219085950.domvcod2dyqdi3v3@flea.lan>
-References: <cover.e46a07c0e181d735c807dc94fe0ce0ea013788be.1512662253.git-series.maxime.ripard@free-electrons.com>
- <f83c1cebc731f0b4251f5ddd7b38c718cd79bb0b.1512662253.git-series.maxime.ripard@free-electrons.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 3/3] PCI: dra7xx: Enable x2 mode support for dra74x, dra76x and dra72x
+Date: Tue, 19 Dec 2017 14:28:23 +0530
+Message-ID: <20171219085823.8695-4-kishon@ti.com>
+References: <20171219085823.8695-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2010099398=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f83c1cebc731f0b4251f5ddd7b38c718cd79bb0b.1512662253.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, jernej.skrabec@siol.net, plaes@plaes.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, thierry.reding@gmail.com, stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org, icenowy@aosc.io
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171219085823.8695-1-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
+dra74x/dra76x and dra72x has separate compatible strings. Add support
+for these compatible strings in pci-dra7xx driver to perform syscon
+configurations required to get x2 mode working.
 
---===============2010099398==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qo2r5u2xkd6kbbgp"
-Content-Disposition: inline
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/dwc/pci-dra7xx.c | 90 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
 
-
---qo2r5u2xkd6kbbgp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Dec 07, 2017 at 04:58:50PM +0100, Maxime Ripard wrote:
-> The commit 4c7f16d14a33 ("drm/sun4i: Fix TCON clock and regmap
-> initialization sequence") moved a bunch of logic around, but forgot to
-> update the gotos after the introduction of the err_free_dotclock label.
->=20
-> It means that if we fail later that the one introduced in that commit,
-> we'll just to the old label which isn't free the clock we created. This
-> will result in a breakage as soon as someone tries to do something with
-> that clock, since its resources will have been long reclaimed.
->=20
-> Cc: <stable@vger.kernel.org>
-> Fixes: 4c7f16d14a33 ("drm/sun4i: Fix TCON clock and regmap initialization=
- sequence")
-> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-Applied this one as a fix.
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---qo2r5u2xkd6kbbgp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlo41QUACgkQ0rTAlCFN
-r3SYEw/8Clz+lWHHPnqE4HvxfoOj/9vflEUxAmONWRkvsMffwemIAQlZ845K4NkH
-54HAyFh/xsm3++f95ALrmiTHBvYp1Jnl6CH0XeVr/b8NY3kLGdTFAPoWxZphewxZ
-e+pMPsMkpsyZsqJX5pz9nfgdYyULtg6XIZ0Edxr5ANlSSqa/oxTIuN6r0bXXSB/E
-Q/nUb8OaKTUxiH+LPtb4lQtWdTPFFv37qgYZSKYEGCxTomafOPI3L6gPJJu0SSqm
-cYgdcFK9E6Vvbdbvepz43jxuddXv+XcgDguqy5CkBO5ojQJCZIGaIiZlsf8ocwwl
-RvoU9D3pACGC6HwM9dbOEf7AoRdfHo6ZjJMhumZLRaO7TP7/qjlUqaUQZRTuWTJR
-wodqfZvDmhkroSMTFQEXyjB83eBUiBcw/j+fQGQXHX+rrnSUxN3DnClMS0YVKN+b
-kriqLj9ngzaV8uyk6hcj7qrM10rAUEKzMjRd7KnV7Hf9iIykKwiV1lcUxfgika78
-IPXVKlYG1lbAnmtGPkr1B+M0wIXJAKR1gEYi5UktqP1BLq7G4falYTGX9yYWnHxH
-jDUMC3paNcUTzxSyLlKOCYYtLo42X8tnFUNmDqhU/9HVWKxGg4qJy+tFOFWYaUcO
-INjcwRVG0xj/w90h9/ISiYiCyBFhLxU0ZG+2EagqL/AREJ2lzIs=
-=AEqR
------END PGP SIGNATURE-----
-
---qo2r5u2xkd6kbbgp--
-
---===============2010099398==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============2010099398==--
+diff --git a/drivers/pci/dwc/pci-dra7xx.c b/drivers/pci/dwc/pci-dra7xx.c
+index e77a4ceed74c..3b4427c10228 100644
+--- a/drivers/pci/dwc/pci-dra7xx.c
++++ b/drivers/pci/dwc/pci-dra7xx.c
+@@ -83,11 +83,15 @@
+ #define MSI_REQ_GRANT					BIT(0)
+ #define MSI_VECTOR_SHIFT				7
+ 
++#define PCIE_1LANE_2LANE_SELECTION			BIT(13)
++#define PCIE_B1C0_MODE_SEL				BIT(2)
++
+ struct dra7xx_pcie {
+ 	struct dw_pcie		*pci;
+ 	void __iomem		*base;		/* DT ti_conf */
+ 	int			phy_count;	/* DT phy-names count */
+ 	struct phy		**phy;
++	u32			*b1c0_mask;
+ 	int			link_gen;
+ 	struct irq_domain	*irq_domain;
+ 	enum dw_pcie_device_mode mode;
+@@ -95,6 +99,7 @@ struct dra7xx_pcie {
+ 
+ struct dra7xx_pcie_of_data {
+ 	enum dw_pcie_device_mode mode;
++	u32 b1co_mode_sel_mask;
+ };
+ 
+ #define to_dra7xx_pcie(x)	dev_get_drvdata((x)->dev)
+@@ -533,6 +538,26 @@ static const struct dra7xx_pcie_of_data dra7xx_pcie_ep_of_data = {
+ 	.mode = DW_PCIE_EP_TYPE,
+ };
+ 
++static const struct dra7xx_pcie_of_data dra746_pcie_rc_of_data = {
++	.b1co_mode_sel_mask = BIT(2),
++	.mode = DW_PCIE_RC_TYPE,
++};
++
++static const struct dra7xx_pcie_of_data dra726_pcie_rc_of_data = {
++	.b1co_mode_sel_mask = GENMASK(3, 2),
++	.mode = DW_PCIE_RC_TYPE,
++};
++
++static const struct dra7xx_pcie_of_data dra746_pcie_ep_of_data = {
++	.b1co_mode_sel_mask = BIT(2),
++	.mode = DW_PCIE_EP_TYPE,
++};
++
++static const struct dra7xx_pcie_of_data dra726_pcie_ep_of_data = {
++	.b1co_mode_sel_mask = GENMASK(3, 2),
++	.mode = DW_PCIE_EP_TYPE,
++};
++
+ static const struct of_device_id of_dra7xx_pcie_match[] = {
+ 	{
+ 		.compatible = "ti,dra7-pcie",
+@@ -542,6 +567,22 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+ 		.compatible = "ti,dra7-pcie-ep",
+ 		.data = &dra7xx_pcie_ep_of_data,
+ 	},
++	{
++		.compatible = "ti,dra746-pcie-rc",
++		.data = &dra746_pcie_rc_of_data,
++	},
++	{
++		.compatible = "ti,dra726-pcie-rc",
++		.data = &dra726_pcie_rc_of_data,
++	},
++	{
++		.compatible = "ti,dra746-pcie-ep",
++		.data = &dra746_pcie_ep_of_data,
++	},
++	{
++		.compatible = "ti,dra726-pcie-ep",
++		.data = &dra726_pcie_ep_of_data,
++	},
+ 	{},
+ };
+ 
+@@ -587,6 +628,47 @@ static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
+ 	return ret;
+ }
+ 
++static int dra7xx_pcie_configure_two_lane(struct device *dev,
++					  u32 b1co_mode_sel_mask)
++{
++	struct device_node *np = dev->of_node;
++	struct regmap *pcie_syscon;
++	unsigned int pcie_reg;
++
++	pcie_syscon = syscon_regmap_lookup_by_phandle(np,
++						      "ti,syscon-lane-conf");
++	if (IS_ERR(pcie_syscon)) {
++		dev_err(dev, "unable to get ti,syscon-lane-conf\n");
++		return -EINVAL;
++	}
++
++	if (of_property_read_u32_index(np, "ti,syscon-lane-conf", 1,
++				       &pcie_reg)) {
++		dev_err(dev, "couldn't get lane configuration reg offset\n");
++		return -EINVAL;
++	}
++
++	regmap_update_bits(pcie_syscon, pcie_reg, PCIE_1LANE_2LANE_SELECTION,
++			   PCIE_1LANE_2LANE_SELECTION);
++
++	pcie_syscon = syscon_regmap_lookup_by_phandle(np, "ti,syscon-lane-sel");
++	if (IS_ERR(pcie_syscon)) {
++		dev_err(dev, "unable to get ti,syscon-lane-sel\n");
++		return -EINVAL;
++	}
++
++	if (of_property_read_u32_index(np, "ti,syscon-lane-sel", 1,
++				       &pcie_reg)) {
++		dev_err(dev, "couldn't get lane selection reg offset\n");
++		return -EINVAL;
++	}
++
++	regmap_update_bits(pcie_syscon, pcie_reg, b1co_mode_sel_mask,
++			   PCIE_B1C0_MODE_SEL);
++
++	return 0;
++}
++
+ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ {
+ 	u32 reg;
+@@ -608,6 +690,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 	const struct dra7xx_pcie_of_data *data;
+ 	enum dw_pcie_device_mode mode;
++	u32 b1co_mode_sel_mask;
+ 
+ 	match = of_match_device(of_match_ptr(of_dra7xx_pcie_match), dev);
+ 	if (!match)
+@@ -615,6 +698,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 
+ 	data = (struct dra7xx_pcie_of_data *)match->data;
+ 	mode = (enum dw_pcie_device_mode)data->mode;
++	b1co_mode_sel_mask = data->b1co_mode_sel_mask;
+ 
+ 	dra7xx = devm_kzalloc(dev, sizeof(*dra7xx), GFP_KERNEL);
+ 	if (!dra7xx)
+@@ -673,6 +757,12 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+ 	dra7xx->pci = pci;
+ 	dra7xx->phy_count = phy_count;
+ 
++	if (phy_count == 2) {
++		ret = dra7xx_pcie_configure_two_lane(dev, b1co_mode_sel_mask);
++		if (ret < 0)
++			goto err_link;
++	}
++
+ 	ret = dra7xx_pcie_enable_phy(dra7xx);
+ 	if (ret) {
+ 		dev_err(dev, "failed to enable phy\n");
+-- 
+2.11.0
