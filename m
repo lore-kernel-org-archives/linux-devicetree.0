@@ -1,47 +1,75 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v3 5/5] ARM: dts: r8a7743: Add TPU support
-Date: Tue, 19 Dec 2017 13:35:00 +0000
-Message-ID: <1513690500-12165-6-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1513690500-12165-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1513690500-12165-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v14 0/5] ZII RAVE platform driver
+Date: Tue, 19 Dec 2017 05:42:42 -0800
+Message-ID: <CAHQ1cqFPDap1D_C2kHHssRQX-q11KKWK+ccUnppv_rLReaidBA@mail.gmail.com>
+References: <20171207162735.25873-1-andrew.smirnov@gmail.com>
+ <b64f8d3e-fb7d-328b-dfd5-ddd0e9dfe932@roeck-us.net> <20171219085603.nk6x25b7kkc2rukz@dell>
+ <20171219090624.GB8917@localhost> <20171219092202.jmuj5am3japbqv5r@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171219092202.jmuj5am3japbqv5r@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add TPU support to SoC DT.
+On Tue, Dec 19, 2017 at 1:22 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 19 Dec 2017, Johan Hovold wrote:
+>
+>> On Tue, Dec 19, 2017 at 08:56:03AM +0000, Lee Jones wrote:
+>> > On Sat, 16 Dec 2017, Guenter Roeck wrote:
+>> > > On 12/07/2017 08:27 AM, Andrey Smirnov wrote:
+>> > > > Lee:
+>> > > >
+>> > > > This patch set has been marinating out there for a while now and
+>> > > > yours, I belive, is that last signature I need to start pushing it for
+>> > > > inclusion. I'd really appreciate if you could spare some of your time
+>> > > > to give it a look. Thanks!
+>> > > >
+>> > > > Everyone:
+>> > > >
+>> > > > This patch series is v14 of the driver for supervisory processor found
+>> > > > on RAVE series of devices from ZII. Supervisory processor is a PIC
+>> > > > microcontroller connected to various electrical subsystems on RAVE
+>> > > > devices whose firmware implements protocol to command/qery them.
+>> > > >
+>> > > > NOTE:
+>> > > >
+>> > > >   * This driver dependends on crc_ccitt_false(), added by
+>> > > >     2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next', the patch
+>> > > >     was pulled in by Andrew Morton and is currently avaiting users, so
+>> > > >     this series might have to go in through Andrew's tree
+>> > > >
+>> > >
+>> > > Strictly speaking, the solution would be for Andrew to provide an immutable
+>> > > branch with the above, for Rob to provide an immutable branch based on Andrew's
+>> > > branch, adding the serdev drivers, for Lee to provide yet another immutable
+>> > > branch with all those plus the mfd driver, and for Wim to pick it all up
+>> > > into the watchdog tree.
+>> >
+>> > I think that's the craziest thing I've ever heard. ;)  Only 1
+>> > immutable branch is required, which can be pulled in by everyone.
+>> >
+>> > Bear with me.  Pull-request to follow.
+>>
+>> Did the compatible-strings issue get sorted out? That is, that the cell
+>> drivers were matching on the parent compatible string to determine
+>> their type instead of encoding that in their own compatible strings. Is
+>> that desired (and recommended)?
+>
+> Looks like they are still doing that.
+>
+> I'd suggest that it was sub-optimal.  It would be better to pass
+> platform information through pdata or ddata IMHO.  Or yes, use the
+> child compatible strings (if they differ from platform to platform).
+>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2->v3:
-* No change
+I'll change that in v15.
 
- arch/arm/boot/dts/r8a7743.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 282ba5a..f24f36d 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -1152,6 +1152,16 @@
- 			status = "disabled";
- 		};
- 
-+		tpu: pwm@e60f0000 {
-+			compatible = "renesas,tpu-r8a7743", "renesas,tpu";
-+			reg = <0 0xe60f0000 0 0x148>;
-+			clocks = <&cpg CPG_MOD 304>;
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 304>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a7743",
- 				     "renesas,rcar-gen2-sdhi";
--- 
-2.7.4
+Thanks,
+Andrey Smirnov
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
