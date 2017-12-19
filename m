@@ -1,85 +1,204 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v3 3/9] ARM: dts: imx7-colibri: mux pull-ups where appropriate
-Date: Tue, 19 Dec 2017 19:10:32 +0100
-Message-ID: <20171219181038.1369-3-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v3 9/9] ARM: dts: imx7: add Toradex Colibri iMX7D 1GB (eMMC) support
+Date: Tue, 19 Dec 2017 19:10:38 +0100
+Message-ID: <20171219181038.1369-9-stefan@agner.ch>
 References: <20171219181038.1369-1-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171219181038.1369-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171219181038.1369-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Use pull-ups instead of pull-downs for the pins which are already
-pulled-up externally.
+Add support for the Computer on Module Colibri iMX7D 1GB along
+with the Colibri Evaluation Board device trees. Follow the usual
+hierarchic include model, maintaining shared configuration in
+imx7-colibri.dtsi and imx7-colibri-eval-v3.dtsi respectively.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
 ---
- arch/arm/boot/dts/imx7-colibri.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+Changes since v2:
+- Fix SPDX header location and use GPL-2.0 only license
+Changes since v1:
+- Use SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 
+ arch/arm/boot/dts/Makefile                       |  1 +
+ arch/arm/boot/dts/imx7-colibri.dtsi              | 64 +++++++++++++++++++++++-
+ arch/arm/boot/dts/imx7d-colibri-emmc-eval-v3.dts | 19 +++++++
+ arch/arm/boot/dts/imx7d-colibri-emmc.dtsi        | 21 ++++++++
+ arch/arm/boot/dts/imx7d-colibri.dtsi             |  4 ++
+ 5 files changed, 108 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/imx7d-colibri-emmc-eval-v3.dts
+ create mode 100644 arch/arm/boot/dts/imx7d-colibri-emmc.dtsi
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b5ba7ad6ae30..9e4b4ecae572 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -519,6 +519,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ull-14x14-evk.dtb
+ dtb-$(CONFIG_SOC_IMX7D) += \
+ 	imx7d-cl-som-imx7.dtb \
++	imx7d-colibri-emmc-eval-v3.dtb \
+ 	imx7d-colibri-eval-v3.dtb \
+ 	imx7d-nitrogen7.dtb \
+ 	imx7d-pico.dtb \
 diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index dae6b561145b..e4e32aa786f4 100644
+index c28a483b786d..895fbde4d433 100644
 --- a/arch/arm/boot/dts/imx7-colibri.dtsi
 +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -307,17 +307,17 @@
+@@ -121,7 +121,6 @@
+ 	fsl,use-minimum-ecc;
+ 	nand-on-flash-bbt;
+ 	nand-ecc-mode = "hw";
+-	status = "okay";
+ };
  
- 	pinctrl_gpio1: gpio1-grp {
- 		fsl,pins = <
--			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x14 /* SODIMM 55 */
--			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x14 /* SODIMM 63 */
-+			MX7D_PAD_ENET1_RGMII_RD3__GPIO7_IO3	0x74 /* SODIMM 55 */
-+			MX7D_PAD_ENET1_RGMII_RD2__GPIO7_IO2	0x74 /* SODIMM 63 */
- 			MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0X14 /* SODIMM 73 */
--			MX7D_PAD_SAI1_RX_SYNC__GPIO6_IO16	0X14 /* SODIMM 77 */
-+			MX7D_PAD_SAI1_RX_SYNC__GPIO6_IO16	0x14 /* SODIMM 77 */
- 			MX7D_PAD_EPDC_DATA09__GPIO2_IO9		0x14 /* SODIMM 89 */
--			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x14 /* SODIMM 91 */
-+			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x74 /* SODIMM 91 */
- 			MX7D_PAD_LCD_RESET__GPIO3_IO4		0x14 /* SODIMM 93 */
- 			MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x14 /* SODIMM 95 */
- 			MX7D_PAD_ENET1_RGMII_TXC__GPIO7_IO11	0x14 /* SODIMM 99 */
--			MX7D_PAD_EPDC_DATA10__GPIO2_IO10	0x14 /* SODIMM 105 */
--			MX7D_PAD_EPDC_DATA15__GPIO2_IO15	0x14 /* SODIMM 107 */
-+			MX7D_PAD_EPDC_DATA10__GPIO2_IO10	0x74 /* SODIMM 105 */
-+			MX7D_PAD_EPDC_DATA15__GPIO2_IO15	0x74 /* SODIMM 107 */
- 			MX7D_PAD_EPDC_DATA00__GPIO2_IO0		0x14 /* SODIMM 111 */
- 			MX7D_PAD_EPDC_DATA01__GPIO2_IO1		0x14 /* SODIMM 113 */
- 			MX7D_PAD_EPDC_DATA02__GPIO2_IO2		0x14 /* SODIMM 115 */
-@@ -333,7 +333,7 @@
- 			MX7D_PAD_SD2_DATA2__GPIO5_IO16		0x14 /* SODIMM 100 */
- 			MX7D_PAD_SD2_DATA3__GPIO5_IO17		0x14 /* SODIMM 102 */
- 			MX7D_PAD_EPDC_GDSP__GPIO2_IO27		0x14 /* SODIMM 104 */
--			MX7D_PAD_EPDC_BDR0__GPIO2_IO28		0x14 /* SODIMM 106 */
-+			MX7D_PAD_EPDC_BDR0__GPIO2_IO28		0x74 /* SODIMM 106 */
- 			MX7D_PAD_EPDC_BDR1__GPIO2_IO29		0x14 /* SODIMM 110 */
- 			MX7D_PAD_EPDC_PWR_COM__GPIO2_IO30	0x14 /* SODIMM 112 */
- 			MX7D_PAD_EPDC_SDCLK__GPIO2_IO16		0x14 /* SODIMM 114 */
-@@ -357,7 +357,7 @@
- 	pinctrl_gpio2: gpio2-grp { /* On X22 Camera interface */
- 		fsl,pins = <
- 			MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x14 /* SODIMM 65 */
--			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x14 /* SODIMM 69 */
-+			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x74 /* SODIMM 69 */
- 			MX7D_PAD_SD1_WP__GPIO5_IO1		0x14 /* SODIMM 71 */
- 			MX7D_PAD_I2C4_SDA__GPIO4_IO15		0x14 /* SODIMM 75 */
- 			MX7D_PAD_ECSPI1_MISO__GPIO4_IO18	0x14 /* SODIMM 79 */
-@@ -378,8 +378,8 @@
- 			MX7D_PAD_LCD_DATA19__GPIO3_IO24		0x14 /* SODIMM 138 */
- 			MX7D_PAD_LCD_DATA20__GPIO3_IO25		0x14 /* SODIMM 140 */
- 			MX7D_PAD_LCD_DATA21__GPIO3_IO26		0x14 /* SODIMM 142 */
--			MX7D_PAD_LCD_DATA22__GPIO3_IO27		0x14 /* SODIMM 146 */
--			MX7D_PAD_LCD_DATA23__GPIO3_IO28		0x14 /* SODIMM 148 */
-+			MX7D_PAD_LCD_DATA22__GPIO3_IO27		0x74 /* SODIMM 144 */
-+			MX7D_PAD_LCD_DATA23__GPIO3_IO28		0x74 /* SODIMM 146 */
+ &i2c1 {
+@@ -311,6 +310,21 @@
+ 	vqmmc-supply = <&reg_LDO2>;
+ };
+ 
++&usdhc3 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	assigned-clocks = <&clks IMX7D_USDHC3_ROOT_CLK>;
++	assigned-clock-rates = <400000000>;
++	bus-width = <8>;
++	fsl,tuning-step = <2>;
++	max-frequency = <100000000>;
++	vmmc-supply = <&reg_module_3v3>;
++	vqmmc-supply = <&reg_DCDC3>;
++	non-removable;
++};
++
+ &iomuxc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3 &pinctrl_gpio4>;
+@@ -598,6 +612,54 @@
  		>;
  	};
  
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
++			MX7D_PAD_SD3_CLK__SD3_CLK		0x19
++			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
++			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
++			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
++			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
++			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
++			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
++			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
++			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
++			MX7D_PAD_SD3_STROBE__SD3_STROBE         0x19
++		>;
++	};
++
++	pinctrl_usdhc3_100mhz: usdhc3grp_100mhz {
++		fsl,pins = <
++			MX7D_PAD_SD3_CMD__SD3_CMD		0x5a
++			MX7D_PAD_SD3_CLK__SD3_CLK		0x1a
++			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x5a
++			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x5a
++			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x5a
++			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x5a
++			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x5a
++			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x5a
++			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x5a
++			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x5a
++			MX7D_PAD_SD3_STROBE__SD3_STROBE         0x1a
++		>;
++	};
++
++	pinctrl_usdhc3_200mhz: usdhc3grp_200mhz {
++		fsl,pins = <
++			MX7D_PAD_SD3_CMD__SD3_CMD		0x5b
++			MX7D_PAD_SD3_CLK__SD3_CLK		0x1b
++			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x5b
++			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x5b
++			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x5b
++			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x5b
++			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x5b
++			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x5b
++			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x5b
++			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x5b
++			MX7D_PAD_SD3_STROBE__SD3_STROBE         0x1b
++		>;
++	};
++
+ 	pinctrl_sai1: sai1-grp {
+ 		fsl,pins = <
+ 			MX7D_PAD_ENET1_RX_CLK__SAI1_TX_BCLK     0x1f
+diff --git a/arch/arm/boot/dts/imx7d-colibri-emmc-eval-v3.dts b/arch/arm/boot/dts/imx7d-colibri-emmc-eval-v3.dts
+new file mode 100644
+index 000000000000..8ee73c870b12
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7d-colibri-emmc-eval-v3.dts
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright 2017 Toradex AG
++ */
++
++/dts-v1/;
++#include "imx7d-colibri-emmc.dtsi"
++#include "imx7-colibri-eval-v3.dtsi"
++
++/ {
++	model = "Toradex Colibri iMX7D 1GB (eMMC) on Colibri Evaluation Board V3";
++	compatible = "toradex,colibri-imx7d-emmc-eval-v3",
++		     "toradex,colibri-imx7d-emmc", "fsl,imx7d";
++};
++
++&usbotg2 {
++	vbus-supply = <&reg_usbh_vbus>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi b/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi
+new file mode 100644
+index 000000000000..9b63b9c89e4b
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7d-colibri-emmc.dtsi
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright 2017 Toradex AG
++ */
++
++#include "imx7d.dtsi"
++#include "imx7-colibri.dtsi"
++
++/ {
++	memory {
++		reg = <0x80000000 0x40000000>;
++	};
++};
++
++&usbotg2 {
++	dr_mode = "host";
++};
++
++&usdhc3 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx7d-colibri.dtsi b/arch/arm/boot/dts/imx7d-colibri.dtsi
+index 3c2cb502b388..6f2bb70c1fbd 100644
+--- a/arch/arm/boot/dts/imx7d-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7d-colibri.dtsi
+@@ -49,6 +49,10 @@
+ 	};
+ };
+ 
++&gpmi {
++	status = "okay";
++};
++
+ &usbotg2 {
+ 	dr_mode = "host";
+ };
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
