@@ -1,100 +1,53 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v2 2/3] dt-bindings: media: Add Allwinner V3s Camera
- Sensor Interface (CSI)
-Date: Tue, 19 Dec 2017 13:53:28 +0200
-Message-ID: <20171219115327.ofs5xwwimpn7x72n@valkosipuli.retiisi.org.uk>
-References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
- <1501131697-1359-3-git-send-email-yong.deng@magewell.com>
+From: <Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: RE: [PATCH v9 2/2] media: i2c: Add the ov7740 image sensor driver
+Date: Tue, 19 Dec 2017 11:54:03 +0000
+Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB8DE616@CHN-SV-EXMX07.mchp-main.com>
+References: <20171211013146.2497-1-wenyou.yang@microchip.com>
+ <20171211013146.2497-3-wenyou.yang@microchip.com>
+ <20171219092246.3usg5mdyi27ivqlq@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1501131697-1359-3-git-send-email-yong.deng@magewell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Deng <yong.deng@magewell.com>
-Cc: maxime.ripard@free-electrons.com, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Hans Verkuil <hverkuil@xs4all.nl>, Arnd Bergmann <arnd@arndb.de>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, Robert
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171219092246.3usg5mdyi27ivqlq-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sakari.ailus-X3B1VOXEql0@public.gmane.org
+Cc: mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas.Ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong,
-
-On Thu, Jul 27, 2017 at 01:01:36PM +0800, Yong Deng wrote:
-> Add binding documentation for Allwinner V3s CSI.
-> 
-> Signed-off-by: Yong Deng <yong.deng@magewell.com>
-
-DT bindings should precede the driver.
-
-> ---
->  .../devicetree/bindings/media/sun6i-csi.txt        | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> new file mode 100644
-> index 0000000..f8d83f6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> @@ -0,0 +1,49 @@
-> +Allwinner V3s Camera Sensor Interface
-> +------------------------------
-> +
-> +Required properties:
-> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-
-What are sun6i and sun8i? Is this device first present in sun6i SoCs,
-whereas you have only defined bindings for sun8i?
-
-> +  - reg: base address and size of the memory-mapped region.
-> +  - interrupts: interrupt associated to this IP
-> +  - clocks: phandles to the clocks feeding the CSI
-> +    * ahb: the CSI interface clock
-> +    * mod: the CSI module clock
-> +    * ram: the CSI DRAM clock
-> +  - clock-names: the clock names mentioned above
-> +  - resets: phandles to the reset line driving the CSI
-> +
-> +- ports: A ports node with endpoint definitions as defined in
-> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-Please document mandatory and optional endpoint properties relevant for the
-hardware.
-
-> +
-> +Example:
-> +
-> +	csi1: csi@01cb4000 {
-> +		compatible = "allwinner,sun8i-v3s-csi";
-> +		reg = <0x01cb4000 0x1000>;
-> +		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&ccu CLK_BUS_CSI>,
-> +			 <&ccu CLK_CSI1_SCLK>,
-> +			 <&ccu CLK_DRAM_CSI>;
-> +		clock-names = "ahb", "mod", "ram";
-> +		resets = <&ccu RST_BUS_CSI>;
-> +
-> +		port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			/* Parallel bus endpoint */
-> +			csi1_ep: endpoint {
-> +				remote-endpoint = <&adv7611_ep>;
-> +				bus-width = <16>;
-> +				data-shift = <0>;
-> +
-> +				/* If hsync-active/vsync-active are missing,
-> +				   embedded BT.656 sync is used */
-> +				hsync-active = <0>; /* Active low */
-> +				vsync-active = <0>; /* Active low */
-> +				data-active = <1>;  /* Active high */
-> +				pclk-sample = <1>;  /* Rising */
-> +			};
-> +		};
-> +	};
-> +
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+SGkgU2FrYXJpLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNha2Fy
+aSBBaWx1cyBbbWFpbHRvOnNha2FyaS5haWx1c0Bpa2kuZmldDQo+IFNlbnQ6IDIwMTfE6jEy1MIx
+OcjVIDE3OjIzDQo+IFRvOiBXZW55b3UgWWFuZyAtIEE0MTUzNSA8V2VueW91LllhbmdAbWljcm9j
+aGlwLmNvbT4NCj4gQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYkBzLW9wZW5zb3Vy
+Y2UuY29tPjsgUm9iIEhlcnJpbmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFu
+ZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgTmljb2xhcyBGZXJyZSAtIE00MzIzOCA8Tmljb2xhcy5GZXJyZUBtaWNyb2NoaXAuY29tPjsN
+Cj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IEpvbmF0aGFuIENvcmJldCA8Y29yYmV0QGx3
+bi5uZXQ+OyBIYW5zIFZlcmt1aWwNCj4gPGh2ZXJrdWlsQHhzNGFsbC5ubD47IGxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgTGludXggTWVkaWEgTWFpbGluZyBMaXN0DQo+IDxs
+aW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmc+OyBTb25nanVuIFd1IDxzb25nanVuLnd1QG1pY3Jv
+Y2hpcC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjkgMi8yXSBtZWRpYTogaTJjOiBBZGQg
+dGhlIG92Nzc0MCBpbWFnZSBzZW5zb3IgZHJpdmVyDQo+IA0KPiBPbiBNb24sIERlYyAxMSwgMjAx
+NyBhdCAwOTozMTo0NkFNICswODAwLCBXZW55b3UgWWFuZyB3cm90ZToNCj4gPiBUaGUgb3Y3NzQw
+IChjb2xvcikgaW1hZ2Ugc2Vuc29yIGlzIGEgaGlnaCBwZXJmb3JtYW5jZSBWR0EgQ01PUyBpbWFn
+ZQ0KPiA+IHNuZXNvciwgd2hpY2ggc3VwcG9ydHMgZm9yIG91dHB1dCBmb3JtYXRzOiBSQVcgUkdC
+IGFuZCBZVVYgYW5kIGltYWdlDQo+ID4gc2l6ZXM6IFZHQSwgYW5kIFFWR0EsIENJRiBhbmQgYW55
+IHNpemUgc21hbGxlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNvbmdqdW4gV3UgPHNvbmdq
+dW4ud3VAbWljcm9jaGlwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2Vu
+eW91LnlhbmdAbWljcm9jaGlwLmNvbT4NCj4gDQo+IEFwcGxpZWQgd2l0aCB0aGlzIGRpZmY6DQoN
+ClRoYW5rIHlvdSB2ZXJ5IG11Y2guDQoNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlh
+L2kyYy9vdjc3NDAuYyBiL2RyaXZlcnMvbWVkaWEvaTJjL292Nzc0MC5jIGluZGV4DQo+IDAzMDhi
+YTQzN2JiYi4uMDQxYTc3MDM5ZDcwIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL21lZGlhL2kyYy9v
+djc3NDAuYw0KPiArKysgYi9kcml2ZXJzL21lZGlhL2kyYy9vdjc3NDAuYw0KPiBAQCAtMSw1ICsx
+LDcgQEANCj4gLS8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+IC0vLyBDb3B5
+cmlnaHQgKGMpIDIwMTcgTWljcm9jaGlwIENvcnBvcmF0aW9uLg0KPiArLyoNCj4gKyAqIFNQRFgt
+TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTcgTWlj
+cm9jaGlwIENvcnBvcmF0aW9uLg0KPiArICovDQo+IA0KPiAgI2luY2x1ZGUgPGxpbnV4L2Nsay5o
+Pg0KPiAgI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+DQo+IA0KPiAtLQ0KPiBTYWthcmkgQWlsdXMN
+Cj4gZS1tYWlsOiBzYWthcmkuYWlsdXNAaWtpLmZpDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2VueW91
+IFlhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
