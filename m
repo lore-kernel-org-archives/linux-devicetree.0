@@ -1,80 +1,112 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v9 2/2] media: i2c: Add the ov7740 image sensor driver
-Date: Tue, 19 Dec 2017 11:11:39 +0200
-Message-ID: <20171219091139.n2wmsj6ydcjntnf3@valkosipuli.retiisi.org.uk>
-References: <20171211013146.2497-1-wenyou.yang@microchip.com>
- <20171211013146.2497-3-wenyou.yang@microchip.com>
- <1641aa67-b05e-47e2-600c-70b77571b450@iki.fi>
- <F9F4555C4E01D7469D37975B62D0EFBB8DDA56@CHN-SV-EXMX07.mchp-main.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
+Date: Tue, 19 Dec 2017 10:13:36 +0100
+Message-ID: <20171219101336.337d0afc@bbrezillon>
+References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
+        <20171214151610.19153-3-boris.brezillon@free-electrons.com>
+        <20171219085250.GC15010@kroah.com>
+        <20171219100900.35c0f66e@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <F9F4555C4E01D7469D37975B62D0EFBB8DDA56-8fD0d2gESGoGk1ErWP88zX2Vsf1/G1/XQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
-Cc: mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas.Ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20171219100900.35c0f66e@bbrezillon>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.orglinux-
 List-Id: devicetree@vger.kernel.org
 
-Hi Wenyou,
+On Tue, 19 Dec 2017 10:09:00 +0100
+Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
 
-On Tue, Dec 19, 2017 at 02:11:28AM +0000, Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org wrote:
-> Hi Sakari,
+> On Tue, 19 Dec 2017 09:52:50 +0100
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 > 
-> > -----Original Message-----
-> > From: Sakari Ailus [mailto:sakari.ailus-X3B1VOXEql0@public.gmane.org]
-> > Sent: 2017年12月14日 4:06
-> > To: Wenyou Yang - A41535 <Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>; Mauro Carvalho
-> > Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>; Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>;
-> > Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Nicolas Ferre - M43238
-> > <Nicolas.Ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jonathan Corbet
-> > <corbet-T1hC0tSOHrs@public.gmane.org>; Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>; linux-arm-
-> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Linux Media Mailing List <linux-
-> > media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>; Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> > Subject: Re: [PATCH v9 2/2] media: i2c: Add the ov7740 image sensor driver
-> > 
-> > Hi Wenyou,
-> > 
-> > Wenyou Yang wrote:
-> > ...
-> > > +static int ov7740_start_streaming(struct ov7740 *ov7740) {
-> > > +	int ret;
+> > On Thu, Dec 14, 2017 at 04:16:05PM +0100, Boris Brezillon wrote:  
+> > > +/**
+> > > + * i3c_device_match_id() - Find the I3C device ID entry matching an I3C dev
+> > > + * @i3cdev: the I3C device we're searching a match for
+> > > + * @id_table: the I3C device ID table
+> > > + *
+> > > + * Return: a pointer to the first entry matching @i3cdev, or NULL if there's
+> > > + *	   no match.
+> > > + */
+> > > +const struct i3c_device_id *
+> > > +i3c_device_match_id(struct i3c_device *i3cdev,
+> > > +		    const struct i3c_device_id *id_table)
+> > > +{
+> > > +	const struct i3c_device_id *id;
 > > > +
-> > > +	if (ov7740->fmt) {
-> > > +		ret = regmap_multi_reg_write(ov7740->regmap,
-> > > +					     ov7740->fmt->regs,
-> > > +					     ov7740->fmt->reg_num);
-> > > +		if (ret)
-> > > +			return ret;
+> > > +	/*
+> > > +	 * The lower 32bits of the provisional ID is just filled with a random
+> > > +	 * value, try to match using DCR info.
+> > > +	 */
+> > > +	if (!I3C_PID_RND_LOWER_32BITS(i3cdev->info.pid)) {
+> > > +		u16 manuf = I3C_PID_MANUF_ID(i3cdev->info.pid);
+> > > +		u16 part = I3C_PID_PART_ID(i3cdev->info.pid);
+> > > +		u16 ext_info = I3C_PID_EXTRA_INFO(i3cdev->info.pid);
+> > > +
+> > > +		/* First try to match by manufacturer/part ID. */
+> > > +		for (id = id_table; id->match_flags != 0; id++) {
+> > > +			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
+> > > +			    I3C_MATCH_MANUF_AND_PART)
+> > > +				continue;
+> > > +
+> > > +			if (manuf != id->manuf_id || part != id->part_id)
+> > > +				continue;
+> > > +
+> > > +			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
+> > > +			    ext_info != id->extra_info)
+> > > +				continue;
+> > > +
+> > > +			return id;
+> > > +		}
 > > > +	}
 > > > +
-> > > +	if (ov7740->frmsize) {
-> > > +		ret = regmap_multi_reg_write(ov7740->regmap,
-> > > +					     ov7740->frmsize->regs,
-> > > +					     ov7740->frmsize->reg_num);
-> > > +		if (ret)
-> > > +			return ret;
+> > > +	/* Fallback to DCR match. */
+> > > +	for (id = id_table; id->match_flags != 0; id++) {
+> > > +		if ((id->match_flags & I3C_MATCH_DCR) &&
+> > > +		    id->dcr == i3cdev->info.dcr)
+> > > +			return id;
 > > > +	}
 > > > +
-> > > +	return __v4l2_ctrl_handler_setup(ov7740->subdev.ctrl_handler);
+> > > +	return NULL;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(i3c_device_match_id);    
 > > 
-> > I believe you're still setting the controls after starting streaming.
+> > I just picked one random export here, but it feels like you are
+> > exporting a bunch of symbols you don't need to.  Why would something
+> > outside of the i3c "core" need to call this function?  
 > 
-> Yes, it sees it does so.
+> Because I'm not passing the i3c_device_id to the ->probe() method, and
+> if the driver is supporting different variants of the device, it may
+> want to know which one is being probed.
 > 
-> The OV7740 sensor generates the stream pixel data at the constant frame
-> rate, no such start or stop control.
+> I considered retrieving this information in the core just before probing
+> the driver and passing it to the ->probe() function, but it means
+> having an extra i3c_device_match_id() call for everyone even those who
+> don't care about the device_id information, so I thought exporting this
+> function was a good alternative (device drivers can use it when they
+> actually need to retrieve the device_id).
+> 
+> Anyway, that's something I can change if you think passing the
+> i3c_device_id to the ->probe() method is preferable.
+> 
+> > Have you looked
+> > to see if you really have callers for everything you are exporting?  
+> 
+> Yes, I tried to only export functions that I think will be needed by
+> I3C device drivers and I3C master drivers. Note that I didn't post the
+> dummy device driver I developed to test the framework (partly because
+> this is 
 
-That'd be odd but I guess hardware sometimes is. I'll apply the patches.
+Sorry, I hit the send button before finishing my sentence :-).
 
-Thanks!
+"
+Note that I didn't post the dummy device driver [1] I developed to test
+the framework (partly because the quality of the code does not meet
+mainline standards and I was ashamed of posting it publicly :-)), but
+this driver is using some of the exported functions.
+"
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1]https://github.com/bbrezillon/linux-0day/commit/10054caf3493524b6ae352a1bdcb71e82c885a6e
