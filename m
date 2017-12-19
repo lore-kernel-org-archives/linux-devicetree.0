@@ -1,83 +1,26 @@
-From: Miquel Raynal <miquel.raynal@free-electrons.com>
-Subject: [PATCH v5 01/11] dt-bindings: thermal: Describe Armada AP806 and CP110
-Date: Tue, 19 Dec 2017 14:57:09 +0100
-Message-ID: <20171219135719.9531-2-miquel.raynal@free-electrons.com>
-References: <20171219135719.9531-1-miquel.raynal@free-electrons.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20171219135719.9531-1-miquel.raynal@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@free-electrons.com>, Baruch Siach <baruch@tkos.co.il>, David Sniatkiwicz <davidsn@marvell.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v9 2/2] media: i2c: Add the ov7740 image sensor driver
+Date: Tue, 19 Dec 2017 12:31:46 -0200
+Message-ID: <CAOMZO5DYWA8O5N=CRm2uR3_7qZ4U1M8u8F-oBU8bJfnKXD4DSA@mail.gmail.com>
+References: <20171211013146.2497-1-wenyou.yang@microchip.com>
+ <20171211013146.2497-3-wenyou.yang@microchip.com> <20171219092246.3usg5mdyi27ivqlq@valkosipuli.retiisi.org.uk>
+ <CAOMZO5BHSJv01SwZ2YNtGZTjMtOuOktET43qriK2fQ+jhE2TDA@mail.gmail.com>
+ <20171219130537.2viv4wjcp4i3mdkj@valkosipuli.retiisi.org.uk>
+ <CAOMZO5C5NJMffBEv2cdqKqUnTMQEYkqzN1JnJMS21PWtKuabnA@mail.gmail.com> <20171219134308.4plzpknvksbzhio7@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171219134308.4plzpknvksbzhio7@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Philippe Ombredanne <pombredanne@nexb.com>, Wenyou Yang <wenyou.yang@microchip.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-kernel <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Songjun Wu <songjun.wu@microchip.com>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Baruch Siach <baruch@tkos.co.il>
+On Tue, Dec 19, 2017 at 11:43 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
 
-Add compatible strings for AP806 and CP110 that are part of the Armada
-8k/7k line of SoCs.
+> Both seem to exist. See e.g. c3a3d1d6b8b363a02234e5564692db3647f183e6 .
 
-Add a note on the differences in the size of the control area in
-different bindings. This is an existing difference between the Armada
-375 binding and the other boards already supported. The new AP806 and
-CP110 bindings are similar to the existing Armada 375 in this regard.
+This patch fixes .h files to use /* SPDX style comment, which is the
+recommendation.
 
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-[<miquel.raynal@free-electrons.com>: reword, additional details]
-Signed-off-by: Miquel Raynal <miquel.raynal@free-electrons.com>
----
- .../devicetree/bindings/thermal/armada-thermal.txt | 37 +++++++++++++++-------
- 1 file changed, 25 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-index 24aacf8948c5..e0d013a2e66d 100644
---- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-@@ -2,22 +2,35 @@
- 
- Required properties:
- 
--- compatible:	Should be set to one of the following:
--		marvell,armada370-thermal
--		marvell,armada375-thermal
--		marvell,armada380-thermal
--		marvell,armadaxp-thermal
-+- compatible: Should be set to one of the following:
-+    * marvell,armada370-thermal
-+    * marvell,armada375-thermal
-+    * marvell,armada380-thermal
-+    * marvell,armadaxp-thermal
-+    * marvell,armada-ap806-thermal
-+    * marvell,armada-cp110-thermal
- 
--- reg:		Device's register space.
--		Two entries are expected, see the examples below.
--		The first one is required for the sensor register;
--		the second one is required for the control register
--		to be used for sensor initialization (a.k.a. calibration).
-+- reg: Device's register space.
-+  Two entries are expected, see the examples below. The first one points
-+  to the status register (4B). The second one points to the control
-+  registers (8B).
-+  Note: The compatibles marvell,armada370-thermal,
-+  marvell,armada380-thermal, and marvell,armadaxp-thermal must point to
-+  "control MSB/control 1", with size of 4 (deprecated binding), or point
-+  to "control LSB/control 0" with size of 8 (current binding). All other
-+  compatibles must point to "control LSB/control 0" with size of 8.
- 
--Example:
-+Examples:
- 
-+	/* Legacy bindings */
- 	thermal@d0018300 {
- 		compatible = "marvell,armada370-thermal";
--                reg = <0xd0018300 0x4
-+		reg = <0xd0018300 0x4
- 		       0xd0018304 0x4>;
- 	};
-+
-+	ap_thermal: thermal@6f8084 {
-+		compatible = "marvell,armada-ap806-thermal";
-+		reg = <0x6f808C 0x4>,
-+		      <0x6f8084 0x8>;
-+	};
--- 
-2.11.0
+.c files should use // SPDX style.
