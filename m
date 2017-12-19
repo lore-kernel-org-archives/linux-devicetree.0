@@ -1,53 +1,112 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 5/6] arm: dts: sun8i: a83t: bananapi-m3:
- Enable IR controller
-Date: Tue, 19 Dec 2017 09:07:46 +0100
-Message-ID: <20171219080747.4507-6-embed3d@gmail.com>
-References: <20171219080747.4507-1-embed3d@gmail.com>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 04/12] thermal: armada: Clarify control registers
+ accesses
+Date: Tue, 19 Dec 2017 09:08:14 +0100
+Message-ID: <20171219090814.3a53ec3d@xps13>
+References: <20171218143643.7714-1-miquel.raynal@free-electrons.com>
+        <20171218143643.7714-5-miquel.raynal@free-electrons.com>
+        <20171218203542.msnswjqeyuudyusz@tarshish>
+        <20171219013233.319365c4@xps13>
+        <20171219055154.f23leaob3zndmmqo@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBXMR4PIQKGQE4YVB7EA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20171219080747.4507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171219055154.f23leaob3zndmmqo-MwjkAAnuF3khR1HGirfZ1z4kX+cae0hd@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Bananapi M3 has an onboard IR receiver.
-This enables the onboard IR receiver subnode.
-Unlike the other IR receivers this one needs a base clock frequency
-of 3000000 Hz (3 MHz), to be able to work.
+On Tue, 19 Dec 2017 07:51:54 +0200
+Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 
-Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+> Hi Miquèl,
+> 
+> On Tue, Dec 19, 2017 at 01:32:33AM +0100, Miquel RAYNAL wrote:
+> > On Mon, 18 Dec 2017 22:35:42 +0200
+> > Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:  
+> > > On Mon, Dec 18, 2017 at 03:36:35PM +0100, Miquel Raynal wrote:  
+> > > > Bindings were incomplete for a long time by only exposing one of
+> > > > the two available control registers. To ease the migration to
+> > > > the full bindings (already in use for the Armada 375 SoC),
+> > > > rename the pointers for clarification. This way, it will only
+> > > > be needed to add another pointer to access the other control
+> > > > register when the time comes.
+> > > > 
+> > > > This avoids dangerous situations where the offset 0 of the
+> > > > control area can be either one register or the other depending
+> > > > on the bindings used. After this change, device trees of other
+> > > > SoCs could be migrated to the "full" bindings if they may
+> > > > benefit from features from the unaccessible register, without
+> > > > any change in the driver.
+> > > > 
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > > Reviewed-by: Gregory CLEMENT
+> > > > <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> ---    
+> > > 
+> > > [...]
+> > >   
+> > > > +	/*
+> > > > +	 * Legacy DT bindings only described "control1"
+> > > > register (also referred
+> > > > +	 * as "control MSB" on old documentation). New bindings
+> > > > cover
+> > > > +	 * "control0/control LSB" and "control1/control MSB"
+> > > > registers within
+> > > > +	 * the same resource, which is then of size 8 instead
+> > > > of 4.
+> > > > +	 */
+> > > > +	if (resource_size(res) == LEGACY_CONTROL_MEM_LEN) {
+> > > > +		/* ->control0 unavailable in this
+> > > > configuration */
+> > > > +		priv->control1 = control +
+> > > > LEGACY_CONTROL1_OFFSET;
+> > > > +	} else {
+> > > > +		priv->control0 = control + CONTROL0_OFFSET;
+> > > > +		priv->control1 = control + CONTROL1_OFFSET;
+> > > > +	}    
+> > > 
+> > > The needs_control0 field that you mentioned in the cover page is
+> > > missing here.  
+> > 
+> > Yes, at this point nobody actually *needs* control0 so the
+> > limitation is added with the patch that introduce ap806 support as
+> > it is the first compatible that needs both control0 and control1 to
+> > work correctly. Does this bother you?  
+> 
+> No. It is just that we agreed to have a verification here that the
+> size of the control registers resource matches the binding. I thought
+> that the needs_control0 field that you mention in the cover page is
+> meant to implement that.
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-index 6550bf0e594b..ffc6445fd281 100644
---- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-@@ -82,6 +82,13 @@
- 	};
- };
- 
-+&cir {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&cir_pins>;
-+	clock-frequency = <3000000>;
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
- 	status = "okay";
+That is absolutely right, but at this point in the series, the supported
+compatible strings are "marvell,armada[370|375|38x|xp]-thermal". All of
+them can use both bindings so I don't see the point to have a
+needs_control0 field in this patch. It is introduced in the next patch
+that adds support for ap806 by only supporting the new bindings
+though.
+
+> necessary. It would just make sure that no one introduces a DT with
+> the wrong resource size.
+
+Not sure I understand what exactly you wanna check, can you
+give me an example?
+
+Thank you,
+Miquèl
+
+> 
+> baruch
+> 
+
+
+
 -- 
-2.11.0
+Miquel Raynal, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
