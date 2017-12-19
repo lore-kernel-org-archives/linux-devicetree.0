@@ -1,64 +1,104 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v14 0/5] ZII RAVE platform driver
-Date: Tue, 19 Dec 2017 10:06:24 +0100
-Message-ID: <20171219090624.GB8917@localhost>
-References: <20171207162735.25873-1-andrew.smirnov@gmail.com>
- <b64f8d3e-fb7d-328b-dfd5-ddd0e9dfe932@roeck-us.net>
- <20171219085603.nk6x25b7kkc2rukz@dell>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
+Date: Tue, 19 Dec 2017 10:09:00 +0100
+Message-ID: <20171219100900.35c0f66e@bbrezillon>
+References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
+        <20171214151610.19153-3-boris.brezillon@free-electrons.com>
+        <20171219085250.GC15010@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171219085603.nk6x25b7kkc2rukz@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20171219085250.GC15010@kroah.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.orglinux-
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 08:56:03AM +0000, Lee Jones wrote:
-> On Sat, 16 Dec 2017, Guenter Roeck wrote:
-> > On 12/07/2017 08:27 AM, Andrey Smirnov wrote:
-> > > Lee:
-> > > 
-> > > This patch set has been marinating out there for a while now and
-> > > yours, I belive, is that last signature I need to start pushing it for
-> > > inclusion. I'd really appreciate if you could spare some of your time
-> > > to give it a look. Thanks!
-> > > 
-> > > Everyone:
-> > > 
-> > > This patch series is v14 of the driver for supervisory processor found
-> > > on RAVE series of devices from ZII. Supervisory processor is a PIC
-> > > microcontroller connected to various electrical subsystems on RAVE
-> > > devices whose firmware implements protocol to command/qery them.
-> > > 
-> > > NOTE:
-> > > 
-> > >   * This driver dependends on crc_ccitt_false(), added by
-> > >     2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next', the patch
-> > >     was pulled in by Andrew Morton and is currently avaiting users, so
-> > >     this series might have to go in through Andrew's tree
-> > > 
-> > 
-> > Strictly speaking, the solution would be for Andrew to provide an immutable
-> > branch with the above, for Rob to provide an immutable branch based on Andrew's
-> > branch, adding the serdev drivers, for Lee to provide yet another immutable
-> > branch with all those plus the mfd driver, and for Wim to pick it all up
-> > into the watchdog tree.
-> 
-> I think that's the craziest thing I've ever heard. ;)  Only 1
-> immutable branch is required, which can be pulled in by everyone.
-> 
-> Bear with me.  Pull-request to follow.
+On Tue, 19 Dec 2017 09:52:50 +0100
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-Did the compatible-strings issue get sorted out? That is, that the cell
-drivers were matching on the parent compatible string to determine
-their type instead of encoding that in their own compatible strings. Is
-that desired (and recommended)?
+> On Thu, Dec 14, 2017 at 04:16:05PM +0100, Boris Brezillon wrote:
+> > +/**
+> > + * i3c_device_match_id() - Find the I3C device ID entry matching an I3C dev
+> > + * @i3cdev: the I3C device we're searching a match for
+> > + * @id_table: the I3C device ID table
+> > + *
+> > + * Return: a pointer to the first entry matching @i3cdev, or NULL if there's
+> > + *	   no match.
+> > + */
+> > +const struct i3c_device_id *
+> > +i3c_device_match_id(struct i3c_device *i3cdev,
+> > +		    const struct i3c_device_id *id_table)
+> > +{
+> > +	const struct i3c_device_id *id;
+> > +
+> > +	/*
+> > +	 * The lower 32bits of the provisional ID is just filled with a random
+> > +	 * value, try to match using DCR info.
+> > +	 */
+> > +	if (!I3C_PID_RND_LOWER_32BITS(i3cdev->info.pid)) {
+> > +		u16 manuf = I3C_PID_MANUF_ID(i3cdev->info.pid);
+> > +		u16 part = I3C_PID_PART_ID(i3cdev->info.pid);
+> > +		u16 ext_info = I3C_PID_EXTRA_INFO(i3cdev->info.pid);
+> > +
+> > +		/* First try to match by manufacturer/part ID. */
+> > +		for (id = id_table; id->match_flags != 0; id++) {
+> > +			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
+> > +			    I3C_MATCH_MANUF_AND_PART)
+> > +				continue;
+> > +
+> > +			if (manuf != id->manuf_id || part != id->part_id)
+> > +				continue;
+> > +
+> > +			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
+> > +			    ext_info != id->extra_info)
+> > +				continue;
+> > +
+> > +			return id;
+> > +		}
+> > +	}
+> > +
+> > +	/* Fallback to DCR match. */
+> > +	for (id = id_table; id->match_flags != 0; id++) {
+> > +		if ((id->match_flags & I3C_MATCH_DCR) &&
+> > +		    id->dcr == i3cdev->info.dcr)
+> > +			return id;
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(i3c_device_match_id);  
+> 
+> I just picked one random export here, but it feels like you are
+> exporting a bunch of symbols you don't need to.  Why would something
+> outside of the i3c "core" need to call this function?
 
-Thanks,
-Johan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Because I'm not passing the i3c_device_id to the ->probe() method, and
+if the driver is supporting different variants of the device, it may
+want to know which one is being probed.
+
+I considered retrieving this information in the core just before probing
+the driver and passing it to the ->probe() function, but it means
+having an extra i3c_device_match_id() call for everyone even those who
+don't care about the device_id information, so I thought exporting this
+function was a good alternative (device drivers can use it when they
+actually need to retrieve the device_id).
+
+Anyway, that's something I can change if you think passing the
+i3c_device_id to the ->probe() method is preferable.
+
+> Have you looked
+> to see if you really have callers for everything you are exporting?
+
+Yes, I tried to only export functions that I think will be needed by
+I3C device drivers and I3C master drivers. Note that I didn't post the
+dummy device driver I developed to test the framework (partly because
+this is 
+
+> 
+> Other than that, the driver core interaction looks good now, nice job.
+
+Thanks.
+
+Boris
