@@ -1,124 +1,76 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH v4 01/12] dt-bindings: thermal: Describe Armada AP806 and
- CP110
-Date: Tue, 19 Dec 2017 08:09:18 +0200
-Message-ID: <20171219060918.nr4ojwpmqf6ju6od@sapphire.tkos.co.il>
-References: <20171218143643.7714-1-miquel.raynal@free-electrons.com>
- <20171218143643.7714-2-miquel.raynal@free-electrons.com>
- <20171218203324.ftyqrgjawkujvhmn@tarshish>
- <20171219014320.182d2522@xps13>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH] touchscreen: mms114: add support for mms152
+Date: Tue, 19 Dec 2017 15:22:52 +0900
+Message-ID: <20171219062252.GC25647@gangnam.samsung>
+References: <CGME20171218124955epcas3p3d776375b0dadbc3e0291da6ffb0eb6b6@epcas3p3.samsung.com>
+        <20171218124933.1803-1-simon@lineageos.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20171219014320.182d2522@xps13>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-disposition: inline
+In-reply-to: <20171218124933.1803-1-simon@lineageos.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Simon Shields <simon@lineageos.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquèl,
+Hi Simon,
 
-On Tue, Dec 19, 2017 at 01:43:20AM +0100, Miquel RAYNAL wrote:
-> On Mon, 18 Dec 2017 22:33:24 +0200
-> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
-> > On Mon, Dec 18, 2017 at 03:36:32PM +0100, Miquel Raynal wrote:
-> > > From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> > > 
-> > > Add compatible strings for AP806 and CP110 that are part of the
-> > > Armada 8k/7k line of SoCs.
-> > > 
-> > > Add a note on the differences in the size of the control area in
-> > > different bindings. This is an existing difference between the
-> > > Armada 375 binding and the other boards already supported. The new
-> > > AP806 and CP110 bindings are similar to the existing Armada 375 in
-> > > this regard.
-> > > 
-> > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> > > [<miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>: reword, additional details]
-> > > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/thermal/armada-thermal.txt | 24
-> > > +++++++++++++++++----- 1 file changed, 19 insertions(+), 5
-> > > deletions(-)
-> > > 
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> > > b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> > > index 24aacf8948c5..9b7b2c03cc6f 100644 ---
-> > > a/Documentation/devicetree/bindings/thermal/armada-thermal.txt +++
-> > > b/Documentation/devicetree/bindings/thermal/armada-thermal.txt @@
-> > > -7,17 +7,31 @@ Required properties: marvell,armada375-thermal
-> > > marvell,armada380-thermal marvell,armadaxp-thermal
-> > > +		marvell,armada-ap806-thermal
-> > > +		marvell,armada-cp110-thermal
-> > >  
-> > >  - reg:		Device's register space.
-> > >  		Two entries are expected, see the examples below.
-> > > -		The first one is required for the sensor register;
-> > > -		the second one is required for the control register
-> > > -		to be used for sensor initialization (a.k.a.
-> > > calibration).
-> > > +		The first one points to the status register (4B).
-> > > +		The second one points to the control registers
-> > > (8B).
-> > > +		Note: with legacy bindings, the second entry
-> > > pointed
-> > > +		only to the so called "control MSB" ("control 1"),
-> > > was
-> > > +		4B wide and did not let the possibility to reach
-> > > the
-> > > +		"control LSB" ("control 0") register. This is only
-> > > +		allowed for compatibility reasons in Armada
-> > > +		370/375/38x/XP DT nodes.  
-> > 
-> > "allowed" is not the right term, IMO. Legacy compatibles MUST point
-> > to the MSB control register to preserve compatibility with existing
-> > DTs.
-> > 
-> > The original patch had a list of legacy and non-legacy compatibles. I
-> > think we need to keep them.
-> 
-> Maybe I should reword this paragraph because we both agree on the
-> meaning:
-> 
-> "
-> Note: Legacy bindings are only supported with Armada 370/375/38x/XP
-> compatibles. The second memory resource entry only points to
-> "control MSB/control 1", is 4 bytes wide and is preventing any access
-> to "control LSB/control 0".
-> "
-> 
-> Does this sounds better to you?
+> +	if (data->pdata->type == TYPE_MMS152) {
+> +		/* MMS152 has no configuration or power on registers */
+> +		return 0;
+> +	}
+> +
 
-I think we need to explicitly list the affected compatible strings. Something 
-like:
+Please drop the brackets here accorting to the
+Documentation/process/coding-style.rst file.
 
-  For backwards compatibility reasons, the compatibles 
-  marvell,armada370-thermal, marvell,armada380-thermal, and 
-  marvell,armadaxp-thermal must point to "control MSB/control 1", with size of 
-  4. All other compatibles must point to "control LSB/control 0" with size of
-  8.
+> +	pdata->type = (enum mms_type)of_device_get_match_data(dev);
+> +
+>  	if (of_property_read_u32(np, "x-size", &pdata->x_size)) {
+>  		dev_err(dev, "failed to get x-size property\n");
+>  		return NULL;
+> @@ -411,6 +437,7 @@ static struct mms114_platform_data *mms114_parse_dt(struct device *dev)
+>  	if (of_find_property(np, "y-invert", NULL))
+>  		pdata->y_invert = true;
+>  
+> +
 
-But I think you are right that we can use the size of the control registers to  
-tell whether e.g. marvell,armada380-thermal is of the old binding of the new 
-one. So maybe the "allow" language is more correct. But let's make it explicit 
-to avoid any doubt. How about:
+Please do not add extra lines
 
-  The compatibles marvell,armada370-thermal, marvell,armada380-thermal, and 
-  marvell,armadaxp-thermal must point to "control MSB/control 1", with size of 
-  4 (deprecated binding), or point to "control LSB/control 0" with size of 8 
-  (current binding). All other compatibles must point to "control LSB/control 
-  0" with size of 8.
+>  	return pdata;
+>  }
+>  #else
+> @@ -456,7 +483,15 @@ static int mms114_probe(struct i2c_client *client,
+>  	data->input_dev = input_dev;
+>  	data->pdata = pdata;
+>  
+> -	input_dev->name = "MELFAS MMS114 Touchscreen";
+> +	switch (pdata->type) {
+> +	case TYPE_MMS114:
+> +		input_dev->name = "MELFAS MMS114 Touchscreen";
+> +		break;
+> +	case TYPE_MMS152:
+> +		input_dev->name = "MELFAS MMS152 Touchscreen";
+> +		break;
+> +	}
+> +
+>  	input_dev->id.bustype = BUS_I2C;
+>  	input_dev->dev.parent = &client->dev;
+>  	input_dev->open = mms114_input_open;
+> @@ -569,7 +604,13 @@ MODULE_DEVICE_TABLE(i2c, mms114_id);
+>  
+>  #ifdef CONFIG_OF
+>  static const struct of_device_id mms114_dt_match[] = {
+> -	{ .compatible = "melfas,mms114" },
+> +	{
+> +		.compatible = "melfas,mms114",
+> +		.data = (void *)TYPE_MMS114,
+> +	}, {
+> +		.compatible = "melfas,mms152",
+> +		.data = (void *)TYPE_MMS152,
 
-baruch
+You are not documenting the new "melfas,mms152" compatible in
+Documentation/devicetree/bindings/input/touchscreen/mms114.txt
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andi
