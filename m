@@ -1,146 +1,87 @@
-From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/3] i2c: mediatek: Add i2c compatible for MediaTek MT2712
-Date: Tue, 19 Dec 2017 14:51:02 +0800
-Message-ID: <1513666263-6443-3-git-send-email-jun.gao@mediatek.com>
-References: <1513666263-6443-1-git-send-email-jun.gao@mediatek.com>
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6] mfd: syscon: Add hardware spinlock support
+Date: Tue, 19 Dec 2017 14:55:47 +0800
+Message-ID: <CAMz4kuK2JRSZt6BiYu+YRy_+kXNen+NTgayqpXy1n3qL-T9OzQ@mail.gmail.com>
+References: <87ec50c846bbc7afc09ba0855aba1cdea6473308.1512048582.git.baolin.wang@linaro.org>
+ <20171215104204.p7i27sen77ohbmzi@dell> <CAK8P3a0Eu4zaVrSEMps06ZZmFs=6026WZ7ze5V2k=nu0zL0bxQ@mail.gmail.com>
+ <CAMz4ku+KfQRoLTO-T3ciS-1Z9oD=y0LJ25n-YDUMr+aYetbt9A@mail.gmail.com> <CAK8P3a3JTV0z0ua_xbbf8eJFGsgOEai4RC9Ny5-JL80MPuKFSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513666263-6443-1-git-send-email-jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CAK8P3a3JTV0z0ua_xbbf8eJFGsgOEai4RC9Ny5-JL80MPuKFSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On 18 December 2017 at 20:44, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Mon, Dec 18, 2017 at 7:54 AM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On 15 December 2017 at 21:13, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>> On Fri, Dec 15, 2017 at 11:42 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>
+>>>>> @@ -87,6 +88,30 @@ static struct syscon *of_syscon_register(struct device_node *np)
+>>>>>       if (ret)
+>>>>>               reg_io_width = 4;
+>>>>>
+>>>>> +     ret = of_hwspin_lock_get_id(np, 0);
+>>>>> +     if (ret > 0) {
+>>>>> +             syscon_config.hwlock_id = ret;
+>>>>> +             syscon_config.hwlock_mode = HWLOCK_IRQSTATE;
+>>>>> +     } else {
+>>>>> +             switch (ret) {
+>>>>> +             case -ENOENT:
+>>>>> +                     /* Ignore missing hwlock, it's optional. */
+>>>>> +                     break;
+>>>>> +             case 0:
+>>>>> +                     /* In case of the HWSPINLOCK is not enabled. */
+>>>>> +                     if (!IS_ENABLED(CONFIG_HWSPINLOCK))
+>>>>> +                             break;
+>>>>> +
+>>>>> +                     ret = -EINVAL;
+>>>>> +                     /* fall-through */
+>>>>> +             default:
+>>>>> +                     pr_err("Failed to retrieve valid hwlock: %d\n", ret);
+>>>>> +                     /* fall-through */
+>>>>> +             case -EPROBE_DEFER:
+>>>>> +                     goto err_regmap;
+>>>>> +             }
+>>>
+>>> The 'case 0' seems odd here, are we sure that this is always a failure?
+>>> From the of_hwspin_lock_get_id() definition it looks like zero might
+>>> be valid, and the !CONFIG_HWSPINLOCK implementation appears
+>>> to be written so that we should consider '0' valid but unused and
+>>> silently continue with that. If that is generally not the intended
+>>> use, it should probably return -EINVAL or something like that.
+>>
+>> Yes, 0 is valid for of_hwspin_lock_get_id(), but if we pass 'hwlock id
+>> = 0' to regmap, the regmap core will not regard it as a valid hwlock
+>> id to request the hwlock and will use default mutex lock instead of
+>> hwlock, which will cause problems. Meanwhile if we silently continue
+>> with case 0, users will not realize that they set one invalid hwlock
+>> id to regmap core, so here we regarded case 0 as one invalid id to
+>> print error messages for users.
+>
+> Something else still seems wrong then: If regmap doesn't accept a zero
+> lock-id, then of_hwspin_lock_get_id() should never return that as a
+> valid ID, right?
 
-Add i2c compatible for MT2712. Compare to MT8173 i2c controller,
-internal divider of i2c source clock need to be configured for
-MT2712 i2c speed calculation.
+Um, why regmap doesn't accept a zero lock-id, that because regmap will
+reguest hwlock depending on the 'regmap_config->hwlock_id' is not
+zero, if regmap regard a zero lock-id as valid which will affect other
+'struct regmap_config' definition. So users should not assign the zero
+lock-id to regmap.
 
-Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/i2c/busses/i2c-mt65xx.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+Now of_hwspin_lock_get_id() can return 0 as valid, which depend on
+what is the base id registered by hwspinlock driver. So you think we
+should not regard 0 as valid from of_hwspin_lock_get_id(), I can try
+to send another patch to fix.
 
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 09d288c..58d6401 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -61,6 +61,7 @@
- #define I2C_DMA_HARD_RST		0x0002
- #define I2C_DMA_4G_MODE			0x0001
- 
-+#define I2C_DEFAULT_CLK_DIV		5
- #define I2C_DEFAULT_SPEED		100000	/* hz */
- #define MAX_FS_MODE_SPEED		400000
- #define MAX_HS_MODE_SPEED		3400000
-@@ -127,6 +128,7 @@ enum I2C_REGS_OFFSET {
- 	OFFSET_DEBUGSTAT = 0x64,
- 	OFFSET_DEBUGCTRL = 0x68,
- 	OFFSET_TRANSFER_LEN_AUX = 0x6c,
-+	OFFSET_CLOCK_DIV = 0x70,
- };
- 
- struct mtk_i2c_compatible {
-@@ -136,6 +138,7 @@ struct mtk_i2c_compatible {
- 	unsigned char auto_restart: 1;
- 	unsigned char aux_len_reg: 1;
- 	unsigned char support_33bits: 1;
-+	unsigned char timing_adjust: 1;
- };
- 
- struct mtk_i2c {
-@@ -176,6 +179,15 @@ struct mtk_i2c {
- 	.max_num_msgs = 255,
- };
- 
-+static const struct mtk_i2c_compatible mt2712_compat = {
-+	.pmic_i2c = 0,
-+	.dcm = 1,
-+	.auto_restart = 1,
-+	.aux_len_reg = 1,
-+	.support_33bits = 1,
-+	.timing_adjust = 1,
-+};
-+
- static const struct mtk_i2c_compatible mt6577_compat = {
- 	.quirks = &mt6577_i2c_quirks,
- 	.pmic_i2c = 0,
-@@ -183,6 +195,7 @@ struct mtk_i2c {
- 	.auto_restart = 0,
- 	.aux_len_reg = 0,
- 	.support_33bits = 0,
-+	.timing_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt6589_compat = {
-@@ -192,6 +205,7 @@ struct mtk_i2c {
- 	.auto_restart = 0,
- 	.aux_len_reg = 0,
- 	.support_33bits = 0,
-+	.timing_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt7622_compat = {
-@@ -201,6 +215,7 @@ struct mtk_i2c {
- 	.auto_restart = 1,
- 	.aux_len_reg = 1,
- 	.support_33bits = 0,
-+	.timing_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt8173_compat = {
-@@ -209,9 +224,11 @@ struct mtk_i2c {
- 	.auto_restart = 1,
- 	.aux_len_reg = 1,
- 	.support_33bits = 1,
-+	.timing_adjust = 0,
- };
- 
- static const struct of_device_id mtk_i2c_of_match[] = {
-+	{ .compatible = "mediatek,mt2712-i2c", .data = &mt2712_compat },
- 	{ .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
- 	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
- 	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
-@@ -271,6 +288,9 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
- 	if (i2c->dev_comp->dcm)
- 		writew(I2C_DCM_DISABLE, i2c->base + OFFSET_DCM_EN);
- 
-+	if (i2c->dev_comp->timing_adjust)
-+		writew(I2C_DEFAULT_CLK_DIV - 1, i2c->base + OFFSET_CLOCK_DIV);
-+
- 	writew(i2c->timing_reg, i2c->base + OFFSET_TIMING);
- 	writew(i2c->high_speed_reg, i2c->base + OFFSET_HS);
- 
-@@ -725,10 +745,6 @@ static int mtk_i2c_probe(struct platform_device *pdev)
- 	if (!i2c)
- 		return -ENOMEM;
- 
--	ret = mtk_i2c_parse_dt(pdev->dev.of_node, i2c);
--	if (ret)
--		return -EINVAL;
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	i2c->base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(i2c->base))
-@@ -759,6 +775,13 @@ static int mtk_i2c_probe(struct platform_device *pdev)
- 	i2c->adap.timeout = 2 * HZ;
- 	i2c->adap.retries = 1;
- 
-+	ret = mtk_i2c_parse_dt(pdev->dev.of_node, i2c);
-+	if (ret)
-+		return -EINVAL;
-+
-+	if (i2c->dev_comp->timing_adjust)
-+		i2c->clk_src_div *= I2C_DEFAULT_CLK_DIV;
-+
- 	if (i2c->have_pmic && !i2c->dev_comp->pmic_i2c)
- 		return -EINVAL;
- 
+But for this patch I still think we need regard the zero lock-id as
+invalid and gave error messages to users.
+
 -- 
-1.8.1.1
-
+Baolin.wang
+Best Regards
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
