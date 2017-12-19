@@ -1,28 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 8/9] dt-bindings: PCI: cadence: Add DT bindings for
- Cadence PCIe endpoint controller
-Date: Tue, 19 Dec 2017 17:29:11 -0600
-Message-ID: <20171219232911.pazvsyc2iybyc7yy@rob-hp-laptop>
-References: <cover.1513620412.git.cyrille.pitchen@free-electrons.com>
- <e3cba0ecfa9189153e7dd7589dd63814315b3d87.1513620412.git.cyrille.pitchen@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e3cba0ecfa9189153e7dd7589dd63814315b3d87.1513620412.git.cyrille.pitchen@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-Cc: bhelgaas@google.com, kishon@ti.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, adouglas@cadence.com, stelford@cadence.com, dgary@cadence.com, kgopi@cadence.com, eandrews@cadence.com, thomas.petazzoni@free-electrons.com, sureshp@cadence.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+Subject: [PATCH v6 00/18] dwc MSI fixes, ARTPEC-6 EP mode support, ARTPEC-7 SoC support
+Date: Wed, 20 Dec 2017 00:29:21 +0100
+Message-ID: <20171219232940.659-1-niklas.cassel@axis.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 18, 2017 at 07:16:08PM +0100, Cyrille Pitchen wrote:
-> This patch documents the DT bindings for the Cadence PCIe controller
-> when configured in endpoint mode.
-> 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
-> ---
->  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt  | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+This is a series that adds:
+- PCI endpoint mode support in the ARTPEC-6 driver.
+- ARTPEC-7 SoC support in the ARTPEC-6 driver (the SoCs are very similar).
+- Small fixes for MSI in designware-ep and designware-host,
+  needed to get endpoint mode support working for ARTPEC-6.
+- Cleanups in pci-dra7xx to better prepare for endpoint mode in other
+  DWC based PCIe drivers.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Changes since V5:
+-Dropped GFP_DMA32 from "PCI: dwc: Use the DMA-API to get the MSI address"
+ so that we use the exact same GFP flags as before.
+-Rewrote commit message for "PCI: dwc: Make cpu_addr_fixup take struct
+dw_pcie as argument" to be more detailed.
+
+Niklas Cassel (18):
+  PCI: dwc: Use the DMA-API to get the MSI address
+  PCI: designware-ep: dw_pcie_ep_set_msi() should only set MMC bits
+  PCI: designware-ep: Read-only registers need DBI_RO_WR_EN to be
+    writable
+  PCI: designware-ep: Pre-allocate memory for MSI in dw_pcie_ep_init
+  PCI: designware-ep: Remove static keyword from dw_pcie_ep_reset_bar()
+  PCI: designware-ep: Add generic function for raising MSI irq
+  PCI: dwc: dra7xx: Refactor Kconfig and Makefile handling for host/ep
+    mode
+  PCI: dwc: dra7xx: Assign pp->ops in dra7xx_add_pcie_port() rather than
+    in probe
+  PCI: dwc: dra7xx: Help compiler to remove unused code
+  PCI: dwc: artpec6: Remove unused defines
+  PCI: dwc: artpec6: Use BIT and GENMASK macros
+  PCI: dwc: artpec6: Split artpec6_pcie_establish_link() into smaller
+    functions
+  bindings: PCI: artpec: Add support for endpoint mode
+  PCI: dwc: artpec6: Add support for endpoint mode
+  PCI: dwc: Make cpu_addr_fixup take struct dw_pcie as argument
+  PCI: dwc: artpec6: Deassert the core before waiting for PHY
+  bindings: PCI: artpec: Add support for the ARTPEC-7 SoC
+  PCI: dwc: artpec6: Add support for the ARTPEC-7 SoC
+
+ .../devicetree/bindings/pci/axis,artpec6-pcie.txt  |   5 +-
+ drivers/pci/dwc/Kconfig                            |  68 +--
+ drivers/pci/dwc/Makefile                           |   4 +-
+ drivers/pci/dwc/pci-dra7xx.c                       |  27 +-
+ drivers/pci/dwc/pcie-artpec6.c                     | 470 ++++++++++++++++++---
+ drivers/pci/dwc/pcie-designware-ep.c               |  59 ++-
+ drivers/pci/dwc/pcie-designware-host.c             |  15 +-
+ drivers/pci/dwc/pcie-designware.c                  |   2 +-
+ drivers/pci/dwc/pcie-designware.h                  |  22 +-
+ 9 files changed, 554 insertions(+), 118 deletions(-)
+
+-- 
+2.14.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
