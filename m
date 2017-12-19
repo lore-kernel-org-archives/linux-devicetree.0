@@ -1,50 +1,90 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: misc: Add DT bindings to xlnx_vcu
- driver
-Date: Tue, 19 Dec 2017 17:09:53 -0600
-Message-ID: <20171219230953.bj5pbo535bzszant@rob-hp-laptop>
-References: <6758f505-2940-feb9-a14a-9d5e3962f7f2@infradead.org>
- <1513577732-10651-1-git-send-email-dshah@xilinx.com>
- <1513577732-10651-2-git-send-email-dshah@xilinx.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: chosen: Add clocksource and clockevent selection
+Date: Tue, 19 Dec 2017 17:20:14 -0600
+Message-ID: <CAL_Jsq+NLfzLnEPxXQyyE2hg9wYeBtOyT307+oTUUdTKXmUUuQ@mail.gmail.com>
+References: <20171213185313.20017-1-alexandre.belloni@free-electrons.com>
+ <20171213185313.20017-2-alexandre.belloni@free-electrons.com> <8fe1dce0-3fd2-d740-8456-bf3b734e571a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1513577732-10651-2-git-send-email-dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8fe1dce0-3fd2-d740-8456-bf3b734e571a@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 17, 2017 at 10:15:31PM -0800, Dhaval Shah wrote:
-> Add Device Tree binding document for logicoreIP. This logicoreIP
-> provides the isolation between the processing system and
-> programmable logic. Also provides the clock related information.
-> 
-> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> Chnages since v5:
->  No Changes.
-> Chnages since v4:
->  No Changes.
-> Chnages since v3:
->  * Use "dt-bindings: misc: ..." for the subject.
-> Changes since v2:
->  * Describe the h/w
->  * compatible string is updated to make it more specific
->    based on the logicoreIP version.
->  * Removed that encoder and decoder child nodes and relatd properties as that
->    will be a separate driver and dts nodes. other team is working on that.
->  * Updated to use as a single driver.
-> 
->  .../devicetree/bindings/misc/xlnx,vcu.txt          | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,vcu.txt
+On Fri, Dec 15, 2017 at 7:57 PM, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+>
+>
+> On 12/13/2017 12:53 PM, Alexandre Belloni wrote:
+>> The clocksource and clockevent timer are probed early in the boot process.
+>> At that time it is difficult for linux to know whether a particular timer
+>> can be used as the clocksource or the clockevent or by another driver,
+>> especially when they are all identical or have similar features.
+>>
+>> Until now, multiple strategies have been used to solve that:
+>>   - use Kconfig option as MXC_USE_EPIT or ATMEL_TCB_CLKSRC_BLOCK
+>>   - use a kernel parameter as the "clocksource" early_param in mach-omap2
+>>   - registering the first seen timer as a clockevent and the second one as
+>>   a clocksource as in rk_timer_init or dw_apb_timer_init
+>>
+>> Add a linux,clocksource and a linux,clockevent node in chosen with a timer
+>> property pointing to the timer to use. Other properties, like the targeted
+>> precision may be added later.
+>>
+>> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+>> ---
+>>   Documentation/devicetree/bindings/chosen.txt | 20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>> index e3b13ea7d2ae..c7ee3ecb5276 100644
+>> --- a/Documentation/devicetree/bindings/chosen.txt
+>> +++ b/Documentation/devicetree/bindings/chosen.txt
+>> @@ -120,3 +120,23 @@ e.g.
+>>   While this property does not represent a real hardware, the address
+>>   and the size are expressed in #address-cells and #size-cells,
+>>   respectively, of the root node.
+>> +
+>> +linux,clocksource and linux,clockevent
+>> +--------------------------------------
+>> +
+>> +Those nodes have a timer property. This property is a phandle to the timer to be
+>> +chosen as the clocksource or clockevent. This is only useful when the platform
+>> +has multiple identical timers and it is not possible to let linux make the
+>> +correct choice.
+>> +
+>> +/ {
+>> +     chosen {
+>> +             linux,clocksource {
+>> +                     timer = <&timer0>;
+>> +             };
+>> +
+>> +             linux,clockevent {
+>> +                     timer = <&timer1>;
+>> +             };
+>> +     };
+>> +};
+>>
+>
+> It'd be nice if smth. like this will actually happen, as on some OMAP
+> platforms can be up to 3-4 alternatives for each clocksource/clockevent and
+> different combination need to be selected depending on SoC and platform
+> (and sometime - use case) which is pain in multi-platform environment now.
 
-Please add Reviewed-by tags when posting new versions.
+Can we have some concrete examples with why the current selection
+logic is broken.
+
+For use-cases, if a board maker can't make that decision, then I think
+those should be kernel command-line options (if boot time) or sysfs
+controlled.
+
+> But more important note from my side is clocksource and clockevent selections seems
+> not enough :( There are also sched clock (sched_clock_register()) and delay_timer
+>  (register_current_timer_delay() at least on ARM).
+> Both above can't be unregistered (at least last time I've checked).
+
+Sounds like an OS problem...
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
