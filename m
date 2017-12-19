@@ -1,51 +1,114 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 0/3] irqchip: irq-bcm2836: add support for DT interrupt
- polarity
-Date: Tue, 19 Dec 2017 16:36:50 +0000
-Message-ID: <a7939fae-31d1-c743-5957-d88be98a0c63@arm.com>
-References: <1513024752-11246-1-git-send-email-stefan.wahren@i2se.com>
- <d0c81267-8379-d4a1-ec56-fec3492c1df6@i2se.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v5 4/6] media: i2c: Add TDA1997x HDMI
+	receiver driver
+Date: Tue, 19 Dec 2017 09:01:12 -0800
+Message-ID: <CAJ+vNU34fBjBos4g9vxv7UkcJOm1YJux7NM2=iUKBjOrxZeMBA@mail.gmail.com>
+References: <1513447230-30948-1-git-send-email-tharvey@gateworks.com>
+ <1513447230-30948-5-git-send-email-tharvey@gateworks.com>
+ <3ae0ee4d-e754-1e97-33ed-d1fedf442dfb@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d0c81267-8379-d4a1-ec56-fec3492c1df6-eS4NqCHxEME@public.gmane.org>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <3ae0ee4d-e754-1e97-33ed-d1fedf442dfb@xs4all.nl>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/12/17 07:02, Stefan Wahren wrote:
-> Hi Marc,
-> 
-> Am 11.12.2017 um 21:39 schrieb Stefan Wahren:
->> This patch series implements DT polarity support for the 1st level interrupt
->> controller.
->>
->> Stefan Wahren (3):
->>    dt-bindings: bcm2836-l1-intc: add interrupt polarity support
->>    irqchip: irq-bcm2836: add support for DT interrupt polarity
->>    ARM: dts: bcm283x: Define polarity of per-cpu interrupts
->>
->>   .../interrupt-controller/brcm,bcm2836-l1-intc.txt  |  4 +-
->>   arch/arm/boot/dts/bcm2836.dtsi                     | 14 +++----
->>   arch/arm/boot/dts/bcm2837.dtsi                     | 12 +++---
->>   arch/arm/boot/dts/bcm283x.dtsi                     |  1 +
->>   drivers/irqchip/irq-bcm2836.c                      | 46 +++++++++++++---------
->>   5 files changed, 44 insertions(+), 33 deletions(-)
->>
-> 
-> is this series okay?
+On Tue, Dec 19, 2017 at 3:12 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> On 16/12/17 19:00, Tim Harvey wrote:
+>> +
+>> +static int tda1997x_fill_format(struct tda1997x_state *state,
+>> +                             struct v4l2_mbus_framefmt *format)
+>> +{
+>> +     const struct v4l2_bt_timings *bt;
+>> +     struct v4l2_hdmi_colorimetry c;
+>> +
+>> +     v4l_dbg(1, debug, state->client, "%s\n", __func__);
+>> +
+>> +     if (!state->detected_timings)
+>> +             return -EINVAL;
+>> +     bt = &state->detected_timings->bt;
+>> +     memset(format, 0, sizeof(*format));
+>> +     c = v4l2_hdmi_rx_colorimetry(&state->avi_infoframe, NULL, bt->height);
+>> +     format->width = bt->width;
+>> +     format->height = bt->height;
+>> +     format->field = (bt->interlaced) ?
+>> +             V4L2_FIELD_ALTERNATE : V4L2_FIELD_NONE;
+>> +     format->colorspace = c.colorspace;
+>> +     format->ycbcr_enc = c.ycbcr_enc;
+>> +     format->quantization = c.quantization;
+>> +     format->xfer_func = c.xfer_func;
+>
+> This is wrong. v4l2_hdmi_rx_colorimetry returns what arrives on the HDMI link,
+> that's not the same as is output towards the SoC. You need to take limited/full
+> range conversions and 601/709 conversions into account since that's what ends
+> up in memory.
+>
+> Also note: you are still parsing the colorimetry information from avi_infoframe
+> in the infoframe parse function. There is no need to do that, just call
+> v4l2_hdmi_rx_colorimetry and let that function parse and interpret all this.
+>
+> Otherwise we still have two places that try to interpret that information.
 
-Yes, it does look good. I'll queue that for 4.16.
+Hans,
+
+Ok so v4l2_hdmi_rx_colorimetry() handles parsing the source avi
+infoframe and deals with enforcing the detailed rules and returns
+'v4l2' enums:
+
+tda1997x_parse_infoframe(...)
+...
+        case HDMI_INFOFRAME_TYPE_AVI:
+                state->avi_infoframe = frame.avi; /* hold on to avi
+infoframe for later use in logging etc */
+                /* parse avi infoframe colorimetry data for v4l2
+colorspace/ycbcr_encoding/quantization/xfer_func */
+                state->hdmi_colorimetry = v4l2_hdmi_rx_colorimetry(&frame.avi,
+                                                NULL,
+                                                state->timings.bt.height);
+
+Also here I still need to override the quant range passed from the
+source avi infoframe per the user control (if not auto) and set per
+vic if default:
+
+                /* Quantization Range */
+                switch (state->rgb_quantization_range) {
+                case V4L2_DV_RGB_RANGE_AUTO:
+                        state->range = frame.avi.quantization_range;
+                        break;
+                case V4L2_DV_RGB_RANGE_LIMITED:
+                        state->range = HDMI_QUANTIZATION_RANGE_LIMITED;
+                        break;
+                case V4L2_DV_RGB_RANGE_FULL:
+                        state->range = HDMI_QUANTIZATION_RANGE_FULL;
+                        break;
+                }
+                if (state->range == HDMI_QUANTIZATION_RANGE_DEFAULT) {
+                        if (frame.avi.video_code <= 1)
+                                state->range = HDMI_QUANTIZATION_RANGE_FULL;
+                        else
+                                state->range = HDMI_QUANTIZATION_RANGE_LIMITED;
+                }
+
+
+Then tda1997x_fill_format() then needs to fill in details of what's on
+the bus so I should be filling in only width/height/field/colorspace
+and use colorspace based on my csc conversion chosen output
+(V4L2_COLORSPACE_SRGB|V4L2_COLORSPACE_SMPTE170M|V4L2_COLORSPACE_REC709)
+and I don't need to set ycbcr_enc/quantization/xfer_func.
+
+does this sound right?
 
 Thanks,
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tim
