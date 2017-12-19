@@ -1,57 +1,86 @@
-From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 25/36] nds32: Miscellaneous header files
-Date: Tue, 19 Dec 2017 13:34:47 +0800
-Message-ID: <CAEbi=3fWvrvdqUYOWdmbAHDmMpLiUaTaL_-jUjqg=p4aZiMLrA@mail.gmail.com>
-References: <cover.1513577007.git.green.hu@gmail.com> <a5dc2090640500d88aa3af2f6fe9e4c73f0634f2.1513577007.git.green.hu@gmail.com>
- <CAK8P3a1EOD3WB=c4JybBD5bazhVJ5reuegyA1Hyoj-nPHpsW6g@mail.gmail.com>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v4 04/12] thermal: armada: Clarify control registers
+ accesses
+Date: Tue, 19 Dec 2017 07:51:54 +0200
+Message-ID: <20171219055154.f23leaob3zndmmqo@sapphire.tkos.co.il>
+References: <20171218143643.7714-1-miquel.raynal@free-electrons.com>
+ <20171218143643.7714-5-miquel.raynal@free-electrons.com>
+ <20171218203542.msnswjqeyuudyusz@tarshish>
+ <20171219013233.319365c4@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a1EOD3WB=c4JybBD5bazhVJ5reuegyA1Hyoj-nPHpsW6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20171219013233.319365c4@xps13>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, Guo Ren <ren_guo-Y+KPrCd2zL4@public.gmane.org>
+To: Miquel RAYNAL <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Sniatkiwicz <davidsn-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Arnd:
+Hi Miquèl,
 
-2017-12-18 19:13 GMT+08:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> On Mon, Dec 18, 2017 at 7:46 AM, Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
->>
->> This patch introduces some miscellaneous header files.
->
->> +static inline void __delay(unsigned long loops)
->> +{
->> +       __asm__ __volatile__(".align 2\n"
->> +                            "1:\n"
->> +                            "\taddi\t%0, %0, -1\n"
->> +                            "\tbgtz\t%0, 1b\n"
->> +                            :"=r"(loops)
->> +                            :"0"(loops));
->> +}
->> +
->> +static inline void __udelay(unsigned long usecs, unsigned long lpj)
->> +{
->> +       usecs *= (unsigned long)(((0x8000000000000000ULL / (500000 / HZ)) +
->> +                                 0x80000000ULL) >> 32);
->> +       usecs = (unsigned long)(((unsigned long long)usecs * lpj) >> 32);
->> +       __delay(usecs);
->> +}
->
-> Do you have a reliable clocksource that you can read here instead of doing the
-> loop? It's generally preferred to have an accurate delay if at all possible, the
-> delay loop calibration is only for those architectures that don't have any
-> way to observe how much time has passed accurately.
->
+On Tue, Dec 19, 2017 at 01:32:33AM +0100, Miquel RAYNAL wrote:
+> On Mon, 18 Dec 2017 22:35:42 +0200
+> Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+> > On Mon, Dec 18, 2017 at 03:36:35PM +0100, Miquel Raynal wrote:
+> > > Bindings were incomplete for a long time by only exposing one of
+> > > the two available control registers. To ease the migration to the
+> > > full bindings (already in use for the Armada 375 SoC), rename the
+> > > pointers for clarification. This way, it will only be needed to add
+> > > another pointer to access the other control register when the time
+> > > comes.
+> > > 
+> > > This avoids dangerous situations where the offset 0 of the control
+> > > area can be either one register or the other depending on the
+> > > bindings used. After this change, device trees of other SoCs could
+> > > be migrated to the "full" bindings if they may benefit from
+> > > features from the unaccessible register, without any change in the
+> > > driver.
+> > > 
+> > > Signed-off-by: Miquel Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > ---  
+> > 
+> > [...]
+> > 
+> > > +	/*
+> > > +	 * Legacy DT bindings only described "control1" register
+> > > (also referred
+> > > +	 * as "control MSB" on old documentation). New bindings
+> > > cover
+> > > +	 * "control0/control LSB" and "control1/control MSB"
+> > > registers within
+> > > +	 * the same resource, which is then of size 8 instead of 4.
+> > > +	 */
+> > > +	if (resource_size(res) == LEGACY_CONTROL_MEM_LEN) {
+> > > +		/* ->control0 unavailable in this configuration */
+> > > +		priv->control1 = control + LEGACY_CONTROL1_OFFSET;
+> > > +	} else {
+> > > +		priv->control0 = control + CONTROL0_OFFSET;
+> > > +		priv->control1 = control + CONTROL1_OFFSET;
+> > > +	}  
+> > 
+> > The needs_control0 field that you mentioned in the cover page is
+> > missing here.
+> 
+> Yes, at this point nobody actually *needs* control0 so the limitation
+> is added with the patch that introduce ap806 support as it is the first
+> compatible that needs both control0 and control1 to work correctly.
+> Does this bother you?
 
-We currently only have atcpit100 as clocksource but it is an IP of  SoC.
-These delay API will be unavailable if we changed to another SoC
-unless all these timer driver provided the same APIs.
-It may suffer our customers if they forget to port these APIs in their
-timer drivers when they try to use nds32 in the first beginning.
-Or maybe I can use a CONFIG_USE_ACCURATE_DELAY to keep these 2
-implementions for these purposes?
+No. It is just that we agreed to have a verification here that the size of the 
+control registers resource matches the binding. I thought that the 
+needs_control0 field that you mention in the cover page is meant to implement 
+that. But I'm not sure all that is strictly necessary. It would just make sure 
+that no one introduces a DT with the wrong resource size.
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
