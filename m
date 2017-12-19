@@ -1,46 +1,46 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v4 1/2] DTS: GTA04: improve panel compatibility string
-Date: Tue, 19 Dec 2017 12:49:01 +0200
-Message-ID: <e52a086f-6748-0e5e-f9b5-d4532c34d215@ti.com>
-References: <cover.1512114082.git.hns@goldelico.com>
- <280160905017f67c91b96bf38ea9b6094ec277c3.1512114082.git.hns@goldelico.com>
- <20171211152203.GH24344@atomide.com>
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6] mfd: syscon: Add hardware spinlock support
+Date: Tue, 19 Dec 2017 19:05:06 +0800
+Message-ID: <CAMz4kuLMpAaiFCBJM2YJE_73KqiXO-k_tymJwVHRY3JuotCrKw@mail.gmail.com>
+References: <87ec50c846bbc7afc09ba0855aba1cdea6473308.1512048582.git.baolin.wang@linaro.org>
+ <20171215104204.p7i27sen77ohbmzi@dell> <CAK8P3a0Eu4zaVrSEMps06ZZmFs=6026WZ7ze5V2k=nu0zL0bxQ@mail.gmail.com>
+ <CAMz4ku+KfQRoLTO-T3ciS-1Z9oD=y0LJ25n-YDUMr+aYetbt9A@mail.gmail.com>
+ <CAK8P3a3JTV0z0ua_xbbf8eJFGsgOEai4RC9Ny5-JL80MPuKFSA@mail.gmail.com>
+ <CAMz4kuK2JRSZt6BiYu+YRy_+kXNen+NTgayqpXy1n3qL-T9OzQ@mail.gmail.com> <20171219092149.GB8563@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20171211152203.GH24344@atomide.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tony Lindgren <tony@atomide.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, letux-kernel@openphoenux.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20171219092149.GB8563-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTEvMTIvMTcgMTc6MjIsIFRvbnkgTGluZGdyZW4gd3JvdGU6Cj4gKiBILiBOaWtvbGF1cyBT
-Y2hhbGxlciA8aG5zQGdvbGRlbGljby5jb20+IFsxNzEyMDEgMDc6NDRdOgo+PiBPZmZpY2lhbCB2
-ZW5kb3Igc3RyaW5nIGlzIG5vdyAidHBvIiBhbmQgbm90ICJ0b3Bwb2x5Ii4KPj4KPj4gUmVxdWly
-ZXMgcGF0Y2ggIm9tYXBkcm06IHBhbmVsOiBmaXggY29tcGF0aWJsZSB2ZW5kb3Igc3RyaW5nIGZv
-ciB0ZDAyOHR0ZWMxIgo+PiBzbyB0aGF0IHRoZSBkcml2ZXIgdW5kZXJzdGFuZHMgYm90aC4KPiAK
-PiBUb21pLCBzbyB3aGF0J3MgdGhlIHBsYW4gd2l0aCB0aGUgZGVwZW5kZW5jeSBwYXRjaCwgaXMg
-dGhhdCBmb3IgdjQuMTYKPiBvciBmb3IgdGhlIHY0LjE1LXJjIGN5Y2xlPwoKVGhlIGRlcGVuZGVu
-Y3kgcGF0Y2ggZm9yIHRoaXMgb25lIGlzIHF1ZXVlZCBmb3IgdjQuMTYgKEkganVzdCBzZW50IGEg
-CnB1bGwgcmVxdWVzdCB0b2RheSkuIEkgY291bGQgcGljayB0aGlzIG9uZSB1cCAoaWYgeW91IGdp
-dmUgYW4gYWNrKSBpZiBJIApzZW5kIGFub3RoZXIgRFJNIHB1bGwgcmVxdWVzdCwgYnV0IEkgcHJv
-YmFibHkgZG9uJ3QgaGF2ZSBhbnl0aGluZyBlbHNlIAp0byBzZW5kIHNvIG1vc3QgbGlrZWx5IEkg
-d29uJ3QgcGljayB0aGlzIHVwIGZvciB2NC4xNi4KClRoZSBwYXRjaCAyLzIgaW4gdGhlIHNlcmll
-cyBkb2Vzbid0IGhhdmUgZGVwZW5kZW5jaWVzIGFuZCBjYW4gYmUgYXBwbGllZCAKYXMgYSBmaXgg
-Zm9yIDQuMTUsIG9yIGZvciA0LjE2LgoKTmVpdGhlciBvZiB0aGVzZSBhcmUgY3JpdGljYWwsIGFz
-IHRoaW5ncyB3b3JrIGZpbmUgd2l0aG91dCB0aGVzZSBwYXRjaGVzLgoKICBUb21pCgotLSAKVGV4
-YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lu
-a2kuIApZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxl
-OiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 19 December 2017 at 17:21, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Dec 19, 2017 at 02:55:47PM +0800, Baolin Wang wrote:
+>
+>> Um, why regmap doesn't accept a zero lock-id, that because regmap will
+>> reguest hwlock depending on the 'regmap_config->hwlock_id' is not
+>> zero, if regmap regard a zero lock-id as valid which will affect other
+>> 'struct regmap_config' definition. So users should not assign the zero
+>> lock-id to regmap.
+>
+>> Now of_hwspin_lock_get_id() can return 0 as valid, which depend on
+>> what is the base id registered by hwspinlock driver. So you think we
+>> should not regard 0 as valid from of_hwspin_lock_get_id(), I can try
+>> to send another patch to fix.
+>
+> If 0 is a valid hwspinlock ID you need to add a flag to the regmap
+> config to say if a hwspinlock should be used.  That way we're not
+> rejecting valid values.
+
+Fine, that seems reasonable if you prefer another new flag to indicate
+if a hwspinlock should be used. Thanks Arnd and Mark's comments.
+
+-- 
+Baolin.wang
+Best Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
