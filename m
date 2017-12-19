@@ -1,75 +1,57 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] Add support for Hexagon q6v5-wcss integrated core
-Date: Tue, 19 Dec 2017 17:21:20 +0530
-Message-ID: <a4f0213d-62c2-b749-9fd2-e7c4a304b5e5@codeaurora.org>
-References: <1510656794-3815-1-git-send-email-sricharan@codeaurora.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 3/6] ARM: dts: r8a7743: Add PWM SoC support
+Date: Tue, 19 Dec 2017 12:52:35 +0100
+Message-ID: <CAMuHMdVb6jpF_HbJMapFTJs285_GOdXVPsACHBasy5Cy5ZZ18g@mail.gmail.com>
+References: <1513619528-12060-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1513619528-12060-4-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdVEgBq+eZqAeas3kf3ARHegSQK9xyVrTDHRyctyTK87QQ@mail.gmail.com> <TY1PR06MB089542724CCC3530DD4677F5C00F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1510656794-3815-1-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <TY1PR06MB089542724CCC3530DD4677F5C00F0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hi Fabrizio,
 
-On 11/14/2017 4:23 PM, Sricharan R wrote:
-> IPQ8074 has an integrated Hexagon dsp core Q6v5 and a wireless lan
-> (Lithium) IP. This series adds the remoteproc driver to reset, load
-> and boot Q6 firmware.
-> 
-> The first patch is to make the mdt_loader authenticate
-> the firmware only if required, so that the code can be reused for
-> self-authenticating firmware like the Q6v5 core in IPQ8074. The second
-> patch exports the elf header's get_boot_addr helper to reuse it.
-> The next couple of patches arranges the code in the original q6v5-mpss
-> rproc to add q6v5-wcss later. The last couple of patches add the relevant
-> bits for the q6v5-wcss core.
-> 
-> This is done on top of Avaneesh's msm8996 rproc support [1]
-> 
-> [1] https://lkml.org/lkml/2017/10/24/771
-> 
-> v5:
->     No change. Just updated tags in PATCH #5
-> 
-> V4:
->     Fixed Bjorn's comment in PATCH#1 and added his acked-by
->     Rebased on top of Avinash's latest rproc for msm8996 q6 support.
-> 
-> V3:
->     Rebased on top of latest remoteproc next
-> 
-> V2:
->     Last time introduced this a new rproc driver, but there is lot
->     of code that can be shared if it is added to the q6v5-mpss pil
->     driver.
-> 
-> Sricharan R (6):
->   remoteproc: qcom: mdt_loader: Make the firmware authentication
->     optional
->   remoteproc: Export rproc_elf_get_boot_addr
->   remoteproc: qcom: Push reset ops, fw ops, rproc ops in to of_match
->     data
->   remoteproc: qcom: Split the head and tail of the q6v5-pil rproc start
->     function
->   remoteproc: qcom: Add support for q6v5-wcss pil
->   remoteproc: qcom: Add q6v5-wcss rproc ops
-> 
+On Tue, Dec 19, 2017 at 12:37 PM, Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+>> Subject: Re: [PATCH v2 3/6] ARM: dts: r8a7743: Add PWM SoC support
+>>
+>> On Mon, Dec 18, 2017 at 6:52 PM, Fabrizio Castro
+>> <fabrizio.castro@bp.renesas.com> wrote:
+>> > Add the definitions for pwm[0123456] to the SoC .dtsi.
+>> >
+>> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+>> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+>>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>> > --- a/arch/arm/boot/dts/r8a7743.dtsi
+>> > +++ b/arch/arm/boot/dts/r8a7743.dtsi
+>> > @@ -1082,6 +1082,83 @@
+>> >                         status = "disabled";
+>> >                 };
+>> >
+>> > +               pwm0: pwm@e6e30000 {
+>> > +                       compatible = "renesas,pwm-r8a7743",
+>> > +                                    "renesas,pwm-rcar";
+>>
+>> I think the above can fit in one line.
+>
+> do you think this deserves a v3?
 
-Hi Bjorn,
- Just thought of pinging you to figure out if the
- patches are ok and any feedback ?
+That depends on the fuzziness-acceptance level of Simon...
 
-Regards,
- Sricharan
+Gr{oetje,eeting}s,
 
+                        Geert
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
