@@ -1,55 +1,53 @@
-From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v7 2/3] dt-bindings: iio: temperature: add MLX90632 device bindings
-Date: Tue, 19 Dec 2017 16:59:32 +0100
-Message-ID: <20171219155932.29592-1-cmo@melexis.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v5 12/15] devicetree: bindings: Document qcom,krait-cc
+Date: Tue, 19 Dec 2017 21:24:57 +0530
+Message-ID: <1513698900-10638-13-git-send-email-sricharan@codeaurora.org>
+References: <1513698900-10638-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1513698900-10638-1-git-send-email-sricharan@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for MLX90632 IR temperature sensor.
+From: Stephen Boyd <sboyd@codeaurora.org>
 
-Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+The Krait clock controller controls the krait CPU and the L2 clocks
+consisting a primary mux and secondary mux. Add document for that.
+
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
- .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+ .../devicetree/bindings/clock/qcom,krait-cc.txt    | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,krait-cc.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+diff --git a/Documentation/devicetree/bindings/clock/qcom,krait-cc.txt b/Documentation/devicetree/bindings/clock/qcom,krait-cc.txt
 new file mode 100644
-index 000000000000..0b05812001f8
+index 0000000..874138f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
-@@ -0,0 +1,28 @@
-+* Melexis MLX90632 contactless Infra Red temperature sensor
++++ b/Documentation/devicetree/bindings/clock/qcom,krait-cc.txt
+@@ -0,0 +1,22 @@
++Krait Clock Controller
 +
-+Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
++PROPERTIES
 +
-+There are various applications for the Infra Red contactless temperature sensor
-+and MLX90632 is most suitable for consumer applications where measured object
-+temperature is in range between -20 to 200 degrees Celsius with relative error
-+of measurement below 1 degree Celsius in object temperature range for
-+industrial applications. Since it can operate and measure ambient temperature
-+in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++			"qcom,krait-cc-v1"
++			"qcom,krait-cc-v2"
 +
-+Be aware that electronics surrounding the sensor can increase ambient
-+temperature. MLX90632 can be calibrated to reduce the housing effect via
-+already existing EEPROM parameters.
-+
-+Since measured object emissivity effects Infra Red energy emitted, emissivity
-+should be set before requesting the object temperature.
-+
-+Required properties:
-+  - compatible: should be "melexis,mlx90632"
-+  - reg: the I2C address of the sensor (default 0x3a)
++- #clock-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1
 +
 +Example:
 +
-+mlx90632@3a {
-+	compatible = "melexis,mlx90632";
-+	reg = <0x3a>;
-+};
++	kraitcc: clock-controller {
++		compatible = "qcom,krait-cc-v1";
++		#clock-cells = <1>;
++	};
 -- 
-2.15.0
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
