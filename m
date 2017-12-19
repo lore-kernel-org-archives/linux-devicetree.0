@@ -1,30 +1,32 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: imx_v6_v7_defconfig: Enable Dialog Semicondocter
- DA9062 driver
-Date: Tue, 19 Dec 2017 15:16:19 -0200
-Message-ID: <CAOMZO5CyMoY+24ub09Lp4VHFn=O6FqFELfQzH-WDv1H9OweoHw@mail.gmail.com>
-References: <1513698588-13325-1-git-send-email-s.riedmueller@phytec.de> <1513698588-13325-7-git-send-email-s.riedmueller@phytec.de>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: add minimal device tree for compute model 3
+Date: Tue, 19 Dec 2017 18:16:09 +0100 (CET)
+Message-ID: <391028930.257226.1513703769801@email.1und1.de>
+References: <20171124121813.11318-1-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513698588-13325-7-git-send-email-s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20171124121813.11318-1-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 1:49 PM, Stefan Riedmueller
-<s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org> wrote:
-> The phyCORE-i.MX 6 uses the DA9062/63 PMIC, RTC and Watchdog driver.
->
-> Enable this option by default.
+Hi Martin,
 
-"these options"
+> kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org hat am 24. November 2017 um 13:18 geschrieben:
+> 
+> 
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> 
+> Add a minimal working device tree for the compute model 3
+> for both arm and arm64.
+> 
 
->
-> Signed-off-by: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+just a note before you send a V2. Recently i looked at the CM datasheet (revision 1.0) and noticed on the block diagram (page 8) that the CM3 eMMC I/O voltage is fixed at 1.8 Volt (doesn't apply to CM3 lite). Providing a fixed regulator for vmmc/vqmmc-supply [1] would give the MMC core the chance to figure out the right voltage.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+[1] - http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/mmc/mmc.txt
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
