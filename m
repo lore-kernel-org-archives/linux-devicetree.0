@@ -1,61 +1,49 @@
-From: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: am335x-boneblue: enable can
-Date: Tue, 19 Dec 2017 16:32:42 -0600
-Message-ID: <20171219223242.21386-3-robertcnelson@gmail.com>
-References: <20171219223242.21386-1-robertcnelson@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: misc: Add DT bindings to xlnx_vcu
+ driver
+Date: Tue, 19 Dec 2017 17:09:53 -0600
+Message-ID: <20171219230953.bj5pbo535bzszant@rob-hp-laptop>
+References: <6758f505-2940-feb9-a14a-9d5e3962f7f2@infradead.org>
+ <1513577732-10651-1-git-send-email-dshah@xilinx.com>
+ <1513577732-10651-2-git-send-email-dshah@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171219223242.21386-1-robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1513577732-10651-2-git-send-email-dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Drew Fustini <drew-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
+To: Dhaval Shah <dhaval.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, hyunk-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-BeagleBone Blue: can: enable the dedicated can connector.
+On Sun, Dec 17, 2017 at 10:15:31PM -0800, Dhaval Shah wrote:
+> Add Device Tree binding document for logicoreIP. This logicoreIP
+> provides the isolation between the processing system and
+> programmable logic. Also provides the clock related information.
+> 
+> Signed-off-by: Dhaval Shah <dshah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> Chnages since v5:
+>  No Changes.
+> Chnages since v4:
+>  No Changes.
+> Chnages since v3:
+>  * Use "dt-bindings: misc: ..." for the subject.
+> Changes since v2:
+>  * Describe the h/w
+>  * compatible string is updated to make it more specific
+>    based on the logicoreIP version.
+>  * Removed that encoder and decoder child nodes and relatd properties as that
+>    will be a separate driver and dts nodes. other team is working on that.
+>  * Updated to use as a single driver.
+> 
+>  .../devicetree/bindings/misc/xlnx,vcu.txt          | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,vcu.txt
 
-Signed-off-by: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-CC: Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
-CC: Drew Fustini <drew-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
-CC: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/am335x-boneblue.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Please add Reviewed-by tags when posting new versions.
 
-diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
-index ad988e8b8427..3f2480d05a3b 100644
---- a/arch/arm/boot/dts/am335x-boneblue.dts
-+++ b/arch/arm/boot/dts/am335x-boneblue.dts
-@@ -252,6 +252,15 @@
- 			AM33XX_IOPAD(0x930, PIN_OUTPUT_PULLUP | MUX_MODE7)	/* (L18) gmii1_rxclk.gpio3[10] - LS_BUF_EN */
- 		>;
- 	};
-+
-+	/* DCAN */
-+	dcan1_pins: pinmux_dcan1_pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x96c, PIN_INPUT | MUX_MODE2)		/* (E17) uart0_rtsn.dcan1_rx */
-+			AM33XX_IOPAD(0x968, PIN_OUTPUT | MUX_MODE2)		/* (E18) uart0_ctsn.dcan1_tx */
-+			AM33XX_IOPAD(0x940, PIN_OUTPUT | MUX_MODE7)		/* (M16) gmii1_rxd0.gpio2[21] */
-+		>;
-+	};
- };
- 
- &uart0 {
-@@ -510,6 +519,12 @@
- 	clock-names = "ext-clk", "int-clk";
- };
- 
-+&dcan1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&dcan1_pins>;
-+	status = "okay";
-+};
-+
- &gpio3 {
- 	ls_buf_en {
- 		gpio-hog;
--- 
-2.15.1
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
