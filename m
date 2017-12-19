@@ -1,121 +1,62 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
-Date: Tue, 19 Dec 2017 10:21:19 +0100
-Message-ID: <20171219092119.GA32748@kroah.com>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
- <20171214151610.19153-3-boris.brezillon@free-electrons.com>
- <20171219085250.GC15010@kroah.com>
- <20171219100900.35c0f66e@bbrezillon>
- <20171219101336.337d0afc@bbrezillon>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6] mfd: syscon: Add hardware spinlock support
+Date: Tue, 19 Dec 2017 09:21:49 +0000
+Message-ID: <20171219092149.GB8563@sirena.org.uk>
+References: <87ec50c846bbc7afc09ba0855aba1cdea6473308.1512048582.git.baolin.wang@linaro.org>
+ <20171215104204.p7i27sen77ohbmzi@dell>
+ <CAK8P3a0Eu4zaVrSEMps06ZZmFs=6026WZ7ze5V2k=nu0zL0bxQ@mail.gmail.com>
+ <CAMz4ku+KfQRoLTO-T3ciS-1Z9oD=y0LJ25n-YDUMr+aYetbt9A@mail.gmail.com>
+ <CAK8P3a3JTV0z0ua_xbbf8eJFGsgOEai4RC9Ny5-JL80MPuKFSA@mail.gmail.com>
+ <CAMz4kuK2JRSZt6BiYu+YRy_+kXNen+NTgayqpXy1n3qL-T9OzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WhfpMioaduB5tiZL"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20171219101336.337d0afc@bbrezillon>
+In-Reply-To: <CAMz4kuK2JRSZt6BiYu+YRy_+kXNen+NTgayqpXy1n3qL-T9OzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Przemyslaw Sroka <psroka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Arkadiusz Golec <agolec-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Bartosz Folta <bfolta-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Damian Kos <dkos-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alicja Jurasik-Urbaniak <alicja-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Suresh Punnoose <sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinux-
+To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 10:13:36AM +0100, Boris Brezillon wrote:
-> On Tue, 19 Dec 2017 10:09:00 +0100
-> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> > On Tue, 19 Dec 2017 09:52:50 +0100
-> > Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> > 
-> > > On Thu, Dec 14, 2017 at 04:16:05PM +0100, Boris Brezillon wrote:  
-> > > > +/**
-> > > > + * i3c_device_match_id() - Find the I3C device ID entry matching an I3C dev
-> > > > + * @i3cdev: the I3C device we're searching a match for
-> > > > + * @id_table: the I3C device ID table
-> > > > + *
-> > > > + * Return: a pointer to the first entry matching @i3cdev, or NULL if there's
-> > > > + *	   no match.
-> > > > + */
-> > > > +const struct i3c_device_id *
-> > > > +i3c_device_match_id(struct i3c_device *i3cdev,
-> > > > +		    const struct i3c_device_id *id_table)
-> > > > +{
-> > > > +	const struct i3c_device_id *id;
-> > > > +
-> > > > +	/*
-> > > > +	 * The lower 32bits of the provisional ID is just filled with a random
-> > > > +	 * value, try to match using DCR info.
-> > > > +	 */
-> > > > +	if (!I3C_PID_RND_LOWER_32BITS(i3cdev->info.pid)) {
-> > > > +		u16 manuf = I3C_PID_MANUF_ID(i3cdev->info.pid);
-> > > > +		u16 part = I3C_PID_PART_ID(i3cdev->info.pid);
-> > > > +		u16 ext_info = I3C_PID_EXTRA_INFO(i3cdev->info.pid);
-> > > > +
-> > > > +		/* First try to match by manufacturer/part ID. */
-> > > > +		for (id = id_table; id->match_flags != 0; id++) {
-> > > > +			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
-> > > > +			    I3C_MATCH_MANUF_AND_PART)
-> > > > +				continue;
-> > > > +
-> > > > +			if (manuf != id->manuf_id || part != id->part_id)
-> > > > +				continue;
-> > > > +
-> > > > +			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
-> > > > +			    ext_info != id->extra_info)
-> > > > +				continue;
-> > > > +
-> > > > +			return id;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	/* Fallback to DCR match. */
-> > > > +	for (id = id_table; id->match_flags != 0; id++) {
-> > > > +		if ((id->match_flags & I3C_MATCH_DCR) &&
-> > > > +		    id->dcr == i3cdev->info.dcr)
-> > > > +			return id;
-> > > > +	}
-> > > > +
-> > > > +	return NULL;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(i3c_device_match_id);    
-> > > 
-> > > I just picked one random export here, but it feels like you are
-> > > exporting a bunch of symbols you don't need to.  Why would something
-> > > outside of the i3c "core" need to call this function?  
-> > 
-> > Because I'm not passing the i3c_device_id to the ->probe() method, and
-> > if the driver is supporting different variants of the device, it may
-> > want to know which one is being probed.
-> > 
-> > I considered retrieving this information in the core just before probing
-> > the driver and passing it to the ->probe() function, but it means
-> > having an extra i3c_device_match_id() call for everyone even those who
-> > don't care about the device_id information, so I thought exporting this
-> > function was a good alternative (device drivers can use it when they
-> > actually need to retrieve the device_id).
-> > 
-> > Anyway, that's something I can change if you think passing the
-> > i3c_device_id to the ->probe() method is preferable.
-> > 
-> > > Have you looked
-> > > to see if you really have callers for everything you are exporting?  
-> > 
-> > Yes, I tried to only export functions that I think will be needed by
-> > I3C device drivers and I3C master drivers. Note that I didn't post the
-> > dummy device driver I developed to test the framework (partly because
-> > this is 
-> 
-> Sorry, I hit the send button before finishing my sentence :-).
-> 
-> "
-> Note that I didn't post the dummy device driver [1] I developed to test
-> the framework (partly because the quality of the code does not meet
-> mainline standards and I was ashamed of posting it publicly :-)), but
-> this driver is using some of the exported functions.
-> "
 
-We don't export functions that has no in-kernel users :)
+--WhfpMioaduB5tiZL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-thanks,
+On Tue, Dec 19, 2017 at 02:55:47PM +0800, Baolin Wang wrote:
 
-greg k-h
+> Um, why regmap doesn't accept a zero lock-id, that because regmap will
+> reguest hwlock depending on the 'regmap_config->hwlock_id' is not
+> zero, if regmap regard a zero lock-id as valid which will affect other
+> 'struct regmap_config' definition. So users should not assign the zero
+> lock-id to regmap.
+
+> Now of_hwspin_lock_get_id() can return 0 as valid, which depend on
+> what is the base id registered by hwspinlock driver. So you think we
+> should not regard 0 as valid from of_hwspin_lock_get_id(), I can try
+> to send another patch to fix.
+
+If 0 is a valid hwspinlock ID you need to add a flag to the regmap
+config to say if a hwspinlock should be used.  That way we're not
+rejecting valid values.
+
+--WhfpMioaduB5tiZL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlo42iwACgkQJNaLcl1U
+h9BpAAf/dFv/Ci6l/rscWDGO6yC6976ewMYs2oN5NifvuaGRFXiPh8aza2CLsVr6
+PF+Vus2gtsNCg7r7JfyXYN+pTX0qLReUanxQ5FVSw9S2Q/is4vObsilmPzEs6Quq
+XApB6xiYn5IJHQdBWalpUeKhCJTGlqouAPXto/a2mKSbnFiSBUvTevpE502CVOTP
+yvWb5ZpXyx7lIw+n5P/AZDsGguxj5ECgtAQD86HDCUGn93XIJu9EEk+ZjbGV429Z
+/r0m18QgyJBldAiAEwap1ax2IEvkXwsqjYR4+JwcDo/SPLWrM0Pf3HsEa+99fqcN
+bWr08MCDnPcCotdNE3r+XR0TsJG5dQ==
+=kBko
+-----END PGP SIGNATURE-----
+
+--WhfpMioaduB5tiZL--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
