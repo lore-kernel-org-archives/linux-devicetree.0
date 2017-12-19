@@ -1,65 +1,70 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 02/25] arm: at91/sama: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Tue, 19 Dec 2017 22:34:38 +0100
-Message-ID: <20171219213438.GQ15162@piout.net>
-References: <20171215124627.29979-1-malat@debian.org>
+From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH v4 04/36] nds32: Kernel booting and initialization
+Date: Tue, 19 Dec 2017 14:01:40 -0800
+Message-ID: <78afd442-4482-f104-746e-5984214658ee@infradead.org>
+References: <cover.1513577007.git.green.hu@gmail.com>
+ <935ff034982f077b2e6f5eeccd6fe2110614fc9c.1513577007.git.green.hu@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171215124627.29979-1-malat@debian.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <malat@debian.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <935ff034982f077b2e6f5eeccd6fe2110614fc9c.1513577007.git.green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org, dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org, ren_guo-Y+KPrCd2zL4AvxtiuMwx3w@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org
+Cc: Vincent Chen <vincentc-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/12/2017 at 13:46:26 +0100, Mathieu Malaterre wrote:
-> Improve the DTS files by removing all the leading "0x" and zeros to fix the
-> following dtc warnings:
+On 12/17/2017 10:46 PM, Greentime Hu wrote:
+> From: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
 > 
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> This patch includes the kernel startup code. It can get dtb pointer
+> passed from bootloader. It will create a temp mapping by tlb
+> instructions at beginning and goto start_kernel.
 > 
-> and
-> 
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
-> 
-> Converted using the following command:
-> 
-> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
-> 
-> For simplicity, two sed expressions were used to solve each warnings separately.
-> 
-> To make the regex expression more robust a few other issues were resolved,
-> namely setting unit-address to lower case, and adding a whitespace before the
-> the opening curly brace:
-> 
-> https://elinux.org/Device_Tree_Linux#Linux_conventions
-> 
-> This will solve as a side effect warning:
-> 
-> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-> 
-> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-> 
-> Reported-by: David Daney <ddaney@caviumnetworks.com>
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: Vincent Chen <vincentc-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
+> Signed-off-by: Greentime Hu <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>
 > ---
->  arch/arm/boot/dts/at91sam9261.dtsi     | 2 +-
->  arch/arm/boot/dts/at91sam9261ek.dts    | 2 +-
->  arch/arm/boot/dts/at91sam9263.dtsi     | 2 +-
->  arch/arm/boot/dts/at91sam9263ek.dts    | 2 +-
->  arch/arm/boot/dts/at91sam9g25ek.dts    | 2 +-
->  arch/arm/boot/dts/at91sam9g45.dtsi     | 2 +-
->  arch/arm/boot/dts/at91sam9m10g45ek.dts | 2 +-
->  arch/arm/boot/dts/sama5d3xmb.dtsi      | 2 +-
->  arch/arm/boot/dts/sama5d3xmb_cmp.dtsi  | 2 +-
->  9 files changed, 9 insertions(+), 9 deletions(-)
+>  arch/nds32/kernel/head.S  |  189 ++++++++++++++++++++++
+>  arch/nds32/kernel/setup.c |  383 +++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 572 insertions(+)
+>  create mode 100644 arch/nds32/kernel/head.S
+>  create mode 100644 arch/nds32/kernel/setup.c
 > 
-Applied, thanks.
+
+> diff --git a/arch/nds32/kernel/setup.c b/arch/nds32/kernel/setup.c
+> new file mode 100644
+> index 0000000..7718c58
+> --- /dev/null
+> +++ b/arch/nds32/kernel/setup.c
+> @@ -0,0 +1,383 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2005-2017 Andes Technology Corporation
+> +
+
+[snip]
+
+> +struct cache_info L1_cache_info[2];
+> +static void __init dump_cpu_info(int cpu)
+> +{
+> +	int i, p = 0;
+> +	char str[sizeof(hwcap_str) + 16];
+> +
+> +	for (i = 0; hwcap_str[i]; i++) {
+> +		if (elf_hwcap & (1 << i)) {
+> +			sprintf(str + p, "%s ", hwcap_str[i]);
+> +			p += strlen(hwcap_str[i]) + 1;
+> +		}
+> +	}
+> +
+> +	pr_info("CPU%d Featuretures: %s\n", cpu, str);
+
+	               Features:
+
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+~Randy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
