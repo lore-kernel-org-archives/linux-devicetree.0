@@ -1,82 +1,96 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 3/9] soc: brcmstb: Make CPU credit offset more parameterized
-Date: Tue, 19 Dec 2017 11:22:41 -0800
-Message-ID: <20171219192247.29799-4-f.fainelli@gmail.com>
+Subject: [PATCH v2 9/9] soc: brcmstb: biuctrl: Move to early_initcall
+Date: Tue, 19 Dec 2017 11:22:47 -0800
+Message-ID: <20171219192247.29799-10-f.fainelli@gmail.com>
 References: <20171219192247.29799-1-f.fainelli@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20171219192247.29799-1-f.fainelli@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: bcm-kernel-feedback-list@broadcom.com
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Fong <gregory.0xf0@gmail.com>, Brian Norris <computersforpeace@gmail.com>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-In preparation for fixing and changing values in the CPU_CREDIT_REG
-register for B53-based systems, make the offset parameterized.
+Being called during early_initcall() is early enough that it occurs
+before SMP initialization, which is all we care about for the Bus
+Interface Unit configuration.
+
+This solves lack of BIU initialization on ARM64 platforms where we do
+not have an anchor where to put the BIU initialization (since there are
+no machine descriptors).
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/soc/bcm/brcmstb/biuctrl.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/arm/mach-bcm/brcmstb.c         | 2 --
+ drivers/soc/bcm/brcmstb/biuctrl.c   | 6 ++++--
+ include/linux/soc/brcmstb/brcmstb.h | 6 ------
+ 3 files changed, 4 insertions(+), 10 deletions(-)
 
+diff --git a/arch/arm/mach-bcm/brcmstb.c b/arch/arm/mach-bcm/brcmstb.c
+index 07e3a86c6466..5f127d5f1045 100644
+--- a/arch/arm/mach-bcm/brcmstb.c
++++ b/arch/arm/mach-bcm/brcmstb.c
+@@ -14,7 +14,6 @@
+ #include <linux/init.h>
+ #include <linux/irqchip.h>
+ #include <linux/of_platform.h>
+-#include <linux/soc/brcmstb/brcmstb.h>
+ 
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -38,7 +37,6 @@ u32 brcmstb_uart_config[3] = {
+ static void __init brcmstb_init_irq(void)
+ {
+ 	irqchip_init();
+-	brcmstb_biuctrl_init();
+ }
+ 
+ static const char *const brcmstb_match[] __initconst = {
 diff --git a/drivers/soc/bcm/brcmstb/biuctrl.c b/drivers/soc/bcm/brcmstb/biuctrl.c
-index 3c39415d484f..c3c548fcaa8c 100644
+index dd45bbfe64dd..2b23ae7b5e9b 100644
 --- a/drivers/soc/bcm/brcmstb/biuctrl.c
 +++ b/drivers/soc/bcm/brcmstb/biuctrl.c
-@@ -26,6 +26,7 @@
+@@ -240,7 +240,7 @@ static struct syscore_ops brcmstb_cpu_credit_syscore_ops = {
+ #endif
  
- static void __iomem *cpubiuctrl_base;
- static bool mcp_wr_pairing_en;
-+static unsigned int cpu_credit_reg_offset = CPU_CREDIT_REG_OFFSET;
  
- static int __init mcp_write_pairing_set(void)
+-void __init brcmstb_biuctrl_init(void)
++static int __init brcmstb_biuctrl_init(void)
  {
-@@ -34,15 +35,15 @@ static int __init mcp_write_pairing_set(void)
- 	if (!cpubiuctrl_base)
- 		return -1;
+ 	int ret;
  
--	creds = readl_relaxed(cpubiuctrl_base + CPU_CREDIT_REG_OFFSET);
-+	creds = readl_relaxed(cpubiuctrl_base + cpu_credit_reg_offset);
- 	if (mcp_wr_pairing_en) {
- 		pr_info("MCP: Enabling write pairing\n");
- 		writel_relaxed(creds | CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
--			     cpubiuctrl_base + CPU_CREDIT_REG_OFFSET);
-+			     cpubiuctrl_base + cpu_credit_reg_offset);
- 	} else if (creds & CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK) {
- 		pr_info("MCP: Disabling write pairing\n");
- 		writel_relaxed(creds & ~CPU_CREDIT_REG_MCPx_WR_PAIRING_EN_MASK,
--				cpubiuctrl_base + CPU_CREDIT_REG_OFFSET);
-+				cpubiuctrl_base + cpu_credit_reg_offset);
- 	} else {
- 		pr_info("MCP: Write pairing already disabled\n");
+@@ -249,11 +249,13 @@ void __init brcmstb_biuctrl_init(void)
+ 	ret = mcp_write_pairing_set();
+ 	if (ret) {
+ 		pr_err("MCP: Unable to disable write pairing!\n");
+-		return;
++		return ret;
  	}
-@@ -81,7 +82,7 @@ static int brcmstb_cpu_credit_reg_suspend(void)
- {
- 	if (cpubiuctrl_base)
- 		cpu_credit_reg_dump =
--			readl_relaxed(cpubiuctrl_base + CPU_CREDIT_REG_OFFSET);
-+			readl_relaxed(cpubiuctrl_base + cpu_credit_reg_offset);
- 	return 0;
+ 
+ 	mcp_b53_set();
+ #ifdef CONFIG_PM_SLEEP
+ 	register_syscore_ops(&brcmstb_cpu_credit_syscore_ops);
+ #endif
++	return 0;
+ }
++early_initcall(brcmstb_biuctrl_init);
+diff --git a/include/linux/soc/brcmstb/brcmstb.h b/include/linux/soc/brcmstb/brcmstb.h
+index 12e548938bbb..8e884e0dda0a 100644
+--- a/include/linux/soc/brcmstb/brcmstb.h
++++ b/include/linux/soc/brcmstb/brcmstb.h
+@@ -13,12 +13,6 @@ static inline u32 BRCM_REV(u32 reg)
  }
  
-@@ -89,7 +90,7 @@ static void brcmstb_cpu_credit_reg_resume(void)
- {
- 	if (cpubiuctrl_base)
- 		writel_relaxed(cpu_credit_reg_dump,
--				cpubiuctrl_base + CPU_CREDIT_REG_OFFSET);
-+				cpubiuctrl_base + cpu_credit_reg_offset);
- }
- 
- static struct syscore_ops brcmstb_cpu_credit_syscore_ops = {
+ /*
+- * Bus Interface Unit control register setup, must happen early during boot,
+- * before SMP is brought up, called by machine entry point.
+- */
+-void brcmstb_biuctrl_init(void);
+-
+-/*
+  * Helper functions for getting family or product id from the
+  * SoC driver.
+  */
 -- 
 2.9.3
