@@ -1,64 +1,73 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: dts: imx6: Add initial support for phyBOARD-Mira
-Date: Tue, 19 Dec 2017 15:10:17 -0200
-Message-ID: <CAOMZO5CSQSpPXTnR69HqHfKZiUpi+eqonqjuEu9mgBECsWG_5g@mail.gmail.com>
-References: <1513698588-13325-1-git-send-email-s.riedmueller@phytec.de> <1513698588-13325-3-git-send-email-s.riedmueller@phytec.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH net-next v5 1/4] phylib: Add device reset delay support
+Date: Tue, 19 Dec 2017 11:12:13 -0600
+Message-ID: <CAL_JsqKM2MgpQzxjNOB9JSZD09vgUjrstbFWcNbnUdjQAYjzrA@mail.gmail.com>
+References: <20171211121700.10200-1-dev@g0hl1n.net> <20171211121700.10200-2-dev@g0hl1n.net>
+ <20171215221752.42sz53izxeebkfuq@rob-hp-laptop> <1b230e6b-8e8c-28a4-7524-6ce60aa71591@skidata.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1513698588-13325-3-git-send-email-s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1b230e6b-8e8c-28a4-7524-6ce60aa71591-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, Stefan Christ <s.christ-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Cc: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fugang Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 19, 2017 at 1:49 PM, Stefan Riedmueller
-<s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org> wrote:
+On Mon, Dec 18, 2017 at 1:30 AM, Richard Leitner
+<richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On 12/15/2017 11:17 PM, Rob Herring wrote:
+>> On Mon, Dec 11, 2017 at 01:16:57PM +0100, Richard Leitner wrote:
+>>> From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+>>>
+>>> Some PHYs need a minimum time after the reset gpio was asserted and/or
+>>> deasserted. To ensure we meet these timing requirements add two new
+>>> optional devicetree parameters for the phy: reset-delay-us and
+>>> reset-post-delay-us.
+>>>
+>>> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+>>> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/net/phy.txt | 10 ++++++++++
+>>>  drivers/net/phy/mdio_device.c                 | 13 +++++++++++--
+>>>  drivers/of/of_mdio.c                          |  4 ++++
+>>>  include/linux/mdio.h                          |  2 ++
+>>>  4 files changed, 27 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+>>> index c05479f5ac7c..72860ce7f610 100644
+>>> --- a/Documentation/devicetree/bindings/net/phy.txt
+>>> +++ b/Documentation/devicetree/bindings/net/phy.txt
+>>> @@ -55,6 +55,12 @@ Optional Properties:
+>>>
+>>>  - reset-gpios: The GPIO phandle and specifier for the PHY reset signal.
+>>>
+>>> +- reset-delay-us: Delay after the reset was asserted in microseconds.
+>>> +  If this property is missing the delay will be skipped.
+>>> +
+>>> +- reset-post-delay-us: Delay after the reset was deasserted in microseconds.
+>>> +  If this property is missing the delay will be skipped.
+>>
+>> I think these names could be clearer as to exactly what they mean.
+>> Looking at existing properties with "reset-delay" there's a mixture of
+>> definitions whether it is the assert time or the time after deassert.
+>>
+>> So I'd call these "reset-assert-us" and "reset-deassert-us".
+>
+> Ok, that would be fine with me, but are you sure that we should omit the
+> "-delay" term completely?
 
-> +       reg_pcie: regulator-pcie {
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_pcie_reg>;
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "mPCIe_1V5";
-> +               regulator-min-microvolt = <1500000>;
-> +               regulator-max-microvolt = <1500000>;
-> +               gpio = <&gpio3 0 GPIO_ACTIVE_HIGH>;
-> +               regulator-always-on;
+These are just minimum assertion and deassertion times. I think that's
+clear enough.
 
-Instead of using 'regulator-always-on' here, you could use:
+> What would be the best approach to post this change (as the patchset was
+> already merged to net-next)? A separate patch or a v6 of the complete
+> patchset?
 
-vpcie-supply = <&reg_pcie>;
+A patch on top of this.
 
-under the &pcie node
-
-> +       panel {
-> +               compatible = "auo,g104sn02";
-
-I could not find this compatible in linux-next.
-
-> +       i2c_rtc: rtc@68 {
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_rtc_int>;
-> +               compatible = "mc,rv4162";
-
-I could not find this compatible in linux-next.
-
-> +&pcie {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_pcie>;
-> +       reset-gpio = <&gpio2 25 GPIO_ACTIVE_HIGH>;
-
-The imx driver ignores the polarity and it is active high only when
-'reset-gpio-active-high' property is present.
-
-The correct here would be: reset-gpio = <&gpio2 25 GPIO_ACTIVE_LOW>;
-
-> +&uart3 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_uart3>;
-> +       fsl,uart-has-rtscts;
-
-uart-has-rtscts, please.
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
