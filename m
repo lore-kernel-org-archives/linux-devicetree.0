@@ -1,13 +1,13 @@
 From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 1/6] media: rc: update sunxi-ir driver to get
- base clock frequency from devicetree
-Date: Tue, 19 Dec 2017 09:07:42 +0100
-Message-ID: <20171219080747.4507-2-embed3d@gmail.com>
+Subject: [PATCH v3 6/6] arm: dts: sun8i: h3-h8: ir register size
+ should be the whole memory block
+Date: Tue, 19 Dec 2017 09:07:47 +0100
+Message-ID: <20171219080747.4507-7-embed3d@gmail.com>
 References: <20171219080747.4507-1-embed3d@gmail.com>
 Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD257DPK24NRBWER4PIQKGQEO3EZONQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD257DPK24NRBX4R4PIQKGQEGESWOJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20171219080747.4507-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,88 +20,26 @@ To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROf
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the sunxi-ir driver to set the base clock frequency from
-devicetree.
-
-This is necessary since there are different ir receivers on the
-market, that operate with different frequencies. So this value could be
-set if the attached ir receiver needs a different base clock frequency,
-than the default 8 MHz.
+The size of the register should be the size of the whole memory block,
+not just the registers, that are needed.
 
 Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/media/rc/sunxi-cir.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-index 97f367b446c4..f500cea228a9 100644
---- a/drivers/media/rc/sunxi-cir.c
-+++ b/drivers/media/rc/sunxi-cir.c
-@@ -72,12 +72,8 @@
- /* CIR_REG register idle threshold */
- #define REG_CIR_ITHR(val)    (((val) << 8) & (GENMASK(15, 8)))
- 
--/* Required frequency for IR0 or IR1 clock in CIR mode */
-+/* Required frequency for IR0 or IR1 clock in CIR mode (default) */
- #define SUNXI_IR_BASE_CLK     8000000
--/* Frequency after IR internal divider  */
--#define SUNXI_IR_CLK          (SUNXI_IR_BASE_CLK / 64)
--/* Sample period in ns */
--#define SUNXI_IR_SAMPLE       (1000000000ul / SUNXI_IR_CLK)
- /* Noise threshold in samples  */
- #define SUNXI_IR_RXNOISE      1
- /* Idle Threshold in samples */
-@@ -122,7 +118,8 @@ static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id)
- 			/* for each bit in fifo */
- 			dt = readb(ir->base + SUNXI_IR_RXFIFO_REG);
- 			rawir.pulse = (dt & 0x80) != 0;
--			rawir.duration = ((dt & 0x7f) + 1) * SUNXI_IR_SAMPLE;
-+			rawir.duration = ((dt & 0x7f) + 1) *
-+					 ir->rc->rx_resolution;
- 			ir_raw_event_store_with_filter(ir->rc, &rawir);
- 		}
- 	}
-@@ -148,6 +145,7 @@ static int sunxi_ir_probe(struct platform_device *pdev)
- 	struct device_node *dn = dev->of_node;
- 	struct resource *res;
- 	struct sunxi_ir *ir;
-+	u32 b_clk_freq = SUNXI_IR_BASE_CLK;
- 
- 	ir = devm_kzalloc(dev, sizeof(struct sunxi_ir), GFP_KERNEL);
- 	if (!ir)
-@@ -172,6 +170,9 @@ static int sunxi_ir_probe(struct platform_device *pdev)
- 		return PTR_ERR(ir->clk);
- 	}
- 
-+	/* Base clock frequency (optional) */
-+	of_property_read_u32(dn, "clock-frequency", &b_clk_freq);
-+
- 	/* Reset (optional) */
- 	ir->rst = devm_reset_control_get_optional_exclusive(dev, NULL);
- 	if (IS_ERR(ir->rst))
-@@ -180,11 +181,12 @@ static int sunxi_ir_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = clk_set_rate(ir->clk, SUNXI_IR_BASE_CLK);
-+	ret = clk_set_rate(ir->clk, b_clk_freq);
- 	if (ret) {
- 		dev_err(dev, "set ir base clock failed!\n");
- 		goto exit_reset_assert;
- 	}
-+	dev_dbg(dev, "set base clock frequency to %d Hz.\n", b_clk_freq);
- 
- 	if (clk_prepare_enable(ir->apb_clk)) {
- 		dev_err(dev, "try to enable apb_ir_clk failed\n");
-@@ -225,7 +227,8 @@ static int sunxi_ir_probe(struct platform_device *pdev)
- 	ir->rc->map_name = ir->map_name ?: RC_MAP_EMPTY;
- 	ir->rc->dev.parent = dev;
- 	ir->rc->allowed_protocols = RC_PROTO_BIT_ALL_IR_DECODER;
--	ir->rc->rx_resolution = SUNXI_IR_SAMPLE;
-+	/* Frequency after IR internal divider with sample period in ns */
-+	ir->rc->rx_resolution = (1000000000ul / (b_clk_freq / 64));
- 	ir->rc->timeout = MS_TO_NS(SUNXI_IR_TIMEOUT);
- 	ir->rc->driver_name = SUNXI_IR_DEV;
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 8d40c00d64bb..a9caeda4a574 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -674,7 +674,7 @@
+ 			clock-names = "apb", "ir";
+ 			resets = <&r_ccu RST_APB0_IR>;
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+-			reg = <0x01f02000 0x40>;
++			reg = <0x01f02000 0x400>;
+ 			status = "disabled";
+ 		};
  
 -- 
 2.11.0
