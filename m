@@ -1,35 +1,58 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] dt-bindings: pinctrl: sh-pfc: Correct SoC family name for R8A7778
-Date: Tue, 19 Dec 2017 17:04:56 +0100
-Message-ID: <1513699496-27931-1-git-send-email-geert+renesas@glider.be>
+From: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v8 2/3] dt-bindings: iio: temperature: add MLX90632 device bindings
+Date: Tue, 19 Dec 2017 17:06:08 +0100
+Message-ID: <20171219160608.30795-1-cmo@melexis.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-R8A7778 is R-Car (not R-Mobile) M1.
+Add device tree bindings for MLX90632 IR temperature sensor.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index bb1790e0b17652e6..dd64dbb4cb0ea98f 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -15,7 +15,7 @@ Required Properties:
-     - "renesas,pfc-r8a7740": for R8A7740 (R-Mobile A1) compatible pin-controller.
-     - "renesas,pfc-r8a7743": for R8A7743 (RZ/G1M) compatible pin-controller.
-     - "renesas,pfc-r8a7745": for R8A7745 (RZ/G1E) compatible pin-controller.
--    - "renesas,pfc-r8a7778": for R8A7778 (R-Mobile M1) compatible pin-controller.
-+    - "renesas,pfc-r8a7778": for R8A7778 (R-Car M1) compatible pin-controller.
-     - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-controller.
-     - "renesas,pfc-r8a7790": for R8A7790 (R-Car H2) compatible pin-controller.
-     - "renesas,pfc-r8a7791": for R8A7791 (R-Car M2-W) compatible pin-controller.
+diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+new file mode 100644
+index 000000000000..0b05812001f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+@@ -0,0 +1,28 @@
++* Melexis MLX90632 contactless Infra Red temperature sensor
++
++Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
++
++There are various applications for the Infra Red contactless temperature sensor
++and MLX90632 is most suitable for consumer applications where measured object
++temperature is in range between -20 to 200 degrees Celsius with relative error
++of measurement below 1 degree Celsius in object temperature range for
++industrial applications. Since it can operate and measure ambient temperature
++in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
++
++Be aware that electronics surrounding the sensor can increase ambient
++temperature. MLX90632 can be calibrated to reduce the housing effect via
++already existing EEPROM parameters.
++
++Since measured object emissivity effects Infra Red energy emitted, emissivity
++should be set before requesting the object temperature.
++
++Required properties:
++  - compatible: should be "melexis,mlx90632"
++  - reg: the I2C address of the sensor (default 0x3a)
++
++Example:
++
++mlx90632@3a {
++	compatible = "melexis,mlx90632";
++	reg = <0x3a>;
++};
 -- 
-2.7.4
+2.15.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
